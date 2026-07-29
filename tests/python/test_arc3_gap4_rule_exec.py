@@ -2,12 +2,24 @@
 vote-primary gated rerank. No codex, no network: programs are injected as code strings.
 """
 
+# Path-resolution traceability: the repo-root/sys.path resolution in this file traces to
+# REQ-ARC-WMTE-6043 (centralised output-path resolution). That is the ONLY behaviour in this
+# file covered by that requirement -- the GAP-3/GAP-4 assertions below predate spec
+# traceability and are recorded as pre-existing debt in ops/known-issues.md, not claimed here.
+
 import sys
 
 import numpy as np
 import pytest
 
-sys.path.insert(0, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments")
+from carnot.paths import repo_root
+
+# The GAP-3/GAP-4 experiment modules live in scripts/experiments/, which is not a
+# package, so it has to go on sys.path to be importable. Resolved from the repo root
+# rather than hardcoded: a hardcoded absolute path here poisons the WHOLE pytest-xdist
+# worker -- every later import in that worker resolves against the operator's checkout,
+# so even correctly repo-relative scripts write their output into the wrong tree.
+sys.path.insert(0, str(repo_root() / "scripts" / "experiments"))
 
 from arc3_gap4_rule_exec_verifier import (  # noqa: E402
     _extract_code,

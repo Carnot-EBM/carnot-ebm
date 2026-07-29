@@ -12,8 +12,10 @@ from pathlib import Path
 from typing import Any
 
 from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair
+from carnot.paths import repo_root
 
-DEFAULT_PROJECT_ROOT = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm")
+# Resolved via the central resolver rather than hardcoded -- see python/carnot/paths.py.
+DEFAULT_PROJECT_ROOT = repo_root()
 DEFAULT_RESULTS_DIR = DEFAULT_PROJECT_ROOT / "results"
 OUTPUT_FILE = "experiment_1317_grpo_vprm_v11_headline_gate.json"
 DEFAULT_OUT_PATH = DEFAULT_RESULTS_DIR / OUTPUT_FILE

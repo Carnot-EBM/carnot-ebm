@@ -30,9 +30,13 @@ from arc3_gap4_rule_exec_verifier import (
     safe_transform_from_code,
 )
 from experiment_3998_gap4_deselection_coverage import audit_transcripts
+from carnot.paths import repo_root
 
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
 CHAIN_ARTIFACT = REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json"
 OUTPUT = REPO_ROOT / "results" / "experiment_4000_gap4_feedback_vs_redraw.json"
@@ -154,8 +158,10 @@ def _grid_hash(grid: Any) -> str:
 
 
 def _score_grid(pred_grid: Any, target: np.ndarray | None) -> bool:
-    return target is not None and pred_grid is not None and np.array_equal(
-        np.asarray(pred_grid, dtype=np.int64), target
+    return (
+        target is not None
+        and pred_grid is not None
+        and np.array_equal(np.asarray(pred_grid, dtype=np.int64), target)
     )
 
 

@@ -32,8 +32,12 @@ import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
+from carnot.paths import repo_root
 
-REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO = repo_root()
 DATASET = "iancblenke/carnot-agent-code"
 KERNEL = "iancblenke/carnot-arc-agi3-submission"
 COMP = "arc-prize-2026-arc-agi-3"

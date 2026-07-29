@@ -48,8 +48,12 @@ from pathlib import Path
 import numpy as np
 
 import sys
+from carnot.paths import repo_root
 
-CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+CARNOT = str(repo_root())
 sys.path.insert(0, f"{CARNOT}/scripts/experiments")
 
 from arc3_gap3_stage2_transition_ebm import SEED, ghash  # noqa: E402

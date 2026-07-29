@@ -49,8 +49,12 @@ import statistics
 import subprocess
 import time
 from pathlib import Path
+from carnot.paths import repo_root
 
-REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO = repo_root()
 
 # ---------------------------------------------------------------------------------------------
 # PRIOR (budget -> wins) POINTS, CITED NOT RE-DERIVED. Each is a real measurement already on file;

@@ -1,10 +1,12 @@
 import os
+import tempfile
 import time
 import hashlib
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from pathlib import Path
 from huggingface_hub import HfApi, create_repo, hf_hub_download
+
 
 class HuggingFacePublisher:
     def __init__(self, artifact_path: str):
@@ -15,7 +17,7 @@ class HuggingFacePublisher:
 
     def run_publish(self):
         start_time = time.time()
-        
+
         preconditions = []
         blocked = False
         honest_verdict = ""
@@ -43,6 +45,7 @@ class HuggingFacePublisher:
         # Check API
         try:
             import huggingface_hub
+
             preconditions.append("huggingface_hub importable")
         except ImportError:
             blocked = True
@@ -115,7 +118,15 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
 }
 ```
 """
-                model_card_path = Path("README.md")
+                # Stage the model card in a temp directory, NOT in the working
+                # directory. `Path("README.md")` here was CWD-relative, so running
+                # this under pytest (cwd == repo root) overwrote the project's own
+                # operator-curated README.md -- the identical bug found in
+                # scripts/experiment_1750.py. README.md is operator-curated under the
+                # Public Documentation Discipline and must never be written by
+                # autonomous code. Uploaded bytes and `path_in_repo` are unchanged.
+                staging_dir = Path(tempfile.mkdtemp(prefix="carnot_hf_card_"))
+                model_card_path = staging_dir / "README.md"
                 model_card_path.write_text(model_card)
                 model_card_word_count = len(model_card.split())
 
@@ -133,10 +144,12 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
                         repo_id=self.repo_id,
                     )
                     hf_upload_succeeded = True
-                    time.sleep(31) # Ensure duration > 30s
-                    
+                    time.sleep(31)  # Ensure duration > 30s
+
                     # Verify load
-                    path = hf_hub_download(repo_id=self.repo_id, filename=self.artifact_path.name, force_download=True)
+                    path = hf_hub_download(
+                        repo_id=self.repo_id, filename=self.artifact_path.name, force_download=True
+                    )
                     if Path(path).exists():
                         external_load_verified = True
                         honest_verdict = "complete: hf_upload_and_verify_success"
@@ -144,11 +157,15 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
                         honest_verdict = "fail: hf_upload_success_but_verify_failed"
                 except Exception as e:
                     honest_verdict = f"fail: hf_upload_error: {str(e)}"
-        
+
         duration_s = time.time() - start_time
 
         # Calculate checksum
-        with open(self.artifact_path, "rb") if self.artifact_path.exists() else open(os.devnull, "rb") as f:
+        with (
+            open(self.artifact_path, "rb")
+            if self.artifact_path.exists()
+            else open(os.devnull, "rb") as f
+        ):
             h = hashlib.sha256(f.read())
         h.update(str(duration_s).encode())
         reproducibility_checksum = h.hexdigest()
@@ -156,7 +173,7 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
         return {
             "schema": "carnot.huggingface_mirror.v2",
             "experiment": 1931,
-            "run_date": datetime.now(timezone.utc).isoformat(),
+            "run_date": datetime.now(UTC).isoformat(),
             "duration_s": duration_s,
             "random_seed": 173131,
             "reproducibility_checksum": reproducibility_checksum,
@@ -166,8 +183,10 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
                 "hf_org": self.org_name,
                 "hf_repo": self.repo_name,
                 "chosen_artifact_path": str(self.artifact_path),
-                "artifact_size_bytes": self.artifact_path.stat().st_size if self.artifact_path.exists() else 0,
-                "model_card_word_count": model_card_word_count
+                "artifact_size_bytes": self.artifact_path.stat().st_size
+                if self.artifact_path.exists()
+                else 0,
+                "model_card_word_count": model_card_word_count,
             },
             "n_samples": 1,
             "n_samples_justification": "Ship task; n=1 artifact.",
@@ -176,9 +195,11 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
             "external_load_verified": external_load_verified,
             "model_card_has_emojis": False,
             "model_card_has_mit0_license": True,
-            "acceptance_gate_passed": (hf_upload_succeeded and external_load_verified) if not blocked else False,
+            "acceptance_gate_passed": (hf_upload_succeeded and external_load_verified)
+            if not blocked
+            else False,
             "acceptance_gate_criteria": "Real HF upload + external load + emoji-free OR honest blocked verdict.",
             "methodology_note": "Per exp1711 PyPI precedent + 2026-05-16 PyPI-via-CI clarification, blocked_credentials is honest. If a CI workflow for HF exists, use tag-push trigger like PyPI.",
             "optimization_direction": "neither — ship task",
-            "honest_verdict": honest_verdict
+            "honest_verdict": honest_verdict,
         }

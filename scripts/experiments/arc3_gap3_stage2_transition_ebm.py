@@ -56,8 +56,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F  # noqa: N812 — the universal torch convention
+from carnot.paths import repo_root
 
-CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+CARNOT = str(repo_root())
 KAGGLE = "/home/ianblenke/trm_src/kaggle/combined"
 POOL = f"{CARNOT}/results/arc3_gap3_stage2_eval_pool.json.gz"
 CKPT = f"{CARNOT}/results/arc3_gap3_stage2_ebm.pt"

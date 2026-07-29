@@ -16,6 +16,7 @@ know"). The non-circular detector (diffusion-surprisal / a learned detector) is 
 
 Output: results/verifier_detector_auroc.json
 """
+
 from __future__ import annotations
 
 import json
@@ -29,9 +30,10 @@ from pathlib import Path
 from typing import Any
 
 import torch
+from carnot.paths import repo_root
 
 _orig_load = torch.load
-torch.load = lambda *a, **k: (k.update(weights_only=False) or _orig_load(*a, **k))  # trusted ckpt
+torch.load = lambda *a, **k: k.update(weights_only=False) or _orig_load(*a, **k)  # trusted ckpt
 
 NANO_TRM = "/home/ianblenke/github.com/ianblenke/carnot/nano-trm"
 sys.path.insert(0, NANO_TRM)
@@ -42,9 +44,14 @@ from src.nn.utils.constants import IGNORE_LABEL_ID  # noqa: E402
 # input token 2 = blank). Decode digit = token - TOKEN_OFFSET before constraint checks.
 TOKEN_OFFSET = 2
 
-STABLE = "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+STABLE = (
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+)
 DATA_DIR = f"{NANO_TRM}/data/sudoku_extreme_1k_aug_1k"
-ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+ROOT = repo_root()
 OUT = ROOT / "results/experiment_4208_verifier_as_detector_auroc.json"
 REQUIRED_CACHED_POOLS = [
     ROOT / "results/arc3_trm_verifier_rerank.json",
@@ -74,7 +81,7 @@ def constraint_sat_fraction(grid: torch.Tensor, n: int = 9) -> float:
             ok += 1
     for br in range(0, n, box):
         for bc in range(0, n, box):
-            b = grid[br:br + box, bc:bc + box].reshape(-1)
+            b = grid[br : br + box, bc : bc + box].reshape(-1)
             if torch.all((b >= 1) & (b <= n)) and len(torch.unique(b)) == n:
                 ok += 1
     return ok / total
@@ -346,11 +353,7 @@ def arc_rows_from_entries(
     entries: list[dict[str, Any]],
     programs: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    by_entry = {
-        int(p.get("entry_i", i)): p
-        for i, p in enumerate(programs)
-        if isinstance(p, dict)
-    }
+    by_entry = {int(p.get("entry_i", i)): p for i, p in enumerate(programs) if isinstance(p, dict)}
     rows = []
     for entry_i, entry in enumerate(entries):
         prog = by_entry.get(entry_i, {})
@@ -443,9 +446,7 @@ def build_artifact(
         }
         if d == "sudoku":
             controls[d]["valid_but_wrong_auroc"] = rep.get("valid_but_wrong_auroc")
-            controls[d]["valid_but_wrong_auroc_ci95"] = rep.get(
-                "valid_but_wrong_auroc_ci95"
-            )
+            controls[d]["valid_but_wrong_auroc_ci95"] = rep.get("valid_but_wrong_auroc_ci95")
             controls[d]["valid_but_wrong_n"] = rep.get("valid_but_wrong_n")
             controls[d]["valid_but_wrong_negatives"] = rep.get("valid_but_wrong_negatives")
             controls[d]["valid_but_wrong_note"] = rep.get("valid_but_wrong_note")
@@ -470,7 +471,7 @@ def build_artifact(
         "schema": "carnot.verifier_detector_auroc.v1",
         "honest_verdict": verdict,
         "field_principles": {
-            "honest_verdict": 'Terminal-prefixed. A clean per-domain detector measurement (high AUROC where selection had none, OR AUROC~0.5 everywhere) is a COMPLETE, decision-grade result either way.',
+            "honest_verdict": "Terminal-prefixed. A clean per-domain detector measurement (high AUROC where selection had none, OR AUROC~0.5 everywhere) is a COMPLETE, decision-grade result either way.",
             "detection_auroc_by_domain": "BARE per-domain {domain: auroc} -- the detection axis the selector metric cannot see; value for abstention/precision even at zero selection headroom.",
             "selector_headroom_by_domain": "BARE per-domain {domain: oracle@K - vote} from .387/.388 -- the contrast axis; the headline is detection >> 0.5 WHERE selector_headroom ~0.",
             "verifier_is_oracle_by_domain": "Per-domain bool -- on code/Sudoku the executable check IS the oracle (circular/execution-grounded detector); declares honestly which domains' detection is oracle-distinct (Circularity Discipline).",
@@ -516,8 +517,9 @@ def blocked_artifact(reason: str, duration_s: float) -> dict[str, Any]:
 @torch.no_grad()
 def run_sudoku_rows() -> tuple[list[dict[str, Any]], dict[str, Any]]:  # pragma: no cover
     t0 = time.time()
-    ev = SudokuEvaluator(checkpoint_path=STABLE, data_dir=DATA_DIR, batch_size=128,
-                         device="auto", eval_split="test")
+    ev = SudokuEvaluator(
+        checkpoint_path=STABLE, data_dir=DATA_DIR, batch_size=128, device="auto", eval_split="test"
+    )
     ev.datamodule.setup("test")
     loader = ev.datamodule.test_dataloader()
     m = ev.model
@@ -550,7 +552,7 @@ def run_sudoku_rows() -> tuple[list[dict[str, Any]], dict[str, Any]]:  # pragma:
             steps += 1
             if carry.halted.all() or steps > 64:
                 break
-        pred = logits.argmax(-1)            # [B, 81]
+        pred = logits.argmax(-1)  # [B, 81]
         label = carry.current_data["output"]
         mask = label != IGNORE_LABEL_ID
         B = label.shape[0]

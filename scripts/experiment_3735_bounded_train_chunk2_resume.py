@@ -7,16 +7,23 @@ import random
 import hashlib
 from typing import Any, Dict, List
 import importlib.util
+from pathlib import Path
 
-PROJECT_ROOT = "/home/ianblenke/github.com/ianblenke/carnot"
+# Resolved from this file rather than hardcoded so a fresh clone or a
+# worktree writes into ITS OWN tree. Inlined (not carnot.paths.repo_root)
+# because the next line is what makes ``carnot`` importable -- importing
+# the resolver here would be circular. Same rule, same answer.
+PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "python"))
+
 
 def check_preconditions() -> Dict[str, Any]:
     preconditions: Dict[str, Any] = {}
-    
+
     # a. CUDA
     try:
         import torch
+
         cuda_ok = torch.cuda.is_available() and torch.cuda.device_count() > 0
     except ImportError:
         cuda_ok = False
@@ -24,7 +31,7 @@ def check_preconditions() -> Dict[str, Any]:
 
     # b. EBT importable
     try:
-        ebt_spec = importlib.util.find_spec('carnot.phase3.ebt_upstream')
+        ebt_spec = importlib.util.find_spec("carnot.phase3.ebt_upstream")
         ebt_ok = ebt_spec is not None
     except Exception:
         ebt_ok = False
@@ -32,35 +39,44 @@ def check_preconditions() -> Dict[str, Any]:
 
     # c. Checkpoint check
     ckpt_path = os.path.join(PROJECT_ROOT, "results", "experiment_3734_checkpoint.pt")
-    json_path = os.path.join(PROJECT_ROOT, "results", "experiment_3734_fix_harness_and_bounded_train_chunk1.json")
-    
+    json_path = os.path.join(
+        PROJECT_ROOT, "results", "experiment_3734_fix_harness_and_bounded_train_chunk1.json"
+    )
+
     ckpt_ok = os.path.exists(ckpt_path) and os.path.exists(json_path)
     if ckpt_ok:
         try:
-            with open(json_path, "r") as f:
+            with open(json_path) as f:
                 data = json.load(f)
             prev_steps = data.get("cumulative_steps_trained", 0)
             if prev_steps <= 0:
                 ckpt_ok = False
         except Exception:
             ckpt_ok = False
-            
+
     preconditions["checkpoint_present"] = ckpt_ok
-    
+
     return preconditions
+
 
 BYTE_TOKENIZER_EOS_ID = 1
 BYTE_TOKENIZER_BYTE_OFFSET = 2
 BYTE_TOKENIZER_VOCAB_SIZE = 258
 
+
 def format_gsm8k_row(row: dict) -> str:
     return f"Question: {row['question']}\nAnswer: {row['answer']}"
 
+
 def _encode_byte_tokens(text: str) -> List[int]:
-    return [byte + BYTE_TOKENIZER_BYTE_OFFSET for byte in text.encode("utf-8")] + [BYTE_TOKENIZER_EOS_ID]
+    return [byte + BYTE_TOKENIZER_BYTE_OFFSET for byte in text.encode("utf-8")] + [
+        BYTE_TOKENIZER_EOS_ID
+    ]
+
 
 def tokenize_texts_to_blocks(texts: List[str], block_size: int):
     import numpy as np
+
     token_stream: List[int] = []
     for text in texts:
         token_stream.extend(_encode_byte_tokens(text))
@@ -71,7 +87,10 @@ def tokenize_texts_to_blocks(texts: List[str], block_size: int):
     trimmed = token_stream[: n_blocks * chunk_len]
     return np.asarray(trimmed, dtype=np.int64).reshape(n_blocks, chunk_len)
 
-def build_tiny_models(dim=768, n_layers=4, n_heads=12, ffn_dim_multiplier=4.0, batch_size=8, block_size=128):
+
+def build_tiny_models(
+    dim=768, n_layers=4, n_heads=12, ffn_dim_multiplier=4.0, batch_size=8, block_size=128
+):
     import torch
     import torch.nn as nn
     from carnot.phase3.ebt_upstream import EBTDefault, EBTModelArgs
@@ -101,7 +120,12 @@ def build_tiny_models(dim=768, n_layers=4, n_heads=12, ffn_dim_multiplier=4.0, b
             super().__init__()
             self.token_embedding = nn.Embedding(BYTE_TOKENIZER_VOCAB_SIZE, dim)
             self.pos_embedding = nn.Embedding(block_size + 2, dim)
-            encoder_layer = nn.TransformerEncoderLayer(d_model=dim, nhead=n_heads, dim_feedforward=int(dim * ffn_dim_multiplier), batch_first=True)
+            encoder_layer = nn.TransformerEncoderLayer(
+                d_model=dim,
+                nhead=n_heads,
+                dim_feedforward=int(dim * ffn_dim_multiplier),
+                batch_first=True,
+            )
             self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
             self.lm_head = nn.Linear(dim, BYTE_TOKENIZER_VOCAB_SIZE)
 
@@ -116,11 +140,12 @@ def build_tiny_models(dim=768, n_layers=4, n_heads=12, ffn_dim_multiplier=4.0, b
 
     return TinyByteEBT(), TinyByteAR()
 
+
 def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
     start_time = time.time()
-    
+
     preconditions = check_preconditions()
-    
+
     blocked_reason = None
     if not preconditions["cuda"] and not mock:
         blocked_reason = "blocked_cuda"
@@ -128,9 +153,11 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
         blocked_reason = "blocked_ebt_not_importable"
     elif not preconditions["checkpoint_present"]:
         blocked_reason = "blocked_no_checkpoint"
-        
-    result_file = os.path.join(PROJECT_ROOT, "results", "experiment_3735_bounded_train_chunk2_resume.json")
-    
+
+    result_file = os.path.join(
+        PROJECT_ROOT, "results", "experiment_3735_bounded_train_chunk2_resume.json"
+    )
+
     if blocked_reason:
         artifact = {
             "honest_verdict": blocked_reason,
@@ -145,23 +172,23 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
             "preconditions_checked": preconditions,
             "model_specs": {
                 "ebt_model": "tiny_ebt_from_scratch",
-                "ar_model": "tiny_ar_from_scratch_matched"
+                "ar_model": "tiny_ar_from_scratch_matched",
             },
             "random_seed": 3734,
             "reproducibility_checksum": "",
-            "duration_s": time.time() - start_time
+            "duration_s": time.time() - start_time,
         }
         os.makedirs(os.path.dirname(result_file), exist_ok=True)
         with open(result_file, "w") as f:
             json.dump(artifact, f, indent=2)
         print(f"Exiting with {blocked_reason}")
         return artifact
-        
+
     import torch
-    import torch.nn.functional as F
+    import torch.nn.functional as F  # noqa: N812 (PyTorch community convention)
     import numpy as np
     from datasets import load_dataset
-    
+
     RANDOM_SEED = 3734
     random.seed(RANDOM_SEED)
     np.random.seed(RANDOM_SEED)
@@ -185,28 +212,38 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
         block_size = 16
         batch_size = 2
         max_steps = 2
-        
+
     if mock:
         texts = ["Question: mock?\nAnswer: mock"] * 10
     else:
         dataset = load_dataset("gsm8k", "main", split="train[:2048]")
         texts = [format_gsm8k_row(row) for row in dataset]
-        
+
     token_blocks = tokenize_texts_to_blocks(texts, block_size)
-    
+
     corpus_hash = hashlib.sha256()
     for text in texts:
         corpus_hash.update(text.encode("utf-8"))
         corpus_hash.update(b"\0")
     payload = {
-        "config": {"dim": dim, "n_layers": n_layers, "n_heads": n_heads, "block_size": block_size, "batch_size": batch_size},
+        "config": {
+            "dim": dim,
+            "n_layers": n_layers,
+            "n_heads": n_heads,
+            "block_size": block_size,
+            "batch_size": batch_size,
+        },
         "corpus_sha256": corpus_hash.hexdigest(),
         "tokenizer": "utf8_byte_tokenizer_v1",
     }
-    reproducibility_checksum = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
+    reproducibility_checksum = hashlib.sha256(
+        json.dumps(payload, sort_keys=True).encode("utf-8")
+    ).hexdigest()
 
-    ebt_model, ar_model = build_tiny_models(dim, n_layers, n_heads, ffn_dim_multiplier, batch_size, block_size)
-    
+    ebt_model, ar_model = build_tiny_models(
+        dim, n_layers, n_heads, ffn_dim_multiplier, batch_size, block_size
+    )
+
     device = torch.device("cuda:0" if torch.cuda.is_available() and not mock else "cpu")
     ebt_model = ebt_model.to(device)
     ar_model = ar_model.to(device)
@@ -214,22 +251,27 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
     ebt_opt = torch.optim.AdamW(ebt_model.parameters(), lr=learning_rate)
     ar_opt = torch.optim.AdamW(ar_model.parameters(), lr=learning_rate)
 
-    json_path = os.path.join(PROJECT_ROOT, "results", "experiment_3734_fix_harness_and_bounded_train_chunk1.json")
-    with open(json_path, "r") as f:
+    json_path = os.path.join(
+        PROJECT_ROOT, "results", "experiment_3734_fix_harness_and_bounded_train_chunk1.json"
+    )
+    with open(json_path) as f:
         prev_data = json.load(f)
-        
+
     prev_steps = prev_data.get("cumulative_steps_trained", 0)
     ebt_loss_curve = prev_data.get("ebt_loss_curve", [])
     ar_loss_curve = prev_data.get("ar_loss_curve", [])
-    stabilizers_applied = prev_data.get("stabilizers_applied", "replay_buffer, langevin_noise, random_alpha, random_descent_steps, grad_clip, kl_cd_fix")
-    
+    stabilizers_applied = prev_data.get(
+        "stabilizers_applied",
+        "replay_buffer, langevin_noise, random_alpha, random_descent_steps, grad_clip, kl_cd_fix",
+    )
+
     ckpt_path = os.path.join(PROJECT_ROOT, "results", "experiment_3734_checkpoint.pt")
     checkpoint = torch.load(ckpt_path, map_location=device, weights_only=True)
-    ebt_model.load_state_dict(checkpoint['ebt_state'])
-    ar_model.load_state_dict(checkpoint['ar_state'])
-    ebt_opt.load_state_dict(checkpoint['ebt_opt'])
-    ar_opt.load_state_dict(checkpoint['ar_opt'])
-    
+    ebt_model.load_state_dict(checkpoint["ebt_state"])
+    ar_model.load_state_dict(checkpoint["ar_state"])
+    ebt_opt.load_state_dict(checkpoint["ebt_opt"])
+    ar_opt.load_state_dict(checkpoint["ar_opt"])
+
     blocks_tensor = torch.as_tensor(token_blocks, dtype=torch.long)
 
     replay_buffer = []
@@ -247,21 +289,23 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
     cumulative_steps_trained = prev_steps
 
     for step in range(max_steps):
-        if time.time() - start_time > max_wall_time - 10: 
+        if time.time() - start_time > max_wall_time - 10:
             break
-        
+
         if blocks_tensor.shape[0] <= batch_size:
             idx = 0
             batch = torch.cat([blocks_tensor] * batch_size, dim=0)[:batch_size]
         else:
             idx = torch.randint(0, blocks_tensor.shape[0] - batch_size, (1,)).item()
-            batch = blocks_tensor[idx:idx + batch_size]
-            
+            batch = blocks_tensor[idx : idx + batch_size]
+
         batch = batch.to(device, non_blocking=True)
-        
+
         ar_opt.zero_grad(set_to_none=True)
         logits = ar_model(batch[:, :-1])
-        ar_loss = F.cross_entropy(logits.reshape(-1, BYTE_TOKENIZER_VOCAB_SIZE), batch[:, 1:].reshape(-1))
+        ar_loss = F.cross_entropy(
+            logits.reshape(-1, BYTE_TOKENIZER_VOCAB_SIZE), batch[:, 1:].reshape(-1)
+        )
         if not torch.isfinite(ar_loss):
             nan_or_divergence = True
             break
@@ -269,26 +313,26 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
         torch.nn.utils.clip_grad_norm_(ar_model.parameters(), max_norm=1.0)
         ar_opt.step()
         ar_loss_curve.append(float(ar_loss.item()))
-        
+
         ebt_opt.zero_grad(set_to_none=True)
-        
+
         original_emb = ebt_model.token_embedding(batch[:, :-1])
         pos_predicted_emb = ebt_model.token_embedding(batch[:, 1:])
-        
+
         pos_energy = ebt_model(original_emb, pos_predicted_emb).mean()
-        
+
         if len(replay_buffer) > 0 and random.random() < 0.95:
             idx_buf = torch.randint(0, len(replay_buffer), (batch_size,))
             neg_predicted_emb = torch.stack([replay_buffer[i] for i in idx_buf]).to(device)
         else:
             neg_predicted_emb = torch.randn_like(pos_predicted_emb) * 0.02
-            
+
         neg_predicted_emb = neg_predicted_emb.detach()
         neg_predicted_emb.requires_grad_(True)
-        
+
         alpha = random.uniform(0.1, 1.0)
         langevin_steps = random.randint(2, 5) if mock else random.randint(10, 30)
-        
+
         for _ in range(langevin_steps):
             neg_energy = ebt_model(original_emb.detach(), neg_predicted_emb).mean()
             grad = torch.autograd.grad(neg_energy, neg_predicted_emb)[0]
@@ -296,33 +340,36 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
             neg_predicted_emb = neg_predicted_emb - alpha * grad + noise
             neg_predicted_emb = neg_predicted_emb.detach()
             neg_predicted_emb.requires_grad_(True)
-            
+
         neg_energy_final = ebt_model(original_emb, neg_predicted_emb.detach()).mean()
-        
+
         kl_penalty = 0.1 * (pos_energy**2 + neg_energy_final**2)
         ebt_loss = pos_energy - neg_energy_final + kl_penalty
-        
+
         if not torch.isfinite(ebt_loss):
             nan_or_divergence = True
             break
-            
+
         ebt_loss.backward()
         torch.nn.utils.clip_grad_norm_(ebt_model.parameters(), max_norm=1.0)
         ebt_opt.step()
-        
+
         ebt_loss_curve.append(float(ebt_loss.item()))
-        
+
         for i in range(batch_size):
             if len(replay_buffer) < buffer_size:
                 replay_buffer.append(neg_predicted_emb[i].detach().cpu())
             else:
                 replace_idx = random.randint(0, buffer_size - 1)
                 replay_buffer[replace_idx] = neg_predicted_emb[i].detach().cpu()
-                
+
         cumulative_steps_trained += 1
-        
+
         if (cumulative_steps_trained) % 10 == 0:
-            print(f"heartbeat chunk2 step={cumulative_steps_trained} ebt_loss={ebt_loss.item():.4f} ar_loss={ar_loss.item():.4f}", flush=True)
+            print(
+                f"heartbeat chunk2 step={cumulative_steps_trained} ebt_loss={ebt_loss.item():.4f} ar_loss={ar_loss.item():.4f}",
+                flush=True,
+            )
 
     if torch.cuda.is_available() and not mock:
         torch.cuda.synchronize(device)
@@ -331,7 +378,7 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
         peak_vram_mb = 100
 
     duration_s = time.time() - start_time
-    
+
     ebt_converged = False
     if len(ebt_loss_curve) > 50 and not nan_or_divergence:
         recent_mean = sum(ebt_loss_curve[-50:]) / 50
@@ -346,8 +393,12 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
         "honest_verdict": verdict,
         "inference_substrate": "live_llm_inference (principle: real GPU training).",
         "cumulative_steps_trained": cumulative_steps_trained,
-        "ebt_loss_curve": ebt_loss_curve[::max(1, len(ebt_loss_curve)//20)] if ebt_loss_curve else [],
-        "ar_loss_curve": ar_loss_curve[::max(1, len(ar_loss_curve)//20)] if ar_loss_curve else [],
+        "ebt_loss_curve": ebt_loss_curve[:: max(1, len(ebt_loss_curve) // 20)]
+        if ebt_loss_curve
+        else [],
+        "ar_loss_curve": ar_loss_curve[:: max(1, len(ar_loss_curve) // 20)]
+        if ar_loss_curve
+        else [],
         "ebt_converged": ebt_converged,
         "nan_or_divergence_events": nan_or_divergence,
         "stabilizers_applied": stabilizers_applied,
@@ -355,22 +406,25 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
         "preconditions_checked": preconditions,
         "model_specs": {
             "ebt_model": "tiny_ebt_from_scratch",
-            "ar_model": "tiny_ar_from_scratch_matched"
+            "ar_model": "tiny_ar_from_scratch_matched",
         },
         "random_seed": RANDOM_SEED,
         "reproducibility_checksum": reproducibility_checksum,
-        "duration_s": round(duration_s, 2)
+        "duration_s": round(duration_s, 2),
     }
 
     if not mock:
         ckpt_path2 = os.path.join(PROJECT_ROOT, "results", "experiment_3735_checkpoint.pt")
-        torch.save({
-            'ebt_state': ebt_model.state_dict(),
-            'ar_state': ar_model.state_dict(),
-            'ebt_opt': ebt_opt.state_dict(),
-            'ar_opt': ar_opt.state_dict(),
-            'steps': cumulative_steps_trained
-        }, ckpt_path2)
+        torch.save(
+            {
+                "ebt_state": ebt_model.state_dict(),
+                "ar_state": ar_model.state_dict(),
+                "ebt_opt": ebt_opt.state_dict(),
+                "ar_opt": ar_opt.state_dict(),
+                "steps": cumulative_steps_trained,
+            },
+            ckpt_path2,
+        )
 
     os.makedirs(os.path.dirname(result_file), exist_ok=True)
     with open(result_file, "w") as f:
@@ -379,8 +433,10 @@ def run_experiment(max_steps=200, mock=False) -> Dict[str, Any]:
     print(verdict, flush=True)
     return artifact
 
+
 def main():
     run_experiment(max_steps=200, mock=False)
+
 
 if __name__ == "__main__":
     main()

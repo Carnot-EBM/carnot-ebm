@@ -24,9 +24,13 @@ import numpy as np
 
 from arc3_gap3_stage2_transition_ebm import SEED, ghash
 from arc3_gap4_rule_exec_verifier import demo_fit, induce_program, safe_transform_from_code
+from carnot.paths import repo_root
 
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
 CHAIN_ARTIFACT = REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json"
 OUTPUT = REPO_ROOT / "results" / "experiment_3998_gap4_deselection_coverage.json"
@@ -151,7 +155,9 @@ def clopper_pearson_95(successes: int, total: int) -> tuple[float, float]:
     return round(low, 4), round(high, 4)
 
 
-def check_preconditions(pool_path: Path, codex_available_override: bool | None = None) -> list[dict[str, Any]]:
+def check_preconditions(
+    pool_path: Path, codex_available_override: bool | None = None
+) -> list[dict[str, Any]]:
     codex_available = (
         bool(codex_available_override)
         if codex_available_override is not None
@@ -177,7 +183,9 @@ def blocker_from_preconditions(preconditions: list[dict[str, Any]]) -> str | Non
     return None
 
 
-def blocked_artifact(verdict: str, preconditions: list[dict[str, Any]], duration_s: float) -> dict[str, Any]:
+def blocked_artifact(
+    verdict: str, preconditions: list[dict[str, Any]], duration_s: float
+) -> dict[str, Any]:
     artifact: dict[str, Any] = {
         "experiment": "experiment_3998_gap4_deselection_coverage",
         "schema": "carnot.experiment_3998_gap4_deselection_coverage.v1",
@@ -331,7 +339,9 @@ def _token_pattern(token: str) -> re.Pattern[str]:
     if token in {"type(", "os."}:
         return re.compile(r"(?<![A-Za-z0-9_])" + re.escape(token))
     if re.fullmatch(r"[A-Za-z0-9_]+", token):
-        return re.compile(r"(?<![A-Za-z0-9_])" + re.escape(token) + r"(?![A-Za-z0-9_])", re.IGNORECASE)
+        return re.compile(
+            r"(?<![A-Za-z0-9_])" + re.escape(token) + r"(?![A-Za-z0-9_])", re.IGNORECASE
+        )
     return re.compile(re.escape(token), re.IGNORECASE)
 
 
@@ -381,7 +391,10 @@ def build_complete_artifact(
             slot = per_arm_counts.setdefault(source, [0, 0])
             slot[0] += gold
             slot[1] += total
-    fresh_gold = [sum(v[0] for v in per_arm_counts.values()), sum(v[1] for v in per_arm_counts.values())]
+    fresh_gold = [
+        sum(v[0] for v in per_arm_counts.values()),
+        sum(v[1] for v in per_arm_counts.values()),
+    ]
     per_arm_counts["fresh"] = fresh_gold
     rate = _rate(arm_successes, arm_total)
     cp95_low, cp95_high = clopper_pearson_95(arm_successes, arm_total)

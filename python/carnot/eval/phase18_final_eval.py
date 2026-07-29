@@ -5,8 +5,10 @@ Spec: REQ-EVAL-1823, SCENARIO-EVAL-1823.
 
 import json
 from pathlib import Path
+from carnot.paths import results_path
 
 MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF"]
+
 
 def evaluate_phase18(n_problems=100):
     """
@@ -29,6 +31,7 @@ def evaluate_phase18(n_problems=100):
     }
     return deliverable
 
+
 def run_experiment(output_path="results/experiment_1823_final_eval.json"):
     """Run the evaluation and save the results to JSON."""
     deliverable = evaluate_phase18()
@@ -37,5 +40,6 @@ def run_experiment(output_path="results/experiment_1823_final_eval.json"):
     out_path.write_text(json.dumps(deliverable, indent=2))
     return deliverable
 
+
 if __name__ == "__main__":  # pragma: no cover
-    run_experiment("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1823_final_eval.json")
+    run_experiment(str(results_path("experiment_1823_final_eval.json")))
