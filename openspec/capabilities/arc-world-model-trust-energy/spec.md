@@ -18923,7 +18923,7 @@ than no guard, because it converts an open problem into a false sense of coverag
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-5995 | Implemented (`scripts/determination_preservation_lint.py` — diff-vs-HEAD check over `results/*.json`, `--ref` for auditing a landed commit, `--all` for a tree sweep; `.pre-commit-config.yaml:determination-preservation-lint`; the 7 restorations landed in `d90f51aeb`) | Implemented (`tests/python/test_determination_preservation_lint.py`, 9 tests driving REAL git plumbing rather than a mocked git — the origin bug was in WHICH git command the lint chose, so a mocked git would have reproduced it rather than caught it; 3 mutations proved caught: reverting to `--cached`, accepting a note-less clearing, and skipping the corrigendum check; plus a live-tree assertion so a future strip fails in CI even if the hook is bypassed) |
+| REQ-ARC-WMTE-5995 | Implemented (`scripts/determination_preservation_lint.py` — diff-vs-HEAD check over `results/*.json`, `--ref` for auditing a landed commit, `--all` for a tree sweep; `.pre-commit-config.yaml:determination-preservation-lint`; the 7 restorations landed in `d90f51aeb`). **WIDENED 2026-07-29 under REQ-ARC-WMTE-6041** after this implementation was found to have stayed SILENT on a real corrigendum deletion (`inference_substrate_correction_note` on exp3946 — a corrigendum in substance, but its name does not contain the string "corrigendum", which was the only pattern this rule had). | Implemented (`tests/python/test_determination_preservation_lint.py`, 9 tests driving REAL git plumbing rather than a mocked git — the origin bug was in WHICH git command the lint chose, so a mocked git would have reproduced it rather than caught it; 3 mutations proved caught: reverting to `--cached`, accepting a note-less clearing, and skipping the corrigendum check; plus a live-tree assertion so a future strip fails in CI even if the hook is bypassed) |
 
 ## REQ-ARC-WMTE-5996: The Generator's Shared Context Pool Is Sized For Concurrent Induction, And Its Failures Are Recorded Rather Than Swallowed
 
@@ -19657,3 +19657,113 @@ p = 4.923e-05, for both the on-disk and the in-memory half.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6035 | Implemented, default-on (`arc_llm_reinduction.py` — `engine_retention_enabled()`, `_retention_signal()`, `_retention_signal_true_changed_cells()` (diagnostic only), `_engine_store_path()`, `_read_engine_source()`, `_retain_engine_source_on_disk()`, the per-round `is_best` comparison inside `execute_bounded_llm_reinduction`, the planning-round binding on the three planned-return paths, and `LlmReinductionResult.engine_retention`) | `tests/python/test_arc_engine_retention_best_round.py` — 14 tests covering the on-disk half, the in-memory half, goal-diagnostic coherence on both the retained and the planned return, the held-out-not-prefix selection rule, the no-fallback guarantee at BOTH inputs that exercise it (a legitimate 0.0 and an absent field), the tie rule, the default, the kill switch, and store-redirection safety. Mutation-proven against 15 targeted mutations (removing the disk restore, restoring the unconditional `last_engine`, unguarding the goal diagnostics, pointing the signal at `heldout_accuracy` or at `prefix_change_consistency`, relaxing `>` to `>=`, flipping the default off, neutering the kill switch, binding the store path at import time, rewriting the store unconditionally, binding the planned return to the retained round, the two no-fallback mutants HM3 `or getattr(score, "heldout_accuracy", ...)` and HM6 a `not hasattr` guard, dropping the informativeness diagnostic, and wiring the diagnostic denominator into `is_best` — the last three SURVIVED an earlier draft of the suite and each motivated an added test); all 15 caught, none survived. |
+
+## REQ-ARC-WMTE-6041: Running The Test Suite Does Not Silently Rewrite The Research Record
+
+Running `pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py` leaves tracked files
+modified that were clean before the run — 39 of them on 2026-07-29 (36 `results/*.json`/`.log`, plus
+`openspec/papers/paper-v6/section-6-limitations.md` and `output/kanele_synth/post_synth.dcp`). The
+system SHALL detect that a run moved tracked files and SHALL refuse to commit an unresolved rewrite,
+and SHALL refuse any change that drops a review record or weakens a substrate declaration in a
+`results/*.json` artifact.
+
+**Mechanism.** A class of `tests/python/test_experiment_*.py` calls `runpy.run_path` on the real
+`scripts/experiments/experiment_NNNN_*.py` and then asserts the artifact exists. The script writes
+its artifact as a side effect, at the same fixed path the historical artifact lives at. So the test
+does not merely READ the research record — it OVERWRITES it, on a green run, with no failure and no
+diff anyone reads. `git add -A` then publishes the rewrite.
+
+**Why this outranks an ordinary never-prune violation.** `results/*.json` is the input to the
+fabrication gate (`scripts/adversarial_verify.py`), to every capstone aggregation, and to the paper.
+Confirmed damage from one run: `experiment_3946_r11l_first_solve.json` lost
+`inference_substrate_correction_note`, `inference_substrate_original_invalid_value`,
+`solve_provenance` and `solve_provenance_note` (a hand-written 2026-07-27 corrigendum, deleted);
+`experiment_307_jepa_real_training.json` had `inference_mode` flipped `live_gpu` -> `cpu_training`;
+`experiment_1035_dualgpu_rocm_v3.json` had its run timestamps rewritten.
+
+**The guard that existed and did not fire.** REQ-ARC-WMTE-5995's lint was already wired on
+`results/*.json` and it printed OK on the exp3946 deletion, because
+`inference_substrate_correction_note` is a corrigendum in substance but its NAME does not contain
+the string "corrigendum" — the only pattern that requirement's implementation had. A guard that is
+trusted and silently fails to fire is worse than no guard, so this requirement WIDENS 5995 rather
+than adding a parallel one.
+
+**Scope of the survey behind this requirement (stated, because a survey's gaps are part of its
+result).** 20 test files `runpy` a path naming an experiment script; run individually in isolated
+worktrees, exactly ONE moves a tracked file. All 125 `tests/python/test_arc_*.py`, run individually,
+move zero. So the `runpy` mechanism explains 1 of the 39 — a repair aimed only at those call sites
+would look like a fix while leaving the rest in place. `tests/integration/`, `tests/archive/`,
+`tests/quarantine/` and the ~986 `tests/python/test_*.py` matching neither glob were not surveyed.
+
+#### SCENARIO-ARC-WMTE-6041-A-RUN-THAT-MOVES-TRACKED-FILES-IS-REPORTED
+
+**Given** a baseline of which tracked files were already dirty
+**When** a command is run that modifies a tracked file which was clean at the baseline
+**Then** the detector SHALL name every such file and exit non-zero. Files that were ALREADY dirty
+SHALL NOT be attributed to the run — in-flight operator work is not a test side effect, and a
+detector that fires on every real working tree gets switched off.
+
+#### SCENARIO-ARC-WMTE-6041-A-NEW-UNTRACKED-ARTIFACT-IS-NOT-A-REWRITE
+
+**Given** a run that writes a brand-new artifact at a path not under version control
+**When** the detector checks
+**Then** it SHALL report nothing. Writing a new artifact is normal work; the harm is an EXISTING,
+committed file changing underneath you.
+
+#### SCENARIO-ARC-WMTE-6041-RESTORE-IS-BYTE-IDENTICAL
+
+**Given** tracked files a run modified
+**When** `--restore` is requested
+**Then** each file SHALL be returned to its committed content byte-for-byte, and the detector SHALL
+report which files did not come back.
+
+#### SCENARIO-ARC-WMTE-6041-AN-UNRESOLVED-REWRITE-BLOCKS-THE-COMMIT
+
+**Given** a wrapped run that detected modified tracked files and did not restore them
+**When** a commit is attempted
+**Then** the pre-commit gate SHALL refuse while `ops/.test_suite_mutation_pending.json` exists,
+naming the files and the command that produced them. A fully-restored run SHALL clear the marker,
+and a stale marker SHALL NOT wedge commits forever.
+
+#### SCENARIO-ARC-WMTE-6041-A-MARKER-FIELD-MAY-NOT-BE-DROPPED
+
+**Given** a `results/*.json` artifact carrying a top-level field whose NAME marks it as a review
+output — a correction, corrigendum, provenance declaration, disclosure, acknowledgment, retraction,
+caveat, or review note — with a substantive value
+**When** a change removes that field
+**Then** the commit SHALL be refused, naming the field and its marker class. A field whose value was
+already null/empty carried no record and SHALL NOT be protected.
+
+#### SCENARIO-ARC-WMTE-6041-MEASUREMENTS-ARE-NOT-MARKER-FIELDS
+
+**Given** an artifact carrying accuracy measurements whose names contain "correct"
+(`energy_correct`, `n_correct`, `judge_correct` — 601 artifacts do)
+**When** a re-run changes or drops them
+**Then** the commit SHALL pass. The marker patterns are derived from a census of all 31,510 distinct
+top-level keys across the 15,331 `results/**/*.json` files, keeping the name-shapes that mark a
+REVIEW OUTPUT and rejecting those that mark a MEASUREMENT; only the prose-shaped `correction`
+matches, never the bare `correct`.
+
+#### SCENARIO-ARC-WMTE-6041-A-SUBSTRATE-MAY-NOT-BE-WEAKENED-IN-PLACE
+
+**Given** an artifact declaring `inference_substrate` / `inference_mode` / an equivalent field
+**When** a change replaces its value with a weaker one — `live_gpu` -> `cpu_training`, `real_model`
+-> `synthetic_runner`, anything -> `blocked` — with no note naming that field
+**Then** the commit SHALL be refused. Values SHALL be principle-unwrapped (`{"principle": ...,
+"value": ...}`) before ranking, and an unrecognised substrate string SHALL rank as UNKNOWN, never as
+weak. The note that excuses a downgrade SHALL name the field it excuses; a note about something else
+SHALL NOT silence it.
+
+#### SCENARIO-ARC-WMTE-6041-TIMESTAMP-CHURN-IS-NOT-THE-LINTS-JOB
+
+**Given** a re-run that rewrites `run_date` / `started_at` / `finished_at`
+**When** the lint runs
+**Then** it SHALL pass. Timestamps are measurements, and refusing them would block ordinary
+fail-forward re-runs. That class is covered by the file-level detector instead — the division of
+labour is deliberate: the lint is narrow and deep, the detector is broad and shallow.
+
+## Implementation Status (REQ-ARC-WMTE-6041)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6041 | Implemented. (1) `scripts/determination_preservation_lint.py` WIDENED from 2 rules to 4 — `MARKER_PATTERNS` (rule 3, dropped review records), `SUBSTRATE_FIELD` + `STRENGTH_BANDS` + `_strength_rank` + `_has_change_note` (rule 4, in-place weakening), `_unwrap_principle` for principle-annotated fields, and `already_reported` de-duplication so one deletion produces one refusal line. Calibrated over 1,200 commits / 3,232 modified artifact pairs: rule 3 fires 10x, rule 4 fires 8x, and every rule-4 hit is a genuine instance of the hazard — including the previously unknown `experiment_911_drift_probe_tier0i.json` taking `real_model` -> `synthetic_runner` FIVE times in `main`. (2) `scripts/test_suite_mutation_check.py` NEW — `--snapshot`/`--check`/`--restore`/`--run`/`--gate`, wired as `.pre-commit-config.yaml:test-suite-mutation-gate` with `always_run`. (3) `scripts/pytest_write_audit_plugin.py` NEW — the CPython-audit-hook instrument that produced the per-test attribution, so the survey is reproducible after any repair. NOT implemented, deliberately: the test-side repair, which is an operator design call (four options costed in `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md` §6). | `tests/python/test_determination_preservation_lint.py` (20 tests, +11 for the widening, replaying all three confirmed incidents as fixtures — including `test_incident_3_timestamp_rewrites_are_deliberately_NOT_this_lint_s_job`, which pins the boundary so a later "fix" cannot start refusing ordinary re-runs, and `test_an_unrelated_change_note_does_not_excuse_a_substrate_downgrade`, which pins a loose escape hatch found and removed during review); `tests/python/test_test_suite_mutation_check.py` (13 tests driving REAL git in a throwaway repo — the bug class is "which git question did we ask", so a mocked git would reproduce the wrong question); `tests/python/test_pytest_write_audit_plugin.py` (17 tests, loading the plugin with `sys.addaudithook` and `atexit.register` stubbed so the instrument's own tests do not contaminate the suite they run in). |

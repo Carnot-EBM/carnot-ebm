@@ -335,6 +335,29 @@ repos:
         files: ^results/.*\.json$
         pass_filenames: false
 
+      - id: test-suite-mutation-gate
+        name: A test run that rewrote tracked files may not be committed unresolved
+        entry: python3 scripts/test_suite_mutation_check.py --gate
+        language: system
+        # WHY THIS IS WIRED (2026-07-29). Running the suite REWRITES THE RESEARCH RECORD: a
+        # class of tests/python/test_experiment_*.py calls runpy.run_path on the real
+        # scripts/experiments/experiment_NNNN_*.py, which writes its artifact as a side effect
+        # at the same fixed path the historical artifact lives at. One run left 39 tracked
+        # files modified, including a hand-written corrigendum deleted from exp3946 and
+        # exp307's inference_mode flipped live_gpu -> cpu_training. `git add -A` then publishes
+        # the rewrite with nobody having read a diff.
+        #
+        # The sibling determination-preservation-lint above catches the CONTENT regressions
+        # that class produces. This one is the broad, shallow half: it refuses while
+        # ops/.test_suite_mutation_pending.json exists, which the --run wrapper writes whenever
+        # it detects tracked files a test run moved and did not restore. Complementary, not
+        # redundant -- that lint knows nothing about openspec/ or output/, which were also hit.
+        #
+        # always_run + pass_filenames: false because the marker's EXISTENCE is the signal; it
+        # is independent of which files this particular commit happens to touch.
+        always_run: true
+        pass_filenames: false
+
       - id: arc-llm-on-liveness-lint
         name: An ARC row claiming the LLM tier must have had a live generator
         entry: python3 scripts/arc_llm_on_liveness_lint.py --baseline

@@ -1,5 +1,101 @@
 # Carnot — Changelog
 
+## 2026-07-29 (outer-loop: the test suite rewrites the research record — surveyed, and the guard that should have caught it was widened)
+
+TRIGGER: operator standing instruction to iterate unattended toward a submission expected to improve
+the live agent score, plus the open hazard recorded in commit `b3e31d341` (diagnosed, not fixed).
+**NO TEST WAS CHANGED** — the repair is an operator design call, documented with a recommendation.
+
+### THE SURVEY THE HAZARD COMMIT SAID IT HAD NOT DONE
+
+`pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py` leaves 39 tracked files
+modified that were clean before the run. The hazard commit suspected the class of tests that
+`runpy.run_path` a real `scripts/experiments/experiment_NNNN_*.py`, and said the artifact-writing set
+was NOT enumerated. It is now.
+
+Method: three throwaway `git worktree --detach` checkouts on tmpfs, `environment_files/` copied in
+(without it the ARC tests abort early and the survey under-reports), `PYTHONPATH` pointed at the
+worktree's `python/` to defeat the editable install that otherwise resolves `import carnot` to the
+canonical repo, and `git status --porcelain -uno` as the oracle after each unit. Per-test attribution
+inside a single run came from a pytest plugin installing a CPython audit hook that records every
+in-repo write attributed to the executing nodeid — which fires *inside* a `runpy.run_path`, where the
+writes actually happen.
+
+**The hypothesis was mostly wrong, and that matters.** 20 test files `runpy` a path naming an
+experiment script (only 2 name a path literally under `scripts/experiments/` — the commit's "11" was
+a looser grep). Run one at a time in a clean worktree, **exactly one moves a tracked file**:
+`test_experiment_3946_r11l_first_solve.py` rewriting `results/experiment_3946_r11l_first_solve.json`,
+which loses `inference_substrate_correction_note`, `inference_substrate_original_invalid_value`,
+`solve_provenance` and `solve_provenance_note`. All 125 `tests/python/test_arc_*.py`, run
+individually, move **zero** tracked files (the six that abort early in a worktree were re-run in the
+canonical repo under the new detector: 67 passed, no tracked file moved). So the `runpy` class
+explains 1 of 39 — a repair aimed only at those call sites would have looked like a fix while
+leaving ~38 rewrites in place.
+
+### THE GUARD THAT EXISTED AND DID NOT FIRE
+
+`scripts/determination_preservation_lint.py` (shipped 2026-07-27) refuses any commit that drops
+`flagged_adversarial` or a `corrigendum*` record. It sat directly in the path of the exp3946 deletion
+and **printed OK**, because `inference_substrate_correction_note` is a corrigendum in substance but
+its name does not contain the string "corrigendum". A guard that is trusted and silently fails to
+fire is worse than no guard.
+
+**Widened 2 rules -> 4.** Rule 3: no top-level *marker* field may be dropped — correction,
+provenance, disclosure, acknowledgment, retraction, caveat, review note, `verifier_is_oracle`,
+`preconditions_checked`. Rule 4: a substrate/mode declaration may not be **weakened in place**
+(`live_gpu` -> `cpu_training`, `real_model` -> `synthetic_runner`, anything -> `blocked`) without a
+note beside it; values are principle-unwrapped first (`{"principle":…, "value":…}`, 162 artifacts —
+the exact shape that was origin bug #2 of the QA-Layer Authenticity Discipline), and an unrecognised
+substrate string ranks as *unknown*, never as *weak*.
+
+The marker list is **derived, not wished for**: a census of all 31,510 distinct top-level keys across
+the 15,331 `results/**/*.json` files, keeping the name-shapes that mark a REVIEW OUTPUT and rejecting
+those that mark a MEASUREMENT. `correct` is deliberately not a pattern — 601 artifacts carry
+`energy_correct` / `n_correct` / `judge_correct`, and refusing those would obstruct exactly the
+fail-forward behaviour the operator's standing directive protects.
+
+**Calibrated over 1,200 commits (3,232 modified artifact pairs):** R3 fires 10 times, R4 fires 8.
+Every R4 hit is a genuine instance of the hazard class, and one was previously unknown —
+`results/experiment_911_drift_probe_tier0i.json` took `real_model` -> `synthetic_runner` **five
+times** in `main`, and `experiment_307` took `live_gpu` -> `cpu_training` **twice**, with nothing in
+the repo watching. Zero violations from either new rule across the 8 commits since the lint shipped.
+
+### NEW: scripts/test_suite_mutation_check.py
+
+The broad, shallow half. Answers one factual question — did this run modify tracked files, and which
+— with no opinion about content, so it covers `openspec/` and `output/` which the lint does not.
+`--snapshot` / `--check` / `--restore`, `--run -- <cmd>` to wrap a test run, and `--gate` wired as a
+pre-commit hook that refuses while `ops/.test_suite_mutation_pending.json` exists. That marker is the
+interlock: an unattended agent that runs the suite, sees the record move, and then `git add -A &&
+git commit`s is stopped rather than publishing the rewrite.
+
+Dogfooded end to end against the canonical repo on the one confirmed offender: it caught the rewrite,
+`--restore` put the artifact back, and the sha256 is byte-identical before and after
+(`6834b56cb72129f044a65a980b62ad3f26d02c21f3471bcda0648205750142ac`).
+
+### TESTS
+
+32 passing across both guards. The three confirmed incidents are replayed as fixtures, including
+`test_incident_3_timestamp_rewrites_are_deliberately_NOT_this_lint_s_job` — pinning the boundary so a
+later "fix" cannot start refusing ordinary re-runs, which is how a guard gets switched off. Also
+pinned: measurement fields containing "correct" are not protected, unknown substrate strings are
+never read as downgrades, principle-wrapped substrates are unwrapped before ranking, and one deletion
+produces exactly one refusal line.
+
+### THE RECORD IS INTACT
+
+All 31,564 tracked files hashed at session start and again at the end; the only differences are this
+session's deliberate edits. No `results/**`, `openspec/**` or `output/**` file changed. The protected
+evidence directories were read only.
+
+### OPERATOR DECISION PENDING
+
+Four repair options with their costs are in
+`docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md` §6. Recommendation
+(overrulable): rely on the guards now, then redirect the output directory for the single confirmed
+call site. Reject snapshot-and-restore outright — the suite runs `-n 4`, so that fix is racy by
+construction.
+
 ## 2026-07-29 (outer-loop: the induced-engine store was last-write-wins — best-engine retention shipped, REQ-ARC-WMTE-6035)
 
 TRIGGER: operator standing instruction to iterate unattended toward a submission expected to improve
