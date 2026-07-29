@@ -65,10 +65,28 @@ artifacts appeared as modified in the CANONICAL repo while every test run was po
 worktree: `results/experiment_3734_…json`, `results/experiment_2427_kv260_yosys_v4.json`, and
 `results/experiment_3351_gatemate_latency_benchmark.json`. All three were restored and verified
 byte-identical against `HEAD`. Two are explained by §3.4 (a hardcoded absolute path in the script).
-The third is **not**: `scripts/experiment_3351_gatemate_latency_benchmark.py:9` resolves
-`REPO_ROOT = Path(__file__).resolve().parents[1]`, which is correct and repo-relative. So there is at
-least one leak route this survey did not identify. Treat "the tests were run in a worktree" as a
-mitigation, never as containment.
+The third looked inexplicable at first — `scripts/experiment_3351_gatemate_latency_benchmark.py:9`
+resolves `REPO_ROOT = Path(__file__).resolve().parents[1]`, which is correct and repo-relative — and
+the explanation turns out to matter more than the leak:
+
+**One hardcoded `sys.path` insert poisons an entire xdist worker.** Three test files insert the
+HARDCODED canonical path directly onto `sys.path`:
+
+```python
+# tests/python/test_arc3_gap3_stage2_ebm.py:14 (also …gap4_rule_exec, …gap3_stage2v2_ebm)
+sys.path.insert(0, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments")
+```
+
+and ten scripts under `scripts/` do the equivalent with a hardcoded `PROJECT_ROOT`. An xdist worker
+is a long-lived process running hundreds of test files in sequence. Once ANY of those runs, the
+canonical tree is on that worker's `sys.path` for the rest of its life — so every later
+`import experiment_NNNN` in that worker resolves to the CANONICAL module, its `__file__` is the
+canonical path, and a perfectly correct `Path(__file__).resolve().parents[1]` then points at the
+operator's checkout. A repo-relative script writes canonically through no fault of its own.
+
+**Consequence: worktree isolation is structurally defeated, per worker, by a single line in an
+unrelated test.** Treat "the tests were run in a worktree" as a mitigation, never as containment.
+The load-bearing check is the before/after hash of the canonical tree.
 
 **The oracle is git, not inference.** After each unit of work, `git status --porcelain -uno` names
 every tracked file that moved. Untracked files are deliberately excluded: an experiment script

@@ -51,6 +51,19 @@ edits; a PASSING test does it on every suite run, and the hazard commit's list o
 it. Same batch also attributes `openspec/papers/paper-v6/section-6-limitations.md` to
 `test_experiment_1911.py::test_experiment_1911_schema`.
 
+**AND THE ISOLATION IS STRUCTURALLY DEFEATABLE BY ONE LINE.** Three test files insert the HARDCODED
+canonical path straight onto `sys.path`
+(`tests/python/test_arc3_gap3_stage2_ebm.py:14` and two siblings:
+`sys.path.insert(0, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments")`), and ten
+scripts do the equivalent with a hardcoded `PROJECT_ROOT`. An xdist worker is a long-lived process
+running hundreds of test files in sequence, so once ANY of those runs, the canonical tree is on that
+worker's `sys.path` for the rest of its life — every later `import experiment_NNNN` resolves to the
+CANONICAL module, its `__file__` is canonical, and even a correct
+`Path(__file__).resolve().parents[1]` then points at the operator's checkout. This is what made
+`results/experiment_3351_gatemate_latency_benchmark.json` leak despite that script being properly
+repo-relative. Worktree isolation is a mitigation, not containment; the load-bearing check is a
+before/after hash of the canonical tree.
+
 **INSTRUMENT LIMIT, STATED.** Three of batch 01's 16 are UNATTRIBUTED
 (`output/kanele_synth/post_synth.dcp`, `results/experiment_1822_rtl_synth.log`,
 `results/experiment_2510_ensemble_v7.json`). A CPython audit hook only sees writes from the process
