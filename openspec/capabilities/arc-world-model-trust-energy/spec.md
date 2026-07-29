@@ -19537,3 +19537,123 @@ for an artifact is not evidence about that artifact.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6016 | Implemented (`arc_executable_world_model.py` — `CARNOT_ARC_E3_DIR`-aware `E3_DIR`, `E3_ORIGIN_FIXTURES_DIR`, `_load_engine_from()`, `load_origin_fixture_engine()`; `results/arc_e3_origin_fixtures/` — 27 frozen engines; `results/arc_wm_four_arm_20260727/fourarm.py` — per-arm `e3_store/<arm>` copytree from one baseline, env + module override, asserted; all three exp601x scripts emit `provenance.code`; `.pre-commit-config.yaml` — freshness-lint `files:` pattern regenerated) | `tests/python/test_arc_hud_mask_coherence_and_swallow_guard.py::test_origin_fixture_engines_are_the_degenerate_ones_the_gap_entry_names` (asserts the frozen ft09 still has its 12 bare `return grid` branches) and `::test_change_gate_rejects_the_frozen_origin_engines`. Freshness lint now reports all three artifacts `[fresh] — 4 dependencies verified`. |
+
+## REQ-ARC-WMTE-6035: the refinement loop SHALL retain its BEST round, not its LAST round
+
+`execute_bounded_llm_reinduction` runs up to `MAX_REFINEMENT_ROUNDS`=3 attempts at a world
+model. Round 1 induces; rounds 2..N call `proposer.refactor()`, and every one of those calls
+overwrites `results/arc_e3/<game>/world_model.py` in place (REQ-ARC-WMTE-6016 documents the
+unconditional-write property of the store). Until this REQ the loop assumed in two independent
+places that the LAST round is the BEST round:
+
+1. it left round N's source on disk, so the next `load_engine()` — next stall, next level, next
+   episode — started from the last refactor however bad it was; and
+2. it reassigned `last_engine = selected.engine` unconditionally, so a caller that never touches
+   the store was handed round N's engine as well.
+
+Refinement is not monotone: `refactor()` is a language model rewriting a program from a
+counterexample, and it frequently makes the model worse.
+
+**The measurement (2026-07-28/29, offline arcade, no LLM).** Replaying the real historical write
+sequence of `results/arc_e3/<game>/world_model.py` for ar25 / ka59 / tr87 / sc25 / cn04 / ft09,
+selecting on a runtime-visible signal only and evaluating on seed-1/seed-2 rollouts the selector
+never saw:
+
+| store policy | mean change_fidelity | change-gate passes |
+|---|---|---|
+| last-write-wins (pre-REQ shipped behaviour) | 0.0042 | 0 of 12 |
+| retain-best (this REQ) | 0.3979 | 5 of 12 |
+
+Retain-best matched the CIRCULAR oracle ceiling (select on the evaluation metric itself) in 6 of
+6 games; Kendall tau-b between the runtime signal and the evaluation metric was 0.828. ka59's
+engine peaked at change_fidelity 1.0000 (2026-06-17, gate 3/3, 885–918 correct changed cells, 0
+spurious, 0 invented) and is 0.0000 on disk today, first broken 2026-07-19; ar25 peaked at
+0.8157 and is 0.0000. Three of the 15 regressive writes landed under the STRONG codex/gpt-5.5
+proposer, so this is a defect of the store, not of the proposer.
+
+**The requirement.**
+
+- The loop SHALL rank its rounds on `select_trusted_world_model(...).selected_score.
+  heldout_change_consistency` and on nothing else. That quantity is computed from the held-out
+  split of the agent's OWN observed transitions, which is the only kind of signal a hidden-game
+  episode actually has. Ranking on the prefix (the evidence the proposer was shown), on the full
+  corpus, on a different seed, on a level counter, or on any ground truth is FORBIDDEN — a
+  selection rule that peeks is not implementable live, and the counterfactual above would not be
+  evidence for it.
+- Ties SHALL keep the incumbent (strictly-greater comparison). A tie is no evidence to overwrite
+  on.
+- On return, the engine store SHALL hold the retained round's source (defect 1), and the
+  NON-planned return's `LlmReinductionResult.engine` — together with the scalar and goal
+  diagnostics reported beside it — SHALL describe the retained round (defect 2). Reporting one
+  round's goal satisfiability next to another round's engine is a self-contradictory artifact,
+  and the live agent installs a goal bias off exactly that field.
+- A PLANNED return is the exception, and SHALL report the PLANNING round throughout: its
+  engine, its goal predicate, its plan, its `heldout_accuracy` /
+  `accepted_by_heldout_verifier` / `goal_predicate_satisfiable` / `goal_satisfiability`. The
+  plan was validated in-model against that engine, so binding any of those fields to a
+  different round would contradict the plan being returned. The first draft of this REQ did
+  bind them to the retained round and was caught by the existing
+  `test_experiment_4664_l2_goal_predicate_induction_live.py::
+  test_scenario_arc_wmte_4664_degenerate_goal_rejected_before_planning`, which observed
+  `planned=True` next to `goal_predicate_satisfiable=False`.
+- The store path SHALL be resolved at CALL time via `arc_executable_world_model.E3_DIR`, so
+  `CARNOT_ARC_E3_DIR` and the `e3.E3_DIR` monkeypatch redirect retention writes exactly as they
+  redirect every other store access (REQ-ARC-WMTE-6016).
+- Retention SHALL default ON, and `CARNOT_ARC_ENGINE_RETENTION=0` SHALL restore exact
+  last-write-wins behaviour so the pre-REQ path remains available as a control arm.
+
+**Default-on is defensible only because the downside is bounded and measured.** Retention can
+hold an engine a later round would have improved on. Replaying the real write sequence in
+sliding 3-write windows — the bound `MAX_REFINEMENT_ROUNDS`=3 imposes on one live episode —
+retention HELPED 24 windows, HURT 3, and tied 28 of 55; two-sided sign test over the 27
+discordant windows p = 4.9e-5; mean delta +0.0898 over all 55 windows, +0.1829 over the 27
+discordant ones. The 3-of-55 is reported in the source comment, not hidden.
+
+**Three limits this REQ does NOT fix, named so nobody reads past them.**
+
+(1) `consistency` is `correct_changed_cells / max(1, true_changed_cells)`, so a held-out window
+containing NO state change scores 0.0 for every round including a perfect engine; retention then
+degenerates to "keep round 1" rather than "keep the best round". That is the same
+FALSE_NEGATIVE_RISK shape the goal-consistency veto guards against with `n_real_levelups >= 1`.
+It is NOT "strictly no worse" than the last-write-wins behaviour it replaces: of the 23
+counterfactual windows whose winning signal was 0.0, retention helped 4, HURT 3 and tied 16 — an
+arbitrary choice, and ALL 3 of the change's measured hurt windows live in this regime. The case
+for default-on is the complementary half of the same split: 0 of the 32 INFORMATIVE windows were
+hurt. `engine_retention["best_round_true_changed_cells"]` / `["signal_informative"]` and the
+per-round `retention_signal_true_changed_cells` record the denominator so the two meanings of a
+0.0 signal are distinguishable in an artifact without a re-run; they are diagnostics and are
+never read by the comparison.
+
+(2) On a planned return the store and the returned engine can name different rounds. The shipped
+`min_heldout_accuracy=1.0` bounds that divergence ONLY when the held-out split contains at least
+one CHANGING transition — exact prediction of a changing transition implies
+`heldout_change_consistency == 1.0`, hence maximal, hence retained. With NO changing transition
+the bound evaporates: consistency is 0.0 for every engine including a perfect one, while a
+do-nothing engine scores `heldout_accuracy` 1.0 and clears the gate. Measured counterexample:
+ft09 seed 0, 0 of 40 held-out transitions change, do-nothing engine `heldout_accuracy` 1.0 /
+consistency 0.0 (`hostile_noop_heldout_results.json`, 55cbd98a7baf3cd4). All rounds then tie,
+round 1 is kept, and a planning round >= 2 returns its own engine while the store holds round
+1's. `engine_retention["best_round"]` is what makes that visible.
+
+(3) The signal is a RECALL and is therefore not rank-consistent with the symmetric
+`change_fidelity` the counterfactual evaluated it by: it does not penalise spurious writes.
+ka59 `9d36f9f25` scores signal 0.9830 / fidelity 0.9119, ranking above `a7488e97a` at 0.9575 /
+1.0000 — ranking by the shipped signal prefers the worse engine. This never bit the measured
+result (no 3-version window isolates that pair without the peak `341f776c9`; recall-argmax
+equalled fidelity-argmax in 6 of 6 games, 0.000 fidelity left on the table), but it is a real
+residual. Closing it would require ranking on a quantity the live loop does not compute, which
+is the peeking this REQ refuses.
+
+**Re-run against the SHIPPED code, not against the design.** The counterfactual was re-executed
+driving `_retention_signal(select_trusted_world_model(...))` — the exact call the live loop
+makes, with the live signature — over the same six games' full version history, and separately
+driving the REAL `execute_bounded_llm_reinduction` over all 55 consecutive 3-version windows
+with `CARNOT_ARC_ENGINE_RETENTION` toggled. It reproduces the design numbers exactly:
+0.397889 / 5-of-12 versus 0.004184 / 0-of-12 globally, and 24 helped / 3 hurt / 28 tied,
+p = 4.923e-05, for both the on-disk and the in-memory half.
+
+## Implementation Status (REQ-ARC-WMTE-6035)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6035 | Implemented, default-on (`arc_llm_reinduction.py` — `engine_retention_enabled()`, `_retention_signal()`, `_retention_signal_true_changed_cells()` (diagnostic only), `_engine_store_path()`, `_read_engine_source()`, `_retain_engine_source_on_disk()`, the per-round `is_best` comparison inside `execute_bounded_llm_reinduction`, the planning-round binding on the three planned-return paths, and `LlmReinductionResult.engine_retention`) | `tests/python/test_arc_engine_retention_best_round.py` — 14 tests covering the on-disk half, the in-memory half, goal-diagnostic coherence on both the retained and the planned return, the held-out-not-prefix selection rule, the no-fallback guarantee at BOTH inputs that exercise it (a legitimate 0.0 and an absent field), the tie rule, the default, the kill switch, and store-redirection safety. Mutation-proven against 15 targeted mutations (removing the disk restore, restoring the unconditional `last_engine`, unguarding the goal diagnostics, pointing the signal at `heldout_accuracy` or at `prefix_change_consistency`, relaxing `>` to `>=`, flipping the default off, neutering the kill switch, binding the store path at import time, rewriting the store unconditionally, binding the planned return to the retained round, the two no-fallback mutants HM3 `or getattr(score, "heldout_accuracy", ...)` and HM6 a `not hasattr` guard, dropping the informativeness diagnostic, and wiring the diagnostic denominator into `is_best` — the last three SURVIVED an earlier draft of the suite and each motivated an added test); all 15 caught, none survived. |

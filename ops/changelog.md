@@ -1,5 +1,211 @@
 # Carnot — Changelog
 
+## 2026-07-29 (outer-loop: the induced-engine store was last-write-wins — best-engine retention shipped, REQ-ARC-WMTE-6035)
+
+TRIGGER: operator standing instruction to iterate unattended toward a submission expected to improve
+the live agent score. NOT committed — staged for operator review.
+
+### THE DEFECT
+
+`execute_bounded_llm_reinduction` runs up to `MAX_REFINEMENT_ROUNDS`=3 attempts at a world model.
+Round 1 induces; rounds 2..N call `proposer.refactor()`, and every one of those overwrites
+`results/arc_e3/<game>/world_model.py` in place. The loop assumed in two independent places that the
+LAST round is the BEST round: it left round N's source on disk, and it reassigned
+`last_engine = selected.engine` unconditionally so an in-memory caller got round N too. Refinement is
+not monotone — `refactor()` is a language model rewriting a program from a counterexample, and it
+frequently makes the model worse.
+
+Replaying the real historical write sequence of six games' engines (ar25 / ka59 / tr87 / sc25 / cn04 /
+ft09), selecting on a runtime-visible signal only and evaluating on seed-1/seed-2 rollouts the
+selector never saw: last-write-wins mean change_fidelity **0.0042, change-gate 0 of 12**; retain-best
+**0.3979, 5 of 12**, matching the circular oracle ceiling in 6 of 6 games. ka59's engine peaked at
+change_fidelity 1.0000 on 2026-06-17 and is 0.0000 on disk today (first broken 2026-07-19); ar25
+peaked at 0.8157 and is 0.0000. Three of the 15 regressive writes landed under the STRONG
+codex/gpt-5.5 proposer, so this is a defect of the store, not of the 9B proposer downgrade.
+
+Demonstrated on the function itself, not only on git history: a scripted proposer replaying real
+recorded ka59 induction blobs at the LIVE thresholds produced per-round held-out accuracies
+0.65 -> 0.15 -> 0.075. The loop returned round 3 (change_fidelity 0.0000, gate 0/2) and left round 3
+on disk. Round 1 was 1.0000, gate 2/2.
+
+### WHAT SHIPPED
+
+`arc_llm_reinduction.py` now ranks its rounds on
+`select_trusted_world_model(...).selected_score.heldout_change_consistency` — the held-out split of
+the agent's OWN observed transitions, the only kind of signal a hidden-game episode has — and on
+nothing else. Strictly-greater comparison, so ties keep the incumbent. On return the store is rolled
+back to the retained round (`_retain_engine_source_on_disk`, resolving `E3_DIR` at CALL time per
+REQ-ARC-WMTE-6016) and the non-planned return hands back the retained engine with matching
+diagnostics. `LlmReinductionResult.engine_retention` records what retention did.
+
+DEFAULT-ON, with the downside stated rather than hidden: over the 55 sliding 3-write windows that
+`MAX_REFINEMENT_ROUNDS`=3 bounds a live episode to, retention HELPED 24, **HURT 3**, tied 28; sign
+test over the 27 discordant windows p = 4.9e-5; mean delta +0.0898 over all 55 windows, +0.1829 over
+the 27 discordant ones. `CARNOT_ARC_ENGINE_RETENTION=0` restores exact last-write-wins as a control
+arm.
+
+### WHAT AN ADVERSARIAL REVIEW OF THIS WORK CHANGED (12 findings, all applied)
+
+The review found one real hole in the test suite and three claims in the prose that were softer than
+the evidence. All are corrected in place; the numbers moved, the mechanism did not.
+
+- **The docstring guarantee that keeps retention non-circular was UNTESTED.** `_retention_signal`
+  promises that a missing field yields 0.0 rather than a fallback to another metric. Two mutants
+  adding exactly that fallback PASSED all 11 tests — `HM3` (one more `or` on a line that already
+  ends in `or 0.0`, which also fires on a legitimate 0.0) and `HM6` (a `not hasattr` guard). HM3 is
+  material: the signal is 0.0 for every round in 23 of the 55 windows — 42% — which is precisely
+  where the tie rule governs. The existing test set the field to 0.25, so the fallback branch never
+  ran. A new test exercises both inputs that do reach it (a legitimate 0.0 beside a high
+  `heldout_accuracy`, and an absent attribute). **Re-run: 13 mutants, 13 caught, 0 survived.**
+- **Honest-limit 2's safety proof was unsound on a corpus game.** It claimed store/returned
+  divergence cannot bite at `min_heldout_accuracy=1.0` because exact prediction implies consistency
+  1.0. That fails when the held-out split has no changing transition: consistency is
+  `correct/max(1, true_changed)` = 0.0. Measured on ft09 seed 0 — 0 of 40 held-out transitions
+  change, a do-nothing engine scores `heldout_accuracy` 1.0 and clears the shipped gate with
+  consistency 0.0 (`hostile_noop_heldout_results.json`, `55cbd98a7baf3cd4`). The limit is rewritten
+  to name the precondition and the counterexample, and `engine_retention` now records
+  `best_round_true_changed_cells` / `signal_informative` (plus a per-round
+  `retention_signal_true_changed_cells`) so an artifact reader can tell an uninformative 0.0 from a
+  bad one. Diagnostic only — never read by the comparison. **A mutant that wired that denominator
+  into `is_best` then SURVIVED the new suite, and the first rationalisation of that ("an equivalent
+  mutant — `true_changed_cells` counts what reality changed, so it's a corpus constant") was
+  WRONG**: `score_change_weighted_consistency` `continue`s before accumulating it when the engine
+  raises or returns a wrong-shaped grid, so a CRASHING engine reports a smaller denominator and
+  ranking on it would reward an engine for failing to be scored. A test built from a crashing
+  round-1 engine now kills it.
+- **Honest-limit 1 claimed the all-tie case is "strictly no worse" than last-write-wins. The
+  project's own counterfactual refutes that**: of the 23 windows whose winning signal was 0.0,
+  retention helped 4, HURT 3, tied 16. All three of the change's measured hurt windows live there.
+  The accurate framing is stronger for the fix, not weaker — the tie rule is an arbitrary choice in
+  that regime, and **0 of the 32 informative windows were hurt**.
+- **A number in the source comment did not trace to its artifact.** "+0.0898" was labelled as the
+  discordant-window mean; it is the mean over all 55. The discordant mean is +0.1829. Both are real;
+  the label was on the wrong one. Corrected in the comment and the spec.
+- **An unnamed residual, now named:** the signal is a RECALL and is therefore not rank-consistent
+  with the symmetric `change_fidelity` it was evaluated by. ka59 `9d36f9f25` scores signal 0.9830 /
+  fidelity 0.9119, ranking above `a7488e97a` at 0.9575 / 1.0000 — ranking by the shipped signal
+  prefers the worse engine. It never bit (no 3-version window isolates that pair without the peak
+  `341f776c9`; recall-argmax equalled fidelity-argmax in 6 of 6 games) but it is a real residual and
+  is now honest-limit 3. Closing it would require ranking on a quantity the live loop does not
+  compute — the peeking this REQ refuses.
+
+### A REGRESSION THIS INTRODUCED AND THEN FIXED
+
+The first draft bound the goal diagnostics to the retained round on EVERY return path, including the
+planned ones — which produced `planned=True` next to `goal_predicate_satisfiable=False`, i.e. a plan
+reported beside a goal the same artifact calls unsatisfiable. The existing
+`test_experiment_4664_l2_goal_predicate_induction_live.py::test_scenario_arc_wmte_4664_degenerate_goal_rejected_before_planning`
+caught it in the whole-suite comparison against HEAD. Fixed: a planned return now reports the
+PLANNING round throughout (engine, goal, plan, accuracy, satisfiability), and only the non-planned
+return reports the retained round. A dedicated local test plus mutation M11 now pin that.
+
+### VERIFICATION
+
+- `tests/python/test_arc_engine_retention_best_round.py` — 14 tests, mutation-proven against 15
+  targeted mutations (delete the disk restore; restore the unconditional `last_engine`; unguard the
+  goal diagnostics; point the signal at `heldout_accuracy`; point it at `prefix_change_consistency`;
+  relax `>` to `>=`; flip the default off; neuter the kill switch; bind the store path at import
+  time; rewrite the store unconditionally; bind the planned return to the retained round; and the
+  two no-fallback mutants HM3/HM6; drop the informativeness diagnostic; wire that diagnostic's
+  denominator into `is_best`). **All 15 caught, none survived.**
+- Whole-suite failure-SET comparison against HEAD in the same working tree, 197 ARC/world-model test
+  files, same redirected engine store both sides: HEAD 18 failed / 1936 passed; with the change
+  18 failed / 1947 passed, the SAME 18 pre-existing failures (salience-prior wiring, artifact
+  freshness, architecture-doc reconciliation — none touching this lane). That comparison covers the
+  code as it stood before the review-driven edits below.
+- **Post-review targeted re-run: all 22 test files that reference `arc_llm_reinduction`,
+  `execute_bounded_llm_reinduction`, `select_trusted_world_model`, `_goal_satisfiability_check` or
+  `engine_retention` — 182 passed, 0 failed, 50s.** This includes
+  `test_experiment_4664_l2_goal_predicate_induction_live.py` (the test that caught the planned-return
+  regression) and the hidden-state change-gate closure tests. Zero failures is the floor, so no HEAD
+  baseline can be better — this set cannot have regressed. Run WITHOUT the store redirect, because
+  `test_arc_hidden_state_change_gate_closure.py` legitimately READS the real on-disk lp85 engine and
+  a redirected store makes it fail spuriously; the evidence directories' full mtime+path digest was
+  captured before and after and is byte-identical (`f91112ad…`), with `git status --porcelain` on all
+  three evidence dirs returning 0 lines.
+- A whole-glob re-run was attempted and abandoned at 73%: one of the `test_experiment_*` files spawns
+  a real Vivado process (observed in the process tree), which dominated the wall clock and contributed
+  nothing to this change. Reported rather than hidden — the targeted run above is the actual evidence.
+- The counterfactual was RE-RUN against the shipped code rather than against the design: driving
+  `_retention_signal(select_trusted_world_model(...))` over the same six games' full version history
+  reproduces 0.397889 / 5-of-12 vs 0.004184 / 0-of-12 and picks the identical six commits; driving
+  the REAL `execute_bounded_llm_reinduction` over all 55 windows with the env flag toggled reproduces
+  24 helped / 3 hurt / 28 tied, p = 4.923e-05, for both the on-disk and the in-memory half.
+
+EVIDENCE SAFETY: no test or script WROTE `results/arc_e3`. Runs redirected `CARNOT_ARC_E3_DIR` to a
+scratch copy, except the targeted re-run above which needs READ access to the real store; its
+before/after mtime+path digest is identical and `git status --porcelain` on all three evidence dirs
+returns 0 lines. One test additionally asserts the real store's per-file mtimes are unchanged.
+
+### DIAGNOSED, NOT FIXED: the second serial gate (`degenerate_goal_predicate`)
+
+Retention fixes the store. It does not unlock planning: at `min_heldout_accuracy` 1.0/0.9/0.75 every
+round fails the dynamics veto; at 0.6/0.5/0.25 the PEAK engine passes and then dies on
+`degenerate_goal_predicate`; at 0.0 a plan appears only by admitting a change-fidelity-0.0 engine.
+**A model with perfect dynamics still cannot plan.** Full diagnosis, with the retractions a hostile
+review forced, in `docs/research-notes/arc-degenerate-goal-gate-diagnosis-2026-07-29.md`. **NOTHING
+was changed in the goal path — no gate was disabled, no threshold moved.** Headlines:
+
+- The gate's successor generator (`_probe_candidates`, a local closure) clicks the first 32
+  non-background cells in raster order; on ka59 all 32 land on the top border and none inside a
+  movable block. It exhausts its frontier at 2641 unique grids and reports unreachable. Swapping
+  only the generator for the planner's `_model_candidates` gives `satisfiable=True at depth 11` with
+  the recorded witness `4,4,4,3,2,3,3,3,CLICK(43,31),1,4` — the canonical ground-truth L1 solve. In
+  25 of 25 games the gate's clicks cover strictly fewer interactive regions than the planner's. **A
+  pre-filter weaker than the search it guards is unsound by construction.**
+- **The "third wall" that was used to dismiss fixing this was an under-powered null.** It was
+  measured with a bare `plan_in_model` — no `goal_energy`, default 20000 nodes — while the live path
+  supplies a `goal_energy` and honours `CARNOT_ARC_PLAN_MAX_NODES`. Re-measured under the shipped
+  L1 configuration: 20000 -> no plan (20006 nodes); **400000 -> plan found, length 11** (137347
+  nodes). A budget constant, not a capability limit.
+- **New, and not in the review's objection: the production `goal_energy` is a dead channel at L1
+  that reports itself as live.** With both bias flags unset and no exemplar, `_goal_energy_for_plan`
+  reduces to `0.0 if is_done else 1.0` — flat over every non-goal state. Measured:
+  `used_goal_energy_search=True` with `initial_goal_energy == min_goal_energy_observed == 1.0`, and
+  the arm is outcome-identical to blind BFS down to the node count. Same shape as the
+  `noop_channel_measurable` defect REQ-ARC-WMTE-6013 exists to expose. **The obvious cheap fix was
+  then TRIED, and the result is two-sided**: the already-shipped opt-in novelty branch
+  (`CARNOT_ARC_NOVELTY_GOAL_BIAS`, whose own docstring asks for exactly this A/B) supplies a
+  gradient whose entire dynamic range is 0.88% of scale (initial 1.0, min 0.9912). It does **NOT**
+  remove the wall at the shipped budget — still `max_nodes_reached` at 20015 nodes, so flipping the
+  flag does not unlock planning and must not be proposed as though it does. But at a raised budget
+  it nearly HALVES the search (71083 nodes vs the blind arm's 137347, 1.93x) **while returning a
+  30-action plan instead of the canonical 11**. It trades offline search cost for online plan
+  quality, which is the wrong direction for an efficiency-weighted score.
+- **A proposed fix was tested and REFUTED before it could be shipped.** The first pass proposed
+  capturing the win exemplar from `t.grid` instead of `t.next_grid`. On the real canonical ka59
+  solve the concept-correct predicate is False on BOTH — False on every observed frame, because the
+  completing action re-lays out the entire board (3527 of 4096 cells changed, a 190x outlier against
+  the ordinary median of 18.5; lp85 and r11l show the same signature). The L1-complete configuration
+  is never rendered. Shipping it would have injected a wrong positive. **Four** sites read that
+  post-relayout frame, not two: `induce_prompt`, `score_goal_predicate_consistency`,
+  `arc_competition_agent._observe_level_boundary` (which populates `_previous_level_complete_grid`),
+  and `_repair_degenerate_goal`'s exemplar-derived fallback.
+- The proposal to replace the reachability veto with root-true/constancy checks **would have
+  silently disabled GOAL-REPAIR** (`_repair_degenerate_goal`, 2026-06-25 operator directive), which
+  fires on `if not round_goal_satisfiable`. Recorded as a mandatory precondition on that proposal:
+  re-trigger it on `plan_in_model` returning `queue_exhausted` — never on `max_nodes_reached` — or
+  get operator sign-off to retire it. Not a side effect of a refactor.
+- **A SEPARATE defect found while tracing these paths, recorded not fixed: the reinduction loop
+  grades UNMASKED but refactors MASKED.** `hud_mask` appears exactly twice in
+  `arc_llm_reinduction.py` — the parameter, and the refactor counterexample scoring. It is NEVER
+  passed to `select_trusted_world_model`, so `heldout_accuracy` (the dynamics veto) and
+  `heldout_change_consistency` (REQ-6035's own retention signal) are both computed unmasked while
+  the evidence handed to `refactor()` is masked. The sibling live path
+  (`arc_competition_agent.py:5943`) does pass the mask. Unmasked, a HUD step-counter tick counts as
+  a real changed cell, so the signal rewards modelling the counter — exactly what REQ-ARC-WMTE-6010
+  exists to prevent, and visible in the ka59 measurement where all 32 gate clicks "change the grid"
+  only by ticking the step counter. NOT fixed tonight for two honest reasons: threading the mask
+  also moves `heldout_accuracy`, i.e. the live dynamics veto, which needs a measured default-off
+  parity pass; and **REQ-6035's counterfactual was measured on the UNMASKED signal, so if the mask
+  is threaded, retention's 24/3/28 and 0.3979-vs-0.0042 must be re-measured.** Fixing it silently
+  would invalidate the evidence for the change shipped in this same commit.
+- Provenance caveat now stated: the peak ka59 engine was written by a codex agent acting directly as
+  proposer, so it is not evidence about what the live induce path produces. The conclusion "the LLM
+  produces dynamics without a usable goal, therefore this is a prompt gap" is downgraded to an
+  untested hypothesis.
+
+
 ## 2026-07-27 (outer-loop: SECOND adversarial review of the same day's mask/gate work — 4 fatal + 9 serious + 6 minor findings applied, 2 further defects found that no finding named)
 
 CONTEXT. An adversarial review of the REQ-6010/-6011/-6013 lane returned 19 findings. Verifying each
