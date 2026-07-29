@@ -332,7 +332,21 @@ repos:
         # re-admitting them to headline aggregation (the fabrication gate keys off the field
         # being PRESENT). pass_filenames is false because the check is a git diff against HEAD,
         # not a per-file scan -- see the lint's docstring for why `--cached` was wrong.
+        #
+        # always_run: true SINCE 2026-07-29, AND IT IS LOAD-BEARING, NOT TIDINESS. pre-commit
+        # decides whether a hook runs by matching `files:` against its own staged-file list, and
+        # `pre_commit.git.get_staged_files` builds that list with `--diff-filter=ACMRTUXB` --
+        # its source comment reads "Everything except for D". So a commit that ONLY DELETES
+        # artifacts matches nothing, and this hook was never invoked at all. Deleting
+        # results/experiment_3946_r11l_first_solve.json destroys its determination, its
+        # hand-written corrigendum and its provenance declaration in one move -- strictly worse
+        # than editing any one of them out -- and it was invisible at BOTH layers: pre-commit
+        # never ran the hook, and the lint's own `--diff-filter=M` would have ignored the
+        # deletion even if it had. The lint side is fixed in `_tracked_json_under_results`;
+        # this is the other half. `files:` is kept as documentation of intent, but with
+        # always_run it no longer gates invocation.
         files: ^results/.*\.json$
+        always_run: true
         pass_filenames: false
 
       - id: test-suite-mutation-gate

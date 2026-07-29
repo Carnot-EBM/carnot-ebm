@@ -19886,3 +19886,79 @@ what to act on — same contract as every sibling Layer-2 audit in this project.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6042 | Implemented in `scripts/qa_layer_authenticity_audit.py`. (1) `GUARD_TARGETS` — 10 guards added, each with a written in-scope reason, including both halves of the operator-curated-doc discipline (`operator_curated_docs_lint.py`, commit-layer, which is why it never saw README.md being rewritten on every test run; and `python/carnot/testing/operator_curated_doc_guard.py`, the runtime half, which a pre-commit-only scan would never have found). (2) `SHARED_BUG_CLASSES` + `PER_GUARD_PROMPT` — the five classes, with the origin incident carried verbatim as a worked precedent because an abstract instruction returns abstract findings; `PER_GUARD_PROMPT` inverts the framing for guards (silent non-firing first, plus scope holes, unintentional bypass, and fail-closed-vs-fail-open — the question that found the old lint's fail-open). (3) `BUG_CLASS_MARKERS` — makes the coverage claim checkable, added after review found the guard prompt covered only 3 of 5. (4) `units_signature` + `resolve_rotation_offset` — extracted from `main()` so the decision is tested rather than reimplemented in the test file. (5) `verify_quoted_evidence` — `strip_constructed_sections` + repo-file existence, narrowed to `is_file()` + `CITABLE_PATH_SUFFIXES` after review found a bare `scripts/` un-voided a verdict. (6) `--check-targets` + `discover_unaudited_guards`, wired as `.pre-commit-config.yaml:qa-layer-audit-scope-check`. (7) `SILENT_NON_FIRING` as its own verdict (a widening, not a logic fix — different operator response than `REAL_BUG`) and `## MISSED INPUT` hoisted above FLAGGED in the report, each line being the fix and the regression test already written. Three incidental bugs fixed while extending: `--file` compared an unresolved path against absolute targets; the report spliced its summary at a hardcoded `out[:5]`; chunking depended on the explicit list alone. Layer 3 is CLAUDE.md "Test-Run Record Integrity Discipline" + the QA-Layer discipline's 2026-07-29 SCOPE EXTENSION. | `tests/python/test_qa_layer_authenticity_audit.py` (79 tests). Mutation-proven: 51/51 mutations killed across two harnesses. That number is load-bearing — the FIRST run of each harness left survivors, and every survivor was a test that existed and did not bite: `repo_root` plumbing severable from `_run_one`, a dunder skip double-covered by a name filter, an assertion on a bare `## MISSED INPUT` string that still appeared elsewhere in the prompt, the `len(units)` prefix double-covered by the label hash, `is_file()` double-covered by the suffix list, and the pre-existing path-escape rule made decorative BY the suffix narrowing (`..` is unreachable for a leading-dot path because `.strip()` eats the dots, so the rule only earns its place on an interior traversal). Each was rewritten to fail under mutation. |
+
+## REQ-ARC-WMTE-6043: Output Path Resolution Is Centralised, and Operator-Curated Docs Are Unwritable From a Test
+
+REQ-ARC-WMTE-6041 surveyed the hazard (a passing test run rewrites the research record) and shipped
+the commit-time guards. REQ-ARC-WMTE-6042 extended the adversarial audit to the guards themselves.
+This requirement is the REPAIR: stop the writes at their source.
+
+Three distinct defects are in scope, and they are separate because they fail independently:
+
+1. **`README.md` was rewritten by a passing test.** The real writer was
+   `scripts/experiment_1750.py`'s `model_card_path = Path("README.md")` -- CWD-relative, and pytest's
+   working directory is the repo root. README.md is operator-curated under CLAUDE.md's Public
+   Documentation Discipline, which forbids autonomous-loop edits entirely. Two sibling files carried
+   the identical line: `python/carnot/pipeline/hf_publisher.py` and `scripts/publish_huggingface.py`.
+   The survey attributed this to `test_experiment_209_cleanup.py`; that attribution was an xdist
+   artifact (concurrently-running workers credited to the wrong test) -- that test already sandboxes
+   correctly via an explicit `--root tmp_path` and needed no change.
+
+2. **~110 files each answered "where is the repo root?" independently**, the dominant answer being a
+   hardcoded `/home/ianblenke/github.com/ianblenke/carnot`. This is a G2 reproducibility defect: a
+   fresh clone anywhere else writes its results into the original author's checkout. Compounding it,
+   this checkout is reachable through a chained symlink alias, so the two entry points disagree on
+   the SPELLING of the same directory and provenance recorded relative to `$PWD` differs by which
+   door the process walked in.
+
+3. **A hardcoded absolute path on `sys.path` poisons an entire xdist worker.** A worker is a
+   long-lived process running hundreds of test files in sequence, so once any file inserts the
+   canonical tree, every later `import experiment_NNNN` in that worker resolves there -- and even a
+   correctly repo-relative script then writes into the operator's checkout.
+
+The system SHALL therefore provide ONE resolver (`python/carnot/paths.py`) that every caller uses,
+and an in-process guard that refuses a write to an operator-curated document at the syscall.
+
+**Scope is deliberately partial and MUST be reported as such.** 61 of 110 path-resolution files are
+migrated; 49 remain (41 `scripts/`, 8 `tests/`). `results/**` (24 files) and `legacy/` (18) are out
+of scope -- the former are preserved evidence snapshots whose modification would rewrite the record
+(never-prune). `PROJECT_ROOT_FOR_METADATA` (57 files) is a provenance STRING asserted on verbatim by
+`python/carnot/reporting/energy_bridge_audit_v2.py:213`, NOT a path, and MUST NOT be migrated.
+
+#### SCENARIO-ARC-WMTE-6043-CANONICAL-FROM-EITHER-SPELLING
+
+**Given** a file reachable both through the real checkout path and through a chained symlink alias
+**When** `repo_root(start=...)` is called with either spelling
+**Then** it SHALL return the identical, fully symlink-resolved canonical path, because it resolves
+the start point BEFORE walking up to the `.git` marker. This SHALL be verified against an alias
+constructed inside `tmp_path`, not only against the alias that happens to exist on one machine --
+gating the guarantee on a machine-specific symlink leaves it untested on exactly the fresh clone the
+requirement exists to serve.
+
+#### SCENARIO-ARC-WMTE-6043-OVERRIDE-ENABLES-SANDBOXING
+
+**Given** `$CARNOT_REPO_ROOT` set to a temporary directory
+**When** any migrated caller resolves an output path
+**Then** the write SHALL land in the sandbox. The resolver SHALL read the variable on every call, and
+SHALL raise rather than silently fall back to the working directory when no root can be located.
+**And** the CALL-time versus IMPORT-time limitation SHALL be documented: a module-scope constant
+computed at import cannot be redirected by a later `monkeypatch.setenv`, so sandboxing silently does
+not apply to it.
+
+#### SCENARIO-ARC-WMTE-6043-OPERATOR-CURATED-WRITE-IS-REFUSED
+
+**Given** the audit hook installed from `tests/python/conftest.py`
+**When** any in-process test write targets `README.md`, `docs/index.html`, `docs/CNAME`,
+`docs/blog/*` or another operator-curated path -- including through the symlink alias, through
+`open(..., 'a')`, or via `os.replace` onto the path
+**Then** the write SHALL be refused BEFORE it happens, so no revert window exists.
+**And** reads SHALL remain allowed, and writes to a `tmp_path` copy SHALL remain allowed.
+**And** the subprocess limitation SHALL be documented rather than implied away: a PEP 578 audit hook
+is per-process and is NOT inherited by children, so `subprocess.run(...)` writes are NOT covered. A
+green guard is therefore not proof that nothing wrote to a curated doc.
+
+## Implementation Status (REQ-ARC-WMTE-6043)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6043 | (1) `python/carnot/paths.py` NEW — `repo_root` / `repo_path` / `results_dir` / `results_path` / `output_dir` / `is_canonical_repo_root`, stdlib-only, `$CARNOT_REPO_ROOT` override (the incumbent name, already used in ~108 files) then resolve-then-walk-up to a `.git` marker accepted as file OR directory (worktrees), then a layout fallback requiring `pyproject.toml` AND `python/` AND `scripts/` so a stray parent cannot hijack it. Raises rather than defaulting to cwd. (2) `python/carnot/testing/operator_curated_doc_guard.py` NEW — PEP 578 audit hook installed from `tests/python/conftest.py` in controller and xdist workers, with a call-phase wrapper so a SWALLOWED violation still becomes a real FAILED rather than a misleading `1 passed, 1 error`. Path list kept byte-identical to `scripts/operator_curated_docs_lint.py` and asserted equal by test. Overhead measured at 0.97 us/open. (3) THREE README writers fixed AT SOURCE (`scripts/experiment_1750.py`, `scripts/publish_huggingface.py`, `python/carnot/pipeline/hf_publisher.py`) — they stage the HF model card in a temp dir; uploaded bytes and `path_in_repo` unchanged. `publish_huggingface.py` has zero test references, so the in-process guard would never have seen it. (4) 61 of 110 path files migrated, type-preserving, all verified to resolve to the identical directory; 0 PATH sites remain in `python/carnot/`. (5) `sys.path` poisoning fixed test-side (3 test files) and in 3 bootstrap scripts. (6) Two destructive rewrites eliminated: `test_verification_learning.py` was overwriting `results/experiment_1861_equivalence.json` (11 keys -> 6, deleting `corrigendum_2026_05_187_audit`, which `test_audit_1796.py` then asserts is present — a never-prune violation AND an order-dependent failure), and `scripts/audit_1796.py` was rewriting live artifacts in place. | `tests/python/test_carnot_paths.py` (36 tests, ZERO skip markers — the alias guarantee is tested against a CHAINED symlink built in `tmp_path`, with a companion assertion that the two spellings really are different strings so the agreement tests cannot go vacuous; a real-alias test is kept as an extra, written as a runtime branch rather than a skip). `tests/python/test_operator_curated_doc_guard.py` (20 tests). Guard proven to fire against the original unfixed `experiment_1750` write. A false positive was shipped and caught before review: `shutil.rmtree` uses fd-relative `os.unlink(entry.name, dir_fd=...)`, so the audit event carries a bare name that must NOT be resolved against cwd — fixed with an explicit `allow_relative` split (True for `open`, False for the fd-capable `os.*` events) plus a regression test. |

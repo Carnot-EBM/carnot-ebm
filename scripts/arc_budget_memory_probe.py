@@ -28,7 +28,11 @@ import sys
 import time
 from pathlib import Path
 
-REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved from this file rather than hardcoded so a fresh clone or a
+# worktree writes into ITS OWN tree. Inlined (not carnot.paths.repo_root)
+# because the next line is what makes ``carnot`` importable -- importing
+# the resolver here would be circular. Same rule, same answer.
+REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "python"))
 sys.path.insert(0, str(REPO / "scripts"))
 

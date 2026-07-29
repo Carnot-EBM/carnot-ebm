@@ -4,6 +4,86 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-29 (outer-loop, REPAIR LANDED — FOLLOW-UP LIST BELOW): README protected, output-path resolution centralised, migration PARTIAL
+
+**Status:** the operator's repair directive (options D -> F -> E of the survey below, plus the README
+fix) is implemented and committed. The migration is **deliberately partial and the remainder is
+enumerated here** — do not read the commit as "all hardcoded paths are gone."
+
+**What is now protected.**
+
+* `README.md` and the other operator-curated docs cannot be rewritten by an IN-PROCESS test write.
+  `python/carnot/testing/operator_curated_doc_guard.py` (PEP 578 audit hook, installed from
+  `tests/python/conftest.py` in controller and xdist workers) refuses the write at the syscall, so
+  the failure names the culprit and nothing is ever written.
+* The three CWD-relative `Path("README.md")` model-card writers are fixed AT SOURCE — they stage to
+  a temp dir now: `scripts/experiment_1750.py`, `scripts/publish_huggingface.py`,
+  `python/carnot/pipeline/hf_publisher.py`. Fixing the writer protects every caller including
+  operators running the script by hand; the guard alone would not have.
+* One resolver decides where output goes: `python/carnot/paths.py` (`CARNOT_REPO_ROOT` override,
+  else resolve-then-walk-up to a `.git` marker). It returns the canonical path from either the real
+  checkout or the `Carnot-EBM/carnot-ebm` symlink alias.
+* Two destructive test rewrites eliminated: `test_verification_learning.py` (was overwriting
+  `results/experiment_1861_equivalence.json`, deleting a corrigendum another test asserts on) and
+  `test_audit_1796.py` (was letting `scripts/audit_1796.py` rewrite live artifacts in place).
+
+**What is NOT protected — read this before trusting a green run.**
+
+* **Subprocess writes bypass the guard entirely.** A PEP 578 audit hook is per-process and is not
+  inherited by children, so `subprocess.run([...])` or any `shell=True` redirect can still destroy an
+  operator-curated doc. Verified empirically. ~184 test files spawn subprocesses and ~159 reference
+  `scripts/`, so this is a large unguarded surface. `scripts/test_suite_mutation_check.py --check`
+  plus `git status` remain the only backstop for that class.
+* **Module-scope constants are not sandboxable.** `X = repo_root() / ...` at import time freezes
+  before any test can set `$CARNOT_REPO_ROOT`, so `monkeypatch.setenv` silently fails to redirect it.
+  Documented in `paths.py`; `python/carnot/reporting/grpo_vprm_v11_headline_gate.py:18` is a known
+  instance.
+
+**FOLLOW-UP LIST (operator).**
+
+1. **54 files still hardcode an absolute repo path for real path resolution** —
+   46 under `scripts/`, 8 under `tests/`. Enumerated at
+   `/tmp/.../scratchpad/remaining_detail.txt` (regenerate with the reclassifier if stale). Largest
+   clusters: `DEFAULT_ARTIFACT_PATH = Path(...)` x12, `OUT = Path(...)` x6, nano-TRM checkpoints x4,
+   test `RESULTS_DIR`/`DELIVERABLE_PATH` x8. Counting note: 110 PATH **files** total, 56 migrated,
+   54 remain — the earlier "88" is label-bindings (one line can bind two names), not source lines.
+1b. **Four analyser scripts were migrated then REVERTED, and need a rebuild-and-diff to land:**
+   `scripts/analyze_arc_early_stop_sweep.py`, `scripts/analyze_scored_path_lever_ab.py`,
+   `scripts/arc_scored_path_early_stop_sweep.py`, `scripts/arc_scored_path_lever_harness.py`.
+   `artifact-freshness-lint` correctly refuses them — they produce published artifacts, and editing
+   an analyser without rebuilding leaves a figure stale. The path change is provably number-neutral,
+   but demonstrating that requires rebuilding each artifact and diffing the numbers, which is a
+   deliberate operation that must not ride along with a mechanical migration. Rebuild commands are
+   printed by `python3 scripts/artifact_freshness_lint.py`. (Counted in the 54 remaining.)
+
+1c. **`scripts/run_tier0r.py` was migrated then REVERTED.** `batching-check` refuses it for two
+   PRE-EXISTING sequential-inference loops (lines 103/107, present verbatim at HEAD). Its migration
+   matters — the hardcoded path there was the ALIAS spelling, so it was also a de-aliasing fix — but
+   landing it first requires a `BatchedInferenceRunner` refactor, which changes what the script
+   computes and so could not ride along with a path-only change. (Counted in the 54 remaining.)
+
+2. **Out of scope, deliberately, and NOT counted above:** `results/**` (24 files) — these are
+   preserved evidence snapshots of the scripts that produced artifacts, so migrating them would
+   rewrite the research record (never-prune); and `legacy/` (18 files, alias-spelled) — dead code.
+   Both should stay out of scope unless the operator decides otherwise.
+3. **Do NOT "fix" `PROJECT_ROOT_FOR_METADATA`** (57 files / 165 uses). It is a provenance STRING
+   written into artifacts, not a path resolution, and
+   `python/carnot/reporting/energy_bridge_audit_v2.py:213` asserts on its literal value. Migrating it
+   would change what scripts compute and break that assertion.
+4. **Consider closing the subprocess gap** via a `sitecustomize.py` on `PYTHONPATH` or an env flag a
+   child interpreter honours. Deliberately not switched on here: both are process-global and would
+   affect unrelated long-running research subprocesses.
+5. **Pre-existing failures found while verifying, NOT caused by this repair** (both reproduce at
+   HEAD): `tests/python/test_experiment_3821_latent_symbol_bridge_unblocked.py::test_build_artifact_import_error`
+   fails only when run after siblings that leave `src` importable on `sys.path` (order-dependent, so
+   under xdist it depends on sharding); and `tests/python/test_experiment_304_hf_publish.py` has 8
+   failures from a missing `onnx` module in this venv. Note `experiment_304_hf_publish.py:351` also
+   writes the repo's real `README.md` (repo-relative, currently no-ops behind two header guards) —
+   it is a Public Documentation Discipline violation that the guard would catch if reached.
+6. **`ruff` debt blocks nothing but will surface at commit time:** the touched files carry
+   pre-existing violations (60 at HEAD, reduced during this work), mostly `W293` blank-line
+   whitespace. Left alone so the diff stays confined to path resolution.
+
 ### 2026-07-29 (outer-loop, SURVEYED — OPERATOR DECISION PENDING): running the test suite rewrites the research record
 
 **Status:** the survey the hazard commit (`b3e31d341`) said it had NOT done is now done, and two

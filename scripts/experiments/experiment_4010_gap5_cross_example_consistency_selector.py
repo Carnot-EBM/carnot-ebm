@@ -9,9 +9,13 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from carnot.paths import repo_root
 
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 PYTHON_DIR = REPO_ROOT / "python"
 if str(PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(PYTHON_DIR))

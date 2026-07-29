@@ -17,7 +17,11 @@ from typing import Any
 
 import numpy as np
 
-REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved from this file rather than hardcoded so a fresh clone or a
+# worktree writes into ITS OWN tree. Inlined (not carnot.paths.repo_root)
+# because the next line is what makes ``carnot`` importable -- importing
+# the resolver here would be circular. Same rule, same answer.
+REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "python"))
 
 from arcengine import GameAction  # noqa: E402
@@ -71,13 +75,19 @@ def top_rail_tail() -> list[dict[str, Any]]:
     ]
     rows += [click(27, 33)] * 8
     rows += [
-        click(33, 39), move(4),
-        click(39, 39), move(4),
-        click(45, 39), move(4),
+        click(33, 39),
+        move(4),
+        click(39, 39),
+        move(4),
+        click(45, 39),
+        move(4),
         click(3, 27),
-        click(45, 33), click(45, 33),
-        click(51, 29), move(4),
-        click(57, 29), move(4),
+        click(45, 33),
+        click(45, 33),
+        click(51, 29),
+        move(4),
+        click(57, 29),
+        move(4),
         click(3, 17),
     ]
     rows += [click(57, 33)] * 7
@@ -93,11 +103,17 @@ def winning_l9_tail() -> list[dict[str, Any]]:
         rows += [click(column, 39), move(1)]
     rows += [click(9, 39), move(1), move(1)]
     rows += [
-        click(9, 3), click(3, 35),
-        click(15, 3), click(3, 35),
-        click(21, 3), click(3, 35),
-        click(27, 3), click(3, 35),
-        click(33, 3), move(4), move(4),
+        click(9, 3),
+        click(3, 35),
+        click(15, 3),
+        click(3, 35),
+        click(21, 3),
+        click(3, 35),
+        click(27, 3),
+        click(3, 35),
+        click(33, 3),
+        move(4),
+        move(4),
     ]
     assert len(rows) == 68
     return rows
@@ -111,9 +127,7 @@ def public_summary(run: PublicRun) -> dict[str, Any]:
         "levels_completed": int(run.frame.levels_completed),
         "camera_y": run.camera_y,
         "player_screen": list(player) if player is not None else None,
-        "player_world": (
-            [player[0], player[1] + run.camera_y] if player is not None else None
-        ),
+        "player_world": ([player[0], player[1] + run.camera_y] if player is not None else None),
         "sha256": raw_hash(run.settled),
         "colors": {
             str(int(color)): int(count)
@@ -138,12 +152,7 @@ def components(grid: np.ndarray, color: int) -> list[list[tuple[int, int]]]:
             comp.append((y, x))
             for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 nxt = (y + dy, x + dx)
-                if (
-                    0 <= nxt[0] < 64
-                    and 0 <= nxt[1] < 64
-                    and nxt not in seen
-                    and bool(mask[nxt])
-                ):
+                if 0 <= nxt[0] < 64 and 0 <= nxt[1] < 64 and nxt not in seen and bool(mask[nxt]):
                     seen.add(nxt)
                     stack.append(nxt)
         found.append(comp)
@@ -178,17 +187,11 @@ def camera_from_switches(grid: np.ndarray, previous: int) -> int | None:
     screens = switch_screen_centers(grid)
     if not screens:
         return None
-    candidates = {
-        int(round(world - screen))
-        for world in SWITCH_WORLD_Y
-        for screen in screens
-    }
+    candidates = {int(round(world - screen)) for world in SWITCH_WORLD_Y for screen in screens}
     valid: list[int] = []
     for camera in candidates:
         projected = sorted(
-            float(world - camera)
-            for world in SWITCH_WORLD_Y
-            if -2 <= world - camera <= 65
+            float(world - camera) for world in SWITCH_WORLD_Y if -2 <= world - camera <= 65
         )
         if all(any(abs(screen - value) < 0.1 for value in projected) for screen in screens):
             valid.append(camera)
@@ -211,9 +214,7 @@ def camera_from_registration(
     scored: list[tuple[int, int, int]] = []
     for delta in range(-3, 4):
         old, new = overlap_for_camera_delta(previous_grid, current_grid, delta)
-        static = ~np.isin(old, (8, 9, 11, 14, 15)) & ~np.isin(
-            new, (8, 9, 11, 14, 15)
-        )
+        static = ~np.isin(old, (8, 9, 11, 14, 15)) & ~np.isin(new, (8, 9, 11, 14, 15))
         informative = static & ((old != 0) | (new != 0))
         score = int(np.sum((old == new) & informative))
         scored.append((score, -abs(delta), delta))
@@ -252,9 +253,7 @@ def load_prefix() -> list[dict[str, Any]]:
 
 
 def public_step(env: Any, row: dict[str, Any]) -> Any:
-    return env.step(
-        _game_action(GameAction, int(row["action"])), data=row.get("data")
-    )
+    return env.step(_game_action(GameAction, int(row["action"])), data=row.get("data"))
 
 
 def fresh_l9() -> PublicRun:
@@ -266,9 +265,7 @@ def fresh_l9() -> PublicRun:
     settled = np.asarray(frame.frame[-1], dtype=np.int8)
     assert int(frame.levels_completed) == 8
     assert "NOT_FINISHED" in str(frame.state)
-    assert raw_hash(settled) == (
-        "375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0"
-    )
+    assert raw_hash(settled) == ("375b7eddf99ae0a2ef41439fe15d92d2c8925b57720f3c6c833b9bb64711d2c0")
     camera = camera_from_switches(settled, 0)
     assert camera == 0
     return PublicRun(env, frame, settled, camera, 342)
@@ -312,9 +309,7 @@ def step_settled(run: PublicRun, row: dict[str, Any]) -> dict[str, Any]:
                 "layer": index,
                 "camera_y": camera,
                 "player_screen": list(player) if player is not None else None,
-                "player_world": (
-                    [player[0], player[1] + camera] if player is not None else None
-                ),
+                "player_world": ([player[0], player[1] + camera] if player is not None else None),
             }
         )
         previous = layer
@@ -330,9 +325,7 @@ def step_settled(run: PublicRun, row: dict[str, Any]) -> dict[str, Any]:
         "levels_completed": int(frame.levels_completed),
         "start_camera_y": before_camera,
         "end_camera_y": camera,
-        "endpoint_player_screen": (
-            list(endpoint_player) if endpoint_player is not None else None
-        ),
+        "endpoint_player_screen": (list(endpoint_player) if endpoint_player is not None else None),
         "endpoint_player_world": (
             [endpoint_player[0], endpoint_player[1] + camera]
             if endpoint_player is not None
@@ -422,8 +415,7 @@ def run_case(name: str) -> dict[str, Any]:
     elif name == "door_low_x15":
         advance(
             run,
-            COMMON
-            + [click(15, 23), move(4), move(4), move(4), move(1), move(1), move(1)],
+            COMMON + [click(15, 23), move(4), move(4), move(4), move(1), move(1), move(1)],
         )
         trace = step_settled(run, click(3, 5))
     elif name.startswith("door_open_trigger_"):
@@ -443,9 +435,7 @@ def run_case(name: str) -> dict[str, Any]:
         player = player_screen_center(run.settled)
         assert player is not None
         expected_x = (
-            27.5 if name.startswith("top_27_")
-            else 45.5 if name.startswith("top_45_")
-            else 15.5
+            27.5 if name.startswith("top_27_") else 45.5 if name.startswith("top_45_") else 15.5
         )
         assert [player[0], player[1] + run.camera_y] == [expected_x, -75.5]
         if name == "top_closed_carry":
@@ -512,9 +502,7 @@ def main() -> None:
                     "offline_steps_including_prefixes": sum(
                         row["offline_steps"] for row in results
                     ),
-                    "max_level_reached": max(
-                        row["levels_completed"] for row in results
-                    ),
+                    "max_level_reached": max(row["levels_completed"] for row in results),
                 }
             },
             sort_keys=True,

@@ -19,9 +19,13 @@ from typing import Any
 
 import experiment_4000_gap4_feedback_vs_redraw as v1
 from arc3_gap3_stage2_transition_ebm import SEED
+from carnot.paths import repo_root
 
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
 PILOT_ARTIFACT = REPO_ROOT / "results" / "experiment_4000_gap4_feedback_vs_redraw.json"
 OUTPUT = REPO_ROOT / "results" / "experiment_4011_gap4_feedback_vs_redraw_v2.json"
@@ -68,9 +72,7 @@ FIELD_PRINCIPLES = {
     "achieved_power": (
         "Power achieved against the preregistered 10-discordant-pair detectable effect."
     ),
-    "min_detectable_effect": (
-        "Exact minimum discordant-pair win-probability shift for 80% power."
-    ),
+    "min_detectable_effect": ("Exact minimum discordant-pair win-probability shift for 80% power."),
     "arm_a_gold_rate": "Per-arm task-level gold rate for the feedback chain at equal budget.",
     "arm_b_gold_rate": "Per-arm task-level gold rate for three iid redraws at equal budget.",
     "total_codex_calls": "Total Codex induction calls across both arms.",
@@ -116,11 +118,7 @@ def _binomial_pmf(n: int, k: int, p: float) -> float:
 
 
 def _critical_indices(n: int, alpha: float = ALPHA) -> list[int]:
-    return [
-        k
-        for k in range(n + 1)
-        if exact_mcnemar_p(k, n - k) <= alpha
-    ]
+    return [k for k in range(n + 1) if exact_mcnemar_p(k, n - k) <= alpha]
 
 
 def _power_at_probability(n: int, p_alt: float, alpha: float = ALPHA) -> float:
@@ -353,9 +351,9 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
         raise ValueError("honest_verdict must use a terminal prefix")
     if "FALSE_NEGATIVE_RISK" in verdict:
         raise ValueError("4011 verdicts must not use the Exp 4000 FALSE_NEGATIVE_RISK suffix")
-    if verdict.startswith(
-        "complete: feedback_no_better_than_redraw_p"
-    ) and not verdict.startswith("complete: feedback_no_better_than_redraw_powered_p"):
+    if verdict.startswith("complete: feedback_no_better_than_redraw_p") and not verdict.startswith(
+        "complete: feedback_no_better_than_redraw_powered_p"
+    ):
         raise ValueError("powered null verdict must include feedback_no_better_than_redraw_powered")
     for field in ("same_run_interleaved", "feedback_beats_redraw", "leak_clean"):
         if not isinstance(artifact[field], bool):
@@ -374,7 +372,9 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
     ):
         if not _is_bare_float(artifact[field]):
             raise ValueError(f"{field} must be a bare float")
-        if field not in {"total_codex_seconds", "duration_s"} and not (0.0 <= artifact[field] <= 1.0):
+        if field not in {"total_codex_seconds", "duration_s"} and not (
+            0.0 <= artifact[field] <= 1.0
+        ):
             raise ValueError(f"{field} must be in [0, 1]")
     if not isinstance(artifact["inference_substrate"], str):
         raise ValueError("inference_substrate must be a string")

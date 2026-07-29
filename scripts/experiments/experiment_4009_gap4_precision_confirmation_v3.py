@@ -18,9 +18,13 @@ from typing import Any
 
 import experiment_3999_gap4_precision_confirmation_v2 as v2
 from arc3_gap3_stage2_transition_ebm import SEED
+from carnot.paths import repo_root
 
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
 CHAIN_ARTIFACT = REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json"
 OUTPUT = REPO_ROOT / "results" / "experiment_4009_gap4_precision_confirmation_v3.json"
@@ -233,9 +237,7 @@ def build_complete_artifact(
     precision_vs_base = round(agreement_precision - float(summary["fresh_arm_base_rate"]), 4)
     primary_passed = floor and primary_gate_passed(n_gold, n_events)
     honest_verdict = (
-        verdict_for(n_gold, n_events, primary_passed)
-        if floor
-        else "blocked_execution_floor_unmet"
+        verdict_for(n_gold, n_events, primary_passed) if floor else "blocked_execution_floor_unmet"
     )
 
     artifact = _base_artifact(
@@ -260,8 +262,11 @@ def build_complete_artifact(
             "agreement_event_target": AGREEMENT_EVENT_TARGET,
             "powered_target_reached": n_events >= AGREEMENT_EVENT_TARGET,
             "draw_stop_reason": (
-                "powered_target_met" if n_events >= AGREEMENT_EVENT_TARGET else
-                "pool_exhausted" if pool_exhausted else "stopped_before_target"
+                "powered_target_met"
+                if n_events >= AGREEMENT_EVENT_TARGET
+                else "pool_exhausted"
+                if pool_exhausted
+                else "stopped_before_target"
             ),
             "sibling_disagreement_tripwire_gold_rate": summary[
                 "sibling_disagreement_tripwire_gold_rate"
@@ -336,7 +341,9 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
         int(artifact["n_agreement_events"]),
     )
     if artifact["execution_floor_met"] is not computed_floor:
-        raise ValueError("execution_floor_met must equal total_codex_calls>0 AND n_agreement_events>0")
+        raise ValueError(
+            "execution_floor_met must equal total_codex_calls>0 AND n_agreement_events>0"
+        )
     if verdict.startswith(("complete:", "success:")) and not artifact["execution_floor_met"]:
         raise ValueError("complete/success verdict requires execution floor")
     if artifact["primary_gate_passed"] and not primary_gate_passed(
@@ -423,10 +430,15 @@ def run(
     pool_exhausted = True
     if workers <= 1:
         for task in tasks:
-            record = _chain_one(task, committed_entries_by_task, transcripts_dir, n_fresh, iters, timeout)
+            record = _chain_one(
+                task, committed_entries_by_task, transcripts_dir, n_fresh, iters, timeout
+            )
             records.append(record)
             _print_record(record, n_fresh)
-            if agreement_events_so_far(records, committed_entries_by_task) >= AGREEMENT_EVENT_TARGET:
+            if (
+                agreement_events_so_far(records, committed_entries_by_task)
+                >= AGREEMENT_EVENT_TARGET
+            ):
                 pool_exhausted = False
                 break
     else:
@@ -447,7 +459,10 @@ def run(
                 for record in futures:
                     records.append(record)
                     _print_record(record, n_fresh)
-                if agreement_events_so_far(records, committed_entries_by_task) >= AGREEMENT_EVENT_TARGET:
+                if (
+                    agreement_events_so_far(records, committed_entries_by_task)
+                    >= AGREEMENT_EVENT_TARGET
+                ):
                     pool_exhausted = False
                     break
 

@@ -27,9 +27,13 @@ from experiment_3998_gap4_deselection_coverage import (
     load_json,
     transcript_paths,
 )
+from carnot.paths import repo_root
 
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 ARC2_POOL = REPO_ROOT / "results" / "arc3_gap4_arc2_eval_pool.json.gz"
 CHAIN_ARTIFACT = REPO_ROOT / "results" / "arc3_gap4_arc2_chain_ensemble.json"
 OUTPUT = REPO_ROOT / "results" / "experiment_3999_gap4_precision_confirmation_v2.json"
@@ -250,8 +254,10 @@ def _grid_hash(grid: Any) -> str:
 
 
 def _score_grid(pred_grid: Any, target: np.ndarray | None) -> bool:
-    return target is not None and pred_grid is not None and np.array_equal(
-        np.asarray(pred_grid, dtype=np.int64), target
+    return (
+        target is not None
+        and pred_grid is not None
+        and np.array_equal(np.asarray(pred_grid, dtype=np.int64), target)
     )
 
 
@@ -503,7 +509,9 @@ def build_complete_artifact(
             "agreement_events": summary["agreement_events"],
             "per_task": summary["per_task"],
             "total_codex_calls": sum(int(record["n_calls"]) for record in records),
-            "total_codex_seconds": round(sum(float(record["codex_seconds"]) for record in records), 1),
+            "total_codex_seconds": round(
+                sum(float(record["codex_seconds"]) for record in records), 1
+            ),
             "leak_clean": bool(transcript_audit["clean"]),
             "leak_audit": transcript_audit,
         }

@@ -2,13 +2,25 @@
 curriculum and the spatial FiLM energy (the two panel-mandated fixes). CPU, deterministic, asserting.
 """
 
+# Path-resolution traceability: the repo-root/sys.path resolution in this file traces to
+# REQ-ARC-WMTE-6043 (centralised output-path resolution). That is the ONLY behaviour in this
+# file covered by that requirement -- the GAP-3/GAP-4 assertions below predate spec
+# traceability and are recorded as pre-existing debt in ops/known-issues.md, not claimed here.
+
 import sys
 
 import numpy as np
 import pytest
 import torch
 
-sys.path.insert(0, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments")
+from carnot.paths import repo_root
+
+# The GAP-3/GAP-4 experiment modules live in scripts/experiments/, which is not a
+# package, so it has to go on sys.path to be importable. Resolved from the repo root
+# rather than hardcoded: a hardcoded absolute path here poisons the WHOLE pytest-xdist
+# worker -- every later import in that worker resolves against the operator's checkout,
+# so even correctly repo-relative scripts write their output into the wrong tree.
+sys.path.insert(0, str(repo_root() / "scripts" / "experiments"))
 
 from arc3_gap3_stage2v2_transition_ebm import (  # noqa: E402
     MAX_HW,
@@ -30,9 +42,9 @@ def test_components_labels_4connected_same_color():
     # SCENARIO: the near-miss families operate on connected components; mislabeled components would
     # produce corrupted negatives that are not single-object perturbations.
     g = np.zeros((5, 5), dtype=int)
-    g[0, 0:3] = 4          # one 3-cell component
-    g[2, 2] = 4            # separate (diagonal does not connect)
-    g[4, 0:2] = 7          # different color component
+    g[0, 0:3] = 4  # one 3-cell component
+    g[2, 2] = 4  # separate (diagonal does not connect)
+    g[4, 0:2] = 7  # different color component
     comps = components(g)
     assert sorted((c, len(cells)) for c, cells in comps) == [(4, 1), (4, 3), (7, 2)]
 

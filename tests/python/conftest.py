@@ -1,5 +1,6 @@
 """Shared test fixtures for Carnot Python tests."""
 
+import contextlib
 import os
 import resource
 import sys
@@ -15,10 +16,30 @@ os.environ.setdefault("JAX_PLATFORMS", "cpu")
 import jax
 import pytest
 
+from carnot.paths import repo_root as _resolve_repo_root
 from carnot.testing.pytest_memory_watchdog import MemoryLeakDetected, PytestMemoryWatchdog
 
 # Add repo root to sys.path so tests can import from scripts/
-repo_root = Path(__file__).parent.parent.parent
+#
+# Routed through the central resolver (`carnot.paths`) rather than an ad-hoc
+# `Path(__file__).parent.parent.parent`. Two reasons, both about the SPELLING of the path
+# rather than which directory it names:
+#
+#  * The old expression never called `.resolve()`. Entered through the
+#    `Carnot-EBM/carnot-ebm` symlink alias, it inserted the ALIAS spelling on `sys.path`, so
+#    modules imported from it recorded alias-flavoured `__file__` values and any provenance
+#    derived from them disagreed with a run started from the real path -- exactly the
+#    inconsistency `carnot.paths` exists to remove.
+#  * Using the resolver here means there is ONE definition of "the repo root" in the test
+#    suite, so a future fix to root detection reaches this insert too.
+#
+# This was never a path-POISONING bug: the old expression was relative to the conftest that
+# is actually running, so it could not point at a different clone. It is corrected for
+# consistency and de-aliasing, not because it selected the wrong tree.
+#
+# `carnot` is already importable at this point (see the import above), so this introduces no
+# bootstrap cycle.
+repo_root = _resolve_repo_root(start=__file__)
 sys.path.insert(0, str(repo_root))
 
 # Disable JAX GPU for testing (CPU only)
@@ -129,6 +150,30 @@ def _mutation_check_module():
         return None
 
 
+def _operator_curated_doc_guard():
+    """Import the operator-curated-doc guard, or None if unavailable.
+
+    Never raises, for the same reason `_mutation_check_module` never raises: a guard that can
+    break the suite it guards gets deleted by the first person it inconveniences.
+    """
+    try:
+        from carnot.testing import operator_curated_doc_guard as _g
+
+        return _g
+    except Exception:  # noqa: BLE001 - deliberately total
+        return None
+
+
+def _install_operator_curated_doc_guard() -> None:
+    """Install the audit hook that refuses writes to operator-curated documents."""
+    guard = _operator_curated_doc_guard()
+    if guard is not None:
+        # Deliberately total: a guard that can break the suite it guards gets deleted by the
+        # first person it inconveniences, which leaves the record unprotected.
+        with contextlib.suppress(Exception):
+            guard.install()
+
+
 def _is_xdist_worker(config) -> bool:
     """True inside an xdist worker process, where this must NOT run.
 
@@ -144,6 +189,25 @@ def pytest_configure(config) -> None:
     """Set hard address-space limit and keep the RSS watchdog installed."""
     config._carnot_rlimit_as_set = _set_process_address_space_limit()
     config._carnot_memory_watchdog = PytestMemoryWatchdog()
+
+    # REFUSE ANY TEST WRITE TO AN OPERATOR-CURATED DOCUMENT (2026-07-29).
+    #
+    # `scripts/experiment_1750.py` writes `Path("README.md")` -- CWD-relative -- and pytest's
+    # working directory is the repo root, so two tests silently replaced the operator's
+    # hand-written README with a HuggingFace model card on every suite run, and passed while
+    # doing it. CLAUDE.md's "Public Documentation Discipline" forbids the autonomous loop from
+    # editing that file at all.
+    #
+    # This is installed in BOTH the controller and every xdist worker -- unlike the mutation
+    # baseline below, which must run only in the controller. The distinction matters: the
+    # baseline is a whole-session before/after diff and a worker's view of "session end" is
+    # partial, whereas this hook must be present in whichever process actually executes the
+    # offending test, and under `-n 4` that is always a worker.
+    #
+    # It only ARMS on writes INSIDE the repository, so a test that copies a doc into `tmp_path`
+    # and rewrites the copy is unaffected (see test_experiment_209_cleanup.py, which does
+    # exactly that and is correct).
+    _install_operator_curated_doc_guard()
 
     # ARM THE RECORD-REWRITE INTERLOCK, HOWEVER PYTEST WAS INVOKED (2026-07-29).
     #
@@ -167,13 +231,74 @@ def pytest_configure(config) -> None:
                 config._carnot_mutation_baseline = None
 
 
+def _clear_guard_violations() -> None:
+    guard = _operator_curated_doc_guard()
+    if guard is not None:
+        guard.clear_violations()
+
+
+def _fail_if_guard_violations() -> None:
+    """Fail the current test if it wrote an operator-curated document.
+
+    This is the ANTI-SWALLOW half of the guard. The audit hook raises at the write, which fails
+    an ordinary test on the spot -- but a test that wraps the call in `except Exception: pass`
+    would otherwise report green, and a guard a careless test can silence is not a guard. The
+    hook records every violation to a ledger regardless of what the test body does with the
+    exception; this reads that ledger and fails the test on a non-empty result. The only way to
+    pass is to not perform the write.
+    """
+    guard = _operator_curated_doc_guard()
+    if guard is None:
+        return
+    violations = guard.recorded_violations()
+    if not violations:
+        return
+    guard.clear_violations()
+    detail = "\n\n".join(f"  {v['event']} {v['path']}\n{v['stack']}" for v in violations)
+    raise pytest.fail.Exception(
+        "Test wrote (or attempted to write) an operator-curated document.\n"
+        "CLAUDE.md 'Public Documentation Discipline' forbids the autonomous loop from\n"
+        "editing these files. Redirect the write to tmp_path -- do not delete the test.\n\n"
+        f"{detail}"
+    )
+
+
 @pytest.hookimpl(tryfirst=True)
 def pytest_runtest_setup(item) -> None:
+    # Reset the guard's ledger so a violation is attributed to exactly one test.
+    _clear_guard_violations()
     _get_memory_watchdog(item.config).record_setup(item)
+
+
+@pytest.hookimpl(wrapper=True)
+def pytest_runtest_call(item):
+    """Convert a swallowed guard violation into a real call-phase FAILURE.
+
+    Doing this in the CALL phase rather than teardown matters for how the result reads. A
+    `pytest.fail` raised in teardown produces `1 passed, 1 error` -- the exit code is non-zero,
+    so nothing ships, but the summary line still says "passed" next to the offending test, which
+    is exactly the kind of ambiguous signal that lets a real problem get waved through. Failing
+    in the call phase reports it as `1 failed`, which is what actually happened.
+    """
+    try:
+        result = yield
+    except BaseException:
+        # The test already failed -- most likely on the guard's own exception, which carries the
+        # better message and the write's stack. Drop our ledger entry so teardown does not
+        # report the same violation a second time, and let the original propagate.
+        _clear_guard_violations()
+        raise
+    _fail_if_guard_violations()
+    return result
 
 
 @pytest.hookimpl(trylast=True)
 def pytest_runtest_teardown(item, nextitem) -> None:
+    # Safety net for violations that happen OUTSIDE the call phase -- a fixture's setup or
+    # teardown. The call-phase wrapper above has already cleared anything it handled, so this
+    # cannot double-report.
+    _fail_if_guard_violations()
+
     try:
         _get_memory_watchdog(item.config).record_teardown(item)
     except MemoryLeakDetected as exc:

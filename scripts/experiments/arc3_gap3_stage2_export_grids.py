@@ -26,8 +26,12 @@ import sys
 from types import SimpleNamespace
 
 import numpy as np
+from carnot.paths import repo_root
 
-CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+CARNOT = str(repo_root())
 TRM = "/home/ianblenke/trm_src"
 sys.path.insert(0, TRM)
 

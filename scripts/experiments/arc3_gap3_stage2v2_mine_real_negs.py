@@ -49,13 +49,17 @@ import json
 import os
 import sys
 import time
+from carnot.paths import repo_root
 
 TRM = "/home/ianblenke/trm_src"
 SNAP = (
     "/home/ianblenke/.cache/huggingface/hub/models--arcprize--trm_arc_prize_verification/"
     "snapshots/55ced5dd59de74c52f53d47aa2898232b5a15b7a"
 )
-CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+CARNOT = str(repo_root())
 SUB, STEP = "arc_v1_public", "step_518071"
 DUMP_DIR = f"{TRM}/eval_out/arc_v1_trainmine"
 OUT = f"{CARNOT}/results/arc3_gap3_stage2v2_mined_negs.json.gz"

@@ -84,8 +84,12 @@ from arc3_gap4_rule_exec_verifier import (  # noqa: E402
     induction_prompt,
     safe_transform_from_code,
 )
+from carnot.paths import repo_root
 
-REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+# Resolved via the central resolver rather than hardcoded: a hardcoded
+# absolute path makes a fresh clone write into the original author's
+# checkout. See python/carnot/paths.py.
+REPO_ROOT = repo_root()
 OUTPUT = REPO_ROOT / "results" / "experiment_4002_gap4_local_generator_arm.json"
 CODEX_REF = REPO_ROOT / "results" / "arc3_gap4_rule_exec_verifier.json"
 
@@ -276,7 +280,9 @@ class LocalGGUFProposer:
         return text, round(time.time() - t0, 2)
 
 
-def load_local_llama(gguf_path: str, n_ctx: int = 16384, seed: int = SEED) -> Any:  # pragma: no cover
+def load_local_llama(
+    gguf_path: str, n_ctx: int = 16384, seed: int = SEED
+) -> Any:  # pragma: no cover
     """Build the real llama.cpp model. Excluded from unit coverage because it loads a multi-GB GGUF
     onto the GPU; the proposer contract around it is covered with a fake llama in the tests.
 
@@ -367,7 +373,9 @@ def induce_pool(
     prog_by_entry: dict[int, dict[str, Any]] = {}
     for task_name in sorted(by_task):
         ents = by_task[task_name]
-        rec = induce_program_local(task_name, ents[0]["demos"], ents[0]["test_input"], proposer, iters)
+        rec = induce_program_local(
+            task_name, ents[0]["demos"], ents[0]["test_input"], proposer, iters
+        )
         prog_by_entry[id(ents[0])] = rec
         for extra in ents[1:]:
             fn = safe_transform_from_code(rec["code"]) if rec["code"] else None
@@ -613,9 +621,14 @@ def validate_artifact(artifact: dict[str, Any]) -> None:
     ):
         if not _is_bare_float(artifact[field]):
             raise ValueError(f"{field} must be a bare float")
-    if not (isinstance(artifact["random_seed"], int) and not isinstance(artifact["random_seed"], bool)):
+    if not (
+        isinstance(artifact["random_seed"], int) and not isinstance(artifact["random_seed"], bool)
+    ):
         raise ValueError("random_seed must be a bare int")
-    if not (isinstance(artifact["ci95_local_minus_vote"], list) and len(artifact["ci95_local_minus_vote"]) == 2):
+    if not (
+        isinstance(artifact["ci95_local_minus_vote"], list)
+        and len(artifact["ci95_local_minus_vote"]) == 2
+    ):
         raise ValueError("ci95_local_minus_vote must be a 2-element list")
     for field in ("local_model_used", "missing_verifier_gaps", "inference_substrate"):
         if not isinstance(artifact[field], str):
@@ -677,9 +690,7 @@ def build_complete_artifact(
     local_beats_vote = bool(g2 > scored["vote2"] and ci[0] > 0.0)
 
     total_local_s = sum(
-        prog_by_entry_id[id(e)]["local_seconds"]
-        for e in entries
-        if prog_by_entry_id.get(id(e))
+        prog_by_entry_id[id(e)]["local_seconds"] for e in entries if prog_by_entry_id.get(id(e))
     )
     cost_local = round(total_local_s / max(1, n_unique), 2)
     total_calls = sum(
@@ -691,7 +702,9 @@ def build_complete_artifact(
     progs_blob = json.dumps(
         sorted(
             (rec["task"], rec["code"] or "")
-            for rec in {id(e): prog_by_entry_id[id(e)] for e in entries if prog_by_entry_id.get(id(e))}.values()
+            for rec in {
+                id(e): prog_by_entry_id[id(e)] for e in entries if prog_by_entry_id.get(id(e))
+            }.values()
         ),
         sort_keys=True,
     )
