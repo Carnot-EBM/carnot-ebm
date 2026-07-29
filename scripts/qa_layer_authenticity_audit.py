@@ -229,7 +229,22 @@ ACKNOWLEDGED_NON_QA_LAYER: dict[str, str] = {
     "pages_fever_dream_lint.py": (
         "presentation-quality lint for the landing page; failure costs professional "
         "polish, not a determination. NOTE its sibling Layer-2 (pages_adversarial_audit) "
-        "reviews the PAGE, not this linter -- so this is an acknowledged, recorded gap"
+        "reviews the PAGE, not this linter -- so this is an acknowledged, recorded gap. "
+        "RE-DECIDED 2026-07-29 ON EVIDENCE, not on this description: the file was read in "
+        "full and audited once via `--file --guard-prompt --model codex`, which returned "
+        "SILENT_NON_FIRING. Every defect it named was independently reproduced and every "
+        "one is UNDER-DETECTION OF PRESENTATION BLOAT -- `Exp. 1001`, `exp1001`, "
+        "`experiment 1001` all evade EXP_ID_RE, which only knows `Exp 1001`; "
+        "`inference_mode=calibrated` and `n_seeds=5` evade FLAG_SYNTAX_RE, which only "
+        "knows booleans; and a missing docs/index.html returns 0, so pre-commit sees "
+        "clean. Consequence of every one is jargon or bloat reaching the landing page. "
+        "None reads an artifact, admits a claim, or preserves a record, so it cannot let "
+        "a false research claim through -- which is the criterion GUARD_TARGETS is drawn "
+        "on. Kept OUT so audit attention stays on guards whose silence costs a "
+        "determination. THE STANDING GAP IS UNCHANGED AND DELIBERATE: nothing reviews "
+        "this linter on a cadence, so if it ever grows a rule that gates a CLAIM rather "
+        "than polish, this entry must be revisited -- there is currently no mechanism "
+        "that forces that revisit when the file changes"
     ),
     "overdue_priority_lint.py": (
         "planning-cadence forcing function; failure delays work rather than admitting a false claim"

@@ -33,7 +33,13 @@ enumerated here** — do not read the commit as "all hardcoded paths are gone."
   inherited by children, so `subprocess.run([...])` or any `shell=True` redirect can still destroy an
   operator-curated doc. Verified empirically. ~184 test files spawn subprocesses and ~159 reference
   `scripts/`, so this is a large unguarded surface. `scripts/test_suite_mutation_check.py --check`
-  plus `git status` remain the only backstop for that class.
+  plus `git status` remain the only backstop for that class. **Updated 2026-07-29:** `--check` now
+  requires a baseline taken *before* the run (`--run -- <cmd>`, or `--snapshot` paired via
+  `$CARNOT_MUTATION_RUN_ID`); a bare `--check` REFUSES rather than answering from whatever shared
+  snapshot was last on disk. So this backstop is only armed if you take the baseline first —
+  budget for that, because the previous shared-snapshot version would silently answer from another
+  workflow's baseline, which is worse than refusing. The `--gate` pre-commit hook needs no baseline
+  and is unaffected.
 * **Module-scope constants are not sandboxable.** `X = repo_root() / ...` at import time freezes
   before any test can set `$CARNOT_REPO_ROOT`, so `monkeypatch.setenv` silently fails to redirect it.
   Documented in `paths.py`; `python/carnot/reporting/grpo_vprm_v11_headline_gate.py:18` is a known

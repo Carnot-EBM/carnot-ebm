@@ -810,7 +810,9 @@ QA-Layer discipline's deliberate zero:
 - `scripts/test_suite_mutation_check.py` (pre-commit
   `test-suite-mutation-gate`, plus `--check` for interactive use) — detects a
   test run having rewritten tracked files, and doubles as the mutation-testing
-  harness that proves a guard's patterns actually bite.
+  harness that proves a guard's patterns actually bite. `--check` needs a
+  baseline taken before the run (see "How to apply (operator)" step 1);
+  `--gate` does not.
 - `python/carnot/testing/operator_curated_doc_guard.py` — the RUNTIME half:
   wired through `tests/python/conftest.py`, it fires at the moment a test
   writes an operator-curated doc and names the writer. This is the only layer
@@ -840,30 +842,74 @@ at the next incident.
 
 **How to apply (operator).**
 
-1. Run `.venv/bin/python scripts/test_suite_mutation_check.py --check` after
-   any local test run, before staging. It reports which tracked files a test
-   touched.
+1. **Take a baseline BEFORE the test run, then check after it.** `--check`
+   compares against a baseline and has no way to invent one, so a bare
+   `--check` with no prior `--snapshot` REFUSES (exit 1) rather than guessing
+   — see the 2026-07-29 note below for why that replaced a silent fail-open.
+   Either wrap the run:
+
+   ```bash
+   .venv/bin/python scripts/test_suite_mutation_check.py --run -- \
+       pytest tests/python -x
+   ```
+
+   or take the baseline by hand and pair it with a matching check:
+
+   ```bash
+   export CARNOT_MUTATION_RUN_ID=my-session      # pins both halves together
+   .venv/bin/python scripts/test_suite_mutation_check.py --snapshot
+   pytest tests/python
+   .venv/bin/python scripts/test_suite_mutation_check.py --check
+   ```
+
+   Pin `$CARNOT_MUTATION_RUN_ID` (or pass `--run-id`) whenever another
+   workflow may be running: it is what keeps your baseline from being paired
+   with someone else's. Without it an id is derived from the parent shell,
+   which is usually right but is shared between agent workflows spawned from
+   the same parent.
+
+   `--gate` — the pre-commit hook — needs no baseline and is unaffected by any
+   of this. It refuses while a pending marker exists. Do not "fix" a `--gate`
+   refusal by taking a snapshot; investigate the marker.
 2. `git status`, then `git checkout --` anything you did not deliberately
    change. Confirm with `git diff` before `git add`.
 
-   **STOP — read this before executing step 2 literally. Under concurrent
-   workflows, `--check` output is a SUPERSET of what your test run did, and
-   `git checkout --` on the reported list is itself a data-loss event of exactly
-   the class "Never Stash — Always Commit-First" exists to prevent.** The
-   `already_dirty` baseline in `ops/.test_suite_mutation_snapshot.json` is
-   SHARED MUTABLE STATE with a single timestamp; anything another workflow
-   modified *after* that snapshot was taken is indistinguishable, to this tool,
-   from something your tests rewrote. Observed 2026-07-29: a snapshot with 7
-   baseline entries reported ~75 paths, the bulk of them a concurrent
+   **STOP — `--check` output is a SUPERSET of what your test run did, and
+   `git checkout --` on the reported list is itself a data-loss event of
+   exactly the class "Never Stash — Always Commit-First" exists to prevent.**
+   The tool diffs the working tree against a baseline; it cannot tell WHOSE
+   write it was, so anything a concurrent workflow changed inside your window
+   is attributed to your run. This is deliberate — the error direction is
+   fail-closed (over-report, never miss) — but it means the reported list is
+   evidence to read, never a command to execute. Confirmed still true
+   2026-07-29 after the concurrency fix below: three markers armed during one
+   agent's pytest window named files a *different* workflow had written.
+
+   So: revert only paths you can attribute to your own run, and never
+   blanket-`git checkout --` the reported list. When in doubt, commit-first
+   (the standing rule) and inspect the diff afterwards — a superfluous
+   `[outer-loop]` commit costs nothing; a `git checkout` over someone else's
+   work is unrecoverable.
+
+   ~~The `already_dirty` baseline in `ops/.test_suite_mutation_snapshot.json`
+   is SHARED MUTABLE STATE with a single timestamp; anything another workflow
+   modified *after* that snapshot was taken is indistinguishable, to this
+   tool, from something your tests rewrote.~~ **Resolved 2026-07-29** — the
+   single shared snapshot is gone, replaced by per-run baselines under
+   `ops/.test_suite_mutation_runs/`, so one workflow can no longer overwrite
+   another's baseline (observed before the fix: a 14:52Z snapshot replaced by
+   one stamped 11:43:01Z). Two consequences worth knowing: a bare `--check`
+   now refuses instead of silently answering from whatever baseline happened
+   to be on disk, and when several candidate baselines match, `--check`
+   refuses and lists them rather than picking one. The over-reporting in the
+   paragraph above is NOT resolved by this and never will be — it is inherent
+   to diffing a shared working tree.
+
+   The 2026-07-29 observation that motivated the fix is preserved: a snapshot
+   with 7 baseline entries reported ~75 paths, the bulk of them a concurrent
    migration's uncommitted in-flight work, under the heading "To undo:
    `git checkout -- <paths>`". Executing that as written would have destroyed
    another agent's session.
-
-   So: **re-snapshot immediately before your own test run**, revert only paths
-   you can attribute to it, and never blanket-`git checkout --` the reported
-   list. When in doubt, commit-first (the standing rule) and inspect the diff
-   afterwards — a superfluous `[outer-loop]` commit costs nothing; a
-   `git checkout` over someone else's work is unrecoverable.
 3. When the Layer-2 audit reports a `## MISSED INPUT` line for one of these
    guards, treat it as a widening task with the test already specified — see
    the QA-Layer discipline's operator instructions.

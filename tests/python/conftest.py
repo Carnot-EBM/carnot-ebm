@@ -334,9 +334,12 @@ def pytest_sessionfinish(session, exitstatus) -> None:
             pytest.PytestWarning(
                 f"This test run REWROTE {len(muts)} tracked file(s) that were clean before it: "
                 f"{muts[:5]}{' ...' if len(muts) > 5 else ''}. These are the committed research "
-                f"record, not test output. Commits are now blocked until this is resolved -- see "
-                f"`python3 scripts/test_suite_mutation_check.py --check` and "
-                f"`--restore`, or `git checkout -- <paths>`."
+                f"record, not test output. Commits are now blocked until this is resolved -- run "
+                f"`python3 scripts/test_suite_mutation_check.py --gate` to list every affected "
+                f"file, then `git checkout -- <paths>` (the marker retires itself once the tree "
+                f"shows the damage undone). Do NOT reach for `--check` here: it needs a baseline "
+                f"taken before the run under a matching --run-id, and this hook keeps its baseline "
+                f"in memory rather than on disk, so `--check` would refuse."
             ),
             stacklevel=2,
         )
