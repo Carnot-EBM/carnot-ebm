@@ -1,0 +1,97 @@
+# The ARC live agent's bottleneck is world-model induction, not the gate that rejects it
+
+**Date:** 2026-07-29
+**Status:** measurement note; three candidate levers ruled out with evidence
+**Origin:** the engine-retention -> banked-levels A/B (REQ-ARC-WMTE-6035). While establishing
+whether that A/B *could* detect anything, the support analysis walked upstream and found the
+binding constraint.
+
+## The one metric that has not moved
+
+Banked levels on held-out games has been flat at 3 (31B) / 3 (9B) across an inducer migration
+that made the generator roughly 6x better. That non-result is usually read as "the lever we
+tried was weak." It is not. It is the same non-result every lever in this area will produce
+until the finding below is addressed.
+
+## The chain, each link measured
+
+**1. Retention acts downstream of admission.** Best-engine retention decides WHICH refinement
+round's engine the store ends up holding. That can only change the agent's behaviour if the
+stored engine reaches the policy at all.
+
+**2. Multi-round refinement and reaching the policy are anti-correlated — perfectly.** Across
+the 13 cells of the 2026-07-28 held-out run:
+
+| | reached policy = True | reached policy = False |
+|---|---|---|
+| any multi-round attempt | **0** | 11 |
+| all attempts single-round | 2 | 0 |
+
+The mechanism is structural, not incidental: a second refinement round runs *because* round 1
+failed the admission gate. If the later rounds fail too, nothing is accepted and nothing
+reaches the policy. If round 1 passes, refinement stops at one round and retention is a
+definitional no-op. Retention's precondition and its opportunity are mutually exclusive in
+practice.
+
+**3. Admission is where it dies.** Of 17 induction attempts, **12 had no round accepted at
+all**, and 9 were blocked specifically by `world_model_accuracy_below_threshold`.
+
+**4. Relaxing the threshold does not help.** `heldout_accuracy` over 45 rounds is degenerate-
+bimodal — 32 rounds score exactly 0.0, 9 score exactly 1.0, and only 4 land in between.
+Thresholds from the shipped 1.0 all the way down to 0.6 admit the **identical 9 rounds**.
+There is no continuum to trade precision against recall on.
+
+**5. Nor does switching to the graded metric.** `CARNOT_ARC_TRUST_METRIC=cell_recall` already
+exists as a lever. Computing it directly from `experiment_6012`'s recorded
+`correct_changed_cells / true_changed_cells` for the real induced (`ondisk`) engines, over
+11 games x 3 seeds:
+
+    median cell_recall 0.0033    max 0.0870    n = 33
+    a graded gate at 0.90 / 0.75 / 0.50 / 0.25 / 0.10 admits 0/33 in every case
+
+**6. The gate itself is fine.** In the same matrix a correct hand-written `base` engine is
+admitted in 31/33 rows and the `identity` engine in 0/33. The gate discriminates exactly as
+intended. It is the induced engines that never clear it.
+
+## What the induced world models are actually doing
+
+The two numbers together are diagnostic. Exact-match `heldout_accuracy` sits at intermediate
+values (0.125-0.6) while cell recall on the same rows is ~0.003. That combination has one
+explanation: the engines predict *no-op frames* correctly — most cells do not change, so
+copying the input scores well — and get essentially every *changed* cell wrong. On the cells
+that carry the dynamics, the induced world model is behaving like the identity engine, which
+the gate correctly rejects.
+
+So the failure is not "the model is slightly imperfect and the gate is too strict." It is
+"the model has not learned the dynamics at all, and the gate is correctly saying so."
+
+## Consequences
+
+* **Retention cannot move banked levels**, and neither can any further work on the admission
+  gate, its threshold, or its metric. All three are downstream of, or orthogonal to, a world
+  model that is wrong about ~99.7% of changed cells.
+* **This explains the inducer migration's null.** A 6x better generator still has to produce a
+  world model that predicts changed cells. Making the proposer stronger did not change what it
+  is being asked to produce or how that is scored, so it did not convert.
+* **The live agent's own note already suspected this** — `arc_competition_agent.py:5751`
+  records that the `min_heldout_accuracy=1.0` gate "is rarely met (0/6 rounds across a full
+  real run on g50t)". This note supplies the reason and rules out the obvious fixes.
+
+## Caveat, stated rather than buried
+
+The cell-recall figures come from `results/arc_e3_origin_fixtures`, whose on-disk engines
+predate best-engine retention and may therefore include stores corrupted by the
+last-write-wins overwrite that REQ-ARC-WMTE-6035 fixes (the ka59 fidelity 1.0000 -> 0.0000
+case). That weakens point 5 as a statement about *freshly induced* engines specifically.
+It does not weaken the chain, because points 3 and 4 are measured on fresh live inductions:
+71% of fresh rounds score exactly 0.0, and 12 of 17 attempts had no accepted round.
+
+## The next question worth asking
+
+Not "how do we admit more engines" but **"why does induction produce a world model that is
+right about static cells and wrong about moving ones, and what representation or supervision
+would change that?"** Concretely, the cheapest discriminating experiment is to take a game
+where a correct `base` engine exists, diff it against the induced engine on the changed-cell
+predictions, and characterise the error class — is the induced engine missing the action
+semantics, the object identity, or the update rule? That is a CPU-only analysis over existing
+fixtures and needs no GPU time.
