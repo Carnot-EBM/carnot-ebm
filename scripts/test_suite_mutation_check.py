@@ -44,8 +44,19 @@ USAGE
     # Wrap a test run: snapshot, run, report, and refuse (exit 1) if the record moved.
     python3 scripts/test_suite_mutation_check.py --run -- pytest tests/python/test_arc_frame_induction.py
 
-    # ...and put everything the run touched back the way it was.
+    # ...and put everything the run touched back the way it was. Every reverted file's previous
+    # content is copied to ops/.test_suite_mutation_backup/ first -- see the warning below.
     python3 scripts/test_suite_mutation_check.py --restore --run -- pytest tests/python
+
+DO NOT EDIT TRACKED FILES WHILE A ``--restore`` RUN IS IN FLIGHT
+---------------------------------------------------------------
+``--restore`` reverts everything that changed since the snapshot, and it CANNOT tell a test's
+write from your concurrent edit -- both are "modified since the snapshot". Editing a tracked file
+during a wrapped run therefore gets that edit reverted. This has happened twice, both times to
+``docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`` while it was being
+written. Since authorship is not recoverable in principle, the revert is made SURVIVABLE instead:
+every file is copied to ``ops/.test_suite_mutation_backup/<path>`` before it is reverted. If a
+restore takes something it should not have, copy it back from there.
 
     # Or do it by hand, around anything at all:
     python3 scripts/test_suite_mutation_check.py --snapshot
@@ -91,6 +102,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 SNAPSHOT = REPO / "ops" / ".test_suite_mutation_snapshot.json"
 PENDING = REPO / "ops" / ".test_suite_mutation_pending.json"
+# Where `restore()` parks a file's pre-revert content. `git checkout --` cannot be undone, and the
+# detector cannot tell a test's write from a human's concurrent edit, so every revert is made
+# recoverable rather than trusted to be correct. See `backup()`.
+BACKUP = REPO / "ops" / ".test_suite_mutation_backup"
 
 
 def _git(*args: str) -> str:
@@ -169,10 +184,53 @@ def mutations(baseline: dict[str, str]) -> list[str]:
     return sorted(p for p in now if p not in baseline)
 
 
+def backup(paths: list[str]) -> list[str]:
+    """Copy each path's CURRENT content aside before anything reverts it.
+
+    WHY THIS EXISTS -- it has now bitten twice, both times on the same file.
+
+    ``restore()`` is ``git checkout --``, which is UNRECOVERABLE for uncommitted content. The
+    detector attributes "modified since the snapshot" to the test run, but it cannot actually tell
+    WHO wrote a file: a human editing a tracked file WHILE a wrapped run is in flight looks exactly
+    like a test rewriting it. Both incidents were the same shape -- an in-progress edit to
+    ``docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`` was written after
+    the snapshot was taken, so the restore dutifully reverted it and the work was gone with no
+    diff, no warning, and nothing on disk to recover from. (The first is recorded in that
+    document's own section 3.6; the second happened while validating this script.)
+
+    Authorship is not recoverable in principle, so the fix is not smarter attribution -- it is
+    making the mistake survivable. Every file is copied to ``ops/.test_suite_mutation_backup/``
+    (gitignored) before it is reverted, and the destination is printed. A wrong revert then costs a
+    ``cp`` instead of the work.
+    """
+    saved: list[str] = []
+    for p in paths:
+        src = REPO / p
+        if not src.exists():
+            continue
+        dst = BACKUP / p
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            dst.write_bytes(src.read_bytes())
+            saved.append(p)
+        except OSError:
+            # A backup failure must never be the reason a restore does not happen; the caller
+            # reports how many were saved, so a shortfall is visible rather than silent.
+            continue
+    return saved
+
+
 def restore(paths: list[str]) -> list[str]:
-    """Put the named paths back to their committed content. Returns the ones that came back."""
+    """Put the named paths back to their committed content. Returns the ones that came back.
+
+    Backs every path up first -- see ``backup()`` for why that is not optional.
+    """
     if not paths:
         return []
+    saved = backup(paths)
+    print(f"  backed up {len(saved)}/{len(paths)} file(s) to {BACKUP.relative_to(REPO)}/")
+    if len(saved) < len(paths):
+        print(f"  WARNING: {len(paths) - len(saved)} file(s) could NOT be backed up before revert")
     _git("checkout", "--", *paths)
     still = dirty_tracked()
     return [p for p in paths if p not in still]
@@ -199,6 +257,81 @@ def _report(muts: list[str]) -> None:
     )
 
 
+def write_pending(muts: list[str], command: list[str]) -> None:
+    """Arm the pre-commit interlock: record which tracked files a run rewrote.
+
+    Factored out of ``cmd_run`` so the pytest auto-arm hook (``arm_from_pytest``) writes the
+    SAME marker in the SAME shape. Two code paths writing two slightly different markers is how
+    a gate ends up passing on one of them.
+    """
+    PENDING.parent.mkdir(parents=True, exist_ok=True)
+    PENDING.write_text(
+        json.dumps(
+            {
+                "detected_at": datetime.now(UTC).isoformat(),
+                "command": command,
+                "modified_tracked_files": muts,
+                "why_this_blocks_commits": (
+                    "These tracked files were rewritten by a test run, not by an edit. "
+                    "Committing them publishes a silent rewrite of the research record. "
+                    "Restore them, or delete this marker deliberately if the rewrite is "
+                    "intended and explained in the commit message."
+                ),
+            },
+            indent=1,
+        )
+        + "\n"
+    )
+
+
+def arm_from_pytest(baseline: dict[str, str], command: list[str]) -> list[str]:
+    """Called by ``tests/python/conftest.py`` at session end. Returns the mutations found.
+
+    WHY THIS ENTRY POINT EXISTS (2026-07-29 review finding, the interlock's worst gap).
+    ------------------------------------------------------------------------------------
+    ``--gate`` refuses a commit while ``ops/.test_suite_mutation_pending.json`` exists, and until
+    now only ``--run`` ever wrote that marker. So the interlock protected exactly the invocation
+    nobody uses, and was silent for the one that caused BOTH recorded incidents:
+
+        pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py
+
+    A bare ``pytest`` leaves no marker, so ``--gate`` exits 0 on a tree the suite has just
+    rewritten. Demonstrated against the real tree: after simulating that rewrite class,
+    ``README.md`` (operator-curated, and one of the original 39) and
+    ``openspec/papers/paper-v6/section-6-limitations.md`` were both modified while ``--gate``
+    exited 0 and the determination lint printed OK.
+
+    The fix has to live where pytest is, not where the wrapper is -- an interlock that depends on
+    the user choosing the safe wrapper is not an interlock. So ``conftest.py`` takes the baseline
+    at session start and calls this at session end, and the marker gets armed HOWEVER pytest was
+    invoked.
+
+    Deliberately NOT the alternative fix of wiring ``--check`` into pre-commit: ``--check`` reads
+    a snapshot file that a bare pytest run never wrote, so with no baseline it cannot distinguish
+    a test's rewrite from a human's in-flight edit, and would refuse every commit made on a dirty
+    tree. The baseline is the whole mechanism; the hook is just where it is read.
+
+    This NEVER restores anything. Auto-reverting a file out from under a concurrent human edit is
+    the failure this tool has already had twice (see ``backup()``); arming a marker is safe,
+    reverting is not.
+
+    STATED LIMITATION: a run that is KILLED never arms. ``pytest_sessionfinish`` does not run if
+    the process is SIGTERM'd or SIGKILL'd, so a suite that times out (or that the operator
+    interrupts) can leave rewrites on disk with no marker. Observed directly while validating
+    this: a 2-minute timeout killed a full ``test_arc_*.py`` run mid-flight and no marker was
+    written. That run happened to have moved nothing, but the gap is real. ``--run`` does not
+    share it (the wrapper checks after the child exits however it exited), so wrap anything
+    long-running. This is a reason to keep ``--run`` alive, not a reason to distrust the hook:
+    the hook's job is to cover the *bare pytest* case that had no coverage at all.
+    """
+    muts = mutations(baseline)
+    if not muts:
+        PENDING.unlink(missing_ok=True)
+        return []
+    write_pending(muts, command)
+    return muts
+
+
 def cmd_run(argv: list[str], do_restore: bool) -> int:
     baseline = snapshot()
     print(f"test-suite-mutation-check: baseline taken ({len(baseline)} file(s) already dirty)")
@@ -218,24 +351,7 @@ def cmd_run(argv: list[str], do_restore: bool) -> int:
             return proc.returncode or 0
         muts = left
         print(f"  COULD NOT RESTORE: {left}")
-    PENDING.parent.mkdir(parents=True, exist_ok=True)
-    PENDING.write_text(
-        json.dumps(
-            {
-                "detected_at": datetime.now(UTC).isoformat(),
-                "command": argv,
-                "modified_tracked_files": muts,
-                "why_this_blocks_commits": (
-                    "These tracked files were rewritten by a test run, not by an edit. "
-                    "Committing them publishes a silent rewrite of the research record. "
-                    "Restore them, or delete this marker deliberately if the rewrite is "
-                    "intended and explained in the commit message."
-                ),
-            },
-            indent=1,
-        )
-        + "\n"
-    )
+    write_pending(muts, argv)
     return 1
 
 

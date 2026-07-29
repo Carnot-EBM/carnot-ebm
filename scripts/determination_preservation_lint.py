@@ -138,10 +138,18 @@ The patterns below were derived by censusing every top-level key in all 15,331
 name-shapes that mark a REVIEW OUTPUT and rejecting the ones that mark a MEASUREMENT. That
 distinction is the whole design, and it is why some obvious-looking patterns are absent:
 
-  * ``correct`` is NOT a pattern. 601 artifacts carry ``energy_correct`` / ``sc_correct`` /
-    ``judge_correct`` / ``n_correct`` -- these are accuracy MEASUREMENTS, and a re-run that
-    changes them is exactly the fail-forward behaviour this lint must never obstruct. Only
-    the longer, prose-shaped ``correction`` is matched.
+  * ``correct`` is NOT a pattern. 465 artifacts carry a top-level ``*correct*`` key that is
+    not ``*correction*`` -- ``energy_correct`` (201), ``sc_correct`` (200),
+    ``energy_pure_correct`` (200), ``judge_correct`` (200), ``n_correct`` (37) and others --
+    and these are accuracy MEASUREMENTS. A re-run that changes them is exactly the
+    fail-forward behaviour this lint must never obstruct. Only the longer, prose-shaped
+    ``correction`` is matched.
+
+    (The figure in the first draft of this docstring was 601, which does not reproduce. The
+    predicate that yields 465 is: top-level keys only, case-insensitive ``correct`` in the
+    name, excluding names containing ``correction``, counted once per artifact. The design
+    decision is unaffected -- those are measurements either way -- but an unreproducible
+    number is not evidence, so it is corrected rather than left standing.)
   * ``corrected_`` is NOT a pattern, for the same reason: ``corrected_cdls_projection_mh``
     and ``corrected_cdls_acceptance_rate`` are numbers.
   * ``_note`` IS a pattern, but only fires when the OLD value was substantive (a non-empty
@@ -206,6 +214,21 @@ MARKER_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"disclos", re.I), "disclosure record"),
     (re.compile(r"caveat", re.I), "caveat record"),
     (re.compile(r"^(notes?|.+_notes?)$", re.I), "review note"),
+    # Added 2026-07-29 after a review found these review-output names uncovered. Each is a
+    # judgement a REVIEW produced, which a re-run's fresh numbers do not supersede:
+    #   justif...        -> `n_samples_justification` (56), the sample-size disclosure that
+    #                       CLAUDE.md's Adversarial Artifact Verification rule REQUIRES for
+    #                       any distributional claim.
+    #   false_negative.. -> `false_negative_risk_checked` (63), the FALSE_NEGATIVE_RISK
+    #                       positive-control check.
+    #   forbidden_claims -> `paper_v6_forbidden_claims` (22), the Paper-v6 Narrowing
+    #                       Discipline's retraction list.
+    # `honest_verdict` (5,245) is deliberately NOT here: a re-run legitimately produces a new
+    # verdict, so protecting it would refuse the fail-forward behaviour this lint must allow.
+    (re.compile(r"justif", re.I), "sample-size justification"),
+    (re.compile(r"false_negative_risk", re.I), "false-negative-risk check"),
+    (re.compile(r"forbidden_claims", re.I), "forbidden-claims record"),
+    (re.compile(r"^adversarial_verify_flags$", re.I), "adversarial-verify flag record"),
     (re.compile(r"^verifier_is_oracle$", re.I), "circularity declaration"),
     (re.compile(r"^flagged_adversarial", re.I), "fabrication-gate stamp"),
     (re.compile(r"^preconditions_checked$", re.I), "precondition record"),
@@ -223,10 +246,28 @@ SUBSTRATE_FIELD = re.compile(
     re.I,
 )
 
+# `inference_substrate` is the ONE field in this family governed by a documented fixed
+# vocabulary (CLAUDE.md "Inference-Substrate Declaration Discipline"), enumerated in
+# `adversarial_verify.py`'s three alias tuples. It is therefore ranked from that enum and
+# NEVER by scanning prose -- see `_strength_rank` for why that distinction is load-bearing.
+ENUM_GOVERNED_SUBSTRATE_FIELD = "inference_substrate"
+
 # Strength bands, weakest first. A declared value's rank is the MINIMUM band of every token
 # it matches, so `cpu_synthetic` ranks as SYNTHETIC (1) rather than as CPU (2), and
 # `blocked_no_live_gpu` ranks as NOT-RUN (0) rather than as LIVE (3). Taking the minimum is
 # the conservative reading: a string that admits any weak token is at most that strong.
+#
+# TOKENS ARE ANCHORED AT A TOKEN START, NOT MATCHED AS BARE SUBSTRINGS (2026-07-29). The
+# first draft used `token in value`, so `real` matched inside `unreal`, `cpu` inside
+# `cpu`-free prose, and so on. Values are normalised (non-alphanumeric runs -> `_`) and each
+# band token must begin at a token boundary. Tokens stay PREFIXES rather than whole words on
+# purpose -- `simulat` has to catch `simulated` and `simulation`, and `analys` has to catch
+# `analysis` and `analyser`.
+#
+# Token anchoring does NOT resolve the `arc_live_path_patch_synthesis` collision, because
+# that value genuinely contains `live` as a whole token. That case is handled structurally
+# instead, by ranking `inference_substrate` from the canonical enum only -- see
+# `_strength_rank`.
 STRENGTH_BANDS: list[tuple[int, tuple[str, ...]]] = [
     (0, ("blocked", "deferred", "not_run", "precondition_check_only", "no_run", "skipped")),
     (1, ("mock", "fake", "synthetic", "simulat", "stub", "dry_run", "placeholder")),
@@ -246,6 +287,19 @@ STRENGTH_BANDS: list[tuple[int, tuple[str, ...]]] = [
     ),
 ]
 _BAND_NAME = {0: "NOT-RUN", 1: "NOT-REAL-COMPUTE", 2: "REAL-BUT-CHEAP", 3: "LIVE/HARDWARE"}
+
+# Bands for the CANONICAL substrate enum, keyed by `adversarial_verify`'s own three kinds.
+# Aggregation and no-LLM work is real but cheap (band 2); anything that loads a model is
+# band 3. `hardware_smoke` is documented in CLAUDE.md's substrate table but is absent from
+# `adversarial_verify`'s alias tuples, so it is supplemented here rather than silently
+# becoming unrankable.
+_ENUM_KIND_BAND = {"aggregation": 2, "no_llm": 2, "live_model": 3}
+_SUPPLEMENTARY_ENUM_BANDS = {"hardware_smoke": 3}
+
+# Separators after which a human note may follow the canonical value, per
+# `adversarial_verify._inference_substrate_value_matches`. Kept only as the fallback for
+# free-form (non-enum) fields; the enum path defers to that function so the two cannot drift.
+_NOTE_SEPARATORS = " -;,:.("
 
 
 def _unwrap_principle(value):
@@ -285,20 +339,112 @@ def _marker_kind(key: str) -> str | None:
     return None
 
 
-def _strength_rank(value) -> int | None:
+def _canonical_substrate_band(raw: str) -> int | None:
+    """Band of a value that declares a CANONICAL substrate, else None.
+
+    Delegates the match to ``adversarial_verify._match_declared_substrate`` rather than
+    re-deriving it. That function already implements the project's documented
+    ``<canonical value><separator><human note>`` convention -- it strips the note and matches
+    only the leading canonical token. Re-implementing that here is exactly how the two would
+    drift, and a drifted copy of a matcher is how this rule got its worst bug (below).
+    """
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        import adversarial_verify as _av
+    except Exception:  # pragma: no cover - defensive: a guard must never die on an import
+        return None
+    for kind, aliases in (
+        ("aggregation", _av.AGGREGATION_SUBSTRATE_ALIASES),
+        ("no_llm", _av.NO_LLM_SUBSTRATE_ALIASES),
+        ("live_model", _av.LIVE_MODEL_SUBSTRATE_ALIASES),
+    ):
+        if _av._match_declared_substrate(raw, tuple(aliases)) is not None:
+            return _ENUM_KIND_BAND[kind]
+    head = raw.split("--", 1)[0].strip()
+    for sep in _NOTE_SEPARATORS:
+        head = head.split(sep, 1)[0].strip()
+    return _SUPPLEMENTARY_ENUM_BANDS.get(head.lower())
+
+
+def _token_scan_band(raw: str) -> int | None:
+    """Band of a FREE-FORM (non-enum) declaration, by anchored token scan, else None."""
+    head = raw.split("--", 1)[0].strip()
+    for sep in _NOTE_SEPARATORS:
+        head = head.split(sep, 1)[0].strip()
+    norm = "_" + re.sub(r"[^a-z0-9]+", "_", head.lower()).strip("_") + "_"
+    matched = [band for band, tokens in STRENGTH_BANDS if any(("_" + t) in norm for t in tokens)]
+    return min(matched) if matched else None
+
+
+def _strength_rank(value, field: str | None = None) -> int | None:
     """Rank a declared substrate/mode value, or None when it matches no known vocabulary.
 
     None means "unrankable", NOT "weak". An unknown string must never be treated as a
-    downgrade -- the project invents new substrate strings constantly (2,842 declarations
+    downgrade -- the project invents new substrate strings constantly (2,673 declarations
     across ~40 distinct vocabularies), and ranking an unrecognised one as 0 would refuse a
     large fraction of honest commits.
+
+    TWO BUGS THIS SIGNATURE EXISTS TO FIX (2026-07-29 review, both found against real
+    artifacts rather than fixtures):
+
+    1. RANKING PROSE. The first draft scanned the WHOLE declaration string for band tokens.
+       The project's documented convention is ``<canonical value><separator><human note>``
+       (233+ live declarations use it), and the note is frequently a substrate CORRECTION
+       that names the substrates it is correcting away from. exp5178 declares
+       ``"live_llm_embedding_extraction; Substrate corrected 2026-07-03: ... "``, whose note
+       contains the word ``cached``; the whole-string scan therefore took the MINIMUM band
+       across the prose and ranked a real GGUF load (band 3) as REAL-BUT-CHEAP (band 2),
+       refusing the commit and asserting the exact opposite of what the artifact says.
+       exp5161 is the same shape. Both are CLAUDE.md's own named exemplars for their
+       substrates, so the rule was refusing the convention the project documents.
+
+    2. PHANTOM BAND-3 FROM A NON-SUBSTRATE NAME. exp5240 declared
+       ``arc_live_path_patch_synthesis`` -- the ARC live CODE path, not a compute substrate,
+       and never a legal value under the Inference-Substrate Declaration Discipline's fixed
+       enum. A token scan reads its ``live`` token as LIVE/HARDWARE, so when a later commit
+       honestly corrected it to the legal ``aggregation_from_upstream_artifacts``, the rule
+       saw band 3 -> band 2 and refused a taxonomy REPAIR as a downgrade.
+
+    The fix for (2) is structural, not another token-list patch: for the one field governed
+    by a documented fixed vocabulary, rank ONLY from that vocabulary. An unrecognised
+    ``inference_substrate`` is UNKNOWN, exactly as ``adversarial_verify`` itself classifies
+    it (``unknown_top_level_inference_substrate``), and unknown is unrankable on BOTH sides.
+    That symmetry is the point: the rule already refused to treat an unknown NEW value as
+    weak, and it now likewise refuses to treat an unknown OLD value as strong. No protection
+    is lost -- a genuine enum-to-enum downgrade is still caught -- and the collision cannot
+    recur for any future ``arc_live_*`` name.
+
+    Free-form mode fields (``inference_mode``, ``execution_mode``, ...) have no enum, so they
+    keep the token scan. That is where the origin incident lives: exp307's
+    ``inference_mode: live_gpu -> cpu_training``.
     """
     v = _unwrap_principle(value)
     if not isinstance(v, str):
         return None
-    low = v.lower()
-    matched = [band for band, tokens in STRENGTH_BANDS if any(t in low for t in tokens)]
-    return min(matched) if matched else None
+    raw = v.strip()
+    if not raw:
+        return None
+    enum_band = _canonical_substrate_band(raw)
+    if enum_band is not None:
+        return enum_band
+    scan = _token_scan_band(raw)
+    if field is not None and str(field).lower() == ENUM_GOVERNED_SUBSTRATE_FIELD:
+        # ASYMMETRY, AND IT IS THE WHOLE POINT. For the enum-governed field, an unrecognised
+        # name may rank WEAK but never STRONG.
+        #
+        # A first attempt at fix (2) above returned None for every non-enum value. That fixed
+        # exp5240 but silently disarmed the rule against `sota_gguf_mock` -- CLAUDE.md's own
+        # fabrication exemplar (exp3397: `duration_s=2.06` declaring a live 35B GGUF) -- which
+        # is not in the enum either. Two existing tests caught it, which is what they are for.
+        #
+        # The distinction that survives both cases: a name asserting STRENGTH (`live`, `gpu`)
+        # is a claim, and claims are cheap to make by accident -- `arc_live_path_patch_synthesis`
+        # asserts nothing about compute, it just happens to contain the token. A name asserting
+        # WEAKNESS (`mock`, `fake`, `blocked`) is an ADMISSION, and nobody accidentally admits
+        # their run was mocked. So admissions are trusted from any string; claims are trusted
+        # only from the documented vocabulary.
+        return None if scan == 3 else scan
+    return scan
 
 
 def _has_change_note(new: dict, field: str) -> bool:
@@ -313,8 +459,31 @@ def _has_change_note(new: dict, field: str) -> bool:
     ``corpus_change_note`` elsewhere in the artifact would silently excuse a substrate downgrade.
     That is the "guard that does not fire" failure mode in miniature, so the field-agnostic
     branch was removed rather than kept for convenience.
+
+    THE NOTE MAY BE CARRIED INLINE IN THE VALUE ITSELF (2026-07-29). An earlier draft only
+    inspected SIBLING keys, which missed the project's own documented convention: the
+    substrate field may be written ``<canonical value><separator><human note>``, and that
+    trailing note is very often precisely the downgrade rationale this function is looking
+    for. exp5161 corrects ``inference_substrate`` down to
+    ``verifier_ensemble_against_cached_candidates`` and explains why in the same string --
+    an explicit, auditable, dated justification sitting exactly where the next reader will
+    find it, which is all this escape hatch ever asked for. Requiring it in a SEPARATE key
+    would have refused the most carefully-documented corrections in the corpus while waving
+    through terse ones that happened to have a sibling.
     """
     stem = str(field).lower()
+    inline = _unwrap_principle(new.get(field))
+    if isinstance(inline, str):
+        body = inline.strip()
+        head = body.split("--", 1)[0].strip()
+        for sep in _NOTE_SEPARATORS:
+            head = head.split(sep, 1)[0].strip()
+        # A note is present when the declaration carries prose BEYOND the canonical token.
+        # The 12-character floor keeps a bare `value.` or a one-word suffix from counting as
+        # a rationale; the origin incidents' values (`cpu_training`) have no trailing prose
+        # at all, so they remain refused.
+        if len(body) - len(head) >= 12:
+            return True
     for k, v in new.items():
         kl = str(k).lower()
         if not v or kl == stem:
@@ -469,8 +638,8 @@ def check(ref: str | None = None, all_files: bool = False) -> list[str]:
         for key, old_value in old.items():
             if not SUBSTRATE_FIELD.match(str(key)) or key not in new:
                 continue
-            old_rank = _strength_rank(old_value)
-            new_rank = _strength_rank(new[key])
+            old_rank = _strength_rank(old_value, key)
+            new_rank = _strength_rank(new[key], key)
             if old_rank is None or new_rank is None or new_rank >= old_rank:
                 continue
             if _has_change_note(new, key):

@@ -482,6 +482,178 @@ def test_one_deletion_produces_one_refusal_line(repo):
     assert len(stamp_lines) == 1, f"the stamp was reported {len(stamp_lines)} times: {stamp_lines}"
 
 
+def test_a_legitimate_analyser_rebuild_is_not_refused(repo):
+    """MUST-NOT-FIRE, and the most load-bearing one in this file.
+
+    Re-running an analyser is the single most COMMON write to ``results/`` in this project, so if
+    the widening false-fires here it refuses the loop's own routine work every night -- and a lint
+    that refuses honest work gets disabled, which is the same outcome as having no lint at all.
+
+    This fixture is not invented. It is the exact field shape of the 12 analyser artifacts rebuilt
+    on 2026-07-28 in commit ``8441055c0`` (9 ``outer_loop_*`` plus the card-ground-truth and
+    reset-attribution passes). A rebuild moves FOUR things and nothing else:
+
+      * ``build_timestamp_utc`` -- when the analyser ran
+      * ``duration_s``          -- how long it took (0.594 -> 0.604 in the real diff)
+      * ``provenance.git_head`` -- which commit it was built from
+      * ``provenance.code[].sha256`` / ``.bytes`` -- the hashes of the scripts it read
+
+    Every one of those is a MEASUREMENT of the rebuild, not a review output. Critically, the
+    top-level ``provenance`` key SURVIVES -- it is rewritten in place, not dropped -- which is why
+    rule 3 must key on a marker field DISAPPEARING rather than on it changing. And
+    ``inference_substrate`` stays ``aggregation_from_upstream_artifacts`` throughout, so rule 4
+    has nothing to compare downward.
+
+    Verified against the real commit as well as this fixture: the widened lint examined all 28
+    modified artifacts in ``8441055c0`` (12 of them analysers, both sides parsed) and reported no
+    violation, while the same run refused four injected violations on that same real file.
+    """
+    r, _ = repo
+    art = r / "results" / "outer_loop_arc_max_actions_answer_20260726.json"
+    before = {
+        "title": "The MAX_ACTIONS answer",
+        "run_date": "2026-07-26",
+        "build_timestamp_utc": "2026-07-27T05:05:38Z",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "inference_substrate_principle": "An analyser pass inherits its methodology from the "
+        "artifacts it cites.",
+        "duration_s": 0.594,
+        "random_seed": 20260724,
+        "verifier_is_oracle": False,
+        "provenance": {
+            "git_head": "692bedfa8c8b9bfc95dd26b95631f01cfad9b996",
+            "code": [
+                {
+                    "path": "scripts/arc_scored_path_lever_harness.py",
+                    "sha256": "11098ad3",
+                    "bytes": 57542,
+                }
+            ],
+        },
+    }
+    art.write_text(json.dumps(before, indent=2) + "\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed analyser")
+
+    after = json.loads(json.dumps(before))
+    after["build_timestamp_utc"] = "2026-07-28T20:26:43Z"
+    after["duration_s"] = 0.604
+    after["provenance"]["git_head"] = "a2222320c629ae14699ca795a4de27abf4c4e296"
+    after["provenance"]["code"][0].update(sha256="fe0dcc1e", bytes=59647)
+    art.write_text(json.dumps(after, indent=2) + "\n")
+
+    assert dpl.check() == [], (
+        "a routine analyser rebuild moves only clocks, git_head and dependency hashes; refusing "
+        "it would block the loop's own nightly work and get this lint switched off"
+    )
+
+
+def test_the_analyser_rebuild_fixture_is_not_silently_unprotected(repo):
+    """The companion to the test above: prove that PASS is a real pass, not blindness.
+
+    A must-not-fire test is worthless on its own -- it also passes when the lint cannot see the
+    artifact at all (wrong path glob, unparseable side, empty file list). That is not a
+    hypothetical: while validating the widening, a positive control was accidentally run against a
+    worktree checked out BEFORE the widening landed, and all four injected violations came back
+    silent. The result looked like a clean bill of health and was in fact a measurement of the old
+    two-rule lint.
+
+    So this test injects violations into the SAME fixture the rebuild test uses and requires each
+    to be refused. If a future change makes the lint stop seeing this artifact shape, the test
+    above keeps passing and THIS one fails.
+    """
+    r, _ = repo
+    art = r / "results" / "outer_loop_arc_max_actions_answer_20260726.json"
+    before = {
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "inference_substrate_principle": "inherits methodology from cited artifacts",
+        "verifier_is_oracle": False,
+        "duration_s": 0.594,
+        "provenance": {"git_head": "692bedfa", "code": []},
+    }
+    art.write_text(json.dumps(before, indent=2) + "\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed analyser 2")
+
+    for drop, expect in (
+        ("provenance", "provenance declaration"),
+        ("inference_substrate_principle", "inference-substrate declaration"),
+        ("verifier_is_oracle", "circularity declaration"),
+    ):
+        d = {k: v for k, v in before.items() if k != drop}
+        art.write_text(json.dumps(d, indent=2) + "\n")
+        assert any(expect in v for v in dpl.check()), f"dropping {drop} must be refused"
+
+    # And the in-place weakening, which no dropped-field rule can see.
+    d = json.loads(json.dumps(before))
+    d["inference_substrate"] = "sota_gguf_mock"
+    art.write_text(json.dumps(d, indent=2) + "\n")
+    assert [v for v in dpl.check() if "WEAKENED" in v], "an in-place substrate downgrade must fire"
+
+
+def test_a_correction_field_matched_by_no_other_pattern_is_still_protected(repo):
+    """The ``correction`` marker pattern, exercised in isolation. Found by mutation testing.
+
+    Deleting the ``correction`` pattern from ``MARKER_PATTERNS`` left the whole suite GREEN. The
+    reason is that the incident-1 test's fields -- ``inference_substrate_correction_note`` and
+    ``inference_substrate_original_invalid_value`` -- are ALSO matched by the
+    ``^inference_substrate`` pattern, and its ``solve_provenance*`` fields by ``provenance``. So
+    every field that test names was double-covered, and the pattern that the incident is actually
+    NAMED for was never the thing being tested.
+
+    That is the same shape as the bug this whole file exists for: coverage that looks real and is
+    not. These two field names are matched by the ``correction`` pattern and nothing else, so this
+    test fails the moment that pattern is weakened or removed.
+    """
+    r, _ = repo
+    art = r / "results" / "experiment_507_thing.json"
+    art.write_text(
+        json.dumps(
+            {
+                "correction_note": "2026-07-27: retracted the AUROC; the corpus was contaminated.",
+                "data_correction": "row 14 was double-counted in the original tally",
+            },
+            indent=2,
+        )
+        + "\n"
+    )
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed 507")
+
+    # Precondition: these must be matched by the `correction` pattern ALONE, or this test would
+    # pass for the wrong reason -- exactly the trap it was written to close.
+    for key in ("correction_note", "data_correction"):
+        assert dpl._marker_kind(key) == "correction record", f"{key} is covered by another pattern"
+
+    art.write_text(json.dumps({"experiment": 507}, indent=2) + "\n")
+    violations = dpl.check()
+    assert any("correction record" in v for v in violations), (
+        "a hand-written correction record must not be droppable"
+    )
+
+
+def test_a_dropped_corrigendum_is_reported_once_not_twice(repo):
+    """Rule 3 must not re-report the corrigendum family that rule 2 already owns.
+
+    Found by mutation testing. ``test_one_deletion_produces_one_refusal_line`` pins the dedup for
+    ``flagged_adversarial`` only, so blanking the OTHER half of ``already_reported`` -- the part
+    that suppresses rule 3 on fields rule 2 already reported -- left the suite green. A corrigendum
+    deletion would then produce two refusal lines naming the same fields.
+
+    Duplicate refusal text is not cosmetic here. The whole value of this guard is that a human
+    reads the line and understands what was lost; a message that says the same thing twice in
+    different words trains the reader to skim, and skimming is how the origin incident survived
+    seven artifacts.
+    """
+    _, art = repo  # fixture holds flagged_adversarial + corrigendum_pending + corrigendum_note
+    _write(art, corrigendum_pending=dpl, corrigendum_note=dpl)
+    violations = dpl.check()
+    corrigendum_lines = [v for v in violations if "corrigendum" in v.lower()]
+    assert len(corrigendum_lines) == 1, (
+        f"the corrigendum deletion was reported {len(corrigendum_lines)} times: {corrigendum_lines}"
+    )
+
+
 def test_a_dropped_substrate_declaration_is_refused_too(repo):
     """The loophole rule 4 cannot see: DELETING the declaration instead of weakening it.
 
@@ -503,3 +675,225 @@ def test_a_dropped_substrate_declaration_is_refused_too(repo):
     assert any("inference_mode" in v for v in violations), (
         "deleting a substrate declaration must be at least as refused as weakening it"
     )
+
+
+# =========================================================================================
+# 2026-07-29 REVIEW FIXES. Each test below pins a defect found by reviewing the widening
+# against REAL artifacts rather than fixtures. Every one of them was a case where the guard
+# fired on honest work -- the mirror image of the original bug, and just as corrosive: a
+# guard that refuses correct commits gets switched off, which leaves the record unprotected.
+# =========================================================================================
+
+_EXP5178_REAL = (
+    "live_llm_embedding_extraction; Substrate corrected 2026-07-03: this task's dominant work "
+    "is a single forward pass per candidate (llama_cpp.Llama(embedding=True, "
+    "pooling_type=LAST).embed against the real local gemma-4-26B-A4B-it GGUF) to extract "
+    "final-token hidden-state vectors for 48 candidates, then centroid-probe training on those "
+    "vectors -- no iterative token-by-token generation. The original declaration "
+    "('live_llm_inference') implied full generative inference (60s floor), which this workload "
+    "genuinely is not; verifier_ensemble_against_cached_candidates also does not fit (its "
+    "definition explicitly requires the LLM NOT be loaded, and this task did load it, for "
+    "embeddings)."
+)
+
+_EXP5161_REAL = (
+    "verifier_ensemble_against_cached_candidates; Substrate honesty, corrected 2026-07-02: this "
+    "artifact's DOMINANT content (n=60 pilot statistics, cluster bootstrap, exact test) rescores "
+    "GAP-4's EXISTING cached candidate pool -- it does not invoke a generative LLM."
+)
+
+
+def test_the_inline_note_convention_does_not_make_a_real_gguf_load_look_cheap():
+    """exp5178: ranking the PROSE instead of the declared value inverted the rule's verdict.
+
+    The project documents `<canonical value><separator><human note>` as the way to declare a
+    substrate with an explanation, and `adversarial_verify.py` strips the note before matching.
+    The first draft of `_strength_rank` scanned the WHOLE string and took the minimum band, so
+    exp5178 -- whose note mentions `cached` and `verifier_ensemble_against_cached_candidates`
+    only to explain why those do NOT apply -- was ranked REAL-BUT-CHEAP. The lint then refused
+    the commit while asserting the exact opposite of what the artifact says: it declares, and
+    performed, a real GGUF load.
+
+    This is the negation-blindness failure class named in CLAUDE.md's QA-Layer Authenticity
+    Discipline: a checker confusing "did X" with "explicitly did NOT do X".
+    """
+    f = "inference_substrate"
+    assert dpl._strength_rank("live_llm_inference", f) == 3
+    assert dpl._strength_rank(_EXP5178_REAL, f) == 3, (
+        "the leading canonical token is live_llm_embedding_extraction (a real model load); "
+        "words appearing in the trailing human note must not change the rank"
+    )
+
+
+def test_a_substrate_correction_explained_inline_is_an_accepted_downgrade():
+    """exp5161: the downgrade note was INSIDE the value, and only siblings were inspected.
+
+    `_has_change_note` originally looked at sibling keys only, so the most carefully documented
+    corrections in the corpus -- which put a dated rationale directly in the declaration, per the
+    project's own convention -- were refused, while a terse downgrade that happened to have some
+    sibling note was waved through.
+    """
+    f = "inference_substrate"
+    assert dpl._strength_rank(_EXP5161_REAL, f) == 2
+    assert dpl._has_change_note({f: _EXP5161_REAL}, f) is True
+
+
+def test_a_bare_downgrade_with_no_prose_is_still_refused():
+    """The escape hatch must not be so wide that the origin incidents walk through it.
+
+    exp307's `cpu_training` carries no trailing prose, so it must NOT count as self-explaining.
+    Without this the inline-note fix would silently disable rule 4.
+    """
+    assert dpl._has_change_note({"inference_mode": "cpu_training"}, "inference_mode") is False
+    assert dpl._has_change_note({"inference_mode": "cpu_training."}, "inference_mode") is False
+
+
+def test_a_non_enum_substrate_name_is_unrankable_not_phantom_live():
+    """exp5240: `arc_live_path_patch_synthesis` is the ARC live CODE path, not a substrate.
+
+    A bare token scan reads its `live` token as LIVE/HARDWARE. That value was never legal under
+    the Inference-Substrate Declaration Discipline's fixed enum, so when a later commit honestly
+    corrected it to `aggregation_from_upstream_artifacts`, rule 4 saw band 3 -> band 2 and
+    refused a taxonomy REPAIR as a downgrade.
+
+    The fix is structural rather than another token-list patch: for the one field governed by a
+    documented vocabulary, rank ONLY from that vocabulary. Unknown is unrankable on BOTH sides --
+    the rule already refused to treat an unknown NEW value as weak, and now likewise refuses to
+    treat an unknown OLD value as strong. The collision cannot recur for any future `arc_live_*`
+    name, which a token-boundary tweak alone could not promise (that string genuinely contains
+    `live` as a whole token).
+    """
+    f = "inference_substrate"
+    assert dpl._strength_rank("arc_live_path_patch_synthesis", f) is None
+    assert dpl._strength_rank("aggregation_from_upstream_artifacts", f) == 2
+
+
+def test_the_exp5240_taxonomy_repair_is_not_refused(repo):
+    """End-to-end form of the above, through `check()` rather than the ranking helper."""
+    r, _ = repo
+    art = r / "results" / "experiment_5240_arc_rubric.json"
+    art.write_text(
+        json.dumps({"experiment": 5240, "inference_substrate": "arc_live_path_patch_synthesis"})
+        + "\n"
+    )
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed 5240")
+
+    art.write_text(
+        json.dumps(
+            {"experiment": 5240, "inference_substrate": "aggregation_from_upstream_artifacts"}
+        )
+        + "\n"
+    )
+    assert not [v for v in dpl.check() if "5240" in v], (
+        "correcting an ILLEGAL substrate value to a legal enum value is a repair, not a downgrade"
+    )
+
+
+def test_the_two_origin_incidents_are_still_refused_after_all_of_the_above():
+    """The whole point of the review fixes is to narrow the rule WITHOUT disarming it.
+
+    Both real incidents live on free-form mode fields with no governing enum, which is exactly
+    why the token scan is retained there.
+    """
+    assert dpl._strength_rank("live_gpu", "inference_mode") == 3
+    assert dpl._strength_rank("cpu_training", "inference_mode") == 2
+    assert dpl._strength_rank("real_model", "inference_mode") == 3
+    assert dpl._strength_rank("synthetic_runner", "inference_mode") == 1
+
+
+def test_band_tokens_match_at_token_boundaries_not_as_bare_substrings():
+    """`dry_run` must not be dragged to NOT-RUN, and `not_run` must not be diluted.
+
+    A draft of the token-anchoring fix split multi-word tokens (`not_run` -> `not`, `run`), which
+    would have made the bare token `run` a NOT-RUN marker -- so `dry_run` (NOT-REAL-COMPUTE) and
+    even `live_run` would have ranked 0. Caught before landing; pinned here so it cannot return.
+    """
+    assert dpl._strength_rank("dry_run", "inference_mode") == 1
+    assert dpl._strength_rank("not_run", "inference_mode") == 0
+    assert dpl._strength_rank("blocked_no_live_gpu", "inference_mode") == 0
+
+
+def test_the_added_review_output_markers_are_protected(repo):
+    """Review outputs a re-run does not supersede: sample-size, false-negative, forbidden-claims.
+
+    `n_samples_justification` (56 artifacts) is the disclosure CLAUDE.md's Adversarial Artifact
+    Verification rule REQUIRES for a distributional claim; losing it silently un-discloses the
+    claim's statistical basis.
+    """
+    r, _ = repo
+    art = r / "results" / "experiment_777_thing.json"
+    seed = {
+        "experiment": 777,
+        "n_samples_justification": "n=10000 so std(empirical_KL) < 0.005",
+        "false_negative_risk_checked": True,
+        "paper_v6_forbidden_claims": ["KV260 speedup at d=128"],
+    }
+    art.write_text(json.dumps(seed, indent=2) + "\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed 777")
+
+    art.write_text(json.dumps({"experiment": 777}, indent=2) + "\n")
+    violations = " ".join(dpl.check())
+    for field in seed:
+        if field == "experiment":
+            continue
+        assert field in violations, f"{field} must be protected as a review output"
+
+
+def test_honest_verdict_is_deliberately_not_protected(repo):
+    """The boundary of the marker list: a re-run legitimately produces a NEW verdict.
+
+    Protecting `honest_verdict` (5,245 artifacts) would refuse the fail-forward behaviour the
+    operator's standing directive requires. Pinned so a later widening cannot quietly cross it.
+    """
+    r, _ = repo
+    art = r / "results" / "experiment_888_thing.json"
+    art.write_text(json.dumps({"experiment": 888, "honest_verdict": "complete: a"}) + "\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed 888")
+
+    art.write_text(json.dumps({"experiment": 888, "honest_verdict": "complete: b"}) + "\n")
+    assert not [v for v in dpl.check() if "888" in v]
+
+
+def test_an_unknown_substrate_may_rank_weak_but_never_strong():
+    """The asymmetry that resolves exp5240 WITHOUT disarming the fabrication case.
+
+    A first attempt returned None for every non-enum `inference_substrate`. It fixed exp5240 and
+    silently un-protected `sota_gguf_mock` -- CLAUDE.md's own fabrication exemplar, also not in
+    the enum. Two pre-existing tests caught the regression, and the fix is to distinguish a CLAIM
+    of strength (cheap to make by accident) from an ADMISSION of weakness (nobody accidentally
+    says their run was mocked).
+    """
+    f = "inference_substrate"
+    assert dpl._strength_rank("arc_live_path_patch_synthesis", f) is None, "claim: not trusted"
+    assert dpl._strength_rank("sota_gguf_mock", f) == 1, "admission: always trusted"
+    assert dpl._strength_rank("blocked_model_not_cached", f) == 0, "admission: always trusted"
+    # ... and the asymmetry is scoped to the enum-governed field only. Free-form mode fields have
+    # no vocabulary to fall back on, so they must keep ranking `live_gpu` strong -- otherwise the
+    # exp307 origin incident stops being refused.
+    assert dpl._strength_rank("live_gpu", "inference_mode") == 3
+
+
+def test_a_negated_weakness_word_does_not_drag_the_rank_down():
+    """Token anchoring, pinned. Found by mutation testing -- nothing exercised it.
+
+    Reverting `_token_scan_band` to a bare `token in value` substring test left the whole suite
+    GREEN, so the anchoring the docstring claims was entirely untested. It matters because the
+    rank is the MINIMUM matching band: a spurious match on a WEAK token inside a longer word
+    silently downgrades an honest declaration.
+
+    Both cases below are the negation-blindness class CLAUDE.md's QA-Layer Authenticity
+    Discipline names -- a checker confusing "did X" with "explicitly did NOT do X":
+      * `uncached_...` contains `cached` (band 2) but asserts the opposite.
+      * `unblocked_...` contains `blocked` (band 0) but asserts the opposite.
+    Unanchored, both would rank a live GPU run as cheap or as never-run, and a subsequent honest
+    edit would be refused as a "downgrade" from a rank the value never deserved.
+    """
+    assert dpl._token_scan_band("uncached_live_gguf_inference") == 3
+    assert dpl._token_scan_band("unblocked_live_gpu_run") == 3
+    # The anchoring must not break PREFIX matching, which the vocabulary depends on:
+    # `simulat` has to catch both `simulated` and `simulation`, `analys` both spellings.
+    assert dpl._token_scan_band("cpu_simulated_annealing") == 1
+    assert dpl._token_scan_band("offline_analysis_only") == 2

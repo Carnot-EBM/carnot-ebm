@@ -141,12 +141,30 @@ record is worse than an honest gap.
    acknowledgment / retraction / review note); new rule 4 refuses **weakening a substrate or mode
    declaration in place** without a note. Marker patterns were derived by censusing all 31,510
    distinct top-level keys across the 15,331 `results/**/*.json` files — `correct` is deliberately
-   NOT a pattern (601 artifacts carry `energy_correct`/`n_correct`, which fail-forward re-runs must
-   be free to change). Calibrated over 1,200 commits / 3,232 modified artifact pairs: R3 fires 10x,
-   R4 fires 8x, and **every R4 hit is a genuine instance of the hazard** — including a previously
-   unknown one, `results/experiment_911_drift_probe_tier0i.json` taking `real_model` ->
-   `synthetic_runner` FIVE times in `main`, plus `experiment_307` taking `live_gpu` -> `cpu_training`
-   TWICE. Zero violations across the 8 commits since the lint first shipped.
+   NOT a pattern (465 artifacts carry `energy_correct`/`n_correct`, which fail-forward re-runs must
+   be free to change).
+   **Calibration, restated 2026-07-29 with its window defined and re-run after the rule-4 repair
+   below.** The first draft reported "1,200 commits / 3,232 pairs, R3 10x, R4 8x" without saying
+   which population "1,200 commits" meant, so it did not reproduce. The two windows are:
+   *1,200 commits overall* → 3,232 modified artifact pairs (the original, undeclared window), and
+   *1,200 commits that touch `results/`* → 7,024 pairs (the larger, more informative window).
+   Re-run over the second: **R3 fires 10x, R4 fires 12x.** Every R4 hit is adjudicated a genuine
+   instance of the hazard — `results/experiment_911_drift_probe_tier0i.json` taking `real_model` ->
+   `synthetic_runner` TEN times in `main` (previously unknown, nothing was watching), plus
+   `experiment_307` taking `live_gpu` -> `cpu_training` TWICE. R3's 10 are one dropped
+   `flagged_adversarial: false` plus nine review notes lost by fixed-path ARC round-probes
+   (`outer_loop_fable5_*`) overwriting the previous round's record — the same class as the origin
+   incident, not false positives.
+   **A pre-repair sweep counted 15 R4 hits; three were the honest-correction class fixed below and
+   are correctly silent now.** Zero violations across the commits since the lint first shipped.
+1b. **REV 2 (2026-07-29): the interlock was disarmed by the invocation that caused both incidents.**
+   `--gate` refuses while `ops/.test_suite_mutation_pending.json` exists, and only `--run` ever wrote
+   it — so a bare `pytest tests/python/test_arc_*.py …` left the gate green on a tree the suite had
+   just rewritten (demonstrated: README.md and a paper-v6 section modified, `--gate` exit 0,
+   determination lint OK). Now armed from `tests/python/conftest.py` — baseline in
+   `pytest_configure`, `arm_from_pytest()` in `pytest_sessionfinish` — so it arms HOWEVER pytest was
+   invoked. Skips xdist workers, disarms on a clean run, never restores. **Known gap: a SIGKILL'd /
+   timed-out run never arms** (`pytest_sessionfinish` does not run); use `--run` for long jobs.
 2. `scripts/test_suite_mutation_check.py` **NEW** — the broad, shallow half: "did this run modify
    tracked files, and which?", no opinion about content, so it also covers `openspec/` and `output/`
    which the lint does not. `--run` wraps a command, `--restore` puts everything back, `--gate` is a
