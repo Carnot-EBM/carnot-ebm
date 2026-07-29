@@ -5667,6 +5667,17 @@ class E3AgentPolicy:
                         "dynamics_candidate_names": list(outcome.dynamics_candidate_names),
                         "refinement_rounds_used": int(outcome.refinement_rounds_used),
                         "refinement_rounds": list(outcome.rounds),
+                        # REQ-ARC-WMTE-6035 diagnostic passthrough. `engine_retention` is
+                        # computed on every refinement call and was the ONLY record of which
+                        # round the store ended up holding -- but it died on the outcome object
+                        # and never reached `induction_attempts`, so a consumer reading the
+                        # per-cell row could not tell a call where retention CHANGED the stored
+                        # engine (best_round < rounds_seen, restored=True) from one where it was
+                        # a structural no-op (a single round ran, so both arms are the same
+                        # agent). Without that distinction a retention A/B cannot report its own
+                        # EFFECTIVE support and a null is unreadable. Read-only copy of a dict
+                        # the loop already built; nothing branches on it.
+                        "engine_retention": dict(outcome.engine_retention),
                         "counterexamples": list(outcome.counterexamples),
                         "verifier_is_oracle": bool(outcome.verifier_is_oracle),
                         "win_state_exemplar_injected": self._previous_level_complete_grid
@@ -5793,6 +5804,12 @@ class E3AgentPolicy:
                             "selected_candidate_name": stall_outcome.selected_candidate_name,
                             "refinement_rounds_used": int(stall_outcome.refinement_rounds_used),
                             "refinement_rounds": list(stall_outcome.rounds),
+                            # Same REQ-ARC-WMTE-6035 passthrough as the level-up call site
+                            # above. This STALL path is the one that actually fires on
+                            # first contact with an unseen game, so omitting it here would
+                            # leave the effective-support accounting blind on exactly the
+                            # cells a held-out measurement consists of.
+                            "engine_retention": dict(stall_outcome.engine_retention),
                             "counterexamples": list(stall_outcome.counterexamples),
                             "verifier_is_oracle": bool(stall_outcome.verifier_is_oracle),
                             "goal_predicate_satisfiable": bool(
