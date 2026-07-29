@@ -4600,3 +4600,49 @@ code default-off (byte-identical live path unless flagged); offline-gated; NEVER
   says no at 9B. That is the same 96GB-hardware question the 2026-07-24 entry above already escalated to
   the operator; a 27B/31B re-run of exp6018 on stable hardware would answer it, and until then a bigger
   prompt is not the lever. The flag stays DEFAULT-OFF; graduation is operator-only.
+
+## 2026-07-29 — the admission gate is not the lever; changed-cell recall is ~0.003
+
+**Failure mode.** The world-model admission gate rejects essentially every INDUCED engine, so
+the live agent's induce -> plan -> execute path never starts. Measured on fresh 31B inductions:
+12 of 17 attempts had NO round accepted, 9 of them specifically on
+`world_model_accuracy_below_threshold`. This is upstream of everything downstream of it —
+best-engine retention (REQ-ARC-WMTE-6035) in particular acts on WHICH engine is stored and
+therefore cannot matter while nothing is admitted.
+
+**Missing discriminator — and three levers ruled OUT before proposing one.** The obvious reads
+("the gate is too strict", "the metric is wrong", "the inducer is too small") are all refuted:
+
+- *Threshold.* `heldout_accuracy` over 45 rounds is degenerate-bimodal: 32 rounds exactly 0.0,
+  9 exactly 1.0, 4 in between. Thresholds from the shipped 1.0 down to 0.6 admit the IDENTICAL
+  9 rounds. There is no precision/recall continuum to trade on.
+- *Metric.* Computing the already-existing graded alternative (`CARNOT_ARC_TRUST_METRIC=
+  cell_recall`) directly from exp6012's recorded `correct_changed_cells / true_changed_cells`
+  for the real `ondisk` engines, over 11 games x 3 seeds: median **0.0033**, max **0.0870**.
+  A graded gate at 0.90 / 0.75 / 0.50 / 0.25 / **0.10** admits **0/33** in every case.
+- *Inducer size.* The Qwen3.6-27B -> gemma-4-31B migration made the generator ~6x better and
+  banked ZERO additional held-out levels.
+
+**The gate is not broken.** In the same matrix a correct hand-written `base` engine is admitted
+31/33 and `identity` 0/33. It discriminates exactly as designed.
+
+**What the engines are actually doing** (the discriminating observation): exact-match
+`heldout_accuracy` sits at intermediate values (0.125-0.6) while cell recall on the same rows is
+~0.003. The engines predict NO-OP frames correctly — most cells do not change, so copying the
+input scores well — and get essentially every CHANGED cell wrong. On the cells that carry the
+dynamics they behave like the identity engine, which the gate correctly rejects. So the missing
+capability is not a more permissive verifier; it is an inducer (or a supervision/representation)
+that gets *changed* cells right at all.
+
+**Priority: HIGH, and it reframes the ARC roadmap.** Every admission-side or retention-side
+proposal is downstream of this and should be deprioritised until changed-cell recall moves off
+the floor. Cheapest next discriminating step, CPU-only over existing fixtures: on a game where a
+correct `base` engine exists, diff it against the induced engine on changed-cell predictions and
+characterise the error class (action semantics? object identity? update rule?).
+
+**Caveat.** The cell-recall figures come from `results/arc_e3_origin_fixtures`, whose engines
+predate retention and may include last-write-wins-corrupted stores. That weakens the metric bullet
+as a claim about freshly-induced engines specifically; the threshold and inducer-size bullets are
+measured on fresh live inductions and are unaffected.
+
+**status: open.** See `docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md`.
