@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 import inspect
+import os
+from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable, Mapping, Sequence
 
@@ -82,6 +84,11 @@ class LlmReinductionResult:
     rounds: list[dict[str, Any]] = field(default_factory=list)
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
     skipped: str = ""
+    # REQ-ARC-WMTE-6035: what best-engine retention actually did on this call (which round
+    # was retained, whether the on-disk store had to be rolled back to it, and why not if
+    # not). Diagnostic only -- nothing branches on it -- but without it a reader cannot tell
+    # a call where retention was a no-op from one where it was silently disabled.
+    engine_retention: dict[str, Any] = field(default_factory=dict)
 
 
 def _model_specs(proposer: Any) -> str:
@@ -652,6 +659,231 @@ def _repair_degenerate_goal(
     }
 
 
+# ==============================================================================================
+# REQ-ARC-WMTE-6035: BEST-ENGINE RETENTION ACROSS REFINEMENT ROUNDS
+# ==============================================================================================
+#
+# THE DEFECT, IN PLAIN TERMS. This function runs up to MAX_REFINEMENT_ROUNDS=3 attempts at a
+# world model. Round 1 induces; rounds 2..N call `proposer.refactor()`, and EVERY one of those
+# calls overwrites `results/arc_e3/<game>/world_model.py` in place. Before this REQ, the loop
+# then did two things that both assume the LAST round is the BEST round:
+#
+#   (i)  it left whatever round N wrote sitting on disk, so the next `load_engine()` -- next
+#        stall, next level, next episode -- starts from the last refactor, however bad; and
+#   (ii) it reassigned `last_engine = selected.engine` unconditionally every round, so even a
+#        caller that never touches disk was handed round N's engine.
+#
+# Neither assumption holds. Refinement is not monotone: `refactor()` is a language model
+# rewriting a program from a counterexample, and it frequently makes the model WORSE.
+#
+# THE MEASUREMENT (2026-07-28/29, offline, no LLM). Replaying the real historical write
+# sequence of `results/arc_e3/<game>/world_model.py` across 6 games:
+#
+#     last-write-wins (shipped)     mean change_fidelity 0.0042, change-gate 0 of 12
+#     retain-best (this REQ)        mean change_fidelity 0.3979, change-gate 5 of 12
+#
+# and retain-best matched the CIRCULAR oracle ceiling (select on the evaluation metric itself)
+# in 6 of 6 games. Concretely: ka59's engine peaked at change_fidelity 1.0000 and is 0.0000 on
+# disk today; ar25 peaked at 0.8157 and is 0.0000. Three of the 15 regressive writes happened
+# under the STRONG codex/gpt-5.5 proposer, so this is a store defect, not a proposer defect.
+#
+# THE SAME DEFECT, DEMONSTRATED ON THIS FUNCTION rather than on the store's git history: a
+# scripted proposer replaying real recorded ka59 induction blobs at the LIVE thresholds
+# produced per-round heldout accuracies 0.65 -> 0.15 -> 0.075. The loop returned round 3
+# (change_fidelity 0.0000) and left round 3 on disk. Round 1 was change_fidelity 1.0000.
+#
+# WHY THE SELECTION SIGNAL IS `heldout_change_consistency` AND NOTHING ELSE. The whole point is
+# a fix that works on a HIDDEN game mid-episode, where there is no ground truth to peek at. So
+# retention is only allowed to rank rounds on a number the loop ALREADY computes at runtime:
+# `select_trusted_world_model(...).selected_score.heldout_change_consistency` -- agreement on
+# the held-out split of the agent's own observed transitions, restricted to cells that actually
+# changed. It never sees the evaluation metric, a different seed, a level counter, or the game
+# source. That is exactly what made the counterfactual above non-circular; a version of this
+# code that reached for anything else would be a fabricated win.
+#
+# WHY DEFAULT-ON, STATED HONESTLY. Retention is not free: it can hold an engine that a later
+# round would have improved on. The counterfactual bounded that downside directly by replaying
+# 55 sliding 3-write windows (the bound MAX_REFINEMENT_ROUNDS=3 imposes on a single live
+# episode): retention HELPED 24, HURT 3, tied 28; sign test over the 27 discordant windows
+# p = 4.9e-5; mean delta +0.0898 over all 55 windows, +0.1829 over the 27 discordant ones.
+# Default-on is defensible because 3-of-55 is the measured downside, not because the downside is
+# zero. `CARNOT_ARC_ENGINE_RETENTION=0` restores exact last-write-wins behaviour for anyone who
+# needs the old path back.
+#
+# TIES GO TO THE INCUMBENT (strict `>` below). A tie is no evidence to overwrite on, and it is
+# what the counterfactual replayed.
+#
+# THREE HONEST LIMITS, NONE OF THEM FIXED HERE.
+#
+#   1. AN ALL-NO-OP HELD-OUT WINDOW MAKES THE SIGNAL UNINFORMATIVE. `consistency` is
+#      correct_changed_cells / max(1, true_changed_cells), so a held-out split containing no
+#      state change at all scores 0.0 for EVERY round -- including a perfect engine. Retention
+#      then degenerates to "keep round 1" rather than to "keep the best round". This is the
+#      same FALSE_NEGATIVE_RISK shape the goal-consistency veto guards against by requiring
+#      `n_real_levelups >= 1`. Do NOT read that regime as "harmless": in the counterfactual, of
+#      the 23 windows whose winning signal was 0.0, retention helped 4, HURT 3 and tied 16 --
+#      an arbitrary coin flip, and ALL 3 of the change's measured hurt windows live here. The
+#      case FOR default-on is the other side of the same split: 0 of the 32 INFORMATIVE windows
+#      were hurt. Named here so nobody later reads a 0.0 retention signal as evidence about the
+#      engine.
+#
+#   2. ON A PLANNING RETURN THE STORE AND THE RETURNED ENGINE CAN DIVERGE. The planned-return
+#      paths return the PLANNING round's engine (the plan was validated in-model against it),
+#      while the store is rolled back to the retained round. The shipped `min_heldout_accuracy
+#      =1.0` bounds that divergence ONLY when the held-out split contains at least one CHANGING
+#      transition: exact prediction of a changing transition gets every changed cell right, so
+#      consistency is 1.0 -- maximal, hence retained. When the split has NO changing transition
+#      the bound evaporates, because consistency is then 0.0 for every engine including a
+#      perfect one, while heldout_accuracy is 1.0 for a do-nothing engine and clears the gate.
+#      Measured counterexample: ft09 seed 0, 0 of 40 held-out transitions change, a do-nothing
+#      engine scores heldout_accuracy 1.0 / consistency 0.0 (hostile_noop_heldout_results.json,
+#      55cbd98a7baf3cd4). Every round then ties, round 1 is kept, and a planning round >= 2
+#      returns its own engine while the store holds round 1's. Two things keep that honest
+#      rather than silent: the planned-return paths report THIS round's scalar and goal
+#      diagnostics (so the returned plan, goal and engine always describe each other), and
+#      `engine_retention["best_round"]` names which round the STORE ended up holding.
+#
+#   3. THE SIGNAL IS A RECALL, SO IT IS NOT RANK-CONSISTENT WITH THE SYMMETRIC
+#      `change_fidelity` THE COUNTERFACTUAL EVALUATED IT BY. `heldout_change_consistency`
+#      counts correctly-predicted changed cells over TRUE changed cells; it does not penalise
+#      spurious changes the way fidelity does. They can therefore disagree: ka59 `9d36f9f25`
+#      scores signal 0.9830 / fidelity 0.9119, ranking ABOVE `a7488e97a` at 0.9575 / 1.0000 --
+#      ranking by the shipped signal would prefer the worse engine. This never bit the measured
+#      result: no 3-version window isolates that pair without the peak `341f776c9`, and
+#      recall-argmax equalled fidelity-argmax in 6 of 6 games with 0.000 fidelity left on the
+#      table. It is a real residual, not a hypothetical one -- it just has no measured victim.
+#      Fixing it would mean ranking on a signal the live loop does not currently compute, which
+#      is exactly the peeking this REQ refuses to do.
+
+_RETENTION_ENV = "CARNOT_ARC_ENGINE_RETENTION"
+
+
+def engine_retention_enabled() -> bool:
+    """REQ-ARC-WMTE-6035: retention is ON unless explicitly disabled (see the block above)."""
+
+    raw = os.environ.get(_RETENTION_ENV)
+    if raw is None:
+        return True
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _retention_signal(selection: Any) -> float:
+    """The ONLY quantity retention is allowed to rank rounds on.
+
+    Deliberately reads `heldout_change_consistency` and nothing else: it is computed by
+    `select_trusted_world_model` on the held-out split of the agent's OWN transitions, which is
+    the only kind of signal a hidden-game episode actually has. A missing field yields 0.0 for
+    every round rather than a fallback to some other metric -- every round then ties, and the
+    tie rule keeps the incumbent, which is still retention. Silently falling back to a
+    different metric would make the shipped selection rule differ from the measured one.
+    """
+
+    score = getattr(selection, "selected_score", None)
+    try:
+        return float(getattr(score, "heldout_change_consistency", 0.0) or 0.0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _retention_signal_true_changed_cells(selection: Any) -> int:
+    """DIAGNOSTIC ONLY -- never read by the comparison. Tells the two 0.0s apart.
+
+    The retention signal is `correct_changed_cells / max(1, true_changed_cells)`, so a 0.0 is
+    ambiguous between "the engine got every changed cell wrong" and "the held-out split had no
+    changed cell to get right" (honest limit 1 above; ft09 seed 0 is the measured instance).
+    Recording the denominator makes an artifact reader able to distinguish them without a
+    re-run.
+
+    IT IS DELIBERATELY NOT PART OF `is_best`, and it is NOT a safe tiebreak either. It looks
+    like a pure property of the corpus -- reality's changed-cell count -- but it is not:
+    `score_change_weighted_consistency`'s accumulation loop `continue`s BEFORE
+    `true_changed_cells += n_changed_cells` when the engine RAISES or returns a wrong-shaped
+    grid. A CRASHING engine therefore reports a SMALLER denominator, so ranking on it would
+    reward an engine for failing to be scored. That was verified the hard way: a mutant wiring
+    this into `is_best` survived the first version of the test suite, and the rationalisation
+    "it's an equivalent mutant, the denominator is a corpus constant" was wrong. See
+    `test_the_informativeness_denominator_never_enters_the_comparison`.
+    """
+
+    score = getattr(selection, "selected_score", None)
+    try:
+        return int(getattr(score, "true_changed_cells", 0) or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _engine_store_path(game: str) -> Path:
+    """Resolve `E3_DIR` at CALL time so `CARNOT_ARC_E3_DIR` / the `e3.E3_DIR` monkeypatch both
+    redirect retention writes exactly like they redirect every other store access
+    (REQ-ARC-WMTE-6016)."""
+
+    from carnot.agentic import arc_executable_world_model as e3
+
+    return Path(e3.E3_DIR) / str(game) / "world_model.py"
+
+
+def _read_engine_source(game: str) -> str | None:
+    """Snapshot the engine source the proposer just wrote. `None` when there is no file --
+    an injected `load_engine` (tests, the structured-engine path) need not use the store at
+    all, and in-memory retention still applies in that case."""
+
+    try:
+        path = _engine_store_path(game)
+        return path.read_text() if path.exists() else None
+    except OSError:
+        return None
+
+
+def _retain_engine_source_on_disk(
+    game: str,
+    source: str | None,
+    *,
+    enabled: bool,
+    best_round: int,
+    rounds_seen: int,
+    signal: float,
+    true_changed_cells: int = 0,
+) -> dict[str, Any]:
+    """Roll the store back to the retained round's source (defect (i) above).
+
+    Returns the diagnostic recorded on `LlmReinductionResult.engine_retention`. Never raises:
+    a store that cannot be written is a degraded-but-live episode, not a crashed one, and the
+    in-memory half of the fix (defect (ii)) is unaffected by it.
+    """
+
+    info: dict[str, Any] = {
+        "enabled": bool(enabled),
+        "selection_signal": "heldout_change_consistency",
+        "best_round": int(best_round),
+        "rounds_seen": int(rounds_seen),
+        "best_round_signal": (None if signal == float("-inf") else round(float(signal), 6)),
+        # Diagnostic denominator (honest limit 1): 0 here means the signal COULD NOT
+        # discriminate, not that the engine was bad. Never read by the comparison.
+        "best_round_true_changed_cells": int(true_changed_cells),
+        "signal_informative": bool(int(true_changed_cells) > 0),
+        "restored": False,
+    }
+    if not enabled:
+        info["reason"] = "disabled_by_env"
+        return info
+    if best_round <= 0 or source is None:
+        info["reason"] = "no_store_snapshot"
+        return info
+    try:
+        path = _engine_store_path(game)
+        info["store_path"] = str(path)
+        current = path.read_text() if path.exists() else None
+        if current == source:
+            info["reason"] = "store_already_holds_retained_engine"
+            return info
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(source)
+        info["restored"] = True
+    except OSError as exc:
+        info["error"] = repr(exc)[:160]
+    return info
+
+
 def execute_bounded_llm_reinduction(
     *,
     game: str,
@@ -724,6 +956,24 @@ def execute_bounded_llm_reinduction(
         structural_goal_provider,
         np.asarray(root_grid),
     )
+    # REQ-ARC-WMTE-6035 retention state. `best_signal` starts at -inf so round 1 always wins
+    # its own comparison; every later round must be STRICTLY better to displace it.
+    retention_on = engine_retention_enabled()
+    best_signal = float("-inf")
+    best_round_no = 0
+    best_source: str | None = None
+    best_true_changed_cells = 0
+
+    def _finalise_engine_retention() -> dict[str, Any]:
+        return _retain_engine_source_on_disk(
+            game,
+            best_source,
+            enabled=retention_on,
+            best_round=best_round_no,
+            rounds_seen=len(rounds),
+            signal=best_signal,
+            true_changed_cells=best_true_changed_cells,
+        )
 
     for round_index in range(rounds_limit):
         round_no = round_index + 1
@@ -778,16 +1028,32 @@ def execute_bounded_llm_reinduction(
                     row["structural_goal_error"] = structural_goal_candidate["error"]
             heldout_accuracy = float(selection.selected_score.heldout_accuracy)
             accepted = heldout_accuracy >= verifier_threshold
-            last_heldout_accuracy = heldout_accuracy
-            last_accepted = bool(accepted)
             names = [candidate.name for candidate in candidates]
-            last_goal_names = list(names)
-            last_dynamics_names = list(names)
-            last_selected = selected.name
-            last_engine = selected.engine
-            last_goal = selected_goal
+            # REQ-ARC-WMTE-6035: this is the ONE place a round is compared against the best
+            # round so far. `not retention_on` reproduces the pre-REQ unconditional
+            # reassignment exactly, which is what makes the env flag a true A/B switch.
+            retention_signal = _retention_signal(selection)
+            retention_true_changed = _retention_signal_true_changed_cells(selection)
+            is_best = (not retention_on) or (retention_signal > best_signal)
+            if is_best:
+                best_signal = retention_signal
+                best_true_changed_cells = retention_true_changed
+                best_round_no = round_no
+                # Snapshot AFTER the proposer wrote and the engine loaded, so the bytes on
+                # disk are known to be the bytes that produced this round's signal.
+                best_source = _read_engine_source(game)
+                last_heldout_accuracy = heldout_accuracy
+                last_accepted = bool(accepted)
+                last_goal_names = list(names)
+                last_dynamics_names = list(names)
+                last_selected = selected.name
+                last_engine = selected.engine
+                last_goal = selected_goal
             row.update(
                 {
+                    "retention_signal_heldout_change_consistency": round(retention_signal, 6),
+                    "retention_signal_true_changed_cells": int(retention_true_changed),
+                    "retained_as_best_engine": bool(is_best),
                     "selected_candidate_name": selected.name,
                     "goal_candidate_names": list(names),
                     "dynamics_candidate_names": list(names),
@@ -833,13 +1099,19 @@ def execute_bounded_llm_reinduction(
                 goal=selected_goal,
                 start_grid=np.asarray(root_grid),
             )
-            last_goal_satisfiable = bool(goal_check.get("satisfiable"))
-            last_goal_satisfiability = dict(goal_check)
-            row["goal_predicate_satisfiable"] = bool(last_goal_satisfiable)
+            # REQ-ARC-WMTE-6035: the reported goal diagnostics must describe the engine that
+            # is actually returned. Binding them to a round whose engine was discarded would
+            # report round N's goal alongside round 1's dynamics -- a lie in the artifact.
+            round_goal_satisfiable = bool(goal_check.get("satisfiable"))
+            round_goal_satisfiability = dict(goal_check)
+            if is_best:
+                last_goal_satisfiable = round_goal_satisfiable
+                last_goal_satisfiability = dict(goal_check)
+            row["goal_predicate_satisfiable"] = bool(round_goal_satisfiable)
             row["goal_satisfiability"] = {
                 key: value for key, value in goal_check.items() if key != "counterexample"
             }
-            if not last_goal_satisfiable:
+            if not round_goal_satisfiable:
                 # GOAL-REPAIR: the LLM-induced goal is degenerate (constant-false / unreachable
                 # exact-match). Before giving up this round to an engine-refactor (which cannot fix
                 # the goal), try the exemplar-derived nonzero-count fallback against THIS engine.
@@ -850,9 +1122,12 @@ def execute_bounded_llm_reinduction(
                 )
                 if repaired is not None:
                     selected_goal = repaired["predicate"]
-                    last_goal = selected_goal
-                    last_goal_satisfiable = True
-                    last_goal_satisfiability = dict(repaired["satisfiability"])
+                    round_goal_satisfiable = True
+                    round_goal_satisfiability = dict(repaired["satisfiability"])
+                    if is_best:
+                        last_goal = selected_goal
+                        last_goal_satisfiable = True
+                        last_goal_satisfiability = dict(repaired["satisfiability"])
                     row["goal_repaired"] = repaired["source"]
                     row["goal_predicate_satisfiable"] = True
                     row["goal_satisfiability"] = {
@@ -966,12 +1241,19 @@ def execute_bounded_llm_reinduction(
                 refinement_rounds_used=round_no,
                 verifier_is_oracle=False,
                 model_specs=specs,
-                heldout_accuracy=last_heldout_accuracy,
-                accepted_by_heldout_verifier=last_accepted,
-                goal_predicate_satisfiable=last_goal_satisfiable,
-                goal_satisfiability=last_goal_satisfiability,
+                # REQ-ARC-WMTE-6035: a PLANNED return describes THIS round -- its engine, its
+                # goal predicate, its plan -- so its scalar and goal diagnostics must be this
+                # round's too. Reporting the retained round's numbers here would contradict the
+                # `goal_predicate` and `engine` returned alongside them. The retained-round
+                # values are what the NON-planned return at the bottom reports, because that
+                # one really does hand back the best engine found rather than this round's.
+                heldout_accuracy=heldout_accuracy,
+                accepted_by_heldout_verifier=bool(accepted),
+                goal_predicate_satisfiable=round_goal_satisfiable,
+                goal_satisfiability=dict(round_goal_satisfiability),
                 goal_expression=last_goal_expression,
                 structural_goal_diagnostics=last_structural_goal_diagnostics,
+                engine_retention=_finalise_engine_retention(),
                 rounds=rounds,
                 counterexamples=counterexamples,
                 skipped="",
@@ -1015,15 +1297,17 @@ def execute_bounded_llm_reinduction(
                     refinement_rounds_used=round_no,
                     verifier_is_oracle=False,
                     model_specs=specs,
-                    heldout_accuracy=last_heldout_accuracy,
-                    accepted_by_heldout_verifier=last_accepted,
-                    goal_predicate_satisfiable=last_goal_satisfiable,
-                    goal_satisfiability=last_goal_satisfiability,
+                    # REQ-ARC-WMTE-6035: see the twin comment on the direct-plan return.
+                    heldout_accuracy=heldout_accuracy,
+                    accepted_by_heldout_verifier=bool(accepted),
+                    goal_predicate_satisfiable=round_goal_satisfiable,
+                    goal_satisfiability=dict(round_goal_satisfiability),
                     goal_expression=last_goal_expression,
                     structural_goal_diagnostics=last_structural_goal_diagnostics,
                     subgoal_decomposition=list(subgoal_result.subgoal_decomposition),
                     per_subgoal_reachable=list(subgoal_result.per_subgoal_reachable),
                     subgoal_search_used=True,
+                    engine_retention=_finalise_engine_retention(),
                     rounds=rounds,
                     counterexamples=counterexamples,
                     skipped="",
@@ -1084,16 +1368,18 @@ def execute_bounded_llm_reinduction(
                         refinement_rounds_used=round_no,
                         verifier_is_oracle=False,
                         model_specs=specs,
-                        heldout_accuracy=last_heldout_accuracy,
-                        accepted_by_heldout_verifier=last_accepted,
-                        goal_predicate_satisfiable=last_goal_satisfiable,
-                        goal_satisfiability=last_goal_satisfiability,
+                        # REQ-ARC-WMTE-6035: see the twin comment on the direct-plan return.
+                        heldout_accuracy=heldout_accuracy,
+                        accepted_by_heldout_verifier=bool(accepted),
+                        goal_predicate_satisfiable=round_goal_satisfiable,
+                        goal_satisfiability=dict(round_goal_satisfiability),
                         goal_expression=last_goal_expression,
                         structural_goal_diagnostics=last_structural_goal_diagnostics,
                         subgoal_decomposition=list(factored_result.subgoal_decomposition),
                         per_subgoal_reachable=list(factored_result.per_subgoal_reachable),
                         factored_planner_used=True,
                         expert_trust_weights=list(expert_result.expert_trust_weights),
+                        engine_retention=_finalise_engine_retention(),
                         rounds=rounds,
                         counterexamples=counterexamples,
                         skipped="",
@@ -1124,6 +1410,7 @@ def execute_bounded_llm_reinduction(
         goal_satisfiability=last_goal_satisfiability,
         goal_expression=last_goal_expression,
         structural_goal_diagnostics=last_structural_goal_diagnostics,
+        engine_retention=_finalise_engine_retention(),
         rounds=rounds,
         counterexamples=counterexamples,
         skipped=skipped,
