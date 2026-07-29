@@ -358,6 +358,30 @@ repos:
         always_run: true
         pass_filenames: false
 
+      - id: qa-layer-audit-scope-check
+        name: A newly-wired guard must be classified as audited or acknowledged
+        entry: python3 scripts/qa_layer_authenticity_audit.py --check-targets
+        language: system
+        # WHY THIS IS WIRED (2026-07-29). --check-targets is the QA-layer audit's defence
+        # against its own target list going stale: it sweeps the script hooks in this file
+        # plus the runtime guards in python/carnot/testing/, and refuses anything that is
+        # neither in GUARD_TARGETS nor in ACKNOWLEDGED_NON_QA_LAYER. Shipped with no caller,
+        # it ran only when a human remembered to type it -- trust without verification, the
+        # same shape the whole discipline exists to defeat, one level up. (The audit does
+        # still emit a SCOPE GAP section on every full run, so a gap surfaces at the next
+        # milestone-close regardless; this hook moves that from "eventually" to "at the
+        # moment the guard is wired", while the author is present to classify it.)
+        #
+        # Scoped to the two files that can INTRODUCE a guard: this config (a new pre-commit
+        # hook) and the runtime-guard package. Editing a guard's body does not change the
+        # scope question, so it deliberately does not fire on scripts/*.py.
+        #
+        # NOTE the deliberate asymmetry with the audit itself: this hook is a pure
+        # classification check and makes no LLM call, so it is fast and offline. The audit
+        # proper is never wired to pre-commit for exactly that reason.
+        files: ^(\.pre-commit-config\.yaml|python/carnot/testing/.*\.py)$
+        pass_filenames: false
+
       - id: arc-llm-on-liveness-lint
         name: An ARC row claiming the LLM tier must have had a live generator
         entry: python3 scripts/arc_llm_on_liveness_lint.py --baseline

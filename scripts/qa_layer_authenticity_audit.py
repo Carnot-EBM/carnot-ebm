@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Periodic adversarial AI audit of the QA/reconciliation layer itself:
-scripts/adversarial_verify.py, scripts/exclusion_manifest_lint.py,
-scripts/in_process_doc_reconcile.py.
+"""Periodic adversarial AI audit of the QA/reconciliation layer itself -- the
+mechanical guards that DECIDE whether everything else in this project counts as
+clean, preserved, or fabricated. Targets are listed in WHOLE_FILE_TARGETS /
+GUARD_TARGETS / CHUNKED_FILE_TARGETS below and include adversarial_verify.py,
+exclusion_manifest_lint.py, in_process_doc_reconcile.py, and (since 2026-07-29)
+the record-preservation guards: determination_preservation_lint.py,
+test_suite_mutation_check.py, operator_curated_docs_lint.py, and the
+artifact/claim-integrity lints.
 
 This is the sibling of scripts/verifier_authenticity_audit.py -- that audit
 polices whether python/carnot/verify/*.py verifiers do what they claim.
@@ -32,6 +37,49 @@ Layer-2 audits that currently exist). The operator's question: "shouldn't
 the adversarial agent be catching these?" -- the honest answer was no
 adversarial agent has this layer in scope. This script closes that gap.
 
+SECOND ORIGIN: 2026-07-29 -- "also update the adversarial model to ensure it
+enforces this."
+--------------------------------------------------------------------------
+The overnight session found that the test suite silently rewrites the research
+record: one run modified 41 tracked files, including README.md; the 2026-07-27
+incident blamed on a "conductor re-run" that stripped seven fabrication-gate
+stamps was in fact a TEST RUN, and five of the seven reproduced on demand. The
+lesson that belongs to THIS audit is not the rewrite itself -- it is that
+`scripts/determination_preservation_lint.py` ALREADY EXISTED to refuse exactly
+that commit, and DID NOT FIRE. The destroyed field was named
+`inference_substrate_correction_note`: a corrigendum in substance that the
+guard's pattern list (`flagged_adversarial` plus keys containing the literal
+`corrigendum`) simply did not name. A guard that is trusted and silent is worse
+than no guard, because the loop stops looking.
+
+Layer 1 cannot detect its own blind spots -- a pattern list cannot notice the
+concept it is narrower than. That is precisely what a hostile independent
+reviewer is for, so the prompts below now hunt four further classes that the
+original three targets' bug taxonomy did not cover:
+
+  * SILENT NON-FIRING -- name a real input this check is SUPPOSED to catch and
+    does NOT. (The tonight class; the highest-value question in this file.)
+  * PATTERN LIST NARROWER THAN ITS CONCEPT -- matching `corrigendum` but not
+    `*_correction_note`; enumerating a fixed field list where the artifact
+    corpus has ~31,510 distinct top-level keys.
+  * UNTESTED PATTERN -- a check whose deletion leaves the test suite green,
+    because another rule double-covers it. Mutation testing on the WIDENED
+    determination lint found this twice: deleting the `correction` marker (the
+    pattern its own incident test is NAMED for) left the suite green, and so did
+    blanking half the rule-1/rule-2 dedup. Coverage that exists on paper and
+    does not bite.
+  * HARDCODED ABSOLUTE WRITE TARGET -- `PROJECT_ROOT = "/home/ianblenke/..."`.
+    139 scripts and 99 files under python/carnot/ do this, so no worktree or env
+    var can isolate them, and a fresh clone writes into the operator's checkout
+    (independently a G2 reproducibility defect). Note that canonical_url_lint.py
+    correctly PERMITS that literal -- its rule is about the GitHub URL, not the
+    filesystem -- so nothing in the project watched it as a WRITE TARGET. A
+    genuine gap BETWEEN two guards, which is the kind only a reviewer holding
+    both in view can see.
+  * TEST MUTATES TRACKED STATE -- a test that imports an experiment module and
+    calls main() (1,696 test files import one; 704 call it), or otherwise writes
+    results/**, openspec/**, output/**, or an operator-curated doc.
+
 Two audit granularities, chosen by target-file size:
   - Small files (exclusion_manifest_lint.py, in_process_doc_reconcile.py):
     whole-file audit, mirroring verifier_authenticity_audit.py's pattern.
@@ -54,6 +102,16 @@ Usage:
     python scripts/qa_layer_authenticity_audit.py [--model gemini|claude|codex]
                                                    [--file FILE]
                                                    [--limit N]
+    python scripts/qa_layer_authenticity_audit.py --check-targets
+
+`--check-targets` is the audit's own defence against the bug class it hunts.
+The target list above is itself a pattern list, and a pattern list goes stale
+silently: a guard added to .pre-commit-config.yaml is trusted from the moment it
+is wired, and nothing would have told anyone it was never audited. So the mode
+reads .pre-commit-config.yaml, extracts every hook whose entry runs a
+scripts/*.py, and refuses (exit 1) if any of them is NEITHER audited NOR listed
+in ACKNOWLEDGED_NON_QA_LAYER with a written reason. It never silently drops a
+guard on the floor; it forces a decision and records it.
 
 Designed to be called from the conductor's milestone-close path (see
 scripts/research_conductor.py:_run_operational_retrospective's caller),
@@ -65,6 +123,7 @@ from __future__ import annotations
 import argparse
 import ast
 import datetime
+import hashlib
 import json
 import re
 import subprocess
@@ -74,6 +133,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPORT_PATH = PROJECT_ROOT / "ops" / "qa_layer_authenticity_audit_report.md"
+PRECOMMIT_CONFIG = PROJECT_ROOT / ".pre-commit-config.yaml"
 
 # Whole-file targets: small enough to audit in one shot.
 WHOLE_FILE_TARGETS = (
@@ -81,8 +141,120 @@ WHOLE_FILE_TARGETS = (
     PROJECT_ROOT / "scripts" / "in_process_doc_reconcile.py",
 )
 
+# ---------------------------------------------------------------------------------------
+# GUARD TARGETS (added 2026-07-29).
+#
+# These are the RECORD-PRESERVATION and CLAIM-INTEGRITY guards: code whose job is to
+# refuse a commit, quarantine an artifact, or reject a claim. Their characteristic failure
+# is not a crash and not a false alarm -- it is SILENCE. determination_preservation_lint.py
+# printed "OK" on the very commit that destroyed a hand-written corrigendum, because the
+# destroyed key was called `inference_substrate_correction_note` and the guard's pattern
+# list only knew the literal `corrigendum`. Nothing downstream could tell the difference
+# between "checked and clean" and "checked with the wrong pattern".
+#
+# They get their own prompt (PER_GUARD_PROMPT) rather than sharing PER_FILE_PROMPT,
+# because the question that matters for them is inverted: not "is this logic wrong" but
+# "name a real input this is SUPPOSED to catch and does NOT."
+#
+# Entries are (path, one-line reason it is in QA-layer scope). A file that is absent from
+# disk is skipped rather than crashing the run -- a guard may be mid-migration in another
+# workflow, and an audit that hard-fails on a concurrent rename is an audit nobody runs.
+# ---------------------------------------------------------------------------------------
+GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
+    (
+        PROJECT_ROOT / "scripts" / "determination_preservation_lint.py",
+        "refuses commits that drop a fabrication-gate determination; the 2026-07-29 "
+        "silent non-firing is this audit's second origin incident",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "test_suite_mutation_check.py",
+        "detects a test run rewriting tracked files; its pre-commit --gate is the only "
+        "interlock between a green test run and a published rewrite of the record",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "operator_curated_docs_lint.py",
+        "enforces the Public Documentation Discipline at the COMMIT layer -- it only sees "
+        "files that reach `git add`, which is why it never saw README.md being rewritten "
+        "on every test run",
+    ),
+    (
+        PROJECT_ROOT / "python" / "carnot" / "testing" / "operator_curated_doc_guard.py",
+        "the RUNTIME half of the same discipline: fires at the moment a test writes an "
+        "operator-curated doc, naming the writer. Not a pre-commit hook, so --check-targets "
+        "would never have found it -- listed here explicitly",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "artifact_freshness_lint.py",
+        "decides whether an analyser-produced artifact is stale, i.e. whether its numbers "
+        "may still be cited",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "arc_artifact_lint.py",
+        "decides whether an ARC artifact's inference-substrate declaration is admissible",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "arc_count_integrity_lint.py",
+        "decides whether a reproduced-level count is honest -- the ARC headline metric",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "arc_llm_on_liveness_lint.py",
+        "decides whether an ARC row claiming the LLM tier actually had a live generator",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "verifier_authenticity_lint.py",
+        "Layer 1 of the Verifier Authenticity Discipline; note its sibling Layer-2 audit "
+        "reviews python/carnot/verify/*.py, NOT this linter, so the linter itself was "
+        "unaudited by anything until now",
+    ),
+    (
+        PROJECT_ROOT / "scripts" / "arc_orphan_solver_lint.py",
+        "decides whether an ARC solver counts as live-path-reachable, i.e. whether the "
+        "work counts at all",
+    ),
+)
+
+# Pre-commit-wired scripts deliberately OUT of QA-layer scope, each with the reason. This
+# is not a convenience list -- it is the audit trail for `--check-targets`. Adding a name
+# here is a decision someone has to write down, which is the whole point: the failure mode
+# being defended against is a guard drifting into the trusted set with nobody noticing.
+ACKNOWLEDGED_NON_QA_LAYER: dict[str, str] = {
+    "canonical_url_lint.py": (
+        "string discipline over one URL literal; its failure publishes a wrong link, it "
+        "does not admit or quarantine a research claim"
+    ),
+    "paper_v6_narrowing_lint.py": (
+        "prose-phrasing discipline for the paper draft; failure over-claims in text that "
+        "is operator-reviewed before submission anyway"
+    ),
+    "pages_fever_dream_lint.py": (
+        "presentation-quality lint for the landing page; failure costs professional "
+        "polish, not a determination. NOTE its sibling Layer-2 (pages_adversarial_audit) "
+        "reviews the PAGE, not this linter -- so this is an acknowledged, recorded gap"
+    ),
+    "overdue_priority_lint.py": (
+        "planning-cadence forcing function; failure delays work rather than admitting a false claim"
+    ),
+    "arc_levelup_guarantee_lint.py": (
+        "planning-cadence forcing function (ARC slot floor); same reasoning as "
+        "overdue_priority_lint"
+    ),
+    "batching_precommit_check.py": "build/perf convention, no record-integrity role",
+    "check_spec_coverage.py": "build-time spec/test traceability, no record-integrity role",
+    "precommit_sync_technical_report.py": "mechanical md->html sync, no judgement to get wrong",
+    "check_torch_cuda.py": "environment capability probe, no record-integrity role",
+    "arc_precondition_nocov_lint.py": "pytest-invocation convention, no record-integrity role",
+    "arc_nocov_precondition_lint.py": "pytest-invocation convention, no record-integrity role",
+}
+
 # Function-chunked target: too large for a whole-file audit.
 CHUNKED_FILE_TARGETS = (PROJECT_ROOT / "scripts" / "adversarial_verify.py",)
+
+# Above this size a whole-file review stops being a review and starts being a skim, so the
+# file is function-chunked instead. Deliberately generous (adversarial_verify.py is 6,200
+# lines): a SILENT-NON-FIRING judgement needs to see EVERY rule at once, because the finding
+# is "no rule here covers input X" -- which cannot be reached from one chunk in isolation.
+# Chunking is therefore a last resort for this audit, not a default.
+CHUNK_THRESHOLD_LINES = 1200
 
 # A function body is audit-worthy (does field extraction / pattern-matching --
 # the exact bug class this audit hunts) if it contains any of these markers.
@@ -100,6 +272,155 @@ RISKY_BODY_MARKERS = (
     ".endswith(",
     "isinstance(",
 )
+
+# ---------------------------------------------------------------------------------------
+# The 2026-07-29 bug classes. EVERY prompt in this file must cover all five --
+# see BUG_CLASS_MARKERS below for how that is enforced.
+#
+# The original three questions ask "is this logic WRONG". These five ask the harder
+# question: "is this logic SILENT where it should speak". A wrong check announces itself
+# eventually -- someone hits the false positive and complains. A silent check never does,
+# and every day it stays silent it earns more trust it has not got.
+#
+# The worked example is deliberately the real one, in full detail, because a hostile
+# reviewer given an abstract instruction ("look for gaps") returns abstract findings. Given
+# a concrete precedent with the exact shape of the miss, it returns concrete ones.
+#
+# THIS COMMENT USED TO LIE, and the lie is worth recording because it is the very class of
+# bug this file hunts. It read "shared by every prompt in this file" while PER_GUARD_PROMPT
+# -- the prompt used for the ONLY targets that are themselves guards -- spliced none of it.
+# Classes D and E therefore never reached a guard review at all. That was caught by review,
+# not by any test, and the demonstration was concrete: an audit fixture that wrote into
+# `results/` on every run produced eight findings from the guard prompt and not one of them
+# mentioned the write. A constant whose comment claims a scope wider than its actual call
+# sites is the same shape as a lint whose pattern list is narrower than its concept -- the
+# deliverable was committing the bug it was written to detect. BUG_CLASS_MARKERS + the test
+# that asserts every prompt contains every marker is what makes the claim checkable rather
+# than merely stated.
+# ---------------------------------------------------------------------------------------
+SHARED_BUG_CLASSES = """\
+NOW THE HARDER CLASSES. Everything above asks whether this code does the wrong
+thing. These five ask whether it does NOTHING where it was supposed to act --
+which is worse, because a check that is silent is trusted, and a check that is
+wrong eventually annoys somebody into looking at it.
+
+The worked precedent (2026-07-29, this project, real):
+`determination_preservation_lint.py` exists to refuse any commit that drops a
+fabrication-gate determination or a corrigendum record from a results artifact.
+A test run overwrote `results/experiment_3946_r11l_first_solve.json` and
+destroyed a hand-written field named `inference_substrate_correction_note`.
+The guard printed "determination-preservation-lint: OK" and the commit went
+through. Why: its pattern list was the literal field name `flagged_adversarial`
+plus "any key containing the substring `corrigendum`". The destroyed key was a
+corrigendum IN SUBSTANCE -- a recorded human correction, exactly the thing the
+guard's own docstring says it protects -- but it did not contain that literal
+substring, and nothing anywhere compared the pattern list against the concept.
+The guard was not wrong. It was NARROW, and silence looks identical to safety.
+
+A. **SILENT NON-FIRING -- answer this first, and concretely.**
+   Name a REAL, plausible input that this code is SUPPOSED to catch (per its own
+   docstring, name, or the discipline it enforces) and DOES NOT. Not a
+   hypothetical shape -- an actual string, field name, file path, or value a
+   real agent in this project would plausibly produce. If you cannot name one,
+   say so explicitly; do not invent a contrived one to look thorough.
+
+B. **PATTERN LIST NARROWER THAN ITS CONCEPT.**
+   For every hardcoded list, tuple, set, prefix, or regex alternation of names,
+   tokens, or markers: state the CONCEPT the list is standing in for, in one
+   sentence, then name a member of that concept the list omits. Watch for the
+   `corrigendum` / `*_correction_note` shape specifically: a list that enumerates
+   a handful of field names when the artifact corpus has roughly 31,510 distinct
+   top-level keys is a sample of the concept, not a definition of it.
+
+C. **UNTESTED PATTERN.**
+   For each individual pattern/rule/branch: if it were DELETED, would anything
+   fail? Or is it double-covered by a broader neighbouring rule, so that the
+   named rule is decorative and its test is actually passing because of the
+   other one? (Mutation testing on the widened version of the lint above found
+   exactly this twice, including on the pattern its own incident regression test
+   is NAMED for.) Name any rule you believe is deletable with the suite still
+   green.
+
+D. **HARDCODED ABSOLUTE WRITE TARGET.**
+   Does this code write to, or compute, an ABSOLUTE path baked into the source
+   (e.g. `PROJECT_ROOT = "/home/<someone>/..."`) rather than deriving it from
+   `Path(__file__)`, an env var, or an argument? Any such path makes the code
+   unrunnable in a worktree or a fresh clone WITHOUT FAILING -- it succeeds, and
+   writes into the original checkout. Treat it as both a correctness bug and a
+   reproducibility defect. Note that this project's canonical_url_lint.py
+   deliberately PERMITS that same literal string, because its rule concerns the
+   GitHub URL and not the filesystem -- so do not assume another guard covers it.
+
+E. **TEST/SIDE-EFFECT MUTATION OF TRACKED STATE.**
+   Does this code (or a test that would naturally be written for it) WRITE to
+   `results/**`, `openspec/**`, `output/**`, `ops/**`, or an operator-curated doc
+   (README.md, docs/index.html, docs/roadmap.md, docs/getting-started.md,
+   docs/cli-usage.md, docs/mcp-server.md, docs/blog/*, docs/CNAME) as a side
+   effect of merely running? Writing to a FIXED artifact path that a committed
+   historical artifact already occupies is the specific hazard: it overwrites the
+   research record on a green run, with no failure and no diff anyone reads.
+"""
+
+# The canonical name of each bug class above. Every prompt in this file MUST contain every
+# one of these strings, and `test_every_prompt_covers_every_bug_class` fails the build if
+# one does not. The marker is the class NAME rather than a splice of SHARED_BUG_CLASSES on
+# purpose: PER_GUARD_PROMPT already asks classes A-D in its own framing, aimed specifically
+# at guards, and splicing the shared text in as well would state the same worked precedent
+# twice in one prompt. Duplication dilutes a prompt; what actually needed enforcing is
+# COVERAGE, not identical wording. So each prompt phrases the class however suits its
+# target and simply has to use the canonical name while doing it.
+# Suffixes a reviewer could legitimately cite as evidence-by-path. Kept deliberately short:
+# every entry widens the audit-integrity guard's un-void path, and un-voiding is the only
+# direction this exemption moves. Source, config, artifacts, docs -- the things that
+# actually exist in this repo and that a finding would name.
+CITABLE_PATH_SUFFIXES: tuple[str, ...] = (
+    ".py",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".md",
+    ".txt",
+    ".toml",
+    ".cfg",
+    ".sh",
+    ".tex",
+    ".html",
+)
+
+BUG_CLASS_MARKERS: tuple[str, ...] = (
+    "SILENT NON-FIRING",
+    "PATTERN LIST NARROWER THAN ITS CONCEPT",
+    "UNTESTED PATTERN",
+    "HARDCODED ABSOLUTE WRITE TARGET",
+    "TEST/SIDE-EFFECT MUTATION OF TRACKED STATE",
+)
+
+SHARED_OUTPUT_TAIL = """\
+## MISSED INPUT
+<the concrete real-world input from class A that this code should catch and does
+ NOT -- a literal field name, verdict string, path, or value. Or "none found".>
+
+## RECOMMENDATION
+<one of: KEEP | ADD_WORD_BOUNDARY | ADD_FIELD_UNWRAP | ADD_TOKEN | WIDEN_PATTERN_TO_CONCEPT |
+ ADD_TEST_CASE | DERIVE_PATH_FROM_FILE | ISOLATE_WRITE_TARGET | NEEDS_REDESIGN>
+
+## RATIONALE
+<2-3 sentences>
+```
+
+Be hostile. If you find no problems, say CLEAN and move on -- do not invent
+issues to seem thorough. Inventing a finding is not a harmless excess of
+caution here: a fabricated smoking gun wastes an operator's investigation and
+teaches the project to distrust this audit.
+
+IMPORTANT about quoting: inside `## FINDINGS`, `## CLAIM` and `## RATIONALE`,
+only put a backtick-quoted code span around text that LITERALLY APPEARS in the
+code you were given -- those sections are machine-checked against the source and
+a verdict citing text that is not there is automatically discarded. Constructed
+inputs that do NOT appear in the source (your counterexample, your missed input)
+belong in `## COUNTEREXAMPLE` and `## MISSED INPUT`, which are exempt from that
+check by design.
+"""
 
 PER_CHUNK_PROMPT = """\
 You are a hostile software reviewer auditing a piece of QA/fabrication-detection
@@ -169,31 +490,23 @@ structured set of questions. Do not soften the answers. Do not rationalize.
    work) or a false negative (misses something it should catch). If you
    cannot construct one, say so explicitly.
 
+{SHARED}
 Output format -- exactly this structure (no preamble, no postscript):
 
 ```
 ## VERDICT
-<one of: CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE>
+<one of: CLEAN | MINOR_RISK | REAL_BUG | SILENT_NON_FIRING | CANNOT_DETERMINE>
 
 ## CLAIM
 <what the function's docstring/name claims to do, 1 sentence>
 
 ## FINDINGS
-<numbered list of concrete issues found per the 6 questions above, or "none found">
+<numbered list of concrete issues found per the questions above, or "none found">
 
 ## COUNTEREXAMPLE
 <the concrete mis-classifying input you constructed, or "none constructed">
 
-## RECOMMENDATION
-<one of: KEEP | ADD_WORD_BOUNDARY | ADD_FIELD_UNWRAP | ADD_TEST_CASE | NEEDS_REDESIGN>
-
-## RATIONALE
-<2-3 sentences>
-```
-
-Be hostile. If you find no problems, say CLEAN and move on -- do not invent
-issues to seem thorough.
-"""
+{TAIL}""".replace("{SHARED}", SHARED_BUG_CLASSES).replace("{TAIL}", SHARED_OUTPUT_TAIL)
 
 PER_FILE_PROMPT = """\
 You are a hostile software reviewer auditing a QA/reconciliation script from
@@ -231,11 +544,12 @@ Your job: review the WHOLE FILE below for the same class of bug. Answer:
    verdict string or roadmap task fragment) that this file would
    mis-classify.
 
+{SHARED}
 Output format -- exactly this structure (no preamble, no postscript):
 
 ```
 ## VERDICT
-<one of: CLEAN | MINOR_RISK | REAL_BUG | CANNOT_DETERMINE>
+<one of: CLEAN | MINOR_RISK | REAL_BUG | SILENT_NON_FIRING | CANNOT_DETERMINE>
 
 ## FINDINGS
 <numbered list of concrete issues, or "none found">
@@ -243,16 +557,125 @@ Output format -- exactly this structure (no preamble, no postscript):
 ## COUNTEREXAMPLE
 <the concrete mis-classifying input you constructed, or "none constructed">
 
-## RECOMMENDATION
-<one of: KEEP | ADD_WORD_BOUNDARY | ADD_FIELD_UNWRAP | ADD_TOKEN | ADD_TEST_CASE | NEEDS_REDESIGN>
+{TAIL}""".replace("{SHARED}", SHARED_BUG_CLASSES).replace("{TAIL}", SHARED_OUTPUT_TAIL)
 
-## RATIONALE
-<2-3 sentences>
+
+PER_GUARD_PROMPT = """\
+You are a hostile software reviewer auditing a GUARD from the Carnot project --
+a script whose entire job is to REFUSE something: refuse a commit, quarantine an
+artifact, reject a claim, or report that a run rewrote files it should not have.
+Most of these are wired into pre-commit, so they run unattended, on every commit,
+in front of an autonomous research loop that runs ~30 milestones a day.
+
+READ THIS BEFORE YOU START, because it defines what "a bug" means here.
+
+For ordinary code, the dangerous failure is doing the wrong thing. For a guard,
+the dangerous failure is doing NOTHING. A guard that raises a false alarm gets
+noticed within a day -- somebody's honest commit is refused and they come
+looking. A guard that stays silent on a real violation is never noticed at all;
+worse, every silent day increases the trust placed in it, and the project stops
+performing the manual check the guard was supposed to replace. The record then
+degrades with a green light on.
+
+This has already happened here, on 2026-07-29, to a guard in this same family.
+`determination_preservation_lint.py` was written to refuse any commit that drops
+a fabrication-gate determination or a corrigendum record from a results
+artifact. A test run overwrote a results artifact and destroyed a hand-written
+field named `inference_substrate_correction_note`. The guard printed
+"determination-preservation-lint: OK". The commit went through. The reason was
+not subtle in hindsight: the guard matched the literal field name
+`flagged_adversarial`, plus any key containing the substring `corrigendum`. The
+destroyed field was a corrigendum in substance -- a recorded human correction,
+precisely what the guard's docstring says it protects -- but it did not contain
+that substring. The guard was not incorrect. It was NARROWER THAN ITS OWN
+CONCEPT, and from the outside that is indistinguishable from working.
+
+Your job is to find the NEXT one of those. Answer these questions about the
+guard below.
+
+1. **What is this guard's CONCEPT?** In one sentence, what class of bad thing is
+   it supposed to prevent -- as stated by its docstring, its name, and the
+   discipline it enforces? State the concept, not the implementation.
+
+2. **SILENT NON-FIRING -- the central question.** Name a REAL, plausible input
+   that falls inside that concept and that this guard DOES NOT catch. Be
+   concrete: an actual field name, verdict string, file path, config value, or
+   diff shape that an agent in this project would plausibly produce. Trace the
+   code and say exactly which line lets it through. If you genuinely cannot find
+   one, say so explicitly -- do not manufacture one.
+
+3. **PATTERN LIST NARROWER THAN ITS CONCEPT.** For every hardcoded
+   list/tuple/set/regex of names, tokens, prefixes or markers: is it a
+   DEFINITION of the concept, or a SAMPLE of it? Name omitted members. The
+   `corrigendum` /
+   `*_correction_note` shape above is the archetype; look also for a fixed field
+   list where the domain is open-ended (this project's artifact corpus has about
+   31,510 distinct top-level keys).
+
+4. **Scope holes.** What does the guard NOT look at -- which directories, file
+   types, diff kinds (added / deleted / renamed files), or execution paths are
+   outside its reach entirely? A guard that inspects `results/*.json` says
+   nothing about `docs/`; a guard that reads the staged diff says nothing about
+   a run that never staged anything. State the hole and whether anything else in
+   the project covers it. Do NOT assume a sibling guard covers a hole unless you
+   can see it in this file.
+
+5. **Bypass.** How would an agent, or an ordinary automation, defeat this guard
+   WITHOUT intending to? (Not an attacker -- the realistic threat here is a
+   careless `git add -A`, a test that calls a script's `main()`, a re-run that
+   overwrites a fixed output path, a `--no-verify`, a rewritten file that is
+   restored to a *superficially* similar state.)
+
+6. **UNTESTED PATTERN.** For each individual rule or branch: if it were deleted,
+   would any test fail, or is it double-covered by a broader neighbouring rule
+   so the named rule is decorative? Name any rule you believe is deletable with
+   the suite still green.
+
+7. **HARDCODED ABSOLUTE WRITE TARGET.** Does the guard bake an absolute path
+   (`/home/<someone>/...`) into the source rather than deriving it from
+   `Path(__file__)`, an env var, or an argument? Two distinct consequences, and
+   the second is the one people miss: it acts on the wrong tree, AND if it
+   WRITES, a run from a worktree or a fresh clone silently writes into the
+   original operator checkout instead of failing. Treat that as a
+   reproducibility defect as well as a correctness bug. Note that this project's
+   `canonical_url_lint.py` deliberately PERMITS that same literal string,
+   because its rule concerns the GitHub URL and not the filesystem -- so do not
+   assume another guard covers it. Nothing was watching it as a write target.
+
+8. **Failure mode on error.** If the guard's own machinery breaks (a file it
+   reads is missing, a subprocess returns non-zero, JSON fails to parse), does
+   it fail CLOSED (refuse, alarm) or fail OPEN (return "OK")? A guard that
+   returns clean when it could not actually perform its check is the silent
+   failure in its purest form. Quote the specific except/fallback.
+
+9. **TEST/SIDE-EFFECT MUTATION OF TRACKED STATE.** Does this guard -- or a test
+   that would naturally be written for it, or a fixture it needs -- WRITE to
+   `results/**`, `openspec/**`, `output/**`, `ops/**`, or an operator-curated
+   doc (README.md, docs/index.html, docs/roadmap.md, docs/getting-started.md,
+   docs/cli-usage.md, docs/mcp-server.md, docs/blog/*, docs/CNAME) merely as a
+   side effect of running? Writing to a FIXED path that a committed historical
+   artifact already occupies is the specific hazard: it overwrites the research
+   record on a green run, with no failure and no diff anyone reads. A guard is
+   not exempt from this because it is a guard -- state-writing test fixtures are
+   how the 2026-07-29 incident happened, and a guard that corrupts the record it
+   protects while verifying it is the worst version of the problem.
+
+Output format -- exactly this structure (no preamble, no postscript):
+
 ```
+## VERDICT
+<one of: CLEAN | MINOR_RISK | REAL_BUG | SILENT_NON_FIRING | CANNOT_DETERMINE>
 
-Be hostile. If you find no problems, say CLEAN and move on -- do not invent
-issues to seem thorough.
-"""
+## CONCEPT
+<the class of bad thing this guard is supposed to prevent, 1 sentence>
+
+## FINDINGS
+<numbered list of concrete issues per the 8 questions above, or "none found">
+
+## COUNTEREXAMPLE
+<a concrete input that gets through, or "none constructed">
+
+{TAIL}""".replace("{TAIL}", SHARED_OUTPUT_TAIL)
 
 
 @dataclass
@@ -374,8 +797,38 @@ def parse_verdict(report: str) -> str:
     return m.group(1).strip() if m else "UNKNOWN"
 
 
-def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]]:
-    """Audit-integrity guard (Layer 1.5) -- identical logic to
+# Sections whose content is, BY PROMPT DESIGN, an input that does NOT appear in the
+# audited source. The reviewer was explicitly asked to construct these. Fact-checking them
+# against the source would void precisely the findings the 2026-07-29 extension exists to
+# surface -- the whole point of a SILENT_NON_FIRING finding is to name a real input the
+# code does not mention anywhere. Without this exemption the extension would have been
+# decorative: its own integrity guard would have discarded every finding it added.
+CONSTRUCTED_INPUT_SECTIONS = ("COUNTEREXAMPLE", "MISSED INPUT")
+
+
+def strip_constructed_sections(report: str) -> str:
+    """Return only the sections that make CLAIMS ABOUT THE AUDITED SOURCE.
+
+    The integrity guard's question is "did the reviewer invent a line of code and attribute
+    it to this file". That question is meaningless for a section that was commissioned to
+    contain something the file does NOT have.
+    """
+    parts = re.split(r"(?m)^\s*##\s*(.+?)\s*$", report)
+    if len(parts) == 1:
+        return report  # unstructured output: nothing to scope, check the whole thing
+    kept = [parts[0]]
+    for i in range(1, len(parts) - 1, 2):
+        heading, content = parts[i].strip().upper(), parts[i + 1]
+        if any(heading.startswith(s) for s in CONSTRUCTED_INPUT_SECTIONS):
+            continue
+        kept.append(content)
+    return "\n".join(kept)
+
+
+def verify_quoted_evidence(
+    report: str, body: str, repo_root: Path | None = None
+) -> tuple[list[str], list[str]]:
+    """Audit-integrity guard (Layer 1.5) -- descended from
     verifier_authenticity_audit.py's guard of the same name. An LLM hostile
     reviewer can hallucinate its smoking gun (a quoted line, a fabricated
     counterexample string, a path that doesn't exist). We can't fact-check
@@ -383,18 +836,66 @@ def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]
     code spans that look like a file path, a line of code, or contain a
     distinctive identifier) against the actual source. Missing evidence ->
     the flagged verdict is auto-downgraded rather than acted on.
+
+    TWO CORRECTIONS ADDED 2026-07-29, both of which the extension needs to not eat itself:
+
+    1. Constructed-input sections are exempt (see CONSTRUCTED_INPUT_SECTIONS). The new
+       SILENT_NON_FIRING class asks the reviewer to name an input the code does NOT
+       contain. Checking that answer against the code and voiding it when absent would
+       reject every correct answer -- a guard that fires only on true findings, which is
+       the exact inversion of what it is for.
+
+    2. A quoted path to a real file in the repo is EVIDENCE, not hallucination. The
+       original check asked only "does this string appear in the audited chunk", so a
+       reviewer citing `results/experiment_3946_r11l_first_solve.json` -- a genuine
+       artifact, and the right thing to cite when explaining what a guard failed to
+       protect -- was treated as fabricated because that filename naturally does not
+       appear inside a linter's source. Existence in the repo now counts. This only ever
+       UN-voids a span, so it cannot let a hallucination through: a path that exists is,
+       by construction, not made up.
     """
     norm_body = re.sub(r"\s+", "", body)
+    scoped = strip_constructed_sections(report)
+
+    def exists_in_repo(core: str) -> bool:
+        """A quoted repo-relative path to a real FILE counts as evidence.
+
+        Narrowed 2026-07-29 from `.exists()` to `.is_file()` plus a known suffix. The
+        loose version un-voided any quoted span containing a slash that resolved to
+        anything on disk, so the bare string `scripts/` -- eight characters, contains a
+        slash, obviously a directory -- was accepted as high-specificity evidence. That
+        is not a citation; it is a gesture at a folder. Requiring a real file with a
+        source/artifact extension keeps the property this exemption exists for (a
+        reviewer citing a genuine artifact by path is not hallucinating) while removing
+        the breadth that was never intended.
+
+        This relaxation only ever UN-voids a span, so every widening of it weakens the
+        integrity guard. That asymmetry is why it is kept as tight as it can be while
+        still admitting real citations.
+        """
+        if repo_root is None or "/" not in core:
+            return False
+        candidate = core.strip().strip("`'\"()[],.")
+        if not candidate or candidate.startswith("/") or ".." in candidate:
+            return False
+        if not candidate.endswith(CITABLE_PATH_SUFFIXES):
+            return False
+        try:
+            return (repo_root / candidate).is_file()
+        except OSError:
+            return False
 
     def is_present(core: str) -> bool:
         if re.sub(r"\s+", "", core) in norm_body:
+            return True
+        if exists_in_repo(core):
             return True
         toks = re.findall(r"[A-Za-z0-9_./-]{6,}", core)
         return any(re.sub(r"\s+", "", t) in norm_body for t in toks)
 
     high: list[str] = []
     missing: list[str] = []
-    for span in re.findall(r"`([^`]+)`", report):
+    for span in re.findall(r"`([^`]+)`", scoped):
         core = span.strip()
         if len(core) < 6:
             continue
@@ -415,6 +916,48 @@ def verify_quoted_evidence(report: str, body: str) -> tuple[list[str], list[str]
     return high, missing
 
 
+"""Verdicts that put a unit on the operator's action list.
+
+`SILENT_NON_FIRING` is the 2026-07-29 addition and is deliberately its own verdict rather
+than folded into REAL_BUG. The two call for different operator responses: REAL_BUG means
+"this logic is wrong, fix the logic", while SILENT_NON_FIRING means "this logic is right as
+far as it goes and does not go far enough" -- a widening, usually with a regression test
+named for the input that got through. Collapsing them would lose that distinction in the
+one report where it matters most.
+"""
+FLAGGED_VERDICTS = frozenset({"REAL_BUG", "NEEDS_REDESIGN", "SILENT_NON_FIRING"})
+
+VERDICT_ORDER = (
+    "CLEAN",
+    "MINOR_RISK",
+    "REAL_BUG",
+    "SILENT_NON_FIRING",
+    "CANNOT_DETERMINE",
+    "NEEDS_REDESIGN",
+    "UNKNOWN",
+)
+
+
+def parse_section(report: str, heading: str) -> str:
+    """Pull one `## HEADING` section's body out of a structured audit reply.
+
+    Used for `## MISSED INPUT`, which is the single most actionable line the audit can
+    produce -- it is the literal input a guard lets through -- and therefore gets hoisted
+    into the report summary instead of being left buried in a per-unit section that nobody
+    scrolls to.
+    """
+    m = re.search(
+        rf"(?ms)^\s*##\s*{re.escape(heading)}\s*$\n(.*?)(?=^\s*##\s|\Z)",
+        report,
+    )
+    if not m:
+        return ""
+    text = m.group(1).strip().strip("`").strip()
+    if text.lower().startswith(("none found", "none constructed", "n/a", "none.")):
+        return ""
+    return text
+
+
 def _run_one(
     label: str,
     body: str,
@@ -424,8 +967,9 @@ def _run_one(
     counts: dict[str, int],
     flagged: list[tuple[str, str]],
     integrity_voids: list[tuple[str, str, list[str]]],
+    missed_inputs: list[tuple[str, str]] | None = None,
 ) -> None:
-    flagged_verdicts = {"REAL_BUG", "NEEDS_REDESIGN"}
+    flagged_verdicts = FLAGGED_VERDICTS
     ok, report = call_model(args.model, args.model_name, prompt, body)
     if not ok:
         out.append(f"## {label}\n\n(audit call failed: {report[:200]})\n")
@@ -434,7 +978,7 @@ def _run_one(
     verdict = parse_verdict(report)
     guard_note = ""
     if verdict in flagged_verdicts:
-        _high, missing = verify_quoted_evidence(report, body)
+        _high, missing = verify_quoted_evidence(report, body, repo_root=PROJECT_ROOT)
         if missing:
             integrity_voids.append((label, verdict, missing[:6]))
             guard_note = (
@@ -455,12 +999,207 @@ def _run_one(
     counts[verdict] = counts.get(verdict, 0) + 1
     if verdict in flagged_verdicts:
         flagged.append((label, verdict))
+        # Hoist the named missed input, but ONLY off a flagged verdict that survived the
+        # integrity guard. A voided verdict's constructed inputs are exactly as unreliable
+        # as the evidence that voided it, and this list is the part an operator acts on.
+        if missed_inputs is not None:
+            missed = parse_section(report, "MISSED INPUT")
+            if missed:
+                missed_inputs.append((label, missed))
     out.append(f"## {label}\n")
     out.append(f"**Verdict:** `{verdict}`\n")
     out.append(report.strip())
     if guard_note:
         out.append(guard_note)
     out.append("\n")
+
+
+def build_units(path: Path) -> list[tuple[str, str, str]]:
+    """Turn one target file into (label, body, prompt) audit units.
+
+    Routing is by ROLE first, then size:
+      * a GUARD_TARGETS file gets PER_GUARD_PROMPT -- the silent-non-firing interrogation;
+      * anything over CHUNK_THRESHOLD_LINES is split into risky functions, because a
+        whole-file review of six thousand lines is a skim;
+      * everything else is a whole-file review.
+
+    A missing file yields no units instead of raising. Guards get renamed and migrated by
+    other workflows, and an audit that dies on a concurrent rename is an audit that stops
+    being run at exactly the moment the tree is changing fastest.
+    """
+    resolved = path.resolve()
+    guard_paths = {p.resolve() for p, _ in GUARD_TARGETS}
+    try:
+        source = resolved.read_text()
+    except OSError:
+        return []
+    if resolved in guard_paths:
+        return [(resolved.name, source, PER_GUARD_PROMPT)]
+    if resolved in {p.resolve() for p in CHUNKED_FILE_TARGETS} or (
+        source.count("\n") + 1 > CHUNK_THRESHOLD_LINES
+    ):
+        return [(c.label, c.body, PER_CHUNK_PROMPT) for c in extract_risky_functions(resolved)]
+    return [(resolved.name, source, PER_FILE_PROMPT)]
+
+
+def all_target_paths() -> list[Path]:
+    """Every file this audit considers in scope, in a stable order.
+
+    Guards come FIRST on purpose: they are the newly-covered surface and the ones with a
+    live incident behind them, so a bounded run should reach them before anything else.
+
+    Ordering alone does NOT deliver that, which is worth stating because this docstring
+    used to claim it did. The rotation offset is persisted across runs, so putting the
+    guards at the head of the list while the stored offset pointed at unit 45 of 168 left
+    them unvisited for roughly seven bounded milestone-closes. `units_signature` is the
+    other half: when the unit list changes, the offset is discarded and rotation restarts
+    here, at the guards. Ordering expresses the priority; the signature enforces it.
+    """
+    return [p for p, _ in GUARD_TARGETS] + list(WHOLE_FILE_TARGETS) + list(CHUNKED_FILE_TARGETS)
+
+
+def units_signature(units: list[tuple[str, str, str]]) -> str:
+    """Stable fingerprint of the unit LIST -- its length and the labels, not the bodies.
+
+    Deliberately insensitive to edits inside a unit. Rewriting a function body should not
+    throw away rotation progress; that would mean an actively-developed file perpetually
+    re-audits its own head slice and never reaches the tail. What must invalidate the
+    offset is a change to what the INDICES MEAN: a target added or removed, a function
+    renamed, a file crossing the chunking threshold.
+    """
+    labels = "\n".join(label for label, _, _ in units)
+    return f"{len(units)}:{hashlib.sha256(labels.encode()).hexdigest()[:16]}"
+
+
+def resolve_rotation_offset(prior: object, signature: str) -> int:
+    """Where this run should start, given the persisted state and the current signature.
+
+    Extracted from main() so it can actually be tested. The rotation slice math already in
+    the suite is a REIMPLEMENTATION of what main() does inline -- it passes whether or not
+    main() is correct, which is the decorative-coverage shape this whole audit hunts. This
+    decision is the part that matters (it is what left the guards dormant at offset 45), so
+    it is a real function with real callers on both sides.
+
+    A missing, malformed, or mismatched signature all resolve to 0. That is deliberately
+    fail-safe in the direction of MORE auditing: the cost of restarting rotation is
+    re-reviewing some units, and the cost of trusting a stale offset is a whole newly-added
+    guard surface never being looked at.
+    """
+    if not isinstance(prior, dict):
+        return 0
+    if str(prior.get("units_signature", "")) != signature:
+        return 0
+    try:
+        return max(0, int(prior.get("offset", 0)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _precommit_script_hooks(config_text: str) -> dict[str, str]:
+    """Map `scripts/<name>.py` -> the hook id that runs it, from .pre-commit-config.yaml.
+
+    Parsed with a regex rather than a YAML load on purpose: this runs inside the audit and
+    inside a unit test, and taking a hard dependency on PyYAML for a scope self-check would
+    trade a real capability for a cosmetic one. The shape being matched is fixed by
+    pre-commit's own schema (`entry:` is a command line), so a regex is sufficient and
+    cannot silently mis-parse into a WRONG answer -- it either finds the script or does not.
+    """
+    hooks: dict[str, str] = {}
+    current_id = ""
+    for line in config_text.splitlines():
+        m_id = re.match(r"\s*-?\s*id:\s*(\S+)", line)
+        if m_id:
+            current_id = m_id.group(1)
+            continue
+        if re.match(r"\s*entry:", line):
+            for script in re.findall(r"scripts/([A-Za-z0-9_]+\.py)", line):
+                hooks.setdefault(script, current_id)
+    return hooks
+
+
+# Guards do not all live in pre-commit. The runtime doc guard landed 2026-07-29 as a pytest
+# audit hook under python/carnot/testing/, wired through conftest.py -- a location a
+# pre-commit-only scan would never reach. Rather than treat that as a one-off, this directory
+# is swept too: it is the project's designated home for test-time guards, so anything
+# guard-shaped appearing in it should have to be classified like everything else.
+RUNTIME_GUARD_DIR = PROJECT_ROOT / "python" / "carnot" / "testing"
+RUNTIME_GUARD_NAME_MARKERS = ("guard", "lint", "audit", "check")
+
+
+def _runtime_guard_modules(guard_dir: Path | None = None) -> dict[str, str]:
+    """Guard-shaped modules under the runtime-guard directory -> a short origin label."""
+    d = guard_dir if guard_dir is not None else RUNTIME_GUARD_DIR
+    found: dict[str, str] = {}
+    try:
+        entries = sorted(d.glob("*.py"))
+    except OSError:
+        return found
+    for p in entries:
+        if p.name.startswith("_"):
+            continue
+        if any(marker in p.stem.lower() for marker in RUNTIME_GUARD_NAME_MARKERS):
+            found[p.name] = f"runtime guard module ({d.name}/)"
+    return found
+
+
+def discover_unaudited_guards(
+    config_text: str | None = None, guard_dir: Path | None = None
+) -> list[tuple[str, str]]:
+    """Wired guards that are NEITHER audited NOR acknowledged as out of scope.
+
+    This is the audit applying its own class-B finding to itself. The target list above is a
+    pattern list, and the whole lesson of 2026-07-29 is that a pattern list drifts narrower
+    than its concept without anybody being told. A guard wired into pre-commit (or into
+    conftest) is trusted from that moment; nothing else in the project would ever have said
+    "and it has never been reviewed".
+
+    Two sources, because one source is how the concept gets narrowed: pre-commit hooks that
+    run a `scripts/*.py`, and guard-shaped modules in the runtime-guard directory.
+
+    Returns (name, origin) pairs. Empty means the scope list is complete.
+    """
+    if config_text is None:
+        try:
+            config_text = PRECOMMIT_CONFIG.read_text()
+        except OSError:
+            config_text = ""
+    covered = {p.name for p in all_target_paths()}
+    covered.add(Path(__file__).name)  # this audit is reviewed by its operator, not by itself
+    candidates: dict[str, str] = {}
+    for script, hook_id in _precommit_script_hooks(config_text).items():
+        candidates[script] = f"pre-commit hook: {hook_id}"
+    for name, origin in _runtime_guard_modules(guard_dir).items():
+        candidates.setdefault(name, origin)
+    out: list[tuple[str, str]] = []
+    for name, origin in sorted(candidates.items()):
+        if name in covered or name in ACKNOWLEDGED_NON_QA_LAYER:
+            continue
+        out.append((name, origin))
+    return out
+
+
+def check_targets() -> int:
+    """`--check-targets`: refuse (exit 1) when a wired guard is unclassified."""
+    unaudited = discover_unaudited_guards()
+    if not unaudited:
+        print("qa-layer-audit --check-targets: OK — every wired guard is either in the")
+        print("  audit's target list or explicitly acknowledged as out of scope.")
+        return 0
+    print("qa-layer-audit --check-targets: UNCLASSIFIED GUARD(S).")
+    print(
+        "  These run on every commit (or every test run), so the project trusts them, but\n"
+        "  nothing reviews them and nobody has written down that they are out of scope.\n"
+        "  That is the exact shape of the 2026-07-29 incident: trusted and unexamined.\n"
+    )
+    for name, origin in unaudited:
+        print(f"  - {name}  ({origin})")
+    print(
+        "\n  Fix by EITHER adding the file to GUARD_TARGETS in this script (with a one-line\n"
+        "  reason it is in scope), OR adding it to ACKNOWLEDGED_NON_QA_LAYER with the reason\n"
+        "  its failure does not admit or destroy a research determination. Do not leave it\n"
+        "  unlisted -- unlisted is how the last one got missed."
+    )
+    return 1
 
 
 def main() -> int:
@@ -475,7 +1214,16 @@ def main() -> int:
     parser.add_argument(
         "--file",
         default=None,
-        help="Audit a single file (chunked if it's adversarial_verify.py, whole-file otherwise)",
+        help="Audit a single file. Routing (guard prompt / chunked / whole-file) is decided "
+        "by build_units() exactly as it is for a full run, so a --file run reviews the "
+        "target the same way the scheduled run would.",
+    )
+    parser.add_argument(
+        "--guard-prompt",
+        action="store_true",
+        help="Force the guard (silent-non-firing) prompt for --file. Use when auditing a "
+        "guard that is not in GUARD_TARGETS -- e.g. an older revision recovered from git "
+        "history, or a guard another workflow has not landed yet.",
     )
     parser.add_argument(
         "--limit",
@@ -483,30 +1231,37 @@ def main() -> int:
         default=0,
         help="Stop after N chunks/files total (for time-bounded sampling)",
     )
+    parser.add_argument(
+        "--check-targets",
+        action="store_true",
+        help="Do not audit; report wired guards that are neither audited nor acknowledged "
+        "out of scope, and exit 1 if any exist.",
+    )
     args = parser.parse_args()
+
+    if args.check_targets:
+        return check_targets()
 
     units: list[tuple[str, str, str]] = []  # (label, body, prompt)
 
     if args.file:
-        p = Path(args.file)
-        if p in CHUNKED_FILE_TARGETS:
-            for chunk in extract_risky_functions(p):
-                units.append((chunk.label, chunk.body, PER_CHUNK_PROMPT))
-        else:
+        # Resolve BEFORE routing. The previous code compared a possibly-relative
+        # `Path(args.file)` against the absolute CHUNKED_FILE_TARGETS, so it never matched:
+        # `--file scripts/adversarial_verify.py` silently fell through to a whole-file
+        # review of 6,200 lines. Silent mis-routing in the auditor is the same failure the
+        # auditor exists to find.
+        p = Path(args.file).resolve()
+        if args.guard_prompt:
             try:
-                units.append((p.name, p.read_text(), PER_FILE_PROMPT))
-            except Exception:
+                units.append((p.name, p.read_text(), PER_GUARD_PROMPT))
+            except OSError:
                 pass
+        else:
+            units.extend(build_units(p))
         rotated = False
     else:
-        for p in WHOLE_FILE_TARGETS:
-            try:
-                units.append((p.name, p.read_text(), PER_FILE_PROMPT))
-            except Exception:
-                continue
-        for p in CHUNKED_FILE_TARGETS:
-            for chunk in extract_risky_functions(p):
-                units.append((chunk.label, chunk.body, PER_CHUNK_PROMPT))
+        for p in all_target_paths():
+            units.extend(build_units(p))
         rotated = True
 
     # Rotation state: adversarial_verify.py alone has 150+ risky-function chunks --
@@ -518,17 +1273,31 @@ def main() -> int:
     # rotated=False) don't touch rotation state.
     if args.limit > 0 and rotated and units:
         state_path = PROJECT_ROOT / "ops" / ".qa_layer_audit_rotation.json"
-        offset = 0
+        signature = units_signature(units)
+        # A persisted offset is only meaningful against the unit list it was measured
+        # on. When the list changes -- a target added, a function renamed, a file grown
+        # past the chunking threshold -- index N no longer denotes what it did, and
+        # worse, newly-added units sit at the HEAD of the list while the offset points
+        # deep into the tail. Adding the guards at offset 45 of 168 with --limit 20
+        # would have left the entire new guard surface dormant for ~7 milestone-closes,
+        # and that surface was added because of a live incident. Detect the change and
+        # start over from the top. See resolve_rotation_offset.
         try:
-            offset = int(json.loads(state_path.read_text()).get("offset", 0))
+            prior_state = json.loads(state_path.read_text())
         except Exception:
-            offset = 0
+            prior_state = None
+        offset = resolve_rotation_offset(prior_state, signature)
         offset = offset % len(units)
         rotated_units = units[offset:] + units[:offset]
         units = rotated_units[: args.limit]
         try:
             state_path.write_text(
-                json.dumps({"offset": (offset + args.limit) % len(rotated_units)})
+                json.dumps(
+                    {
+                        "offset": (offset + args.limit) % len(rotated_units),
+                        "units_signature": signature,
+                    }
+                )
             )
         except Exception:
             pass
@@ -538,32 +1307,34 @@ def main() -> int:
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     today = datetime.date.today().isoformat()
 
-    out = [
+    header = [
         f"<!-- generated by scripts/qa_layer_authenticity_audit.py — {today} -->",
-        f"<!-- per CLAUDE.md 'QA-Layer Authenticity Discipline' — advisory only -->",
-        f"",
+        "<!-- per CLAUDE.md 'QA-Layer Authenticity Discipline' — advisory only -->",
+        "",
         f"# qa_layer_authenticity_audit_report — {today}",
-        f"",
-        f"Scanned {len(units)} unit(s) (whole-files + function-chunks) with {args.model} as "
-        f"the hostile reviewer. Targets: {', '.join(p.name for p in WHOLE_FILE_TARGETS)} "
-        f"(whole-file), {', '.join(p.name for p in CHUNKED_FILE_TARGETS)} (function-chunked).",
-        f"",
+        "",
+        f"Scanned {len(units)} unit(s) with {args.model} as the hostile reviewer. "
+        f"Guards ({len(GUARD_TARGETS)}): "
+        f"{', '.join(p.name for p, _ in GUARD_TARGETS)}. "
+        f"Whole-file: {', '.join(p.name for p in WHOLE_FILE_TARGETS)}. "
+        f"Function-chunked: {', '.join(p.name for p in CHUNKED_FILE_TARGETS)}.",
+        "",
     ]
 
-    counts: dict[str, int] = {
-        "CLEAN": 0,
-        "MINOR_RISK": 0,
-        "REAL_BUG": 0,
-        "CANNOT_DETERMINE": 0,
-        "NEEDS_REDESIGN": 0,
-        "UNKNOWN": 0,
-    }
+    # `out` holds ONLY the per-unit bodies. The previous version appended header and bodies
+    # to one list and then spliced the summary in at a hardcoded `out[:5]`, which silently
+    # became the wrong offset the moment a header line was added -- the summary landed in
+    # the middle of the header. Keeping the three parts separate removes the offset entirely.
+    out: list[str] = []
+
+    counts: dict[str, int] = {v: 0 for v in VERDICT_ORDER}
     flagged: list[tuple[str, str]] = []
     integrity_voids: list[tuple[str, str, list[str]]] = []
+    missed_inputs: list[tuple[str, str]] = []
 
     for i, (label, body, prompt) in enumerate(units, 1):
         print(f"[{i}/{len(units)}] {label}", file=sys.stderr)
-        _run_one(label, body, prompt, args, out, counts, flagged, integrity_voids)
+        _run_one(label, body, prompt, args, out, counts, flagged, integrity_voids, missed_inputs)
 
     summary = [
         "## Summary",
@@ -573,11 +1344,37 @@ def main() -> int:
     ]
     for v, n in counts.items():
         summary.append(f"| `{v}` | {n} |")
+    if missed_inputs:
+        # Hoisted above FLAGGED deliberately. This is the shortest path from an audit run to
+        # a repair: each line is a literal input a guard lets through, which is both the fix
+        # and the regression test, already written.
+        summary.append("")
+        summary.append("### MISSED INPUTS — a real input each guard does NOT catch")
+        summary.append(
+            "The 2026-07-29 class. Each line names an input that falls inside the guard's own "
+            "stated concept and gets through anyway. Treat each as a widening plus a "
+            "regression test NAMED for the input — a widening without the named test is how "
+            "the last one came back."
+        )
+        for label, missed in missed_inputs:
+            one_line = " ".join(missed.split())
+            summary.append(f"- `{label}` — {one_line[:400]}")
     if flagged:
         summary.append("")
         summary.append("### FLAGGED — operator action recommended")
         for label, verdict in flagged:
             summary.append(f"- `{label}` — **{verdict}**")
+    unaudited = discover_unaudited_guards()
+    if unaudited:
+        summary.append("")
+        summary.append("### SCOPE GAP — wired guards this audit does not cover")
+        summary.append(
+            "These run on every commit or every test run, so they are trusted, but they are "
+            "neither in this audit's target list nor recorded as out of scope. Classify each "
+            "one (see `--check-targets`)."
+        )
+        for name, origin in unaudited:
+            summary.append(f"- `{name}` — {origin}")
     if integrity_voids:
         summary.append("")
         summary.append(
@@ -595,14 +1392,15 @@ def main() -> int:
     summary.append("")
     summary.append("---")
     summary.append("")
-    out = out[:5] + summary + out[5:]
 
-    REPORT_PATH.write_text("\n".join(out))
+    REPORT_PATH.write_text("\n".join(header + summary + out))
     print(f"audit complete — report at {REPORT_PATH.relative_to(PROJECT_ROOT)}")
     print(f"  scanned: {len(units)} unit(s)")
     print(f"  flagged: {len(flagged)}")
     for label, verdict in flagged:
         print(f"    {label}: {verdict}")
+    for label, missed in missed_inputs:
+        print(f"    MISSED INPUT [{label}]: {' '.join(missed.split())[:160]}")
     return 0
 
 

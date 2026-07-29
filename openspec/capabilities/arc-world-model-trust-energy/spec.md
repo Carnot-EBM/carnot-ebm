@@ -19802,3 +19802,87 @@ labour is deliberate: the lint is narrow and deep, the detector is broad and sha
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6041 | Implemented. (1) `scripts/determination_preservation_lint.py` WIDENED from 2 rules to 4 — `MARKER_PATTERNS` (rule 3, dropped review records), `SUBSTRATE_FIELD` + `STRENGTH_BANDS` + `_strength_rank` + `_has_change_note` (rule 4, in-place weakening), `_unwrap_principle` for principle-annotated fields, and `already_reported` de-duplication so one deletion produces one refusal line. Calibration RESTATED 2026-07-29 (rev 2) with its window defined and re-run after the review repairs: the original "1,200 commits" was ambiguous between *1,200 commits overall* (3,232 modified artifact pairs) and *1,200 commits touching `results/`* (7,024 pairs). Over the latter: rule 3 fires 10x, rule 4 fires 12x, each hit adjudicated individually — `experiment_911_drift_probe_tier0i.json` takes `real_model` -> `synthetic_runner` TEN times in `main` (previously unknown) and `experiment_307` takes `live_gpu` -> `cpu_training` twice. A pre-repair sweep counted 15 rule-4 hits; the three that no longer fire are the honest-substrate-correction class the rev-2 repair fixed. (4) REV 2 — an adversarial review found TEN defects, two serious: rule 4 was ranking the human note in the project's documented `<canonical value><separator><note>` substrate form (233+ live declarations), inverting its verdict on CLAUDE.md's own exp5178/exp5161 exemplars; and the pre-commit interlock was disarmed by a bare `pytest`, because only `--run` ever wrote the pending marker. Fixed by delegating to `adversarial_verify._match_declared_substrate`, accepting an inline rationale, ranking the enum-governed field from the canonical enum only (unknown may rank weak, never strong), and arming the marker from `tests/python/conftest.py` so it arms however pytest was invoked. Corpus-wide verification: 0 of 2,673 declarations rank differently from their leading token. (2) `scripts/test_suite_mutation_check.py` NEW — `--snapshot`/`--check`/`--restore`/`--run`/`--gate`, wired as `.pre-commit-config.yaml:test-suite-mutation-gate` with `always_run`. (3) `scripts/pytest_write_audit_plugin.py` NEW — the CPython-audit-hook instrument that produced the per-test attribution, so the survey is reproducible after any repair. NOT implemented, deliberately: the test-side repair, which is an operator design call (four options costed in `docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md` §6). | `tests/python/test_determination_preservation_lint.py` (20 tests, +11 for the widening, replaying all three confirmed incidents as fixtures — including `test_incident_3_timestamp_rewrites_are_deliberately_NOT_this_lint_s_job`, which pins the boundary so a later "fix" cannot start refusing ordinary re-runs, and `test_an_unrelated_change_note_does_not_excuse_a_substrate_downgrade`, which pins a loose escape hatch found and removed during review); `tests/python/test_test_suite_mutation_check.py` (13 tests driving REAL git in a throwaway repo — the bug class is "which git question did we ask", so a mocked git would reproduce the wrong question); `tests/python/test_pytest_write_audit_plugin.py` (17 tests, loading the plugin with `sys.addaudithook` and `atexit.register` stubbed so the instrument's own tests do not contaminate the suite they run in). |
+
+## REQ-ARC-WMTE-6042: The Adversarial Audit Hunts Guards That Are Silent, Not Only Guards That Are Wrong
+
+REQ-ARC-WMTE-6041 established that a test run rewrites the research record and that the guard meant
+to stop it (REQ-ARC-WMTE-5995's lint) printed OK while a hand-written corrigendum was deleted. The
+operator's follow-up directive was "also update the adversarial model to ensure it enforces this".
+The system SHALL therefore extend the Layer-2 QA-layer audit to (a) cover the guards themselves as
+audit targets, and (b) ask the question that would have found the miss: *name a real input this check
+is supposed to catch and does not*.
+
+**Why a new requirement rather than more implementation under 6041.** 6041 is about the record being
+rewritten. This is about the DETECTION LAYER's blind spots, which is a different failure mode with a
+different owner: 6041's guards refuse a bad commit, this one refuses to let a guard be trusted
+without review. A guard whose pattern list is narrower than its concept is indistinguishable from a
+working guard by every mechanical means available — only an adversarial reader comparing the concept
+to the implementation can find it, which is precisely what Layer 2 is for and why Layer 1 cannot
+substitute.
+
+**Five bug classes, drawn from what the 2026-07-29 incident actually produced**, added to every audit
+prompt: SILENT NON-FIRING; PATTERN LIST NARROWER THAN ITS CONCEPT; UNTESTED PATTERN (a rule whose
+deletion leaves the suite green because a neighbour double-covers it); HARDCODED ABSOLUTE WRITE
+TARGET; and TEST/SIDE-EFFECT MUTATION OF TRACKED STATE.
+
+#### SCENARIO-ARC-WMTE-6042-THE-ORIGIN-MISS-IS-NAMED
+
+**Given** the pre-widening two-rule `determination_preservation_lint.py` as the audited unit
+**When** the guard prompt is run against it
+**Then** the reviewer SHALL return `SILENT_NON_FIRING` and SHALL name a concrete missed input — the
+acceptance demonstration returned `inference_substrate_correction_note` verbatim, and separately the
+`_cleared_deliberately` hole. Reviewer variance means a bounded run may name a different REAL miss;
+the requirement is that the CLASS is found, not that one literal string is reproduced.
+
+#### SCENARIO-ARC-WMTE-6042-EVERY-PROMPT-COVERS-EVERY-CLASS
+
+**Given** the three audit prompts (`PER_CHUNK_PROMPT`, `PER_FILE_PROMPT`, `PER_GUARD_PROMPT`)
+**When** the bug-class markers are checked
+**Then** every prompt SHALL contain every marker in `BUG_CLASS_MARKERS`. This scenario exists because
+the extension first shipped with `PER_GUARD_PROMPT` — used by the ONLY targets that are guards —
+omitting the write-target framing and the tracked-state class entirely, under a comment claiming the
+classes were shared by every prompt. Prompts MAY phrase a class in their own framing and SHALL use
+the canonical name while doing so.
+
+#### SCENARIO-ARC-WMTE-6042-A-NEW-TARGET-IS-AUDITED-BEFORE-THE-OLD-ONES
+
+**Given** a persisted rotation offset measured against a different unit list
+**When** targets are added and a bounded `--limit` run starts
+**Then** the offset SHALL be discarded and rotation SHALL restart at the head of the list. Ordering
+the guards first is NOT sufficient on its own: the ten guard targets were added at indices 0-9 while
+the stored offset was 45 of 168, so at the conductor's `--limit 20` the entire new surface would have
+been dormant for roughly seven milestone-closes. The signature SHALL be insensitive to edits inside a
+unit, so that an actively-developed file does not re-audit its own head slice forever.
+
+#### SCENARIO-ARC-WMTE-6042-A-WIRED-GUARD-CANNOT-GO-UNCLASSIFIED
+
+**Given** a guard newly wired into `.pre-commit-config.yaml` or `python/carnot/testing/`
+**When** the commit is attempted
+**Then** `--check-targets` SHALL refuse unless the guard is in `GUARD_TARGETS` or recorded in
+`ACKNOWLEDGED_NON_QA_LAYER` with a written reason. The check SHALL be wired to pre-commit rather than
+left to be typed by hand: a check nothing calls is the same trust-without-verification shape one
+level up.
+
+#### SCENARIO-ARC-WMTE-6042-A-CONSTRUCTED-MISSED-INPUT-IS-NOT-HALLUCINATION
+
+**Given** a `SILENT_NON_FIRING` verdict whose `## MISSED INPUT` names a field the audited source does
+not contain
+**When** the audit-integrity guard (Layer 1.5) runs
+**Then** the verdict SHALL survive. A missed input is BY DEFINITION absent from the source, so the
+naive evidence check would have voided every correct answer and made the extension decorative.
+Constructed-input sections SHALL be exempt, and a quoted path to a real repo FILE SHALL count as
+evidence. Both relaxations only ever un-void, so neither can admit a hallucination; hallucinated
+evidence inside `## FINDINGS` SHALL still be caught.
+
+#### SCENARIO-ARC-WMTE-6042-THE-AUDIT-NEVER-EDITS
+
+**Given** any verdict, including `SILENT_NON_FIRING` on a live guard
+**When** the audit completes
+**Then** it SHALL write only its report and SHALL NOT modify any audited file. The operator decides
+what to act on — same contract as every sibling Layer-2 audit in this project.
+
+## Implementation Status (REQ-ARC-WMTE-6042)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6042 | Implemented in `scripts/qa_layer_authenticity_audit.py`. (1) `GUARD_TARGETS` — 10 guards added, each with a written in-scope reason, including both halves of the operator-curated-doc discipline (`operator_curated_docs_lint.py`, commit-layer, which is why it never saw README.md being rewritten on every test run; and `python/carnot/testing/operator_curated_doc_guard.py`, the runtime half, which a pre-commit-only scan would never have found). (2) `SHARED_BUG_CLASSES` + `PER_GUARD_PROMPT` — the five classes, with the origin incident carried verbatim as a worked precedent because an abstract instruction returns abstract findings; `PER_GUARD_PROMPT` inverts the framing for guards (silent non-firing first, plus scope holes, unintentional bypass, and fail-closed-vs-fail-open — the question that found the old lint's fail-open). (3) `BUG_CLASS_MARKERS` — makes the coverage claim checkable, added after review found the guard prompt covered only 3 of 5. (4) `units_signature` + `resolve_rotation_offset` — extracted from `main()` so the decision is tested rather than reimplemented in the test file. (5) `verify_quoted_evidence` — `strip_constructed_sections` + repo-file existence, narrowed to `is_file()` + `CITABLE_PATH_SUFFIXES` after review found a bare `scripts/` un-voided a verdict. (6) `--check-targets` + `discover_unaudited_guards`, wired as `.pre-commit-config.yaml:qa-layer-audit-scope-check`. (7) `SILENT_NON_FIRING` as its own verdict (a widening, not a logic fix — different operator response than `REAL_BUG`) and `## MISSED INPUT` hoisted above FLAGGED in the report, each line being the fix and the regression test already written. Three incidental bugs fixed while extending: `--file` compared an unresolved path against absolute targets; the report spliced its summary at a hardcoded `out[:5]`; chunking depended on the explicit list alone. Layer 3 is CLAUDE.md "Test-Run Record Integrity Discipline" + the QA-Layer discipline's 2026-07-29 SCOPE EXTENSION. | `tests/python/test_qa_layer_authenticity_audit.py` (79 tests). Mutation-proven: 51/51 mutations killed across two harnesses. That number is load-bearing — the FIRST run of each harness left survivors, and every survivor was a test that existed and did not bite: `repo_root` plumbing severable from `_run_one`, a dunder skip double-covered by a name filter, an assertion on a bare `## MISSED INPUT` string that still appeared elsewhere in the prompt, the `len(units)` prefix double-covered by the label hash, `is_file()` double-covered by the suffix list, and the pre-existing path-escape rule made decorative BY the suffix narrowing (`..` is unreachable for a leading-dot path because `.strip()` eats the dots, so the rule only earns its place on an interior traversal). Each was rewritten to fail under mutation. |
