@@ -9,7 +9,7 @@
  "inference_substrate_principle": "This file is an ANALYSER pass over rows persisted by a separate live-LLM measurement. Declaring live_llm_inference here would publish the analyser's runtime as the measurement's, which is how a 2.54-hour measurement once shipped claiming 7.884s.",
  "measurement_wall_s": 2490.7,
  "measurement_wall_s_principle": "Taken from the row file's own elapsed_s -- the measuring process's wall clock. NOT a sum of per-cell wall_s (that excludes construction + inter-cell overhead and undercounts) and NOT this analyser's duration.",
- "duration_s": 0.18,
+ "duration_s": 0.186,
  "duration_s_principle": "The analyser's OWN runtime. Small by construction -- it reads persisted JSON. It is NOT evidence about how long the measurement took; measurement_wall_s is.",
  "acceptance_gates": {
   "G1_every_llm_on_row_had_a_live_generator": {
@@ -38,7 +38,7 @@
   }
  },
  "provenance": {
-  "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+  "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
   "code": [
    {
     "path": "scripts/arc_llm_on_wallclock_budget_probe.py",
@@ -66,9 +66,9 @@
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256": "9761f574fbb1d2d4fe031009c28b9c2b5ec062ff7ec88c8384975eef4de0b348",
-    "bytes": 374719,
-    "mtime_utc": "2026-07-28T19:04:52Z"
+    "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+    "bytes": 376234,
+    "mtime_utc": "2026-07-29T14:20:59Z"
    },
    {
     "path": "python/carnot/agentic/arc_executable_world_model.py",

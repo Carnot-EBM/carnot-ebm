@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_arc_gateway_rescore_20260726",
  "title": "Gateway-accurate re-scoring: the uncharged-RESET defect, bounded over 1401 recorded rows and then MEASURED exactly on matched live re-runs",
- "run_date": "2026-07-28T22:24:13Z",
+ "run_date": "2026-07-29T14:36:02Z",
  "schema": "carnot.arc_gateway_rescore.v1",
  "defect_under_measurement": {
   "gateway_charges_a_reset": "arc_agi/scorecard.py:701-704 inc_reset_count -> `self.resets[i] += 1` AND `self.actions[i] += 1`; reached from update_scorecard:839-843",
@@ -88,7 +88,7 @@
  "independent_implementation_crosscheck": {
   "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
   "available": true,
-  "peer_sha256": "a1f1a0f1a9aacd86496b1e33b1206f0d5233c322110a1981cf482f147c401bec",
+  "peer_sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
   "field_by_field_peer_vs_mine": {
    "n_rows_total": {
     "peer": 1401,
@@ -965,9 +965,9 @@
    "available": true
   }
  ],
- "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+ "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
  "provenance": {
-  "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+  "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
   "code": [
    {
     "path": "scripts/arc_gateway_rescore.py",
@@ -995,9 +995,9 @@
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256": "9761f574fbb1d2d4fe031009c28b9c2b5ec062ff7ec88c8384975eef4de0b348",
-    "bytes": 374719,
-    "mtime_utc": "2026-07-28T19:04:52Z"
+    "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+    "bytes": 376234,
+    "mtime_utc": "2026-07-29T14:20:59Z"
    }
   ],
   "rows_sources": {
@@ -1051,9 +1051,9 @@
    ]
   }
  },
- "duration_s": 1.042,
+ "duration_s": 1.748,
  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock -- Part A's clock is `measurement_wall_s` (sum of upstream row-file elapsed_s) and Part B's is `part_b_measurement_wall_s`. Conflating them is the 2026-07-26 failure this field's annotation exists to prevent.",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "the artifact as a whole is an aggregation over persisted rows plus a cited live sub-measurement; the live half declares its own substrate inside `part_b_exact_attribution_live`.",
- "reproducibility_checksum": "c21087ec3964e3906e790f2c20d7f22d9fed45ecaa5a6fa6faac5eaeabc9ca0a"
+ "reproducibility_checksum": "8e2123304c6120873fd80eb4d56716b287ec3d6f541e68ad04b864c5b9dad325"
 }

@@ -1,0 +1,975 @@
+{
+  "COMPLETION_ASYMMETRY": {
+    "games_never_attempted_or_stopped_by_operator_teardown": [
+      "cd82",
+      "cn04",
+      "sc25",
+      "tn36"
+    ],
+    "interpretation": "This is a WALL-CLOCK property, not a capability result, and it is reported separately from the banked-levels comparison for that reason. It matters for the live 8h Kaggle envelope: a per-game cell the 31B cannot finish is a game the live agent would not finish either at this induction budget. It ALSO induces a SELECTION EFFECT on the matched-pair analysis above -- the analyzed games are conditioned on the 31B completing, which correlates with FEWER induction cycles, so the analyzed subset is biased toward the 31B's cheaper games.",
+    "per_arm": {
+      "31b": {
+        "completed": [
+          "ft09",
+          "lp85",
+          "ls20",
+          "tr87",
+          "vc33"
+        ],
+        "completion_rate": 0.625,
+        "games_run_to_a_natural_conclusion": 8,
+        "hard_timed_out_1100s": [
+          "r11l",
+          "su15",
+          "tu93"
+        ],
+        "other_nonzero_exit": []
+      },
+      "9b": {
+        "completed": [
+          "ft09",
+          "lp85",
+          "ls20",
+          "r11l",
+          "su15",
+          "tr87",
+          "tu93",
+          "vc33"
+        ],
+        "completion_rate": 1.0,
+        "games_run_to_a_natural_conclusion": 8,
+        "hard_timed_out_1100s": [],
+        "other_nonzero_exit": []
+      }
+    }
+  },
+  "PRIMARY_banked_levels_reproduction_gated": {
+    "31b": 3,
+    "9b": 2,
+    "HOW_TO_READ_THE_THREE_TALLIES": "The matched-pair tally (31B 3 / 9B 2, wins 1 / losses 0) CONDITIONS on the 31B having finished the game. Over every cell each arm actually completed the tally is 31B 3 / 9B 3 -- DEAD EVEN -- because tu93, where the 9B banked a reproduction-gated level, is one of the three games the 31B could not finish. Scoring a non-finisher as zero gives wins 1 / losses 1, also dead even. The action-matched variant (4 pairs) preserves the matched-pair direction. No variant reaches significance; the two bracketing tallies both land on parity, so the raw 3-vs-2 must not be read as a 31B edge.",
+    "banked_levels_ALL_COMPLETED_CELLS": {
+      "31b": 3,
+      "9b": 3,
+      "note": "Unconditioned on the pairing restriction: every cell each arm actually finished. Coding a non-finishing arm as banking nothing, wins/losses over all games are computed in banked_paired_ALL_GAMES below.",
+      "per_game": {
+        "31b": [
+          [
+            "lp85",
+            1
+          ],
+          [
+            "ft09",
+            0
+          ],
+          [
+            "tr87",
+            0
+          ],
+          [
+            "vc33",
+            2
+          ],
+          [
+            "ls20",
+            0
+          ]
+        ],
+        "9b": [
+          [
+            "lp85",
+            0
+          ],
+          [
+            "ft09",
+            0
+          ],
+          [
+            "tr87",
+            0
+          ],
+          [
+            "vc33",
+            2
+          ],
+          [
+            "su15",
+            0
+          ],
+          [
+            "tu93",
+            1
+          ],
+          [
+            "r11l",
+            0
+          ],
+          [
+            "ls20",
+            0
+          ]
+        ]
+      }
+    },
+    "definition": "A level counts ONLY if the run's action trace, replayed through arc_solver_kit.reproduce against a FRESH env, reaches the claimed level. A live-recorded trajectory alone does NOT count (ARC Solve Reproducibility + Solver-Reuse Discipline).",
+    "n_cells_failed": 0,
+    "n_cells_gated": 4,
+    "n_cells_passed": 4,
+    "paired": {
+      "discordant": 1,
+      "losses_31b": 0,
+      "minimum_reachable_p_at_this_discordance": 1.0,
+      "sign_test_p_two_sided": 1.0,
+      "ties": 4,
+      "wins_31b": 1
+    },
+    "paired_ACTION_MATCHED_headline": {
+      "discordant": 1,
+      "excluded_unmatched": [
+        {
+          "actions_31b": 26,
+          "actions_9b": 391,
+          "game": "ls20",
+          "timed_out_31b": true,
+          "timed_out_9b": false
+        }
+      ],
+      "games": [
+        "lp85",
+        "ft09",
+        "tr87",
+        "vc33"
+      ],
+      "losses_31b": 0,
+      "minimum_reachable_p_at_this_discordance": 1.0,
+      "n_pairs": 4,
+      "sign_test_p_two_sided": 1.0,
+      "ties": 3,
+      "why_this_is_the_headline": "A wall-truncated cell did not consume the action budget its partner did, so it is a MISSING observation, not a tie. The 5-pair version is the inclusive variant.",
+      "wins_31b": 1
+    },
+    "paired_ALL_GAMES_nonfinisher_scores_zero": {
+      "caveat": "Scores a non-finishing arm as zero, which PENALIZES the arm that timed out. Reported as the opposite-bias bracket to the matched-pair tally, not as the headline; the truth is bracketed by the two.",
+      "discordant": 2,
+      "losses_31b": 1,
+      "sign_test_p_two_sided": 1.0,
+      "ties": 10,
+      "wins_31b": 1
+    },
+    "what_the_gate_actually_verifies": "STATED PLAINLY so the gate is not read as stronger than it is: this is a SAME-SESSION replay of the run's OWN action trace against a fresh instance of the SAME deterministic offline env. Passing is close to guaranteed by construction. It can only catch (a) nondeterminism in the env, (b) a level that depended on policy-INTERNAL state rather than the action sequence, and (c) ACTION6 clicks outside the live [0,63]^2 bound that the offline arcade would silently accept. It is NOT the from-scratch / state-grounded env-discovered RE-DERIVATION the ARC Solve Reproducibility rule asks for. Discriminating power here is UNMEASURED: 4 cells were gated, 4 passed, 0 failed, so the gate has never been observed to reject anything in this run."
+  },
+  "SECONDARY_metrics": {
+    "EFFECTIVE_DISCRIMINATING_SUPPORT": {
+      "n_pairs_where_at_least_one_arm_reached_the_policy": 2,
+      "nominal_n_pairs": 5,
+      "warning": "generator_output_reached_policy (n_plans_found>0) is the harness's own witness that the LLM's output actually reached the policy. It is False on 11 of 13 cells and False on ALL 8 9B cells. On ft09, tr87 and ls20 NEITHER arm produced a usable plan -- those pairs are the same control agent run twice, visible as identical hv_progress (0.75/0.75, 0.40/0.40, and a truncated cell). They contribute ties that say NOTHING about the inducer. Effective discriminating support is therefore 2 of 5 pairs, not the nominal n=5, and the 4 ties must not be read as evidence that the inducer did not matter."
+    },
+    "escalating_treatment_witness": {
+      "engine_accepted_rate": {
+        "31b": 0.4,
+        "9b": 0.2
+      },
+      "induction_fired_rate": {
+        "31b": 1.0,
+        "9b": 1.0
+      },
+      "n_cells_where_an_induced_engine_was_installed": {
+        "31b": 2,
+        "9b": 1
+      },
+      "plan_found_rate": {
+        "31b": 0.4,
+        "9b": 0.0
+      }
+    },
+    "generator_output_reached_policy_PER_PAIR": [
+      {
+        "31b": true,
+        "9b": false,
+        "game": "lp85",
+        "informative_about_the_inducer": true
+      },
+      {
+        "31b": false,
+        "9b": false,
+        "game": "ft09",
+        "informative_about_the_inducer": false
+      },
+      {
+        "31b": false,
+        "9b": false,
+        "game": "tr87",
+        "informative_about_the_inducer": false
+      },
+      {
+        "31b": true,
+        "9b": false,
+        "game": "vc33",
+        "informative_about_the_inducer": true
+      },
+      {
+        "31b": false,
+        "9b": false,
+        "game": "ls20",
+        "informative_about_the_inducer": false
+      }
+    ],
+    "generator_output_reached_policy_rate": {
+      "31b": 0.4,
+      "9b": 0.0
+    },
+    "induce_ok_rate": {
+      "31b": 1.0,
+      "9b": 1.0
+    },
+    "mean_actions_used": {
+      "31b": 319.6,
+      "9b": 392.8
+    },
+    "mean_actions_used_IS_A_TRUNCATION_ARTIFACT": "The all-pairs mean_actions_used gap (31B 319.6 vs 9B 392.8) is ENTIRELY the single wall-truncated ls20 cell (26 actions). It must NOT be read as the 31B being more action-efficient. Excluding that cell the arms are dead even -- see mean_actions_used_NON_TRUNCATED_CELLS_ONLY.",
+    "mean_actions_used_NON_TRUNCATED_CELLS_ONLY": {
+      "31b": 393,
+      "9b": 393.25,
+      "n_pairs": 4,
+      "note": "The all-pairs mean_actions_used difference is a TRUNCATION ARTIFACT, not an efficiency result: excluding the wall-truncated cell the arms are dead even."
+    },
+    "mean_heldout_accuracy": {
+      "31b": 0.5,
+      "9b": 0.2
+    },
+    "mean_hv_progress": {
+      "31b": 0.39,
+      "9b": 0.4133
+    },
+    "mean_n_inductions": {
+      "31b": 1.4,
+      "9b": 1.2
+    },
+    "mean_plan_found_rate": {
+      "31b": 0.4,
+      "9b": 0.0
+    },
+    "mean_wall_s_per_cell": {
+      "31b": 541.08,
+      "9b": 203.14
+    },
+    "paired_secondary_direction_summary": "Favoring the 31B: plan_found_rate (2-0), n_engine_accepted (2-0), n_goal_satisfiable (2-0), mean_heldout_accuracy (2-0), n_inductions (1-0). FAVORING THE 9B: hv_progress is 0 wins / 1 loss for the 31B (mean delta -0.0233) -- the ONLY paired secondary with a direction that runs against the 31B, stated explicitly here rather than left flat among neutral numbers. Every one of these is at or below the p=0.5 floor and none is significant.",
+    "paired_tests": {
+      "hv_progress": {
+        "losses_31b": 1,
+        "mean_delta_31b_minus_9b": -0.0233,
+        "minimum_reachable_p": 1.0,
+        "n_pairs": 5,
+        "sign_test_p_two_sided": 1.0,
+        "ties": 4,
+        "wins_31b": 0
+      },
+      "mean_heldout_accuracy": {
+        "losses_31b": 0,
+        "mean_delta_31b_minus_9b": 0.3,
+        "minimum_reachable_p": 0.5,
+        "n_pairs": 5,
+        "sign_test_p_two_sided": 0.5,
+        "ties": 3,
+        "wins_31b": 2
+      },
+      "n_engine_accepted": {
+        "losses_31b": 0,
+        "mean_delta_31b_minus_9b": 0.6,
+        "minimum_reachable_p": 0.5,
+        "n_pairs": 5,
+        "sign_test_p_two_sided": 0.5,
+        "ties": 3,
+        "wins_31b": 2
+      },
+      "n_goal_satisfiable": {
+        "losses_31b": 0,
+        "mean_delta_31b_minus_9b": 0.8,
+        "minimum_reachable_p": 0.5,
+        "n_pairs": 5,
+        "sign_test_p_two_sided": 0.5,
+        "ties": 3,
+        "wins_31b": 2
+      },
+      "n_inductions": {
+        "losses_31b": 0,
+        "mean_delta_31b_minus_9b": 0.2,
+        "minimum_reachable_p": 1.0,
+        "n_pairs": 5,
+        "sign_test_p_two_sided": 1.0,
+        "ties": 4,
+        "wins_31b": 1
+      },
+      "plan_found_rate": {
+        "losses_31b": 0,
+        "mean_delta_31b_minus_9b": 0.4,
+        "minimum_reachable_p": 0.5,
+        "n_pairs": 5,
+        "sign_test_p_two_sided": 0.5,
+        "ties": 3,
+        "wins_31b": 2
+      }
+    }
+  },
+  "SELECTION_EFFECT_ON_THE_PRIMARY_COMPARISON": "MUST be read alongside the banked-levels result. The 31B ran 8 games to a natural conclusion and COMPLETED only 0.625 of them (r11l, su15, tu93 blew the 1100s hard timeout); the 9B completed 1.0. Because a pair is analyzed only when BOTH arms produced a cell, the 5 analyzed games are CONDITIONED ON THE 31B FINISHING -- i.e. biased toward games where the 31B needed fewer/cheaper induction cycles. The three dropped games are precisely the ones where the 31B worked hardest, so the banked-levels comparison is not a random sample of the 12-game candidate set. DIRECTION OF THE BIAS, CORRECTED: an earlier draft of this artifact stated the exclusion cut AGAINST the 31B. That was BACKWARDS on the primary metric. One of the three dropped games -- tu93 -- is a game where the 9B BANKED a reproduction-gated level (cell 9b__tu93__s1: 0->1, reproduced=True, 389 actions, not timed out). The exclusion therefore removes ONE 9B banked level and ZERO 31B banked levels: it FLATTERS the 31B. Over all games each arm completed the tally is 31B 3 / 9B 3, and coding a non-finisher as zero gives wins 1 / losses 1. The entire 1-win-0-loss matched-pair edge exists only because the game where the 9B banked its third level is one the 31B could not finish. On the primary metric the completion asymmetry UNDER-CREDITS the 9B.",
+  "WALL_CAP_CONFOUND_AND_SENSITIVITY": {
+    "gate_that_fired": "acceptance_gate_wall_cap_did_not_bind_one_arm_only = False",
+    "sensitivity_excluding_wall_truncated_cells": {
+      "PRE_REGISTERED_CONSEQUENCE_HONORED": "acceptance_gates_note pre-registered that a False on this gate 'means the primary comparison is confounded and must be re-run with a larger cap'. The gate IS False. The pre-registered consequence is therefore APPLIED, not reinterpreted: the primary comparison is labelled CONFOUNDED pending a re-run at a larger cap. Overriding a pre-registered gate after seeing the data -- which is what calling it merely 'insensitive' amounted to -- is the failure this project's own discipline exists to prevent.",
+      "banked_31b": 3,
+      "banked_9b": 2,
+      "losses_31b": 0,
+      "ls20_is_a_MISSING_OBSERVATION_not_a_tie": "An earlier draft called ls20 'a 0-0 tie' and concluded the result was therefore 'insensitive' to the confound. That reasoning was circular: the 31B was cut off at 26 of 400 actions (6.5% of the budget) against the 9B's 391, so its 0 is a value never observed, not an observed tie. Recoded here as MISSING, which is why the action-matched 4-pair tally is the headline and the 5-pair version the inclusive variant.",
+      "n_pairs": 4,
+      "note": "Dropping the truncated cell changes neither the win/loss counts nor the direction. That bounds the damage to the DIRECTION -- it does not clear the gate.",
+      "primary_comparison_status": "CONFOUNDED_pending_rerun_at_larger_cap",
+      "win_loss_direction_changes": false,
+      "wins_31b": 1
+    },
+    "what_happened": [
+      "ls20: 31B hit the 900s soft wall cap (wall 1067s, timed_out=True) while the 9B did not (wall 228s). The 31B's result on this game (0 banked) is therefore CUT OFF, not converged."
+    ],
+    "why_it_is_reported_rather_than_suppressed": "The design forbids wall-clock from determining an ACTION-budgeted metric. This gate exists to catch exactly that and it fired correctly, so it is left FAILING. A gate quietly relaxed to make a run look clean is worse than the confound it hides."
+  },
+  "WHY_THE_PRIMARY_METRIC_MAY_BE_INSENSITIVE_TO_THE_INDUCER": {
+    "consequence": "Banked levels is the RIGHT metric for the submission decision (it is what scores), but it is a PARTIALLY INDUCER-INDEPENDENT metric: an arm can tie on banked levels while being strictly better at the thing the generator actually controls. That is precisely the pattern here -- tie-ish on banked levels, 0.4 vs 0.0 on plan_found. It means a null on banked levels does NOT license the conclusion that the generator is irrelevant; it licenses the narrower conclusion that, at this budget and support, the generator upgrade has not converted into score.",
+    "implication_for_design": "A future run wanting to isolate the inducer should either raise the action budget (so more levels require a plan rather than luck) or report banked levels SPLIT by whether a plan was installed before the level-up.",
+    "observation": "The 9B banked 2 levels (vc33) while its plan_found_rate was 0.0 on EVERY analyzed game -- i.e. those levels were reached by EXPLORATION, with no plan derived from any induced world model. So at a 400-action budget a substantial share of banked levels is produced by the explorer, not the inducer."
+  },
+  "acceptance_gate_both_arms_on_the_cuda_build_not_the_igpu": true,
+  "acceptance_gate_every_analyzed_game_is_a_matched_pair": true,
+  "acceptance_gate_every_banked_level_passed_the_reproduction_gate": true,
+  "acceptance_gate_measurement_is_falsifiable": true,
+  "acceptance_gate_no_cell_errors": true,
+  "acceptance_gate_no_direction_claimed_below_the_prestated_floor": true,
+  "acceptance_gate_wall_cap_did_not_bind_one_arm_only": false,
+  "acceptance_gates_note": "acceptance_gate_wall_cap_did_not_bind_one_arm_only is the fairness check that matters most for a SLOWER treatment arm: if the 900s tractability cap fired on the 31B and not the 9B, the 31B would have been handicapped on WALL-CLOCK, which the design explicitly forbids as a determinant of the ACTION-budgeted primary metric. A False here means the primary comparison is confounded and must be re-run with a larger cap. THIS GATE IS FALSE AND ITS PRE-REGISTERED CONSEQUENCE IS APPLIED: the primary comparison carries status CONFOUNDED_pending_rerun_at_larger_cap (see WALL_CAP_CONFOUND_AND_SENSITIVITY.primary_comparison_status). The direction is separately shown to be insensitive to the confound, but that bounds the damage -- it does NOT clear the gate, and an earlier draft that concluded 'insensitive' in place of the pre-registered consequence was overriding a gate after seeing the data.",
+  "answer_is_a_scored_submission_justified": {
+    "answer": "NO -- not on this evidence.",
+    "honest_reading": "Consistent with project_arc_actions_to_progress_metric: the binding constraint on the live path is dynamics induction quality reaching a USABLE plan, and while the 31B improves the plan-found rate, banked levels did not follow at this support. The migration remains justified on loadability and induction quality; it is NOT yet justified as a score improvement, and this measurement does not authorize a run. Note the primary metric is only PARTIALLY inducer-sensitive: the 9B banked 2 levels with plan_found_rate 0.0 everywhere, i.e. by exploration, so a banked-levels parity does NOT license the broader claim that the generator is irrelevant -- only the narrower one that it has not converted into score at this budget and support.",
+    "standing_gate": "feedback_arc3_online_gated_on_offline_beating_baselines: play the scored game only when an offline result beats BOTH a TRM baseline AND our best prior submitted Carnot run.",
+    "what_DID_move": "The 31B's upstream induction edge is visible downstream but stops short of score: plan_found_rate 0.4 vs 0.0 and engine_accepted_rate 0.4 vs 0.2. So the migration is NOT inert -- more of its induced world models survive the held-out verifier and yield a reachable plan. That is a real mechanism gain that has NOT yet converted into banked levels. Counterweight, stated rather than buried: hv_progress is the one paired secondary whose direction runs AGAINST the 31B (0 wins / 1 loss, mean delta -0.0233).",
+    "what_would_settle_it": "Raise the per-cell hard timeout to ~2400s so the 31B stops dropping its own hardest games (removing the selection effect), then run the full 12 games x >=2 seeds. Six discordant games are needed before p<0.05 is even reachable.",
+    "why_not": [
+      "The primary metric does not clear the gate: 1 discordant pair(s) out of n=5, two-sided p=1.0, and the MINIMUM reachable p at this discordance is 1.0. No direction is claimable at this support; the raw 3-vs-2 total rests on a single game.",
+      "The raw 3-vs-2 is an artifact of the pairing restriction. Over every cell each arm COMPLETED the tally is 31B 3 / 9B 3, and scoring a non-finisher as zero gives wins 1 / losses 1. Both bracketing tallies land on PARITY, because tu93 -- where the 9B banked a reproduction-gated level -- is one of the three games the 31B could not finish. The exclusion removes one 9B level and zero 31B levels.",
+      "Effective discriminating support is 2 of 5 pairs, not 5: on ft09, tr87 and ls20 NEITHER arm produced a usable plan, so those pairs are the same control agent twice and their ties carry no information about the inducer.",
+      "The wall-cap fairness gate is FALSE and its pre-registered consequence applies: the primary comparison is CONFOUNDED pending a re-run at a larger cap.",
+      "The analyzed subset is selection-biased toward games the 31B could finish (see SELECTION_EFFECT_ON_THE_PRIMARY_COMPARISON), and on the PRIMARY metric that bias runs IN THE 31B's FAVOR, not against it.",
+      "The 31B failed to complete 3 of 8 games within 1100s while the 9B completed 8/8 -- a direct risk to the live 8h envelope that a banked-levels tie does nothing to offset."
+    ]
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "outer_loop_arc_first_win_llm_on_eval_concurrency_20260727",
+      "fields_imported": [
+        "first_win_rate 0.04 baseline",
+        "the UNFALSIFIABLE failure mode"
+      ],
+      "path": "results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json"
+    }
+  ],
+  "duration_s": 3721.1,
+  "duration_s_provenance": "Sum of per-cell wall_s across BOTH arms. Arms ran CONCURRENTLY on separate cards, so this exceeds the wall-clock span of the session; it is compute time, not elapsed time. Real GGUF load + real autoregressive generation on CUDA, measured 32.6 tok/s decode on the 31B.",
+  "experiment": "outer_loop_arc_heldout_31b_vs_9b_banked_levels",
+  "fairness_controls": {
+    "arm_prompt_configs": "Each model ran in ITS OWN live pin: 31B on arm 'frozen_gemma_pin' (no /no_think prefix -- gemma-4 has no such control token and would consume it as literal text), 9B on arm 'frozen' (/no_think, its shipped Qwen3 setting). Identical on every other knob (codeonly fence ON, 4096 n_predict, 3 tries). Forcing the retired Qwen prefix onto gemma would have reintroduced the thinking-budget confound.",
+    "both_arms_mtp_off": "The 9B's SHIPPED config is mtp=True, but _resolve_mtp_head() now resolves to the gemma-4-31B draft head staged for Kaggle, and pairing that head with the Qwen target kills the server outright ('Gemma4Assistant requires ctx_other to be set' -> '[spec] failed to measure draft model memory' -> exit). MTP is a decode-SPEED lever only, so under an ACTION budget it cannot move banked levels. Running BOTH arms MTP-off is symmetric and removes the mis-paired-head landmine. Kaggle's 31B arm would be ~1.4x faster in WALL-CLOCK only.",
+    "deviation_from_the_shipped_live_config": "n_ctx 32768 (shipped: 81920) and ffn_cpu_layers 0 (auto-fit would pick 7), for BOTH arms. FORCED, not preferred: at 81920 the VRAM guard needs 25388 MiB on a 24576 MiB card and even after auto-fit needs 24020 MiB against ~24123 free -- a ~100 MiB margin that any stray CUDA context loses, at which point _generator_server_and_env() falls through to the iGPU HIP build and the agent runs LLM-OFF while still reporting itself as the LLM-on path. That exact silent fallback happened in the design phase and was caught and discarded. The pool only has to satisfy K_concurrent*(prompt+max_tokens); this harness is single-threaded (K=1 -> 19830 <= 32768), whereas 81920 is sized for the Kaggle swarm's K=4. Applied identically to both arms, so it cannot bias the comparison; it does mean neither arm is byte-identical to the Kaggle configuration. THIRD DEVIATION -- explore_budget 24 vs the shipped-routed 80. Every cell ran at run_bounded_progress's explore_budget=24 default. The SCORED path passes explore_budget=None and resolves it through _route_explore_budget(strategy_route), which returns SUBMITTED_ROUTED_EXPLORE_BUDGET=24 only when uses_goal_distance_heuristic is False and SUBMITTED_GRAPH_EXPLORE_BUDGET=80 otherwise. Verified directly: all 12 candidate games AND their anonymized ids route to graph_explore with uses_goal_distance_heuristic not False, hence 80. So the measured agent induces every 24 transitions where the scored agent induces every 80 -- a ~3.3x higher induction cadence on exactly the treatment channel. It is MATCHED across arms, so it introduces no directional bias, and it is CONSERVATIVE for this artifact's verdict: the scored agent would see LESS inducer influence per run, not more, so a null here is if anything easier to obtain on the scored path.",
+    "matched": "SAME games, SAME seed, SAME action budget, SAME max_inductions, SAME adapter-disabled condition; every game run as a matched PAIR, so a truncated run can never compare a complete arm against a partial one.",
+    "one_model_per_card_proven_from_per_pid_vram": {
+      "31b": "PID on bus 00000000:03:00.0 (GPU0), 21434 MiB resident",
+      "9b": "PID on bus 00000000:62:00.0 (GPU1), 6324 MiB resident",
+      "method": "nvidia-smi --query-compute-apps=pid,used_memory,gpu_bus_id cross-referenced with the server PID's /proc/<pid>/cmdline --port; NEVER inferred from CUDA_VISIBLE_DEVICES."
+    },
+    "per_arm_engine_store_verified": true,
+    "server_witness_from_proc": [
+      {
+        "bus": "00000000:03:00.0",
+        "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "is_cuda_build": true,
+        "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "pid": "3652315",
+        "port": "8951",
+        "t": "2026-07-29T01:53:17Z",
+        "vram_mib": "21434"
+      },
+      {
+        "bus": "00000000:62:00.0",
+        "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "is_cuda_build": true,
+        "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+        "pid": "3652820",
+        "port": "8952",
+        "t": "2026-07-29T01:53:17Z",
+        "vram_mib": "6324"
+      },
+      {
+        "bus": "00000000:03:00.0",
+        "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "is_cuda_build": true,
+        "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "phase": "teardown",
+        "pid": "3652315",
+        "port": "8951",
+        "t": "2026-07-29T03:17:57Z",
+        "vram_mib": "21434"
+      },
+      {
+        "bus": "00000000:62:00.0",
+        "exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "is_cuda_build": true,
+        "model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.5-9B-MTP-GGUF/snapshots/9716a636ee4bddc3fed678220b7a33dd2a4160ae/Qwen3.5-9B-Q4_K_M.gguf",
+        "phase": "teardown",
+        "pid": "3652820",
+        "port": "8952",
+        "t": "2026-07-29T03:17:57Z",
+        "vram_mib": "6326"
+      }
+    ],
+    "server_witness_note": "Read from /proc/<pid>/exe + nvidia-smi per-PID gpu_bus_id. This is the authoritative check, and it is NOT redundant with the per-cell guard: cells REUSE a persistent server, and on reuse the proposer's _proc handle is None, so the per-cell 'is it the build-hip binary?' assertion cannot fire. This witness covers that case.",
+    "wall_clock_is_not_the_budget": "ACTIONS (400, unchanged from CarnotAgent.MAX_ACTIONS) and max_inductions (3) are the matched budget. The wall_s cap (900s) is a tractability guard recorded honestly as timed_out; per-arm timeout counts are reported per game so a reader can check the cap did not silently bind one arm only."
+  },
+  "false_negative_risk": "A null/inconclusive here is NOT automatically informative, so the positive controls are stated explicitly. (1) The metric CAN move: lp85 produced a real, reproduction-gated level-up for the 31B and vc33 produced 2 for BOTH arms -- so neither the harness nor the gate is stuck at zero. (2) The treatment WAS applied: induction fired on 100% of cells in both arms and an induced engine was installed in 2/5 (31B) and 1/5 (9B) cells, so this is not the 2026-07-27 arm-identical-to-its-own-control state. (3) Headroom EXISTS: the arms differ on plan_found_rate (0.4 vs 0.0), so the corpus is not degenerate with respect to the generator. The honest limitation is POWER and the completion selection effect, not an absent signal.",
+  "false_negative_risk_checked": true,
+  "falsifiability_detail": {
+    "both_arms_engaged": true,
+    "n_cells_engine_installed": {
+      "31b": 2,
+      "9b": 1
+    },
+    "n_pairs_where_NEITHER_arm_reached_the_policy": 3,
+    "n_pairs_with_differential_engine_acceptance": 1,
+    "n_pairs_with_differential_plan_found": 2,
+    "per_arm_engagement_required": "both arms must install >=1 induced engine",
+    "why": "A pair where NEITHER arm produced a usable plan is the same control agent twice; it contributes a tie that says nothing about the inducer. Effective discriminating support is n_pairs minus that count."
+  },
+  "falsifiability_gate_was_STRENGTHENED_after_review": "The original gate was `n_installed['31b'] + n_installed['9b'] > 0` -- an OR across arms. That is too weak: it passes whenever EITHER arm engaged, so it would have certified a run with 31b=1 / 9b=0 over 12 games as 'falsifiable' while the BASELINE arm never engaged its treatment channel at all. That failure mode is nearly as uninformative as the 2026-07-27 state the gate exists to catch, and it is not hypothetical here: the 9B reached the policy on 0 of 8 cells. The gate now requires BOTH arms to install >=1 induced engine (31b=2, 9b=1 -- it still passes, now for the right reason) and additionally reports the count of pairs with DIFFERENTIAL engagement (1 on engine acceptance, 2 on plan-found), which is the quantity that actually makes an individual pair informative about the inducer.",
+  "falsifiability_rationale": "The 2026-07-27 attempt at this question was VOIDED (verdict complete_UNFALSIFIABLE_treatment_not_applied): induction_attempts_planned == 0 on 174/174 rows because a POST-generation trust gate rejected every induced model before a plan could be installed, so the 'LLM arms' were the control agent relabelled and the delta was an arithmetic identity. This run therefore records THREE escalating witnesses per cell -- induction fired, induced engine ACCEPTED by the held-out verifier (i.e. installed as the agent's world model), and a plan found and executed. If no cell in EITHER arm had reached witness 2, this artifact would report blocked_treatment_not_applied, not a null.",
+  "field_principles": {
+    "banked_levels": "principle: a level only counts once it REPRODUCES offline; a live-recorded trajectory is exactly what the ARC Solve Reproducibility discipline says does NOT count, so the primary metric is replay-gated.",
+    "deviation_from_the_shipped_live_config": "principle: an undeclared config deviation is how a measurement silently stops describing the system it claims to describe.",
+    "inference_substrate": "principle: declares which duration floor applies, so a fabricated fast run cannot pass as live inference.",
+    "measurement_is_falsifiable": "principle: a delta between two arms that are secretly the same agent is an arithmetic identity, not a null; this gate is what separates 'the inducer does not help' from 'we never applied the treatment'.",
+    "minimum_reachable_p_at_achieved_discordance": "principle: stating the p FLOOR prevents reading an underpowered screen as a significance test.",
+    "random_seed": "principle: determinism is the precondition for a third party re-running this and getting the same pairs.",
+    "reproducibility_checksum": "principle: content-addressed hash of the per-cell rows catches silent corpus or model drift between this artifact and any replication.",
+    "solve_provenance": "principle: distinguishes an advance the LIVE agent could make on a hidden game from one an outer-loop session hand-engineered; mis-stamping it would make wasted effort look like capability."
+  },
+  "games_blocked": [],
+  "games_ran": [
+    "lp85",
+    "ft09",
+    "tr87",
+    "vc33",
+    "ls20"
+  ],
+  "games_truncated_excluded": [
+    {
+      "31b_log_tail": "92-46c9-a02b-52c365265501\n2026-07-28 22:02:53 | INFO | Found latest version of su15: su15-1944f8ab (downloaded: 2026-06-08 07:25:24.919195+00:00)\n2026-07-28 22:02:53 | INFO | Successfully loaded game class Su15 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/su15/1944f8ab/su15.py",
+      "9b_log_tail": "7-28 22:02:53 | INFO | Successfully loaded game class Su15 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/su15/1944f8ab/su15.py\n{\"arm\": \"9b\", \"game\": \"su15\", \"seed\": 1, \"banked_levels\": 0, \"treatment_applied\": true, \"generator_output_reached_policy\": false, \"cell_wall_s\": 222.1}",
+      "game": "su15",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": "9b",
+      "surviving_arm_banked_levels": 0,
+      "surviving_arm_reproduced": null
+    },
+    {
+      "31b_log_tail": "e4-4d43-9a1b-49ee2f7b1887\n2026-07-28 22:21:14 | INFO | Found latest version of tu93: tu93-0768757b (downloaded: 2026-06-08 07:25:18.086006+00:00)\n2026-07-28 22:21:14 | INFO | Successfully loaded game class Tu93 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/tu93/0768757b/tu93.py",
+      "9b_log_tail": "90df-4efa-93dd-041fee845955\n2026-07-28 22:28:10 | INFO | Found latest version of tu93: tu93-0768757b (downloaded: 2026-06-08 07:25:18.086006+00:00)\n{\"arm\": \"9b\", \"game\": \"tu93\", \"seed\": 1, \"banked_levels\": 1, \"treatment_applied\": true, \"generator_output_reached_policy\": false, \"cell_wall_s\": 419.8}",
+      "game": "tu93",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": "9b",
+      "surviving_arm_banked_levels": 1,
+      "surviving_arm_reproduced": true
+    },
+    {
+      "31b_log_tail": "e9-408d-b859-cf271e7a28a6\n2026-07-28 22:39:34 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-07-28 22:39:34 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py",
+      "9b_log_tail": "7-28 22:39:34 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n{\"arm\": \"9b\", \"game\": \"r11l\", \"seed\": 1, \"banked_levels\": 0, \"treatment_applied\": true, \"generator_output_reached_policy\": false, \"cell_wall_s\": 280.1}",
+      "game": "r11l",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": "9b",
+      "surviving_arm_banked_levels": 0,
+      "surviving_arm_reproduced": null
+    },
+    {
+      "31b_log_tail": "fd-48df-ae5f-91f3572a702f\n2026-07-28 23:15:43 | INFO | Found latest version of cd82: cd82-fb555c5d (downloaded: 2026-06-08 07:25:18.243395+00:00)\n2026-07-28 23:15:43 | INFO | Successfully loaded game class Cd82 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/cd82/fb555c5d/cd82.py",
+      "9b_log_tail": "5f-4e5c-a6dd-b4672126a1a1\n2026-07-28 23:15:43 | INFO | Found latest version of cd82: cd82-fb555c5d (downloaded: 2026-06-08 07:25:18.243395+00:00)\n2026-07-28 23:15:43 | INFO | Successfully loaded game class Cd82 from /home/ianblenke/github.com/ianblenke/carnot/environment_files/cd82/fb555c5d/cd82.py",
+      "game": "cd82",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": null,
+      "surviving_arm_banked_levels": null,
+      "surviving_arm_reproduced": null
+    },
+    {
+      "game": "sc25",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": null,
+      "surviving_arm_banked_levels": null,
+      "surviving_arm_reproduced": null
+    },
+    {
+      "game": "cn04",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": null,
+      "surviving_arm_banked_levels": null,
+      "surviving_arm_reproduced": null
+    },
+    {
+      "game": "tn36",
+      "missing_arm": "31b",
+      "note": "no cell JSON written",
+      "surviving_arm": null,
+      "surviving_arm_banked_levels": null,
+      "surviving_arm_reproduced": null
+    }
+  ],
+  "git_head": "8441055c01772c21750d74c0b4e02fce7128cd8a",
+  "harness_paths": {
+    "analysis": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/analyze_heldout_31b_9b.py",
+    "anonymization_evidence": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/anon_evidence.json",
+    "cell_runner": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/cell.py",
+    "driver": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/drive.sh",
+    "harness": "python/carnot/agentic/arc_actions_to_progress.py",
+    "per_cell_rows": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/cells",
+    "per_pid_vram_samples": [
+      "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/vram_31b.jsonl",
+      "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/vram_9b.jsonl",
+      "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/vram_samples.jsonl"
+    ]
+  },
+  "heldout_condition": {
+    "additional_isolation": "Each arm also ran with its own CARNOT_ARC_E3_DIR (verified by reading E3_DIR back off the imported module, not off os.environ), both starting EMPTY. So neither arm could load an engine banked by the other, or by any historical run -- both induce cold. A shared engine store is how an earlier attempt got contaminated.",
+    "anon_id_formula": "hg + sha256('<game>|heldout')[:6]",
+    "limits_stated_plainly": [
+      "These are PUBLIC games; a hidden Kaggle game is a strictly harder condition.",
+      "Both generators may carry pretraining exposure to the public corpus.",
+      "Anonymizing an id does not remove knowledge baked into arc_solver_kit primitives.",
+      "The strategy route is unchanged for 11 of 12 games (see above).",
+      "This is a PROXY for a hidden game. It is not equal to one, and is not claimed to be."
+    ],
+    "measured_effect_across_the_12_candidate_games": {
+      "canonical_banked_engine_removed": 12,
+      "canonical_banked_engine_removed_IS_REDUNDANT": "This 12/12 count OVERSTATES what anonymizing the game id incrementally bought. Every cell already ran with its own EMPTY per-arm CARNOT_ARC_E3_DIR (set before import, then asserted by reading E3_DIR back off the imported module -- see e3_dir_honoured/e3_dir_resolved on every cell). With an empty store NO banked engine was loadable for ANY game id, anonymized or not. So this component is fully redundant with the isolation control and contributes nothing beyond it. The INCREMENTAL effect of anonymization is: transfer-recipe removal (12/12) + hidden-state-branch flip (3/12) + strategy-route change (1/12).",
+      "hidden_state_branch_flipped_off": 3,
+      "strategy_route_changed": 1,
+      "strategy_route_changed_detail": "Only tn36 (program_editor -> graph_explore). For the other 11 the route was already graph_explore, arc_strategy_router._BY_MECHANIC holding only 5 taxonomy classes so most registry mechanic_class values already fall back to it. This is the 'silent fallback to the same route' trap and it is REAL: anonymization does NOT change the strategy route for 11 of 12 games.",
+      "transfer_routing_recipe_removed": 12
+    },
+    "mechanism": "run_bounded_progress(..., policy_game_id=<anon>) -- the ENV runs the real game while E3AgentPolicy is constructed with an anonymized id. The scored entrypoint never imports arc_game_adapters at all (grep: zero hits in arc_competition_agent.py), so 'disable the GameAdapter' is not the available lever for entrypoint 1; every per-game prior the policy holds flows from self.short, and an unseen id makes all of them resolve to generic defaults."
+  },
+  "honest_verdict": "complete_INCONCLUSIVE_banked_levels_PARITY_over_all_completed_cells_31b_3_vs_9b_3_matched_pair_subset_3_vs_2_favors_31b_only_because_dropped_tu93_is_a_9b_bank_only_1_discordant_pair_of_n5_p1.0_min_reachable_p_1.0_no_direction_claimed_wall_cap_gate_FAILED_primary_CONFOUNDED_pending_rerun_plus_31b_completed_only_0.625_of_games_vs_9b_1.0",
+  "inference_substrate": "live_llm_inference",
+  "live_levels_gained_UNGATED_for_contrast": {
+    "31b": 3,
+    "9b": 2
+  },
+  "live_path_entrypoint": "python/carnot/agentic/arc_competition_agent.py :: E3AgentPolicy -- entrypoint 1, the SCORED agent's own per-action cascade, driven via arc_actions_to_progress.run_bounded_progress. Not a bespoke solver.",
+  "measurement_is_falsifiable": true,
+  "model_specs": {
+    "baseline_arm_9b": {
+      "card": "RTX 3090 GPU1 (bus 00000000:62:00.0)",
+      "ffn_cpu_layers": 0,
+      "file": "Qwen3.5-9B-Q4_K_M.gguf",
+      "hf_id": "unsloth/Qwen3.5-9B-MTP-GGUF",
+      "kv_quant": "q8_0",
+      "mtp": false,
+      "n_ctx": 32768,
+      "quant": "Q4_K_M",
+      "resident_mib": 6324
+    },
+    "note": "BOTH arms run FRESH in this session. No historical baseline is cited as an arm.",
+    "treatment_arm_31b": {
+      "card": "RTX 3090 GPU0 (bus 00000000:03:00.0)",
+      "ffn_cpu_layers": 0,
+      "file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "kv_quant": "q8_0",
+      "measured_decode_tok_s": 32.6,
+      "mtp": false,
+      "n_ctx": 32768,
+      "quant": "Q4_K_M",
+      "resident_mib": 21434
+    }
+  },
+  "n_cell_files_hashed": 13,
+  "n_matched_pairs": 5,
+  "per_game": [
+    {
+      "actions_31b": 393,
+      "actions_9b": 394,
+      "actions_to_first_solve_31b": 315,
+      "actions_to_first_solve_9b": null,
+      "anon_game_id": "hg655fcd",
+      "banked_31b": 1,
+      "banked_9b": 0,
+      "banked_delta": 1,
+      "engine_accepted_31b": true,
+      "engine_accepted_9b": true,
+      "error_31b": null,
+      "error_9b": null,
+      "game": "lp85",
+      "gen_reached_policy_31b": true,
+      "gen_reached_policy_9b": false,
+      "hv_progress_31b": 0.8,
+      "hv_progress_9b": 0.8,
+      "live_levels_gained_31b": 1,
+      "live_levels_gained_9b": 0,
+      "mean_heldout_acc_31b": 1.0,
+      "mean_heldout_acc_9b": 1.0,
+      "n_engine_accepted_31b": 2,
+      "n_engine_accepted_9b": 1,
+      "n_goal_satisfiable_31b": 2,
+      "n_goal_satisfiable_9b": 0,
+      "n_inductions_31b": 2,
+      "n_inductions_9b": 1,
+      "plan_found_rate_31b": 1.0,
+      "plan_found_rate_9b": 0.0,
+      "repro_gate_31b": {
+        "any_oob_action6_clicks": false,
+        "checked_action6_clicks": 393,
+        "claimed_level": 1,
+        "game": "lp85",
+        "mode": "offline_reproduction_gate_no_quota",
+        "oob_action6_clicks": [],
+        "reached_level": 1,
+        "reproduced": true
+      },
+      "repro_gate_9b": null,
+      "timed_out_31b": false,
+      "timed_out_9b": false,
+      "treatment_applied_31b": true,
+      "treatment_applied_9b": true,
+      "wall_s_31b": 495.6,
+      "wall_s_9b": 194.4,
+      "witness_31b": {
+        "engine_accepted": true,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 2,
+        "n_goal_satisfiable": 2,
+        "n_inductions": 2,
+        "plan_found": true
+      },
+      "witness_9b": {
+        "engine_accepted": true,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 1,
+        "n_engine_accepted": 1,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      }
+    },
+    {
+      "actions_31b": 396,
+      "actions_9b": 396,
+      "actions_to_first_solve_31b": null,
+      "actions_to_first_solve_9b": null,
+      "anon_game_id": "hgd3073c",
+      "banked_31b": 0,
+      "banked_9b": 0,
+      "banked_delta": 0,
+      "engine_accepted_31b": false,
+      "engine_accepted_9b": false,
+      "error_31b": null,
+      "error_9b": null,
+      "game": "ft09",
+      "gen_reached_policy_31b": false,
+      "gen_reached_policy_9b": false,
+      "hv_progress_31b": 0.75,
+      "hv_progress_9b": 0.75,
+      "live_levels_gained_31b": 0,
+      "live_levels_gained_9b": 0,
+      "mean_heldout_acc_31b": 0.5,
+      "mean_heldout_acc_9b": 0.0,
+      "n_engine_accepted_31b": 0,
+      "n_engine_accepted_9b": 0,
+      "n_goal_satisfiable_31b": 0,
+      "n_goal_satisfiable_9b": 0,
+      "n_inductions_31b": 1,
+      "n_inductions_9b": 1,
+      "plan_found_rate_31b": 0.0,
+      "plan_found_rate_9b": 0.0,
+      "repro_gate_31b": null,
+      "repro_gate_9b": null,
+      "timed_out_31b": false,
+      "timed_out_9b": false,
+      "treatment_applied_31b": true,
+      "treatment_applied_9b": true,
+      "wall_s_31b": 382.0,
+      "wall_s_9b": 121.2,
+      "witness_31b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      },
+      "witness_9b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      }
+    },
+    {
+      "actions_31b": 396,
+      "actions_9b": 396,
+      "actions_to_first_solve_31b": null,
+      "actions_to_first_solve_9b": null,
+      "anon_game_id": "hga767de",
+      "banked_31b": 0,
+      "banked_9b": 0,
+      "banked_delta": 0,
+      "engine_accepted_31b": false,
+      "engine_accepted_9b": false,
+      "error_31b": null,
+      "error_9b": null,
+      "game": "tr87",
+      "gen_reached_policy_31b": false,
+      "gen_reached_policy_9b": false,
+      "hv_progress_31b": 0.4,
+      "hv_progress_9b": 0.4,
+      "live_levels_gained_31b": 0,
+      "live_levels_gained_9b": 0,
+      "mean_heldout_acc_31b": 0.0,
+      "mean_heldout_acc_9b": 0.0,
+      "n_engine_accepted_31b": 0,
+      "n_engine_accepted_9b": 0,
+      "n_goal_satisfiable_31b": 0,
+      "n_goal_satisfiable_9b": 0,
+      "n_inductions_31b": 1,
+      "n_inductions_9b": 1,
+      "plan_found_rate_31b": 0.0,
+      "plan_found_rate_9b": 0.0,
+      "repro_gate_31b": null,
+      "repro_gate_9b": null,
+      "timed_out_31b": false,
+      "timed_out_9b": false,
+      "treatment_applied_31b": true,
+      "treatment_applied_9b": true,
+      "wall_s_31b": 484.0,
+      "wall_s_9b": 242.2,
+      "witness_31b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      },
+      "witness_9b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      }
+    },
+    {
+      "actions_31b": 387,
+      "actions_9b": 387,
+      "actions_to_first_solve_31b": 15,
+      "actions_to_first_solve_9b": 15,
+      "anon_game_id": "hgb6a5e8",
+      "banked_31b": 2,
+      "banked_9b": 2,
+      "banked_delta": 0,
+      "engine_accepted_31b": true,
+      "engine_accepted_9b": false,
+      "error_31b": null,
+      "error_9b": null,
+      "game": "vc33",
+      "gen_reached_policy_31b": true,
+      "gen_reached_policy_9b": false,
+      "hv_progress_31b": 0.0,
+      "hv_progress_9b": 0.0,
+      "live_levels_gained_31b": 2,
+      "live_levels_gained_9b": 2,
+      "mean_heldout_acc_31b": 1.0,
+      "mean_heldout_acc_9b": 0.0,
+      "n_engine_accepted_31b": 2,
+      "n_engine_accepted_9b": 0,
+      "n_goal_satisfiable_31b": 2,
+      "n_goal_satisfiable_9b": 0,
+      "n_inductions_31b": 2,
+      "n_inductions_9b": 2,
+      "plan_found_rate_31b": 1.0,
+      "plan_found_rate_9b": 0.0,
+      "repro_gate_31b": {
+        "any_oob_action6_clicks": false,
+        "checked_action6_clicks": 387,
+        "claimed_level": 2,
+        "game": "vc33",
+        "mode": "offline_reproduction_gate_no_quota",
+        "oob_action6_clicks": [],
+        "reached_level": 2,
+        "reproduced": true
+      },
+      "repro_gate_9b": {
+        "any_oob_action6_clicks": false,
+        "checked_action6_clicks": 387,
+        "claimed_level": 2,
+        "game": "vc33",
+        "mode": "offline_reproduction_gate_no_quota",
+        "oob_action6_clicks": [],
+        "reached_level": 2,
+        "reproduced": true
+      },
+      "timed_out_31b": false,
+      "timed_out_9b": false,
+      "treatment_applied_31b": true,
+      "treatment_applied_9b": true,
+      "wall_s_31b": 277.2,
+      "wall_s_9b": 230.1,
+      "witness_31b": {
+        "engine_accepted": true,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 2,
+        "n_goal_satisfiable": 2,
+        "n_inductions": 2,
+        "plan_found": true
+      },
+      "witness_9b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 2,
+        "plan_found": false
+      }
+    },
+    {
+      "actions_31b": 26,
+      "actions_9b": 391,
+      "actions_to_first_solve_31b": null,
+      "actions_to_first_solve_9b": null,
+      "anon_game_id": "hg8b46b8",
+      "banked_31b": 0,
+      "banked_9b": 0,
+      "banked_delta": 0,
+      "engine_accepted_31b": false,
+      "engine_accepted_9b": false,
+      "error_31b": null,
+      "error_9b": null,
+      "game": "ls20",
+      "gen_reached_policy_31b": false,
+      "gen_reached_policy_9b": false,
+      "hv_progress_31b": 0.0,
+      "hv_progress_9b": 0.1163,
+      "live_levels_gained_31b": 0,
+      "live_levels_gained_9b": 0,
+      "mean_heldout_acc_31b": 0.0,
+      "mean_heldout_acc_9b": 0.0,
+      "n_engine_accepted_31b": 0,
+      "n_engine_accepted_9b": 0,
+      "n_goal_satisfiable_31b": 0,
+      "n_goal_satisfiable_9b": 0,
+      "n_inductions_31b": 1,
+      "n_inductions_9b": 1,
+      "plan_found_rate_31b": 0.0,
+      "plan_found_rate_9b": 0.0,
+      "repro_gate_31b": null,
+      "repro_gate_9b": null,
+      "timed_out_31b": true,
+      "timed_out_9b": false,
+      "treatment_applied_31b": true,
+      "treatment_applied_9b": true,
+      "wall_s_31b": 1066.6,
+      "wall_s_9b": 227.8,
+      "witness_31b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      },
+      "witness_9b": {
+        "engine_accepted": false,
+        "induction_fired": true,
+        "n_degenerate_goal_predicate": 0,
+        "n_engine_accepted": 0,
+        "n_goal_satisfiable": 0,
+        "n_inductions": 1,
+        "plan_found": false
+      }
+    }
+  ],
+  "played_scored_or_online_game": false,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "how": "llama_cpp.Llama(vocab_only=True) tokenize -- never AutoTokenizer on a GGUF repo id",
+      "resource": "gemma-4-31B-it-Q4_K_M GGUF cached"
+    },
+    {
+      "available": true,
+      "how": "llama_cpp.Llama(vocab_only=True) tokenize",
+      "resource": "Qwen3.5-9B-Q4_K_M GGUF cached"
+    },
+    {
+      "available": true,
+      "how": "llama_supports_gpu_offload() == True; 2 CUDA devices",
+      "resource": "llama_cpp CUDA offload"
+    },
+    {
+      "available": true,
+      "how": "asserted per cell from _proc.args[0]; a build-hip path HARD-BLOCKS the cell",
+      "resource": "generator bound the CUDA build (NOT the iGPU HIP build)"
+    },
+    {
+      "available": true,
+      "how": "read back off the imported module; mismatch HARD-BLOCKS the cell",
+      "resource": "per-arm CARNOT_ARC_E3_DIR honoured"
+    },
+    {
+      "available": true,
+      "how": "server /props observed_model_path checked against repo_substr per cell",
+      "resource": "served model matches the arm's pin"
+    }
+  ],
+  "question": "Does migrating the ARC live-path inducer from Qwen3.5-9B to gemma-4-31B-it make the LIVE agent BANK MORE LEVELS on held-out games? Every piece of evidence behind the 2026-07-28 migration (induction quality 0.3843 vs 0.0627, loadability 38/39 vs 21/39, MTP ~1.4x decode) is UPSTREAM of score. This is the first measurement of the downstream quantity, and it is the offline result the standing gate (feedback_arc3_online_gated_on_offline_beating_baselines) requires before a scored run is justified.",
+  "random_seed": 1,
+  "reproducibility_checksum": "sha256:f68c923fe3cb1970b4a5ce4b58a14eccb58beb69ffd605e18bccaa457cbfe76c",
+  "run_date": "2026-07-29T03:34:24Z",
+  "schema": "carnot.arc.heldout_generator_headtohead.v1",
+  "scope_and_power": {
+    "achieved_discordance": 1,
+    "design": "Paired per-game sign test; ties dropped.",
+    "minimum_reachable_p_at_achieved_discordance": 1.0,
+    "minimum_two_sided_p_at_b_discordant_pairs": {
+      "1": 1.0,
+      "2": 0.5,
+      "3": 0.25,
+      "4": 0.125,
+      "5": 0.0625,
+      "6": 0.0313,
+      "7": 0.0156
+    },
+    "prestated_floor": "PRE-REGISTERED BEFORE ANY DATA: p<0.05 is UNREACHABLE below 6 discordant games. The project's own held-out first-win rate is 0.04 (4/100, all lp85; results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json), so at 12 games roughly 1 win per arm and b~1-2 was expected, i.e. minimum reachable p ~0.5-1.0. This is a SCREENING measurement, NOT a hypothesis test, and no significance is claimed at any outcome.",
+    "resolution_actually_lives_in": "the secondary rates (induce_ok, engine_accepted, plan_found, heldout accuracy), which are dense and move on every cell."
+  },
+  "solve_provenance": "development_proxy",
+  "solve_provenance_justification": "Declared development_proxy, NOT live_agent_self_discovery, and the choice is argued rather than stamped. FOR self-discovery: this drives entrypoint 1 (E3AgentPolicy, the SCORED agent's own per-action cascade), the policy was handed an ANONYMIZED game id so no per-game adapter route / transfer recipe / banked engine was reachable, and any banked level was derived by the agent inducing its own world model at runtime and planning in it. AGAINST: the games are still the 25-game PUBLIC corpus played on the offline arcade over environment_files; both generators may carry pretraining exposure to them; load_cross_game_value_head() is trained across public games and stays enabled (it is part of the scored config); and the hv_progress instrument is a per-game adapter callable that would not exist on a hidden game. A hidden Kaggle game grants none of that, so calling this live_agent_self_discovery would overclaim.",
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No verifier-moat or verifier-value claim is made here, so the circularity rule's headline restriction does not bind. The PRIMARY metric (banked levels) is decided by the env's own level counter replayed through arc_solver_kit.reproduce -- an executable oracle, deliberately, because a level-up must never be scored by a heuristic. The hand_verifier hv_progress track is a SECONDARY measurement instrument, is a different function from the agent's routing verifier, and is never the win gate."
+}

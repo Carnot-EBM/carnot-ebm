@@ -2,7 +2,7 @@
  "experiment": "outer_loop_arc_generator_concurrency_fix_20260727",
  "title": "Generator concurrency fault: the fix applied and verified through the SHIPPED launch path, plus a scored-path liveness witness so a dead generator can no longer produce a row that claims llm_enabled=True",
  "run_date": "2026-07-27T11:00:00Z",
- "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+ "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
  "random_seed": 5866,
  "random_seed_note": "The fault is a hard resource limit (shared-pool admission), not a stochastic effect, so the seed fixes the synthetic grid content used to size the prompt -- it is not a replication axis. Per-seed replication was not the binding uncertainty; the CONTROL arm in the same tree is.",
  "inference_substrate": "live_llm_inference",
@@ -816,7 +816,7 @@
  "acceptance_gate_principle": "Each conjunct guards a distinct failure mode: g1 that the fault is real at the shipped value (not modelled), g2 that the fix holds at llama.cpp's own concurrency cap, g3 that the fix did not convert a loud failure into a silent one, g4 that the guard fires on the recorded incident, g5 that every guard branch is load-bearing, g6 that nothing else regressed.",
  "provenance": {
   "analyzer": "results/generator_concurrency_fix_20260727/build_fix_artifact.py",
-  "built_at_utc": "2026-07-28T22:33:43Z",
+  "built_at_utc": "2026-07-29T14:36:06Z",
   "code": [
    {
     "path": "results/generator_concurrency_fix_20260727/build_fix_artifact.py",
@@ -836,7 +836,7 @@
    },
    {
     "path": "python/carnot/agentic/arc_competition_agent.py",
-    "sha256": "9761f574fbb1d2d4fe031009c28b9c2b5ec062ff7ec88c8384975eef4de0b348"
+    "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb"
    },
    {
     "path": "scripts/kaggle/submission_kernel/main.py",
@@ -866,5 +866,5 @@
    }
   ]
  },
- "reproducibility_checksum": "sha256:89a43e8ec84d5e1002f22707e0a8bd407aeb300b081c06297c4d2487621958d0"
+ "reproducibility_checksum": "sha256:70baf71dcb6d964172195ea991f221f7f846fdc33dbd297fe2d1eafc760c22cd"
 }

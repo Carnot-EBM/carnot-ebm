@@ -2,7 +2,7 @@
   "experiment": "arc_early_stop_grace_sweep",
   "experiment_id": "outer_loop_early_stop_grace_sweep_20260726",
   "title": "SUBMITTED_EARLY_STOP_GRACE parameter sweep on the scored path: a WALL-CLOCK lever, not a score lever",
-  "run_date": "2026-07-28T22:24:02Z",
+  "run_date": "2026-07-29T14:32:23Z",
   "milestone": "outer-loop 2026-07-26",
   "random_seed": 20260724,
   "random_seeds_used": [
@@ -10,7 +10,7 @@
     20260725,
     20260726
   ],
-  "duration_s": 2.337,
+  "duration_s": 2.755,
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "measurement_wall_s": {
     "total_s": 9126.0,
@@ -5229,7 +5229,7 @@
   "acceptance_gates_all_passed": false,
   "honest_verdict": "complete_early_stop_grace_sweep_measured_wall_clock_lever_not_score_lever_shipped_budget_b400_safe_firing_grace_350_saves_only_0.072pct_actions_on_1_of_75_cells_score_delta_0.0_safety_pass_falsifiable_False_wall_saving_noise_dominated_True_not_worth_shipping_at_b400",
   "provenance": {
-    "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296",
+    "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
     "code": [
       {
         "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/analyze_arc_early_stop_sweep.py",
@@ -5257,9 +5257,9 @@
       },
       {
         "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
-        "sha256": "9761f574fbb1d2d4fe031009c28b9c2b5ec062ff7ec88c8384975eef4de0b348",
-        "bytes": 374719,
-        "mtime_utc": "2026-07-28T19:04:52Z"
+        "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "bytes": 376234,
+        "mtime_utc": "2026-07-29T14:20:59Z"
       }
     ],
     "rows_sources": {
@@ -5329,7 +5329,7 @@
     "rebuild_command": "python scripts/analyze_arc_early_stop_sweep.py --rows results/early_stop_sweep_20260726/rows_b400.json results/early_stop_sweep_20260726/rows_b400_g350.json results/early_stop_sweep_20260726/rows_b2000.json results/early_stop_sweep_20260726/rows_b4000_stress.json --reproduction-rows results/early_stop_sweep_20260726/rows_reproduction.json --contention-serial-rows results/early_stop_sweep_20260726/rows_contention_serial.json --contention-concurrent-rows results/early_stop_sweep_20260726/rows_contention_conc_1.json results/early_stop_sweep_20260726/rows_contention_conc_2.json results/early_stop_sweep_20260726/rows_contention_conc_3.json --out results/outer_loop_arc_early_stop_grace_sweep_20260726.json",
     "note": "principle: an artifact that cannot say which code produced it cannot be known to be current, and a stale artifact's numbers are quoted exactly as confidently as a fresh one's. Every ROW-SOURCE DESIGN is fingerprinted, not just --rows, so a swapped contention or reproduction file cannot pass unnoticed."
   },
-  "reproducibility_checksum": "05e98720635d95bff174f04ec714dbf00b06b881ff4c74eb1a88fac7655288a5",
+  "reproducibility_checksum": "e832da70624f2145f7082418344bd0b5bc6810e3441a4d232eb1ebb0b72503c2",
   "reproducibility_checksum_note": "sha256 over the WHOLE artifact except run_date and duration_s (wall-clock noise). Every analysed condition, gate, witness and row-source list is inside the hash.",
-  "git_head": "a2222320c629ae14699ca795a4de27abf4c4e296"
+  "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855"
 }

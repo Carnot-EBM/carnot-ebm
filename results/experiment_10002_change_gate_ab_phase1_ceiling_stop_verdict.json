@@ -1,0 +1,475 @@
+{
+  "experiment": 10002,
+  "experiment_id": "exp10002",
+  "title": "Change-gate A/B PHASE 1 ceiling -> STOP: the world-model admission gate is not the ARC induce->plan bottleneck (Phase 2 live GPU A/B not run)",
+  "run_date": "2026-07-29T04:04:58.177872+00:00",
+  "schema": "carnot.arc_change_gate_ceiling_stop_verdict.v1",
+  "milestone": "outer-loop-2026-07-29",
+  "honest_verdict": "complete_phase1_ceiling_stop_change_gate_admits_0_of_25_live_store_engines_and_0_of_389_induced_engines_vs_incumbent_1_and_4_disjoint_and_stricter_hypothesis_inverted_phase2_live_ab_skipped_because_exp6015_gate_arm_planned_admissions_was_0_across_all_25_cells",
+  "inference_substrate": {
+    "value": "aggregation_from_upstream_artifacts",
+    "principle": "This artifact runs NO model and NO env. It aggregates the Phase-1 offline ceiling sweep (itself verifier_ensemble_against_cached_candidates) and the prior-art live artifact exp6015. Declaring the weaker substrate prevents a duration floor calibrated for live inference from being applied to a pure aggregation."
+  },
+  "solve_provenance": {
+    "value": "development_proxy",
+    "principle": "No ARC level was solved, banked, or attempted here; no scored/online game was played. Recorded as development_proxy (never live_agent_self_discovery) so this can never be miscounted as evidence the live agent self-discovered anything."
+  },
+  "phase_2_executed": {
+    "value": false,
+    "principle": "The brief made Phase 2 conditional on Phase 1 finding the hypothesis live. It did not. Recording the skip as a first-class field so the absence of a live A/B reads as a decision with a stated reason, not as an unfinished run."
+  },
+  "phase_2_skip_reason": "Phase-1 stop condition met (change-gate admissions ~0 AND direction inverted), AND the exact Phase-2 experiment already exists as exp6015 with a null at the minimum reachable p.",
+  "decision": "STOP -- do not spend the Phase-2 GPU budget on the change gate",
+  "headline": {
+    "hypothesis_under_test": "the induce->plan path is closed by an unpassable accuracy gate; swapping in the change gate opens it and banks more levels",
+    "result": "INVERTED, not merely null. The change gate is STRICTER than the incumbent, not looser. DECISIVE POPULATION (the store the live agent loads from): 0 of 25 live-store ENGINES admitted by the change gate, vs 1 (ft09, a behavioural identity engine) admitted by the shipped incumbent at 1.0. Across all 389 induced engine identities: change gate 0, incumbent@1.0 4. The two admission sets are DISJOINT (engine level: both=0, gate_only=2, incumbent_only=4).",
+    "therefore": "opening the induce->plan path via this gate is not merely unhelpful, it is unreachable -- the treatment admits strictly fewer engines than the control, so the Phase-2 primary endpoint (banked levels) cannot rise by this mechanism. Corroborated live: exp6015's gate arm recorded planned_admissions=0 across all 25 cells.",
+    "row_level_counts_secondary": "0 of 1167 induced rows vs incumbent 12; 0 of 75 live-store rows vs incumbent 3. Row counts are 3 seeds over the same engine files and overstate effective support ~3x."
+  },
+  "independent_recompute_of_phase1": {
+    "value": {
+      "performed": true,
+      "method": "re-derived every decisive count from the raw 1185-row table rather than reading the Phase-1 summary",
+      "all_decisive_numbers_reproduced_exactly": true,
+      "secondary_number_reconciled": {
+        "clean_row_restriction": "summary said '1039 clean rows'; the unrestricted clean count is 1057. Reconciled: 1039 is clean INTERSECT induced (historical snapshot excluded) -- correct and relevant, merely under-labeled. On that exact set: change-gate passes 0, max change_fidelity 0.071244, both reproduced."
+      },
+      "WITHDRAWN_false_alarm_threshold_sweep": {
+        "what_was_wrongly_flagged": "an earlier revision of this artifact recorded the 0.05/0.01 sweep counts (14/65) as 'not reproducing' against a recompute of 17/97, blamed on a clean/induced filter mismatch",
+        "resolution": "the flag was WRONG and is withdrawn. The sweep reproduces EXACTLY over the full induced set (n=1167) once the FULL shipped gate condition is applied -- fidelity>=t AND correct_changed_cells>=1 AND n_changing>0 AND noop_hallucination_rate<=WORLD_MODEL_MAX_NOOP_HALLUCINATION_RATE(0.25). The recompute had dropped the noop-hallucination condition; neither filter variant explains the gap. Verified: {0.5:0, 0.4:0, 0.3:0, 0.2:0, 0.1:5, 0.05:14, 0.01:65}.",
+        "lesson": "a recompute that omits one condition of a compound gate manufactures a non-reproduction and flags a correct artifact as unsound"
+      }
+    },
+    "principle": "A summary that cannot be re-derived from its own raw table is not evidence -- but a recompute that drops a condition is not a refutation either. Recording the withdrawal keeps a correct number from staying flagged."
+  },
+  "Q2_admission_counts_mask_off_shipped_default": {
+    "value": {
+      "whole_corpus": {
+        "n": 1185,
+        "incumbent_doc_0_5": 76,
+        "incumbent_live_1_0": 12,
+        "change_gate": 4
+      },
+      "induced_excl_historical_snapshot": {
+        "n": 1167,
+        "incumbent_doc_0_5": 73,
+        "incumbent_live_1_0": 12,
+        "change_gate": 0
+      },
+      "arc_e3_live_the_store_the_agent_loads_from": {
+        "n": 75,
+        "incumbent_doc_0_5": 6,
+        "incumbent_live_1_0": 3,
+        "change_gate": 0
+      },
+      "arc_logo_snapshot_historical": {
+        "n": 18,
+        "incumbent_doc_0_5": 3,
+        "incumbent_live_1_0": 0,
+        "change_gate": 4
+      },
+      "contingency_gate_x_incumbent_live_1_0_whole_corpus": {
+        "both": 0,
+        "gate_only": 4,
+        "incumbent_only": 12,
+        "neither": 1169
+      }
+    },
+    "principle": "Admission counts are reported per-store because the only store the live agent actually loads from is arc_e3_live, where the change gate admits 0/75. A whole-corpus number alone would hide that the 4 passers live in a historical snapshot the agent never reads."
+  },
+  "Q1_the_briefs_premise_is_inverted": {
+    "value": {
+      "brief_held": "accuracy is at an instrument floor; change_fidelity is the channel that DOES move",
+      "measured_over_the_banked_corpus": "the opposite",
+      "accuracy_histogram": {
+        "exactly_0": 619,
+        "(0,0.1)": 133,
+        "[0.1,0.25)": 203,
+        "[0.25,0.5)": 154,
+        "[0.5,0.75)": 28,
+        "[0.75,0.9)": 32,
+        "[0.9,1.0)": 4,
+        "exactly_1": 12
+      },
+      "change_fidelity_histogram": {
+        "exactly_0": 852,
+        "(0,0.1)": 319,
+        "[0.1,0.25)": 5,
+        "[0.25,0.5)": 5,
+        "[0.5,0.75)": 1,
+        "[0.75,0.9)": 3,
+        "[0.9,1.0)": 0,
+        "exactly_1": 0
+      },
+      "max_change_fidelity_induced": 0.121619,
+      "max_change_fidelity_arc_e3_live": 0.062281
+    },
+    "principle": "Distributions, not means: a mean hides whether a channel is floored. accuracy has live spread (12 rows at exactly 1.0); change_fidelity is the MORE floored channel (852/1185 exactly zero). The positive-control reasoning that motivated this task therefore does not transfer to the banked-engine corpus."
+  },
+  "threshold_sensitivity_the_null_is_not_threshold_specific": {
+    "value": {
+      "induced_n1167": {
+        "0.5": 0,
+        "0.4": 0,
+        "0.3": 0,
+        "0.2": 0,
+        "0.1": 5,
+        "0.05": 17,
+        "0.01": 97
+      },
+      "clean_and_induced_n1039": {
+        "0.5": 0,
+        "0.4": 0,
+        "0.3": 0,
+        "0.2": 0,
+        "0.1": 0,
+        "0.05": 6,
+        "0.01": 69
+      }
+    },
+    "principle": "Rules out 'the threshold is merely mistuned'. A ~10x cut would be needed for a non-trivial rate, and it would admit engines predicting <5% of changed cells correctly -- garbage, not a plan source. The metric is not the bottleneck either."
+  },
+  "Q3_degeneracy_the_incumbent_admits_garbage_the_gate_rejects_it": {
+    "value": {
+      "ft09": {
+        "on_disk": "8 return-grid branches falling through to return grid == behaviourally identity",
+        "accuracy_all_seeds": 1.0,
+        "n_changing": 0,
+        "n_noop": 120,
+        "incumbent_admits_at_live_1_0": true,
+        "change_gate": "REJECTED (no_changing_transitions)"
+      },
+      "lp85": {
+        "accuracy": [
+          0.725,
+          0.766667,
+          0.758333
+        ],
+        "change_fidelity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "correct_changed_cells": 0,
+        "incumbent_admits_at_0_5": true,
+        "change_gate": "REJECTED (degenerate_engine_no_correct_changed_cells)"
+      },
+      "identity_reference_engine_25_games_x_3_seeds": {
+        "n": 75,
+        "incumbent_0.5": 12,
+        "incumbent_live_1.0": 3,
+        "change_gate": 0
+      },
+      "source_corroboration": "arc_executable_world_model.py:change_gate_decision names ft09 and lp85 verbatim as 'THE ORIGIN INCIDENT' -- the gate was designed against exactly these two engines, independently confirming the degeneracy finding was not constructed post hoc",
+      "qualification_the_gates_one_strictly_novel_admission_is_NOT_clean": {
+        "row": "arc_logo_snapshot/tr87 seed 1, mask off",
+        "why_it_matters": "this is the ONLY row the change gate admits that EVERY incumbent threshold rejects (accuracy exactly 0.0000, legacy_pass_doc_0.5 False, legacy_pass_live_1.0 False) -- i.e. the gate's single strictly-novel admission in the whole corpus",
+        "seed_instability": "passes at fidelity 0.5190 while sibling seeds score 0.4891 and 0.4782 and FAIL (change_fidelity_below_threshold). 1 of 3 seeds, by a 3.8% margin over the 0.5 threshold.",
+        "change_accuracy": 0.0,
+        "invented_vs_correct_changed_cells": "2286 invented vs 2324 correct -- nearly one invented changed cell per correct one",
+        "noop_guard_was_VACUOUS": "n_noop = 0, so noop_channel_measurable is False and the anti-hallucination branch of change_gate_decision could not fire. That branch's docstring records it was added by attacking the gate with exactly this shape: high change_fidelity at exact accuracy 0.0000.",
+        "correct_statement": "the gate admits no identity or near-identity engine (structurally excluded by the nondegeneracy floor: correct_changed_cells>=1 AND n_changing>0), but its single strictly-novel admission is a seed-unstable borderline pass whose no-op guard was vacuous -- the exact attack shape that branch exists to catch"
+      }
+    },
+    "principle": "Distinguishes 'the gate is too strict' from 'the gate is correctly rejecting degenerate engines' -- while recording that the gate's one strictly-novel admission is itself unclean, so the rejection story is not overstated in the other direction."
+  },
+  "the_gate_pass_region_is_non_empty_so_this_is_not_a_broken_gate": {
+    "value": {
+      "handwritten_correct_dc22_control": {
+        "mask_on": "3/3 PASS, fidelity 0.736-0.815",
+        "mask_off": "0/3, fidelity 0.408-0.469 (just under threshold) -- reproduces exp6011's 'the gate must not ship without the mask'"
+      },
+      "real_engine_passers_GATE_ALONE_mask_off": {
+        "n_rows": 4,
+        "n_distinct_engine_files": 2,
+        "detail": "arc_logo_snapshot/ar25 seeds 0/1/2 (fidelity 0.8287/0.7696/0.8487, change_accuracy 0.5833/0.4875/0.6915 -- LEGITIMATE) + arc_logo_snapshot/tr87 seed 1 only (fidelity 0.5190, change_accuracy 0.0000 -- BORDERLINE, see the qualification field)",
+        "note": "2 distinct engine FILES, 4 of the snapshot store's 18 rows -- this control is thinner than a row count suggests, and it is the ONLY evidence that the gate's pass region is reachable by generated (not hand-written) code"
+      },
+      "mask_induced_passers_gate_plus_mask_the_A3_arm_configuration": {
+        "n_rows": 3,
+        "n_distinct_engine_files": 1,
+        "detail": "arc_logo_snapshot/ka59 seeds 0/1/2, ALL with change_accuracy exactly 0.0000 -- these are the laundered rows (see mask_laundering_ka59_do_not_cite_mask_on_fidelity)",
+        "flips_down_caused_by_mask": 0,
+        "IMPORTANT": "ALL 3 mask-induced admissions in the entire 1185-row corpus are ka59 at change_accuracy 0.0. So gate-ALONE admits essentially nothing garbage, but GATE+MASK TOGETHER (the A3 arm configuration) admits engines gate-alone rejects. exp6015 found the gate rejecting the mask's one live admission and called the gate 'protecting against the mask'; the REVERSE configuration is visible offline here and was not previously reported."
+      },
+      "provenance_of_all_passers": "every real-engine passer comes from results/arc_logo_snapshot, a historical snapshot COPY of results/arc_e3/<game>/world_model.py made by scripts/experiments/arc3_logo_induction_transfer.py:snapshot_engines -- SAME induction pipeline, earlier generation",
+      "implication": "the gate rejecting everything is a property of the engines CURRENTLY on disk, not of the gate"
+    },
+    "principle": "A gate that nothing can pass is indistinguishable from a broken gate unless you exhibit something that passes. Separating gate-alone from gate-plus-mask admissions is what reveals that the mask, not the gate, is the channel that admits laundered engines."
+  },
+  "prior_art_that_already_answered_phase_2": {
+    "value": {
+      "artifact": "results/experiment_6015_wm_hud_mask_change_gate_four_arm_live.json",
+      "what_it_is": "the live four-arm A/B (control / mask / gate / both) on E3AgentPolicy, 100 cells, ~11.4h, run 2026-07-28",
+      "THE_MECHANICAL_REASON_PHASE_2_IS_SKIPPED": "exp6015's gate arm (wm_A2_gate) recorded planned_admissions = 0 across ALL 25 cells. The treatment channel never engaged even once. A repeat of that design cannot measure the treatment because there is no treatment to measure -- this is a mechanical fact about the run, independent of any statistic.",
+      "offline_corroboration_from_this_artifact": "0 of 25 live-store engines are admitted by the change gate offline, which is exactly why planned_admissions was 0 live",
+      "result_for_reference": "1 win in every arm (same cell, bit-identical, zero world-model admissions on it), max level 1->1, zero win-discordant pairs",
+      "verdict": "measurement-artifact hypothesis REFUTED",
+      "DEVICE_PROVENANCE_CAVEAT_CARRIED_FORWARD": "exp6015 itself discloses that wm_A2_gate -- the change-gate arm, precisely the arm this artifact leans on -- has NO per-PID VRAM residency record (arm_integrity_from_rollups.wm_A2_gate.vram_summary = null, server_device = null; gate_vacuity_disclosure.acceptance_gate_device_confirmed_by_per_pid_residency_where_recorded: vacuous=true, support=3, \"the arm(s) ['wm_A2_gate'] are NOT covered by this gate and their device placement is not claimed\"). That arm's result is therefore CORROBORATIVE, not provenance-complete."
+    },
+    "principle": "Prior art is only cheaper than a rerun if it is cited for a claim it actually supports and its own disclosed caveats travel with it. The mechanical fact (zero admissions) is both stronger and safer than the statistic."
+  },
+  "minimum_reachable_p_stated_for_the_skipped_phase_2": {
+    "value": {
+      "note": "stated BEFORE any result per the brief -- but it is explicitly NOT the reason the run is skipped",
+      "exp6015_achieved_support": "0 win-discordant pairs over 100 cells",
+      "min_reachable_two_sided_p_at_that_support": 1.0,
+      "CATEGORY_ERROR_EXPLICITLY_AVOIDED": "exp6015's own REQUIRED_PHRASING states: 'With zero win-discordant pairs in every arm the minimum reachable two-sided p is 1.0, so NO significance is available at ANY outcome. This is NOT no significant difference between arms -- no test was performed, because there was no discordance to test.' Zero discordance is an ABSENCE OF EVIDENCE, not a null result. Furthermore, 'the prior run was unfalsifiable' would be an argument FOR a better-powered rerun, not against a rerun.",
+      "so_why_skip": "the skip rests on the MECHANICAL fact in prior_art_that_already_answered_phase_2 -- wm_A2_gate planned_admissions = 0 across all 25 cells, corroborated offline by 0 of 25 live-store engines admitted -- not on the p-value.",
+      "reading": "a design at b+c=0 cannot reach significance at any alpha; but the decisive point is that the treatment channel never engaged, which no amount of additional support fixes while the engines on disk are unadmittable"
+    },
+    "principle": "Citing an absence of evidence as a null is the exact error the cited artifact wrote a REQUIRED_PHRASING field to prevent. Naming the mechanical reason instead makes the skip defensible on its own terms."
+  },
+  "what_this_does_NOT_claim": {
+    "value": [
+      "It does NOT claim the change gate is a bad gate. Its pass region is non-empty and it correctly rejects two engines the incumbent wrongly admits.",
+      "It does NOT claim the gate admits nothing questionable: its single strictly-novel admission (tr87 seed 1) is a seed-unstable borderline pass with change_accuracy 0.0 and a vacuous no-op guard.",
+      "It does NOT claim gate+mask together is safe: all 3 mask-induced admissions in the corpus are laundered ka59 rows at change_accuracy 0.0.",
+      "It does NOT claim the accuracy metric is well-designed. The incumbent admitting an identity engine at 1.0 is a real defect -- it is simply not the defect blocking banked levels.",
+      "It does NOT claim opening admission could never help. It claims that ON THE ENGINES CURRENTLY ON DISK the treatment admits strictly fewer than the control, so this specific A/B cannot show a gain.",
+      "It does NOT measure the live path. This is an offline ceiling; the live evidence is exp6015's, cited not re-derived, and that artifact's own device-provenance caveat for the gate arm travels with it.",
+      "It does NOT measure plan-quality harm from admitted engines -- that endpoint is UNMEASURED, not null."
+    ],
+    "principle": "Bounding the claim is what stops a narrow offline null from being propagated as a broad conclusion about gates, metrics, or world models in general."
+  },
+  "false_negative_risk_assessment": {
+    "value": {
+      "is_this_an_uninformative_null": "No -- and the positive controls are what establish that. But their real weight is stated honestly below.",
+      "positive_control_1": "the hand-written CORRECT dc22 engine PASSES the change gate 3/3 mask-on (fidelity 0.736-0.815) -- the gate can move.",
+      "positive_control_2": "2 DISTINCT snapshot engine files (ar25, tr87) pass gate-alone mask-off, accounting for 4 of the snapshot store's 18 rows -- so the metric moves on real pipeline output, not only on hand-written code. This control is thin (2 engines, and tr87's pass is seed-unstable at change_accuracy 0.0), and it is the only evidence the pass region is reachable by generated code.",
+      "positive_control_3": "the incumbent admits 12 rows / 4 engine identities, so the comparison arm is non-degenerate.",
+      "flip_count_analogue": "admission changed on 16 of 1185 rows (4 gate-only + 12 incumbent-only); at engine level, 6 of 395 identities (2 gate-only + 4 incumbent-only). The two gates are NOT the same function -- a real contrast, not a no-op comparison.",
+      "conclusion": "a null with a live positive control and a non-zero contrast is an earned negative, not an unfalsifiable one -- with the caveat that positive control 2 rests on 2 engine files"
+    },
+    "principle": "CLAUDE.md FALSE_NEGATIVE_RISK: a null claim is not a finding unless a positive control passed. Stating the control's true unit count prevents a thin control from being read as a strong one."
+  },
+  "deviation_from_the_shipped_live_config": {
+    "value": {
+      "applies_to": "Phase 2 only -- which was NOT run, so NONE of these deviations were incurred",
+      "n_ctx": "N/A (no LLM loaded). Had Phase 2 run: 32768 instead of shipped 81920.",
+      "ffn_cpu_layers": "N/A. Had Phase 2 run: 0 instead of auto-fit 7.",
+      "explore_budget": "N/A. Had Phase 2 run: shipped resolution via _route_explore_budget (~80), not the prior run's forced 24.",
+      "mtp": "N/A. Had Phase 2 run: OFF on both arms (_resolve_mtp_head is not model-aware).",
+      "policy_game_id_anonymization": "N/A. Had Phase 2 run: anonymized to prevent loading pre-induced engines from results/arc_e3/.",
+      "phase_1_deviations_actually_incurred": {
+        "gate_and_mask_selection": "per-call explicit parameters (enabled=, hud_mask_enabled=), never env vars, never constant mutation -- so the shipped default was exercised as the control arm",
+        "transition_source": "collect_transitions() random rollouts, NOT E3AgentPolicy._active_transitions(). This is the one substantive deviation and it is disclosed as a residual caveat below."
+      }
+    },
+    "principle": "The shipped live config is the thing every claim is implicitly about. Listing deviations -- including the counterfactual ones for the run that did not happen -- keeps a cheap offline proxy from being read as a live-config result."
+  },
+  "residual_caveats_not_resolved": {
+    "value": [
+      "CORPUS PROVENANCE: engines were induced from E3AgentPolicy._active_transitions(); this scores them against collect_transitions() random rollouts -- a different state distribution. Mitigated but not eliminated by exp6015 measuring the same quantity on the agent's own transitions and agreeing (change_fidelity ~0 on essentially every rejected engine).",
+      "HELD-OUT SPLIT: the incumbent's live min_heldout_accuracy=1.0 is applied by execute_bounded_llm_reinduction to a held-out split; the full-corpus accuracy here is a PROXY for it, so incumbent admission counts are approximate. The change-gate counts carry no such caveat -- they come from the production e3.change_gate_decision on the production VerifyResult.",
+      "ENGINE CRASHES: 12 of 75 live-store rows (16%) have a non-zero exception rate and 9/1185 rows raised on EVERY transition (vc33 x6 KeyError('player'); lp85__r4__off x3 shape error). Handled by measuring engine_ran_at_all and engine_exception_rate per row and re-deriving on the crash-free subset (result unchanged: 0 admissions, max fidelity 0.071244). But a partially-crashing engine's fidelity is measured on a self-selected non-crashing subset -- see LEAD 1a.",
+      "SEED CORRELATION: 1185 rows are 3 seeds over 367 distinct engine contents / 395 identities. Seeds are correlated replicates, not independent observations; engine-level counts are the honest unit (see Q2_admission_counts_ENGINE_LEVEL_seed_deduped_HEADLINE).",
+      "CORPUS COMPOSITION: 61% of induced engines come from a population (object_perception A/B) already established to be degenerate; the decisive population is the 25 live-store engines (see corpus_composition_the_decisive_population_is_25_engines)."
+    ],
+    "principle": "An undisclosed proxy is how a cheap measurement gets cited as an expensive one. Naming the two places this differs from the live path lets a reader discount the claim appropriately instead of trusting it uniformly."
+  },
+  "harness_bug_caught_and_fixed_before_any_number_was_believed": {
+    "value": {
+      "bug": "e3._load_engine_from returns a TUPLE (engine, is_level_complete); passing the tuple to WorldModelVerifier.score made it continue past a raising engine WITHOUT incrementing n_changing",
+      "symptom": "all 1185 rows returned accuracy=0.0, change_fidelity=0.0, reason=no_changing_transitions -- a clean, plausible, entirely fictitious null pixel-identical to the real finding",
+      "fix": "unpack the tuple; additionally the harness now records engine_ran_at_all / n_engine_exceptions per row so this class of silent-null cannot recur undetected",
+      "all_reported_numbers_are_post_fix": true
+    },
+    "principle": "A harness that fabricates the expected answer is the highest-severity failure mode in this codebase (cf. the fabrication gate). Recording the near-miss makes the reported null auditable rather than merely asserted."
+  },
+  "recommended_next_direction_not_executed_here": {
+    "value": [
+      "LEAD 1a -- ENGINES THAT CRASH (a shape/harness mismatch, possibly NOT generator quality): 12 of 75 live-store rows (16%) have a non-zero engine exception rate: ar25 40-53/120 transitions (33-44%, TypeError('must assign iterable to extended slice')), m0r0 40-53/120 (UnboundLocalError on px/py), tu93 24-35/120 (ValueError broadcast (2,)->(3,)), vc33 120/120 (KeyError('player'), never ran at all). Live ar25's 0.000 fidelity is therefore measured on a self-selected non-crashing subset and is not a clean quality reading. Cheapest possible fix and it is not an induction-capability question.",
+      "LEAD 1b -- ENGINES THAT RUN BUT PREDICT BADLY (a genuine within-pipeline regression, MASK-OFF numbers only): paired seed-0 change_fidelity, results/arc_e3 vs its own results/arc_logo_snapshot historical copy: ar25 0.0000 vs 0.8287 (but see 1a -- live ar25 crashes 44%), ka59 0.0000 vs 0.4542, tr87 0.0000 vs 0.4891, sc25 0.0020 vs 0.0302, ft09 0.0000 vs 0.0000 (tied at the floor), cn04 0.0211 vs 0.0128 (live marginally HIGHER). So 4 of 6 paired games regressed (3 of them to exactly 0.000), 1 tied at zero, 1 marginally improved. The store is overwritten in place by every induction run -- exactly the concern load_origin_fixture_engine's docstring documents -- and the snapshot is a known-good reference set from the same pipeline.",
+      "LEAD 2: perception / world-model quality upstream. Max mask-off change_fidelity in the live store is 0.0623 -- the generator does not produce engines that predict changing cells. Admission policy cannot fix a generator that has nothing admissible to offer."
+    ],
+    "principle": "A stop verdict without a redirect wastes the information the stop produced. Splitting crash from quality matters because they have different fixes; both leads are stated as unexecuted hypotheses, not findings."
+  },
+  "model_specs": {
+    "value": {
+      "models_invoked": [],
+      "note": "no model loaded; no GPU touched; no llama-server started. Phase 1 is pure cached-candidate scoring and this artifact is pure aggregation."
+    },
+    "principle": "An empty invoked-model list is the honest declaration for an aggregation artifact. Naming a SOTA GGUF that was never loaded would be a vestigial marker that falsely implies live inference."
+  },
+  "random_seed": 0,
+  "random_seeds_used": [
+    0,
+    1,
+    2
+  ],
+  "reproducibility_checksum": "3710f31a60ec6578218ac40523d9c16db77629e59fc787d4c7fd27c51f948829",
+  "upstream_checksums": {
+    "phase1_ceiling_results.json": "3710f31a60ec6578218ac40523d9c16db77629e59fc787d4c7fd27c51f948829"
+  },
+  "git_head": "8441055c01772c21750d74c0b4e02fce7128cd8a",
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "phase1_ceiling",
+      "path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/phase1_ceiling_results.json",
+      "fields_imported": [
+        "rows",
+        "summary",
+        "per_store",
+        "degeneracy_check"
+      ],
+      "sha256": "3710f31a60ec6578218ac40523d9c16db77629e59fc787d4c7fd27c51f948829"
+    },
+    {
+      "experiment_id": "exp6015",
+      "path": "results/experiment_6015_wm_hud_mask_change_gate_four_arm_live.json",
+      "fields_imported": [
+        "honest_verdict",
+        "what_this_run_refutes",
+        "reproduced_levels"
+      ],
+      "sha256": "b917adf930589b1bb51b6c73dfc9780294a99355370c8de7b74d7c586ed26de4"
+    }
+  ],
+  "preconditions_checked": {
+    "value": [
+      {
+        "resource": "shipped default SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED still False on disk",
+        "available": true
+      },
+      {
+        "resource": "shipped default SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED still False on disk",
+        "available": true
+      },
+      {
+        "resource": "phase1_ceiling_results.json readable, 1185 rows",
+        "available": true
+      },
+      {
+        "resource": "exp6015 prior-art artifact readable",
+        "available": true
+      },
+      {
+        "resource": "no scored/online ARC game played, nothing submitted",
+        "available": true
+      },
+      {
+        "resource": "no GPU / llama-server required for this artifact",
+        "available": true
+      }
+    ],
+    "principle": "Records WHICH resources were verified, pre-empting the fabrication mode where an agent silently lacks a resource and synthesises a passing artifact instead of emitting blocked_*."
+  },
+  "verifier_is_oracle": {
+    "value": false,
+    "principle": "No moat or verifier-value claim is made here. The change gate is an ADMISSION POLICY over induced engines, not a correctness oracle, and this artifact reports a null on it rather than a win."
+  },
+  "acceptance_gate_passed": {
+    "value": true,
+    "principle": "The gate for this task was 'produce a decisive go/no-go on the Phase-2 spend'. Met: the stop condition is satisfied on independently recomputed numbers with the direction inverted and prior art corroborating."
+  },
+  "acceptance_gate_condition": "Phase-1 stop condition (both admission channels ~0 on the decisive live-store population) evaluated on independently recomputed ENGINE-LEVEL counts, with positive controls demonstrating the measurement could have moved, and with mask-laundered admissions excluded from every comparison",
+  "duration_s": {
+    "value": 98.906,
+    "principle": "Real wall-clock. Phase-1 sweep 57.9s of cached-candidate scoring plus this session's independent recompute and aggregation. Short because no model is loaded -- consistent with the declared aggregation substrate, not with a live-inference claim."
+  },
+  "flagged_adversarial": false,
+  "compliance": {
+    "SUBMITTED_flags_flipped_in_shipped_default": "none -- both verified still False on disk",
+    "scored_or_online_game_played": false,
+    "submitted": false,
+    "MAX_ACTIONS_or_EARLY_STOP_GRACE_changed": false,
+    "historical_artifact_rewritten": false,
+    "arc_e3_origin_fixtures_modified": false,
+    "committed": false,
+    "servers_started_or_killed": "none started; no pkill issued"
+  },
+  "Q2_admission_counts_ENGINE_LEVEL_seed_deduped_HEADLINE": {
+    "value": {
+      "why_this_is_the_headline": "Every row count in this artifact is 3 seeds over the SAME engine FILE. Seeds vary the transition sample, not the engine. Content-hashing all 1185 rows' world_model.py gives 367 DISTINCT engine contents across 395 (store,game) identities, and the seed changes the mask-off gate verdict for exactly 1 of those 395 identities (arc_logo_snapshot/tr87). Seeds therefore add ~no independent information about admission, so row counts overstate the effective evidence base ~3x.",
+      "induced_engines_excl_historical_snapshot": {
+        "n_engine_identities": 389,
+        "change_gate_any_seed": 0,
+        "incumbent_live_1_0_any_seed": 4,
+        "incumbent_doc_0_5_any_seed": 26
+      },
+      "arc_e3_live_the_store_the_agent_loads_from": {
+        "n_engine_identities": 25,
+        "change_gate_any_seed": 0,
+        "incumbent_live_1_0_any_seed": 1,
+        "incumbent_live_1_0_which": [
+          "ft09"
+        ],
+        "incumbent_doc_0_5_any_seed": 2,
+        "incumbent_doc_0_5_which": [
+          "ft09",
+          "lp85"
+        ]
+      },
+      "contingency_engine_level_gate_x_incumbent_live_1_0": {
+        "both": 0,
+        "gate_only": 2,
+        "incumbent_only": 4
+      },
+      "restatement_of_the_decisive_live_store_claim": "the row-level '0/75 vs 3/75' is really 0 engines vs ONE engine (ft09, counted 3x by seed)",
+      "conclusion_unchanged": "the direction and the stop verdict are identical at engine level; only the advertised breadth shrinks 3x"
+    },
+    "principle": "Counting correlated replicates as independent observations inflates apparent support. Reporting the deduplicated unit of analysis as the headline keeps the evidence base honest even when it does not change the conclusion."
+  },
+  "corpus_composition_the_decisive_population_is_25_engines": {
+    "value": {
+      "induced_engine_identities_by_store_family": {
+        "object_perception_A_B_store": 239,
+        "four_arm_A_B_store": 100,
+        "arc_e3_live": 25,
+        "arc_e3_origin_fixtures": 25
+      },
+      "disclosure": "61% (239/389) of the induced corpus is the object-perception A/B store, whose OWN headline was accuracy 0.0 across all cells UNDER A TOTAL LEAK -- i.e. a population already established to be degenerate. A further 100 come from the four-arm A/B store. Only 25 are results/arc_e3, the store the live agent actually loads from.",
+      "consequence": "'0 of 1167 rows' / '0 of 389 engines' draws much of its apparent breadth from engines already known to be bad, which biases toward the null it reports.",
+      "decisive_number_to_lead_with": "0 of 25 live-store engines admitted by the change gate (0 of 75 rows)",
+      "supporting_but_non_independent": "object_perception and four_arm populations corroborate but must not be counted as independent breadth"
+    },
+    "principle": "Breadth assembled from populations already known to be degenerate is not breadth. Naming the decisive sub-population prevents a large-n headline from laundering a small-n result."
+  },
+  "mask_laundering_ka59_do_not_cite_mask_on_fidelity": {
+    "value": {
+      "what_the_mask_did_to_ka59_snapshot": [
+        {
+          "seed": 0,
+          "change_fidelity": "0.454219 -> 0.901361",
+          "correct_changed_cells": "795 -> 795 (UNCHANGED)",
+          "change_accuracy": "0.0000 -> 0.0000",
+          "invented_changed_cells": "111 -> 0",
+          "n_noop": "28 -> 71",
+          "gate_passed": "False -> True"
+        },
+        {
+          "seed": 1,
+          "change_fidelity": "0.435225 -> 0.913712",
+          "correct_changed_cells": "773 -> 773 (UNCHANGED)",
+          "change_accuracy": "0.0000 -> 0.0000",
+          "invented_changed_cells": "150 -> 0",
+          "n_noop": "27 -> 73",
+          "gate_passed": "False -> True"
+        },
+        {
+          "seed": 2,
+          "change_fidelity": "0.470209 -> 0.940087",
+          "correct_changed_cells": "863 -> 863 (UNCHANGED)",
+          "change_accuracy": "0.0000 -> 0.0000",
+          "invented_changed_cells": "152 -> 0",
+          "n_noop": "24 -> 69",
+          "gate_passed": "False -> True"
+        }
+      ],
+      "reading": "the mask drove invented_changed_cells to 0 and reclassified 43-46 changing transitions as no-ops. It SHRANK THE DENOMINATOR. correct_changed_cells is bit-identical and change_accuracy stays exactly 0.0000 -- the engine did not improve by one cell.",
+      "rule": "mask-on fidelity is NOT comparable to mask-off fidelity and must never be used as the reference side of a regression comparison"
+    },
+    "principle": "A metric that improves while its numerator is unchanged has moved its denominator, not its subject. Flagging the laundering inline stops a masked number being cited as evidence of engine quality."
+  },
+  "harm_endpoint_did_any_admitted_engine_make_progress_WORSE": {
+    "value": {
+      "status": "UNMEASURED -- not null",
+      "why_it_reads_as_null": "exp6015 reports acceptance_gate_no_control_win_lost_by_any_treatment_arm = true, which reads as evidence of no harm",
+      "why_that_is_not_evidence": "the gate arm (wm_A2_gate) admitted 0 engines across all 25 cells, and the mask arm's single admission (lf52~color01) produced NO reachable plan -- exp6015 records skipped_after_admission='no_reachable_plan_after_refinement', first_win=false, reached_level=0, 196 vs 197 actions. ZERO admitted engines in ANY arm ever produced an executing plan.",
+      "correct_statement": "plan-quality harm was never testable, because no admitted engine ever produced a plan that executed. Report as UNMEASURED, matching this artifact's own discipline of distinguishing an unmeasurable pass from a clean one.",
+      "note_on_exp6015s_own_vacuity_flag": "exp6015 marks that particular acceptance gate vacuous=false with support=1 (the control did win 1 cell, so a loss was structurally possible). That flag is about the WIN-LOSS clause; the PLAN-QUALITY harm question is a different endpoint and is unmeasured regardless."
+    },
+    "principle": "An acceptance gate that passes because the treatment never engaged is not evidence of safety. Reporting it as unmeasured rather than null prevents an untested endpoint being cited as a clean one."
+  }
+}
