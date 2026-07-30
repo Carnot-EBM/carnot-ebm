@@ -175,6 +175,69 @@ def to_ascii(logical: np.ndarray) -> str:
     return "\n".join("".join(str(int(v))[-1] for v in row) for row in logical)
 
 
+def _state_key(g: np.ndarray) -> bytes | str:
+    """The duplicate-state key for in-model search. Same partition as `to_ascii`, ~5x cheaper.
+
+    WHY THIS EXISTS (REQ-ARC-WMTE-6051, measured 2026-07-30). `plan_in_model` calls `to_ascii`
+    once per engine call to decide whether it has already seen a state. A cProfile of a
+    shipped-budget ka59 search attributed **38% of the entire search** to that one function --
+    essentially all of it in ~1.3M `str.join` calls building a one-char-per-cell Python string
+    cell by cell. The search is CPU-bound replay with a hard wall-clock budget per game, so that
+    38% is bought at the direct expense of nodes explored.
+
+    WHY IT IS `% 10` AND NOT A PLAIN `tobytes()` -- the part that is easy to get wrong.
+    `to_ascii` renders each cell as `str(int(v))[-1]`: the LAST DIGIT ONLY. Colour 14 and colour 4
+    therefore render to the same character, as do 15/5, 11/1 and 10/0. The shipped key is LOSSY --
+    it MERGES two states that differ only by such a swap, and the search discards the second as
+    already-seen. Those colours are live, not hypothetical: ka59's root grid contains 4 AND 14 and
+    also 5 AND 15; lp85's contains 1/11, 4/14 and 5/15; cn04's contains 0/10 and 4/14.
+
+    So a plain `g.tobytes()` is NOT a drop-in. It distinguishes those states, inducing a strictly
+    FINER partition -- a change to which states the search explores, not a speedup. That is not
+    speculative either: measured across ten games, a plain-bytes key changes the search on cn04
+    (93 engine calls / 9 unique states becomes 140 / 14).
+
+    Whether the lossy merge is a defect worth fixing is a SEPARATE question, deliberately not
+    answered here: fixing it would change search behaviour and belongs in its own change with its
+    own evidence. This function's contract is to be indistinguishable from `to_ascii`, faster.
+
+    THE FAST PATH IS DELIBERATELY NARROW: 2-D, INTEGER, AND NON-NEGATIVE. Each condition excludes
+    an input class on which `% 10` and `to_ascii` genuinely DISAGREE, and the exclusion is a
+    fallback to `to_ascii` itself -- so equivalence holds by construction rather than by argument.
+
+    * **Non-negative.** This is the condition an adversarial review caught missing, and it is the
+      subtlest of the three. `to_ascii` takes the last character of the DECIMAL STRING, which for a
+      negative number is the last digit of its ABSOLUTE value: `str(-1)[-1] == "1"`. But `-1 % 10`
+      is 9. The two agree only where a digit is its own complement mod 10, i.e. only for 0 and 5 --
+      so they disagree on 12 of the 16 values in -15..-1, and `-1` and `-11` would have been keyed
+      as 9 and 9 by arithmetic but as "1" and "1" by `to_ascii` (same class, different from the
+      class `% 10` assigns). `np.abs(a) % 10` would match everywhere except at a dtype's most
+      negative value, where `abs` silently overflows. Rather than take on that edge case for input
+      that does not occur, the fast path simply declines negatives. The `min()` guard is one C-level
+      reduction over the grid -- negligible beside the per-cell Python work it replaces.
+    * **Integer.** For a negative float the encodings also disagree: `to_ascii` truncates toward
+      zero (`int(-2.7) == -2`, rendering "2") while `-2.7 % 10 == 7.3` truncates to 7.
+    * **2-D.** `to_ascii` iterates rows, so anything else is its business, including how it fails.
+
+    ONE MORE FIDELITY DETAIL a naive swap gets wrong: **the shape prefix is load-bearing.**
+    `to_ascii` separates rows with newlines, so a 2x3 grid and a 3x2 grid holding the same six
+    values render differently. Raw bytes of the same values are IDENTICAL, so without the prefix
+    those two states would collide. `plan_in_model` happens to be safe (it rejects any grid whose
+    shape differs from the start grid before keying), but `plan_and_execute` only checks
+    `ndim == 2` and would genuinely regress.
+
+    MEASURED: partition identity is verified against `to_ascii` on ten games -- not by comparing
+    totals (two different partitions can agree on those) but by hashing the search's ACCEPT TRACE,
+    the key-independent sequence of accept/duplicate/skip decisions over every engine call. See
+    REQ-ARC-WMTE-6051 for the per-game table.
+    """
+    a = np.asarray(g)
+    if a.ndim == 2 and a.dtype.kind in "iu" and a.size and a.min() >= 0:
+        h, w = a.shape
+        return b"%d:%d|" % (h, w) + (a % 10).astype(np.uint8).tobytes()
+    return to_ascii(a)
+
+
 def _rle_grid(g: np.ndarray) -> str:
     """Lossless run-length encoding of a FULL grid for the induce prompt: one line per row,
     'r<row>:<v0>x<n0>,<v1>x<n1>,...' -- each row's runs cover ALL columns left-to-right with NO
@@ -5312,7 +5375,7 @@ def plan_in_model(
             diagnostics["termination_reason"] = "is_level_complete_none"
         return None
     start = np.asarray(start_grid)
-    seen = {to_ascii(start)}
+    seen = {_state_key(start)}
     nodes = 0
 
     if goal_energy is not None:
@@ -5342,7 +5405,7 @@ def plan_in_model(
                 nodes += 1
                 if ng.shape != start.shape:
                     continue
-                key = to_ascii(ng)
+                key = _state_key(ng)
                 if key in seen:
                     continue
                 seen.add(key)
@@ -5390,7 +5453,7 @@ def plan_in_model(
             nodes += 1
             if ng.shape != start.shape:
                 continue
-            key = to_ascii(ng)
+            key = _state_key(ng)
             if key in seen:
                 continue
             seen.add(key)
@@ -5443,7 +5506,7 @@ def plan_and_execute(
     start_level = _levels_completed(f)
 
     # plan inside the model
-    seen = {to_ascii(start)}
+    seen = {_state_key(start)}
     frontier = deque([(start, [])])
     plan = None
     expansions = 0
@@ -5457,7 +5520,7 @@ def plan_and_execute(
             except Exception:
                 continue
             expansions += 1
-            key = to_ascii(ng) if ng.ndim == 2 else None
+            key = _state_key(ng) if ng.ndim == 2 else None
             if key is None or key in seen:
                 continue
             seen.add(key)

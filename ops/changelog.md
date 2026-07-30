@@ -1,5 +1,128 @@
 # Carnot — Changelog
 
+## 2026-07-30 (outer-loop: the search's dedup key is 38% of its time — replaced in NumPy, and the OBVIOUS version of that swap is refuted by measurement)
+
+**Instruction:** land the already-validated treatment-activation pre-flight, then ship the bytes
+dedup key — but only after cross-game verification, proving the partition identical on every game
+tested rather than on the one it was tuned on.
+
+**Landed the pre-flight (`0da7f75ad`).** `python/carnot/analysis/treatment_activation_preflight.py`
+plus its 36 tests, the CLI, and the committed evidence cells. Its retrospective validation was
+re-run before committing and is what justifies it: pointed at the 12 committed matched pairs of the
+2026-07-29 engine-retention A/B, it REFUSES (exit 1) — 6 IDENTICAL / 3 TRUNCATION_ONLY /
+2 BOTH_TRUNCATED / 1 PERTURBED, strict ceiling on discordant pairs 1 against the 6 the sign test
+needs, best reachable p = 1.0. A pre-flight that passed a grid already known to be underpowered
+would be worthless, so that refusal is the acceptance test, not a footnote.
+
+**Perturbation rate at `f9a458e87`:** 0.5 over usable observations (1 of 2 cells; vc33 diverges at
+action index 4, ft09 byte-identical), verdict REFUSE. The A/A control at the same commit shows 1 of
+2 pairs diverging under IDENTICAL CODE, so the *attributable* count is 1 (vc33 is deterministic
+under A/A; ft09 is not). **n=2 — no rate should be quoted as calibrated**, which is why the
+artifact reports the qualitative finding (seeding the sampler is NECESSARY BUT NOT SUFFICIENT) and
+declines to publish a rate.
+
+**The dedup-key swap, and the trap in it (REQ-ARC-WMTE-6051).** `plan_in_model` called `to_ascii`
+once per engine call to test for a duplicate state; a cProfile put that single function at **38% of
+the whole search**. The swap looks trivial. It is not:
+
+> `to_ascii` renders each cell as `str(int(v))[-1]` — the **LAST DIGIT ONLY** — so it MERGES colour
+> 4 with 14, 5 with 15, 1 with 11 and 0 with 10. A plain `g.tobytes()` separates them, which is a
+> **strictly finer partition**: a change to which states the search explores, not a speedup.
+
+That is measured, not argued. Across 10 games a plain-bytes key **changes the search on cn04**
+(93 engine calls / 9 unique states → 140 / 14). Shipped as "a faster key" it would have altered
+search behaviour while every count a casual check looks at stayed plausible — and the aliasing
+colours are in the ROOT grids of ka59, lp85, cn04, sp80, sc25, sk48, tu93 and re86, so the exposure
+is corpus-wide. What shipped instead is `(g % 10)` on a fast path guarded to NON-NEGATIVE integer
+2-D grids, with every other input falling back to `to_ascii` itself.
+
+**An adversarial review caught a real bug in this change before it shipped, and it is worth stating
+plainly because every test I had already written passed.** The first implementation took the
+arithmetic path for ANY integer grid, and the docstring, spec, ops docs and tests all asserted that
+`% 10` matched `to_ascii` "for every integer, negatives included". FALSE. `to_ascii` takes the last
+character of the DECIMAL STRING, i.e. the last digit of the ABSOLUTE value: `str(-1)[-1] == "1"`,
+while `-1 % 10 == 9`. They agree only where a digit is its own complement mod 10 — 0 and 5 — so they
+**disagree on 12 of the 16 values in -15..-1**, and `-1` and `9`, distinct states under `to_ascii`,
+would have been MERGED. Every test passed because every test used non-negative colours: exactly the
+"tests test what the author thought to test" mode CLAUDE.md's QA-Layer discipline names. The fast
+path is now guarded `a.min() >= 0` and negative grids fall back to `to_ascii` itself, so equivalence
+holds by construction rather than by argument. (`np.abs(a) % 10` would match everywhere except at a
+dtype's most negative value, where `abs` silently overflows — not worth taking on for input that
+does not occur.)
+
+Three further fidelity details a naive swap gets wrong, each pinned as a test: a **shape prefix** is
+required (`to_ascii` separates rows with newlines, so a 2x3 and a 3x2 grid of the same six values
+differ under it but have identical raw bytes — `plan_and_execute` only checks `ndim == 2` and would
+genuinely regress); **bool, object and non-integer dtypes fall back**; and the **`% 10` must run
+BEFORE the uint8 cast**, or colours 256 apart would wrap into the same key.
+
+**Verification, 10 games at a 20,000-engine-call cap.** Partition identity is proved by ACCEPT TRACE
+— one entry per engine call for what the search DECIDED (accepted / duplicate / shape-skip / engine
+raised), hashed. That sequence is key-INDEPENDENT, so equal hashes mean the identical search ran;
+equal totals alone would not, since two different partitions can coincidentally agree on both. The
+landed `_state_key` is partition-identical to `to_ascii` on **all ten**. Speedup on the four games
+whose engines do enough work to time: **ka59 1.28x, sk48 4.59x, sc25 6.61x, lp85 7.18x** — no
+regression anywhere. The other six exhaust their search queue in 1–148 calls, which verifies the
+partition but yields no timing signal; they are excluded from the speed table rather than averaged
+in. The spread is explained rather than blended: ka59's peak engine is expensive (`_blocks` alone
+was 48% of its search) so the key is a smaller share of its total.
+
+**A measurement error found and corrected mid-flight.** The first version of the cross-game harness
+ran the control arm first and reported a "371x speedup" on ka59. That was one-off engine warm-up
+charged entirely to the control. The harness now discards a warm-up run and takes the minimum of two
+timed reps per arm; the corrected ka59 figure is 1.28x, and the earlier ka59-only 1.288x figure was
+mildly inflated for the same reason.
+
+**The pre-flight's sibling check caught this session's own artifact.** The first draft of the
+dedup-key evidence artifact declared the MEASUREMENT's substrate
+(`offline_arcade_live_agent_runtime_self_discovery_no_llm`) while carrying the BUILDER's 0.0019s
+runtime, and `adversarial_verify` flagged it CRITICAL `DURATION_TOO_SHORT` — the REQ-ARC-WMTE-6050
+check landed hours earlier in the same session, firing on its own author. The substrate was
+corrected to `aggregation_from_upstream_artifacts` (it reads JSON and does arithmetic) rather than
+the duration massaged, and the raw per-arm rows are now committed as cited upstream evidence.
+
+**Test-suite state, stated rather than implied.** The ARC-related subset is **53 failed, 8975
+passed, 13 skipped, 1 error**. Those 53 failures are PRE-EXISTING and unrelated: the identical
+subset was re-run against the pre-swap file and the failure sets are byte-identical (zero new, zero
+fixed), with the +8 passed accounted for exactly by the new tests. They are almost all
+artifact-schema/replay assertions, not search behaviour. This is recorded because "the tests pass"
+would be false, and because 53 red tests plus 13 skips in the ARC subset is itself a standing
+finding — skips are invisible failures per CLAUDE.md and neither number is this change's to fix.
+
+**Independent corroboration from the freshness rebuild.** Changing the module lapsed the
+artifact-freshness acknowledgements (by design — they pin one exact hash). The four registered
+artifacts with a `rebuild_command` that depend on it were rebuilt and deep-diffed leaf by leaf:
+**77,222 leaf values compared across exp6011/6012/6013/6021, ZERO substantive differences and zero
+removals** — all 163 changed leaves are timing/hash/mtime/diff-stat/git-head fields. Four real
+analysers whose searches run through the swapped call sites produce byte-identical findings, which is
+a stronger check on partition identity than any test I wrote. Both evidence trees stayed `git status`
+clean. The three artifacts without a rebuild command carry APPENDED acknowledgements pinned to the new
+hash (appended, not replaced, so the transition history survives).
+
+**A pre-commit guard fired as a FALSE POSITIVE and was cleared deliberately, never bypassed.** The
+`test-suite-mutation-gate` recorded the ARC test run as having modified the WMTE spec. No test wrote
+it: the run was backgrounded and the REQ-ARC-WMTE-6051 section was appended by hand while it was in
+flight, so the audit hook attributed a concurrent human edit to the test process. Verified before
+clearing (staged spec diff is +77/-0, authored prose, no existing line touched), then the marker was
+removed via the tool's own documented path rather than `git commit --no-verify`. **Lesson: do not
+hand-edit tracked files while a background test run is active** — it manufactures ambiguity in a guard
+whose entire value is being unambiguous.
+
+**Files:** `python/carnot/agentic/arc_executable_world_model.py` (`_state_key` + 5 call sites),
+`tests/python/test_arc_state_key_dedup_2026_07_30.py` (14 tests, 7/7 mutations killed),
+`scripts/arc_state_key_dedup_xgame_verify.py`,
+`results/outer_loop_arc_state_key_dedup_xgame_20260730.json`,
+`results/arc_state_key_dedup_rows_20260730/rows_cap20000.json`,
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` (REQ-ARC-WMTE-6051).
+
+**Still open, and NOT claimed closed by this change.** The affordability gap is untouched: a ka59
+plan needs 137,347 engine calls and the per-game non-LLM budget affords ~17,854 at the conservative
+end, so a ~1.28x key win on that game does not close it — the remaining lever is a smaller
+BRANCHING FACTOR (18 candidates per expansion, 90.2% of engine calls landing on an already-seen
+grid), not a faster key or a better frontier order. Separately, the lossy last-digit merge is now
+documented and REPRODUCED rather than fixed; whether it should be fixed is a behaviour change owed
+its own change and its own evidence.
+
 ## 2026-07-29 (outer-loop: the generator had no seed — ~~40% of cells diverge under identical code~~ [RATE RETRACTED 2026-07-30, see the box below; the no-seed defect is REAL], so three A/B nulls meant nothing)
 
 > **RETRACTION NOTICE (2026-07-30).** This entry's A/A-derived numbers are WITHDRAWN: the "40% /

@@ -1,0 +1,522 @@
+{
+  "experiment": "outer_loop_arc_state_key_dedup_xgame_20260730",
+  "title": "The in-model search's duplicate-state key, replaced in NumPy: cross-game proof that the partition is unchanged, and the measured refutation of the obvious plain-bytes swap",
+  "honest_verdict": "complete_state_key_is_partition_identical_to_to_ascii_on_all_10_games_tested_by_accept_trace_hash_yes_and_1_28x_to_7_18x_faster_on_the_4_with_a_usable_timing_signal_while_the_plain_bytes_key_that_looks_like_the_obvious_swap_is_refuted_because_it_changes_the_search_on_cn04",
+  "run_date": "2026-07-30",
+  "schema": "carnot.arc_state_key_dedup_xgame.v1",
+  "requirements": [
+    "REQ-ARC-WMTE-6051"
+  ],
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "THIS FILE is a builder: it reads the persisted measurement rows and formats them. It steps no environment and loads no model, so its own duration_s is milliseconds. An earlier draft declared the MEASUREMENT's substrate (offline_arcade_live_agent_runtime_self_discovery_no_llm) here and was correctly flagged CRITICAL DURATION_TOO_SHORT by adversarial_verify -- the builder's 0.0019s is far below that substrate's 0.01s floor. That flag was the REQ-ARC-WMTE-6050 check landed hours earlier in this same session doing exactly its job, on its author. The substrate is corrected rather than the duration adjusted, and the row file that DOES carry the no-LLM-substrate measurement is committed and cited below.",
+  "rows_source": [
+    "results/arc_state_key_dedup_rows_20260730/rows_cap20000.json"
+  ],
+  "rows_source_principle": "The raw per-arm rows are committed alongside so the aggregation's every number is recomputable by a third party without re-running the 40-minute measurement, and so this file cannot silently drift from what was measured.",
+  "cited_upstream_artifacts": [
+    {
+      "path": "results/arc_state_key_dedup_rows_20260730/rows_cap20000.json",
+      "fields_imported": [
+        "games.*.arms.*.engine_calls",
+        "games.*.arms.*.unique_states",
+        "games.*.arms.*.accept_trace_sha256",
+        "games.*.arms.*.wall_clock_s",
+        "games.*.arms.*.termination_reason"
+      ],
+      "sha256": "0cc3364b2eeb67c892014fe721af22f2001aab89bc93c189a047b81a626b1428"
+    }
+  ],
+  "is_a_solve_claim": false,
+  "is_a_solve_claim_principle": "Some rows report plan_found because the search reached its induced goal predicate inside the MODEL. That is not a banked level: nothing was executed against the real env and no level was reproduced. Declaring it false keeps this out of the solve-claim ledger.",
+  "banked_levels": 0,
+  "solve_provenance": "development_proxy",
+  "solve_provenance_principle": "An outer-loop measurement over already-induced engines. It changes no live capability by itself and must not be read as evidence the live agent self-discovered anything.",
+  "verifier_is_oracle": false,
+  "read_game_source": false,
+  "used_env_source": false,
+  "question": "The dedup key is 38% of in-model search time. Does replacing it with a NumPy key preserve the search EXACTLY, on more than the one game it was tuned on -- and is the obvious plain-tobytes() version safe to ship?",
+  "FINDING_1_the_obvious_swap_is_wrong": {
+    "claim": "A plain g.tobytes() key is NOT a drop-in. to_ascii keeps only each cell's LAST DIGIT, so it MERGES colours 4/14, 5/15, 1/11 and 0/10; plain bytes separate them, giving a strictly finer partition and a different search.",
+    "measured_consequence": {
+      "games_where_plain_bytes_changes_the_search": [
+        "cn04"
+      ],
+      "cn04_engine_calls_to_ascii": 93,
+      "cn04_engine_calls_plain_bytes": 140,
+      "cn04_unique_states_to_ascii": 9,
+      "cn04_unique_states_plain_bytes": 14
+    },
+    "why_it_matters": "Shipped as 'a faster key', it would have altered which states the search explores while every count that a casual check looks at stayed plausible. The aliasing colours are present in the ROOT grids of ka59, lp85, cn04, sp80, sc25, sk48, tu93 and re86, so the exposure is corpus-wide and not a cn04 curiosity.",
+    "what_was_shipped_instead": "(g % 10) on a fast path guarded to NON-NEGATIVE 2-D integer grids, with every other input deferred to to_ascii itself, so equivalence holds by construction.",
+    "SECOND_BUG_CAUGHT_BY_ADVERSARIAL_REVIEW_BEFORE_SHIPPING": {
+      "what_was_wrong": "The first implementation took the arithmetic fast path for ANY integer grid, and this artifact, the module docstring, the spec, the ops docs and the whole test file all asserted that % 10 reproduced to_ascii 'for every integer, negatives included'. That was FALSE.",
+      "why": "to_ascii takes the last character of the DECIMAL STRING, i.e. the last digit of the ABSOLUTE value: str(-1)[-1] == '1'. But -1 % 10 == 9. The two agree only where a digit is its own complement mod 10 -- 0 and 5 -- so they DISAGREE on 12 of the 16 values in -15..-1, and -1 and 9 (distinct states under to_ascii) would have been merged into one.",
+      "why_no_test_caught_it": "Every test used non-negative colours, because every real ARC grid does. This is the 'tests test what the author thought to test' mode named in CLAUDE.md's QA-Layer Authenticity Discipline -- the same mode that produced REQ-ARC-WMTE-6050 earlier in this session.",
+      "fix": "The fast path is guarded a.min() >= 0 and negatives fall back to to_ascii itself. np.abs(a) % 10 would have matched everywhere EXCEPT at a dtype's most negative value, where abs silently overflows -- not worth taking on for input that does not occur in ARC grids.",
+      "practical_exposure": "ZERO on the measured corpus: every root grid observed is non-negative, so the fast path is taken throughout and the cross-game numbers below are unaffected. The bug was latent, not active -- which is exactly why it survived every test."
+    }
+  },
+  "FINDING_2_partition_identity_across_games": {
+    "n_games": 10,
+    "all_landed_state_key_partitions_identical": true,
+    "EVIDENCE_WEIGHT_IS_NOT_UNIFORM_read_this_before_citing_ten": "'Identical on all ten' is true but must not be read as ten equally strong observations. Only FOUR games (ka59, lp85, sc25, sk48) ran to the 20,000-call cap and explored 887-1,994 distinct states; those carry the weight. The other six exhausted their search queue after 1-148 engine calls because their CURRENT on-disk engines are near-inert, so their partition agreement, while real, is close to vacuous -- agreeing over 16 engine calls is weak evidence about a key. The substantive claim is therefore 'partition-identical on four games covering 4,750 distinct states and ~80,000 engine calls, corroborated on six more', not 'verified on ten'. Notably the ONE game where the plain-bytes key diverges (cn04) is itself a 93-call game -- so a divergence CAN surface even in the thin rows, which is why they are reported rather than dropped.",
+    "n_games_with_substantive_exploration": 4,
+    "how_proved": "Not by comparing totals -- two different partitions can coincidentally agree on engine_calls and unique_states. Each arm records an ACCEPT TRACE: one entry per engine call, in order, for what the search DECIDED (A accepted / D duplicate / S shape skip / E engine raised). That sequence is key-INDEPENDENT and is the complete record of the key's influence, so an equal SHA256 means the identical search ran."
+  },
+  "FINDING_3_speedup_where_it_can_be_measured": {
+    "speedup_by_game": {
+      "ka59@341f776c9": 1.2828,
+      "lp85": 7.1824,
+      "sk48": 4.5864,
+      "sc25": 6.6077
+    },
+    "n_games_with_usable_timing": 4,
+    "min_speedup": 1.2828,
+    "no_regression_on_any_timed_game": true,
+    "excluded_from_the_speed_table_and_why": {
+      "cn04": "control ended queue_exhausted after 93 calls in 0.048s -- too little work to time",
+      "ar25": "control ended queue_exhausted after 16 calls in 0.005s -- too little work to time",
+      "m0r0": "control ended plan_found after 1 calls in 0.003s -- too little work to time",
+      "sp80": "control ended queue_exhausted after 56 calls in 0.025s -- too little work to time",
+      "tu93": "control ended queue_exhausted after 148 calls in 0.052s -- too little work to time",
+      "re86": "control ended queue_exhausted after 28 calls in 0.01s -- too little work to time"
+    },
+    "why_the_spread_is_not_averaged": "ka59's peak engine is expensive -- a single LLM-written helper (_blocks) was 48% of its search -- so the key is a smaller share of ka59's total than of games with cheap engines. Reporting one blended figure would hide that the lever's size depends on the engine, which is the thing a reader needs in order to predict it elsewhere."
+  },
+  "MEASUREMENT_HONESTY": {
+    "arm_order_artefact_found_and_fixed": "The first version of this measurement ran the control arm first and reported a '371x speedup' on ka59. That was one-off engine warm-up charged entirely to the control, not speed. Every arm is now preceded by a discarded warm-up run and timed twice with the MINIMUM taken. The corrected ka59 figure is 1.25x.",
+    "engine_pinning": "ka59 is measured against the engine at git 341f776c9, the one the original 137,347-call profile used. Today's on-disk ka59 engine exhausts its queue in 36 calls, so citing it as 'ka59' would have compared a different program.",
+    "cap_semantics": "Every arm runs to the SAME 20,000-engine-call cap, so wall clock compares equal work and the partition comparison covers the whole explored prefix rather than stopping at the first goal state.",
+    "what_this_does_NOT_show": "It does not show the search now fits the per-game budget, and it does not show the lossy merge is harmless -- only that the swap did not change it. The affordability question and the merge question are both still open."
+  },
+  "per_game": {
+    "ka59@341f776c9": {
+      "engine_sha256": "ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        14,
+        15
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          4,
+          14
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "control_termination": "cap_reached",
+      "engine_calls": 20000,
+      "unique_states": 1968,
+      "accept_trace_sha256_to_ascii": "50ed92eb8aca47f90910f8ae3923d0c98eb4b3421ba7e55d85c9aab7191e5d5f",
+      "accept_trace_sha256_landed_fn": "50ed92eb8aca47f90910f8ae3923d0c98eb4b3421ba7e55d85c9aab7191e5d5f",
+      "accept_trace_sha256_plain_bytes": "50ed92eb8aca47f90910f8ae3923d0c98eb4b3421ba7e55d85c9aab7191e5d5f",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 26.967,
+      "wall_s_landed_state_key": 21.022,
+      "timing_usable": true,
+      "timing_unusable_reason": null,
+      "speedup_landed_over_to_ascii": 1.2828
+    },
+    "lp85": {
+      "engine_sha256": "788a69ba7299b3a25eaba14b6706290b0ff1dde37c771e3bd4d0773baeff7d3b",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        10,
+        11,
+        14,
+        15
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          1,
+          11
+        ],
+        [
+          4,
+          14
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "control_termination": "cap_reached",
+      "engine_calls": 20000,
+      "unique_states": 887,
+      "accept_trace_sha256_to_ascii": "866185c266a0bf37de5a04bd18d1d6926143f9bfcbeb7a24cc8cd24b3853afca",
+      "accept_trace_sha256_landed_fn": "866185c266a0bf37de5a04bd18d1d6926143f9bfcbeb7a24cc8cd24b3853afca",
+      "accept_trace_sha256_plain_bytes": "866185c266a0bf37de5a04bd18d1d6926143f9bfcbeb7a24cc8cd24b3853afca",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 7.678,
+      "wall_s_landed_state_key": 1.069,
+      "timing_usable": true,
+      "timing_unusable_reason": null,
+      "speedup_landed_over_to_ascii": 7.1824
+    },
+    "sk48": {
+      "engine_sha256": "c8093326a52d5415292c9d0efca91976009a996190f07e85d6cca31b6c1e4b13",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        14
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          4,
+          14
+        ]
+      ],
+      "control_termination": "cap_reached",
+      "engine_calls": 20000,
+      "unique_states": 981,
+      "accept_trace_sha256_to_ascii": "5159f8c202fae20bc7e15e7c9ad02bae130ba7c3f882ba018c143c246cae75d4",
+      "accept_trace_sha256_landed_fn": "5159f8c202fae20bc7e15e7c9ad02bae130ba7c3f882ba018c143c246cae75d4",
+      "accept_trace_sha256_plain_bytes": "5159f8c202fae20bc7e15e7c9ad02bae130ba7c3f882ba018c143c246cae75d4",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 8.283,
+      "wall_s_landed_state_key": 1.806,
+      "timing_usable": true,
+      "timing_unusable_reason": null,
+      "speedup_landed_over_to_ascii": 4.5864
+    },
+    "sc25": {
+      "engine_sha256": "8ea3abe388954a2e79f44007be266599005d9a12ff011af65562540a1e925b39",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        2,
+        3,
+        5,
+        9,
+        10,
+        14,
+        15
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          0,
+          10
+        ],
+        [
+          5,
+          15
+        ]
+      ],
+      "control_termination": "cap_reached",
+      "engine_calls": 20000,
+      "unique_states": 1994,
+      "accept_trace_sha256_to_ascii": "c5e955c78ce4a0917972bc0afc17ba6e320b6a996238623690eb124459aa1f96",
+      "accept_trace_sha256_landed_fn": "c5e955c78ce4a0917972bc0afc17ba6e320b6a996238623690eb124459aa1f96",
+      "accept_trace_sha256_plain_bytes": "c5e955c78ce4a0917972bc0afc17ba6e320b6a996238623690eb124459aa1f96",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 7.85,
+      "wall_s_landed_state_key": 1.188,
+      "timing_usable": true,
+      "timing_unusable_reason": null,
+      "speedup_landed_over_to_ascii": 6.6077
+    },
+    "cn04": {
+      "engine_sha256": "d40404e1807d3501ddbdb444f336efdf5636b0b6c8a31e413c11641b235d5479",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        4,
+        8,
+        10,
+        14
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          0,
+          10
+        ],
+        [
+          4,
+          14
+        ]
+      ],
+      "control_termination": "queue_exhausted",
+      "engine_calls": 93,
+      "unique_states": 9,
+      "accept_trace_sha256_to_ascii": "35df924b13d3424643df6f1ac99d9e05ef62997bbc2ef32e03d26c6f8027576e",
+      "accept_trace_sha256_landed_fn": "35df924b13d3424643df6f1ac99d9e05ef62997bbc2ef32e03d26c6f8027576e",
+      "accept_trace_sha256_plain_bytes": "7cc3d6ef2258cb19765329c6a03c0057d9debdc6cc12da9c0fcda4e0cf46d031",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "SEMANTIC_CHANGE_as_predicted",
+      "wall_s_to_ascii": 0.048,
+      "wall_s_landed_state_key": 0.017,
+      "timing_usable": false,
+      "timing_unusable_reason": "control ended queue_exhausted after 93 calls in 0.048s -- too little work to time",
+      "speedup_landed_over_to_ascii": null
+    },
+    "ar25": {
+      "engine_sha256": "d9bc795e30dcd12de250dc7a79aac3ed20b01bff83f3011ef1b35eb76aafd15a",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        4,
+        5,
+        9,
+        10,
+        11
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          0,
+          10
+        ]
+      ],
+      "control_termination": "queue_exhausted",
+      "engine_calls": 16,
+      "unique_states": 1,
+      "accept_trace_sha256_to_ascii": "07a8de8a38f27084138387d9e65eeb31d9176ce9849bc8498d36f379e0c673bb",
+      "accept_trace_sha256_landed_fn": "07a8de8a38f27084138387d9e65eeb31d9176ce9849bc8498d36f379e0c673bb",
+      "accept_trace_sha256_plain_bytes": "07a8de8a38f27084138387d9e65eeb31d9176ce9849bc8498d36f379e0c673bb",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 0.005,
+      "wall_s_landed_state_key": 0.001,
+      "timing_usable": false,
+      "timing_unusable_reason": "control ended queue_exhausted after 16 calls in 0.005s -- too little work to time",
+      "speedup_landed_over_to_ascii": null
+    },
+    "m0r0": {
+      "engine_sha256": "45864e1b79c61960f885eef1e955d45ecb60a6f240ae5f5d28212e5920b8885b",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        5,
+        10,
+        11,
+        12
+      ],
+      "aliasing_pairs_present_in_root": [],
+      "control_termination": "plan_found",
+      "engine_calls": 1,
+      "unique_states": 2,
+      "accept_trace_sha256_to_ascii": "559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd",
+      "accept_trace_sha256_landed_fn": "559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd",
+      "accept_trace_sha256_plain_bytes": "559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 0.003,
+      "wall_s_landed_state_key": 0.002,
+      "timing_usable": false,
+      "timing_unusable_reason": "control ended plan_found after 1 calls in 0.003s -- too little work to time",
+      "speedup_landed_over_to_ascii": null
+    },
+    "sp80": {
+      "engine_sha256": "5ca19c910f3fa434e0a4f9eade178c4ca53a0855960df462431d0516bb3279b0",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        1,
+        4,
+        6,
+        9,
+        11,
+        12,
+        14
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          1,
+          11
+        ],
+        [
+          4,
+          14
+        ]
+      ],
+      "control_termination": "queue_exhausted",
+      "engine_calls": 56,
+      "unique_states": 4,
+      "accept_trace_sha256_to_ascii": "418513847515aa335444471f4930c734fd468a45bc8ee8bdd145b864965a73e2",
+      "accept_trace_sha256_landed_fn": "418513847515aa335444471f4930c734fd468a45bc8ee8bdd145b864965a73e2",
+      "accept_trace_sha256_plain_bytes": "418513847515aa335444471f4930c734fd468a45bc8ee8bdd145b864965a73e2",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 0.025,
+      "wall_s_landed_state_key": 0.021,
+      "timing_usable": false,
+      "timing_unusable_reason": "control ended queue_exhausted after 56 calls in 0.025s -- too little work to time",
+      "speedup_landed_over_to_ascii": null
+    },
+    "tu93": {
+      "engine_sha256": "fd0c1d7b1f02e082419b148664ade45501583aee39fb5c2ed256c0ba6be0e395",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        2,
+        4,
+        5,
+        6,
+        9,
+        14
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          4,
+          14
+        ]
+      ],
+      "control_termination": "queue_exhausted",
+      "engine_calls": 148,
+      "unique_states": 4,
+      "accept_trace_sha256_to_ascii": "4e2dc2dc878b22e3cfe6c95a83a1b2cd31f85fe9f815027793587fb5516b803f",
+      "accept_trace_sha256_landed_fn": "4e2dc2dc878b22e3cfe6c95a83a1b2cd31f85fe9f815027793587fb5516b803f",
+      "accept_trace_sha256_plain_bytes": "4e2dc2dc878b22e3cfe6c95a83a1b2cd31f85fe9f815027793587fb5516b803f",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 0.052,
+      "wall_s_landed_state_key": 0.004,
+      "timing_usable": false,
+      "timing_unusable_reason": "control ended queue_exhausted after 148 calls in 0.052s -- too little work to time",
+      "speedup_landed_over_to_ascii": null
+    },
+    "re86": {
+      "engine_sha256": "862a18cbdd65573640c830cde053cf7ccaa0c10d41493c6362760bdd97e3118f",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "logical_dtype": "int16",
+      "root_colours": [
+        0,
+        4,
+        5,
+        9,
+        11,
+        15
+      ],
+      "aliasing_pairs_present_in_root": [
+        [
+          5,
+          15
+        ]
+      ],
+      "control_termination": "queue_exhausted",
+      "engine_calls": 28,
+      "unique_states": 1,
+      "accept_trace_sha256_to_ascii": "92a7bedce43a6e0bc854c1ec19b6bbdc8ef81cac4c5edd05a20e9dd8621e8f0c",
+      "accept_trace_sha256_landed_fn": "92a7bedce43a6e0bc854c1ec19b6bbdc8ef81cac4c5edd05a20e9dd8621e8f0c",
+      "accept_trace_sha256_plain_bytes": "92a7bedce43a6e0bc854c1ec19b6bbdc8ef81cac4c5edd05a20e9dd8621e8f0c",
+      "partition_identical_landed_vs_to_ascii": "PARTITION_IDENTICAL",
+      "partition_identical_plain_bytes_vs_to_ascii": "coincidentally_identical_on_this_game",
+      "wall_s_to_ascii": 0.01,
+      "wall_s_landed_state_key": 0.001,
+      "timing_usable": false,
+      "timing_unusable_reason": "control ended queue_exhausted after 28 calls in 0.01s -- too little work to time",
+      "speedup_landed_over_to_ascii": null
+    }
+  },
+  "engine_call_cap_per_arm": 20000,
+  "max_depth": 40,
+  "random_seed": 6051,
+  "random_seed_principle": "The search itself is deterministic given the engine and root frame -- no sampler is involved -- so the seed pins only the random-grid property test in the companion suite. Recorded because a reader cannot know that without being told.",
+  "preconditions_checked": [
+    {
+      "resource": "offline arcade importable and every game's root frame obtainable",
+      "available": true
+    },
+    {
+      "resource": "induced engine readable at results/arc_e3/<game>/world_model.py",
+      "available": true
+    },
+    {
+      "resource": "ka59 peak engine readable at git 341f776c9",
+      "available": true
+    },
+    {
+      "resource": "no GPU required (CPU-side replay; CUDA_VISIBLE_DEVICES emptied)",
+      "available": true
+    }
+  ],
+  "preconditions_checked_principle": "Records which resources were verified before measuring, so a missing engine surfaces as a blocked verdict rather than as a silently smaller game set.",
+  "code_provenance": {
+    "git_head_at_build": "0da7f75adb635e4823806a2c2572611ba0a9d5d0",
+    "code": [
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256": "28386f924693829b89a9cff90f82ae9f64c35a4e8aa7750aead69fe5c03d25e1"
+      },
+      {
+        "path": "tests/python/test_arc_state_key_dedup_2026_07_30.py",
+        "sha256": "e054768442d83210b6b534e7ebf2d600b1d58dde9d85302a2eef725b5ec4f509"
+      },
+      {
+        "path": "scripts/arc_state_key_dedup_xgame_verify.py",
+        "sha256": "6579e3b5cf15252b3163d9a3e219ad9c9793d637e2d58208a63505b48ce33cc1"
+      }
+    ],
+    "measurement_script": "scripts/arc_state_key_dedup_xgame_verify.py"
+  },
+  "measurement_wall_s": 125.46,
+  "measurement_wall_s_principle": "The measuring process's own wall clock. Filled from the source rows' summed arm timings below because the harness did not record a single process elapsed value; it is a LOWER bound on the measurement's cost, and is labelled as such rather than presented as exact.",
+  "measurement_wall_s_is_a_lower_bound": true,
+  "duration_s": 0.002455,
+  "duration_s_principle": "This BUILDER's runtime, not the measurement's. It reads JSON and formats it. measurement_wall_s carries the measurement cost.",
+  "reproducibility_checksum": "b2cd286c775962d7f85ba27998e50975c1a78bd3dc7e0427dfa4fc83951a7e80",
+  "reproducibility_checksum_principle": "Content hash over this artifact's own fields, so a later silent edit to a recorded number is detectable rather than deniable."
+}
