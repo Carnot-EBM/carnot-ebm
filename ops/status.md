@@ -7836,3 +7836,124 @@ resolutions considered and the one-line path to the alternative if the operator 
   **1.84x** short.
 - **The per-call cost inside the LLM-generated engine is still unmeasured**, and it is now the larger
   of the two surviving levers by elimination rather than by evidence.
+
+## 2026-07-30 (later still) — operator-directed: should G3, the gate's budget unit, be reverted? Measured: NO
+
+### The question
+
+Commit `f9a458e87`'s change **G3** switched `_goal_satisfiability_check`'s budget unit from UNIQUE
+GRIDS (counted after the `seen` dedup) to ENGINE CALLS (counted before it, matching
+`plan_in_model`'s `nodes += 1`). The lead to evaluate: ka59's gate needs **12,435 unique grids**
+but **137,347 engine calls**, so under the OLD unit the gate passes inside the shipped
+`max_nodes = 20000` while under G3 it refuses — a quality-shaped verdict for a compute reason.
+
+### Verdict: DO NOT REVERT — the failure moves to the planner and costs ~8x to arrive at the same nothing
+
+Measured on ka59, registry engine `341f776c9` (change_fidelity 1.0000, sha `ec4c777b…`), offline
+arcade, shipped budget 20,000. Both arms run from the canonical repo path.
+
+| Arm | What ran | Result | Wall |
+|---|---|---|---|
+| A | gate, **HEAD** (engine-call unit), 20000 | NOT satisfiable — `goal_unreached_within_budget`, `termination: budget_exhausted`, 20,002 engine calls / 1,969 unique grids / frontier 899 | 26.8 s |
+| B | gate, **G3 REVERTED** (unique-grid unit), 20000 | **satisfiable = true** at 12,435 unique grids, `first_true_depth: 11` | 190.9 s |
+| C | gate, HEAD, 400000 (reference) | satisfiable at the **same** 12,435 grids / depth 11 — proves B and C are ONE identical search differing only in which counter trips | — |
+| D | `plan_in_model`, **20000** | **NO PLAN** — `termination_reason: max_nodes_reached`, 20,006 nodes expanded | 21.2 s |
+| E | `plan_in_model`, 400000 | plan found, **length 11** (canonical — no regression), 137,347 nodes | — |
+| F | arcade replay of E's plan | `reproduced: true`, `reached_level: 1`, 1 action-6 click, none out of bounds | — |
+
+**Arms B then D are the decisive sequence.** The reverted gate CERTIFIES at 12,435 units what the
+planner then cannot reach in 20,000 — precisely the false-certification-followed-by-planner-failure
+that the unit alignment was introduced to prevent. G3's stated justification ("a gate must not
+out-search the planner it guards") is therefore now measured rather than argued.
+
+**Cost of reverting, plainly:** HEAD refuses honestly in 26.8 s. G3-reverted spends 190.9 s proving
+the goal reachable and then 21.2 s failing to plan to it — **~212 s for the same no-plan, ~8x
+worse**. Reverting buys only the ILLUSION that the gate passes.
+
+The soundness question is moot on this evidence: it mattered only if a plan were produced at the
+shipped budget, and none is. The only thing that opens ka59 end to end is more compute for
+`plan_in_model` (137,347 calls — recorded budget-independent, bit-identical at 160k and 400k in
+`results/outer_loop_arc_plan_affordability_corrected_20260730.json`) or a cheaper search.
+
+### Correction to this session's own knob table (it had a false row)
+
+An earlier write-up of this investigation claimed `arc_llm_reinduction.py`'s `plan_in_model` call
+"is bare and is not overridable". **That is false.** The agent injects
+`self._guided_plan_in_model(e3.plan_in_model)` at `arc_competition_agent.py:5641` and `:5778`, and
+that wrapper applies `CARNOT_ARC_PLAN_MAX_NODES` via `_call_plan_in_model` (`:4938-4941`);
+`e3.plan_in_model` accepts `max_nodes`. **The planner budget was already tunable.**
+
+The real asymmetry is the other half: **the GATE had no knob at all.** All three call sites
+(`_repair_degenerate_goal`, `execute_bounded_llm_reinduction`, and the agent's default-off
+plain-path check) pass no `max_nodes`, and nothing read an environment variable — so the
+commit's own "`max_nodes` is compute and may be raised" was UNREACHABLE for the gate.
+
+**Fixed:** `CARNOT_ARC_GOAL_GATE_MAX_NODES` (dev-only, unset in production, default behaviour
+bit-identical; malformed or non-positive values fall back to 20000; an explicit `max_nodes=`
+argument still wins outright). This is COMPUTE ONLY — it cannot admit a goal the predicates
+reject, and `goal_predicate_true_at_root`, `degenerate_goal_predicate` on a drained frontier, and
+the caller's skip-without-GOAL-REPAIR resolution are all untouched. **Its payoff is DEV PARITY**
+with `CARNOT_ARC_PLAN_MAX_NODES`, not a live unblock: production affordability is ~17,854 engine
+calls per game, and raising the gate alone buys a pass the planner still cannot use.
+
+### Two documentation defects fixed, one caveat newly stated
+
+- **A false MECHANISM was justifying a correct design**, in production and in its test. The comment
+  above `budget_exhausted = engine_calls >= int(max_nodes)` claimed the inner `break` discards
+  queued successors "so `q` can be empty at that moment". It cannot — the `break` fires immediately
+  AFTER `q.append(...)`, and that fixture measurably leaves `frontier_remaining == 1`. The real
+  drain is the DEDUP path (a round of expansions yielding only already-seen grids appends nothing).
+  The design choice is right; its stated reason was checkably wrong, and the risk is concrete: a
+  future editor "simplifying" on the strength of it lands exactly on mutation M3. Corrected
+  additively in both places per never-prune, with the superseded prose kept beside it.
+- **A dangling disclosure reference.** `arc_llm_reinduction.py` cited
+  `ops/known-issues.md "budget-exhausted goal pre-veto"`; that file had zero matches. Fixed by
+  WRITING the entry, not by repointing away from it.
+- **Residual alignment gap G3 does not cover (newly disclosed, not fixed).** The gate is always
+  plain BFS; `plan_in_model` is a goal-energy best-first heap whenever `_goal_energy_for_plan`
+  returns non-None. At production defaults this is inert — the binary goal energy is a flat
+  constant so heapq ties break FIFO and degenerate to BFS, which is why gate and planner were
+  measured expanding the SAME 137,347 nodes. Under `CARNOT_ARC_GRADED_GOAL_BIAS=1` the planner is
+  genuinely best-first and can beat the BFS gate, re-opening the false-negative class. Mitigating:
+  graded-exemplar bias measured **2.3x WORSE** on ka59, so the configuration that opens the gap is
+  not the one in use.
+
+### The dedup-key "mutation-proven 7/7" claim, restated with a method — it is 7 of 8
+
+The earlier entry above records `tests/python/test_arc_state_key_dedup_2026_07_30.py` as
+"mutation-proven 7/7" and states **no method**, which matters because this repo's default
+`addopts = -n 4` makes a parent-process mutation patch silently vacuous in xdist workers (see
+`ops/known-issues.md`, 2026-07-30 METHOD TRAP). Re-run under `-n0` with plugin-based injection and
+8 mutants: **7 caught, 1 REAL SURVIVOR.** Relaxing `a.dtype.kind in "iu" and a.min() >= 0` to the
+sign check alone is indistinguishable on every grid the file exercised — for a non-negative float
+`int(v) % 10 == int(v % 10)`, verified over 400k random values plus the float32/float64 precision
+edges — but `a.min()` is only DEFINED for an orderable dtype, so on a string grid HEAD
+short-circuits and keys correctly (`b"2:2|\x04\x04\x05\x05"`, merging '4'/'14' as `to_ascii` does)
+while the mutant dies with `UFuncTypeError`. Closed by
+`test_the_dtype_guard_is_checked_before_min_and_not_merely_alongside_it`; the proof is **8/8**.
+The goal-gate file's own 5-mutant proof re-ran 5/5 after this session's edits.
+
+### Known constraints (added)
+
+- **The mutation guard fails CLOSED, not open — one review claim about it is retracted.** A
+  finding held that `scripts/test_suite_mutation_check.py --check` "exits 0 while refusing" for
+  lack of a baseline, so a wrapper would read a refusal as a pass. Measured: an unarmed `--check`
+  prints `REFUSING -- no baseline for this run` and **exits 1**. The actionable half of the
+  finding stands and was applied — a `--snapshot` baseline was taken before this session's first
+  test run, so the guard MEASURED (flagging exactly the two files hand-edited after the snapshot,
+  both verified mine by diff) instead of refusing.
+- **`test_arc_structured_memory_causal_audit.py::test_req_arc_wmte_5901_repository_artifact_is_current`
+  is RED and is PRE-EXISTING.** The committed Exp5901 artifact pins
+  `scripts/research_conductor.py: sha256:353e0a26…`; the live file hashes `7fd4b787…` (last changed
+  in `dd5fc7a2c`). None of the four protected files it hashes is dirty in this session's tree, so
+  the artifact the test builds is bit-identical to what HEAD builds — the failure reproduces at
+  HEAD without this session's changes. NOT regenerated: `results/` is evidence and rewriting a
+  historical artifact is forbidden.
+
+### Not done, stated plainly
+
+- **Banked levels UNCHANGED at 3/3, and the submission gate is UNMET.** This session solved
+  nothing, played no game (scored or offline), and took no submission action. It measured a
+  proposed revert, declined it, and fixed documentation and one missing knob.
+- **Induce→plan remains CLOSED at a production-payable budget for ka59.** Nothing here changed the
+  137,347-call requirement; the new gate knob does not move it.

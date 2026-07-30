@@ -15254,3 +15254,46 @@ reads. The two assets were the whole of it.
 **Banked ARC levels remain 3/3 and the submission gate is NOT met.** Nothing here measured a
 score; this is measurement hygiene on the pre-flight that decides whether a scored measurement is
 worth running.
+
+## 2026-07-30 — G3 (the gate's budget unit) evaluated for revert: DO NOT REVERT, measured
+
+**Trigger:** operator directive to evaluate reverting change G3 of `f9a458e87`, which switched
+`_goal_satisfiability_check`'s budget unit from unique grids to engine calls, closing an 11x
+permissiveness gap against `plan_in_model`. The lead: under the old unit ka59's gate passes inside
+the shipped 20,000 budget (12,435 unique grids) while under G3 it refuses (needs ~160,000 engine
+calls) — a quality-shaped verdict for a compute cause.
+
+### Outcome: DO NOT REVERT — the failure only moves, at ~8x the wall clock
+
+Measured on ka59, registry engine `341f776c9` (sha `ec4c777b…`), offline arcade, both arms from the
+canonical repo path. The G3-reverted gate certifies as satisfiable (12,435 unique grids, depth 11,
+190.9 s) and `plan_in_model` then fails at the SAME shipped budget (`max_nodes_reached`, 20,006
+nodes, 21.2 s). HEAD refuses honestly in 26.8 s. So reverting spends ~212 s to reach the same
+no-plan. A plan for ka59 does exist and is canonical length 11 — it replays against the offline
+arcade to `reached_level: 1` — but needs 137,347 nodes, which no gate change reaches. G3's stated
+justification ("a gate must not out-search the planner it guards") is now measured, not argued.
+
+### Shipped
+
+- **`CARNOT_ARC_GOAL_GATE_MAX_NODES`** — the gate's `max_nodes` had no override at all (all three
+  call sites pass none), so the commit's own "`max_nodes` is compute and may be raised" was
+  unreachable for the gate, while the planner has had `CARNOT_ARC_PLAN_MAX_NODES` since
+  REQ-ARC-FCP-5699-15. Dev-only, unset in production, default bit-identical, malformed values fall
+  back, explicit arguments still win. Compute only — no predicate touched.
+- **A false mechanism corrected in two places** (production comment and its test docstring): the
+  inner `break` cannot leave `q` empty, because it fires immediately after `q.append(...)`. The
+  real drain is the dedup path. Correct design, wrong stated reason — and the wrong reason invites
+  the exact "simplification" that mutation M3 encodes. Additive, superseded prose preserved.
+- **`ops/known-issues.md` "budget-exhausted goal pre-veto"** — written, because production code had
+  been citing it since `764226c86` and it did not exist.
+- **A newly disclosed residual gap:** unit alignment does not align SEARCH ORDER. The gate is BFS;
+  `plan_in_model` is best-first given a goal energy. Inert at defaults (flat binary energy ties
+  FIFO — why both measured 137,347), live under `CARNOT_ARC_GRADED_GOAL_BIAS=1`.
+- **The dedup-key mutation claim restated with a method, and one real gap closed.** "7/7" was
+  recorded with no method, which this repo's default `-n 4` makes unfalsifiable (a parent-process
+  patch is discarded by xdist workers). Re-run under `-n0`: 7 of 8, one real survivor — dropping
+  the `dtype.kind in "iu"` guard crashes on a string grid where HEAD keys correctly. Now 8/8. The
+  trap itself is recorded in `ops/known-issues.md`.
+
+**Banked ARC levels remain 3/3 and the submission gate is NOT met.** Nothing here solved a level,
+played a game scored or offline, or measured a score.

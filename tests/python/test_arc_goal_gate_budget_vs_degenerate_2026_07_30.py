@@ -33,9 +33,14 @@ WHAT THESE TESTS PIN.
    `termination: queue_exhausted`. The two must never collapse again.
 2. The SAME predicate on the SAME engine flips kind purely on `max_nodes` -- which is the
    ka59 shape, and the thing that makes the bug a compute artifact rather than a goal defect.
-3. "Frontier empty" is not trusted when the budget is what stopped the search, because the inner
-   loop discards the current grid's remaining candidate expansions on `break` and they are never
-   queued -- so an empty deque at that moment does not mean the successors were explored.
+3. "Frontier empty" is not trusted when the budget is what stopped the search. NB the mechanism,
+   because the original version of this item (and the in-module comment it was copied from) named
+   the wrong one: it is NOT that the inner `break` discards queued successors -- the `break` fires
+   immediately after `q.append(...)`, so the deque is never empty there, and that fixture leaves
+   `frontier_remaining == 1`. The deque drains via the DEDUP path: a round of expansions that
+   yields only grids already in `seen` appends nothing, so the `while` can then fail on the budget
+   with the frontier at 0. The gate still refuses to read that as exhaustiveness, because it
+   cannot tell "drained because we saw everything" from "drained because we stopped".
 4. Depth-limited exhaustion is still reported as `queue_exhausted` (vetoing on
    unreachable-within-depth is sound: the planner it guards is bounded the same way).
 """
@@ -140,26 +145,67 @@ def test_same_predicate_same_engine_flips_kind_on_budget_alone() -> None:
 def test_empty_frontier_is_not_trusted_when_the_budget_is_what_stopped_us() -> None:
     """`frontier_remaining == 0` must not upgrade a budget stop into an exhaustiveness claim.
 
-    The inner loop `break`s on budget and DISCARDS the current grid's remaining candidates without
-    queueing them, so the deque can be empty while successors went unexplored. Keying the verdict
-    on `q` being non-empty (rather than on the budget alone) would misreport exactly that case.
-    A single-successor world with a budget of 1 produces it: one call, the goal is not yet true,
-    the successor IS queued -- so we force the harder shape with max_depth=1, where the queued
-    node is then dropped by the depth cap and the deque drains.
+    REWRITTEN 2026-07-30 -- THIS TEST WAS VACUOUS FOR THE PROPERTY IT NAMES, and was caught by
+    mutation-proving the guard rather than by the test failing. Mutating the module to key the
+    verdict on `engine_calls >= max_nodes AND len(q) > 0` -- i.e. exactly the "trust an empty
+    frontier" behaviour this test exists to forbid -- left the whole file GREEN.
+
+    Why the old fixture could not bite: it used `max_nodes=1, max_depth=1` and its docstring
+    claimed "the queued node is then dropped by the depth cap and the deque drains". It does not.
+    The successor is appended, the inner loop `break`s on the budget, and the `while` condition
+    then fails on the budget BEFORE that node is ever popped -- so the depth cap never runs and
+    the deque still holds it. Measured: `frontier_remaining == 1`. With a non-empty frontier the
+    two keyings agree, so the assertion held either way.
+
+    The in-module comment's stated rationale was wrong in the same direction and for the same
+    reason: it said that on `break` the remaining candidates are discarded "so `q` can be empty at
+    that moment while successors went unexplored". The `break` fires immediately AFTER
+    `q.append(...)`, so `q` is never empty there. (The design CHOICE is still right -- see below --
+    but it is not right for that reason.) That comment now carries a dated CORRECTION naming the
+    real mechanism and pointing back at this test; the superseded prose is kept beside it per the
+    project's never-prune rule, so a reader will meet both.
+
+    The real shape, found by search and used here: a width-2 growing bar. The full bar's every
+    action is a no-op, so expanding it yields only duplicates, nothing is appended, and the deque
+    drains while the budget is spent. `frontier_remaining == 0` and `termination ==
+    "budget_exhausted"` together, which is the combination the old fixture never produced.
+
+    What this pins, stated honestly: at `max_nodes=18` the reachable set (3 grids, 18 calls) really
+    WAS searched out, and the gate still refuses to call it exhaustive because the budget also ran
+    out. That conservatism is deliberate. The gate cannot distinguish "drained because we saw
+    everything" from "drained because we stopped", so it errs toward UNKNOWN -- which suppresses a
+    veto it might have been entitled to, rather than fabricating one it is not. Declining to veto
+    is the safe direction; `degenerate_goal_predicate` is a quality verdict and must be earned.
     """
-    result = reinduction._goal_satisfiability_check(
-        engine=_make_engine(),
-        goal=_goal_at(_TARGET),
-        start_grid=_start(),
-        max_nodes=1,
-        max_depth=1,
+    engine, goal, board = _make_engine(), (lambda g: False), np.zeros((1, 2), dtype=int)
+    # Identical search in both arms -- same engine, same board, same 18 engine calls, same drained
+    # frontier. ONLY `max_nodes` differs, so the verdict is keyed on the budget and nothing else.
+    starved = reinduction._goal_satisfiability_check(
+        engine=engine, goal=goal, start_grid=board, max_nodes=18, max_depth=40
     )
-    assert result["satisfiable"] is False
-    assert result["termination"] == "budget_exhausted", (
-        "the budget is what stopped the search, so the verdict must say so regardless of how "
-        "many nodes happen to remain queued"
+    assert starved["frontier_remaining"] == 0, (
+        "fixture guard: this test is only meaningful when the frontier actually drained -- the "
+        "old fixture left it at 1, which is why it could not detect the mutation"
     )
-    assert _kind(result) == "goal_unreached_within_budget"
+    assert starved["engine_calls"] == 18
+    assert starved["satisfiable"] is False
+    assert starved["termination"] == "budget_exhausted", (
+        "the budget is what stopped the search, so the verdict must say so EVEN THOUGH the "
+        "frontier is empty; trusting the empty deque here would claim an exhaustiveness the "
+        "gate has not established"
+    )
+    assert _kind(starved) == "goal_unreached_within_budget"
+
+    # One more engine call of headroom and the SAME search reports exhaustion -- the boundary the
+    # mutation blurs. Without this arm the assertions above could be satisfied by a gate that
+    # never reports `queue_exhausted` at all.
+    ample = reinduction._goal_satisfiability_check(
+        engine=engine, goal=goal, start_grid=board, max_nodes=19, max_depth=40
+    )
+    assert ample["engine_calls"] == 18
+    assert ample["frontier_remaining"] == 0
+    assert ample["termination"] == "queue_exhausted"
+    assert _kind(ample) == "degenerate_goal_predicate"
 
 
 def test_depth_limited_exhaustion_reports_queue_exhausted() -> None:
