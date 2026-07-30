@@ -1,0 +1,556 @@
+{
+  "experiment": "outer_loop_arc_plan_affordability_corrected_20260730",
+  "schema": "carnot.outer_loop.arc_plan_affordability.v2",
+  "requirements": [
+    "REQ-ARC-WMTE-6047"
+  ],
+  "question": "Is a world-model plan reachable at a search budget the LIVE agent can afford in production, and at what per-attempt cost?",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete_search_budget_threshold_is_137347_engine_calls_and_per_attempt_cost_is_engine_dependent_so_affordability_at_110_cells_is_unresolved_and_the_recommendation_is_cheaper_search_not_a_bigger_compute_budget",
+  "NOT_A_SOLVE_CLAIM": "This artifact measures COST. It claims no new ARC level. The reproduction-gate result below re-validates a route to ka59 level 1 that `ops/arc_solve_registry.yaml` ALREADY records, purely to confirm that the planner's output is a genuine action sequence rather than a model-internal artefact. `used_env_source` is true because the offline arcade reads environment_files, which is the sanctioned development-proxy path for a public game; no game source was read, no ground-truth BFS was run, and nothing here was hand-calibrated per game.",
+  "replay_revalidates_an_already_registered_level_not_a_new_one": true,
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "read_game_source": false,
+  "used_env_source": true,
+  "offline_ground_truth_bfs": false,
+  "exhaustive_bfs_calibration": false,
+  "hand_calibrated_per_game": false,
+  "random_seed": 6047,
+  "duration_s": 0.002,
+  "model_specs": "none -- no LLM is invoked; the world-model engines are read from disk/git",
+  "preconditions_checked": [
+    {
+      "resource": "offline_arcade environment_files",
+      "available": true
+    },
+    {
+      "resource": "results/arc_e3 engine store (READ ONLY)",
+      "available": true
+    },
+    {
+      "resource": "git 341f776c9 ka59 registry engine",
+      "available": true
+    },
+    {
+      "resource": "no live GPU grid running (contention biases timings)",
+      "available": true
+    }
+  ],
+  "SUPERSEDES": {
+    "prior_claim": "REACHABLE_BUT_UNAFFORDABLE, from a single engine's 197.0 s per attempt applied as a per-game constant across 110 games, at a 6h/8h cap, against a baseline asserted to exclude plan search, with a cProfile-derived 48% engine share.",
+    "corrections_applied": {
+      "F3_cost_is_engine_specific": "measured across every on-disk engine, SPLIT by whether the engine can actually branch and spend a budget. Among the 13 planning-capable engines the spread is 4.0x (708.8 to 2802.0 calls/s), NOT the single number v1 used. A wider 44.8x spread suggested in review was not reproduced; those measurements were most likely taken while a 940%-CPU probe grid was live, which the project's own setup notes warn biases timings. This run was taken with the grid stopped.",
+      "F4_cap_selection": "primary cap moved to 9h to match the cited envelope artifact's own headline, and the verdict now rests explicitly on the CONSERVATIVE per-game cost level, which that artifact calls the decision-relevant one.",
+      "F5_baseline_field_renamed": "baseline_total_s_without_any_plan_search -> plan search is probably INCLUDED. The exclusion was assumed; the retention corpus in fact records 21 real plan attempts totalling 323988 nodes, which at those engines' measured ~2600 calls/s is ~5 s per cell and fits inside the 9.74 s/game non-LLM component. Bias direction is conservative for this analysis.",
+      "F7_profile_share_remeasured": "the 48% engine share came from a cProfile run with 1.59x instrumentation overhead. Re-measured with targeted timers on the UNPROFILED path the engine is 69.5% of plan_in_model and to_ascii is 24.9% -- so cProfile UNDERSTATED the engine and OVERSTATED to_ascii. The review predicted the opposite direction. The 'structural, not tunable' conclusion is STRENGTHENED, not weakened."
+    }
+  },
+  "THE_THRESHOLD": {
+    "engine_calls_to_find_the_ka59_plan": 137347,
+    "budget_independent": true,
+    "evidence": "bit-identical call count at max_nodes 160000 and 400000, so the search order is deterministic and the threshold is a property of the problem, not of the budget",
+    "plan_length": 11,
+    "shipped_budget": 20000
+  },
+  "THE_PLAN_IS_A_REAL_SOLVE": {
+    "reproduction_gate": {
+      "game": "ka59",
+      "reached_level": 1,
+      "claimed_level": 1,
+      "reproduced": true,
+      "mode": "offline_reproduction_gate_no_quota",
+      "checked_action6_clicks": 1,
+      "oob_action6_clicks": [],
+      "any_oob_action6_clicks": false
+    },
+    "note": "This closes a check the prior session's replay script PROMISED and never ran: it built labels in the reproduce dialect, commented 'Independent confirmation via the project's own reproduction gate', and never called reproduce(). Run here, in the JSON label dialect the gate can actually parse -- the original '6:x:y' form would have silently skipped the out-of-live-bounds click check and reported checked_action6_clicks=0.",
+    "labels": [
+      "{\"action\": 4, \"data\": null}",
+      "{\"action\": 4, \"data\": null}",
+      "{\"action\": 4, \"data\": null}",
+      "{\"action\": 3, \"data\": null}",
+      "{\"action\": 2, \"data\": null}",
+      "{\"action\": 3, \"data\": null}",
+      "{\"action\": 3, \"data\": null}",
+      "{\"action\": 3, \"data\": null}",
+      "{\"action\": 6, \"data\": {\"x\": 43, \"y\": 31}}",
+      "{\"action\": 1, \"data\": null}",
+      "{\"action\": 4, \"data\": null}"
+    ]
+  },
+  "PER_ATTEMPT_COST_DISTRIBUTION": {
+    "planning_capable_engines": {
+      "name": "can_plan",
+      "n": 13,
+      "games": [
+        "bp35",
+        "cd82",
+        "dc22",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "su15",
+        "tn36"
+      ],
+      "calls_per_s_min": 708.8,
+      "calls_per_s_median": 2594.2,
+      "calls_per_s_max": 2802.0,
+      "spread_x": 4.0,
+      "s_for_137347_calls_at_slowest": 193.8,
+      "s_for_137347_calls_at_fastest": 49.0
+    },
+    "degenerate_or_non_branching_engines": {
+      "name": "cannot_plan",
+      "n": 12,
+      "games": [
+        "ar25",
+        "cn04",
+        "ft09",
+        "ka59",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "sp80",
+        "tr87",
+        "tu93",
+        "wa30"
+      ],
+      "calls_per_s_min": 369.5,
+      "calls_per_s_median": 2560.8,
+      "calls_per_s_max": 2871.6,
+      "spread_x": 7.8,
+      "s_for_137347_calls_at_slowest": 371.7,
+      "s_for_137347_calls_at_fastest": 47.8
+    },
+    "the_one_verified_solving_engine": {
+      "game": "ka59",
+      "engine_source": "git 341f776c9 (registry peak, change-fidelity 1.0000, VERIFIED SOLVE)",
+      "budget": 20000,
+      "root_candidates": 18,
+      "successors_that_change_the_grid": 17,
+      "distinct_successors": 7,
+      "can_branch": true,
+      "plan_len": null,
+      "wall_s": 28.226,
+      "engine_calls": 20006,
+      "spent_full_budget": true,
+      "calls_per_s": 708.8,
+      "s_for_137347_calls": 193.8
+    },
+    "why_the_split_matters": "A first pass sampled every engine on disk and reported a median ~2700 calls/s, which would have flipped the verdict. That number is an ARTEFACT: most engines in the store are degenerate (the corpus split is no-op 12/33, runaway writer 21/33), a no-op engine dedups every successor against the root and empties its frontier in ~36 calls, and the ones that DO spend the full budget are cheap precisely because they compute almost nothing. An engine that computes nothing never produces a plan and in production never reaches the planner at all -- the held-out transition gate rejects it.",
+    "n_engines_verified_to_produce_a_real_arcade_replayed_solve": 1,
+    "that_engine_sits_at_the": "SLOW extreme of the planning-capable range"
+  },
+  "ENGINE_VS_HARNESS_TARGETED_TIMERS": {
+    "experiment": "p1_engine_vs_harness_targeted_timers_no_profiler",
+    "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+    "game": "ka59",
+    "engine_source": "git 341f776c9 registry peak",
+    "budget": 20000,
+    "plan_in_model_unprofiled_s": 27.021,
+    "plan_in_model_engine_calls": 20006,
+    "replay": {
+      "engine_calls_timed": 20002,
+      "engine_s": 18.993,
+      "to_ascii_calls": 20002,
+      "to_ascii_s": 6.816,
+      "goal_calls": 1968,
+      "goal_s": 0.5975,
+      "candidate_gen_calls": 1070,
+      "candidate_gen_s": 0.93,
+      "component_total_s": 27.336
+    },
+    "engine_share_of_component_total": 0.6948,
+    "to_ascii_share_of_component_total": 0.2493,
+    "engine_share_of_full_plan_in_model": 0.7029,
+    "unaccounted_share_of_full": -0.0116,
+    "cprofile_claim_being_corrected": {
+      "claim": "_blocks tottime 21.7s = 48% of the search; to_ascii = 38%",
+      "profiled_cumtime_s": 45.5,
+      "unprofiled_s": 28.6,
+      "instrumentation_overhead_x": 1.591
+    }
+  },
+  "AFFORDABILITY": {
+    "experiment": "p1_affordability_v2_corrected",
+    "inference_substrate": "aggregation_from_upstream_artifacts",
+    "question": "is a plan affordable in production, at what budget and what cost?",
+    "threshold_engine_calls_ka59": 137347,
+    "threshold_is_budget_independent": true,
+    "per_attempt_cost_spectrum_s": {
+      "verified_solving_engine_ka59_registry_peak_s": 193.8,
+      "fastest_planning_capable_engine_s": 49.0,
+      "slowest_planning_capable_engine_s": 193.8,
+      "with_bytes_dedup_key_on_ka59_s": 150.5
+    },
+    "engine_cost_is_engine_specific_evidence": {
+      "engine_share_of_search_time_targeted_timers": 0.7029,
+      "to_ascii_share_targeted_timers": 0.2493,
+      "components_account_for_fraction_of_full": 0.9884,
+      "cprofile_claim_corrected_from": {
+        "claim": "_blocks tottime 21.7s = 48% of the search; to_ascii = 38%",
+        "profiled_cumtime_s": 45.5,
+        "unprofiled_s": 28.6,
+        "instrumentation_overhead_x": 1.591
+      },
+      "planning_capable_spread_x": 4.0,
+      "n_planning_capable_engines": 13,
+      "n_engines_verified_to_produce_a_real_solve": 1,
+      "verified_engine_is_at_the": "SLOW end of the planning-capable range"
+    },
+    "cited_baseline": {
+      "source": "results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json",
+      "field_renamed_from": "baseline_total_s_without_any_plan_search",
+      "field_renamed_to": "baseline_total_s_plan_search_INCLUDED_cheaply",
+      "why": "the exclusion was assumed, not verified. The retention corpus records 21 real plan attempts totalling 323988 nodes; at those engines' measured ~2600 calls/s that is ~5 s per cell, which fits inside the 9.74 s/game non-LLM component. So plan search is probably already IN the baseline.",
+      "bias_direction": "CONSERVATIVE for this analysis: if cheap plan search is already in the baseline, adding a full attempt on top double-counts only ~5 s, so the residual is understated by at most that -- the verdict is if anything slightly too pessimistic, not too optimistic.",
+      "non_llm_gil_serialised_s_per_game": 9.74
+    },
+    "cap_selection": {
+      "primary_cap": "kaggle_9h_max_notebook_runtime",
+      "why": "the cited artifact's own SHORT_ANSWER names 9h as THE MOST LIKELY CAP and ~110 as the game count. v1 asserted 6h/8h as most likely, which claimed more confidence than the source supports.",
+      "cost_level_the_verdict_rests_on": "conservative",
+      "why_conservative": "the cited artifact states it directly: the eval runs ~110 concurrent threads in one process, which is MORE contended than the measurement behind the optimistic number, so 'the conservative reading is the decision-relevant one and the optimistic one should not be used to justify a raise'."
+    },
+    "primary_row_conservative": {
+      "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+      "n_games": 110,
+      "per_game_cost_level": "conservative",
+      "per_game_baseline_s": 227.3,
+      "residual_s_per_game": 67.2,
+      "affordable_calls_at_verified_engine_rate": 47663,
+      "threshold_calls_needed": 137347,
+      "fits__verified_solving_engine_ka59_registry_peak_s": false,
+      "fits__fastest_planning_capable_engine_s": true,
+      "fits__slowest_planning_capable_engine_s": false,
+      "fits__with_bytes_dedup_key_on_ka59_s": false
+    },
+    "primary_row_uncontended": {
+      "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+      "n_games": 110,
+      "per_game_cost_level": "uncontended",
+      "per_game_baseline_s": 110.93,
+      "residual_s_per_game": 183.6,
+      "affordable_calls_at_verified_engine_rate": 130146,
+      "threshold_calls_needed": 137347,
+      "fits__verified_solving_engine_ka59_registry_peak_s": false,
+      "fits__fastest_planning_capable_engine_s": true,
+      "fits__slowest_planning_capable_engine_s": false,
+      "fits__with_bytes_dedup_key_on_ka59_s": true
+    },
+    "all_rows": [
+      {
+        "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+        "n_games": 110,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 183.6,
+        "affordable_calls_at_verified_engine_rate": 130146,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+        "n_games": 110,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 67.2,
+        "affordable_calls_at_verified_engine_rate": 47663,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": false
+      },
+      {
+        "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+        "n_games": 60,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 429.1,
+        "affordable_calls_at_verified_engine_rate": 304124,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+        "n_games": 60,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 312.7,
+        "affordable_calls_at_verified_engine_rate": 221641,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+        "n_games": 25,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 1185.1,
+        "affordable_calls_at_verified_engine_rate": 839977,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_9h_max_notebook_runtime_MOST_LIKELY",
+        "n_games": 25,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 1068.7,
+        "affordable_calls_at_verified_engine_rate": 757494,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "preview_8h",
+        "n_games": 110,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 150.9,
+        "affordable_calls_at_verified_engine_rate": 106949,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "preview_8h",
+        "n_games": 110,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 34.5,
+        "affordable_calls_at_verified_engine_rate": 24466,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": false,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": false
+      },
+      {
+        "cap": "preview_8h",
+        "n_games": 60,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 369.1,
+        "affordable_calls_at_verified_engine_rate": 261596,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "preview_8h",
+        "n_games": 60,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 252.7,
+        "affordable_calls_at_verified_engine_rate": 179113,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "preview_8h",
+        "n_games": 25,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 1041.1,
+        "affordable_calls_at_verified_engine_rate": 737910,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "preview_8h",
+        "n_games": 25,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 924.7,
+        "affordable_calls_at_verified_engine_rate": 655427,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_6h_arcagi3_specific",
+        "n_games": 110,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 85.4,
+        "affordable_calls_at_verified_engine_rate": 60555,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": false
+      },
+      {
+        "cap": "kaggle_6h_arcagi3_specific",
+        "n_games": 110,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": -30.9,
+        "affordable_calls_at_verified_engine_rate": 0,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": false,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": false
+      },
+      {
+        "cap": "kaggle_6h_arcagi3_specific",
+        "n_games": 60,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 249.1,
+        "affordable_calls_at_verified_engine_rate": 176540,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_6h_arcagi3_specific",
+        "n_games": 60,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 132.7,
+        "affordable_calls_at_verified_engine_rate": 94057,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": false,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": false,
+        "fits__with_bytes_dedup_key_on_ka59_s": false
+      },
+      {
+        "cap": "kaggle_6h_arcagi3_specific",
+        "n_games": 25,
+        "per_game_cost_level": "uncontended",
+        "per_game_baseline_s": 110.93,
+        "residual_s_per_game": 753.1,
+        "affordable_calls_at_verified_engine_rate": 533776,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      },
+      {
+        "cap": "kaggle_6h_arcagi3_specific",
+        "n_games": 25,
+        "per_game_cost_level": "conservative",
+        "per_game_baseline_s": 227.3,
+        "residual_s_per_game": 636.7,
+        "affordable_calls_at_verified_engine_rate": 451292,
+        "threshold_calls_needed": 137347,
+        "fits__verified_solving_engine_ka59_registry_peak_s": true,
+        "fits__fastest_planning_capable_engine_s": true,
+        "fits__slowest_planning_capable_engine_s": true,
+        "fits__with_bytes_dedup_key_on_ka59_s": true
+      }
+    ],
+    "verdict": {
+      "reachable": true,
+      "reachable_at_engine_calls": 137347,
+      "the_only_verified_solving_engine_is_affordable_at_primary_cap": false,
+      "some_planning_capable_engine_is_affordable_at_primary_cap_conservative": true,
+      "some_planning_capable_engine_is_affordable_at_primary_cap_uncontended": true,
+      "label": "REACHABLE_AND_AFFORDABILITY_IS_ENGINE_DEPENDENT",
+      "conservative_primary_residual_s": 67.2,
+      "honest_reading": "The threshold is reachable at a fixed 137347 engine calls. Whether one attempt fits the per-game envelope depends on WHICH ENGINE is planning, and the range straddles the decision boundary: the fastest planning-capable engines cost ~49 s (fits the conservative 9h/110 residual of 67.2 s) while the ONLY engine verified to produce a real, arcade-replayed solve costs ~194 s (does not fit, by 3.3x). n=1 on the class that matters, so the fast tail is not evidence that a WORKING engine is ever cheap -- several of those fast engines are provably degenerate and would never reach the planner in production. The recommendation is therefore unchanged in direction: pursue cheaper SEARCH, not a bigger budget."
+    }
+  },
+  "VERDICT": {
+    "reachable": true,
+    "reachable_at_engine_calls": 137347,
+    "the_only_verified_solving_engine_is_affordable_at_primary_cap": false,
+    "some_planning_capable_engine_is_affordable_at_primary_cap_conservative": true,
+    "some_planning_capable_engine_is_affordable_at_primary_cap_uncontended": true,
+    "label": "REACHABLE_AND_AFFORDABILITY_IS_ENGINE_DEPENDENT",
+    "conservative_primary_residual_s": 67.2,
+    "honest_reading": "The threshold is reachable at a fixed 137347 engine calls. Whether one attempt fits the per-game envelope depends on WHICH ENGINE is planning, and the range straddles the decision boundary: the fastest planning-capable engines cost ~49 s (fits the conservative 9h/110 residual of 67.2 s) while the ONLY engine verified to produce a real, arcade-replayed solve costs ~194 s (does not fit, by 3.3x). n=1 on the class that matters, so the fast tail is not evidence that a WORKING engine is ever cheap -- several of those fast engines are provably degenerate and would never reach the planner in production. The recommendation is therefore unchanged in direction: pursue cheaper SEARCH, not a bigger budget."
+  },
+  "RECOMMENDATION": {
+    "direction": "cheaper SEARCH, not a bigger budget",
+    "why_not_a_bigger_budget": "max_nodes is a COMPUTE knob and raising it is legitimate in principle -- it is not a quality gate. But the agent cannot reliably pay it: at the most likely cap (9h) and game count (~110), one attempt on the only engine verified to solve costs ~194 s against a conservative residual of 67.2 s.",
+    "levers_measured_and_REFUTED": {
+      "graded_exemplar_goal_gradient": "2.3x WORSE (317935 calls, plan length 22 not 11). Mean-Hamming-to-exemplar is noisily flat, so it misorders the frontier and destroys BFS depth-optimality.",
+      "inert_click_pruning": "0 candidates prunable -- no click was ever a strict no-op."
+    },
+    "lever_measured_and_CONFIRMED": {
+      "bytes_dedup_key": "1.288x faster, provably equivalent partition (same call count, same 12435 states, same plan). Consistent with the timer split: to_ascii is 24.9% of component time, and 1/(1-0.22) = 1.28."
+    },
+    "the_residual_gap_is_structural": "The engine is 69.5% of search time and it is LLM-GENERATED code, not ours; 90.2% of engine calls land on an already-seen grid at 18 candidates per expansion. So the remaining factor is in the BRANCHING FACTOR -- candidate generation and perception -- not in the frontier order. Both ordering levers were measured and refuted.",
+    "also_required": "budget the GATE and the PLANNER together: post-counter-fix they need the same ~137k calls, so raising one alone just moves which of the two refuses."
+  },
+  "LINTER_BUG_FOUND_AND_FIXED_WHILE_VERIFYING_THIS_ARTIFACT": {
+    "what": "adversarial_verify's `_ARC_GAME_SOLVE_CLAIM_RE` matched the bare substring `solv`, which fires inside UNRELATED LONGER WORDS whose meaning is the OPPOSITE of a solve claim: unre-SOLV-ed, re-SOLV-e, dis-SOLV-e.",
+    "how_it_surfaced": "This artifact's own verdict says affordability is UNRESOLVED. Combined with `used_env_source: True` (legitimately true -- the offline arcade reads environment_files) that substring alone produced a CRITICAL ARC_OUTER_LOOP_SOLVE flag on a pure cost measurement that claims no level at all.",
+    "fix": "`(?<![a-z])solv` -- a negative lookbehind for a letter, NOT `\\b`. A word boundary would have broken the real matches, because this project's verdicts are underscore-joined and `_` is a word character, so `\\bsolv` would MISS `complete_self_solve_...`.",
+    "bug_class": "CLAUDE.md 'QA-Layer Authenticity Discipline' -- substring matching without word/token boundaries. Origin bug #3 of that discipline was the same shape (`'diffusiongemma_met' in verdict` matching inside `meta_tensor`).",
+    "corpus_wide_backfill_dry_run": {
+      "artifacts_scanned": 15332,
+      "artifacts_whose_classification_changes": 64,
+      "true_positives_lost": 0,
+      "all_64_are_false_positives": true,
+      "evidence": "Every one of the 64 is a verdict containing 'resolved'/'unresolved' about something that is not an ARC solve: milestone retros, pytest-cascade fixes, LaTeX compiles, PyPI import errors, GateMate LUT mapping, sklearn prerequisites. Not one is a game-solve claim.",
+      "only_1_of_the_64_was_actually_being_CRITICAL_flagged": "this artifact -- the only one of the 64 that also declares an outer-loop input flag. The other 63 were LATENT false positives that would have quarantined honest work the moment any of them declared one.",
+      "one_of_the_64_is_literally_the_origin_bug_family": "results/experiment_5182_diffusiongemma_meta_tensor_rootcause_fix_v475.json, whose verdict is 'blocked_diffusiongemma_meta_tensor_bug_unresolved_v475'"
+    },
+    "regression_tests": "tests/python/test_adversarial_verify_arc_self_solve.py -- pinned in BOTH directions: the unresolved-verdict incident must not flag, 9 real solve phrasings must still match, and a genuine exhaustive-BFS calibration solve must still be CRITICAL."
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "outer_loop_arc_llm_on_wallclock_envelope_20260726",
+      "fields_imported": [
+        "per_game_cost_levels.400.mine_uncontended_mean_s_per_game",
+        "per_game_cost_levels.400.prior_b400_median_scaled_by_my_paired_ratio",
+        "two_component_cost_decomposition.400.non_llm_s_per_game_mean",
+        "headline.SHORT_ANSWER (for cap selection)"
+      ],
+      "sha256": "e32ed8d5127be7c66d06da59b33770701a1e497e22f7030a3c0e52591ac75000"
+    }
+  ],
+  "field_principles": {
+    "inference_substrate": "Declares what compute actually ran so the duration floor is the right one. No LLM is invoked here: engines are read from disk and from git, and the arcade is the offline simulator.",
+    "THE_THRESHOLD.budget_independent": "A threshold that moves with the budget would be a measurement of the budget, not of the problem. Bit-identical call counts at two budgets is the evidence that it does not.",
+    "PER_ATTEMPT_COST_DISTRIBUTION.n_engines_verified_to_produce_a_real_arcade_replayed_solve": "n=1 on the class the decision depends on. Stating it prevents the fast tail of degenerate engines from being read as evidence that a WORKING engine is ever cheap.",
+    "VERDICT.label": "An engine-dependent verdict is reported as engine-dependent rather than collapsed to a single word, because collapsing it is what made v1 wrong."
+  },
+  "code_commit_at_write": "f9a458e87594250d147b01dd902bbdda07bc3060",
+  "historical_artifacts_rewritten": [],
+  "reproducibility_checksum": "a8184069de551699227dade873f0294037187dcdf1715612e8357ecbde158fd2",
+  "inference_substrate_correction_20260730": "CORRECTED from 'offline_arcade_live_agent_runtime_self_discovery_no_llm' to 'aggregation_from_upstream_artifacts'. This artifact runs NO environment steps: it reads the sweep rows + the cited envelope artifact and does arithmetic, which is why duration_s is 0.002. The prior label was not merely imprecise, it was BELOW ITS OWN FLOOR (that substrate requires >=0.01s because a single real environment action takes non-zero time), so the declaration contradicted the measurement. The underlying MEASUREMENTS this aggregates were themselves live offline-arcade runs and are recorded in the scratch row files cited under THE_THRESHOLD / PER_ATTEMPT_COST_DISTRIBUTION; this correction changes the label of the AGGREGATION step only and moves no research number."
+}

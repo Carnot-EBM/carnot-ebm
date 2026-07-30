@@ -1,6 +1,80 @@
 # Carnot — Test Results
 
-**Last Updated:** 2026-04-14
+**Last Updated:** 2026-07-29 (treatment-activation pre-flight + the generator sampler-seed
+determinism check). Prior: 2026-04-14.
+
+## Treatment-Activation Pre-Flight + Generator Sampler Seed (2026-07-29, outer-loop)
+
+**inference_mode: LIVE** — a real `gemma-4-31B-it` Q4_K_M GGUF on the CUDA `llama-server` build,
+21,434 MiB resident per card on two RTX 3090s (bus 03:00.0 and 62:00.0, per-PID `nvidia-smi`
+attribution, not `CUDA_VISIBLE_DEVICES`). NOT the iGPU HIP build — each probe cell hard-blocks on
+`build-hip` in the bound binary, because there the 31B runs LLM-OFF while still reporting LLM-ON.
+
+### Unit / integration (all run, none skipped)
+
+| Suite | Tests | Result |
+|---|---|---|
+| `tests/python/test_treatment_activation_preflight.py` | 27 | pass |
+| `tests/python/test_arc_hv_progress_per_level_reset_2026_07_29.py` | 12 | pass |
+| `tests/python/test_arc_generator_sampling_seed_2026_07_29.py` | 12 | pass |
+| `tests/python/test_arc_actions_to_progress.py` (pre-existing, regression) | 16 | pass |
+| `tests/python/test_arc_hand_verifier_measurability_2026_07_29.py` + `test_arc_win_state_positive_example_2026_07_29.py` + `test_goal_repair_degenerate_predicate.py` + `test_arc_goal_predicate_live_veto.py` | 40 | pass |
+| world-model suites (`test_arc_agi3_world_model`, `..._change_gate`, `..._dsl`, `..._synth`, `..._trust_energy`, `test_codeonly_induce_scoping`, `test_e3_world_model_candidates_os_import`, `test_arc_per_level_goal_reinduction`, `test_arc_induce_prompt_large_grid_scalability`, `test_induce_split_fallback`) | 84 | pass |
+
+`scripts/test_suite_mutation_check.py --snapshot` was taken BEFORE each run and `--check` after;
+both reported `OK -- no tracked file was modified since the snapshot`. Zero `pytest.mark.skip` /
+`unittest.skip` / `pytest.skip` in any new file (the one grep hit is a docstring explaining why a
+skip would be wrong there).
+
+### E2E 1 — retrospective validation of the pre-flight against committed evidence
+
+Read-only over `results/arc_engine_retention_20260729/cells` (12 matched pairs) and
+`results/arc_heldout_31b_vs_9b_20260728/cells` (8 pairs). Both grids are REFUSED, which is the
+required outcome: both are independently known to have returned uninformative nulls.
+
+| Grid | IDENTICAL | TRUNCATION_ONLY | PERTURBED | MISSING | strict ceiling | best reachable p |
+|---|---|---|---|---|---|---|
+| engine-retention (ret0 vs ret1) | 8 | 3 | 1 | 0 | 1 | 1.0 |
+| held-out inducer (9b vs 31b) | 2 | 1 | 2 | 3 | 2 | 0.5 |
+
+With the A/A floor applied, the retention grid's ATTRIBUTABLE perturbation is 0 — its one
+perturbed cell (vc33) also differs under identical code.
+Artifact: `results/outer_loop_treatment_activation_preflight_retrospective_validation_20260729.json`.
+
+### E2E 2 — the sampler seed actually determinises the generator
+
+Direct against the loaded 31B on port 8171, temperature 0.4, a deliberately high-entropy prompt
+(`n_predict=48`), 4 identical requests each way:
+
+| Condition | Distinct completions of 4 |
+|---|---|
+| unseeded (today's shipped payload) | **3** |
+| `seed=9999` | **1** |
+
+A low-entropy control prompt ("count 1 to 6") produced 1 distinct completion in BOTH conditions,
+which is why the high-entropy prompt was required — the first version of this check used the
+low-entropy prompt and would have wrongly concluded the harness was already deterministic.
+
+### E2E 3 — the f9a458e87 perturbation probe (LIVE, in flight at hand-off)
+
+12 games x {`pre` = worktree at `aa8a38e31` + the seed shim, `post` = `f9a458e87`}, plus a `postb`
+A/A determinism control on the 3 fastest games. Per-cell: 60 actions, 1 induction, `explore_budget`
+24, `wall_s` 1200, hard cap 1500 with SIGTERM-before-SIGKILL so a killed cell still records
+`blocked_hard_timeout_sigterm` rather than vanishing. Each cell asserts its own fairness witnesses
+before measuring: the imported module path proves which arm's code ran, the sampler seed is read
+back through the shipped accessor, the per-cell engine store is asserted EMPTY, and an iGPU-bound
+binary or a wrong served model hard-blocks.
+
+First completed pair (ft09): `pre` and `post` loaded provably different module paths, sampled with
+the identical seed (1000000), each ran 1 induction with 3 refinement rounds ending
+`no_reachable_plan_after_refinement`, and produced **byte-identical** 28-action traces —
+classified IDENTICAL. Mechanistically consistent: this commit tightens a goal gate that was
+already refusing on that cell, so tightening it changes nothing there.
+
+Cells: `<scratch>/p2/pcells/`. Verdict builder: `<scratch>/p2/build_preflight_artifact.py`.
+Arithmetic early-stop: `<scratch>/p2/settled.py` exits 0 once
+`n_perturbed + n_pending < 6` (REFUSE certain) or `n_perturbed >= 6` (PASS certain), because every
+cell after that point cannot change the answer.
 
 ## Exp 316 Full-Scale Benchmark Results (2026-04-14)
 
@@ -272,3 +346,63 @@ states_expanded=116, errors=36 -- where before the fix the reference reseeded th
 the wall clock and every arm-E cell was an unrepeatable draw. The new error counter also makes the
 reference's livelock through our shim visible for the first time: 1,576-1,927 swallowed errors per
 2,001-action cell.
+
+## 2026-07-30 — review-fix verification
+
+All runs on `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python`, `--no-cov`
+(pytest `--cov` SIGABRTs on this repo under JAX/absl double-init), `-p no:randomly`.
+
+| Suite | Result |
+|---|---|
+| `test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py` | 7 passed (NEW — REQ-ARC-WMTE-6047) |
+| `test_arc_e3_evidence_write_guard_2026_07_30.py` | 6 passed (NEW — REQ-ARC-WMTE-6048) |
+| `test_treatment_activation_preflight.py` | 36 passed (was 27; +9, and 3 rewritten for the retraction) |
+| `test_arc_hv_progress_per_level_reset_2026_07_29.py` | 15 passed (was 12; +3 for `levels_entered`) |
+| `test_adversarial_verify_arc_self_solve.py` | 14 passed (+3 for the boundary-aware solve regex) |
+| `test_goal_repair_degenerate_predicate.py` | passed (unchanged — the real veto is not blunted) |
+| `test_arc_win_state_positive_example_2026_07_29.py` | passed (unchanged) |
+| `test_codeonly_induce_scoping.py` | 12 passed, and `results/arc_e3/g/world_model.py` mtime UNCHANGED |
+
+### Mechanical verification beyond the unit tests
+
+- **The evidence store is no longer touched.** `results/arc_e3/g/world_model.py` mtime was pinned
+  before the run and is unchanged after; `git status results/arc_e3/` clean.
+- **Corpus-wide dry run for the regex narrowing:** 15,332 artifacts scanned, 64 change
+  classification, all 64 false positives (verdicts saying "resolved"/"unresolved" about milestone
+  retros, pytest fixes, LaTeX compiles, GateMate LUT mapping), 0 true positives lost. Only 1 of the
+  64 was actually being flagged; the other 63 were latent.
+- **`adversarial_verify` on all four artifacts of this change: 0 flags each.**
+- **Reproduction gate on the planner's ka59 plan:** `reproduced: true`, `reached_level: 1`,
+  `checked_action6_clicks: 1`, `any_oob_action6_clicks: false`.
+- **The retention grid reclassifies to the honest partition** under the fixed classifier: 6
+  IDENTICAL / 3 TRUNCATION_ONLY / 2 BOTH_TRUNCATED / 1 PERTURBED, rate 1/7 = 0.1429, 42 pairs needed.
+
+### Honest note on the pre-flight's charitable ceiling
+
+With 5 truncation-affected cells rather than 3, the retention refusal's CHARITABLE ceiling is 6,
+which just reaches alpha=0.05 (p=0.03125). So that refusal no longer holds "even under the most
+generous possible coding of the missing observations" — it rests on the STRICT reading, in which a
+truncated cell is excluded rather than counted as a favourable discordant pair. That reading is the
+correct one, but the weaker margin is stated rather than buried.
+
+### Not verified
+
+- No live GPU A/B ran to completion this session; the f9a458e87 grid was stopped at 2 of 12 cells by
+  design (see `ops/known-issues.md` item 1).
+- The live seeding-determinism check is not re-run in CI (needs a 21 GiB resident model).
+
+### Artifact-freshness rebuild-and-diff (2026-07-30)
+
+| Artifact | Leaf values compared | Substantive diffs |
+|---|---|---|
+| `experiment_6011_world_model_change_gate_four_arm.json` | 48,295 | 0 |
+| `experiment_6012_hidden_state_trust_gate_hole.json` | 20,202 | 0 |
+| `experiment_6013_hidden_state_change_gate_closure.json` | 7,258 | 0 |
+| `experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json` | 1,245 | 7 — all its own recorded code-provenance hashes/mtimes plus `aggregation_wall_s` |
+| **total** | **77,000** | **zero research numbers moved** |
+
+Ignored fields: `run_date`, `duration_s`, `provenance`, `reproducibility_checksum`, `timestamp`,
+`elapsed_s`, `measurement_wall_s`, `wall_s`, `cell_wall_s`, `generated_at`, `code_commit_at_write`.
+Both evidence trees (`results/arc_e3`, `results/arc_e3_origin_fixtures`) stayed `git status` clean
+across all four rebuilds. `tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py`: 7
+passed.

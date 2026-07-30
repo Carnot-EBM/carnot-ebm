@@ -317,6 +317,55 @@ The merge MUST be implemented as a pure function so it is testable without the
 writer's network side effects, and its tests MUST be written against the
 actual record that was destroyed rather than a synthetic example.
 
+### REQ-HARNESS-6050: A Matched-Pair A/B Grid MUST Pass A Treatment-Activation Pre-Flight
+
+Before a matched-pair A/B grid is run on the live agent, a SHORT probe MUST be run
+per cell in both arms, the two arms' ACTION TRACES MUST be diffed, and the grid MUST
+be REFUSED unless the treatment perturbs enough cells for the planned test to be
+able to reach significance.
+
+Origin: on 2026-07-29 three A/B measurements on the live ARC agent each returned a
+null after hours of wall-clock. The post-mortem diffed the arms' action traces and
+found 8 of 12 cells byte-IDENTICAL, 3 truncation-only, and 1 genuinely perturbed. A
+byte-identical pair cannot differ on ANY downstream endpoint, so the ceiling on
+discordant pairs was 1 and the smallest p-value the grid could ever have reported
+was 1.0. The null was guaranteed before the first cell started and was knowable in
+minutes.
+
+The pre-flight MUST:
+
+- Classify every matched pair as IDENTICAL, TRUNCATION_ONLY, PERTURBED or MISSING.
+  TRUNCATION_ONLY (one arm cut short by a wall-clock cap, hard timeout or crash,
+  with both arms agreeing on every action they both took) is a MISSING OBSERVATION
+  and MUST NOT be scored as a zero, because a treatment that does more work is
+  systematically slower and coding its truncations as zeros biases against it.
+- Distinguish a truncation caused by a RESOURCE CAP from an early termination the
+  arm chose. The latter is a real behavioural difference and MUST be classified
+  PERTURBED.
+- DERIVE its threshold from the planned test rather than picking a number. For a
+  two-sided sign test over matched pairs, all discordant pairs one-way gives
+  `p = 2 * (1/2)**d`, so `d = 6` is the smallest count reaching `alpha = 0.05`
+  (d=5 gives 0.0625, d=6 gives 0.03125).
+- Take the ceiling on discordant pairs from PERTURBED cells only. A charitable
+  ceiling that also credits truncations MAY be reported for argument but MUST NOT
+  decide the verdict.
+- Measure an A/A NOISE FLOOR (one arm against a byte-identical replicate of itself)
+  and attribute a perturbation to the treatment only where the harness is
+  demonstrably deterministic on that cell. Where no noise floor was measured the
+  verdict MUST say so, because the ARC generator samples at a temperature and sends
+  no seed, so raw perturbation cannot be attributed to the treatment.
+- State on every verdict, PASS included, that PASS does not mean the experiment is
+  powered: perturbation is necessary but not sufficient for discordance on the
+  endpoint.
+
+A REFUSAL IS A SUCCESSFUL OUTCOME of the pre-flight. It converts "we measured it
+and found nothing" — which future planners read as evidence against the treatment —
+into "the treatment never activated, so we have learned nothing about it yet."
+
+The classifier and the verdict MUST be pure functions, testable with no GPU, and
+they MUST be validated RETROSPECTIVELY against a grid already known to have been
+underpowered. A pre-flight that cannot refuse a known-dead grid does not work.
+
 ## Scenarios
 
 ### SCENARIO-HARNESS-5940-1: A Reset Before A Level-Up Costs Score
@@ -512,6 +561,54 @@ not readable as already submitted
 **When** version 9 is re-prepped
 **Then** its own submission fields stay live and no history entry is created
 
+### SCENARIO-HARNESS-6050-1: A Byte-Identical Arm Pair Is Not A Tie
+
+**Given** two arms of a matched-pair A/B whose action traces are byte-identical on a cell
+**When** the pre-flight classifies that pair
+**Then** it MUST be classified IDENTICAL and MUST NOT contribute to the ceiling on
+discordant pairs, because no endpoint computed downstream of those actions can differ.
+
+### SCENARIO-HARNESS-6050-2: A Wall-Clock Truncation Is A Missing Observation
+
+**Given** one arm was cut short by a wall-clock cap and the two arms agreed on every
+action they both took
+**When** the pre-flight classifies that pair
+**Then** it MUST be classified TRUNCATION_ONLY and MUST NOT be scored as a zero for the
+truncated arm.
+
+**And Given** the shorter arm instead terminated on its own terms
+**Then** the pair MUST be classified PERTURBED, because an early stop the agent chose is
+a real behavioural difference.
+
+### SCENARIO-HARNESS-6050-3: The Grid Is Refused When No Outcome Could Reach Alpha
+
+**Given** the probe finds fewer PERTURBED cells than the derived threshold of 6
+**When** the pre-flight renders a verdict
+**Then** it MUST REFUSE the grid, and MUST report the best reachable p-value and the
+number of matched pairs the observed perturbation rate would require.
+
+### SCENARIO-HARNESS-6050-4: The Pre-Flight Refuses A Grid Already Known To Be Dead
+
+**Given** the 12 committed matched pairs of the 2026-07-29 engine-retention A/B
+(`results/arc_engine_retention_20260729/cells/`), independently known to be 8 identical
+/ 3 truncation-only / 1 perturbed
+**When** the pre-flight is run against them
+**Then** it MUST REFUSE, reporting a strict ceiling of 1 (best reachable p = 1.0), a
+charitable ceiling of 4 (best reachable p = 0.125), and 72 matched pairs needed at the
+observed perturbation rate.
+
+### SCENARIO-HARNESS-6050-5: A Nondeterministic Harness Cannot Buy A Pass
+
+**Given** every cell perturbs under A/B but every cell also perturbs under A/A
+**When** the pre-flight renders a verdict with the A/A noise floor supplied
+**Then** attributable perturbation MUST be 0 and the grid MUST be REFUSED, because a
+difference on a cell where the harness does not repeat itself cannot be attributed to
+the treatment.
+
+**And Given** no A/A noise floor was measured at all
+**Then** the verdict MUST carry an explicit warning that a PASS computed without one is
+uninterpretable.
+
 ### SCENARIO-HARNESS-SAMPLER-2: Future SpecAnn Proposals Rebut Rejection
 
 **Given** a future Phase 3 planning proposal recommends SpecAnn or Spectral
@@ -519,6 +616,45 @@ Annealing
 **When** it enters the research harness
 **Then** the proposal MUST document why the rejection rationale no longer
 applies.
+
+
+### SCENARIO-HARNESS-6050-6: Equal traces with both arms truncated are not a measurement
+GIVEN two arms that agree on every action and NEITHER finished
+WHEN the pair is classified
+THEN the class is `BOTH_TRUNCATED`, not `IDENTICAL`. It is a missing observation: neither arm was
+allowed to reach an endpoint, so the pair can neither show the treatment is inert nor serve as a
+determinism witness.
+
+### SCENARIO-HARNESS-6050-7: A truncated A/A pair cannot license attribution
+GIVEN six A/B-perturbed cells whose A/A replicates were each cut short
+WHEN the verdict is computed
+THEN it is REFUSE with `n_perturbed_attributable == 0`. A truncated A/A measures nothing, so it
+must never certify the harness as deterministic on that cell. Enforced twice — once structurally,
+and once at the point of use, because `noise_pairs` is plain data a caller can hand-build. With a
+genuine complete A/A floor the same A/B data PASSES, proving the refusal is caused by the
+truncation and not by an unrelated tightening.
+
+### SCENARIO-HARNESS-6050-8: Probing a subset decides against the PLANNED grid size
+GIVEN 4 of 12 probed cells perturb attributably (a 1-in-3 rate)
+WHEN `planned_n_cells` exceeds the probed count and a noise floor was measured
+THEN the decision uses the projected attributable count at the planned size: REFUSE at 12 and 15,
+PASS at 24. Without a measured noise floor the projection is refused outright, because forecasting
+an unattributed rate only predicts how much noise the larger grid will contain.
+
+### SCENARIO-HARNESS-6050-9: An unfinished grid is INCONCLUSIVE, never REFUSE
+GIVEN a grid stopped with cells still outstanding that could carry the ceiling to `required`
+WHEN the verdict is computed
+THEN it is `INCONCLUSIVE`, the report says the grid is INCOMPLETE and "This is NOT a refusal", and
+the interpretation states it must never be cited as evidence the treatment is inert. A PASS is
+never downgraded by outstanding cells (more cells cannot un-perturb measured ones), and outstanding
+cells that could NOT close the gap still yield a genuine REFUSE.
+
+### SCENARIO-HARNESS-6050-10: Truncated cells are excluded from the rate, not scored as zeros
+GIVEN a grid containing MISSING and TRUNCATION_ONLY cells
+WHEN the perturbation rate is computed
+THEN the denominator is USABLE observations only, and the comparable-cell rate is still emitted
+under a name that says it counts truncations as zeros — so a refusal that holds under both is
+visibly stronger than one that needs the favourable denominator.
 
 ## Implementation Status
 
@@ -542,4 +678,44 @@ applies.
 | REQ-HARNESS-5920 | Implemented (`python/carnot/experiment_5920_prospective_event_stream_admission.py`) | Implemented (`tests/python/test_experiment_5920_prospective_event_stream_admission.py`) |
 | REQ-HARNESS-5940 | Implemented (`scripts/arc_gateway_rescore.py`, `scripts/arc_gateway_exact_attribution.py`, `scripts/arc_leaderboard_eval.py` per-level reset instrumentation) | Implemented (`tests/python/test_arc_gateway_rescore.py`, `results/outer_loop_arc_gateway_rescore_20260726.json`) |
 | REQ-HARNESS-6040 | Implemented (`scripts/kaggle/prep_daily_submission.py:_merge_prep_status`) | Implemented (`tests/python/test_prep_daily_status_merge.py`, `ops/arc-daily-prep-status.json`) |
+| REQ-HARNESS-6050 | Implemented (`python/carnot/analysis/treatment_activation_preflight.py` — `classify_trace_pair`, `preflight_verdict`, `min_one_way_discordant_pairs`, `two_sided_sign_test_p`, `format_report`; pure, zero-GPU, threshold DERIVED from the sign test rather than hardcoded; A/A noise-floor attribution). **FOUR classes** — a 2026-07-30 review added `BOTH_TRUNCATED` because `classify_trace_pair` tested `a == b` BEFORE consulting completeness, so a pair in which NEITHER arm got past action 27 of a 400-action budget was labelled IDENTICAL and its recorded reason asserted "no downstream endpoint can differ" — unsupportable when neither arm reached an endpoint (live on cn04 and r11l, so the published retention partition of "8 identical / 3 truncated / 1 perturbed" over-counted IDENTICAL by two; the honest partition is 6 / 3 / 2 / 1). **THREE verdicts** — `INCONCLUSIVE` was added because every unrun cell classifies as MISSING and MISSING is not PERTURBED, so a partially-run probe returned REFUSE: the module's own "a missing observation is never a zero" principle violated at the verdict level, and it would have laundered a process decision (a probe stopped early because review found a bug in the arm under test) into a finding that the treatment is inert. Attribution now requires BOTH A/A arms complete, enforced twice (structurally via the class fix, and again at the point of use because `noise_pairs` is plain data a caller can hand-build). `planned_n_cells` now DECIDES: it was inert — only `ceiling_strict >= required` mattered, so a 33%-perturbation probe of 12 cells was refused at planned_n_cells = 12, 24, 48 AND 1000 alike, though 1000 at that rate expects ~333 against the 6 needed; projection is gated on a measured noise floor, because forecasting an unattributed rate just predicts how much noise the bigger grid will contain. The perturbation rate is now over USABLE observations: truncation-affected cells were in the denominator and never the numerator, i.e. scored as zeros, which this module's own class documentation forbids — and the bias has a direction, since the arm that gets truncated is systematically the slower one and a treatment that does more work is systematically slower. On the retention grid that is 1/7 = 0.1429 (42 pairs needed), not 1/12 = 0.0833 (72).) | Implemented (`tests/python/test_treatment_activation_preflight.py` — **36 tests**, including the RETROSPECTIVE validation against the 12 committed matched pairs of the 2026-07-29 engine-retention A/B, which the pre-flight correctly REFUSES: strict ceiling 1, best reachable p = 1.0. Read-only on `results/`.) **HONEST NOTE:** with 5 truncation-affected cells rather than 3, that refusal's CHARITABLE ceiling is now 6, which just reaches alpha=0.05 — so it no longer holds "even under the most generous possible coding of the missing observations" and rests on the strict reading. That reading is the correct one (coding a missing observation as favourable is the error this module exists to prevent), but the weaker margin is stated rather than buried. **RETRACTION (2026-07-30):** the previously-reported "free A/A noise floor" — built by pairing the retention grid's `ret1` cells against a DIFFERENT experiment's `31b` cells on the grounds that both were "retention ON at seed 1 on the same GGUF" — was NOT an A/A. The held-out cells ran before commit `11cd3c3a9` introduced engine retention at all and carry none of its diagnostic fields, so ≥6 agentic commits separate the sets and the comparison was an A/B of the treatment under test. The claims it supported ("2 of 5 cells diverge under IDENTICAL code", hence "vc33's attributable perturbation is ZERO") are WITHDRAWN from the artifact, the spec, ops docs and the tests. Replaced by a real same-commit A/A committed at `results/arc_goalspec_f9a458e87_preflight_20260730/cells` (`post` vs `postb`, both at `f9a458e87`, equality of ten witness fields asserted from the cells themselves rather than argued in prose): **1 of 2 pairs diverges EVEN WITH `CARNOT_ARC_GENERATOR_SEED` set** — ft09 at action 26, and the two runs disagreed on whether a plan was found at all (1 vs 0). So seeding the sampler is NECESSARY BUT NOT SUFFICIENT and a noise floor must be MEASURED per grid. n=2 supports that qualitative claim and no rate is asserted. The retention grid's one perturbed cell is now reported as UNATTRIBUTABLE, not proven-noise; the REFUSE verdict is unchanged either way, so the retraction costs a claim, not a decision. The invalid pairing is pinned as a test so it cannot quietly return, keyed on the fields the two cells RECORD. Three further review findings are each pinned: the CLI refuses to pick silently between duplicate `arm__cell__*` records (it took `sorted(matches)[0]`, so a second seed or re-run replicate would have been neither read, nor reported, nor counted as MISSING — `--suffix` is the explicit resolution and multiple matches now exit 2); the verdict carries per-cell record provenance so a reader can see WHICH file each number came from; and the module docstring's advice to build a floor from "cells from a DIFFERENT experiment that happen to share treatment, seed, model and game" — which is exactly the retracted practice — was corrected, not softened. **The probe is NOT cheap on this path:** one 31B induction is 200–1200 s, so a 24-cell probe costs roughly what the grid it screens costs; the leverage came entirely from the FREE retrospective use. |
 | REQ-HARNESS-SAMPLER-NO-SPECANN | Implemented (`_bmad/architecture.md`, `ops/exclusion_manifest.yaml`) | Implemented (`results/experiment_1563_specann_rejection_architecture_record.json`) |
+
+## REQ-HARNESS-6051: A Verified-Inert Code Drift MAY Be Acknowledged, Never Silently Bumped
+
+`artifact_freshness_lint` refuses a commit that leaves a registered artifact stale w.r.t. the code
+that built it. Three registered artifacts declare a code dependency but NO `rebuild_command`, so when
+that dependency legitimately changes the author cannot rebuild — and the only remaining moves were to
+edit the recorded sha256 silently or to pass `--no-verify`. The lint's own docstring names the second
+as the failure mode to avoid; the first is worse, because it launders an unverified change into a
+verified-looking provenance block.
+
+### SCENARIO-HARNESS-6051-1: A complete acknowledgement clears the drift
+GIVEN a `provenance.freshness_acknowledgements` entry naming `path`, `sha256_was`, the EXACT
+`sha256_now`, a non-empty `reason` and a non-empty `evidence`
+WHEN the lint checks the artifact
+THEN the status is `fresh` and the detail line says `drift ACKNOWLEDGED as verified-inert`.
+
+### SCENARIO-HARNESS-6051-2: An acknowledgement without a reason or evidence is IGNORED
+GIVEN an entry with an empty or whitespace `reason` or `evidence`
+WHEN the lint checks the artifact
+THEN it remains `stale`. An acknowledgement that does not say why is indistinguishable from a silent
+hash bump, so it must not clear anything.
+
+### SCENARIO-HARNESS-6051-3: The acknowledgement is pinned to one exact hash
+GIVEN an acknowledgement for hash H
+WHEN the dependency is edited again, producing H'
+THEN the acknowledgement no longer applies and the artifact goes stale again. This is the safety
+property: an acknowledgement can never become a standing exemption for a file.
+
+### SCENARIO-HARNESS-6051-4: A malformed block is empty, not fatal
+GIVEN a missing, non-list, or garbage `freshness_acknowledgements`
+WHEN the lint runs
+THEN it yields no acknowledgements and does not raise. A crash in the freshness layer blocks every
+commit while reporting nothing about staleness, which is strictly worse than a miss.
+
+## Implementation Status (REQ-HARNESS-6051)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-6051 | `scripts/artifact_freshness_lint.py:_acknowledged_inert_drift` + the per-dependency branch in `check_artifact`, which reports acknowledged drift explicitly in the `fresh` detail rather than hiding it. | `tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py` (7 tests) including an end-to-end pass through `check_artifact` (stale → acknowledged-fresh → stale again for the wrong hash) and a test asserting the three real committed acknowledgements are well-formed and name checkable evidence. **Applied 2026-07-30 to the three artifacts with no `rebuild_command`, and ONLY after the drift was verified inert two ways:** structurally (`_guard_engine_write`'s first statement is an early return when `PYTEST_CURRENT_TEST` is unset, and the module diff is purely additive — zero removed or modified lines) and EMPIRICALLY (the four registered artifacts that DO have a rebuild command were rebuilt in place and deep-diffed: **77,000 leaf values compared, zero research numbers moved** — only `elapsed_s`/`measurement_wall_s` timing jitter and, in exp6021, its own recorded code-provenance hashes). Preferring the rebuild where one exists is the documented rule: it proves inertness by construction rather than by argument. |

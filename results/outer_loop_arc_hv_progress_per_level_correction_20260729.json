@@ -1,0 +1,358 @@
+{
+  "actions_to_progress_corpus_checked_and_unaffected": [
+    {
+      "artifact": "results/experiment_5720_actions_to_progress_reason_ab.json",
+      "n_rows": 24,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5721_actions_to_progress_retrieval_ab.json",
+      "n_rows": 36,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5722_generator_swap_gemma31_ab.json",
+      "n_rows": 24,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5723_generator_swap_gemma12_ab.buggy_prefix_20260718.json",
+      "n_rows": 36,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5723_generator_swap_gemma12_ab.json",
+      "n_rows": 36,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5724_thinkingcap_token_efficient_reason_ab.json",
+      "n_rows": 36,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5725_thinkingcap_chat_template_reason_ab.json",
+      "n_rows": 36,
+      "n_rows_with_a_level_gain": 0
+    },
+    {
+      "artifact": "results/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.json",
+      "n_rows": 80,
+      "n_rows_with_a_level_gain": 0
+    }
+  ],
+  "actions_to_progress_corpus_finding": "ZERO rows across the whole experiment_57xx actions-to-progress A/B corpus are affected, because not one of those runs ever levelled up. That is itself worth recording: the metric's validity was assessed on a corpus in which its own level-up branch never executed.",
+  "code_commit_at_write": "f9a458e87594250d147b01dd902bbdda07bc3060",
+  "corrections": [
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_engine_retention_20260729/cells/ret0__tu93__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.8981
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "tu93",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 6.125,
+      "recorded_hv_progress": 0.8981,
+      "recorded_start_hv": 60.125,
+      "sha256_of_original": "3671f18b8645dee08c1868cd2ac4daae8dec21e9f93b67c3bfce835fad97fbb8"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_engine_retention_20260729/cells/ret0__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 2,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "0ce1c5512c7d01ca4eb48ab6cc629df9870821bd320e9290604c3c7264d73ac6"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_engine_retention_20260729/cells/ret1__tu93__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.8981
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "tu93",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 6.125,
+      "recorded_hv_progress": 0.8981,
+      "recorded_start_hv": 60.125,
+      "sha256_of_original": "a967805d286021c76a30e2a4e175a85c2aea1dca2f9b1552e3bcf5f97a133a7b"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_engine_retention_20260729/cells/ret1__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 2,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "75ba64afc3ead51d26cbdd8bfc6eb89e9b8b8e3e92c29f78409aeef1358dd962"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_goalspec_f9a458e87_preflight_20260730/cells/post__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "4bd2681b38066e9bd06ce52c5181c5b50dad79050e60f16a7c4f0d59ebd47cdb"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_goalspec_f9a458e87_preflight_20260730/cells/postb__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "c8478a4c6698ea51410ead77d7c16bae19abf442d732a2ee8e34328ebda43cd5"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_goalspec_f9a458e87_preflight_20260730/cells/pre__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "0fe32f708f06ff2b0f76ff15c0f4376b19ceb1c903bfa55bc655ed7c1e38c9eb"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_heldout_31b_vs_9b_20260728/cells/31b__lp85__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.8
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "lp85",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 3.0,
+      "recorded_hv_progress": 0.8,
+      "recorded_start_hv": 15.0,
+      "sha256_of_original": "d95045834d1fe79da64140c48ea69d61f13041f9a998f0d8e39b0a8094a4ac56"
+    },
+    {
+      "arm": "frozen_gemma_pin",
+      "artifact": "results/arc_heldout_31b_vs_9b_20260728/cells/31b__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 2,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "b158ab46b12f8a986921425db7bf12eea4be7c15811784bd68f630234a141a93"
+    },
+    {
+      "arm": "frozen",
+      "artifact": "results/arc_heldout_31b_vs_9b_20260728/cells/9b__tu93__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.8981
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "tu93",
+      "json_path_of_row": "$.result",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 6.125,
+      "recorded_hv_progress": 0.8981,
+      "recorded_start_hv": 60.125,
+      "sha256_of_original": "df9329f98b55a7d8605bfa45dfc63350179fd8a4cbddc15d9692402f06615622"
+    },
+    {
+      "arm": "frozen",
+      "artifact": "results/arc_heldout_31b_vs_9b_20260728/cells/9b__vc33__s1.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": "vc33",
+      "json_path_of_row": "$.result",
+      "levels_gained": 2,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time.",
+      "recorded_best_hv": 18.0,
+      "recorded_hv_progress": 0.0,
+      "recorded_start_hv": 18.0,
+      "sha256_of_original": "7b33ab16d07b4f6278d04707e06982e0e8166d9c7a957a91d0b1f94a604e8ad0"
+    },
+    {
+      "arm": null,
+      "artifact": "results/outer_loop_arc_structured_nav_broader_ab_20260724.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": null,
+      "json_path_of_row": "$.per_game[0].structured_nav_on",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time; this row kept no start_hv/best_hv at all, so only the completed-level credit is reconstructable.",
+      "recorded_best_hv": null,
+      "recorded_hv_progress": 0.8981,
+      "recorded_start_hv": null,
+      "sha256_of_original": "6441e3627aa85d69a59a1ccc3cf58ea3d6f81e03e383a2521f20540b1a0ad122"
+    },
+    {
+      "arm": null,
+      "artifact": "results/outer_loop_arc_structured_nav_scored_ab_20260723.json",
+      "corrected_hv_progress_best_level": 1.0,
+      "corrected_per_level_reconstruction": {
+        "0": 1.0,
+        "1": 0.0
+      },
+      "correction_is_exact_for_best_level": true,
+      "game": null,
+      "json_path_of_row": "$.per_game[0].structured_nav_on",
+      "levels_gained": 1,
+      "note": "The best-over-levels figure is EXACT: every level the run left for a higher one was completed per the level counter, so it scores 1.0 regardless of any verifier reading. The final level's fraction is a reconstruction because per-level start/best were not recorded at the time; this row kept no start_hv/best_hv at all, so only the completed-level credit is reconstructable.",
+      "recorded_best_hv": null,
+      "recorded_hv_progress": 0.8981,
+      "recorded_start_hv": null,
+      "sha256_of_original": "9144668d98d03c7ba4a512e79de645092be593f01a25bbbe67db367970a639c8"
+    }
+  ],
+  "duration_s": 13.4653,
+  "experiment": "outer_loop_arc_hv_progress_per_level_correction_20260729",
+  "field_principles": {
+    "correction_is_exact_for_best_level": "Separates what is exactly recoverable (completed-level credit, which depends only on the level counter) from what is a lower-bound reconstruction (the final level's partial fraction, whose per-level start/best were never recorded).",
+    "historical_artifacts_rewritten": "Explicitly empty. A correction artifact must make it checkable that it corrected the record by ADDING rather than by editing (never-prune).",
+    "sha256_of_original": "Pins each correction to the exact bytes it corrects, so a reader can verify the original was not edited and a future re-run can detect drift."
+  },
+  "historical_artifacts_rewritten": [],
+  "honest_verdict": "complete_hv_progress_per_level_reset_fixed_13_recorded_numbers_change_none_rewritten",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_artifacts_scanned": 15364,
+  "n_recorded_numbers_changed": 13,
+  "n_recorded_numbers_changed_breakdown": {
+    "in_artifacts_committed_BEFORE_this_change": 10,
+    "in_cells_committed_BY_this_change": 3,
+    "why_split": "The second group is the A/A probe evidence this same change commits. Those cells were produced by the code as it stood at f9a458e87 -- i.e. BEFORE the levels_entered fix -- so their recorded numbers really are affected, but calling them 'historical records corrected' would overstate the reach of the defect. The first group is the honest measure of that."
+  },
+  "n_unaffected_retention_cells": 20,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "committed retention cells readable"
+    },
+    {
+      "available": true,
+      "resource": "no write to results/arc_e3 or other evidence dirs"
+    }
+  ],
+  "question": "`run_bounded_progress` never reset the hand-verifier baseline at a level-up, so a later level's board distance was scored against the FIRST level's starting distance. Which previously-recorded numbers change once the baseline is rebased per level?",
+  "random_seed": 6045,
+  "read_game_source": false,
+  "reproducibility_checksum": "5e18c009dc8ee5e21e28ccaa013b451f2f037557083fe3199025e5a9d61816c1",
+  "requirements": [
+    "REQ-ARC-WMTE-6045"
+  ],
+  "scan_is_exhaustive_over_results_tree": true,
+  "schema": "carnot.outer_loop.metric_definition_correction.v1",
+  "solve_provenance": "development_proxy",
+  "the_defect": {
+    "downstream_consequence": "That 0.0 was pooled into the rank correlation that concluded the actions-to-progress metric was NOT_A_VALID_PROXY. The conclusion is NOT retracted here -- this artifact only corrects the inputs and records that the correlation was computed over a corrupted vc33 value.",
+    "exemplar": "vc33 banked 2 levels -- the most of any cell in the 24-cell retention corpus -- with start_hv == best_hv == 18.0 and hv_progress == 0.0. The best run in the corpus read as having made no progress at all.",
+    "mechanism": "`start_hv` was set on the first frame and `best_hv` was a running minimum; neither was reset at a level-up. The frame returned by the step that COMPLETES a level is already the NEXT level's opening board, so the verifier is never read at a solved state, the global minimum stays pinned at `start_hv`, and the run scores 0.0.",
+    "site": "python/carnot/agentic/arc_actions_to_progress.py:run_bounded_progress"
+  },
+  "the_fix": {
+    "never_prune": "The global fields start_hv / best_hv / hv_progress are preserved unchanged, and the global value is additionally recorded as `hv_progress_global_legacy`, so every historical number stays readable and no reader has to guess which definition produced it.",
+    "rule": "A level the agent LEFT for a higher one scores 1.0 -- it was completed, per the LEVEL COUNTER (the win oracle, not a heuristic). The level the run ENDED on is scored by the verifier against ITS OWN opening board. The measurability guard (REQ-ARC-WMTE-6044) applies to the final level only."
+  },
+  "unaffected_retention_cells_zero_levels_gained": [
+    "ret0__cd82__s1.json",
+    "ret0__cn04__s1.json",
+    "ret0__ft09__s1.json",
+    "ret0__lp85__s1.json",
+    "ret0__ls20__s1.json",
+    "ret0__r11l__s1.json",
+    "ret0__sc25__s1.json",
+    "ret0__su15__s1.json",
+    "ret0__tn36__s1.json",
+    "ret0__tr87__s1.json",
+    "ret1__cd82__s1.json",
+    "ret1__cn04__s1.json",
+    "ret1__ft09__s1.json",
+    "ret1__lp85__s1.json",
+    "ret1__ls20__s1.json",
+    "ret1__r11l__s1.json",
+    "ret1__sc25__s1.json",
+    "ret1__su15__s1.json",
+    "ret1__tn36__s1.json",
+    "ret1__tr87__s1.json"
+  ],
+  "used_env_source": false,
+  "verifier_is_oracle": false
+}

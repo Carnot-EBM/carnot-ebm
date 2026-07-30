@@ -79,6 +79,52 @@ E3_DIR = (
     if os.environ.get("CARNOT_ARC_E3_DIR")
     else (REPO / "results" / "arc_e3")
 )
+# The tracked evidence store, named separately from `E3_DIR` so the guard below can tell "the
+# default location" from "wherever this process was redirected to".
+_TRACKED_E3_EVIDENCE_DIR = REPO / "results" / "arc_e3"
+
+
+def _guard_engine_write(path: Path) -> None:
+    """Refuse to overwrite the TRACKED evidence store from inside a test (2026-07-30).
+
+    THE INCIDENT. `tests/python/test_codeonly_induce_scoping.py` drives `LocalGGUFProposer.induce`
+    with a stubbed `urlopen`, and did not redirect `E3_DIR`. So running the suite wrote
+    `results/arc_e3/g/world_model.py` -- a TRACKED file in a store this project treats as
+    read-only evidence. It was caught only because the stubbed response happened to be
+    byte-identical to the committed content, so `git status` stayed clean. A different stub body
+    would have silently clobbered committed evidence, and the very next `git add -A` would have
+    committed the clobber.
+
+    WHY THE GUARD IS SCOPED TO PYTEST, and not to writes-in-general. The LIVE agent legitimately
+    writes induced engines into this exact directory -- that is what the store is FOR -- so a
+    blanket refusal would break production, which is why the 2026-07-29 note above declined to
+    change write routing at all. But a write to the tracked store from inside a test is never
+    legitimate: a test that needs an engine store needs its OWN. `PYTEST_CURRENT_TEST` is set by
+    pytest for the duration of each test, so it identifies exactly that situation and nothing else.
+
+    The escape hatch (`CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE=1`) exists because a test whose PURPOSE
+    is to exercise the default-path write should be able to say so out loud.
+    """
+    if not os.environ.get("PYTEST_CURRENT_TEST"):
+        return
+    if os.environ.get("CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE") == "1":
+        return
+    try:
+        resolved = path.resolve()
+        tracked = _TRACKED_E3_EVIDENCE_DIR.resolve()
+    except OSError:  # pragma: no cover - resolve() on an unreadable parent
+        return
+    if resolved == tracked or tracked in resolved.parents:
+        raise RuntimeError(
+            f"refusing to write {resolved} from inside a test: results/arc_e3 is TRACKED, "
+            f"read-only evidence. Redirect the store for this test -- set CARNOT_ARC_E3_DIR "
+            f"before the interpreter starts, or monkeypatch "
+            f"`carnot.agentic.arc_executable_world_model.E3_DIR` to a tmp_path. If the write is "
+            f"deliberately exercising the default path, set "
+            f"CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE=1."
+        )
+
+
 # Pristine, READ-ONLY copies of the engines as they stood at the commit that named them the
 # GAP-WM-TRUST-GATE origin incident. The mutable store above is rewritten by any induction
 # run, so a test that asserts "the new gate rejects the real degenerate engines" must read
@@ -2711,6 +2757,7 @@ class CodexProposer:
         *,
         previous_level_complete_grid: Optional[np.ndarray] = None,
     ) -> tuple[bool, str]:
+        _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
         return _codex(
             induce_prompt(
@@ -4155,6 +4202,57 @@ class LocalGGUFProposer:
     def _url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
 
+    @staticmethod
+    def sampling_seed(attempt: int = 0) -> int | None:
+        """OPT-IN sampler seed for the `/completion` payload. ``None`` = today's behaviour exactly.
+
+        WHY THIS EXISTS (measured 2026-07-29, and it is the root cause of three wasted A/B runs).
+        Every generation this class issues goes out at ``temperature = 0.2 + 0.1*attempt`` --
+        NONZERO -- and with NO ``seed`` field. `llama-server` defaults an absent seed to -1, which
+        means "pick a fresh random one", so **two runs of identical code on the identical game with
+        the identical harness `seed` produce different LLM output**. The harness `seed` argument
+        seeds `random`/`numpy` inside the driver; it never reached the server's sampler.
+
+        The cost of that gap, measured rather than assumed: comparing two runs that share the same
+        treatment, seed, model file and game (`ret1` in
+        `results/arc_engine_retention_20260729/cells` against `31b` in
+        `results/arc_heldout_31b_vs_9b_20260728/cells`), **2 of 5 cells diverge under IDENTICAL
+        CODE** -- a 40% nondeterminism rate. That floor is at least as large as any treatment
+        effect yet measured on this path, so an A/B here is uninterpretable without an A/A control
+        no matter how many cells it runs. It is why the engine-retention grid's single "perturbed"
+        cell (vc33, divergence at action index 17) turned out to perturb under A/A too, and why
+        four runs spanning two different treatments in two different experiments all diverge at
+        that same index 17 while the partition crosses treatment lines.
+
+        THE DESIGN, and why each choice is deliberate:
+
+        * **Default OFF.** With ``CARNOT_ARC_GENERATOR_SEED`` unset this returns None and the
+          caller omits the field entirely, so the payload is byte-identical to today's. The live
+          scored agent's behaviour is unchanged unless an operator opts in. Determinism is a
+          measurement property, and quietly changing how the scored agent samples is not a
+          measurement change -- it is a behaviour change, and it is not this function's to make.
+        * **The seed VARIES WITH `attempt`.** A single fixed seed would break the retry ladder:
+          the whole point of ``0.2 + 0.1*attempt`` is that a failed induction is retried with more
+          diversity, and re-sending the same seed at a higher temperature would still re-explore,
+          but pinning it would make attempt 2 far more correlated with attempt 1 than intended.
+          ``base * 1000 + attempt`` keeps every attempt distinct while making the WHOLE RUN
+          reproducible, which is the property an A/B needs.
+        * **Non-integer or absent values fall back to None** rather than raising. A malformed env
+          var must not take down a live episode; it should just leave behaviour as it is today.
+
+        With this set, a `pre` vs `post` trace difference is attributable to the code change
+        without needing a third arm -- and an A/A arm should come back byte-identical, which is a
+        cheap positive control on the determinism itself.
+        """
+        raw = os.environ.get("CARNOT_ARC_GENERATOR_SEED")
+        if raw is None or raw.strip() == "":
+            return None
+        try:
+            base = int(raw)
+        except (TypeError, ValueError):
+            return None
+        return base * 1000 + int(attempt)
+
     def _note_server_failure(self, diagnostic: str) -> None:
         """Count + KEEP a server-side failure diagnostic (bounded, so a storm cannot grow
         without limit). This is the record the scored path never had."""
@@ -4263,6 +4361,7 @@ class LocalGGUFProposer:
         max_tokens: int,
         temperature: float,
         stop: Optional[list],
+        attempt: int = 0,
     ) -> tuple[dict, str]:
         """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
         applies the GGUF's OWN embedded chat template -- the turn delimiters Qwen3.6/ThinkingCap
@@ -4289,6 +4388,14 @@ class LocalGGUFProposer:
             "temperature": float(temperature),
             "cache_prompt": True,
         }
+        # Same opt-in determinism as the raw /completion path -- it must be on BOTH, or the
+        # chat-template route (which Qwen3.6/ThinkingCap take) would stay nondeterministic while
+        # the artifact claimed a seeded run. `attempt` is threaded in from the retry ladder so
+        # this route gets the SAME per-attempt seed the /completion route does; without it the
+        # chat path would reuse one seed across a ladder whose whole purpose is diversity.
+        _seed = self.sampling_seed(attempt)
+        if _seed is not None:
+            payload["seed"] = _seed
         if stop:
             payload["stop"] = list(stop)
         req = urllib.request.Request(
@@ -4775,6 +4882,12 @@ class LocalGGUFProposer:
                 "temperature": 0.2 + 0.1 * attempt,
                 "cache_prompt": True,
             }
+            # OPT-IN determinism. Absent CARNOT_ARC_GENERATOR_SEED this adds nothing and the
+            # payload is byte-identical to before. See `sampling_seed` for why the default must
+            # stay off and why the seed varies with `attempt`.
+            _seed = self.sampling_seed(attempt)
+            if _seed is not None:
+                _payload["seed"] = _seed
             if _stop_seq:
                 _payload["stop"] = _stop_seq
             body = _json.dumps(_payload).encode()
@@ -4787,6 +4900,7 @@ class LocalGGUFProposer:
                         max_tokens=self.max_tokens,
                         temperature=_payload["temperature"],
                         stop=_stop_seq,
+                        attempt=attempt,
                     )
                 else:
                     req = urllib.request.Request(
@@ -4876,6 +4990,11 @@ class LocalGGUFProposer:
             "temperature": float(temperature),
             "cache_prompt": True,
         }
+        # Opt-in determinism on the third and last generation path (`complete_text`), so no route
+        # out of this class can be nondeterministic while another is seeded.
+        _seed = self.sampling_seed(0)
+        if _seed is not None:
+            payload["seed"] = _seed
         if stop:
             payload["stop"] = list(stop)
         body = _json.dumps(payload).encode()
@@ -4920,6 +5039,7 @@ class LocalGGUFProposer:
     def _gen_to_file(
         self, game: str, prompt: str, *, codeonly_eligible: bool = False
     ) -> tuple[bool, str]:
+        _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
         ok, code = self.generate(
             prompt,
@@ -4938,6 +5058,7 @@ class LocalGGUFProposer:
             self._proc = None
 
     def _write_world_model(self, game: str, code: str, note: str = "") -> tuple[bool, str]:
+        _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
         (E3_DIR / game / "world_model.py").write_text(code)
         msg = "local gguf (GPU server) wrote world_model.py"

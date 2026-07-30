@@ -301,6 +301,34 @@ class ProgressResult:
     # then yields hv_progress ~= 1.0 FOR FREE -- ceiling corruption that looks like near-perfect
     # progress. Recorded per cell so a suspiciously high hv_progress can be checked against it.
     hv_sentinel_frac: Optional[float] = None
+    # ------------------------------------------------------------------------------------------
+    # PER-LEVEL BASELINE (2026-07-29). `start_hv`/`best_hv` above are GLOBAL over the whole run:
+    # `start_hv` is the very first frame's distance and `best_hv` is the running minimum, and
+    # NEITHER was reset when the agent levelled up. So on level 2 the board's distance-to-goal was
+    # being scored against LEVEL 1's starting distance -- two different boards, two different goals,
+    # one baseline.
+    #
+    # That is not a rounding problem, it inverts the metric on exactly the runs that matter. vc33
+    # banked TWO levels -- the best cell in the entire 24-cell retention corpus -- and scored
+    # `hv_progress = 0.0`, because the frame returned by the step that COMPLETES a level is already
+    # the NEXT level's opening board, so the distance never dips below level 1's start and the
+    # global minimum stays pinned at `start_hv`. The single most successful run in the corpus was
+    # therefore recorded as having made no progress at all.
+    #
+    # The fix keeps the global fields untouched (never-prune: every previously-recorded number
+    # remains readable and reproducible) and ADDS a per-level track. `hv_progress_per_level` is the
+    # honest one:
+    #   * a level the agent COMPLETED scores 1.0 -- it reached that level's goal, by the oracle
+    #     (the level counter), which is the strongest possible statement about that level
+    #   * the level the run ENDED on scores its own `(start - best) / max(|start|, 1)` against ITS
+    #     OWN opening board
+    # and `hv_progress_best_level` is the max over levels, which is what a consumer wanting one
+    # number should read instead of `hv_progress`.
+    hv_progress_per_level: dict[str, float] = field(default_factory=dict)
+    hv_progress_best_level: Optional[float] = None
+    # The global, pre-2026-07-29 value, preserved under an explicit name so historical artifacts
+    # stay comparable and nobody has to guess which definition a number came from.
+    hv_progress_global_legacy: Optional[float] = None
 
     def to_row(
         self, *, include_events: bool = False, include_trace: bool = False
@@ -496,6 +524,73 @@ def _summarize_inductions(events: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def per_level_hv_progress(
+    hv_per_level: dict[int, dict[str, float]],
+    hv_level_seen: list[int],
+    hv_measurable: Optional[bool],
+    *,
+    levels_entered: Optional[list[int]] = None,
+) -> tuple[dict[str, float], Optional[float]]:
+    """Per-level hand-verifier progress, each level scored against ITS OWN opening board.
+
+    THE BUG THIS REPLACES (2026-07-29). The run-level `hv_progress` is
+    ``(start_hv - best_hv) / start_hv`` where `best_hv` is a running minimum that was NEVER
+    reset at a level-up. So once the agent advanced a level, the new board's distance-to-goal
+    was being compared against the PREVIOUS level's starting distance -- two different boards,
+    two different goals, one baseline.
+
+    It inverted the metric on precisely the runs worth measuring. The frame returned by the
+    step that COMPLETES a level is already the NEXT level's opening board, so the verifier is
+    never read at the solved state; the global minimum therefore stays pinned at `start_hv` and
+    the run scores 0.0. vc33 banked TWO levels -- the most of any cell in the 24-cell retention
+    corpus -- and recorded `hv_progress = 0.0`. The best run in the corpus read as no progress.
+
+    THE RULE HERE, and why each half is justified:
+
+      * a level the agent LEFT for a higher one was COMPLETED, and the level counter says so.
+        That counter is the win oracle, not a heuristic, so the level's progress is 1.0 by
+        definition -- independent of whatever the hand verifier managed to read before the
+        board flipped, and independent of whether the verifier is measurable at all.
+      * the level the run ENDED on is the only one still in progress, so it is the only one the
+        verifier scores, and it is scored against its OWN opening board.
+
+    The measurability guard (`hv_progress_measurable`) applies to the final level only: an
+    immovable verifier cannot evidence PARTIAL progress, so that entry is omitted rather than
+    recorded as a 0.0 that a downstream mean would swallow. A completed level's 1.0 survives
+    because it never depended on the verifier.
+
+    ``levels_entered`` IS WHAT MAKES THE FIRST BULLET TRUE (2026-07-30 review). Without it this
+    function derived the level set from `hv_level_seen`, which is appended ONLY inside the branch
+    where a hand-verifier reading was successfully obtained. So a level the agent entered,
+    completed and left WITHOUT the verifier ever returning a value for it was invisible here and
+    received no credit -- while the docstring claimed the 1.0 was awarded "independent of whether
+    the verifier is measurable at all", which held only once at least one reading existed at that
+    level. Passing the level counter's own entry order closes the gap; the claim and the code now
+    agree. It defaults to ``hv_level_seen`` so existing callers keep their behaviour exactly.
+
+    Returns ``(per_level_by_str_key, best_over_levels)``. The dict is keyed by string so it
+    round-trips through JSON unchanged.
+    """
+    # The credit set is the levels the agent actually ENTERED, per the level counter. The final
+    # level is the LAST ONE ENTERED, which after a mid-run RESET may be lower than the maximum
+    # ever reached -- correctly so: a higher level that was left behind was completed, and the
+    # level the run ended on is the one still in progress.
+    entered = list(levels_entered) if levels_entered else list(hv_level_seen)
+    final_level = entered[-1] if entered else None
+    per_level: dict[str, float] = {}
+    for lvl_key in entered:
+        if lvl_key != final_level:
+            # Completed. Credited from the counter alone -- no verifier reading required.
+            per_level[str(lvl_key)] = 1.0
+            continue
+        rec = hv_per_level.get(lvl_key)
+        if rec is not None and hv_measurable is not False:
+            per_level[str(lvl_key)] = round(
+                max(0.0, rec["start"] - rec["best"]) / max(abs(rec["start"]), 1.0), 4
+            )
+    return per_level, (max(per_level.values()) if per_level else None)
+
+
 def run_bounded_progress(
     game: str,
     arm: str,
@@ -571,6 +666,18 @@ def run_bounded_progress(
     start = best = None
     level_up_actions: list[int] = []
     start_hv = best_hv = None
+    # PER-LEVEL hand-verifier baseline (2026-07-29). See ProgressResult.hv_progress_per_level:
+    # the global `start_hv`/`best_hv` above are never reset at a level-up, so a later level's
+    # board distance was being scored against the FIRST level's starting distance. These track
+    # each level against its own opening board. `hv_level_seen` preserves the order levels were
+    # entered in, so a level the agent completed can be told apart from the one it ended on.
+    hv_per_level: dict[int, dict[str, float]] = {}
+    hv_level_seen: list[int] = []
+    # Levels ENTERED per the level counter, in entry order, independent of the verifier. This is
+    # the credit set for `per_level_hv_progress`; `hv_level_seen` only records where a reading
+    # happened to land, which is not the same thing (see that function's docstring).
+    levels_entered: list[int] = []
+    levels_entered_set: set[int] = set()
 
     try:
         pol = E3AgentPolicy(
@@ -625,6 +732,15 @@ def run_bounded_progress(
                         revisit += 1
                     seen.add(h)
             lvl = _level_of(latest)
+            # LEVELS ENTERED, from the level counter alone (2026-07-30). Deliberately outside the
+            # `hv_fn is not None` block below: a level the agent entered and completed without the
+            # hand verifier ever returning a value must still earn its 1.0, and deriving the level
+            # set from verifier readings silently dropped exactly those levels.
+            if lvl is not None:
+                lvl_entered = int(lvl)
+                if lvl_entered not in levels_entered_set:
+                    levels_entered_set.add(lvl_entered)
+                    levels_entered.append(lvl_entered)
             if start is None:
                 start = best = lvl
             if best is not None and lvl > best:
@@ -638,6 +754,16 @@ def run_bounded_progress(
                         start_hv = hv
                     if best_hv is None or hv < best_hv:
                         best_hv = hv
+                    # PER-LEVEL track, keyed on the level of the frame the reading came from.
+                    # The first reading AFTER a level-up establishes that level's own baseline,
+                    # which is the whole point: a new level is a new board with a new goal, so
+                    # the previous level's numbers say nothing about progress on this one.
+                    lvl_key = int(lvl) if lvl is not None else 0
+                    if lvl_key not in hv_per_level:
+                        hv_per_level[lvl_key] = {"start": float(hv), "best": float(hv)}
+                        hv_level_seen.append(lvl_key)
+                    elif hv < hv_per_level[lvl_key]["best"]:
+                        hv_per_level[lvl_key]["best"] = float(hv)
             frames.append(latest)
             if latest is None:
                 break
@@ -669,6 +795,10 @@ def run_bounded_progress(
     if start_hv is not None and best_hv is not None and hv_measurable is not False:
         hv_progress = round(max(0.0, (start_hv - best_hv)) / max(abs(start_hv), 1.0), 4)
 
+    per_level, hv_progress_best_level = per_level_hv_progress(
+        hv_per_level, hv_level_seen, hv_measurable, levels_entered=levels_entered
+    )
+
     return ProgressResult(
         game=game,
         arm=arm,
@@ -697,6 +827,9 @@ def run_bounded_progress(
         error=err,
         induction_events=events,
         action_trace=trace,
+        hv_progress_per_level=per_level,
+        hv_progress_best_level=hv_progress_best_level,
+        hv_progress_global_legacy=hv_progress,
         hv_progress_measurable=hv_measurable,
         hv_distinct_values_observed=hv_distinct,
         hv_exception_count=hv_exceptions,

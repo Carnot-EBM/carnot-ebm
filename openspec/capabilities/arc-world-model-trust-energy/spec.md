@@ -20066,3 +20066,340 @@ SHALL be recorded, because a sentinel or a None on the FIRST call silently rebas
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6044 | `arc_executable_world_model.py` — `_transitions_block` emits the labelled WIN TRANSITION + joint constraint (was `win.next_grid` under "is_level_complete must return True here"); `objects_block` relabelled, deliberately still ONE extra table (a third would lengthen a prompt that already caused Qwen3.5-9B truncation); `LocalGGUFProposer._goal_only_prompt` polarity corrected (its old single emphasised fact was the inverse of the truth, in a prompt whose whole budget goes to the win condition); `score_goal_predicate_consistency(engine=, engine_change_fidelity=, min_engine_fidelity_for_counterfactual=)` with `_engine_verified_on_action` per-action corroboration, ungradeable-row exclusion, and `counterfactual_grading_is_not_oracle_distinct` / `n_levelups_ungradeable_low_engine_fidelity` / `engine_fidelity_used_for_counterfactual_decision` disclosure; `WorldModelVerifier.score` excludes level-up rows and reports `n_levelup_rows_excluded`. `arc_llm_reinduction.py` — `_probe_candidates` shares the planner's `_model_candidates` (raster kept as a defensive fallback), `goal_predicate_true_at_root` rejection, engine-call budget matching `plan_in_model` + `budget_unit`, `_strictly_fuller_than_predicate` (root-referenced, modal-background, exemplar lower bound) replacing the trivially-true `_nonzero_count_predicate(exemplar)` in `_repair_degenerate_goal`, and the `consistency.n >= 1` veto guard. `arc_actions_to_progress.py` — `hv_progress_measurable_from_stats` + instrumented `_hand_verifier_fn` (call/exception/sentinel/distinct-value/distinct-frame counters) and four new `ProgressResult` fields. | `tests/python/test_arc_win_state_positive_example_2026_07_29.py` (22 tests) and `tests/python/test_arc_hand_verifier_measurability_2026_07_29.py` (8 tests), each reproducing the measured incident rather than a happy path. 7 mutations applied one at a time, all killed; two first-draft tests did NOT kill their mutation (`engine_calls <= cap` passes under post-dedup counting; a stats-only assertion passes when the measurability rule is loosened to always-True) and were rewritten until they did. `tests/python/test_arc_goal_predicate_live_veto.py` and `tests/python/test_goal_repair_degenerate_predicate.py` updated with the reason recorded at each site. Real-corpus consequence measured by rebuilding the 7 artifacts the freshness lint flagged: exp6011 `n_transitions` 120->119, `legacy_accuracy` 0.725->0.731092, and sp80's on-disk engine correctly reclassified `nondegenerate: True->False` (its only "correct changed cell" came from the re-layout row); all 8 acceptance gates still pass. exp6013 spurious-writer separation IMPROVED (0.777778->0.875). |
+
+## REQ-ARC-WMTE-6045: The Progress Metric SHALL Rebase Its Baseline At Every Level-Up
+
+`run_bounded_progress`'s `hv_progress` is `(start_hv - best_hv) / max(|start_hv|, 1)`, where
+`best_hv` is the hand verifier's running MINIMUM over the run. Neither `start_hv` nor `best_hv`
+was reset when the agent advanced a level, so a later level's board distance was scored against
+the FIRST level's starting distance -- two different boards, two different goals, one baseline.
+
+REQ-ARC-WMTE-6044 fixed the adjacent defect (a CONSTANT verifier reporting an instrument floor
+of 0.0 as an observation). This requirement fixes the baseline itself.
+
+**Why this is not cosmetic.** The frame returned by the step that COMPLETES a level is already
+the NEXT level's opening board, so the verifier is never read at a solved state; the global
+minimum therefore stays pinned at `start_hv` and the run scores 0.0. vc33 banked TWO levels --
+the most of any cell in the 24-cell 2026-07-29 retention corpus -- and recorded
+`start_hv == best_hv == 18.0`, `hv_progress == 0.0`. The single most successful run in the
+corpus read as having made no progress at all, and that 0.0 was then pooled into the rank
+correlation that concluded the metric was `NOT_A_VALID_PROXY`.
+
+The metric SHALL therefore track each level against ITS OWN opening board, and:
+
+- a level the agent LEFT for a higher one SHALL score 1.0. It was completed, and the LEVEL
+  COUNTER -- the win oracle, not a heuristic -- says so. That credit SHALL NOT depend on what
+  the hand verifier read before the board flipped, nor on whether the verifier is measurable.
+- the level the run ENDED on is the only one still in progress and SHALL be the only one the
+  verifier scores, against its own opening board.
+- the REQ-ARC-WMTE-6044 measurability guard SHALL apply to the final level only. An immovable
+  verifier cannot evidence PARTIAL progress, so that entry is omitted rather than recorded as a
+  0.0 a downstream mean would swallow.
+- the pre-existing global fields (`start_hv`, `best_hv`, `hv_progress`) SHALL be preserved
+  unchanged, and the global value SHALL additionally be recorded under an explicit legacy name,
+  so every previously-recorded number stays readable and no reader has to guess which definition
+  produced it (never-prune).
+
+Historical artifacts SHALL NOT be rewritten. Corrections SHALL be published in a NEW artifact
+citing the originals by sha256.
+
+#### SCENARIO-ARC-WMTE-6045-COMPLETED-LEVEL-SCORES-ONE
+
+**Given** a run that completed levels 0 and 1 and ended on level 2, whose hand verifier never
+read a value below level 0's starting distance
+**When** per-level progress is computed
+**Then** levels 0 and 1 SHALL each score 1.0 and the best-over-levels figure SHALL be 1.0,
+rather than the 0.0 the never-reset global minimum produced.
+
+#### SCENARIO-ARC-WMTE-6045-FINAL-LEVEL-SCORED-AGAINST-ITS-OWN-ROOT
+
+**Given** a run whose level 0 opened at distance 100 and whose level 1 opened at 20 and reached 10
+**When** per-level progress is computed
+**Then** level 1 SHALL score 0.5 -- 10 closed of ITS OWN 20 -- and SHALL NOT score 0.9, which is
+what scoring against level 0's baseline would have produced.
+
+#### SCENARIO-ARC-WMTE-6045-SINGLE-LEVEL-RUN-IS-UNCHANGED
+
+**Given** a run that never levelled up
+**When** per-level progress is computed
+**Then** it SHALL equal the pre-fix value exactly, so the fix cannot silently move any run that
+did not level up.
+
+#### SCENARIO-ARC-WMTE-6045-IMMOVABLE-VERIFIER-STILL-CREDITS-A-LEVEL-UP
+
+**Given** a run on a game whose `hand_verifier` is a literal constant, which nonetheless levelled up
+**When** per-level progress is computed
+**Then** the completed level SHALL still score 1.0 (the level counter, not the verifier, is its
+evidence) **and** the final level SHALL be omitted rather than recorded as 0.0.
+
+### SCENARIO-ARC-WMTE-6045-5: A completed level with no verifier reading is still credited
+
+GIVEN the agent entered levels 0, 1 and 2 and the hand verifier returned a value at 0 and 2 but
+never at 1
+WHEN per-level progress is computed
+THEN level 1 scores 1.0. It was COMPLETED — the level counter left it — and the credit for a
+completed level must not depend on whether the verifier happened to be readable there.
+
+The first version of this fix derived its level set from `hv_level_seen`, which is appended ONLY
+inside the branch where a reading was obtained, so a level entered, completed and left without a
+reading was invisible and earned nothing — while the docstring claimed the 1.0 was awarded
+"independent of whether the verifier is measurable at all". The claim held only once at least one
+reading existed at that level. The level counter's own entry order (`levels_entered`) is now passed
+in; it defaults to `hv_level_seen` so existing callers are unchanged. An immovable verifier
+(`hv_measurable=False`) still suppresses only the FINAL level's partial score, never a completed
+level's 1.0.
+
+## Implementation Status (REQ-ARC-WMTE-6045)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6045 | `python/carnot/agentic/arc_actions_to_progress.py` — per-level `hv_per_level`/`hv_level_seen` tracking keyed on the level of the frame each reading came from, the new pure helper `per_level_hv_progress` (extracted so the decision is tested rather than reimplemented in the test file), and three new `ProgressResult` fields: `hv_progress_per_level`, `hv_progress_best_level`, `hv_progress_global_legacy`. The global `start_hv`/`best_hv`/`hv_progress` are left untouched. | `tests/python/test_arc_hv_progress_per_level_reset_2026_07_29.py` (**15 tests**), including a read-only regression test pinned to the committed `results/arc_engine_retention_20260729/cells/ret0__vc33__s1.json`, which still records the defective `hv_progress == 0.0` against `levels_gained == 2` and must continue to (never-prune). Affected recorded numbers: **13** (10 in artifacts committed BEFORE this change, 3 in the A/A probe cells committed BY it — split in the artifact because calling the latter "historical records corrected" would overstate the defect's reach), found by an EXHAUSTIVE recursive scan of all 15,371 artifacts in `results/` matching rows by SHAPE (a dict carrying `hv_progress` alongside a level gain) -- 4 retention cells (tu93 x2 `0.8981 -> 1.0`, vc33 x2 `0.0 -> 1.0`), 4 held-out-grid cells (a SECOND independent instance of the vc33 defect: `31b__vc33` and `9b__vc33` each record `levels_gained=2` with `hv_progress=0.0`; plus tu93 and lp85), and 2 structured-nav A/B rows. A first version of the builder enumerated two hardcoded directories, reported 6, and was wrong by four the moment a third cell directory was committed -- so the count in the artifact's verdict string is now derived from the scan, never typed in. ZERO rows in the whole `experiment_57xx` actions-to-progress corpus are affected — none of them ever levelled up. |
+
+## REQ-ARC-WMTE-6046: The Generator's Sampler Seed SHALL Be Settable, And OFF By Default
+
+`LocalGGUFProposer` issues every generation at `temperature = 0.2 + 0.1*attempt` -- NONZERO --
+with no `seed` field in the `/completion` or `/v1/chat/completions` payload. `llama-server` treats
+an absent seed as -1, "pick a fresh random one", so **two runs of IDENTICAL code on the identical
+game with the identical harness `seed` produce different LLM output.** The harness `seed` argument
+seeds `random`/`numpy` inside the driver; it never reached the server's sampler.
+
+**Why this is a measurement-integrity requirement and not a nicety.** ~~Measured from committed
+cells at zero GPU cost -- `ret1` in `results/arc_engine_retention_20260729/cells` against `31b` in
+`results/arc_heldout_31b_vs_9b_20260728/cells`, which share treatment, seed=1, model file, game
+and anonymised game id -- **2 of 5 cells diverge under identical code**. (n=5, so 40% is a point
+estimate with a wide interval, not a calibrated rate; the requirement rests on the existence of a
+counterexample and on the direct root-cause finding below, not on the rate.) That floor is at
+least as large as any treatment effect yet measured on this path, so an A/B here is
+uninterpretable without an A/A control no matter how many cells it runs. It is why three A/B
+measurements on 2026-07-29 returned uninformative nulls, and why the engine-retention grid's only
+"perturbed" cell (vc33, divergence at action index 17) turned out to perturb under A/A too: four
+runs spanning two treatments in two experiments all diverge at that same index 17, and the
+partition CROSSES treatment lines -- a 31B retention-OFF run is byte-identical to a run using a
+DIFFERENT inducer model while differing from another 31B run with the same retention setting.~~
+
+**RETRACTED 2026-07-30 — the paragraph above is withdrawn; the REQUIREMENT below is not.** The
+`ret1`-vs-`31b` pairing is NOT an A/A: the held-out cells ran BEFORE commit `11cd3c3a9` introduced
+engine retention and carry none of its diagnostic fields, so >=6 agentic commits separate the sets
+and the comparison is an A/B **of the treatment under test**. The "2 of 5 / 40%" rate, the
+"vc33's attributable perturbation is ZERO" inference, and the "provably treatment-INDEPENDENT"
+argument are all WITHDRAWN (the four runs are not matched pairs: `ret0__vc33` records
+`generator_output_reached_policy=True` against `9b__vc33`'s `False`). Preserved unedited per
+never-prune.
+
+**What the requirement rests on instead, and why it is UNWEAKENED.** Two independent legs, neither
+of which needs the retracted A/A: (1) the no-seed defect is a **direct reading of the code** --
+`temperature` is nonzero and no `seed` field is sent, so the server picks a fresh one per request;
+(2) it was **confirmed live**, 4 identical requests to the loaded 31B at T=0.4 on a high-entropy
+prompt returning **3 distinct completions unseeded and 1 seeded** (a low-entropy control returned 1
+of 4 BOTH ways, which is why the high-entropy prompt is the valid probe). A real same-commit A/A
+then landed at `results/arc_goalspec_f9a458e87_preflight_20260730/cells` (`post` vs `postb`, both at
+`f9a458e87`, ten witness fields asserted equal from the cells): **1 of 2 pairs diverges EVEN WITH
+`CARNOT_ARC_GENERATOR_SEED` set** (ft09 at action 26; the runs disagreed on whether a plan was found
+at all). That STRENGTHENS the requirement -- seeding is necessary but NOT sufficient, so a noise
+floor must be MEASURED per grid rather than borrowed from an adjacent experiment, which is precisely
+the practice the retraction condemns. n=2: qualitative only, no rate asserted.
+
+The proposer SHALL therefore:
+
+- expose a sampler seed via `CARNOT_ARC_GENERATOR_SEED`, applied on EVERY generation path out of
+  the class. A route left unseeded while another is seeded is worse than an unseeded run, because
+  the artifact would carry a reproducibility claim the run did not honour.
+- default to OFF. With the variable unset the payload SHALL be byte-identical to before, so the
+  live scored agent's behaviour is unchanged unless an operator opts in. Determinism is a
+  measurement property; changing how the scored agent samples is a behaviour change and is not
+  this mechanism's to make unilaterally.
+- vary the seed with the retry `attempt`, so the `0.2 + 0.1*attempt` diversity ladder still
+  explores while the run as a whole is reproducible. Distinct base seeds SHALL NOT collide across
+  attempts.
+- fall back to unseeded on a malformed or empty value rather than raising, so a typo'd env var
+  cannot take down a live episode mid-run.
+
+#### SCENARIO-ARC-WMTE-6046-DEFAULT-OFF-IS-BYTE-IDENTICAL
+
+**Given** `CARNOT_ARC_GENERATOR_SEED` is unset (or empty, or malformed)
+**When** any generation payload is built
+**Then** no `seed` key SHALL be present, so behaviour matches the pre-2026-07-29 shipped path exactly.
+
+#### SCENARIO-ARC-WMTE-6046-SEED-VARIES-WITH-ATTEMPT
+
+**Given** the variable is set to a base value
+**When** the retry ladder runs attempts 0..N
+**Then** each attempt SHALL receive a DISTINCT seed derived from the base, and two different base
+values SHALL NOT produce a colliding seed at any attempt.
+
+#### SCENARIO-ARC-WMTE-6046-SEEDING-DELIVERS-DETERMINISM
+
+**Given** a high-entropy prompt at temperature 0.4 on a live `gemma-4-31B-it` server
+**When** four identical requests are issued unseeded, and four more with the same seed
+**Then** the unseeded set SHALL contain more than one distinct completion and the seeded set
+exactly one. (Verified 2026-07-29: 3 distinct of 4 unseeded, 1 of 4 seeded.)
+
+## Implementation Status (REQ-ARC-WMTE-6046)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6046 | `python/carnot/agentic/arc_executable_world_model.py` — `LocalGGUFProposer.sampling_seed()` plus the three call sites that are every generation route out of the class (`generate()`'s `/completion` ladder, `_chat_complete_request()`'s `/v1/chat/completions`, and `complete_text()`). Default OFF via an unset `CARNOT_ARC_GENERATOR_SEED`; seed is `base*1000 + attempt`. | `tests/python/test_arc_generator_sampling_seed_2026_07_29.py` (12 tests): the default-off guarantee, empty/whitespace/malformed fallbacks, negative bases (−1 is llama.cpp's own random sentinel and must stay expressible), per-attempt distinctness, cross-base non-collision, payload capture via a fake `urlopen` proving the key is absent when unset and present when set, and a source-contract test pinning the call-site count at 3 so a newly-added generation path cannot ship unseeded. A first draft of that last test double-counted the `_payload["seed"]` spelling (asserted 4 where the truth is 3) and was corrected. Live determinism verified directly against the loaded 31B server; that check is not re-run in CI because it needs a 21 GiB model resident. |
+
+## REQ-ARC-WMTE-6047: A Spent Search Budget SHALL NOT Be Reported As A Degenerate Goal Predicate
+
+The reachability pre-veto `_goal_satisfiability_check` exists to reject an induced
+`is_level_complete` that the planner could never satisfy. It can stop for two reasons that mean
+OPPOSITE things about the predicate, and it MUST distinguish them:
+
+- the frontier empties — the reachable set (within `max_depth`) was searched out and the goal was
+  never true. This is real evidence against the predicate and a sound basis for a veto.
+- `engine_calls >= max_nodes` — the BUDGET ran out. This says nothing whatsoever about the
+  predicate. Vetoing on it is unsound.
+
+Both previously returned `counterexample.kind == "degenerate_goal_predicate"`.
+
+### SCENARIO-ARC-WMTE-6047-1: Budget exhaustion reports its own kind
+GIVEN a goal that becomes true only at a depth the budget cannot reach
+WHEN `_goal_satisfiability_check` runs with a starved `max_nodes`
+THEN `counterexample.kind` is `goal_unreached_within_budget`, `termination` is
+`budget_exhausted`, and the `detail` states the result is UNKNOWN and explicitly NOT evidence that
+the predicate is degenerate.
+
+### SCENARIO-ARC-WMTE-6047-2: Genuine unreachability keeps the degenerate kind
+GIVEN a constant-false goal and an ample budget
+WHEN the check runs
+THEN `termination` is `queue_exhausted` and `kind` is `degenerate_goal_predicate`. The split MUST
+NOT blunt the real veto.
+
+### SCENARIO-ARC-WMTE-6047-3: The kind flips on budget alone
+GIVEN one goal, one engine, one board
+WHEN only `max_nodes` differs
+THEN the starved run reports `goal_unreached_within_budget` and the generous run reports
+`satisfiable: True` at the goal's true depth. A predicate's KIND must not depend on how much
+compute it was granted.
+
+### SCENARIO-ARC-WMTE-6047-4: An empty frontier is not trusted under a budget stop
+GIVEN the budget is what stopped the search
+WHEN the frontier happens to be empty at that moment
+THEN `termination` is still `budget_exhausted`. The inner loop `break`s on budget and DISCARDS the
+current grid's remaining candidate expansions without queueing them, so an empty deque does not
+imply the successors were explored.
+
+### SCENARIO-ARC-WMTE-6047-5: GOAL-REPAIR does not fire on an undecided gate
+GIVEN a correct-but-deep goal, an exemplar available (so GOAL-REPAIR is armed), and a budget the
+goal's depth exceeds
+WHEN `execute_bounded_llm_reinduction` runs a round
+THEN the row records `goal_undecided_within_budget: True`, carries NO `goal_repaired` key, is NOT
+skipped, and the goal handed onward is the induced predicate unmodified. The round proceeds to
+planning and fails there if the goal really is out of reach — attributing the failure to "no plan
+found" rather than to "your goal is degenerate".
+
+### SCENARIO-ARC-WMTE-6047-6: A plan that reaches the goal proves satisfiability
+GIVEN the gate was budget-undecided
+WHEN the planner returns a plan whose terminal state satisfies the predicate
+THEN `goal_predicate_satisfiable` is promoted to True with
+`satisfiability_evidence: plan_in_model_found_a_plan_reaching_the_goal`. Scoped to the undecided
+case only: a goal DISPROVED by exhaustive search, rejected at the root, or failing with a predicate
+error is never promoted.
+
+## Implementation Status (REQ-ARC-WMTE-6047)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6047 | `python/carnot/agentic/arc_llm_reinduction.py` — `_goal_satisfiability_check` now returns `termination` + `frontier_remaining` and selects `kind` on the budget alone (deliberately NOT on `q` being non-empty); the caller computes `goal_undecided_within_budget` and gates BOTH the GOAL-REPAIR call and the round-skip on genuine exhaustion, recording the undecided gate in `counterexamples` for the audit trail without setting `row["skipped"]`; and a plan that reaches the goal promotes `round_goal_satisfiable` with explicit evidence. | `tests/python/test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py` (7 tests) — the four kind/termination cases, the explicit UNKNOWN disclaimer, and an END-TO-END test through the real `execute_bounded_llm_reinduction` on a 5-way-branching depth-7 world (~19.5k states must be covered before the goal is reachable, comfortably past the shipped 20,000-call default) with an exemplar present so GOAL-REPAIR is armed. A first draft used a single-cell counter world and could not reach depth 11 at all: the gate dedups on `to_ascii`, whose key is the grid mod 10, so the counter wrapped and the search terminated at depth 9 reporting `queue_exhausted` — the test would have passed for a reason unrelated to the property. **Severity note:** this defect became live only when the 2026-07-29 counter fix made the gate's budget unit match `plan_in_model`'s. Before that the gate counted UNIQUE GRIDS while the planner counted RAW ENGINE CALLS, an ~11x gap on ka59, so the gate essentially never hit its ceiling first. After it, ka59's proven-correct depth-11 predicate (137,347 calls needed, 20,000 shipped) was rejected AND replaced by GOAL-REPAIR's looser "strictly fuller than root" proxy, and the agent planned to a NON-WINNING goal while the artifact reported a satisfiable predicate throughout. All 18 occurrences in the historical corpus were genuine frontier exhaustion, so no recorded result is invalidated by the split. |
+
+## REQ-ARC-WMTE-6048: The Tracked Engine-Evidence Store SHALL NOT Be Writable From A Test
+
+`results/arc_e3/` holds the induced world-model engines that several published artifacts cite as
+origin fixtures; the project treats it as read-only evidence. The LIVE agent writes there by
+design, so a blanket write refusal is not available — but a write from inside a test is never
+legitimate.
+
+### SCENARIO-ARC-WMTE-6048-1: A test write to the evidence store raises
+GIVEN `PYTEST_CURRENT_TEST` is set
+WHEN any engine writer targets `results/arc_e3` or a game directory beneath it
+THEN a `RuntimeError` names the path, states that the store is tracked read-only evidence, and
+tells the caller how to redirect (`CARNOT_ARC_E3_DIR`, or monkeypatching `E3_DIR`).
+
+### SCENARIO-ARC-WMTE-6048-2: The guard is inert outside pytest
+GIVEN `PYTEST_CURRENT_TEST` is unset
+WHEN the live agent writes an induced engine to the default store
+THEN the write proceeds. The guard is scoped to the situation where a write is definitionally
+wrong, not to the directory.
+
+### SCENARIO-ARC-WMTE-6048-3: A redirected store is unaffected
+GIVEN a test that redirects `E3_DIR` to a tmp_path
+WHEN it writes an engine
+THEN no error is raised — no false positives on the correct pattern.
+
+### SCENARIO-ARC-WMTE-6048-4: Deliberate default-path writes can opt in
+GIVEN `CARNOT_ARC_E3_ALLOW_EVIDENCE_WRITE=1`
+WHEN a test writes to the default store
+THEN the write proceeds, so a test whose PURPOSE is to exercise that path can say so out loud.
+
+## Implementation Status (REQ-ARC-WMTE-6048)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6048 | `python/carnot/agentic/arc_executable_world_model.py` — `_guard_engine_write(path)` plus `_TRACKED_E3_EVIDENCE_DIR`, called at the top of all three engine writers (`_gen_to_file`, `_write_world_model`, and the codex induce path). `tests/python/test_codeonly_induce_scoping.py` gained an AUTOUSE fixture redirecting `E3_DIR` to tmp_path for every test in the module — autouse rather than per-test because the failure mode is forgetting it. | `tests/python/test_arc_e3_evidence_write_guard_2026_07_30.py` (6 tests): the exact incident path raises, the store root and nested game dirs raise, a redirected store and a non-engine sibling directory under `results/` do not, the guard is inert without `PYTEST_CURRENT_TEST` (the property that makes it safe for the live agent), the opt-in re-enables the write, and the guard is wired into a real writer rather than merely available as a helper. **Origin:** `test_codeonly_induce_scoping.py` drove `LocalGGUFProposer.induce` against a stubbed `urlopen` without redirecting `E3_DIR`, so running the suite WROTE `results/arc_e3/g/world_model.py`. It was caught only by luck — the canned stub body was byte-identical to the committed content, so `git status` stayed clean and nothing was lost. One character's difference in `_VALID_CODE` and the suite would have silently clobbered committed evidence, and the next `git add -A` would have committed the clobber. A 2026-07-29 note in the module had already identified the hazard and deliberately left it unfixed for fear of changing live write routing; the pytest scoping is what makes the fix safe. |
+
+## REQ-ARC-WMTE-6049: The ARC Solve-Claim Matcher SHALL Be Word-Boundary Aware
+
+`adversarial_verify.check_arc_outer_loop_solve` decides whether an artifact makes an ARC game-solve
+claim, and a CRITICAL flag on that decision quarantines the artifact under the fabrication gate. The
+matcher MUST NOT fire on a substring inside an unrelated longer word.
+
+### SCENARIO-ARC-WMTE-6049-1: "unresolved" is not a solve claim
+GIVEN an artifact whose verdict says affordability is UNRESOLVED, and which declares
+`used_env_source: True` (legitimately — the offline arcade reads `environment_files`)
+WHEN the solve guard runs
+THEN there is no flag of any severity. The bare `solv` pattern matched inside "unre-solv-ed" and
+CRITICAL-flagged a pure cost measurement claiming no level at all.
+
+### SCENARIO-ARC-WMTE-6049-2: Every real solve phrasing still matches
+GIVEN `complete_self_solve_tu93_l3`, "solved", "solving", `arc_solver_kit`, "winpath", "lethal",
+"level-up", "levelup", "reached L3"
+THEN each still matches. A plain `\b` is NOT usable here: this project's verdicts are
+underscore-joined and `_` is a word character, so `\bsolv` would MISS `complete_self_solve_...` —
+i.e. the exact strings the guard exists to catch. The fix is a negative lookbehind for a letter,
+`(?<![a-z])solv`, which accepts `_solve` and rejects `unresolved` / `resolve` / `dissolve`.
+
+### SCENARIO-ARC-WMTE-6049-3: A genuine calibration solve is still CRITICAL
+GIVEN an artifact declaring `offline_ground_truth_bfs: True` with a real solve claim
+THEN the CRITICAL flag still fires. The narrowing must not blunt the guard.
+
+## Implementation Status (REQ-ARC-WMTE-6049)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6049 | `scripts/adversarial_verify.py:_ARC_GAME_SOLVE_CLAIM_RE` — `(?<![a-z])solv`. | `tests/python/test_adversarial_verify_arc_self_solve.py::test_unresolved_is_not_a_solve_claim`, `::test_the_regex_still_catches_every_real_solve_phrasing`, `::test_a_real_calibration_solve_is_still_critical`. **Corpus-wide backfill dry run:** 15,332 artifacts scanned, 64 change classification, **all 64 false positives, 0 true positives lost** — every one a verdict containing "resolved"/"unresolved" about something that is not an ARC solve (milestone retros, pytest-cascade fixes, LaTeX compiles, PyPI import errors, GateMate LUT mapping, sklearn prerequisites). Only 1 of the 64 was actually being flagged; the other 63 were LATENT false positives that would have quarantined honest work the moment any of them declared an outer-loop input flag. One of the 64 is literally the origin-bug family of CLAUDE.md's QA-Layer Authenticity Discipline: `blocked_diffusiongemma_meta_tensor_bug_unresolved_v475`. Same bug class as that discipline's origin bug #3 (`"diffusiongemma_met" in verdict` matching inside `meta_tensor`), found the same way — a legitimate artifact quarantined by a boundary-blind substring hit. |
+
+## REQ-ARC-WMTE-6050: The ARC No-LLM Duration Floor SHALL Be Reachable Without a Vestigial Model Marker
+
+`adversarial_verify.py` assigns the substrate
+`offline_arcade_live_agent_runtime_self_discovery_no_llm` a 0.01s duration floor, on the reasoning
+that a single real environment action takes non-zero time, so a faster value means the duration was
+never measured. That floor MUST be enforced whenever the substrate is declared.
+
+### SCENARIO-ARC-WMTE-6050-1: A clean no-LLM artifact below the floor is flagged
+GIVEN an artifact declaring the no-LLM live-agent substrate at `duration_s: 0.002`, carrying NO
+`model_specs` and no GGUF/CUDA string (the honest shape for this substrate — there is no model to
+name)
+WHEN the duration check runs
+THEN a CRITICAL `DURATION_TOO_SHORT` fires. Before 2026-07-30 it did NOT: the dedicated
+`arc_live_agent_no_llm` branch sat BEHIND the `_has_compute_bound_marker(d) or
+_is_live_llm_inference(d)` early return, so it was reachable ONLY for an artifact carrying a
+VESTIGIAL marker — exactly backwards, since that branch exists *because* such markers are
+vestigial for this substrate. A clean artifact could therefore declare any duration at all,
+including `0.0`, and be reported clean.
+
+### SCENARIO-ARC-WMTE-6050-2: A plausible no-LLM duration is still not flagged
+GIVEN the same artifact at `duration_s` in {0.01, 0.5, 42.0, 3600.0}
+THEN no flag fires. The fix must not make the substrate un-declarable — 99 committed artifacts
+declare it legitimately.
+
+### SCENARIO-ARC-WMTE-6050-3: The live-LLM floor is unchanged
+GIVEN an artifact declaring `live_llm_inference` with `model_specs` at `duration_s: 3.0`
+THEN it is judged against the 60s live-model floor, not the 0.01s no-LLM floor. The change widened
+WHICH artifacts reach the floor dispatch; it MUST NOT alter which floor any of them gets.
+
+## Implementation Status (REQ-ARC-WMTE-6050)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6050 | `scripts/adversarial_verify.py:check_duration_vs_claim` — the marker early-return now also admits `_is_arc_live_agent_no_llm(d)`, because an explicit substrate declaration is itself an affirmative claim of real per-action environment stepping and is self-sufficient grounds to check the floor. | `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py` — 6 tests, incl. the exact clean-artifact regression, `duration_s=0.0`, a not-over-flagging guard across four plausible durations, and a live-LLM scope guard. **Corpus-wide impact: ZERO.** All 99 artifacts on disk declaring this substrate already have `duration_s >= 0.01`, so closing the hole newly flags no historical artifact — the fix removes a forward blind spot rather than reinterpreting the past, and that claim is itself pinned as a test (`::test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole`) so a future sub-floor artifact surfaces as an operator corrigendum decision instead of a quiet loosening. **How it was found:** NOT by a unit test — the pre-existing tests exercised the branch by handing it an artifact WITH a marker, so they passed while the branch was dead for real clean inputs (the "tests test what the author thought to test" mode named in CLAUDE.md's QA-Layer Authenticity Discipline). It surfaced by probing the linter with a hand-built clean artifact while verifying THIS session's own affordability artifact, which declared this substrate at `duration_s: 0.002` — below its own floor — and was reported clean by the full scan. That artifact's substrate was simultaneously corrected to `aggregation_from_upstream_artifacts` (it reads upstream JSON and does arithmetic; it steps no environment), recorded in its `inference_substrate_correction_20260730` field. |

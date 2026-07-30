@@ -1,0 +1,383 @@
+{
+  "experiment": "outer_loop_arc_goalspec_preflight_f9a458e87_20260730",
+  "schema": "carnot.outer_loop.treatment_activation_preflight_applied.v1",
+  "requirements": [
+    "REQ-HARNESS-6050",
+    "REQ-ARC-WMTE-6044"
+  ],
+  "question": "Does the win-state goal-spec fix (f9a458e87) perturb enough cells versus its parent (aa8a38e31 + the seed shim) for a 12-cell banked-levels sign test to be able to detect anything? If not, that measurement must not be run.",
+  "inference_substrate": "live_llm_inference",
+  "honest_verdict": "complete_preflight_is_INCONCLUSIVE_and_SUPERSEDED_grid_stopped_after_2_of_12_cells_because_the_arm_under_test_contains_a_goal_gate_bug_fixed_in_this_same_change",
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy",
+  "read_game_source": false,
+  "used_env_source": true,
+  "random_seed": 1,
+  "duration_s": 3914.0,
+  "model_specs": {
+    "inducer": "unsloth/gemma-4-31B-it-GGUF (gemma-4-31B-it-Q4_K_M.gguf)",
+    "n_ctx": 32768,
+    "note": "n_ctx 32768 not the shipped 81920: at 81920 the VRAM guard auto-fits to ~24020 MiB against ~24123 free, and any stray CUDA context tips it into the iGPU HIP fallback where the agent runs LLM-OFF while still REPORTING LLM-ON."
+  },
+  "preconditions_checked": [
+    {
+      "resource": "gemma-4-31B-it GGUF cached",
+      "available": true
+    },
+    {
+      "resource": "two RTX 3090s free",
+      "available": true
+    },
+    {
+      "resource": "parent worktree at aa8a38e31 + seed shim",
+      "available": true
+    },
+    {
+      "resource": "CARNOT_ARC_GENERATOR_SEED set per game, identical across arms",
+      "available": true
+    }
+  ],
+  "DESIGN": {
+    "arms": {
+      "pre": "worktree at aa8a38e31 (parent of f9a458e87) PLUS the seed shim, so the arms differ by exactly f9a458e87's content and not by whether the generator is seeded",
+      "post": "the main checkout at f9a458e87",
+      "postb": "post again -- the A/A determinism control"
+    },
+    "per_cell_budget": 60,
+    "max_inductions": 1,
+    "explore_budget": 24,
+    "planned_cells": 12,
+    "required_one_way_discordant_pairs": 6
+  },
+  "WHY_THE_GRID_WAS_STOPPED_AT_2_OF_12": "Not a resource decision. While it was running, review found a SERIOUS live bug in the very code path the treatment acts on: `_goal_satisfiability_check` returned `degenerate_goal_predicate` on BUDGET exhaustion, indistinguishable from a constant-false goal, so GOAL-REPAIR fired and SUBSTITUTED a looser non-winning proxy predicate. Every cell in this grid was therefore measuring a treatment sitting on top of a defect that is fixed in the same change (REQ-ARC-WMTE-6047). Continuing would have spent ~3 more hours characterising a configuration that no longer exists -- and editing the fix in mid-grid would have confounded the arms with intervening code, which is the exact error the retracted cross-experiment 'A/A' was retracted for. Stopping and re-running post-fix is the only sequence that yields an interpretable answer.",
+  "VERDICT": {
+    "decision_basis": "strict_attributable_ceiling_at_probed_n",
+    "n_missing_cells_still_outstanding": 10,
+    "max_reachable_ceiling_if_every_missing_cell_were_attributable": 11,
+    "grid_is_incomplete_and_still_arithmetically_open": true,
+    "projected_attributable_cells_at_planned_n": null,
+    "n_usable_observations": 2,
+    "n_truncation_affected": 0,
+    "perturbation_rate_over_comparable_counting_truncations_as_zero": 0.5,
+    "verdict": "INCONCLUSIVE",
+    "alpha": 0.05,
+    "required_one_way_discordant_pairs": 6,
+    "sign_test_arithmetic": {
+      "1": 1.0,
+      "2": 0.5,
+      "3": 0.25,
+      "4": 0.125,
+      "5": 0.0625,
+      "6": 0.03125,
+      "7": 0.015625
+    },
+    "n_probed_cells": 12,
+    "n_comparable_cells": 2,
+    "counts": {
+      "IDENTICAL": 1,
+      "TRUNCATION_ONLY": 0,
+      "BOTH_TRUNCATED": 0,
+      "PERTURBED": 1,
+      "MISSING": 10
+    },
+    "noise_floor_measured": true,
+    "n_perturbed_raw": 1,
+    "n_perturbed_attributable": 1,
+    "attributable_cells": [
+      "vc33"
+    ],
+    "unattributable_cells_with_aa_class": {},
+    "perturbation_rate_over_usable_observations": 0.5,
+    "discordance_ceiling_strict": 1,
+    "discordance_ceiling_charitable_counts_truncations": 1,
+    "best_reachable_p_strict": 1.0,
+    "best_reachable_p_charitable": 1.0,
+    "planned_n_cells": 12,
+    "cells_needed_at_observed_perturbation_rate": 12,
+    "per_cell": {
+      "ft09": {
+        "len_a": 30,
+        "len_b": 30,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": 30,
+        "first_divergence_index": null,
+        "cls": "IDENTICAL",
+        "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+      },
+      "vc33": {
+        "len_a": 14,
+        "len_b": 18,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": 4,
+        "first_divergence_index": 4,
+        "cls": "PERTURBED",
+        "why": "traces diverge at action index 4"
+      },
+      "tn36": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "cd82": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "cn04": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "lp85": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "ls20": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "r11l": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "sc25": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "su15": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "tr87": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "tu93": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      }
+    },
+    "per_cell_noise": {
+      "ft09": {
+        "len_a": 30,
+        "len_b": 27,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": 26,
+        "first_divergence_index": 26,
+        "cls": "PERTURBED",
+        "why": "traces diverge at action index 26"
+      },
+      "vc33": {
+        "len_a": 18,
+        "len_b": 18,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": 18,
+        "first_divergence_index": null,
+        "cls": "IDENTICAL",
+        "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+      },
+      "tn36": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "cd82": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "cn04": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "lp85": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "ls20": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "r11l": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "sc25": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "su15": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "tr87": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      },
+      "tu93": {
+        "len_a": null,
+        "len_b": null,
+        "a_complete": true,
+        "b_complete": true,
+        "common_prefix_len": null,
+        "first_divergence_index": null,
+        "cls": "MISSING",
+        "why": "one or both arms produced no action trace"
+      }
+    },
+    "noise_floor_warning": null,
+    "interpretation": "PASS means only that the treatment perturbs enough cells for the planned sign test to be ABLE to reach significance. It does NOT mean the experiment is powered: perturbation is necessary but not sufficient for discordance on the endpoint. REFUSE means no possible outcome of the grid reaches alpha, so running it cannot produce a finding. INCONCLUSIVE means the probe itself is not finished -- cells are still outstanding that could carry it to a PASS -- so it is NOT evidence that the treatment is inert and must never be cited as one."
+  },
+  "REPORT": "f9a458e87 treatment-activation pre-flight (2 of 12 cells)\n=========================================================\nVERDICT: INCONCLUSIVE   (alpha=0.05)\n  NOTE: the grid is INCOMPLETE -- 10 cells outstanding, and the ceiling could still reach 11 vs 6 required. This is NOT a refusal.\ncells probed 12, comparable 2, counts {'IDENTICAL': 1, 'TRUNCATION_ONLY': 0, 'BOTH_TRUNCATED': 0, 'PERTURBED': 1, 'MISSING': 10}\none-way discordant pairs required for p<0.05: 6   (2*(1/2)^d: {'1': 1.0, '2': 0.5, '3': 0.25, '4': 0.125, '5': 0.0625, '6': 0.03125, '7': 0.015625})\nceiling on discordant pairs: strict 1 (best reachable p = 1.0), charitable 1 (best reachable p = 1.0)\nperturbation rate over USABLE observations 0.5 (n_usable 2, truncation-affected 0 EXCLUDED as missing, not scored as zeros; counting them as zeros instead would give 0.5); cells needed at that rate: 12\ndecision basis: strict_attributable_ceiling_at_probed_n\nA/A noise floor measured: raw perturbed 1, attributable 1 ['vc33']; unattributable {}\n  ft09     IDENTICAL        len 30/30 prefix 30 -- byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ\n  vc33     PERTURBED        len 14/18 prefix 4 -- traces diverge at action index 4\n  tn36     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  cd82     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  cn04     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  lp85     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  ls20     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  r11l     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  sc25     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  su15     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  tr87     MISSING          len None/None prefix None -- one or both arms produced no action trace\n  tu93     MISSING          len None/None prefix None -- one or both arms produced no action trace\nPASS means only that the treatment perturbs enough cells for the planned sign test to be ABLE to reach significance. It does NOT mean the experiment is powered: perturbation is necessary but not sufficient for discordance on the endpoint. REFUSE means no possible outcome of the grid reaches alpha, so running it cannot produce a finding. INCONCLUSIVE means the probe itself is not finished -- cells are still outstanding that could carry it to a PASS -- so it is NOT evidence that the treatment is inert and must never be cited as one.",
+  "ARITHMETIC_STATE": {
+    "cells_decided": 2,
+    "cells_pending": 10,
+    "perturbed_among_decided": 1,
+    "attributable_among_decided": 1,
+    "required": 6,
+    "max_reachable_if_every_pending_cell_perturbs_and_is_attributable": 11,
+    "still_arithmetically_open": true,
+    "reading": "OPEN, not REFUSED: 1 attributable cell decided plus 10 pending is >= the 6 required, so the pre-flight had not settled when the grid was stopped. This artifact therefore reports INCONCLUSIVE. It is NOT a refusal and must not be cited as evidence that the goal-spec fix is inert."
+  },
+  "WHAT_THE_TWO_DECIDED_CELLS_SHOW": {
+    "vc33": "ATTRIBUTABLE PERTURBATION. A/B PERTURBED (first divergence at action 4, 14 vs 18 actions) with the A/A byte-IDENTICAL over 18 actions -- so the harness demonstrably repeats itself on this cell and the treatment nonetheless changed behaviour. This is the first cleanly-attributable treatment effect measured on this path.",
+    "ft09": "NO PERTURBATION (A/B byte-identical over 30 actions), and separately the A/A on this cell PERTURBED -- so even if the A/B had differed it could not have been attributed. Mechanistically consistent with the commit tightening a goal gate that was already refusing here: both arms ended `no_reachable_plan_after_refinement`."
+  },
+  "PHASE_3_BANKED_LEVELS_NOT_RUN": {
+    "ran": false,
+    "why": "Phase 3 was conditional on a PASS. The pre-flight did not reach a PASS -- it did not reach a verdict at all -- so running a 12-cell banked-levels measurement would have been the exact unpowered-grid spend the pre-flight exists to prevent.",
+    "baseline_banked_levels": "3/3",
+    "moved": false,
+    "submission_gate_met": false
+  },
+  "KNOWN_LIMITS_do_not_over_read": "max_inductions=1 and budget=60, so a treatment acting only at induction #2/#3, or only after a level-up deep in a 400-action run, is INVISIBLE to this probe. A future REFUSE from this design would mean 'not detectably perturbing within 60 actions and 1 induction', never 'inert'.",
+  "cell_sha256": {
+    "pre__ft09": "e86e7761fefd4d8445e8657a21e712e0f8420c26935ddd2c936b7a5289e03fe3",
+    "post__ft09": "104e56a9a9595bfe91e08d4d6584f0312a3534081d011f15cbec381a60b73900",
+    "postb__ft09": "8ee7da76453bb335e9310afe815b69927cd1d6219d01448aa6db1526ec2386b4",
+    "pre__vc33": "0fe32f708f06ff2b0f76ff15c0f4376b19ceb1c903bfa55bc655ed7c1e38c9eb",
+    "post__vc33": "4bd2681b38066e9bd06ce52c5181c5b50dad79050e60f16a7c4f0d59ebd47cdb",
+    "postb__vc33": "c8478a4c6698ea51410ead77d7c16bae19abf442d732a2ee8e34328ebda43cd5"
+  },
+  "field_principles": {
+    "inference_substrate": "live_llm_inference: each cell loads and runs the 31B GGUF for a real induction, so the 60 s duration floor applies and per-cell wall times of 650-800 s are consistent with it.",
+    "ARITHMETIC_STATE.still_arithmetically_open": "Distinguishes 'we stopped early' from 'the answer is REFUSE'. Reporting an incomplete grid as a refusal would launder a process decision into a scientific finding about the treatment.",
+    "PHASE_3_BANKED_LEVELS_NOT_RUN.submission_gate_met": "The submission gate requires beating a TRM baseline AND our best prior submitted score (0.12). Nothing here measured a score, so it is False by absence of evidence, not by a failed comparison."
+  },
+  "code_commit_at_write": "f9a458e87594250d147b01dd902bbdda07bc3060",
+  "historical_artifacts_rewritten": [],
+  "reproducibility_checksum": "af9363be9995b73af135d148fdacbbaab35d43187700e478ed36351de60bfe62"
+}

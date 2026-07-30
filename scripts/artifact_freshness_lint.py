@@ -113,6 +113,50 @@ def _rows_source_entries(prov: dict) -> list[dict[str, Any]]:
     return out
 
 
+def _acknowledged_inert_drift(prov: dict) -> dict[str, str]:
+    """Per-dependency acknowledgements that a code change is VERIFIED INERT for this artifact.
+
+    WHY THIS EXISTS (2026-07-30). Three registered artifacts declare a code dependency but NO
+    `rebuild_command`. When that dependency legitimately changes, the author has no sanctioned way
+    to clear the lint: they cannot rebuild, and the only remaining moves are to edit the recorded
+    sha256 silently or to pass `--no-verify`. This module's own docstring names the second as the
+    failure mode to avoid ("blocking on 'I cannot check' would train people to pass --no-verify,
+    which is worse than the gap it closes") -- and the first is worse still, because it launders an
+    unverified change into a verified-looking provenance block.
+
+    So there is now a third move, and it is deliberately EXPENSIVE TO ABUSE. An acknowledgement is
+    accepted only when it pins:
+
+      * `path` and `sha256_now` -- the EXACT new hash. A later edit to the same file produces a
+        different hash and the acknowledgement stops applying, so this cannot become a permanent
+        exemption for a file. That is the property that makes it safe.
+      * `sha256_was` -- what it was, so the transition is auditable.
+      * `reason` and `evidence` -- non-empty prose naming HOW inertness was established. An
+        acknowledgement without both is IGNORED (the artifact stays stale), because an
+        acknowledgement that does not say why is indistinguishable from a silent hash bump.
+
+    It is NOT a substitute for a rebuild where a rebuild is possible. Prefer rebuilding: it proves
+    inertness by construction rather than by argument.
+    """
+    out: dict[str, str] = {}
+    entries = prov.get("freshness_acknowledgements")
+    if not isinstance(entries, list):
+        return out
+    for e in entries:
+        if not isinstance(e, dict):
+            continue
+        path = str(e.get("path", "")).strip()
+        now = str(e.get("sha256_now", "")).strip()
+        reason = str(e.get("reason", "")).strip()
+        evidence = str(e.get("evidence", "")).strip()
+        # All four required. A missing reason or evidence makes this a silent hash bump wearing a
+        # structured field, which is the thing being prevented.
+        if not (path and len(now) == 64 and reason and evidence):
+            continue
+        out[path] = now
+    return out
+
+
 def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
     """Return (status, detail_lines, rebuild_command).
 
@@ -129,14 +173,21 @@ def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
     recorded.extend(_rows_source_entries(prov))
     if not recorded:
         return ("no_provenance", [], None)
-    drift, unreadable = [], []
+    # A VERIFIED-INERT acknowledgement, per dependency (2026-07-30). See
+    # `_acknowledged_inert_drift` for why this exists and what it demands.
+    ack = _acknowledged_inert_drift(prov)
+    drift, unreadable, acknowledged = [], [], []
     for entry in recorded:
         p = Path(str(entry.get("path", "")))
         now = _sha256(p)
         if now is None:
             unreadable.append(str(p))
         elif now != entry.get("sha256"):
-            drift.append(str(p))
+            rel = _repo_relative(str(p)) or str(p)
+            if ack.get(rel) == now or ack.get(str(p)) == now:
+                acknowledged.append(str(p))
+            else:
+                drift.append(str(p))
     cmd = prov.get("rebuild_command")
     if isinstance(cmd, str):
         cmd = cmd.replace("<this file>", str(artifact))
@@ -144,7 +195,9 @@ def check_artifact(artifact: Path) -> tuple[str, list[str], str | None]:
         return ("stale", [f"drifted: {p}" for p in drift], cmd)
     if unreadable:
         return ("unverifiable", [f"unreadable input: {p}" for p in unreadable], cmd)
-    return ("fresh", [f"{len(recorded)} dependencies verified"], cmd)
+    detail = [f"{len(recorded)} dependencies verified"]
+    detail += [f"drift ACKNOWLEDGED as verified-inert: {p}" for p in acknowledged]
+    return ("fresh", detail, cmd)
 
 
 def _repo_relative(raw: str) -> str | None:

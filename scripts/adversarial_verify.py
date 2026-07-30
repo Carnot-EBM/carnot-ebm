@@ -2386,7 +2386,23 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                 )
             )
         return
-    if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
+    # An artifact that EXPLICITLY declares the ARC live-agent no-LLM substrate must reach its own
+    # floor check even though, by that substrate's definition, it invokes no model and so carries
+    # no compute-bound marker. Before 2026-07-30 the dedicated `arc_live_agent_no_llm` branch below
+    # sat BEHIND the marker guard on the next line, which made it reachable ONLY for artifacts that
+    # happened to carry a VESTIGIAL GGUF/CUDA string -- exactly backwards, since that branch exists
+    # precisely because such strings are vestigial for this substrate. Net effect: a CLEAN no-LLM
+    # artifact (no vestigial marker) could declare any duration at all, including 0.0, and the 0.01s
+    # floor never ran. Found by probe while verifying an artifact of this session that declared the
+    # substrate at duration_s=0.002 -- below its own floor -- and was reported clean. The
+    # declaration is an affirmative claim of real per-action environment stepping, so it is
+    # self-sufficient grounds to check the floor; no marker should be required.
+    _declares_arc_live_no_llm = _is_arc_live_agent_no_llm(d)
+    if (
+        not _has_compute_bound_marker(d)
+        and not _is_live_llm_inference(d)
+        and not _declares_arc_live_no_llm
+    ):
         return
     floor = duration_floor_for_artifact(d)
     if floor is None:
@@ -3270,8 +3286,21 @@ _ARC_CALIBRATION_NAME_RE = re.compile(
     r"calibrat|ground[_-]?truth|exhaustive[_-]?bfs|position[_-]?keyed[_-]?bfs|bfs[_-]?ground",
     re.IGNORECASE,
 )
+# `(?<![a-z])solv` NOT bare `solv` (2026-07-30). The bare form matched inside UNRELATED LONGER
+# WORDS, and the words it hit were the opposite of a solve claim: "unre-solv-ed", "re-solv-e",
+# "dis-solv-e". A cost artifact whose verdict said "...affordability is UNRESOLVED..." was
+# CRITICAL-flagged as an ARC game-solve claim on that substring alone.
+#
+# A plain `\b` will not do here: this project's verdicts are underscore-joined
+# (`complete_self_solve_...`), and `_` is a word character, so `\bsolv` would MISS the real
+# matches it exists to catch. The negative lookbehind for a letter accepts `_solve` / `-solve` /
+# start-of-string `solving` while rejecting `unresolved` / `resolve` / `dissolve`.
+#
+# This is the exact bug class CLAUDE.md "QA-Layer Authenticity Discipline" was written for
+# (origin bug #3 was `"diffusiongemma_met" in verdict` matching inside `meta_tensor`), found the
+# same way: a legitimate artifact quarantined by a substring hit with no boundary awareness.
 _ARC_GAME_SOLVE_CLAIM_RE = re.compile(
-    r"winpath|win[_-]?path|lethal|solv|\bl[1-9]\b|level[_-]?up", re.IGNORECASE
+    r"winpath|win[_-]?path|lethal|(?<![a-z])solv|\bl[1-9]\b|level[_-]?up", re.IGNORECASE
 )
 
 
