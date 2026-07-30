@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_arc_gateway_accurate_rescore_20260726",
  "title": "GATEWAY-ACCURATE re-score: the opening RESET is FREE, so the published uncharged-RESET optimism was itself overstated",
- "run_date": "2026-07-29T14:38:58Z",
+ "run_date": "2026-07-30T11:03:57Z",
  "schema": "carnot.arc_gateway_accurate_rescore.v1",
  "charge_model_settled_from_installed_source": {
   "source_spans": {
@@ -115,8 +115,8 @@
    {
     "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
     "exists": true,
-    "sha256": "7dec8637eab82e3d185f336e40cc1ae7a8d54c82231311dd8a54e630af13268b",
-    "bytes": 41629,
+    "sha256": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
+    "bytes": 43180,
     "committed_at_time_of_writing": true,
     "what_it_reported": "published the uncharged-RESET optimism as median 4.62% / max 16.80% over 44 live cells, computed under M1",
     "NOT_MODIFIED": true
@@ -124,8 +124,8 @@
    {
     "path": "results/arc_per_level_reset_attribution_20260726.json",
     "exists": true,
-    "sha256": "624a21ec085e78942699514bd432b704b2b7d51aac0329cbceff03f8e8be99e8",
-    "bytes": 55743,
+    "sha256": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
+    "bytes": 57295,
     "committed_at_time_of_writing": true,
     "what_it_reported": "published relative score loss from charged resets as median 4.5% / max 12.0% over 7 won cells, computed under M1",
     "NOT_MODIFIED": true
@@ -133,8 +133,8 @@
    {
     "path": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
     "exists": true,
-    "sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
-    "bytes": 461356,
+    "sha256": "f7c50f73ab4d7137ebacbbd93f0facf23e5287e0fa78434f8f8017bc8423d999",
+    "bytes": 462952,
     "committed_at_time_of_writing": true,
     "what_it_reported": "independent bound over the same rows (median 11.4% / max 95.7% worst case) plus the first statement that the opening reset is free",
     "NOT_MODIFIED": true
@@ -2526,7 +2526,7 @@
  "peer_bound_crosscheck": {
   "peer_artifact": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
   "available": true,
-  "peer_sha256": "cf2ae7ad2ea0debab2e55c45dce4e2d8ad58d4320f568db3755ad7aa0ec3dd5d",
+  "peer_sha256": "f7c50f73ab4d7137ebacbbd93f0facf23e5287e0fa78434f8f8017bc8423d999",
   "peer_is_uncommitted_at_time_of_writing": true,
   "peer_first_stated_the_opening_reset_is_free": true,
   "what_agrees": "the peer's independent reading of the same installed source reached the same conclusion -- gateway-charged == actions + resets - n_full_resets, n_full_resets >= 1 -- and its three hand-recomputed cells (vc33 4.51%->0.00%, r11l 16.66%->16.46%, tu93 4.62%->4.06%) are reproduced independently here over 44 cells.",
@@ -3045,9 +3045,9 @@
   "no historical artifact's recorded numbers rewritten; the M1 figures are published beside the M2 figures, not over them",
   "no pre-existing field of scripts/arc_leaderboard_eval.py's row shape changed value; the 2026-07-27 Card-read instrumentation is PURE ADDITION and the fix history is recorded in CORRECTION_OWED.claim_3_a_CODE_correction_not_just_a_number"
  ],
- "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
+ "git_head": "2bad77981445ee690fb502080fdd6d753b244699",
  "provenance": {
-  "git_head": "a283217433c2e4b69781a293a6d17a32f47f8855",
+  "git_head": "2bad77981445ee690fb502080fdd6d753b244699",
   "code": [
    {
     "path": "scripts/analyze_arc_gateway_accurate_rescore.py",
@@ -3120,11 +3120,11 @@
    "cited_artifacts": [
     {
      "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
-     "sha256": "7dec8637eab82e3d185f336e40cc1ae7a8d54c82231311dd8a54e630af13268b"
+     "sha256": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a"
     },
     {
      "path": "results/arc_per_level_reset_attribution_20260726.json",
-     "sha256": "624a21ec085e78942699514bd432b704b2b7d51aac0329cbceff03f8e8be99e8"
+     "sha256": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9"
     }
    ]
   },
@@ -3133,7 +3133,7 @@
   "submitted_nothing": true,
   "max_actions_untouched": true
  },
- "duration_s": 17.029,
+ "duration_s": 10.317,
  "measurement_wall_s": 9649.5,
  "measurement_wall_s_basis": {
   "per_part": {
@@ -3146,5 +3146,26 @@
  "duration_s_principle": "THIS ANALYSER'S runtime only. It is NOT the measurement clock: each part publishes its own `measurement_wall_s`, summed from the upstream row FILES' own elapsed clocks. Conflating the two published an 8-second duration for a 2.54-hour measurement once already.",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "inference_substrate_principle": "this artifact steps no environment and loads no model. It re-reads persisted rows and re-drives the INSTALLED scorer. Declaring a live substrate here would borrow credibility the pass does not have.",
- "reproducibility_checksum": "sha256:d8c4b4129c3262c8a028303fc45ade3f71774022377beb983e72ddfa29e9a409"
+ "reproducibility_checksum": "sha256:dd094faf8d27ed5d343a8f720dc49aeb3a6fd17eb652eaaca4009e0a8ab463bd",
+ "original_timings_superseded_by_rebuild": {
+  "why_this_block_exists": "this artifact was REBUILT on 2026-07-30 to clear artifact-freshness-lint after its upstream rows_source artifacts gained freshness acknowledgements. The rebuild was verified numerically inert -- see rebuild_diff_2026_07_30 -- but it overwrote measured wall-clock values, which are not reproducible. Restored per the standing never-prune rule.",
+  "superseded_at_commit": "pending (this session)",
+  "n_timing_fields_restored": 1,
+  "original_timings": {
+   "duration_s": 17.029
+  },
+  "original_run_date": "2026-07-29T14:38:58Z",
+  "current_values_are_unchanged_by_this_block": true
+ },
+ "rebuild_diff_2026_07_30": {
+  "why_it_was_rebuilt": "its declared rows_source artifacts (outer_loop_arc_gateway_rescore_20260726 and arc_per_level_reset_attribution_20260726) had freshness acknowledgements APPENDED this session, which changed their sha256 and byte length. A rebuild is the strongest available proof that an upstream annotation did not move a downstream number.",
+  "fields_differing": 14,
+  "measured_numbers_that_moved": 0,
+  "non_timing_differences_and_why_each_is_not_a_number": {
+   "run_date": "clock at rebuild",
+   "cited_originals_never_rewritten.artifacts[*].bytes": "byte LENGTH of the upstream artifacts, which grew because acknowledgement blocks were appended to them. Not a measurement.",
+   "peer_bound_crosscheck.peer_sha256": "content hash of a peer artifact that also gained an acknowledgement block."
+  },
+  "verdict": "REBUILD IS NUMERICALLY INERT: every headline, median and per-cell value is unchanged."
+ }
 }

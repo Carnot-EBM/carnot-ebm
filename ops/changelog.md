@@ -1,5 +1,150 @@
 # Carnot — Changelog
 
+## 2026-07-30 (outer-loop: an undisclosed quality-gate relaxation reverted, the dedup key's partition fixed a second time, and the branching-factor lever devalued to noise)
+
+**Instruction:** apply an 18-item adversarial review of the day's three commits — arguing back with
+evidence where a finding is wrong — then commit. Submission remains operator-only; no submission
+action was taken and no scored game was played.
+
+Four of the eighteen changed a conclusion. The rest were reporting-basis corrections, and two were
+wrong on their numbers (recorded below rather than quietly adopted).
+
+**A QUALITY GATE HAD BEEN RELAXED WITHOUT DISCLOSURE, and is reverted (the most serious finding).**
+`0da7f75ad` split `degenerate_goal_predicate` so that a goal pre-veto which ran out of BUDGET returns
+`goal_unreached_within_budget` instead, and the caller then fell through to the planner — neither
+firing GOAL-REPAIR nor skipping the round. The in-code rationale was thorough, but the commit
+message's explicit five-item "Also in this commit" list omits it, and no ops record or session
+narrative mentioned it. It is a relaxation of exactly the named gate that may only be widened with
+operator authorisation: goals that previously failed the pre-veto now reached the planner.
+
+There were three possible resolutions and the ordering between them is the substance:
+
+1. **Fire GOAL-REPAIR** (the pre-split behaviour) — unsound in the worst way. A spent compute budget
+   silently became a goal REWRITE to a looser "strictly fuller than root" proxy, and the planner then
+   reported success against a non-winning goal. **Not restored.**
+2. **Fall through to the planner** — the permissive answer, and the one that shipped. **Reverted.**
+3. **Skip the round without attempting repair** — what runs now. At least as strict as the pre-split
+   behaviour on the accept axis, strictly stricter on the rewrite axis, so it widens nothing in either
+   direction.
+
+**The accepted loss is stated rather than hidden:** at the shipped `max_nodes=20000`, ka59's
+proven-correct depth-11 predicate needs ~137k engine calls to demonstrate, so its round is skipped and
+induce→plan does not complete for that game. That is a COMPUTE failure and is now reported as one —
+`skipped`, `goal_undecided_within_budget` and `termination: budget_exhausted` distinguish it from a
+disproved predicate in every artifact. `max_nodes` is compute and may be raised on evidence; the veto
+is quality and may not be widened. Should the operator prefer resolution (2), it is a one-line change
+plus two assertions, both named in SCENARIO-ARC-WMTE-6047-5. The same conflation was fixed in the
+default-off live-path gate (`arc_competition_agent.py`) as a **label-only** change: both cases still
+skip there, so behaviour is unchanged and only the recorded reason becomes honest.
+
+**THE DEDUP KEY'S PARTITION WAS BROKEN BY ITS OWN FIRST FIX.** The contract required of a dedup key is
+not `key(x) == to_ascii(x)` per input — it is a PARTITION: `key(x) == key(y)` iff
+`to_ascii(x) == to_ascii(y)`, over the whole set being keyed. Handing negative grids to `to_ascii`
+verbatim satisfied the per-input reading and broke the partition, because a `bytes` never equals a
+`str`: `to_ascii` MERGES `[[4]]` with `[[-4]]` (both render "4") while the two-namespace key returned
+`b"1:1|\x04"` and `"4"` and SPLIT them. One negative cell anywhere in a reachable set silently
+un-merged it from its aliasing twin — the finer-partition failure the whole change existed to avoid,
+reintroduced by its own fix. Every non-empty 2-D grid now keys into one namespace, with the arithmetic
+fast path unchanged (48x on the key itself) and the cell-by-cell path computing `to_ascii`'s digit
+directly. Latent in practice — real grids are non-negative — but engines here are arbitrary
+LLM-written code, and "that input class does not occur" is the assumption that produced this bug
+twice.
+
+Eight existing tests all PASSED against the broken version, because every one asked the per-input
+question. That is the finding worth keeping: they were not thin on values, they were asking the wrong
+thing. `_assert_same_partition` now checks the fallback classes as sets, the new
+`test_a_mixed_sign_set_keys_the_same_partition_as_to_ascii` pins the exact regressed pair plus a
+12-grid corpus spanning every branch, and reverting the implementation kills 5 tests including that
+one. Re-verified end to end on three real engines (lp85, sk48, sc25): **PARTITION_IDENTICAL by
+accept-trace hash on all three**, speedups 4.73–6.26x intact.
+
+**THE BRANCHING-FACTOR LEVER IS NOT WORTH SHIPPING, and the reason is a noise floor nobody had
+measured.** Phase 2 valued the cut in CALLS while its own central correction said the verdict must be
+in seconds. Restated in wall clock over the 14 strong corpus rows, the deployable lever is **1.021x**
+(not 1.152x) and the lossy one **1.099x** (not 2.547x — which was not even the call median, just
+dc22's value; the call median is 2.510). Then, having added a **trailing-control arm** to the dedup
+verifier — the control key re-run last, an in-harness A/A over identical work — the floor measures
+**10.8–14.6%**, about 5x an earlier external estimate of ~2.5%, which is retracted. So the deployable
+cut's 1.021x median, and 13 of 14 strong rows, sit DEEP INSIDE the noise: on this evidence the cut is
+not measurably faster at all. The already-shipped dedup KEY clears the same floor by ~30x, so the two
+changes are not comparable in size.
+
+**"L1 is provably safe" is withdrawn; only its dedup half is safe by construction.** The
+inert-keyboard ban is inductive, and its corpus support is essentially vacuous where it matters: in
+the 6-game deep run, **five** games ban ALL FIVE keyboard actions and still show an identical state
+set — guaranteed, because those engines' keyboard actions are no-ops, so banning a no-op cannot lose
+anything. Only dc22 exercises it non-vacuously. (The session report said "three games"; it is five.)
+The ban rule is also **absorbing by construction** — `key_new[a] > 0 or key_calls[a] == 0` has no
+un-ban path, since a banned action is never emitted again — so the risk the harness's own docstring
+names was constructible. Built it: an action inert until a gate then the only way forward. It loses
+**1024 of 1365 reachable states (75%), permanently — still lost at 5x the expansion budget.** If the
+ban ever ships it needs an un-ban path.
+
+**The affordability residual was too generous everywhere, and a prior "correction" had gone the wrong
+way.** The analysis re-derived the per-game budget as `cap_s / n_games` (32400/110 = 294.55 s) instead
+of importing the envelope's own published `n_games_110.usable_loop_wall_s = 31420`, which already
+deducts the 980 s kernel overhead the envelope assumes and uses for its own `fraction_of_usable`. That
+spends the 980 s twice: **every residual was 8.91 s/game too generous.** Conservative residual
+**58.34 s**, not 67.2; shortfalls **2.56x / 2.13x / 1.84x**, not 2.22x / 1.85x / 1.60x. The changelog
+records that an earlier report said 58.3 and was overridden to 67.2 as being "derived from the table,
+not typed" — so a correct number was replaced by an incorrect one and the swap was logged as a rigour
+improvement. Worth naming as its own failure mode: **deriving from the wrong field in the right
+artifact looks exactly like deriving properly.** Also: only 2 of ~6 named cost levels were scored, and
+the one that changes a verdict was skipped — at `mine_uncontended_ci_hi` (139.31 s/game, residual
+146.33 s) the shipped arm (149.45 s) does **not** fit, so "the uncontended case was already closed" is
+unsupported; it closes at the mean level and fails at ci-hi. That is the single place the branching cut
+flips a verdict rather than widening a margin. `cited_baseline.bias_direction: CONSERVATIVE` is
+retracted — it accounted for one bias while ignoring a larger one pointing the other way; net bias was
+**OPTIMISTIC by ~3.9 s/game**.
+
+**Two findings were wrong on their numbers, and are recorded rather than adopted.** The review said 9
+of 26 rows were vacuous; the artifact's own `signal_strength` says **12 vacuous / 14 strong**, with 7
+rows where the lever dropped nothing and 1 with no data. It also said the L2 call median was 2.547;
+it is **2.510**. Both findings' *direction* was right and their arithmetic was not.
+
+**Never-prune repair.** `0da7f75ad` rebuilt four registered artifacts and overwrote their originally
+measured timings in place — disclosed and verified substantive-free at the time, but a wall-clock
+number is not reproducible, so overwriting it destroys the record. **132 timing values restored** across
+experiment_6011/6012/6013 and the inducer head-to-head, under
+`original_timings_superseded_by_rebuild`, additive with every current value unchanged. The restoring
+script ASSERTS that every differing field is a timing or a provenance pin, and that assertion caught
+three provenance fields it had not anticipated rather than silently filing them as timings. The
+preferred path next time is the VERIFIED-INERT acknowledgement mechanism that the same commit added.
+
+**Smaller corrections, all applied.** A stale hard-coded "1.25x" in the dedup artifact contradicted the
+1.2828 in its own table — now DERIVED from the row so it cannot drift again. The affordability
+artifact's cited envelope hash was already stale at its own commit (two later commits edited the
+envelope); a freshness acknowledgement pins the new hash and records that every imported field was
+re-read unchanged. The prose "n=2, so no rate is claimed" contradicted an artifact publishing the rate
+twice — resolved by keeping the rate with a loud n=2 caveat and withholding only the forward
+projection, since hiding a measured value is worse than publishing it under a stated n. Plan
+preservation is now scoped to the 2 rows that verify it (ka59 length 11, m0r0), not 26. Median and
+range no longer use different denominators inside one sentence. "26 games" is now "25 games / 26
+(game, engine) rows". And the mutation-check rule is documented as the PAIR it actually is — a bare
+`--check` exits 1 with "REFUSING — no baseline for this run", so any instruction phrased as "run
+`--check` after the tests" cannot be satisfied.
+
+**The guard earned its keep during this session.** The paired snapshot/check caught the test suite
+rewriting three tracked files that were not mine: `experiment_4548_integration_8game_gate.py` and
+`experiment_4560_integration_8game_gate.py` regenerated with 30 and 34 lines DELETED, and
+`experiment_5746_...preflight.json` with its `blocked_reasons` flipped from `[]` to
+`["required_exact_solver_unavailable"]`. All three reverted; only authored changes were committed.
+
+**Test state, stated plainly.** ARC subset: 57 failed / 8784 passed / 5 skipped. The identical
+selection run in a clean worktree at `2bad77981` gives the same failure set — 0 new, 0 fixed — so all
+57 are pre-existing. 57 red plus a nonzero skip count remains a standing finding, not a clean bill of
+health; per CLAUDE.md a skipped test is an invisible failure.
+
+**Where this leaves the frontier.** Induce→plan is **NOT** open at a price production can pay: at the
+decision-relevant conservative level the deployable configuration is 2.13x short and even the
+completeness-losing filter is 1.84x short. Candidate GENERATION is 5.0% of search time, so no
+candidate-set change can address the other 95% — and the cut that was supposed to be the lever turns
+out to be inside the noise. Two independent lines now point past search to **perception**: 13 of 18
+candidates are clicks, 72.7% of engine calls are clicks, and 3 of 15 salience ranks are entirely
+inert. A front-end that proposed four interactive objects instead of thirteen speculative points would
+cut branching with no inductive ban and no completeness risk at all. That is a perception problem, not
+a search problem.
+
 ## 2026-07-30 (outer-loop: the search's dedup key is 38% of its time — replaced in NumPy, and the OBVIOUS version of that swap is refuted by measurement)
 
 **Instruction:** land the already-validated treatment-activation pre-flight, then ship the bytes
@@ -14646,13 +14791,28 @@ finding. Added the `INCONCLUSIVE` verdict.
   computes nothing never produces a plan and never reaches the planner in production.
 - **The cap was wrong.** Primary cap moved to 9h to match the cited envelope artifact's own headline,
   and the verdict now rests explicitly on the CONSERVATIVE per-game cost level, which that artifact
-  calls the decision-relevant one. Conservative 9h/110 residual is 67.2 s/game (the earlier report
-  said 58.3; it is now derived from the table, not typed).
+  calls the decision-relevant one. Conservative 9h/110 residual is ~~67.2 s/game (the earlier report
+  said 58.3; it is now derived from the table, not typed)~~ **58.34 s/game — the 67.2 was WRONG and
+  the "earlier report" it overrode was right.** Corrected 2026-07-30 (review). "Derived from the
+  table" is exactly where it went wrong: it derived the per-game budget as `cap_s / n_games`
+  (32400/110 = 294.55) instead of importing the envelope's own published
+  `n_games_110.usable_loop_wall_s = 31420`, which already deducts the 980 s kernel overhead the
+  envelope assumes and uses for its own `fraction_of_usable`. Deriving from cap hours spends that
+  980 s twice, making every residual 8.91 s/game too generous. So this bullet replaced a correct
+  number with an incorrect one and recorded the swap as a rigour improvement — worth naming as its own
+  failure mode: *deriving from the wrong field in the right artifact looks exactly like deriving
+  properly.* Corrected shortfalls 2.56x / 2.13x / 1.84x. See
+  `results/outer_loop_arc_plan_affordability_corrected_20260730.json:CORRECTION_20260730_REVIEW`.
 - **A baseline field asserted something unverified.** `baseline_total_s_without_any_plan_search` — the
   exclusion was assumed. The retention corpus in fact records 21 real plan attempts totalling 323,988
   nodes, which at those engines' ~2600 calls/s is ~5 s/cell and FITS inside the 9.74 s/game non-LLM
   component, so plan search is probably already in the baseline. Renamed, with the bias direction
-  stated (conservative for this analysis).
+  stated ~~(conservative for this analysis)~~ — **the CONSERVATIVE bias claim is RETRACTED
+  (2026-07-30).** It accounted for one bias (~5 s/game of cheap plan search possibly already inside
+  the baseline, genuinely conservative) while the residual carried an ~8.91 s/game error in the
+  OPPOSITE direction. Net bias was **OPTIMISTIC by ~3.9 s/game**. Stating a bias direction from a
+  partial accounting of the biases is worse than stating none, because it invites the reader to stop
+  looking.
 - **VERDICT: `REACHABLE_AND_AFFORDABILITY_IS_ENGINE_DEPENDENT`.** Reachable at a fixed 137,347 engine
   calls (bit-identical at 160k and 400k). The fastest planning-capable engines cost ~49 s and fit; the
   ONLY engine verified to produce a real, arcade-replayed solve costs ~194 s and misses by 3.3x. n=1

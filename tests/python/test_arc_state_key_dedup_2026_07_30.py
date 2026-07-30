@@ -23,18 +23,20 @@ Anything less is a silent change to search behaviour dressed as an optimisation.
 
 Each test below pins one way a plausible "simplification" of `_state_key` would break that
 equivalence, and each was checked to FAIL against that simplification rather than merely to pass
-against the real thing (7 mutations applied one at a time, 7 killed):
+against the real thing (8 mutations applied one at a time, 8 killed):
 
   * drop the `% 10`              -> ``test_the_aliasing_pair_collides_under_both`` (+4 more)
   * drop the shape prefix        -> ``test_shape_is_part_of_the_key``
   * drop the non-negative guard  -> ``test_negative_grids_fall_back_because_mod_10_disagrees_...``
-  * drop the integer guard       -> ``test_bool_and_object_dtypes_fall_back_rather_than_crash``
+  * drop the integer guard       -> ``test_bool_and_object_dtypes_decline_the_arithmetic_rather_than_crash``
   * drop the `a.size` guard      -> ``test_an_empty_grid_does_not_crash_the_min_guard``
   * fall back unconditionally    -> ``test_the_fast_path_is_actually_taken``
   * uint8 cast before the `% 10` -> ``test_colours_above_255_cannot_wrap_the_uint8_cast``
+  * split the namespace in two   -> ``test_a_mixed_sign_set_keys_the_same_partition_as_to_ascii``
+                                    (+4 more -- reverting to the two-namespace version kills 5)
   * any of the above             -> ``test_equivalence_over_random_grids`` in bulk
 
-TWO OF THOSE TESTS EXIST ONLY BECAUSE AN ADVERSARIAL REVIEW READ THIS FILE AND FOUND IT WANTING,
+THREE OF THOSE TESTS EXIST ONLY BECAUSE AN ADVERSARIAL REVIEW READ THIS FILE AND FOUND IT WANTING,
 which is worth recording where the next reader will see it:
 
   1. The non-negative guard was MISSING, and this docstring, the module docstring, the spec and the
@@ -44,6 +46,13 @@ which is worth recording where the next reader will see it:
      tests all passed against that bug because every one used non-negative colours.
   2. ``test_equivalence_over_random_grids`` carried an anti-vacuity guard that was satisfied by
      exactly the vacuous case it was written to exclude. See its own docstring.
+  3. THE FIX FOR (1) WAS ITSELF WRONG, and no amount of additional values would have caught it,
+     because every test here asked the WRONG QUESTION. Handing negatives to `to_ascii` verbatim
+     satisfies ``_state_key(x) == to_ascii(x)`` per input while BREAKING the partition that is the
+     only thing a dedup key is for: a `bytes` never equals a `str`, so ``[[4]]`` and ``[[-4]]`` --
+     which `to_ascii` MERGES -- came back SPLIT. Every non-empty 2-D grid now keys into one
+     namespace. See ``test_a_mixed_sign_set_keys_the_same_partition_as_to_ascii``, and
+     ``_assert_same_partition``, which is how the fallback classes are checked now.
 """
 
 from __future__ import annotations
@@ -58,6 +67,27 @@ ALIASING_PAIRS = [(0, 10), (1, 11), (4, 14), (5, 15)]
 
 def _grid(fill: int, shape=(3, 4)) -> np.ndarray:
     return np.full(shape, fill, dtype=np.int16)
+
+
+def _assert_same_partition(grids: list[np.ndarray], why: str) -> int:
+    """Assert the property that actually matters, over a SET: `_state_key` collides on exactly the
+    pairs `to_ascii` collides on. Returns the number of pairs compared.
+
+    This helper exists because asserting ``_state_key(x) == to_ascii(x)`` per input -- which is what
+    three tests here used to do for the fallback classes -- is a WEAKER and genuinely misleading
+    property. See ``test_a_mixed_sign_set_keys_the_same_partition_as_to_ascii``.
+    """
+    pairs = 0
+    for i, a in enumerate(grids):
+        for j, b in enumerate(grids[i:], start=i):
+            pairs += 1
+            ascii_same = to_ascii(a) == to_ascii(b)
+            key_same = _state_key(a) == _state_key(b)
+            assert ascii_same == key_same, (
+                f"{why}: pair ({i},{j}) to_ascii_same={ascii_same} key_same={key_same} "
+                f"({to_ascii(a)!r} vs {to_ascii(b)!r}; {_state_key(a)!r} vs {_state_key(b)!r})"
+            )
+    return pairs
 
 
 def test_the_aliasing_pair_collides_under_both() -> None:
@@ -109,30 +139,40 @@ def test_shape_is_part_of_the_key() -> None:
     )
 
 
-def test_negative_float_grid_falls_back_to_to_ascii() -> None:
+def test_negative_float_grid_declines_the_arithmetic_fast_path() -> None:
     """The one input class where `% 10` and `to_ascii` genuinely DISAGREE.
 
     `to_ascii` truncates toward zero: ``int(-2.7) == -2``, rendering "2". But ``-2.7 % 10 == 7.3``,
-    which truncates to 7. Rather than argue that float grids cannot occur, anything that is not an
-    integer dtype is handed to `to_ascii` itself, so behaviour is identical by construction.
+    which truncates to 7. So a negative float must not take the arithmetic path -- it takes the
+    cell-by-cell path that computes `to_ascii`'s digit directly, in the SAME namespace.
     """
     neg = np.full((2, 2), -2.7, dtype=np.float64)
-    assert _state_key(neg) == to_ascii(neg)
-    # And the disagreement it avoids is real, not hypothetical:
+    # It must key as "2" per cell (to_ascii's digit), NOT as 7 (what the arithmetic would give).
+    assert _state_key(neg) == b"2:2|" + bytes([2, 2, 2, 2])
     would_have_been = (neg % 10).astype(np.uint8).tobytes()
-    assert would_have_been != np.full((2, 2), 2, dtype=np.uint8).tobytes(), (
-        "premise wrong: % 10 agrees with to_ascii here, so the fallback guards nothing"
+    assert would_have_been != bytes([2, 2, 2, 2]), (
+        "premise wrong: % 10 agrees with to_ascii here, so the guard protects nothing"
+    )
+    # And it must land in the same partition as the grid to_ascii merges it with.
+    _assert_same_partition(
+        [neg, np.full((2, 2), 2, dtype=np.int16), np.full((2, 2), -12.9, dtype=np.float64)],
+        "negative float did not share to_ascii's partition",
     )
 
 
 def test_the_fast_path_is_actually_taken() -> None:
     """An unconditional fallback would satisfy every equivalence test above and buy nothing.
 
-    So assert the optimisation is ENGAGED for the input class that matters: a 2-D integer grid must
-    come back as `bytes` (the NumPy path), never as the `str` that `to_ascii` returns.
+    So assert the optimisation is ENGAGED for the input class that matters: a 2-D non-negative
+    integer grid must come back as the arithmetic encoding, which is what carries the measured
+    speedup. Checked by VALUE, not by `isinstance`: every non-empty 2-D grid now returns `bytes`
+    (that is the partition fix), so a type check no longer distinguishes the paths at all.
     """
-    assert isinstance(_state_key(_grid(7)), bytes)
-    assert isinstance(_state_key(np.full((2, 2), 1.5, dtype=np.float32)), str)
+    assert _state_key(_grid(7)) == b"3:4|" + bytes([7] * 12)
+    # A grid that declines the arithmetic still keys into the same namespace -- only an input
+    # `to_ascii` itself collapses (non-2-D, or empty) is handed out verbatim as a `str`.
+    assert isinstance(_state_key(np.full((2, 2), 1.5, dtype=np.float32)), bytes)
+    assert isinstance(_state_key(np.zeros((2, 0), dtype=np.int16)), str)
 
 
 def test_equivalence_over_random_grids() -> None:
@@ -247,10 +287,14 @@ def test_negative_grids_fall_back_because_mod_10_disagrees_with_to_ascii() -> No
     value, where `abs` silently overflows). So the assertion here is agreement with `to_ascii`
     itself -- by construction, not by argument.
     """
-    # Every value where the two encodings disagree must still key exactly as `to_ascii` does.
+    # Every value where the two encodings disagree must still key into to_ascii's OWN class: the
+    # digit of the absolute value, not `v % 10`.
     for v in range(-15, 0):
         a = np.full((2, 2), v, dtype=np.int16)
-        assert _state_key(a) == to_ascii(a), f"negative grid {v} did not fall back to to_ascii"
+        digit = int(str(v)[-1])
+        assert _state_key(a) == b"2:2|" + bytes([digit] * 4), (
+            f"negative grid {v} keyed as {_state_key(a)!r}, not to_ascii's digit {digit}"
+        )
 
     # And the disagreement being guarded is real, not defensive ceremony: -1 and -11 are the SAME
     # state under to_ascii, and arithmetic would have agreed here -- but -1 vs 9 is where it breaks.
@@ -264,11 +308,68 @@ def test_negative_grids_fall_back_because_mod_10_disagrees_with_to_ascii() -> No
         "-1 and 9 were merged into one state: the fast path is taking negative grids again"
     )
 
-    # A mixed grid (one negative cell) must also fall back -- the guard is on the MINIMUM, not on
-    # every cell being negative.
+    # A mixed grid (one negative cell) must also decline the arithmetic -- the guard is on the
+    # MINIMUM, not on every cell being negative.
     mixed = np.array([[1, 2], [3, -4]], dtype=np.int16)
-    assert _state_key(mixed) == to_ascii(mixed)
-    assert isinstance(_state_key(mixed), str)
+    assert _state_key(mixed) == b"2:2|" + bytes([1, 2, 3, 4])
+    _assert_same_partition(
+        [mixed, np.array([[1, 2], [3, 4]], dtype=np.int16), np.array([[11, 2], [3, 14]])],
+        "a grid with one negative cell left to_ascii's partition",
+    )
+
+
+def test_a_mixed_sign_set_keys_the_same_partition_as_to_ascii() -> None:
+    """THE SECOND BUG AN ADVERSARIAL REVIEW CAUGHT, and the one the eight original tests could not
+    have caught no matter how many values they tried, because they asserted the WRONG PROPERTY.
+
+    The fix for the negative-colour bug handed negatives to `to_ascii` itself and argued that
+    equivalence therefore held "by construction". Every test agreed, because each one asked
+    ``_state_key(x) == to_ascii(x)`` -- a PER-INPUT VALUE question. But a dedup key is only ever used
+    to compare TWO states, so the property required of it is a PARTITION:
+
+        ``key(x) == key(y)``  iff  ``to_ascii(x) == to_ascii(y)``
+
+    Two namespaces break that while satisfying the per-input reading, because `bytes` never equals
+    `str`. `to_ascii` MERGES ``[[4]]`` with ``[[-4]]`` (both render "4"); the two-namespace key
+    returned ``b"1:1|\\x04"`` and ``"4"`` and SPLIT them. Any reachable set mixing a negative cell
+    with its aliasing twin silently explored states the `to_ascii` key had deduplicated -- the exact
+    finer-partition failure the whole change was designed to avoid, reintroduced by its own fix.
+
+    Latent in practice (real ARC grids are non-negative), which is why it is pinned rather than
+    merely fixed: engines here are arbitrary LLM-written code, and "the input class does not occur"
+    is the assumption that produced this bug twice.
+    """
+    # The pair that regressed, stated as bluntly as possible.
+    pos, neg = np.array([[4]]), np.array([[-4]])
+    assert to_ascii(pos) == to_ascii(neg), "premise wrong: to_ascii does not merge 4 with -4"
+    assert _state_key(pos) == _state_key(neg), (
+        "4 and -4 keyed into different states: the fallback is in a separate namespace again"
+    )
+
+    # And in bulk, over a set that deliberately spans every branch: non-negative int (arithmetic),
+    # negative int, float, bool, object, and aliasing twins of each.
+    corpus = [
+        np.array([[4, 5], [0, 1]], dtype=np.int16),  # arithmetic path
+        np.array([[14, 15], [10, 11]], dtype=np.int16),  # to_ascii-identical twin
+        np.array([[-4, 5], [0, 1]], dtype=np.int16),  # one negative -> cell-by-cell path
+        np.array([[-14, -5], [0, -11]], dtype=np.int16),  # all negative, same digits
+        np.array([[4.0, 5.2], [0.9, 1.1]], dtype=np.float64),  # float truncation
+        np.array([[-4.7, 5.0], [0.0, 1.0]], dtype=np.float64),
+        np.array([[4, 5], [0, 1]], dtype=object),
+        np.array([[True, False], [False, True]]),
+        np.array([[1, 0], [0, 1]], dtype=np.int16),  # what bool must merge with
+        np.array([[9, 9], [9, 9]], dtype=np.int16),  # must NOT merge with -1 grids
+        np.array([[-1, -1], [-1, -1]], dtype=np.int16),
+        np.array([[-11, -21], [-31, -41]], dtype=np.int16),  # same digits as the -1 grid
+    ]
+    pairs = _assert_same_partition(corpus, "mixed-branch corpus left to_ascii's partition")
+    # Anti-vacuity: the set must actually contain merges AND separations across DIFFERENT branches,
+    # or the agreement above is trivially satisfied by any key at all.
+    merged = sum(
+        1 for i, a in enumerate(corpus) for b in corpus[i + 1 :] if to_ascii(a) == to_ascii(b)
+    )
+    assert pairs == 78
+    assert merged >= 6, f"only {merged} non-trivial merges: the collision direction is vacuous"
 
 
 def test_an_empty_grid_does_not_crash_the_min_guard() -> None:
@@ -279,11 +380,22 @@ def test_an_empty_grid_does_not_crash_the_min_guard() -> None:
     assert _state_key(empty) == to_ascii(empty)
 
 
-def test_bool_and_object_dtypes_fall_back_rather_than_crash() -> None:
-    """Neither is an integer dtype, so both must route to `to_ascii` -- whatever it does with them is
-    by definition the pre-existing behaviour this change promised not to alter."""
-    for arr in (np.array([[True, False]]), np.array([[1, 2]], dtype=object)):
-        assert _state_key(arr) == to_ascii(arr)
+def test_bool_and_object_dtypes_decline_the_arithmetic_rather_than_crash() -> None:
+    """Neither is an integer dtype, so both decline the arithmetic and take the cell-by-cell path --
+    which must reproduce `to_ascii`'s digit, and must land bool in the same class as the 0/1 integer
+    grid `to_ascii` cannot tell it apart from."""
+    for arr in (np.array([[True, False]]), np.array([[1, 0]], dtype=object)):
+        assert _state_key(arr) == b"1:2|" + bytes([1, 0]), f"{arr.dtype} keyed unexpectedly"
+    _assert_same_partition(
+        [
+            np.array([[True, False]]),
+            np.array([[1, 0]], dtype=object),
+            np.array([[1, 0]], dtype=np.int16),
+            np.array([[11, 10]], dtype=np.int16),
+            np.array([[1, 1]], dtype=np.int16),
+        ],
+        "bool/object left to_ascii's partition",
+    )
 
 
 def test_plan_in_model_finds_the_same_plan_through_the_real_call_sites() -> None:

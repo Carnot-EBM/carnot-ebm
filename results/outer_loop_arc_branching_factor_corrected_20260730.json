@@ -1,0 +1,258 @@
+{
+ "experiment": "outer_loop_arc_branching_factor_corrected_20260730",
+ "title": "Cutting the in-model search's branching factor: what it buys, in seconds, and what it costs",
+ "honest_verdict": "complete_branching_cut_measured_and_devalued_do_not_ship: the deployable lever is worth 1.021x median WALL clock (not the 1.152x its call count suggests), which is DEEP INSIDE the 10.8-14.6% noise floor this session measured -- i.e. not measurably faster at all. Its inert-keyboard half is inductive, has ~1 game of non-vacuous support, and now has a constructed counterexample that permanently loses 75% of reachable states. The high-multiplier variant permanently loses states on 3 of 25 games. Neither closes the conservative production budget. The candidate set is not where the remaining cost is.",
+ "schema": "carnot.outer_loop_arc_branching_factor.v1",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_principle": "THIS artifact runs no search and calls no engine: it reads the upstream measurement JSONs cited below and recomputes medians, vacuity counts and affordability arithmetic over them. The UPSTREAM runs are offline_arcade_live_agent_runtime_self_discovery_no_llm (CPU-side replay of already-induced engines, no GGUF loaded); declaring that substrate here would be a claim to have done the compute, which adversarial_verify correctly flagged as DURATION_TOO_SHORT against a 0.0 s aggregation duration. Every number is traceable to a cited upstream sha256.",
+ "is_a_solve_claim": false,
+ "why_not_a_solve_claim": "every arm replays engines that already exist and re-derives levels the registry already records. No new level is banked and no game is played online.",
+ "banked_levels": 0,
+ "solve_provenance": "development_proxy",
+ "solve_provenance_principle": "this is the offline dev twin (arc_loop_solve-class replay over environment_files), not the live E3 agent discovering a hidden game. It is a measurement of the search's cost, not evidence the live agent self-discovers anything.",
+ "verifier_is_oracle": false,
+ "read_game_source": false,
+ "used_env_source": true,
+ "offline_ground_truth_bfs": false,
+ "exhaustive_bfs_calibration": false,
+ "hand_calibrated_per_game": false,
+ "question": "the remaining gap to an affordable plan is structural, not tunable: 90.2% of engine calls land on an already-seen grid and 18 candidates are generated per expansion. Can cutting the candidate set close it, and at what cost to completeness?",
+ "WHAT_THE_LEVERS_ARE": {
+  "dedup": "collapse click candidates that resolve to the same point. Safe BY CONSTRUCTION -- it removes duplicate work, never a distinct candidate.",
+  "inert_keyboard": "ban a keyboard action that has been tried and has yielded zero new states. INDUCTIVE, not safe: see the counterexample below.",
+  "object_class": "ban clicks on connected-component classes that have never responded. INDUCTIVE, and measurably lossy.",
+  "L1_deployable": "dedup + inert_keyboard",
+  "L2_lossy": "dedup + inert_keyboard + object_class",
+  "all_three_learn_only_from_the_agents_own_observed_transitions": true
+ },
+ "CORRECTION_1_the_valuation_must_be_in_seconds": {
+  "why": "the cut removes disproportionately CHEAP calls -- the duplicates -- so a call reduction overstates time saved. On ka59 it removes 2.58x of the calls and 1.39x of the wall clock; retained calls are ~2.06x more expensive each. The session report stated this principle as its central correction and then quoted its own headline in calls anyway.",
+  "over_the_14_strong_rows": {
+   "L1_deployable": {
+    "n_rows": 14,
+    "wall_reduction_x_median": 1.021,
+    "wall_reduction_x_range": [
+     1.002,
+     1.21
+    ],
+    "call_reduction_x_median": 1.151,
+    "call_reduction_x_range": [
+     1.007,
+     1.461
+    ]
+   },
+   "L2_lossy": {
+    "n_rows": 14,
+    "wall_reduction_x_median": 1.099,
+    "wall_reduction_x_range": [
+     1.007,
+     1.391
+    ],
+    "call_reduction_x_median": 2.51,
+    "call_reduction_x_range": [
+     1.2,
+     9.437
+    ]
+   }
+  },
+  "as_published_vs_corrected": {
+   "L1_published_x": 1.152,
+   "L1_corrected_wall_x": 1.021,
+   "L2_published_x": 2.547,
+   "L2_corrected_wall_x": 1.099,
+   "note_on_the_2_547_figure": "2.547 is not even the call median -- it is dc22's single value. The call median over the 14 strong rows is 2.510."
+  },
+  "how_many_rows_are_within_noise": {
+   "L1_rows_under_1_08x_wall": 13,
+   "of_n_strong_rows": 14,
+   "the_outlier_the_conclusion_generalised_from": "ka59 at 1.210x wall"
+  },
+  "what_this_does_to_the_conclusion": "'the value is almost entirely in the unsafe lever' does not survive: 1.099x (lossy) against 1.021x (safe). On this evidence NEITHER lever justifies a completeness risk, and the safe one is worth shipping only on expensive engines like ka59."
+ },
+ "CORRECTION_2_the_evidence_is_not_uniform": {
+  "the_claim_as_published": "L1: identical on all 26 games",
+  "what_the_artifact_itself_records": {
+   "rows_total": 26,
+   "distinct_games": 25,
+   "ka59_appears_twice": "once at pinned engine git 341f776c9, once at the results/arc_e3 HEAD engine (the HEAD row is itself vacuous)",
+   "signal_strength_strong": 14,
+   "signal_strength_vacuous": 12,
+   "rows_where_L1_dropped_NOTHING": 7,
+   "rows_with_no_data": [
+    "vc33"
+   ],
+   "rows_where_the_lever_actually_FIRED": 18
+  },
+  "restated": "L1 produced an identical accept sequence on all 26 rows, but the lever only FIRED on 18 of them; 7 rows had it drop nothing at all and vc33 produced no data. By the artifact's own signal_strength field, 12 of 26 rows are vacuous -- their baselines exhaust the queue in 5-148 engine calls and 0.00-0.02 s, so agreement there is near-vacuous and their wall ratios (as low as 0.952x) are pure noise.",
+  "the_review_said_9_of_26_vacuous_which_is_wrong": "the correct figures are 12 vacuous / 14 strong by the artifact's own field, 7 rows where L1 dropped nothing, and 1 row with no data. The direction of the finding is right and the count is not; recorded here rather than repeated.",
+  "why_this_matters": "identity on a row where the lever did nothing is not an observation. The sibling dedup-key artifact handles the same problem explicitly with an EVIDENCE_WEIGHT_IS_NOT_UNIFORM note; the 26-game claim carried no equivalent."
+ },
+ "CORRECTION_3_the_inert_keyboard_lever_is_not_safe": {
+  "the_claim_as_published": "L1 is provably safe / empirically strong across 26 games",
+  "why_the_corpus_evidence_is_vacuous_where_it_matters": {
+   "deep_tested_games": [
+    "cd82",
+    "sb26",
+    "dc22",
+    "s5i5",
+    "bp35",
+    "tn36"
+   ],
+   "games_banning_ALL_FIVE_keyboard_actions": [
+    "cd82",
+    "sb26",
+    "s5i5",
+    "bp35",
+    "tn36"
+   ],
+   "why_that_is_vacuous": "those engines' keyboard actions are no-ops, so banning them cannot lose anything and an identical state set is GUARANTEED, not evidence.",
+   "the_only_non_vacuous_row": "dc22 -- bans 1, 2, 5 while 3 and 4 stay productive",
+   "non_vacuous_n": 1,
+   "the_session_report_said_three_games_ban_all_five": "it is FIVE. Corrected here."
+  },
+  "THE_CONSTRUCTED_COUNTEREXAMPLE": {
+   "why_it_was_needed": "the risk the harness's own docstring names -- an action inert early and productive later -- does not occur in the 25-game corpus, so it had to be built.",
+   "the_ban_rule_is_ABSORBING_by_construction": {
+    "rule": "kept = [a for a in keys if key_new[a] > 0 or key_calls[a] == 0]",
+    "why_it_cannot_recover": "a banned action is never emitted again, so key_new[a] can never grow. There is no un-ban path in the expression."
+   },
+   "fixture": {
+    "shape": "actions 1-4 fill the row up to gate_depth; action 5 is inert until then, and is the ONLY action that can extend past it",
+    "gate_depth": 4,
+    "width": 8,
+    "warmup_expansions": 3
+   },
+   "result": {
+    "states_lost": 1024,
+    "states_gained": 0,
+    "state_sets_identical": false,
+    "states_still_lost_at_5x_expansions": 1024,
+    "loss_is_permanent_not_a_frontier_delay": true,
+    "action_5_was_banned": true
+   },
+   "verdict": "the inert-keyboard ban is NOT lossless in general. On a mechanic where an action is inert before a gate and the only way forward after it, the ban fires during the inert phase and is never lifted, so every state past the gate becomes unreachable -- and stays unreachable at 5x the expansion budget. The 26-game corpus agreed only because no game in it has that shape: 5 of the 6 deep-tested games ban ALL FIVE keyboard actions (no-ops, so the ban is free) and just one, dc22, exercises the lever at all.",
+   "artifact": "scratchpad/p3/p3_inert_keyboard_adversarial.json"
+  },
+  "restated": "L1 = dedup (safe by construction) + an INDUCTIVE ban with ~1 game of non-vacuous support and a constructed counterexample that loses 75% of reachable states permanently. The two halves must be separable, and only the dedup half may be called safe. Dedup alone accounts for 1.095-1.433x of the call reduction on the deep-tested games, so the safe half carries most of the (already small) win.",
+  "if_the_ban_ever_ships": "it needs an un-ban path -- re-probe a banned action every K expansions, or require N distinct non-responding states before banning -- because as written a single inert phase removes the action for the rest of the search."
+ },
+ "CORRECTION_4_plan_preservation_is_verified_on_two_rows": {
+  "the_claim_as_published": "all five arms keep the 11-step plan",
+  "what_is_actually_verified": {
+   "ka59_plan_length_11_across_all_five_arms": true,
+   "rows_with_a_non_null_L1_goal_preserved_flag": [
+    "m0r0"
+   ],
+   "every_other_row": "state-partition / accept-sequence identity only, with no goal reached inside the 1500-expansion cap -- so those rows say nothing about plan preservation."
+  },
+  "restated": "plan/goal preservation is verified on ka59 (length 11, all arms) and m0r0. The other 24 rows are state-set identity. The distinction matters because a pruned candidate set can preserve the explored set at a shallow cap and still lose the goal deeper."
+ },
+ "CORRECTION_5_one_statistical_basis_per_sentence": {
+  "what_was_published": "'1.15x median (range 1.007-1.461)' -- the median over all 25 numeric rows including seven at exactly 1.0, but the range excluding those seven. Two denominators in one sentence, in the direction that flatters the lever's floor.",
+  "corrected_all_numeric_rows": {
+   "n": 25,
+   "call_reduction_x_median": 1.151,
+   "call_reduction_x_range": [
+    1.0,
+    1.461
+   ],
+   "no_data_row": "vc33"
+  },
+  "corrected_strong_rows_only": {
+   "n_rows": 14,
+   "wall_reduction_x_median": 1.021,
+   "wall_reduction_x_range": [
+    1.002,
+    1.21
+   ],
+   "call_reduction_x_median": 1.151,
+   "call_reduction_x_range": [
+    1.007,
+    1.461
+   ]
+  }
+ },
+ "COMPLETENESS_THE_CLASS_FILTER_LOSS_IS_PERMANENT": {
+  "L2_divergent_games": [
+   "lp85",
+   "s5i5",
+   "sb26"
+  ],
+  "tested_for_mere_frontier_delay": true,
+  "recovery_at_4x_expansions": "see p2_is_the_loss_permanent.json",
+  "conclusion": "not a frontier delay: the deficit grows with depth (lp85 14 -> 348 lost states). The object-class filter is not shippable as a default."
+ },
+ "WHERE_THE_COST_ACTUALLY_IS": {
+  "candidate_generation_share_of_search_time": 0.05,
+  "action_6_click_share_of_engine_calls": 0.727,
+  "candidates_at_root": "5 keyboard + 13 clicks",
+  "mean_candidates_per_expansion": 18.31,
+  "implication": "generation is 5% of the time, so no candidate-set change can address the other 95%. The remaining lever is the per-call cost INSIDE the LLM-generated engine, which this phase did not measure."
+ },
+ "AFFORDABILITY_AFTER_THE_CUT": {
+  "see": "results/outer_loop_arc_plan_affordability_corrected_20260730.json:CORRECTION_20260730_REVIEW",
+  "conservative_residual_s_per_game": 58.34,
+  "shortfall_x": {
+   "A0": 2.562,
+   "A2_deployable": 2.134,
+   "A4_lossy": 1.844
+  },
+  "uncontended_ci_hi_residual_s_per_game": 146.33,
+  "the_one_verdict_the_cut_changes": "at the envelope's mine_uncontended_ci_hi level the shipped arm (149.45 s) does NOT fit the 146.33 s residual, and the deployable cut (124.50 s) does. Everywhere else the cut only widens or narrows a margin without flipping it.",
+  "induce_to_plan_open_at_a_price_production_can_pay": false
+ },
+ "NOISE_FLOOR": {
+  "this_measurement_is_single_shot": true,
+  "arm_wall_times_s_range": "1.3-5.0 on most rows",
+  "consequence": "wall ratios near 1.00 are inside the noise and must NOT be read as small real effects. The 12 vacuous rows time at 0.00-0.02 s and carry no timing signal at all.",
+  "floor_MEASURED_in_the_sibling_harness_2026_07_30": {
+   "how": "a trailing-control arm was added to scripts/arc_state_key_dedup_xgame_verify.py: the control key is re-run LAST, so leading/trailing is an A/A over identical work differing only in position. Partition identity between the two was asserted, so the ratio is pure timing drift.",
+   "per_game_drift_x": {
+    "lp85": 0.8541,
+    "sk48": 1.1156,
+    "sc25": 1.108
+   },
+   "floor_pct_range": [
+    10.8,
+    14.6
+   ],
+   "an_earlier_2_5_pct_estimate_is_RETRACTED": "an external A/A estimate put the floor at ~2.5%. The in-harness measurement is 5x larger. The estimate is withdrawn, not reworded.",
+   "THE_DECISIVE_CONSEQUENCE_FOR_THIS_PHASE": "L1's 1.021x median WALL reduction -- and 13 of 14 strong rows, all under 1.08x -- sit DEEP INSIDE a 10.8-14.6% floor. On this evidence the deployable branching cut is not measurably faster at all across the corpus; only ka59's 1.210x approaches the floor's edge, and even that is barely outside it. This is the strongest single reason not to ship the branching cut, and it is stronger than the completeness argument: the lever may simply not do anything worth measuring.",
+   "what_still_clears_the_floor_comfortably": "the already-shipped dedup KEY, at 4.73-6.26x on these same games -- ~30x the noise. The two changes are not comparable in size."
+  },
+  "machine_contention_was_not_recorded_for_this_run": true
+ },
+ "WHAT_SHOULD_HAPPEN_NEXT": "not another candidate-set lever. Generation is 5% of search time and the two ordering heuristics tried earlier were both refuted, so the frontier is the per-call cost inside the LLM-generated engine (_blocks and to_ascii dominate it) -- or, one level up, the PERCEPTION that sets the branching factor in the first place: 13 of 18 candidates are clicks, 72.7% of calls are clicks, and 3 of 15 salience ranks are entirely inert. A front-end that proposed 4 interactive objects instead of 13 speculative points would cut branching without any inductive ban -- and that is a perception problem, not a search problem.",
+ "cited_upstream_artifacts": [
+  {
+   "path": "p2/p2_lossless_arm_across_games.json",
+   "sha256": "a7e357145e53aaf27803aef229da529f1168a22a566f3b525455cc8828ae8065",
+   "role": "26-row cross-game arm comparison (wall + calls + accept-sequence identity)"
+  },
+  {
+   "path": "p2/p2_is_l1_really_lossless_deeper.json",
+   "sha256": "9520f89792e1a85140436ab649e9906ae34dfce15156c6350ff31469f4d1a3b4",
+   "role": "6-game 4x-deeper L1 losslessness check with keyboard-ban disclosure"
+  },
+  {
+   "path": "p3/p3_inert_keyboard_adversarial.json",
+   "sha256": "9f23a4c60b07005364d6da352872cfe6415643d31716f5053ae26a8fae631c08",
+   "role": "the constructed inert-early-productive-later counterexample"
+  }
+ ],
+ "random_seed": 0,
+ "random_seed_principle": "the search is deterministic given the engine: candidate order and the flat-energy frontier are fixed, so a seed changes nothing. Recorded for schema conformance.",
+ "preconditions_checked": [
+  {
+   "resource": "offline arcade engines under results/arc_e3",
+   "available": true
+  },
+  {
+   "resource": "no GPU / no GGUF required",
+   "available": true
+  }
+ ],
+ "code_commit_at_write": "2bad77981445ee690fb502080fdd6d753b244699",
+ "duration_s": 0.003,
+ "reproducibility_checksum": "53f8e13b07db9c45e8f60a73334136b51f8e68e52644cef46b16bc590de110f3"
+}
