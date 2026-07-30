@@ -273,6 +273,34 @@ class ProgressResult:
     # measurable. Default empty; `to_row` drops it unless asked, so no existing caller's
     # row shape changes.
     action_trace: list[str] = field(default_factory=list)
+    # ------------------------------------------------------------------------------------------
+    # HAND-VERIFIER MEASURABILITY (2026-07-29). `hv_progress` is
+    # `(start_hv - min_hv) / start_hv`, so a hand_verifier that returns THE SAME VALUE on every
+    # frame makes it IDENTICALLY 0.0 for any run of that game, no matter what the agent does. That
+    # is an INSTRUMENT FLOOR, not an observation -- the same defect that invalidated `accuracy`,
+    # where a total answer leak could not move it off 0.0.
+    #
+    # It is not hypothetical: 4 of the 22 adaptered public games (cn04, ka59, sp80, su15) ship
+    # `hand_verifier=lambda _game, _frame=None: 0.0`, a literal constant, and 3 more have no
+    # adapter at all -- 7 of 25 games immovable by construction. In the 24-cell retention A/B that
+    # was 8 cells (33%) whose 0.0 was silently pooled with real observations; excluding them moved
+    # the headline rank correlation from +0.0929 to -0.0040.
+    #
+    # `hv_progress_measurable` is False whenever the verifier never produced two different values
+    # across two DIFFERENT frames. When it is False, `hv_progress` is reported as None
+    # (unmeasurable) rather than 0.0, so no downstream analysis can average a floor into a mean or
+    # count it as a zero.
+    hv_progress_measurable: Optional[bool] = None
+    hv_distinct_values_observed: Optional[int] = None
+    # Exceptions raised by the hand_verifier, SURFACED rather than swallowed. `_hand_verifier_fn`
+    # returns None on error, and a None on the FIRST call leaves `start_hv` unset until a later
+    # frame -- so a run can silently rebase its own baseline. Counting them makes that visible.
+    hv_exception_count: int = 0
+    # Fraction of verifier calls that returned the adapters' 1000.0 "search stops here" sentinel.
+    # A sentinel on the first call pins `start_hv` at 1000.0, and any ordinary value afterwards
+    # then yields hv_progress ~= 1.0 FOR FREE -- ceiling corruption that looks like near-perfect
+    # progress. Recorded per cell so a suspiciously high hv_progress can be checked against it.
+    hv_sentinel_frac: Optional[float] = None
 
     def to_row(
         self, *, include_events: bool = False, include_trace: bool = False
@@ -335,18 +363,93 @@ def _hand_verifier_fn(game: str) -> Optional[Callable[[Any, Any], Optional[float
         return None
     hv = ad.hand_verifier
 
+    # MEASURABILITY + FAILURE BOOKKEEPING (2026-07-29). Three properties of this instrument were
+    # previously invisible to every consumer:
+    #
+    #  1. A CONSTANT verifier makes `hv_progress` identically 0.0 for any run (see
+    #     ProgressResult.hv_progress_measurable). 4 of 22 adaptered games ship a literal
+    #     `lambda _game, _frame=None: 0.0`, so this is the common case, not a corner.
+    #  2. Exceptions were SWALLOWED (`except Exception: return None`), and a None on the first call
+    #     silently defers `start_hv` to a later frame -- the run rebases its own baseline with no
+    #     record that it happened.
+    #  3. Several adapters return a 1000.0 "search stops here" sentinel. A sentinel on the first
+    #     call pins `start_hv` at 1000.0, after which any ordinary value yields hv_progress ~= 1.0
+    #     for free -- ceiling corruption that reads as near-perfect progress.
+    #
+    # The exception is still caught (this is a measurement instrument attached to a live agent; it
+    # must not crash an episode), but it is now COUNTED and surfaced instead of vanishing.
+    stats: dict[str, Any] = {
+        "n_calls": 0,
+        "n_exceptions": 0,
+        "n_sentinel": 0,
+        "distinct_values": set(),
+        "distinct_frame_keys": set(),
+    }
+    SENTINEL = 1000.0
+
     def _call(game_obj: Any, frame: Any) -> Optional[float]:
+        stats["n_calls"] += 1
         for args in ((game_obj, frame), (game_obj,)):
             try:
                 v = hv(*args)
-                return float(v)
+                value = float(v)
             except TypeError:
                 continue
             except Exception:
+                stats["n_exceptions"] += 1
                 return None
+            stats["distinct_values"].add(round(value, 9))
+            if value == SENTINEL:
+                stats["n_sentinel"] += 1
+            # Track frame identity so "one value" can be distinguished from "one frame". A verifier
+            # that only ever saw a single distinct frame is not evidence of constancy, and calling
+            # it unmeasurable on that basis would be its own false claim.
+            try:
+                import numpy as _np
+
+                from carnot.agentic.arc_agi3_world_model import grid_of as _grid_of
+
+                stats["distinct_frame_keys"].add(
+                    hash(_np.asarray(_grid_of(frame)).tobytes()) if frame is not None else None
+                )
+            except Exception:
+                pass
+            return value
+        # Neither call signature worked -- a genuine adapter/API mismatch, not a per-frame failure.
+        stats["n_exceptions"] += 1
         return None
 
+    _call.stats = stats  # type: ignore[attr-defined]
     return _call
+
+
+def hv_progress_measurable_from_stats(stats: Optional[dict[str, Any]]) -> Optional[bool]:
+    """Can `hv_progress` possibly move for this run, given what the verifier actually returned?
+
+    Extracted as a pure function so the RULE is testable without standing up an arcade env. The
+    rule decided whether 8 of the 24 retention cells were observations or instrument floors, so it
+    needs to be pinned by a test that fails when it is loosened.
+
+    Returns:
+      * ``False`` -- the verifier returned ONE value across TWO OR MORE DISTINCT frames. Then
+        ``(start_hv - min_hv)`` is structurally 0 for every run of this game, so a reported 0.0 is
+        the instrument's floor, not a measurement. 4 of the 22 adaptered public games ship a literal
+        ``lambda _game, _frame=None: 0.0`` and hit this.
+      * ``True``  -- the verifier produced at least two different values, so the metric has range.
+      * ``None``  -- UNDECIDED, and deliberately not ``False``: with fewer than two distinct frames
+        observed there is no evidence about constancy, and calling that "unmeasurable" would be its
+        own unfounded claim. ``None`` also covers "no verifier at all".
+    """
+    if stats is None:
+        return None
+    n_distinct_values = len(stats.get("distinct_values") or ())
+    n_distinct_frames = len(stats.get("distinct_frame_keys") or ())
+    if n_distinct_values >= 2:
+        return True
+    if n_distinct_frames >= 2:
+        # One value, several genuinely different frames -> constant by observation.
+        return False
+    return None
 
 
 def _summarize_inductions(events: list[dict[str, Any]]) -> dict[str, Any]:
@@ -549,8 +652,21 @@ def run_bounded_progress(
     events = list(getattr(pol, "induction_attempts", []) or []) if pol is not None else []
     ind = _summarize_inductions(events)
     levels_gained = max(0, (reached or 0) - (start or 0))
+    # ---- hand-verifier measurability (2026-07-29) -------------------------------------------
+    # A verifier that returned ONE value across TWO OR MORE DIFFERENT frames cannot move
+    # `hv_progress` off 0.0 for any run of this game. Reporting that 0.0 as an observation is what
+    # let 8 of 24 cells (33%) in the retention A/B contribute instrument floors to a correlation,
+    # an entropy and a discordance tally. So it is reported as None -- unmeasurable -- instead.
+    hv_stats = getattr(hv_fn, "stats", None) if hv_fn is not None else None
+    hv_measurable = hv_progress_measurable_from_stats(hv_stats)
+    hv_distinct = None if hv_stats is None else len(hv_stats["distinct_values"])
+    hv_exceptions = 0 if hv_stats is None else int(hv_stats["n_exceptions"])
+    hv_sentinel_frac = None
+    if hv_stats is not None and hv_stats["n_calls"]:
+        hv_sentinel_frac = round(hv_stats["n_sentinel"] / hv_stats["n_calls"], 4)
+
     hv_progress = None
-    if start_hv is not None and best_hv is not None:
+    if start_hv is not None and best_hv is not None and hv_measurable is not False:
         hv_progress = round(max(0.0, (start_hv - best_hv)) / max(abs(start_hv), 1.0), 4)
 
     return ProgressResult(
@@ -581,6 +697,10 @@ def run_bounded_progress(
         error=err,
         induction_events=events,
         action_trace=trace,
+        hv_progress_measurable=hv_measurable,
+        hv_distinct_values_observed=hv_distinct,
+        hv_exception_count=hv_exceptions,
+        hv_sentinel_frac=hv_sentinel_frac,
     )
 
 

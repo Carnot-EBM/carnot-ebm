@@ -57,9 +57,18 @@ def test_scenario_arc_wmte_4664_previous_level_win_grid_enters_prompt() -> None:
         previous_level_complete_grid=previous_level_complete,
     )
 
-    assert "WIN STATE" in block
-    assert "COMPLETED the previous level" in block
-    assert "next level's completion likely looks structurally similar" in block
+    # CORRECTED 2026-07-29. This test used to assert the block said "WIN STATE ... COMPLETED the
+    # previous level ... next level's completion likely looks structurally similar". Those claims
+    # were measured FALSE and the test was locking the defect in: `previous_level_complete_grid` is
+    # captured from the frame AFTER the level counter incremented, so it is the CURRENT level's
+    # OPENING BOARD, not a state that completed anything. (Measured on ka59's canonical L1 solve: the
+    # completing action rewrites 3527 of 4096 cells because it re-lays out the playfield, and a
+    # concept-correct predicate is False on that frame.) The block now describes the grid truthfully
+    # and states the predicate's polarity on it, which is the whole point of the fix.
+    assert "WIN STATE" not in block, "the false win-state labelling must not come back"
+    assert "COMPLETED the previous level" not in block
+    assert "BOARD AT THE START OF THE CURRENT LEVEL" in block
+    assert "is_level_complete must return False here" in block
     # REQ-ARC-WMTE-5593-2 (2026-07-14): full-grid renders now use _rle_grid's row-wise,
     # implicit-column run-length encoding instead of raw to_ascii -- "r0:7x2\nr1:0x1,7x1"
     # is the lossless encoding of [[7,7],[0,7]], replacing the old raw "77\n07" form.

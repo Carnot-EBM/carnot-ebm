@@ -284,6 +284,99 @@ def _nonzero_count_predicate(target: np.ndarray) -> Callable[[np.ndarray], bool]
     return _predicate
 
 
+def _strictly_fuller_than_predicate(
+    root: np.ndarray, exemplar: np.ndarray | None = None
+) -> Callable[[np.ndarray], bool]:
+    """ "Complete" once the grid holds STRICTLY MORE non-BACKGROUND cells than the level ``root``
+    (and at least as many as ``exemplar``, when one distinct from the root is supplied).
+
+    "Filled" is measured against the root's MODAL colour, not against zero. Using
+    ``count_nonzero`` here would make the predicate UNREACHABLE on any board whose background is not
+    colour 0 -- and that is the common case, not an edge case: ka59's board (and the regression
+    fixture modelled on it) has background colour 1, so every cell is "non-zero" and no reachable
+    state can hold more non-zero cells than the root. The repair would then decline on every such
+    game, which is the dead-repair failure this function exists to end, merely relocated.
+    The modal-colour convention is the one already used by ``_raster_probe_candidates`` in this same
+    module, so this introduces no new notion of background.
+
+    WHY THIS EXISTS (2026-07-29). ``_nonzero_count_predicate`` uses ``>=``, which makes it
+    TRUE ON ``reference`` ITSELF. That is harmless where the reference is a genuinely different
+    grid from the planning root, but ``_repair_degenerate_goal`` calls it with the level-boundary
+    exemplar -- and at a level boundary that exemplar is BYTE-IDENTICAL to the planning root.
+
+    Both grids are produced from the SAME frame by the SAME code:
+    ``arc_competition_agent._observe_level_boundary`` computes
+    ``completed_grid = to_logical(grid_of(latest), detect_cell(grid_of(latest)))`` and stores it as
+    ``_previous_level_complete_grid``; the caller then immediately does
+    ``self.root_grid = to_logical(grid_of(latest), self.cell)`` with the same ``latest`` and the
+    same ``detect_cell`` result. So ``count_nonzero(root) >= count_nonzero(exemplar)`` is
+    ``count >= count`` -- trivially True at the root.
+
+    That made the repaired goal DEGENERATE, and degenerate in the worst direction: a goal true at
+    the root yields a ZERO-ACTION plan, i.e. the agent concludes the level is already complete
+    without acting. So this was never a working repair -- before the root-true rejection existed it
+    "succeeded" by handing the planner a vacuous target, and after that rejection it returns None
+    every time. Either way GOAL-REPAIR delivered nothing.
+
+    The strict form is False at the reference and therefore False at the root, so it is a real
+    forward target: "make at least one net new cell filled relative to the opening screen". It is
+    still a HEURISTIC PROXY, not a win oracle -- exactly the same disclosed status as the ``>=``
+    version (see ``_repair_degenerate_goal``'s docstring) -- and the downstream plan-reaches-goal
+    check plus the offline reproduction gate still decide whether a resulting plan is a REAL
+    level-up. This narrows nothing and widens nothing; it removes a trivially-satisfied bound.
+
+    ``_nonzero_count_predicate`` is deliberately left UNCHANGED: its other consumer
+    (``propose_hierarchical_subgoals``' ``previous_level_complete_shape`` candidate) runs through a
+    different path with different scoring, and altering a shared helper for an unmeasured consumer
+    is how one fix becomes two regressions.
+
+    TWO BOUNDS, NOT ONE (2026-07-29, second pass). The predicate is the CONJUNCTION of:
+
+      * ``count > count(root)``     -- strictly above the level's own opening screen. This is the
+        non-degeneracy bound: it is what makes the predicate False at the root, which is what the
+        root-true rejection requires and what the ``>=``-against-an-identical-grid version failed.
+      * ``count >= count(exemplar)`` -- at least the exemplar's fill level, when an exemplar
+        distinct from the root is supplied. This is the MEANINGFUL-TARGET bound, and it is what
+        preserves the repair's ability to GIVE UP: without it the bar is always the weakest possible
+        ("one more filled cell than the root"), so the repair could only ever decline on a totally
+        inert engine.
+
+    Using the exemplar alone as a STRICT bound is wrong -- it silently raises the target from "reach
+    the exemplar's fill level" to "exceed it", a change nothing asked for. Using the root alone is
+    also wrong -- it discards the exemplar's information and with it the give-up condition asserted
+    by the pre-existing operator-directed tests (2026-06-25). At a level boundary the two grids are
+    identical, so the conjunction reduces to exactly ``count > count(root)`` in the live case; the
+    exemplar bound only bites in the constructed cases where the two genuinely differ.
+    """
+    from collections import Counter
+
+    root_arr = np.asarray(root)
+    flat = [int(v) for v in root_arr.flatten().tolist()]
+    background = Counter(flat).most_common(1)[0][0] if flat else 0
+    root_count = int(np.count_nonzero(root_arr != background))
+    # The exemplar's count is measured against the SAME background, so the two bounds are
+    # commensurable. None when no exemplar was supplied, or when it is the root (the live boundary
+    # case), in which case the conjunction reduces to the root bound alone.
+    exemplar_count: Optional[int] = None
+    if exemplar is not None:
+        exemplar_arr = np.asarray(exemplar)
+        if exemplar_arr.shape == root_arr.shape and not np.array_equal(exemplar_arr, root_arr):
+            exemplar_count = int(np.count_nonzero(exemplar_arr != background))
+
+    def _predicate(grid: np.ndarray) -> bool:
+        # The background is fixed from the ROOT, deliberately, not recomputed per candidate grid: a
+        # per-grid modal colour would shift under the agent's own edits and make the threshold
+        # compare two different quantities.
+        filled = int(np.count_nonzero(np.asarray(grid) != background))
+        if filled <= root_count:
+            return False  # non-degeneracy bound: never true at (or below) the opening screen
+        if exemplar_count is not None and filled < exemplar_count:
+            return False  # meaningful-target bound: preserves the repair's ability to give up
+        return True
+
+    return _predicate
+
+
 def propose_hierarchical_subgoals(
     *,
     game: str,
@@ -531,7 +624,13 @@ def _goal_satisfiability_check(
 
     start = np.asarray(start_grid)
 
-    def _probe_candidates(grid: np.ndarray) -> list[dict[str, Any]]:
+    def _raster_probe_candidates(grid: np.ndarray) -> list[dict[str, Any]]:
+        """The ORIGINAL raster-order generator, kept as a defensive fallback only.
+
+        Retained verbatim so that if the component-aware generator below is unavailable or
+        raises, the gate degrades to its historical behaviour rather than crashing. It is NOT
+        the primary path any more -- see `_probe_candidates` for why.
+        """
         candidates = [{"action": action, "data": None} for action in (1, 2, 3, 4, 5)]
         flat = [int(value) for value in np.asarray(grid).flatten().tolist()]
         background = Counter(flat).most_common(1)[0][0] if flat else 0
@@ -541,6 +640,56 @@ def _goal_satisfiability_check(
         for r, c in coords[:32]:
             candidates.append({"action": 6, "data": {"x": int(c), "y": int(r)}})
         return candidates
+
+    def _probe_candidates(grid: np.ndarray) -> list[dict[str, Any]]:
+        """Successors for the reachability probe -- the SAME generator the planner uses.
+
+        WHY THIS CHANGED (2026-07-29). This pre-veto exists to reject a goal the planner could
+        never satisfy. A pre-filter that searches a STRICTLY WEAKER action set than the planner it
+        guards is unsound by construction: it can only produce FALSE NEGATIVES, rejecting goals the
+        planner would in fact have reached. That is exactly what it did.
+
+        The original generator (`_raster_probe_candidates`, kept above) clicked the first 32
+        non-background cells in raw ROW-MAJOR RASTER order. On real boards those 32 cells are
+        essentially always the top border, because a border is the first thing raster order walks
+        into. Measured on ka59's L1 root with its change-fidelity-1.0000 engine: all 32 clicks land
+        on row 21 while both movable blocks sit at rows 30-32, so ZERO clicks land inside a block --
+        and ka59's only selection mechanic requires a click strictly inside one. The probe therefore
+        could not select a block, could not seat the second block, and rejected a
+        concept-correct goal predicate as `degenerate_goal_predicate` after burning 2641 states.
+        Corpus-wide this is structural, not a ka59 quirk: in 25 of 25 games the raster clicks covered
+        fewer distinct interactive regions than the planner's candidates, and in 18 of 25 every one
+        of the 32 landed in rows 0-8.
+
+        The clicks were not visibly inert, which is what made this hard to spot -- on ka59 all 32
+        DID change the grid, but only by ticking the bottom-row step-counter HUD. So the probe looked
+        like it was exploring while going nowhere.
+
+        `_model_candidates` (the planner's own generator) clicks CONNECTED-COMPONENT CENTROIDS,
+        salience-ordered, which is what actually lands inside objects. Sharing it makes the gate
+        consistent with the search it guards, which is the only sound relationship between the two.
+
+        NB: this narrows the gate to rejecting goals that are genuinely unreachable, so GOAL-REPAIR
+        (which fires on `not round_goal_satisfiable`) now triggers on true unreachability instead of
+        on this false negative. That is the intended direction.
+
+        (An earlier revision of this docstring asserted here that "GOAL-REPAIR is not disabled".
+        That claim was FALSE when written and has been removed rather than reworded: the
+        root-true rejection added below did in fact kill GOAL-REPAIR in every case it could
+        reach, because the repair built its fallback with `>=` against a grid that IS the root.
+        See `_repair_degenerate_goal` for the measurement and the fix.)
+        """
+        try:
+            from carnot.agentic.arc_executable_world_model import _model_candidates
+
+            candidates = _model_candidates(np.asarray(grid))
+            # Only trust it if it actually produced click candidates; an empty/degenerate result
+            # would silently shrink the probe to the 5 keyboard actions.
+            if any(c.get("action") == 6 for c in candidates):
+                return list(candidates)
+        except Exception:
+            pass
+        return _raster_probe_candidates(grid)
 
     def _eval_goal(grid: np.ndarray, depth: int, evaluated: int) -> dict[str, Any] | None:
         try:
@@ -565,12 +714,51 @@ def _goal_satisfiability_check(
     evaluated = 1
     start_result = _eval_goal(start, 0, evaluated)
     if start_result is not None:
+        # A goal that is ALREADY TRUE on the level's own opening screen is degenerate, not
+        # satisfied (2026-07-29). `start_grid` is the root of the level we are planning THROUGH,
+        # so a predicate true there says "this level is complete before I have done anything" --
+        # which `lambda g: True`, the most degenerate predicate expressible, satisfies. The old
+        # code returned satisfiable=True at depth 0 and handed the planner a 1-action plan.
+        # Nothing anywhere tested this, and it is the one hole a *satisfiability* check cannot
+        # catch by construction: trivially-true is trivially satisfiable.
+        # Reported under its own kind so `refactor()` is told the GOAL is wrong rather than being
+        # sent after the dynamics (which is what the generic kind causes).
+        if bool(start_result.get("satisfiable")):
+            return {
+                "satisfiable": False,
+                "reachable_grids_evaluated": 1,
+                "counterexample": {
+                    "kind": "goal_predicate_true_at_root",
+                    "detail": (
+                        "is_level_complete is True on the level's own start grid; a level is not "
+                        "complete at its opening screen, so this predicate cannot discriminate."
+                    ),
+                },
+            }
         return start_result
 
     seen = {to_ascii(start)}
     q = deque([(start, 0)])
     engine_errors = 0
-    while q and evaluated < int(max_nodes):
+    # BUDGET UNIT MUST MATCH `plan_in_model`'S (2026-07-29). This pre-veto exists to reject a goal
+    # the planner could never satisfy, so it MUST NOT be able to search further than the planner at
+    # the same nominal `max_nodes` -- otherwise it certifies goals the planner then fails on, which
+    # is exactly the false-certification mirror of the false-rejection the click-candidate fix
+    # removed.
+    #
+    # The two loops were counting DIFFERENT THINGS under the same name. `plan_in_model` does
+    # `nodes += 1` IMMEDIATELY AFTER the engine call, before its shape check and before its `seen`
+    # dedup, so it budgets RAW ENGINE CALLS. This loop used to do `evaluated += 1` only AFTER the
+    # shape check and the dedup, so it budgeted UNIQUE GRIDS. On ka59 that is a ~11x gap at the
+    # same number (12435 unique grids vs 137347 engine calls), i.e. the gate was ~11x MORE
+    # PERMISSIVE than the search it guards.
+    #
+    # So the budget now counts engine calls, incremented at the same place `plan_in_model`
+    # increments. `evaluated` is KEPT as the unique-grid diagnostic (`reachable_grids_evaluated`),
+    # because that number is genuinely informative about coverage and is referenced in artifacts --
+    # it simply no longer decides when to stop.
+    engine_calls = 0
+    while q and engine_calls < int(max_nodes):
         grid, depth = q.popleft()
         if depth >= int(max_depth):
             continue
@@ -582,6 +770,9 @@ def _goal_satisfiability_check(
             except Exception:
                 engine_errors += 1
                 continue
+            # Counted HERE -- same position as `plan_in_model`'s `nodes += 1`: after the engine
+            # call, before the shape check and the dedup. That equality is the whole point.
+            engine_calls += 1
             if next_grid.shape != start.shape:
                 continue
             key = to_ascii(next_grid)
@@ -593,20 +784,24 @@ def _goal_satisfiability_check(
             if result is not None:
                 return result
             q.append((next_grid, depth + 1))
-            if evaluated >= int(max_nodes):
+            if engine_calls >= int(max_nodes):
                 break
 
     return {
         "satisfiable": False,
         "reachable_grids_evaluated": int(evaluated),
+        "engine_calls": int(engine_calls),
         "engine_errors": int(engine_errors),
         "max_nodes": int(max_nodes),
         "max_depth": int(max_depth),
+        "budget_unit": "engine_calls_matching_plan_in_model",
         "counterexample": {
             "kind": "degenerate_goal_predicate",
             "reachable_grids_evaluated": int(evaluated),
+            "engine_calls": int(engine_calls),
             "max_nodes": int(max_nodes),
             "max_depth": int(max_depth),
+            "budget_unit": "engine_calls_matching_plan_in_model",
         },
     }
 
@@ -627,24 +822,49 @@ def _repair_degenerate_goal(
     win-condition it writes is any good).
 
     Re-refactoring the engine (the loop's default fallback) does NOT help, because refactor prompts
-    target the dynamics, not the goal predicate. Instead we substitute the exemplar-derived
-    ``_nonzero_count_predicate`` fallback (already used as a hierarchical subgoal) and re-check
-    satisfiability against the SAME engine. If that fallback is reachable, return it so the caller
-    can plan toward it; otherwise return ``None`` (no exemplar available, or the fallback is also
-    unreachable -> genuinely give up this round).
+    target the dynamics, not the goal predicate. Instead we substitute an exemplar-derived
+    count-threshold fallback and re-check satisfiability against the SAME engine. If that fallback
+    is reachable, return it so the caller can plan toward it; otherwise return ``None`` (no exemplar
+    available, or the fallback is also unreachable -> genuinely give up this round).
 
     WHY this is a real repair and not a cheat: the fallback is a NON-DEGENERATE, REACHABLE proxy
-    (the level is "complete" once the grid has at least as many filled cells as the L1-completion
-    exemplar). It is a heuristic, not an exact win oracle -- it can admit some non-win grids -- but
-    it gives the planner a satisfiable target where a constant-false predicate blocks planning
+    (the level is "complete" once the grid holds strictly more filled cells than the level's own
+    opening screen). It is a heuristic, not an exact win oracle -- it can admit some non-win grids --
+    but it gives the planner a satisfiable target where a constant-false predicate blocks planning
     entirely. The downstream plan-reaches-goal check and the offline reproduction gate still decide
     whether the resulting plan is a REAL level-up, so a loose proxy cannot fabricate a solve; it can
     only unblock the search so a genuine deepening has a chance to be found and then verified.
+
+    CORRECTED 2026-07-29 -- THIS REPAIR HAD NEVER WORKED, in either of two ways.
+
+    It used to build its fallback as ``_nonzero_count_predicate(exemplar)``, i.e.
+    ``count_nonzero(grid) >= count_nonzero(exemplar)``. At a level boundary -- the ONLY situation in
+    which ``previous_level_complete_grid`` is non-None, since it is set exclusively by
+    ``_begin_level_goal_episode`` -- that exemplar is BYTE-IDENTICAL to ``root_grid``: both are
+    ``to_logical(grid_of(latest), detect_cell(grid_of(latest)))`` off the same ``latest`` frame (see
+    ``_strictly_fuller_than_predicate`` for the two call sites). So the fallback was ``count >=
+    count`` at the root: trivially True there.
+
+    Consequently:
+      * BEFORE the root-true rejection existed, this "repair" returned a goal already satisfied at
+        the root, so ``plan_in_model`` produced a ZERO-ACTION plan and the agent concluded the level
+        was complete without acting. A vacuous success, not a repair.
+      * AFTER the root-true rejection was added, ``_goal_satisfiability_check`` correctly refuses
+        that predicate as ``goal_predicate_true_at_root``, so this function returned None on EVERY
+        reachable call -- verified directly by constructing the live boundary case.
+
+    The fix is to the INPUT, not to any gate: use the STRICT bound, which is False at the root and
+    is therefore a genuine forward target. The root-true rejection stays exactly as strict as it is;
+    a goal true at the root is degenerate no matter who authored it, including this repair.
     """
     if previous_level_complete_grid is None:
         return None
     exemplar = np.asarray(previous_level_complete_grid).copy()
-    fallback = _nonzero_count_predicate(exemplar)
+    # Both bounds: strictly above the level ROOT (non-degeneracy -- this is the finding-12 fix) and
+    # at least the EXEMPLAR's fill level when the two grids genuinely differ (which preserves the
+    # repair's ability to give up). At a real level boundary they ARE the same grid, so the second
+    # bound is inert live. See `_strictly_fuller_than_predicate`.
+    fallback = _strictly_fuller_than_predicate(np.asarray(root_grid), exemplar)
     check = _goal_satisfiability_check(
         engine=engine,
         goal=fallback,
@@ -655,7 +875,7 @@ def _repair_degenerate_goal(
     return {
         "predicate": fallback,
         "satisfiability": dict(check),
-        "source": "exemplar_nonzero_count_fallback",
+        "source": "exemplar_strictly_fuller_than_level_root_fallback",
     }
 
 
@@ -1170,6 +1390,27 @@ def execute_bounded_llm_reinduction(
                 # (catches the too-loose predicate). Oracle-distinct: the predicate never reads the level
                 # counter; the exemplar is a grid the agent itself banked live.
                 consistency_window = list(transitions)
+                # ---------------------------------------------------------------------------
+                # KNOWN CONTRADICTION, LEFT IN PLACE DELIBERATELY (2026-07-29). This lever is
+                # default-off (`goal_exemplar_grading=False`) and is NOT changed here, but it is now
+                # provably inconsistent with two things measured today, and silently "fixing" an
+                # operator-directed lever is worse than naming the conflict:
+                #
+                #   1. `previous_level_complete_grid` is captured by
+                #      `arc_competition_agent._observe_level_boundary` from the frame AFTER the
+                #      level counter incremented, so it is the CURRENT level's OPENING BOARD, not a
+                #      level-complete state. The synthetic row below therefore asserts
+                #      "is_level_complete(opening board) must be True".
+                #   2. `_goal_satisfiability_check` now REJECTS any predicate that is True at the
+                #      level root, precisely because a level is not complete at its opening screen.
+                #
+                # So a predicate cannot satisfy both gates: this lever demands True on an opening
+                # board and the reachability gate rejects exactly that. Turning this lever on would
+                # make the two vetoes mutually unsatisfiable. It needs a real positive exemplar
+                # (the engine's counterfactual terminal state, which is what the win-transition
+                # constraint in `_transitions_block` now asks the proposer to produce) before it can
+                # be enabled. Tracked in the Phase-2 report, not fixed here.
+                # ---------------------------------------------------------------------------
                 if goal_exemplar_grading and previous_level_complete_grid is not None:
                     _exemplar = np.asarray(previous_level_complete_grid)
                     consistency_window = [
@@ -1183,11 +1424,57 @@ def execute_bounded_llm_reinduction(
                         ),
                         *consistency_window,
                     ]
-                consistency = score_goal_predicate_consistency(selected_goal, consistency_window)
+                # Pass the engine so level-up rows are graded on the engine's counterfactual
+                # terminal state instead of the rendered post-level-up frame, which is the NEXT
+                # level's opening board and on which a CORRECT predicate is False (measured on
+                # ka59, 2026-07-29). Without this the veto penalises correct predicates on exactly
+                # the rows that carry the positive signal.
+                #
+                # AND pass the engine's MEASURED quality, because the counterfactual grading is NOT
+                # oracle-distinct: engine and goal predicate come from the SAME proposer in the SAME
+                # call, so a jointly-confabulated pair (engine invents a state, goal recognises
+                # exactly that state) agrees with itself and would clear a veto that catches it
+                # otherwise. `retention_signal` is `heldout_change_consistency` -- the engine's
+                # correct-changed-cell rate on the agent's OWN held-out transitions, computed with
+                # no reference whatsoever to the goal predicate. Gating on it keeps the DECISION
+                # independent even though the grading it authorises is not, and below the floor the
+                # level-up rows are dropped as ungradeable rather than graded wrongly either way.
+                consistency = score_goal_predicate_consistency(
+                    selected_goal,
+                    consistency_window,
+                    engine=selected.engine,
+                    engine_change_fidelity=retention_signal,
+                )
                 row["goal_predicate_consistency_accuracy"] = round(float(consistency.accuracy), 6)
                 row["goal_predicate_consistency_n_real_levelups"] = int(consistency.n_real_levelups)
+                row["goal_predicate_consistency_n_levelups_on_engine_counterfactual"] = int(
+                    consistency.n_levelups_graded_on_engine_counterfactual
+                )
+                # Disclosed next to the count, per the oracle-distinctness finding: a reader must be
+                # able to tell from the artifact alone whether these numbers were produced with the
+                # veto's independence traded away, and how many rows went ungraded.
+                row["goal_predicate_consistency_not_oracle_distinct"] = bool(
+                    consistency.counterfactual_grading_is_not_oracle_distinct
+                )
+                row["goal_predicate_consistency_n_levelups_ungradeable"] = int(
+                    consistency.n_levelups_ungradeable_low_engine_fidelity
+                )
+                row["goal_predicate_consistency_engine_fidelity"] = (
+                    None
+                    if consistency.engine_fidelity_used_for_counterfactual_decision is None
+                    else round(
+                        float(consistency.engine_fidelity_used_for_counterfactual_decision), 6
+                    )
+                )
+                # `consistency.n >= 1` is the SECOND guard, alongside the existing
+                # `n_real_levelups >= 1` (2026-07-29). A window whose level-up rows were all dropped
+                # as ungradeable has NO evidence about the predicate, and a veto that fires on no
+                # evidence is the reject-correct-predicates failure wearing a different mask. The
+                # scalar `accuracy` is already 1.0 in that case, so this is belt-and-braces: no
+                # consumer of either the scalar or this gate can misfire on an empty window.
                 if (
                     consistency.n_real_levelups >= 1
+                    and consistency.n >= 1
                     and consistency.accuracy < goal_consistency_threshold
                 ):
                     last_counterexample = {

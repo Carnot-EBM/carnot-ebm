@@ -1,0 +1,1432 @@
+{
+  "DROP_ASYMMETRY": {
+    "drop_asymmetry_treatment_minus_control": 0,
+    "dropped_cells_by_arm": {
+      "ret0": [],
+      "ret1": []
+    },
+    "mean_rounds_dropped": null,
+    "mean_rounds_surviving": 2.286,
+    "n_dropped_control": 0,
+    "n_dropped_treatment": 0,
+    "rounds_seen_in_DROPPED_cells": [],
+    "rounds_seen_in_SURVIVING_cells": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "why": "A pair needs BOTH arms `ok`. If the treatment arm is dropped more often (it runs more rounds, so it is slower and likelier to hit the hard timeout), the surviving pairs are conditioned on low round counts -- precisely low effective support. Comparing the round distributions shows the direction."
+  },
+  "EFFECTIVE_SUPPORT": {
+    "VERDICT": "2 of 12 pairs carry real information about retention's effect on banked levels (11 met the weaker round-only condition; 2 also had an informative, non-tie selection signal).",
+    "definition_conjunction": "Round condition AND generator_output_reached_policy. A changed stored engine that never reached the policy has NO causal path to banked levels, so such a pair carries zero information about the PRIMARY endpoint however many rounds it ran. This is the falsifiability gate.",
+    "definition_informative": "Conjunction AND at least one attempt with signal_informative=True. When the held-out split contains no changing transition the selection signal is 0.0 for every round, all rounds tie, and the tie rule keeps round 1 -- retention still acts, but ARBITRARILY rather than on quality. All 3 of retention's measured hurt-windows were in exactly that regime, so an arbitrary-tie-driven result must be separable from a quality-driven one.",
+    "definition_round_only": "In the retention-ON arm, at least one refinement call ran MORE THAN ONE round AND best_round != rounds_seen. Necessary but NOT sufficient: it establishes only that retention changed the STORED ENGINE.",
+    "games_support_conjunction": [
+      "tu93",
+      "vc33"
+    ],
+    "games_support_informative": [
+      "tu93",
+      "vc33"
+    ],
+    "games_support_round_only": [
+      "cd82",
+      "cn04",
+      "ft09",
+      "lp85",
+      "ls20",
+      "r11l",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "vc33"
+    ],
+    "n_pairs_nominal": 12,
+    "n_pairs_support_CONJUNCTION_AND_INFORMATIVE_SIGNAL": 2,
+    "n_pairs_support_CONJUNCTION_the_falsifiability_gate": 2,
+    "n_pairs_support_ROUND_ONLY": 11,
+    "total_attempts_ret1": 14,
+    "total_multi_round_attempts_ret1": 11,
+    "total_signal_informative_ret1": 8,
+    "total_store_restored_ret1": 5
+  },
+  "POWER_CEILING": {
+    "VERDICT": "The banked-levels sign test is UNDERPOWERED BY CONSTRUCTION at this n and base rate: significance needs 6 discordant pairs and the base rate does not supply them. A null here is a statement about the design's resolution, NOT evidence that retention does not help. The densely-supported secondaries (actions-to-progress, plans installed, engine-accepted rate) are where an effect of this size could actually show up.",
+    "at_observed_base_rate_this_run": {
+      "P_reaching_b_at_least_6_UPPER_BOUND": 0.0858,
+      "assumed_per_cell_bank_probability": 0.1667,
+      "discordant_pairs_needed_for_p_below_0_05": 6,
+      "expected_discordant_pairs": 3.33,
+      "implied_P_pair_is_discordant": 0.2778,
+      "independence_note": "Arms share game, seed and model, so their outcomes are positively correlated. Correlation makes ties MORE likely and b SMALLER, so this probability is an UPPER BOUND on the design's power, not an estimate of it.",
+      "n_pairs": 12
+    },
+    "at_prior_base_rate_3_of_13": {
+      "P_reaching_b_at_least_6_UPPER_BOUND": 0.2239,
+      "assumed_per_cell_bank_probability": 0.2308,
+      "discordant_pairs_needed_for_p_below_0_05": 6,
+      "expected_discordant_pairs": 4.26,
+      "implied_P_pair_is_discordant": 0.355,
+      "independence_note": "Arms share game, seed and model, so their outcomes are positively correlated. Correlation makes ties MORE likely and b SMALLER, so this probability is an UPPER BOUND on the design's power, not an estimate of it.",
+      "n_pairs": 12
+    },
+    "observed_per_cell_bank_rate_this_run": 0.1667
+  },
+  "PRIMARY_banked_levels_ALL_MATCHED_PAIRS": {
+    "banked_total_ret0": 3,
+    "banked_total_ret1": 3,
+    "discordant": 0,
+    "estimand": "Intention-to-treat over every matched pair. Unbiased; the ONLY stratum from which a direction may be claimed.",
+    "losses_retention_on": 0,
+    "minimum_reachable_p_at_this_discordance": 1.0,
+    "n_pairs": 12,
+    "p_one_sided_retention_helps": 1.0,
+    "p_one_sided_retention_hurts": 1.0,
+    "sign_test_p_two_sided": 1.0,
+    "ties": 12,
+    "wins_retention_on": 0
+  },
+  "REPRODUCTION_GATE_ERRORS": {
+    "by_arm": {
+      "ret0": [],
+      "ret1": []
+    },
+    "n_control": 0,
+    "n_treatment": 0,
+    "why": "A gate exception is a MISSING observation, never 0 banked levels: the run DID produce a level, we merely failed to verify it. Scoring it 0 would hand the comparison to the arm that did NOT earn the level."
+  },
+  "SECONDARY_banked_levels_ACTION_MATCHED": {
+    "banked_total_ret0": 3,
+    "banked_total_ret1": 3,
+    "definition": "Pairs where each arm did at least 50% of the other's actions AND inductions. Ratio pre-stated before the run.",
+    "discordant": 0,
+    "losses_retention_on": 0,
+    "minimum_reachable_p_at_this_discordance": 1.0,
+    "n_pairs": 9,
+    "p_one_sided_retention_helps": 1.0,
+    "p_one_sided_retention_hurts": 1.0,
+    "sign_test_p_two_sided": 1.0,
+    "ties": 9,
+    "wins_retention_on": 0
+  },
+  "SECONDARY_conditional_on_informative_signal": {
+    "banked_total_ret0": 3,
+    "banked_total_ret1": 3,
+    "discordant": 0,
+    "estimand_warning": "Same post-treatment conditioning caveat, further restricted to pairs whose retained round was chosen on a NON-ZERO signal. Separates a quality-driven effect from arbitrary round-1 tie-breaking.",
+    "losses_retention_on": 0,
+    "minimum_reachable_p_at_this_discordance": 1.0,
+    "n_pairs": 2,
+    "p_one_sided_retention_helps": 1.0,
+    "p_one_sided_retention_hurts": 1.0,
+    "sign_test_p_two_sided": 1.0,
+    "ties": 2,
+    "wins_retention_on": 0
+  },
+  "SECONDARY_conditional_on_treatment_arm_support": {
+    "banked_total_ret0": 3,
+    "banked_total_ret1": 3,
+    "discordant": 0,
+    "estimand_warning": "NOT an ITT estimate. Membership is decided by n_attempts_retention_could_have_mattered and generator_output_reached_policy, both READ OFF THE TREATMENT ARM'S REALIZED RUN. Conditioning on a post-treatment realization is non-random whenever retention acting correlates with induction quality. Read as a mechanism probe, never as the headline.",
+    "losses_retention_on": 0,
+    "minimum_reachable_p_at_this_discordance": 1.0,
+    "n_pairs": 2,
+    "p_one_sided_retention_helps": 1.0,
+    "p_one_sided_retention_hurts": 1.0,
+    "sign_test_p_two_sided": 1.0,
+    "ties": 2,
+    "wins_retention_on": 0
+  },
+  "SECONDARY_metrics": {
+    "generator_output_reached_policy_rate": {
+      "ret0": 0.1667,
+      "ret1": 0.1667
+    },
+    "live_levels_gained_UNGATED_for_contrast": {
+      "note": "UNGATED live frame-counter levels. Reported only as a contrast against the reproduction-gated PRIMARY; a live level that does not replay is NOT banked and never enters the primary comparison.",
+      "ret0": 3,
+      "ret1": 3
+    },
+    "mean_actions_used": {
+      "ret0": 327.0,
+      "ret1": 234.75
+    },
+    "mean_n_inductions": {
+      "ret0": 1.1667,
+      "ret1": 1.1667
+    },
+    "mean_plans_found": {
+      "ret0": 0.1667,
+      "ret1": 0.1667
+    },
+    "mean_wall_s": {
+      "ret0": 1110.825,
+      "ret1": 1263.7
+    }
+  },
+  "UPSTREAM_ADMISSION_CENSUS": {
+    "admitted_at_threshold": {
+      "0.5": 15,
+      "0.6": 11,
+      "0.7": 10,
+      "0.8": 10,
+      "0.9": 9,
+      "1.0": 9
+    },
+    "heldout_accuracy_distribution": {
+      "0.0": 29,
+      "0.25": 1,
+      "0.375": 1,
+      "0.5": 4,
+      "0.625": 1,
+      "0.875": 1,
+      "1.0": 9
+    },
+    "interpretation": "Retention decides WHICH engine the store holds; it cannot matter while nothing is ADMITTED. If `heldout_accuracy` is degenerate-bimodal (mass at exactly 0.0 and exactly 1.0), the identical set of rounds is admitted across a wide band of thresholds, so the gate's strictness is not the lever either -- the induced world model is. See docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md.",
+    "n_attempts_with_NO_accepted_round": 21,
+    "n_attempts_with_at_least_one_accepted_round": 7,
+    "n_induction_attempts": 28,
+    "n_rounds_scored": 46,
+    "skip_reason_census": {
+      "(not skipped)": 4,
+      "degenerate_goal_predicate": 1,
+      "no_reachable_plan_after_refinement": 1,
+      "proposer_failed": 5,
+      "proposer_failed_or_missing_root": 1,
+      "world_model_accuracy_below_threshold": 16
+    }
+  },
+  "acceptance_gates": {
+    "both_arms_bound_the_cuda_build_not_the_igpu": true,
+    "design_can_reach_significance_at_this_base_rate": false,
+    "drop_asymmetry_treatment_minus_control": 0,
+    "every_analysed_cell_induced_COLD_empty_engine_store": true,
+    "every_analysed_cell_served_the_pinned_31B": true,
+    "every_banked_level_passed_the_reproduction_gate": true,
+    "every_pair_is_action_matched": false,
+    "games_not_action_matched": [
+      "lp85",
+      "ls20",
+      "su15"
+    ],
+    "measurement_had_nonzero_effective_support_CONJUNCTION": true,
+    "no_direction_claimed_below_the_prestated_floor": true,
+    "no_drop_asymmetry_between_arms": true,
+    "no_reproduction_gate_errors": true,
+    "note": "`measurement_had_nonzero_effective_support_CONJUNCTION` is the FALSIFIABILITY gate: it fails when retention never changed a stored engine that then reached the policy, i.e. when the two arms were the same agent on this endpoint. A run that fails it produced no evidence about retention in either direction. `design_can_reach_significance_at_this_base_rate` is separate and PRIOR: it fails when the base rate cannot supply 6 discordant pairs, in which case a null was foreseeable before any cell ran.",
+    "per_cell_e3_dir_honoured": true,
+    "retention_flag_honoured_in_every_analysed_cell": true
+  },
+  "cell_status_census": {
+    "ok": [
+      "ret0/cd82",
+      "ret0/cn04",
+      "ret0/ft09",
+      "ret0/lp85",
+      "ret0/ls20",
+      "ret0/r11l",
+      "ret0/sc25",
+      "ret0/su15",
+      "ret0/tn36",
+      "ret0/tr87",
+      "ret0/tu93",
+      "ret0/vc33",
+      "ret1/cd82",
+      "ret1/cn04",
+      "ret1/ft09",
+      "ret1/lp85",
+      "ret1/ls20",
+      "ret1/r11l",
+      "ret1/sc25",
+      "ret1/su15",
+      "ret1/tn36",
+      "ret1/tr87",
+      "ret1/tu93",
+      "ret1/vc33"
+    ]
+  },
+  "cited_upstream_artifacts": [
+    {
+      "cell_wall_s": 1159.6,
+      "experiment_id": "ret0__cd82__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160156,
+      "sha256": "b16758c432b35604108529b9fa4519a7ad212724f6dc8b5595961ebb5e5387ad"
+    },
+    {
+      "cell_wall_s": 1772.5,
+      "experiment_id": "ret0__cn04__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 363684,
+      "sha256": "1360263e9a6eb3ea903ee8d3c51fee8df4de75cba018f1933d0af55048c70240"
+    },
+    {
+      "cell_wall_s": 434.2,
+      "experiment_id": "ret0__ft09__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4097589,
+      "sha256": "ff03af81e3137eda507ea3d2af5fbe469e79198f7d407204b645ef64f64d833d"
+    },
+    {
+      "cell_wall_s": 1256.2,
+      "experiment_id": "ret0__lp85__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4082753,
+      "sha256": "ae4914b64a48b959c60db40e4bfbb6ef127a70030a8f8dba874ac02faba2b503"
+    },
+    {
+      "cell_wall_s": 1400.3,
+      "experiment_id": "ret0__ls20__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160155,
+      "sha256": "65236190fe9b14a7226b3ec464eaa6a582c9e490589625558e4c5c8daf095842"
+    },
+    {
+      "cell_wall_s": 1670.7,
+      "experiment_id": "ret0__r11l__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160156,
+      "sha256": "8c8b5e7510a80da0d45abe1da32bca37bb378803f0b86274eae587960bdde26a"
+    },
+    {
+      "cell_wall_s": 921.9,
+      "experiment_id": "ret0__sc25__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_pid": 363687,
+      "sha256": "ffc27860b35091951d8d614465a1f6f8860e5e71efc657f91215a38e042e8a7c"
+    },
+    {
+      "cell_wall_s": 1264.9,
+      "experiment_id": "ret0__su15__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_pid": 4160156,
+      "sha256": "d441cd0b411a5f0bfde9d1cfcf400e8d9b175be8e1dd69a59d5a61b1376e0d83"
+    },
+    {
+      "cell_wall_s": 599.6,
+      "experiment_id": "ret0__tn36__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 377236,
+      "sha256": "7d60e85ac2782dc2075408c17254ade5d7d31d9ff0d55b2d836e441ae67bb606"
+    },
+    {
+      "cell_wall_s": 1141.1,
+      "experiment_id": "ret0__tr87__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4082753,
+      "sha256": "4e60f204c1eee53c157e5e170890793fc833acaf9caf6a8c519cfb30a9f1b8e9"
+    },
+    {
+      "cell_wall_s": 1224.8,
+      "experiment_id": "ret0__tu93__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160155,
+      "sha256": "3671f18b8645dee08c1868cd2ac4daae8dec21e9f93b67c3bfce835fad97fbb8"
+    },
+    {
+      "cell_wall_s": 484.1,
+      "experiment_id": "ret0__vc33__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4097589,
+      "sha256": "0ce1c5512c7d01ca4eb48ab6cc629df9870821bd320e9290604c3c7264d73ac6"
+    },
+    {
+      "cell_wall_s": 1493.3,
+      "experiment_id": "ret1__cd82__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160155,
+      "sha256": "438ffc6f71053eaa691eb46b77142947cd3fe1ccc347f1ba63e5b35b5b36e765"
+    },
+    {
+      "cell_wall_s": 1554.0,
+      "experiment_id": "ret1__cn04__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 363687,
+      "sha256": "211f650b20ff4d40d5c5e74fc39cc5394555676c5b186a0513527f8692c3d53a"
+    },
+    {
+      "cell_wall_s": 918.7,
+      "experiment_id": "ret1__ft09__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4082753,
+      "sha256": "65dec755d921e38707fe0f8d77343012f6d4c8c7d7662b963926985b7b0ce9f7"
+    },
+    {
+      "cell_wall_s": 1594.3,
+      "experiment_id": "ret1__lp85__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4095416,
+      "sha256": "e359e0b48f4f06103407f2557cb9de6c7b079968e3e10ff6f58e0964636bff49"
+    },
+    {
+      "cell_wall_s": 1749.2,
+      "experiment_id": "ret1__ls20__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160156,
+      "sha256": "1a5895588d210e81bda3231dae8ac430f65e6d9cbe59142326cc7febece86b72"
+    },
+    {
+      "cell_wall_s": 1576.7,
+      "experiment_id": "ret1__r11l__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160155,
+      "sha256": "e65501255362cbb951d8ae0bcac1b1fd3e4a987546ea710505ce22dd78c0125d"
+    },
+    {
+      "cell_wall_s": 949.9,
+      "experiment_id": "ret1__sc25__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_pid": 363684,
+      "sha256": "35ecae5095693f9acb370061448db1bd20360223684bc537b61bff407a60bb8b"
+    },
+    {
+      "cell_wall_s": 1586.6,
+      "experiment_id": "ret1__su15__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_pid": 4160155,
+      "sha256": "7c6ee475ad1cb725fddb276ef920bc476b053838c205fb8a37ac41ce82336cd7"
+    },
+    {
+      "cell_wall_s": 747.9,
+      "experiment_id": "ret1__tn36__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 377190,
+      "sha256": "99fab78126aadd4c4171f4af3226edd7b209d428559524dd012af99c06153920"
+    },
+    {
+      "cell_wall_s": 931.3,
+      "experiment_id": "ret1__tr87__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4097589,
+      "sha256": "ef9acba18fccdd25de085651d6153626469a9f5d474df3a8ea1d23b41f338555"
+    },
+    {
+      "cell_wall_s": 1465.9,
+      "experiment_id": "ret1__tu93__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4160156,
+      "sha256": "a967805d286021c76a30e2a4e175a85c2aea1dca2f9b1552e3bcf5f97a133a7b"
+    },
+    {
+      "cell_wall_s": 596.6,
+      "experiment_id": "ret1__vc33__s1",
+      "fields_imported": [
+        "banked_levels",
+        "reproduction_gate",
+        "retention_support",
+        "generator_output_reached_policy",
+        "result.total_actions",
+        "result.n_inductions",
+        "result.n_plans_found"
+      ],
+      "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "server_binary": "reused_existing",
+      "server_pid": 4082753,
+      "sha256": "75ba64afc3ead51d26cbdd8bfc6eb89e9b8b8e3e92c29f78409aeef1358dd962"
+    }
+  ],
+  "deviations_from_shipped_live_config": [
+    {
+      "field": "n_ctx",
+      "here": 32768,
+      "shipped": 81920,
+      "symmetric_across_arms": true,
+      "why": "at 81920 the VRAM guard needs ~24020 MiB against ~24123 free and any stray CUDA context tips it into the iGPU HIP fallback, where the agent runs LLM-OFF while reporting LLM-ON -- a fake null"
+    },
+    {
+      "field": "ffn_cpu_layers",
+      "here": 0,
+      "shipped": "auto-fit",
+      "symmetric_across_arms": true,
+      "why": "same VRAM guard; keeps all layers on the CUDA card"
+    },
+    {
+      "field": "mtp",
+      "here": false,
+      "shipped": true,
+      "symmetric_across_arms": true,
+      "why": "_resolve_mtp_head() is not model-aware and can pair a Gemma head with a Qwen target, killing the server. MTP is decode-SPEED only, so under an ACTION budget it cannot move banked levels"
+    },
+    {
+      "field": "explore_budget",
+      "here": 24,
+      "shipped": "per-game via _route_explore_budget (24 routed / 80 graph)",
+      "symmetric_across_arms": true,
+      "why": "pinned so a bounded run reliably reaches the induce->plan phase, the only phase the arms differ in. On a graph-route game this induces up to ~3.3x sooner than the scored path, INFLATING retention opportunity"
+    }
+  ],
+  "duration_s": 0.017,
+  "duration_s_provenance": "Wall time of THIS aggregation only. The measurement's own wall time is per-cell in `per_game[].wall_s_ret0/ret1`.",
+  "experiment": "outer_loop_arc_engine_retention_banked_levels_20260729",
+  "false_negative_risk": "THE dominant risk on this endpoint and the reason the verdict logic leads with support and power rather than with the tally. Banked levels are rare (~3 per 13 held-out games), so most pairs tie 0-0 and the sign test's discordance cannot reach the b>=6 it needs for p<0.05. Separately, retention acts on WHICH engine is stored, which can only move a banked level if the stored engine reaches the policy at all -- and multi-round refinement (retention's precondition) is anti-correlated with reaching the policy, because a second round runs precisely when round 1 failed the admission gate. Both are reported as measurement limits, never as evidence against retention.",
+  "false_negative_risk_checked": true,
+  "heldout_condition": "policy_game_id is an anonymized hash, so the policy cannot key into a per-game adapter; CARNOT_ARC_E3_DIR is a per-CELL store verified EMPTY at start, so neither arm can load a pre-induced engine banked by a historical run.",
+  "honest_verdict": "complete_retention_ab_UNDERPOWERED_banked_levels_endpoint_cannot_reach_significance_at_this_base_rate",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_path_entrypoint": "python/carnot/agentic/arc_actions_to_progress.py:run_bounded_progress -> E3AgentPolicy (the scored cascade)",
+  "measurement_wall_s_sum_over_cells": 28494.3,
+  "model_specs": {
+    "both_arms_identical": true,
+    "inducer": "unsloth/gemma-4-31B-it-GGUF (gemma-4-31B-it-Q4_K_M.gguf)",
+    "note": "Retention is the ONLY intended difference. Arms run concurrently on separate RTX 3090s with the arm->card assignment counterbalanced by game index, and each cell proves its own card from a per-PID nvidia-smi row rather than from CUDA_VISIBLE_DEVICES."
+  },
+  "n_matched_pairs": 12,
+  "per_game": [
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 389,
+      "actions_ret1": 389,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "cd82",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 0,
+      "n_store_restored_ret1": 1,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        3
+      ],
+      "rounds_seen_ret1": [
+        3
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 1159.6,
+      "wall_s_ret1": 1493.3
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 26,
+      "actions_ret1": 26,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "cn04",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 1,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        2
+      ],
+      "rounds_seen_ret1": [
+        2
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": true,
+      "timed_out_ret1": true,
+      "wall_s_ret0": 1772.5,
+      "wall_s_ret1": 1554.0
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 396,
+      "actions_ret1": 396,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        2
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "ft09",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 1,
+      "n_store_restored_ret1": 1,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        3
+      ],
+      "rounds_seen_ret1": [
+        3
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 434.2,
+      "wall_s_ret1": 918.7
+    },
+    {
+      "action_ratio_min_over_max": 0.066,
+      "actions_ret0": 394,
+      "actions_ret1": 26,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "lp85",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": false,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 0,
+      "n_store_restored_ret1": 1,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        3
+      ],
+      "rounds_seen_ret1": [
+        3
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": true,
+      "wall_s_ret0": 1256.2,
+      "wall_s_ret1": 1594.3
+    },
+    {
+      "action_ratio_min_over_max": 0.0665,
+      "actions_ret0": 391,
+      "actions_ret1": 26,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "ls20",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": false,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 1,
+      "n_store_restored_ret1": 1,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        3
+      ],
+      "rounds_seen_ret1": [
+        3
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": true,
+      "wall_s_ret0": 1400.3,
+      "wall_s_ret1": 1749.2
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 26,
+      "actions_ret1": 26,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "r11l",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 0,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        2
+      ],
+      "rounds_seen_ret1": [
+        2
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": true,
+      "timed_out_ret1": true,
+      "wall_s_ret0": 1670.7,
+      "wall_s_ret1": 1576.7
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 396,
+      "actions_ret1": 396,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        0
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "sc25",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 0,
+      "n_retention_could_have_mattered_ret1": 0,
+      "n_signal_informative_ret1": 0,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        2
+      ],
+      "rounds_seen_ret1": [
+        1
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": false,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 921.9,
+      "wall_s_ret1": 949.9
+    },
+    {
+      "action_ratio_min_over_max": 0.067,
+      "actions_ret0": 388,
+      "actions_ret1": 26,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "su15",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": false,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 0,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        2
+      ],
+      "rounds_seen_ret1": [
+        2
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": true,
+      "wall_s_ret0": 1264.9,
+      "wall_s_ret1": 1586.6
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 346,
+      "actions_ret1": 346,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "tn36",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 1,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        3
+      ],
+      "rounds_seen_ret1": [
+        2
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 599.6,
+      "wall_s_ret1": 747.9
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 396,
+      "actions_ret1": 396,
+      "banked_ret0": 0,
+      "banked_ret1": 0,
+      "best_round_ret1": [
+        2
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "tr87",
+      "gen_reached_policy_ret0": false,
+      "gen_reached_policy_ret1": false,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 0,
+      "live_levels_gained_ret1": 0,
+      "n_inductions_ret0": 1,
+      "n_inductions_ret1": 1,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 1,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 0,
+      "plans_found_ret1": 0,
+      "reproduced_ret0": null,
+      "reproduced_ret1": null,
+      "rounds_seen_ret0": [
+        3
+      ],
+      "rounds_seen_ret1": [
+        3
+      ],
+      "support_for_banked_levels_CONJUNCTION": false,
+      "support_informative_signal": false,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 1141.1,
+      "wall_s_ret1": 931.3
+    },
+    {
+      "action_ratio_min_over_max": 1.0,
+      "actions_ret0": 389,
+      "actions_ret1": 389,
+      "banked_ret0": 1,
+      "banked_ret1": 1,
+      "best_round_ret1": [
+        1,
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "tu93",
+      "gen_reached_policy_ret0": true,
+      "gen_reached_policy_ret1": true,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 1,
+      "live_levels_gained_ret1": 1,
+      "n_inductions_ret0": 2,
+      "n_inductions_ret1": 2,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 1,
+      "n_store_restored_ret1": 0,
+      "plans_found_ret0": 1,
+      "plans_found_ret1": 1,
+      "reproduced_ret0": true,
+      "reproduced_ret1": true,
+      "rounds_seen_ret0": [
+        2,
+        1
+      ],
+      "rounds_seen_ret1": [
+        2,
+        1
+      ],
+      "support_for_banked_levels_CONJUNCTION": true,
+      "support_informative_signal": true,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 1224.8,
+      "wall_s_ret1": 1465.9
+    },
+    {
+      "action_ratio_min_over_max": 0.969,
+      "actions_ret0": 387,
+      "actions_ret1": 375,
+      "banked_ret0": 2,
+      "banked_ret1": 2,
+      "best_round_ret1": [
+        1,
+        1
+      ],
+      "delta_ret1_minus_ret0": 0,
+      "game": "vc33",
+      "gen_reached_policy_ret0": true,
+      "gen_reached_policy_ret1": true,
+      "induction_ratio_min_over_max": 1.0,
+      "is_action_matched": true,
+      "live_levels_gained_ret0": 2,
+      "live_levels_gained_ret1": 2,
+      "n_inductions_ret0": 2,
+      "n_inductions_ret1": 2,
+      "n_multi_round_ret0": 1,
+      "n_multi_round_ret1": 1,
+      "n_retention_could_have_mattered_ret1": 1,
+      "n_signal_informative_ret1": 2,
+      "n_store_restored_ret1": 1,
+      "plans_found_ret0": 1,
+      "plans_found_ret1": 1,
+      "reproduced_ret0": true,
+      "reproduced_ret1": true,
+      "rounds_seen_ret0": [
+        3,
+        1
+      ],
+      "rounds_seen_ret1": [
+        1,
+        3
+      ],
+      "support_for_banked_levels_CONJUNCTION": true,
+      "support_informative_signal": true,
+      "support_round_only": true,
+      "timed_out_ret0": false,
+      "timed_out_ret1": false,
+      "wall_s_ret0": 484.1,
+      "wall_s_ret1": 596.6
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_build_not_igpu_hip"
+    },
+    {
+      "available": true,
+      "resource": "retention_flag_honoured"
+    },
+    {
+      "available": true,
+      "resource": "cold_empty_engine_store"
+    },
+    {
+      "available": true,
+      "resource": "pinned_31B_served"
+    }
+  ],
+  "prereg": "PREREGISTRATION.md (amended 2026-07-29T14:10Z with rcells/ EMPTY)",
+  "provenance": {
+    "code": [
+      {
+        "bytes": 64274,
+        "path": "python/carnot/agentic/arc_llm_reinduction.py",
+        "sha256": "dbcaf96e0c026e2034dbb19c252c808f51fd1c811698b4053fc3686c1b3db1d5"
+      },
+      {
+        "bytes": 376234,
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb"
+      },
+      {
+        "bytes": 46033,
+        "path": "python/carnot/agentic/arc_actions_to_progress.py",
+        "sha256": "44e5a4b89966b034ea2cabc8292795cbc4d24a8497394b1b7a04cd2fed701b9f"
+      },
+      {
+        "bytes": 26148,
+        "path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rcell.py",
+        "sha256": "ac6f5a4292ba3fd6c1c27aa0352949c6035e137a8449d86b4e8a09672ee8b49e"
+      },
+      {
+        "bytes": 4335,
+        "path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/rdrive.sh",
+        "sha256": "fc014bf4bcdeaac84352395753b8fd26964a51186e22548ae8058b34297e9676"
+      },
+      {
+        "bytes": 26976,
+        "path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/analyze_retention.py",
+        "sha256": "35244b7d88cce1e4b49d0a6c36e81ee568fe7180d43b92b465339db294fa2ce2"
+      },
+      {
+        "bytes": 12368,
+        "path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/PREREGISTRATION.md",
+        "sha256": "2054448026b14b82aacb48a08b0d43c12d2e0fdc2a87016a51454c215704d86b"
+      }
+    ],
+    "git_head": "aa8a38e315947e47bb20e8b07f77b2c39a82346f",
+    "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/analyze_retention.py && /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/build_retention_artifact.py",
+    "rows_sources": [
+      {
+        "bytes": 352594,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__cd82__s1.json",
+        "sha256": "b16758c432b35604108529b9fa4519a7ad212724f6dc8b5595961ebb5e5387ad"
+      },
+      {
+        "bytes": 151864,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__cn04__s1.json",
+        "sha256": "1360263e9a6eb3ea903ee8d3c51fee8df4de75cba018f1933d0af55048c70240"
+      },
+      {
+        "bytes": 320349,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__ft09__s1.json",
+        "sha256": "ff03af81e3137eda507ea3d2af5fbe469e79198f7d407204b645ef64f64d833d"
+      },
+      {
+        "bytes": 37504,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__lp85__s1.json",
+        "sha256": "ae4914b64a48b959c60db40e4bfbb6ef127a70030a8f8dba874ac02faba2b503"
+      },
+      {
+        "bytes": 150614,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__ls20__s1.json",
+        "sha256": "65236190fe9b14a7226b3ec464eaa6a582c9e490589625558e4c5c8daf095842"
+      },
+      {
+        "bytes": 59987,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__r11l__s1.json",
+        "sha256": "8c8b5e7510a80da0d45abe1da32bca37bb378803f0b86274eae587960bdde26a"
+      },
+      {
+        "bytes": 98315,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__sc25__s1.json",
+        "sha256": "ffc27860b35091951d8d614465a1f6f8860e5e71efc657f91215a38e042e8a7c"
+      },
+      {
+        "bytes": 58554,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__su15__s1.json",
+        "sha256": "d441cd0b411a5f0bfde9d1cfcf400e8d9b175be8e1dd69a59d5a61b1376e0d83"
+      },
+      {
+        "bytes": 54988,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__tn36__s1.json",
+        "sha256": "7d60e85ac2782dc2075408c17254ade5d7d31d9ff0d55b2d836e441ae67bb606"
+      },
+      {
+        "bytes": 302298,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__tr87__s1.json",
+        "sha256": "4e60f204c1eee53c157e5e170890793fc833acaf9caf6a8c519cfb30a9f1b8e9"
+      },
+      {
+        "bytes": 56185,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__tu93__s1.json",
+        "sha256": "3671f18b8645dee08c1868cd2ac4daae8dec21e9f93b67c3bfce835fad97fbb8"
+      },
+      {
+        "bytes": 170844,
+        "path": "results/arc_engine_retention_20260729/cells/ret0__vc33__s1.json",
+        "sha256": "0ce1c5512c7d01ca4eb48ab6cc629df9870821bd320e9290604c3c7264d73ac6"
+      },
+      {
+        "bytes": 238115,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__cd82__s1.json",
+        "sha256": "438ffc6f71053eaa691eb46b77142947cd3fe1ccc347f1ba63e5b35b5b36e765"
+      },
+      {
+        "bytes": 332044,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__cn04__s1.json",
+        "sha256": "211f650b20ff4d40d5c5e74fc39cc5394555676c5b186a0513527f8692c3d53a"
+      },
+      {
+        "bytes": 285537,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__ft09__s1.json",
+        "sha256": "65dec755d921e38707fe0f8d77343012f6d4c8c7d7662b963926985b7b0ce9f7"
+      },
+      {
+        "bytes": 14093,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__lp85__s1.json",
+        "sha256": "e359e0b48f4f06103407f2557cb9de6c7b079968e3e10ff6f58e0964636bff49"
+      },
+      {
+        "bytes": 110303,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__ls20__s1.json",
+        "sha256": "1a5895588d210e81bda3231dae8ac430f65e6d9cbe59142326cc7febece86b72"
+      },
+      {
+        "bytes": 60206,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__r11l__s1.json",
+        "sha256": "e65501255362cbb951d8ae0bcac1b1fd3e4a987546ea710505ce22dd78c0125d"
+      },
+      {
+        "bytes": 25754,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__sc25__s1.json",
+        "sha256": "35ecae5095693f9acb370061448db1bd20360223684bc537b61bff407a60bb8b"
+      },
+      {
+        "bytes": 24761,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__su15__s1.json",
+        "sha256": "7c6ee475ad1cb725fddb276ef920bc476b053838c205fb8a37ac41ce82336cd7"
+      },
+      {
+        "bytes": 40356,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__tn36__s1.json",
+        "sha256": "99fab78126aadd4c4171f4af3226edd7b209d428559524dd012af99c06153920"
+      },
+      {
+        "bytes": 302508,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__tr87__s1.json",
+        "sha256": "ef9acba18fccdd25de085651d6153626469a9f5d474df3a8ea1d23b41f338555"
+      },
+      {
+        "bytes": 56659,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__tu93__s1.json",
+        "sha256": "a967805d286021c76a30e2a4e175a85c2aea1dca2f9b1552e3bcf5f97a133a7b"
+      },
+      {
+        "bytes": 70808,
+        "path": "results/arc_engine_retention_20260729/cells/ret1__vc33__s1.json",
+        "sha256": "75ba64afc3ead51d26cbdd8bfc6eb89e9b8b8e3e92c29f78409aeef1358dd962"
+      }
+    ],
+    "working_tree_dirty_at_build": true
+  },
+  "random_seed": 1,
+  "reproducibility_checksum": "sha256:f3dd3ed659c34a0a2f72292f01861acf3e978769377f4b1c1c79e09c76ec6ff0",
+  "run_date": "2026-07-29T18:29:03Z",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "The offline dev twin under an anonymized policy_game_id, not the scored hidden-game path. No level is claimed as live-agent self-discovery, and no scored or online ARC game was played at any point.",
+  "verifier_is_oracle": false
+}

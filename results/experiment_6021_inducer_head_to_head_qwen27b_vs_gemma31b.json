@@ -2,7 +2,7 @@
   "acceptance_gate_both_arms_complete": true,
   "acceptance_gate_coverage_separation": true,
   "acceptance_gate_criterion_fixed_before_unblinding": true,
-  "aggregation_wall_s": 212.933,
+  "aggregation_wall_s": 211.476,
   "arm_meta": {
     "gemma31b": {
       "arm": "gemma31b",
@@ -198,10 +198,10 @@
           "gemma31b": false,
           "qwen27b": false
         },
-        "dirty_vs_head": false,
-        "mtime_utc": "2026-07-28T20:00:12Z",
+        "dirty_vs_head": true,
+        "mtime_utc": "2026-07-29T23:54:44Z",
         "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256": "22092ec9074b9e64bd9adcf23f16308cc10298aaa7408db779930a81494f27fa"
+        "sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8"
       },
       {
         "arm_import_is_provably_this_sha256": {
@@ -209,9 +209,9 @@
           "qwen27b": false
         },
         "dirty_vs_head": true,
-        "mtime_utc": "2026-07-29T13:15:53Z",
+        "mtime_utc": "2026-07-29T23:40:51Z",
         "path": "python/carnot/agentic/arc_actions_to_progress.py",
-        "sha256": "44e5a4b89966b034ea2cabc8292795cbc4d24a8497394b1b7a04cd2fed701b9f"
+        "sha256": "1f9c406c960d0484d0b09979c2e1df17be0b230bf4948a96466ffb2e8dc015c0"
       },
       {
         "arm_import_is_provably_this_sha256": {
@@ -278,14 +278,14 @@
           "gemma31b": false,
           "qwen27b": false
         },
-        "dirty_vs_head": true,
+        "dirty_vs_head": false,
         "mtime_utc": "2026-07-29T13:21:46Z",
         "path": "results/inducer_h2h_6021/build_artifact_6021.py",
         "sha256": "80a46d6cee89d824a5ac24a9394a4e4c165a6dabab80a69472c6d1fc8384b833"
       }
     ],
-    "diff_stat_vs_head_for_declared_deps": "python/carnot/agentic/arc_actions_to_progress.py | 108 ++++++++++++++++++++++-\n results/inducer_h2h_6021/build_artifact_6021.py  |  16 +++-\n 2 files changed, 119 insertions(+), 5 deletions(-)",
-    "git_head": "75b62f048cfff236fda270eab6ce0647d35fee58",
+    "diff_stat_vs_head_for_declared_deps": "python/carnot/agentic/arc_actions_to_progress.py   | 124 ++++++-\n .../carnot/agentic/arc_executable_world_model.py   | 372 +++++++++++++++++++--\n 2 files changed, 472 insertions(+), 24 deletions(-)",
+    "git_head": "aa8a38e315947e47bb20e8b07f77b2c39a82346f",
     "git_head_describes_tree_only_for_clean_files": true,
     "inertness_checked_at_runtime_not_only_by_reading": {
       "check": "Constructed WorldModelVerifier(list(window)) exactly as run_reason_cell_budget does, with hud_mask_swallow_clean wrapped in a counting spy.",
@@ -1256,11 +1256,11 @@
     "code": [
       {
         "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256": "22092ec9074b9e64bd9adcf23f16308cc10298aaa7408db779930a81494f27fa"
+        "sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8"
       },
       {
         "path": "python/carnot/agentic/arc_actions_to_progress.py",
-        "sha256": "44e5a4b89966b034ea2cabc8292795cbc4d24a8497394b1b7a04cd2fed701b9f"
+        "sha256": "1f9c406c960d0484d0b09979c2e1df17be0b230bf4948a96466ffb2e8dc015c0"
       },
       {
         "path": "python/carnot/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.py",

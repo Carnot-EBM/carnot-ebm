@@ -1,0 +1,2379 @@
+{
+  "anon_game_id": "hgb6a5e8",
+  "arm": "ret1",
+  "banked_levels": 2,
+  "budget": 400,
+  "cell_wall_s": 596.6,
+  "deviations_from_shipped_live_config": [
+    {
+      "field": "n_ctx",
+      "here": 32768,
+      "shipped": 81920,
+      "symmetric_across_arms": true,
+      "why": "at 81920 the VRAM guard needs ~24020 MiB against ~24123 free and any stray CUDA context tips it into the iGPU HIP fallback, where the agent runs LLM-OFF while reporting LLM-ON -- a fake null"
+    },
+    {
+      "field": "ffn_cpu_layers",
+      "here": 0,
+      "shipped": "auto-fit",
+      "symmetric_across_arms": true,
+      "why": "same VRAM guard; keeps all layers on the CUDA card"
+    },
+    {
+      "field": "mtp",
+      "here": false,
+      "shipped": true,
+      "symmetric_across_arms": true,
+      "why": "_resolve_mtp_head() is not model-aware and can pair a Gemma head with a Qwen target, killing the server. MTP is decode-SPEED only, so under an ACTION budget it cannot move banked levels"
+    },
+    {
+      "field": "explore_budget",
+      "here": 24,
+      "shipped": "per-game via _route_explore_budget (24 routed / 80 graph)",
+      "symmetric_across_arms": true,
+      "why": "pinned so a bounded run reliably reaches the induce->plan phase, the only phase the arms differ in. On a graph-route game this induces up to ~3.3x sooner than the scored path, INFLATING retention opportunity"
+    }
+  ],
+  "e3_dir_entries_at_end": [
+    "hgb6a5e8"
+  ],
+  "e3_dir_entries_at_start": [],
+  "e3_dir_honoured": true,
+  "e3_dir_requested": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/ret_e3/ret1__vc33__s1",
+  "e3_dir_resolved": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/ret_e3/ret1__vc33__s1",
+  "explore_budget": 24,
+  "game": "vc33",
+  "generator_output_reached_policy": true,
+  "gpu_requested": "0",
+  "max_inductions": 3,
+  "n_induction_events": 2,
+  "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+  "observed_n_ctx": 32768,
+  "reproduction_gate": {
+    "any_oob_action6_clicks": false,
+    "checked_action6_clicks": 375,
+    "claimed_level": 2,
+    "game": "vc33",
+    "mode": "offline_reproduction_gate_no_quota",
+    "oob_action6_clicks": [],
+    "reached_level": 2,
+    "reproduced": true
+  },
+  "reproduction_gate_error": null,
+  "result": {
+    "action_trace": [
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":54,\"y\":46}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":54}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":54}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":54}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":46}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":42,\"y\":46}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":24,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":34,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":16,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":46,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":56}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+      "{\"action\":6,\"data\":{\"x\":50,\"y\":56}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":58,\"y\":46}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":8,\"y\":54}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":8,\"y\":54}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":28,\"y\":41}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":17}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":12,\"y\":54}}",
+      "RESET",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "{\"action\":6,\"data\":{\"x\":1,\"y\":37}}",
+      "RESET"
+    ],
+    "actions_to_first_solve": 15,
+    "arm": "frozen_gemma_pin",
+    "best_hv": 18.0,
+    "error": null,
+    "game": "vc33",
+    "hit_induction_cap": false,
+    "hv_progress": 0.0,
+    "induction_events": [
+      {
+        "counterexamples": [],
+        "dsl_transition_count": 1,
+        "dynamics_candidate_names": [
+          "loaded_world_model.py"
+        ],
+        "engine_retention": {
+          "best_round": 1,
+          "best_round_signal": 1.0,
+          "best_round_true_changed_cells": 141,
+          "enabled": true,
+          "reason": "store_already_holds_retained_engine",
+          "restored": false,
+          "rounds_seen": 1,
+          "selection_signal": "heldout_change_consistency",
+          "signal_informative": true,
+          "store_path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/ret_e3/ret1__vc33__s1/hgb6a5e8/world_model.py"
+        },
+        "expert_trust_weights": [],
+        "factored_planner_used": false,
+        "goal_candidate_names": [
+          "loaded_world_model.py"
+        ],
+        "goal_expression": "",
+        "goal_level": 2,
+        "goal_predicate_satisfiable": true,
+        "goal_satisfiability": {
+          "counterexample": {},
+          "first_true_depth": 0,
+          "reachable_grids_evaluated": 1,
+          "satisfiable": true
+        },
+        "model_specs": "gemma-4-31B-it",
+        "per_subgoal_reachable": [],
+        "plan_length": 1,
+        "planned": true,
+        "reason": "level_up_reinduction",
+        "refinement_rounds": [
+          {
+            "accepted_by_heldout_verifier": true,
+            "action": "induce",
+            "dynamics_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_predicate_consistency_accuracy": 0.0,
+            "goal_predicate_consistency_n_real_levelups": 0,
+            "goal_predicate_satisfiable": true,
+            "goal_repaired": "exemplar_nonzero_count_fallback",
+            "goal_satisfiability": {
+              "first_true_depth": 0,
+              "reachable_grids_evaluated": 1,
+              "satisfiable": true
+            },
+            "heldout_accuracy": 1.0,
+            "heldout_threshold": 1.0,
+            "message": "local gguf (GPU server) wrote world_model.py",
+            "plan_length": 1,
+            "plan_reaches_goal": true,
+            "prefix_accuracy": 1.0,
+            "proposer_ok": true,
+            "retained_as_best_engine": true,
+            "retention_signal_heldout_change_consistency": 1.0,
+            "retention_signal_true_changed_cells": 141,
+            "round": 1,
+            "selected_candidate_name": "loaded_world_model.py",
+            "trust_energy": 7.304768
+          }
+        ],
+        "refinement_rounds_used": 1,
+        "selected_candidate_name": "loaded_world_model.py",
+        "skipped": "",
+        "structural_goal_diagnostics": {},
+        "structured_engine_enabled": false,
+        "subgoal_decomposition": [],
+        "subgoal_search_used": false,
+        "transition_count": 1,
+        "ttt_prior_engine": {
+          "backend": "cnn",
+          "n_transitions": 1,
+          "prior_transition_count": 0,
+          "skip": "too_few_transitions",
+          "warm_start": false
+        },
+        "verifier_is_oracle": false,
+        "win_state_exemplar_injected": true
+      },
+      {
+        "counterexamples": [
+          {
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "kind": "heldout_transition_verification_failed",
+            "real_accuracy": 0.0,
+            "real_mismatches": [
+              {
+                "action": 6,
+                "data": {
+                  "x": 16,
+                  "y": 56
+                },
+                "i": 0,
+                "true_change": [
+                  [
+                    0,
+                    63,
+                    7,
+                    4
+                  ],
+                  [
+                    51,
+                    9,
+                    4,
+                    3
+                  ],
+                  [
+                    52,
+                    8,
+                    4,
+                    3
+                  ],
+                  [
+                    52,
+                    9,
+                    4,
+                    3
+                  ],
+                  [
+                    52,
+                    10,
+                    4,
+                    3
+                  ],
+                  [
+                    53,
+                    8,
+                    14,
+                    3
+                  ],
+                  [
+                    53,
+                    9,
+                    14,
+                    4
+                  ],
+                  [
+                    53,
+                    10,
+                    14,
+                    3
+                  ],
+                  [
+                    54,
+                    6,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    7,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    8,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    9,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    10,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    11,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    12,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    13,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    16,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    17,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    18,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    19,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    20,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    21,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    22,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    23,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    24,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    25,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    6,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    7,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    8,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    9,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    10,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    11,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    12,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    13,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    16,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    17,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    18,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    19,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    20,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    21,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    22,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    23,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    24,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    25,
+                    3,
+                    0
+                  ]
+                ],
+                "your_prediction_was_wrong_at": [
+                  [
+                    55,
+                    8,
+                    3,
+                    14
+                  ],
+                  [
+                    55,
+                    9,
+                    3,
+                    14
+                  ],
+                  [
+                    55,
+                    10,
+                    3,
+                    14
+                  ],
+                  [
+                    55,
+                    14,
+                    3,
+                    5
+                  ],
+                  [
+                    55,
+                    15,
+                    3,
+                    5
+                  ]
+                ]
+              }
+            ],
+            "real_n": 1,
+            "real_n_correct": 0,
+            "selected_candidate_name": "loaded_world_model.py"
+          },
+          {
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "kind": "heldout_transition_verification_failed",
+            "real_accuracy": 0.0,
+            "real_mismatches": [
+              {
+                "action": 6,
+                "data": {
+                  "x": 16,
+                  "y": 56
+                },
+                "i": 0,
+                "true_change": [
+                  [
+                    0,
+                    63,
+                    7,
+                    4
+                  ],
+                  [
+                    51,
+                    9,
+                    4,
+                    3
+                  ],
+                  [
+                    52,
+                    8,
+                    4,
+                    3
+                  ],
+                  [
+                    52,
+                    9,
+                    4,
+                    3
+                  ],
+                  [
+                    52,
+                    10,
+                    4,
+                    3
+                  ],
+                  [
+                    53,
+                    8,
+                    14,
+                    3
+                  ],
+                  [
+                    53,
+                    9,
+                    14,
+                    4
+                  ],
+                  [
+                    53,
+                    10,
+                    14,
+                    3
+                  ],
+                  [
+                    54,
+                    6,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    7,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    8,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    9,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    10,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    11,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    12,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    13,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    16,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    17,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    18,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    19,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    20,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    21,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    22,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    23,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    24,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    25,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    6,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    7,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    8,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    9,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    10,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    11,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    12,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    13,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    16,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    17,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    18,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    19,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    20,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    21,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    22,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    23,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    24,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    25,
+                    3,
+                    0
+                  ]
+                ],
+                "your_prediction_was_wrong_at": [
+                  [
+                    54,
+                    6,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    7,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    8,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    9,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    10,
+                    0,
+                    4
+                  ],
+                  [
+                    54,
+                    11,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    12,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    13,
+                    0,
+                    3
+                  ],
+                  [
+                    54,
+                    16,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    17,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    18,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    19,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    20,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    21,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    22,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    23,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    24,
+                    3,
+                    0
+                  ],
+                  [
+                    54,
+                    25,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    6,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    7,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    8,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    9,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    10,
+                    0,
+                    14
+                  ],
+                  [
+                    55,
+                    11,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    12,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    13,
+                    0,
+                    3
+                  ],
+                  [
+                    55,
+                    16,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    17,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    18,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    19,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    20,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    21,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    22,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    23,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    24,
+                    3,
+                    0
+                  ],
+                  [
+                    55,
+                    25,
+                    3,
+                    0
+                  ]
+                ]
+              }
+            ],
+            "real_n": 1,
+            "real_n_correct": 0,
+            "selected_candidate_name": "loaded_world_model.py"
+          }
+        ],
+        "dsl_transition_count": 1,
+        "dynamics_candidate_names": [
+          "loaded_world_model.py"
+        ],
+        "engine_retention": {
+          "best_round": 1,
+          "best_round_signal": 0.931818,
+          "best_round_true_changed_cells": 44,
+          "enabled": true,
+          "restored": true,
+          "rounds_seen": 3,
+          "selection_signal": "heldout_change_consistency",
+          "signal_informative": true,
+          "store_path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/ret_e3/ret1__vc33__s1/hgb6a5e8/world_model.py"
+        },
+        "expert_trust_weights": [],
+        "factored_planner_used": false,
+        "goal_candidate_names": [
+          "loaded_world_model.py"
+        ],
+        "goal_expression": "",
+        "goal_level": 3,
+        "goal_predicate_satisfiable": false,
+        "goal_satisfiability": {},
+        "model_specs": "gemma-4-31B-it",
+        "per_subgoal_reachable": [],
+        "plan_length": 0,
+        "planned": false,
+        "reason": "level_up_reinduction",
+        "refinement_rounds": [
+          {
+            "accepted_by_heldout_verifier": false,
+            "action": "induce",
+            "counterexample": {
+              "heldout_accuracy": 0.0,
+              "heldout_threshold": 1.0,
+              "kind": "heldout_transition_verification_failed",
+              "real_accuracy": 0.0,
+              "real_mismatches": [
+                {
+                  "action": 6,
+                  "data": {
+                    "x": 16,
+                    "y": 56
+                  },
+                  "i": 0,
+                  "true_change": [
+                    [
+                      0,
+                      63,
+                      7,
+                      4
+                    ],
+                    [
+                      51,
+                      9,
+                      4,
+                      3
+                    ],
+                    [
+                      52,
+                      8,
+                      4,
+                      3
+                    ],
+                    [
+                      52,
+                      9,
+                      4,
+                      3
+                    ],
+                    [
+                      52,
+                      10,
+                      4,
+                      3
+                    ],
+                    [
+                      53,
+                      8,
+                      14,
+                      3
+                    ],
+                    [
+                      53,
+                      9,
+                      14,
+                      4
+                    ],
+                    [
+                      53,
+                      10,
+                      14,
+                      3
+                    ],
+                    [
+                      54,
+                      6,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      7,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      8,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      9,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      10,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      11,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      12,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      13,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      16,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      17,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      18,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      19,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      20,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      21,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      22,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      23,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      24,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      25,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      6,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      7,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      8,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      9,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      10,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      11,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      12,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      13,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      16,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      17,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      18,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      19,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      20,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      21,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      22,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      23,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      24,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      25,
+                      3,
+                      0
+                    ]
+                  ],
+                  "your_prediction_was_wrong_at": [
+                    [
+                      55,
+                      8,
+                      3,
+                      14
+                    ],
+                    [
+                      55,
+                      9,
+                      3,
+                      14
+                    ],
+                    [
+                      55,
+                      10,
+                      3,
+                      14
+                    ],
+                    [
+                      55,
+                      14,
+                      3,
+                      5
+                    ],
+                    [
+                      55,
+                      15,
+                      3,
+                      5
+                    ]
+                  ]
+                }
+              ],
+              "real_n": 1,
+              "real_n_correct": 0,
+              "selected_candidate_name": "loaded_world_model.py"
+            },
+            "dynamics_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "message": "local gguf (GPU server) wrote world_model.py",
+            "prefix_accuracy": 0.0,
+            "proposer_ok": true,
+            "retained_as_best_engine": true,
+            "retention_signal_heldout_change_consistency": 0.931818,
+            "retention_signal_true_changed_cells": 44,
+            "round": 1,
+            "selected_candidate_name": "loaded_world_model.py",
+            "skipped": "heldout_transition_verification_failed",
+            "trust_energy": 5.222222
+          },
+          {
+            "accepted_by_heldout_verifier": false,
+            "action": "refactor",
+            "counterexample": {
+              "heldout_accuracy": 0.0,
+              "heldout_threshold": 1.0,
+              "kind": "heldout_transition_verification_failed",
+              "real_accuracy": 0.0,
+              "real_mismatches": [
+                {
+                  "action": 6,
+                  "data": {
+                    "x": 16,
+                    "y": 56
+                  },
+                  "i": 0,
+                  "true_change": [
+                    [
+                      0,
+                      63,
+                      7,
+                      4
+                    ],
+                    [
+                      51,
+                      9,
+                      4,
+                      3
+                    ],
+                    [
+                      52,
+                      8,
+                      4,
+                      3
+                    ],
+                    [
+                      52,
+                      9,
+                      4,
+                      3
+                    ],
+                    [
+                      52,
+                      10,
+                      4,
+                      3
+                    ],
+                    [
+                      53,
+                      8,
+                      14,
+                      3
+                    ],
+                    [
+                      53,
+                      9,
+                      14,
+                      4
+                    ],
+                    [
+                      53,
+                      10,
+                      14,
+                      3
+                    ],
+                    [
+                      54,
+                      6,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      7,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      8,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      9,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      10,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      11,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      12,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      13,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      16,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      17,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      18,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      19,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      20,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      21,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      22,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      23,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      24,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      25,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      6,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      7,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      8,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      9,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      10,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      11,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      12,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      13,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      16,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      17,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      18,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      19,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      20,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      21,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      22,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      23,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      24,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      25,
+                      3,
+                      0
+                    ]
+                  ],
+                  "your_prediction_was_wrong_at": [
+                    [
+                      54,
+                      6,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      7,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      8,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      9,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      10,
+                      0,
+                      4
+                    ],
+                    [
+                      54,
+                      11,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      12,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      13,
+                      0,
+                      3
+                    ],
+                    [
+                      54,
+                      16,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      17,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      18,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      19,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      20,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      21,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      22,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      23,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      24,
+                      3,
+                      0
+                    ],
+                    [
+                      54,
+                      25,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      6,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      7,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      8,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      9,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      10,
+                      0,
+                      14
+                    ],
+                    [
+                      55,
+                      11,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      12,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      13,
+                      0,
+                      3
+                    ],
+                    [
+                      55,
+                      16,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      17,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      18,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      19,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      20,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      21,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      22,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      23,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      24,
+                      3,
+                      0
+                    ],
+                    [
+                      55,
+                      25,
+                      3,
+                      0
+                    ]
+                  ]
+                }
+              ],
+              "real_n": 1,
+              "real_n_correct": 0,
+              "selected_candidate_name": "loaded_world_model.py"
+            },
+            "dynamics_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "message": "local gguf (GPU server) wrote world_model.py",
+            "prefix_accuracy": 0.0,
+            "proposer_ok": true,
+            "retained_as_best_engine": false,
+            "retention_signal_heldout_change_consistency": 0.181818,
+            "retention_signal_true_changed_cells": 44,
+            "round": 2,
+            "selected_candidate_name": "loaded_world_model.py",
+            "skipped": "heldout_transition_verification_failed",
+            "trust_energy": -1.356695
+          },
+          {
+            "action": "refactor",
+            "message": "local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')",
+            "proposer_ok": false,
+            "round": 3,
+            "skipped": "proposer_failed"
+          }
+        ],
+        "refinement_rounds_used": 3,
+        "selected_candidate_name": "loaded_world_model.py",
+        "skipped": "proposer_failed",
+        "structural_goal_diagnostics": {},
+        "structured_engine_enabled": false,
+        "subgoal_decomposition": [],
+        "subgoal_search_used": false,
+        "transition_count": 1,
+        "ttt_prior_engine": {
+          "backend": "cnn",
+          "n_transitions": 1,
+          "prior_transition_count": 0,
+          "skip": "too_few_transitions",
+          "warm_start": false
+        },
+        "verifier_is_oracle": false,
+        "win_state_exemplar_injected": true
+      }
+    ],
+    "levels_gained": 2,
+    "mean_heldout_accuracy": 0.5,
+    "mean_prefix_accuracy": 0.5,
+    "n_inductions": 2,
+    "n_plans_found": 1,
+    "noop_frac": 0.056,
+    "plan_found_rate": 0.5,
+    "playbook_injection_modes": [
+      "none",
+      "none"
+    ],
+    "reached_level": 2,
+    "revisit_frac": 0.264,
+    "seed": 1,
+    "solved": true,
+    "start_hv": 18.0,
+    "start_level": 0,
+    "timed_out": false,
+    "total_actions": 375,
+    "variant": 0,
+    "wall_s": 594.2
+  },
+  "retention_enabled_effective": true,
+  "retention_requested": "1",
+  "retention_support": {
+    "cell_is_effective_support_round_only": true,
+    "n_attempts": 2,
+    "n_attempts_multi_round": 1,
+    "n_attempts_retention_could_have_mattered": 1,
+    "n_attempts_signal_informative": 2,
+    "n_attempts_store_restored": 1,
+    "n_attempts_with_retention_record": 2,
+    "per_attempt": [
+      {
+        "best_round": 1,
+        "best_round_signal": 1.0,
+        "enabled": true,
+        "multi_round": false,
+        "planned": true,
+        "present": true,
+        "reason": "store_already_holds_retained_engine",
+        "restored": false,
+        "retention_could_have_mattered": false,
+        "rounds_seen": 1,
+        "signal_informative": true
+      },
+      {
+        "best_round": 1,
+        "best_round_signal": 0.931818,
+        "enabled": true,
+        "multi_round": true,
+        "planned": false,
+        "present": true,
+        "reason": null,
+        "restored": true,
+        "retention_could_have_mattered": true,
+        "rounds_seen": 3,
+        "signal_informative": true
+      }
+    ]
+  },
+  "reuse_model_check": "match",
+  "seed": 1,
+  "selection_log": [],
+  "server_binary": "reused_existing",
+  "server_pid": 4082753,
+  "server_pid_resolved_by": "listening_socket",
+  "server_port": 8961,
+  "server_started": true,
+  "status": "ok",
+  "treatment_applied": true,
+  "wall_s_cap": 1500.0
+}
