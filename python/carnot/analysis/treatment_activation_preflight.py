@@ -288,6 +288,8 @@ def classify_trace_pair(
     *,
     a_complete: bool = True,
     b_complete: bool = True,
+    a_config: Any = None,
+    b_config: Any = None,
 ) -> dict[str, Any]:
     """Classify one matched pair of action traces into one of the four classes.
 
@@ -306,6 +308,27 @@ def classify_trace_pair(
     or a real early-stop into an ignored signal. So the caller must supply it honestly from
     the cell's own `timed_out` / `status` / `error` record.
 
+    ``a_config`` / ``b_config`` are an OPAQUE fingerprint of the configuration each arm
+    actually ran under -- everything outside the treatment that can reach the trace. They are
+    compared only for equality, so any hashable value works; the caller decides what belongs in
+    it. `preflight_verdict` uses them to check that an A/A noise floor was measured at the SAME
+    configuration as the A/B it is being used to certify.
+
+    WHY THAT CHECK IS NEEDED, from the incident that added it (2026-07-30). A composite grid
+    ran its control arm from a `git worktree` and its treatment arm from the canonical checkout.
+    Two GITIGNORED live assets are not materialised by `git worktree add`, so the control arm
+    silently lost the action-effect scorer that orders the search frontier -- a different action
+    stream, produced by an axis perfectly confounded with the treatment. Four cells were
+    reported as treatment-attributable; all four were the missing assets. Then the correction
+    itself repeated the mistake one level up: the A/A floor run to certify the corrected result
+    executed after the assets had been removed again, so it replicated a DIFFERENT configuration
+    than the A/B it was certifying, came back "identical to the control arm", and was read as
+    proving the residual difference was noise. It proved nothing of the kind.
+
+    Neither error is visible in the traces, in the commit shas, or in any completeness flag.
+    The only way to catch it is to state the configuration and check it, so this module now
+    requires that to be said out loud rather than assumed.
+
     Returns a dict (not a bare string) because the diagnostic detail -- where the traces
     first diverged, how long each was -- is what makes a REFUSE actionable rather than
     merely discouraging.
@@ -318,6 +341,8 @@ def classify_trace_pair(
         "len_b": None if b is None else len(b),
         "a_complete": bool(a_complete),
         "b_complete": bool(b_complete),
+        "a_config": a_config,
+        "b_config": b_config,
         "common_prefix_len": None,
         "first_divergence_index": None,
     }
@@ -391,6 +416,35 @@ def classify_trace_pair(
             f"MISSING observation and must never be scored as a zero"
         )
     return out
+
+
+def _config_witness(ab_rec: Mapping[str, Any], noise_rec: Mapping[str, Any]) -> Optional[str]:
+    """Does this A/A record actually describe the same configuration as this A/B record?
+
+    Returns ``None`` when the caller supplied no fingerprints (check not run -- reported, never
+    silently treated as a pass), ``"OK"`` when the floor is applicable, or a reason string.
+
+    The two failure modes are DIFFERENT and are named separately, because they mislead in
+    different ways and a reader needs to tell them apart:
+
+      * ``AA_FLOOR_IS_NOT_AN_AA`` -- the "A/A" pair's own two arms ran at different
+        configurations, so it is an A/B of something else wearing an A/A's name. This is the
+        2026-07-30 case: a replicate launched after two live assets had been deleted from the
+        worktree replicated the wrong thing, matched the OLD arm byte for byte, and was read as
+        proof that a real difference was noise.
+      * ``AA_FLOOR_CONFIG_MISMATCH`` -- the A/A is internally consistent but was measured at a
+        configuration matching NEITHER arm of the A/B. It measures the determinism of a third
+        setup, which says nothing about either arm under test.
+    """
+    ab_a, ab_b = ab_rec.get("a_config"), ab_rec.get("b_config")
+    aa_a, aa_b = noise_rec.get("a_config"), noise_rec.get("b_config")
+    if aa_a is None or aa_b is None or (ab_a is None and ab_b is None):
+        return None
+    if aa_a != aa_b:
+        return "AA_FLOOR_IS_NOT_AN_AA"
+    if aa_a not in (ab_a, ab_b):
+        return "AA_FLOOR_CONFIG_MISMATCH"
+    return "OK"
 
 
 def preflight_verdict(
@@ -495,6 +549,7 @@ def preflight_verdict(
     attributable: list[str] = []
     unattributable: dict[str, str] = {}
     lacking_second_witness: list[str] = []
+    config_unverified: set[str] = set()
     if noise_measured:
         for label, rec in items:
             if str(rec.get("cls")) != PERTURBED:
@@ -510,6 +565,18 @@ def preflight_verdict(
                 both_complete = bool(noise_rec.get("a_complete")) and bool(
                     noise_rec.get("b_complete")
                 )
+                # CONFIGURATION check, before the class check. An A/A that ran at a different
+                # configuration than the A/B is not a floor for that A/B at all -- it is a
+                # second experiment. See `classify_trace_pair`'s `a_config` docs for the
+                # incident. Only enforced when the caller supplied fingerprints on BOTH the A/B
+                # and the A/A record; absent them the behaviour is unchanged and the result
+                # reports that the check did not run, rather than implying it passed.
+                cfg_verdict = _config_witness(rec, noise_rec)
+                if cfg_verdict is None:
+                    config_unverified.add(label)
+                elif cfg_verdict != "OK":
+                    reasons.append(cfg_verdict)
+                    continue
                 if noise_cls == IDENTICAL and both_complete:
                     continue
                 reasons.append(
@@ -625,6 +692,20 @@ def preflight_verdict(
         ),
         "n_noise_arms_measured": n_noise_arms,
         "cells_perturbed_but_lacking_a_second_arm_noise_witness": sorted(lacking_second_witness),
+        "cells_whose_noise_floor_config_was_unverified": sorted(config_unverified),
+        "noise_floor_config_unverified_warning": (
+            None
+            if not config_unverified
+            else (
+                "THE A/A NOISE FLOOR'S CONFIGURATION WAS NOT VERIFIED for "
+                f"{sorted(config_unverified)}. A floor only certifies an A/B if it was measured "
+                "at the SAME configuration -- same assets on disk, same environment, same "
+                "everything outside the treatment. A replicate run at a different configuration "
+                "is a second experiment, and on 2026-07-30 one was read as proving a real "
+                "difference was noise. Supply `a_config`/`b_config` on both the A/B and A/A "
+                "records so this can be checked rather than assumed."
+            )
+        ),
         "single_arm_noise_floor_warning": (
             None
             if n_noise_arms >= 2 or not noise_measured

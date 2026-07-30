@@ -15146,3 +15146,111 @@ recorded in each (structural: the guard's first statement is an early return out
 module diff is purely additive; empirical: the 77,000-value diff above).
 
 `artifact-freshness-lint: OK`.
+
+## 2026-07-30 (outer loop, continued) — The A/A floor that certified the correction was itself measured at the wrong configuration
+
+### What the operator asked, and what actually came back
+
+The instruction was to finish the composite pre-flight's 4 missing cells and check the context
+truncation. Both were answered, and then review found that the answer to the second one had a
+second-order error underneath it.
+
+**The context hypothesis is FALSIFIED, and it was not the cause of anything.** Every arm ran at
+`n_ctx=32768`, symmetric, read from `/props` per cell (`observed_n_ctx` on all 22 cells that
+reached that line) and now also directly from the live server argv (`-c 32768`), on the CUDA
+build proved via `/proc/<pid>/exe`. The `n_ctx=16384` log that motivated the hypothesis is dated
+2026-07-27 — three days before this grid — and shows MTP enabled, which this probe disables. Zero
+occurrences of every overflow mode across all 24 cell artifacts: no pool-truncation marker, no
+HTTP 500 "Context size has been exceeded", no graceful 400, no `RemoteDisconnected`. The detector
+was verified LIVE on both arms (the base worktree already carries `_limit_diagnostic`, the
+shared-pool branch and the `usage.completion_tokens` fallback), so the absence is a measurement,
+not a blind baseline. The 4 missing cells were never launched at all — the driver's global wall
+budget expired at +11672s against a 11520s cap.
+
+### The finding that overturned the headline, and the finding that overturned THAT
+
+The 4 "attributable" perturbations were an **asset confound**. The base arm ran from a
+`git worktree` and the head arm from the canonical checkout;
+`results/experiment_4629_live_frame_change_cnn.pt` and `data/arc_transition_corpus/` are
+gitignored, so `git worktree add` never materialised them. The base arm's
+`load_live_action_effect_scorer()` returned None, no `ActionEffectExpansionPrior` was built, and
+the search frontier expanded in a different order — a different action stream, from an axis
+perfectly confounded with the arm axis. The base commit already contains that wiring, so it was
+never part of the treatment span. **Neither A/A floor could catch it**: head/headb both ran from
+the canonical repo and base/baseb both from the worktree, so both floors held the asset axis
+fixed by construction. That is exactly why 10 of 10 replicate pairs came back IDENTICAL while
+every A/B perturbed.
+
+Then the correction repeated the mistake one level up. The A/A floor run to certify the
+deconfounded result (`basefixb/vc33`) launched AFTER the asset symlinks had been removed from the
+worktree again at 15:43:32 — both directories carry an ns-identical mtime, i.e. one unlink batch —
+so it replicated the NO-ASSET configuration while certifying a WITH-ASSET A/B. It came back
+byte-identical to the original no-asset base arm and was read as "vc33 fails its own noise floor",
+retracting the one cell that had survived. It was not a floor at all; it was a third A/B of the
+asset axis wearing an A/A's name.
+
+**Re-measured at the correct configuration** — assets restored and verified LOADED, not merely
+present (`live_action_effect_scorer` stamps `LiveActionEffectScorer(PersistentAEM,
+FrameChangeScorer)` per cell) — the vc33 A/A is IDENTICAL across THREE replicates (`basefix`,
+`basefix2`, `basefix2b`, all sha `329d92ccb0`, 19 actions) while the A/B still differs at index 17
+after 17 agreeing actions. **vc33 is a certified code-attributable perturbation.** The prior
+artifact's `attributable_deconfounded_count: 0` and `best_reachable_p: 1.0` are both withdrawn;
+p=1.0 asserted that no discordant pair could exist, which vc33 falsifies.
+
+### The mechanical fix: an A/A only certifies an A/B measured at the same configuration
+
+Neither error is visible in the traces, in the commit shas, or in any completeness flag, so the
+fix is to make the configuration something the analysis CHECKS rather than assumes.
+`classify_trace_pair` gained `a_config`/`b_config` — an opaque, equality-compared fingerprint of
+everything outside the treatment that can reach the trace — and `preflight_verdict` now refuses a
+floor whose configuration does not match the comparison it is certifying, with two separately
+named reasons because they mislead differently:
+
+* `AA_FLOOR_IS_NOT_AN_AA` — the "replicate" pair's own two arms ran at different configurations
+  (the 2026-07-30 case).
+* `AA_FLOOR_CONFIG_MISMATCH` — internally consistent, but matches neither arm under test.
+
+Legacy callers that supply no fingerprints keep working unchanged, but the verdict now carries
+`cells_whose_noise_floor_config_was_unverified` and a warning — because reading "nobody said" as
+"checked and matched" is precisely how this happened. Five regression tests
+(`test_preflight_aa_floor_config_witness_2026_07_30.py`) cover both failure modes, the positive
+control, legacy compatibility, and composition with the existing two-arm floor.
+
+`probe_cell.py` gained the stamps that would have made both errors visible at the time: per-cell
+asset presence AND whether the loader returned non-None; a MEASURED `arm_commit` plus
+`git status --porcelain`; a recursive `agentic_content_sha` (the package has a `gap_fills/`
+subpackage — a non-recursive walk silently omits 8 files); and a counter on
+`_chat_complete_request`, which proves rather than argues that the base worktree's
+`sampling_seed(0)` pin is dormant. The SIGTERM handler now merges those stamps instead of building
+a bare payload, which is why 11 of 46 cells in the first grid recorded no `n_ctx` at all.
+
+### Outcome: INCONCLUSIVE, and two prior claims corrected
+
+Deconfounded sub-grid, 4 cells, **zero missing**: **1 certified attributable** (vc33) and **3
+observed nulls** — tn36, tr87 and tu93 all came back with `basefix2` byte-identical to `head`
+(31/31, 27/27, 27/27). The two cells that were truncated on the first attempt were re-run at
+head's identical in-cell wall with only the external SIGTERM cap raised, so the graceful wall
+stopped them rather than a kill, and both completed. The other 8 grid cells still have an
+asset-confounded base arm and are reported as `CONFOUNDED_NOT_DECONFOUNDED` rather than dropped,
+so nobody reads 4 cells as if the grid were 12.
+
+Six one-way discordant pairs are needed for two-sided p<0.05. This sub-grid's ceiling is 4, i.e.
+**p=0.125 even if every cell had been discordant** — it could not have reached alpha whatever it
+showed. Observed p is 1.0. INCONCLUSIVE — **not** a refusal, and specifically not evidence the
+25-commit span is inert: one cell demonstrably moves the action stream.
+
+One earlier claim is also withdrawn: the slowdown that truncated cells was attributed to the live
+assets. It was not. `basefix/tu93` was SIGTERM'd at the 1500s cap while `basefix2/tu93`, the SAME
+configuration, completed in 558.6s; `basefix/tr87` was likewise SIGTERM'd while `basefix2/tr87`
+finished in 932.2s — **faster than head's own 1064.4s**. The difference was contemporaneous
+machine load, which nobody recorded. Missingness was therefore non-random with respect to WHEN a
+cell ran, which is why truncated cells are excluded as missing observations rather than scored as
+nulls.
+
+An asymmetry sweep over the two trees found 1566 untracked paths present in one only — and, over
+the real runtime import closure (124 modules, not a directory guess), **zero** that the live path
+reads. The two assets were the whole of it.
+
+**Banked ARC levels remain 3/3 and the submission gate is NOT met.** Nothing here measured a
+score; this is measurement hygiene on the pre-flight that decides whether a scored measurement is
+worth running.
