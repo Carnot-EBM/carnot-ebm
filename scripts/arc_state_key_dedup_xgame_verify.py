@@ -50,14 +50,26 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from collections import deque
 
 import numpy as np
 
-REPO = "/home/ianblenke/github.com/ianblenke/carnot"
-SCRATCH = os.path.dirname(os.path.abspath(__file__))
-os.environ.setdefault("CARNOT_ARC_E3_DIR", os.path.join(SCRATCH, "e3s"))
+REPO = os.environ.get("CARNOT_REPO_ROOT") or os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))
+)
+# Output goes to $XG_OUT_DIR, else the CURRENT DIRECTORY -- deliberately NOT next to this file.
+# When this harness lived in a scratch dir, "next to the script" was the right default; once it moved
+# into `scripts/` that same line started dropping `xgame_dedup_cap*.json` into a tracked source
+# directory, which a later `git add -A` would have committed as stray output. Caught by a post-commit
+# smoke run showing an untracked file under `scripts/`.
+OUT_DIR = os.environ.get("XG_OUT_DIR") or os.getcwd()
+# The engine store is redirected by default: `results/arc_e3` is TRACKED, read-only evidence, and an
+# induction triggered from here must never write into it.
+os.environ.setdefault(
+    "CARNOT_ARC_E3_DIR", os.path.join(tempfile.gettempdir(), "arc_state_key_verify_e3")
+)
 os.environ["JAX_PLATFORMS"] = "cpu"
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 sys.path.insert(0, os.path.join(REPO, "python"))
@@ -380,7 +392,8 @@ def main():
             != ("coincidentally_identical_on_this_game")
         ],
     }
-    p = os.path.join(SCRATCH, f"xgame_dedup_cap{CAP}.json")
+    os.makedirs(OUT_DIR, exist_ok=True)
+    p = os.path.join(OUT_DIR, f"xgame_dedup_cap{CAP}.json")
     with open(p, "w") as fh:
         json.dump(out, fh, indent=2, default=str)
     print(json.dumps(out["SUMMARY"], indent=2, default=str))
