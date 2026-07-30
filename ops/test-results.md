@@ -505,6 +505,13 @@ call sites produce byte-identical findings. The three artifacts that share the d
 no `rebuild_command` carry APPENDED acknowledgements pinned to the new hash (appended, not replaced,
 so the transition history survives).
 
+**A post-commit smoke run found the harness littering a tracked source directory.** The script wrote
+its output "next to itself", which was correct while it lived in a scratch dir and wrong the moment it
+moved into `scripts/` -- it dropped `xgame_dedup_cap3000.json` there, where a later `git add -A` would
+have committed stray output. Output now goes to `$XG_OUT_DIR` or the CURRENT directory, never beside
+the source, and the engine store defaults to a temp dir so an induction triggered from this harness can
+never write `results/arc_e3`. Verified by running it from an unrelated cwd.
+
 **A second guard false-positived, and the fix was to rename rather than to allowlist.** `gitleaks`
 flagged all 10 accept-trace hashes in the evidence artifact as `generic-api-key` leaks: the rule fires
 on a 64-hex value whose FIELD NAME contains "key", and the field was
