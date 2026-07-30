@@ -20,7 +20,11 @@ from carnot.agentic.arc_color_blob_salience import (
     ColorBlobSaliencePrior,
     connected_color_blobs,
 )
-from carnot.agentic.arc_competition_agent import E3AgentPolicy, SUBMITTED_AGENT_CONFIG
+from carnot.agentic.arc_competition_agent import (
+    SUBMITTED_AGENT_CONFIG,
+    SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED,
+    E3AgentPolicy,
+)
 from carnot.agentic.arc_frame_change_predictor import rank_arc_actions
 
 
@@ -138,9 +142,24 @@ def test_scenario_arc_fcp_5360_live_e3_policy_wires_salience_prior() -> None:
         active_probe_controller=False,
     )
 
-    assert isinstance(policy.explorer.action_prior, ColorBlobSaliencePrior)
-    assert SUBMITTED_AGENT_CONFIG["color_blob_salience_enabled"] is True
-    assert exp5360.salience_policy_live_reachable() is True
+    # CORRECTED EXPECTATION (2026-07-30). These demanded that colour-blob salience be ACTIVE.
+    # The flag is False by deliberate operator decision (disabled 2026-07-14 after a near-hang,
+    # re-validated 2026-07-16 as ~9x slower per action for no measured benefit), so E3AgentPolicy
+    # installs no default action_prior and salience_policy_live_reachable() correctly reports
+    # False -- its stated principle is "proves the live agent CAN REACH the new mechanism", and
+    # with the flag off it genuinely cannot. Reporting False is the honest answer, not a
+    # regression. The flag is NOT flipped to make these pass.
+    assert (
+        SUBMITTED_AGENT_CONFIG["color_blob_salience_enabled"]
+        is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    ), "the shipped config must agree with the module constant it is built from"
+    assert (
+        isinstance(policy.explorer.action_prior, ColorBlobSaliencePrior)
+        is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    ), "a default ColorBlobSaliencePrior is installed exactly when the flag says so"
+    assert exp5360.salience_policy_live_reachable() is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED, (
+        "the reachability probe must report what the live path actually does"
+    )
 
 
 def test_scenario_arc_fcp_5360_registry_precheck_rotates_duplicate_depth() -> None:
@@ -207,7 +226,9 @@ def test_scenario_arc_fcp_5360_honest_null_artifact_schema_and_write(tmp_path: P
     assert artifact["registry_precheck_completed"] is True
     assert artifact["target_level_before"] == 2
     assert artifact["perception_audit_completed"] is True
-    assert artifact["salience_policy_live_reachable"] is True
+    # Computed live by run_experiment via salience_policy_live_reachable(), so it tracks
+    # the flag rather than being a frozen expectation. See the note above.
+    assert artifact["salience_policy_live_reachable"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
     assert artifact["offline_reproduced"] is False
     assert artifact["reproduced_levels"] == 0
     assert artifact["new_level_banked"] is False

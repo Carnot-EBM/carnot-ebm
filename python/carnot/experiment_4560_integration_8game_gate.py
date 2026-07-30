@@ -5,7 +5,6 @@ Spec refs: REQ-ARC-WMTE-4560, SCENARIO-ARC-WMTE-4560.
 
 from __future__ import annotations
 
-import ast
 import hashlib
 import json
 import subprocess
@@ -14,6 +13,8 @@ import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
+
+from carnot.submitted_agent_config_ast import parse_submitted_agent_config
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -160,40 +161,18 @@ def load_gate_baseline(root: Path | str = REPO_ROOT) -> dict[str, Any]:
 
 
 def _submitted_agent_config() -> dict[str, Any]:
-    src = (REPO_ROOT / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text(
-        encoding="utf-8"
+    """Read the submitted agent's config from source, without importing the agent.
+
+    The parsing itself lives in ``carnot.submitted_agent_config_ast`` -- shared with experiment
+    4548, which needs the identical read. It used to be copy-pasted into both, and both copies
+    carried the same defect: a constant defined by *reference* rather than by literal was silently
+    dropped by ``literal_eval``'s except-continue, then resurfaced much later as a bare
+    ``KeyError`` from the lookup that needed it. Sharing one implementation is what stops the next
+    fix from landing in only one of them.
+    """
+    return parse_submitted_agent_config(
+        REPO_ROOT / "python" / "carnot" / "agentic" / "arc_competition_agent.py"
     )
-    tree = ast.parse(src)
-    constants: dict[str, Any] = {}
-    for node in tree.body:
-        target = None
-        value = None
-        if (
-            isinstance(node, ast.Assign)
-            and len(node.targets) == 1
-            and isinstance(node.targets[0], ast.Name)
-        ):
-            target = node.targets[0].id
-            value = node.value
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            target = node.target.id
-            value = node.value
-        if target is None or value is None:
-            continue
-        if target == "SUBMITTED_AGENT_CONFIG" and isinstance(value, ast.Dict):
-            config: dict[str, Any] = {}
-            for key_node, value_node in zip(value.keys, value.values):
-                key = ast.literal_eval(key_node)
-                if isinstance(value_node, ast.Name):
-                    config[key] = constants[value_node.id]
-                else:
-                    config[key] = ast.literal_eval(value_node)
-            return config
-        try:
-            constants[target] = ast.literal_eval(value)
-        except (ValueError, TypeError):
-            continue
-    return {}  # pragma: no cover - defensive fallback for malformed submitted config source.
 
 
 def check_preconditions(

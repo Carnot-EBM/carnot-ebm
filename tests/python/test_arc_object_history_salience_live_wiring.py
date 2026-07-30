@@ -20,6 +20,7 @@ import numpy as np
 from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior
 from carnot.agentic.arc_competition_agent import (
     SUBMITTED_AGENT_CONFIG,
+    SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED,
     SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED,
     E3AgentPolicy,
     StepwiseExplorer,
@@ -37,19 +38,58 @@ class _FakeFrame:
 
 
 def test_scenario_5591_2_default_off_parity() -> None:
-    """SCENARIO-ARC-FCP-5591-2-DEFAULT-OFF-PARITY: tracks
-    SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED (currently False, pending a matched-budget A/B)
-    rather than a hardcoded literal, and SUBMITTED_AGENT_CONFIG agrees -- the default action_prior
-    is a plain, unwrapped ColorBlobSaliencePrior, byte-identical to before this task."""
+    """SCENARIO-ARC-FCP-5591-2-DEFAULT-OFF-PARITY: the default action_prior is UNWRAPPED.
+
+    CORRECTED EXPECTATION (2026-07-30). The final assertion read
+
+        assert type(pol.explorer.action_prior) is ColorBlobSaliencePrior
+
+    which is a hardcoded literal expectation -- exactly what this docstring claimed to be
+    avoiding. It tracked SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED correctly and then hardcoded a
+    claim that actually depends on a DIFFERENT flag: SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED.
+    E3AgentPolicy installs a ColorBlobSaliencePrior only when that second flag is True
+    (`if action_prior is None and SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED`).
+
+    That flag is False, deliberately: salience was disabled 2026-07-14 after a near-hang and
+    re-validated 2026-07-16 as ~9x slower per action for no measured benefit. So
+    `action_prior is None` is the CORRECT production behaviour, and the test was asserting a state
+    the shipped agent has not been in for weeks.
+
+    The expectation is now DERIVED from the flag rather than restating a literal, so it survives
+    the flag moving in either direction. What this scenario is really about is unchanged and still
+    asserted: whatever the base prior resolves to, it is NOT wrapped in an
+    ObjectHistorySaliencePrior while the object-history flag is off.
+    """
 
     assert SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED is False
     assert (
         SUBMITTED_AGENT_CONFIG["object_history_salience_enabled"]
         is SUBMITTED_OBJECT_HISTORY_SALIENCE_ENABLED
     )
+    # The config must agree about the colour-blob flag too, since the expectation below is derived
+    # from it -- otherwise a config/constant divergence would make this test vacuous.
+    assert (
+        SUBMITTED_AGENT_CONFIG["color_blob_salience_enabled"]
+        is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    )
 
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _f: 0.0)
-    assert type(pol.explorer.action_prior) is ColorBlobSaliencePrior
+    prior = pol.explorer.action_prior
+
+    # The invariant this scenario exists to protect: default-off means NOT WRAPPED.
+    assert not isinstance(prior, ObjectHistorySaliencePrior), (
+        "object-history salience is off, so the action_prior must not be wrapped"
+    )
+    if SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
+        assert type(prior) is ColorBlobSaliencePrior, (
+            "colour-blob salience is enabled, so the default prior should be a plain, unwrapped "
+            "ColorBlobSaliencePrior"
+        )
+    else:
+        assert prior is None, (
+            "colour-blob salience is disabled (2026-07-14, re-validated 2026-07-16: ~9x slower "
+            "per action for no measured benefit), so no default action_prior is installed"
+        )
 
 
 def test_scenario_5591_2_opt_in_wraps_action_prior() -> None:

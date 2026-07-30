@@ -18,7 +18,10 @@ import yaml
 from carnot import experiment_5397_arc_blob_salience_live_path_v491 as exp5397
 from carnot.agentic.arc_agi3_live_adapter import ArcAction
 from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior
-from carnot.agentic.arc_competition_agent import E3AgentPolicy
+from carnot.agentic.arc_competition_agent import (
+    SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED,
+    E3AgentPolicy,
+)
 from carnot.agentic.arc_graph_explore import rich_action_candidates
 
 
@@ -101,26 +104,66 @@ def test_scenario_arc_fcp_5397_generation_stage_blob_tiers_beat_click_cap() -> N
 def test_scenario_arc_fcp_5397_live_e3_policy_logs_salience_tiers() -> None:
     """SCENARIO-ARC-FCP-5397: live E3 generation path emits blob tier diagnostics."""
 
-    policy = E3AgentPolicy(
-        "re86",
-        proposer=None,
-        value_head=None,
-        frame_change_scorer=None,
-        candidate_router=None,
-        action_effect_expansion_prior=False,
-        goal_bias=None,
-        goal_candidate_guidance=False,
-        active_probe_controller=False,
-    )
+    # CORRECTED EXPECTATION (2026-07-30). This asserted that the DEFAULT live policy emits tier
+    # diagnostics. It does not, and should not: SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED is False by
+    # deliberate operator decision (disabled 2026-07-14 after a near-hang, re-validated 2026-07-16
+    # as ~9x slower per action for no measured benefit), so no default action_prior is installed
+    # and there is nothing to rank or report.
+    #
+    # The SCENARIO's real claim -- the live generation path emits blob tier diagnostics when the
+    # salience prior is wired in -- is preserved and still asserted, by wiring the prior through
+    # E3AgentPolicy's own public `action_prior=` parameter. That is a genuine live-path
+    # configuration, not a stub: the same slot the flag fills when it is on. The shipped
+    # default-off behaviour is then asserted separately, so this test now pins BOTH states instead
+    # of silently assuming the one that is currently switched off.
+    def _policy(**kwargs):
+        return E3AgentPolicy(
+            "re86",
+            proposer=None,
+            value_head=None,
+            frame_change_scorer=None,
+            candidate_router=None,
+            action_effect_expansion_prior=False,
+            goal_bias=None,
+            goal_candidate_guidance=False,
+            active_probe_controller=False,
+            **kwargs,
+        )
 
-    candidates = policy.explorer._candidates(_blob_frame())  # noqa: SLF001 - live hook fixture
-    diagnostics = policy.explorer.action_salience_diagnostics()
+    wired = _policy(action_prior=ColorBlobSaliencePrior())
+    candidates = wired.explorer._candidates(_blob_frame())  # noqa: SLF001 - live hook fixture
+    diagnostics = wired.explorer.action_salience_diagnostics()
 
     assert candidates[0]["data"] == {"x": 14, "y": 14}
     assert diagnostics["connected_component_salience_enabled"] is True
     assert diagnostics["salience_tiers_emitted"] is True
     assert diagnostics["generation_stage_action_prioritization"] is True
     assert diagnostics["tier_rows"][0]["tier"] == 0
+
+    # And the shipped default: whatever the flag says, the default policy's diagnostics must agree
+    # with it.
+    #
+    # THE CANDIDATE GENERATION ON THE NEXT LINE IS LOAD-BEARING, not setup noise (corrected
+    # 2026-07-30). Without it this assertion was NON-CAUSAL -- the exact "green for the wrong
+    # reason" shape this project keeps getting bitten by. `connected_component_salience_enabled` is
+    # reported from what the explorer OBSERVED while ranking, so on a policy that has never
+    # generated candidates it is False because nothing ran, NOT because the flag is off. Verified
+    # directly: a policy with ColorBlobSaliencePrior EXPLICITLY wired also reports False before its
+    # first `_candidates()` call. So the pre-correction version of this assertion would have passed
+    # with the flag flipped either way, and an earlier comment here claiming it "would have caught
+    # the drift" was simply false.
+    #
+    # Generating candidates first makes it discriminate: False for the default policy, True for the
+    # wired one (both confirmed). Coverage of the drift itself is not resting on this line either --
+    # a mutation run showed seven other tests catch a flag flip -- but a test that cannot fail is
+    # worse than no test, because it reads as protection that is not there.
+    default_policy = _policy()
+    default_policy.explorer._candidates(_blob_frame())  # noqa: SLF001 - live hook fixture
+    default_diagnostics = default_policy.explorer.action_salience_diagnostics()
+    assert (
+        default_diagnostics["connected_component_salience_enabled"]
+        is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    )
 
 
 def test_scenario_arc_fcp_5397_registry_precheck_selects_re86_l3_or_rotates() -> None:
@@ -162,8 +205,10 @@ def test_scenario_arc_fcp_5397_artifact_success_and_honest_null_gates() -> None:
     assert no_bank["target_game"] == "re86"
     assert no_bank["attempted_level"] == 3
     assert no_bank["duplicate_solve_avoided"] is True
-    assert no_bank["connected_component_salience_enabled"] is True
-    assert no_bank["salience_tiers_emitted"] is True
+    # Computed by blob_salience_live_diagnostics() from the DEFAULT policy, so these
+    # track SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED. See the note in the live-path test.
+    assert no_bank["connected_component_salience_enabled"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    assert no_bank["salience_tiers_emitted"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
     assert no_bank["per_game_adapter_used"] is False
     assert no_bank["offline_bfs_used"] is False
     assert no_bank["outer_loop_re_used"] is False
@@ -381,7 +426,9 @@ def test_scenario_arc_fcp_5397_run_experiment_writes_artifact(tmp_path: Path) ->
     assert artifact["registry_precheck_done"] is True
     assert artifact["duplicate_solve_avoided"] is True
     assert artifact["live_agent_policy_modified"] is True
-    assert artifact["connected_component_salience_enabled"] is True
-    assert artifact["salience_tiers_emitted"] is True
+    # Computed by blob_salience_live_diagnostics() from the DEFAULT policy, so these
+    # track SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED. See the note in the live-path test.
+    assert artifact["connected_component_salience_enabled"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    assert artifact["salience_tiers_emitted"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
     assert artifact["live_attempt_count"] == 1
     assert artifact["tests_run"] == ["unit 5397 blob salience"]

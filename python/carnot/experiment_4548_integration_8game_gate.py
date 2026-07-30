@@ -5,7 +5,6 @@ Spec refs: REQ-ARC-WMTE-4548, SCENARIO-ARC-WMTE-4548.
 
 from __future__ import annotations
 
-import ast
 import hashlib
 import json
 import subprocess
@@ -13,6 +12,8 @@ import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
+
+from carnot.submitted_agent_config_ast import parse_submitted_agent_config
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -108,36 +109,18 @@ def _kit() -> Any:  # pragma: no cover - ARC SDK boundary.
 
 
 def _submitted_agent_config() -> dict[str, Any]:
-    src = (REPO_ROOT / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text(
-        encoding="utf-8"
+    """Read the submitted agent's config from source, without importing the agent.
+
+    The parsing itself lives in ``carnot.submitted_agent_config_ast`` -- shared with experiment
+    4560, which needs the identical read. It used to be copy-pasted into both, and both copies
+    carried the same defect: a constant defined by *reference* rather than by literal was silently
+    dropped by ``literal_eval``'s except-continue, then resurfaced much later as a bare
+    ``KeyError`` from the lookup that needed it. Sharing one implementation is what stops the next
+    fix from landing in only one of them.
+    """
+    return parse_submitted_agent_config(
+        REPO_ROOT / "python" / "carnot" / "agentic" / "arc_competition_agent.py"
     )
-    tree = ast.parse(src)
-    constants: dict[str, Any] = {}
-    for node in tree.body:
-        target = None
-        value = None
-        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
-            target = node.targets[0].id
-            value = node.value
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            target = node.target.id
-            value = node.value
-        if target is None or value is None:
-            continue
-        if target == "SUBMITTED_AGENT_CONFIG" and isinstance(value, ast.Dict):
-            config: dict[str, Any] = {}
-            for key_node, value_node in zip(value.keys, value.values):
-                key = ast.literal_eval(key_node)
-                if isinstance(value_node, ast.Name):
-                    config[key] = constants[value_node.id]
-                else:
-                    config[key] = ast.literal_eval(value_node)
-            return config
-        try:
-            constants[target] = ast.literal_eval(value)
-        except (ValueError, TypeError):
-            continue
-    return {}
 
 
 def _stable_checksum(payload: Mapping[str, Any]) -> str:
@@ -179,7 +162,9 @@ def load_gate_baseline(root: Path | str = REPO_ROOT) -> dict[str, Any]:
     }
 
 
-def check_preconditions(root: Path | str = REPO_ROOT) -> dict[str, Any]:  # pragma: no cover - SDK boundary.
+def check_preconditions(
+    root: Path | str = REPO_ROOT,
+) -> dict[str, Any]:  # pragma: no cover - SDK boundary.
     root_path = Path(root)
     spec_path = root_path / "openspec" / "capabilities" / "arc-world-model-trust-energy" / "spec.md"
     checks: dict[str, Any] = {
@@ -250,17 +235,12 @@ def _levels_from_nested(
 
 
 def _core_regressions(control: Mapping[str, int], treatment: Mapping[str, int]) -> list[str]:
-    return [
-        game
-        for game in CORE_GAMES
-        if int(treatment.get(game, 0)) < int(control.get(game, 0))
-    ]
+    return [game for game in CORE_GAMES if int(treatment.get(game, 0)) < int(control.get(game, 0))]
 
 
 def _core_progress_gain(control: Mapping[str, int], treatment: Mapping[str, int]) -> bool:
     return any(
-        int(treatment.get(game, 0)) > int(control.get(game, 0))
-        and int(treatment.get(game, 0)) > 0
+        int(treatment.get(game, 0)) > int(control.get(game, 0)) and int(treatment.get(game, 0)) > 0
         for game in CORE_GAMES
     )
 
@@ -400,7 +380,9 @@ def _summary_for_a4(a4_artifact: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _reject(rejected: dict[str, dict[str, Any]], key: str, summary: Mapping[str, Any], reason: str) -> None:
+def _reject(
+    rejected: dict[str, dict[str, Any]], key: str, summary: Mapping[str, Any], reason: str
+) -> None:
     rejected[key] = {**dict(summary), "reason": reason}
 
 
@@ -479,7 +461,9 @@ def select_integrated_levers(
         accepted.append(a4_key)
 
     a1_isolated_delta = (
-        0.0 if a1_summary["flag_status"] == "rejected_flagged_adversarial" else _a1_delta(a1_artifact)
+        0.0
+        if a1_summary["flag_status"] == "rejected_flagged_adversarial"
+        else _a1_delta(a1_artifact)
     )
     a4_isolated_delta = _a4_delta(a4_artifact)
     isolated_deltas = {
@@ -548,7 +532,11 @@ def _efficiency_by_game(measurement: Mapping[str, Any]) -> dict[str, float]:
         return {str(game): float(value or 0.0) for game, value in explicit.items()}
     out: dict[str, float] = {}
     for row in measurement.get("per_game", []) or []:
-        if isinstance(row, Mapping) and row.get("game") is not None and row.get("efficiency") is not None:
+        if (
+            isinstance(row, Mapping)
+            and row.get("game") is not None
+            and row.get("efficiency") is not None
+        ):
             out[str(row["game"])] = float(row["efficiency"] or 0.0)
     return out
 
@@ -619,7 +607,9 @@ def _additivity_checked(
     a1_delta = float(isolated.get("A1_llm_proposer_reinduction") or 0.0)
     a4_delta = float(isolated.get("A4_frame_change_cnn_ranker") or 0.0)
     naive_sum_delta = _round_delta(a1_delta + a4_delta)
-    integrated_delta = _round_delta(_core_efficiency(integrated_measurement) - CORE_EFFICIENCY_BASELINE)
+    integrated_delta = _round_delta(
+        _core_efficiency(integrated_measurement) - CORE_EFFICIENCY_BASELINE
+    )
     return {
         "metric": "core_efficiency",
         "a1_delta_core_efficiency": _round_delta(a1_delta),
@@ -723,9 +713,7 @@ def _blocked_artifact(
     duration_s: float | None,
 ) -> dict[str, Any]:
     missing = [
-        key
-        for key in ("offline_arcade_import",)
-        if preconditions_checked.get(key) is not True
+        key for key in ("offline_arcade_import",) if preconditions_checked.get(key) is not True
     ]
     reason = "_".join(missing) if missing else "unknown_resource"
     artifact = build_artifact(
