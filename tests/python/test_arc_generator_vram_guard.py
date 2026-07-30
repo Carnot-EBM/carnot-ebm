@@ -71,13 +71,43 @@ MEASURED_FREED_PER_CPU_FFN_LAYER_MIB = 195.3
 
 @pytest.fixture()
 def wm(monkeypatch):
-    """Import the module fresh with a clean env so an override cannot leak between tests.
+    """Pin the env to the NO-OFFLOAD configuration, which is what the constants below measure.
 
-    CARNOT_ARC_FFN_CPU_LAYERS is cleared too: since 2026-07-28 it is a second input to the guard,
-    and an ambient value would silently lower every threshold asserted here.
+    Every threshold in this file is measured against a launch that keeps the whole model on the
+    card. Three env vars can move the guard away from that configuration, so all three are cleared:
+
+      * CARNOT_ARC_INDUCE_N_CTX     -- the documented tight-VRAM lever; sets the context pool.
+      * CARNOT_ARC_FFN_CPU_LAYERS   -- since 2026-07-28 a second input to the guard; an ambient
+        value silently lowers every threshold asserted here.
+      * CARNOT_ARC_GENERATOR_CUDA_GPU -- the one that actually bit us, and the least obvious. It
+        looks irrelevant to a VRAM *threshold*, but it is the trigger for the FFN auto-fit path:
+        when it names a real card and CARNOT_ARC_FFN_CPU_LAYERS is unset, the guard sizes an
+        offload for that card and SUBTRACTS the freed-VRAM credit. With it set to 0 the guard came
+        out at 23630 MiB against a measured 23888 MiB footprint -- a margin of MINUS 258 -- and
+        two tests here failed.
+
+        THAT LOWER GUARD IS NOT A BUG. With FFN layers pushed to system RAM the on-card footprint
+        genuinely is smaller, so a smaller guard is correct *for that configuration*. The defect
+        was in this fixture: it left the configuration ambient, so the tests compared an
+        auto-fit-lowered guard against a no-offload measurement -- two different launches. The
+        assertions were never wrong; they were just not told which launch to assert about.
+
+        This matters beyond one variable: the conductor's standing systemd drop-in sets
+        CARNOT_ARC_GENERATOR_CUDA_GPU=0, so it is present in normal operation and leaks into any
+        test process that inherits it.
+
+    NOTE ON THE IMPORT: ``import_module`` returns the CACHED module if already imported, so this is
+    emphatically not a fresh import -- the previous docstring claimed it was, which was untrue. It
+    does not need to be: every variable above is read at CALL time inside
+    ``_generator_cuda_min_free_mb()`` / ``_default_induce_n_ctx()`` / ``_default_ffn_cpu_layers()``,
+    and the module computes nothing env-dependent at import time (verified against the module AST:
+    no module-level assignment calls any of those helpers). If import-time env-dependent state is
+    ever added, this fixture must switch to ``importlib.reload`` -- this note is here so whoever
+    adds it knows to.
     """
     monkeypatch.delenv("CARNOT_ARC_INDUCE_N_CTX", raising=False)
     monkeypatch.delenv("CARNOT_ARC_FFN_CPU_LAYERS", raising=False)
+    monkeypatch.delenv("CARNOT_ARC_GENERATOR_CUDA_GPU", raising=False)
     mod = importlib.import_module(MOD)
     return mod
 
@@ -109,6 +139,76 @@ def test_guard_carries_real_margin_over_the_measured_footprint(wm) -> None:
         f"only {margin} MiB of margin between the guard ({guard}) and the measured footprint "
         f"({MEASURED_81920_GEMMA31B_MIB}); binding a card this tightly is how the 2026-07-21 "
         "self-heal-onto-a-full-card incident happened"
+    )
+
+
+def test_the_autofit_guard_carries_real_margin_over_the_autofit_footprint(wm, monkeypatch) -> None:
+    """The same safety property as the test above, but for the configuration that actually SHIPS.
+
+    ADDED 2026-07-30 after review pointed out a real gap in the fixture fix. Clearing
+    CARNOT_ARC_GENERATOR_CUDA_GPU was the correct way to make the no-offload assertions honest --
+    they are measured against a no-offload launch -- but it left the *production* path less covered
+    than the one that does not ship: the conductor's standing systemd drop-in SETS that variable, so
+    the FFN auto-fit is what runs in normal operation, and nothing asserted that the auto-fit guard
+    clears an auto-fit footprint with margin.
+
+    That gap mattered because the two properties are genuinely different, and only one of them was
+    covered anywhere:
+
+      * ADMISSIBILITY, guard <= free_mb -- "we only claim a card we fit on". Already covered, in
+        tests/python/test_arc_ffn_cpu_offload.py.
+      * SAFETY MARGIN, guard >= footprint + margin -- "we do not bind a card with no slack". This
+        is the property whose absence caused the original incident, and at the auto-fit layer count
+        it was asserted nowhere. A guard that satisfied admissibility while sitting BELOW its own
+        footprint would pass every existing test and still cudaMalloc-fail into silent LLM-off.
+
+    Both are asserted here, so neither can be satisfied at the other's expense.
+
+    THE FOOTPRINT IS DERIVED FROM THIS FILE'S MEASUREMENTS, NOT FROM THE MODULE'S PREDICTOR.
+    Comparing the guard against `_predicted_generator_vram_mib` would be circular -- the guard is
+    computed FROM that predictor, so the assertion would hold no matter how wrong the envelope was.
+    Instead the expected footprint is rebuilt from the two independently measured constants at the
+    top of this file: the measured 81920 no-offload residency, minus the measured per-layer credit.
+
+    Subtracting a credit measured at n_ctx 32768 from a footprint measured at 81920 is sound
+    because the `-ot` lever moves FFN *weight* tensors to system RAM, and weight size does not
+    depend on the context-pool size (what n_ctx moves is the KV cache, which stays on the card).
+
+    MOCKED, NOT SKIPPED, per CLAUDE.md: the auto-fit's only environmental input is
+    `_cuda_gpu_free_mb`, so stubbing that one call exercises the whole decision on any machine,
+    with or without a GPU.
+    """
+    # A 3090 with a few hundred MiB of driver/desktop overhead already resident -- i.e. the
+    # realistic case where the no-offload guard (25388 MiB) does NOT fit but a small offload does.
+    free_mb = 24123
+    monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
+    monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: free_mb)
+
+    layers = wm._default_ffn_cpu_layers()
+    assert layers > 0, (
+        "auto-fit did not engage on a card the no-offload guard cannot fit; this test is then not "
+        "exercising the production path it was written for"
+    )
+    assert layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS
+
+    guard = wm._generator_cuda_min_free_mb(layers)
+    expected_footprint = MEASURED_81920_GEMMA31B_MIB - layers * MEASURED_FREED_PER_CPU_FFN_LAYER_MIB
+
+    margin = guard - expected_footprint
+    # `guard` is an int over a float footprint, so allow 1 MiB for truncation. Derived from the
+    # module's own margin constant rather than a literal, so raising the required margin cannot
+    # leave this test asserting the old, smaller one.
+    assert margin >= wm._GENERATOR_CUDA_GUARD_MARGIN_MIB - 1, (
+        f"the auto-fit guard ({guard} MiB at {layers} CPU-FFN layers) carries only {margin:.0f} MiB "
+        f"over the measurement-derived footprint ({expected_footprint:.0f} MiB). This is the "
+        "SHIPPED configuration -- the conductor's systemd drop-in sets "
+        "CARNOT_ARC_GENERATOR_CUDA_GPU -- so a guard that binds this tightly here binds tightly in "
+        "production, and cudaMalloc failure returns the agent to LLM-off silently."
+    )
+    assert guard <= free_mb, (
+        f"auto-fit chose {layers} layers but the resulting guard ({guard} MiB) still exceeds the "
+        f"{free_mb} MiB it was fitting to -- the card would be declined despite an offload having "
+        "been selected for it, which is the auto-fit failing at its one job"
     )
 
 

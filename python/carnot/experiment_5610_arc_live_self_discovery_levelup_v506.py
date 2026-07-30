@@ -16,6 +16,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from carnot.artifact_gate_annotations import checksum_core
+
 import yaml
 
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
@@ -159,7 +161,9 @@ def _registry_total(registry: Mapping[str, Any]) -> int:
     return sum(_registry_depth(row) for row in _registry_rows(registry).values())
 
 
-def _public_game_items(public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> list[tuple[str, Mapping[str, Any]]]:
+def _public_game_items(
+    public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]],
+) -> list[tuple[str, Mapping[str, Any]]]:
     if isinstance(public_games, Mapping):
         items = [(str(game), meta) for game, meta in public_games.items()]
     else:
@@ -175,7 +179,9 @@ def _headroom(meta: Mapping[str, Any]) -> int:
     for key in ("authenticated_headroom", "baseline_levels", "num_levels", "levels"):
         if key in meta:
             return _int(meta.get(key))
-    baseline = meta.get("baseline_actions") or meta.get("solution_lengths") or meta.get("action_counts")
+    baseline = (
+        meta.get("baseline_actions") or meta.get("solution_lengths") or meta.get("action_counts")
+    )
     if isinstance(baseline, Mapping):
         return len(baseline)
     if isinstance(baseline, Sequence) and not isinstance(baseline, (str, bytes)):
@@ -358,11 +364,14 @@ def filter_configuration_from_exp5609(exp5609: Mapping[str, Any] | None) -> dict
         "attempt_gated_by_exp5609": False,
         "enabled_filters": enabled,
         "inert_click_pruner": "inert_click" in enabled,
-        "object_history_salience": "object_history" in enabled or "object_history_salience" in enabled,
+        "object_history_salience": "object_history" in enabled
+        or "object_history_salience" in enabled,
         "baseline_unchanged": not enabled,
         "promotion_decisions": normalized,
         "advisory_outcome": payload.get("honest_verdict") or payload.get("verdict"),
-        "reason": "promoted_non_regressing_filters_only" if enabled else "no_safe_promoted_filter_exp5609_baseline_unchanged",
+        "reason": "promoted_non_regressing_filters_only"
+        if enabled
+        else "no_safe_promoted_filter_exp5609_baseline_unchanged",
     }
 
 
@@ -473,7 +482,9 @@ def run_live_self_discovery_attempt(
             program_synthesis_filter=None,
             program_synthesis_filter_trust_threshold=0.0,
             inert_click_pruner=bool(filter_configuration.get("inert_click_pruner", False)),
-            object_history_salience=bool(filter_configuration.get("object_history_salience", False)),
+            object_history_salience=bool(
+                filter_configuration.get("object_history_salience", False)
+            ),
             amortized_first_contact_prior=None,
             go_explore_archive=False,
             similarity_retrieval=False,
@@ -575,7 +586,9 @@ def run_live_self_discovery_attempt(
                 "trace_replay_checksum": checksum,
             }
             post_levels_reproduced = _int(gate.get("reached_level"))
-            offline_reproduced = bool(gate.get("reproduced")) and post_levels_reproduced >= target_level
+            offline_reproduced = (
+                bool(gate.get("reproduced")) and post_levels_reproduced >= target_level
+            )
 
         return {
             "live_attempt_executed": True,
@@ -624,7 +637,11 @@ def _accepted_new_levels(
     post = _int(attempt.get("post_levels_reproduced"))
     if not attempt.get("offline_reproduced"):
         return []
-    if attempt.get("source_files_read") or attempt.get("per_game_adapter_used") or attempt.get("offline_bfs_used"):
+    if (
+        attempt.get("source_files_read")
+        or attempt.get("per_game_adapter_used")
+        or attempt.get("offline_bfs_used")
+    ):
         return []
     if attempt.get("action_trace_sha256") != attempt.get("trace_replay_checksum"):
         return []
@@ -640,12 +657,18 @@ def _accepted_new_levels(
 
 
 def compute_artifact_checksum(artifact: Mapping[str, Any]) -> str:
-    core = {
-        key: value
-        for key, value in artifact.items()
-        if key not in {"artifact_checksum", "reproducibility_checksum"}
-    }
-    return _sha256(core)
+    """Hash the MEASURED record, excluding post-hoc review annotations.
+
+    Excluding the fabrication gate's ``flagged_adversarial`` / ``corrigendum_*`` stamp is
+    load-bearing, not cosmetic. This artifact was stamped by ``adversarial_verify.py`` AFTER it
+    landed; hashing that stamp made the artifact's own recorded checksum fail to reproduce, so
+    ``validate_artifact`` rejected the committed record -- the mandated review process was
+    invalidating the artifact it reviewed. Recomputing with only the gate keys removed reproduces
+    the checksum recorded at authoring time EXACTLY, which is what proves the measured record is
+    untouched. Every measurement, seed, duration, verdict and substrate declaration is still
+    hashed, so real tampering is still caught. See ``carnot.artifact_gate_annotations``.
+    """
+    return _sha256(checksum_core(artifact))
 
 
 def build_artifact(
@@ -698,7 +721,8 @@ def build_artifact(
         "llm_invoked": bool(attempt.get("llm_invoked", False)),
         "model_specs_receipt": attempt.get("model_specs_receipt"),
         "no_model_specs_required": not bool(attempt.get("llm_invoked", False)),
-        "target_reached_live": _int(attempt.get("max_level_reached")) >= _int(target_selection_receipt.get("target_level")),
+        "target_reached_live": _int(attempt.get("max_level_reached"))
+        >= _int(target_selection_receipt.get("target_level")),
         "max_level_reached": attempt.get("max_level_reached"),
         "post_levels_reproduced": attempt.get("post_levels_reproduced"),
         "action_trace_sha256": attempt.get("action_trace_sha256"),
@@ -781,7 +805,9 @@ def main() -> int:  # pragma: no cover - command wrapper
     current_path = root / RESULT_RELATIVE_PATH
     current = read_json(current_path) if current_path.exists() else {}
     current_for_precheck = current if not current.get("live_attempt_executed") else {}
-    precheck = registry_precheck(registry, public_games, loop_depths, previous, current_for_precheck)
+    precheck = registry_precheck(
+        registry, public_games, loop_depths, previous, current_for_precheck
+    )
     target = select_target_from_precheck(precheck)
     filters = filter_configuration_from_exp5609(read_json(root / EXP5609_RELATIVE_PATH))
     if target.get("blocked"):
@@ -805,7 +831,11 @@ def main() -> int:  # pragma: no cover - command wrapper
             "per_game_adapter_used": False,
             "offline_bfs_used": False,
             "runtime_reverse_engineering": {},
-            "reproduction_gate": {"attempted": False, "reproduced": False, "reason": "target_selection_blocked"},
+            "reproduction_gate": {
+                "attempted": False,
+                "reproduced": False,
+                "reason": "target_selection_blocked",
+            },
         }
     else:
         attempt = run_live_self_discovery_attempt(target, filters)

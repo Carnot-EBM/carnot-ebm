@@ -14,6 +14,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from carnot.artifact_gate_annotations import checksum_core
+
 from carnot import experiment_5610_arc_live_self_discovery_levelup_v506 as v506
 
 
@@ -140,7 +142,9 @@ def _registry_total(registry: Mapping[str, Any]) -> int:
     return v506._registry_total(registry)
 
 
-def _public_game_items(public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> list[tuple[str, Mapping[str, Any]]]:
+def _public_game_items(
+    public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]],
+) -> list[tuple[str, Mapping[str, Any]]]:
     return v506._public_game_items(public_games)
 
 
@@ -170,20 +174,26 @@ def _target_entries(artifact: Mapping[str, Any]) -> list[dict[str, Any]]:
         }
 
     add(
-        artifact.get("game_targeted") or artifact.get("selected_game") or artifact.get("target_game"),
+        artifact.get("game_targeted")
+        or artifact.get("selected_game")
+        or artifact.get("target_game"),
         artifact.get("target_level") or artifact.get("selected_level"),
     )
     for key in ("target_selection", "target_selection_receipt"):
         selection = artifact.get(key)
         if isinstance(selection, Mapping):
             add(
-                selection.get("selected_game") or selection.get("game") or selection.get("target_game"),
+                selection.get("selected_game")
+                or selection.get("game")
+                or selection.get("target_game"),
                 selection.get("target_level") or selection.get("selected_level"),
             )
     return list(pairs.values())
 
 
-def _entries_by_pair(artifacts: Sequence[Mapping[str, Any]]) -> dict[tuple[str, int], dict[str, Any]]:
+def _entries_by_pair(
+    artifacts: Sequence[Mapping[str, Any]],
+) -> dict[tuple[str, int], dict[str, Any]]:
     entries: dict[tuple[str, int], dict[str, Any]] = {}
     for artifact in artifacts:
         for entry in _target_entries(artifact):
@@ -338,7 +348,10 @@ def _safety_regression(payload: Mapping[str, Any]) -> bool:
     for gate in payload.get("gates_evaluated", []) or []:
         if not isinstance(gate, Mapping):
             continue
-        if str(gate.get("artifact_field")) == "unsafe_transition_accept_count" and _int(gate.get("actual")) > 0:
+        if (
+            str(gate.get("artifact_field")) == "unsafe_transition_accept_count"
+            and _int(gate.get("actual")) > 0
+        ):
             return True
     return False
 
@@ -402,7 +415,9 @@ def run_live_self_discovery_attempt(
     attempt["random_seed"] = random_seed
     attempt["random_seeds"] = [random_seed]
     attempt["stopping_rule"] = STOPPING_RULE
-    attempt["model_specs"] = [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
+    attempt["model_specs"] = (
+        [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
+    )
     attempt["live_branch_configuration"] = dict(live_branch_configuration)
     return attempt
 
@@ -415,7 +430,11 @@ def _accepted_new_levels(
     post = _int(attempt.get("post_levels_reproduced"))
     if not attempt.get("offline_reproduced"):
         return []
-    if attempt.get("source_files_read") or attempt.get("per_game_adapter_used") or attempt.get("offline_bfs_used"):
+    if (
+        attempt.get("source_files_read")
+        or attempt.get("per_game_adapter_used")
+        or attempt.get("offline_bfs_used")
+    ):
         return []
     if attempt.get("action_trace_sha256") != attempt.get("trace_replay_checksum"):
         return []
@@ -431,12 +450,18 @@ def _accepted_new_levels(
 
 
 def compute_artifact_checksum(artifact: Mapping[str, Any]) -> str:
-    core = {
-        key: value
-        for key, value in artifact.items()
-        if key not in {"artifact_checksum", "reproducibility_checksum"}
-    }
-    return _sha256(core)
+    """Hash the MEASURED record, excluding post-hoc review annotations.
+
+    Excluding the fabrication gate's ``flagged_adversarial`` / ``corrigendum_*`` stamp is
+    load-bearing, not cosmetic. This artifact was stamped by ``adversarial_verify.py`` AFTER it
+    landed; hashing that stamp made the artifact's own recorded checksum fail to reproduce, so
+    ``validate_artifact`` rejected the committed record -- the mandated review process was
+    invalidating the artifact it reviewed. Recomputing with only the gate keys removed reproduces
+    the checksum recorded at authoring time EXACTLY, which is what proves the measured record is
+    untouched. Every measurement, seed, duration, verdict and substrate declaration is still
+    hashed, so real tampering is still caught. See ``carnot.artifact_gate_annotations``.
+    """
+    return _sha256(checksum_core(artifact))
 
 
 def build_artifact(
@@ -492,7 +517,8 @@ def build_artifact(
         "frozen_generator_choice": FROZEN_GENERATOR_CHOICE,
         "llm_invoked": llm_invoked,
         "no_model_specs_required": not llm_invoked,
-        "target_reached_live": _int(attempt.get("max_level_reached")) >= _int(target_selection_receipt.get("target_level")),
+        "target_reached_live": _int(attempt.get("max_level_reached"))
+        >= _int(target_selection_receipt.get("target_level")),
         "max_level_reached": attempt.get("max_level_reached"),
         "post_levels_reproduced": attempt.get("post_levels_reproduced"),
         "action_trace_sha256": attempt.get("action_trace_sha256"),
@@ -577,11 +603,15 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("; ".join(errors))
 
 
-def _read_existing(paths: Sequence[Path]) -> list[dict[str, Any]]:  # pragma: no cover - filesystem wrapper
+def _read_existing(
+    paths: Sequence[Path],
+) -> list[dict[str, Any]]:  # pragma: no cover - filesystem wrapper
     return [payload for payload in (read_json(path) for path in paths) if payload]
 
 
-def load_current_v507_artifacts(root: Path) -> list[dict[str, Any]]:  # pragma: no cover - filesystem wrapper
+def load_current_v507_artifacts(
+    root: Path,
+) -> list[dict[str, Any]]:  # pragma: no cover - filesystem wrapper
     artifacts: list[dict[str, Any]] = []
     for path in sorted((root / "results").glob("experiment_56*.json")):
         if path.as_posix().endswith(RESULT_RELATIVE_PATH):

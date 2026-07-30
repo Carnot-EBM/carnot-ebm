@@ -13,6 +13,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from carnot.artifact_gate_annotations import checksum_core
+
 import yaml
 
 from carnot import experiment_5610_arc_live_self_discovery_levelup_v506 as v506
@@ -175,7 +177,9 @@ def _registry_total(registry: Mapping[str, Any]) -> int:
     return v507._registry_total(registry)
 
 
-def _public_game_items(public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> list[tuple[str, Mapping[str, Any]]]:
+def _public_game_items(
+    public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]],
+) -> list[tuple[str, Mapping[str, Any]]]:
     return v507._public_game_items(public_games)
 
 
@@ -195,7 +199,9 @@ def _explicit_exclusion_pairs(
     return pairs
 
 
-def _registry_duplicate_levels(registry_rows: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+def _registry_duplicate_levels(
+    registry_rows: Mapping[str, Mapping[str, Any]],
+) -> list[dict[str, Any]]:
     duplicates: list[dict[str, Any]] = []
     for game, row in sorted(registry_rows.items()):
         depth = _registry_depth(row)
@@ -430,7 +436,9 @@ def run_live_self_discovery_attempt(
     attempt["random_seed"] = random_seed
     attempt["random_seeds"] = [random_seed]
     attempt["stopping_rule"] = STOPPING_RULE
-    attempt["model_specs"] = [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
+    attempt["model_specs"] = (
+        [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
+    )
     attempt["policy_source"] = dict(policy_source)
     attempt["source_read"] = bool(attempt.get("source_files_read", False))
     attempt["game_adapter_used"] = bool(attempt.get("per_game_adapter_used", False))
@@ -467,7 +475,9 @@ def _live_path_reachability_counters(
     policy_source: Mapping[str, Any],
 ) -> dict[str, Any]:
     rows = [row for row in attempt.get("action_rows", []) if isinstance(row, Mapping)]
-    action_rows = [row for row in rows if row.get("kind") == "ACTION" or row.get("action") is not None]
+    action_rows = [
+        row for row in rows if row.get("kind") == "ACTION" or row.get("action") is not None
+    ]
     reset_rows = [row for row in rows if row.get("kind") == "RESET"]
     promoted = policy_source.get("policy_name") == "promoted_exp5631_epistemic_policy"
     return {
@@ -487,12 +497,18 @@ def _model_specs_allowed(model_specs: Sequence[Any]) -> bool:
 
 
 def compute_artifact_checksum(artifact: Mapping[str, Any]) -> str:
-    core = {
-        key: value
-        for key, value in artifact.items()
-        if key not in {"artifact_checksum", "reproducibility_checksum"}
-    }
-    return _sha256(core)
+    """Hash the MEASURED record, excluding post-hoc review annotations.
+
+    Excluding the fabrication gate's ``flagged_adversarial`` / ``corrigendum_*`` stamp is
+    load-bearing, not cosmetic. This artifact was stamped by ``adversarial_verify.py`` AFTER it
+    landed; hashing that stamp made the artifact's own recorded checksum fail to reproduce, so
+    ``validate_artifact`` rejected the committed record -- the mandated review process was
+    invalidating the artifact it reviewed. Recomputing with only the gate keys removed reproduces
+    the checksum recorded at authoring time EXACTLY, which is what proves the measured record is
+    untouched. Every measurement, seed, duration, verdict and substrate declaration is still
+    hashed, so real tampering is still caught. See ``carnot.artifact_gate_annotations``.
+    """
+    return _sha256(checksum_core(artifact))
 
 
 def build_artifact(
@@ -654,7 +670,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         errors.append("new_reproducible_levels length must equal registry_delta")
     if artifact.get("offline_reproduced") is True:
         if artifact.get("reproduced_levels") != 1 or delta != 1:
-            errors.append("offline_reproduced=true requires reproduced_levels=1 and registry_delta=1")
+            errors.append(
+                "offline_reproduced=true requires reproduced_levels=1 and registry_delta=1"
+            )
     elif artifact.get("reproduced_levels") != 0 or delta != 0:
         errors.append("offline_reproduced=false requires reproduced_levels=0 and registry_delta=0")
     if artifact.get("action_trace_sha256") != artifact.get("trace_replay_checksum"):
@@ -681,7 +699,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("; ".join(errors))
 
 
-def update_registry_if_banked(root: Path, artifact: Mapping[str, Any]) -> bool:  # pragma: no cover - null in normal run
+def update_registry_if_banked(
+    root: Path, artifact: Mapping[str, Any]
+) -> bool:  # pragma: no cover - null in normal run
     if _int(artifact.get("registry_delta")) != 1:
         return False
     path = root / REGISTRY_RELATIVE_PATH

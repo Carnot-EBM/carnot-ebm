@@ -22,7 +22,10 @@ from carnot.agentic.arc_color_blob_salience import (
     ColorBlobSaliencePrior,
     connected_color_blobs,
 )
-from carnot.agentic.arc_competition_agent import E3AgentPolicy
+from carnot.agentic.arc_competition_agent import (
+    SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED,
+    E3AgentPolicy,
+)
 from carnot.agentic.arc_frame_change_predictor import (
     GroundTruthValidatedFrameChangeScorer,
     rank_arc_actions,
@@ -240,8 +243,21 @@ def test_scenario_arc_fcp_5373_submitted_e3_wraps_frame_change_scorer_when_avail
 
     policy = E3AgentPolicy("re86", proposer=None, value_head=lambda _frame: 0.0)
 
-    assert isinstance(policy.explorer.action_prior, ColorBlobSaliencePrior)
-    assert policy.explorer.action_prior.large_flat_deprioritization is True
+    # CORRECTED EXPECTATION (2026-07-30): this demanded a live ColorBlobSaliencePrior, but
+    # SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED is False by deliberate operator decision (disabled
+    # 2026-07-14 after a near-hang, re-validated 2026-07-16 as ~9x slower per action for no
+    # measured benefit), so E3AgentPolicy installs no default action_prior and None is correct.
+    # The WIRING assertion now tracks the flag; the large_flat_deprioritization DEFAULT is
+    # asserted directly below so that property keeps its coverage either way -- dropping it when
+    # the flag is off would have been a silent loss of a real check.
+    if SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
+        assert isinstance(policy.explorer.action_prior, ColorBlobSaliencePrior)
+        assert policy.explorer.action_prior.large_flat_deprioritization is True
+    else:
+        assert policy.explorer.action_prior is None
+    assert ColorBlobSaliencePrior().large_flat_deprioritization is True, (
+        "the prior's shipped default must stay on regardless of whether it is currently wired in"
+    )
     if policy.explorer.frame_change_scorer is not None:
         assert isinstance(
             policy.explorer.frame_change_scorer, GroundTruthValidatedFrameChangeScorer
@@ -383,8 +399,14 @@ def test_scenario_arc_fcp_5373_artifact_schema_and_write(tmp_path: Path) -> None
     assert artifact["target_game"] == "re86"
     assert artifact["target_level_before"] == 2
     assert artifact["attempted_level"] == 3
-    assert artifact["salience_repair_live_reachable"] is True
-    assert artifact["status_bar_deprioritization_enabled"] is True
+    # CORRECTED EXPECTATION (2026-07-30): both salience fields come from
+    # salience_repair_live_diagnostics(), which gates each on
+    # `isinstance(prior, ColorBlobSaliencePrior)`. With the flag False (see the note above) there
+    # is no prior, so False is the correct, honest report. frame_diff_ground_truth_validated is
+    # NOT gated on the prior -- it only checks the explicitly-supplied validator -- so it stays an
+    # unconditional True, which is what stops this correction from quietly widening.
+    assert artifact["salience_repair_live_reachable"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
+    assert artifact["status_bar_deprioritization_enabled"] is SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED
     assert artifact["frame_diff_ground_truth_validated"] is True
     assert artifact["button_like_blob_rank_delta"] > 0
     assert artifact["offline_reproduced"] is False

@@ -13,6 +13,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from carnot.artifact_gate_annotations import checksum_core
+
 import yaml
 
 from carnot import experiment_5621_arc_live_self_discovery_levelup_v507 as v507
@@ -189,7 +191,9 @@ def _registry_total(registry: Mapping[str, Any]) -> int:
     return v508._registry_total(registry)
 
 
-def _public_game_items(public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> list[tuple[str, Mapping[str, Any]]]:
+def _public_game_items(
+    public_games: Mapping[str, Any] | Sequence[Mapping[str, Any]],
+) -> list[tuple[str, Mapping[str, Any]]]:
     return v508._public_game_items(public_games)
 
 
@@ -236,7 +240,10 @@ def recent_failed_targets_from_transition_receipt(
             continue
         game = str(evidence.get("selected_game") or evidence.get("game") or "")
         level = _level_number(evidence.get("selected_level") or evidence.get("target_level"))
-        failed = evidence.get("offline_reproduced") is False or _int(evidence.get("registry_delta"), 1) == 0
+        failed = (
+            evidence.get("offline_reproduced") is False
+            or _int(evidence.get("registry_delta"), 1) == 0
+        )
         key = str(scope.get("key") or "unknown_scope")
         if not game or level <= 0 or not failed:
             continue
@@ -259,7 +266,9 @@ def _transition_exclusion_pairs(
     return pairs
 
 
-def _registry_duplicate_levels(registry_rows: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+def _registry_duplicate_levels(
+    registry_rows: Mapping[str, Mapping[str, Any]],
+) -> list[dict[str, Any]]:
     return v508._registry_duplicate_levels(registry_rows)
 
 
@@ -296,11 +305,17 @@ def registry_precheck(
                     closed_level_reasons[str(level)] = sorted(set(reasons_for_level))
                 else:
                     open_levels.append(level)
-            reasons = [] if open_levels else ["all_authenticated_headroom_targets_closed_by_recent_failures"]
+            reasons = (
+                []
+                if open_levels
+                else ["all_authenticated_headroom_targets_closed_by_recent_failures"]
+            )
 
         target_level = open_levels[0] if open_levels else registry_depth + 1
         closed_intermediate = [
-            level for level in unreproduced_levels if level < target_level and str(level) in closed_level_reasons
+            level
+            for level in unreproduced_levels
+            if level < target_level and str(level) in closed_level_reasons
         ]
         candidate_rows.append(
             {
@@ -323,7 +338,9 @@ def registry_precheck(
     eligible = [row for row in candidate_rows if not row["excluded"]]
     excluded_targets = {
         "explicit_recent_attempts": [dict(row) for row in explicit_excluded_targets],
-        "transition_receipt_failed_targets": recent_failed_targets_from_transition_receipt(transition_receipt),
+        "transition_receipt_failed_targets": recent_failed_targets_from_transition_receipt(
+            transition_receipt
+        ),
         "registry_duplicate_levels": _registry_duplicate_levels(registry_rows),
     }
     return {
@@ -503,7 +520,9 @@ def run_live_self_discovery_attempt(
     attempt["random_seed"] = random_seed
     attempt["random_seeds"] = [random_seed]
     attempt["stopping_rule"] = STOPPING_RULE
-    attempt["model_specs"] = [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
+    attempt["model_specs"] = (
+        [] if not attempt.get("llm_invoked") else attempt.get("model_specs", [])
+    )
     attempt["policy_source"] = dict(policy_source)
     attempt["source_read"] = bool(attempt.get("source_files_read", False))
     attempt["game_adapter_used"] = bool(attempt.get("per_game_adapter_used", False))
@@ -540,7 +559,9 @@ def _live_path_reachability_counters(
     policy_source: Mapping[str, Any],
 ) -> dict[str, Any]:
     rows = [row for row in attempt.get("action_rows", []) if isinstance(row, Mapping)]
-    action_rows = [row for row in rows if row.get("kind") == "ACTION" or row.get("action") is not None]
+    action_rows = [
+        row for row in rows if row.get("kind") == "ACTION" or row.get("action") is not None
+    ]
     reset_rows = [row for row in rows if row.get("kind") == "RESET"]
     promoted = policy_source.get("policy_name") == "promoted_exp5642_executable_model_policy"
     return {
@@ -568,7 +589,9 @@ def build_methodology_receipt(
 ) -> dict[str, Any]:
     return {
         "methodology_version": "arc_live_self_discovery_v509",
-        "target_recorded_before_interaction": bool(target_selection_receipt.get("target_selection_hash")),
+        "target_recorded_before_interaction": bool(
+            target_selection_receipt.get("target_selection_hash")
+        ),
         "target_selection_hash": target_selection_receipt.get("target_selection_hash"),
         "policy_frozen_before_outcome": True,
         "policy_name": policy_source.get("policy_name"),
@@ -586,8 +609,12 @@ def build_methodology_receipt(
             "in_process_policy_memory",
         ],
         "source_read": bool(attempt.get("source_read", attempt.get("source_files_read", False))),
-        "game_adapter_used": bool(attempt.get("game_adapter_used", attempt.get("per_game_adapter_used", False))),
-        "outer_loop_re_used": bool(attempt.get("outer_loop_re_used", attempt.get("offline_bfs_used", False))),
+        "game_adapter_used": bool(
+            attempt.get("game_adapter_used", attempt.get("per_game_adapter_used", False))
+        ),
+        "outer_loop_re_used": bool(
+            attempt.get("outer_loop_re_used", attempt.get("offline_bfs_used", False))
+        ),
         "offline_ground_truth_bfs_used": bool(attempt.get("offline_bfs_used", False)),
         "llm_invoked": bool(attempt.get("llm_invoked", False)),
         "model_specs_policy": "empty_list_required_when_llm_invoked_false",
@@ -604,12 +631,18 @@ def build_methodology_receipt(
 
 
 def compute_artifact_checksum(artifact: Mapping[str, Any]) -> str:
-    core = {
-        key: value
-        for key, value in artifact.items()
-        if key not in {"artifact_checksum", "reproducibility_checksum"}
-    }
-    return _sha256(core)
+    """Hash the MEASURED record, excluding post-hoc review annotations.
+
+    Excluding the fabrication gate's ``flagged_adversarial`` / ``corrigendum_*`` stamp is
+    load-bearing, not cosmetic. This artifact was stamped by ``adversarial_verify.py`` AFTER it
+    landed; hashing that stamp made the artifact's own recorded checksum fail to reproduce, so
+    ``validate_artifact`` rejected the committed record -- the mandated review process was
+    invalidating the artifact it reviewed. Recomputing with only the gate keys removed reproduces
+    the checksum recorded at authoring time EXACTLY, which is what proves the measured record is
+    untouched. Every measurement, seed, duration, verdict and substrate declaration is still
+    hashed, so real tampering is still caught. See ``carnot.artifact_gate_annotations``.
+    """
+    return _sha256(checksum_core(artifact))
 
 
 def build_artifact(
@@ -755,14 +788,26 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         errors.append("solve_provenance must be live_agent_self_discovery")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate mismatch")
-    for key in ("source_read", "game_adapter_used", "outer_loop_re_used", "source_files_read", "per_game_adapter_used", "offline_bfs_used"):
+    for key in (
+        "source_read",
+        "game_adapter_used",
+        "outer_loop_re_used",
+        "source_files_read",
+        "per_game_adapter_used",
+        "offline_bfs_used",
+    ):
         if artifact.get(key) is not False:
             errors.append(f"{key} must be false")
     methodology = artifact.get("methodology_receipt")
     if not isinstance(methodology, Mapping):
         errors.append("methodology_receipt must be present")
     else:
-        for key in ("source_read", "game_adapter_used", "outer_loop_re_used", "offline_ground_truth_bfs_used"):
+        for key in (
+            "source_read",
+            "game_adapter_used",
+            "outer_loop_re_used",
+            "offline_ground_truth_bfs_used",
+        ):
             if methodology.get(key) is not False:
                 errors.append(f"methodology_receipt.{key} must be false")
         if methodology.get("model_call_limit") != MODEL_CALL_LIMIT:
@@ -779,7 +824,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         errors.append("new_reproducible_levels length must equal registry_delta")
     if artifact.get("offline_reproduced") is True:
         if artifact.get("reproduced_levels") != 1 or delta != 1:
-            errors.append("offline_reproduced=true requires reproduced_levels=1 and registry_delta=1")
+            errors.append(
+                "offline_reproduced=true requires reproduced_levels=1 and registry_delta=1"
+            )
     elif artifact.get("reproduced_levels") != 0 or delta != 0:
         errors.append("offline_reproduced=false requires reproduced_levels=0 and registry_delta=0")
     if artifact.get("action_trace_sha256") != artifact.get("trace_replay_checksum"):
@@ -809,7 +856,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("; ".join(errors))
 
 
-def update_registry_if_banked(root: Path, artifact: Mapping[str, Any]) -> bool:  # pragma: no cover - null in normal run
+def update_registry_if_banked(
+    root: Path, artifact: Mapping[str, Any]
+) -> bool:  # pragma: no cover - null in normal run
     if _int(artifact.get("registry_delta")) != 1:
         return False
     path = root / REGISTRY_RELATIVE_PATH
@@ -822,7 +871,9 @@ def update_registry_if_banked(root: Path, artifact: Mapping[str, Any]) -> bool: 
             if isinstance(row, dict) and row.get("game") == game:
                 current = _int(row.get("levels_reproduced"))
                 if target_level != current + 1:
-                    raise ValueError("cannot update contiguous registry depth for non-adjacent bank")
+                    raise ValueError(
+                        "cannot update contiguous registry depth for non-adjacent bank"
+                    )
                 row["levels_reproduced"] = target_level
                 row["reproducibility"] = "reproduced"
                 row["latest_exp5643_levelup_attempt"] = {
