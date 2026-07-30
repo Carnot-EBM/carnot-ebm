@@ -1,5 +1,135 @@
 # Carnot — Changelog
 
+## 2026-07-30 (outer-loop: the base arm's own determinism was never measured; measured, and the finding survives it — plus a QA-layer duration hole and a work-destroying guard)
+
+**Instruction:** apply an 11-item adversarial review of the composite treatment-activation
+pre-flight, argue back with evidence where a finding is wrong, then commit. Submission remains
+operator-only; no submission action was taken and no scored or online ARC game was played.
+
+Two of the eleven changed a number. One required a fresh 4-cell GPU measurement to settle. Two were
+wrong on their specifics and are recorded as corrections rather than quietly adopted.
+
+**THE ONE THAT NEEDED A MEASUREMENT: the noise floor was single-armed, and the instrument itself
+encoded that mistake.** The grid reported an "A/A noise floor" of 0/6. That is the HEAD arm's floor
+(head vs headb). Every A/B pair is base-vs-head and holds exactly ONE base run, unreplicated — so
+0/6 proves HEAD repeats itself and says nothing about BASE. The review's hypothesis was that base is
+the noisy arm, which would collapse the attributable count 4 → 1 and the p-value 0.016 → ~0.54. It
+was a serious hypothesis with real supporting evidence: the base worktree's own
+`results/proto_just_explore_budget_scan.json` documents this codebase's explore path as
+nondeterministic across fresh processes — *"ar25@2000 with the SAME seed in three FRESH processes
+gave atfl=362, then 153, then no-solve … dict/set iteration order in the graph explorer's frontier
+(untested_edges from hash-keyed structures, PYTHONHASHSEED randomized per process)"* — and
+`probe_cell.py` pins no `PYTHONHASHSEED` on either arm.
+
+**Settled by running the arm rather than by arguing about it.** A `baseb` arm (8441055c0 again, same
+worktree, same seeds, same config) was run on the four attributable cells: **base vs baseb IDENTICAL
+on all four** — tu93 28/28, tr87 27/27, tn36 31/31, vc33 14/14, zero divergences, base-arm floor
+**0/4**. The hypothesis is refuted; the attributable count stands at 4. The review was right that the
+assumption was unlicensed and wrong about which way it would fall — which is exactly why it had to be
+measured. Stated as a limit rather than a reassurance: this is an empirical result about these four
+cells at budget=60, not a proof the hash channel is closed. Any future grid should pin
+`PYTHONHASHSEED` on both arms.
+
+**The instrument was fixed, not just the artifact.** `preflight_verdict` accepted ONE `noise_pairs`
+mapping and treated it as certifying a comparison that spans TWO arms — so a grid whose control arm
+was the noisy one would credit the control's self-perturbation to the treatment and the module would
+stamp it attributable. It now takes `noise_pairs_b`; attribution requires EVERY supplied noise
+mapping to witness the cell, a cell absent from one mapping is unwitnessed rather than passed, and a
+single-arm call returns `single_arm_noise_floor_warning` (printed by `format_report`, because the
+realistic misuse is a caller who reads `noise_floor_measured: True` and stops). Eight new tests; the
+36 pre-existing ones pass unchanged.
+
+**A COMPUTE-BOUND ARTIFACT COULD OMIT `duration_s` AND PASS THE DURATION CHECK IN SILENCE.**
+`check_duration_vs_claim` returns immediately on a non-finite duration, so an artifact declaring
+`inference_substrate: live_llm_inference` (60s floor) with `duration_s: null` was reported clean —
+and that clean result was then cited as evidence the artifact was sound. Verified by injection on the
+real artifact: `1.0` and `0.0001` fire CRITICAL, `null` passes. That is strictly worse than a short
+duration — omitting the field makes a fabricator invisible to the check built to catch them, while an
+honest 35s run gets flagged. CLAUDE.md names `duration_s` as *the* load-bearing fabrication signal.
+Fixed in `check_methodology_present`, which already gates on the right population and carries every
+legitimate exemption (aggregation-only, ARC no-LLM, deterministic verifier, precondition-blocked).
+**Corpus impact measured before shipping over all 6311 artifacts: 656 gain the string inside a
+METHODOLOGY_MISSING warn they already carried, and ZERO acquire a warn they did not have.** Twelve new
+tests.
+
+**A GUARD WHOSE ADVICE DESTROYS WORK.** `scripts/test_suite_mutation_check.py --check` answered
+"which tracked files changed?" and then printed `git checkout --` over the union, as though it had
+answered "which files did the run write?". It has now aimed that at authored work three times. The
+prior survey concluded this was unfixable because "a test's write and a human's concurrent edit are
+identical events at the file level" — the premise is true and the conclusion does not follow: they
+are distinct at the PROCESS level, and the documented damage mechanism (`runpy.run_path`) is
+in-process, so `sys.addaudithook` observes it directly. `scripts/_mutation_observer/sitecustomize.py`
+records every path an interpreter opens for writing; only ATTRIBUTED paths are reverted. Replayed
+against the 6-file incident: pre-fix destroys 6/6, post-fix destroys 0/6 **and still restores the
+genuine artifact rewrite**. Five further defects found while building it — xdist workers unobserved
+under the default `-n 4` (attribution would have been dead under exactly the invocation behind all
+three incidents), `atexit` flush too late, missing log directory, an append-only log that let run 20
+attribute run 1's write, and a module-level constant defeating the test fixture's monkeypatch.
+
+**TWO REVIEW ITEMS WERE WRONG ON THEIR SPECIFICS.**
+
+1. *"2 of the 3 A/B truncation events dropped the HEAD cell (cd82 head, sc25 head)."* Checked against
+   the cells: the three events are head/cd82 (hard SIGTERM), headb/sc25 (hard SIGTERM) and base/su15
+   (soft 1200s cap). sc25's truncated arm is **headb**, which is in the A/A arm and costs an A/A
+   observation, not an A/B one. Of the TWO A/B truncation events, one dropped head and one dropped
+   base — symmetric, not head-selecting. The broader point survives in a weaker form and is recorded:
+   2 of 3 events across the whole grid landed on head-arm code, and head is 2.5–3.1x slower on
+   exactly the two cells where the treatment activates (vc33 3.12x, tn36 2.47x) while being FASTER on
+   tu93 and su15. Flagged as a candidate scored-efficiency regression alongside vc33's
+   `actions_to_first_solve` 10 → 15.
+2. *"Every A/A pair spanned both GPUs"* — the review was right that this was false, and the corrected
+   count is 7 of 8, not 5 of 6. tu93 is the exception. The base-arm replicate partly closes it: tu93's
+   base/baseb ran on the same card but in DIFFERENT server processes (fresh model load, fresh prompt
+   cache) and came back byte-identical; the other three attributable cells crossed both cards and both
+   processes.
+
+**FOUR REPORTING-BASIS CORRECTIONS.**
+
+- **The Fisher table compared mismatched cell sets** (5/7 vs 0/6 — cd82 in the A/B numerator but
+  absent from the A/A denominator; su15 the reverse) and counted cd82 as a perturbation in the test
+  while excluding it from `attributable_cells` as unattributable. Now reports the matched-cell table
+  **4/5 vs 0/5, p=0.0238** as primary, the attributable-consistent **4/7 vs 0/6, p=0.0490** alongside,
+  and demotes the original 5/7 vs 0/6 (p=0.0163) to a labelled upper bound. Also discloses that the
+  rows are NOT independent — both contain the entire head arm — so the p-values are an effect-size
+  sanity check, not a formal test.
+- **`structural_channel_check` contradicted itself.** It asserted that on a no-plan cell "the two arms
+  are GUARANTEED to emit identical traces", while tn36, tr87 and tu93 were all listed as no-plan AND
+  classified PERTURBED. The claim conflated the INDUCTION channel with the ACTION STREAM: a plan is
+  the only route from an induction change to the actions, but the explore stream runs regardless.
+  Retracted, and the count split — **attributable-to-the-SPAN = 4, attributable-to-INDUCTION = 1
+  (vc33)**. The second is the number that speaks to what this session shipped.
+- **A stale sentence was doing load-bearing work.** `methodology_note` asserted "the A/B truncation
+  count is 0" — carried over from a 6-game build — and that sentence was the stated justification for
+  dismissing a CRITICAL TAUTOLOGY flag. The artifact's own `preflight_verdict_full` said 1 (su15). Now
+  computed from the run, with the equal-by-construction argument stated as a property of the
+  DEFINITION rather than a claim about this run.
+- **`duration_s` recorded**: 14811.8s elapsed across both drivers, 21023.6s of summed cell compute.
+
+**A FOURTH INSTANCE OF THE SAME COMPARATOR BUG, found by review.** The external/native trace
+cross-check reported `_all_head_cells_agree: false` with mismatches at action index 1–2 — inside the
+region where the artifact's own class-1 divergences live — while the prose correctly said the two
+recorders agree action-for-action. The prose was right and the FIELD was wrong: a data-less action is
+`ACTION7|None` externally and `{"action":7}` natively, so one side produced the four-character STRING
+"None" and the other a genuine absent value. Fixed, extended to the headb cells, and **all 14 cells
+now agree**. This is the same missing-vs-present error as the three already recorded in the artifact
+(INERT on zero usable observations, the fairness audit reading an absent witness as a differing value,
+truncation coded as a zero). Four independent instances in one session is itself the finding: this
+codebase's comparators default to treating "no value" as "a value", and that default has been wrong
+every single time.
+
+**Verdicts.** Do the session's code fixes change the live agent — **YES**, 4 of 7 usable cells
+perturb attributably against a 0/6 head floor and a 0/4 base floor. But only **1** of those four sits
+on a cell where the induction channel was open, so the evidence that *the induction work specifically*
+reached the agent is n=1. Banked levels: **unchanged, still 3/3** — no banked-levels grid was run, and
+this pre-flight measures activation, never benefit. Submission gate: **NOT MET**, and the gate is
+mis-calibrated — the real leaderboard is 0.08 ×3 and 0.12 ×1 across five weeks, so the standing
+"beat our best prior submitted run" is anchored to a single-observation maximum that is plausibly
+variance around a flat 0.08 level.
+
+**Artifact:** `results/outer_loop_arc_composite_treatment_activation_preflight_head_vs_8441055c0_20260730.json`
+(`adversarial_verify` clean, 0 flagged — and now with `duration_s` present, so the duration check
+actually ran rather than skipping).
+
 ## 2026-07-30 (outer-loop: an undisclosed quality-gate relaxation reverted, the dedup key's partition fixed a second time, and the branching-factor lever devalued to noise)
 
 **Instruction:** apply an 18-item adversarial review of the day's three commits — arguing back with

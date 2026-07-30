@@ -221,14 +221,55 @@ def pytest_configure(config) -> None:
     #
     # Taking the baseline HERE closes that: the marker is armed from inside pytest, so opting out
     # requires opting out of pytest. Cost is one `git status --porcelain` per session.
+    #
+    # AND OBSERVE WHAT THIS RUN WRITES (2026-07-30).
+    #
+    # The baseline says WHETHER the tree moved. It cannot say WHO moved it, and the difference
+    # matters because the advice ("git checkout -- <paths>") is unrecoverable: it has been aimed
+    # at a concurrent agent's authored work three times now. So alongside the baseline we install
+    # an audit hook recording what the run writes -- `runpy.run_path` on a real experiment script,
+    # the documented damage mechanism, is an in-process event and therefore directly observable.
+    # See `test_suite_mutation_check.classify()`.
+    #
+    # THE OBSERVER MUST RUN IN THE WORKERS, NOT JUST THE CONTROLLER. This suite defaults to
+    # `-n 4` (pyproject addopts): the controller collects and the WORKERS execute. Installing only
+    # in the controller would watch the one process that never calls `runpy.run_path`, record
+    # nothing, and silently degrade every mutation to UNATTRIBUTED -- attribution switched off
+    # under exactly the default invocation, which is the invocation behind all three incidents.
+    # The controller pins the run id into the environment before spawning, so every worker
+    # resolves the same id and appends to the SAME log; `read_observed` takes the union.
     config._carnot_mutation_baseline = None
-    if not _is_xdist_worker(config):
-        mod = _mutation_check_module()
-        if mod is not None:
-            try:
-                config._carnot_mutation_baseline = mod.dirty_tracked()
-            except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
-                config._carnot_mutation_baseline = None
+    config._carnot_mutation_run_id = None
+    config._carnot_mutation_flush = None
+    mod = _mutation_check_module()
+    if mod is None:
+        return
+    is_worker = _is_xdist_worker(config)
+    try:
+        if not is_worker:
+            # Pin BEFORE the workers are spawned, so every one of them resolves to this id.
+            os.environ.setdefault(mod.RUN_ID_ENV, mod.resolve_run_id())
+            # This session is a new observation window. The log is append-only (so four workers
+            # can share it without locking), and this path never calls `snapshot()` -- it holds
+            # its baseline in memory -- so nothing else would clear it. Under a pinned
+            # $CARNOT_MUTATION_RUN_ID, session 20 would otherwise still see session 1's writes.
+            # Cleared in the CONTROLLER only, and before any worker is spawned, so a worker can
+            # never truncate the log a sibling worker is appending to.
+            mod.reset_writes(mod.resolve_run_id())
+        run_id = mod.resolve_run_id()
+        # Held so sessionfinish can flush BEFORE it reads: atexit is far too late.
+        config._carnot_mutation_flush = mod.install_write_observer(mod._writes_path(run_id))
+        config._carnot_mutation_run_id = run_id
+    except Exception:  # noqa: BLE001 - observation is a diagnostic, never a blocker
+        config._carnot_mutation_run_id = None
+
+    # The BASELINE and the marker stay controller-only: they must be taken once for the session,
+    # and four workers each arming their own marker would quadruple the noise for one event.
+    if not is_worker:
+        try:
+            config._carnot_mutation_baseline = mod.dirty_tracked()
+        except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
+            config._carnot_mutation_baseline = None
 
 
 def _clear_guard_violations() -> None:
@@ -315,31 +356,63 @@ def pytest_sessionfinish(session, exitstatus) -> None:
 
     # Close the interlock armed in pytest_configure. Any tracked file that is dirty NOW but was
     # clean at session start was rewritten by this run; record it so the pre-commit gate refuses
-    # to publish it. This only ARMS a marker -- it never reverts a file, because the detector
-    # cannot distinguish a test's write from a human's concurrent edit and auto-reverting has
-    # already destroyed in-flight work twice (see test_suite_mutation_check.backup()).
+    # to publish it. This only ARMS a marker -- it never reverts a file: arming is safe and
+    # reverting is not (see test_suite_mutation_check.backup()).
     config = session.config
+
+    # FLUSH FIRST, AND IN EVERY PROCESS, before the worker early-return below.
+    # `install_write_observer` buffers in memory and writes at exit, which is too late here twice
+    # over. In a WORKER: the controller may read the log before the worker's interpreter has
+    # exited, so a worker that flushed only at exit would contribute nothing and its writes --
+    # which under `-n 4` are ALL of the real writes -- would come out UNATTRIBUTED. In the
+    # CONTROLLER: sessionfinish runs long before atexit, so reading first would attribute nothing.
+    flush = getattr(config, "_carnot_mutation_flush", None)
+    if flush is not None:
+        # Suppressed deliberately: a diagnostic must never break the suite it guards.
+        with contextlib.suppress(Exception):
+            flush()
+
     baseline = getattr(config, "_carnot_mutation_baseline", None)
     if baseline is None or _is_xdist_worker(config):
         return
     mod = _mutation_check_module()
     if mod is None:
         return
+
     try:
-        muts = mod.arm_from_pytest(baseline, ["pytest", *sys.argv[1:]])
+        run_id = getattr(config, "_carnot_mutation_run_id", None)
+        muts = mod.arm_from_pytest(baseline, ["pytest", *sys.argv[1:]], run_id)
+        # Only files this run was OBSERVED writing may carry the `git checkout --` suggestion.
+        # The rest changed in the same window but not by this run's hand -- most often a
+        # concurrent agent editing the same tree -- and telling the operator to revert those is
+        # how this guard destroyed authored work three times.
+        attributed = mod.attributed_from_pytest(baseline, run_id)
     except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
         return
     if muts:
-        warnings.warn(
-            pytest.PytestWarning(
-                f"This test run REWROTE {len(muts)} tracked file(s) that were clean before it: "
-                f"{muts[:5]}{' ...' if len(muts) > 5 else ''}. These are the committed research "
-                f"record, not test output. Commits are now blocked until this is resolved -- run "
-                f"`python3 scripts/test_suite_mutation_check.py --gate` to list every affected "
-                f"file, then `git checkout -- <paths>` (the marker retires itself once the tree "
-                f"shows the damage undone). Do NOT reach for `--check` here: it needs a baseline "
-                f"taken before the run under a matching --run-id, and this hook keeps its baseline "
-                f"in memory rather than on disk, so `--check` would refuse."
-            ),
-            stacklevel=2,
+        other = [p for p in muts if p not in attributed]
+        parts = [
+            f"This test run modified {len(muts)} tracked file(s) that were clean before it. "
+            f"Commits are blocked until this is resolved -- run "
+            f"`python3 scripts/test_suite_mutation_check.py --gate` to list every affected file."
+        ]
+        if attributed:
+            parts.append(
+                f"ATTRIBUTED TO THIS RUN ({len(attributed)}, observed being written): "
+                f"{attributed[:5]}{' ...' if len(attributed) > 5 else ''}. These are the committed "
+                f"research record, not test output -- `git checkout -- <paths>` restores them and "
+                f"the marker retires itself once the tree shows the damage undone."
+            )
+        if other:
+            parts.append(
+                f"NOT ATTRIBUTED ({len(other)}): "
+                f"{other[:5]}{' ...' if len(other) > 5 else ''}. This run was not observed writing "
+                f"these; they may be a concurrent agent's in-flight work. Do NOT blanket "
+                f"`git checkout --` them -- check authorship first."
+            )
+        parts.append(
+            "Do NOT reach for `--check` here: it needs a baseline taken before the run under a "
+            "matching --run-id, and this hook keeps its baseline in memory rather than on disk, "
+            "so `--check` would refuse."
         )
+        warnings.warn(pytest.PytestWarning(" ".join(parts)), stacklevel=2)

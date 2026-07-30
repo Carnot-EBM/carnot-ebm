@@ -2643,6 +2643,21 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
         or d.get("seeds")
     )
     has_repro = d.get("reproducibility_checksum")
+    # duration_s (added 2026-07-30). `check_duration_vs_claim` returns immediately when
+    # duration_s is absent or non-finite, so a compute-bound artifact that simply OMITS the
+    # field sails past the entire DURATION_TOO_SHORT family in silence. Verified directly on
+    # this session's composite pre-flight artifact: injecting duration_s=1.0 or 0.0001 fires
+    # CRITICAL DURATION_TOO_SHORT, while duration_s=null passes clean -- so "adversarial_verify
+    # clean" was not evidence of duration plausibility, because the field the check is DEFINED
+    # on was absent. That is strictly worse than a short duration: a fabricator who omits the
+    # field is invisible to the check built to catch them, while an honest one who records 35s
+    # gets flagged. CLAUDE.md's Adversarial Artifact Verification rule lists duration_s as the
+    # load-bearing fabrication-detection signal precisely because real compute takes wall-clock
+    # time, so its ABSENCE on a compute-bound artifact is a methodology gap in exactly the same
+    # sense as a missing seed. Reported at `warn`, alongside the other three, rather than as a
+    # critical: the corpus predates the requirement and quarantining historical artifacts for a
+    # newly-added field would be a retroactive gate, not a fabrication finding.
+    has_duration = _is_finite_number(d.get("duration_s"))
     missing = []
     if not has_model_spec:
         missing.append("model_specs/target_model")
@@ -2650,6 +2665,8 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
         missing.append("random_seed")
     if not has_repro:
         missing.append("reproducibility_checksum")
+    if not has_duration:
+        missing.append("duration_s")
     if missing:
         flags.append(
             Flag(

@@ -567,7 +567,11 @@ def test_check_honours_a_pinned_run_id_from_the_environment(repo, monkeypatch, c
     art.write_text('{"experiment": 3946, "duration_s": 7.7}\n')
     assert tsm.main(["--check"]) == 1
     out = capsys.readouterr().out
-    assert "MODIFIED BY THE RUN" in out, (
+    # Heading reworded 2026-07-30 with attribution: "MODIFIED BY THE RUN" was a claim the tool
+    # could not support (this rewrite was made by the TEST process, not by an observed run), and
+    # asserting it here would re-pin the overclaim the split exists to remove. The assertion's
+    # intent is unchanged -- it still pins WHICH refusal this is.
+    assert "MODIFIED SINCE THE BASELINE" in out, (
         f"must REPORT the rewrite, not refuse for lack of a baseline: {out}"
     )
     assert "results/experiment_3946_r11l_first_solve.json" in out
@@ -671,3 +675,258 @@ def test_the_legacy_shared_baseline_is_not_used_even_when_present(repo):
 
     assert tsm._load_snapshot() is None, "the shared baseline must not be adopted"
     assert tsm.main(["--check"]) == 1, "and with no baseline of its own, --check refuses"
+
+
+# ---------------------------------------------------------------------------------------------
+# ATTRIBUTION (2026-07-30, third destroyed-work incident)
+# ---------------------------------------------------------------------------------------------
+# The tool reported "changed since the baseline" and advised on "written by the run" -- two
+# different claims -- and printed `git checkout -- <paths>` over the union. That advice is
+# unrecoverable and has now been aimed at authored work three times. `classify()` splits the two
+# using what the run was OBSERVED writing; only the attributed half is ever reverted or advised.
+
+#: The concurrent lane's authored files in the 2026-07-30 incident. Three are the real paths that
+#: lane had open (they were still modified in the tree when this was written); the other three
+#: stand in for the rest of the six, which were never recorded individually. The set matters as a
+#: CLASS -- prose and state that no test writes -- not as six specific names.
+_CONCURRENT_LANE_FILES = (
+    "docs/research-notes/arc-agi3-news-watch.md",
+    "docs/research-notes/arc-agi3-leaderboard-technique-watch.md",
+    "ops/.arc_leaderboard_technique_watch_state.json",
+    "docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md",
+    "ops/known-issues.md",
+    "docs/research-notes/arc-agi3-generalization-floor.md",
+)
+
+
+def _seed_concurrent_lane(r: Path) -> dict[str, bytes]:
+    """Commit the six files, then return the AUTHORED content each will carry mid-run."""
+    for rel in _CONCURRENT_LANE_FILES:
+        p = r / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(f"# {rel}\n\ncommitted baseline prose\n")
+    _git(r, "add", "-A")
+    _git(r, "commit", "-q", "-m", "seed concurrent lane files")
+    return {
+        rel: (
+            f"# {rel}\n\ncommitted baseline prose\n\n"
+            f"## section authored DURING the test run -- not recoverable if reverted\n"
+        ).encode()
+        for rel in _CONCURRENT_LANE_FILES
+    }
+
+
+def test_authored_edits_are_not_blamed_on_the_run_that_ran_beside_them(repo, monkeypatch, capsys):
+    """REPLAY OF THE 2026-07-30 INCIDENT. Six authored files, one real rewrite, one `--check`.
+
+    What happened: a lane took a baseline, a test run rewrote an artifact, and a CONCURRENT agent
+    authored six files in the same window. ``--check`` reported all seven as
+    "TRACKED FILE(S) MODIFIED BY THE RUN" and printed ``git checkout -- <paths>``. Only a
+    by-hand mtime+content audit stopped six files of authored work from being reverted; the same
+    advice had already destroyed the survey document twice (its sections 3.6 and 7b.3).
+
+    The survey concluded this was unfixable -- "at the file level they are identical events".
+    They are, and they are NOT identical at the process level: the damage mechanism runs inside
+    the interpreter, so the run can watch itself. This test pins that the split is real by
+    driving both writers for real in a throwaway repo.
+    """
+    r, art = repo
+    authored = _seed_concurrent_lane(r)
+    committed = {rel: (r / rel).read_bytes() for rel in _CONCURRENT_LANE_FILES}
+    monkeypatch.setenv(tsm.RUN_ID_ENV, "incident-replay")
+    tsm.snapshot()
+
+    # (1) THE TEST RUN. An observed Python child rewrites the artifact in place -- the real
+    #     `runpy.run_path`-writes-its-artifact mechanism, reduced to its essentials.
+    child = subprocess.run(
+        [sys.executable, "-c", f"open({str(art)!r},'w').write('{{\"experiment\": 3946}}')"],
+        env=tsm.observer_env("incident-replay"),
+        cwd=r,
+        capture_output=True,
+    )
+    assert child.returncode == 0, child.stderr
+
+    # (2) THE CONCURRENT LANE, writing in the same window and NOT part of the run.
+    for rel, content in authored.items():
+        (r / rel).write_bytes(content)
+
+    # Both are "modified since the baseline" -- the signal the old tool had, and all it had.
+    muts = tsm.mutations(tsm._load_snapshot("incident-replay"))
+    assert len(muts) == 7, muts
+
+    observed = tsm.read_observed("incident-replay")
+    attributed, unattributed = tsm.classify(muts, observed)
+
+    assert attributed == ["results/experiment_3946_r11l_first_solve.json"], (
+        f"only the file the run was seen writing may be attributed to it: {attributed}"
+    )
+    assert sorted(unattributed) == sorted(_CONCURRENT_LANE_FILES), (
+        f"every authored file must land outside the run's blame: {unattributed}"
+    )
+
+    # (3) THE ADVICE. The authored files must not be offered up for reverting.
+    assert tsm.main(["--check", "--run-id", "incident-replay"]) == 1
+    out = capsys.readouterr().out
+    checkout_advice = out.split("UNATTRIBUTED")[0]
+    assert "git checkout --" in checkout_advice, "the real rewrite still gets its restore advice"
+    for rel in _CONCURRENT_LANE_FILES:
+        assert rel not in checkout_advice, (
+            f"{rel} was authored, not written by the run -- it must never appear above the "
+            f"UNATTRIBUTED heading, where the git checkout advice lives"
+        )
+
+    # (4) THE ACT. --restore reverts the rewrite and leaves every authored byte where it is.
+    assert tsm.main(["--check", "--run-id", "incident-replay", "--restore"]) == 1
+    assert (
+        art.read_bytes()
+        == json.dumps(
+            {
+                "experiment": 3946,
+                "duration_s": 4.21,
+                "solve_provenance": "development_proxy",
+                "inference_substrate_correction_note": "2026-07-27: original declaration illegal",
+            },
+            indent=2,
+        ).encode()
+        + b"\n"
+    ), "the attributed rewrite must be restored to its committed content"
+    for rel, content in authored.items():
+        assert (r / rel).read_bytes() == content, f"{rel} was reverted -- the incident recurred"
+        assert (r / rel).read_bytes() != committed[rel]
+
+
+def test_an_unobserved_run_attributes_nothing_rather_than_everything(repo, monkeypatch):
+    """FAIL SAFE. No observation must mean "cannot attribute", never "attribute it all".
+
+    A run that was killed before it flushed, or one whose writer was not a Python process, leaves
+    no log. The tempting reading is "no evidence of another writer, so it must have been the
+    run" -- which restores exactly the blanket behaviour that caused all three incidents. The
+    honest reading is that nothing is known, so nothing is reverted. The interlock still arms, so
+    the record stays protected; only the destructive suggestion is withheld.
+    """
+    r, art = repo
+    authored = _seed_concurrent_lane(r)
+    monkeypatch.setenv(tsm.RUN_ID_ENV, "never-observed")
+    tsm.snapshot()
+
+    art.write_text('{"experiment": 3946, "rewritten": true}\n')
+    for rel, content in authored.items():
+        (r / rel).write_bytes(content)
+
+    assert tsm.read_observed("never-observed") is None, "no log was ever written"
+    muts = tsm.mutations(tsm._load_snapshot("never-observed"))
+    attributed, unattributed = tsm.classify(muts, tsm.read_observed("never-observed"))
+    assert attributed == []
+    assert len(unattributed) == 7
+
+    assert tsm.main(["--check", "--run-id", "never-observed", "--restore"]) == 1
+    for rel, content in authored.items():
+        assert (r / rel).read_bytes() == content, f"{rel} was reverted without any evidence"
+    assert art.read_text() == '{"experiment": 3946, "rewritten": true}\n', (
+        "even the artifact must survive: without observation the tool cannot know the run wrote it"
+    )
+
+
+def test_the_marker_records_which_files_the_run_was_seen_writing(repo, monkeypatch, capsys):
+    """--gate must not tell the operator to revert what the run was not seen writing."""
+    r, art = repo
+    authored = _seed_concurrent_lane(r)
+    monkeypatch.setenv(tsm.RUN_ID_ENV, "marker-split")
+
+    rc = tsm.cmd_run(
+        [
+            sys.executable,
+            "-c",
+            f"open({str(art)!r},'w').write('{{\"experiment\": 3946}}')",
+        ],
+        do_restore=False,
+    )
+    assert rc == 1
+    for rel, content in authored.items():
+        (r / rel).write_bytes(content)
+
+    marker = json.loads(next(tsm.RUNS.glob("*.pending.json")).read_text())
+    assert marker["write_observation"] == "recorded"
+    assert marker["attributed_to_run"] == ["results/experiment_3946_r11l_first_solve.json"]
+
+    capsys.readouterr()
+    assert tsm.cmd_gate() == 1, "the interlock still refuses -- attribution narrows advice only"
+    gate_out = capsys.readouterr().out
+    assert "[run wrote it]   results/experiment_3946_r11l_first_solve.json" in gate_out
+
+
+def test_observation_reaches_a_grandchild_process(repo, monkeypatch, tmp_path):
+    """The observer must survive process boundaries, because that is where the writes happen.
+
+    This suite runs under ``-n 4`` (pyproject addopts): the controller collects and the WORKERS
+    execute, so an observer that lived only in the process that installs it would watch the one
+    interpreter that never calls ``runpy.run_path``. Every real write would then come out
+    UNATTRIBUTED -- attribution switched off precisely under the default invocation, which is the
+    invocation behind all three incidents.
+
+    ``observer_env`` closes that by putting ``scripts/_mutation_observer`` on PYTHONPATH, so every
+    descendant interpreter installs the hook at startup. A python-spawning-python chain is exactly
+    the controller/worker shape, one generation deeper for good measure.
+    """
+    r, _ = repo
+    monkeypatch.setenv(tsm.RUN_ID_ENV, "grandchild")
+    target = tmp_path / "written_by_the_grandchild.txt"
+    grandchild = f"open({str(target)!r},'w').write('x')"
+    child = (
+        f"import subprocess,sys; subprocess.run([sys.executable,'-c',{grandchild!r}],check=True)"
+    )
+
+    proc = subprocess.run(
+        [sys.executable, "-c", child],
+        env=tsm.observer_env("grandchild"),
+        cwd=r,
+        capture_output=True,
+    )
+    assert proc.returncode == 0, proc.stderr
+
+    log = (tsm.RUNS / "grandchild.writes.log").read_text()
+    assert str(target) in log, (
+        "a write two process generations down was not observed; under -n 4 that is every write "
+        f"the suite makes: {log}"
+    )
+
+
+def test_a_new_baseline_discards_the_previous_windows_observations(repo, monkeypatch, tmp_path):
+    """Observation must mean "in THIS window", or a stale write becomes a wrong revert.
+
+    The write log is append-only so four xdist workers can share one file without locking. The
+    documented agent workflow PINS one ``$CARNOT_MUTATION_RUN_ID`` for a whole session, so without
+    a reset the log grows across every run under that id. Run 20's ``--check`` would then still
+    see run 1's writes -- and ``--restore`` would revert a file on run 1's evidence, even after a
+    human edited it by hand in between. That is the incident this whole change exists to stop,
+    arriving by a slower route.
+    """
+    r, art = repo
+    monkeypatch.setenv(tsm.RUN_ID_ENV, "windowed")
+
+    # WINDOW 1: a run writes the artifact.
+    tsm.snapshot("windowed")
+    subprocess.run(
+        [sys.executable, "-c", f"open({str(art)!r},'w').write('{{\"experiment\": 3946}}')"],
+        env=tsm.observer_env("windowed"),
+        cwd=r,
+        check=True,
+        capture_output=True,
+    )
+    assert tsm.read_observed("windowed") == {"results/experiment_3946_r11l_first_solve.json"}
+    _git(r, "checkout", "--", ".")
+
+    # WINDOW 2: a NEW baseline, and this time a human edits that same file by hand.
+    tsm.snapshot("windowed")
+    assert tsm.read_observed("windowed") is None, "the previous window's log must not survive"
+
+    art.write_text('{"experiment": 3946, "edited_by_hand": true}\n')
+    muts = tsm.mutations(tsm._load_snapshot("windowed"))
+    attributed, unattributed = tsm.classify(muts, tsm.read_observed("windowed"))
+    assert attributed == [], "a write from a previous window must not be attributed to this one"
+    assert unattributed == ["results/experiment_3946_r11l_first_solve.json"]
+
+    assert tsm.main(["--check", "--run-id", "windowed", "--restore"]) == 1
+    assert art.read_text() == '{"experiment": 3946, "edited_by_hand": true}\n', (
+        "the hand edit was reverted on a previous window's evidence"
+    )
