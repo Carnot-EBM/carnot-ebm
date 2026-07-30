@@ -132,6 +132,12 @@ def main() -> None:
         "start_hv": result.start_hv,
         "best_hv": result.best_hv,
         "hv_progress": result.hv_progress,
+        # PER-LEVEL progress (REQ-ARC-WMTE-6045). `hv_progress` / `best_hv` above are GLOBAL and
+        # their baseline was never reset at a level-up, so on a run that levelled up they score a
+        # later level's board against the FIRST level's starting distance. Kept for continuity;
+        # `hv_progress_best_level` is the figure to read.
+        "hv_progress_per_level": result.hv_progress_per_level,
+        "hv_progress_best_level": result.hv_progress_best_level,
         "n_inductions": result.n_inductions,
         "n_plans_found": result.n_plans_found,
         "plan_found_rate": result.plan_found_rate,

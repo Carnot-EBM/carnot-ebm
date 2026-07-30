@@ -787,6 +787,52 @@ def _goal_satisfiability_check(
             if engine_calls >= int(max_nodes):
                 break
 
+    # WHY THE TERMINATION REASON IS REPORTED SEPARATELY (2026-07-30).
+    #
+    # This loop can stop for two reasons that mean OPPOSITE things about the goal predicate, and
+    # until now both returned `kind: degenerate_goal_predicate`:
+    #
+    #   * `q` is empty -- the reachable set was searched EXHAUSTIVELY and the goal is never true.
+    #     That is real evidence against the predicate. Sound to veto on.
+    #   * `engine_calls >= max_nodes` -- the BUDGET ran out. This says nothing whatsoever about
+    #     the predicate; it says the board is big. Vetoing on it is unsound.
+    #
+    # Conflating them was harmless while the budget was ~11x more permissive than the planner's
+    # (the pre-counter-fix state: this loop counted unique grids, `plan_in_model` counted raw
+    # engine calls). Making the two consistent made it live and severe: ka59's PROVEN-CORRECT
+    # depth-11 predicate needs ~137k engine calls to demonstrate, the shipped budget is 20k, so
+    # the gate now returns `degenerate_goal_predicate` on a correct goal -- and the caller's
+    # GOAL-REPAIR then SUBSTITUTES a looser "strictly fuller than root" proxy and plans to a
+    # NON-WINNING goal. A budget ceiling silently became a goal rewrite.
+    #
+    # All 18 occurrences in the historical corpus were genuine exhaustion, so nothing recorded is
+    # invalidated by this split -- but every occurrence from the counter fix onward would have
+    # been the budget case.
+    # Keyed on the BUDGET alone, deliberately not on `q` being non-empty. When the budget is hit
+    # the inner loop `break`s and DISCARDS the current grid's remaining candidate expansions --
+    # they are never appended to `q` -- so `q` can be empty at that moment while successors went
+    # unexplored. "Frontier empty" is therefore only evidence of exhaustiveness when the budget
+    # was NOT the thing that stopped us. `frontier_remaining` is still reported so a reader can
+    # see which shape occurred.
+    #
+    # NB `queue_exhausted` means exhaustive WITHIN `max_depth` -- nodes dropped by the depth cap
+    # are not expanded either. Vetoing a goal as unreachable-within-depth is defensible (the
+    # planner it guards is bounded the same way); vetoing on a spent budget is not.
+    budget_exhausted = engine_calls >= int(max_nodes)
+    kind = "goal_unreached_within_budget" if budget_exhausted else "degenerate_goal_predicate"
+    termination = "budget_exhausted" if budget_exhausted else "queue_exhausted"
+    detail = (
+        (
+            "the reachability probe ran out of budget with the frontier still non-empty, so "
+            "whether this goal is reachable is UNKNOWN. This is NOT evidence that the "
+            "predicate is degenerate and must not be treated as such."
+        )
+        if budget_exhausted
+        else (
+            "the reachable set was searched exhaustively (frontier empty) and the goal was "
+            "never true, so this predicate is unreachable under this engine."
+        )
+    )
     return {
         "satisfiable": False,
         "reachable_grids_evaluated": int(evaluated),
@@ -795,8 +841,13 @@ def _goal_satisfiability_check(
         "max_nodes": int(max_nodes),
         "max_depth": int(max_depth),
         "budget_unit": "engine_calls_matching_plan_in_model",
+        "termination": termination,
+        "frontier_remaining": int(len(q)),
         "counterexample": {
-            "kind": "degenerate_goal_predicate",
+            "kind": kind,
+            "detail": detail,
+            "termination": termination,
+            "frontier_remaining": int(len(q)),
             "reachable_grids_evaluated": int(evaluated),
             "engine_calls": int(engine_calls),
             "max_nodes": int(max_nodes),
@@ -1331,7 +1382,29 @@ def execute_bounded_llm_reinduction(
             row["goal_satisfiability"] = {
                 key: value for key, value in goal_check.items() if key != "counterexample"
             }
-            if not round_goal_satisfiable:
+            # A gate that ran out of BUDGET has not disproved anything (2026-07-30). It must
+            # therefore neither fire GOAL-REPAIR (which would replace a possibly-correct
+            # predicate with a looser non-winning proxy) nor skip the round (which would throw
+            # away a possibly-correct engine). "Unknown" is not "false": the pre-veto exists to
+            # reject goals it can PROVE unreachable, and an undecided veto must not fire.
+            #
+            # The cost of falling through is bounded and self-correcting: `plan_in_model` runs
+            # next with the SAME budget on the SAME engine, so if the goal really is out of reach
+            # the planner simply fails to find a plan and says so -- which is the honest signal.
+            # The cost of the old behaviour was unbounded: a plan that "succeeds" against a goal
+            # nobody asked for.
+            goal_undecided_within_budget = not round_goal_satisfiable and (
+                str((goal_check.get("counterexample") or {}).get("kind", ""))
+                == "goal_unreached_within_budget"
+            )
+            row["goal_undecided_within_budget"] = bool(goal_undecided_within_budget)
+            if goal_undecided_within_budget:
+                # Recorded as a counterexample for the audit trail, but WITHOUT `row["skipped"]`,
+                # because the round is not being skipped.
+                last_counterexample = dict(goal_check.get("counterexample") or {})
+                counterexamples.append(last_counterexample)
+                row["counterexample"] = dict(last_counterexample)
+            if not round_goal_satisfiable and not goal_undecided_within_budget:
                 # GOAL-REPAIR: the LLM-induced goal is degenerate (constant-false / unreachable
                 # exact-match). Before giving up this round to an engine-refactor (which cannot fix
                 # the goal), try the exemplar-derived nonzero-count fallback against THIS engine.
@@ -1515,6 +1588,38 @@ def execute_bounded_llm_reinduction(
                 "plan_reaches_goal": bool(check["reaches_goal"]),
             }
         )
+        # A PLAN THAT REACHES THE GOAL IS A SATISFIABILITY PROOF (2026-07-30), and a stronger one
+        # than the pre-veto's bounded BFS: it exhibits an actual action sequence from the root to
+        # a state the predicate accepts, verified by `_plan_reaches_goal` against the same engine.
+        #
+        # This matters only in the budget-undecided case above. Without it the artifact would
+        # report `goal_predicate_satisfiable=false` next to a plan that provably reaches the goal
+        # -- self-contradictory, and it would trip
+        # `adversarial_verify.check_l2_goal_induction_satisfiability_overclaim` (critical) on a
+        # legitimate win, quarantining exactly the results the budget fix is meant to unblock.
+        # Scoped to the undecided case on purpose: a goal DISPROVED by exhaustive search is not
+        # promoted, and neither is one rejected at the root or by a predicate error.
+        if check["reaches_goal"] and goal_undecided_within_budget and not round_goal_satisfiable:
+            round_goal_satisfiable = True
+            round_goal_satisfiability = {
+                **dict(round_goal_satisfiability),
+                "satisfiable": True,
+                "satisfiability_evidence": "plan_in_model_found_a_plan_reaching_the_goal",
+                "satisfiability_evidence_note": (
+                    "the bounded reachability pre-veto ran out of budget without deciding; the "
+                    "planner then exhibited a concrete plan whose terminal state satisfies the "
+                    "predicate, which is a constructive proof of satisfiability"
+                ),
+            }
+            row["goal_predicate_satisfiable"] = True
+            row["goal_satisfiability"] = {
+                key: value
+                for key, value in round_goal_satisfiability.items()
+                if key != "counterexample"
+            }
+            if is_best:
+                last_goal_satisfiable = True
+                last_goal_satisfiability = dict(round_goal_satisfiability)
         if check["reaches_goal"]:
             rounds.append(row)
             return LlmReinductionResult(

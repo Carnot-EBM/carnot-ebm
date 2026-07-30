@@ -1,0 +1,825 @@
+{
+  "CONCLUSIONS": [
+    "The pre-flight REFUSES both grids. Grid 1: strict ceiling 1 of 12, best reachable p = 1.0. Grid 2: strict ceiling 2 of 5 comparable cells (3 of 8 were MISSING, all on the same arm -- the drop asymmetry that grid flagged itself), best reachable p = 0.5. Neither could have reached p<0.05 under any outcome.",
+    "RETRACTED (2026-07-30): the claim that grid 1's ATTRIBUTABLE perturbation is ZERO. It rested on a cross-experiment pairing that is not an A/A -- the held-out arm predates the retention treatment by >=6 agentic commits. Grid 1's one perturbed cell is UNATTRIBUTABLE, which is a weaker and honest statement. The REFUSE verdict is unaffected.",
+    "RETRACTED (2026-07-30): the '2 of 5 cells differ under IDENTICAL code' rate, for the same reason. Replaced by a real same-commit A/A: 1 of 2 pairs diverges EVEN WITH the sampler seed set (ft09, first divergence at action 26, and the two runs disagreed on whether a plan was found at all: 1 vs 0). n=2 supports 'this happens', not a rate, and no rate is claimed. The operational conclusion is unchanged and now rests on sound evidence: seeding the sampler is NECESSARY BUT NOT SUFFICIENT, so a noise floor must be MEASURED per grid rather than assumed.",
+    "The lesson generalises past this incident: a noise floor assembled out of convenient nearby data is not a noise floor. 'Same treatment flag' is not 'same code', and the check that catches it is structural -- compare the fields the two cells actually record, not an argument about how they were configured."
+  ],
+  "GRID_1_cross_experiment_pairing_RETRACTED": {
+    "RETRACTION": "This section previously reported a 'free A/A noise floor' built by pairing the retention grid's `ret1` cells against the held-out grid's `31b` cells, on the grounds that both were retention-ON at seed 1 on the same GGUF for the same anonymised game. THAT PAIRING IS NOT AN A/A AND THE CLAIMS DRAWN FROM IT ARE WITHDRAWN. The held-out cells ran BEFORE commit 11cd3c3a9 introduced engine retention at all -- they carry none of the retention_requested / retention_enabled_effective / retention_support fields that every post-11cd3c3a9 cell carries -- so at least six agentic commits separate the two sets and the comparison is an A/B of the very treatment under test.",
+    "SMALL_SAMPLE_CAVEAT_ALSO_RETRACTED_the_rate_it_qualified_is_withdrawn": "The A/A rate is 2 of 5 -- n=5. A 95% Wilson interval on that proportion is roughly [0.12, 0.77], so '40%' is a POINT ESTIMATE with very wide uncertainty and must not be quoted as a calibrated figure. What the five cells DO establish beyond the rate is the QUALITATIVE fact that matters: at least one cell (vc33) -- specifically the retention grid's only perturbed cell -- differs under identical code, so that grid's attributable perturbation is zero. That conclusion needs one counterexample, not a calibrated rate. The rate itself is reported only to convey that the floor is NOT negligible, and it is superseded by the direct root-cause finding: the generator sent no seed at all, which was then verified live (4 identical requests at T=0.4 gave 3 distinct completions unseeded, 1 seeded).",
+    "aa_pair_definition_RETRACTED_AS_INVALID": "ret1 (retention ON, retention-grid session) vs 31b (held-out-grid session). ASSERTED to differ only in session and wall_s cap. In fact differs in CODE: the held-out arm predates the retention treatment entirely.",
+    "aa_per_cell": {
+      "ft09": {
+        "a_complete": true,
+        "b_complete": true,
+        "cls": "IDENTICAL",
+        "common_prefix_len": 400,
+        "first_divergence_index": null,
+        "len_a": 400,
+        "len_b": 400,
+        "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+      },
+      "lp85": {
+        "a_complete": false,
+        "b_complete": true,
+        "cls": "PERTURBED",
+        "common_prefix_len": 26,
+        "first_divergence_index": 26,
+        "len_a": 27,
+        "len_b": 400,
+        "why": "traces diverge at action index 26"
+      },
+      "ls20": {
+        "a_complete": false,
+        "b_complete": false,
+        "cls": "BOTH_TRUNCATED",
+        "common_prefix_len": 27,
+        "first_divergence_index": null,
+        "len_a": 27,
+        "len_b": 27,
+        "why": "both arms were cut short after the same 27 actions and agreed on all of them. NEITHER arm reached an endpoint, so this pair cannot show that the treatment is inert and cannot serve as a determinism witness -- it is a MISSING observation, not a tie"
+      },
+      "tr87": {
+        "a_complete": true,
+        "b_complete": true,
+        "cls": "IDENTICAL",
+        "common_prefix_len": 400,
+        "first_divergence_index": null,
+        "len_a": 400,
+        "len_b": 400,
+        "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+      },
+      "vc33": {
+        "a_complete": true,
+        "b_complete": true,
+        "cls": "PERTURBED",
+        "common_prefix_len": 17,
+        "first_divergence_index": 17,
+        "len_a": 400,
+        "len_b": 400,
+        "why": "traces diverge at action index 17"
+      }
+    },
+    "claims_withdrawn": [
+      "the harness nondeterminism rate is 2 of 5 cells under IDENTICAL code",
+      "grid 1's ATTRIBUTABLE perturbation is ZERO",
+      "vc33's divergence cannot be a treatment effect because the partition crosses treatment lines"
+    ],
+    "corrected_status_of_grid_1s_one_perturbed_cell": "UNATTRIBUTABLE, not 'proven to be noise'. Its pre-registered ret0b/ret1b A/A arms were never run and the cross-experiment substitute is invalid, so whether vc33's divergence was treatment or harness noise is unknown. The pre-flight VERDICT is unchanged either way -- REFUSE, strict ceiling 1, best reachable p = 1.0 -- so the retraction costs a claim, not a decision.",
+    "invalid_pairing_identical_count_NOT_A_NOISE_FLOOR": 2,
+    "invalid_pairing_perturbation_count_NOT_A_NOISE_FLOOR": 2,
+    "restricted_to_games_with_a_replicate": [
+      "ft09",
+      "lp85",
+      "ls20",
+      "tr87",
+      "vc33"
+    ],
+    "verdict_the_invalid_pairing_WOULD_have_produced": {
+      "alpha": 0.05,
+      "attributable_cells": [],
+      "best_reachable_p_charitable": 0.5,
+      "best_reachable_p_strict": 1.0,
+      "cells_needed_at_observed_perturbation_rate": null,
+      "counts": {
+        "BOTH_TRUNCATED": 0,
+        "IDENTICAL": 2,
+        "MISSING": 0,
+        "PERTURBED": 1,
+        "TRUNCATION_ONLY": 2
+      },
+      "decision_basis": "projected_attributable_rate_at_planned_n",
+      "discordance_ceiling_charitable_counts_truncations": 2,
+      "discordance_ceiling_strict": 0,
+      "interpretation": "PASS means only that the treatment perturbs enough cells for the planned sign test to be ABLE to reach significance. It does NOT mean the experiment is powered: perturbation is necessary but not sufficient for discordance on the endpoint. REFUSE means no possible outcome of the grid reaches alpha, so running it cannot produce a finding.",
+      "n_comparable_cells": 5,
+      "n_perturbed_attributable": 0,
+      "n_perturbed_raw": 1,
+      "n_probed_cells": 5,
+      "n_truncation_affected": 2,
+      "n_usable_observations": 3,
+      "noise_floor_measured": true,
+      "noise_floor_warning": null,
+      "per_cell": {
+        "ft09": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "lp85": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "TRUNCATION_ONLY",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 27,
+          "shorter_arm": "b",
+          "why": "the shorter arm (b) was cut short before finishing; both arms agreed on all 27 actions they both took. This is a MISSING observation and must never be scored as a zero"
+        },
+        "ls20": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "TRUNCATION_ONLY",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 27,
+          "shorter_arm": "b",
+          "why": "the shorter arm (b) was cut short before finishing; both arms agreed on all 27 actions they both took. This is a MISSING observation and must never be scored as a zero"
+        },
+        "tr87": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "vc33": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 17,
+          "first_divergence_index": 17,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "traces diverge at action index 17"
+        }
+      },
+      "per_cell_noise": {
+        "ft09": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "lp85": {
+          "a_complete": false,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 26,
+          "first_divergence_index": 26,
+          "len_a": 27,
+          "len_b": 400,
+          "why": "traces diverge at action index 26"
+        },
+        "ls20": {
+          "a_complete": false,
+          "b_complete": false,
+          "cls": "BOTH_TRUNCATED",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 27,
+          "len_b": 27,
+          "why": "both arms were cut short after the same 27 actions and agreed on all of them. NEITHER arm reached an endpoint, so this pair cannot show that the treatment is inert and cannot serve as a determinism witness -- it is a MISSING observation, not a tie"
+        },
+        "tr87": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "vc33": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 17,
+          "first_divergence_index": 17,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "traces diverge at action index 17"
+        }
+      },
+      "perturbation_rate_over_comparable_counting_truncations_as_zero": 0.0,
+      "perturbation_rate_over_usable_observations": 0.0,
+      "planned_n_cells": 12,
+      "projected_attributable_cells_at_planned_n": 0.0,
+      "required_one_way_discordant_pairs": 6,
+      "sign_test_arithmetic": {
+        "1": 1.0,
+        "2": 0.5,
+        "3": 0.25,
+        "4": 0.125,
+        "5": 0.0625,
+        "6": 0.03125,
+        "7": 0.015625
+      },
+      "unattributable_cells_with_aa_class": {
+        "vc33": "PERTURBED"
+      },
+      "verdict": "REFUSE"
+    },
+    "what_replaces_them": "A real same-commit A/A, measured 2026-07-30 and committed at results/arc_goalspec_f9a458e87_preflight_20260730/cells: `post` vs `postb`, both at f9a458e87, identical effective sampler seed, identical GGUF / n_ctx / budget / explore_budget / max_inductions / game. See SAME_COMMIT_AA_FLOOR below.",
+    "why_that_verdict_is_not_a_finding": "Retained for auditability only. It is what the pre-flight returns when handed the invalid cross-experiment pairing AS IF it were an A/A. The REFUSE it reports happens to agree with the no-floor verdict, which is why the error was easy to miss -- an invalid control that produces the right answer is still an invalid control, and the next grid it is applied to may not be so forgiving."
+  },
+  "GRID_1_engine_retention_ab": {
+    "cell_sha256": {
+      "ret0__cd82": "b16758c432b35604108529b9fa4519a7ad212724f6dc8b5595961ebb5e5387ad",
+      "ret0__cn04": "1360263e9a6eb3ea903ee8d3c51fee8df4de75cba018f1933d0af55048c70240",
+      "ret0__ft09": "ff03af81e3137eda507ea3d2af5fbe469e79198f7d407204b645ef64f64d833d",
+      "ret0__lp85": "ae4914b64a48b959c60db40e4bfbb6ef127a70030a8f8dba874ac02faba2b503",
+      "ret0__ls20": "65236190fe9b14a7226b3ec464eaa6a582c9e490589625558e4c5c8daf095842",
+      "ret0__r11l": "8c8b5e7510a80da0d45abe1da32bca37bb378803f0b86274eae587960bdde26a",
+      "ret0__sc25": "ffc27860b35091951d8d614465a1f6f8860e5e71efc657f91215a38e042e8a7c",
+      "ret0__su15": "d441cd0b411a5f0bfde9d1cfcf400e8d9b175be8e1dd69a59d5a61b1376e0d83",
+      "ret0__tn36": "7d60e85ac2782dc2075408c17254ade5d7d31d9ff0d55b2d836e441ae67bb606",
+      "ret0__tr87": "4e60f204c1eee53c157e5e170890793fc833acaf9caf6a8c519cfb30a9f1b8e9",
+      "ret0__tu93": "3671f18b8645dee08c1868cd2ac4daae8dec21e9f93b67c3bfce835fad97fbb8",
+      "ret0__vc33": "0ce1c5512c7d01ca4eb48ab6cc629df9870821bd320e9290604c3c7264d73ac6",
+      "ret1__cd82": "438ffc6f71053eaa691eb46b77142947cd3fe1ccc347f1ba63e5b35b5b36e765",
+      "ret1__cn04": "211f650b20ff4d40d5c5e74fc39cc5394555676c5b186a0513527f8692c3d53a",
+      "ret1__ft09": "65dec755d921e38707fe0f8d77343012f6d4c8c7d7662b963926985b7b0ce9f7",
+      "ret1__lp85": "e359e0b48f4f06103407f2557cb9de6c7b079968e3e10ff6f58e0964636bff49",
+      "ret1__ls20": "1a5895588d210e81bda3231dae8ac430f65e6d9cbe59142326cc7febece86b72",
+      "ret1__r11l": "e65501255362cbb951d8ae0bcac1b1fd3e4a987546ea710505ce22dd78c0125d",
+      "ret1__sc25": "35ecae5095693f9acb370061448db1bd20360223684bc537b61bff407a60bb8b",
+      "ret1__su15": "7c6ee475ad1cb725fddb276ef920bc476b053838c205fb8a37ac41ce82336cd7",
+      "ret1__tn36": "99fab78126aadd4c4171f4af3226edd7b209d428559524dd012af99c06153920",
+      "ret1__tr87": "ef9acba18fccdd25de085651d6153626469a9f5d474df3a8ea1d23b41f338555",
+      "ret1__tu93": "a967805d286021c76a30e2a4e175a85c2aea1dca2f9b1552e3bcf5f97a133a7b",
+      "ret1__vc33": "75ba64afc3ead51d26cbdd8bfc6eb89e9b8b8e3e92c29f78409aeef1358dd962"
+    },
+    "cells": "results/arc_engine_retention_20260729/cells (committed, read-only)",
+    "verdict_without_a_noise_floor": {
+      "alpha": 0.05,
+      "attributable_cells": [],
+      "best_reachable_p_charitable": 0.03125,
+      "best_reachable_p_strict": 1.0,
+      "cells_needed_at_observed_perturbation_rate": 42,
+      "counts": {
+        "BOTH_TRUNCATED": 2,
+        "IDENTICAL": 6,
+        "MISSING": 0,
+        "PERTURBED": 1,
+        "TRUNCATION_ONLY": 3
+      },
+      "decision_basis": "strict_attributable_ceiling_at_probed_n",
+      "discordance_ceiling_charitable_counts_truncations": 6,
+      "discordance_ceiling_strict": 1,
+      "interpretation": "PASS means only that the treatment perturbs enough cells for the planned sign test to be ABLE to reach significance. It does NOT mean the experiment is powered: perturbation is necessary but not sufficient for discordance on the endpoint. REFUSE means no possible outcome of the grid reaches alpha, so running it cannot produce a finding.",
+      "n_comparable_cells": 12,
+      "n_perturbed_attributable": null,
+      "n_perturbed_raw": 1,
+      "n_probed_cells": 12,
+      "n_truncation_affected": 5,
+      "n_usable_observations": 7,
+      "noise_floor_measured": false,
+      "noise_floor_warning": "NO A/A NOISE FLOOR WAS MEASURED. The ARC generator samples at a temperature and sends no seed, so the harness is not deterministic; raw perturbation therefore cannot be attributed to the treatment. A PASS computed without a noise floor is uninterpretable -- run one arm against a byte-identical replicate of itself and pass it as `noise_pairs`.",
+      "per_cell": {
+        "cd82": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "cn04": {
+          "a_complete": false,
+          "b_complete": false,
+          "cls": "BOTH_TRUNCATED",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 27,
+          "len_b": 27,
+          "why": "both arms were cut short after the same 27 actions and agreed on all of them. NEITHER arm reached an endpoint, so this pair cannot show that the treatment is inert and cannot serve as a determinism witness -- it is a MISSING observation, not a tie"
+        },
+        "ft09": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "lp85": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "TRUNCATION_ONLY",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 27,
+          "shorter_arm": "b",
+          "why": "the shorter arm (b) was cut short before finishing; both arms agreed on all 27 actions they both took. This is a MISSING observation and must never be scored as a zero"
+        },
+        "ls20": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "TRUNCATION_ONLY",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 27,
+          "shorter_arm": "b",
+          "why": "the shorter arm (b) was cut short before finishing; both arms agreed on all 27 actions they both took. This is a MISSING observation and must never be scored as a zero"
+        },
+        "r11l": {
+          "a_complete": false,
+          "b_complete": false,
+          "cls": "BOTH_TRUNCATED",
+          "common_prefix_len": 28,
+          "first_divergence_index": null,
+          "len_a": 28,
+          "len_b": 28,
+          "why": "both arms were cut short after the same 28 actions and agreed on all of them. NEITHER arm reached an endpoint, so this pair cannot show that the treatment is inert and cannot serve as a determinism witness -- it is a MISSING observation, not a tie"
+        },
+        "sc25": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "su15": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "TRUNCATION_ONLY",
+          "common_prefix_len": 28,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 28,
+          "shorter_arm": "b",
+          "why": "the shorter arm (b) was cut short before finishing; both arms agreed on all 28 actions they both took. This is a MISSING observation and must never be scored as a zero"
+        },
+        "tn36": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "tr87": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "tu93": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "vc33": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 17,
+          "first_divergence_index": 17,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "traces diverge at action index 17"
+        }
+      },
+      "per_cell_noise": null,
+      "perturbation_rate_over_comparable_counting_truncations_as_zero": 0.0833,
+      "perturbation_rate_over_usable_observations": 0.1429,
+      "planned_n_cells": 12,
+      "projected_attributable_cells_at_planned_n": null,
+      "required_one_way_discordant_pairs": 6,
+      "sign_test_arithmetic": {
+        "1": 1.0,
+        "2": 0.5,
+        "3": 0.25,
+        "4": 0.125,
+        "5": 0.0625,
+        "6": 0.03125,
+        "7": 0.015625
+      },
+      "unattributable_cells_with_aa_class": {},
+      "verdict": "REFUSE"
+    }
+  },
+  "GRID_2_heldout_31b_vs_9b_ab": {
+    "cell_sha256": {
+      "31b__ft09__s1.json": "96e2b695205ce63a59e0fa7cfc802f2dd74684ffa7e13086b36abed1572daa34",
+      "31b__lp85__s1.json": "d95045834d1fe79da64140c48ea69d61f13041f9a998f0d8e39b0a8094a4ac56",
+      "31b__ls20__s1.json": "e907d62c1f42ba71be1d603eee124175ac4d07f9238737b1950c166e009038eb",
+      "31b__tr87__s1.json": "a7a07ded340ad10cd7bc454a77ddc3c981746fad32df89e8fe7f0b3c493c2615",
+      "31b__vc33__s1.json": "b158ab46b12f8a986921425db7bf12eea4be7c15811784bd68f630234a141a93",
+      "9b__ft09__s1.json": "aed125db551ad75fab0ed7be6bbf2196637c8f7d170da0688c9239d24f0061bb",
+      "9b__lp85__s1.json": "a7918ccef32ec82ab01bff0ba23e0532148516e1babb241096c1d990710a433b",
+      "9b__ls20__s1.json": "dbec5ecaa64aba3dbefc63211fe37e1e892e1ea79fe6e476e8ade578d74d233d",
+      "9b__r11l__s1.json": "58fe9ae0b1c6cc69011423f6a9db88ba17d432754d1723c5b26b865cc5ac4da1",
+      "9b__su15__s1.json": "e5d08df9eab29274cb63f545c1821f707d85095fd7690b32e44f48a9420fe01d",
+      "9b__tr87__s1.json": "4eac2c2734d5270b99082001942142cd276d081278e2176c0e15cf15c27920f6",
+      "9b__tu93__s1.json": "df9329f98b55a7d8605bfa45dfc63350179fd8a4cbddc15d9692402f06615622",
+      "9b__vc33__s1.json": "7b33ab16d07b4f6278d04707e06982e0e8166d9c7a957a91d0b1f94a604e8ad0"
+    },
+    "cells": "results/arc_heldout_31b_vs_9b_20260728/cells (committed by this work)",
+    "verdict": {
+      "alpha": 0.05,
+      "attributable_cells": [],
+      "best_reachable_p_charitable": 0.25,
+      "best_reachable_p_strict": 0.5,
+      "cells_needed_at_observed_perturbation_rate": 12,
+      "counts": {
+        "BOTH_TRUNCATED": 0,
+        "IDENTICAL": 2,
+        "MISSING": 3,
+        "PERTURBED": 2,
+        "TRUNCATION_ONLY": 1
+      },
+      "decision_basis": "strict_attributable_ceiling_at_probed_n",
+      "discordance_ceiling_charitable_counts_truncations": 3,
+      "discordance_ceiling_strict": 2,
+      "interpretation": "PASS means only that the treatment perturbs enough cells for the planned sign test to be ABLE to reach significance. It does NOT mean the experiment is powered: perturbation is necessary but not sufficient for discordance on the endpoint. REFUSE means no possible outcome of the grid reaches alpha, so running it cannot produce a finding.",
+      "n_comparable_cells": 5,
+      "n_perturbed_attributable": null,
+      "n_perturbed_raw": 2,
+      "n_probed_cells": 8,
+      "n_truncation_affected": 1,
+      "n_usable_observations": 4,
+      "noise_floor_measured": false,
+      "noise_floor_warning": "NO A/A NOISE FLOOR WAS MEASURED. The ARC generator samples at a temperature and sends no seed, so the harness is not deterministic; raw perturbation therefore cannot be attributed to the treatment. A PASS computed without a noise floor is uninterpretable -- run one arm against a byte-identical replicate of itself and pass it as `noise_pairs`.",
+      "per_cell": {
+        "ft09": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "lp85": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 26,
+          "first_divergence_index": 26,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "traces diverge at action index 26"
+        },
+        "ls20": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "TRUNCATION_ONLY",
+          "common_prefix_len": 27,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 27,
+          "shorter_arm": "b",
+          "why": "the shorter arm (b) was cut short before finishing; both arms agreed on all 27 actions they both took. This is a MISSING observation and must never be scored as a zero"
+        },
+        "r11l": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "MISSING",
+          "common_prefix_len": null,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": null,
+          "why": "one or both arms produced no action trace"
+        },
+        "su15": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "MISSING",
+          "common_prefix_len": null,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": null,
+          "why": "one or both arms produced no action trace"
+        },
+        "tr87": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 400,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "tu93": {
+          "a_complete": true,
+          "b_complete": false,
+          "cls": "MISSING",
+          "common_prefix_len": null,
+          "first_divergence_index": null,
+          "len_a": 400,
+          "len_b": null,
+          "why": "one or both arms produced no action trace"
+        },
+        "vc33": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 17,
+          "first_divergence_index": 17,
+          "len_a": 400,
+          "len_b": 400,
+          "why": "traces diverge at action index 17"
+        }
+      },
+      "per_cell_noise": null,
+      "perturbation_rate_over_comparable_counting_truncations_as_zero": 0.4,
+      "perturbation_rate_over_usable_observations": 0.5,
+      "planned_n_cells": 12,
+      "projected_attributable_cells_at_planned_n": null,
+      "required_one_way_discordant_pairs": 6,
+      "sign_test_arithmetic": {
+        "1": 1.0,
+        "2": 0.5,
+        "3": 0.25,
+        "4": 0.125,
+        "5": 0.0625,
+        "6": 0.03125,
+        "7": 0.015625
+      },
+      "unattributable_cells_with_aa_class": {},
+      "verdict": "REFUSE"
+    }
+  },
+  "SAME_COMMIT_AA_FLOOR": {
+    "FINDING": "1 of 2 same-commit pairs DIVERGES even with CARNOT_ARC_GENERATOR_SEED set: ft09 first diverges at action 26, and the two runs disagree on whether a plan was found at all (n_plans_found 1 vs 0). vc33 is byte-identical over 18 actions. So seeding the sampler is NECESSARY BUT NOT SUFFICIENT for a deterministic harness.",
+    "SAMPLE_SIZE_HONESTY": "n=2. This supports the QUALITATIVE claim ('residual nondeterminism survives the seed', which needs one counterexample and has it) and does NOT support any rate. No rate is reported. The retracted section above is exactly what quoting a rate off a tiny, confounded sample looks like.",
+    "arms": {
+      "post": "the main checkout at f9a458e87",
+      "postb": "the SAME checkout, run again -- the A/A determinism control"
+    },
+    "cells": "results/arc_goalspec_f9a458e87_preflight_20260730/cells (committed by this work)",
+    "n_pairs": 2,
+    "n_pairs_perturbed_under_identical_code": 1,
+    "per_cell": {
+      "ft09": {
+        "classification": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "PERTURBED",
+          "common_prefix_len": 26,
+          "first_divergence_index": 26,
+          "len_a": 30,
+          "len_b": 27,
+          "why": "traces diverge at action index 26"
+        },
+        "levels_gained_post": 0,
+        "levels_gained_postb": 0,
+        "n_plans_found_post": 1,
+        "n_plans_found_postb": 0,
+        "sha256_post": "104e56a9a9595bfe91e08d4d6584f0312a3534081d011f15cbec381a60b73900",
+        "sha256_postb": "8ee7da76453bb335e9310afe815b69927cd1d6219d01448aa6db1526ec2386b4"
+      },
+      "vc33": {
+        "classification": {
+          "a_complete": true,
+          "b_complete": true,
+          "cls": "IDENTICAL",
+          "common_prefix_len": 18,
+          "first_divergence_index": null,
+          "len_a": 18,
+          "len_b": 18,
+          "why": "byte-identical action traces, both arms run to completion: the two arms are the same agent on this cell, so no downstream endpoint can differ"
+        },
+        "levels_gained_post": 1,
+        "levels_gained_postb": 1,
+        "n_plans_found_post": 0,
+        "n_plans_found_postb": 0,
+        "sha256_post": "4bd2681b38066e9bd06ce52c5181c5b50dad79050e60f16a7c4f0d59ebd47cdb",
+        "sha256_postb": "c8478a4c6698ea51410ead77d7c16bae19abf442d732a2ee8e34328ebda43cd5"
+      }
+    },
+    "why_this_one_is_valid": "Both arms report the same `arm_commit`, the same effective sampler seed, the same GGUF path, the same n_ctx, and the same action/explore/induction budgets. The only recorded differences are session, GPU index and server port.",
+    "witness_equality": {
+      "ft09": {
+        "anon_game_id": {
+          "equal": true,
+          "post": "hgd3073c",
+          "postb": "hgd3073c"
+        },
+        "arm_commit": {
+          "equal": true,
+          "post": "f9a458e87594250d147b01dd902bbdda07bc3060",
+          "postb": "f9a458e87594250d147b01dd902bbdda07bc3060"
+        },
+        "arm_repo": {
+          "equal": true,
+          "post": "/home/ianblenke/github.com/ianblenke/carnot",
+          "postb": "/home/ianblenke/github.com/ianblenke/carnot"
+        },
+        "budget": {
+          "equal": true,
+          "post": 60,
+          "postb": 60
+        },
+        "explore_budget": {
+          "equal": true,
+          "post": 24,
+          "postb": 24
+        },
+        "generator_sampler_seed_effective": {
+          "equal": true,
+          "post": 1000000,
+          "postb": 1000000
+        },
+        "max_inductions": {
+          "equal": true,
+          "post": 1,
+          "postb": 1
+        },
+        "observed_model_path": {
+          "equal": true,
+          "post": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "postb": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        },
+        "observed_n_ctx": {
+          "equal": true,
+          "post": 32768,
+          "postb": 32768
+        },
+        "seed": {
+          "equal": true,
+          "post": 1,
+          "postb": 1
+        }
+      },
+      "vc33": {
+        "anon_game_id": {
+          "equal": true,
+          "post": "hgb6a5e8",
+          "postb": "hgb6a5e8"
+        },
+        "arm_commit": {
+          "equal": true,
+          "post": "f9a458e87594250d147b01dd902bbdda07bc3060",
+          "postb": "f9a458e87594250d147b01dd902bbdda07bc3060"
+        },
+        "arm_repo": {
+          "equal": true,
+          "post": "/home/ianblenke/github.com/ianblenke/carnot",
+          "postb": "/home/ianblenke/github.com/ianblenke/carnot"
+        },
+        "budget": {
+          "equal": true,
+          "post": 60,
+          "postb": 60
+        },
+        "explore_budget": {
+          "equal": true,
+          "post": 24,
+          "postb": 24
+        },
+        "generator_sampler_seed_effective": {
+          "equal": true,
+          "post": 1001000,
+          "postb": 1001000
+        },
+        "max_inductions": {
+          "equal": true,
+          "post": 1,
+          "postb": 1
+        },
+        "observed_model_path": {
+          "equal": true,
+          "post": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "postb": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+        },
+        "observed_n_ctx": {
+          "equal": true,
+          "post": 32768,
+          "postb": 32768
+        },
+        "seed": {
+          "equal": true,
+          "post": 1,
+          "postb": 1
+        }
+      }
+    }
+  },
+  "VC33_CROSS_EXPERIMENT_REPLICATE_SET": {
+    "action_at_index_17": {
+      "heldout_31b_retention_on_by_default": "{\"action\":6,\"data\":{\"x\":25,\"y\":9}}",
+      "heldout_9b_a_DIFFERENT_inducer_model": "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "ret0_31B_retention_off": "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}",
+      "ret1_31B_retention_on": "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}"
+    },
+    "finding_NARROWED_2026_07_30": "SURVIVING OBSERVATION: all four runs share a byte-identical prefix through action 16 and, where they diverge, they diverge at the SAME index 17 -- consistent with a single branch point in the agent's decision sequence rather than drift. That is a lead for LOCATING the nondeterminism.\n\nWITHDRAWN INFERENCE: this previously concluded 'a treatment effect cannot produce that pattern, so index 17 is a harness nondeterminism point'. The four runs are not matched -- they differ in commit, and two differ in generator_output_reached_policy and in whether the run completed -- so the partition crossing treatment lines has explanations other than harness noise, and the inference does not follow.",
+    "pairwise": [
+      {
+        "a": "ret0_31B_retention_off",
+        "b": "ret1_31B_retention_on",
+        "first_divergence_index": 17,
+        "identical": false,
+        "len_a": 400,
+        "len_b": 400
+      },
+      {
+        "a": "ret0_31B_retention_off",
+        "b": "heldout_31b_retention_on_by_default",
+        "first_divergence_index": 17,
+        "identical": false,
+        "len_a": 400,
+        "len_b": 400
+      },
+      {
+        "a": "ret0_31B_retention_off",
+        "b": "heldout_9b_a_DIFFERENT_inducer_model",
+        "first_divergence_index": null,
+        "identical": true,
+        "len_a": 400,
+        "len_b": 400
+      },
+      {
+        "a": "ret1_31B_retention_on",
+        "b": "heldout_31b_retention_on_by_default",
+        "first_divergence_index": 17,
+        "identical": false,
+        "len_a": 400,
+        "len_b": 400
+      },
+      {
+        "a": "ret1_31B_retention_on",
+        "b": "heldout_9b_a_DIFFERENT_inducer_model",
+        "first_divergence_index": 17,
+        "identical": false,
+        "len_a": 400,
+        "len_b": 400
+      },
+      {
+        "a": "heldout_31b_retention_on_by_default",
+        "b": "heldout_9b_a_DIFFERENT_inducer_model",
+        "first_divergence_index": 17,
+        "identical": false,
+        "len_a": 400,
+        "len_b": 400
+      }
+    ],
+    "why": "vc33 was the ONLY perturbed cell in the retention grid and the cell that banked the most levels in the whole corpus, so whether its divergence was treatment or noise decides how that grid should be read."
+  },
+  "code_commit_at_write": "f9a458e87594250d147b01dd902bbdda07bc3060",
+  "duration_s": 0.0563,
+  "experiment": "outer_loop_treatment_activation_preflight_retrospective_validation_20260729",
+  "field_principles": {
+    "CONCLUSIONS": "Stated as claims a reader can check against the per-cell records above, rather than as a summary they must trust.",
+    "GRID_1_with_the_free_aa_noise_floor.aa_perturbation_count": "Perturbations between two runs of the SAME code. Any A/B perturbation at or below this rate is indistinguishable from noise, so this number bounds what any A/B on this harness can claim.",
+    "VC33_CROSS_EXPERIMENT_REPLICATE_SET.pairwise": "A treatment effect must partition runs along treatment lines. A partition that crosses treatments falsifies the treatment explanation without needing any new run -- which is why the matrix is recorded rather than a single verdict."
+  },
+  "historical_artifacts_rewritten": [],
+  "honest_verdict": "complete_preflight_refuses_both_known_dead_grids_and_the_cross_experiment_aa_floor_is_retracted_and_replaced_by_a_same_commit_aa_that_shows_the_sampler_seed_is_necessary_but_not_sufficient",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "committed retention cells readable"
+    },
+    {
+      "available": true,
+      "resource": "committed held-out grid cells readable"
+    },
+    {
+      "available": true,
+      "resource": "no historical artifact rewritten"
+    }
+  ],
+  "question": "Would the treatment-activation pre-flight have refused the two A/B grids run on 2026-07-29 that returned uninformative nulls? And what does an A/A noise floor -- recoverable from cells already on disk at zero GPU cost -- do to their one apparently-informative cell?",
+  "random_seed": 6050,
+  "read_game_source": false,
+  "reproducibility_checksum": "1732108935a260cd7237129e1164913bb08308e1b4f4afce0451c7cc304b1bfa",
+  "requirements": [
+    "REQ-HARNESS-6050"
+  ],
+  "schema": "carnot.outer_loop.preflight_retrospective_validation.v1",
+  "solve_provenance": "development_proxy",
+  "used_env_source": false,
+  "verifier_is_oracle": false
+}

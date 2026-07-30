@@ -58,6 +58,25 @@ def _capture(monkeypatch: pytest.MonkeyPatch) -> dict:
     return captured
 
 
+@pytest.fixture(autouse=True)
+def _redirect_engine_store(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    """Point the induced-engine store at tmp_path for EVERY test in this module.
+
+    THE BUG THIS FIXES (2026-07-30). `induce()` / `refactor()` here run against a stubbed
+    `urlopen`, but nothing redirected `E3_DIR` -- so running this file WROTE
+    `results/arc_e3/g/world_model.py`, a TRACKED file in a store the project treats as read-only
+    evidence. It went unnoticed only because the stub's canned body happened to be byte-identical
+    to the committed content, leaving `git status` clean; any change to `_VALID_CODE` would have
+    silently clobbered committed evidence instead.
+
+    Autouse rather than per-test, because the failure mode is FORGETTING it: the two tests that
+    tripped it are the ones that call `induce`/`refactor`, and the next test added to this file
+    will not remember either. `arc_executable_world_model._guard_engine_write` is the mechanical
+    backstop if this fixture is ever removed.
+    """
+    monkeypatch.setattr(awm, "E3_DIR", tmp_path / "e3")
+
+
 def _proposer(monkeypatch: pytest.MonkeyPatch) -> LocalGGUFProposer:
     p = LocalGGUFProposer(
         repo_substr="X",

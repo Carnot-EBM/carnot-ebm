@@ -1,8 +1,140 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-27 (STOP MODELLING THE GATEWAY CHARGE, READ IT: the "gateway-accurate"
+**Last Updated:** 2026-07-30 (post-review: the goal gate was REWRITING a correct predicate when it
+merely ran out of search budget; the plan is a verified solve; the "A/A noise floor" behind
+yesterday's 40% figure is RETRACTED and replaced by a real same-commit A/A. See
+"2026-07-30 — post-review state" below, which supersedes the 2026-07-29 entry's A/A claims.)
+Prior: 2026-07-29 (the ARC generator was sampling WITHOUT A SEED — ~~40% of cells
+diverge under identical code~~ [RETRACTED 2026-07-30: that rate came from a pairing that was not an
+A/A; the no-seed defect itself is REAL and was confirmed live], so three A/B nulls were
+uninterpretable; opt-in fix + a treatment-activation pre-flight that refuses a dead grid).
+Prior: 2026-07-27 (STOP MODELLING THE
+GATEWAY CHARGE, READ IT: the "gateway-accurate"
 3.69% was a MODEL — the real figure read off the gateway's own scorecard Card is 0.018097 at the
 median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NEGATIVE)
+
+## Session 2026-07-29 — a pre-flight that refuses a dead A/B, and the reason three A/Bs died (outer-loop)
+
+**The headline: the ARC generator was sampling WITHOUT A SEED, and nobody had measured what that
+cost.** Every generation `LocalGGUFProposer` issues goes out at `temperature = 0.2 + 0.1*attempt` --
+nonzero -- with no `seed` field. `llama-server` reads an absent seed as -1, "pick a fresh random
+one". The harness `seed` argument seeds `random`/`numpy` in the driver; it never reached the
+server's sampler. So two runs of IDENTICAL code on the identical game at the identical seed produce
+different LLM output.
+
+**Measured cost, from cells already on disk, at zero GPU cost.** `ret1` in
+`results/arc_engine_retention_20260729/cells` and `31b` in the newly-committed
+`results/arc_heldout_31b_vs_9b_20260728/cells` share treatment, seed=1, model file, game and
+anonymised game id -- a de-facto A/A replicate pair, and exactly the control the retention
+pre-registration specified as `ret1b` and never ran:
+
+> **RETRACTED 2026-07-30 — THE THREE BULLETS BELOW ARE WITHDRAWN. DO NOT CITE THEM.** The pairing
+> they rest on is NOT an A/A. The held-out `31b` cells ran BEFORE commit `11cd3c3a9` introduced
+> engine retention at all -- they carry none of its diagnostic fields -- so at least six agentic
+> commits separate the two sets and `ret1`-vs-`31b` is an A/B **of the very treatment under test**.
+> The bullets are preserved unedited per never-prune, struck through at the point of claim.
+> **What replaced them:** a real same-commit A/A (`post` vs `postb`, both at `f9a458e87`, ten
+> witness fields asserted equal from the cells themselves) committed at
+> `results/arc_goalspec_f9a458e87_preflight_20260730/cells`. Finding: **1 of 2 pairs diverges EVEN
+> WITH `CARNOT_ARC_GENERATOR_SEED` set** (ft09, first divergence at action 26; the two runs
+> disagreed on whether a plan was found at all, 1 vs 0). So seeding the sampler is NECESSARY BUT
+> NOT SUFFICIENT and a noise floor must be MEASURED per grid. n=2 supports that qualitative claim
+> and NO rate is asserted. The retention grid's one perturbed cell is now **UNATTRIBUTABLE**, not
+> proven-noise -- the REFUSE verdict is unchanged either way, so the retraction costs a claim, not
+> a decision. **The no-seed defect itself is REAL and independently confirmed live** (4 identical
+> requests at T=0.4: 3 distinct completions unseeded, 1 seeded); only the A/A-derived RATE and the
+> zero-attribution inference are withdrawn. Full detail: "2026-07-30 — post-review state" below.
+
+- ~~**2 of 5 cells diverge under identical code.** n=5, so 40% is a point estimate with a wide
+  interval (Wilson 95% ≈ [0.12, 0.77]), NOT a calibrated rate. The load-bearing claim needs one
+  counterexample and has it; the root cause was then confirmed directly (below), not inferred.~~
+  [RETRACTED 2026-07-30 — not an A/A; see the note above.]
+- ~~The retention grid's ONLY perturbed cell -- **vc33, also the cell that banked the most levels in
+  the whole corpus** -- perturbs under A/A too. Its **attributable perturbation is ZERO**. That grid
+  was not merely underpowered; it contained no attributable signal at all.~~
+  [RETRACTED 2026-07-30 — vc33 is UNATTRIBUTABLE, not proven-noise.]
+- ~~vc33's divergence is provably treatment-INDEPENDENT: four runs spanning two treatments in two
+  experiments all diverge at the SAME action index 17, and the partition CROSSES treatment lines --
+  a 31B retention-OFF run is byte-IDENTICAL to a run using a DIFFERENT inducer model (9B) while
+  differing from another 31B run with the same retention setting. No treatment effect does that.~~
+  [RETRACTED 2026-07-30 — the four runs are not matched pairs (`ret0__vc33` records
+  `generator_output_reached_policy=True` against `9b__vc33`'s `False`, and the lp85 pair sets a
+  timed-out 27-action run against a complete 400-action one), so "no treatment effect does that"
+  does not follow. The stable divergence INDEX (always 17 on vc33) survives as an OBSERVATION and
+  is the lead for locating the residual nondeterminism; the treatment-independence INFERENCE does not.]
+
+**The fix (REQ-ARC-WMTE-6046), opt-in and default-OFF.** `LocalGGUFProposer.sampling_seed()` +
+`CARNOT_ARC_GENERATOR_SEED`, wired into all three generation routes out of the class. Unset =
+payload byte-identical to before, so the scored agent is unchanged unless an operator opts in;
+determinism is a measurement property and changing how the scored agent samples is a behaviour
+change that is not this mechanism's to make. The seed varies with `attempt` so the retry diversity
+ladder still explores. **Verified live** against the loaded 31B at T=0.4 on a high-entropy prompt:
+4 identical requests gave **3 distinct completions unseeded, 1 seeded**.
+
+**The pre-flight (REQ-HARNESS-6050).**
+`python/carnot/analysis/treatment_activation_preflight.py` +
+`scripts/treatment_activation_preflight.py`. Given two arms it diffs ACTION TRACES, classifies each
+matched pair IDENTICAL / TRUNCATION_ONLY / PERTURBED / MISSING, and REFUSES the grid unless the
+treatment perturbs enough cells for the planned test to be able to reach significance. Exit 0 =
+PASS, 1 = REFUSE, 2 = usage error.
+
+- The threshold is DERIVED, not picked: a two-sided sign test with all discordant pairs one-way
+  gives `p = 2*(1/2)**d`, so **6** is the floor at alpha=0.05 (d=5 -> 0.0625, d=6 -> 0.03125).
+- TRUNCATION_ONLY is a **MISSING observation, never a zero.** Scoring it zero biases against the
+  treatment systematically, because a treatment that does more work is slower.
+- **Validated retrospectively against BOTH grids we already knew were dead.** Retention: strict
+  ceiling 1 of 12, best reachable p = **1.0**, 72 pairs needed at the observed rate. Held-out
+  31b-vs-9b: ceiling 2 of 5 comparable cells (3 of 8 MISSING, all on one arm -- the drop asymmetry
+  that grid flagged itself), best reachable p = **0.5**. Neither could have reached p<0.05 under
+  any outcome.
+- **A REFUSAL IS A SUCCESSFUL OUTCOME.** It turns "we measured it and found nothing" -- which a
+  future planner reads as evidence against a direction -- into "the treatment never activated, so
+  we have learned nothing about it yet."
+- A PASS is **not** a power guarantee: perturbation is necessary, not sufficient, for discordance.
+
+**Also fixed: `hv_progress` never rebased at a level-up (REQ-ARC-WMTE-6045).** `best_hv` was a
+global running minimum, so a later level's board distance was scored against the FIRST level's
+starting distance. vc33 banked 2 levels and scored `hv_progress = 0.0` -- the best run in the corpus
+read as no progress, and that 0.0 was pooled into the correlation that declared the metric
+`NOT_A_VALID_PROXY`. Now per-level (`hv_progress_per_level`, `hv_progress_best_level`,
+`hv_progress_global_legacy`); a completed level scores 1.0 on the LEVEL COUNTER, not the verifier.
+**10 recorded numbers change** (4 retention cells, 4 held-out-grid cells including a SECOND
+independent vc33 instance, 2 structured-nav rows), each listed by sha256 in
+`results/outer_loop_arc_hv_progress_per_level_correction_20260729.json`. A first count of 6 was wrong
+by four — it used hardcoded directories; the builder now scans all 15,371 artifacts by row SHAPE and
+derives the count rather than hardcoding it. Nothing historical is
+rewritten. **ZERO rows in the whole `experiment_57xx` actions-to-progress corpus are affected --
+none of those runs ever levelled up**, so that metric's validity was assessed on a corpus in which
+its own level-up branch never executed.
+
+**What is NOT settled — read before trusting any of this further.**
+
+- **`artifact-freshness-lint` REFUSES the commit** (7 artifacts stale from touching
+  `arc_executable_world_model.py` / `arc_actions_to_progress.py`). The numbers cannot have moved —
+  `git diff` of both files has ZERO removed or modified lines, every seed assignment is guarded by
+  `if _seed is not None:`, and `sampling_seed()` is None when the env var is unset. Rebuild-and-diff
+  was deliberately not run (3 have no rebuild command; two rebuild paths would write to read-only
+  evidence or overwrite a historical artifact; GPUs busy). See `ops/known-issues.md` for the
+  explicit accept-or-rebuild decision this needs.
+
+- The f9a458e87 perturbation probe (12 games x pre/post, seeded, plus an A/A determinism control on
+  the 3 fastest games) was still running at hand-off. Cells land in `<scratch>/p2/pcells/`; build
+  the verdict with `<scratch>/p2/build_preflight_artifact.py`. **Full instructions:
+  `<scratch>/p2/FINISH_THE_PROBE.md`** — whether it is still running, whether the verdict is already
+  arithmetically settled (`settled.py`), how to rebuild the worktree arm, and every load-bearing
+  config value. The `pre` arm is a detached worktree
+  at `aa8a38e31` with the seed shim patched in, so the arms differ by exactly f9a458e87's content.
+- **The probe is NOT cheap on this harness.** One induction on the 31B is 400-1200s, so a 24-cell
+  probe costs roughly what the grid it screens costs. The pre-flight's leverage today came from the
+  ZERO-cost retrospective analysis, not from the probe. A genuinely cheap pre-flight needs a cheaper
+  induction (a smaller SOTA model, or a cached-induction replay) -- unbuilt.
+- Whether to turn `CARNOT_ARC_GENERATOR_SEED` ON for the scored path is an OPERATOR call. It would
+  make submissions reproducible; it also freezes sampling diversity across a re-run, which may or
+  may not be wanted on the hidden set.
+- The probe's `max_inductions=1` means a treatment that only acts at induction #2 or #3, or only
+  after a level-up deep in a 400-action run, is invisible to it. That biases toward REFUSE (the safe
+  direction) but a REFUSE from the probe reads as "not detectably perturbing within 60 actions and
+  1 induction", NOT as "inert".
 
 ## Session 2026-07-27 (latest) — the charge is now READ, not reconstructed (outer-loop)
 
@@ -7448,3 +7580,81 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 | 2026-07-09 | Exp 5506: Multi-board hardware smoke receipts for descriptor continuity | ✅ Complete | honest_verdict starts with `complete:` in the terminal artifact; inference_substrate=hardware_smoke; descriptor_source=results/experiment_5505_active_constraint_milp_descriptor_v499.json; command_receipts record bounded CPU/CUDA/KV260/GateMate/PolarFire probes; matched_timing_available=false; hardware_speedup_claim=false; conductor_unchanged=true; focused pytest passed, focused Exp5506 module coverage is 100%, ruff passed, scoped spec coverage passed, and repo-wide spec coverage remains blocked by the known pre-existing 1262-test traceability backlog | results/experiment_5506_hardware_multiboard_receipts_v499.json |
 | 2026-07-15 | Exp 5714 one-axis Rust/Python parity repair | ✅ Complete | Fixed the failing Exp5714 parity tests by aligning Rust energy summation with the Python reference dot-product order, matching the Python/Rust checkpoint seed fixture, preserving pure-Python fallback validation, and adding fail-closed branch coverage. Verification: focused Exp5714 pytest 10 passed; per-module coverage 100%; conductor smart subset 128 passed, 1 warning; `cargo test -p carnot-samplers` passed. Repo-wide spec coverage and clippy remain blocked by pre-existing non-Exp5714 issues. |
 | 2026-07-16 | ARC-AGI-3 `lf52` L7 round 14 red-peg bridge | ✅ Complete | Banked level 7 with a 759-action real-engine replay. The prior no-win search accidentally filtered out red-peg jumps; the recovered route leapfrogs the west plain peg across rail-free column 7 with the red peg, then removes one same-name plain peg at the east goal. Official fresh-env reproduction gate and five additional fresh reset/replay trials all reached level 8. Registry now records 7 reproduced `lf52` levels; artifact: `results/outer_loop_round14_lf52_probe_20260716.json`. |
+
+## 2026-07-30 — post-review state (supersedes the 2026-07-29 entry's A/A claims)
+
+### RETRACTED from the 2026-07-29 entry — do not cite
+
+- "2 of 5 cells diverge under IDENTICAL code" and "the retention grid's attributable perturbation is
+  ZERO". The pairing behind both was not an A/A: the held-out cells predate commit `11cd3c3a9`, which
+  introduced engine retention, by >=6 agentic commits. Replaced by a real same-commit A/A (below).
+- "index 17 on vc33 is a harness coin flip". The four runs it compared are not matched, so the
+  partition crossing treatment lines has explanations other than noise. The stable divergence INDEX
+  survives as an observation and is a lead for locating the nondeterminism; the inference does not.
+
+### What is working
+
+- **The pre-flight is validated and has four classes and three verdicts.** It refuses both grids
+  known to be dead, and it now distinguishes an UNFINISHED grid (`INCONCLUSIVE`) from a genuinely
+  unpowered one (`REFUSE`). 36 tests. Attribution requires both A/A arms complete; `planned_n_cells`
+  actually decides; truncated cells are excluded from the rate rather than scored as zeros.
+- **A real same-commit A/A noise floor exists**, committed as checkable evidence at
+  `results/arc_goalspec_f9a458e87_preflight_20260730/cells`. Finding: **1 of 2 pairs diverges even
+  with the sampler seed set** — so seeding is necessary but NOT sufficient, and a noise floor must be
+  measured per grid. n=2; no rate claimed.
+- **The goal gate no longer rewrites a correct predicate when it runs out of budget** (REQ-ARC-WMTE-6047).
+  This was live and severe from the moment the 2026-07-29 counter fix landed.
+- **The plan is a real solve.** `arc_solver_kit.reproduce` confirms `reproduced: true` at ka59 L1,
+  `checked_action6_clicks: 1`, no out-of-live-bounds clicks — a check the prior session's replay
+  script promised in a comment and never called.
+- **`results/arc_e3/` is no longer writable from a test** (REQ-ARC-WMTE-6048). The suite had been
+  writing to it.
+- **vc33 is the first cleanly-attributable treatment effect measured on this path**: A/B perturbed at
+  action 4, A/A byte-identical over 18 actions.
+- **The ARC no-LLM duration floor now actually fires** (REQ-ARC-WMTE-6050). It was UNREACHABLE for a
+  clean artifact: the dedicated 0.01s-floor branch sat behind the compute-marker early return, so it
+  ran only for artifacts carrying a VESTIGIAL GGUF/CUDA string — backwards, since that branch exists
+  *because* such markers are vestigial for this substrate. A clean no-LLM artifact could declare
+  `duration_s: 0.0` and be reported clean. Corpus impact zero (all 99 such artifacts already clear
+  the floor), pinned as a test. Found by probing the linter after it reported CLEAN on this session's
+  own affordability artifact, which had declared that substrate at 0.002s — below its own floor. That
+  artifact's substrate was corrected to `aggregation_from_upstream_artifacts` in the same change (it
+  steps no environment; it reads JSON and does arithmetic), recorded in a correction field rather
+  than by silently relabelling. The pre-existing tests missed it by feeding the branch an artifact
+  WITH a marker — they passed while it was dead for the honest input shape.
+
+### The affordability answer
+
+`REACHABLE_AND_AFFORDABILITY_IS_ENGINE_DEPENDENT`. The plan threshold is a fixed **137,347 engine
+calls** (bit-identical at 160k and 400k, so it is a property of the problem, not the budget). Per
+attempt: **~49 s** on the fastest planning-capable engine, **~194 s** on the only engine verified to
+produce a real arcade-replayed solve. At the most likely cap (9h) and game count (~110) the
+conservative residual is **67.2 s/game** — the fast tail fits, the verified solver misses by 3.3x, and
+n=1 on the class that decides. At <=60 games everything fits.
+
+Recommendation: **cheaper SEARCH, not a bigger budget.** `max_nodes` is compute and raising it is
+legitimate in principle, but the agent cannot reliably pay it. Two ordering levers were measured and
+REFUTED (graded goal gradient 2.3x WORSE and plan length 22 not 11; inert-click pruning had 0
+prunable candidates). One is CONFIRMED (bytes dedup key, 1.288x, provably equivalent partition). The
+residual gap is structural: the engine is 69.5% of search time and it is LLM-GENERATED code, with
+90.2% of calls landing on an already-seen grid at 18 candidates per expansion — so the lever is the
+BRANCHING FACTOR (candidate generation / perception), not the frontier order.
+
+### What is next
+
+1. **Re-run the f9a458e87 pre-flight post-fix.** The stopped grid measured a configuration containing
+   the goal-gate bug. Runbook: `<scratch>/p2/FINISH_THE_PROBE.md`; verdict builder
+   `build_preflight_artifact.py`; arithmetic early-stop `settled.py`.
+2. **Ship the bytes dedup key** — measured, safe, 1.288x.
+3. **Budget the gate and the planner together.** Post-counter-fix they need the same ~137k calls.
+4. **Attack the branching factor.** Both ordering levers are refuted; perception/candidate generation
+   is where the remaining factor lives, and it is already the queued direction.
+
+### Not done, stated plainly
+
+- Banked levels UNCHANGED at 3/3. The Phase-3 measurement did not run and should not have.
+- Submission gate NOT met. Nothing here measured a score; the gate needs a TRM baseline AND our best
+  prior submitted score (0.12).
+- A minutes-scale pre-flight does not exist. One 31B induction is 200-1200 s, so a 24-cell probe costs
+  roughly what the grid it screens costs. Today's leverage came entirely from FREE retrospective use.
+  A cheap version needs a smaller SOTA model or cached-induction replay — unbuilt.

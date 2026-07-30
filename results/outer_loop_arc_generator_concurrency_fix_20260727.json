@@ -864,6 +864,17 @@
     "path": "results/generator_concurrency_fix_20260727/refresh.json",
     "sha256": "7fa2865be7140b288d566b948b895c27210d86be4cc1a3139ff501bd1d1b51a3"
    }
+  ],
+  "freshness_acknowledgements": [
+   {
+    "path": "python/carnot/agentic/arc_executable_world_model.py",
+    "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
+    "sha256_now": "1ce4758252d58832581fd1f104fbd642106c29041960f31ae88709866ced31a1",
+    "acknowledged_on": "2026-07-30",
+    "reason": "The only change to arc_executable_world_model.py in this commit is REQ-ARC-WMTE-6048's `_guard_engine_write` (plus the `_TRACKED_E3_EVIDENCE_DIR` constant and three call sites at the top of the engine writers). `git diff --numstat HEAD` is 121 insertions and 0 deletions -- PURELY ADDITIVE, no existing line changed. The guard's FIRST statement is `if not os.environ.get(\"PYTEST_CURRENT_TEST\"): return`, so outside pytest it is an unconditional early return and cannot alter any value this artifact records.",
+    "evidence": "Empirical, not just structural, and re-verified AFTER `ruff format` moved the module hash: the registered artifacts that DO have a rebuild command and depend on this same module were rebuilt in place and deep-diffed against their committed versions -- experiment_6011 (48,295 leaf values), experiment_6012 (20,202) and experiment_6013 (7,258) = 75,755 compared values with ZERO substantive differences, ignoring only timing and provenance fields. These three artifacts share the drifted dependency but declare NO rebuild_command, so they cannot be refreshed the same way. See ops/changelog.md and ops/test-results.md, both dated 2026-07-30.",
+    "note": "Pinned to THIS EXACT new hash: the next edit to the module produces a different hash and this acknowledgement stops applying, so it is not a standing exemption for the file. That property was exercised in practice during this very commit -- `ruff format` reformatted the module, the earlier acknowledgement LAPSED, the lint correctly went stale again, and the rebuild-and-diff was re-run before re-acknowledging. No recorded number in this artifact was changed. (Supersedes an acknowledgement of the pre-format hash efcdc84814720b2a.)"
+   }
   ]
  },
  "reproducibility_checksum": "sha256:7b9f345f0181c25a023968e44d3e9eeb80fa065390b406e1639db53836faab5c"

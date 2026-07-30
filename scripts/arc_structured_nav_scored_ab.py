@@ -86,6 +86,12 @@ def _run(game: str, structured_nav: bool, proposer) -> dict:
         "n_plans_found": r.n_plans_found,
         "mean_heldout_accuracy": r.mean_heldout_accuracy,
         "hv_progress": r.hv_progress,
+        # PER-LEVEL progress (REQ-ARC-WMTE-6045). The `hv_progress` above is the GLOBAL figure,
+        # whose baseline was never reset at a level-up -- so on any run that levelled up it scores
+        # a later level's board against the FIRST level's starting distance. It is kept for
+        # continuity with the rows already recorded; `hv_progress_best_level` is the one to read.
+        "hv_progress_per_level": r.hv_progress_per_level,
+        "hv_progress_best_level": r.hv_progress_best_level,
         "total_actions": r.total_actions,
         "wall_s": r.wall_s,
     }

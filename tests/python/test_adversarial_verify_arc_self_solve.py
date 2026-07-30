@@ -1,5 +1,7 @@
 """Tests for adversarial_verify.check_arc_outer_loop_solve -- the ARC live-agent self-solve guard.
 
+Spec: REQ-ARC-WMTE-6049 (the solve-claim matcher SHALL be word/token-boundary aware).
+
 The ARC-AGI-3 deliverable is the LIVE agent self-discovering hidden-game solves from its OWN attempts +
 runtime RE. This guard flags ARC solve artifacts that represent outer-loop / off-path / duplicate solving.
 CRITICAL sub-checks fire only once provenance is DECLARED, so artifacts predating the contract get at most
@@ -105,3 +107,75 @@ def test_duplicate_self_discovery_against_registry_is_critical():
     else:
         assert reg >= 2
         assert "ARC_OUTER_LOOP_SOLVE" in _kinds(d, "critical")
+
+
+# ---- 2026-07-30: the solve-claim regex must be word-boundary aware -------------------------
+def test_unresolved_is_not_a_solve_claim() -> None:
+    """`solv` matched inside UNRELATED LONGER WORDS whose meaning is the OPPOSITE of a solve.
+
+    The incident: a cost artifact whose verdict read
+    `..._so_affordability_at_110_cells_is_unresolved_and_the_recommendation_is_cheaper_search...`
+    was CRITICAL-flagged as an ARC game-solve claim. The only trigger was the `solv` inside
+    "unre-SOLV-ed", combined with `used_env_source: True` (legitimately true -- the offline arcade
+    reads environment_files). The artifact claimed no level at all.
+
+    This is the bug class CLAUDE.md "QA-Layer Authenticity Discipline" exists for: a substring
+    match with no boundary awareness, quarantining honest work. Origin bug #3 of that discipline
+    was the same shape (`"diffusiongemma_met" in verdict` matching inside `meta_tensor`).
+    """
+    d = {
+        "experiment": "outer_loop_arc_plan_affordability_corrected_20260730",
+        "honest_verdict": (
+            "complete_search_budget_threshold_is_137347_engine_calls_and_per_attempt_cost_is_"
+            "engine_dependent_so_affordability_at_110_cells_is_unresolved_and_the_recommendation_"
+            "is_cheaper_search_not_a_bigger_compute_budget"
+        ),
+        "used_env_source": True,
+        "solve_provenance": "development_proxy",
+    }
+    assert _kinds(d, "critical") == []
+    assert _kinds(d, "warn") == []
+
+
+def test_the_regex_still_catches_every_real_solve_phrasing() -> None:
+    """The narrowing must not blunt the guard -- pinned in both directions.
+
+    A negative lookbehind for a letter (rather than `\\b`) is required because this project's
+    verdicts are underscore-joined and `_` is a word character: `\\bsolv` would MISS
+    `complete_self_solve_...`, i.e. the exact strings the guard exists to catch.
+    """
+    for phrasing in (
+        "complete_self_solve_tu93_l3",
+        "solved tu93 level 3",
+        "solving the hidden game",
+        "arc_solver_kit reproduction",
+        "winpath found",
+        "lethal rung calibrated",
+        "level-up banked",
+        "levelup",
+        "reached L3",
+    ):
+        assert av._ARC_GAME_SOLVE_CLAIM_RE.search(phrasing), phrasing
+
+    for phrasing in (
+        "affordability is unresolved",
+        "the question is now resolved",
+        "the precipitate did not dissolve",
+        "resolver returned None",
+    ):
+        assert not av._ARC_GAME_SOLVE_CLAIM_RE.search(phrasing), phrasing
+
+
+def test_a_real_calibration_solve_is_still_critical() -> None:
+    """CONTROL: the incident this check was built for must still fire.
+
+    Proves the regex narrowing above did not disable the guard -- an artifact that declares an
+    outer-loop input AND makes a genuine solve claim is still quarantined.
+    """
+    d = {
+        "experiment": "outer_loop_tu93_hazard_calibration",
+        "honest_verdict": "complete_solved_tu93_l3_via_exhaustive_bfs",
+        "offline_ground_truth_bfs": True,
+        "solve_provenance": "development_proxy",
+    }
+    assert _kinds(d, "critical") == ["ARC_OUTER_LOOP_SOLVE"]
