@@ -1,5 +1,110 @@
 # Carnot — Changelog
 
+## 2026-07-30 (outer-loop: "revert the vc33 regression" — nothing was reverted, because half the regression was a confound and the other half is a tradeoff that a revert would not fix)
+
+**Instruction:** revert the vc33 regression (`actions_to_first_solve` 10 → 15, attributed to
+`f9a458e87` across six runs / two probes / two seeds), then apply a nine-item adversarial review of
+that work and commit. Submission remains operator-only; no submission action was taken and no scored
+or online ARC game was played.
+
+**Nothing from `f9a458e87` was reverted, and nothing from it was removed.** All five input-side
+win-state fixes are KEPT, as are the three corrections it made where the win-state change had been
+penalising CORRECT predicates and had killed GOAL-REPAIR, and the gate changes. No production code
+changed in this pass at all — the deliverables are one test file, one live pin and one correction
+artifact.
+
+**The ACTIONS half of the report is a measurement confound, not a regression.** vc33's traces diverge
+at action 4, six actions upstream of the level-up that fires its only induction (`n_inductions` is 0
+through the whole divergent window), so no goal-predicate change could reach the number. The
+pre-flight varied repo PATH in lockstep with its treatment: every `pre`/`base` arm ran from a `/tmp`
+git worktree and every `post`/`head` arm from the canonical checkout, verified from its own recorded
+`arm_repo` fields. Two live assets are gitignored, so `git worktree add` does not materialise them —
+`results/experiment_4629_live_frame_change_cnn.pt` (2026-06-23) and `data/arc_transition_corpus/*.npz`
+(25 shards, 2026-07-17), both predating the entire span under test. Without them
+`_load_submitted_frame_change_scorer()` returns None, `StepwiseExplorer` builds no
+`ActionEffectExpansionPrior`, and the frontier expands in a different order. The A/A controls were
+each taken WITHIN their own arm's repo, so six zero-variance replicates replicate the confound as
+faithfully as the treatment.
+
+**The balanced grid, run this pass because the first one was not balanced.** Four commits × two asset
+states, each commit in ONE tree with the assets symlinked in and then removed:
+
+| commit | assets PRESENT | assets ABSENT |
+|---|---|---|
+| `8441055c0` (pre-flight's base) | 15 | 10 |
+| `aa8a38e31` (`f9a458e87`'s parent) | 15, trace `19ca5e74` | 10, trace `e693e8c5` |
+| `f9a458e87` (the accused commit) | 15, trace `19ca5e74` | 10, trace `e693e8c5` |
+| `6fc2bd17b` (HEAD) | 15, trace `19ca5e74` | 10, trace `e693e8c5` |
+
+The commit axis is inert in BOTH asset conditions. The earlier grid varied the commit only inside the
+asset-absent arm, so a commit × asset interaction could not have been detected; it asserted a 2×2 it
+had not completed. `8441055c0` predates `ARM_CONFIGS["frozen_gemma_pin"]`, the `policy_game_id` kwarg
+and `to_row(include_trace)`, so its two cells needed the older `frozen` arm and no trace capture —
+both reductions were first shown INERT by re-running HEAD under them and getting the same
+`19ca5e74`.
+
+**THE HALF THAT IS REAL, and that the first version of this work wrongly dissolved.** The same
+pre-flight also recorded, for vc33, `n_plans_found` 1 → 0, `refinement_rounds_used` 1 → 3 and a cell
+wall of 137.2 s → 428.5 s (3.12×). That half is commit-caused: replaying a FIXED captured predicate
+through each commit's `_goal_satisfiability_check` involves no path channel at all, and the p2
+probe's root-true predicate is called satisfiable by the `aa8a38e31` gate and rejected
+`goal_predicate_true_at_root` by `f9a458e87` and HEAD. Same input, different commit, different
+verdict. The first version said "the vc33 cost is disproved, nothing to weigh it against" and closed
+G3 on that basis; that premise is withdrawn.
+
+**So: not a BUG, and not a pure win — a TRADEOFF, stated with both columns.** vc33 lost a real,
+in-production length-1 plan and gained two extra LLM refinement rounds. ka59 gained a gate pass that
+is **not affordable**: it is reachable only at `max_nodes=160000` (137,347 nodes, `plan_length` 11,
+~193–197 s/attempt against a 9.74 s non-LLM per-game budget), and at the SHIPPED `max_nodes=20000`
+the gate still returns `degenerate_goal_predicate` with no plan. It is still not reverted, because
+recovering vc33's plan means re-admitting a predicate that is true at the root (the p2 base arm's is
+a literal `return True`) — the lower-the-bar anti-pattern. No quality gate was widened or disabled:
+`degenerate_goal_predicate`, `goal_predicate_true_at_root` and `min_heldout_accuracy` are untouched.
+
+**G3 is reopened, not taken.** ka59 needs 12,435 unique grids but 137,347 engine calls, so under the
+pre-`f9a458e87` unique-grid budget unit its pass lands INSIDE the shipped 20000. That is now a live
+judgment call again, but it is not taken here: changing a budget UNIT to make a gate pass is the same
+lower-the-bar class, and it is verdict-neutral for vc33.
+
+**Four review findings changed a number or a claim in the artifact.** The corpus sweep had claimed
+"11 of 12 games identical on every recorded field"; it compared three summary fields and never hashed
+the action trace, though every cell recorded one. Hashing them: **8 of 12 diverge**, and 7 of those
+diverge while all three summary metrics tie — so the scorer's efficiency cost on
+tn36/tr87/cd82/tu93/ls20/cn04/r11l is UNMEASURED, not zero. (The review said 4; the sweep's own cells
+show 7 non-vc33.) The sweep was also described as "budget 40" when no cell reached it — every
+non-vc33 cell terminates at 25–26 actions, bounded by `explore_budget` and the `max_inductions=1`
+cap. `mutation_proof` claimed each of five mutations was killed by exactly one test; re-running M2
+alone kills TWO (2 failed, 3 passed), so the 5/5 kill result stands but the independence claim did
+not. And the `return True` predicate quoted to justify refusing the plan came from the **p2** probe
+(sha `1b5a7cf4bc3a`), not from the p3 arm that produced the headline.
+
+**One residual is recorded rather than papered over.** The p3 base arm's persisted predicate (sha
+`b8688e5b0716`) has no `return` at all — the body degenerates into a repeated comment loop, so it is
+always falsy — yet that arm recorded `satisfiable=true, plan_length=1`. Cross-replayed this pass, it
+is `degenerate_goal_predicate` under ALL THREE gate revisions **including its own**. The persisted
+predicate is therefore not the one that produced the recorded verdict (retained-best from another
+round, or a GOAL-REPAIR substitution). Unexplained, and stated as such.
+
+**The real finding, which is not a regression.** The live action-effect scorer costs +5 actions to
+first solve on vc33 — roughly a 56% score reduction on that level under `(baseline/agent)²`, on the
+cell that banks the most levels. Pre-existing production behaviour since at least 2026-06-23. One
+game, one seed; not claimed to generalise, and not something to revert.
+
+**Regression protection.** `tests/python/test_arc_live_asset_arm_confound_2026_07_30.py` — 5 tests,
+all asset-independent so they run in a clean checkout, all mutation-proved.
+`scripts/arc_vc33_explore_pin.py` — hard-asserts 10 with the scorer off (and `n_inductions == 0`,
+which is what makes the number immune to goal-predicate changes) and 15 with it on; exit 3 if the
+untracked assets are absent, so it can never silently report the crippled number as production.
+The vc33 number is pinned in `scripts/` rather than pytest because reproducing it needs
+`environment_files/` (also gitignored) — a pytest assertion would be red on every fresh clone, worse
+than the skip it replaces. The suite pins the MECHANISM.
+
+**Failure set, same tree:** 136 files touching the two imported modules. 6 failed / 1330 passed, the
+FAILED set line-for-line identical to the pre-existing six. `test_suite_mutation_check --check
+--run-id ph3_review_20260730`: no tracked file modified since snapshot; `results/arc_e3`,
+`results/arc_logo_snapshot` and `results/arc_e3_origin_fixtures` contain no file newer than this
+session. Neither original artifact was edited (never-prune); the correction cites both by sha256.
+
 ## 2026-07-30 (outer-loop: the base arm's own determinism was never measured; measured, and the finding survives it — plus a QA-layer duration hole and a work-destroying guard)
 
 **Instruction:** apply an 11-item adversarial review of the composite treatment-activation
