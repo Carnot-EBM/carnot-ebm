@@ -1,6 +1,11 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-07-30 (post-review: the goal gate was REWRITING a correct predicate when it
+**Last Updated:** 2026-07-30 (later: the treatment-activation pre-flight is LANDED with its
+retrospective refusal proven, and the in-model search's dedup key — 38% of search time — is replaced
+in NumPy, partition-identical on 10 games by accept-trace hash, 1.28x–7.18x faster. The OBVIOUS
+version of that swap, a plain `tobytes()`, is REFUTED: it changes the search on cn04. See
+"2026-07-30 (later) — dedup key + pre-flight landed" below.)
+Prior: 2026-07-30 (post-review: the goal gate was REWRITING a correct predicate when it
 merely ran out of search budget; the plan is a verified solve; the "A/A noise floor" behind
 yesterday's 40% figure is RETRACTED and replaced by a real same-commit A/A. See
 "2026-07-30 — post-review state" below, which supersedes the 2026-07-29 entry's A/A claims.)
@@ -7658,3 +7663,56 @@ BRANCHING FACTOR (candidate generation / perception), not the frontier order.
 - A minutes-scale pre-flight does not exist. One 31B induction is 200-1200 s, so a 24-cell probe costs
   roughly what the grid it screens costs. Today's leverage came entirely from FREE retrospective use.
   A cheap version needs a smaller SOTA model or cached-induction replay — unbuilt.
+
+## 2026-07-30 (later) — dedup key + pre-flight landed
+
+### What's working (added)
+
+- **The treatment-activation pre-flight is committed and its refusal is proven** (`0da7f75ad`;
+  `python/carnot/analysis/treatment_activation_preflight.py`, CLI at
+  `scripts/treatment_activation_preflight.py`, 36 tests). Pointed at the 12 committed matched pairs
+  of the 2026-07-29 engine-retention A/B it REFUSES (exit 1): 6 IDENTICAL / 3 TRUNCATION_ONLY /
+  2 BOTH_TRUNCATED / 1 PERTURBED, strict discordant-pair ceiling 1 against the 6 needed, best
+  reachable p = 1.0. Perturbation rate at `f9a458e87`: 0.5 over usable observations (1 of 2), with
+  the same-commit A/A showing 1 of 2 pairs diverging under identical code — n=2, so the qualitative
+  finding (seeding the sampler is necessary but NOT sufficient) is reported and no rate is claimed.
+- **`_state_key` replaces `to_ascii` as the in-model search's duplicate-state key**
+  (REQ-ARC-WMTE-6051). Partition-identical to `to_ascii` on **all 10 games tested**, proved by
+  ACCEPT-TRACE hash (the key-independent per-engine-call record of accept/duplicate/shape-skip/raise)
+  rather than by matching totals. **Weight is not uniform:** only 4 of those 10 ran to the
+  20,000-call cap (887–1,994 states each); the other 6 exhausted their queue in 1–148 calls, so they
+  corroborate rather than carry the claim. Measured speedup on the 4 games with a usable timing
+  signal:
+  ka59 1.28x, sk48 4.59x, sc25 6.61x, lp85 7.18x; no regression anywhere.
+
+### Known constraints (added)
+
+- **A plain `g.tobytes()` dedup key is NOT safe** and must not be "simplified" back in. `to_ascii`
+  keeps only each cell's LAST DIGIT, merging colours 4/14, 5/15, 1/11, 0/10; plain bytes separate
+  them and **change the search on cn04** (93 engine calls / 9 states → 140 / 14). The aliasing
+  colours occur in the ROOT grids of ka59, lp85, cn04, sp80, sc25, sk48, tu93 and re86. Pinned by
+  `tests/python/test_arc_state_key_dedup_2026_07_30.py`, mutation-proven 7/7.
+- **The lossy last-digit merge is documented and REPRODUCED, not fixed.** Whether the search *should*
+  distinguish colour 4 from 14 is a behaviour change owed its own change and its own evidence.
+- **The ARC-subset test suite is 53 failed / 8975 passed / 13 skipped / 1 error.** The 53 are
+  PRE-EXISTING — the identical subset run against the pre-swap file gives a byte-identical failure
+  set (zero new, zero fixed) — and are overwhelmingly artifact-schema/replay assertions rather than
+  search behaviour. Recorded rather than glossed: 53 red tests plus 13 skips is a standing finding
+  (skips are invisible failures per CLAUDE.md), and neither number is this change's to fix.
+- **The plan-affordability gap is UNCHANGED by this work.** A ka59 plan needs 137,347 engine calls;
+  the conservative per-game non-LLM budget affords ~17,854. A 1.28x key win on that game does not
+  close a ~7.7x conservative gap.
+
+### What's next
+
+- **Cut the BRANCHING FACTOR — the remaining structural lever.** 18 candidates per expansion and
+  **90.2% of engine calls land on an already-seen grid**; 10.17 calls per new state. Candidate
+  generators are `arc_llm_reinduction.py:_probe_candidates` and
+  `arc_executable_world_model.py:_model_candidates`. First measure the COMPOSITION (how many of the
+  18 are ACTION-6 clicks vs the 5 keyboard actions), then restrict clicks to distinct INTERACTIVE
+  objects learned from the agent's OWN observed transitions rather than every connected-component
+  centroid. **Report whether ka59's 11-step plan is still found for every reduction** — BFS
+  depth-optimality is what produced it, and a cut that loses the plan is not a speedup.
+- Do NOT attempt another frontier-ORDERING heuristic. Two were already refuted by measurement: a
+  graded-exemplar goal gradient was **2.3x WORSE** (317,935 calls, plan length 22 not 11) and
+  inert-click pruning found **0 prunable candidates**.

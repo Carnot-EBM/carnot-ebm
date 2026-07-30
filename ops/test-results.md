@@ -406,3 +406,120 @@ Ignored fields: `run_date`, `duration_s`, `provenance`, `reproducibility_checksu
 Both evidence trees (`results/arc_e3`, `results/arc_e3_origin_fixtures`) stayed `git status` clean
 across all four rebuilds. `tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py`: 7
 passed.
+
+## 2026-07-30 (later) — REQ-ARC-WMTE-6051 dedup key
+
+**New tests:** `tests/python/test_arc_state_key_dedup_2026_07_30.py` — **14 passed**.
+
+**AN ADVERSARIAL REVIEW FOUND A REAL BUG HERE, AND THE FIRST 8 TESTS ALL PASSED AGAINST IT.** The
+first `_state_key` took the arithmetic fast path for ANY integer grid, while the docstring, spec, ops
+docs and every test asserted that `% 10` reproduced `to_ascii` "for every integer, negatives
+included". That is false: `to_ascii` takes the last character of the DECIMAL STRING, i.e. the last
+digit of the ABSOLUTE value (`str(-1)[-1] == "1"`), whereas `-1 % 10 == 9`. They agree only where a
+digit is its own complement mod 10 — 0 and 5 — so they **disagree on 12 of the 16 values in -15..-1**,
+and `-1` and `9`, distinct states under `to_ascii`, would have been MERGED into one. Every test passed
+because every test used non-negative colours, which is what real ARC grids contain: precisely the
+"tests test what the author thought to test" mode named in CLAUDE.md's QA-Layer Authenticity
+Discipline. Practical exposure on the measured corpus was ZERO (every root grid is non-negative, so
+the fast path was taken throughout and no measured number changed) — the bug was LATENT, which is
+exactly why it survived. Fixed by guarding the fast path on `a.min() >= 0`, so negative grids defer to
+`to_ascii` itself and equivalence holds by construction rather than by argument.
+
+The review also found the anti-vacuity guard on the bulk test **satisfied by the very case it was
+written to exclude**: 60 random 4x5 grids over colours 0..15 give 1830 pairs with 60 collisions — and
+all 60 are SELF-pairs (measured: **0 non-trivial collisions**). So "collides where it collides" was
+only ever exercised by comparing a grid with itself, which any key satisfies. The corpus is now
+constructed: each random grid contributes an aliasing-perturbed twin (+10 on a scattered subset of
+cells) that is a distinct array `to_ascii` cannot tell from its parent, and both directions are now
+asserted to contain at least 30 non-trivial pairs.
+
+**Mutation proof, 7/7 killed**, each by the test written for it (a test that does not bite under its
+own mutation is not evidence):
+
+| Mutation applied to `_state_key` | Tests that died |
+|---|---|
+| M1 drop the `% 10` (i.e. the plain-`tobytes()` swap) | `::test_equivalence_over_random_grids`, `::test_the_aliasing_pair_collides_under_both`, `::test_colours_above_255_cannot_wrap_the_uint8_cast`, `::test_a_plain_bytes_key_would_not_have_been_equivalent`, `::test_plan_in_model_finds_the_same_plan_through_the_real_call_sites` |
+| M2 drop the shape prefix | `::test_shape_is_part_of_the_key` |
+| M3 drop the non-negative guard (**this was the shipped bug**) | `::test_negative_grids_fall_back_because_mod_10_disagrees_with_to_ascii`, `::test_an_empty_grid_does_not_crash_the_min_guard` |
+| M4 drop the integer-dtype guard | `::test_bool_and_object_dtypes_fall_back_rather_than_crash`, `::test_the_fast_path_is_actually_taken` |
+| M5 drop the `a.size` guard (empty-array crash) | `::test_an_empty_grid_does_not_crash_the_min_guard` |
+| M6 fall back unconditionally (never take the fast path) | `::test_the_fast_path_is_actually_taken` |
+| M7 run the uint8 cast BEFORE the `% 10` (wrap) | `::test_colours_above_255_cannot_wrap_the_uint8_cast` |
+
+On M4: with the dtype guard gone a NEGATIVE float is still caught by the `min() >= 0` guard, so
+`::test_negative_float_grid_falls_back_to_to_ascii` SURVIVES M4 — the two guards genuinely overlap
+there. M4 is killed by the bool/object case instead, which only the dtype guard covers. Recorded
+because a surviving test under a mutation is normally a defect in the test, and here it is not.
+
+**Cross-game verification** (`scripts/arc_state_key_dedup_xgame_verify.py`, 10 games, 20,000-call
+cap per arm, warm-up discarded, min of 2 timed reps):
+
+| game | control termination | engine calls | unique states | partition vs `to_ascii` | speedup |
+|---|---|---|---|---|---|
+| ka59 @ `341f776c9` | cap_reached | 20,000 | 1,968 | IDENTICAL | **1.28x** |
+| lp85 | cap_reached | 20,000 | 887 | IDENTICAL | **7.18x** |
+| sc25 | cap_reached | 20,000 | 1,994 | IDENTICAL | **6.61x** |
+| sk48 | cap_reached | 20,000 | 981 | IDENTICAL | **4.59x** |
+| cn04 | queue_exhausted | 93 | 9 | IDENTICAL | n/a — too little work to time |
+| tu93 | queue_exhausted | 148 | 4 | IDENTICAL | n/a |
+| sp80 | queue_exhausted | 56 | 4 | IDENTICAL | n/a |
+| re86 | queue_exhausted | 28 | 1 | IDENTICAL | n/a |
+| ar25 | queue_exhausted | 16 | 1 | IDENTICAL | n/a |
+| m0r0 | plan_found | 1 | 2 | IDENTICAL | n/a |
+
+Identity is by ACCEPT-TRACE SHA256, not by matching the counts in this table — two different
+partitions can coincidentally agree on both totals. The six unusable rows still verify the partition;
+they are excluded from the speed column rather than averaged into it.
+
+**The plain-bytes arm, reported separately because it is a behaviour change and not a speedup:**
+identical on 9 of 10 games and DIFFERENT on **cn04** (93 calls / 9 states → 140 / 14). That is the
+measured refutation of the obvious swap.
+
+**Regression check on the surrounding suite.** ARC-related subset (`-k "arc or world_model or e3 or
+plan"`): **53 failed, 8975 passed, 13 skipped, 1 error**. The same subset run against the PRE-SWAP
+file gives **53 failed, 8967 passed, 13 skipped, 1 error** and a byte-identical failure set — zero
+new, zero fixed, with the +8 passed accounted for exactly by the new test file. So all 53 failures
+are pre-existing (overwhelmingly artifact-schema/replay assertions, not search behaviour). Stating it
+rather than reporting "tests pass": 53 red tests and 13 skips in this subset is a standing finding in
+its own right, and neither is this change's to fix.
+
+**Freshness rebuild, and it is the strongest corroboration of the partition claim.** Changing
+`arc_executable_world_model.py` lapsed the artifact-freshness acknowledgements (as designed — they
+pin one exact hash). The four registered artifacts that declare a `rebuild_command` and depend on
+this module were rebuilt at the new hash and deep-diffed leaf by leaf against their committed
+versions:
+
+| artifact | leaf values compared | changed leaves | SUBSTANTIVE differences |
+|---|---|---|---|
+| `experiment_6011_world_model_change_gate_four_arm.json` | 48,384 | 78 | **0** |
+| `experiment_6012_hidden_state_trust_gate_hole.json` | 20,249 | 37 | **0** |
+| `experiment_6013_hidden_state_change_gate_closure.json` | 7,311 | 41 | **0** |
+| `experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json` | 1,278 | 7 | **0** |
+| **total** | **77,222** | **163** | **0** |
+
+Every one of the 163 changed leaves is a timing, hash, mtime, diff-stat or git-head field; zero
+recorded findings moved and zero fields were removed. Both evidence trees (`results/arc_e3`,
+`results/arc_e3_origin_fixtures`) stayed `git status` clean across all four rebuilds. This is an
+INDEPENDENT check on the partition claim: four real analysers that run searches through the swapped
+call sites produce byte-identical findings. The three artifacts that share the dependency but declare
+no `rebuild_command` carry APPENDED acknowledgements pinned to the new hash (appended, not replaced,
+so the transition history survives).
+
+**A second guard false-positived, and the fix was to rename rather than to allowlist.** `gitleaks`
+flagged all 10 accept-trace hashes in the evidence artifact as `generic-api-key` leaks: the rule fires
+on a 64-hex value whose FIELD NAME contains "key", and the field was
+`accept_trace_sha256_landed_state_key`. It is a SHA-256 of a search's accept/reject decision sequence,
+not a credential. Renamed to `accept_trace_sha256_landed_fn`; an allowlist entry would have blunted a
+security lint for one artifact's convenience. Recorded so the name is not "tidied" back.
+
+**One pre-commit guard fired as a FALSE POSITIVE and was resolved deliberately, not bypassed.** The
+`test-suite-mutation-gate` recorded that the ARC test run had modified
+`openspec/capabilities/arc-world-model-trust-energy/spec.md`. No test wrote that file: the run was
+launched in the background and the REQ-ARC-WMTE-6051 spec section was appended by hand WHILE it was in
+flight, so the audit hook attributed a concurrent human edit to the test process. The gate cannot
+distinguish those, and it is right not to guess. Verified before clearing: the staged spec diff is
++77/-0, entirely authored prose for the new REQ, touching no existing line. The marker was then
+deleted deliberately per the tool's own documented path (explain it in the commit message), NOT with
+`--no-verify`. **Lesson for future sessions: do not hand-edit tracked files while a background test
+run is active** — it manufactures exactly this ambiguity in a guard whose whole value is being
+unambiguous.

@@ -20403,3 +20403,79 @@ WHICH artifacts reach the floor dispatch; it MUST NOT alter which floor any of t
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6050 | `scripts/adversarial_verify.py:check_duration_vs_claim` — the marker early-return now also admits `_is_arc_live_agent_no_llm(d)`, because an explicit substrate declaration is itself an affirmative claim of real per-action environment stepping and is self-sufficient grounds to check the floor. | `tests/python/test_adversarial_verify_arc_no_llm_floor_2026_07_30.py` — 6 tests, incl. the exact clean-artifact regression, `duration_s=0.0`, a not-over-flagging guard across four plausible durations, and a live-LLM scope guard. **Corpus-wide impact: ZERO.** All 99 artifacts on disk declaring this substrate already have `duration_s >= 0.01`, so closing the hole newly flags no historical artifact — the fix removes a forward blind spot rather than reinterpreting the past, and that claim is itself pinned as a test (`::test_no_artifact_on_disk_is_newly_flagged_by_closing_this_hole`) so a future sub-floor artifact surfaces as an operator corrigendum decision instead of a quiet loosening. **How it was found:** NOT by a unit test — the pre-existing tests exercised the branch by handing it an artifact WITH a marker, so they passed while the branch was dead for real clean inputs (the "tests test what the author thought to test" mode named in CLAUDE.md's QA-Layer Authenticity Discipline). It surfaced by probing the linter with a hand-built clean artifact while verifying THIS session's own affordability artifact, which declared this substrate at `duration_s: 0.002` — below its own floor — and was reported clean by the full scan. That artifact's substrate was simultaneously corrected to `aggregation_from_upstream_artifacts` (it reads upstream JSON and does arithmetic; it steps no environment), recorded in its `inference_substrate_correction_20260730` field. |
+
+## REQ-ARC-WMTE-6051: The In-Model Search's Duplicate-State Key SHALL Be Cheap AND Partition-Preserving
+
+`plan_in_model` calls its duplicate-state key once per engine call. A cProfile of a shipped-budget
+ka59 search attributed **38% of the entire search** to that one function — `to_ascii`, building a
+one-char-per-cell Python string cell by cell (~1.3M `str.join` calls). The search is CPU-bound
+replay under a hard per-game wall-clock budget, so that 38% is bought directly at the expense of
+nodes explored. The key SHALL be computed in NumPy instead, and it SHALL induce EXACTLY the same
+partition on grid states as `to_ascii` did.
+
+The second clause is the whole difficulty. `to_ascii` renders each cell as `str(int(v))[-1]` — the
+LAST DIGIT ONLY — so it MERGES colour 4 with 14, 5 with 15, 1 with 11, and 0 with 10. The shipped
+key is therefore LOSSY, and those colours are live in real root grids (ka59 contains 4 AND 14 and
+also 5 AND 15; lp85 contains 1/11, 4/14 and 5/15; cn04 contains 0/10 and 4/14). Whether that merge
+is a defect worth fixing is a SEPARATE question, deliberately NOT answered here: fixing it changes
+which states the search explores and belongs in its own change with its own evidence.
+
+### SCENARIO-ARC-WMTE-6051-1: A plain `tobytes()` key is REFUSED as the swap
+GIVEN two states differing only by an aliasing colour swap (all-4 versus all-14)
+WHEN the duplicate-state key is computed
+THEN both keys MUST be equal, because `to_ascii` treats them as the same state.
+A plain `g.tobytes()` FAILS this: it separates them, inducing a strictly finer partition. That is
+not a hypothetical — measured across ten games, a plain-bytes key changes the search on **cn04**,
+taking 93 engine calls / 9 unique states to 140 / 14. `(g % 10)` reproduces `to_ascii`'s equivalence
+classes exactly for every NON-NEGATIVE integer, which is why the fast path is guarded on
+`a.min() >= 0`. It does NOT hold for negatives, and an adversarial review caught that claim being
+made falsely here before this shipped: `to_ascii` takes the last character of the DECIMAL STRING, so
+for a negative number that is the last digit of its ABSOLUTE value (`str(-1)[-1] == "1"`), whereas
+`-1 % 10 == 9`. They agree only where a digit is its own complement mod 10 -- only 0 and 5 -- so they
+DISAGREE on 12 of the 16 values in -15..-1. Negative grids therefore fall back to `to_ascii` itself,
+making the equivalence hold by construction rather than by argument.
+That is what makes it a drop-in rather than a behaviour change.
+
+### SCENARIO-ARC-WMTE-6051-2: Shape is part of the key
+GIVEN one flat sequence of six values viewed as a 2x3 grid and as a 3x2 grid
+THEN the two keys MUST differ, because `to_ascii` separates rows with newlines and so distinguishes
+them. Raw bytes of the same values are IDENTICAL, so a prefix carrying the shape is required.
+`plan_in_model` happens to be immune (it rejects any grid whose shape differs from the start grid
+BEFORE keying) but `plan_and_execute` only checks `ndim == 2`, so the prefix is what makes the swap
+safe at BOTH call sites rather than one.
+
+### SCENARIO-ARC-WMTE-6051-3: A non-integer dtype falls back to `to_ascii` itself
+GIVEN a grid of negative floats
+THEN the key MUST equal `to_ascii`'s output. This is the one input class where the two encodings
+genuinely disagree: `to_ascii` truncates toward zero (`int(-2.7) == -2`, rendering "2") while
+`-2.7 % 10 == 7.3`, which truncates to 7. Rather than argue that float grids cannot occur, anything
+that is not an integer dtype is handed to `to_ascii`, making behaviour identical by construction at
+no cost to the case that matters.
+
+### SCENARIO-ARC-WMTE-6051-3b: A NEGATIVE integer grid falls back, because `% 10` is wrong there
+GIVEN a grid of any value in -15..-1
+THEN the key MUST equal `to_ascii`'s output. This scenario exists because the first implementation
+did NOT have it and was wrong: it took the arithmetic path for ANY integer dtype while this spec,
+the module docstring, the ops docs and the whole test file asserted that `% 10` matched `to_ascii`
+"for every integer, negatives included". It does not. `to_ascii` yields the last digit of the
+ABSOLUTE value; `% 10` wraps. `-1` renders "1" but `-1 % 10 == 9`, so `-1` and `9` -- distinct states
+under `to_ascii` -- would have been MERGED. Every pre-existing test passed because every one used
+non-negative colours. `np.abs(a) % 10` would match everywhere except at a dtype's most negative
+value, where `abs` silently overflows; the fast path declines negatives instead, so equivalence holds
+by construction. A grid with a SINGLE negative cell also falls back — the guard is on the minimum.
+
+### SCENARIO-ARC-WMTE-6051-4: Partition identity is proved by ACCEPT TRACE, not by totals
+GIVEN a search run to an identical engine-call cap under the old key and the new one
+THEN equal `engine_calls` and equal `unique_states` are NOT sufficient evidence of identity — two
+different partitions can coincidentally agree on both totals. The search SHALL additionally agree on
+its ACCEPT TRACE: the key-INDEPENDENT sequence, one entry per engine call in order, of what the
+search DECIDED (accepted as new / rejected as duplicate / skipped on shape / engine raised). Two
+runs sharing an accept-trace hash and a plan ran the identical search.
+
+**Evidence weight is NOT uniform across the ten, and 'all ten' must not be read as ten equally strong observations.** Only FOUR (ka59, lp85, sc25, sk48) ran to the 20,000-call cap and explored 887–1,994 distinct states; those carry the weight. The other six exhausted their search queue after 1–148 engine calls because their current on-disk engines are near-inert, so their agreement, while real, is close to vacuous — agreeing over 16 engine calls says little about a key. The substantive claim is "partition-identical on four games covering ~4,750 distinct states and ~80,000 engine calls, corroborated on six more". The thin rows are still reported rather than dropped because the ONE game where the plain-bytes key diverges (cn04) is itself a 93-call game, so a divergence can surface even there.
+
+## Implementation Status (REQ-ARC-WMTE-6051)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6051 | `python/carnot/agentic/arc_executable_world_model.py:_state_key` — `b"%d:%d\|" % (h, w) + (a % 10).astype(np.uint8).tobytes()` on the 2-D integer fast path, `to_ascii(a)` otherwise. Swapped in at all **5** key sites: `plan_in_model`'s `seen` seed and both of its branches (best-first goal-energy and blind FIFO BFS), plus `plan_and_execute`'s `seen` seed and its keying site (whose `ndim == 2` guard is preserved). `to_ascii` itself is UNCHANGED and still used for prompts and for the fallback — this adds a key, it does not retire a renderer. | `tests/python/test_arc_state_key_dedup_2026_07_30.py` — 14 tests. **Mutation-proven: 7/7 mutations killed**, each by the test written for it — dropping the `% 10` kills 3 tests (incl. the `plan_in_model` end-to-end), dropping the shape prefix kills `::test_shape_is_part_of_the_key`, dropping the dtype fallback kills 2, and an unconditional fallback (which would satisfy every equivalence test and buy nothing) kills `::test_the_fast_path_is_actually_taken`. **Cross-game verification, 10 games at a 20,000-call cap:** the landed `_state_key` is partition-identical to `to_ascii` on ALL TEN — same engine calls, same unique states, same plan, same accept-trace SHA256. Speedup on the 4 games whose engines do enough work to time (the other 6 exhaust their search queue in 1–148 calls, which verifies the partition but gives no timing signal, and are excluded from the speed table rather than averaged in): **ka59 1.28x, sk48 4.59x, sc25 6.61x, lp85 7.18x** — no regression anywhere, minimum 1.28x. The spread is explained, not averaged: ka59's peak engine is expensive (`_blocks` alone was 48% of its search), so the key is a smaller share of its total, whereas the other three have cheap engines where the key dominated. An earlier version of this measurement reported "371x" on ka59 — an artefact of arm ORDER, since the control ran first and absorbed one-off engine warm-up; the measurement now discards a warm-up run and takes the minimum of two timed reps per arm. |
