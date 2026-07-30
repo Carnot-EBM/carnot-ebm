@@ -399,6 +399,7 @@ def preflight_verdict(
     alpha: float = 0.05,
     planned_n_cells: Optional[int] = None,
     noise_pairs: Optional[Mapping[str, Mapping[str, Any]]] = None,
+    noise_pairs_b: Optional[Mapping[str, Mapping[str, Any]]] = None,
 ) -> dict[str, Any]:
     """PASS or REFUSE the full grid, from the per-cell classifications.
 
@@ -415,6 +416,28 @@ def preflight_verdict(
     harness makes every cell perturb and the pre-flight passes on noise. When it is supplied,
     the ceiling on discordant pairs is ATTRIBUTABLE perturbation (perturbs under A/B AND
     byte-identical under A/A) rather than raw perturbation.
+
+    ``noise_pairs_b`` is the SECOND arm's A/A comparison, and it closes a hole this module had
+    from the day it shipped (found by review 2026-07-30, on the first real grid to use it).
+
+    An A/B comparison spans TWO arms. A single ``noise_pairs`` measures the determinism of ONE
+    of them. The module nonetheless treated that single measurement as licensing attribution for
+    the whole comparison -- so a grid whose control arm was the noisy one would credit the
+    control arm's self-perturbation to the treatment, and the module would certify it. In the
+    grid that exposed this, the measured floor was head-vs-headb 0/6 while every A/B pair held
+    ONE unreplicated base run; and the treatment under test changed a search DEDUP KEY, i.e.
+    exactly the kind of change that can stabilise iteration order and so make the two arms
+    differ in determinism. "The treatment arm repeats itself" is not evidence that "the control
+    arm repeats itself", and the whole point of a noise floor is that it must not rest on an
+    argument.
+
+    When both mappings are supplied, a cell is attributable only when BOTH arms were separately
+    witnessed to repeat themselves on THAT cell. A cell present in one mapping and absent from
+    the other is UNWITNESSED on the missing side and is excluded -- a missing observation, never
+    a pass. When only one is supplied the behaviour is unchanged for compatibility, but the
+    result now carries ``single_arm_noise_floor_warning`` saying so, because a caller who reads
+    ``noise_floor_measured: True`` and stops there is reading the same over-claim this
+    parameter exists to prevent.
 
     The decision rule, and why each part of it is there:
 
@@ -465,23 +488,42 @@ def preflight_verdict(
     # A/B perturbation as treatment-attributable. A false REFUSE only wastes an experiment; a
     # false PASS spends hours and then reports a number nobody can attribute.
     noise_measured = noise_pairs is not None
+    noise_maps: list[Mapping[str, Mapping[str, Any]]] = [
+        m for m in (noise_pairs, noise_pairs_b) if m is not None
+    ]
+    n_noise_arms = len(noise_maps)
     attributable: list[str] = []
     unattributable: dict[str, str] = {}
+    lacking_second_witness: list[str] = []
     if noise_measured:
         for label, rec in items:
             if str(rec.get("cls")) != PERTURBED:
                 continue
-            noise_rec = (noise_pairs or {}).get(label, {})
-            noise_cls = str(noise_rec.get("cls", MISSING))
-            aa_both_complete = bool(noise_rec.get("a_complete")) and bool(
-                noise_rec.get("b_complete")
-            )
-            if noise_cls == IDENTICAL and aa_both_complete:
+            # EVERY supplied noise mapping must witness this cell as deterministic. `all()` over
+            # the mappings, rather than a check against one of them, is the whole fix: with a
+            # single mapping this is identical to the previous behaviour, and with two it refuses
+            # to let one arm's determinism speak for the other's.
+            reasons: list[str] = []
+            for m in noise_maps:
+                noise_rec = m.get(label, {})
+                noise_cls = str(noise_rec.get("cls", MISSING))
+                both_complete = bool(noise_rec.get("a_complete")) and bool(
+                    noise_rec.get("b_complete")
+                )
+                if noise_cls == IDENTICAL and both_complete:
+                    continue
+                reasons.append(
+                    "IDENTICAL_BUT_AA_ARM_TRUNCATED" if noise_cls == IDENTICAL else noise_cls
+                )
+            if not reasons:
                 attributable.append(label)
-            elif noise_cls == IDENTICAL:
-                unattributable[label] = "IDENTICAL_BUT_AA_ARM_TRUNCATED"
             else:
-                unattributable[label] = noise_cls
+                # Report the FIRST failing reason for compatibility with the single-arm output
+                # shape, and name the multi-arm case explicitly so a reader can tell "one arm
+                # said no" from "one arm never spoke".
+                unattributable[label] = reasons[0] if n_noise_arms == 1 else "+".join(reasons)
+                if n_noise_arms > 1 and MISSING in reasons:
+                    lacking_second_witness.append(label)
     n_attributable = len(attributable) if noise_measured else None
 
     ceiling_strict = n_attributable if noise_measured else n_perturbed
@@ -578,6 +620,25 @@ def preflight_verdict(
         "per_cell_noise": (
             None if not noise_measured else {k: dict(v) for k, v in (noise_pairs or {}).items()}
         ),
+        "per_cell_noise_b": (
+            None if noise_pairs_b is None else {k: dict(v) for k, v in noise_pairs_b.items()}
+        ),
+        "n_noise_arms_measured": n_noise_arms,
+        "cells_perturbed_but_lacking_a_second_arm_noise_witness": sorted(lacking_second_witness),
+        "single_arm_noise_floor_warning": (
+            None
+            if n_noise_arms >= 2 or not noise_measured
+            else (
+                "ONLY ONE ARM'S DETERMINISM WAS MEASURED. An A/B comparison spans two arms, so a "
+                "noise floor measured on one of them does not license attribution for the pair: "
+                "if the UNREPLICATED arm is the noisy one, its self-perturbation is credited to "
+                "the treatment and this verdict certifies it. Supply the other arm's A/A as "
+                "`noise_pairs_b`. Note that a treatment which touches hashing, dedup keys, "
+                "iteration order or tie-breaking can CHANGE how deterministic an arm is, so the "
+                "two arms' floors cannot be assumed equal -- that is precisely when this matters "
+                "most."
+            )
+        ),
         "noise_floor_warning": (
             None
             if noise_measured
@@ -654,10 +715,15 @@ def format_report(verdict: Mapping[str, Any], *, title: str = "") -> str:
     )
     if v.get("noise_floor_measured"):
         lines.append(
-            f"A/A noise floor measured: raw perturbed {v['n_perturbed_raw']}, "
+            f"A/A noise floor measured on {v.get('n_noise_arms_measured', 1)} arm(s): "
+            f"raw perturbed {v['n_perturbed_raw']}, "
             f"attributable {v['n_perturbed_attributable']} {v['attributable_cells']}; "
             f"unattributable {v['unattributable_cells_with_aa_class']}"
         )
+        # Printed as a WARNING rather than tucked into the dict, because the failure mode is a
+        # reader who sees "noise floor measured" and stops.
+        if v.get("single_arm_noise_floor_warning"):
+            lines.append(f"WARNING: {v['single_arm_noise_floor_warning']}")
     else:
         lines.append(f"WARNING: {v['noise_floor_warning']}")
     for label, rec in v["per_cell"].items():

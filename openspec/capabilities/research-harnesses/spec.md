@@ -719,3 +719,105 @@ commit while reporting nothing about staleness, which is strictly worse than a m
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-HARNESS-6051 | `scripts/artifact_freshness_lint.py:_acknowledged_inert_drift` + the per-dependency branch in `check_artifact`, which reports acknowledged drift explicitly in the `fresh` detail rather than hiding it. | `tests/python/test_artifact_freshness_acknowledgement_2026_07_30.py` (7 tests) including an end-to-end pass through `check_artifact` (stale → acknowledged-fresh → stale again for the wrong hash) and a test asserting the three real committed acknowledgements are well-formed and name checkable evidence. **Applied 2026-07-30 to the three artifacts with no `rebuild_command`, and ONLY after the drift was verified inert two ways:** structurally (`_guard_engine_write`'s first statement is an early return when `PYTEST_CURRENT_TEST` is unset, and the module diff is purely additive — zero removed or modified lines) and EMPIRICALLY (the four registered artifacts that DO have a rebuild command were rebuilt in place and deep-diffed: **77,000 leaf values compared, zero research numbers moved** — only `elapsed_s`/`measurement_wall_s` timing jitter and, in exp6021, its own recorded code-provenance hashes). Preferring the rebuild where one exists is the documented rule: it proves inertness by construction rather than by argument. |
+
+## REQ-HARNESS-6052: An A/A Noise Floor SHALL Be Measured On Every Arm The A/B Spans
+
+`preflight_verdict` accepted ONE `noise_pairs` mapping — one arm's A/A replicate — and treated it as
+licensing attribution for a comparison that spans TWO arms. So a grid whose CONTROL arm was the
+nondeterministic one would credit the control arm's self-perturbation to the treatment, and the
+module would stamp every such cell attributable.
+
+This is not a theoretical hole. The 2026-07-30 composite treatment-activation grid measured a
+head-vs-headb floor of 0/6 while every A/B pair held exactly ONE unreplicated base run, and the
+treatment under test changed a search DEDUP KEY — precisely the kind of change that can stabilise
+iteration order, so the two arms' determinism could not be assumed equal. The module's own docstring
+already says a control whose validity rests on an argument is not a control; the signature committed
+that error.
+
+### SCENARIO-HARNESS-6052-1: A second arm that perturbs removes attribution
+GIVEN every cell PERTURBED under A/B, arm A's A/A all IDENTICAL, and arm B's A/A all PERTURBED
+WHEN `preflight_verdict` is called with both `noise_pairs` and `noise_pairs_b`
+THEN `n_perturbed_attributable` is 0 and the verdict is REFUSE, where the single-arm call returned
+the full count and PASS.
+
+### SCENARIO-HARNESS-6052-2: A cell absent from the second arm is UNWITNESSED, never a pass
+GIVEN a partial second-arm replicate covering a strict subset of the probed cells
+WHEN the verdict is computed
+THEN only the covered cells are attributable, the uncovered ones appear in
+`cells_perturbed_but_lacking_a_second_arm_noise_witness`, and they are reported as unattributable
+rather than silently dropped. A second arm is expensive, so partial coverage is the realistic case
+and it must degrade to a missing observation.
+
+### SCENARIO-HARNESS-6052-3: A truncated second-arm replicate does not certify
+GIVEN a second-arm A/A pair that is TRUNCATION_ONLY, or IDENTICAL with an incomplete arm
+WHEN the verdict is computed
+THEN the cell is not attributable. Agreement over a prefix is not a determinism witness, and the
+error direction matters: a false PASS spends hours and yields a number nobody can attribute, while a
+false REFUSE costs one experiment.
+
+### SCENARIO-HARNESS-6052-4: A single-arm call still works, and says that it is single-armed
+GIVEN only `noise_pairs`
+WHEN the verdict is computed
+THEN the attributable count is unchanged from before this requirement (backward compatible), AND the
+result carries `single_arm_noise_floor_warning`, which `format_report` prints. The realistic misuse
+is a caller who reads `noise_floor_measured: True` and stops there.
+
+### SCENARIO-HARNESS-6052-5: "Never spoke" is distinguished from "said no"
+GIVEN a cell PERTURBED under A/B, IDENTICAL in arm A's A/A, and absent from arm B's mapping
+WHEN the verdict is computed
+THEN its unattributable reason is MISSING, not PERTURBED. Conflating them is the missing-vs-present
+error this module exists to prevent, committed inside its own reason strings.
+
+## Implementation Status (REQ-HARNESS-6052)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-6052 | `python/carnot/analysis/treatment_activation_preflight.py:preflight_verdict` — new `noise_pairs_b` parameter; attribution loops over EVERY supplied noise mapping (`all()` semantics) rather than checking one, so with a single mapping the behaviour is bit-identical to before and with two neither arm can speak for the other. New output fields `per_cell_noise_b`, `n_noise_arms_measured`, `cells_perturbed_but_lacking_a_second_arm_noise_witness`, `single_arm_noise_floor_warning`; `format_report` prints the warning as a WARNING line. | `tests/python/test_treatment_activation_preflight_two_arm_noise_floor.py` — 8 tests, one per scenario plus a both-arms-clean control asserting the stricter rule costs no attribution and a guard that the pre-existing no-floor warning is not shadowed. All **36** pre-existing tests in `test_treatment_activation_preflight.py` pass unchanged, which is the backward-compatibility claim. **MEASURED, not assumed:** the hypothesis that motivated this (base is the noisy arm, collapsing the 2026-07-30 grid's attributable count 4 → 1) was tested by running a real `baseb` arm at 8441055c0 on the four attributable cells — base vs baseb IDENTICAL on all four (tu93 28/28, tr87 27/27, tn36 31/31, vc33 14/14), base-arm floor **0/4**. The hypothesis is REFUTED and the count stands at 4; the requirement stands regardless, because the point is that it had to be measured rather than argued. **Honest scope:** that is a result about those four cells at budget=60, NOT a proof the nondeterminism channel is closed — `probe_cell.py` pins no `PYTHONHASHSEED`, and the base worktree's own `results/proto_just_explore_budget_scan.json` documents the graph explorer's frontier as hash-order-nondeterministic across fresh processes ("the SAME seed in three FRESH processes gave atfl=362, then 153, then no-solve"). Future grids should pin it on both arms. |
+
+## REQ-HARNESS-6053: An ABSENT `duration_s` On A Compute-Bound Artifact SHALL Be A Methodology Gap
+
+`check_duration_vs_claim` returns immediately when `duration_s` is absent or non-finite, so the
+entire DURATION_TOO_SHORT family never runs on an artifact that simply OMITS the field. The
+2026-07-30 composite treatment-activation artifact declared `inference_substrate:
+live_llm_inference` — a 60s floor — with `duration_s: null`, and `adversarial_verify` returned
+"0 flagged". That clean result was then cited as evidence the artifact was sound. It was not
+evidence about the duration at all: the field the check is DEFINED on was missing.
+
+Verified by injection on that artifact: `1.0` and `0.0001` both fire CRITICAL DURATION_TOO_SHORT,
+`null` passes silently. The asymmetry is strictly worse than a short duration — an artifact that
+omits the field is INVISIBLE to the check built to catch fabrication, while an honest one recording
+a real 35s gets flagged. CLAUDE.md's Adversarial Artifact Verification rule names `duration_s` as
+the load-bearing fabrication-detection signal precisely because real compute takes wall-clock time,
+so its ABSENCE on a compute-bound artifact is a methodology gap in the same sense as a missing seed.
+
+### SCENARIO-HARNESS-6053-1: A compute-bound artifact with no `duration_s` is flagged
+GIVEN an artifact declaring `live_llm_inference` (or carrying a compute-bound marker) with
+`model_specs`, `random_seed` and `reproducibility_checksum` all present but `duration_s` absent
+WHEN `check_methodology_present` runs
+THEN it emits METHODOLOGY_MISSING naming `duration_s` and nothing else.
+
+### SCENARIO-HARNESS-6053-2: Any value the duration check would skip is caught here
+GIVEN `duration_s` set to `null`, `""`, the STRING `"1200"`, NaN, inf, `[]` or `{}`
+WHEN `check_methodology_present` runs
+THEN each is flagged. The bug is not "null is missing" but "the duration check skips anything it
+cannot treat as a finite number", so a fabricator need only write a string to stay invisible.
+
+### SCENARIO-HARNESS-6053-3: Absence and implausibility stay separate findings
+GIVEN a live-LLM artifact with `duration_s: 1.0`
+WHEN both checks run
+THEN `check_methodology_present` is silent and `check_duration_vs_claim` emits DURATION_TOO_SHORT.
+The field was measured; it is a plausibility problem, not a methodology gap, and double-reporting
+would corrupt the downstream counts.
+
+### SCENARIO-HARNESS-6053-4: Every existing exemption is inherited
+GIVEN an aggregation-only artifact, or one with no compute-bound marker and no live substrate
+WHEN `check_methodology_present` runs
+THEN no METHODOLOGY_MISSING is emitted. The addition lives inside the function that already carries
+the aggregation, ARC-no-LLM, deterministic-verifier and precondition-blocked carve-outs, so it
+inherits them rather than re-deriving a second divergent set.
+
+## Implementation Status (REQ-HARNESS-6053)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-6053 | `scripts/adversarial_verify.py:check_methodology_present` — `duration_s` joins `model_specs`/`random_seed`/`reproducibility_checksum` in the `missing` list, gated on `_is_finite_number`. Reported at `warn`, not `critical`: the corpus predates the requirement and quarantining historical artifacts for a newly-added field would be a retroactive gate, not a fabrication finding. | `tests/python/test_adversarial_verify_absent_duration_2026_07_30.py` — 12 tests, one per scenario plus a present-and-finite control and a non-compute-bound no-op guard. The fixture deliberately carries every OTHER methodology field so a passing "the flag fired" assertion cannot pass for the wrong reason. **Corpus impact measured over all 6311 result artifacts BEFORE shipping: 656 gain the string `duration_s` inside a METHODOLOGY_MISSING warn they ALREADY carried for another reason, and ZERO artifacts acquire a warn they did not previously have.** So the change adds detail to existing findings and quarantines nothing retroactively. **How it was found:** by probing the linter with injected durations while verifying this session's own artifact, not by a unit test — the pre-existing tests all supplied a duration, so they exercised the populated path while the absent path was unguarded. Same mode as REQ-ARC-WMTE-6050 above ("tests test what the author thought to test") and the fourth instance in one session of a comparator treating "no value" as "a value". |
