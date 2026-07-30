@@ -156,7 +156,43 @@ enumerated here** — do not read the commit as "all hardcoded paths are gone."
   plus `git status` remain the only backstop for that class. **Updated 2026-07-29:** `--check` now
   requires a baseline taken *before* the run (`--run -- <cmd>`, or `--snapshot` paired via
   `$CARNOT_MUTATION_RUN_ID`); a bare `--check` REFUSES rather than answering from whatever shared
-  snapshot was last on disk. So this backstop is only armed if you take the baseline first —
+  snapshot was last on disk. **The copy-pasteable form (verified 2026-07-30 — a bare `--check` exits
+  1 with "REFUSING -- no baseline for this run", so any instruction phrased as just "run `--check`
+  after the tests" cannot be satisfied and yields a failure instead of information):**
+
+  ```bash
+  export CARNOT_MUTATION_RUN_ID=my_run_$$
+  python3 scripts/test_suite_mutation_check.py --snapshot        # BEFORE the tests
+  <run the test suite>
+  python3 scripts/test_suite_mutation_check.py --check --run-id "$CARNOT_MUTATION_RUN_ID"
+  git status --short                                            # the independent second look
+  ```
+
+  It deliberately declines to fall back on `ops/.test_suite_mutation_snapshot.json` — answering from
+  a shared baseline any other workflow may have overwritten is the concurrency bug it replaced, so
+  "REFUSING" is the correct behaviour and not a defect to work around.
+
+  **NEW 2026-07-30 — the guard earned its keep twice in one session, and found a class it does NOT
+  cover.** With the pair armed, one ARC-subset run was caught rewriting **eight tracked files** that
+  were clean before it: `experiment_4548_integration_8game_gate.py` and
+  `experiment_4560_integration_8game_gate.py` regenerated with 30 and 34 lines DELETED,
+  `experiment_5610/5621/5632/5643_arc_live_self_discovery_levelup_v50*.py`,
+  `tests/python/test_arc_generator_vram_guard.py` (36 insertions / 4 deletions, docstrings and
+  asserted semantics both changed), `tests/python/test_arc_object_history_salience_live_wiring.py`,
+  and `results/experiment_5746_...preflight.json` with its `blocked_reasons` flipped from `[]` to
+  `["required_exact_solver_unavailable"]`. All reverted; none committed.
+
+  **The class it does NOT cover: brand-new untracked files written into tracked source directories.**
+  The same run created `python/carnot/artifact_gate_annotations.py`,
+  `python/carnot/submitted_agent_config_ast.py` and
+  `tests/python/test_submitted_agent_config_ast.py` — 34 KB of generated module and test source
+  sitting in `python/carnot/` and `tests/python/`. The mutation check compares hashes of files that
+  already existed, so a NEW file is invisible to it; only `git status` shows them, as `??`. That is
+  the same stray-output hazard `2bad77981` fixed for `scripts/` (an analyser resolving its output dir
+  as "next to this file"), and it is worse here because a `git add -A` would commit generated
+  modules into the package as if authored. **Left on disk deliberately** (deleting them was not
+  traced to be safe for whatever regenerates them) and explicitly NOT committed. A `--check` that
+  also reported new untracked files under `python/` and `tests/` would close this.
   budget for that, because the previous shared-snapshot version would silently answer from another
   workflow's baseline, which is worse than refusing. The `--gate` pre-commit hook needs no baseline
   and is unaffected.
@@ -14424,12 +14460,32 @@ if the pattern recurs with enough detail to actually pin down a cause.
    divergence INDEX on vc33 (always 17) is the lead. Until this is characterised, every A/B on this
    path needs its own measured A/A floor.
 3. **Affordability is unresolved at 110 games.** The only engine verified to produce a real solve
-   costs ~194 s/attempt against a conservative 67.2 s/game residual. n=1 on that class. Needs the
+   costs ~194 s/attempt against a conservative ~~67.2~~ **58.34** s/game residual (corrected
+   2026-07-30 — the envelope's own `usable_loop_wall_s` was re-derived from cap hours instead of
+   imported, making every residual 8.91 s/game too generous). n=1 on that class. Needs the
    cost of MORE engines that actually solve, which needs more engines that actually solve.
-4. **The branching factor is the remaining lever.** Both frontier-ordering levers are refuted with
-   measurements. Perception / candidate generation (18 candidates per expansion, 90.2% duplicate
-   rate) is where the ~4x gap lives.
-5. **The bytes dedup key is measured but not shipped.** 1.288x, provably equivalent partition.
+4. ~~**The branching factor is the remaining lever.**~~ **MEASURED AND DEVALUED 2026-07-30 — the
+   branching factor is NOT the lever.** Both frontier-ordering levers were already refuted; the
+   candidate-set cut has now been measured too and it does not deliver. Three points, each measured:
+   (a) candidate GENERATION is only **5.0%** of search time, so no change to the candidate set can
+   touch the other 95%; (b) the deployable cut (click-dedup + inert-keyboard ban) is worth **1.021x
+   median WALL clock** over the 14 strong corpus rows — deep inside the **10.8–14.6%** A/A noise floor
+   this session measured for the first time, i.e. not measurably faster at all; (c) the
+   high-multiplier variant (object-class filter) **permanently loses reachable states** on 3 of 25
+   games, and the deficit GROWS with depth (lp85 14 → 348), so it is not a frontier delay. The
+   inert-keyboard ban is additionally **absorbing by construction** and has a constructed
+   counterexample that loses 75% of reachable states permanently — its non-vacuous corpus support is
+   ~1 game. See `results/outer_loop_arc_branching_factor_corrected_20260730.json`. **The remaining
+   lever is per-call cost INSIDE the LLM-generated engine, or the PERCEPTION that sets the branching
+   factor** (13 of 18 candidates are clicks, 72.7% of engine calls are clicks, 3 of 15 salience ranks
+   are entirely inert) — a front-end proposing 4 interactive objects instead of 13 speculative points
+   would cut branching with no inductive ban at all.
+5. ~~**The bytes dedup key is measured but not shipped.**~~ **SHIPPED** 2026-07-30 as `_state_key`
+   (4.7–6.3x on the games with usable timing, partition-identical by accept-trace hash). A review then
+   found the first fix's fallback returned a `str` while the fast path returned `bytes`, which
+   satisfied per-input equality with `to_ascii` but BROKE the partition across branches — `[[4]]` and
+   `[[-4]]`, which `to_ascii` merges, came back split. Every non-empty 2-D grid now keys into one
+   namespace. Latent (real grids are non-negative) but reachable, since engines are arbitrary LLM code.
 6. **A cheap pre-flight does not exist.** Needs a smaller SOTA inducer or cached-induction replay.
 7. **`planned_n_cells` projection is unvalidated in practice.** The arithmetic is tested but no real
    grid has yet been screened by projecting from a subset. Treat the first such use as a pilot.

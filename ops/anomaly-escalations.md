@@ -1224,3 +1224,17 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
 - artifact: results/experiment_5936_sota_atomic_support_union_ab.json
+
+## outer_loop_arc_branching_factor_corrected_20260730.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/outer_loop_arc_branching_factor_corrected_20260730.json
+  - **RESOLVED same session (2026-07-30), root cause was a MISDECLARED SUBSTRATE, not a fabricated
+    duration.** The artifact is an AGGREGATION -- it reads upstream measurement JSONs and recomputes
+    medians -- but declared `offline_arcade_live_agent_runtime_self_discovery_no_llm`, the substrate
+    of the runs it cites. Against a 0.0 s aggregation duration that correctly tripped the ARC no-LLM
+    floor: the artifact was claiming to have done compute it had not done. Substrate corrected to
+    `aggregation_from_upstream_artifacts` and a real measured `duration_s` added; re-verified clean.
+    Worth keeping the escalation rather than deleting it, because the flag was RIGHT and the lesson
+    generalises: declaring the substrate of your INPUTS rather than of your own run is an easy and
+    silent overclaim, and the duration floor is what catches it.

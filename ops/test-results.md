@@ -1,5 +1,75 @@
 # Carnot — Test Results
 
+## 2026-07-30 (outer-loop, review pass) — gate revert, dedup-key partition fix, branching-cut devaluation
+
+**inference_mode: NO-LLM.** Every measurement here is CPU-side replay of already-induced engines
+against the offline arcade, plus artifact arithmetic. No GGUF was loaded, no scored game was played,
+and no submission action was taken.
+
+### Unit / integration
+
+| Suite | Tests | Result |
+|---|---|---|
+| `tests/python/test_arc_state_key_dedup_2026_07_30.py` | 15 | pass |
+| `tests/python/test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py` | 7 | pass |
+| `tests/python/test_experiment_4544_llm_proposer_reinduction.py` (regression for the gate change) | 19 | pass |
+| ARC subset (`-k "arc or state_key or goal_gate or preflight"`) | 8,795 pass / 46 fail / 5 skip | see below |
+
+**46 failures, 0 of them new.** The identical selection was run in a clean worktree at `2bad77981`
+and the failure sets were diffed: **0 new, 0 fixed** relative to that baseline. 46 red plus a nonzero
+skip count is a standing finding, not a clean bill of health — per CLAUDE.md a skipped test is an
+invisible failure.
+
+**The first baseline attempt was INVALID and is recorded rather than quietly replaced.** A `git
+worktree` at `2bad77981` still imported `carnot` from the MAIN checkout (verified:
+`arc_executable_world_model.__file__` resolved to the main tree), so it ran the worktree's TESTS
+against the MODIFIED code — not a code baseline at all. Re-run with
+`PYTHONPATH=<worktree>/python`, which does take precedence. Any future before/after comparison in
+this repo must assert the import path, not assume the worktree isolates code.
+
+### Mutation check — the guard caught real damage, twice
+
+Paired form used throughout (`--snapshot` before, `--check --run-id` after; a bare `--check` REFUSES).
+
+* Run 1 caught the suite rewriting three tracked files that were clean before it:
+  `experiment_4548_integration_8game_gate.py` and `experiment_4560_integration_8game_gate.py`
+  regenerated with **30 and 34 lines deleted**, and
+  `results/experiment_5746_...preflight.json` with `blocked_reasons` flipped from `[]` to
+  `["required_exact_solver_unavailable"]`. All reverted.
+* Later runs (including `pre-commit run --all-files` on the ARC hooks, which loads games) rewrote five
+  more: the four `experiment_56*_arc_live_self_discovery_levelup_v50*.py`, plus
+  `test_arc_generator_vram_guard.py` (36 insertions / 4 deletions, asserted semantics changed),
+  `test_arc_object_history_salience_live_wiring.py`, and two salience test files. All reverted.
+* **Final run: `OK -- no tracked file was modified since the snapshot`.**
+* **A gap the check does NOT cover:** brand-new untracked files. The suite created
+  `python/carnot/artifact_gate_annotations.py`, `python/carnot/submitted_agent_config_ast.py` and
+  `tests/python/test_submitted_agent_config_ast.py` (~34 KB of generated source) inside tracked
+  package directories. Hash comparison cannot see a file that did not exist; only `git status` shows
+  them. Left on disk, explicitly NOT committed.
+
+### Mutation-proof of the new tests
+
+Reverting `_state_key` to the two-namespace version kills **5** tests including the new
+`test_a_mixed_sign_set_keys_the_same_partition_as_to_ascii` — so the regression is pinned, not merely
+described. Bit-identity of the new implementation on the real input class was measured separately:
+**5,200 non-negative 2-D integer grids, 0 differing keys.**
+
+### E2E — real engines, 20,000 engine calls each
+
+`scripts/arc_state_key_dedup_xgame_verify.py` re-run post-change on lp85, sk48, sc25 with
+`CARNOT_ARC_E3_DIR` redirected to scratch (`results/arc_e3` is read-only evidence):
+**`PARTITION_IDENTICAL` by accept-trace SHA256 on all three**, identical unique-state counts and
+plans, speedups 6.26x / 4.73x / 5.73x. The newly-added trailing-control arm puts the harness's own A/A
+noise floor at **10.8–14.6%** (0.8541 / 1.1156 / 1.1080), retracting an earlier ~2.5% external
+estimate and, incidentally, devaluing the Phase-2 branching cut's 1.021x median to noise.
+
+### Artifact linters
+
+`adversarial_verify.py` on all 7 touched artifacts: **0 flagged** — after it correctly caught one of
+mine (`DURATION_TOO_SHORT`: an aggregation artifact declaring the substrate of its INPUTS with a 0.0 s
+duration). `artifact_freshness_lint.py`: **OK**. `determination_preservation_lint.py`: **OK**.
+`canonical_url_lint`, `arc_orphan_solver_lint`: **OK**.
+
 **Last Updated:** 2026-07-29 (treatment-activation pre-flight + the generator sampler-seed
 determinism check). Prior: 2026-04-14.
 

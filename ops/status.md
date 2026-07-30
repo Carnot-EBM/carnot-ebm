@@ -7634,8 +7634,23 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 calls** (bit-identical at 160k and 400k, so it is a property of the problem, not the budget). Per
 attempt: **~49 s** on the fastest planning-capable engine, **~194 s** on the only engine verified to
 produce a real arcade-replayed solve. At the most likely cap (9h) and game count (~110) the
-conservative residual is **67.2 s/game** — the fast tail fits, the verified solver misses by 3.3x, and
-n=1 on the class that decides. At <=60 games everything fits.
+conservative residual is ~~**67.2 s/game**~~ **58.34 s/game** (corrected 2026-07-30 — see below) —
+the fast tail fits, the verified solver misses by 3.3x, and n=1 on the class that decides. At <=60
+games everything fits.
+
+**CORRECTED 2026-07-30 (review).** The 67.2 s figure re-derived the per-game budget as
+`cap_s / n_games` = 32400/110 = 294.55 s, ignoring the envelope's own published
+`n_games_110.usable_loop_wall_s = 31420` — which already deducts the 980 s kernel overhead the
+envelope assumes and uses for its own `fraction_of_usable`. Re-deriving from cap hours spends that
+980 s twice, so **every residual was 8.91 s/game too generous**: 285.64 s/game usable, conservative
+residual **58.34 s**, uncontended **174.71 s**. Corrected shortfalls are **2.56x / 2.13x / 1.84x**
+(shipped / deployable-cut / lossy-cut), not 2.22x / 1.85x / 1.60x. Two further corrections: only 2 of
+the envelope's ~6 named cost levels were scored, and the one that changes a verdict —
+`mine_uncontended_ci_hi` at 139.31 s/game, corrected residual **146.33 s** — was never evaluated. The
+shipped arm (149.45 s) does **not** fit there, so "the uncontended case is already closed" was
+unsupported; it is closed at the mean level and fails at the ci-hi level. `cited_baseline.
+bias_direction: CONSERVATIVE` is retracted — net bias was **OPTIMISTIC** by ~3.9 s/game. Full detail:
+`results/outer_loop_arc_plan_affordability_corrected_20260730.json:CORRECTION_20260730_REVIEW`.
 
 Recommendation: **cheaper SEARCH, not a bigger budget.** `max_nodes` is compute and raising it is
 legitimate in principle, but the agent cannot reliably pay it. Two ordering levers were measured and
@@ -7645,15 +7660,56 @@ residual gap is structural: the engine is 69.5% of search time and it is LLM-GEN
 90.2% of calls landing on an already-seen grid at 18 candidates per expansion — so the lever is the
 BRANCHING FACTOR (candidate generation / perception), not the frontier order.
 
+**UPDATE 2026-07-30 — the branching factor was measured and it is NOT the lever either.** The
+candidate-set cut has now been built and A/B'd across the corpus, and it fails on three independent
+counts: (a) candidate GENERATION is only **5.0%** of search time, so no candidate-set change can reach
+the other 95%; (b) restated in WALL CLOCK — which the analysis's own stated principle demanded and its
+headline ignored — the deployable cut is worth **1.021x** median over the 14 strong rows, not the
+1.152x its call count suggests, and that sits **deep inside the 10.8–14.6% A/A noise floor** measured
+for the first time this session via a trailing-control arm (an earlier ~2.5% external estimate is
+retracted); (c) the high-multiplier variant **permanently loses reachable states** on 3 of 25 games
+with the deficit GROWING with depth (lp85 14 → 348). The inert-keyboard half is additionally
+**absorbing by construction** with ~1 game of non-vacuous support and a constructed counterexample
+that loses **75% of reachable states permanently**. So of the three candidate levers only click-dedup
+is safe by construction, and it is not measurably fast. Detail:
+`results/outer_loop_arc_branching_factor_corrected_20260730.json`.
+
+**What the remaining lever therefore is.** Not search. Either the per-call cost INSIDE the
+LLM-generated engine (unmeasured), or one level up — the **PERCEPTION** that sets the branching factor
+before any pruning can apply: 13 of 18 candidates are clicks, **72.7%** of engine calls are clicks, and
+3 of 15 salience ranks are entirely inert. A front-end proposing four interactive objects instead of
+thirteen speculative points cuts branching with no inductive ban and no completeness risk. Two
+independent lines of evidence now converge there.
+
+**Also 2026-07-30 — an undisclosed quality-gate relaxation was reverted.** `0da7f75ad` had made a
+budget-exhausted goal pre-veto fall through to the planner instead of vetoing, which relaxes
+`degenerate_goal_predicate` and was not disclosed in the commit message or here. It now SKIPS the round
+without attempting GOAL-REPAIR — at least as strict as the pre-split behaviour on the accept axis and
+strictly stricter on the rewrite axis. **Accepted loss:** at `max_nodes=20000` ka59's proven-correct
+depth-11 predicate cannot be demonstrated, so its round is skipped and induce→plan does not complete
+for that game. That is a compute failure, reported as one. See SCENARIO-ARC-WMTE-6047-5 for the three
+resolutions considered and the one-line path to the alternative if the operator prefers it.
+
 ### What is next
 
 1. **Re-run the f9a458e87 pre-flight post-fix.** The stopped grid measured a configuration containing
    the goal-gate bug. Runbook: `<scratch>/p2/FINISH_THE_PROBE.md`; verdict builder
    `build_preflight_artifact.py`; arithmetic early-stop `settled.py`.
-2. **Ship the bytes dedup key** — measured, safe, 1.288x.
-3. **Budget the gate and the planner together.** Post-counter-fix they need the same ~137k calls.
-4. **Attack the branching factor.** Both ordering levers are refuted; perception/candidate generation
-   is where the remaining factor lives, and it is already the queued direction.
+2. ~~**Ship the bytes dedup key** — measured, safe, 1.288x.~~ **DONE** (`4f7e5f55a`, partition fixed
+   again 2026-07-30). 4.7–6.3x on the games with usable timing; partition-identical by accept-trace
+   hash on every game tested.
+3. **Budget the gate and the planner together.** Post-counter-fix they need the same ~137k calls, and
+   the gate now SKIPS rather than falls through when its budget runs out — so raising `max_nodes` for
+   the planner alone leaves the gate refusing first.
+4. ~~**Attack the branching factor.**~~ **CLOSED as a direction 2026-07-30** — measured and devalued to
+   inside the noise floor (above). Do not propose another candidate-set or frontier-ordering lever
+   without new evidence; three have now been refuted with measurements.
+5. **NEW: measure the per-call cost inside the LLM-generated engine**, and separately **test whether a
+   classical object/salience front-end cuts the candidate set at the source.** These are the two
+   surviving directions, and the second is a perception experiment, not a search one.
+6. **NEW: decide the goal-gate resolution.** The conservative skip is in place. If the operator wants
+   budget-exhausted goals to reach the planner, that is an authorised gate relaxation and a one-line
+   change; it should not be made silently, which is how it arrived the first time.
 
 ### Not done, stated plainly
 
@@ -7674,8 +7730,14 @@ BRANCHING FACTOR (candidate generation / perception), not the frontier order.
   of the 2026-07-29 engine-retention A/B it REFUSES (exit 1): 6 IDENTICAL / 3 TRUNCATION_ONLY /
   2 BOTH_TRUNCATED / 1 PERTURBED, strict discordant-pair ceiling 1 against the 6 needed, best
   reachable p = 1.0. Perturbation rate at `f9a458e87`: 0.5 over usable observations (1 of 2), with
-  the same-commit A/A showing 1 of 2 pairs diverging under identical code — n=2, so the qualitative
-  finding (seeding the sampler is necessary but NOT sufficient) is reported and no rate is claimed.
+  the same-commit A/A showing 1 of 2 pairs diverging under identical code. **n=2, so the rate is
+  published WITH that caveat rather than withheld** (corrected 2026-07-30: the earlier wording said
+  "no rate is claimed" while the artifact published
+  `perturbation_rate_over_usable_observations: 0.5` twice plus
+  `cells_needed_at_observed_perturbation_rate: 12`. The prose and the artifact now agree — the rate is
+  recorded because hiding a measured value is worse than publishing it under a loud n, and only the
+  forward PROJECTION `projected_attributable_cells_at_planned_n` is withheld as null). The
+  load-bearing finding is qualitative: seeding the sampler is necessary but NOT sufficient.
 - **`_state_key` replaces `to_ascii` as the in-model search's duplicate-state key**
   (REQ-ARC-WMTE-6051). Partition-identical to `to_ascii` on **all 10 games tested**, proved by
   ACCEPT-TRACE hash (the key-independent per-engine-call record of accept/duplicate/shape-skip/raise)
@@ -7684,6 +7746,22 @@ BRANCHING FACTOR (candidate generation / perception), not the frontier order.
   corroborate rather than carry the claim. Measured speedup on the 4 games with a usable timing
   signal:
   ka59 1.28x, sk48 4.59x, sc25 6.61x, lp85 7.18x; no regression anywhere.
+  **PARTITION BUG IN THE FIRST FIX, found by review and repaired 2026-07-30.** The contract is a
+  PARTITION (`key(x) == key(y)` iff `to_ascii(x) == to_ascii(y)` over the set being keyed), not
+  per-input value equality. Handing negative grids to `to_ascii` verbatim satisfied the per-input
+  reading and BROKE the partition, because a `bytes` never equals a `str`: `to_ascii` merges `[[4]]`
+  with `[[-4]]` (both render "4") while the two-namespace key SPLIT them, so a single negative cell
+  anywhere in a reachable set un-merged it from its aliasing twin. Every non-empty 2-D grid now keys
+  into one namespace — arithmetic fast path unchanged for non-negative ints, cell-by-cell
+  `int(str(int(v))[-1])` for everything else, same digit either way. **All eight original tests PASSED
+  against the broken version** because each asked the per-input question; they were not thin on values,
+  they were asking the wrong thing. Re-verified on three real engines (lp85, sk48, sc25):
+  PARTITION_IDENTICAL by accept-trace hash, speedups 4.73–6.26x intact.
+  **The harness now measures its own noise floor.** A trailing-control arm (the control key re-run
+  LAST — an in-harness A/A over identical work) puts drift at **10.8–14.6%**, ~5x an earlier external
+  estimate of ~2.5% that is now retracted. The key's 4.7–6.3x clears that by ~30x. It also invalidates
+  reading any near-1.0x single-shot result as a real effect — which is what devalued the branching-cut
+  lever above. Machine load is now recorded per run.
 
 ### Known constraints (added)
 
@@ -7716,3 +7794,45 @@ BRANCHING FACTOR (candidate generation / perception), not the frontier order.
 - Do NOT attempt another frontier-ORDERING heuristic. Two were already refuted by measurement: a
   graded-exemplar goal gradient was **2.3x WORSE** (317,935 calls, plan length 22 not 11) and
   inert-click pruning found **0 prunable candidates**.
+
+## 2026-07-30 (later still) — an 18-finding review: a gate relaxation reverted, the dedup key's partition fixed again, the branching lever devalued to noise
+
+### What's working (added)
+
+- **The budget-exhausted goal pre-veto is CONSERVATIVE again** (`arc_llm_reinduction`,
+  SCENARIO-ARC-WMTE-6047-5). It SKIPS the round rather than falling through to the planner, and does
+  NOT attempt GOAL-REPAIR. Strictly no wider than the pre-split behaviour on either axis. The
+  default-off live-path gate got the same honest label with behaviour unchanged.
+- **`_state_key` is partition-correct across every branch.** Proven bit-identical to the pre-change
+  implementation on 5,200 non-negative 2-D integer grids (0 differing keys) — the whole class any ARC
+  engine produces — and PARTITION_IDENTICAL end-to-end by accept-trace hash on lp85, sk48 and sc25 at
+  20,000 engine calls each.
+- **The dedup verifier measures its own noise floor.** A trailing-control arm makes leading-vs-trailing
+  control an in-harness A/A; machine load is recorded per run. Floor: **10.8–14.6%**.
+- **132 overwritten timing values restored** across four artifacts under
+  `original_timings_superseded_by_rebuild`, additive, with an assertion that every differing field is
+  a timing or a provenance pin (it caught three provenance fields it had not anticipated).
+
+### Known constraints (added)
+
+- **The branching-factor cut is NOT measurably faster.** 1.021x median wall over the 14 strong rows,
+  inside a 10.8–14.6% floor. Its inert-keyboard half is absorbing by construction with a constructed
+  counterexample losing 75% of reachable states permanently; the object-class half permanently loses
+  states on 3 of 25 games. Only click-dedup is safe by construction, and it is not fast.
+- **The test suite still rewrites tracked files**, and the mutation guard does NOT see brand-new
+  untracked files it drops into `python/carnot/` and `tests/python/`. Eight rewrites caught and
+  reverted this session; three generated source files left on disk, uncommitted. Detail in
+  `ops/known-issues.md`.
+
+### Not done, stated plainly
+
+- **Banked levels UNCHANGED at 3/3.** This session solved nothing and played no game, scored or
+  offline. It measured, corrected and reverted.
+- **Submission gate NOT met.** Nothing here measured a score. The gate needs a TRM baseline AND our
+  best prior submitted score (**0.12**); neither was touched. No submission action was taken —
+  submission remains operator-only.
+- **Induce→plan is NOT open at a price production can pay.** At the decision-relevant conservative
+  level the deployable configuration is **2.13x** short and even the completeness-losing filter is
+  **1.84x** short.
+- **The per-call cost inside the LLM-generated engine is still unmeasured**, and it is now the larger
+  of the two surviving levers by elimination rather than by evidence.

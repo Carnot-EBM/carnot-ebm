@@ -6128,7 +6128,26 @@ class E3AgentPolicy:
                 attempt["goal_predicate_satisfiable"] = bool(goal_check.get("satisfiable"))
                 attempt["goal_satisfiability"] = dict(goal_check)
                 if not goal_check.get("satisfiable"):
-                    attempt["skipped"] = "degenerate_goal_predicate"
+                    # The label must distinguish a DISPROVED predicate from a SPENT BUDGET
+                    # (2026-07-30). `_goal_satisfiability_check` reports the two separately --
+                    # `degenerate_goal_predicate` when the frontier emptied, `goal_unreached_within
+                    # _budget` when max_nodes ran out -- and flattening them here would record "your
+                    # goal is degenerate" for what is only "the board is big", which is exactly the
+                    # false negative the paragraph above warns this check can produce.
+                    #
+                    # BEHAVIOUR IS UNCHANGED: both cases still skip. That is deliberate. Skipping is
+                    # the conservative reading of "undecided" -- it never admits a goal the previous
+                    # code rejected -- so this is a disclosure fix, not a relaxation of the veto.
+                    # Matches the resolution in execute_bounded_llm_reinduction; see
+                    # SCENARIO-ARC-WMTE-6047-5.
+                    _kind = str((goal_check.get("counterexample") or {}).get("kind", "")) or (
+                        "degenerate_goal_predicate"
+                    )
+                    attempt["skipped"] = (
+                        _kind
+                        if _kind in ("degenerate_goal_predicate", "goal_unreached_within_budget")
+                        else "degenerate_goal_predicate"
+                    )
                     return
             self._install_goal_bias(is_done)
             # plan ENTIRELY in the model (zero real actions); execute phase RESETs then

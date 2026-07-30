@@ -208,6 +208,18 @@ def main():
         "is_a_solve_claim": False,
         "engine_call_cap_per_arm": CAP,
         "max_depth": MAX_DEPTH,
+        # MACHINE CONTENTION, recorded rather than assumed. Every wall-clock number below is only
+        # interpretable against how loaded the box was; a reader finding a load average of 20 here
+        # should discount the timings, and previously had no way to know.
+        "machine_load_at_start": {
+            "loadavg_1_5_15": list(os.getloadavg()),
+            "cpu_count": os.cpu_count(),
+            "principle": (
+                "a timing harness that does not record contention cannot be re-interpreted later. "
+                "Paired with control_aa_drift_x per game, which measures the drift that actually "
+                "occurred during the run."
+            ),
+        },
         "games": {},
     }
     for game in GAMES:
@@ -251,6 +263,14 @@ def main():
             # discarded short run, and each arm is timed TWICE with the MINIMUM taken, because the
             # minimum of repeated timings is the estimator least contaminated by one-off costs and
             # by scheduler noise.
+            # A TRAILING CONTROL IS NOT REDUNDANT, and its absence was a real gap (2026-07-30
+            # review). Warm-up plus min-of-2 removes one-off costs and short scheduler blips, but arm
+            # order is still FIXED -- control first, every time -- so neither of those can separate a
+            # real speedup from a MONOTONE drift over the run: another process ramping up, a thermal
+            # or clock change, memory filling. `to_ascii_control_trailing` re-measures the control
+            # arm LAST, so `control_aa_drift_x` is an in-harness A/A: identical work, identical key,
+            # only the position in the run differs. Any speedup smaller than that drift is noise, and
+            # the harness now says so itself instead of relying on an external check.
             bfs(engine, goal, root, key_ascii, min(400, CAP))
             arms = {}
             for name, fn in (
@@ -258,6 +278,7 @@ def main():
                 ("mod10_bytes", key_mod10),
                 ("exact_bytes", key_exact),
                 ("shipped_state_key", key_shipped),
+                ("to_ascii_control_trailing", key_ascii),
             ):
                 best = None
                 for _rep in range(2):
@@ -287,6 +308,27 @@ def main():
             rec["arms"] = arms
             ctl, m10, ex = arms["to_ascii_control"], arms["mod10_bytes"], arms["exact_bytes"]
             sh = arms["shipped_state_key"]
+            trail = arms["to_ascii_control_trailing"]
+
+            # THE IN-HARNESS NOISE FLOOR. Two runs of the SAME key at opposite ends of the arm
+            # sequence. A speedup below this is not measurable by this harness.
+            aa_drift = (
+                round(ctl["wall_clock_s"] / trail["wall_clock_s"], 4)
+                if trail["wall_clock_s"] > 0
+                else None
+            )
+            rec["control_aa_drift_x"] = aa_drift
+            rec["control_aa_drift_principle"] = (
+                "first-position control / last-position control, identical key and identical work. "
+                "Isolates monotone drift across the run, which arm order alone cannot: warm-up "
+                "removes one-off costs and min-of-2 removes short blips, but neither sees a load or "
+                "clock ramp. Any reported speedup smaller than |1 - this| is inside the floor."
+            )
+            # The trailing control must also produce the SAME partition -- if it does not, the engine
+            # is not deterministic across repeats and no timing comparison here means anything.
+            rec["control_is_deterministic_across_repeats"] = bool(
+                ctl["accept_trace_sha256"] == trail["accept_trace_sha256"]
+            )
 
             def same(a, b):
                 return {

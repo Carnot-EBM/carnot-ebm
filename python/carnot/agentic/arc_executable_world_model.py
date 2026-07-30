@@ -201,9 +201,36 @@ def _state_key(g: np.ndarray) -> bytes | str:
     answered here: fixing it would change search behaviour and belongs in its own change with its
     own evidence. This function's contract is to be indistinguishable from `to_ascii`, faster.
 
-    THE FAST PATH IS DELIBERATELY NARROW: 2-D, INTEGER, AND NON-NEGATIVE. Each condition excludes
-    an input class on which `% 10` and `to_ascii` genuinely DISAGREE, and the exclusion is a
-    fallback to `to_ascii` itself -- so equivalence holds by construction rather than by argument.
+    WHAT THE CONTRACT ACTUALLY IS: A PARTITION, NOT A VALUE. This is the second thing an
+    adversarial review caught here, and it invalidated the first fix's reasoning. The claim used to
+    be that excluded input classes "fall back to `to_ascii` itself -- so equivalence holds by
+    construction". That is false, because the property required of a dedup key is not
+    ``key(x) == to_ascii(x)`` per input; it is
+
+        ``key(x) == key(y)``  if and only if  ``to_ascii(x) == to_ascii(y)``
+
+    over the whole set being keyed. Returning `to_ascii(x)` verbatim for SOME inputs and a byte
+    encoding for others satisfies the per-input reading and BREAKS the partition, because a `bytes`
+    can never equal a `str`: `to_ascii([[4]]) == to_ascii([[-4]])` (both render "4", MERGED) while
+    the two-namespace version returned ``b"1:1|\\x04"`` and ``"4"`` (SPLIT). One negative cell
+    anywhere in the reachable set silently un-merged it from its aliasing twin. Latent rather than
+    active -- real ARC grids are non-negative -- but engines here are arbitrary LLM-written code,
+    which is precisely the class of assumption that should not be load-bearing.
+
+    So EVERY non-empty 2-D grid now keys into ONE namespace: the shape prefix followed by one byte
+    per cell holding `to_ascii`'s digit for that cell. The fast path computes that digit as `a % 10`
+    (exact for v >= 0, one C-level reduction to check); every other 2-D grid computes the identical
+    digit the way `to_ascii` does, `int(str(int(v))[-1])`, cell by cell. Same partition, by
+    construction this time, because both branches emit the same encoding of the same digit.
+
+    The three conditions below therefore now select the ARITHMETIC, not the namespace. The reasoning
+    for each is unchanged and kept verbatim; only where an excluded input goes has changed -- to the
+    canonical byte encoding rather than out to a second namespace. The one class still handed to
+    `to_ascii` whole is a grid that is not 2-D or is EMPTY, and that is deliberate: `to_ascii`
+    collapses every zero-row shape to the same `""`, so a shape prefix would SPLIT states it merges.
+    An empty grid's key is a `str` and a non-empty grid's is `bytes`, which cannot collide, and
+    `to_ascii` never renders a non-empty grid as an empty-ish string -- so that one boundary is
+    partition-safe in both directions.
 
     * **Non-negative.** This is the condition an adversarial review caught missing, and it is the
       subtlest of the three. `to_ascii` takes the last character of the DECIMAL STRING, which for a
@@ -232,9 +259,14 @@ def _state_key(g: np.ndarray) -> bytes | str:
     REQ-ARC-WMTE-6051 for the per-game table.
     """
     a = np.asarray(g)
-    if a.ndim == 2 and a.dtype.kind in "iu" and a.size and a.min() >= 0:
+    if a.ndim == 2 and a.size:
         h, w = a.shape
-        return b"%d:%d|" % (h, w) + (a % 10).astype(np.uint8).tobytes()
+        prefix = b"%d:%d|" % (h, w)
+        if a.dtype.kind in "iu" and a.min() >= 0:
+            # v % 10 == int(str(v)[-1]) for every v >= 0, so this is the canonical digit too.
+            return prefix + (a % 10).astype(np.uint8).tobytes()
+        # Same namespace, same canonical digit, computed the way `to_ascii` computes it.
+        return prefix + bytes(int(str(int(v))[-1]) for v in a.flat)
     return to_ascii(a)
 
 

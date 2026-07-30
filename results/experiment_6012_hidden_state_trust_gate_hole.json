@@ -23,7 +23,29 @@
   ],
   "engine_store": "results/arc_e3_origin_fixtures",
   "engine_store_is_frozen_fixtures": true,
-  "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py"
+  "rebuild_command": "CARNOT_ARC_E3_DIR=\"$(git rev-parse --show-toplevel)\"/results/arc_e3_origin_fixtures .venv/bin/python scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py",
+  "freshness_acknowledgements": [
+   {
+    "path": "python/carnot/agentic/arc_executable_world_model.py",
+    "sha256_was": "28386f924693829b89a9cff90f82ae9f64c35a4e8aa7750aead69fe5c03d25e1",
+    "sha256_now": "c529e608c4e732f55031f236b52b98dd547b34fd54667e87f8168be6493d0aa5",
+    "reason": "`_state_key` was changed so that negative / non-integer 2-D grids key into the SAME namespace as the arithmetic fast path instead of falling out to `to_ascii` (a `bytes` vs `str` split that broke the PARTITION contract). For every 2-D non-negative integer grid -- which is every grid any ARC engine produces -- the emitted key is unchanged.",
+    "evidence": "5,200 random 2-D non-negative integer grids (1x1..64x64, colours 0..255, six integer dtypes) keyed under the pre-change and post-change implementations: 0 differed, i.e. bit-identical on the whole class. All 10 games in outer_loop_arc_state_key_dedup_xgame_20260730 report logical_dtype int16 with no negative root colour, so no real grid leaves that class. Re-run end to end on lp85, sk48 and sc25 at a 20,000-engine-call cap: PARTITION_IDENTICAL by accept-trace SHA256, identical unique-state counts and identical plans. The docstring edit is prose.",
+    "acknowledged_at_commit": "2bad77981445ee690fb502080fdd6d753b244699",
+    "acknowledged_date": "2026-07-30",
+    "why_not_rebuilt": "rebuilding would overwrite this artifact's MEASURED timings, which are not reproducible -- the previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history this session. Inertness here is established by direct measurement (see evidence), so a rebuild would trade recorded facts for a formality. The rebuild_command remains recorded for anyone who wants rebuild-strength proof."
+   },
+   {
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+    "sha256_now": "ff0cd7aa09a9e6b77e7b5073e5a57f1fdf4fce5c87651744f22feaed846a04de",
+    "reason": "One change, inside the DEFAULT-OFF CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK branch, and within it only the string written to attempt['skipped'] -- so that a budget-exhausted goal gate is no longer recorded as a disproved predicate. Control flow is identical: both cases still return.",
+    "evidence": "The edit is a label substitution guarded by an env var that is unset by default; the surrounding `if not goal_check.get('satisfiable'): ... return` structure is byte-identical. `git diff` on the file is 20 insertions / 1 deletion, of which 12 lines are comment. No artifact in this set exercises that branch (none sets the env var), and no numeric field is touched on any path.",
+    "acknowledged_at_commit": "2bad77981445ee690fb502080fdd6d753b244699",
+    "acknowledged_date": "2026-07-30",
+    "why_not_rebuilt": "rebuilding would overwrite this artifact's MEASURED timings, which are not reproducible -- the previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history this session. Inertness here is established by direct measurement (see evidence), so a rebuild would trade recorded facts for a formality. The rebuild_command remains recorded for anyone who wants rebuild-strength proof."
+   }
+  ]
  },
  "honest_verdict": "complete_hidden_state_gate_hole_measured_req6011_not_wired_into_that_branch",
  "inference_substrate": "verifier_ensemble_against_cached_candidates",
@@ -23218,5 +23240,56 @@
    "elapsed_s": 0.774
   }
  ],
- "reproducibility_checksum": "fe94eac45183733f704cf5981104d19ff55ce5980af78b67eae29d98b777f77b"
+ "reproducibility_checksum": "fe94eac45183733f704cf5981104d19ff55ce5980af78b67eae29d98b777f77b",
+ "original_timings_superseded_by_rebuild": {
+  "why_this_block_exists": "the values below were MEASURED on the original run and were overwritten in place when this artifact was rebuilt in 0da7f75ad to re-pin its code provenance. The rebuild changed nothing substantive -- verified here by asserting that every differing field is a timing or a provenance hash -- but a wall-clock number is not reproducible, so overwriting it destroys the record of what the first run actually cost. Restored per the standing never-prune rule.",
+  "superseded_at_commit": "0da7f75ad",
+  "n_timing_fields_restored": 32,
+  "original_timings": {
+   "measurement_wall_s": 29.356,
+   "duration_s": 29.358558,
+   "rows[0].elapsed_s": 1.804,
+   "rows[1].elapsed_s": 0.623,
+   "rows[2].elapsed_s": 0.669,
+   "rows[4].elapsed_s": 0.792,
+   "rows[6].elapsed_s": 0.743,
+   "rows[7].elapsed_s": 0.762,
+   "rows[8].elapsed_s": 0.753,
+   "rows[9].elapsed_s": 0.863,
+   "rows[10].elapsed_s": 0.833,
+   "rows[11].elapsed_s": 0.857,
+   "rows[12].elapsed_s": 1.218,
+   "rows[13].elapsed_s": 1.124,
+   "rows[14].elapsed_s": 1.12,
+   "rows[15].elapsed_s": 0.705,
+   "rows[16].elapsed_s": 0.677,
+   "rows[17].elapsed_s": 0.679,
+   "rows[18].elapsed_s": 0.923,
+   "rows[19].elapsed_s": 0.911,
+   "rows[20].elapsed_s": 0.913,
+   "rows[21].elapsed_s": 0.862,
+   "rows[22].elapsed_s": 0.83,
+   "rows[23].elapsed_s": 0.817,
+   "rows[25].elapsed_s": 0.951,
+   "rows[26].elapsed_s": 0.97,
+   "rows[27].elapsed_s": 1.054,
+   "rows[28].elapsed_s": 1.012,
+   "rows[29].elapsed_s": 1.044,
+   "rows[30].elapsed_s": 0.805,
+   "rows[31].elapsed_s": 0.782,
+   "rows[32].elapsed_s": 0.773
+  },
+  "original_provenance_pins": {
+   "provenance.code[0].sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
+   "reproducibility_checksum": "27bb0a215dded172893ed03785881fb45e4334e1237b9a54fbaf0fd64e6cb229"
+  },
+  "current_values_are_unchanged_by_this_block": true,
+  "the_preferred_path_next_time": "the same commit that caused this added VERIFIED-INERT acknowledgements to the artifact-freshness lint, which pin a new upstream hash plus a reason WITHOUT rerunning. When the only drift is timing, acknowledge rather than rebuild.",
+  "verification": {
+   "fields_differing_between_pre_rebuild_and_now": 34,
+   "all_differences_are_timing_or_provenance": true,
+   "substantive_differences": 0,
+   "fields_dropped_by_the_rebuild": 0
+  }
+ }
 }

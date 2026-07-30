@@ -1382,29 +1382,53 @@ def execute_bounded_llm_reinduction(
             row["goal_satisfiability"] = {
                 key: value for key, value in goal_check.items() if key != "counterexample"
             }
-            # A gate that ran out of BUDGET has not disproved anything (2026-07-30). It must
-            # therefore neither fire GOAL-REPAIR (which would replace a possibly-correct
-            # predicate with a looser non-winning proxy) nor skip the round (which would throw
-            # away a possibly-correct engine). "Unknown" is not "false": the pre-veto exists to
-            # reject goals it can PROVE unreachable, and an undecided veto must not fire.
+            # A gate that ran out of BUDGET has not disproved anything (2026-07-30) -- but
+            # "undecided" is resolved CONSERVATIVELY here, and the reasoning is worth spelling out
+            # because an earlier version of this block got it wrong in the permissive direction.
             #
-            # The cost of falling through is bounded and self-correcting: `plan_in_model` runs
-            # next with the SAME budget on the SAME engine, so if the goal really is out of reach
-            # the planner simply fails to find a plan and says so -- which is the honest signal.
-            # The cost of the old behaviour was unbounded: a plan that "succeeds" against a goal
-            # nobody asked for.
+            # There are three possible responses to a budget-exhausted pre-veto:
+            #
+            #   1. Fire GOAL-REPAIR. This is what the code did before the budget/exhaustion split
+            #      existed, and it is UNSOUND IN THE WORST WAY: repair substitutes a looser
+            #      "strictly fuller than root" proxy and sets the round satisfiable, so a spent
+            #      compute budget silently became a GOAL REWRITE and the planner then "succeeded"
+            #      against a goal nobody asked for. Not restored.
+            #   2. Fall through and plan against the unproven goal. Tried on 2026-07-30 and
+            #      REVERTED here. It is the permissive answer, and it RELAXES a named quality gate
+            #      (`degenerate_goal_predicate`) -- goals that previously failed the pre-veto now
+            #      reach the planner. That is a change only the operator may authorise, and it was
+            #      shipped without being disclosed in the commit message or the ops record. See
+            #      ops/known-issues.md "budget-exhausted goal pre-veto".
+            #   3. Skip the round, WITHOUT attempting repair. What runs now. It is at least as
+            #      strict as the pre-split behaviour on the accept axis (it never admits a goal the
+            #      old code would have rejected) and strictly stricter on the rewrite axis (it never
+            #      substitutes a goal), so it cannot be read as widening the gate in either
+            #      direction.
+            #
+            # What (3) costs, stated plainly rather than hidden: at the shipped budget ka59's
+            # PROVEN-CORRECT depth-11 predicate needs ~137k engine calls to demonstrate against a
+            # 20k ceiling, so its round is skipped and induce->plan does not complete for that game.
+            # That is a COMPUTE failure and it is reported as one -- `goal_undecided_within_budget`
+            # and `termination: budget_exhausted` distinguish it from a genuine degenerate predicate
+            # in every artifact -- rather than being converted into a goal rewrite or a false solve.
+            # `max_nodes` is compute and may be raised; the gate is quality and may not be widened.
             goal_undecided_within_budget = not round_goal_satisfiable and (
                 str((goal_check.get("counterexample") or {}).get("kind", ""))
                 == "goal_unreached_within_budget"
             )
             row["goal_undecided_within_budget"] = bool(goal_undecided_within_budget)
             if goal_undecided_within_budget:
-                # Recorded as a counterexample for the audit trail, but WITHOUT `row["skipped"]`,
-                # because the round is not being skipped.
+                # Skip the round, but do NOT route through GOAL-REPAIR: repair's whole premise is
+                # that the predicate has been PROVEN unreachable, which is exactly what a spent
+                # budget fails to establish.
                 last_counterexample = dict(goal_check.get("counterexample") or {})
                 counterexamples.append(last_counterexample)
                 row["counterexample"] = dict(last_counterexample)
-            if not round_goal_satisfiable and not goal_undecided_within_budget:
+                row["skipped"] = "goal_unreached_within_budget"
+                skipped = row["skipped"]
+                rounds.append(row)
+                continue
+            if not round_goal_satisfiable:
                 # GOAL-REPAIR: the LLM-induced goal is degenerate (constant-false / unreachable
                 # exact-match). Before giving up this round to an engine-refactor (which cannot fix
                 # the goal), try the exemplar-derived nonzero-count fallback against THIS engine.

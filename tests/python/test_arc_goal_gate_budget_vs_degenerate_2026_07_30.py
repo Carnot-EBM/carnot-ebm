@@ -258,19 +258,34 @@ def test_budget_starved_gate_does_not_rewrite_the_goal_end_to_end() -> None:
         "GOAL-REPAIR must NOT fire on a spent budget: substituting a looser proxy here is how a "
         "correct predicate got replaced by a non-winning one on ka59"
     )
-    assert row0.get("skipped", "") == "", (
-        "the round must not be skipped either -- the engine may well be correct; only the gate's "
-        "budget ran out"
+    # AND THE ROUND IS SKIPPED -- the conservative resolution of "undecided", reverted here on
+    # 2026-07-30 review from an earlier version that fell through to the planner.
+    #
+    # Falling through is the PERMISSIVE answer: a goal that failed the pre-veto reaches the planner
+    # anyway, which relaxes `degenerate_goal_predicate` -- a named quality gate that may only be
+    # widened with operator authorisation, and was not. Skipping is at least as strict as the
+    # pre-split behaviour on the accept axis and strictly stricter on the rewrite axis (the two
+    # assertions above), so it cannot be read as widening anything.
+    #
+    # The cost is real and is the point of reporting it: at the shipped budget this correct-but-deep
+    # goal never gets planned against, exactly as ka59's depth-11 predicate does not. That is a
+    # COMPUTE result, and `skipped`/`termination` name it as one instead of laundering it into
+    # either a goal rewrite or a false solve.
+    assert row0.get("skipped", "") == "goal_unreached_within_budget", (
+        "an undecided goal must skip the round rather than reach the planner: falling through "
+        "relaxes the degenerate-goal veto, which is a quality gate and operator-gated"
     )
-    # The goal handed onward is still the induced one, unmodified.
-    assert result.goal_predicate is correct_goal
-    # The undecided gate IS recorded in the audit trail...
+    # The goal is never REWRITTEN -- skipping discards the round, it does not substitute a proxy.
+    assert result.goal_predicate is not None
+    assert getattr(result, "goal_repaired", None) in (None, "", False)
+    # The undecided gate IS recorded in the audit trail, distinguishably from a degenerate one.
     kinds = [str(c.get("kind", "")) for c in result.counterexamples]
     assert "goal_unreached_within_budget" in kinds
-    # ...and the round then proceeds and fails at PLANNING, which is the honest signal and the
-    # whole point: the failure is attributed to "no plan found", not to "your goal is degenerate".
-    # `row["counterexample"]` is therefore the planner's, having been overwritten downstream.
-    assert row0["counterexample"]["kind"] == "no_reachable_plan"
+    assert "degenerate_goal_predicate" not in kinds, (
+        "a spent budget must never be recorded as a disproved predicate"
+    )
+    assert row0["counterexample"]["kind"] == "goal_unreached_within_budget"
+    assert row0["counterexample"]["termination"] == "budget_exhausted"
 
 
 def test_budget_case_carries_an_explicit_unknown_disclaimer() -> None:

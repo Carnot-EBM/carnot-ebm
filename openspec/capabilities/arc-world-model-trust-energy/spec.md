@@ -20280,14 +20280,38 @@ THEN `termination` is still `budget_exhausted`. The inner loop `break`s on budge
 current grid's remaining candidate expansions without queueing them, so an empty deque does not
 imply the successors were explored.
 
-### SCENARIO-ARC-WMTE-6047-5: GOAL-REPAIR does not fire on an undecided gate
+### SCENARIO-ARC-WMTE-6047-5: GOAL-REPAIR does not fire on an undecided gate, and the round is skipped
 GIVEN a correct-but-deep goal, an exemplar available (so GOAL-REPAIR is armed), and a budget the
 goal's depth exceeds
 WHEN `execute_bounded_llm_reinduction` runs a round
-THEN the row records `goal_undecided_within_budget: True`, carries NO `goal_repaired` key, is NOT
-skipped, and the goal handed onward is the induced predicate unmodified. The round proceeds to
-planning and fails there if the goal really is out of reach — attributing the failure to "no plan
-found" rather than to "your goal is degenerate".
+THEN the row records `goal_undecided_within_budget: True`, carries NO `goal_repaired` key, the goal
+is never REWRITTEN, and the round is `skipped: goal_unreached_within_budget` with
+`counterexample.termination: budget_exhausted`. `degenerate_goal_predicate` MUST NOT appear in the
+counterexample trail for a budget stop.
+
+REVISED 2026-07-30 (review). The first version of this scenario required the round NOT to be skipped
+— falling through to the planner instead. That is the PERMISSIVE resolution of "undecided" and it
+RELAXES `degenerate_goal_predicate`, a named quality gate: goals that previously failed the pre-veto
+reached the planner. It shipped in `0da7f75ad` without disclosure in the commit message or the ops
+record, which is what the review caught. Three responses were available and the ordering between
+them is the substance of this scenario:
+
+1. Fire GOAL-REPAIR (the pre-split behaviour) — UNSOUND. A spent compute budget silently becomes a
+   goal REWRITE to a looser "strictly fuller than root" proxy, and the planner then reports success
+   against a non-winning goal. Not restored.
+2. Fall through to the planner — PERMISSIVE, and a gate relaxation requiring operator authorisation.
+   Reverted.
+3. Skip the round without attempting repair — what this scenario now requires. At least as strict as
+   the pre-split behaviour on the accept axis, strictly stricter on the rewrite axis, so it widens
+   nothing in either direction.
+
+ACCEPTED LOSS, stated rather than hidden: at the shipped `max_nodes=20000`, ka59's proven-correct
+depth-11 predicate needs ~137k engine calls to demonstrate, so its round is skipped and induce→plan
+does not complete for that game. This is a COMPUTE failure and is reported as one — `skipped`,
+`goal_undecided_within_budget` and `termination` all distinguish it from a disproved predicate.
+`max_nodes` is compute and may be raised on evidence; the veto is quality and may not be widened.
+Should the operator prefer response (2), that is a one-line change here plus the two assertions in
+`test_budget_starved_gate_does_not_rewrite_the_goal_end_to_end`.
 
 ### SCENARIO-ARC-WMTE-6047-6: A plan that reaches the goal proves satisfiability
 GIVEN the gate was budget-undecided
