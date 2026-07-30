@@ -398,6 +398,58 @@ def test_bool_and_object_dtypes_decline_the_arithmetic_rather_than_crash() -> No
     )
 
 
+def test_the_dtype_guard_is_checked_before_min_and_not_merely_alongside_it() -> None:
+    """The `dtype.kind in "iu"` test must SHORT-CIRCUIT `a.min()`, not just narrow the fast path.
+
+    ADDED 2026-07-30, by re-running this file's mutation proof under `-n0`. The recorded claim was
+    "mutation-proven 7/7" with no method stated; re-run it is **7 of 8**, and this is the survivor.
+
+    The surviving mutant relaxes `a.dtype.kind in "iu" and a.min() >= 0` to `a.min() >= 0` alone.
+    On every grid this repo's own tests exercise that is INDISTINGUISHABLE -- for a non-negative
+    float, `int(v) % 10 == int(v % 10)`, verified over 400k random values and every large/precision
+    edge case in float32 and float64, so the integer check looks redundant once the sign check is
+    present. It is not redundant, for a reason none of those tests reach: `a.min()` is only DEFINED
+    for an orderable dtype. On a string grid HEAD never evaluates it (the `kind` check is False and
+    `and` short-circuits) and falls through to the per-cell path, which keys it correctly. The
+    mutant evaluates it and dies with `UFuncTypeError`.
+
+    Why a string grid is worth pinning rather than dismissing: the function's own docstring already
+    declines to assume engine output is well-behaved -- "engines here are arbitrary LLM-written
+    code, which is precisely the class of assumption that should not be load-bearing" -- and that
+    argument does not distinguish a negative cell from a stringly-typed one. An engine that builds
+    its grid with `np.array([[str(v) ...]])` is a plausible LLM bug, and the difference between
+    "keys correctly" and "raises inside the dedup path" is the difference between a search that
+    works and a round that dies.
+    """
+    # '4'/'14' and '5'/'15' are the aliasing pairs, so this grid also exercises the merge rather
+    # than merely surviving the call.
+    stringly = np.array([["4", "14"], ["5", "15"]])
+    swapped = np.array([["14", "4"], ["15", "5"]])
+    collapsed = np.array([["4", "4"], ["5", "5"]])
+
+    key = _state_key(stringly)
+    assert isinstance(key, bytes), (
+        "a string grid must key into the same bytes namespace as every other non-empty 2-D grid; "
+        "a str key here would re-open the two-namespace partition break this file exists to pin"
+    )
+    _assert_same_partition(
+        [stringly, swapped, collapsed],
+        "a string-dtype grid keys by to_ascii's last digit like any other",
+    )
+
+    # The guard order is the actual property. Stated as the mutant's own failure: evaluating
+    # `min()` on this dtype is what HEAD must avoid.
+    try:
+        _ = stringly.min() >= 0
+    except Exception:
+        pass
+    else:  # pragma: no cover - defensive; numpy raising here is what makes the guard load-bearing
+        raise AssertionError(
+            "numpy now orders this dtype, so the short-circuit is no longer observable and this "
+            "test needs a dtype that still raises -- it must not be left silently vacuous"
+        )
+
+
 def test_plan_in_model_finds_the_same_plan_through_the_real_call_sites() -> None:
     """End-to-end through `plan_in_model`, on a grid whose states differ ONLY by an aliasing swap.
 

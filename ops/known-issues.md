@@ -4,6 +4,66 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-30 (outer-loop, DISCLOSURE — the entry `arc_llm_reinduction.py` has been pointing at since 764226c86): the budget-exhausted goal pre-veto
+
+**Why this entry exists.** `arc_llm_reinduction.py`'s caller comment cited
+`ops/known-issues.md "budget-exhausted goal pre-veto"` as the disclosure record for a gate
+relaxation that was reverted. That entry did not exist — this file had **zero** matches for the
+phrase, and the real disclosure lived only in `ops/status.md` and `ops/changelog.md`. A reader
+auditing a gate change was pointed at the wrong file. Written 2026-07-30 rather than repointing
+the comment away, so the reference resolves where it says it does.
+
+**What was relaxed, and reverted.** `_goal_satisfiability_check` stops for two reasons that mean
+opposite things: the frontier drains (the goal really is unreachable — a sound veto) or the search
+budget runs out (nothing whatsoever was learned). Both used to report
+`counterexample.kind == "degenerate_goal_predicate"`. The 2026-07-29 budget-unit alignment (the
+gate counts ENGINE CALLS now, matching `plan_in_model`, closing an 11x permissiveness gap) made
+that conflation live and severe, because the gate now hits its ceiling first on real boards.
+
+A same-day fix resolved the budget case by **falling through and planning against the unproven
+goal**. That is a relaxation of a named QUALITY gate — goals that previously failed the pre-veto
+now reached the planner — and it shipped without disclosure in the commit message or the ops
+record. It was reverted in `764226c86`. What runs now is option 3: **skip the round, and do NOT
+attempt GOAL-REPAIR**, which is no wider than the pre-split behaviour on the accept axis and
+strictly stricter on the rewrite axis.
+
+**What it costs, stated rather than hidden.** ka59's proven-correct depth-11 predicate needs
+~137k engine calls to demonstrate against a 20k ceiling, so its round is skipped and induce->plan
+does not complete for that game. That is a COMPUTE failure and is now reported as one
+(`goal_unreached_within_budget` + `termination: budget_exhausted`) rather than converted into a
+goal rewrite or a false solve. `max_nodes` is compute and may be raised; the predicates are
+quality and may not be widened.
+
+**Cross-refs:** `ops/status.md` 2026-07-30 entries · `ops/changelog.md` (764226c86) ·
+`tests/python/test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py` (SCENARIO-ARC-WMTE-6047-5) ·
+`CARNOT_ARC_GOAL_GATE_MAX_NODES` (the compute knob added 2026-07-30, dev-only, unset in production).
+
+### 2026-07-30 (outer-loop, OPEN — METHOD TRAP): a mutation proof run under this repo's default `addopts` can be silently VACUOUS
+
+**The trap.** `pyproject.toml` sets `addopts = -n 4`, so pytest-xdist runs tests in WORKER
+SUBPROCESSES. A mutation harness that patches the module attribute **in the parent process** and
+then shells out to pytest has its patch discarded by every worker. Every mutant then "survives",
+the harness reports a clean-looking result, and **the proof establishes nothing**. This is not
+hypothetical: it happened to the goal-gate proof on 2026-07-30 — five mutants, all five apparently
+surviving, none of it real.
+
+**Two workarounds, both measured 2026-07-30.**
+
+* `-p <plugin_module>` — a pytest PLUGIN is imported **inside each worker**, so its patch DOES
+  propagate. Verified: mutation M3 was caught under the default `-n 4` via this route.
+* `-n0` — no workers at all, so a parent-process patch works too. Slower, but immune.
+
+Use the plugin route AND `-n0` if you want the result to be correct under either reading.
+
+**Consequence for a recorded claim.** `ops/status.md` recorded
+`tests/python/test_arc_state_key_dedup_2026_07_30.py` as "mutation-proven 7/7" with **no method
+stated**, so it could not be told apart from the vacuous shape. Re-run 2026-07-30 under `-n0`
+with 8 mutants: **7 of 8 caught, 1 real survivor** (the `dtype.kind in "iu"` guard could be
+dropped and nothing failed — on a string-dtype grid HEAD short-circuits and keys correctly while
+the mutant dies in `a.min()`). Gap closed by
+`test_the_dtype_guard_is_checked_before_min_and_not_merely_alongside_it`; the proof is now 8/8.
+**Any future "mutation-proven N/N" claim must state its method**, or it is not a claim.
+
 ### 2026-07-29 (outer-loop, MECHANISM LANDED): every A/B on the live ARC path needs a treatment-activation pre-flight AND an A/A control — ~~the harness perturbs ~40% of cells under IDENTICAL code~~ [RATE RETRACTED 2026-07-30 — see the retraction box below; the REQUIREMENT for a per-grid A/A floor is UNCHANGED and if anything strengthened]
 
 **Status:** the pre-flight is shipped (`python/carnot/analysis/treatment_activation_preflight.py`,

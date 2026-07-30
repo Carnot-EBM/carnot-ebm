@@ -602,15 +602,62 @@ def _plan_reaches_goal(
     }
 
 
+_GOAL_GATE_DEFAULT_MAX_NODES = 20000
+
+
+def _goal_gate_max_nodes_default() -> int:
+    """Resolve the gate's search budget, honouring a DEV-ONLY environment override.
+
+    WHY THIS EXISTS (2026-07-30). The budget/exhaustion split above ends with "`max_nodes` is
+    compute and may be raised; the gate is quality and may not be widened" -- but that sentence
+    was UNREACHABLE for the gate. All three production call sites
+    (`_repair_degenerate_goal`, `execute_bounded_llm_reinduction`, and the agent's plain-path
+    check) call `_goal_satisfiability_check` with no `max_nodes`, and no environment variable
+    read it, so the 20000 default could not be changed without editing production code. The
+    planner it guards has had exactly such a knob since REQ-ARC-FCP-5699-15
+    (`CARNOT_ARC_PLAN_MAX_NODES`, applied in `ArcAgent._call_plan_in_model`); the gate had none.
+    This closes that asymmetry so the two halves of the induce->plan path can be budgeted
+    together in a diagnostic run.
+
+    THIS IS COMPUTE, NOT QUALITY. It moves only how far the probe is allowed to search. It
+    cannot admit a goal the predicates would reject: `goal_predicate_true_at_root`,
+    `degenerate_goal_predicate` on a genuinely drained frontier, and the caller's
+    skip-without-GOAL-REPAIR resolution are all untouched, and raising the budget can only turn
+    an UNDECIDED verdict into a DECIDED one (either direction). Unset in production, so the
+    default behaviour is bit-identical.
+
+    WHAT IT IS WORTH, HONESTLY. On ka59 the gate needs 12,435 unique grids / 160,000 engine
+    calls to certify its concept-correct depth-11 predicate, and `plan_in_model` then needs
+    137,347 nodes to actually produce the plan -- both far past 20,000. Raising this knob alone
+    therefore does NOT open that game: it buys a gate pass that the planner cannot use (measured
+    2026-07-30; see ops/status.md). Production affordability is ~17,854 engine calls per game,
+    so the payoff here is DEV PARITY with `CARNOT_ARC_PLAN_MAX_NODES` -- being able to budget
+    both halves in one A/B -- not a live unblock.
+    """
+    raw = os.environ.get("CARNOT_ARC_GOAL_GATE_MAX_NODES")
+    if not raw:
+        return _GOAL_GATE_DEFAULT_MAX_NODES
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return _GOAL_GATE_DEFAULT_MAX_NODES
+    return value if value > 0 else _GOAL_GATE_DEFAULT_MAX_NODES
+
+
 def _goal_satisfiability_check(
     *,
     engine: Callable[[np.ndarray, int, Any], np.ndarray],
     goal: Callable[[np.ndarray], bool] | None,
     start_grid: np.ndarray,
-    max_nodes: int = 20000,
+    max_nodes: int | None = None,
     max_depth: int = 40,
 ) -> dict[str, Any]:
     """REQ-ARC-WMTE-4664: reject constant-false goals before invoking the planner."""
+
+    # `None` means "no caller opinion" -> the default, or the dev-only env override. An
+    # EXPLICIT `max_nodes` (every test, and any future diagnostic caller) still wins outright.
+    if max_nodes is None:
+        max_nodes = _goal_gate_max_nodes_default()
 
     if goal is None:
         return {
@@ -757,6 +804,20 @@ def _goal_satisfiability_check(
     # increments. `evaluated` is KEPT as the unique-grid diagnostic (`reachable_grids_evaluated`),
     # because that number is genuinely informative about coverage and is referenced in artifacts --
     # it simply no longer decides when to stop.
+    #
+    # WHAT THE ALIGNMENT DOES *NOT* COVER (2026-07-30 review). The UNIT now matches; the SEARCH
+    # ORDER does not. This loop is always plain BFS over a deque. `plan_in_model` is BFS only
+    # while `_goal_energy_for_plan` returns None -- given a goal energy it becomes a best-first
+    # heap. At production defaults that difference is inert: the binary goal energy is a flat
+    # constant, so heapq's `(energy, counter)` tie-breaks FIFO and degenerates to BFS, which is
+    # why the gate and the planner were measured expanding the SAME 137,347 nodes on ka59. Under
+    # `CARNOT_ARC_GRADED_GOAL_BIAS=1` it is genuinely best-first and can reach a goal in fewer
+    # nodes than this BFS gate, which re-opens the FALSE-NEGATIVE class the unit alignment closed
+    # (the gate vetoing a goal the planner would have reached). Mitigating, and the reason this is
+    # a documented caveat rather than a fix: the graded-exemplar bias measured 2.3x WORSE than the
+    # binary one on ka59 (ops/status.md), so the configuration that opens the gap is not the one
+    # in use. If graded bias is ever defaulted on, pass the same `goal_energy` into this probe
+    # rather than leaving the two orders divergent.
     engine_calls = 0
     while q and engine_calls < int(max_nodes):
         grid, depth = q.popleft()
@@ -814,6 +875,28 @@ def _goal_satisfiability_check(
     # unexplored. "Frontier empty" is therefore only evidence of exhaustiveness when the budget
     # was NOT the thing that stopped us. `frontier_remaining` is still reported so a reader can
     # see which shape occurred.
+    #
+    # CORRECTION 2026-07-30 (the paragraph above is kept verbatim per never-prune; its CONCLUSION
+    # is right and its stated MECHANISM is wrong, so read this before acting on it). The `break`
+    # fires immediately AFTER `q.append((next_grid, depth + 1))`, so `q` is NEVER empty at that
+    # moment -- measured: the shape that paragraph describes leaves `frontier_remaining == 1`.
+    # The real way an empty deque coincides with a spent budget is the OTHER exit: the `while`
+    # condition failing on `engine_calls` after a round of expansions produced only duplicates,
+    # which the `key in seen` check drops without appending. Then the deque genuinely drained AND
+    # the budget ran out, and the gate still declines to call it exhaustive.
+    #
+    # That conservatism is the deliberate part and it survives the correction intact. The gate
+    # cannot tell "drained because we saw everything" from "drained because we stopped", so it
+    # errs to UNKNOWN -- suppressing a veto it might have been entitled to rather than fabricating
+    # one it is not. `degenerate_goal_predicate` is a QUALITY verdict and must be earned.
+    #
+    # DO NOT "simplify" this to `engine_calls >= max_nodes and len(q) > 0` on the strength of the
+    # superseded mechanism above. That is mutation M3 of the 2026-07-30 mutation proof, and it
+    # survived the whole test file until the fixture was rewritten. It is now pinned by
+    # tests/python/test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py
+    # ::test_empty_frontier_is_not_trusted_when_the_budget_is_what_stopped_us -- a width-2 growing
+    # bar where an identical 18-call search reports `budget_exhausted` at max_nodes=18 and
+    # `queue_exhausted` at 19, with `frontier_remaining == 0` in both.
     #
     # NB `queue_exhausted` means exhaustive WITHIN `max_depth` -- nodes dropped by the depth cap
     # are not expanded either. Vetoing a goal as unreachable-within-depth is defensible (the
@@ -1398,7 +1481,11 @@ def execute_bounded_llm_reinduction(
             #      (`degenerate_goal_predicate`) -- goals that previously failed the pre-veto now
             #      reach the planner. That is a change only the operator may authorise, and it was
             #      shipped without being disclosed in the commit message or the ops record. See
-            #      ops/known-issues.md "budget-exhausted goal pre-veto".
+            #      ops/known-issues.md "budget-exhausted goal pre-veto" (the disclosure is also
+            #      recorded in ops/status.md and in ops/changelog.md's 764226c86 entry; this
+            #      reference pointed only at known-issues.md, where the entry did not yet exist --
+            #      dangling reference fixed 2026-07-30 by writing the entry rather than by
+            #      repointing away from it).
             #   3. Skip the round, WITHOUT attempting repair. What runs now. It is at least as
             #      strict as the pre-split behaviour on the accept axis (it never admits a goal the
             #      old code would have rejected) and strictly stricter on the rewrite axis (it never
