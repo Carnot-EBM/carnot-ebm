@@ -46,17 +46,26 @@ def test_repair_returns_none_without_exemplar() -> None:
 
 
 def test_repair_returns_satisfiable_fallback_when_reachable() -> None:
-    """Exemplar nonzero-count is reachable by the engine -> return the fallback predicate."""
-    exemplar = np.array([[1, 0]], dtype=np.int16)  # nonzero count = 1
+    """Exemplar fill level is reachable by the engine -> return the fallback predicate.
+
+    RENAMED SOURCE (2026-07-29): the `source` string was `exemplar_nonzero_count_fallback`, which
+    became factually wrong when the fallback was corrected. It is no longer a `>=`-against-nonzero
+    bound and it is no longer referenced to the exemplar alone -- it is now the conjunction of
+    "strictly more filled than the level ROOT" (which is what makes it False at the root, so the
+    root-true rejection no longer kills the repair) and "at least the exemplar's fill level" (which
+    is what keeps the give-up case below reachable). Only the label and the threshold's form changed;
+    the assertions here are the same properties as before.
+    """
+    exemplar = np.array([[1, 0]], dtype=np.int16)  # one filled cell
     repaired = _repair_degenerate_goal(
         engine=_set_corner_engine,
         previous_level_complete_grid=exemplar,
         root_grid=np.zeros((1, 2), dtype=np.int16),
     )
     assert repaired is not None
-    assert repaired["source"] == "exemplar_nonzero_count_fallback"
+    assert repaired["source"] == "exemplar_strictly_fuller_than_level_root_fallback"
     assert repaired["satisfiability"]["satisfiable"] is True
-    # the returned predicate fires once the grid has >= 1 nonzero cell, false otherwise
+    # the returned predicate fires once the grid has >= 1 filled cell, false otherwise
     assert repaired["predicate"](np.array([[1, 0]])) is True
     assert repaired["predicate"](np.array([[0, 0]])) is False
 
@@ -138,7 +147,7 @@ def test_repair_unblocks_planning_with_exemplar() -> None:
     assert result.goal_predicate_satisfiable is True
     assert result.refinement_rounds_used == 1
     assert proposer.refactor_calls == 0  # repaired in place, no engine-refactor needed
-    assert result.rounds[0]["goal_repaired"] == "exemplar_nonzero_count_fallback"
+    assert result.rounds[0]["goal_repaired"] == "exemplar_strictly_fuller_than_level_root_fallback"
     # the planned goal is the reachable fallback, not the degenerate constant-false predicate
     assert result.goal_predicate(np.array([[1, 0]])) is True
 
@@ -195,4 +204,4 @@ def test_repair_fires_on_refactor_round_not_just_round_one() -> None:
     assert result.refinement_rounds_used == 2  # repaired on the 2nd (refactor) round
     assert proposer.refactor_calls == 1
     assert "goal_repaired" not in result.rounds[0]  # round 1 could not repair (unreachable)
-    assert result.rounds[1]["goal_repaired"] == "exemplar_nonzero_count_fallback"
+    assert result.rounds[1]["goal_repaired"] == "exemplar_strictly_fuller_than_level_root_fallback"

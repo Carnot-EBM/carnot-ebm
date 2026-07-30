@@ -53,9 +53,27 @@ REPO = Path(__file__).resolve().parents[3]
 #
 # Module-global by design so the existing `e3.E3_DIR = ...` monkeypatch (see
 # scripts/experiments/arc3_local_scaffold_induction_ab.py and
-# tests/python/test_induce_split_fallback.py) keeps working: both readers and writers resolve
-# it at CALL time, not at import time. The env var is the same override for a subprocess that
-# cannot patch the module.
+# tests/python/test_induce_split_fallback.py) keeps working: readers and writers dereference the
+# module attribute, so REBINDING IT takes effect immediately. The env var is the same override for
+# a subprocess that cannot patch the module.
+#
+# CORRECTION 2026-07-29 -- THE REDIRECT IS NOT TOTAL, and this comment used to claim it was.
+# It previously read "both readers and writers resolve it at CALL time, not at import time". That
+# is false about the ENV VAR: the expression below runs ONCE, at module import, so
+# `CARNOT_ARC_E3_DIR` only redirects a process that set it BEFORE importing this module. A process
+# that imports first and sets the variable afterwards keeps writing to the real evidence store --
+# `results/arc_e3/<game>/world_model.py`, which is tracked and is read-only by discipline. The
+# monkeypatch path IS effectively call-time (rebinding the attribute changes what every later
+# dereference sees); only the env-var path is import-time. Two further writers bypass this constant
+# altogether and hardcode `config.repo_root / "results" / "arc_e3" / <game>`, with
+# `mkdir(parents=True)`: `arc_e3_named_tail_gate._write_skill_file` and
+# `arc_e3_fidelity_gate` (both write `skill_*.json`, not `world_model.py`).
+#
+# NOT CHANGED HERE, deliberately. Making the env var call-time, or routing those two gates through
+# this constant, alters where live code writes; the monkeypatch contract above is depended on by
+# existing consumers I have not measured against a change. Recorded so the next reader does not
+# re-derive it, and so nobody trusts `CARNOT_ARC_E3_DIR` as a total guarantee -- set it in the
+# ENVIRONMENT BEFORE the interpreter starts, not from inside an already-imported process.
 E3_DIR = (
     Path(os.environ["CARNOT_ARC_E3_DIR"])
     if os.environ.get("CARNOT_ARC_E3_DIR")
@@ -1328,6 +1346,16 @@ class VerifyResult:
     # unmasked ones (where it reports `no_mask`), so an artifact row always shows whether
     # the guard could have fired and what it measured -- never only when it did fire.
     hud_mask_swallow: dict = field(default_factory=dict)
+    # Transitions dropped from grading because they are LEVEL-UP rows, whose `next_grid` is the
+    # NEXT level's re-laid-out opening board rather than this action's effect (2026-07-29). No
+    # engine can predict a re-layout it has never seen, so grading those rows measures nothing
+    # about the dynamics and penalises an HONEST engine for the level-up it correctly caused.
+    # Measured: one identical, perfectly-honest engine scores accuracy 1.0000 / change_fidelity
+    # 1.0000 on a window with no level-up and 0.6667 / 0.6667 on the same window whose last row
+    # is a real level-up. Because the acceptance gate is `heldout_accuracy >= threshold`, that
+    # difference is the whole gate at a strict threshold. Reported so the exclusion is never
+    # silent: a reader can always see how many rows were dropped and recompute without them.
+    n_levelup_rows_excluded: int = 0
     # REQ-ARC-WMTE-6017: "precomputed_by_caller" (the verdict is about the caller's whole
     # corpus) or "computed_on_this_corpus" (about this verifier's slice only).
     hud_mask_swallow_source: str = "computed_on_this_corpus"
@@ -1445,7 +1473,27 @@ class WorldModelVerifier:
                 mask_status = "applied"
             else:
                 mask_status = "shape_mismatch"
+        n_levelup_excluded = 0
         for i, t in enumerate(self.transitions):
+            # LEVEL-UP ROWS ARE NOT GRADEABLE DYNAMICS EVIDENCE (2026-07-29). The completing
+            # action satisfies the win condition AND re-lays out the playfield atomically, so
+            # `t.next_grid` is the NEXT LEVEL'S OPENING BOARD -- on ka59 the winning step rewrites
+            # 3527 of 4096 cells against an ordinary-step median of 18.5. No engine induced from
+            # THIS level's transitions can predict a layout it has never observed, so scoring the
+            # row measures the renderer's level-change, not the engine's dynamics, and it penalises
+            # an honest engine precisely for causing the level-up we wanted.
+            #
+            # Unlike the goal predicate (see `score_goal_predicate_consistency`), there is NO
+            # counterfactual available here: the engine's own prediction IS the counterfactual, so
+            # grading it against itself would be vacuous. Exclusion is the only sound option.
+            #
+            # DIRECTION OF THIS CHANGE, STATED PLAINLY: it can only ADMIT engines that were
+            # previously rejected, never reject one that previously passed. Every admitted engine
+            # was rejected on a row that carried no information about it. `n_levelup_rows_excluded`
+            # records the count so no acceptance is silently attributable to this.
+            if t.level_after > t.level_before:
+                n_levelup_excluded += 1
+                continue
             try:
                 pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
             except Exception as e:  # a crashing engine fails the transition
@@ -1509,13 +1557,18 @@ class WorldModelVerifier:
                         ),
                     }
                 )
-        n = len(self.transitions)
+        # Excluded level-up rows leave the DENOMINATOR too. Counting them in `n` while never
+        # grading them would cap `accuracy` at (n - n_levelup)/n and hand a strict threshold an
+        # automatic failure on any window containing a level-up -- the same wrong-frame penalty,
+        # relocated from the numerator to the denominator.
+        n = len(self.transitions) - n_levelup_excluded
         cell_recall = float(np.mean(cell_recalls)) if cell_recalls else 0.0
         return VerifyResult(
             n,
             n_correct,
             n_correct / max(1, n),
             mism,
+            n_levelup_rows_excluded=n_levelup_excluded,
             cell_recall=cell_recall,
             n_changing=n_changing,
             n_changes_correct=n_changes_correct,
@@ -1780,6 +1833,32 @@ class GoalPredicateConsistency:
     n_real_levelups: int
     n_real_noops: int
     mismatches: list[dict] = field(default_factory=list)
+    # How many level-up rows were graded on the ENGINE'S COUNTERFACTUAL rather than on the
+    # (re-laid-out, therefore wrong) rendered `next_grid` -- see score_goal_predicate_consistency's
+    # `engine` parameter. 0 means the historical grading was used, so a caller cannot mistake an
+    # unfixed run for a fixed one. Defaulted, so existing constructions stay valid.
+    #
+    # READ THIS ALONGSIDE `counterfactual_grading_is_not_oracle_distinct` BELOW: a non-zero count
+    # here means the veto traded independence for correctness on those rows, and that trade must be
+    # visible to anyone reading a verdict off this object.
+    n_levelups_graded_on_engine_counterfactual: int = 0
+    # Level-up rows that could NOT be graded at all, because the engine supplied to grade their
+    # counterfactual did not clear the fidelity floor. They are EXCLUDED from `n`/`n_correct`
+    # rather than graded on `next_grid`: grading them on the rendered frame is what penalises a
+    # CORRECT predicate (measured -- see the docstring), and grading them on an untrusted engine's
+    # counterfactual is what loses oracle-distinctness. Neither is acceptable, so the honest state
+    # is "ungradeable", recorded here so a silently-inert veto cannot pass for a satisfied one.
+    n_levelups_ungradeable_low_engine_fidelity: int = 0
+    # True whenever at least one row was graded on the engine's own counterfactual. On those rows
+    # the veto is NO LONGER independent of the engine: engine and goal predicate are emitted by the
+    # SAME proposer in the SAME call, so a jointly-confabulated (engine, goal) pair -- engine
+    # invents a state, goal recognises exactly that state -- agrees with itself and passes. That
+    # pair is caught when this is False and can slip through when it is True.
+    counterfactual_grading_is_not_oracle_distinct: bool = False
+    # The measured engine-quality number the counterfactual decision was made on, and the floor it
+    # was compared against, so the decision is reconstructible from the artifact alone.
+    engine_fidelity_used_for_counterfactual_decision: Optional[float] = None
+    min_engine_fidelity_for_counterfactual: Optional[float] = None
 
 
 def score_goal_predicate_consistency(
@@ -1787,6 +1866,9 @@ def score_goal_predicate_consistency(
     transitions: Sequence[Transition],
     *,
     max_mismatch: int = 8,
+    engine: Optional[Callable[[np.ndarray, int, Any], np.ndarray]] = None,
+    engine_change_fidelity: Optional[float] = None,
+    min_engine_fidelity_for_counterfactual: float = 0.5,
 ) -> GoalPredicateConsistency:
     """REQ-ARC-WMTE-5593: does `is_level_complete`'s sign match real observed level-ups?
 
@@ -1801,20 +1883,165 @@ def score_goal_predicate_consistency(
     real pipeline (`execute_bounded_llm_reinduction` re-induces it after every level-up), so
     checking it against transitions spanning multiple boundaries can produce a spurious
     mismatch if a "win"-looking state persists visually into a later, unrelated boundary.
+
+    ``engine`` (optional, 2026-07-29) -- THE LEVEL-UP ROWS CANNOT BE GRADED ON ``next_grid``.
+    For a level-up transition this function asks the predicate to return True on ``t.next_grid``,
+    but the completing action re-lays out the playfield atomically with winning, so ``next_grid``
+    is the NEXT LEVEL'S OPENING BOARD. Measured on ka59's canonical 11-action L1 solve against a
+    change-fidelity-1.0000 engine whose predicate encodes the registry's documented win condition:
+    the winning step rewrites 3527 of 4096 cells and the CORRECT predicate is False on
+    ``next_grid``. So on exactly the rows that carry the positive signal, this veto was scoring a
+    correct predicate as WRONG -- it penalised correctness.
+
+    When ``engine`` is supplied, level-up rows are instead graded on the engine's own
+    counterfactual ``engine(t.grid, t.action, t.data)``, which is where the terminal configuration
+    actually exists (measured True there on the same ka59 case, a 19-cell ordinary-magnitude step).
+    Non-level-up rows are unaffected either way.
+
+    DEFAULT IS UNCHANGED. With ``engine=None`` this function behaves EXACTLY as before, because
+    this is a live veto and flipping how it scores would change which rounds reach the planner. The
+    call site in ``arc_llm_reinduction`` passes the engine explicitly; every other caller keeps the
+    historical behaviour until measured. ``n_levelups_graded_on_engine_counterfactual`` reports how
+    many rows took the corrected path, so a run cannot silently claim the fix was active.
+
+    THE COST OF THE COUNTERFACTUAL: IT IS NOT ORACLE-DISTINCT (2026-07-29, second pass).
+    Grading a level-up row on ``engine(t.grid, t.action)`` makes the goal veto depend on the ENGINE,
+    and the engine and the goal predicate are emitted BY THE SAME PROPOSER IN THE SAME CALL. Mutual
+    consistency between them is therefore the EXPECTED confabulation mode, not an independent
+    check. Demonstrated: an engine that invents colour 9 on the winning action paired with a goal
+    that tests for colour 9 -- a colour that appears in NO real observed frame -- scores 0.5 when
+    graded on ``next_grid`` (veto FIRES, pair correctly caught) and 1.0 when graded on the
+    counterfactual (veto PASSES). So on exactly the rows that carry the level-up signal, a
+    jointly-wrong pair now clears a veto that used to catch it.
+
+    Both grading choices are therefore wrong for an UNTRUSTED engine, in opposite directions:
+    ``next_grid`` penalises a CORRECT predicate, the counterfactual excuses a JOINTLY-WRONG one.
+    So the counterfactual is gated on the engine having independently earned trust:
+
+      * ``engine_change_fidelity`` is the engine's MEASURED quality on the agent's own held-out
+        transitions (``heldout_change_consistency`` at the ``arc_llm_reinduction`` call site) --
+        computed WITHOUT reference to the goal predicate, which is what keeps the gating decision
+        itself independent even though the grading it authorises is not.
+      * At or above ``min_engine_fidelity_for_counterfactual`` the counterfactual is used.
+      * Below it -- or when no fidelity number was supplied at all -- the level-up row is treated as
+        UNGRADEABLE and EXCLUDED from ``n``/``n_correct``, counted in
+        ``n_levelups_ungradeable_low_engine_fidelity``. It is NOT quietly graded on ``next_grid``.
+
+    Excluding makes the veto go INERT on such a window (it only fires at
+    ``n_real_levelups >= 1``), which is the lesser evil and the honest one: with no trustworthy
+    positive there is nothing to grade against, and firing the veto anyway would reject correct
+    predicates -- the very failure that blocked the induce->plan path. ``n_real_levelups`` still
+    counts the row (it really was a level-up), so the inertness is visible rather than disguised as
+    a clean pass, and ``counterfactual_grading_is_not_oracle_distinct`` flags any run whose numbers
+    were produced with the independence traded away.
     """
 
     n_correct = 0
     n_real_levelups = 0
     n_real_noops = 0
+    n_cf = 0
+    n_ungradeable = 0
     mismatches: list[dict] = []
+    # Whether the engine has independently earned the right to supply the counterfactual. The
+    # decision is made ONCE, outside the loop, from a number computed without reference to the goal
+    # predicate -- so the gating stays independent even though the grading it authorises does not.
+    engine_fidelity_ok = (
+        engine is not None
+        and engine_change_fidelity is not None
+        and float(engine_change_fidelity) >= float(min_engine_fidelity_for_counterfactual)
+    )
+
+    def _engine_verified_on_action(action: int) -> bool:
+        """Is this engine's behaviour ON THIS ACTION corroborated by REAL observed data?
+
+        The overall fidelity floor is necessary but NOT sufficient, and this is the condition that
+        actually blocks the confabulation. A jointly-wrong (engine, goal) pair confabulates on the
+        WINNING action specifically -- which is exactly the action whose true effect is unobservable
+        from `next_grid`, because the completing action's frame is the next level's re-layout. An
+        engine can therefore score well overall and still be entirely unconstrained on the one
+        action whose counterfactual we are about to trust.
+
+        So we require independent corroboration for that action: at least one NON-level-up
+        transition using the SAME action, whose real observed `next_grid` the engine reproduces
+        exactly. Those rows are graded against REALITY, not against the goal predicate, which is
+        what makes this check oracle-distinct. If the winning action appears nowhere else in the
+        window, there is no evidence and the answer is False -- deliberately conservative: absence
+        of evidence about the decisive action is not evidence the engine models it.
+        """
+        corroborated = False
+        for other in transitions:
+            if int(other.action) != int(action):
+                continue
+            if other.level_after > other.level_before:
+                continue  # its own next_grid is a re-layout; cannot corroborate anything
+            try:
+                pred = np.asarray(
+                    engine(np.asarray(other.grid).copy(), int(other.action), other.data)
+                )
+            except Exception:
+                return False
+            observed = np.asarray(other.next_grid)
+            if pred.shape != observed.shape or not np.array_equal(pred, observed):
+                return False  # demonstrably wrong on this action -> do not trust its counterfactual
+            corroborated = True
+        return corroborated
+
     for i, t in enumerate(transitions):
         real_levelup = bool(t.level_after > t.level_before)
         if real_levelup:
             n_real_levelups += 1
         else:
             n_real_noops += 1
+        # Grade the row on the frame where a correct predicate should actually be True. For a
+        # level-up that is the engine's counterfactual, NOT the rendered next frame (see docstring).
+        graded_grid = t.next_grid
+        if real_levelup and engine is not None:
+            if not (engine_fidelity_ok and _engine_verified_on_action(int(t.action))):
+                # UNGRADEABLE (see docstring). We refuse BOTH available gradings: `next_grid` is
+                # the next level's re-laid-out board, on which a CORRECT predicate is False, and an
+                # untrusted engine's counterfactual is a state the same proposer may have
+                # confabulated to match its own goal predicate. Drop the row instead of scoring it
+                # wrongly in either direction.
+                n_ungradeable += 1
+                if len(mismatches) < max_mismatch:
+                    mismatches.append(
+                        {
+                            "i": i,
+                            "real_levelup": True,
+                            "claimed": None,
+                            "ungradeable": (
+                                "engine_fidelity_below_counterfactual_floor"
+                                if not engine_fidelity_ok
+                                else "engine_unverified_on_this_action"
+                            ),
+                            "engine_change_fidelity": (
+                                None
+                                if engine_change_fidelity is None
+                                else round(float(engine_change_fidelity), 6)
+                            ),
+                            "floor": round(float(min_engine_fidelity_for_counterfactual), 6),
+                        }
+                    )
+                continue
+            try:
+                cf = np.asarray(engine(np.asarray(t.grid).copy(), int(t.action), t.data))
+                if cf.shape == np.asarray(t.grid).shape:
+                    graded_grid = cf
+                    n_cf += 1
+                else:
+                    # A shape-changing engine cannot have produced this level's terminal board, so
+                    # its counterfactual is not usable -- and `next_grid` is still wrong. Same
+                    # ungradeable treatment rather than a silent fall back to the wrong frame.
+                    n_ungradeable += 1
+                    continue
+            except Exception:
+                # A broken engine must not turn into a goal-predicate verdict, and must not be
+                # laundered into a `next_grid` grading either (that is what penalises a correct
+                # predicate). The row is ungradeable.
+                n_ungradeable += 1
+                continue
         try:
-            claimed = bool(is_level_complete(t.next_grid))
+            claimed = bool(is_level_complete(graded_grid))
         except Exception as e:
             claimed = False
             if len(mismatches) < max_mismatch:
@@ -1827,14 +2054,38 @@ def score_goal_predicate_consistency(
         elif len(mismatches) < max_mismatch:
             mismatches.append({"i": i, "real_levelup": real_levelup, "claimed": claimed})
 
-    n = len(transitions)
+    # Ungradeable rows leave the DENOMINATOR too. Keeping them in `n` would depress `accuracy`
+    # toward the veto threshold for a reason that has nothing to do with the predicate under test --
+    # which is the same "penalise correctness" failure this whole correction exists to remove.
+    n = len(transitions) - n_ungradeable
+    # NOTHING GRADEABLE MUST NOT READ AS MAXIMALLY INCONSISTENT -- but only when rows were actually
+    # EXCLUDED. With every level-up row dropped, `n == 0`, and the obvious `n_correct / max(1, n)`
+    # yields 0.0, which trips any `accuracy < threshold` veto: the veto would fire HARDEST exactly
+    # when it has no evidence, re-creating the reject-correct-predicates failure through the
+    # denominator instead of the numerator. So an all-excluded window reads 1.0 (vacuously
+    # consistent) and `n == 0` is the discriminator a consumer should test.
+    #
+    # An EMPTY INPUT is a different case and keeps its historical 0.0 (REQ-ARC-WMTE-5593's
+    # empty-transitions contract, asserted by test_arc_goal_predicate_consistency). "You gave me no
+    # transitions" and "your transitions were all ungradeable" are distinct claims, and collapsing
+    # them would silently change a documented return value for every existing caller.
+    all_rows_excluded = bool(len(transitions) > 0 and n == 0)
     return GoalPredicateConsistency(
         n=n,
         n_correct=n_correct,
-        accuracy=float(n_correct / max(1, n)),
+        accuracy=1.0 if all_rows_excluded else float(n_correct / max(1, n)),
         n_real_levelups=n_real_levelups,
         n_real_noops=n_real_noops,
         mismatches=mismatches,
+        n_levelups_graded_on_engine_counterfactual=n_cf,
+        n_levelups_ungradeable_low_engine_fidelity=n_ungradeable,
+        counterfactual_grading_is_not_oracle_distinct=bool(n_cf > 0),
+        engine_fidelity_used_for_counterfactual_decision=(
+            None if engine_change_fidelity is None else float(engine_change_fidelity)
+        ),
+        min_engine_fidelity_for_counterfactual=(
+            float(min_engine_fidelity_for_counterfactual) if engine is not None else None
+        ),
     )
 
 
@@ -2072,16 +2323,60 @@ def _transitions_block(
         )
     win = next((t for t in trans if t.level_after > t.level_before), None)
     if win is not None:
+        # THE WIN STATE IS NOT A RENDERED FRAME (measured 2026-07-29). This block used to emit
+        # `win.next_grid` under the label "is_level_complete must return True here". That claim is
+        # FALSE, and it was teaching the proposer a wrong win concept.
+        #
+        # The completing action does two things ATOMICALLY: it satisfies the level's win condition
+        # AND it re-lays out the playfield for the next level. So `next_grid` is the NEXT LEVEL'S
+        # OPENING BOARD, not a picture of this level completed. Measured on ka59's canonical
+        # 11-action L1 solve with the change-fidelity-1.0000 engine whose predicate encodes the
+        # registry's documented win condition exactly: the winning step changes 3527 of 4096 cells
+        # (86% of the grid) against an ordinary-step median of 18.5 -- a full re-layout -- and the
+        # correct predicate is False on `next_grid`. Same shape on the only other two games whose
+        # rollout window contains a real level-up (lp85 37.7%, r11l 34.1%).
+        #
+        # The obvious off-by-one "use the frame BEFORE the increment" (`win.grid`) is ALSO WRONG and
+        # was tested and refuted: `win.grid` is one action short of completion, where a correct
+        # predicate MUST be False. Measured: the correct predicate is False on `win.grid`, False on
+        # `win.next_grid`, and False on ALL 12 observed frames -- but TRUE on
+        # `engine(win.grid, win.action)`, a 19-cell ordinary-magnitude step. The terminal
+        # configuration exists in the MODEL; the renderer never shows it.
+        #
+        # So we emit the one thing that IS trustworthy: the labelled TRANSITION EVENT. We give the
+        # board before the completing action plus the action, and state the constraint as a joint
+        # condition on engine AND is_level_complete. That is strictly more information than the old
+        # block (it names the action too) and it asserts nothing false.
+        click = f" data={win.data}" if win.data else ""
         out.append(
-            "WIN STATE (full grid of a level-complete state, run-length encoded — "
-            "is_level_complete must return True here):\n" + _rle_grid(win.next_grid)
+            f"WIN TRANSITION (this is how the level was completed): applying ACTION{win.action}"
+            f"{click} to the grid below completed the level (level {win.level_before}->"
+            f"{win.level_after}).\n"
+            "CONSTRAINT: is_level_complete(engine(GRID_BELOW, "
+            f"{win.action}{', data' if win.data else ''})) must return True.\n"
+            "Do NOT assume the rendered next frame is the win state -- the completing action also "
+            "re-lays out the board for the next level, so the completed configuration of THIS "
+            "level is never drawn. Reason about what the winning move accomplishes, not about how "
+            "the following screen looks.\n"
+            "GRID BEFORE THE COMPLETING ACTION (run-length encoded):\n" + _rle_grid(win.grid)
         )
     elif previous_level_complete_grid is not None:
+        # RELABELLED TRUTHFULLY (2026-07-29). This grid is captured by
+        # `arc_competition_agent._observe_level_boundary` from the frame AFTER the level counter
+        # incremented, so by the same re-layout measurement above it is the OPENING BOARD OF THE
+        # LEVEL THAT JUST STARTED -- not a picture of the previous level completed. Describing it as
+        # "a state that COMPLETED the previous level" told the proposer that a level-complete state
+        # looks like a fresh board, which is the opposite of the truth.
+        # It is still genuinely useful -- it shows the object vocabulary, palette and geometry the
+        # game draws with -- so it is kept and described for what it actually is, with no claim
+        # about is_level_complete's value on it.
         out.append(
-            "WIN STATE EXEMPLAR (full grid of a state that COMPLETED the previous level, "
-            "run-length encoded; the next level's completion likely looks structurally similar. "
-            "Use this as a positive level-complete shape exemplar, not as an oracle for the "
-            "exact next grid):\n" + _rle_grid(np.asarray(previous_level_complete_grid))
+            "BOARD AT THE START OF THE CURRENT LEVEL (full grid, run-length encoded; captured "
+            "just after the previous level completed, so this is the CURRENT level's opening "
+            "layout). Use it for the object vocabulary, palette and geometry. It is NOT a "
+            "level-complete state -- is_level_complete must return False here, because a level is "
+            "not complete at its opening screen:\n"
+            + _rle_grid(np.asarray(previous_level_complete_grid))
         )
     return "\n".join(out)
 
@@ -2144,11 +2439,27 @@ def objects_block(
 
     try:
         parts = [_table(layout, "INITIAL")]
-        win = next((t.next_grid for t in trans if t.level_after > t.level_before), None)
-        if win is None and previous_level_complete_grid is not None:
-            win = np.asarray(previous_level_complete_grid)
-        if win is not None:
-            parts.append(_table(win, "WIN STATE"))
+        # Same correction as `_transitions_block` (2026-07-29): neither candidate grid here is a
+        # win state. `t.next_grid` on a level-up is the NEXT level's opening board (the completing
+        # action re-lays out the playfield -- 86% of cells on ka59), and
+        # `previous_level_complete_grid` is captured after the counter incremented, so it is the
+        # CURRENT level's opening board. Labelling either "WIN STATE" and handing the proposer an
+        # object table for it taught a wrong win concept in object space exactly as the raw-grid
+        # block did in pixel space. Both are still emitted -- the object vocabulary is the useful
+        # part -- under labels that say what they actually are.
+        # TOKEN BUDGET: exactly ONE extra table, same as before this fix. The post-level-up board is
+        # deliberately NOT emitted -- it is the NEXT level's layout, so it is irrelevant to inducing
+        # THIS level's win condition, and a third table would lengthen a prompt that already caused
+        # Qwen3.5-9B to spend its whole budget on win-state chain-of-thought before reaching the code
+        # block (see _L2_CODEONLY_DIRECTIVE's history). Removing the poison must not reintroduce the
+        # truncation failure it sits next to.
+        win_t = next((t for t in trans if t.level_after > t.level_before), None)
+        if win_t is not None:
+            parts.append(_table(win_t.grid, "BOARD BEFORE THE COMPLETING ACTION"))
+        elif previous_level_complete_grid is not None:
+            parts.append(
+                _table(np.asarray(previous_level_complete_grid), "CURRENT LEVEL OPENING BOARD")
+            )
         return "\n\n".join(parts)
     except Exception:
         return ""  # never break the default induction path
@@ -4635,13 +4946,30 @@ class LocalGGUFProposer:
     def _goal_only_prompt(
         self, game: str, previous_level_complete_grid: Optional[np.ndarray]
     ) -> str:
-        """A FOCUSED is_level_complete-only prompt with the WIN STATE exemplar front-and-centre, so
-        the model spends its whole budget on the win condition (not the engine)."""
+        """A FOCUSED is_level_complete-only prompt, so the model spends its whole budget on the win
+        condition (not the engine).
+
+        CORRECTED 2026-07-29 -- this was the most damaging instance of the win-state poison. The
+        block used to assert, about `previous_level_complete_grid`: "The level is COMPLETE at this
+        WIN STATE grid (is_level_complete must return True here, and False elsewhere)." That grid is
+        captured by `arc_competition_agent._observe_level_boundary` from the frame AFTER the level
+        counter incremented, so it is the CURRENT level's OPENING BOARD. The prompt was therefore
+        telling the model, as its single most emphasised fact, that a level-complete state looks like
+        a freshly-laid-out board -- the exact opposite of the truth, in a prompt whose entire budget
+        goes to the win condition.
+        It also directly contradicted `_goal_satisfiability_check`, which now REJECTS any predicate
+        that is True at the level root: a model obeying the old instruction produced a predicate the
+        gate immediately threw out as `goal_predicate_true_at_root`.
+        The grid is still shown -- the object vocabulary and geometry are genuinely useful -- but
+        labelled for what it is, with the polarity stated correctly.
+        """
         win = ""
         if previous_level_complete_grid is not None:
             win = (
-                "The level is COMPLETE at this WIN STATE grid (is_level_complete must return True "
-                "here, and False elsewhere):\n"
+                "This is the board at the START of the current level (captured just after the "
+                "previous level completed). is_level_complete must return False here -- a level is "
+                "NOT complete at its opening screen. Use it for the object vocabulary, palette and "
+                "geometry, and infer what would have to CHANGE for the level to be complete:\n"
                 + to_ascii(np.asarray(previous_level_complete_grid))
                 + "\n"
             )

@@ -69,7 +69,31 @@ def test_req_arc_wmte_5593_3_veto_fires_on_real_mismatch() -> None:
     # A genuine level-up transition (level_before=1 -> level_after=2) whose next_grid is
     # [[1]] -- `_is_complete_at_two` returns False on it (1 < 2), a real false-negative
     # mismatch against the real observed level-up.
+    #
+    # FIXTURE EXTENDED 2026-07-29: a level-up row is now graded on the engine's COUNTERFACTUAL
+    # rather than on `next_grid` (the rendered post-level-up frame is the next level's re-layout,
+    # on which even a CORRECT predicate is False -- measured on ka59). That grading is only trusted
+    # when the engine has independently earned it, which requires a NON-level-up row on the SAME
+    # action whose real observed effect the engine reproduces. Without one the row is ungradeable
+    # and the veto is inert -- correct, but it would make this test assert nothing.
+    #
+    # So the corroborating row below is added: action 1 on [[-2]] really does produce [[-1]], which
+    # `_progress_engine` (grid + 1) predicts exactly. Its values stay BELOW the predicate's
+    # threshold, so `_is_complete_at_two` is False there and no level-up occurred -- the row is
+    # CONSISTENT and contributes no mismatch of its own. (A corroborating row above the threshold,
+    # e.g. [[5]] -> [[6]], would itself be a genuine too-loose mismatch and would muddy what this
+    # test is asserting.) The veto then fires on the level-up row exactly as before -- and now on
+    # the counterfactual [[1]], where the predicate is still False, so the mismatch this test exists
+    # to catch is genuinely caught.
     transitions = [
+        Transition(
+            grid=np.array([[-2]], dtype=np.int16),
+            action=1,
+            data=None,
+            next_grid=np.array([[-1]], dtype=np.int16),
+            level_before=1,
+            level_after=1,
+        ),
         Transition(
             grid=np.array([[0]], dtype=np.int16),
             action=1,
@@ -77,7 +101,7 @@ def test_req_arc_wmte_5593_3_veto_fires_on_real_mismatch() -> None:
             next_grid=np.array([[1]], dtype=np.int16),
             level_before=1,
             level_after=2,
-        )
+        ),
     ]
     proposer = _RepeatProposer()
 
@@ -96,11 +120,16 @@ def test_req_arc_wmte_5593_3_veto_fires_on_real_mismatch() -> None:
 
     assert result.planned is False
     assert result.rounds[0]["skipped"] == "goal_predicate_consistency_failed"
-    assert result.rounds[0]["goal_predicate_consistency_accuracy"] == 0.0
+    # 0.5, not 0.0: the window now has TWO rows and the corroborating one is graded correctly. The
+    # load-bearing property is unchanged -- accuracy is below the 1.0 threshold, so the veto fires.
+    assert result.rounds[0]["goal_predicate_consistency_accuracy"] == 0.5
+    assert result.rounds[0]["goal_predicate_consistency_accuracy"] < 1.0
     assert result.rounds[0]["goal_predicate_consistency_n_real_levelups"] == 1
     assert result.counterexamples[0]["kind"] == "goal_predicate_consistency_failed"
+    # Index 1 is the level-up row (index 0 is the corroborating no-op row, which is consistent and
+    # therefore contributes no mismatch).
     assert result.counterexamples[0]["mismatches"] == [
-        {"i": 0, "real_levelup": True, "claimed": False}
+        {"i": 1, "real_levelup": True, "claimed": False}
     ]
     # Never reached plan_in_model -- the veto fires before planning is attempted at all.
     assert result.rounds[0].get("plan_length") is None

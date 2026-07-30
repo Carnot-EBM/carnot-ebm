@@ -19962,3 +19962,107 @@ green guard is therefore not proof that nothing wrote to a curated doc.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6043 | (1) `python/carnot/paths.py` NEW — `repo_root` / `repo_path` / `results_dir` / `results_path` / `output_dir` / `is_canonical_repo_root`, stdlib-only, `$CARNOT_REPO_ROOT` override (the incumbent name, already used in ~108 files) then resolve-then-walk-up to a `.git` marker accepted as file OR directory (worktrees), then a layout fallback requiring `pyproject.toml` AND `python/` AND `scripts/` so a stray parent cannot hijack it. Raises rather than defaulting to cwd. (2) `python/carnot/testing/operator_curated_doc_guard.py` NEW — PEP 578 audit hook installed from `tests/python/conftest.py` in controller and xdist workers, with a call-phase wrapper so a SWALLOWED violation still becomes a real FAILED rather than a misleading `1 passed, 1 error`. Path list kept byte-identical to `scripts/operator_curated_docs_lint.py` and asserted equal by test. Overhead measured at 0.97 us/open. (3) THREE README writers fixed AT SOURCE (`scripts/experiment_1750.py`, `scripts/publish_huggingface.py`, `python/carnot/pipeline/hf_publisher.py`) — they stage the HF model card in a temp dir; uploaded bytes and `path_in_repo` unchanged. `publish_huggingface.py` has zero test references, so the in-process guard would never have seen it. (4) 61 of 110 path files migrated, type-preserving, all verified to resolve to the identical directory; 0 PATH sites remain in `python/carnot/`. (5) `sys.path` poisoning fixed test-side (3 test files) and in 3 bootstrap scripts. (6) Two destructive rewrites eliminated: `test_verification_learning.py` was overwriting `results/experiment_1861_equivalence.json` (11 keys -> 6, deleting `corrigendum_2026_05_187_audit`, which `test_audit_1796.py` then asserts is present — a never-prune violation AND an order-dependent failure), and `scripts/audit_1796.py` was rewriting live artifacts in place. | `tests/python/test_carnot_paths.py` (36 tests, ZERO skip markers — the alias guarantee is tested against a CHAINED symlink built in `tmp_path`, with a companion assertion that the two spellings really are different strings so the agreement tests cannot go vacuous; a real-alias test is kept as an extra, written as a runtime branch rather than a skip). `tests/python/test_operator_curated_doc_guard.py` (20 tests). Guard proven to fire against the original unfixed `experiment_1750` write. A false positive was shipped and caught before review: `shutil.rmtree` uses fd-relative `os.unlink(entry.name, dir_fd=...)`, so the audit event carries a bare name that must NOT be resolved against cwd — fixed with an explicit `allow_relative` split (True for `open`, False for the fd-capable `os.*` events) plus a regression test. |
+
+## REQ-ARC-WMTE-6044: The Win State Is Not a Rendered Frame, and Neither Gate May Grade a Level-Up Row On One
+
+**Origin:** 2026-07-29. The loop asks an LLM proposer for `is_level_complete` and then vetoes the
+result against real observed level-ups. Both halves were grading against the WRONG FRAME.
+
+A level's completing action does two things ATOMICALLY: it satisfies the win condition AND it
+re-lays out the playfield for the next level. So the frame recorded as `Transition.next_grid` on a
+level-up is the NEXT LEVEL'S OPENING BOARD, not a picture of this level completed. Measured on
+ka59's canonical 11-action L1 solve against a change-fidelity-1.0000 engine: the winning step
+rewrites 3527 of 4096 cells (86%) against an ordinary-step median of 18.5, and the CORRECT predicate
+is False on `next_grid`. It is also False on `Transition.grid` (one action short of completion, where
+a correct predicate MUST be False) and on all 12 observed frames -- but TRUE on
+`engine(grid, action)`. The terminal configuration exists only in the MODEL; the renderer never
+draws it. The naive off-by-one "use the frame BEFORE the increment" is therefore also wrong.
+
+Consequences this requirement fixes: the goal veto scored a CORRECT predicate as wrong on exactly
+the rows carrying the positive signal; the DYNAMICS verifier penalised an honest engine for the
+level-up it correctly caused; a degenerate goal predicate could be true at the level root; the
+pre-veto searched a weaker action set and a differently-counted budget than the planner it guards;
+and GOAL-REPAIR was structurally dead.
+
+#### SCENARIO-ARC-WMTE-6044-WIN-STATE-IS-A-TRANSITION-NOT-A-FRAME
+
+**Given** a rollout window containing a real level-up
+**When** the proposer prompt describes how the level was completed
+**Then** it SHALL emit the labelled WIN TRANSITION -- the board before the completing action, the
+action, and the joint constraint `is_level_complete(engine(GRID, ACTION))` -- and SHALL NOT assert
+that any RENDERED frame is a level-complete state.
+**And** where only a post-boundary grid is available it SHALL be labelled the CURRENT level's opening
+board with `is_level_complete` stated as False there, because a level is not complete at its opening
+screen.
+
+#### SCENARIO-ARC-WMTE-6044-GOAL-TRUE-AT-ROOT-IS-REJECTED
+
+**Given** an induced `is_level_complete` that returns True on the level's own start grid
+**When** the reachability pre-veto evaluates it
+**Then** it SHALL be refused as `goal_predicate_true_at_root` rather than reported satisfiable at
+depth 0, because such a predicate yields a zero-action plan asserting the level is already won, and
+`lambda g: True` satisfies it.
+
+#### SCENARIO-ARC-WMTE-6044-LEVELUP-ROW-GRADING-IS-GATED-ON-EARNED-TRUST
+
+**Given** a level-up row and an induced engine
+**When** the goal-consistency veto grades that row
+**Then** it SHALL grade on `engine(grid, action)` ONLY IF the engine has independently earned it:
+a measured held-out change-fidelity at or above the floor AND corroboration on THAT SPECIFIC ACTION
+from a real non-level-up transition the engine reproduces exactly.
+**And** below either bar the row SHALL be UNGRADEABLE and excluded from both numerator and
+denominator -- never silently graded on `next_grid`.
+**And** the lost independence SHALL be disclosed, because engine and goal predicate are emitted by
+the SAME proposer in the SAME call, so a jointly-confabulated pair agrees with itself.
+**And** a window with NO gradeable rows SHALL read as vacuously consistent, NOT as accuracy 0.0 --
+a veto that fires hardest when it has no evidence is the reject-correct-predicates failure relocated
+to the denominator. An EMPTY INPUT SHALL keep its historical 0.0, which is a different claim.
+
+#### SCENARIO-ARC-WMTE-6044-DYNAMICS-VERIFIER-EXCLUDES-LEVELUP-ROWS
+
+**Given** a held-out window containing a real level-up
+**When** `WorldModelVerifier.score` grades an engine
+**Then** level-up rows SHALL be excluded from grading and from the denominator, and the count SHALL
+be reported, because no engine can predict a re-layout it has never observed and no counterfactual
+is available here (the engine's own prediction would be grading it against itself).
+**And** the change SHALL only ever ADMIT engines previously rejected on rows carrying no information
+about them; a dishonest engine SHALL still be rejected on the rows that do carry dynamics.
+
+#### SCENARIO-ARC-WMTE-6044-PRE-VETO-IS-NOT-LOOSER-THAN-ITS-PLANNER
+
+**Given** the reachability pre-veto and `plan_in_model` at the same nominal `max_nodes`
+**When** both search the induced model
+**Then** the pre-veto SHALL budget the SAME unit the planner budgets -- raw engine calls, counted at
+the same point, before the shape check and before deduplication -- because a pre-filter that can
+search further than the search it guards certifies goals the planner then fails on.
+**And** its successor generator SHALL be the planner's own component-aware generator, not
+raster-order clicks, which land on borders and reach fewer interactive regions than the planner does.
+**And** the unique-grid count SHALL remain reported as a coverage diagnostic.
+
+#### SCENARIO-ARC-WMTE-6044-GOAL-REPAIR-IS-NOT-DEAD
+
+**Given** a level boundary, where the captured exemplar and the planning root are the SAME grid
+**When** GOAL-REPAIR substitutes its fallback predicate
+**Then** the fallback SHALL be False at the root -- strictly more filled cells than the root, counted
+against the root's MODAL colour so the bound is reachable on boards whose background is not colour 0
+-- AND at least the exemplar's fill level where the two grids genuinely differ, so the repair retains
+its ability to give up.
+**And** the repair SHALL still return None when the fallback is genuinely unreachable.
+
+#### SCENARIO-ARC-WMTE-6044-PROGRESS-ENDPOINT-DOES-NOT-REPORT-AN-INSTRUMENT-FLOOR
+
+**Given** a per-game `hand_verifier` that returns ONE value across two or more DISTINCT frames
+**When** `hv_progress` is computed for that run
+**Then** it SHALL be reported as unmeasurable (None) rather than 0.0, because
+`(start_hv - min_hv)/start_hv` is structurally 0 for every run of such a game and a reported 0.0
+would be pooled with real observations.
+**And** with fewer than two distinct frames observed the rule SHALL abstain rather than assert
+constancy, which is its own unfounded claim.
+**And** verifier exceptions SHALL be counted rather than swallowed, and the sentinel-return fraction
+SHALL be recorded, because a sentinel or a None on the FIRST call silently rebases the baseline.
+
+## Implementation Status (REQ-ARC-WMTE-6044)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6044 | `arc_executable_world_model.py` — `_transitions_block` emits the labelled WIN TRANSITION + joint constraint (was `win.next_grid` under "is_level_complete must return True here"); `objects_block` relabelled, deliberately still ONE extra table (a third would lengthen a prompt that already caused Qwen3.5-9B truncation); `LocalGGUFProposer._goal_only_prompt` polarity corrected (its old single emphasised fact was the inverse of the truth, in a prompt whose whole budget goes to the win condition); `score_goal_predicate_consistency(engine=, engine_change_fidelity=, min_engine_fidelity_for_counterfactual=)` with `_engine_verified_on_action` per-action corroboration, ungradeable-row exclusion, and `counterfactual_grading_is_not_oracle_distinct` / `n_levelups_ungradeable_low_engine_fidelity` / `engine_fidelity_used_for_counterfactual_decision` disclosure; `WorldModelVerifier.score` excludes level-up rows and reports `n_levelup_rows_excluded`. `arc_llm_reinduction.py` — `_probe_candidates` shares the planner's `_model_candidates` (raster kept as a defensive fallback), `goal_predicate_true_at_root` rejection, engine-call budget matching `plan_in_model` + `budget_unit`, `_strictly_fuller_than_predicate` (root-referenced, modal-background, exemplar lower bound) replacing the trivially-true `_nonzero_count_predicate(exemplar)` in `_repair_degenerate_goal`, and the `consistency.n >= 1` veto guard. `arc_actions_to_progress.py` — `hv_progress_measurable_from_stats` + instrumented `_hand_verifier_fn` (call/exception/sentinel/distinct-value/distinct-frame counters) and four new `ProgressResult` fields. | `tests/python/test_arc_win_state_positive_example_2026_07_29.py` (22 tests) and `tests/python/test_arc_hand_verifier_measurability_2026_07_29.py` (8 tests), each reproducing the measured incident rather than a happy path. 7 mutations applied one at a time, all killed; two first-draft tests did NOT kill their mutation (`engine_calls <= cap` passes under post-dedup counting; a stats-only assertion passes when the measurability rule is loosened to always-True) and were rewritten until they did. `tests/python/test_arc_goal_predicate_live_veto.py` and `tests/python/test_goal_repair_degenerate_predicate.py` updated with the reason recorded at each site. Real-corpus consequence measured by rebuilding the 7 artifacts the freshness lint flagged: exp6011 `n_transitions` 120->119, `legacy_accuracy` 0.725->0.731092, and sp80's on-disk engine correctly reclassified `nondegenerate: True->False` (its only "correct changed cell" came from the re-layout row); all 8 acceptance gates still pass. exp6013 spurious-writer separation IMPROVED (0.777778->0.875). |
