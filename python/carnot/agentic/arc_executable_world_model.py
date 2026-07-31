@@ -3265,6 +3265,95 @@ _INDUCE_DEFAULT_MAX_TOKENS = 4096
 # guard must be conservative in the direction of declining the card.
 _GENERATOR_CUDA_GUARD_MARGIN_MIB = 1500
 
+# ---------------------------------------------------------------------------------------------
+# INDUCE-PATH DECODE SAMPLER (wired 2026-07-31 -- REQ-ARC-FCP-5699-41)
+#
+# WHAT FAILED. The shipped induce path sends NO repetition penalty, so `llama-server` applies its
+# default of 1.0 (read from the running server's own `/props`) -- i.e. none. The dominant induce
+# failure is a decode-level repetition loop: the model reaches an impasse part-way through
+# `engine()`, emits the same comment line until `n_predict` is exhausted, and never writes a
+# `return`. ft09's live engine is 1112 of 1144 lines of duplicated comment. The defect census over
+# 36 paired attempts:  `missing_return` 13 -> 2 and `engine_returned_none` 12 -> 2 with the penalty
+# on, and the share of calls hitting the 4096-token cap falls 20/36 -> 2/36.
+#
+# WHAT IS CLAIMED, AND WHAT IS NOT. This ships on VALIDITY and COST, which is what was measured:
+# attempts producing a mechanically-usable engine 13/36 -> 22/36, attempt-matched sign test
+# p = 0.049 (17 discordant pairs), at 47.2 s per attempt against 100.3 s. It is NOT claimed to
+# improve engine QUALITY: the strict out-of-sample quality funnel moved 2/6 games -> 3/6 on a
+# single attempt, p = 1.000, and that channel had only 5 discordant pairs so its best reachable
+# two-sided p was 0.0625 -- it could not have shown an effect at that n either way. On 2 of 6 games
+# NO arm ever produced a correct engine. See
+# docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md.
+#
+# WHY DEFAULT ON, when `sampling_seed()` above argues at length that quietly changing how the
+# scored agent samples is "a behaviour change, and it is not this function's to make". The two are
+# consistent: that argument is against changing sampling as an unmeasured side effect of wanting a
+# measurement. This is the sanctioned opposite -- a behaviour change adopted BECAUSE a paired
+# measurement on the live prompt says it is better, under an explicit operator decision to ship it.
+# The env var exists so a future A/B can turn it back off without a code edit; 1.0 disables the
+# penalty exactly (llama.cpp treats 1.0 as identity), so `CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0`
+# restores the pre-2026-07-31 payload byte-for-byte.
+#
+# SCOPE. Applied ONLY on the code-only induce path (`codeonly_eligible`), which is where it was
+# measured. `refactor()` is a reasoning task on a different prompt shape and is deliberately
+# untouched -- penalising repetition in a debugging explanation is not the same intervention and
+# has no measurement behind it here.
+_INDUCE_REPEAT_PENALTY = 1.1
+# The window the penalty looks back over. 256 tokens is what was measured; it must be wide enough
+# to span the repeating unit (a duplicated comment line plus its neighbours) or the penalty cannot
+# see the loop it is meant to break.
+_INDUCE_REPEAT_LAST_N = 256
+# How many times a MECHANICALLY DEFECTIVE candidate may be rejected and re-asked. 1 is what was
+# measured (round 0 + one plain re-ask). This is a floor on quality, never a cap on attempts: when
+# the budget is spent the candidate is accepted anyway rather than failing the call -- see
+# `generate()`.
+_INDUCE_DEFECT_REASKS = 1
+# The re-ask text. It names NOTHING about what went wrong, and that is a measured choice rather
+# than laziness: `arc_engine_static_validation.repair_prompt_block()` builds a defect-naming block,
+# and a head-to-head of repair-text against this neutral block over 5 discordant pairs on disjoint
+# games came back p = 1.000. The defect TEXT bought nothing; the second ASK is the whole effect.
+# `repair_prompt_block` is therefore deliberately left unwired -- it is a better-looking prompt
+# with no evidence behind it.
+_INDUCE_PLAIN_REASK_BLOCK = """
+YOUR PREVIOUS ANSWER WAS RUN AGAINST THE OBSERVED TRANSITIONS AND WAS NOT SATISFACTORY.
+Please try again from the same evidence:
+
+  * re-read the observed transitions above before writing anything
+  * take the simplest rule that is consistent with all of them
+  * prefer a general rule over a table of the specific cases you were shown
+
+Write the function again. `engine(grid, action, data)` must return a numpy array of the SAME
+SHAPE as `grid` on EVERY path, and must not raise on any observed transition.
+"""
+
+
+def _induce_repeat_penalty() -> float:
+    """The induce-path repetition penalty, env-overridable. 1.0 disables it exactly.
+
+    A malformed value falls back to the measured default rather than raising: a typo'd env var
+    must not take down a live episode, and the default is the behaviour we have evidence for.
+    """
+    raw = os.environ.get("CARNOT_ARC_INDUCE_REPEAT_PENALTY")
+    if raw is None or raw.strip() == "":
+        return _INDUCE_REPEAT_PENALTY
+    try:
+        return float(raw)
+    except (TypeError, ValueError):
+        return _INDUCE_REPEAT_PENALTY
+
+
+def _induce_defect_reasks() -> int:
+    """How many defect-triggered re-asks `generate()` may spend. 0 disables the re-ask entirely,
+    leaving `repeat_penalty` as the only wired change (the two ship independently on purpose --
+    the penalty carries 11 of the 13 paired wins, the re-ask 2)."""
+    raw = os.environ.get("CARNOT_ARC_INDUCE_DEFECT_REASKS")
+    if raw is None or raw.strip() == "":
+        return _INDUCE_DEFECT_REASKS
+    try:
+        return max(0, int(raw))
+    except (TypeError, ValueError):
+        return _INDUCE_DEFECT_REASKS
+
 
 def _generator_cuda_min_free_mb(
     ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
@@ -4221,6 +4310,13 @@ class LocalGGUFProposer:
     n_completion_ok: int = 0
     n_server_failures: int = 0
     n_content_failures: int = 0
+    # Times a candidate that PASSED parse/required/validate was rejected as mechanically
+    # defective and re-asked (2026-07-31). Counted separately from the three above because it is
+    # neither a liveness fact nor a content failure: the server answered and the answer looked
+    # well-formed. It is the count of accepts the old path would have made and this one did not,
+    # which is the only number that says whether the wired re-ask is doing anything at all in a
+    # live episode -- 0 here means the gate never fired, not that it fired and found nothing.
+    n_induce_defect_reasks: int = 0
     server_failure_diagnostics: list = field(default_factory=list)
     last_generated_tokens: int = -1
     # DECLARED-VS-ACTUAL (2026-07-27 review finding 1). `n_ctx` above is what we INTEND to
@@ -4371,6 +4467,7 @@ class LocalGGUFProposer:
                 "responses": int(self.n_completion_ok),
                 "errors": int(self.n_server_failures),
                 "content_failures": int(self.n_content_failures),
+                "induce_defect_reasks": int(self.n_induce_defect_reasks),
             },
             "generator_healthy_after": bool(healthy),
             "generator_server_failure_diagnostics": list(self.server_failure_diagnostics),
@@ -4924,6 +5021,34 @@ class LocalGGUFProposer:
             self.last_mtp_engaged = None
             self.mtp_engaged_evidence = "mtp verification raised; treated as could-not-determine"
 
+    def _engine_defects(self, code: str, transitions: Optional[Sequence[Any]]) -> list[str]:
+        """The MECHANICAL defect kinds in an emitted engine, or [] -- never a quality judgement.
+
+        Returning [] means nothing detectable is broken. It does NOT mean the engine models the
+        game: the out-of-sample measurement behind this wiring found a game where every arm
+        produced clean-but-wrong engines on 19 of 19 held-out transitions. `usable` is not `good`,
+        and this gate only ever claims the former.
+
+        The import is LOCAL, not module-scope, and deliberately so: `arc_engine_static_validation`
+        must not become a hard import of the world-model module, because a failure to import it
+        would take the induce path down entirely in order to run an optional quality gate. Any
+        exception here is swallowed to [] -- i.e. "accept, as before". A defect DETECTOR that can
+        break the thing it is checking is worse than no detector.
+        """
+        try:
+            from . import arc_engine_static_validation as _sv
+
+            defects = _sv.validate_engine_code(
+                code,
+                transitions=list(transitions) if transitions else None,
+                stop_type=self.last_stop_type,
+                required=("engine",),
+                budget=self.max_tokens,
+            )
+            return sorted({d.kind for d in defects})
+        except Exception:
+            return []
+
     def generate(
         self,
         prompt: str,
@@ -4932,13 +5057,21 @@ class LocalGGUFProposer:
         tries: int = 3,
         *,
         codeonly_eligible: bool = False,
+        engine_transitions: Optional[Sequence[Any]] = None,
     ) -> tuple[bool, str]:
         """Generic GPU-server completion: returns (True, code) where `code` contains every
         `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
         runtime check `validate(code) -> bool`. Retries on the iGPU (fast). This is the
         gap-filler entry point: the LLM writes a FOCUSED component (a goal_distance
         heuristic, a state_key, a verifier invariant) — not a full solver. `validate` lets
-        the caller reject runtime-buggy code (e.g. a heuristic that returns None)."""
+        the caller reject runtime-buggy code (e.g. a heuristic that returns None).
+
+        `engine_transitions` (induce path only) supplies the observed transitions the emitted
+        `engine()` is DRY-RUN against before it is accepted. Without them the defect check is
+        static-only (truncation, syntax, missing `return`), which is still the majority of what
+        the shipped path was accepting: 22 of 36 measured attempts returned a mechanically
+        defective candidate as success, `missing_return` being the single largest kind.
+        """
         import ast
         import json as _json
         import os
@@ -4969,14 +5102,27 @@ class LocalGGUFProposer:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
         elif self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
             prompt = self.no_think_prefix + prompt
+        # DEFECT-REJECTION + PLAIN RE-ASK (2026-07-31). Armed only where it was measured: the
+        # code-only induce path emitting an `engine`. Gap-fillers (a goal_distance heuristic, a
+        # state_key) are a different artifact with a different contract and are left alone.
+        _defect_check_on = bool(codeonly_eligible) and "engine" in tuple(required)
+        _reasks_left = _induce_defect_reasks() if _defect_check_on else 0
+        _reask_suffix = ""
         last = ""
         for attempt in range(tries):
             _payload = {
-                "prompt": prompt,
+                "prompt": prompt + _reask_suffix,
                 "n_predict": self.max_tokens,
                 "temperature": 0.2 + 0.1 * attempt,
                 "cache_prompt": True,
             }
+            # See _INDUCE_REPEAT_PENALTY: breaks the decode-level repetition loop that is the
+            # dominant induce failure. Scoped to the induce path; 1.0 restores the old payload.
+            if codeonly_eligible:
+                _rp = _induce_repeat_penalty()
+                if _rp != 1.0:
+                    _payload["repeat_penalty"] = _rp
+                    _payload["repeat_last_n"] = _INDUCE_REPEAT_LAST_N
             # OPT-IN determinism. Absent CARNOT_ARC_GENERATOR_SEED this adds nothing and the
             # payload is byte-identical to before. See `sampling_seed` for why the default must
             # stay off and why the seed varies with `attempt`.
@@ -4991,7 +5137,7 @@ class LocalGGUFProposer:
                     # OpenAI /v1/chat/completions -> server applies the GGUF's embedded chat template
                     # (Qwen3.6/ThinkingCap need the assistant-turn structure; REQ-ARC-WMTE-5725).
                     _response, text = self._chat_complete_request(
-                        prompt,
+                        _payload["prompt"],
                         max_tokens=self.max_tokens,
                         temperature=_payload["temperature"],
                         stop=_stop_seq,
@@ -5036,6 +5182,30 @@ class LocalGGUFProposer:
                         continue
                 except Exception as ve:
                     last = f"runtime check raised: {ve!r}"[:120]
+                    continue
+            # The candidate now parses and defines everything asked for -- which is exactly the
+            # bar the shipped path stopped at, and exactly the bar 22 of 36 measured attempts
+            # cleared while returning code that could not work: an `engine()` with no `return`
+            # on some path yields None, and `WorldModelVerifier.score` wraps that in
+            # `np.asarray(None)` rather than raising, so it degrades SILENTLY into a world model
+            # that predicts nothing.
+            #
+            # NEVER FAILS WHERE THE OLD PATH SUCCEEDED. A defect only ever converts an accept
+            # into one more ask, and only while `_reasks_left` allows; once the budget is spent
+            # the candidate is accepted exactly as before. So the worst case of this block is the
+            # old behaviour plus one wasted call, and a hard failure here can still only come
+            # from the pre-existing parse/required/validate checks above.
+            # `attempt < tries - 1` is what makes the "never fails where the old path succeeded"
+            # guarantee TRUE rather than merely intended: on the final attempt a `continue` would
+            # fall out of the loop into the content-failure return and convert an accept into a
+            # hard False. On the last try we take the defective candidate, exactly as before.
+            if _defect_check_on and _reasks_left > 0 and attempt < tries - 1:
+                _defects = self._engine_defects(code, engine_transitions)
+                if _defects:
+                    _reasks_left -= 1
+                    _reask_suffix = _INDUCE_PLAIN_REASK_BLOCK
+                    last = f"mechanically defective engine: {_defects}"
+                    self.n_induce_defect_reasks += 1
                     continue
             self.n_completion_ok += 1
             return True, code
@@ -5237,6 +5407,10 @@ class LocalGGUFProposer:
             ("engine", "is_level_complete"),
             tries=self.tries,
             codeonly_eligible=True,
+            # The SAME transitions the prompt was built from. This is not a held-out set and is
+            # not scored as one: it is the dry run that catches an `engine()` which raises or
+            # returns None on evidence the model was literally shown.
+            engine_transitions=trans,
         )
         if ok:
             return self._write_world_model(game, code)
@@ -5251,6 +5425,7 @@ class LocalGGUFProposer:
             ("engine",),
             tries=self.tries,
             codeonly_eligible=True,
+            engine_transitions=trans,
         )
         if not ok_e:
             return False, f"split induce: engine failed: {str(eng)[:150]}"

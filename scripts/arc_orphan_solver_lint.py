@@ -57,11 +57,15 @@ ALLOWLIST = {
     # before this entry its orphan status was INVISIBLE -- the guard returned a clean bill on a
     # module that is genuinely unreachable from both live entrypoints. Retire this entry when the
     # module is wired into the pre-gate path.
-    "arc_engine_static_validation": (
-        "diagnostic-only, deliberately unwired pending a proven funnel gain; see "
-        "REQ-ARC-WMTE-6052 and CORRECTION 2026-07-31 in "
-        "openspec/capabilities/arc-world-model-trust-energy/spec.md"
-    ),
+    #
+    # RETIRED 2026-07-31, on the condition the entry itself names. The module is now imported by
+    # `LocalGGUFProposer._engine_defects`, which `generate()` calls on the code-only induce path,
+    # so it is reachable from BOTH live entrypoints on the ordinary closure and needs no
+    # exemption. The funnel gain that entry was waiting for was measured out-of-sample over 36
+    # paired attempts on 6 games: mechanically-usable engines 13/36 -> 22/36, p = 0.049. Note
+    # what that does and does not license -- the gain is on VALIDITY and COST, not on engine
+    # quality, whose comparison came back p = 1.000 and could not have reached significance at
+    # that n. Wiring a defect gate is justified by the former alone.
 }
 
 

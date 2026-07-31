@@ -12,17 +12,26 @@ module that is genuinely unreachable from both live entrypoints -- a false-negat
 guard that exists to prevent silent off-path work. The module IS deliberately unwired, which is a
 legitimate state; what was wrong is that the decision was invisible rather than recorded.
 
-The fix has two halves and BOTH are pinned here, because either alone is useless:
+The fix had two halves:
 
   * `_is_solver_like` now also matches a module defining `validate_engine_code` or
     `repair_prompt_block` -- the induce-path gating surface, which decides whether the live agent
     gets a usable world model at all.
-  * the module is in `ALLOWLIST` with its reason, so the lint stays green while the orphan status
-    is now an auditable entry instead of a gap.
+  * the module went into `ALLOWLIST` with its reason, so the lint stayed green while the orphan
+    status became an auditable entry instead of a gap.
 
-The second test is the load-bearing one: it removes the allow-list entry in memory and asserts the
-lint FLAGS the module. Without it, a future edit that quietly drops the detection rule would leave
-this file green -- the whole point is that the module is detectable, not that the lint passes.
+SUPERSEDED LATER THE SAME DAY, and the detection rule is why the succession was safe. The module
+was WIRED into `LocalGGUFProposer.generate()`'s code-only induce path once the funnel gain it was
+waiting on had been measured out-of-sample (13/36 -> 22/36 mechanically-usable engines, p = 0.049;
+`docs/research-notes/arc-induce-repeat-penalty-confirm-2026-07-31.md`). The allow-list entry was
+removed in that same change, exactly as its own comment instructed. Two tests below therefore
+INVERTED -- they now assert reachability and the ABSENCE of an exemption. Their predecessors are
+described in their docstrings rather than deleted, because the reason the entry existed is part of
+the record.
+
+The detection-rule tests did NOT change, and are the durable half: whether the module is exempted
+or reachable, the lint must be able to SEE it. A future edit that quietly drops the rule would
+otherwise leave this file green.
 """
 
 from __future__ import annotations
@@ -54,34 +63,57 @@ def test_the_validation_module_is_recognised_as_something_the_lint_must_account_
     assert "validate_engine_code" in reason
 
 
-def test_it_is_genuinely_unreachable_so_the_allow_list_entry_is_not_decorative():
-    """If the module were on the live path the allow-list entry would be stale and misleading.
+def test_it_is_now_genuinely_reachable_from_the_live_path():
+    """UPDATED 2026-07-31 (same day, later): the module got wired, so this test INVERTED.
 
-    This asserts the FACT the entry claims -- deliberately unwired -- rather than trusting the
-    comment. When the module is eventually wired, this test fails and the allow-list entry should
-    be removed in the same change.
+    Its predecessor asserted the opposite -- that the module was unreachable, so that the
+    allow-list entry recording its orphan status could not become decorative. That test carried
+    its own succession plan: "When the module is eventually wired, this test fails and the
+    allow-list entry should be removed in the same change." That is what happened. Wiring
+    `LocalGGUFProposer._engine_defects` -> `validate_engine_code` into `generate()`'s code-only
+    induce path put the module in the ordinary import closure of both live entrypoints, the
+    predecessor test failed as designed, and the allow-list entry was removed in that change.
+
+    What justified the wiring was a measurement, not a tidiness preference: 36 attempt-matched
+    pairs across 6 games, mechanically-usable engines 13/36 -> 22/36 at p = 0.049, scored
+    out-of-sample. Note the narrowness -- that is a VALIDITY and COST result. Engine quality came
+    back p = 1.000 on 5 discordant pairs and is not claimed.
+
+    This test is now the one that keeps the wiring honest: if a future refactor drops the import,
+    the module silently becomes off-path work again and this fails.
     """
     mod = _lint_module()
     closure = mod._closure(mod.ENTRYPOINTS) | {ep.stem for ep in mod.ENTRYPOINTS}
-    assert "arc_engine_static_validation" not in closure
+    assert "arc_engine_static_validation" in closure, (
+        "the induce-path defect gate is no longer reachable from the live agent -- either the "
+        "import in LocalGGUFProposer._engine_defects was dropped, or the closure no longer "
+        "follows it. Off-path gating code produces no live capability (CLAUDE.md ARC Live-Path "
+        "Reachability Discipline)."
+    )
 
 
-def test_the_allow_list_entry_is_what_keeps_the_lint_green():
-    """Remove the entry and the lint must flag -- proving the pass is an explicit decision."""
+def test_the_lint_is_green_on_reachability_and_not_on_an_exemption():
+    """The green bill must be earned. An allow-list entry would now be a false record.
+
+    This is the load-bearing half. `main() == 0` alone cannot distinguish "reachable" from
+    "exempted", and those are opposite facts about whether the live agent can use this code. So
+    the assertion is on the ABSENCE of the exemption, with the reachability asserted above.
+    """
     mod = _lint_module()
-    assert "arc_engine_static_validation" in mod.ALLOWLIST
-    reason = mod.ALLOWLIST["arc_engine_static_validation"]
-    # The discipline demands a REASON, not a bare exemption.
-    assert len(reason) > 40 and "unwired" in reason
-
+    assert "arc_engine_static_validation" not in mod.ALLOWLIST, (
+        "the module is on the live path now; an allow-list entry claiming it is deliberately "
+        "unwired would be a stale record of a decision that has been reversed"
+    )
+    # With no exemption in play, nothing solver-like may be left unreachable.
     closure = mod._closure(mod.ENTRYPOINTS) | {ep.stem for ep in mod.ENTRYPOINTS}
-    without = {k: v for k, v in mod.ALLOWLIST.items() if k != "arc_engine_static_validation"}
     flagged = [
         p.stem
         for p in sorted(mod.AGENTIC.glob("arc_*.py"))
-        if mod._is_solver_like(p) is not None and p.stem not in closure and p.stem not in without
+        if mod._is_solver_like(p) is not None
+        and p.stem not in closure
+        and p.stem not in mod.ALLOWLIST
     ]
-    assert flagged == ["arc_engine_static_validation"]
+    assert flagged == []
 
 
 def test_the_new_rule_does_not_widen_into_a_false_positive_sweep():
