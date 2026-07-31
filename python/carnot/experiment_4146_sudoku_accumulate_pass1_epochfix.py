@@ -11,6 +11,8 @@ SCENARIO-LEARN-4146-BLOCKED-NOOP.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import json
 import math
 import subprocess
@@ -94,12 +96,20 @@ class Exp4146Config:
         if parent == DEFAULT_SAVE_PARENT and root != REPO_ROOT:
             parent = root / "results" / "trm_runs"
         nano_root = Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm"
-        stable = Path(self.stable_dir) if self.stable_dir is not None else parent / "sudoku_extreme_baseline"
+        stable = (
+            Path(self.stable_dir)
+            if self.stable_dir is not None
+            else parent / "sudoku_extreme_baseline"
+        )
         hydra_root = (
-            Path(self.hydra_run_root) if self.hydra_run_root is not None else parent / DEFAULT_HYDRA_RUN_ROOT.name
+            Path(self.hydra_run_root)
+            if self.hydra_run_root is not None
+            else parent / DEFAULT_HYDRA_RUN_ROOT.name
         )
         dataset = (
-            Path(self.dataset_dir) if self.dataset_dir is not None else nano_root / "data" / "sudoku_extreme_1k_aug_1k"
+            Path(self.dataset_dir)
+            if self.dataset_dir is not None
+            else nano_root / "data" / "sudoku_extreme_1k_aug_1k"
         )
         object.__setattr__(self, "repo_root", root)
         object.__setattr__(self, "save_parent", parent)
@@ -129,7 +139,14 @@ class Exp4146Config:
 
     @property
     def data_config_path(self) -> Path:
-        return Path(self.nano_trm_root) / "src" / "nn" / "configs" / "data" / "sudoku_extreme_1k_aug1k.yaml"
+        return (
+            Path(self.nano_trm_root)
+            / "src"
+            / "nn"
+            / "configs"
+            / "data"
+            / "sudoku_extreme_1k_aug1k.yaml"
+        )
 
     def pass_run_dir(self) -> Path:
         return Path(self.hydra_run_root) / "pass_1_epochfix_hydra"
@@ -205,8 +222,13 @@ def _int_or_none(value: Any) -> int | None:
     return None if number is None else int(number)
 
 
-def _checks_to_dicts(checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
-    return [check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check) for check in checks]
+def _checks_to_dicts(
+    checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check)
+        for check in checks
+    ]
 
 
 def _nested_get(mapping: Mapping[str, Any], path: Sequence[str]) -> Any:
@@ -222,8 +244,12 @@ def _timer_train_elapsed(callbacks: Any) -> float | None:
     if not isinstance(callbacks, Mapping):
         return None
     for key, callback_state in callbacks.items():
-        if key == "Timer" or (isinstance(callback_state, Mapping) and "time_elapsed" in callback_state):
-            elapsed = callback_state.get("time_elapsed") if isinstance(callback_state, Mapping) else None
+        if key == "Timer" or (
+            isinstance(callback_state, Mapping) and "time_elapsed" in callback_state
+        ):
+            elapsed = (
+                callback_state.get("time_elapsed") if isinstance(callback_state, Mapping) else None
+            )
             return _float_or_none(elapsed.get("train") if isinstance(elapsed, Mapping) else None)
     return None
 
@@ -238,13 +264,22 @@ def read_checkpoint_state(path: str | Path) -> CheckpointState:
         import torch  # pylint: disable=import-outside-toplevel
 
         try:
-            payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+            payload = safe_torch_load(checkpoint_path, map_location="cpu", allow_unsafe_pickle=True)
         except TypeError:  # pragma: no cover - older torch compatibility.
             payload = torch.load(checkpoint_path, map_location="cpu")
     except Exception as exc:  # pragma: no cover - corrupt local checkpoint.
         return CheckpointState(False, f"{type(exc).__name__}: {exc}", None, None, None, None)
-    if not isinstance(payload, Mapping):  # pragma: no cover - defensive against unexpected torch payloads.
-        return CheckpointState(False, f"unexpected checkpoint payload: {type(payload).__name__}", None, None, None, None)
+    if not isinstance(
+        payload, Mapping
+    ):  # pragma: no cover - defensive against unexpected torch payloads.
+        return CheckpointState(
+            False,
+            f"unexpected checkpoint payload: {type(payload).__name__}",
+            None,
+            None,
+            None,
+            None,
+        )
 
     epoch = _int_or_none(payload.get("epoch"))
     if epoch is None:
@@ -299,10 +334,16 @@ def diagnose_epoch_cap(
 ) -> EpochCapDiagnosis:
     """REQ-LEARN-4146: decide whether the requested max-epochs root cause is real."""
 
-    state = checkpoint_state if checkpoint_state is not None else read_checkpoint_state(config.stable_checkpoint_path)
+    state = (
+        checkpoint_state
+        if checkpoint_state is not None
+        else read_checkpoint_state(config.stable_checkpoint_path)
+    )
     config_max_epochs = read_config_max_epochs(config.experiment_config_path)
     epoch = state.epoch
-    cap_confirmed = epoch is not None and config_max_epochs is not None and epoch >= config_max_epochs
+    cap_confirmed = (
+        epoch is not None and config_max_epochs is not None and epoch >= config_max_epochs
+    )
     return EpochCapDiagnosis(
         checkpoint_epoch=epoch,
         checkpoint_global_step=state.global_step,
@@ -430,7 +471,9 @@ def _common_fields(
         "max_epochs_cap_confirmed": bool(diagnosis.max_epochs_cap_confirmed),
         "seed_epoch": diagnosis.checkpoint_epoch,
         "post_epoch": post_epoch,
-        "val_exact_accuracy": None if val_exact_accuracy is None else round(float(val_exact_accuracy), 12),
+        "val_exact_accuracy": None
+        if val_exact_accuracy is None
+        else round(float(val_exact_accuracy), 12),
         "stable_checkpoint_path": str(run_config.stable_checkpoint_path),
         "duration_s": round(float(duration_s), 3),
         "random_seed": int(run_config.random_seed),
@@ -462,21 +505,27 @@ def build_blocked_artifact(
         {
             "acceptance_gate_passed": reason.startswith("blocked_noop_"),
             "preconditions_checked": _checks_to_dicts(preconditions_checked),
-            "command": [] if seed_epoch is None else build_train_command(run_config, seed_epoch=seed_epoch),
+            "command": []
+            if seed_epoch is None
+            else build_train_command(run_config, seed_epoch=seed_epoch),
         }
     )
     validate_artifact(artifact)
     return artifact
 
 
-def _verdict_for_result(seed_epoch: int | None, post_epoch: int | None, duration_s: float, val: float | None) -> str:
+def _verdict_for_result(
+    seed_epoch: int | None, post_epoch: int | None, duration_s: float, val: float | None
+) -> str:
     if duration_s <= MIN_REAL_TRAINING_DURATION_S:
         return "blocked_noop_duration_too_short"
     if seed_epoch is None or post_epoch is None or post_epoch <= seed_epoch:
         return "blocked_noop_epoch_not_advanced"
     if val is None:
         return "blocked_noop_missing_val_exact_accuracy"
-    return f"complete: epochfix_trained_seed_epoch={seed_epoch}_post_epoch={post_epoch}_val={val:.4f}"
+    return (
+        f"complete: epochfix_trained_seed_epoch={seed_epoch}_post_epoch={post_epoch}_val={val:.4f}"
+    )
 
 
 def build_result_artifact(
@@ -491,7 +540,9 @@ def build_result_artifact(
 ) -> dict[str, Any]:
     """SCENARIO-LEARN-4146: build the artifact and apply the anti-no-op guard."""
 
-    verdict = _verdict_for_result(seed_state.epoch, post_state.epoch, run_result.duration_s, val_exact_accuracy)
+    verdict = _verdict_for_result(
+        seed_state.epoch, post_state.epoch, run_result.duration_s, val_exact_accuracy
+    )
     artifact = _common_fields(
         honest_verdict=verdict,
         run_config=run_config,
@@ -508,8 +559,12 @@ def build_result_artifact(
             "return_code": int(run_result.return_code),
             "checkpoint_reload_ok": bool(run_result.checkpoint_reload_ok),
             "checkpoint_reload_detail": run_result.checkpoint_reload_detail,
-            "exact_accuracy_metric": "val/exact_accuracy" if val_exact_accuracy is not None else None,
-            "exact_accuracy_metrics_path": None if val_metrics_path is None else str(val_metrics_path),
+            "exact_accuracy_metric": "val/exact_accuracy"
+            if val_exact_accuracy is not None
+            else None,
+            "exact_accuracy_metrics_path": None
+            if val_metrics_path is None
+            else str(val_metrics_path),
             "run_dir": str(run_result.run_dir),
             "command": list(run_result.command),
             "stdout_tail": list(run_result.stdout_tail[-60:]),
@@ -540,25 +595,37 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
             errors.append(f"{field} must be an int or null")
     val = artifact.get("val_exact_accuracy")
     if val is not None:
-        number = _float_or_none(val) if isinstance(val, (int, float)) and not isinstance(val, bool) else None
+        number = (
+            _float_or_none(val)
+            if isinstance(val, (int, float)) and not isinstance(val, bool)
+            else None
+        )
         if number is None or not 0.0 <= number <= 1.0:
             errors.append("val_exact_accuracy must be numeric between 0 and 1 or null")
     stable_checkpoint_path = artifact.get("stable_checkpoint_path")
     if not isinstance(stable_checkpoint_path, str) or not stable_checkpoint_path.endswith(
         "results/trm_runs/sudoku_extreme_baseline/last.ckpt"
     ):
-        errors.append("stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path")
+        errors.append(
+            "stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path"
+        )
     duration = _float_or_none(artifact.get("duration_s"))
     if duration is None or duration < 0 or duration >= 86_400:
         errors.append("duration_s must be a scalar bounded number below 86400")
-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
+    if not isinstance(artifact.get("random_seed"), int) or isinstance(
+        artifact.get("random_seed"), bool
+    ):
         errors.append("random_seed must be a bare int")
     gate = artifact.get("acceptance_gate_passed")
     if gate is not None and not isinstance(gate, bool):
         errors.append("acceptance_gate_passed must be a bare bool")
-    if isinstance(verdict, str) and verdict.startswith(("complete:", "success:", "passed:", "shipped:")):
+    if isinstance(verdict, str) and verdict.startswith(
+        ("complete:", "success:", "passed:", "shipped:")
+    ):
         if not _acceptance_gate(artifact):
-            errors.append("complete verdict requires duration>120, epoch advance, and real val_exact_accuracy")
+            errors.append(
+                "complete verdict requires duration>120, epoch advance, and real val_exact_accuracy"
+            )
     return errors
 
 
@@ -584,7 +651,9 @@ def run_native_epochfixed_pass(
     started = time.time()
     command = build_train_command(config, seed_epoch=seed_epoch)
     stdout_lines: list[str] = []
-    print(f"[exp4146] launching epoch-fixed resume stable={config.stable_checkpoint_path}", flush=True)
+    print(
+        f"[exp4146] launching epoch-fixed resume stable={config.stable_checkpoint_path}", flush=True
+    )
     try:
         proc = subprocess.Popen(
             command,
@@ -634,7 +703,9 @@ def run_native_epochfixed_pass(
     )
 
 
-def generate_sudoku_extreme_dataset_if_missing(config: Exp4146Config) -> bool:  # pragma: no cover - native helper.
+def generate_sudoku_extreme_dataset_if_missing(
+    config: Exp4146Config,
+) -> bool:  # pragma: no cover - native helper.
     """Generate the nano-trm Sudoku Extreme dataset only when it is absent."""
 
     return exp4116.generate_sudoku_extreme_dataset_if_missing(
@@ -664,7 +735,9 @@ def run_experiment(
     cuda_checker: Callable[[], tuple[bool, str]] = exp4107._default_cuda_checker,
     checkpoint_loader: Callable[[Path], tuple[bool, str]] = exp4107._load_torch_checkpoint,
     dataset_builder: Callable[[Exp4146Config], object] = generate_sudoku_extreme_dataset_if_missing,
-    timer_reset: Callable[[Path], exp4135.TimerResetResult | Mapping[str, Any]] = exp4135.reset_checkpoint_timer_state,
+    timer_reset: Callable[
+        [Path], exp4135.TimerResetResult | Mapping[str, Any]
+    ] = exp4135.reset_checkpoint_timer_state,
     trainer_runner: Callable[[Exp4146Config, int], exp4116.ResumeRunResult] | None = None,
     random_seed: int = RANDOM_SEED,
 ) -> dict[str, Any]:
@@ -727,7 +800,9 @@ def run_experiment(
     seed_epoch = seed_state.epoch if seed_state.epoch is not None else 0
     try:
         run_result = (
-            run_native_epochfixed_pass(config, seed_epoch=seed_epoch, checkpoint_loader=checkpoint_loader)
+            run_native_epochfixed_pass(
+                config, seed_epoch=seed_epoch, checkpoint_loader=checkpoint_loader
+            )
             if trainer_runner is None
             else trainer_runner(config, seed_epoch)
         )
@@ -761,7 +836,13 @@ def run_experiment(
 
 def main() -> None:  # pragma: no cover - thin CLI wrapper.
     artifact = run_experiment()
-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover

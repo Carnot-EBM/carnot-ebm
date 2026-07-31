@@ -6,6 +6,8 @@ SCENARIO-LEARN-4100-RFT.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import hashlib
 import json
 import os
@@ -100,8 +102,16 @@ class NativeSmokeConfig:
     def __post_init__(self) -> None:
         root = Path(self.repo_root)
         object.__setattr__(self, "repo_root", root)
-        object.__setattr__(self, "nano_trm_root", Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm")
-        output = Path(self.output_dir) if self.output_dir else root / "results" / "experiment_4100_native_smoke"
+        object.__setattr__(
+            self,
+            "nano_trm_root",
+            Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm",
+        )
+        output = (
+            Path(self.output_dir)
+            if self.output_dir
+            else root / "results" / "experiment_4100_native_smoke"
+        )
         object.__setattr__(self, "output_dir", output)
         python_executable = self.python_executable
         if python_executable is None:
@@ -148,7 +158,9 @@ class NanoTrmProgressPrinter(Callback):  # pragma: no cover - used inside native
     def __init__(self, every_n_steps: int = 1) -> None:
         self.every_n_steps = max(int(every_n_steps), 1)
 
-    def on_train_batch_end(self, trainer: Any, _pl_module: Any, _outputs: Any, _batch: Any, batch_idx: int) -> None:
+    def on_train_batch_end(
+        self, trainer: Any, _pl_module: Any, _outputs: Any, _batch: Any, batch_idx: int
+    ) -> None:
         step = int(getattr(trainer, "global_step", 0))
         if step == 0 or step % self.every_n_steps == 0:
             print(
@@ -174,7 +186,10 @@ def _jsonable(value: Any) -> Any:
     if isinstance(value, Path):
         return str(value)
     if isinstance(value, Mapping):
-        return {str(key): _jsonable(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
+        return {
+            str(key): _jsonable(item)
+            for key, item in sorted(value.items(), key=lambda item: str(item[0]))
+        }
     if isinstance(value, (list, tuple)):
         return [_jsonable(item) for item in value]
     return value
@@ -203,7 +218,9 @@ def _check_trm_weights(path: Path) -> PreconditionCheck:
 
 
 def _check_nano_trm(repo_root: Path) -> PreconditionCheck:
-    required = [repo_root / "nano-trm" / "src" / name for name in ("arc_evaluator.py", "baseline.py")]
+    required = [
+        repo_root / "nano-trm" / "src" / name for name in ("arc_evaluator.py", "baseline.py")
+    ]
     missing = [str(path) for path in required if not path.exists()]
     if missing:
         return PreconditionCheck("nano_trm_substrate", False, "missing: " + ", ".join(missing))
@@ -219,16 +236,27 @@ def _check_cuda(cuda_checker: Callable[[], tuple[bool, str]]) -> PreconditionChe
 
 
 def _load_exp4099(repo_root: Path) -> tuple[PreconditionCheck, Path | None, dict[str, Any] | None]:
-    candidates = sorted((repo_root / "results").glob(EXP4099_PATTERN), key=lambda path: (path.stat().st_mtime, path.name))
+    candidates = sorted(
+        (repo_root / "results").glob(EXP4099_PATTERN),
+        key=lambda path: (path.stat().st_mtime, path.name),
+    )
     if not candidates:
-        return PreconditionCheck("exp4099_probe", False, f"missing results/{EXP4099_PATTERN}"), None, None
+        return (
+            PreconditionCheck("exp4099_probe", False, f"missing results/{EXP4099_PATTERN}"),
+            None,
+            None,
+        )
     path = candidates[-1]
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         return PreconditionCheck("exp4099_probe", False, f"{type(exc).__name__}: {exc}"), path, None
     if not isinstance(payload.get("verifier_beats_trm_vote"), bool):
-        return PreconditionCheck("exp4099_probe", False, "verifier_beats_trm_vote is not a bare bool"), path, None
+        return (
+            PreconditionCheck("exp4099_probe", False, "verifier_beats_trm_vote is not a bare bool"),
+            path,
+            None,
+        )
     return PreconditionCheck("exp4099_probe", True, f"loaded {path}"), path, payload
 
 
@@ -273,7 +301,9 @@ def _field_principles() -> dict[str, str]:
     }
 
 
-def _precondition_dicts(preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
+def _precondition_dicts(
+    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
+) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for check in preconditions_checked:
         if isinstance(check, PreconditionCheck):
@@ -332,9 +362,15 @@ def _exp4099_gap(exp4099_artifact: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "verifier_beats_trm_vote": bool(exp4099_artifact.get("verifier_beats_trm_vote", False)),
         "best_reranker": best,
-        "captured_pp_directional": float(exp4099_artifact.get("captured_pp_directional", 0.0) or 0.0),
-        "best_captured_pp": best_row.get("captured_pp", 0.0) if isinstance(best_row, Mapping) else 0.0,
-        "best_captured_pp_ci95": best_row.get("captured_pp_ci95", [0.0, 0.0]) if isinstance(best_row, Mapping) else [0.0, 0.0],
+        "captured_pp_directional": float(
+            exp4099_artifact.get("captured_pp_directional", 0.0) or 0.0
+        ),
+        "best_captured_pp": best_row.get("captured_pp", 0.0)
+        if isinstance(best_row, Mapping)
+        else 0.0,
+        "best_captured_pp_ci95": best_row.get("captured_pp_ci95", [0.0, 0.0])
+        if isinstance(best_row, Mapping)
+        else [0.0, 0.0],
         "bottleneck": "verifier_discrimination_on_trm_grids",
     }
 
@@ -384,7 +420,9 @@ def build_smoke_artifact(
         "exp4099_path": str(exp4099_path) if exp4099_path else None,
         "verifier_gap": gap,
         "native_smoke": {
-            "checkpoint_path": str(smoke_result.checkpoint_path) if smoke_result.checkpoint_path else None,
+            "checkpoint_path": str(smoke_result.checkpoint_path)
+            if smoke_result.checkpoint_path
+            else None,
             "checkpoint_reload_ok": bool(smoke_result.checkpoint_reload_ok),
             "command": list(smoke_result.command),
             "stdout_tail": list(smoke_result.stdout_tail[-20:]),
@@ -469,7 +507,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("trm_native_trainer_checkpoint_ok must be a bare bool")
     if not isinstance(artifact.get("preconditions_checked"), list):
         errors.append("preconditions_checked must be a list")
-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
+    if not isinstance(artifact.get("random_seed"), int) or isinstance(
+        artifact.get("random_seed"), bool
+    ):
         errors.append("random_seed must be a bare int")
     if not isinstance(artifact.get("reproducibility_checksum"), str):
         errors.append("reproducibility_checksum must be a string")
@@ -480,7 +520,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         ci = delta.get("ci95")
         if not isinstance(ci, list) or len(ci) != 2:
             errors.append("rft_vs_ablation_delta must include two-element ci95")
-        elif not all(isinstance(value, (int, float)) and not isinstance(value, bool) for value in ci):
+        elif not all(
+            isinstance(value, (int, float)) and not isinstance(value, bool) for value in ci
+        ):
             errors.append("rft_vs_ablation_delta ci95 values must be numeric")
     return errors
 
@@ -497,7 +539,10 @@ def ensure_nano_trm_src_on_path(nano_trm_root: Path) -> Path:
 
 def build_native_smoke_command(config: NativeSmokeConfig) -> list[str]:
     train_py = Path(config.nano_trm_root) / "src" / "nn" / "train.py"
-    epochs = max((int(config.max_steps) // max(int(config.train_puzzles) // int(config.batch_size), 1)) + 1, 1)
+    epochs = max(
+        (int(config.max_steps) // max(int(config.train_puzzles) // int(config.batch_size), 1)) + 1,
+        1,
+    )
     return [
         str(config.python_executable),
         str(train_py),
@@ -574,7 +619,7 @@ def _load_torch_checkpoint(path: Path) -> tuple[bool, str]:
         import torch  # pylint: disable=import-outside-toplevel
 
         try:
-            payload = torch.load(path, map_location="cpu", weights_only=False)
+            payload = safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
         except TypeError:  # pragma: no cover - older torch.
             payload = torch.load(path, map_location="cpu")
     except Exception as exc:
@@ -588,11 +633,15 @@ def _latest_checkpoint(checkpoint_dir: Path) -> Path | None:
     last = checkpoint_dir / "last.ckpt"
     if last.exists():
         return last
-    candidates = sorted(checkpoint_dir.glob("*.ckpt"), key=lambda path: (path.stat().st_mtime, path.name))
+    candidates = sorted(
+        checkpoint_dir.glob("*.ckpt"), key=lambda path: (path.stat().st_mtime, path.name)
+    )
     return candidates[-1] if candidates else None
 
 
-def run_native_trm_smoke(config: NativeSmokeConfig) -> SmokeRunResult:  # pragma: no cover - launches external trainer.
+def run_native_trm_smoke(
+    config: NativeSmokeConfig,
+) -> SmokeRunResult:  # pragma: no cover - launches external trainer.
     """Run a real native nano-trm training smoke and reload its checkpoint."""
 
     started = time.time()
@@ -613,7 +662,9 @@ def run_native_trm_smoke(config: NativeSmokeConfig) -> SmokeRunResult:  # pragma
             bufsize=1,
         )
     except Exception as exc:
-        return SmokeRunResult(False, False, None, time.time() - started, command, [f"{type(exc).__name__}: {exc}"])
+        return SmokeRunResult(
+            False, False, None, time.time() - started, command, [f"{type(exc).__name__}: {exc}"]
+        )
 
     assert proc.stdout is not None
     for line in proc.stdout:
@@ -746,7 +797,13 @@ def run_experiment(
 
 def main() -> None:  # pragma: no cover - thin CLI wrapper.
     artifact = run_experiment()
-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover

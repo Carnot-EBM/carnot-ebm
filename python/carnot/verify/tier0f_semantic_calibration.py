@@ -1,7 +1,15 @@
-"""Tier 0f: Semantic calibrated verifier."""
+"""Tier 0f: Semantic calibrated verifier.
+
+Persisted as a pickle rather than safetensors for the same reason as Tier 0e:
+the payload is fitted scikit-learn estimators, not tensors.  The load goes
+through ``carnot.serialization_safety.safe_pickle_load``, which confines
+code-executing deserialization to in-repo artifacts.
+"""
 
 import os
-import pickle
+
+from carnot.serialization_safety import safe_pickle_load
+
 
 class SemanticCalibratedVerifier:
     """TF-IDF logistic verifier with paraphrase clustering calibration."""
@@ -11,10 +19,9 @@ class SemanticCalibratedVerifier:
         self.vectorizer = None
         self.clf = None
         if os.path.exists(self.model_path):
-            with open(self.model_path, "rb") as f:
-                data = pickle.load(f)
-                self.vectorizer = data["vectorizer"]
-                self.clf = data["clf"]
+            data = safe_pickle_load(self.model_path, expected_type=dict)
+            self.vectorizer = data["vectorizer"]
+            self.clf = data["clf"]
 
     def verify(self, text: str) -> float:
         """Verify text and return probability of being correct."""

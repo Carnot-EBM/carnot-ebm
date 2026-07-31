@@ -6,6 +6,8 @@ SCENARIO-LEARN-4107-BLOCKED.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import csv
 import json
 import math
@@ -52,15 +54,9 @@ FIELD_PRINCIPLES = {
     "nanotrm_trainer_checkpoint_ok": (
         "Bare bool: did nano-trm's native trainer produce and reload a checkpoint."
     ),
-    "exact_accuracy": (
-        "The real solve metric from exact_accuracy, never q_halt_accuracy."
-    ),
-    "checkpoint_path": (
-        "Persistent path to the saved checkpoint under results/trm_runs."
-    ),
-    "duration_s": (
-        "Wall-clock native training plus checkpoint/metric verification seconds."
-    ),
+    "exact_accuracy": ("The real solve metric from exact_accuracy, never q_halt_accuracy."),
+    "checkpoint_path": ("Persistent path to the saved checkpoint under results/trm_runs."),
+    "duration_s": ("Wall-clock native training plus checkpoint/metric verification seconds."),
     "preconditions_checked": (
         "Records uv, CUDA, native trainer, and persistent save parent checks."
     ),
@@ -216,14 +212,18 @@ def _check_cuda(cuda_checker: Callable[[], tuple[bool, str]]) -> PreconditionChe
 
 def _check_save_parent(root: Path, save_parent: Path) -> PreconditionCheck:
     if not save_parent.exists() or not save_parent.is_dir():
-        return PreconditionCheck("persistent_save_parent", False, f"missing directory: {save_parent}")
+        return PreconditionCheck(
+            "persistent_save_parent", False, f"missing directory: {save_parent}"
+        )
     if not os.access(save_parent, os.W_OK):
         return PreconditionCheck("persistent_save_parent", False, f"not writable: {save_parent}")
     try:
         save_parent.resolve().relative_to(root.resolve())
     except ValueError:
         return PreconditionCheck("persistent_save_parent", False, f"not under repo: {save_parent}")
-    return PreconditionCheck("persistent_save_parent", True, f"writable persistent dir: {save_parent}")
+    return PreconditionCheck(
+        "persistent_save_parent", True, f"writable persistent dir: {save_parent}"
+    )
 
 
 def check_preconditions(
@@ -293,7 +293,9 @@ def extract_latest_exact_accuracy(save_dir: str | Path) -> ExactAccuracy:
     """SCENARIO-LEARN-4107: parse latest real exact_accuracy from CSV logs."""
 
     root = Path(save_dir)
-    metrics_files = sorted(root.rglob("metrics.csv"), key=lambda path: (path.stat().st_mtime, str(path)))
+    metrics_files = sorted(
+        root.rglob("metrics.csv"), key=lambda path: (path.stat().st_mtime, str(path))
+    )
     if not metrics_files:
         raise ValueError(f"exact_accuracy metrics.csv not found under {root}")
 
@@ -311,7 +313,9 @@ def extract_latest_exact_accuracy(save_dir: str | Path) -> ExactAccuracy:
 
 
 def _latest_checkpoint(save_dir: Path) -> Path | None:
-    checkpoints = sorted(save_dir.rglob("*.ckpt"), key=lambda path: (path.stat().st_mtime, str(path)))
+    checkpoints = sorted(
+        save_dir.rglob("*.ckpt"), key=lambda path: (path.stat().st_mtime, str(path))
+    )
     if not checkpoints:
         return None
     last = [path for path in checkpoints if path.name == "last.ckpt"]
@@ -338,12 +342,14 @@ def _select_artifact_root(config: NanoTrmRunConfig) -> Path:
     return Path(config.save_dir)
 
 
-def _load_torch_checkpoint(path: Path) -> tuple[bool, str]:  # pragma: no cover - environment dependent.
+def _load_torch_checkpoint(
+    path: Path,
+) -> tuple[bool, str]:  # pragma: no cover - environment dependent.
     try:
         import torch  # pylint: disable=import-outside-toplevel
 
         try:
-            payload = torch.load(path, map_location="cpu", weights_only=False)
+            payload = safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
         except TypeError:
             payload = torch.load(path, map_location="cpu")
     except Exception as exc:
@@ -375,7 +381,9 @@ def build_train_command(config: NanoTrmRunConfig) -> list[str]:
     ]
 
 
-def build_train_env(config: NanoTrmRunConfig) -> dict[str, str]:  # pragma: no cover - subprocess only.
+def build_train_env(
+    config: NanoTrmRunConfig,
+) -> dict[str, str]:  # pragma: no cover - subprocess only.
     paths = [
         str(Path(config.repo_root) / "python"),
         str(Path(config.repo_root)),
@@ -393,7 +401,9 @@ def build_train_env(config: NanoTrmRunConfig) -> dict[str, str]:  # pragma: no c
     return env
 
 
-def generate_sudoku_data_if_missing(config: NanoTrmRunConfig) -> None:  # pragma: no cover - subprocess only.
+def generate_sudoku_data_if_missing(
+    config: NanoTrmRunConfig,
+) -> None:  # pragma: no cover - subprocess only.
     if Path(config.dataset_dir).exists():
         return
     command = [
@@ -416,7 +426,9 @@ def generate_sudoku_data_if_missing(config: NanoTrmRunConfig) -> None:  # pragma
     subprocess.run(command, cwd=Path(config.nano_trm_root), check=True)  # noqa: S603
 
 
-def run_native_trm_training(config: NanoTrmRunConfig) -> NanoTrmRunResult:  # pragma: no cover - launches trainer.
+def run_native_trm_training(
+    config: NanoTrmRunConfig,
+) -> NanoTrmRunResult:  # pragma: no cover - launches trainer.
     """Run the real native nano-trm trainer and reload its checkpoint."""
 
     generate_sudoku_data_if_missing(config)
@@ -533,7 +545,9 @@ def _artifact_common(
         "nanotrm_trainer_checkpoint_ok": bool(checkpoint_ok),
         "exact_accuracy": None if exact_accuracy is None else float(exact_accuracy.value),
         "exact_accuracy_metric": None if exact_accuracy is None else exact_accuracy.metric_name,
-        "exact_accuracy_metrics_path": None if exact_accuracy is None else str(exact_accuracy.metrics_path),
+        "exact_accuracy_metrics_path": None
+        if exact_accuracy is None
+        else str(exact_accuracy.metrics_path),
         "checkpoint_path": None if checkpoint_path is None else str(checkpoint_path),
         "duration_s": round(float(duration_s), 3),
         "preconditions_checked": _precondition_dicts(preconditions_checked),
@@ -658,7 +672,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
 
     if not isinstance(artifact.get("preconditions_checked"), list):
         errors.append("preconditions_checked must be a list")
-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
+    if not isinstance(artifact.get("random_seed"), int) or isinstance(
+        artifact.get("random_seed"), bool
+    ):
         errors.append("random_seed must be a bare int")
 
     gate = artifact.get("acceptance_gate_passed")
@@ -669,7 +685,11 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
             errors.append("successful gate requires nanotrm_trainer_checkpoint_ok true")
         if exact is None:
             errors.append("successful gate requires exact_accuracy")
-        if not isinstance(duration, (int, float)) or isinstance(duration, bool) or float(duration) <= 60.0:
+        if (
+            not isinstance(duration, (int, float))
+            or isinstance(duration, bool)
+            or float(duration) <= 60.0
+        ):
             errors.append("successful gate requires duration_s > 60")
         checkpoint_path = artifact.get("checkpoint_path")
         if not (
@@ -751,7 +771,13 @@ def run_experiment(
 
 def main() -> None:  # pragma: no cover - thin CLI wrapper.
     artifact = run_experiment()
-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover

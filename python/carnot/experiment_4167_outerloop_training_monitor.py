@@ -12,6 +12,8 @@ SCENARIO-LEARN-4167-FAITHFUL-STABLE.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import csv
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
@@ -85,12 +87,16 @@ class MonitorConfig:
         object.__setattr__(
             self,
             "checkpoint_path",
-            Path(self.checkpoint_path) if self.checkpoint_path is not None else trm_runs / "sudoku_extreme_baseline" / "last.ckpt",
+            Path(self.checkpoint_path)
+            if self.checkpoint_path is not None
+            else trm_runs / "sudoku_extreme_baseline" / "last.ckpt",
         )
         object.__setattr__(
             self,
             "contiguous_run_dir",
-            Path(self.contiguous_run_dir) if self.contiguous_run_dir is not None else trm_runs / "contiguous_run_hydra",
+            Path(self.contiguous_run_dir)
+            if self.contiguous_run_dir is not None
+            else trm_runs / "contiguous_run_hydra",
         )
         object.__setattr__(
             self,
@@ -141,7 +147,13 @@ class MetricRow:
 
     @property
     def signature(self) -> tuple[str, int, int | None, int | None, float]:
-        return (str(self.metrics_path), self.row_number, self.epoch, self.step, self.val_exact_accuracy)
+        return (
+            str(self.metrics_path),
+            self.row_number,
+            self.epoch,
+            self.step,
+            self.val_exact_accuracy,
+        )
 
     def to_dict(self, *, delta_vs_previous: float | None = None) -> JsonDict:
         return {
@@ -237,7 +249,9 @@ def _version_number(metrics_path: Path) -> int:
 
 def _payload_checksum(payload: Mapping[str, Any]) -> str:
     filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
-    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
+    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode(
+        "utf-8"
+    )
     return hashlib.sha256(encoded).hexdigest()
 
 
@@ -246,12 +260,14 @@ def read_checkpoint_status(path: str | Path) -> CheckpointStatus:
 
     checkpoint_path = Path(path)
     if not checkpoint_path.exists():
-        return CheckpointStatus(str(checkpoint_path), False, False, "missing checkpoint", None, None, None)
+        return CheckpointStatus(
+            str(checkpoint_path), False, False, "missing checkpoint", None, None, None
+        )
     mtime = checkpoint_path.stat().st_mtime
     try:
         import torch
 
-        payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        payload = safe_torch_load(checkpoint_path, map_location="cpu", allow_unsafe_pickle=True)
     except Exception as exc:
         return CheckpointStatus(
             str(checkpoint_path),
@@ -319,7 +335,9 @@ def check_pid_alive(
 
 
 def _metric_value(row: Mapping[str, Any]) -> float | None:
-    return _float_or_none(row.get("val_exact_accuracy")) or _float_or_none(row.get("val/exact_accuracy"))
+    return _float_or_none(row.get("val_exact_accuracy")) or _float_or_none(
+        row.get("val/exact_accuracy")
+    )
 
 
 def read_metrics(root: str | Path) -> MetricsSnapshot:
@@ -392,7 +410,9 @@ def build_artifact(
             "SCENARIO-LEARN-4167-READONLY-MONITOR",
             "SCENARIO-LEARN-4167-FAITHFUL-STABLE",
         ],
-        "honest_verdict": _verdict(current_val, alive=process.alive, crossed=crossed, faithful=faithful),
+        "honest_verdict": _verdict(
+            current_val, alive=process.alive, crossed=crossed, faithful=faithful
+        ),
         "outerloop_train_alive": bool(process.alive),
         "current_val_exact_accuracy": _rounded(current_val),
         "baseline_faithful": faithful,

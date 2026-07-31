@@ -1,7 +1,18 @@
-"""Tier 0e: TF-IDF margin-ranking logistic model."""
+"""Tier 0e: TF-IDF margin-ranking logistic model.
+
+The persisted model is a pickle, not safetensors, because it holds fitted
+scikit-learn estimators (a TF-IDF vectoriser and a logistic classifier) --
+Python object graphs, not a tensor dict, so safetensors cannot represent them.
+Pickle deserialization executes arbitrary code, so the load is routed through
+``carnot.serialization_safety.safe_pickle_load``, which refuses any path
+resolving outside this checkout.  See that module for what the restriction does
+and does not buy.
+"""
 
 import os
-import pickle
+
+from carnot.serialization_safety import safe_pickle_load
+
 
 class EORMVerifier:
     """TF-IDF margin-ranking logistic verifier trained on FoVer."""
@@ -11,10 +22,9 @@ class EORMVerifier:
         self.vectorizer = None
         self.clf = None
         if os.path.exists(self.model_path):
-            with open(self.model_path, "rb") as f:
-                data = pickle.load(f)
-                self.vectorizer = data["vectorizer"]
-                self.clf = data["clf"]
+            data = safe_pickle_load(self.model_path, expected_type=dict)
+            self.vectorizer = data["vectorizer"]
+            self.clf = data["clf"]
 
     def verify(self, text: str) -> float:
         """Verify text and return probability of being correct."""

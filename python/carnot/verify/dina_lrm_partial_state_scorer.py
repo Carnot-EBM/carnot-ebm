@@ -23,6 +23,8 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
+from carnot.serialization_safety import safe_pickle_load
+
 from carnot.verify.partial_state_diffusion_scorer import (
     DEFAULT_CANVAS_LEN,
     DEFAULT_MASK_TOKEN_ID,
@@ -220,11 +222,25 @@ class DinaLRMPartialStateScorer:
 
     @classmethod
     def load(cls, path: str | Path) -> "DinaLRMPartialStateScorer":
-        with Path(path).open("rb") as handle:
-            loaded = pickle.load(handle)
-        if not isinstance(loaded, cls):
-            raise TypeError("loaded object is not a DinaLRMPartialStateScorer")
-        return loaded
+        """Load a pickled scorer from a trusted in-repo path.
+
+        The previous implementation called ``pickle.load`` directly and then
+        checked ``isinstance``. That check is a correctness guard, not a
+        security one: a pickle payload executes DURING parsing, so by the time
+        the type is inspected any embedded code has already run. It is preserved
+        via ``expected_type`` for its real purpose -- catching corruption and
+        wrong-file mistakes.
+
+        This loader uses ``on_untrusted="warn"``, NOT the strict default, and
+        that is a deliberate weakening worth stating plainly: ``save``/``load``
+        here is a general-purpose round-trip and writing to a scratch directory
+        is ordinary usage, so refusing out-of-repo paths would break correct
+        callers. The warning buys visibility, not prevention. The strict mode is
+        reserved for the fixed-path loaders wired into the live verifier
+        ensemble (``tier0e_eorm``, ``tier0f_semantic_calibration``), where an
+        out-of-repo path really does indicate the mirror-supply-chain vector.
+        """
+        return safe_pickle_load(path, expected_type=cls, on_untrusted="warn")
 
     def _fit_uncertainty(self, records: Sequence[DinaLRMRecord], labels: np.ndarray) -> None:
         probabilities = np.asarray(

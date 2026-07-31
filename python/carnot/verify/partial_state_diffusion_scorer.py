@@ -23,6 +23,8 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
+from carnot.serialization_safety import safe_pickle_load
+
 
 DEFAULT_CANVAS_LEN = 256
 DEFAULT_MASK_TOKEN_ID = 4
@@ -84,7 +86,9 @@ class ByteCanvasEncoder:
         self.canvas_len = int(canvas_len)
         self.mask_token_id = int(mask_token_id)
 
-    def encode(self, text: str, *, visible_fraction: float) -> tuple[tuple[int, ...], tuple[int, ...]]:
+    def encode(
+        self, text: str, *, visible_fraction: float
+    ) -> tuple[tuple[int, ...], tuple[int, ...]]:
         if not 0.0 <= visible_fraction <= 1.0:
             raise ValueError("visible_fraction must be in [0, 1]")
         clipped = str(text)[: self.canvas_len]
@@ -165,7 +169,9 @@ class PartialStateDiffusionScorer:
         text = self._feature_text(canvas_ids, step)
         matrix = self.vectorizer.transform([text])
         probabilities = self.classifier.predict_proba(matrix)[0]
-        class_to_index = {bool(value): index for index, value in enumerate(self.classifier.classes_)}
+        class_to_index = {
+            bool(value): index for index, value in enumerate(self.classifier.classes_)
+        }
         return float(probabilities[class_to_index[True]])
 
     def score_partial_state(self, canvas_ids: Sequence[int], step: int) -> float:
@@ -180,11 +186,14 @@ class PartialStateDiffusionScorer:
 
     @classmethod
     def load(cls, path: str | Path) -> "PartialStateDiffusionScorer":
-        with Path(path).open("rb") as handle:
-            loaded = pickle.load(handle)
-        if not isinstance(loaded, cls):
-            raise TypeError("loaded object is not a PartialStateDiffusionScorer")
-        return loaded
+        """Load a pickled scorer from a trusted in-repo path.
+
+        See ``DinaLRMPartialStateScorer.load`` for why the former
+        ``pickle.load`` + ``isinstance`` pairing was not a security control (the
+        payload runs during parsing, strictly before the type is inspected), and
+        for why this loader warns rather than refuses on out-of-repo paths.
+        """
+        return safe_pickle_load(path, expected_type=cls, on_untrusted="warn")
 
     def _feature_text(self, canvas_ids: Sequence[int], step: int) -> str:
         visible_chars: list[str] = []
