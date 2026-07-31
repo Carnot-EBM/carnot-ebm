@@ -4,6 +4,44 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-31 (security audit) — gVisor GPU passthrough is NOT usable on this host (measured)
+
+Raised by the operator while reviewing the sandbox-routing fix: *"We don't want to
+impact GPU activity by using gvisor — is it compatible?"* Measured rather than assumed:
+
+| | |
+|---|---|
+| host NVIDIA driver | **610.43.03** (2x RTX 3090) |
+| `runsc release-20260330.0` nvproxy max supported | **590.48.01** |
+| `nvidia-container-toolkit` | **NOT INSTALLED** |
+| `carnot-sandbox:latest` image | **NOT BUILT** |
+| `DockerSandboxConfig.gpu` default | `False` |
+
+gVisor does not hand GPU calls to the driver directly — it intercepts them through
+`nvproxy`, which whitelists specific driver versions. 610.43.03 is newer than anything
+this runsc build knows about, and the toolkit providing `--gpus` is absent regardless of
+runtime. So `gpu=True` + `runtime="runsc"` fails twice over here.
+
+**No impact on the project's GPU work, and this is the load-bearing part.** The sandbox
+runs LLM-generated *hypothesis* code (CPU JAX experiments). Training and inference run
+through separate paths (`llama_cpp`, torch directly) that never touch that module. The
+2026-07-31 routing change also leaves the default path byte-identical: with neither
+`CARNOT_USE_SANDBOX` nor `CARNOT_REQUIRE_SANDBOX` set, execution is in-process and Docker
+is never probed (asserted by `test_does_not_touch_docker_by_default`). Setting
+`CARNOT_USE_SANDBOX=1` today warns and falls back, because the image is not built.
+
+**CLAUDE.md correction.** The Security Requirements section says gVisor "plays nicely with
+nvidia-container-toolkit". True as a general statement about gVisor; NOT actionable on this
+host at these versions. A dated note was added there rather than editing the original claim
+(never-prune).
+
+**If isolation WITH GPU is ever needed**, the realistic option is `runtime="runc"` plus
+nvidia-container-toolkit — keeps the GPU, still buys real namespaces / no network /
+read-only fs, but drops the gVisor syscall boundary. The alternative (downgrade the driver
+into nvproxy's supported range) is not worth it and should not be done. Re-check when a
+runsc build lists a 610.x driver.
+
+
 ### 2026-07-31 (security audit) — 3 dependency advisories ACCEPTED, cannot be fixed today
 
 Full OSV sweep of the 225 installed packages: **53 advisories across 10 packages
