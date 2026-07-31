@@ -145,7 +145,23 @@ def load_split(game: str, call_index: int = CALL_INDEX) -> dict:
             ambiguous += 1
             continue
         held.append(t)
-    checks["no_heldout_line_in_prompt"] = True  # true by construction of the loop above
+    # CORRECTION 2026-07-31 (adversarial review). This field used to be the literal `True`,
+    # commented "true by construction of the loop above" -- a tautology dressed as a check,
+    # sitting in the payload beside two real ones. The loop `continue`s on any row whose line
+    # is in the prompt, so the field could never have been False and measured nothing.
+    #
+    # It is now the independent post-hoc assertion the artifact was implicitly claiming:
+    # recompute the property over the FINISHED partition, by a scan the construction does not
+    # perform. Kept (rather than dropped) because the property IS the one that makes the
+    # held-out set out-of-sample, and a reader is entitled to see it verified rather than
+    # assumed. The counting identity below is the second, stronger form -- every row whose
+    # rendered line appears in the prompt is accounted for as either shown or ambiguous, so
+    # no such row can have leaked into `held` by a path the first check misses.
+    checks["no_heldout_line_in_prompt"] = all(_line(t) not in prompt for t in held)
+    _n_lines_in_prompt = sum(1 for t in full if _line(t) in prompt)
+    checks["lines_in_prompt_are_exactly_shown_plus_ambiguous"] = (
+        _n_lines_in_prompt == len(shown) + ambiguous
+    )
 
     prefix_keys: dict = {}
     for t in prefix:

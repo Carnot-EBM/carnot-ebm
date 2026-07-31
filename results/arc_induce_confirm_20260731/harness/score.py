@@ -45,6 +45,8 @@ produced, and it is stated as such rather than written into any gate.
 
 from __future__ import annotations
 
+import hashlib
+import itertools
 import json
 import math
 import os
@@ -77,6 +79,22 @@ def _sign_test(n_a: int, n_b: int) -> float:
     k = min(n_a, n_b)
     tail = sum(math.comb(n, i) for i in range(k + 1)) / (2.0**n)
     return min(1.0, 2.0 * tail)
+
+
+def _round_p(p: float) -> float:
+    """Round a p-value WITHOUT collapsing a small one to zero.
+
+    CORRECTION 2026-07-31 (adversarial review). This used to be a bare `round(p, 4)`, which
+    reported the usable channel's minimum reachable two-sided p as **0.0** at 17 discordant
+    pairs. The true value is 2/2^17 = 1.526e-5. A p of exactly 0.0 is not attainable by any
+    test, so the field read as a computation error sitting next to the correctly-reported
+    0.0625 of the 5-discordant quality channel -- and the whole point of reporting a minimum
+    reachable p BEFORE the result is that a reader can trust it.
+    """
+
+    if p <= 0.0:
+        return 0.0
+    return round(p, 4) if p >= 1e-4 else float(f"{p:.4g}")
 
 
 def main() -> int:  # noqa: C901
@@ -120,6 +138,9 @@ def main() -> int:  # noqa: C901
                 "predicted_n": row["predicted_n"],
                 "wall_s": row["wall_s"],
                 "engine_changes_anything": row["engine_changes_anything"],
+                # RETROFIT 2026-07-31: absent on rows captured before confirm_ab.py started
+                # recording it per call. `None` means UNVERIFIED, never "same process".
+                "server_pid": row.get("server_pid"),
             }
             ns: dict = {"np": np, "numpy": np}
             try:
@@ -142,9 +163,7 @@ def main() -> int:  # noqa: C901
                 m[f"{label}_accuracy"] = round(float(getattr(vr, "accuracy", 0.0) or 0.0), 4)
                 # None, not 0.0: with no changing rows this quantity was NOT measured.
                 m[f"{label}_cell_recall"] = (
-                    round(float(getattr(vr, "cell_recall", 0.0) or 0.0), 4)
-                    if n_changing
-                    else None
+                    round(float(getattr(vr, "cell_recall", 0.0) or 0.0), 4) if n_changing else None
                 )
                 m[f"{label}_change_fidelity"] = (
                     round(float(getattr(vr, "change_fidelity", 0.0) or 0.0), 4)
@@ -157,9 +176,7 @@ def main() -> int:  # noqa: C901
                     getattr(vr, "invented_changed_cells", 0) or 0
                 )
                 m[f"{label}_n_noop"] = int(getattr(vr, "n_noop", 0) or 0)
-                m[f"{label}_n_noop_hallucinated"] = int(
-                    getattr(vr, "n_noop_hallucinated", 0) or 0
-                )
+                m[f"{label}_n_noop_hallucinated"] = int(getattr(vr, "n_noop_hallucinated", 0) or 0)
             scored[key] = m
 
         for rec in data.get("attempts", []):
@@ -293,7 +310,10 @@ def main() -> int:  # noqa: C901
                 if best
                 else None
             )
-            for suffix, fn_ in (("_any_quality", _quality_ok), ("_any_quality_strict", _quality_strict)):
+            for suffix, fn_ in (
+                ("_any_quality", _quality_ok),
+                ("_any_quality_strict", _quality_strict),
+            ):
                 q = [fn_(m) for m in ms]
                 g[f"{arm}{suffix}"] = (
                     True
@@ -332,6 +352,29 @@ def main() -> int:  # noqa: C901
             "sign_test_p_two_sided": round(_sign_test(a_only, b_only), 4),
         }
 
+    # ---- SAME-SERVER-PROCESS GUARD (retrofitted 2026-07-31 after adversarial review) --
+    #
+    # Phase 3's pre-flight added this guard because a server WAS replaced mid-session there
+    # and an arm pair straddling the restart is confounded by sampler variance alone -- the
+    # seed does not reach across server instances. This run had no such guard, and its rows
+    # carry no per-call PID, so an equivalent replacement here would have been SILENT.
+    #
+    # The guard is implemented now so any future re-run is checked. For the rows already on
+    # disk it reports UNVERIFIED rather than pretending: `None` is not evidence of sameness.
+    # `paired()` therefore does NOT drop unverified pairs (that would discard all 36 and say
+    # nothing), but the state is recorded in the payload so the claim is not overread.
+    def _pair_server_state(ma: dict | None, mb: dict | None) -> str:
+        pa = (ma or {}).get("server_pid")
+        pb = (mb or {}).get("server_pid")
+        if pa is None or pb is None:
+            return "unverified"
+        return "same" if pa == pb else "different"
+
+    pair_server_states: dict = {"same": 0, "different": 0, "unverified": 0}
+    for rec in attempts:
+        for arm in ("TREATMENT_round0", "TREATMENT_final"):
+            pair_server_states[_pair_server_state(rec.get("CONTROL"), rec.get(arm))] += 1
+
     def _is_usable(m: dict) -> bool:
         return bool(m.get("usable"))
 
@@ -352,6 +395,111 @@ def main() -> int:  # noqa: C901
         ),
     }
 
+    # ---- CLUSTERED INFERENCE (added 2026-07-31 after adversarial review) --------------
+    #
+    # WHY THIS EXISTS. `paired()` above treats each of the 36 attempt-matched pairs as an
+    # independent observation. They are not. The 36 pairs are 6 GAMES x 6 resamples of the
+    # SAME induce prompt, varying only seed and temperature. Resamples of one prompt are not
+    # independent draws from the population the claim generalizes to, which is NEW GAMES: the
+    # question a reader has is "will this help on a game I have not seen", and the unit that
+    # answers it is the game, not the sample. Treating 6 resamples as 6 independent pairs
+    # inflates the effective n sixfold and is textbook pseudo-replication.
+    #
+    # The correction is to collapse each game to a single signed observation (its net win-loss
+    # across its own resamples) and test THOSE. Two tests are reported because they answer the
+    # same question two ways and agreeing is worth something:
+    #   * a sign test over the games whose net is non-zero, and
+    #   * a whole-game sign-flip permutation test on the net total, which uses the MAGNITUDE of
+    #     each game's net rather than only its direction.
+    #
+    # This is reported as the PRIMARY inference. The within-prompt p from `paired()` is kept
+    # and is a valid answer to a narrower question -- "does the treatment beat control on a
+    # resample of a prompt I have already seen" -- but it is not the claim anyone wants.
+    def clustered(arm_a: str, arm_b: str, pred) -> dict:
+        nets: dict[str, int] = {}
+        for game in games:
+            a_only = b_only = 0
+            for rec in attempts:
+                if rec["game"] != game:
+                    continue
+                ma, mb = rec[arm_a], rec[arm_b]
+                if ma is None or mb is None:
+                    continue
+                pa, pb = pred(ma), pred(mb)
+                if pa is None or pb is None:
+                    continue
+                if pa and not pb:
+                    a_only += 1
+                elif pb and not pa:
+                    b_only += 1
+            nets[game] = a_only - b_only
+        scored_games = sorted(nets)
+        better = sum(1 for g in scored_games if nets[g] > 0)
+        worse = sum(1 for g in scored_games if nets[g] < 0)
+        tied = sum(1 for g in scored_games if nets[g] == 0)
+        obs = sum(nets.values())
+        # Exact permutation over every assignment of signs to the per-game nets. 2^k terms,
+        # k <= 6 here, so this is exhaustive rather than sampled.
+        exhaustive = [
+            sum(sgn * nets[g] for sgn, g in zip(signs, scored_games, strict=True))
+            for signs in itertools.product((1, -1), repeat=len(scored_games))
+        ]
+        n_extreme = sum(1 for s in exhaustive if abs(s) >= abs(obs))
+        return {
+            "arm_a": arm_a,
+            "arm_b": arm_b,
+            "unit": "game",
+            "per_game_net": nets,
+            "games_better": better,
+            "games_worse": worse,
+            "games_tied": tied,
+            "observed_net": obs,
+            "sign_test_p_two_sided": _round_p(_sign_test(better, worse)),
+            "permutation_p_two_sided": _round_p(n_extreme / len(exhaustive)),
+            "permutation_n_extreme": n_extreme,
+            "permutation_n_total": len(exhaustive),
+            # With k games the smallest two-sided sign-test p is 2/2^k, reachable only if
+            # EVERY game moves the same way. At k=6 that is 0.03125 -- so significance here
+            # required all six games to improve, and four did. Stated before the result per
+            # this phase's own rule.
+            "min_reachable_p_two_sided": _round_p(2.0 / (2.0 ** len(scored_games))),
+            "n_games_clustered": len(scored_games),
+        }
+
+    clustered_tests = {
+        "usable__treatment_final_vs_control": clustered("TREATMENT_final", "CONTROL", _is_usable),
+        "usable__treatment_round0_vs_control": clustered("TREATMENT_round0", "CONTROL", _is_usable),
+        "quality_strict__treatment_final_vs_control": clustered(
+            "TREATMENT_final", "CONTROL", _quality_strict
+        ),
+    }
+
+    # ---- PER-GAME WIN/LOSS DECOMPOSITION (added 2026-07-31 after adversarial review) ---
+    #
+    # The aggregate "13 treatment-only wins against 4 control-only" hides where those wins
+    # came from. Five of the 13 -- 38% -- are ft09, which is also the game whose held-out set
+    # cannot grade a change at all and where 5 of 6 usable treatment engines hallucinate a
+    # change on 12-16 of 16 unseen inert clicks. Reporting the decomposition beside the
+    # aggregate means a reader sees that concentration without recomputing it.
+    usable_decomposition = {}
+    for game in games:
+        a_only = b_only = 0
+        for rec in attempts:
+            if rec["game"] != game:
+                continue
+            ma, mb = rec["TREATMENT_final"], rec["CONTROL"]
+            if ma is None or mb is None:
+                continue
+            if ma.get("usable") and not mb.get("usable"):
+                a_only += 1
+            elif mb.get("usable") and not ma.get("usable"):
+                b_only += 1
+        usable_decomposition[game] = {
+            "treatment_only_wins": a_only,
+            "control_only_wins": b_only,
+            "net": a_only - b_only,
+        }
+
     n_games = len(games)
     funnel = {
         arm: {
@@ -367,6 +515,60 @@ def main() -> int:  # noqa: C901
             "n_games": n_games,
         }
         for arm in ("CONTROL", "TREATMENT_round0", "TREATMENT_final")
+    }
+
+    # ---- THE QUALITY CONJUNCTION (added 2026-07-31 after adversarial review) ----------
+    #
+    # WHY THIS EXISTS. The note disclosed both components -- that the strict funnel moved
+    # 2/6 games -> 3/6, and separately that ft09's held-out set contains no changing row --
+    # but never computed the CONJUNCTION, and the conjunction is the result. Restricted to
+    # the games whose held-out set contains at least one CHANGING transition (the only games
+    # where out-of-sample change prediction can be graded at all), the strict counts are
+    # IDENTICAL in both arms. The entire strict-funnel gain is ft09, which passes only on the
+    # zero-hallucinated-no-ops fallback. On tn36 -- the one game with a substantial gradable
+    # held-out set, 17 changing rows -- both arms are 4/6 and each arm's best engine is the
+    # same 17/17 exact.
+    #
+    # Stated plainly, because it is the sharpest limit on what this run shows: the treatment
+    # produced no better engine on ANY game where out-of-sample change prediction could
+    # actually be graded.
+    gradable_games = sorted(g["game"] for g in per_game if (g.get("heldout_n_changing") or 0) > 0)
+    quality_strict_change_gradable_only = {
+        "gradable_games": gradable_games,
+        "ungradable_games": sorted(set(games) - set(gradable_games)),
+        "n_attempts_on_gradable_games": sum(1 for a in attempts if a["game"] in gradable_games),
+        "n_attempts_total": len(attempts),
+        "why": (
+            "A held-out set with no changing row cannot distinguish a correct engine from the "
+            "identity function; its strict pass is the weaker no-op-discrimination fallback. "
+            "These counts drop those games so the change channel is read on its own."
+        ),
+        "per_arm": {
+            arm: {
+                "n_attempts_strict": sum(
+                    1
+                    for a in attempts
+                    if a["game"] in gradable_games and _quality_strict(a[arm]) is True
+                ),
+                "n_games_strict": len(
+                    {
+                        a["game"]
+                        for a in attempts
+                        if a["game"] in gradable_games and _quality_strict(a[arm]) is True
+                    }
+                ),
+            }
+            for arm in ("CONTROL", "TREATMENT_round0", "TREATMENT_final")
+        },
+        "per_game": {
+            game: {
+                arm: sum(
+                    1 for a in attempts if a["game"] == game and _quality_strict(a[arm]) is True
+                )
+                for arm in ("CONTROL", "TREATMENT_round0", "TREATMENT_final")
+            }
+            for game in gradable_games
+        },
     }
 
     # ---- THE VERDICT, computed rather than asserted -----------------------------------
@@ -386,7 +588,7 @@ def main() -> int:  # noqa: C901
     n_disc = t_usable["n_discordant"]
     # The smallest two-sided p this many discordant pairs could ever produce, if every one had
     # gone the same way. Reported BEFORE the result is read, per the phase's own rule.
-    min_reachable_p = round(_sign_test(n_disc, 0), 4) if n_disc else 1.0
+    min_reachable_p = _round_p(_sign_test(n_disc, 0)) if n_disc else 1.0
     q_final = funnel["TREATMENT_final"]
     q_ctl = funnel["CONTROL"]
     # STRICT bar is the one the verdict runs on. The recall bar is kept in the payload because
@@ -437,11 +639,85 @@ def main() -> int:  # noqa: C901
             "total_predicted_tokens": tot_t,
             "calls_hitting_token_cap": tot_c,
         }
+    # ---- METHODOLOGY BLOCK (added 2026-07-31 after adversarial review) ----------------
+    #
+    # WHY THIS EXISTS. `scripts/adversarial_verify.py` flagged this artifact
+    # METHODOLOGY_MISSING: no inference_substrate, model_specs, random_seed,
+    # reproducibility_checksum or duration_s at top level. That is not a formality here --
+    # this is the artifact carrying the 13/36 -> 22/36 headline that unlocked Phase 2, it is
+    # cited in seven published artifacts' freshness acknowledgements, in
+    # scripts/arc_orphan_solver_lint.py and in the shipped source comment. The Phase 3
+    # artifact was fully compliant, so the discipline had been applied unevenly within one
+    # session. The fields are derived from what the run actually recorded (the witnesses
+    # block, the per-attempt seeds, the summed wall clock) rather than asserted.
+    _seeds = sorted({int(a["seed"]) for a in attempts if a.get("seed") is not None})
+    _bases = sorted({int(a["seed_base"]) for a in attempts if a.get("seed_base") is not None})
+    _model_paths = sorted(
+        {w["observed_model_path"] for w in witnesses.values() if w.get("observed_model_path")}
+    )
+    _duration_s = round(sum(c["total_wall_s"] for c in cost.values()), 1)
+    # Content hash over the completions this scoring read, plus the split that graded them.
+    # Catches silent corpus drift between this artifact and any re-score: if a completion
+    # file or the held-out partition changes, the checksum moves.
+    _h = hashlib.sha256()
+    for tag in sorted(run_status):
+        cpath = HERE / "confirm" / tag
+        if not cpath.exists():
+            continue
+        for f in sorted(cpath.glob("*.txt")):
+            _h.update(f.name.encode())
+            _h.update(f.read_bytes())
+    for game in sorted(splits):
+        s = splits[game]
+        _h.update(f"{game}:{s['n_shown']}:{s['n_heldout']}:{s['heldout_n_changing']}".encode())
+
     payload = {
         "generated_by": "results/arc_induce_confirm_20260731/harness/score.py",
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "run_status": run_status,
         "witnesses": witnesses,
+        # -- adversarial_verify.py methodology fields --------------------------------
+        "inference_substrate": "live_llm_inference",
+        "model_specs": {
+            "target_model": "unsloth/gemma-4-31B-it-GGUF",
+            "quantization": "Q4_K_M",
+            "observed_model_paths": _model_paths,
+            "server": "llama.cpp-master llama-server, CUDA build proven from /proc/<pid>/exe",
+            "n_ctx": sorted({w.get("observed_n_ctx") for w in witnesses.values()}),
+            "headline_required_any_of": ["unsloth/gemma-4-31B-it-GGUF"],
+        },
+        "random_seed": _seeds[0] if _seeds else None,
+        "random_seeds_used": _seeds,
+        "seed_bases": _bases,
+        "reproducibility_checksum": _h.hexdigest(),
+        "reproducibility_checksum_covers": (
+            "sha256 over every scored completion .txt (name + bytes) plus each game's "
+            "(n_shown, n_heldout, heldout_n_changing) split shape. Moves if a completion or "
+            "the held-out partition drifts; does NOT cover the harness source."
+        ),
+        "duration_s": _duration_s,
+        "duration_s_note": (
+            "Summed generator wall clock across all three arms (CONTROL + TREATMENT_round0 + "
+            "TREATMENT_final), i.e. the LLM time this artifact rests on. Not the scorer's own "
+            "runtime, which is offline arithmetic."
+        ),
+        "measured_configuration": {
+            "CARNOT_ARC_INDUCE_N_CTX": 32768,
+            "CARNOT_ARC_FFN_CPU_LAYERS": 0,
+            "CUDA_VISIBLE_DEVICES": "",
+            "max_tokens_n_predict": 4096,
+            "call_index_scored": sorted({s.get("call_index") for s in splits.values()}),
+            "CAVEAT_shipped_default_n_ctx": 81920,
+            "why_it_matters": (
+                "The measurement pinned n_ctx=32768 because the shipped _default_induce_n_ctx() "
+                "of 81920 does not fit a 24 GiB card and silently binds the iGPU. The COST half "
+                "of this artifact's claim (token-cap hits 20/36 -> 2/36) is completion-budget "
+                "sensitive, and 4*(15767+4096)=79452 rounds up to the 81920 default -- so at the "
+                "live default the completion budget is not the 32768-derived one measured here. "
+                "The validity and cost numbers are conditioned on n_ctx=32768 until either the "
+                "default is fixed or the treatment is re-measured at it."
+            ),
+        },
         "OUT_OF_SAMPLE_SPLIT": (
             "HELD_OUT = the agent's collected transitions MINUS the <=8 rows _transitions_block "
             "renders into the induce prompt, proven per game in split.json by checking each "
@@ -480,6 +756,28 @@ def main() -> int:  # noqa: C901
         "control_attempts_scored": len(ctl_rows),
         "funnel": funnel,
         "paired_tests": tests,
+        "paired_tests_note": (
+            "WITHIN-PROMPT inference: treats the 36 attempt-matched pairs as independent, "
+            "which they are not (6 games x 6 resamples of one prompt each). Valid answer to "
+            "'does the treatment beat control on a resample of a prompt already seen'. For "
+            "the claim that generalizes to a NEW game, read clustered_tests -- that is the "
+            "primary inference."
+        ),
+        "clustered_tests": clustered_tests,
+        "paired_server_process_check": {
+            "counts": pair_server_states,
+            "status": (
+                "UNVERIFIED for this run's pairs: confirm_ab.py recorded server_pid once per "
+                "GPU worker, not per call, so a mid-run server replacement would have been "
+                "silent. The guard and the per-call PID are retrofitted (2026-07-31) and "
+                "apply to any future run. Phase 3 proved the failure mode is real -- a server "
+                "WAS replaced mid-session there and its guard excluded a game rather than "
+                "score a confounded pair. The shared-process property is ASSERTED for these "
+                "pairs, MEASURED for future ones."
+            ),
+        },
+        "usable_per_game_decomposition": usable_decomposition,
+        "quality_strict_change_gradable_only": quality_strict_change_gradable_only,
         "per_game": per_game,
         "attempts": attempts,
     }
@@ -506,7 +804,9 @@ def main() -> int:  # noqa: C901
                 print(head + f"{'--':>6s} {'--':>7s} {'--':>6s} {'--':>9s} {'--':>7s} {'--':>8s}")
                 continue
             rec_s = (
-                f"{b['heldout_cell_recall']:>7.3f}" if b["heldout_cell_recall"] is not None else f"{'n/a':>7s}"
+                f"{b['heldout_cell_recall']:>7.3f}"
+                if b["heldout_cell_recall"] is not None
+                else f"{'n/a':>7s}"
             )
             fid_s = (
                 f"{b['heldout_change_fidelity']:>6.3f}"

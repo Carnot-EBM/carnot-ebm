@@ -216,7 +216,10 @@ def main() -> int:  # noqa: C901
     ]
     log(f"witness: {json.dumps(witness)}")
     for bad, why in (
-        (witness.get("server_exe_is_cuda_build") is not True, "blocked_generator_not_proven_cuda_build"),
+        (
+            witness.get("server_exe_is_cuda_build") is not True,
+            "blocked_generator_not_proven_cuda_build",
+        ),
         (not witness.get("vram_rows_mine"), "blocked_generator_no_vram_residency"),
         (
             witness.get("observed_model_path")
@@ -236,6 +239,36 @@ def main() -> int:  # noqa: C901
     rows: list[dict] = []
     attempts: list[dict] = []
 
+    def _live_server_pid() -> int | None:
+        """Re-read the PID currently listening on PORT, at CALL time.
+
+        RETROFIT 2026-07-31 (adversarial review). This run captured `server_pid` ONCE per GPU
+        worker, in the witness block, and per-attempt rows carried the seed but no PID. That is
+        not sufficient, and the Phase 3 pre-flight later PROVED the failure mode is real: a
+        server WAS replaced mid-session there (1532116 -> 1562595), and Phase 3's own
+        `same_server_process` guard excluded a game rather than score a confounded pair.
+
+        This matters specifically because the sampler seed does NOT reach across server
+        instances -- identical config on a second server gives different output, while within
+        one process it holds byte-exactly. So an arm pair that straddles a server restart is
+        confounded by sampler variance alone, which is exactly the comparison this harness
+        exists to avoid. A once-per-worker witness cannot detect that; a per-call read can.
+
+        An equivalent replacement during THIS run would have been silent, so the pairs already
+        recorded are unverified in this respect. They are not retro-fixable -- the PIDs were
+        never written down -- and the honest statement is that the shared-process property was
+        ASSERTED for this run's pairs and is MEASURED for any future one.
+        """
+
+        try:
+            out = subprocess.run(
+                ["ss", "-lptnH", f"sport = :{PORT}"], capture_output=True, text=True, timeout=5
+            ).stdout
+        except Exception:  # noqa: BLE001
+            return None
+        found = re.search(r"pid=(\d+)", out)
+        return int(found.group(1)) if found else None
+
     def call(prompt, *, seed, temperature, sampler, game, tag) -> dict:
         payload = {
             "prompt": prompt,
@@ -247,6 +280,8 @@ def main() -> int:  # noqa: C901
         }
         if seed is not None:
             payload["seed"] = seed
+        # Read BEFORE the request, so a row records the process that actually served it.
+        _call_pid = _live_server_pid()
         t = time.monotonic()
         try:
             req = urllib.request.Request(
@@ -263,6 +298,7 @@ def main() -> int:  # noqa: C901
                 "status": f"http_error:{type(exc).__name__}",
                 "error": str(exc)[:300],
                 "wall_s": round(time.monotonic() - t, 1),
+                "server_pid": _call_pid,
             }
         text = resp.get("content", "")
         timings = resp.get("timings") or {}
@@ -299,6 +335,7 @@ def main() -> int:  # noqa: C901
             "prompt_n": timings.get("prompt_n"),
             "prompt_truncated": bool(resp.get("truncated")),
             "wall_s": round(time.monotonic() - t, 1),
+            "server_pid": _call_pid,
             "prompt_chars": len(prompt),
             "generate_would_accept": accepted,
             "defect_kinds": sorted({d.kind for d in defects}),

@@ -44,6 +44,49 @@ Validity and cost, on Phase 1's numbers: mechanically-usable engines 13/36 → 2
 test p = 0.049, 17 discordant pairs), 47.2 s per attempt against 100.3 s, token-cap hits 20/36 →
 2/36, `missing_return` 13 → 2.
 
+> **CORRECTIONS 2026-07-31 (adversarial review). Three things about the number above, and one
+> about the scope of what shipped. Original text left unedited per never-prune.**
+>
+> **W1 — p = 0.049 is the WITHIN-PROMPT figure; the primary inference is p = 0.125.** The 36 pairs
+> are 6 games × 6 resamples of one induce prompt each, so the sign test's independence assumption
+> does not hold for the population the claim generalizes to (new games). Clustered at the game
+> level: **4 games better, 0 worse, 2 tied, p = 0.125**; whole-game sign-flip permutation on the
+> net agrees exactly (+9, p = 0.1250). With 6 games the reachable floor is 2/2⁶ = 0.031, so
+> significance required all six to improve. **What still carries the wiring decision** is that no
+> game got worse and the cost effect is large enough to need no test at all — not a sub-0.05 p.
+> See `arc-induce-repeat-penalty-confirm-2026-07-31.md` C2.
+>
+> **W2 — attribute the effect to the COMPOUND, not to `repeat_penalty`.** Penalty-alone is
+> p = 0.1185 within-prompt / 0.625 clustered; the re-ask alone is p = 0.5. Neither component is
+> individually significant at either level; only the compound reaches 0.049 / 0.125. The
+> "penalty carries 11 of 13, the re-ask 2" split below is a decomposition of the point estimate,
+> and remains the right reason to keep the two independently disableable — but it is not a
+> significance claim about either part.
+>
+> **W3 — the numbers are conditioned on `n_ctx = 32768`, which is not the shipped default.**
+> Phase 1 pinned `CARNOT_ARC_INDUCE_N_CTX=32768` because the shipped `_default_induce_n_ctx()`
+> returns 81920, which does not fit a 24 GiB card and silently binds the iGPU. The cost half of
+> the claim is completion-budget sensitive. This wiring shipped into that path without noting the
+> gap; noted now. Until the 81920 default is fixed or the treatment re-measured at it, the
+> validity and cost numbers hold at 32768 and are unproven at the live default.
+>
+> **W4 — SCOPE NARROWED, and this is a config drift from Phase 3.** As first wired, the penalty's
+> condition was `codeonly_eligible` alone — which is also True for `_split_induce`'s focused
+> goal-only call (`required=("is_level_complete",)`). Phase 1 sent ENGINE prompts only, so the
+> penalty was reaching a prompt shape it was never measured on, while the source comment claimed
+> the scope was "where it was measured" (true of the flag, not of the measurement). The defect
+> gate was already correctly narrower. The penalty now uses the same condition, named
+> `_engine_induce_call`. Narrowed rather than merely disclosed because with no measurement in
+> either direction the goal-only call's correct state is the no-penalty baseline every banked
+> result was produced under — and because `_split_induce` exists precisely to isolate a call that
+> does NOT exhibit the repetition-loop failure the penalty treats ("valid in ~3.5s where the
+> combined call fails"). **Cost, stated rather than buried:** the Phase 3 pre-flight exercised the
+> WIDER configuration, so the shipped code no longer matches that artifact byte-for-byte. Phase 3
+> was a REFUSAL, nothing downstream depends on it, and its finding (byte-identical action traces;
+> `n_plans_found` 0 in every completed cell but one) is not a function of the goal-only sampler.
+> Two tests pin the boundary from both sides; both mutations — widen back, and drop entirely —
+> are killed.
+
 ## What is not claimed
 
 That this fixes induction. The strict out-of-sample quality funnel moved 2/6 games → 3/6 on a
@@ -51,6 +94,18 @@ single attempt at p = 1.000, and that channel had only 5 discordant pairs — be
 two-sided p 0.0625, so it could not have shown an effect either way at that n. On tu93 and sc25 no
 arm ever produced a correct engine, at any budget, in any of the 36 attempts. The bottleneck
 Phase 1 pointed at is target-selection in click mechanics, and nothing here touches that.
+
+> **W5 (2026-07-31) — sharper than the above: restricted to games where quality can be graded,
+> it did not move at all.** On the three games whose held-out set contains a CHANGING transition
+> (sc25, tn36, tu93), strict quality is **4 of 18 attempts in EVERY arm — identical**. The whole
+> 2/6 → 3/6 movement is ft09, whose held-out set has zero changing rows and which passes only on
+> the weaker zero-hallucinated-no-ops fallback. On tn36, the one game with a substantial gradable
+> held-out set, both arms are 4/6 and each arm's best engine is the same 17/17 exact. **The
+> treatment produced no better engine on any game where out-of-sample change prediction could
+> actually be graded.** Also note (Phase 1 C7) that the quality channel was scored at induce
+> **call 2**, while all three live gates and `_proposal_prefix` are on call 1 — so ft09's
+> ungradability is an artifact of the scored call site, not a property of the game, and a quality
+> claim would need re-running at call 1 regardless.
 
 ## The rebuild would have destroyed the record — and the artifacts had already said so
 
@@ -81,6 +136,24 @@ clean before re-annotating), and all 7 were discharged by acknowledgement instea
 This is a case where the instruction I was given ("rebuild in dependency order") and the
 instruction the repository carries ("acknowledge rather than rebuild") disagreed, and the
 repository was right — it had already paid for the lesson.
+
+> **2026-07-31 (adversarial-review pass) — the same thing happened again, for the narrowing (W4),
+> and it very nearly produced FALSE evidence.** The narrowing changes this file's hash, so the same
+> 7 artifacts went stale again and the same 4 rebuilds were run. Same outcome — **0 substantive
+> movement across 77,543 compared leaves**, the sole exception being 6012's
+> `reproducibility_checksum`, which is a hash *over* the dependency set — so all 7 were again
+> discharged by acknowledgement, `+8 −0` on every file, zero deletions.
+>
+> **The near-miss is worth more than the result.** A concurrent process reverted the working tree
+> mid-sequence — the source file and both research notes were rolled back to HEAD while the git
+> INDEX kept the correct staged content. Two of the four rebuilds therefore ran against the
+> **pre-change** source and would have been written up as evidence for a change they never
+> exercised. It was caught by reading each rebuild's own `provenance.code` sha rather than trusting
+> that the file on disk was the file I edited. Every acknowledgement now cites that check
+> explicitly. **The lesson generalizes: after a failed pre-commit run, verify the working tree still
+> matches the index before trusting anything you then measure.** Recovery was `git checkout --` FROM
+> THE INDEX (which held the good version), plus a copy of the source kept outside git so a
+> concurrent checkout could not take it away again.
 
 ## The rebuilds were not wasted: they are the evidence
 

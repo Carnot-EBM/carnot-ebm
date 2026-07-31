@@ -10804,3 +10804,96 @@ Required field principles:
 - **THEN** `default_enabled` SHALL remain bare `false`,
   `coordinate_router_progress_ready_score` SHALL be `0.0`, and the honest
   verdict SHALL not make a level/solve claim.
+
+### REQ-ARC-FCP-5699-41: The Induce Sampler SHALL Send A Repetition Penalty, And A Mechanically Defective Engine SHALL Be Re-Asked Rather Than Accepted
+
+**Written 2026-07-31, AFTER the code shipped.** This requirement id was cited by
+`python/carnot/agentic/arc_executable_world_model.py` and by
+`tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` from commit `d20533033`,
+but no such requirement existed anywhere in `openspec/` — the highest id in this chain was
+`-39`. Shipped code and its test carried traceability to a requirement that was never written,
+which the 2026-07-31 adversarial review caught. The id is written here rather than renumbered
+in the source so the two existing citations stay valid; `-40` is unused and stays unused.
+
+**WHAT FAILED.** The shipped induce path sent NO repetition control, so `llama-server` applied
+its default of `1.0` — i.e. none, read back from a running server's own `/props`. The dominant
+induce failure is a decode-level repetition loop: the model reaches an impasse part-way through
+`engine()`, emits the same comment line until `n_predict` is exhausted, and never writes a
+`return`. ft09's live engine is 1112 of 1144 lines of duplicated comment. Separately, the shipped
+`generate()` ACCEPTED a mechanically defective candidate in **22 of 36** attempts — it parses and
+defines the required symbols, so parse-level acceptance passes it through to the semantic gate,
+which then records "predicted wrong" for what is actually broken code.
+
+**THE REQUIREMENT.** On an ENGINE code-only induce call the system SHALL:
+
+1. Send `repeat_penalty` and `repeat_last_n` on the `/completion` payload, both env-overridable,
+   with `repeat_penalty = 1.0` restoring the pre-2026-07-31 payload BYTE-FOR-BYTE (llama.cpp
+   treats 1.0 as the identity, so the off switch must omit the fields entirely rather than send
+   a small value).
+2. Check the candidate for MECHANICAL defects through
+   `arc_engine_static_validation.validate_engine_code` before accepting it, and on a defect
+   re-ask ONCE with a block that names NOTHING about what went wrong.
+3. Never convert an accept into a hard failure. The re-ask SHALL be spent only while an attempt
+   remains; on the last try the defective candidate SHALL be accepted exactly as before.
+4. Keep the two interventions INDEPENDENTLY disableable, because they carry very different
+   weight — the penalty carries 11 of the 13 paired wins and the re-ask 2.
+
+**SCOPE — the shipped condition SHALL equal the measured condition.** Both interventions are
+armed on `codeonly_eligible AND "engine" in required`, and on nothing else. `refactor()` is a
+reasoning task on a different prompt shape. The focused goal-only call in `_split_induce`
+(`required=("is_level_complete",)`) is ALSO `codeonly_eligible`, and as first wired it inherited
+the penalty although Phase 1 sent ENGINE prompts only; that was narrowed 2026-07-31 after the
+adversarial review, in the conservative direction — with no measurement in either direction the
+goal-only call's correct state is the long-standing no-penalty baseline every banked result was
+produced under.
+
+**WHAT IS CLAIMED: VALIDITY AND COST.** Attempts producing a mechanically-usable engine
+**13/36 → 22/36**; wall clock **47.2 s per attempt against 100.3 s** (65.2 s charging the
+re-ask); calls hitting the 4096-token cap **20/36 → 2/36**; `missing_return` **13 → 2**.
+
+**WHAT IS NOT CLAIMED: QUALITY.** Restricted to the games whose held-out set contains a CHANGING
+transition, strict out-of-sample quality is **4/36 in both arms — identical**. The whole
+strict-funnel gain (2/6 games → 3/6) is ft09, which has zero held-out changing rows and passes
+only on the weaker no-op fallback. On tu93 and sc25 NO arm ever produced a correct engine at any
+budget. Nothing here fixes induction.
+
+**THE INFERENCE SHALL BE REPORTED CLUSTERED BY GAME.** The 36 pairs are 6 games × 6 resamples of
+ONE prompt each; resamples of one prompt are not independent draws from the population the claim
+generalizes to, which is NEW GAMES. Reporting the within-prompt p alone is pseudo-replication.
+
+#### SCENARIO-ARC-FCP-5699-41-1: The penalty reaches the ENGINE induce payload and nothing else
+- **WHEN** `generate()` is called with `codeonly_eligible=True` and `engine` in `required`
+- **THEN** the payload SHALL carry `repeat_penalty` and `repeat_last_n`; and WHEN it is called
+  with `codeonly_eligible=False`, or with `codeonly_eligible=True` but `engine` absent from
+  `required` (the goal-only call), the payload SHALL carry NEITHER field.
+
+#### SCENARIO-ARC-FCP-5699-41-2: A defective engine is re-asked, not accepted
+- **WHEN** a candidate parses and defines the required symbols but carries a mechanical defect,
+  and an attempt remains
+- **THEN** it SHALL be rejected and re-asked exactly once, with a block naming nothing about the
+  defect; a CLEAN candidate SHALL never trigger a re-ask.
+
+#### SCENARIO-ARC-FCP-5699-41-3: The gate can never break the path it guards
+- **WHEN** the defect budget is exhausted, or the validator itself raises for any reason
+- **THEN** `generate()` SHALL degrade to its pre-2026-07-31 accept-everything behaviour and
+  return the candidate, NEVER a hard failure and never an exception. Removing the
+  attempt-remains guard is a mutation this requirement's tests SHALL kill.
+
+#### SCENARIO-ARC-FCP-5699-41-4: The off switches are exact
+- **WHEN** `CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0` is set
+- **THEN** the payload SHALL be byte-identical to the pre-2026-07-31 one (fields omitted, not set
+  to 1.0); and WHEN `CARNOT_ARC_INDUCE_DEFECT_REASKS=0` is set, the defect re-ask SHALL be
+  disabled WITHOUT disabling the penalty. A malformed value SHALL fall back rather than raise.
+
+#### SCENARIO-ARC-FCP-5699-41-5: A quality claim SHALL NOT be made from this change
+- **WHEN** any artifact, capstone or note cites this requirement's measurement
+- **THEN** it SHALL report the game-clustered inference as primary (p = 0.125, 4 games better,
+  0 worse, 2 tied) with the within-prompt p = 0.049 labelled as such; SHALL state the
+  change-gradable-only strict counts (4/36 vs 4/36); and SHALL NOT claim the change improves
+  engine quality, the funnel of games reaching the policy, or banked levels.
+
+## Implementation Status (REQ-ARC-FCP-5699-41)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-FCP-5699-41 | `python/carnot/agentic/arc_executable_world_model.py` — `_INDUCE_REPEAT_PENALTY` (1.1) / `_INDUCE_REPEAT_LAST_N` (256) / `_INDUCE_DEFECT_REASKS` (1) / `_INDUCE_PLAIN_REASK_BLOCK`, applied in `LocalGGUFProposer.generate()` under `_engine_induce_call` (`codeonly_eligible AND "engine" in required` — the same condition as `_defect_check_on`, named separately so narrowing one cannot move the other); defect check via `LocalGGUFProposer._engine_defects` → `arc_engine_static_validation.validate_engine_code` (see REQ-ARC-WMTE-6052 CORRECTION #2, which records that this wiring superseded that module's standalone status). `repair_prompt_block()` deliberately UNWIRED: defect-naming text measured p = 1.000 against the neutral block. Env: `CARNOT_ARC_INDUCE_REPEAT_PENALTY` (1.0 = byte-identical off), `CARNOT_ARC_INDUCE_DEFECT_REASKS` (0 = off, independent of the penalty). | `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` — 15 tests. **Mutation-proven:** the original 13 killed 3 mutations including removal of the `attempt < tries - 1` safety guard (which the first draft got WRONG — the `continue` fell through to the content-failure return, caught by the mutation check and not by review); the 2 added 2026-07-31 pin the narrowed scope from BOTH sides and kill "widen the penalty back to `codeonly_eligible`" and "drop the penalty entirely". **Measurement:** `results/arc_induce_confirm_20260731/confirm_scored.json` — 36 attempt-matched pairs, 6 games, gemma-4-31B-it Q4_K_M, CUDA build proven from `/proc/<pid>/exe` + 21416 MiB per-PID VRAM on distinct bus IDs, one server process per GPU shared by both arms, scored OUT-OF-SAMPLE against a proven held-out split (`split.json`). Usable 13/36 → 22/36 (within-prompt p = 0.049; **game-clustered p = 0.125**, permutation p = 0.125, 4 better / 0 worse / 2 tied, min reachable clustered p 0.031); strict quality on change-gradable games 4/36 both arms; cost 100.3 s → 47.2 s per attempt. **Config caveat:** measured at `CARNOT_ARC_INDUCE_N_CTX=32768`, while the shipped `_default_induce_n_ctx()` still returns 81920 — the COST half is completion-budget sensitive and is conditioned on 32768 until the default is fixed or the treatment re-measured at it. **Live pre-flight (`results/arc_phase3_preflight_20260731/`) REFUSED a banked-levels grid:** the wired change produced 17 distinct engines across 17 cells and byte-identical action traces in 4 of 4 comparable A/B pairs, so no endpoint downstream of the actions could reach alpha (minimum reachable p = 1.0). The re-ask half fired 0 times in all 17 live cells — Phase 1's 22-of-36 defective-accept rate did not reproduce live, which is "the tier never fired", not "the tier did not help". |
