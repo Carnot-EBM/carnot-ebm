@@ -4,7 +4,99 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-31 (outer-loop, MEASURED — the ARC test selection is ORDER-UNSTABLE under xdist, so a failure count is not a fact about the tree)
+
+**What was measured.** The pinned selection `pytest tests/python -q --no-cov -p no:randomly -k "arc"`,
+run repeatedly from the CANONICAL repo with a clean tree:
+
+| tree | sample 1 | sample 2 | sample 3 | sample 4 |
+|---|---|---|---|---|
+| `7d81fa816` (pre-session) | 52 failed / 8197 passed | 53 failed / 8196 passed | — | — |
+| `e17e6334f` (this session) | 31 failed / 8242 passed | 25 failed | — | — |
+
+Same command, same tree, same `-p no:randomly`: **31 then 25**. Three tests
+(`4664::..._post_boundary_stall_uses_l2_reinduction`,
+`4676::..._e3_routes_subgoal_search_option`, `4677::..._e3_routes_factored_planner_option`)
+appear in the failure set on some samples and not others — in the SAME tree — and all three PASS
+in isolation (`-n 0`, 3 passed in 5.81s). `4676`'s failure is `KeyError:
+'enable_subgoal_search'`, i.e. the monkeypatched reinduction was reached without a kwarg a
+sibling test's environment governs: cross-test state leaking between xdist workers, whose
+distribution changes with the worker split.
+
+**Why this matters more than the count.** "All N failures reproduce at HEAD" is the sentence this
+project uses to clear a commit, and it is not a well-formed claim while the failure set is a
+random variable. It also means a real regression can hide inside the variance. Any such claim must
+now name (a) the exact selection string, (b) that the tree was clean at the start, and (c) how
+many samples were taken — and a NEW failure must be confirmed in isolation before it is called
+new, exactly as the three above were disconfirmed.
+
+**Also measured: collection itself is unstable.** `pytest tests/python --collect-only` reports
+**52,526 items** in the current tree; the same selection has previously reported ~9,657. Since the
+suite's own writes change what is collected (see the worktree entry above), a run's denominator is
+not stable either, which is why the table above quotes passed-counts rather than percentages.
+
+**Not fixed.** Candidate directions, none applied: run the ARC selection with `-n 0` in CI (serial,
+slow, but deterministic); or find and fix the tests that mutate process-global/env state without
+restoring it (`enable_subgoal_search` is the first thread to pull). Until then, treat any ARC
+failure-count delta under ±8 as noise.
+
+### 2026-07-31 (outer-loop, ROOT-CAUSED — a mutation harness run from a WORKTREE rewrites the CANONICAL repo)
+
+**The symptom.** Test runs launched from a git worktree were observed rewriting tracked historical
+artifacts in `/home/ianblenke/github.com/ianblenke/carnot` — `run_date`, `started_at`,
+`duration_s`, `reproducibility_checksum` churn on experiment_1035 / 1038 / 1081 / 1089 / 1103 /
+1717 / 2754 / 3350 and, in an earlier instance, on 2427 / 3351 / 4162 / 4170 / 2083 / 2093 / 2516.
+Two of those (`experiment_4162` / `experiment_4170_sota_ingestion_verifier_moat_guidance.json`)
+lost 15 lines each — content deletion, i.e. a never-prune violation had it been committed.
+Worktree isolation did not protect the operator's tree, which is the part that made this look
+impossible.
+
+**The mechanism, found 2026-07-31.** It is a two-part composition and neither part is wrong alone:
+
+1. **Mutation harnesses hardcode the canonical repo and run pytest there.** Every one of them does
+   `REPO = "/home/ianblenke/github.com/ianblenke/carnot"` then
+   `subprocess.run([PY, "-m", "pytest", ...], cwd=REPO)`. Confirmed in
+   `results/arc_goal_gate_depth_20260731/harness/mutation_check.py`,
+   `results/arc_engine_validation_20260731/harness/mutation_check.py`,
+   `results/generator_concurrency_fix_20260727/{mutate,refresh,build_fix_artifact}.py`,
+   `results/inducer_h2h_6021/build_artifact_6021.py`. So a harness invoked from a worktree edits
+   and tests the CANONICAL sources regardless of where it was launched. (It restores them
+   byte-identically and verifies the digest — but only at the end, and only the files it mutated.)
+2. **Experiment scripts write artifacts to CWD-relative paths.** e.g.
+   `scripts/experiment_1035_dualgpu_rocm_v3.py` has
+   `RESULT_PATH = Path("results/experiment_1035_dualgpu_rocm_v3.json")`, and
+   `tests/python/test_experiment_1035_dualgpu_rocm_v3.py::test_main_writes_well_formed_artifact`
+   calls `main()` directly. With CWD forced to the canonical repo by (1), the write lands on the
+   canonical artifact instead of the worktree's copy.
+
+**What to do until it is fixed.** After ANY harness or suite run, `git status` in the CANONICAL
+repo before `git add`, and CONTENT-diff (not timestamp-glance) anything under `results/` that
+appears — `scripts/test_suite_mutation_check.py --check` flags the files but does not tell you
+whether a data line moved. The pre-commit hook "A test run that rewrote tracked files may not be
+committed unresolved" is the backstop, not the fix.
+
+**Candidate fixes, none applied (operator's call).** (a) Derive `REPO` in the harnesses from
+`git rev-parse --show-toplevel` of the harness's own location rather than a hardcoded literal, so a
+worktree run stays in its worktree — cheapest, and fixes part 1 for every future harness. (b) Make
+experiment scripts resolve `RESULT_PATH` against a repo root derived from `__file__` rather than
+CWD — larger blast radius (hundreds of scripts) but fixes part 2 permanently. (c) A pytest fixture
+that fails any test whose run dirties a tracked `results/` file it did not declare. (a) alone
+removes the observed failure mode.
+
+
 ### 2026-07-31 (outer-loop, MEASURED — OPEN QUESTION FOR THE OPERATOR): the induce path accepts broken code 13 times in 15, and the cheapest fix is a re-ask whose CONTENT is unproven
+
+> **CORRECTION 2026-07-31 (adversarial review; text below preserved unedited per never-prune).**
+> "A second ask lifts games reaching a non-degenerate engine from 1 of 5 to 3 of 5" must not be
+> read as a funnel number. That measurement's `usable_definition` is PARSE-LEVEL
+> (`generate_would_accept` is "it parses and defines the two functions"), not the semantic trust
+> gate, and "reaching" is reserved in this project for reaching the POLICY. Restated: **1 of 5 ->
+> 3 of 5 attempts produced PARSEABLE, NON-INERT code offline; the live funnel is unchanged at 1 of
+> 6.** The 3 also counts tu93, whose engine scores `cell_recall 0.112` with 144 invented cells and
+> 0 of 25 changes correct — it clears "non-inert" by changing the grid WRONGLY. On the artifact's
+> own STRONG bar the per-arm counts are round-0 {tn36} = 1, repair {sc25, tn36} = 2, control
+> {ft09} = 1, so the **net new strong game is sc25 alone, n = 1, paired sign test p = 1.000**. The
+> arm-A finding below is unaffected and is not close.
 
 **What is settled.** Four of the five ARC induction failures the 2026-07-30 audit catalogued are
 mechanically detectable before the trust gate: ft09 and tu93 by an AST fall-through check, lp85 by a
