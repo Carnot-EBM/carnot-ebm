@@ -1,0 +1,138 @@
+{
+  "baseline_all_green": true,
+  "baseline_tail": [
+    "..........................................                               [100%]",
+    "============================== 42 passed in 3.14s =============================="
+  ],
+  "duration_s": 12.26,
+  "generated_by": "results/arc_engine_validation_20260731/harness/mutation_check.py",
+  "module_restored_byte_identical": true,
+  "mutations": [
+    {
+      "mutation": "if_without_else_terminates",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_ft09_frozen_engine_is_flagged_missing_return",
+        "test_tu93_shape_is_flagged_missing_return"
+      ],
+      "why": "The core of the ft09/tu93 detection: an `if` with no `else` can be skipped, so it cannot terminate a path. Claiming it does blinds the checker to exactly the shape both games failed on."
+    },
+    {
+      "mutation": "loops_always_terminate",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_loop_that_may_run_zero_times_IS_flagged"
+      ],
+      "why": "A `for`/`while` may execute zero times. Treating every loop as terminating is the single most tempting simplification and it silently accepts the tu93 shape."
+    },
+    {
+      "mutation": "while_true_not_special_cased",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_no_false_positive_on_terminating_shapes"
+      ],
+      "why": "The reverse error: `while True:` with no `break` never exits normally, so treating it like an ordinary loop REJECTS working code -- the false-positive direction."
+    },
+    {
+      "mutation": "break_binds_across_nested_loops",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_break_in_a_nested_loop_does_not_count_for_the_outer_one"
+      ],
+      "why": "`_has_break` must not count a `break` that belongs to an inner loop, or an outer `while True` looks exitable and a correct engine is rejected."
+    },
+    {
+      "mutation": "first_function_definition_wins",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_last_definition_wins"
+      ],
+      "why": "Python binds the LAST definition. Grading the first grades a function that never runs."
+    },
+    {
+      "mutation": "try_without_finally_always_terminates",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_try_except_falling_through_IS_flagged"
+      ],
+      "why": "A try/except whose body and handlers all fall through plainly falls through; claiming otherwise hides a real defect inside a try block."
+    },
+    {
+      "mutation": "goal_arm_removed_from_dry_run",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_lp85_unbound_local_is_caught_by_the_goal_dry_run",
+        "test_goal_returning_an_array_is_flagged_not_boolean"
+      ],
+      "why": "lp85's observed failure is raised by `is_level_complete`, not `engine`. Dropping the goal arm makes the validator silently miss one of the four failures it exists for."
+    },
+    {
+      "mutation": "truncation_ignores_whether_symbols_arrived",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_truncation_not_flagged_when_capped_but_complete"
+      ],
+      "why": "Hitting the cap AFTER writing both functions loses nothing. Flagging it anyway would throw away usable engines and retry forever."
+    },
+    {
+      "mutation": "truncation_does_not_short_circuit",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_truncation_short_circuits_the_other_checks"
+      ],
+      "why": "A truncated file has no end, so 'it never returns' is a false statement about it. Reporting both would send a half-written file back as a repair."
+    },
+    {
+      "mutation": "repair_prompt_includes_unrepairable",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_repair_prompt_carries_the_exception_text_and_omits_truncation"
+      ],
+      "why": "A truncation in the repair block spends the very budget the retry needs."
+    },
+    {
+      "mutation": "dry_run_grades_predictions",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_dry_run_does_NOT_report_a_merely_wrong_prediction"
+      ],
+      "why": "Reporting a merely-wrong prediction turns this defect scanner into a second, weaker trust gate -- the exact thing the module docstring forbids."
+    },
+    {
+      "mutation": "bare_return_not_flagged",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_explicit_return_none_is_flagged",
+        "test_bare_return_is_flagged"
+      ],
+      "why": "`return` and `return None` hand the caller None just as surely as falling off the end."
+    }
+  ],
+  "n_mutations": 12,
+  "n_proved": 12,
+  "run_date": "2026-07-31T04:56:01Z"
+}
