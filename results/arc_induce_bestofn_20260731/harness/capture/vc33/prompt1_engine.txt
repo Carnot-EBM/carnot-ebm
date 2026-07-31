@@ -1,0 +1,183 @@
+/no_think
+CRITICAL OUTPUT RULES -- obey EXACTLY:
+1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.
+2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write
+   step-by-step analysis, explanation, or commentary -- not even as comments.
+3. Your response MUST begin with the characters ```python and end with ```.
+4. Induce SIMPLE, GENERAL rules and write the requested function(s) directly. Skip all reasoning.
+
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'hgb6a5e8'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 3, 4, 5, 7, 9, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/hgb6a5e8/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:7x64
+r1:0x52,3x12
+r2:0x52,3x12
+r3:0x52,3x12
+r4:0x52,3x12
+r5:0x52,3x12
+r6:0x52,3x12
+r7:0x52,3x12
+r8:0x52,3x12
+r9:0x52,3x12
+r10:0x52,3x12
+r11:0x52,3x12
+r12:0x52,3x12
+r13:0x52,3x12
+r14:0x52,3x12
+r15:0x52,3x12
+r16:9x4,0x48,3x12
+r17:9x4,0x48,3x12
+r18:9x4,0x48,3x12
+r19:9x4,0x48,3x12
+r20:5x56,3x8
+r21:5x56,3x8
+r22:5x56,3x8
+r23:5x56,3x8
+r24:9x4,0x8,3x52
+r25:9x4,0x8,3x52
+r26:9x4,0x8,3x52
+r27:9x4,0x8,3x52
+r28:0x12,3x52
+r29:0x12,3x52
+r30:0x12,3x52
+r31:0x12,3x52
+r32:0x12,3x52
+r33:0x12,3x52
+r34:0x12,3x52
+r35:0x12,3x52
+r36:9x4,0x8,3x52
+r37:9x4,0x8,3x52
+r38:9x4,0x8,3x52
+r39:9x4,0x8,3x52
+r40:5x28,14x2,5x14,3x20
+r41:5x28,14x2,5x14,3x20
+r42:5x28,14x2,5x14,3x20
+r43:5x28,14x2,5x14,3x20
+r44:9x4,0x4,3x56
+r45:9x4,0x4,3x56
+r46:9x4,0x4,3x56
+r47:9x4,0x4,3x56
+r48:0x8,3x56
+r49:0x8,3x56
+r50:0x8,3x56
+r51:0x8,3x56
+r52:0x8,14x2,4x2,3x52
+r53:0x8,14x2,4x2,3x52
+r54:0x8,14x2,4x4,3x50
+r55:0x8,14x2,4x4,3x50
+r56:0x8,14x2,4x2,3x52
+r57:0x8,14x2,4x2,3x52
+r58:0x8,3x56
+r59:0x8,3x56
+r60:0x8,3x56
+r61:0x8,3x56
+r62:0x8,3x56
+r63:0x8,3x56
+--- ACTION6 data={'x': 1, 'y': 25} (level 1->1): changed cells (FULL, run-length) = r0c63:4x1 r1c48:3x4 r2c48:3x4 r3c48:3x4 r4c48:3x4 r5c48:3x4 r6c48:3x4 r7c48:3x4 r8c48:3x4 r9c48:3x4 r10c48:3x4 r11c48:3x4 r12c48:3x4 r13c48:3x4 r14c48:3x4 r15c48:3x4 r16c48:3x4 r17c48:3x4 r18c48:3x4 r19c48:3x4 r24c12:0x4 r25c12:0x4 r26c12:0x4 r27c12:0x4 r28c12:0x4 r29c12:0x4 r30c12:0x4 r31c12:0x4 r32c12:0x4 r33c12:0x4 r34c12:0x4 r35c12:0x4 r36c12:0x4 r37c12:0x4 r38c12:0x4 r39c12:0x4
+BOARD AT THE START OF THE CURRENT LEVEL (full grid, run-length encoded; captured just after the previous level completed, so this is the CURRENT level's opening layout). Use it for the object vocabulary, palette and geometry. It is NOT a level-complete state -- is_level_complete must return False here, because a level is not complete at its opening screen:
+r0:7x64
+r1:0x52,3x12
+r2:0x52,3x12
+r3:0x52,3x12
+r4:0x52,3x12
+r5:0x52,3x12
+r6:0x52,3x12
+r7:0x52,3x12
+r8:0x52,3x12
+r9:0x52,3x12
+r10:0x52,3x12
+r11:0x52,3x12
+r12:0x52,3x12
+r13:0x52,3x12
+r14:0x52,3x12
+r15:0x52,3x12
+r16:9x4,0x48,3x12
+r17:9x4,0x48,3x12
+r18:9x4,0x48,3x12
+r19:9x4,0x48,3x12
+r20:5x56,3x8
+r21:5x56,3x8
+r22:5x56,3x8
+r23:5x56,3x8
+r24:9x4,0x8,3x52
+r25:9x4,0x8,3x52
+r26:9x4,0x8,3x52
+r27:9x4,0x8,3x52
+r28:0x12,3x52
+r29:0x12,3x52
+r30:0x12,3x52
+r31:0x12,3x52
+r32:0x12,3x52
+r33:0x12,3x52
+r34:0x12,3x52
+r35:0x12,3x52
+r36:9x4,0x8,3x52
+r37:9x4,0x8,3x52
+r38:9x4,0x8,3x52
+r39:9x4,0x8,3x52
+r40:5x28,14x2,5x14,3x20
+r41:5x28,14x2,5x14,3x20
+r42:5x28,14x2,5x14,3x20
+r43:5x28,14x2,5x14,3x20
+r44:9x4,0x4,3x56
+r45:9x4,0x4,3x56
+r46:9x4,0x4,3x56
+r47:9x4,0x4,3x56
+r48:0x8,3x56
+r49:0x8,3x56
+r50:0x8,3x56
+r51:0x8,3x56
+r52:0x8,14x2,4x2,3x52
+r53:0x8,14x2,4x2,3x52
+r54:0x8,14x2,4x4,3x50
+r55:0x8,14x2,4x4,3x50
+r56:0x8,14x2,4x2,3x52
+r57:0x8,14x2,4x2,3x52
+r58:0x8,3x56
+r59:0x8,3x56
+r60:0x8,3x56
+r61:0x8,3x56
+r62:0x8,3x56
+r63:0x8,3x56
+
+
+Return ONLY one ```python code block defining engine(grid, action, data).
+```python
+
+```python
