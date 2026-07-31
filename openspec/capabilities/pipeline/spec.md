@@ -1659,8 +1659,16 @@ be idempotent: re-running when the section already exists MUST succeed without r
 
 **Statement:** The HuggingFace authentication token (HF_TOKEN) MUST be stored at rest using
 SOPS encryption (age or PGP key).  Plaintext HF_TOKEN values MUST NOT appear in any
-committed file.  The token MUST be decrypted at runtime via `sops -d secrets/hf_token.yaml`
-and injected into the conductor environment with `eval $(sops -d ... | grep HF_TOKEN)`.
+committed file.  The token MUST be decrypted at runtime via
+`sops -d secrets/hf_token.enc.yaml` and injected into the conductor environment with
+`eval $(sops -d ... | grep HF_TOKEN)`.  The decrypted value MUST reach the process only
+as an environment variable — never written back to disk.
+
+Corrected 2026-07-31 (security audit): this requirement previously named
+`secrets/hf_token.yaml`.  No such file exists — the real artifact is
+`secrets/hf_token.enc.yaml` — and that plaintext path was, at the time, not covered by
+`.gitignore`, so the spec named a committable plaintext location.  Both the ignore rules
+and the path are fixed; see `docs/sops-hf-token-setup.md`.
 
 **Why this matters:**
     Exp 777 (.59) revealed that HF_TOKEN was absent from the conductor environment,

@@ -56,8 +56,27 @@ tarpaulin-report.html
 !.env.enc
 secrets.*.yaml
 !secrets.*.enc.yaml
+# The dotted pattern above matches `secrets.prod.yaml` but NOT `secrets/hf_token.yaml`
+# — and `secrets/` is where this project actually keeps its credentials. The 2026-07-31
+# security audit confirmed via `git check-ignore` that `secrets/hf_token.yaml` was
+# committable, which is the exact plaintext path `docs/sops-hf-token-setup.md` used to
+# tell operators to create. Deny the whole directory, then re-admit only the SOPS
+# ciphertext. Anything decrypted into `secrets/` is now unstageable by construction.
+secrets/*
+!secrets/*.enc.yaml
+!secrets/*.enc
+# `ops/secrets.yaml` is referenced by two experiment scripts as a sops source; it lives
+# outside `secrets/` so the rule above cannot cover it.
+ops/secrets.yaml
 *.key
 *.pem
+# SSH private keys carry no extension, so `*.key` / `*.pem` never matched them.
+id_rsa
+id_ed25519
+id_ecdsa
+id_dsa
+*_rsa
+*_ed25519
 data/*.safetensors
 exports/**/model.safetensors
 .venv-npu

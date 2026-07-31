@@ -2,7 +2,7 @@
 # OPERATOR ACTION - run this script to push model artifacts to HuggingFace.
 #
 # Authentication: Source the SOPS-encrypted HF_TOKEN before running this script.
-#   eval $(sops -d secrets/hf_token.yaml | grep HF_TOKEN)
+#   eval $(sops -d secrets/hf_token.enc.yaml | grep HF_TOKEN)
 #   export HF_TOKEN
 #
 # Or set HF_TOKEN in your environment via another secure mechanism.
@@ -21,7 +21,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODELS_DIR="${REPO_ROOT}/models"
-SECRETS_FILE="${REPO_ROOT}/secrets/hf_token.yaml"
+SECRETS_FILE="${REPO_ROOT}/secrets/hf_token.enc.yaml"
 
 # ---------------------------------------------------------------------------
 # Authentication: inject HF_TOKEN from SOPS if not already set
@@ -33,7 +33,7 @@ if [ -z "${HF_TOKEN:-}" ]; then
         export HF_TOKEN
     else
         echo "ERROR: HF_TOKEN not set and ${SECRETS_FILE} not found."
-        echo "Run: eval \$(sops -d secrets/hf_token.yaml | grep HF_TOKEN)"
+        echo "Run: eval \$(sops -d secrets/hf_token.enc.yaml | grep HF_TOKEN)"
         echo "See docs/sops-hf-token-setup.md for setup instructions."
         exit 1
     fi
