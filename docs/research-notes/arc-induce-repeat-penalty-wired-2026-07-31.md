@@ -139,10 +139,57 @@ published numbers with fresh nondeterministic ones. Paying that to land a commen
 change whose value is unchanged at 4096 is not proportionate. The patch remains prepared and
 applies cleanly.
 
-## What the next measurement is
+## Phase 3: the 12-cell grid is underpowered, and no GPU time was needed to know it
 
-Phase 3 (the banked-levels grid) must not be run until
-`python/carnot/analysis/treatment_activation_preflight.py` says the wired change perturbs ≥ 6/12
-cells attributably. A refusal there is a success — it is the discipline three earlier nulls
-lacked. Nothing in this note is evidence that banked levels will move; Phase 1 says the tier now
-produces working code more often and says nothing about whether working code solves anything.
+Phase 3 was gated on `python/carnot/analysis/treatment_activation_preflight.py`: run the pre-flight
+first, and if the change does not perturb ≥ 6 of 12 cells attributably, do not run the grid.
+
+**The pre-flight was not run live, because the grid it screens is refusable on arithmetic, and the
+arithmetic is grounded in 36 paired live inductions rather than an argument.** The pre-flight's own
+doctrine says the verdict is settled the moment the required count is unreachable, and that every
+cell after that point is pure cost.
+
+The bound is a strict one, and it does not depend on guessing a mechanism. **Banked levels is
+downstream of the induced engine**: a cell where both arms produce the same induce outcome cannot
+differ on banked levels. So the per-cell probability of a discordant *endpoint* is bounded above by
+the per-cell probability of a discordant *induce* result — which Phase 1 measured directly, on the
+real induce prompts of all six games.
+
+`min_one_way_discordant_pairs(0.05) = 6`, so 6 of 12 cells must be discordant **and all six must
+fall the same way**.
+
+| perturbation channel | P(discordant)/cell | expected discordant of 12 | expected one-way | P(reach 6 one-way) | cells for a 50% chance |
+|---|---|---|---|---|---|
+| **A** — tracks strict quality (an engine good enough to pass the unchanged trust gate) | 5/36 = 0.139 | 1.7 | 1.0 | **0.000** | 68 |
+| **B** — tracks mere usability (any mechanically-valid engine changes behaviour) | 17/36 = 0.472 | 5.7 | 4.3 | **0.238** | 16 |
+
+**Channel B is the upper bound**, because `usable` discordance is the most permissive notion of
+"the two arms differed at induce at all". So for the grid as specified:
+
+> **P(the 12-cell banked-levels grid reaches p < 0.05) ≤ 0.24**, even granting that every induce
+> difference propagates all the way to a banked level.
+
+Roughly three runs in four would return an uninterpretable null *even if the treatment works
+exactly as measured*. That is the same shape as the three nulls that paid for this pre-flight, and
+it is why the grid must not be run at 12 cells.
+
+**Which channel is real is the thing the live pre-flight would settle**, and it is worth settling,
+because it changes the required grid from 16 cells to 68 — the difference between an affordable
+experiment and one that is not worth running at all. The distinction is concrete: the defect gate
+raises the supply of *valid* engines a lot (13/36 → 22/36) and the supply of *correct* ones not at
+all (3 treatment-only against 2 control-only, p = 1.000). Whether the agent's action trace responds
+to the first or only to the second is unmeasured, and the trust gate — which admits on correctness
+and which the gate-rejection audit found was rejecting correctly every time — is untouched by this
+change. Channel A is therefore the more likely of the two, and it is the one that says 68.
+
+**What would decide it, and what it costs honestly.** A live A/B on 3–4 games with
+`CARNOT_ARC_GENERATOR_SEED` pinned, both arms in one server process, plus an A/A control on the
+same cells — the A/A is not optional, since a provably-same-code A/A diverged on 1 of 2 pairs on
+2026-07-30, so residual nondeterminism survives the seed and its rate is unknown. On this path one
+induction is 200–1200 s and an episode is many inductions, so this is hours, not minutes; a prior
+probe died at 3.2 h with 4 of 12 cells never launched. It should be run against a wall budget with
+the verdict checked as cells land, and it should report the per-cell perturbation rate — the
+quantity that picks 16 vs 68 — rather than a go/no-go.
+
+Nothing here is evidence that banked levels will move. Phase 1 says the tier now produces working
+code more often, and says nothing about whether working code solves anything.

@@ -1,0 +1,92 @@
+{
+ "experiment": "arc_induce_wiring_20260731",
+ "title": "Phase 2 wiring of repeat_penalty + plain re-ask; Phase 3 grid refused as underpowered",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "substrate_note": "No model is loaded. Every number here is read from results/arc_induce_confirm_20260731/confirm_scored.json (Phase 1's 36 paired live inductions) or computed from the four artifact rebuilds performed under the changed module.",
+ "duration_s": 0.02,
+ "run_date": "2026-07-31",
+ "git_head": "d20533033560a06020bba79537b4c89a821465a5",
+ "random_seed": 0,
+ "reproducibility_checksum": "n/a-deterministic-arithmetic-over-cited-upstream-artifacts",
+ "cited_upstream_artifacts": [
+  {
+   "experiment_id": "arc_induce_confirm_20260731",
+   "fields_imported": [
+    "paired_tests.usable__treatment_final_vs_control",
+    "paired_tests.quality_strict__treatment_final_vs_control"
+   ]
+  }
+ ],
+ "phase2_wiring": {
+  "module": "python/carnot/agentic/arc_executable_world_model.py",
+  "changes": [
+   "repeat_penalty=1.1 + repeat_last_n=256 on the codeonly induce payload",
+   "defect gate via arc_engine_static_validation + one PLAIN re-ask"
+  ],
+  "env_reversible": {
+   "CARNOT_ARC_INDUCE_REPEAT_PENALTY": "1.0 restores the prior payload exactly",
+   "CARNOT_ARC_INDUCE_DEFECT_REASKS": "0 disables the re-ask"
+  },
+  "safety_invariant": "the defect gate can never convert an accept into a hard failure: it re-asks only while an attempt remains (attempt < tries - 1)",
+  "tests": "tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py (13 tests, 3 mutations killed)"
+ },
+ "artifact_discharge": {
+  "n_marked_stale": 7,
+  "method": "freshness_acknowledgement (NOT rebuild)",
+  "why_not_rebuild": "all four rebuildable artifacts DROPPED their accumulated freshness_acknowledgements and original_timings_superseded_by_rebuild block when rebuilt; the rebuilds were discarded and the published artifacts restored",
+  "differential_execution": [
+   {
+    "artifact": "experiment_6011_world_model_change_gate_four_arm",
+    "leaves": 48488,
+    "substantive_moved": 0
+   },
+   {
+    "artifact": "experiment_6012_hidden_state_trust_gate_hole",
+    "leaves": 20324,
+    "substantive_moved": 1,
+    "detail": "reproducibility_checksum only -- a hash OVER the dependency set"
+   },
+   {
+    "artifact": "experiment_6013_hidden_state_change_gate_closure",
+    "leaves": 7390,
+    "substantive_moved": 0
+   },
+   {
+    "artifact": "experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b",
+    "leaves": 1313,
+    "substantive_moved": 4,
+    "detail": "aggregation_wall_s + 3 code_provenance fields; every head-to-head statistic identical"
+   }
+  ],
+  "published_measurements_moved": 0
+ },
+ "phase3_preflight_bound": {
+  "verdict": "REFUSE_12_CELL_GRID_UNDERPOWERED",
+  "required_one_way_discordant_pairs": 6,
+  "cells_planned": 12,
+  "bounding_argument": "banked levels is DOWNSTREAM of the induced engine, so a cell whose two arms produce the same induce outcome cannot differ on banked levels; P(discordant endpoint) <= P(discordant induce), which Phase 1 measured directly",
+  "channels": [
+   {
+    "channel": "A_strict_quality",
+    "p_discordant_per_cell": 0.1388888888888889,
+    "p_one_way_given_discordant": 0.6,
+    "expected_one_way_of_12": 1.0,
+    "p_reach_significance": 0.0002,
+    "cells_for_50pct": 68
+   },
+   {
+    "channel": "B_usability_UPPER_BOUND",
+    "p_discordant_per_cell": 0.4722222222222222,
+    "p_one_way_given_discordant": 0.7647058823529411,
+    "expected_one_way_of_12": 4.33,
+    "p_reach_significance": 0.2378,
+    "cells_for_50pct": 16
+   }
+  ],
+  "upper_bound_p_grid_reaches_p05": 0.2378,
+  "live_preflight_run": false,
+  "why_not_run": "the grid is refusable on this bound alone, and the pre-flight's own doctrine is that every cell after the verdict is settled is pure cost. What a live pre-flight would add is WHICH channel is real, which sets the required grid at 16 vs 68 cells."
+ },
+ "honest_verdict": "complete_wired_repeat_penalty_and_reask_into_live_induce_path_7_artifacts_discharged_by_acknowledgement_zero_published_measurements_moved_phase3_12cell_grid_refused_underpowered_upper_bound_p_reach_0.238",
+ "what_is_not_claimed": "that this improves engine QUALITY (Phase 1: p = 1.000) or that banked levels will move. No scored or online ARC game was played; nothing was submitted."
+}
