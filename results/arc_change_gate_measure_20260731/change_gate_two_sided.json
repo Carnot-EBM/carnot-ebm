@@ -1,0 +1,1046 @@
+{
+ "admission_swap_vs_incumbent": {
+  "cell_recall_0.5__admit_to_reject": [
+   "ft09-onb"
+  ],
+  "cell_recall_0.5__reject_to_admit": [],
+  "exact_0.5__admit_to_reject": [
+   "lp85-on"
+  ],
+  "exact_0.5__reject_to_admit": []
+ },
+ "duration_s": 0.4418,
+ "experiment": "arc_change_gate_two_sided_measurement",
+ "flag_default_unchanged": true,
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "n_rows": 9,
+ "n_usable": 8,
+ "question": "Does the REQ-ARC-WMTE-6011 change-aware trust gate catch the vacuous engines the 2026-07-30 force-admit audit named (lp85-on: 96 invented cells, 0 of 2 real changes right; ft09-onb: a hallucinated change on 19 of 19 no-ops) AND still pass the one structurally sound engine in that run (tn36-on)?",
+ "random_seed": 1,
+ "reproducibility_checksum": "a5e050d7cb0937b4bdb03bacbd740efc",
+ "rows": [
+  {
+   "arm": "on",
+   "audit_refinement_round_heldout": [
+    0.0,
+    1.0,
+    1.0
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "degenerate_goal_predicate",
+    "goal_predicate_error"
+   ],
+   "audit_src_engine_sha256": "a006fc8330b7c114",
+   "audit_terminal_skipped": "goal_predicate_error",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "change_fidelity_below_threshold"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 2,
+   "engine_sha256_16": "a006fc8330b7c114",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 96,
+     "measured": 96
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 2,
+     "measured": 2
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 23,
+     "measured": 23
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.92,
+     "measured": 0.92
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.4369,
+     "measured": 0.4369
+    }
+   },
+   "game": "lp85",
+   "heldout": {
+    "accuracy": 1.0,
+    "cell_recall": 0.0,
+    "change_fidelity": 0.0,
+    "change_gate_passed": false,
+    "change_gate_reason": "no_changing_transitions",
+    "correct_changed_cells": 0,
+    "incumbent_admits_at_1.0": true,
+    "invented_changed_cells": 0,
+    "n_changing": 0,
+    "n_noop": 8,
+    "n_noop_hallucinated": 0
+   },
+   "incumbent_accuracy_at_0.5": true,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.92,
+    "cell_recall": 0.43686,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.375367,
+    "correct_changed_cells": 256,
+    "invented_change_rate": 48.0,
+    "invented_changed_cells": 96,
+    "n_changes_correct": 0,
+    "n_changing": 2,
+    "n_noop": 23,
+    "n_noop_hallucinated": 0,
+    "noop_channel_measurable": true,
+    "noop_hallucination_rate": 0.0,
+    "spurious_changed_cells": 416
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": false,
+   "status": "ok"
+  },
+  {
+   "arm": "onb",
+   "audit_refinement_round_heldout": [
+    0.0,
+    1.0,
+    1.0
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "degenerate_goal_predicate",
+    "goal_predicate_error"
+   ],
+   "audit_src_engine_sha256": "80f95c36e87729da",
+   "audit_terminal_skipped": "world_model_accuracy_below_threshold",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "degenerate_engine_no_correct_changed_cells"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 2,
+   "engine_sha256_16": "80f95c36e87729da",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 2,
+     "measured": 2
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 23,
+     "measured": 23
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 23,
+     "measured": 23
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    }
+   },
+   "game": "lp85",
+   "heldout": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_fidelity": 0.0,
+    "change_gate_passed": false,
+    "change_gate_reason": "no_changing_transitions",
+    "correct_changed_cells": 0,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 0,
+    "n_noop": 8,
+    "n_noop_hallucinated": 8
+   },
+   "incumbent_accuracy_at_0.5": false,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.0,
+    "correct_changed_cells": 0,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 0,
+    "n_changing": 2,
+    "n_noop": 23,
+    "n_noop_hallucinated": 23,
+    "noop_channel_measurable": true,
+    "noop_hallucination_rate": 1.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": false,
+   "status": "ok"
+  },
+  {
+   "arm": "on",
+   "audit_refinement_round_heldout": [
+    0.125,
+    null
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "proposer_failed"
+   ],
+   "audit_src_engine_sha256": "c5ca8b1f168aae00",
+   "audit_terminal_skipped": "world_model_accuracy_below_threshold",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "degenerate_engine_no_correct_changed_cells"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 6,
+   "engine_sha256_16": "c5ca8b1f168aae00",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 6,
+     "measured": 6
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 19,
+     "measured": 19
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 19,
+     "measured": 19
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    }
+   },
+   "game": "ft09",
+   "heldout": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_fidelity": 0.0,
+    "change_gate_passed": false,
+    "change_gate_reason": "degenerate_engine_no_correct_changed_cells",
+    "correct_changed_cells": 0,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 4,
+    "n_noop": 4,
+    "n_noop_hallucinated": 4
+   },
+   "incumbent_accuracy_at_0.5": false,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.0,
+    "correct_changed_cells": 0,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 0,
+    "n_changing": 6,
+    "n_noop": 19,
+    "n_noop_hallucinated": 19,
+    "noop_channel_measurable": true,
+    "noop_hallucination_rate": 1.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": false,
+   "status": "ok"
+  },
+  {
+   "arm": "onb",
+   "audit_refinement_round_heldout": [
+    0.5,
+    0.0,
+    0.5
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "heldout_transition_verification_failed",
+    "heldout_transition_verification_failed"
+   ],
+   "audit_src_engine_sha256": "7924ffc59976e68c",
+   "audit_terminal_skipped": "world_model_accuracy_below_threshold",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "engine_hallucinates_changes_on_noop_transitions"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 6,
+   "engine_sha256_16": "7924ffc59976e68c",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 6,
+     "measured": 6
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 19,
+     "measured": 19
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 19,
+     "measured": 19
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.9474,
+     "measured": 0.9474
+    }
+   },
+   "game": "ft09",
+   "heldout": {
+    "accuracy": 0.0,
+    "cell_recall": 0.947368,
+    "change_fidelity": 0.947368,
+    "change_gate_passed": false,
+    "change_gate_reason": "engine_hallucinates_changes_on_noop_transitions",
+    "correct_changed_cells": 144,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 4,
+    "n_noop": 4,
+    "n_noop_hallucinated": 4
+   },
+   "incumbent_accuracy_at_0.5": false,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": true,
+   "measured": {
+    "accuracy": 0.0,
+    "cell_recall": 0.947368,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.947368,
+    "correct_changed_cells": 216,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 0,
+    "n_changing": 6,
+    "n_noop": 19,
+    "n_noop_hallucinated": 19,
+    "noop_channel_measurable": true,
+    "noop_hallucination_rate": 1.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": false,
+   "status": "ok"
+  },
+  {
+   "arm": "on",
+   "audit_refinement_round_heldout": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "audit_refinement_round_skips": [
+    "degenerate_goal_predicate",
+    "heldout_transition_verification_failed",
+    "heldout_transition_verification_failed"
+   ],
+   "audit_src_engine_sha256": "ee71e68bad5668c6",
+   "audit_terminal_skipped": "degenerate_goal_predicate",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": true,
+    "reason": "passed"
+   },
+   "decision_is_discriminating": false,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 25,
+   "engine_sha256_16": "ee71e68bad5668c6",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 1.0,
+     "measured": 1.0
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 1.0,
+     "measured": 1.0
+    }
+   },
+   "game": "tn36",
+   "heldout": {
+    "accuracy": 1.0,
+    "cell_recall": 1.0,
+    "change_fidelity": 1.0,
+    "change_gate_passed": true,
+    "change_gate_reason": "passed",
+    "correct_changed_cells": 8,
+    "incumbent_admits_at_1.0": true,
+    "invented_changed_cells": 0,
+    "n_changing": 8,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0
+   },
+   "incumbent_accuracy_at_0.5": true,
+   "incumbent_accuracy_at_1.0": true,
+   "incumbent_cell_recall_at_0.5": true,
+   "measured": {
+    "accuracy": 1.0,
+    "cell_recall": 1.0,
+    "change_accuracy": 1.0,
+    "change_fidelity": 1.0,
+    "correct_changed_cells": 25,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 25,
+    "n_changing": 25,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0,
+    "noop_channel_measurable": false,
+    "noop_hallucination_rate": 0.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": true,
+   "status": "ok"
+  },
+  {
+   "arm": "onb",
+   "audit_refinement_round_heldout": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "audit_refinement_round_skips": [
+    "degenerate_goal_predicate",
+    "heldout_transition_verification_failed",
+    "heldout_transition_verification_failed"
+   ],
+   "audit_src_engine_sha256": "be3fe7b9e34e19f4",
+   "audit_terminal_skipped": "world_model_accuracy_below_threshold",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "change_fidelity_below_threshold"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 25,
+   "engine_sha256_16": "be3fe7b9e34e19f4",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 12,
+     "measured": 12
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.48,
+     "measured": 0.48
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.48,
+     "measured": 0.48
+    }
+   },
+   "game": "tn36",
+   "heldout": {
+    "accuracy": 0.75,
+    "cell_recall": 0.75,
+    "change_fidelity": 0.75,
+    "change_gate_passed": true,
+    "change_gate_reason": "passed",
+    "correct_changed_cells": 6,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 8,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0
+   },
+   "incumbent_accuracy_at_0.5": false,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.48,
+    "cell_recall": 0.48,
+    "change_accuracy": 0.48,
+    "change_fidelity": 0.48,
+    "correct_changed_cells": 12,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 12,
+    "n_changing": 25,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0,
+    "noop_channel_measurable": false,
+    "noop_hallucination_rate": 0.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": true,
+   "status": "ok"
+  },
+  {
+   "arm": "on",
+   "audit_refinement_round_heldout": [
+    0.0,
+    null
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "proposer_failed"
+   ],
+   "audit_src_engine_sha256": "8517896591b06c68",
+   "audit_terminal_skipped": "world_model_accuracy_below_threshold",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "degenerate_engine_no_correct_changed_cells"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 25,
+   "engine_sha256_16": "8517896591b06c68",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    }
+   },
+   "game": "tu93",
+   "heldout": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_fidelity": 0.0,
+    "change_gate_passed": false,
+    "change_gate_reason": "degenerate_engine_no_correct_changed_cells",
+    "correct_changed_cells": 0,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 8,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0
+   },
+   "incumbent_accuracy_at_0.5": false,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.0,
+    "correct_changed_cells": 0,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 0,
+    "n_changing": 25,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0,
+    "noop_channel_measurable": false,
+    "noop_hallucination_rate": 0.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": true,
+   "status": "ok"
+  },
+  {
+   "arm": "onb",
+   "audit_refinement_round_heldout": [
+    0.0,
+    null
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "proposer_failed"
+   ],
+   "audit_src_engine_sha256": "dcdd53895615bb4e",
+   "audit_terminal_skipped": "world_model_accuracy_below_threshold",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "degenerate_engine_no_correct_changed_cells"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 25,
+   "engine_sha256_16": "dcdd53895615bb4e",
+   "engine_source_verified": true,
+   "fidelity_fields_agreeing": 8,
+   "fidelity_fields_compared": 8,
+   "fidelity_ok": true,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_changing": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "n_noop": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_noop_hallucinated": {
+     "agrees": true,
+     "audit": 0,
+     "measured": 0
+    },
+    "n_transitions": {
+     "agrees": true,
+     "audit": 25,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    },
+    "verify_cell_recall": {
+     "agrees": true,
+     "audit": 0.0,
+     "measured": 0.0
+    }
+   },
+   "game": "tu93",
+   "heldout": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_fidelity": 0.0,
+    "change_gate_passed": false,
+    "change_gate_reason": "degenerate_engine_no_correct_changed_cells",
+    "correct_changed_cells": 0,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 8,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0
+   },
+   "incumbent_accuracy_at_0.5": false,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.0,
+    "cell_recall": 0.0,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.0,
+    "correct_changed_cells": 0,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 0,
+    "n_changing": 25,
+    "n_noop": 0,
+    "n_noop_hallucinated": 0,
+    "noop_channel_measurable": false,
+    "noop_hallucination_rate": 0.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": true,
+   "status": "ok"
+  },
+  {
+   "arm": "on",
+   "audit_refinement_round_heldout": [
+    0.875,
+    0.0,
+    0.875
+   ],
+   "audit_refinement_round_skips": [
+    "heldout_transition_verification_failed",
+    "heldout_transition_verification_failed",
+    "heldout_transition_verification_failed"
+   ],
+   "audit_src_engine_sha256": "dd64c09be6834b0d",
+   "audit_terminal_skipped": "proposer_failed_or_missing_root",
+   "change_gate_off": {
+    "passed": true,
+    "reason": "gate_disabled"
+   },
+   "change_gate_on": {
+    "passed": false,
+    "reason": "change_fidelity_below_threshold"
+   },
+   "decision_is_discriminating": true,
+   "decision_is_vacuous": false,
+   "decision_population_n_changing": 7,
+   "engine_sha256_16": "dd64c09be6834b0d",
+   "engine_source_verified": true,
+   "fidelity_excluded_reason": "audit record has no populated comparison fields (terminal_skipped='proposer_failed_or_missing_root'); corpus identity unconfirmable, row reported but excluded from the verdict",
+   "fidelity_fields_agreeing": 0,
+   "fidelity_fields_compared": 0,
+   "fidelity_ok": false,
+   "fidelity_vs_audit": {
+    "invented_changed_cells": {
+     "agrees": false,
+     "audit": null,
+     "measured": 0
+    },
+    "n_changes_correct": {
+     "agrees": false,
+     "audit": null,
+     "measured": 1
+    },
+    "n_changing": {
+     "agrees": false,
+     "audit": null,
+     "measured": 7
+    },
+    "n_noop": {
+     "agrees": false,
+     "audit": null,
+     "measured": 18
+    },
+    "n_noop_hallucinated": {
+     "agrees": false,
+     "audit": null,
+     "measured": 0
+    },
+    "n_transitions": {
+     "agrees": false,
+     "audit": null,
+     "measured": 25
+    },
+    "verify_accuracy": {
+     "agrees": false,
+     "audit": null,
+     "measured": 0.76
+    },
+    "verify_cell_recall": {
+     "agrees": false,
+     "audit": null,
+     "measured": 0.2778
+    }
+   },
+   "game": "sc25",
+   "heldout": {
+    "accuracy": 0.875,
+    "cell_recall": 0.222222,
+    "change_fidelity": 0.222222,
+    "change_gate_passed": false,
+    "change_gate_reason": "change_fidelity_below_threshold",
+    "correct_changed_cells": 8,
+    "incumbent_admits_at_1.0": false,
+    "invented_changed_cells": 0,
+    "n_changing": 1,
+    "n_noop": 7,
+    "n_noop_hallucinated": 0
+   },
+   "incumbent_accuracy_at_0.5": true,
+   "incumbent_accuracy_at_1.0": false,
+   "incumbent_cell_recall_at_0.5": false,
+   "measured": {
+    "accuracy": 0.76,
+    "cell_recall": 0.277778,
+    "change_accuracy": 0.142857,
+    "change_fidelity": 0.277778,
+    "correct_changed_cells": 32,
+    "invented_change_rate": 0.0,
+    "invented_changed_cells": 0,
+    "n_changes_correct": 1,
+    "n_changing": 7,
+    "n_noop": 18,
+    "n_noop_hallucinated": 0,
+    "noop_channel_measurable": true,
+    "noop_hallucination_rate": 0.0,
+    "spurious_changed_cells": 0
+   },
+   "n_heldout": 8,
+   "noop_verdict_is_vacuous": false,
+   "status": "ok"
+  }
+ ],
+ "run_date": "2026-07-31T07:15:42Z",
+ "scope_limits": {
+  "THE_FLAG_DOES_NOT_GOVERN_THE_SITE_THE_lp85_ACCEPTANCE_HAPPENED_AT": "`change_gate_decision` is called ZERO times in arc_llm_reinduction.py (verified by grep). That module admits a refinement round on `heldout_accuracy >= verifier_threshold` alone. The diagnosis's phrase 'lp85 rounds 2-3 scored heldout 1.0 and were ACCEPTED' describes THAT admission -- so flipping CARNOT_ARC_WM_CHANGE_GATE would NOT have changed those two rounds' fate. The flag decides at exactly one place for these games: arc_competition_agent.py:6078-6100. Every catch claimed in this artifact is a catch AT THAT SITE and nowhere else.",
+  "WHICH_lp85_ENGINE_THIS_ACTUALLY_MEASURES": "The diagnosis conflates two engines. The rounds ACCEPTED at heldout 1.0 are rounds 2 and 3; the engine carrying the 96-invented-cell diagnostics is the RETAINED one (engine_retention.best_round == 1 for lp85-on). This row measures the retained engine -- confirmed by reproducing the audit's own verify_accuracy 0.92 / verify_cell_recall 0.4369 / invented_changed_cells 96 exactly. Rounds 2 and 3's sources were never retained and are NOT recoverable, so what the gate would have done to THEM is unmeasured and is not claimed here.",
+  "WHY_THE_CATCH_MECHANISM_IS_NOT_THE_ONE_THE_DIAGNOSIS_IMPLIES": "The diagnosis cites lp85's `n_changes_correct: 0`, which is TRANSITION-level exact match (0 of 2) and is reproduced here. The gate's non-degeneracy floor is a different, CELL-level quantity, `correct_changed_cells`, which measures 256 -- so the `degenerate_engine_no_correct_changed_cells` branch does NOT fire on lp85. The catch is `change_fidelity` 0.375 < 0.5, a 0.125 margin over an n_changing of 2. Real, but thin, and not the mechanism the framing implies.",
+  "admit_rate_on_the_broader_engine_corpus_is_zero": "exp6011 reports new_gate_admits_ondisk_mask_on == 0 and _mask_off == 0 across 75 rows (25 games x 3 seeds) of real on-disk engines. A gate that admits 1 of 9 here and 0 of 75 there may be closer to 'rejects everything' than to 'rejects the bad ones'. On this population that is the correct behaviour (8 of the 9 engines ARE broken), but it is the strongest single reason not to read a 2-catch / 1-spare result as a licence to flip a submission default.",
+  "branch_coverage": "Every row here is scored the way the PLAIN (non-hidden-state) branch scores. sc25 is in HIDDEN_STATE_GAME_IDS, so its live admission runs the REQ-6013 hidden-state branch instead and its row below is NOT its live decision. The three pre-registered targets (lp85-on, ft09-onb, tn36-on) are all plain-branch.",
+  "funnel_effect_predicted_zero": "The funnel metric is 'LLM output reaches the policy', today 1 of 6. Neither engine the gate newly rejects was reaching the policy: lp85-on ended `goal_predicate_error` and ft09-onb ended `world_model_accuracy_below_threshold`, both with levels_gained 0. And the ONE cell that did reach the policy, vc33, has every change-gate diagnostic field NULL in the audit -- its engine never arrived at this call site (terminal_skipped `degenerate_goal_predicate`). So this gate cannot be shown either to preserve or to break the single funnel success. Predicted funnel effect: 0 of 6 -> 0 of 6 change. The gate is a PRECISION change, not a funnel change.",
+  "known_residual_escape": "exp6013's FINDING_residual_escape_witness: on re86 the no-op channel is DEAD (n_noop=0) and an engine with invented_change_rate 1.0 clears the gate at change_fidelity 0.919. `noop_verdict_is_vacuous` is recorded per row here for the same reason -- a no-op verdict over an empty no-op population is not a pass.",
+  "mask_condition": "Measured MASK OFF, matching every audit cell's own hud_mask_status='disabled'. This population therefore says nothing about the mask-coupling that exp6011 measured on dc22, and does not overturn it.",
+  "n_equals_1_on_the_must_not_fire_side": "'Spares the good engine' rests on ONE engine (tn36-on), because that run produced only one structurally sound engine. One passing engine cannot establish a false-reject RATE. Two independent priors bear on it and they DISAGREE: exp6011 measured the hand-written correct dc22 control REJECTED mask-off on 3/3 seeds (whole-corpus change_fidelity 0.4694/0.4083/0.4103) and concluded 'do not flip CARNOT_ARC_WM_CHANGE_GATE without CARNOT_ARC_WM_HUD_MASK'; exp6013 measured the same control ADMITTED mask-off on 3/3 seeds through the production path. That disagreement is unresolved and is not resolved here.",
+  "no_live_effect_claimed": "This is an offline decision-level measurement over 9 cached engine/corpus pairs. No episode was played and no level was banked. It says which engines the gate admits, NOT that admitting them moves the funnel."
+ },
+ "solve_provenance": "development_proxy",
+ "thresholds_unchanged": true,
+ "verdict": {
+  "both_conditions_hold": true,
+  "catches_all_named_vacuous_cases": true,
+  "must_catch": {
+   "ft09__onb": {
+    "decision_population_n_changing": 6,
+    "measured": true,
+    "reason": "engine_hallucinates_changes_on_noop_transitions",
+    "rejected_at_all": true,
+    "vacuous": false
+   },
+   "lp85__on": {
+    "decision_population_n_changing": 2,
+    "measured": true,
+    "reason": "change_fidelity_below_threshold",
+    "rejected_at_all": true,
+    "vacuous": false
+   }
+  },
+  "must_not_fire": {
+   "tn36__on": {
+    "passes_change_gate": true,
+    "reason": "passed"
+   }
+  },
+  "recommendation": "QUALIFIED YES, and NOT ACTED ON. The stated criterion is met on this population -- both named vacuous engines are rejected for discriminating reasons, the good engine passes, and the admission swap adds ZERO new admits against either incumbent configuration. But three limits sit between that and flipping a submission default, all recorded in `scope_limits`: the must-not-fire side is n=1; exp6011 and exp6013 disagree about whether the gate rejects the hand-written correct control mask-off; and the flag does not govern the call site where the lp85 acceptance the diagnosis names actually happened. SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED is left False, as shipped.",
+  "recommendation_rule": "Recommend enabling CARNOT_ARC_WM_CHANGE_GATE only if BOTH hold. Otherwise report the measurement and leave the shipped default as-is.",
+  "spares_the_good_engine": true,
+  "what_would_settle_it": "A must-not-fire population larger than one: score a set of engines INDEPENDENTLY known to be good (the hand-written controls exp6011/6013 already build, plus any engine whose plan matched reality) through the plain branch at both mask settings, and resolve the exp6011-vs-exp6013 disagreement about the dc22 control before flipping anything."
+ },
+ "verifier_is_oracle": true,
+ "verifier_is_oracle_note": "The comparison target is the recorded next_grid, i.e. the executable oracle that defines dynamics correctness. Circular by construction and reported as such."
+}
