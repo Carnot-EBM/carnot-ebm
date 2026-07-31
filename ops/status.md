@@ -85,7 +85,20 @@ median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NE
   reader** (the context-pool derivation in `_default_induce_n_ctx()`), and the other three sites
   are independent hardcoded `4096` literals — not "binds none of its four sites".
 - Suite failure counts in this project are selection- and order-dependent (the suite's own writes
-  change collection), so any "reproduces at HEAD" claim must name its exact selection.
+  change collection), so any "reproduces at HEAD" claim must name its exact selection. **Now
+  MEASURED, not asserted:** the pinned selection `pytest tests/python -q --no-cov -p no:randomly
+  -k "arc"` gives 31 failed then 25 failed on two samples of the SAME tree, and the three tests
+  that differ all PASS in isolation (`-n 0`). At `7d81fa816` the same selection gives 52 then 53.
+  So this session's tree is 25-31 failed / ~8242 passed against a 52-53 failed baseline — 30
+  previously-failing ARC tests now pass (Phase 3 landing its own tests) and **zero confirmed new
+  failures**. See `ops/known-issues.md` 2026-07-31 for the full table and the
+  `enable_subgoal_search` cross-test-leak thread.
+- **Root-caused this session:** a mutation harness run from a git WORKTREE rewrites the CANONICAL
+  repo, because every harness hardcodes `REPO = /home/ianblenke/github.com/ianblenke/carnot` and
+  passes `cwd=REPO` to pytest, while experiment scripts write artifacts to CWD-relative paths.
+  Plain `pytest` from a worktree is NOT affected (verified: canonical `git status` unchanged
+  across a full worktree run). `ops/known-issues.md` 2026-07-31 has the mechanism and three
+  candidate fixes.
 
 ## Session 2026-07-31 (later still) — the depth axis of the goal gate (outer-loop, REQ-ARC-WMTE-6047-D)
 
