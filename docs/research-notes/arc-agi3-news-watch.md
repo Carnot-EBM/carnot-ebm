@@ -79,3 +79,11 @@ CHECK_TIMED_OUT
 
 - Kaggle’s competition host published an analysis of 500 failed submissions: nearly 20% used GPU-dependent code without enabling a GPU; other recurring issues included missing datasets/dependencies, CUDA OOM, using the wrong API endpoint, and writing to read-only `/kaggle/input`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-07-30 13:12 UTC -- check failed
+
+CHECK_TIMED_OUT
+
+## 2026-07-31 13:16 UTC -- check failed
+
+CHECK_TIMED_OUT
+

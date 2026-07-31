@@ -60,3 +60,13 @@ CHECK_TIMED_OUT
 
 ## 2026-07-29 13:38 UTC -- checked, nothing new
 
+## 2026-07-30 13:38 UTC -- checked, nothing new
+
+## 2026-07-31 13:40 UTC -- NEW
+
+- **New top-five entrant:** **Andy liu** (`codinggodandyliu`, `ichuqinggaove`) is **#2 at 1.69**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [member notebooks](https://www.kaggle.com/codinggodandyliu/code)
+
+- **New top-five entrant:** **GeniusYY** (`alexyy`) is **#3 at 1.64**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/alexyy/code)
+
+- **New top-five entrant:** **DhanaLakshmiMalla** (`dhanalakshmimalla`) is **#5 at 1.60**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/dhanalakshmimalla/code)
+
