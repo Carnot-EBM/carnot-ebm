@@ -650,7 +650,7 @@ def _goal_satisfiability_check(
     goal: Callable[[np.ndarray], bool] | None,
     start_grid: np.ndarray,
     max_nodes: int | None = None,
-    max_depth: int = 40,
+    max_depth: int | None = None,
 ) -> dict[str, Any]:
     """REQ-ARC-WMTE-4664: reject constant-false goals before invoking the planner."""
 
@@ -658,6 +658,19 @@ def _goal_satisfiability_check(
     # EXPLICIT `max_nodes` (every test, and any future diagnostic caller) still wins outright.
     if max_nodes is None:
         max_nodes = _goal_gate_max_nodes_default()
+
+    # THE DEPTH CAP IS READ FROM THE PLANNER'S OWN RESOLVER, DELIBERATELY (2026-07-31).
+    # This gate vetoes a goal it cannot reach within `max_depth`, and the veto below says so in
+    # as many words: "it is still a correct veto, because plan_in_model is bounded by the same
+    # depth cap and therefore could not reach this goal either". That sentence is TRUE ONLY IF
+    # the two numbers are the same one. Holding a literal 40 here while the planner moved to 80
+    # would not be a stale constant, it would make this function's stated justification false --
+    # it would veto goals the planner could now reach. Importing the resolver makes the shared
+    # horizon structural rather than a comment two files apart asking to be kept in sync.
+    if max_depth is None:
+        from carnot.agentic import arc_executable_world_model as _e3
+
+        max_depth = _e3.plan_max_depth_default()
 
     if goal is None:
         return {
@@ -1181,6 +1194,81 @@ def engine_retention_enabled() -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def should_promote_on_plannability(
+    *,
+    retention_on: bool,
+    round_goal_satisfiable: bool,
+    best_goal_satisfiable: bool,
+    is_best: bool,
+    retention_signal: float,
+    best_signal: float,
+) -> bool:
+    """REQ-ARC-WMTE-6035 (2026-07-31): plannability BREAKS TIES in retention; it does not override.
+
+    THE DEFECT THIS FIXES IS AN ORDERING BUG, NOT A BAD CRITERION. In
+    `execute_bounded_llm_reinduction`, `is_best` is decided on `heldout_change_consistency` ALONE,
+    and `_goal_satisfiability_check` -- the only signal saying whether an engine can be PLANNED
+    with -- does not run until ~70 lines later. Every round therefore computed its own
+    plannability and threw it away, keeping whichever engine predicted transitions best with no
+    way to prefer one the planner can actually use.
+
+    MEASURED CONSEQUENCE (48 induction candidates, 2026-07-31, at the corrected depth horizon):
+    on tn36 SIX candidates pass the shipped trust gate and only THREE yield a plan -- ranking on
+    dynamics alone chooses among those six blind. Across the stall corpus 9 candidates disagree
+    between "clears dynamics" and "plannable": 3 are dynamics-perfect yet unplannable, 2 plan
+    while failing dynamics.
+
+    `retention_signal >= best_signal` IS THE LOAD-BEARING CONJUNCT, and it is here because the
+    first version of this function did NOT have it and was WRONG. That version made plannability
+    the PRIMARY key, which retains a badly-worse dynamics model on the strength of a reachable
+    goal. `test_arc_engine_retention_best_round.py::
+    test_a_planned_return_reports_its_own_round_not_the_retained_one` already encoded the
+    opposite decision -- round 1 good dynamics with a constant-False goal, round 2 a weak mover
+    with a reachable one, asserting the retained round stays 1 -- and it failed. It was right and
+    the draft was wrong: retention exists to preserve the best DYNAMICS model, because held-out
+    dynamics is the signal that generalises to the next episode, whereas a reachable goal on a
+    weak engine is a plan to nowhere.
+
+    Re-reading the measurement supports the narrow rule and not the broad one. The tn36 conflict
+    is among SIX candidates ALL at held-out accuracy 1.0 -- 17 of 17 changing transitions exact
+    -- of which only THREE plan. Identical dynamics, differing plannability: that is a TIE, and
+    dynamics ranking resolves it by coin flip. Nothing measured supports overriding a dynamics
+    DEFICIT; everything measured supports breaking a dynamics TIE. Hence: among rounds dynamics
+    cannot separate, prefer the one that can be planned with.
+
+    WHY THIS SHAPE, in order of weight:
+      1. `>=` and not `>`. The ordinary comparison above already uses strict `>`, so an
+         equal-signal round never displaces the incumbent by the normal path. Equal signal IS the
+         measured tn36 case, so a strict `>` here would make the entire rule unreachable on the
+         very evidence that motivates it.
+      2. Ranking on plannability alone would re-admit the degenerate-goal hazard: a trivially
+         satisfiable predicate is trivially plannable, so an engine predicting nothing correctly
+         would win. The dynamics floor is exactly what excludes that.
+      3. Rounds REJECTED by the held-out verifier `continue` before the goal check and so can
+         never reach this. Promotion widens WHICH accepted engine is kept, never WHETHER a bad
+         one is.
+      4. Moving the goal check above the retention decision instead would run a bounded search on
+         rounds already known to be discarded.
+
+    MONOTONE BY CONSTRUCTION: it fires only when the incumbent is NOT satisfiable, so once a
+    plannable round is retained no unplannable round can displace it whatever its dynamics score.
+
+    THIS LIVES AT MODULE LEVEL ON PURPOSE. It was first written inline in the loop and mirrored
+    by a copy in the test file -- and mutation testing then showed BOTH promotion tests stayed
+    green when the shipped expression was inverted and when its `retention_on` guard was deleted.
+    Tests that reimplement the rule cannot detect a change to the rule. One named function is the
+    only copy, so deleting or inverting any conjunct now fails the suite.
+    """
+
+    return (
+        retention_on
+        and round_goal_satisfiable
+        and not best_goal_satisfiable
+        and not is_best
+        and retention_signal >= best_signal
+    )
+
+
 def _retention_signal(selection: Any) -> float:
     """The ONLY quantity retention is allowed to rank rounds on.
 
@@ -1377,6 +1465,10 @@ def execute_bounded_llm_reinduction(
     best_round_no = 0
     best_source: str | None = None
     best_true_changed_cells = 0
+    # REQ-ARC-WMTE-6035 extension (2026-07-31): PLANNABILITY is the primary retention key and
+    # dynamics fidelity is the tiebreak, not the other way round. See `_promote_on_plannability`
+    # below for why, and for why this is a promotion rather than a rewrite of the comparison.
+    best_goal_satisfiable = False
 
     def _finalise_engine_retention() -> dict[str, Any]:
         return _retain_engine_source_on_disk(
@@ -1518,7 +1610,64 @@ def execute_bounded_llm_reinduction(
             # report round N's goal alongside round 1's dynamics -- a lie in the artifact.
             round_goal_satisfiable = bool(goal_check.get("satisfiable"))
             round_goal_satisfiability = dict(goal_check)
+
+            # ---- PLANNABILITY PROMOTION (2026-07-31) -----------------------------------------
+            # THE DEFECT THIS FIXES IS AN ORDERING BUG, NOT A BAD CRITERION. `is_best` is decided
+            # ~70 lines above on `heldout_change_consistency` ALONE, and `goal_check` -- the only
+            # signal that says whether this engine can be PLANNED with -- does not run until
+            # here. So every round computed its plannability and then threw it away. Retention
+            # kept whichever engine predicted transitions best, with no way to prefer one the
+            # planner can actually use.
+            #
+            # MEASURED CONSEQUENCE (48 induction candidates, 2026-07-31, at the corrected depth
+            # horizon): on tn36 SIX candidates pass the shipped trust gate and only THREE of them
+            # yield a plan. Ranking on dynamics alone is choosing among those six blind. Across
+            # the stall corpus 9 candidates disagree between "clears dynamics" and "plannable" --
+            # 3 are dynamics-perfect yet unplannable, and 2 plan while failing dynamics.
+            #
+            # WHY A PROMOTION AND NOT A REWRITTEN COMPARISON. Three reasons, in order of weight:
+            #   1. It is lexicographic (goal_satisfiable, retention_signal), NOT plannability
+            #      alone. Ranking on plannability by itself re-admits the degenerate-goal hazard:
+            #      a trivially-satisfiable predicate is trivially plannable, and an engine that
+            #      predicts nothing correctly would win. Dynamics remains the tiebreak among
+            #      plannable rounds, and among non-plannable rounds nothing changes at all.
+            #   2. Rounds REJECTED by the held-out verifier `continue` before reaching this point
+            #      and so can never be promoted -- a round has to earn the accept first. That is
+            #      deliberate: promotion widens WHICH accepted engine is kept, never WHETHER a
+            #      bad engine is kept.
+            #   3. Moving the goal check above the retention decision instead would run the gate
+            #      on rejected rounds too, paying a bounded-but-real search on engines already
+            #      known to be discarded.
+            #
+            # `retention_on` gates it so the env A/B switch still reproduces the pre-REQ
+            # behaviour exactly, and it can only ever fire when the incumbent is NOT satisfiable
+            # -- so it is monotone: once a plannable round is retained, no unplannable round can
+            # displace it, whatever its dynamics score.
+            _promote_on_plannability = should_promote_on_plannability(
+                retention_on=retention_on,
+                round_goal_satisfiable=round_goal_satisfiable,
+                best_goal_satisfiable=best_goal_satisfiable,
+                is_best=is_best,
+                retention_signal=retention_signal,
+                best_signal=best_signal,
+            )
+            if _promote_on_plannability:
+                is_best = True
+                best_signal = retention_signal
+                best_true_changed_cells = retention_true_changed
+                best_round_no = round_no
+                best_source = _read_engine_source(game)
+                last_heldout_accuracy = heldout_accuracy
+                last_accepted = bool(accepted)
+                last_goal_names = list(names)
+                last_dynamics_names = list(names)
+                last_selected = selected.name
+                last_engine = selected.engine
+                last_goal = selected_goal
+                row["retained_as_best_engine"] = True
+                row["retained_by_plannability_promotion"] = True
             if is_best:
+                best_goal_satisfiable = bool(round_goal_satisfiable)
                 last_goal_satisfiable = round_goal_satisfiable
                 last_goal_satisfiability = dict(goal_check)
             row["goal_predicate_satisfiable"] = bool(round_goal_satisfiable)

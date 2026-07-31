@@ -730,9 +730,14 @@ def plan_factored_subgoal_sequence(
     value_head: Callable[[np.ndarray], float] | None = None,
     max_subgoals: int = 3,
     max_nodes: int = 20000,
-    max_depth: int = 40,
+    max_depth: int | None = None,
 ) -> FactoredSubgoalPlanResult:
-    """SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING: plan through the product model."""
+    """SCENARIO-ARC-WMTE-4677-PRODUCT-PLANNING: plan through the product model.
+
+    `max_depth=None` defers to `plan_max_depth_default()` via the `plan_in_model` calls below,
+    rather than re-declaring 40 here. A literal default would have silently kept this path on the
+    old horizon after the 2026-07-31 change -- the drift that resolver exists to make impossible.
+    """
 
     product = ProductWorldModel(experts)
     current = np.asarray(start_grid)
@@ -5599,13 +5604,85 @@ def _termination_reason(nodes: int, max_nodes: int, depth_truncated_nodes: int) 
     return "queue_exhausted"
 
 
+_PLAN_DEFAULT_MAX_DEPTH = 80
+
+
+def plan_max_depth_default() -> int:
+    """THE single source of truth for the search horizon, shared by the planner and the goal gate.
+
+    WHY IT IS SHARED RATHER THAN TWO CONSTANTS (this is a soundness requirement, not tidiness).
+    `arc_llm_reinduction._goal_satisfiability_check` vetoes a goal it cannot reach within its
+    depth cap, and that veto is only honest because `plan_in_model` -- the planner the gate exists
+    to guard -- is bounded by the SAME cap: a goal unreachable within the horizon is genuinely
+    unreachable BY THE PLANNER, so refusing it wastes nothing. Let the two drift and both
+    directions break:
+      * gate deeper than planner -> the gate certifies goals the planner then fails on, turning
+        an honest veto into a false accept one layer down;
+      * planner deeper than gate -> the gate vetoes goals the planner could now reach.
+    Two module-level constants would drift silently on the next edit. One resolver cannot.
+
+    WHY 80 AND NOT 40 (measured 2026-07-31, twice, by two independently-written harnesses).
+    At the previous default of 40, re-running the shipped gate and planner over 48 frozen
+    induction candidates gave an EMPTY intersection between "clears held-out dynamics" and "a
+    plan was found" -- 9 candidates in the first set, 2 in the second, 0 in both. That looked
+    like evidence that selecting engines on dynamics is anti-selective for plannability. It was
+    not. It was the horizon:
+
+        max_depth   clears (i)   plan found   BOTH
+               40            9            2      0
+               61            9            6      3
+               80            9            6      3
+              200            9            6      3
+
+    Three tn36 engines that predict 17 of 17 held-out changing transitions EXACTLY, and that
+    already pass the shipped trust gate, need a 61-action plan. At 40 they were reported
+    `goal_unreached_within_depth` and discarded.
+
+    THE COST IS ABSENT, NOT MERELY SMALL. Mean planner wall time across all 48 candidates was
+    0.357s at depth 40, 0.339 at 61, 0.334 at 80, 0.355 at 200 -- flat within noise, and LOWEST
+    where the conversions happen, because a search that succeeds stops early instead of draining
+    its frontier. The reason is structural and was measured rather than assumed: tn36's 32
+    changing root actions collapse to ONE distinct successor (the engine fills the next cell
+    wherever the click lands) and both search sites dedup by state key, so the tree is a PATH.
+    On a path the node budget buys depth one-for-one and only `max_depth` can stop the search --
+    which is why raising the horizon and NOT `max_nodes` is the correct fix, and why this is a
+    horizon correction rather than a threshold relaxation. `max_nodes` is untouched at 20000, and
+    every quality check is untouched: the same sweep also moved 3 candidates from UNDECIDED to a
+    firm `degenerate_goal_predicate`, which is the gate rejecting MORE confidently, not less.
+
+    80 rather than 61: 61 is one game's exact measured requirement (tn36's row is 61 cells wide)
+    and pinning the default to it would be overfitting to the only game in the corpus that
+    converts. 80 carries ~30% headroom at a cost measured to be zero. Nothing above 61 bought
+    anything on this corpus, so this is headroom over a measured need, NOT a tuned optimum -- do
+    not read 80 as evidence that 80 is special.
+
+    HONEST SCOPE. Every conversion observed was tn36. Of the other 36 stall candidates, 21 never
+    had a usable engine at all (13 predict that no action changes anything; 8 are disproved at
+    their own dynamical fixed point) and 8 are not valid Python. Raising the horizon does nothing
+    for any of them. This unblocks a real and previously-invisible class; it does not fix
+    induction.
+
+    `CARNOT_ARC_PLAN_MAX_DEPTH` restores any prior behaviour exactly -- set it to 40 to recover
+    the pre-2026-07-31 default byte-for-byte.
+    """
+
+    raw = os.environ.get("CARNOT_ARC_PLAN_MAX_DEPTH")
+    if raw is None:
+        return _PLAN_DEFAULT_MAX_DEPTH
+    try:
+        value = int(str(raw).strip())
+    except (TypeError, ValueError):
+        return _PLAN_DEFAULT_MAX_DEPTH
+    return value if value > 0 else _PLAN_DEFAULT_MAX_DEPTH
+
+
 def plan_in_model(
     engine,
     is_level_complete,
     start_grid: np.ndarray,
     *,
     max_nodes: int = 20000,
-    max_depth: int = 40,
+    max_depth: int | None = None,
     goal_energy=None,
     diagnostics: Optional[dict] = None,
 ) -> Optional[list]:
@@ -5659,6 +5736,12 @@ def plan_in_model(
     or never moved toward it at all (min ~= initial, "the model's rollout doesn't structurally
     connect toward the goal"). Backward-compatible: ``diagnostics=None`` (the default) changes
     nothing about the search or the return value."""
+    # `None` means "no caller opinion" -> the shared default (or its env override). An EXPLICIT
+    # `max_depth` still wins outright, so every existing test and diagnostic caller that pins a
+    # horizon keeps pinning it. Resolved HERE rather than in the signature default so the env
+    # override is read at CALL time, matching how `max_nodes` is handled in the goal gate.
+    if max_depth is None:
+        max_depth = plan_max_depth_default()
     if is_level_complete is None:
         if diagnostics is not None:
             diagnostics["is_level_complete_was_none"] = True

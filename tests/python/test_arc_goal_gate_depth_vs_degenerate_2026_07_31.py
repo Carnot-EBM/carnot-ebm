@@ -325,7 +325,16 @@ def test_depth_capped_kind_reaches_the_row_and_still_routes_through_goal_repair(
     from carnot.agentic.arc_executable_world_model import Transition
     from carnot.agentic.arc_llm_reinduction import execute_bounded_llm_reinduction
 
-    # A chain world whose goal sits at depth 45, against the shipped cap of 40 -- reachable, but
+    # PIN THE HORIZON (2026-07-31). The shipped default moved 40 -> 80, and the docstring above
+    # notes this test cannot pass `max_depth` down -- the loop calls the gate with no argument.
+    # A 45-deep goal is BELOW 80, so without this the round is simply satisfiable and the depth
+    # kind never arises: the test would pass vacuously while asserting nothing about routing.
+    # The env knob is the supported way to hold a horizon across an internal call, and it keeps
+    # the fixture's stated arithmetic (45 against 40) intact rather than re-tuning it to 85-vs-80
+    # and re-deriving every number in this test.
+    monkeypatch.setenv("CARNOT_ARC_PLAN_MAX_DEPTH", "40")
+
+    # A chain world whose goal sits at depth 45, against the pinned cap of 40 -- reachable, but
     # not within the cap. A chain yields one new state per node, so the search costs ~40 x
     # candidates engine calls, nowhere near the 20,000 budget: the ONLY thing that can classify
     # this round is the depth axis. (Same shape as tn36, which needs 61 against the same 40.)
@@ -509,7 +518,15 @@ def test_tn36_the_real_cell_reports_depth_not_degeneracy(tmp_path) -> None:
     untouched, frontier drained -- and asserts the verdict it now carries.
     """
     engine, is_done, root = _load_tn36_cell(tmp_path)
-    result = reinduction._goal_satisfiability_check(engine=engine, goal=is_done, start_grid=root)
+    # PINNED to 40 on 2026-07-31, when the shipped default moved 40 -> 80. This test is about the
+    # LABEL at a capped horizon -- `goal_unreached_within_depth` vs the old `degenerate` mislabel
+    # -- and its dependence on the default was incidental. At 80 this same cell is SATISFIABLE
+    # (its goal sits at depth 61), which is the point of that change and is asserted directly by
+    # `test_the_same_cell_is_satisfiable_at_the_new_default` below. Pinning keeps the origin
+    # incident reproduced exactly instead of quietly ceasing to exercise it.
+    result = reinduction._goal_satisfiability_check(
+        engine=engine, goal=is_done, start_grid=root, max_depth=40
+    )
 
     # The audit's arithmetic, reproduced exactly.
     assert result["engine_calls"] == 1480
