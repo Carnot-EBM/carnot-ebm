@@ -1,0 +1,158 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves a cursor/marker at column 0 that moves vertically and shifts colors in specific regions.
+    """
+    if action != 6:
+        return grid.copy()
+
+    # The marker is located at col 0. Let's find its current position.
+    # Initial marker color is 14. In transition 1, it changes to 5.
+    #
+    # Based on the observation:
+    # Transition 1: Action6(4, 32). Marker r0..r4 becomes 5.
+    # Transition 2: Action6(4, 32). Marker r5..r9 becomes 5.
+    # It seems clicking (4, 32) triggers a vertical shift of the marker.
+    #
+    # Looking at the other changes:
+    # The blocks are shifted horizontally by 4 columns each time.
+    # The blocks are arranged in several horizontal bands.
+    #
+    # Let's define the regions where these blocks exist.
+    # From INITIAL GRID:
+    # Band 1: rows 19-22
+    # Band 2: rows 25-28
+    # Band 3: rows 31-34
+    # Band 4: rows 37-40
+    # Band 5: rows 43-46
+    #
+    # Each band has a set of colors that rotate or shift.
+    #
+    # However, the observed transitions show that when ACTION6 is triggered,
+    # the marker moves down and the blocks in all bands shift.
+    #
+    # Specifically, let's
+    # {12, 18, 24, 30, 36, 42, 48} are common column indices for block starts.
+    # Thesees are 6 units apart.
+    #
+    # In Transition 1:
+    # r19c12 becomes 2x4, r19c18 becomes 10x4, etc.
+    # This is a rotation of the existing values.
+    #
+    # Let's implement a simple rotation rule:
+    # When Action6(4, 32) is clicked, we move the marker (col 0) and rotate the blocks.
+    # The marker moves from r0..r4 to r5..r9...
+    #
+    # Since this is an ARC game, it likely involves some pattern matching or shifting.
+    #
+    # Given the limited data, we most accurately model the behavior as a sequence of rotations.
+    #
+    # The marker position is tracked by where color 5 is on col 0.
+    #
+    # We will simulate the marker movement and determine which "rotation" state we is in.
+    #
+    # But wait, the observed transitions show that clicking (4, 32) specifically triggers these changes.
+    #
+    # Let's refine the logic:
+    # Every time ACTION6(4, 32) is called, the grid shifts.
+    #
+    # To simplify, we use a global counter for the number of times (4, 32) was clicked.
+    #
+    # However, engine() must be pure. So we can actually derive the current state from the grid itself.
+    #
+    # Marker at col 0 has color 14 initially. All other cells are 14? No.
+    #
+    # Let's find the marker: it's the block of 5 cells of color 5.
+    # If no color 5 exists, it's the first click.
+    #
+    # Let's actually just implement the rotation based on the current values in one specific cell.
+    #
+    # The blocks are located at columns [12, 18, 24, 30, 36, 42, 48].
+    # These start columns are the same across all bands.
+    #
+    # In Transition 1:
+    # r19c12 becomes 2x4, r19c18 becomes 10x4...
+    #
+    # Let's define the rotation sequence for each band.
+    #
+    # Based on the observed transitions, clicking (4, 32) shifts colors.
+    #
+    # Since we don't have a win condition or WIN STATE grid, is_level_complete will return False.
+    #
+    # To be more precise, let's actually rotate the blocks in each band.
+    #
+    # Let's identify the blocks and their blocks.
+    # Let's assume they are block-wise rotations.
+    #
+    # Let's look at the blocks in Band 1 (rows 19-22):
+    # Initial: c12=1, c18=2, c24=10, c30=9, c36=15, c42=11, c48=2
+    # Trans 1: c12=2, c18=10, c24=9, c30=15, c36=11, c42=2, c48=15
+    # Trans 2: c12=10, c18=9, c24=15, c30=11, c36=2, c42=15, c48=9
+    #
+    # This is a simple shift right by one position in the sequence [c12, c18, ..., c48].
+    #
+    # The marker moves down by 5 cells each time.
+    #
+    # Let's implement this.
+    """
+    if action != 6 or data.get('x') != 4 or data.get('y') != 32:
+        return grid.copy()
+
+    new_grid = grid.copy()
+    
+    # Move Marker (col 0)
+    marker_pos = -1
+    for r in range(64):
+        if new_grid[r, 0] == 5:
+            marker_pos = r
+            # We only need to find the first occurrence of color 5 on col 0
+            break
+    
+    if marker_pos == -1:
+        # First click: move from implicit start to r0..r4
+        start_row = 0
+    else:
+        # Move from r0..r4 -> r5..r9...
+        start_row = marker_pos + 5
+    
+    # Clear old marker if it exists
+    for r in range(64):
+        if new_grid[r, 0] == 5:
+            new_grid[r, 0] = 14 # Reset to background/initial color
+            
+    # Set new marker
+    for r in range(start_row, min(start_row + 5, 64)):
+        new_grid[r, 0] = 5
+        
+    # Rotate Blocks
+    bands = [
+        (19, 22), (25, 28), (31, 34), (37, 40), (43, 46)
+    ]
+    cols = [12, 18, 24, 30, 36, 42, 48]
+    
+    for row_start, row_end in bands:
+        for r in range(row_start, row_end + 1):
+            # Extract current colors of the blocks in this row
+            current_colors = []
+            for c in cols:
+                current_colors.append(grid[r, c])
+            
+            # Shift right by one position
+            # New sequence: last element becomes first, and the rest shift right
+            rotated_colors = [current_colors[-1]] + current_colors[:-1]
+            
+            # Apply rotated colors to the block (each block is 4 wide)
+            for i, c in enumerate(cols):
+                val = rotated_colors[i]
+                for col_offset in range(4):
+                    new_grid[r, c + col_offset] = val
+                    
+    return new_grid
+
+def is_level_complete(grid):
+    """
+    The win state is not provided, so we return False.
+    """
+    return False

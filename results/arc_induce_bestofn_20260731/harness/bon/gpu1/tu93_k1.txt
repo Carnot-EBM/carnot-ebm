@@ -1,0 +1,94 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The game appears to be a puzzle where an agent moves through a maze of walls and paths.
+    # Based on the observed transitions, it seems like there is a a 'cursor' or 'player' object that moves.
+    # However, the grid itself contains many colors.
+    # Color 5 is background/wall.
+    # Color 0 is empty space/path.
+    # Color 2 is wall/obstacle.
+    # Color 9 is a key or collectible.
+    # Color 14 is a goal or exit.
+    # Color 4 is a special tile.
+    #
+    # Looking at the observed deltas, ACTION2 (down), ACTION4 (up), ACTION3 (right?), ACTION1 (left?)
+    # usually change cells in specific blocks.
+    #
+    # In this particular sequence, we see changes occurring in blocks of 3x3.
+    # The movements are likely moving a "brush" or "active area" that fills or clears tiles.
+    #
+    # Let's identify the player position from the grid. Since the grid starts with mostly color 5,
+    # 
+    # The most distinct feature is the maze-like structure.
+    # The laurentian coordinates for the pixels are nots provided but data is not only used for Action 6.
+    #
+    # Based on the transitions:
+    # ACTION 4: r15c15:0x3, r15c21:9x3, etc. -> This suggests movement to (15, 15) and filling it with 0.
+    # ACTION 2: r15c21:0x3, r21c21:0x3... -> Moving from row 15 to row 21.
+    #
+    # It seems there is an invisible cursor that moves across the grid in steps of 6 units (15->21->27).
+    #
+    # Let's track the 'cursor' based on the current state of the grid.
+    # We find the same pattern of changes occurring at (r, c) where r % 6 == 3 or similar.
+    #
+    # Actually, looking at the sequence:
+    # Initial: Cursor starts somewhere.
+    # Action 4 (Up): Changes cells at r=15, 16, 17.
+    # Action 2 (Down): Changes cells at r=21, 22, 23.
+    # Action 2 (Down): Changes cells at r=27, 28, 29.
+    # Action 1 (Left): Changes cells at r=21, 22, 23 back to original and r=27, 28, 29 to something else.
+    #
+    # The "cursor" is a 3x3 block.
+    # Starting position: likely derived from the same cell that is not color 5 at (63, 63).
+    #
+    # This looks like a Sokoban-style game or a maze puzzle.
+    # However, the most critical observation is the cambiamenti in r63c63, r63c61, etc.
+    # These are cells acting as counters or status indicators.
+    #
+    # Let's refine the rules:
+    # - ACTION 1: Left
+    # - ACTION 2: Down
+    # - ACTION 3: Right
+    # - ACTION 4: Up
+    #
+    # The cursor moves in increments of 6 pixels.
+    # The cursor size is 3x3.
+    #
+    # When the cursor moves into a region, it modifies the grid based on some logic (e.g., filling paths).
+    #
+    # Given the limited data, we will implement a simple movement model for the laurentian cursor.
+    #
+    # WeCannot determine the exact starting position of the cursor from the initial grid.
+    # But we'll assume the cursor is at a position where it can be moved.
+    #
+    # Since we only have one example and the transitions are very sparse, we'll implement a    
+    # basic engine that mimics the movements seen.
+
+    new_grid = grid.copy()
+    
+    # Find current 'cursor' by looking for the most recently changed block of 3x3.
+    # This is not enough.
+    #
+    # Let's look at the status cells at r=63.
+    # The value at r63c63 starts as 6 and then becomes 0.
+    # Action 3 -> r63c63:0
+    # Action 4 -> r63c61:0, r63c62:0? No, r63c61:0x2 means c61 and c62.
+    # Action 2 -> r63c60:0
+    # Action 2 -> r63c60:0... no, r63c59:0
+    #
+    # It seems the status bar at row 63 is counting down from right to left.
+    #
+    # We will simulate the cursor movement based on the logic observed in the 3x3 blocks.
+    #
+    # Since we cannot deduce a full state machine, we'll return the grid as is or apply simple changes.
+
+    return new_grid
+
+def is_level_complete(grid):
+    # Level complete when all 'status' cells are filled (e.g., color 0) in a certain range.
+    # Check if any cell in the last row that was not 5/6 has changed to 0.
+    # The win condition usually involves reaching the goal (color 14).
+    #
+    # In this-> case, weCannot determine it.
+    # Let's assume level complete if the target area is cleared.
+    return False

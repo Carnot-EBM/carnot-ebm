@@ -79,16 +79,24 @@ SHIPPED_HELDOUT_THRESHOLD = 1.0
 NS = [1, 4, 8]
 
 
-def _run_gates(jobs: list[tuple[str, str, str]]) -> dict[str, dict]:
-    """Run gate_worker over `jobs` with bounded parallelism. Each job is (key, code, root)."""
+def _tally(values) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for v in values:
+        k = str(v) if v is not None else "not_evaluated"
+        out[k] = out.get(k, 0) + 1
+    return dict(sorted(out.items(), key=lambda kv: (-kv[1], kv[0])))
+
+
+def _run_gates(jobs: list[tuple[str, str]]) -> dict[str, dict]:
+    """Run gate_worker over `jobs` with bounded parallelism. Each job is (key, job_json_path)."""
     results: dict[str, dict] = {}
     pending = list(jobs)
     running: list[tuple[str, subprocess.Popen, float]] = []
     while pending or running:
         while pending and len(running) < GATE_WORKERS:
-            key, code_path, root_path = pending.pop(0)
+            key, job_path = pending.pop(0)
             proc = subprocess.Popen(
-                [PY, str(HERE / "gate_worker.py"), code_path, root_path],
+                [PY, str(HERE / "gate_worker.py"), job_path],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -128,13 +136,7 @@ def _run_gates(jobs: list[tuple[str, str, str]]) -> dict[str, dict]:
 
 
 def main() -> int:  # noqa: C901
-    import numpy as np
-
     from carnot.agentic import arc_executable_world_model as e3
-    from carnot.agentic.arc_world_model_trust_energy import (
-        WorldModelCandidate,
-        select_trusted_world_model,
-    )
     from split import load_split
 
     runs: dict[str, dict] = {}
@@ -160,8 +162,13 @@ def main() -> int:  # noqa: C901
     postbank_games = sorted(set(games) - set(stall_games))
 
     # ---- per-candidate scoring -----------------------------------------------------------
+    # THIS PROCESS NEVER EXECUTES GENERATED CODE. Every metric that requires running the induced
+    # engine -- the held-out verifier, the shipped trust gate, the goal gate, the planner -- is
+    # computed by gate_worker.py in its own killable subprocess. See that module's docstring: a
+    # non-terminating induced engine wedged the generation loop for 13 minutes on this very run,
+    # and `WorldModelVerifier.score` would have executed the same engine here.
     cands: list[dict] = []
-    gate_jobs: list[tuple[str, str, str]] = []
+    gate_jobs: list[tuple[str, str]] = []
     for tag, run in runs.items():
         for row in run.get("rows", []):
             if row.get("status") != "ok":
@@ -180,86 +187,71 @@ def main() -> int:  # noqa: C901
                 "usable": row["usable"],
                 "generate_would_accept": row["generate_would_accept"],
                 "defect_kinds": row["defect_kinds"],
+                "validation_timed_out": row.get("validation_timed_out"),
                 "engine_changes_anything": row["engine_changes_anything"],
                 "stop_type": row["stop_type"],
                 "predicted_n": row["predicted_n"],
                 "wall_s": row["wall_s"],
                 "code_sha256_16": row["code_sha256_16"],
             }
-            ns: dict = {"np": np, "numpy": np}
-            try:
-                exec(compile(code, row["completion_file"], "exec"), ns)  # noqa: S102
-                engine = ns.get("engine")
-                assert callable(engine)
-            except Exception as exc:  # noqa: BLE001
-                m["score_status"] = f"unrunnable:{type(exc).__name__}"
-                cands.append(m)
-                continue
-            m["score_status"] = "ok"
-            m["has_goal_predicate"] = callable(ns.get("is_level_complete"))
-
-            for label, rows_ in (("heldout", s["_heldout"]), ("in_sample", s["_shown"])):
-                if not rows_:
-                    m[f"{label}_n"] = 0
-                    continue
-                vr = e3.WorldModelVerifier(list(rows_)).score(engine)
-                n_changing = int(getattr(vr, "n_changing", 0) or 0)
-                m[f"{label}_n"] = int(getattr(vr, "n", 0) or 0)
-                m[f"{label}_accuracy"] = round(float(getattr(vr, "accuracy", 0.0) or 0.0), 6)
-                m[f"{label}_n_changing"] = n_changing
-                m[f"{label}_n_changes_correct"] = int(getattr(vr, "n_changes_correct", 0) or 0)
-                m[f"{label}_cell_recall"] = (
-                    round(float(getattr(vr, "cell_recall", 0.0) or 0.0), 4) if n_changing else None
-                )
-                m[f"{label}_invented_changed_cells"] = int(
-                    getattr(vr, "invented_changed_cells", 0) or 0
-                )
-                m[f"{label}_n_noop"] = int(getattr(vr, "n_noop", 0) or 0)
-                m[f"{label}_n_noop_hallucinated"] = int(getattr(vr, "n_noop_hallucinated", 0) or 0)
-
-            # THE SHIPPED TRUST GATE, replicated on the transitions `induce()` actually received.
-            # Reported next to the out-of-sample bar because they are NOT the same measurement:
-            # this one splits the 17-row prefix internally, the other uses the proven unrendered
-            # rows. Where they disagree, the shipped gate is the optimistic one.
-            try:
-                with open(HERE / "capture" / game / f"transitions{CALL_INDEX}.pkl", "rb") as fh:
-                    prefix_trans = pickle.load(fh)
-                sel = select_trusted_world_model(
-                    list(prefix_trans),
-                    [WorldModelCandidate("bon_candidate", engine, ns.get("is_level_complete"))],
-                    hidden_state=True,
-                )
-                m["shipped_gate_heldout_accuracy"] = round(
-                    float(sel.selected_score.heldout_accuracy), 6
-                )
-                m["shipped_gate_prefix_accuracy"] = round(
-                    float(sel.selected_score.prefix_accuracy), 6
-                )
-                m["shipped_gate_trust_energy"] = round(float(sel.selected_score.trust_energy), 6)
-                m["shipped_gate_passes"] = bool(
-                    sel.selected_score.heldout_accuracy >= SHIPPED_HELDOUT_THRESHOLD
-                )
-            except Exception as exc:  # noqa: BLE001
-                m["shipped_gate_error"] = f"{type(exc).__name__}: {str(exc)[:160]}"
-
-            root_path = HERE / "capture" / game / f"root_grid{CALL_INDEX}.pkl"
-            if root_path.exists():
-                cp = SCRATCH / f"{game}_k{row['candidate']}.py"
-                cp.write_text(code)
-                key = f"{game}|{row['candidate']}"
-                gate_jobs.append((key, str(cp), str(root_path)))
-                m["_gate_key"] = key
+            cp = SCRATCH / f"{game}_k{row['candidate']}.py"
+            cp.write_text(code)
+            hp = SCRATCH / f"{game}_heldout.pkl"
+            ip = SCRATCH / f"{game}_shown.pkl"
+            if not hp.exists():
+                with open(hp, "wb") as fh:
+                    pickle.dump(s["_heldout"], fh)
+                with open(ip, "wb") as fh:
+                    pickle.dump(s["_shown"], fh)
+            job = {
+                "code_path": str(cp),
+                "heldout_pkl": str(hp),
+                "in_sample_pkl": str(ip),
+                "prefix_pkl": str(HERE / "capture" / game / f"transitions{CALL_INDEX}.pkl"),
+                "root_pkl": str(HERE / "capture" / game / f"root_grid{CALL_INDEX}.pkl"),
+            }
+            jp = SCRATCH / f"{game}_k{row['candidate']}.job.json"
+            jp.write_text(json.dumps(job))
+            key = f"{game}|{row['candidate']}"
+            gate_jobs.append((key, str(jp)))
+            m["_gate_key"] = key
             cands.append(m)
 
-    print(f"running {len(gate_jobs)} gate jobs, {GATE_WORKERS} at a time ...", flush=True)
+    # GATE CACHE, keyed by the candidate's code sha. Gate results are a deterministic function of
+    # (code, root grid, transitions), all of which are frozen once generation has finished, so a
+    # re-analysis that adds a new CRITERION must not have to re-execute 48 searches -- and must
+    # not be tempted to skip them either. Delete the cache file to force a clean re-run.
+    cache_path = HERE.parent / "gate_cache.json"
+    cache = {}
+    if cache_path.exists() and os.environ.get("BON_GATE_CACHE", "1") == "1":
+        try:
+            cache = json.loads(cache_path.read_text())
+        except Exception:  # noqa: BLE001
+            cache = {}
+    sha_of = {f"{m['game']}|{m['candidate']}": m.get("code_sha256_16") for m in cands}
+    todo = [(k, jp) for k, jp in gate_jobs if cache.get(sha_of.get(k) or "") is None]
+    print(
+        f"running {len(todo)} gate jobs ({len(gate_jobs) - len(todo)} cached), "
+        f"{GATE_WORKERS} at a time ...",
+        flush=True,
+    )
     t_gate = time.monotonic()
-    gate_results = _run_gates(gate_jobs)
+    fresh = _run_gates(todo)
     gate_wall = round(time.monotonic() - t_gate, 1)
+    for k, v in fresh.items():
+        sha = sha_of.get(k)
+        if sha:
+            cache[sha] = v
+    cache_path.write_text(json.dumps(cache, indent=1, sort_keys=True))
+    gate_results = {k: cache[sha_of[k]] for k, _ in gate_jobs if sha_of.get(k) in cache}
     for m in cands:
         key = m.pop("_gate_key", None)
         if key and key in gate_results:
-            for k, v in gate_results[key].items():
-                m[f"gate_{k}" if not k.startswith(("goal", "plan")) else k] = v
+            res = dict(gate_results[key])
+            m["score_status"] = res.pop("status", "ok")
+            m.update(res)
+        elif "score_status" not in m:
+            m["score_status"] = "no_gate_result"
 
     # ---- the three criteria --------------------------------------------------------------
     def c_i(m: dict) -> bool | None:
@@ -298,11 +290,48 @@ def main() -> int:  # noqa: C901
             return base
         return bool(m.get("plan_found"))
 
+    # THE UNCONDITIONAL READS, and why reporting only the conjunctions would have been a false
+    # null. The operator posed (ii) and (iii) as CONJUNCTIONS onto (i), and they are computed that
+    # way above. But (i) here is the SHIPPED accuracy bar applied OUT-OF-SAMPLE, which is strictly
+    # harsher than what the live pipeline computes -- and on this grid the two components turn out
+    # to be ANTI-CORRELATED. ft09 candidate 1 and tn36 candidate 1 both reach a satisfiable goal
+    # AND a found plan while failing the out-of-sample (i) bar, so the conjunction records 0 for a
+    # reason that has nothing to do with the goal or the planner. Reporting only the conjunction
+    # would have said "no candidate is plannable" when two are.
+    def c_ii_uncond(m: dict) -> bool | None:
+        if m.get("score_status") != "ok":
+            return False
+        return bool(m.get("goal_satisfiable"))
+
+    def c_iii_uncond(m: dict) -> bool | None:
+        if m.get("score_status") != "ok":
+            return False
+        return bool(m.get("goal_satisfiable")) and bool(m.get("plan_found"))
+
+    # THE LIVE PIPELINE'S OWN CONJUNCTION. `select_trusted_world_model` splits the 17-row prefix
+    # internally; that -- not the proven unrendered split -- is the gate the agent actually
+    # applies before it consults the goal gate. This is therefore what the shipped path would
+    # have done with each candidate, and it is the fair test of "could best-of-N have helped the
+    # pipeline as it exists" (as opposed to "as it should be graded").
+    def c_ii_shipped(m: dict) -> bool | None:
+        if m.get("score_status") != "ok":
+            return False
+        return bool(m.get("shipped_gate_passes")) and bool(m.get("goal_satisfiable"))
+
+    def c_iii_shipped(m: dict) -> bool | None:
+        if m.get("score_status") != "ok":
+            return False
+        return c_ii_shipped(m) and bool(m.get("plan_found"))
+
     CRITERIA = {
         "i_dynamics": c_i,
         "i_dynamics_strict": c_i_strict,
         "ii_goal_satisfiable": c_ii,
         "iii_plan_found": c_iii,
+        "ii_goal_satisfiable_unconditional": c_ii_uncond,
+        "iii_plan_found_unconditional": c_iii_uncond,
+        "ii_shipped_gate_and_goal": c_ii_shipped,
+        "iii_shipped_gate_and_plan": c_iii_shipped,
     }
     for m in cands:
         m["criteria"] = {name: fn(m) for name, fn in CRITERIA.items()}
@@ -455,6 +484,101 @@ def main() -> int:  # noqa: C901
             round(sum(per_game_cost.values()) / len(per_game_cost), 1) if per_game_cost else None
         )
 
+    # ---- WHY criterion (ii) failed, which is a different question from THAT it failed -------
+    # `degenerate_goal_predicate` means the reachable set was searched EXHAUSTIVELY and the goal
+    # was never true -- evidence against the predicate. `goal_unreached_within_budget` and
+    # `goal_unreached_within_depth` mean the search STOPPED, and whether the goal is reachable is
+    # UNKNOWN. Both make criterion (ii) False, but they license opposite conclusions: the first
+    # says sampling a better goal could help, the second says the gate could not decide and no
+    # amount of sampling is being fairly tested. Flattening them is the exact mislabel the repo
+    # fixed on 2026-07-31 in `_goal_satisfiability_check`; it must not be reintroduced here.
+    gate_census: dict = {}
+    for scope, gs in (("stall", stall_games), ("postbank", postbank_games)):
+        rows_ = [m for g in gs for m in by_game.get(g, [])]
+        passed_i = [m for m in rows_ if m["criteria"]["i_dynamics"] is True]
+        gate_census[scope] = {
+            "n_candidates": len(rows_),
+            "n_passing_criterion_i": len(passed_i),
+            "goal_kind_all_candidates": _tally(m.get("goal_kind") for m in rows_),
+            "goal_kind_among_criterion_i_passers": _tally(m.get("goal_kind") for m in passed_i),
+            "n_criterion_i_passers_whose_gate_was_UNDECIDED": sum(
+                1
+                for m in passed_i
+                if str(m.get("goal_kind", "")).startswith(
+                    ("goal_unreached_within_budget", "goal_unreached_within_depth")
+                )
+            ),
+            "n_criterion_i_passers_whose_goal_was_DISPROVED": sum(
+                1 for m in passed_i if m.get("goal_kind") == "degenerate_goal_predicate"
+            ),
+        }
+
+    # ---- IS DYNAMICS QUALITY ANTI-CORRELATED WITH PLANNABILITY? ----------------------------
+    # The operator's design tension, measured rather than argued: "selecting on DYNAMICS accuracy
+    # alone would reliably produce more tn36s -- perfect models that die at the goal gate". This
+    # block compares held-out accuracy between the candidates whose goal the gate certifies and
+    # the candidates whose goal it does not. If the certified ones are WORSE, then criterion (i)
+    # is not merely insufficient as a selector, it is actively pointed the wrong way.
+    def _acc(m):
+        v = m.get("heldout_accuracy")
+        return float(v) if isinstance(v, (int, float)) else None
+
+    anti: dict = {}
+    for scope, gs in (("stall", stall_games), ("postbank", postbank_games)):
+        rows_ = [
+            m
+            for g in gs
+            for m in by_game.get(g, [])
+            if m.get("score_status") == "ok" and _acc(m) is not None
+        ]
+        sat = [m for m in rows_ if m.get("goal_satisfiable")]
+        uns = [m for m in rows_ if not m.get("goal_satisfiable")]
+        anti[scope] = {
+            "n_candidates_satisfying_both_i_and_goal": sum(
+                1 for m in rows_ if m["criteria"]["i_dynamics"] is True and m.get("goal_satisfiable")
+            ),
+            "n_goal_satisfiable": len(sat),
+            "n_goal_not_satisfiable": len(uns),
+            "mean_heldout_accuracy_when_goal_SATISFIABLE": (
+                round(sum(_acc(m) for m in sat) / len(sat), 4) if sat else None
+            ),
+            "mean_heldout_accuracy_when_goal_NOT_satisfiable": (
+                round(sum(_acc(m) for m in uns) / len(uns), 4) if uns else None
+            ),
+            "mean_comparison_is_underpowered": (
+                "The two pooled means are n=2 against n=29 and pool across games of very "
+                "different difficulty, so they are reported but carry no weight. The "
+                "load-bearing evidence for the inversion is the EMPTY INTERSECTION and the "
+                "per-game tn36 contrast below, neither of which depends on pooling."
+            ),
+            "goal_satisfiable_candidates": [
+                {
+                    "game": m["game"],
+                    "candidate": m["candidate"],
+                    "heldout_accuracy": _acc(m),
+                    "heldout_n_changes_correct": m.get("heldout_n_changes_correct"),
+                    "heldout_n_changing": m.get("heldout_n_changing"),
+                    "shipped_gate_passes": m.get("shipped_gate_passes"),
+                    "plan_found": m.get("plan_found"),
+                    "plan_length": m.get("plan_length"),
+                }
+                for m in sat
+            ],
+            # The per-game version is the load-bearing one: a pooled comparison across games
+            # confounds "this game is easy" with "this candidate is good".
+            "per_game_best_dynamics_vs_satisfiable": {
+                g: {
+                    "best_heldout_accuracy": max(
+                        (_acc(m) for m in by_game.get(g, []) if _acc(m) is not None), default=None
+                    ),
+                    "heldout_accuracy_of_goal_satisfiable_candidates": [
+                        _acc(m) for m in by_game.get(g, []) if m.get("goal_satisfiable")
+                    ],
+                }
+                for g in gs
+            },
+        }
+
     # ---- diversity: is the candidate pool degenerate? --------------------------------------
     diversity = {}
     for g, rows_ in by_game.items():
@@ -531,6 +655,8 @@ def main() -> int:  # noqa: C901
         "splits": {g: {k: v for k, v in splits[g].items() if not k.startswith("_")} for g in games},
         "cost": cost,
         "diversity": diversity,
+        "goal_gate_failure_census": gate_census,
+        "dynamics_vs_plannability": anti,
         "yields_stall_path": yields_for(stall_games),
         "yields_postbank_path": yields_for(postbank_games),
         "candidates": cands,
@@ -565,6 +691,13 @@ def main() -> int:  # noqa: C901
             )
         print(f"    select-on-(i)  {json.dumps(b['select_on_i_then_check']['yield'])}")
         print(f"    accept-first   {json.dumps(b['accept_first_over_same_N']['yield'])}")
+    gc = payload["goal_gate_failure_census"]["stall"]
+    print(
+        f"\n  GOAL-GATE census (stall): {gc['n_passing_criterion_i']} of {gc['n_candidates']} "
+        f"candidates pass (i); of those, UNDECIDED={gc['n_criterion_i_passers_whose_gate_was_UNDECIDED']} "
+        f"DISPROVED={gc['n_criterion_i_passers_whose_goal_was_DISPROVED']}"
+    )
+    print(f"    goal_kind among (i)-passers: {json.dumps(gc['goal_kind_among_criterion_i_passers'])}")
     print("\n  MARGINAL per-candidate rate (n = games x N):")
     for name, r in ys.get("marginal_per_candidate", {}).items():
         print(

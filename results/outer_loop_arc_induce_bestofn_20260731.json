@@ -1,0 +1,1614 @@
+{
+  "acceptance_gate_definitions": {
+    "generator_proven_cuda_build_and_model": "The 31B silently binds the iGPU HIP build at the shipped n_ctx and then runs LLM-OFF while REPORTING LLM-ON. Proving the build from /proc/<pid>/exe plus a per-PID VRAM row is the only reading that cannot be faked by what was requested.",
+    "grid_is_balanced": "Yield at N is only comparable across games if every game contributed the same N. An unbalanced grid pools a game's easy candidates against another's hard ones and the ratio stops meaning anything.",
+    "split_proven_on_every_scored_game": "An ASSERTED held-out split makes every out-of-sample number an in-sample number wearing a new label. split.py derives `shown` by replicating the render rule and then checks each row against the prompt TEXT by a different computation.",
+    "stall_and_postbank_paths_are_scored_separately": "A level_up_reinduction at transition_count=1 passes both gates near-trivially, so a criterion evaluated on the post-bank path selects for triviality and reproduces the reverse-causal artifact this phase exists to avoid.",
+    "zero_yields_are_labelled_disproved_or_undecided": "`degenerate_goal_predicate` (reachable set searched exhaustively, goal never true) is evidence AGAINST the predicate; `goal_unreached_within_budget`/`_depth` mean the search stopped and reachability is UNKNOWN. Both make the criterion False and they license opposite conclusions, so a zero that is mostly UNDECIDED must not be reported as a disproof."
+  },
+  "acceptance_gate_passed": true,
+  "acceptance_gates": {
+    "generator_proven_cuda_build_and_model": {
+      "observed": {
+        "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "observed_n_ctx": 32768,
+        "server_exe_is_cuda_build": true,
+        "vram_rows_mine": [
+          "1563056, 21434, 00000000:62:00.0"
+        ]
+      },
+      "passed": true,
+      "principle": "The 31B silently binds the iGPU HIP build at the shipped n_ctx and then runs LLM-OFF while REPORTING LLM-ON. Proving the build from /proc/<pid>/exe plus a per-PID VRAM row is the only reading that cannot be faked by what was requested."
+    },
+    "grid_is_balanced": {
+      "observed_candidates_per_game": 8,
+      "passed": true,
+      "principle": "Yield at N is only comparable across games if every game contributed the same N. An unbalanced grid pools a game's easy candidates against another's hard ones and the ratio stops meaning anything."
+    },
+    "split_proven_on_every_scored_game": {
+      "passed": true,
+      "principle": "An ASSERTED held-out split makes every out-of-sample number an in-sample number wearing a new label. split.py derives `shown` by replicating the render rule and then checks each row against the prompt TEXT by a different computation."
+    },
+    "stall_and_postbank_paths_are_scored_separately": {
+      "passed": true,
+      "postbank_games": [
+        "vc33"
+      ],
+      "principle": "A level_up_reinduction at transition_count=1 passes both gates near-trivially, so a criterion evaluated on the post-bank path selects for triviality and reproduces the reverse-causal artifact this phase exists to avoid.",
+      "stall_games": [
+        "ft09",
+        "lp85",
+        "sc25",
+        "tn36",
+        "tu93"
+      ]
+    },
+    "zero_yields_are_labelled_disproved_or_undecided": {
+      "census": {
+        "goal_kind_all_candidates": {
+          "degenerate_goal_predicate": 17,
+          "gate_timeout": 1,
+          "goal_unreached_within_budget": 5,
+          "goal_unreached_within_depth": 7,
+          "not_evaluated": 8,
+          "satisfiable": 2
+        },
+        "goal_kind_among_criterion_i_passers": {
+          "degenerate_goal_predicate": 3,
+          "goal_unreached_within_depth": 6
+        },
+        "n_candidates": 40,
+        "n_criterion_i_passers_whose_gate_was_UNDECIDED": 6,
+        "n_criterion_i_passers_whose_goal_was_DISPROVED": 3,
+        "n_passing_criterion_i": 9
+      },
+      "passed": true,
+      "principle": "`degenerate_goal_predicate` (reachable set searched exhaustively, goal never true) is evidence AGAINST the predicate; `goal_unreached_within_budget`/`_depth` mean the search stopped and reachability is UNKNOWN. Both make the criterion False and they license opposite conclusions, so a zero that is mostly UNDECIDED must not be reported as a disproof."
+    }
+  },
+  "cost": {
+    "N1_gpu_seconds_per_induction_mean": 52.2,
+    "N4_gpu_seconds_per_induction_mean": 170.9,
+    "N8_gpu_seconds_per_induction_mean": 367.1,
+    "gate_and_plan_wall_s_total_parallel": 0.0,
+    "gate_workers": 6,
+    "generation_wall_s_mean_per_candidate": 45.9,
+    "generation_wall_s_total": 2202.8,
+    "n_candidates_generated": 48,
+    "note": "generation_wall_s_total is SERIAL GPU time on one card -- every candidate went through one server process, so it is directly a GPU-hour figure. The gate/plan wall is CPU and was run with bounded parallelism; it is not GPU cost."
+  },
+  "diversity": {
+    "ft09": {
+      "n_candidates": 8,
+      "n_distinct_code_sha": 8,
+      "n_distinct_heldout_behaviour": 4
+    },
+    "lp85": {
+      "n_candidates": 8,
+      "n_distinct_code_sha": 8,
+      "n_distinct_heldout_behaviour": 2
+    },
+    "sc25": {
+      "n_candidates": 8,
+      "n_distinct_code_sha": 8,
+      "n_distinct_heldout_behaviour": 1
+    },
+    "tn36": {
+      "n_candidates": 8,
+      "n_distinct_code_sha": 8,
+      "n_distinct_heldout_behaviour": 3
+    },
+    "tu93": {
+      "n_candidates": 8,
+      "n_distinct_code_sha": 8,
+      "n_distinct_heldout_behaviour": 2
+    },
+    "vc33": {
+      "n_candidates": 8,
+      "n_distinct_code_sha": 8,
+      "n_distinct_heldout_behaviour": 1
+    }
+  },
+  "duration_s": 2202.8,
+  "duration_s_note": "Serial GPU decode time for every candidate, through ONE llama-server process on one RTX 3090. The offline scoring pass (verifier + goal gate + planner) is CPU and is reported separately under cost.gate_and_plan_wall_s_total_parallel.",
+  "experiment": "outer_loop_arc_induce_bestofn_phase1",
+  "generation_runs": {
+    "gpu1": {
+      "budget": 4096,
+      "n_candidates_requested": 8,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "seed_base": 7100,
+      "status": "ok",
+      "temperature": 0.2,
+      "wall_s": 950.4,
+      "witness": {
+        "gpu_requested": "1",
+        "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "observed_n_ctx": 32768,
+        "port": 8962,
+        "server_cmdline": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf -ngl 999 -c 32768 --port 8962 --host 127.0.0.1 --cache-type-k q8_0 --cache-type-v q8_0 ",
+        "server_exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_exe_is_cuda_build": true,
+        "server_pid": 1563056,
+        "vram_rows_mine": [
+          "1563056, 21434, 00000000:62:00.0"
+        ]
+      }
+    }
+  },
+  "goal_gate_failure_census": {
+    "postbank": {
+      "goal_kind_all_candidates": {
+        "degenerate_goal_predicate": 8
+      },
+      "goal_kind_among_criterion_i_passers": {},
+      "n_candidates": 8,
+      "n_criterion_i_passers_whose_gate_was_UNDECIDED": 0,
+      "n_criterion_i_passers_whose_goal_was_DISPROVED": 0,
+      "n_passing_criterion_i": 0
+    },
+    "stall": {
+      "goal_kind_all_candidates": {
+        "degenerate_goal_predicate": 17,
+        "gate_timeout": 1,
+        "goal_unreached_within_budget": 5,
+        "goal_unreached_within_depth": 7,
+        "not_evaluated": 8,
+        "satisfiable": 2
+      },
+      "goal_kind_among_criterion_i_passers": {
+        "degenerate_goal_predicate": 3,
+        "goal_unreached_within_depth": 6
+      },
+      "n_candidates": 40,
+      "n_criterion_i_passers_whose_gate_was_UNDECIDED": 6,
+      "n_criterion_i_passers_whose_goal_was_DISPROVED": 3,
+      "n_passing_criterion_i": 9
+    }
+  },
+  "headline": "Criterion (iii) as posed is 0.0 at N=8 -- but that zero is an EMPTY INTERSECTION, not an absent capability. No candidate (0 of 40) is simultaneously dynamics-clean by (i) and goal-satisfiable by (ii). Dropping the conjunction, 2 of 40 candidates reach a satisfiable goal AND a found plan, and best-of-N finds them: unconditional (iii) yield goes 0.0 at N=1 to 0.4 at N=8, and the SHIPPED pipeline's own conjunction (trust gate AND goal AND plan) goes 0.0 to 0.2. Selecting on dynamics accuracy is not merely insufficient for plannability -- on this grid it is anti-selective: on tn36 the six candidates with held-out accuracy 1.0 (17 of 17 changing transitions exact) ALL fail the goal gate, while the one candidate whose goal is satisfiable and plannable scores 0.235.",
+  "honest_verdict": "complete_criterion_iii_zero_by_empty_intersection_dynamics_anti_selects_for_plannability",
+  "inductions_passing_per_gpu_hour": {
+    "N1": {
+      "i_dynamics": 27.59,
+      "i_dynamics_strict": 27.59,
+      "ii_goal_satisfiable": 0.0,
+      "iii_plan_found": 0.0
+    },
+    "N4": {
+      "i_dynamics": 8.43,
+      "i_dynamics_strict": 8.43,
+      "ii_goal_satisfiable": 0.0,
+      "iii_plan_found": 0.0
+    },
+    "N8": {
+      "i_dynamics": 3.92,
+      "i_dynamics_strict": 3.92,
+      "ii_goal_satisfiable": 0.0,
+      "iii_plan_found": 0.0
+    }
+  },
+  "inductions_passing_per_gpu_hour_note": "How many stall inductions clear each criterion per GPU-hour of generation, at each N. Denominator is mean serial decode seconds per induction at that N.",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_note": "Every candidate is a real completion from gemma-4-31B-it Q4_K_M loaded on a CUDA build (build proven from /proc/<pid>/exe, per-PID VRAM residency recorded, n_ctx 32768). The scoring pass loads no model and is aggregation over those completions.",
+  "marginal_per_candidate_rate": {
+    "i_dynamics": {
+      "n": 40,
+      "n_pass": 9,
+      "rate": 0.225
+    },
+    "i_dynamics_strict": {
+      "n": 40,
+      "n_pass": 9,
+      "rate": 0.225
+    },
+    "ii_goal_satisfiable": {
+      "n": 40,
+      "n_pass": 0,
+      "rate": 0.0
+    },
+    "ii_goal_satisfiable_unconditional": {
+      "n": 40,
+      "n_pass": 2,
+      "rate": 0.05
+    },
+    "ii_shipped_gate_and_goal": {
+      "n": 40,
+      "n_pass": 1,
+      "rate": 0.025
+    },
+    "iii_plan_found": {
+      "n": 40,
+      "n_pass": 0,
+      "rate": 0.0
+    },
+    "iii_plan_found_unconditional": {
+      "n": 40,
+      "n_pass": 2,
+      "rate": 0.05
+    },
+    "iii_shipped_gate_and_plan": {
+      "n": 40,
+      "n_pass": 1,
+      "rate": 0.025
+    }
+  },
+  "milestone": "2026.07.outer_loop",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Two, independent. (a) RANK on goal reachability rather than gating on it: the gate already computes a depth and a frontier state, so a candidate whose goal is reachable at depth 6 is distinguishable from one needing depth 61 without widening any threshold. (b) Grade the predicate against evidence the agent already holds: on the stall path the prompt carries NO positive win-state example (previous_level_complete_grid is None on all five stall games and present only on the post-bank game), so the predicate is an unconstrained guess -- a plausibility score from observed structure would be oracle-distinct and independent of search budget.",
+      "failure_mode": "Across 5 stall inductions x 8 candidates, 9 engines clear the held-out dynamics bar and 2 reach a satisfiable goal with a found plan -- and the two sets are DISJOINT (0 of 40 candidates are in both). The shipped selector ranks on held-out dynamics accuracy, so among the candidates it prefers there is by construction no plannable one. On tn36 the six accuracy-1.0 engines all fail the goal gate while the plannable candidate scores 0.235.",
+      "gap": "selector_optimises_a_quantity_anti_correlated_with_goal_reachability",
+      "headroom_it_would_unlock": "2 of 40 sampled candidates are already plannable and the current selector cannot reach any of them. This is realised headroom, not hypothetical: the shipped pipeline's own conjunction rises from 0.0 at N=1 to 0.2 at N=4 once sampling supplies the candidate, so the missing piece is the ranking signal, not the generator.",
+      "missing_discriminator": "A score over the induced GOAL PREDICATE, not over the dynamics. Nothing in the current selector reads `is_level_complete` at all: `select_trusted_world_model` ranks on transition-prediction accuracy and off-path energy, and the goal is only consulted afterwards by a pass/fail reachability search whose answer is 'undecided' whenever it runs out of budget or depth -- as it did for 6 of the 9 dynamics-clean engines here.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "ffn_cpu_layers": 0,
+    "generator": "unsloth/gemma-4-31B-it-GGUF :: gemma-4-31B-it-Q4_K_M.gguf",
+    "invoked": true,
+    "kv_quant": "q8_0",
+    "mtp": false,
+    "n_ctx": 32768,
+    "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
+  },
+  "n_candidates_per_induction": 8,
+  "n_stall_inductions": 5,
+  "partition_evidence": {
+    "ft09": {
+      "heldout_n": 20,
+      "heldout_n_changing": 4,
+      "levels_gained": 0,
+      "n_transitions_at_induction": 17
+    },
+    "lp85": {
+      "heldout_n": 18,
+      "heldout_n_changing": 0,
+      "levels_gained": 0,
+      "n_transitions_at_induction": 17
+    },
+    "sc25": {
+      "heldout_n": 14,
+      "heldout_n_changing": 1,
+      "levels_gained": 0,
+      "n_transitions_at_induction": 17
+    },
+    "tn36": {
+      "heldout_n": 17,
+      "heldout_n_changing": 17,
+      "levels_gained": 0,
+      "n_transitions_at_induction": 17
+    },
+    "tu93": {
+      "heldout_n": 19,
+      "heldout_n_changing": 19,
+      "levels_gained": 0,
+      "n_transitions_at_induction": 17
+    },
+    "vc33": {
+      "heldout_n": 0,
+      "heldout_n_changing": 0,
+      "levels_gained": 2,
+      "n_transitions_at_induction": 1
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_generator_build"
+    },
+    {
+      "available": true,
+      "resource": "gemma_4_31b_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "per_pid_vram_residency"
+    },
+    {
+      "available": true,
+      "resource": "proven_heldout_split"
+    },
+    {
+      "available": true,
+      "resource": "captured_root_grid_for_goal_gate"
+    }
+  ],
+  "question": "Does generating N candidates per stall induction and selecting with the verifier raise the yield of (i) held-out dynamics, (ii) a satisfiable goal predicate, and (iii) an actual plan -- and does selecting on (i) alone select for the tn36 failure?",
+  "random_seed": 7100,
+  "random_seed_note": "Candidate k uses seed = seed_base + k at a FIXED temperature, all through one server process -- the sampler seed does not reach across server instances.",
+  "reproducibility_checksum": "fd97a416b91eee3444eb165680fbff4c",
+  "run_date": "2026-07-31T15:37:52Z",
+  "schema": "carnot.arc_induce_bestofn.v1",
+  "scored_detail_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_induce_bestofn_20260731/bestofn_scored.json",
+  "splits": {
+    "ft09": {
+      "call_index": 1,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "recorded_proposal_prefix_input",
+      "game": "ft09",
+      "heldout_can_grade_change": true,
+      "heldout_n_changing": 4,
+      "heldout_n_noop": 16,
+      "n_ambiguous_dropped": 1,
+      "n_full": 25,
+      "n_heldout": 20,
+      "n_prefix": 17,
+      "n_shown": 4,
+      "n_strict_live_suffix": 8,
+      "prompt_sha256_16": "dfb8723004cf67de",
+      "shown_n_changing": 2,
+      "split_proven": true
+    },
+    "lp85": {
+      "call_index": 1,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "recorded_proposal_prefix_input",
+      "game": "lp85",
+      "heldout_can_grade_change": false,
+      "heldout_n_changing": 0,
+      "heldout_n_noop": 18,
+      "n_ambiguous_dropped": 3,
+      "n_full": 25,
+      "n_heldout": 18,
+      "n_prefix": 17,
+      "n_shown": 4,
+      "n_strict_live_suffix": 8,
+      "prompt_sha256_16": "b1997c13183e68cf",
+      "shown_n_changing": 2,
+      "split_proven": true
+    },
+    "sc25": {
+      "call_index": 1,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "recorded_proposal_prefix_input",
+      "game": "sc25",
+      "heldout_can_grade_change": true,
+      "heldout_n_changing": 1,
+      "heldout_n_noop": 13,
+      "n_ambiguous_dropped": 3,
+      "n_full": 25,
+      "n_heldout": 14,
+      "n_prefix": 17,
+      "n_shown": 8,
+      "n_strict_live_suffix": 8,
+      "prompt_sha256_16": "edc4e636499a89ed",
+      "shown_n_changing": 6,
+      "split_proven": true
+    },
+    "tn36": {
+      "call_index": 1,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "recorded_proposal_prefix_input",
+      "game": "tn36",
+      "heldout_can_grade_change": true,
+      "heldout_n_changing": 17,
+      "heldout_n_noop": 0,
+      "n_ambiguous_dropped": 2,
+      "n_full": 25,
+      "n_heldout": 17,
+      "n_prefix": 17,
+      "n_shown": 6,
+      "n_strict_live_suffix": 8,
+      "prompt_sha256_16": "b14cf85555655836",
+      "shown_n_changing": 6,
+      "split_proven": true
+    },
+    "tu93": {
+      "call_index": 1,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "recorded_proposal_prefix_input",
+      "game": "tu93",
+      "heldout_can_grade_change": true,
+      "heldout_n_changing": 19,
+      "heldout_n_noop": 0,
+      "n_ambiguous_dropped": 0,
+      "n_full": 25,
+      "n_heldout": 19,
+      "n_prefix": 17,
+      "n_shown": 6,
+      "n_strict_live_suffix": 8,
+      "prompt_sha256_16": "3e0a090197f2acaf",
+      "shown_n_changing": 6,
+      "split_proven": true
+    },
+    "vc33": {
+      "call_index": 1,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "recorded_proposal_prefix_input",
+      "game": "vc33",
+      "heldout_can_grade_change": false,
+      "heldout_n_changing": 0,
+      "heldout_n_noop": 0,
+      "n_ambiguous_dropped": 0,
+      "n_full": 1,
+      "n_heldout": 0,
+      "n_prefix": 1,
+      "n_shown": 1,
+      "n_strict_live_suffix": 0,
+      "prompt_sha256_16": "d5883796cd89bf3a",
+      "shown_n_changing": 1,
+      "split_proven": true
+    }
+  },
+  "surprising_result_acknowledgment": null,
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "The selector is the induced world model's held-out prediction accuracy plus the goal/plan reachability search -- not the executable oracle that defines a win. No moat or verifier-value claim is made; this measures whether verifier-based SELECTION among sampled candidates changes the induce path's yield.",
+  "yield_by_criterion_and_N": {
+    "N1": {
+      "i_dynamics": 0.4,
+      "i_dynamics_strict": 0.4,
+      "ii_goal_satisfiable": 0.0,
+      "iii_plan_found": 0.0
+    },
+    "N4": {
+      "i_dynamics": 0.4,
+      "i_dynamics_strict": 0.4,
+      "ii_goal_satisfiable": 0.0,
+      "iii_plan_found": 0.0
+    },
+    "N8": {
+      "i_dynamics": 0.4,
+      "i_dynamics_strict": 0.4,
+      "ii_goal_satisfiable": 0.0,
+      "iii_plan_found": 0.0
+    }
+  },
+  "yields_postbank_path": {
+    "N1": {
+      "accept_first_over_same_N": {
+        "selected_candidate_index": {
+          "vc33": 0
+        },
+        "yield": {
+          "i_dynamics": null,
+          "i_dynamics_strict": null,
+          "ii_goal_satisfiable": null,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": null,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      },
+      "i_dynamics": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "i_dynamics_strict": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "ii_goal_satisfiable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "ii_shipped_gate_and_goal": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "iii_plan_found_unconditional": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "iii_shipped_gate_and_plan": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "select_on_i_then_check": {
+        "per_criterion": {
+          "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_strict": {
+            "vc33": null
+          },
+          "ii_goal_satisfiable": {
+            "vc33": null
+          },
+          "ii_goal_satisfiable_unconditional": {
+            "vc33": false
+          },
+          "ii_shipped_gate_and_goal": {
+            "vc33": false
+          },
+          "iii_plan_found": {
+            "vc33": null
+          },
+          "iii_plan_found_unconditional": {
+            "vc33": false
+          },
+          "iii_shipped_gate_and_plan": {
+            "vc33": false
+          }
+        },
+        "selected_candidate_index": {
+          "vc33": 0
+        },
+        "yield": {
+          "i_dynamics": null,
+          "i_dynamics_strict": null,
+          "ii_goal_satisfiable": null,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": null,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      }
+    },
+    "N4": {
+      "accept_first_over_same_N": {
+        "selected_candidate_index": {
+          "vc33": 0
+        },
+        "yield": {
+          "i_dynamics": null,
+          "i_dynamics_strict": null,
+          "ii_goal_satisfiable": null,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": null,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      },
+      "i_dynamics": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "i_dynamics_strict": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "ii_goal_satisfiable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "ii_shipped_gate_and_goal": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "iii_plan_found_unconditional": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "iii_shipped_gate_and_plan": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "select_on_i_then_check": {
+        "per_criterion": {
+          "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_strict": {
+            "vc33": null
+          },
+          "ii_goal_satisfiable": {
+            "vc33": null
+          },
+          "ii_goal_satisfiable_unconditional": {
+            "vc33": false
+          },
+          "ii_shipped_gate_and_goal": {
+            "vc33": false
+          },
+          "iii_plan_found": {
+            "vc33": null
+          },
+          "iii_plan_found_unconditional": {
+            "vc33": false
+          },
+          "iii_shipped_gate_and_plan": {
+            "vc33": false
+          }
+        },
+        "selected_candidate_index": {
+          "vc33": 0
+        },
+        "yield": {
+          "i_dynamics": null,
+          "i_dynamics_strict": null,
+          "ii_goal_satisfiable": null,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": null,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      }
+    },
+    "N8": {
+      "accept_first_over_same_N": {
+        "selected_candidate_index": {
+          "vc33": 0
+        },
+        "yield": {
+          "i_dynamics": null,
+          "i_dynamics_strict": null,
+          "ii_goal_satisfiable": null,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": null,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      },
+      "i_dynamics": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "i_dynamics_strict": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "ii_goal_satisfiable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "ii_shipped_gate_and_goal": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null
+      },
+      "iii_plan_found_unconditional": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "iii_shipped_gate_and_plan": {
+        "n_measured_games": 1,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": false
+        },
+        "yield": 0.0
+      },
+      "select_on_i_then_check": {
+        "per_criterion": {
+          "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_strict": {
+            "vc33": null
+          },
+          "ii_goal_satisfiable": {
+            "vc33": null
+          },
+          "ii_goal_satisfiable_unconditional": {
+            "vc33": false
+          },
+          "ii_shipped_gate_and_goal": {
+            "vc33": false
+          },
+          "iii_plan_found": {
+            "vc33": null
+          },
+          "iii_plan_found_unconditional": {
+            "vc33": false
+          },
+          "iii_shipped_gate_and_plan": {
+            "vc33": false
+          }
+        },
+        "selected_candidate_index": {
+          "vc33": 0
+        },
+        "yield": {
+          "i_dynamics": null,
+          "i_dynamics_strict": null,
+          "ii_goal_satisfiable": null,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": null,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      }
+    },
+    "games": [
+      "vc33"
+    ],
+    "marginal_per_candidate": {
+      "i_dynamics": {
+        "implied_any_of_N_if_independent": {
+          "N1": null,
+          "N4": null,
+          "N8": null
+        },
+        "marginal_rate": null,
+        "n_candidates_measured": 0,
+        "n_pass": 0
+      },
+      "i_dynamics_strict": {
+        "implied_any_of_N_if_independent": {
+          "N1": null,
+          "N4": null,
+          "N8": null
+        },
+        "marginal_rate": null,
+        "n_candidates_measured": 0,
+        "n_pass": 0
+      },
+      "ii_goal_satisfiable": {
+        "implied_any_of_N_if_independent": {
+          "N1": null,
+          "N4": null,
+          "N8": null
+        },
+        "marginal_rate": null,
+        "n_candidates_measured": 0,
+        "n_pass": 0
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.0,
+          "N4": 0.0,
+          "N8": 0.0
+        },
+        "marginal_rate": 0.0,
+        "n_candidates_measured": 8,
+        "n_pass": 0
+      },
+      "ii_shipped_gate_and_goal": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.0,
+          "N4": 0.0,
+          "N8": 0.0
+        },
+        "marginal_rate": 0.0,
+        "n_candidates_measured": 8,
+        "n_pass": 0
+      },
+      "iii_plan_found": {
+        "implied_any_of_N_if_independent": {
+          "N1": null,
+          "N4": null,
+          "N8": null
+        },
+        "marginal_rate": null,
+        "n_candidates_measured": 0,
+        "n_pass": 0
+      },
+      "iii_plan_found_unconditional": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.0,
+          "N4": 0.0,
+          "N8": 0.0
+        },
+        "marginal_rate": 0.0,
+        "n_candidates_measured": 8,
+        "n_pass": 0
+      },
+      "iii_shipped_gate_and_plan": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.0,
+          "N4": 0.0,
+          "N8": 0.0
+        },
+        "marginal_rate": 0.0,
+        "n_candidates_measured": 8,
+        "n_pass": 0
+      }
+    },
+    "n_candidates_available_per_game": 8
+  },
+  "yields_stall_path": {
+    "N1": {
+      "accept_first_over_same_N": {
+        "selected_candidate_index": {
+          "ft09": 0,
+          "lp85": 0,
+          "sc25": 0,
+          "tn36": 0,
+          "tu93": 0
+        },
+        "yield": {
+          "i_dynamics": 0.4,
+          "i_dynamics_strict": 0.4,
+          "ii_goal_satisfiable": 0.0,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": 0.0,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      },
+      "i_dynamics": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": false,
+          "lp85": true,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "i_dynamics_strict": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": false,
+          "lp85": true,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "ii_goal_satisfiable": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "ii_shipped_gate_and_goal": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found_unconditional": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "iii_shipped_gate_and_plan": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "select_on_i_then_check": {
+        "per_criterion": {
+          "i_dynamics": {
+            "ft09": false,
+            "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_strict": {
+            "ft09": false,
+            "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "ii_goal_satisfiable": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "ii_goal_satisfiable_unconditional": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "ii_shipped_gate_and_goal": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_plan_found": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_plan_found_unconditional": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_shipped_gate_and_plan": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          }
+        },
+        "selected_candidate_index": {
+          "ft09": 0,
+          "lp85": 0,
+          "sc25": 0,
+          "tn36": 0,
+          "tu93": 0
+        },
+        "yield": {
+          "i_dynamics": 0.4,
+          "i_dynamics_strict": 0.4,
+          "ii_goal_satisfiable": 0.0,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": 0.0,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      }
+    },
+    "N4": {
+      "accept_first_over_same_N": {
+        "selected_candidate_index": {
+          "ft09": 0,
+          "lp85": 0,
+          "sc25": 0,
+          "tn36": 0,
+          "tu93": 0
+        },
+        "yield": {
+          "i_dynamics": 0.4,
+          "i_dynamics_strict": 0.4,
+          "ii_goal_satisfiable": 0.0,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": 0.0,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      },
+      "i_dynamics": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": false,
+          "lp85": true,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "i_dynamics_strict": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": false,
+          "lp85": true,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "ii_goal_satisfiable": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "ii_shipped_gate_and_goal": {
+        "n_measured_games": 5,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.2
+      },
+      "iii_plan_found": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found_unconditional": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "iii_shipped_gate_and_plan": {
+        "n_measured_games": 5,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.2
+      },
+      "select_on_i_then_check": {
+        "per_criterion": {
+          "i_dynamics": {
+            "ft09": false,
+            "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_strict": {
+            "ft09": false,
+            "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "ii_goal_satisfiable": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "ii_goal_satisfiable_unconditional": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "ii_shipped_gate_and_goal": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_plan_found": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_plan_found_unconditional": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_shipped_gate_and_plan": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          }
+        },
+        "selected_candidate_index": {
+          "ft09": 1,
+          "lp85": 2,
+          "sc25": 0,
+          "tn36": 0,
+          "tu93": 0
+        },
+        "yield": {
+          "i_dynamics": 0.4,
+          "i_dynamics_strict": 0.4,
+          "ii_goal_satisfiable": 0.0,
+          "ii_goal_satisfiable_unconditional": 0.2,
+          "ii_shipped_gate_and_goal": 0.2,
+          "iii_plan_found": 0.0,
+          "iii_plan_found_unconditional": 0.2,
+          "iii_shipped_gate_and_plan": 0.2
+        }
+      }
+    },
+    "N8": {
+      "accept_first_over_same_N": {
+        "selected_candidate_index": {
+          "ft09": 0,
+          "lp85": 0,
+          "sc25": 0,
+          "tn36": 0,
+          "tu93": 5
+        },
+        "yield": {
+          "i_dynamics": 0.4,
+          "i_dynamics_strict": 0.4,
+          "ii_goal_satisfiable": 0.0,
+          "ii_goal_satisfiable_unconditional": 0.0,
+          "ii_shipped_gate_and_goal": 0.0,
+          "iii_plan_found": 0.0,
+          "iii_plan_found_unconditional": 0.0,
+          "iii_shipped_gate_and_plan": 0.0
+        }
+      },
+      "i_dynamics": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": false,
+          "lp85": true,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "i_dynamics_strict": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": false,
+          "lp85": true,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "ii_goal_satisfiable": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "ii_shipped_gate_and_goal": {
+        "n_measured_games": 5,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.2
+      },
+      "iii_plan_found": {
+        "n_measured_games": 5,
+        "n_pass": 0,
+        "per_game": {
+          "ft09": false,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.0
+      },
+      "iii_plan_found_unconditional": {
+        "n_measured_games": 5,
+        "n_pass": 2,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.4
+      },
+      "iii_shipped_gate_and_plan": {
+        "n_measured_games": 5,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": true,
+          "lp85": false,
+          "sc25": false,
+          "tn36": false,
+          "tu93": false
+        },
+        "yield": 0.2
+      },
+      "select_on_i_then_check": {
+        "per_criterion": {
+          "i_dynamics": {
+            "ft09": false,
+            "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_strict": {
+            "ft09": false,
+            "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "ii_goal_satisfiable": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "ii_goal_satisfiable_unconditional": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "ii_shipped_gate_and_goal": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_plan_found": {
+            "ft09": false,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_plan_found_unconditional": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          },
+          "iii_shipped_gate_and_plan": {
+            "ft09": true,
+            "lp85": false,
+            "sc25": false,
+            "tn36": false,
+            "tu93": false
+          }
+        },
+        "selected_candidate_index": {
+          "ft09": 1,
+          "lp85": 2,
+          "sc25": 0,
+          "tn36": 0,
+          "tu93": 5
+        },
+        "yield": {
+          "i_dynamics": 0.4,
+          "i_dynamics_strict": 0.4,
+          "ii_goal_satisfiable": 0.0,
+          "ii_goal_satisfiable_unconditional": 0.2,
+          "ii_shipped_gate_and_goal": 0.2,
+          "iii_plan_found": 0.0,
+          "iii_plan_found_unconditional": 0.2,
+          "iii_shipped_gate_and_plan": 0.2
+        }
+      }
+    },
+    "games": [
+      "ft09",
+      "lp85",
+      "sc25",
+      "tn36",
+      "tu93"
+    ],
+    "marginal_per_candidate": {
+      "i_dynamics": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.225,
+          "N4": 0.6392,
+          "N8": 0.8699
+        },
+        "marginal_rate": 0.225,
+        "n_candidates_measured": 40,
+        "n_pass": 9
+      },
+      "i_dynamics_strict": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.225,
+          "N4": 0.6392,
+          "N8": 0.8699
+        },
+        "marginal_rate": 0.225,
+        "n_candidates_measured": 40,
+        "n_pass": 9
+      },
+      "ii_goal_satisfiable": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.0,
+          "N4": 0.0,
+          "N8": 0.0
+        },
+        "marginal_rate": 0.0,
+        "n_candidates_measured": 40,
+        "n_pass": 0
+      },
+      "ii_goal_satisfiable_unconditional": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.05,
+          "N4": 0.1855,
+          "N8": 0.3366
+        },
+        "marginal_rate": 0.05,
+        "n_candidates_measured": 40,
+        "n_pass": 2
+      },
+      "ii_shipped_gate_and_goal": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.025,
+          "N4": 0.0963,
+          "N8": 0.1833
+        },
+        "marginal_rate": 0.025,
+        "n_candidates_measured": 40,
+        "n_pass": 1
+      },
+      "iii_plan_found": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.0,
+          "N4": 0.0,
+          "N8": 0.0
+        },
+        "marginal_rate": 0.0,
+        "n_candidates_measured": 40,
+        "n_pass": 0
+      },
+      "iii_plan_found_unconditional": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.05,
+          "N4": 0.1855,
+          "N8": 0.3366
+        },
+        "marginal_rate": 0.05,
+        "n_candidates_measured": 40,
+        "n_pass": 2
+      },
+      "iii_shipped_gate_and_plan": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.025,
+          "N4": 0.0963,
+          "N8": 0.1833
+        },
+        "marginal_rate": 0.025,
+        "n_candidates_measured": 40,
+        "n_pass": 1
+      }
+    },
+    "n_candidates_available_per_game": 8
+  }
+}

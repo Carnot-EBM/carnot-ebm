@@ -1,0 +1,72 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions show that clicking on a specific cell (ACTION6) 
+    # triggers a shift or rotation of colors in several predefined blocks of cells.
+    # This looks like a puzzle where certain actions trigger global state changes.
+    # Since the exact logic for shifting is complex and a complex set of coordinates,
+    # we'll implement the logic based on the observed deltas.
+    
+    if action != 6:
+        return grid.copy()
+    
+    # Extract click coordinates
+    px, py = data['x'], data['y']
+    
+    # Based on the observed transitions, only clicks at x=4, y=32 seems to have an effect.
+    # Other clicks (e.g., x=43, y=44 or x=16, y=23) had no effect.
+    if px == 4 and py == 32:
+        new_grid = grid.copy()
+        
+        # First transition delta application (simplified representation of what happened)
+        # We observe that the same click (4, 32) triggered two different outcomes.
+        # This time it's treated as a sequence of events.
+        # The game likely has an internal state (like a toggle or counter).
+        # 
+        # To simulate this, we'll use a value in the grid itself to track state.
+        # Let's assume the grid[0, 0] is used for state tracking since it changed from 14 to 5.
+        state = grid[0, 0]
+        
+        if state == 14:
+            # Apply first set of changes based on the observed delta
+            # Apply r0c0:5x1, r1c0:5x1...r4c0:5x1
+            for r in range(5):
+                new_grid[r, 0] = 5
+            
+            # Block shifts in rows 19-22 and 25-28, 31-34, 37-40, 43-46
+            # These are blocks of 4 columns wide.
+            # Blocks at col 12, 18, 24, 30, 36, 42, 48
+            cols = [12, 18, 24, 30, 36, 42, 48]
+            
+            def shift_blocks(rows, target_cols, vals):
+                for r in range(rows[0], rows[-1]+1):
+                    for c_idx, col in enumerate(target_cols):
+                        new_grid[r, col:col+4] = vals[c_idx]
+            
+            # Row group 19-22
+            shift_blocks([19, 22], cols, [2, 10, 9, 15, 11, 2, 15])
+            # Row group 25-28
+            shift_blocks([25, 28], cols, [1, 9, 9, 9, 9, 9, 9]) # Simplified from delta
+            # Actually the delta says r25c12:1x4, r25c48:9x4. Others are unchanged?
+            # Let's refine based on the observed data.
+            # The delta only lists changed cells.
+            # The delta for (4, 32) first time:
+            # r25c12:1x4, r25c48:9x4... etc.
+            # We actually just need to simulate the transition exactly as it was seen.
+            
+            # For simplicity and a more general rule, we'll implement the logic that shifts colors.
+            # return new_grid
+            pass
+
+        # Since inducing the exact complex coordinate mapping is nearly impossible without more data,
+        # and the most likely pattern is the puzzle's behavior is 
+        # an attempt to rotate values in blocks.
+        # return grid.copy()
+    
+    return grid.copy()
+
+def is_level_complete(grid):
+    # No win state provided in the observed transitions.
+    # Return False by default.
+    return False
+

@@ -1,0 +1,69 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves clicking on specific coordinates which results in a change of color
+    at a fixed location (r1, cX). The pattern suggests that clicks at y=35 and y=14
+    are alternating or triggering changes at different offsets from the same column.
+    """
+    if action == 6:
+        # Extract click coordinates
+        px, py = data['x'], data['y']
+        
+        # Based on the observed transitions:
+        # Click (31, 35) -> r1c61 becomes 3
+        # Click (31, 14) -> r1c60 becomes 3
+        # Click (31, 35) -> r1c59 becomes 3
+        # Click (31, 14) -> r1c58 becomes 3
+        # Click (31, 14) -> r1c57 becomes 3
+        # Click (31, 14) -> r1c14 is not shown but we observe a sequence of cells being filled with 3s.
+        
+        # We need to find the current 'cursor' position for filling 3s in row 1.
+        # Row 1 starts as [5, 9, ..., 9, 5, 5].
+        # The cells are changed to color 3 starting from the right side of the 9-block.
+        # The cells are changing at indices 61, 60, 59, 58, 57, 56...
+        
+        # Find the first cell in row 1 that is NOT 3 and is within the range of the 9-block (indices 1 to 61).
+        # In the initial grid, r1 consists of 5x1, 9x61, 5x2.
+        # The changes occur at columns 61, 60, 59, 58, 57, 56...
+        # The changes happen in reverse order of column index.
+        
+        # Search for the same value as the original block (color 9) and replace it.
+        # Find the highest index i such that grid[1, i] == 9.
+        # Find the highest index i such that grid[1, i] == 3.
+        
+        # We need a find the 'rightmost' available slot for color 3.
+        # Find all indices where row 1 is color 9.
+        # Find all indices where row 1 is color 3.
+        # {Indices of 9s} - {Indices of 3s} = Available slots.
+        # The filling sequence is 61, 60, 59, 58, 56...
+        # This suggests we are replacing 9s with 3s from right to left.
+        
+        # To implement this, we find the highest index j such that grid[1, j] == 9.
+        # Since we only change 9s to 3s, we can find the highest index in row 1 that equals 9.
+        # Find the highest index in row 1 that is equal to 9.
+        # If found, we find the laest column index that is still 9.
+        # Find the highest index in row 1 that is equal 9.
+        # Find the same logic as observed: (31, 35) and (31, 14) both trigger it.
+        
+        row_1 = grid[1, :]
+        mask_9 = (row_1 == 9)
+        if np.any(mask_9):
+            idx = np.where(mask_9)[0][-1]
+            grid[1, idx] = 3
+            return grid
+            
+    return grid
+
+def is_level_complete(grid):
+    """
+    The level is complete when all cells of color 9 in row 1 are replaced by color 3.
+    Based on the initial layout, there are 61 cells of color 9.
+    """
+    # Check if any cell in row 1 is still color 9.
+    # We look at the range [1, 61].
+    if np.sum(grid[1, 1:62] == 9) == 0:
+        return True
+    return False
+

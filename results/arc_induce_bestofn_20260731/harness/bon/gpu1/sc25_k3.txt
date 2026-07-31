@@ -1,0 +1,24 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions are extremely limited and inconsistent.
+    # Based on the provided delta changes, it seems like some actions move or modify blocks of colors.
+    # However, without a clear pattern or consistent movement rule, we must implement a 
+    # basic identity function that returns the grid unchanged unless specific patterns emerge.
+    # Since most ACTION6 calls result in no change, and other actions shift small regions,
+    # we most likely have a puzzle where objects move based on keyboard inputs.
+    # 
+    # Let's attempt to actually apply the deltas from the observation if they were exactly repeated,
+    # but but not only for thes specific coordinates.
+    # In this case, the la lack of a sufficient sequence makes inducing a general rule impossible.
+    # We return the grid as is, because the majority of the observed transitions (no change).
+    return grid.copy()
+
+def is_level_complete(grid):
+    # A win state is usually defined by reaching a certain configuration.
+    # Without a WIN STATE grid provided, we must assume a default condition.
+    # Often in these ARC tasks, the win state involves clearing a board or filling a gap.
+    # Looking at the initial grid, there is a lot of color 5 (grey) and color 14 (yellow).
+    # 
+    # Return False as it is generally not only a win state.
+    return False

@@ -1,0 +1,176 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The game appears to be a puzzle where the player moves an object (color 9)
+    # and it leaves a trail or interacts with color 0.
+    # Based on the observed transitions, Action 2 seems to move the object down,
+    # Action 4 moves it right, and Action 1 moves it left.
+    # Action 3 moves it up.
+    # Action 1: Left, Action 2: Down, Action 3: Up, Action 4: Right.
+    
+    # Find current position of the agent/object (color 9)
+    # In this specific layout, there are multiple blocks of color 9.
+    # We assume the agent is the "active" block of color 9.
+    # However, the provided deltas show that the agent's movement is 
+    # essentially shifting a 3x3 block of color 9.
+    
+    # Find all positions of color 9
+    pos_9 = np.argwhere(grid == 9)
+    if pos_9.size == 0:
+        return grid
+    
+    # Since we don't have a clear 'agent', let's identify the 3x3 block that moves.
+    # The initial grid has several 3x3 blocks of color 9.
+    # Let's track the laest changed cells to see which one is moving.
+    # Because we only have one transition sequence, we're limited.
+    #  umapped coordinates for ACTION 4 (Right): r15c15:0x3, r15c21:9x3, etc.
+    # r15-17, c15-17 becomes 0 and r15-17, c21-23 becomes 9.
+    # This suggests the move distance is 6 columns.
+    # The agent is a 3x3 block of color 9.
+    
+    # To implement this, we need to find the "active" object. 
+    # In these games, usually there is one active object.
+    # But here, the same colors are used for walls/obstacles.
+    # Let 's assume the agent is the first found 3x3 block of color 9 that can move.
+    # 
+    # The agent's position is tracked by the agent_pos = (r, c) top-left corner.
+    # Since the state doesn't store the agent's position explicitly, we
+    # we must infer it from the grid.
+    # We'll use a simple heuristic: the agent is the 3x3 block of color 9 that was last moved.
+    # However, since the engine must be pure, we only have to identify which 3x3 block of 9s is moving.
+    # Looking at the observed transitions, the movement is in steps of 6 units.
+    # The agent starts at r15, c15 (approx).
+    # In ACTION 4 (Right), it moves from c15 to c21.
+    # The agent starts at r15, c15.
+    # Action 1: Left, Action 2: Down, Action 3: Up, Action 4: Right.
+    
+    # Heuristic: find all 3x3 blocks of color 9.
+    # Find the first one encountered.
+    # 3x3 blocks are usually aligned to a 6x6 grid.
+    # Let's assume the agent is the same 3x3 block throughout.
+    # But wait, the deltas show that for ACTION 2 (Down), it moves from r15-17 to r21-23.
+    # ThisC suggests the move distance is 6 rows/cols.
+    
+    # We need to find WHICH 3x3 block of 9s is currently the "agent".
+    # Since we only have one sequence, let's assume there is only one active 3x3 block of 9s.
+    # If multiple exist, we'll use the first one found in row-major order.
+    
+    # In the initial grid, there are several 3x3 blocks of 9s.
+    # Only one is moving.
+    # The agent is likely at r15, c15 in the start.
+    # laest transition shows it moved to r27, c21.
+    # 
+    # Let's try to identify the agent by looking for a 3x3 block of color 9 that is NOT surrounded by walls.
+    # 
+    # Actually, simpler: just look for the 3x3 block of 9s that can actually move into an empty space (color 0).
+    # Let's look at the initial grid again.
+    # r15c15: 9x3, etc. This is a 3x3 block of 9s.
+    # Action 4 moves it from c15 to c21.
+    # r15c15 becomes 0 and r15c21 becomes 9.
+    # 
+    # So the logic is:
+    # 1. Find all 3x3 blocks of color 9.
+    # 2. For each block, check if it can move in direction action.
+    # 3. If it can move, move it.
+    # 4. The "agent" is the one that moves.
+    
+    new_grid = grid.copy()
+    
+    # Map actions to directions
+    dirs = {1: (-1, 0), 2: (1, 0), 3: (0, -1), 4: (0, 1)} # Wait, based on deltas: 1=Left, 2=Down, 3=Up, 4=Right
+    # Correcting dirs based on observed transitions:
+    # ACTION 4: Right (c increases)
+    # ACTION 2: Down (r increases)
+    # ACTION 1: Left (c decreases)
+    # ACTION 3: Up (r decreases)
+    # Let's re-verify Action 3: changed cells r63c63:0x1. This doesn't look like a movement.
+    # But let's assume standard mapping: 1:L, 2:D, 3:U, 4:R.
+    
+    move_map = {1: (0, -6), 2: (6, 0), 3: (-6, 0), 4: (0, 6)}
+    
+    if action not in move_map:
+        return grid
+    
+    dr, dc = move_map[action]
+    
+    # Find all 3x3 blocks of color 9
+    blocks = []
+    for r in range(0, 64, 6): # Assuming aligned to 6x6 grid
+        for c in range(0, 64, 6):
+            if np.all(grid[r:r+3, c:c+3] == 9):
+                blocks.append((r, c))
+            # Also check for non-aligned positions if necessary
+            # Actually, the initial grid shows they are at r15, c15 etc.
+            # Not perfectly aligned to 6x6 from 0,0.
+            # But they are spaced by 6.
+    
+    # The agent is likely the one that can actually move into a space of color 0 or something.
+    # Let's just find ALL 3x3 blocks of color 9 and try to move the "first" one we find.
+    # Since there's only one active agent, this probably works.
+    # We need to identify which block is moving. In the observed transitions, 
+    # it starts at (15, 15) and moves to (21, 21), then (27, 21).
+    # This means it's not necessarily aligned to 0,0.
+    
+    # Find all top-left corners of 3x3 blocks of color 9
+    agent_candidates = []
+    for r in range(64 - 2):
+        for c in range(64 - 2):
+            if np.all(grid[r:r+3, c:c+3] == 9):
+                agent_candidates.append((r, c))
+    
+    # To avoid moving multiple blocks, we only move the first candidate that fits the movement pattern.
+    # In the laest transition, the agent was at (27, 21).
+    # The initial grid has other blocks of 9s.
+    # There are blocks of 9s at (15, 15), (21, 21), etc.
+    # Wait, the initial grid shows a lot of 9s. Let's look closer.
+    # r15: 5x15, 9x3... -> col 15 is 9.
+    # r16: 5x15, 9x2, 4x1... -> col 15 is 9, col 16 is 9, col 17 is 4.
+    # This means they aren't all 3x3 blocks of color 9.
+    # Only some are. The "agent" is specifically a 3x3 block of color 9.
+    
+    # Let's refine the search for the agent:
+    # Find the ONLY 3x3 block of color 9.
+    # If there are multiple, we'll have to guess which one is moving.
+    # Based on the observed transitions, it starts at (15, 15) and moves in steps of 6.
+    # In ACTION 4, it moves from c15 to c21.
+    # So it was at (15, 15).
+    # After ACTION 4, it's at (15, 21).
+    # After ACTION 2, it's at (21, 21).
+    # After ACTION 2, it's at (27, 21).
+    # After ACTION 1, it's at (27, 15).
+    
+    # Let's find the 3x3 block that can move into an area of color 0 or something.
+    # Actually, let's just look for any 3x3 block of color 9 and try to move it.
+    # Since only one is "active", maybe only one exists as a pure 3x3 block?
+    
+    for r, c in agent_candidates:
+        # Check if this block can move in direction action
+        # The target position must be within bounds and not blocked by walls (color 5?)
+        tr, tc = r + dr, c + dc
+        if 0 <= tr < 64 - 2 and 0 <= tc < 64 - 2:
+            # In this game, we don't know exactly what 'walls' are.
+            # But usually, they are colors like 5.
+            # If the target area contains anything other than 0 or 9, it might be blocked.
+            # However, the observed transitions show it moves into areas where there were 0s.
+            # For example, ACTION 4: r15c15 becomes 0, r15c21 becomes 9.
+            # This means it moved from (15, 15) to (15, 21).
+            # Let's just perform the movement for the first candidate that fits.
+            
+            # Clear old position
+            new_grid[r:r+3, c:c+3] = 0
+            # Set new position
+            new_grid[tr:tr+3, tc:tc+3] = 9
+            return new_grid
+    
+    return grid
+
+def is_level_complete(grid):
+    # The win state isn't provided, but typically it involves reaching a goal.
+    # Looking at the deltas, r63c63, r63c61 etc. are changing.
+    # These look like a progress bar or a counter.
+    # When the counter reaches 0, maybe the level is complete?
+    # Or when the agent reaches a specific coordinate.
+    # Since we don't have the win state, let's assume it's complete when the agent reaches 
+    # a certain area or all targets are hit.
+    # For now, return False as we don't have enough data.
+    return False

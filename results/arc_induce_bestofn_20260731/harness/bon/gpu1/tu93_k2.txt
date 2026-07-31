@@ -1,0 +1,190 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The game appears to be a puzzle where an agent moves through a maze of walls and paths.
+    # Based on the observed transitions, it seems that some colors are used for markers or 
+    # specific objects.
+    # The grid contains various colors: 0, 2, 4, 5, 6, 9, 14.
+    # 
+    # Action mapping based on common ARC patterns:
+    # ACTION1: Up?
+    # ACTION2: Down?
+    # ACTION3: Left?
+    # ACTION4: Right?
+    # ACTION6: Click (not used in the observed transitions)
+    # 
+    # Looking at the observed deltas:
+    # ACTION4 (Right) moved something from c15-c21 range to c21-c24 range.
+    # ACTION2 (Down) moved something from r15-r17 to r21-r23.
+    # ACTION2 (Down) again moved something from r21-r23 to r27-r29.
+    # ACTION1 (Up) moved something from r27-r29 back to r21-r23.
+    # 
+    # It seems there be an agent (represented by color 9) moving through a maze of walls (color 2 or 0).
+    # 
+    # Let's identify the agent's current position. The agent is likely the object that changes position.
+    # In the initial grid, color 9 is at (15, 15), (16, 15), (17, 15) - wait, no.
+    # Initial Grid Analysis:
+    # r15: 5x15, 9x3, ... -> col 15, 16, 17 are color 9.
+    # r16: 5x15, 9x2, 4x1, ... -> col 15, 16 are color 9, col 17 is color 4.
+    # r17: 5x15, 9x3, ... -> col 15, 16, 17 are color 9.
+    # This looks like a 3x3 block of color 9 with one cell (16, 17) being color 4.
+    # The "agent" is this 3x3 block.
+    # 
+    # Agent properties:
+    # Size: 3x3.
+    # Center: (16, 16).
+    # 
+    # Movement rules:
+    # Action 1: Up (-1 row)
+    # Action 2: Down (+1 row)
+    # Action 3: Left (-1 col)
+    # Action 4: Right (+1 col)
+    # 
+    # However, the deltas show movement in blocks of 6 units?
+    # ACTION4: r15c15:0x3, r15c21:9x3... (moved from c15 to c21, delta = +6)
+    # ACTION2: r15c21:0x3, r21c21:9x3... (moved from r15 to r21, delta = +6)
+    # 
+    # It seems the agent moves in steps of 6 logical cells.
+    # 
+    # Let's refine the agent identification:
+    # The agent is a 3x3 block centered at (r, c).
+    # When it moves, the old position becomes color 5 (background), and the same pattern of colors within the 3x3 block is 
+    # 3x3 grid of values: [[9, 9, 9], [9, 4, 9], [9, 9, 9]] - wait, no.
+    # Initial Grid:
+    # r15: 9x3
+    # r16: 9x2, 4x1
+    # r17: 9x3
+    # This means the 3x3 block is:
+    # row 0: 9, 9, 9
+    # row 1: 9, 9, 4  <-- col 17 is 4
+    # row 2: 9, 9, 9
+    # 
+    # Let's check ACTION4 again:
+    # r15c15:0x3 -> background becomes 0? No, 0 is a wall.
+    # Wait, the initial grid has 5 as background.
+    # r15c15:0x3 means cells at (15, 15), (15, 16), (15, 17) become color 0.
+    # 
+    # Actually, looking at the laout, it seems the agent moves and leaves a trail of color 0.
+    # The movement step is 6 units.
+    # 
+    # Agent pattern:
+    # [[9, 9, 9],
+    #  [9, 9, 4],
+    #  [9, 9, 9]]
+    # 
+    # Movement logic:
+    # 
+    # Action 1: Up (-6 rows)
+    # Action 2: Down (+6 rows)
+    # Action 3: Left (-6 cols)
+    # Action 4: Right (+6 cols)
+    # 
+    # Collision detection:
+    # The agent can only move if the target 3x3 area is "clear".
+    # A clear area is one that contains only background (color 5).
+    # 
+    # Let's re-examine the deltas for ACTION2:
+    # r15c21:0x3, r21c21:9x3...
+    # Old position (r15-17, c21-23) becomes 0, new position (r21-23, c21-23) becomes 9.
+    # 
+    # This means the movement rule is:
+    # 1. Find current center of the agent (the cell with color 4).
+    # 2. Calculate new potential center based on action.
+    # 3. If the new 3x3 area is within bounds and consists only of color 5, move the agent.
+    # 4. When moving, the old 3x3 area becomes color 0.
+    # 5. Update grid.
+    # 
+    # Wait, let's check the initial grid again. Color 0 is already present in many places.
+    # The maze walls are likely color 2 and 0.
+    # 
+    # Let's refine the "clear" condition:
+    # The target 3x3 area must not contain any cells of color 2 or 0.
+    # 
+    # Let's implement this logic.
+
+def engine(grid, action, data):
+    # Agent pattern: [[9, 9, 9], [9, 9, 4], [9, 9, 9]]
+    # Center is at the cell with value 4.
+    
+    # Find the center of the agent (color 4)
+    center_y, center_x = None, None
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if grid[r, c] == 4:
+                center_y, center_x = r, c
+                break
+        if center_y is not None: break
+    
+    if center_y is None: return grid # Should not happen
+    
+    # Movement step size
+    step = 6
+    dy, dx = 0, 0
+    if action == 1: dy = -step
+    elif action == 2: dy = step
+    elif action == 3: dx = -step
+    elif action == 4: dx = step
+    else: return grid
+    
+    new_y, new_x = center_y + dy, center_x + dx
+    
+    # Check if target 3x3 area is within bounds
+    if not (0 <= new_y - 1 and new_y + 1 < grid.shape[0] and 
+            0 <= new_x - 1 and new_x + 1 < grid.shape[1]):
+        return grid
+    
+    # Check if the target 3x3 area contains any walls (color 0 or 2)
+    target_area = grid[new_y-1 : new_y+2, new_x-1 : new_x+2]
+    if np.any((target_area == 0) | (target_area == 2)):
+        return grid
+    
+    # Move agent: old position becomes color 0, new position gets pattern
+    # The aget's current 3x3 block consists of colors {9, 4}
+    # We need to capture the exact pattern of the agent before moving it.
+    agent_pattern = grid[center_y-1 : center_y+2, center_x-1 : center_x+2].copy()
+    
+    # Old position becomes color 0
+    grid_next = grid.copy()
+    grid_next[center_y-1 : center_y+2, center_x-1 : center_x+2] = 0
+    
+    # New position gets the pattern
+    grid_next[new_y-1 : new_y+2, new_x-1 : new_x+2] = agent_pattern
+    
+    return grid_next
+
+def is_level_complete(grid):
+    # A level is complete when the agent reaches a specific target area.
+    # Looking at the initial grid, there are some cells with color 14.
+    # Color 14 is likely the goal.
+    # Target areas (r45-47, c36-38) have color 14.
+    # If any part of the agent's 3x3 block overlaps with color 14, it's complete.
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if grid[r, c] == 4: # Agent center
+                # Check if any cell in the 3x3 block around the center is color 14
+                # Wait, if we move onto 14, the 14 will be replaced by the agent's colors.
+                # So we should check if the target area had 14 before moving.
+                # But this function only sees the final state.
+                # Let's assume completion is based on the position of the agent.
+                pass
+    
+    # Since we don't have a win state grid, let's look for common patterns.
+    # Usually, reaching the goal means the agent's center is at the goal's coordinates.
+    # The goals are at (46, 37).
+    # Let's just return False unless we see something specific.
+    # Actually, looking at the initial grid, there are cells of color 14 at r45-47, c36-38.
+    # If the agent moves to that location, it might be complete.
+    
+    center_y, center_x = None, None
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[0]): # Fixed index error
+            if grid[r, c] == 4:
+                center_y, center_x = r, c
+                break
+        if center_y is not None: break
+    
+    if center_y is not None and center_y == 46 and center_x == 37:
+        return True
+    
+    return False
+

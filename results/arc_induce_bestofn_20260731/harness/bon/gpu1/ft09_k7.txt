@@ -1,0 +1,115 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid
+    
+    # Action 6 is a click at (x, y). In this game, x and y are pixel coords.
+    # Pixel coords map directly to logical coords since resolution is 1.
+    px, py = data['x'], data['y']
+    
+    # The observed transitions show that clicking on certain areas changes the 
+    # blocks of colors in specific regions.
+    # Specifically, it seems like there are "buttons" or "targets" that can be 
+    # toggled or activated.
+    # Looking at the data:
+    # Click (46, 38) -> r36c44:8x6, ..., r41c44:8x6. This target region is [36:42, 44:50].
+    # Click (38, 54) -> r52c36:8x6, ..., r57c36:8x6. This target region is [52:58, 36:42].
+    # Click (14, 14) - no change.
+    # Click (14, 4) - no change.
+    
+    # We identify a pattern where clicking near a block of color 9 (maroon) or 4 (yellow) 
+    # might trigger a change to color 8 (azure).
+    # Let's define the targets based on the observed clicks.
+    # The grid contains several rectangular blocks of colors.
+    # 
+    # Target 1: Region [36:42, 44:50] triggered by click (46, 38)
+    # Target 2: Region [52:58, 36:42] triggered by click (38, 54)
+    # 
+    # In both cases, the clicked cell (px, py) is inside the target region.
+    # If we 클릭 a cell that is not part of a target, nothing happens.
+    # 
+    # Based on thes limited data, the rule is: if you click inside a specific 
+    # 
+    # "active" rectangle, it changes its color to 8.
+    
+    # Define active rectangles (these are likely defined by the same color in the initial grid)
+    # Let's find all contiguous blocks of color 9 (maroon) and 4 (yellow) that could be 
+    # 
+    # be those buttons.
+    # We identify these blocks as the same color.
+    # 
+    # For the a few observed clicks:
+    # (46, 38) -> r36c44:8x6, ..., r41c44:8x6. The block was color 9 at [36:42, 44:50].
+    # (38, 54) -> r52c36:8x6, ..., r57c36:8x6.8. The block was color 9 at [52:58, 36:42].
+    # 
+    # Rule: If clicked cell is part of a block of color 9, change that entire connected component 
+    # 
+    # # of color 9 to color 8.
+    
+    # Find the connected component of color 9 containing (py, px)
+    # Note: data['x'] is col, data['y'] is row.
+    row, col = py, px
+    if grid[row, col] == 9:
+        # Simple flood fill to find the connected component of color 9
+        color_to_replace = 9
+        target_color = 8
+        
+        visited = set()
+        stack = [(row, col)]
+        while stack:
+            r, c = {
+                # Use a tuple for unpacking if this a dictionary or not? No, it
+                # Let's just use standard list/stack.
+                }
+            pass
+        # This logic is too complex for a simple engine. Let's try a simpler approach.
+        # Since the blocks are rectangular, we find the boundaries of the rectangle of color 9.
+        
+        # Find the horizontal span of color 9
+        c_min, c_max = col, col
+        while c_min > 0 and grid[row, c_min - 1] == 9:
+            c_min -= 1
+        while c_max < grid.shape[1] - 1 and grid[row, c_max + 1] == 9:
+            c_max += 1
+        
+        # Find the vertical span of color 9
+        r_min, r_max = row, row
+        while r_min > 0 and grid[row-1, col] == 9: # Wait, this should be wrong.
+            # It should check the same column.
+            pass
+    
+    # Let's refine the rule based on the observed transitions.
+    # The target regions were [36:42, 44:50] and [52:58, 36:42].
+    # Both these regions were color 9 in the initial grid.
+    # 9 is maroon.
+    # 
+    # Rule: If clicked cell (py, px) is color 9, find the rectangular block of color 9 it belongs to and change it to color 8.
+    
+    new_grid = grid.copy()
+    row, col = py, px
+    if 0 <= row < grid.shape[0] and 0 <= col < grid.shape[1]:
+        if grid[row, col] == 9:
+            # Find boundaries of the rectangle of color 9
+            r_start, r_end = row, row
+            c_start, c_end = col, col
+            
+            while r_start > 0 and grid[r_start - 1, col] == 9:
+                r_start -= 1
+            while r_end < grid.shape[0] - 1 and grid[r_end + 1, col] == 9:
+                r_end += 1
+            while c_start > 0 and grid[row, c_start - 1] == 9:
+                c_start -= 1
+            while c_end < grid.shape[1] - 1 and grid[row, c_end + 1] == 9:
+                c_end += 1
+            
+            new_grid[r_start : r_end + 1, c_start : c_end + 1] = 8
+    return new_grid
+
+def is_level_complete(grid):
+    # The observed transitions show that clicking on blocks of color 9 changes them to 8.
+    # There is no explicit win state given, but usually in these games, 
+    # the win condition is 
+    # # is either all buttons are pressed (all color 9s are gone) or a specific pattern is achieved.
+    # Since we only have two examples, let's assume the win condition is that there are no more cells of color 9.
+    return not np.any(grid == 9)

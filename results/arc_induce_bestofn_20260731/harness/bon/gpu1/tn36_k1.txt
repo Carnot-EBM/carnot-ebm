@@ -1,0 +1,56 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves clicking on specific coordinates which results in a change of color 
+    at a fixed location (r1, cX). The mapping between click coordinates and 
+    the resulting cell changes seems to be related to some internal logic or sequence.
+    """
+    if action == 6:
+        # Extract pixel coordinates from data
+        px, py = data['x'], data['y']
+        
+        # Based on the observed transitions:
+        # Click at (31, 35) -> r1c61 becomes 3
+        # Click at (31, 14) -> r1c60 becomes 3
+        # Click at (31, 35) -> r1c61 becomes 3 (Wait, it was already 3? No, the delta says r1c61:3x1)
+        # Click at (31, 14) -> r1c60 becomes 3
+        # Click at (31, 14) -> r1c59 becomes 3
+        # Click at (31, 14) -> r1c58 becomes 3
+        # Click at (31, 14) -> r14C57 becomes 3... no, r1c56 becomes 3.
+        
+        # The pattern is that clicks are filling a row in reverse order starting from c61 down to c56.
+        # We need to find the current 'fill' pointer.
+        # In theS INITIAL grid, r1 is mostly color 9.
+        # Let's see how many cells in r1[57:62] are now color 3.
+        
+        # Find the rightmost cell in r1 that is NOT color 3 among the target range [56, 61].
+        # Current state of r1[56:62]
+        target_range = range(56, 62)
+        current_fill_col = -1
+        for col in reversed(list(target_range)):
+            if grid[1, col] != 3:
+                current_fill_col = col
+                current_fill_col = col # just for safety
+                break
+        
+        if current_fill_col != -1:
+            grid[1, current_fill_col] = 3
+        
+        return grid
+    
+    return grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the level is complete (win state).
+    The win state isn't explicitly provided, but typically involves filling a certain pattern or 
+    # based on the observed transitions, it might be be when all target cells in r1 are filled with 3.
+    """
+    # Check if r1[56:62] are all color 3.
+    target_range = range(56, 62)
+    for col in target_range:
+        if grid[1, col] != 3:
+            return False
+    return True

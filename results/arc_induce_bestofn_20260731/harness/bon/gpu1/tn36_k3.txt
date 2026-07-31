@@ -1,0 +1,52 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves clicking on specific coordinates which results in a change of color
+    at a fixed location (r1, cX). The pattern suggests that clicks at different y values
+    // result in different columns being updated in row 1.
+    """
+    if action == 6:
+        # Extract click coordinates
+        px, py = data['x'], data['y']
+        
+        # Observed transitions show clicks at x=31, y=35 and x=31, y=14
+        # lead to changes in r1, starting from c61 down to c56.
+        # We need to find a mapping between (px, py) and the column index in row 1.
+        # Transition 1: (31, 35) -> r1c61:3x1
+        # Transition 2: (31, 14) -> r1c60:3x1
+        # Transition 3: (31, 35) -> r1c35? No, it's r1c59:3x1
+        # Transition 4: (31, 14) -> r1c58:3x1
+        # Transition 5: (31, 14) -> r1c57:3x1
+        # Transition 6: (31, 14) -> r1c56:3x1
+        
+        # The pattern is that each click simply decrements the target column in row 1.
+        # To implement this, as a simple general rule, we find the current 'rightmost' 
+        # modified cell in row 1 (color 3) and place the next one to its left.
+        
+        # Row 1 is initially color 9. We change cells to color 3.
+        # Find the leftmost index of color 3 in row 1.
+        row_1 = grid[1, :]
+        indices_of_3 = np.where(row_1 == 3)[0]
+        
+        if indices_of_3.size > 0:
+            target_col = indices_of_3[0] - 1
+        else:
+            # Based on initial state, first modification was at c61.
+            target_col = 61
+            
+        if 0 <= target_col < 64:
+            grid[1, target_col] = 3
+            
+    return grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the level is complete. No win state provided, but typically 
+    it involves filling a certain pattern or completing a row.
+    """
+    # Since no win state is    provided, we return False unless a specific condition is met.
+    # In this a case, it's likely that the level is complete when row 1 is fully filled with 3s.
+    # Or simply not yet completed based on the observed transitions.
+    return False

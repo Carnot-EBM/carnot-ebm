@@ -1,0 +1,71 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    The game state is a 64x64 grid. Action 6 is a click.
+    Based on the observed transitions, clicking at certain coordinates (x, y)
+    causes specific cells in row 1 to change color to 3.
+    The mapping seems to be based on some internal logic or coordinate transformation.
+    Looking at the observed deltas:
+    Click (31, 35) -> r1c61 becomes 3
+    Click (31, 14) -> r1c60 becomes 3
+    Click (31, 35) -> r1c61 becomes 3 (already 3? no, it's a sequence of changes)
+    Actually, looking closer at the sequence:
+    C(31, 35) -> r1c61=3
+    C(31, 14) -> r1c60=3
+    C(31, 35) -> r1c59=3
+    C(31, 14) -> r1c58=3
+    C(31, 14) -> r1c57=3
+    C(31, 14) -> r1c56=3
+    This suggests that clicks at these locations act as toggles or triggers for a counter/pointer in row 1.
+    """
+    if action == 6:
+        x = data['x']
+        y = data['y']
+        # The observed pattern is very specific to the provided transitions.
+        # We need a general rule. In this game, clicking on certain 'interactive' cells 
+        # might be filling a progress bar or similar.
+        # Let's identify which cell in row 1 is currently the "target".
+        # Row 1 is mostly color 9 (blue).
+        # Color 3 is green.
+        # We are looking for the first index from the right (63 down to 0) that is NOT 3.
+        # Row 1 columns 0 and 62, 63 are color 5.
+        # The blue area is cols 1 to 61.
+        # Target column is the one just to the left of the existing 3s.
+        
+        # Find the rightmost column in row 1 that is not 3, but is within the range [1, 61].
+        # Start from col 61 and go backwards.
+        row1 = grid[1]
+        current_3s = np.where(row1 == 3)[0]
+        if len(current_3s) == 0:
+            last_col = 61
+        else:
+            last_col = current_3s[-1] - 1 if current_3s[-1] < 61 else current_3s[-1] - 1
+            # This doesn't quite match. Let's re-evaluate.
+            # Sequence: r1c61=3, then r1c60=3, then r1c59=3...
+            # It fills from right to left.
+            
+        target_col = -1
+        for c in range(61, 0, -1):
+            if grid[1, c] != 3:
+                target_col = c
+                # We want the rightmost one that isn't 3 yet.
+                # But wait, the sequence was 61, 60, 59, 58, 57, 56.
+                # The target is simply the rightmost cell of color 9 that hasn't been turned into 3.
+                break
+        
+        if target_col != -1:
+            new_grid = grid.copy()
+            new_grid[1, target_col] = 3
+            return new_grid
+
+    return grid
+
+def is_level_complete(grid):
+    """
+    The level is complete when row 1 (the progress bar) is filled with 3s from col 1 to 61.
+    """
+    # Check if all cells from index 1 to 61 in row 1 are color 3.
+    if np.all(grid[1, 1:62] == 3):
+        return True
+    return False
