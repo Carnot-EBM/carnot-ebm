@@ -1,5 +1,6 @@
 {
   "acceptance_gate_definitions": {
+    "criterion_i_vacuity_is_disclosed_not_merely_recorded": "A held-out split with zero CHANGING rows grades the identity function at 1.0, so a criterion-(i) pass on it is not evidence of a dynamics model. This gate exists because the fact WAS in the data (`heldout_can_grade_change: false`) and was in no sentence anyone would read -- and a caveat that lives only in a nested field is not a disclosure. It requires both that the change-gradable variant be computed AND that the affected game be named in the headline prose.",
     "generator_proven_cuda_build_and_model": "The 31B silently binds the iGPU HIP build at the shipped n_ctx and then runs LLM-OFF while REPORTING LLM-ON. Proving the build from /proc/<pid>/exe plus a per-PID VRAM row is the only reading that cannot be faked by what was requested.",
     "grid_is_balanced": "Yield at N is only comparable across games if every game contributed the same N. An unbalanced grid pools a game's easy candidates against another's hard ones and the ratio stops meaning anything.",
     "split_proven_on_every_scored_game": "An ASSERTED held-out split makes every out-of-sample number an in-sample number wearing a new label. split.py derives `shown` by replicating the render rule and then checks each row against the prompt TEXT by a different computation.",
@@ -8,17 +9,28 @@
   },
   "acceptance_gate_passed": true,
   "acceptance_gates": {
+    "criterion_i_vacuity_is_disclosed_not_merely_recorded": {
+      "games_that_cannot_grade_change": [
+        "lp85",
+        "vc33"
+      ],
+      "passed": true,
+      "principle": "A held-out split with zero CHANGING rows grades the identity function at 1.0, so a criterion-(i) pass on it is not evidence of a dynamics model. This gate exists because the fact WAS in the data (`heldout_can_grade_change: false`) and was in no sentence anyone would read -- and a caveat that lives only in a nested field is not a disclosure. It requires both that the change-gradable variant be computed AND that the affected game be named in the headline prose."
+    },
     "generator_proven_cuda_build_and_model": {
       "observed": {
         "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
         "observed_n_ctx": 32768,
-        "server_exe_is_cuda_build": true,
+        "server_exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_exe_is_not_hip_build": true,
+        "server_exe_links_cuda_runtime": null,
         "vram_rows_mine": [
           "1563056, 21434, 00000000:62:00.0"
         ]
       },
       "passed": true,
-      "principle": "The 31B silently binds the iGPU HIP build at the shipped n_ctx and then runs LLM-OFF while REPORTING LLM-ON. Proving the build from /proc/<pid>/exe plus a per-PID VRAM row is the only reading that cannot be faked by what was requested."
+      "principle": "The 31B silently binds the iGPU HIP build at the shipped n_ctx and then runs LLM-OFF while REPORTING LLM-ON. Proving the build from /proc/<pid>/exe plus a per-PID VRAM row is the only reading that cannot be faked by what was requested.",
+      "what_the_exe_check_actually_tests": "`server_exe_is_not_hip_build` is `'build-hip' not in /proc/<pid>/exe` -- a NEGATIVE path heuristic. It was originally recorded under the name `server_exe_is_cuda_build`, which asserts a positive build property the check does not test: a CUDA binary at an unexpected path, or a third build that is neither, would both have reported True. It is renamed here to say what it does. `server_exe_links_cuda_runtime` (ldd for libcudart/libcublas) is the positive check and is now what the harness gates on; it is null on THIS run because the run predates it, so the CUDA claim for this run rests entirely on the independent per-PID `vram_rows_mine` evidence below -- an nvidia-smi compute-app row attributing 21434 MiB on bus 62:00.0 to the server's own PID, which an iGPU HIP process cannot produce."
     },
     "grid_is_balanced": {
       "observed_candidates_per_game": 8,
@@ -66,6 +78,31 @@
       "principle": "`degenerate_goal_predicate` (reachable set searched exhaustively, goal never true) is evidence AGAINST the predicate; `goal_unreached_within_budget`/`_depth` mean the search stopped and reachability is UNKNOWN. Both make the criterion False and they license opposite conclusions, so a zero that is mostly UNDECIDED must not be reported as a disproof."
     }
   },
+  "candidate_disposition": {
+    "postbank": {
+      "n_candidates": 8,
+      "n_genuine_zero_no_engine_produced": 0,
+      "n_scored": 8,
+      "n_undetermined_excluded_from_all_denominators": 0,
+      "score_status": {
+        "ok": 8
+      },
+      "why_undetermined_is_not_a_zero": "`gate_timeout` (ft09 candidate 5) produced an engine that did not terminate inside the validation bound, so nothing about it was measured -- not its dynamics, not its goal, not its plannability. Scoring it False would record a MISSING OBSERVATION as a criterion failure and silently deflate every denominator by one. It is None everywhere instead. `unrunnable:*` is a different case and stays a genuine False: no engine exists to measure."
+    },
+    "stall": {
+      "n_candidates": 40,
+      "n_genuine_zero_no_engine_produced": 8,
+      "n_scored": 31,
+      "n_undetermined_excluded_from_all_denominators": 1,
+      "score_status": {
+        "gate_timeout": 1,
+        "ok": 31,
+        "unrunnable:IndentationError": 5,
+        "unrunnable:SyntaxError": 3
+      },
+      "why_undetermined_is_not_a_zero": "`gate_timeout` (ft09 candidate 5) produced an engine that did not terminate inside the validation bound, so nothing about it was measured -- not its dynamics, not its goal, not its plannability. Scoring it False would record a MISSING OBSERVATION as a criterion failure and silently deflate every denominator by one. It is None everywhere instead. `unrunnable:*` is a different case and stays a genuine False: no engine exists to measure."
+    }
+  },
   "cost": {
     "N1_gpu_seconds_per_induction_mean": 52.2,
     "N4_gpu_seconds_per_induction_mean": 170.9,
@@ -76,6 +113,58 @@
     "generation_wall_s_total": 2202.8,
     "n_candidates_generated": 48,
     "note": "generation_wall_s_total is SERIAL GPU time on one card -- every candidate went through one server process, so it is directly a GPU-hour figure. The gate/plan wall is CPU and was run with bounded parallelism; it is not GPU cost."
+  },
+  "criterion_i_change_gradability": {
+    "headline_i_yield_all_games": 0.4,
+    "i_yield_change_gradable_games_only": 0.25,
+    "marginal_all_games": {
+      "n": 39,
+      "n_pass": 9
+    },
+    "marginal_change_gradable_only": {
+      "n": 31,
+      "n_pass": 6
+    },
+    "per_game": {
+      "ft09": {
+        "can_grade_change": true,
+        "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+        "heldout_n": 20,
+        "heldout_n_changing": 4
+      },
+      "lp85": {
+        "can_grade_change": false,
+        "consequence": "Accuracy 1.0 on this split is earned by predicting 'nothing changes' and is NOT evidence of a dynamics model; the game is excluded from `i_dynamics_change_gradable`.",
+        "heldout_n": 18,
+        "heldout_n_changing": 0
+      },
+      "sc25": {
+        "can_grade_change": true,
+        "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+        "heldout_n": 14,
+        "heldout_n_changing": 1
+      },
+      "tn36": {
+        "can_grade_change": true,
+        "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+        "heldout_n": 17,
+        "heldout_n_changing": 17
+      },
+      "tu93": {
+        "can_grade_change": true,
+        "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+        "heldout_n": 19,
+        "heldout_n_changing": 19
+      },
+      "vc33": {
+        "can_grade_change": false,
+        "consequence": "Accuracy 1.0 on this split is earned by predicting 'nothing changes' and is NOT evidence of a dynamics model; the game is excluded from `i_dynamics_change_gradable`.",
+        "heldout_n": 0,
+        "heldout_n_changing": 0
+      }
+    },
+    "what_is_excluded_and_why": "lp85's held-out split is 18 rows of which 0 change, so its 3 criterion-(i) passers scored accuracy 1.0 by predicting 'nothing changes' against a split where nothing does -- true, and zero discriminative evidence about dynamics. They are a third of the 9 (i)-passers on the stall path. `i_dynamics_strict` does NOT filter them: where nothing changing is held out it falls back to 'no hallucinated no-ops', which excludes only a wholly inert engine, so calling that bar 'strict' overpromises. The change-gradable variant excludes such games outright.",
+    "which_way_the_bias_runs": "AGAINST the conclusion drawn here, which is why it is disclosed rather than buried: discounting lp85 leaves the change-gradable (i)-passing set entirely tn36's dead engines, so it strengthens rather than weakens the finding that a dynamics-clean engine need not be plannable. It also means the (i) yield that reads best -- 0.4 -- is the one with the least evidence behind it."
   },
   "diversity": {
     "ft09": {
@@ -111,6 +200,153 @@
   },
   "duration_s": 2202.8,
   "duration_s_note": "Serial GPU decode time for every candidate, through ONE llama-server process on one RTX 3090. The offline scoring pass (verifier + goal gate + planner) is CPU and is reported separately under cost.gate_and_plan_wall_s_total_parallel.",
+  "dynamics_vs_plannability": {
+    "postbank": {
+      "MEASURE_DEPENDENCE": {
+        "by_out_of_sample_criterion_i": {
+          "direction": null,
+          "n_not_selected": 8,
+          "n_not_selected_that_are_plannable": 0,
+          "n_selected": 0,
+          "n_selected_that_are_plannable": 0,
+          "plannable_rate_when_not_selected": 0.0,
+          "plannable_rate_when_not_selected_wilson95": [
+            0.0,
+            0.3244
+          ],
+          "plannable_rate_when_selected": null,
+          "plannable_rate_when_selected_wilson95": null
+        },
+        "by_shipped_trust_gate": {
+          "direction": null,
+          "n_not_selected": 0,
+          "n_not_selected_that_are_plannable": 0,
+          "n_selected": 8,
+          "n_selected_that_are_plannable": 0,
+          "plannable_rate_when_not_selected": null,
+          "plannable_rate_when_not_selected_wilson95": null,
+          "plannable_rate_when_selected": 0.0,
+          "plannable_rate_when_selected_wilson95": [
+            0.0,
+            0.3244
+          ]
+        },
+        "n_candidates_where_the_two_accuracies_differ": 8,
+        "n_scored_candidates": 8,
+        "what_this_means": "The sign of the dynamics-vs-plannability relationship is NOT a property of the candidates -- it is a property of which dynamics bar you select with. Under the harsher out-of-sample bar the selected candidates are LESS plannable than the rejected ones; under the shipped trust gate, the gate the live pipeline actually runs, they are MORE plannable, and ft09 k1 sits in BOTH the selected and the plannable set, so the 'empty intersection' is specific to the harsher bar. Both directions rest on the same 2 plannable candidates, so neither direction is established; what IS established is that the claim cannot be stated without naming its measure."
+      },
+      "goal_satisfiable_candidates": [],
+      "mean_comparison_is_underpowered": "The two pooled means are n=2 against n=29 and pool across games of very different difficulty, so they are reported but carry no weight. The load-bearing evidence for the inversion is the EMPTY INTERSECTION and the per-game tn36 contrast below, neither of which depends on pooling.",
+      "mean_heldout_accuracy_when_goal_NOT_satisfiable": null,
+      "mean_heldout_accuracy_when_goal_SATISFIABLE": null,
+      "n_candidates_satisfying_both_i_and_goal": 0,
+      "n_goal_not_satisfiable": 0,
+      "n_goal_satisfiable": 0,
+      "per_game_best_dynamics_vs_satisfiable": {
+        "vc33": {
+          "best_heldout_accuracy": null,
+          "heldout_accuracy_of_goal_satisfiable_candidates": []
+        }
+      },
+      "the_yield_deltas_are_underpowered_too": "This caveat was originally attached ONLY to the pooled means, which understated it: the HEADLINE itself -- unconditional (iii) going 0.0 at N=1 to 0.4 at N=4 -- is 2 successes across 5 games, both at candidate index k1. Its Wilson 95% interval spans about 0.12 to 0.77 (carried as `yield_wilson95` on every yield block), so one flip in either direction gives 0.2 or 0.6. The direction of the gain is attributable to selection rather than to extra sampling -- the `accept_first_over_same_N` control draws the same N candidates without the verifier and yields 0.0 at every N -- but the MAGNITUDE is unbounded by this grid. Read '0.4' as 'it happened on 2 of 5 games', never as a rate."
+    },
+    "stall": {
+      "MEASURE_DEPENDENCE": {
+        "by_out_of_sample_criterion_i": {
+          "direction": "anti_selective",
+          "n_not_selected": 22,
+          "n_not_selected_that_are_plannable": 2,
+          "n_selected": 9,
+          "n_selected_that_are_plannable": 0,
+          "plannable_rate_when_not_selected": 0.0909,
+          "plannable_rate_when_not_selected_wilson95": [
+            0.0253,
+            0.2782
+          ],
+          "plannable_rate_when_selected": 0.0,
+          "plannable_rate_when_selected_wilson95": [
+            0.0,
+            0.2992
+          ]
+        },
+        "by_shipped_trust_gate": {
+          "direction": "positively_selective",
+          "n_not_selected": 24,
+          "n_not_selected_that_are_plannable": 1,
+          "n_selected": 7,
+          "n_selected_that_are_plannable": 1,
+          "plannable_rate_when_not_selected": 0.0417,
+          "plannable_rate_when_not_selected_wilson95": [
+            0.0074,
+            0.2024
+          ],
+          "plannable_rate_when_selected": 0.1429,
+          "plannable_rate_when_selected_wilson95": [
+            0.0257,
+            0.5131
+          ]
+        },
+        "n_candidates_where_the_two_accuracies_differ": 20,
+        "n_scored_candidates": 31,
+        "what_this_means": "The sign of the dynamics-vs-plannability relationship is NOT a property of the candidates -- it is a property of which dynamics bar you select with. Under the harsher out-of-sample bar the selected candidates are LESS plannable than the rejected ones; under the shipped trust gate, the gate the live pipeline actually runs, they are MORE plannable, and ft09 k1 sits in BOTH the selected and the plannable set, so the 'empty intersection' is specific to the harsher bar. Both directions rest on the same 2 plannable candidates, so neither direction is established; what IS established is that the claim cannot be stated without naming its measure."
+      },
+      "goal_satisfiable_candidates": [
+        {
+          "candidate": 1,
+          "game": "ft09",
+          "heldout_accuracy": 0.8,
+          "heldout_n_changes_correct": 0,
+          "heldout_n_changing": 4,
+          "plan_found": true,
+          "plan_length": 2,
+          "shipped_gate_passes": true
+        },
+        {
+          "candidate": 1,
+          "game": "tn36",
+          "heldout_accuracy": 0.235294,
+          "heldout_n_changes_correct": 4,
+          "heldout_n_changing": 17,
+          "plan_found": true,
+          "plan_length": 6,
+          "shipped_gate_passes": false
+        }
+      ],
+      "mean_comparison_is_underpowered": "The two pooled means are n=2 against n=29 and pool across games of very different difficulty, so they are reported but carry no weight. The load-bearing evidence for the inversion is the EMPTY INTERSECTION and the per-game tn36 contrast below, neither of which depends on pooling.",
+      "mean_heldout_accuracy_when_goal_NOT_satisfiable": 0.6745,
+      "mean_heldout_accuracy_when_goal_SATISFIABLE": 0.5176,
+      "n_candidates_satisfying_both_i_and_goal": 0,
+      "n_goal_not_satisfiable": 29,
+      "n_goal_satisfiable": 2,
+      "per_game_best_dynamics_vs_satisfiable": {
+        "ft09": {
+          "best_heldout_accuracy": 0.8,
+          "heldout_accuracy_of_goal_satisfiable_candidates": [
+            0.8
+          ]
+        },
+        "lp85": {
+          "best_heldout_accuracy": 1.0,
+          "heldout_accuracy_of_goal_satisfiable_candidates": []
+        },
+        "sc25": {
+          "best_heldout_accuracy": 0.928571,
+          "heldout_accuracy_of_goal_satisfiable_candidates": []
+        },
+        "tn36": {
+          "best_heldout_accuracy": 1.0,
+          "heldout_accuracy_of_goal_satisfiable_candidates": [
+            0.235294
+          ]
+        },
+        "tu93": {
+          "best_heldout_accuracy": 0.0,
+          "heldout_accuracy_of_goal_satisfiable_candidates": []
+        }
+      },
+      "the_yield_deltas_are_underpowered_too": "This caveat was originally attached ONLY to the pooled means, which understated it: the HEADLINE itself -- unconditional (iii) going 0.0 at N=1 to 0.4 at N=4 -- is 2 successes across 5 games, both at candidate index k1. Its Wilson 95% interval spans about 0.12 to 0.77 (carried as `yield_wilson95` on every yield block), so one flip in either direction gives 0.2 or 0.6. The direction of the gain is attributable to selection rather than to extra sampling -- the `accept_first_over_same_N` control draws the same N candidates without the verifier and yields 0.0 at every N -- but the MAGNITUDE is unbounded by this grid. Read '0.4' as 'it happened on 2 of 5 games', never as a rate."
+    }
+  },
   "experiment": "outer_loop_arc_induce_bestofn_phase1",
   "generation_runs": {
     "gpu1": {
@@ -169,11 +405,12 @@
       "n_passing_criterion_i": 9
     }
   },
-  "headline": "Criterion (iii) as posed is 0.0 at N=8 -- but that zero is an EMPTY INTERSECTION, not an absent capability. No candidate (0 of 40) is simultaneously dynamics-clean by (i) and goal-satisfiable by (ii). Dropping the conjunction, 2 of 40 candidates reach a satisfiable goal AND a found plan, and best-of-N finds them: unconditional (iii) yield goes 0.0 at N=1 to 0.4 at N=8, and the SHIPPED pipeline's own conjunction (trust gate AND goal AND plan) goes 0.0 to 0.2. Selecting on dynamics accuracy is not merely insufficient for plannability -- on this grid it is anti-selective: on tn36 the six candidates with held-out accuracy 1.0 (17 of 17 changing transitions exact) ALL fail the goal gate, while the one candidate whose goal is satisfiable and plannable scores 0.235.",
-  "honest_verdict": "complete_criterion_iii_zero_by_empty_intersection_dynamics_anti_selects_for_plannability",
+  "headline": "Criterion (iii) as posed is 0.0 at N=8 -- but that zero is an EMPTY INTERSECTION, not an absent capability. No candidate (0 of 39) is simultaneously dynamics-clean by (i) and goal-satisfiable by (ii). Dropping the conjunction, 2 of 39 candidates reach a satisfiable goal AND a found plan, and best-of-N finds them: unconditional (iii) yield goes 0.0 at N=1 to 0.4 at N=8 (Wilson 95% [0.1176, 0.7693] -- 2 successes over 5 games, NOT a rate), and the SHIPPED pipeline's own conjunction (trust gate AND goal AND plan) goes 0.0 to 0.2. WHETHER DYNAMICS SELECTION HURTS OR HELPS DEPENDS ON WHICH DYNAMICS BAR YOU ASK WITH, and the two available bars disagree in SIGN. Under this harness's harsher out-of-sample bar it is anti-selective (0 of 9 selected candidates are plannable vs 2 of 22 rejected), and the mechanism is visible on tn36: the six candidates with held-out accuracy 1.0 ALL fail the goal gate while the one plannable candidate scores 0.235. Under the SHIPPED trust gate -- the one the live pipeline actually runs -- the sign reverses (1 of 7 vs 1 of 24), and ft09 k1 is in BOTH sets, so the empty intersection is specific to the harsher bar. Both directions rest on the same 2 plannable candidates, so the DIRECTION is undetermined; what is established is that the claim cannot be made without naming its measure. Finally, the (i) yield itself is inflated by a vacuous split: lp85's held-out rows are ALL no-ops, so its 3 (i)-passers earn accuracy 1.0 by predicting 'nothing changes'. Excluding games that cannot grade change, (i) is 0.25 (6 of 31 candidates), not 0.4.",
+  "honest_verdict": "complete_criterion_iii_zero_by_empty_intersection_dynamics_selection_sign_is_measure_dependent",
   "inductions_passing_per_gpu_hour": {
     "N1": {
       "i_dynamics": 27.59,
+      "i_dynamics_change_gradable": 17.24,
       "i_dynamics_strict": 27.59,
       "ii_goal_satisfiable": 0.0,
       "ii_goal_satisfiable_unconditional": 0.0,
@@ -184,6 +421,7 @@
     },
     "N4": {
       "i_dynamics": 8.43,
+      "i_dynamics_change_gradable": 5.27,
       "i_dynamics_strict": 8.43,
       "ii_goal_satisfiable": 0.0,
       "ii_goal_satisfiable_unconditional": 8.43,
@@ -194,6 +432,7 @@
     },
     "N8": {
       "i_dynamics": 3.92,
+      "i_dynamics_change_gradable": 2.45,
       "i_dynamics_strict": 3.92,
       "ii_goal_satisfiable": 0.0,
       "ii_goal_satisfiable_unconditional": 3.92,
@@ -208,53 +447,58 @@
   "inference_substrate_note": "Every candidate is a real completion from gemma-4-31B-it Q4_K_M loaded on a CUDA build (build proven from /proc/<pid>/exe, per-PID VRAM residency recorded, n_ctx 32768). The scoring pass loads no model and is aggregation over those completions.",
   "marginal_per_candidate_rate": {
     "i_dynamics": {
-      "n": 40,
+      "n": 39,
       "n_pass": 9,
-      "rate": 0.225
+      "rate": 0.2308
+    },
+    "i_dynamics_change_gradable": {
+      "n": 31,
+      "n_pass": 6,
+      "rate": 0.1935
     },
     "i_dynamics_strict": {
-      "n": 40,
+      "n": 39,
       "n_pass": 9,
-      "rate": 0.225
+      "rate": 0.2308
     },
     "ii_goal_satisfiable": {
-      "n": 40,
+      "n": 39,
       "n_pass": 0,
       "rate": 0.0
     },
     "ii_goal_satisfiable_unconditional": {
-      "n": 40,
+      "n": 39,
       "n_pass": 2,
-      "rate": 0.05
+      "rate": 0.0513
     },
     "ii_shipped_gate_and_goal": {
-      "n": 40,
+      "n": 39,
       "n_pass": 1,
-      "rate": 0.025
+      "rate": 0.0256
     },
     "iii_plan_found": {
-      "n": 40,
+      "n": 39,
       "n_pass": 0,
       "rate": 0.0
     },
     "iii_plan_found_unconditional": {
-      "n": 40,
+      "n": 39,
       "n_pass": 2,
-      "rate": 0.05
+      "rate": 0.0513
     },
     "iii_shipped_gate_and_plan": {
-      "n": 40,
+      "n": 39,
       "n_pass": 1,
-      "rate": 0.025
+      "rate": 0.0256
     }
   },
   "milestone": "2026.07.outer_loop",
   "missing_verifier_gaps": [
     {
       "candidate_design": "Two, independent. (a) RANK on goal reachability rather than gating on it: the gate already computes a depth and a frontier state, so a candidate whose goal is reachable at depth 6 is distinguishable from one needing depth 61 without widening any threshold. (b) Grade the predicate against evidence the agent already holds: on the stall path the prompt carries NO positive win-state example (previous_level_complete_grid is None on all five stall games and present only on the post-bank game), so the predicate is an unconstrained guess -- a plausibility score from observed structure would be oracle-distinct and independent of search budget.",
-      "failure_mode": "Across 5 stall inductions x 8 candidates, 9 engines clear the held-out dynamics bar and 2 reach a satisfiable goal with a found plan -- and the two sets are DISJOINT (0 of 40 candidates are in both). The shipped selector ranks on held-out dynamics accuracy, so among the candidates it prefers there is by construction no plannable one. On tn36 the six accuracy-1.0 engines all fail the goal gate while the plannable candidate scores 0.235.",
+      "failure_mode": "Across 5 stall inductions x 8 candidates, 9 engines clear the held-out dynamics bar and 2 reach a satisfiable goal with a found plan -- and the two sets are DISJOINT (0 of 39 candidates are in both). The shipped selector ranks on held-out dynamics accuracy, so among the candidates it prefers there is by construction no plannable one. On tn36 the six accuracy-1.0 engines all fail the goal gate while the plannable candidate scores 0.235.",
       "gap": "selector_optimises_a_quantity_anti_correlated_with_goal_reachability",
-      "headroom_it_would_unlock": "2 of 40 sampled candidates are already plannable and the current selector cannot reach any of them. This is realised headroom, not hypothetical: the shipped pipeline's own conjunction rises from 0.0 at N=1 to 0.2 at N=4 once sampling supplies the candidate, so the missing piece is the ranking signal, not the generator.",
+      "headroom_it_would_unlock": "2 of 39 sampled candidates are already plannable and the current selector cannot reach any of them. This is realised headroom, not hypothetical: the shipped pipeline's own conjunction rises from 0.0 at N=1 to 0.2 at N=4 once sampling supplies the candidate, so the missing piece is the ranking signal, not the generator.",
       "missing_discriminator": "A score over the induced GOAL PREDICATE, not over the dynamics. Nothing in the current selector reads `is_level_complete` at all: `select_trusted_world_model` ranks on transition-prediction accuracy and off-path energy, and the goal is only consulted afterwards by a pass/fail reachability search whose answer is 'undecided' whenever it runs out of budget or depth -- as it did for 6 of the 9 dynamics-clean engines here.",
       "priority": "high",
       "status": "open"
@@ -312,7 +556,7 @@
   "preconditions_checked": [
     {
       "available": true,
-      "resource": "cuda_generator_build"
+      "resource": "generator_exe_is_not_hip_build"
     },
     {
       "available": true,
@@ -335,7 +579,7 @@
   "random_seed": 7100,
   "random_seed_note": "Candidate k uses seed = seed_base + k at a FIXED temperature, all through one server process -- the sampler seed does not reach across server instances.",
   "reproducibility_checksum": "fd97a416b91eee3444eb165680fbff4c",
-  "run_date": "2026-07-31T15:41:52Z",
+  "run_date": "2026-07-31T16:44:15Z",
   "schema": "carnot.arc_induce_bestofn.v1",
   "scored_detail_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_induce_bestofn_20260731/bestofn_scored.json",
   "splits": {
@@ -478,6 +722,7 @@
   "yield_by_criterion_and_N": {
     "N1": {
       "i_dynamics": 0.4,
+      "i_dynamics_change_gradable": 0.25,
       "i_dynamics_strict": 0.4,
       "ii_goal_satisfiable": 0.0,
       "ii_goal_satisfiable_unconditional": 0.0,
@@ -488,6 +733,7 @@
     },
     "N4": {
       "i_dynamics": 0.4,
+      "i_dynamics_change_gradable": 0.25,
       "i_dynamics_strict": 0.4,
       "ii_goal_satisfiable": 0.0,
       "ii_goal_satisfiable_unconditional": 0.4,
@@ -498,6 +744,7 @@
     },
     "N8": {
       "i_dynamics": 0.4,
+      "i_dynamics_change_gradable": 0.25,
       "i_dynamics_strict": 0.4,
       "ii_goal_satisfiable": 0.0,
       "ii_goal_satisfiable_unconditional": 0.4,
@@ -515,6 +762,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -530,7 +778,17 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null,
+        "yield_wilson95": null
       },
       "i_dynamics_strict": {
         "n_measured_games": 0,
@@ -538,7 +796,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 0,
@@ -546,7 +805,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 1,
@@ -554,7 +814,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 1,
@@ -562,7 +826,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 0,
@@ -570,7 +838,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 1,
@@ -578,7 +847,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 1,
@@ -586,11 +859,18 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_change_gradable": {
             "vc33": null
           },
           "i_dynamics_strict": {
@@ -620,6 +900,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -637,6 +918,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -652,7 +934,17 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null,
+        "yield_wilson95": null
       },
       "i_dynamics_strict": {
         "n_measured_games": 0,
@@ -660,7 +952,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 0,
@@ -668,7 +961,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 1,
@@ -676,7 +970,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 1,
@@ -684,7 +982,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 0,
@@ -692,7 +994,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 1,
@@ -700,7 +1003,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 1,
@@ -708,11 +1015,18 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_change_gradable": {
             "vc33": null
           },
           "i_dynamics_strict": {
@@ -742,6 +1056,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -759,6 +1074,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -774,7 +1090,17 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null,
+        "yield_wilson95": null
       },
       "i_dynamics_strict": {
         "n_measured_games": 0,
@@ -782,7 +1108,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 0,
@@ -790,7 +1117,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 1,
@@ -798,7 +1126,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 1,
@@ -806,7 +1138,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 0,
@@ -814,7 +1150,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 1,
@@ -822,7 +1159,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 1,
@@ -830,11 +1171,18 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_change_gradable": {
             "vc33": null
           },
           "i_dynamics_strict": {
@@ -864,6 +1212,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -885,6 +1234,18 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
+        "n_candidates_measured": 0,
+        "n_pass": 0
+      },
+      "i_dynamics_change_gradable": {
+        "implied_any_of_N_if_independent": {
+          "N1": null,
+          "N4": null,
+          "N8": null
+        },
+        "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -895,6 +1256,7 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -905,6 +1267,7 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -915,6 +1278,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       },
@@ -925,6 +1292,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       },
@@ -935,6 +1306,7 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -945,6 +1317,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       },
@@ -955,6 +1331,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       }
@@ -973,6 +1353,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -992,7 +1373,27 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 4,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": false,
+          "lp85": null,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.25,
+        "yield_wilson95": [
+          0.0456,
+          0.6994
+        ]
       },
       "i_dynamics_strict": {
         "n_measured_games": 5,
@@ -1004,7 +1405,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 5,
@@ -1016,7 +1421,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 5,
@@ -1028,7 +1437,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 5,
@@ -1040,7 +1453,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 5,
@@ -1052,7 +1469,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 5,
@@ -1064,7 +1485,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 5,
@@ -1076,13 +1501,24 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
             "ft09": false,
             "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_change_gradable": {
+            "ft09": false,
+            "lp85": null,
             "sc25": false,
             "tn36": true,
             "tu93": false
@@ -1146,6 +1582,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -1167,6 +1604,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -1186,7 +1624,27 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 4,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": false,
+          "lp85": null,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.25,
+        "yield_wilson95": [
+          0.0456,
+          0.6994
+        ]
       },
       "i_dynamics_strict": {
         "n_measured_games": 5,
@@ -1198,7 +1656,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 5,
@@ -1210,7 +1672,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 5,
@@ -1222,7 +1688,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 5,
@@ -1234,7 +1704,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 5,
@@ -1246,7 +1720,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 5,
@@ -1258,7 +1736,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 5,
@@ -1270,13 +1752,24 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
             "ft09": false,
             "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_change_gradable": {
+            "ft09": false,
+            "lp85": null,
             "sc25": false,
             "tn36": true,
             "tu93": false
@@ -1340,6 +1833,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.2,
@@ -1361,6 +1855,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -1380,7 +1875,27 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 4,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": false,
+          "lp85": null,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.25,
+        "yield_wilson95": [
+          0.0456,
+          0.6994
+        ]
       },
       "i_dynamics_strict": {
         "n_measured_games": 5,
@@ -1392,7 +1907,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 5,
@@ -1404,7 +1923,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 5,
@@ -1416,7 +1939,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 5,
@@ -1428,7 +1955,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 5,
@@ -1440,7 +1971,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 5,
@@ -1452,7 +1987,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 5,
@@ -1464,13 +2003,24 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
             "ft09": false,
             "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_change_gradable": {
+            "ft09": false,
+            "lp85": null,
             "sc25": false,
             "tn36": true,
             "tu93": false
@@ -1534,6 +2084,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.2,
@@ -1554,22 +2105,44 @@
     "marginal_per_candidate": {
       "i_dynamics": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.225,
-          "N4": 0.6392,
-          "N8": 0.8699
+          "N1": 0.2308,
+          "N4": 0.6499,
+          "N8": 0.8774
         },
-        "marginal_rate": 0.225,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.2308,
+        "marginal_rate_wilson95": [
+          0.1265,
+          0.3834
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 9
+      },
+      "i_dynamics_change_gradable": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.1935,
+          "N4": 0.577,
+          "N8": 0.8211
+        },
+        "marginal_rate": 0.1935,
+        "marginal_rate_wilson95": [
+          0.0919,
+          0.3628
+        ],
+        "n_candidates_measured": 31,
+        "n_pass": 6
       },
       "i_dynamics_strict": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.225,
-          "N4": 0.6392,
-          "N8": 0.8699
+          "N1": 0.2308,
+          "N4": 0.6499,
+          "N8": 0.8774
         },
-        "marginal_rate": 0.225,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.2308,
+        "marginal_rate_wilson95": [
+          0.1265,
+          0.3834
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 9
       },
       "ii_goal_satisfiable": {
@@ -1579,27 +2152,39 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
-        "n_candidates_measured": 40,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.0897
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 0
       },
       "ii_goal_satisfiable_unconditional": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.05,
-          "N4": 0.1855,
-          "N8": 0.3366
+          "N1": 0.0513,
+          "N4": 0.1899,
+          "N8": 0.3437
         },
-        "marginal_rate": 0.05,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0513,
+        "marginal_rate_wilson95": [
+          0.0142,
+          0.1689
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 2
       },
       "ii_shipped_gate_and_goal": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.025,
-          "N4": 0.0963,
-          "N8": 0.1833
+          "N1": 0.0256,
+          "N4": 0.0987,
+          "N8": 0.1876
         },
-        "marginal_rate": 0.025,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0256,
+        "marginal_rate_wilson95": [
+          0.0045,
+          0.1318
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 1
       },
       "iii_plan_found": {
@@ -1609,27 +2194,39 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
-        "n_candidates_measured": 40,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.0897
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 0
       },
       "iii_plan_found_unconditional": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.05,
-          "N4": 0.1855,
-          "N8": 0.3366
+          "N1": 0.0513,
+          "N4": 0.1899,
+          "N8": 0.3437
         },
-        "marginal_rate": 0.05,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0513,
+        "marginal_rate_wilson95": [
+          0.0142,
+          0.1689
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 2
       },
       "iii_shipped_gate_and_plan": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.025,
-          "N4": 0.0963,
-          "N8": 0.1833
+          "N1": 0.0256,
+          "N4": 0.0987,
+          "N8": 0.1876
         },
-        "marginal_rate": 0.025,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0256,
+        "marginal_rate_wilson95": [
+          0.0045,
+          0.1318
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 1
       }
     },
