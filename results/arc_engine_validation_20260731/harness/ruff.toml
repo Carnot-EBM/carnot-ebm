@@ -18,10 +18,14 @@
 #         results/arc_e3.
 #
 #   SIM115  `open(p).read()` without a context manager -- fine in a short-lived analysis process.
+#   N806    non-lowercase locals: `rB`/`rC` name the ARMS of the A/B (`A_shipped`, `B_repair`,
+#           `C_control`), and `_BasePolicy` is a class bound to a local. Renaming `rB` to `r_b`
+#           would break the visual correspondence to the arm labels that every table, log line
+#           and artifact key in this measurement uses.
 extend = "../../../pyproject.toml"
 
 [lint]
-ignore = ["E501", "I001", "SIM115"]
+ignore = ["E501", "I001", "SIM115", "N806"]
 
 [format]
 exclude = ["*"]

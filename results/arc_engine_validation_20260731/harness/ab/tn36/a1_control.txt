@@ -1,0 +1,72 @@
+# No changes to the other cells.
+import numpy as np
+
+def engine(grid, action, action_data):
+    # The observed transitions show that ACTION6 (click) at specific coordinates (x, y)
+    # triggers changes in a specific row (r1) and specific columns (c56-c61).
+    # The observed changes are all to value 3.
+    # The observed changes are not only at the coordinates clicked, but are not only at the 
+    # a constant row.
+    # The observed changes are {r1c61:3x1, r1c60:3x1, r1c59:3x1, r1c58:3x1, r1c57:3x1, r1c56:3x1}.
+    # 
+    # Looking at the closely related coordinates (x=31, y=35) and (x=31, y=14),
+    # coordinates (31, 35) and 35 is the row index for the same column.
+    # (31, 35) and (14) are two different y-coordinates.
+    # 
+    # The pattern of changes is:
+    # click (31, 35) -> r1c61 = 3
+    # click (31, 14) -> r1c60 = 3
+    # click (31, 35) -> r1c61 = 3 (Wait, the sequence is r1c61, r1c60, r1c59, r1c58, r1c57, r1c56)
+    # 
+    # It seems clicking (31, 35) and (31, 14) alternately changes a cell in row 1, 
+    # 
+    # Let's refine the rule:
+    # Each click at (31, 35) or (31, 31) or (31, 14)
+    # a # of times,
+    #
+    # a # of times (0->0)-> r1c61:3x1, then (0->0)-> r1c60:3x1, then (0->0)s
+    # 
+    # The observed sequence of changes:
+    # 1. (31, 35) -> r1c61 = 3
+    # 2. (31, 14) -> r1c60 = 3
+    # 3. (31, 35) -> r1c61 = 3 (Wait, the observed delta is r1c59:3x1)
+    # 4. (31, 14) -> r1c58 = 3
+    # 5. (31, 14) -> r1c57 = 3
+    # 6. (31, 14) -> r1c56 = 3
+    # 
+    # The rule is: each click at these specific coordinates triggers a change in row 1, 
+    # 
+    # Let's as amended:
+    # 3: (31, 35) -> r1c59 = 3
+    # 4: (31, 14) -> r1c58 = 3
+    # 5: (31, 14) -> r1c57 = 3
+    # 6: (31, 14) -> (31, 14) -> r1c56 = 3
+    # 
+    # It seems the same click (31, 14) can trigger multiple cells.
+    # 
+    # 
+    # 
+    # # a similar pattern is 
+    # # 
+    # 
+# a simple rule:
+def engine(grid, action, data):
+    if action == 6:
+        # The observed transitions are very specific.
+        # The sequence of changes is:
+        # click (31, 35) -> r1c61 = 3
+        # click (31, 14) -> r1c60 = 3
+        # click (31, 35) -> r1c59 = 3
+        # click (31, 14) -> r1c58 = 3
+        # click (31, 14) -> r1c57 = 3
+        # click (31, 14) -> r1c56 = 3
+        # 
+        # We need a track of the state. Since we cannot have a state, 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+        # 
+s

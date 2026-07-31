@@ -1,0 +1,66 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions are ACTION6 (click)
+    # Each click at (x, y) results in a 6x6 block of color 8 or 9
+    # The coordinates (x, y) are pixel coords (logical*1)
+    # The observed changes are:
+    # 1. (46, 38) -> r36c44:8x6, r37c44:8x6, r38c44:8x6, r39c44:8x6, r40c44:8x6, r41c44:8x6 (Color 8)
+    # 2. (38, 54) -> r52c36:8x6, r53c36:8x6, r54c36:8x6, r55c36:8x6, r56c36:8x6, r57c36:8x6 (Color 8)
+    # 3. (54, 54) -> r52c52:8x6, r53c52:8x6, r54c52:8x6, r55c52:8x6, r56c52:8x6, r57c52:8x6 (Color 8)
+    # 4. (46, 38) -> r36c44:9x6, r37c44:9x6, r38c44:9x6, r39c44:9x6, r40c44:9x6, r41c44:9x6 (Color 9)
+    # 5. (54, 54) -> r52c52:9x6, r53c52:9x6, r54c5s2:9x6, r55c52:9x6, r56c52:9x6, r57c52:9x6 (Color 9)
+    # 6. (38, 46) -> r44c36:8x6, r45c36:8x6, r46c36:8x6, r47c36:8x6, r48c36:8x6, r49c36:8x6 (Color 8)
+    
+    # Rule: A click at (x, y) targets a 6x6 block.
+    # The block's top-left corner is (y-2, x-2) based on the observed data.
+    # Let's check: (46, 38) -> r36c44. 38-2=36, 46-2=44. Correct.
+    # (38, 54) -> r52c36. 54-2=52, 36-2=34? No, 38-2=36. Correct.
+    # (54, 54) -> r52c52. 54-2=52, 54-2=52. Correct.
+    # (38, 46) -> r44c36. 46-2=44. Correct.
+    
+    # The color changes to 8, then 9, then maybe back to 8?
+    # The observed transitions show clicks on the same spot (46, 38) first 8 then 9.
+    # The observed transitions show clicks on (54, 54) first 8 then 9.
+    # The observed a click on (14, 4) and (14, 54) that did nothing.
+    # This implies the block must be "active" or "valid" to be toggled.
+    # The block is valid if it's currently color 5 (background).
+    # The observed grids show these blocks are surrounded by specific patterns.
+    # The block is toggled from 5 -> 8 -> 9.
+    
+    # Logic:
+    # 1. Find the 6x6 block at (y-2, x-2).
+    # 2. If the block is currently all 5s, it becomes 8s.
+    # 3. If the block is currently all 8s, it becomes 9s.
+    # 4. If the block is currently all 9s, it becomes 5s (assumption).
+    # 5. If the block is not a valid target (e.g., not uniform), it does nothing.
+    
+    new_grid = grid.copy()
+    if action == 6:
+        x, y = data['x'], data['y']
+        r, c = y - 2, x - 2
+        
+        if 0 <= r < grid.shape[0] - 5 and 0 <= c < grid.shape[1] - 5:
+            block = grid[r:r+6, c:c+6]
+            
+            # Check if block is uniform
+            if np.all(block == 5):
+                new_grid[r:r+6, c:c+6] = 8
+            elif np.all(block == 8):
+                new_grid[r:r+6, c:c+6] = 9
+            elif np.all(block == 9):
+                new_grid[r:r+6, c:c+6] = 5
+            else:
+                # Do nothing if not uniform
+                pass
+                
+    return new_grid
+
+def is_level_complete(grid):
+    # No win state provided, but usually it's about filling or clearing.
+    # Based on the observed r63 changes, it's a progress bar.
+    # The progress bar is at r63.
+    # The progress bar fills from right to left (62, 60, 58, 56, 54, 52).
+    # The progress bar fills with color 11.
+    # The progress bar is complete when the whole row 63 is color 11.
+    return np.all(grid[63, :] == 11)

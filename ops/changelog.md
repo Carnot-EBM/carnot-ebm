@@ -1,5 +1,87 @@
 # Carnot — Changelog
 
+## 2026-07-31 (outer-loop, PHASE 2b LIVE: the shipped induce path accepts broken code 13 times in 15 — and a second ask of ANY kind is what rescues it; the defect text is p=1.000 against a contentless one)
+
+**Instruction:** PHASE 2 — report the funnel effect: how many of the 5 now produce a usable engine
+that faces the semantic gate.
+
+### The answer, in the units asked for
+
+Three-arm live A/B, 5 games x 3 attempts on gemma-4-31B-it Q4_K_M, prompts captured LLM-off from
+the agent itself and byte-identical to Phase 1's committed ft09 prompt (sha `78f829d86fa65938`),
+CUDA build proven from `/proc/<pid>/exe` with 21416 MiB per-PID VRAM on each of two 3090s,
+n_ctx=32768, non-default ports, one game per card.
+
+| arm | usable attempts | games with a non-degenerate engine |
+|---|---|---|
+| A shipped (round 0 only) | **1 / 15** | tn36 |
+| B repair (names the defect + exception text) | 3 / 13 | sc25, tn36 |
+| C control (neutral re-ask, names nothing) | 2 / 13 | ft09 |
+
+**Games reaching a non-degenerate engine: 1 of 5 -> 3 of 5** (`in_sample_cell_recall > 0.5`).
+tu93 and lp85 get nothing good from any arm.
+
+### The finding that is not close, and the one that is
+
+NOT CLOSE: **the shipped `generate()` ACCEPTED a candidate carrying a mechanical defect in 13 of 15
+attempts.** It never re-asks, because it does not know anything is wrong. That is the whole
+mechanism the static check adds, and it is worth adding.
+
+CLOSE, AND I FIRST OVER-READ IT: repair 3 vs control 2 looks like a repair win, and the first
+version of `build_ab_artifact.py` printed exactly that — *"the DEFECT TEXT carries the value"*. The
+comparison is PAIRED (both arms branch from the same round 0 at the same seed), so only discordant
+pairs inform it: **5 discordant, 3 repair-only, 2 control-only, exact two-sided sign test
+p = 1.000.** A coin. The two arms also succeed on DISJOINT games, which is itself the signature of
+resampling rather than comprehension. The over-claim was in the MEASUREMENT TOOLING rather than in a
+result — the worse place, since a result gets audited and a verdict string gets quoted. The tool now
+computes the paired test and reports it, and SCENARIO-ARC-WMTE-6052-7 requires the control arm.
+
+### "Usable" is necessary and nowhere near sufficient
+
+Scored with the production `WorldModelVerifier`: tu93's one usable repair has `cell_recall 0.112`,
+`change_fidelity 0.076`, **144 invented cells**, **0 of 25** real changes right — it clears the
+non-inert clause by changing the grid WRONGLY. Two of the five usable engines are degenerate.
+SCENARIO-ARC-WMTE-6052-8 now requires the verifier's numbers to be reported beside any usable count.
+
+### Three independent reproductions of the 2026-07-30 audit, from the generator side
+
+- ft09's best completion: `cell_recall 0.947`, `noop_hallucination 0/19` — the audit's ft09-`onb`
+  record is `cell_recall 0.947` with 216 correct changed cells. Same mechanic, rediscovered.
+- tn36's round 0: `accuracy 1.000 / cell_recall 1.000 / fidelity 1.000, 25/25` — the audit's "run's
+  best engine, held-out 8/8 exact".
+- lp85's best repair: `accuracy 0.920` with `cell_recall 0.000` and `0/2` changes right — the
+  vacuous pass the audit flagged, live. It matches 23 of 25 by matching the 23 no-ops. `usable`
+  rejects it; a 0.5 legacy-accuracy bar would admit it.
+
+All in-sample (every transition scored was in the induce prompt; the live gate grades a held-out
+suffix), and labelled as such in the artifact.
+
+### A real latent bug in my own module, found by self-review after the first commit
+
+`_find_function` used a bare `ast.walk` with "last definition wins". `ast.walk` is BREADTH-FIRST,
+so every module-level definition is visited before any nested one — the rule therefore picked the
+NESTED `engine` whenever one existed, while `exec` binds only top-level ones. A helper's throwaway
+inner function would have decided the verdict for the real engine, in either direction. Fixed
+(last TOP-LEVEL wins, nested only as a fallback), two tests, mutation-proven. **Inert on the
+corpus**: no generated engine defines a nested `engine`, and the 439-file scan is byte-identical
+before and after — a latent bug, not an active one, and reported as such.
+
+Also capped the code echoed into a repair prompt (4000 chars). The completions being repaired are
+repetition-loop runaways; echoing one back in full spends thousands of prompt tokens re-showing the
+model the text it is stuck repeating, which is the last thing a repetition loop needs.
+
+### NOT WIRED IN, deliberately
+
+The validator is still standalone; nothing in the shipped induce path calls it. Editing
+`arc_executable_world_model.py` marks 7 registered artifacts stale, and the honest justification for
+paying that is a proven funnel gain. What is proven is a diagnosis (13 of 15) and an UNDECIDED
+repair mechanism (p = 1.000). The obvious next measurement is the cheap one this run points at: arm
+A versus a plain re-ask with NO defect text, at larger n, since that is the arm the data favours on
+cost.
+
+46 tests, **14/14 mutations killed**. Banked ARC levels remain 3/3; the submission gate is NOT met.
+Detail: `docs/research-notes/arc-engine-static-validation-2026-07-31.md` Part 2.
+
 ## 2026-07-31 (outer-loop, PHASE 2: static + dry-run validation of an induced engine — the four broken-code failures are all mechanically detectable, at 0 false positives in 439 real engines)
 
 **Instruction:** PHASE 2 — add STATIC validation + repair of the generated engine BEFORE the

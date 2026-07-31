@@ -1,0 +1,122 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    World model for game hg45e09c.
+    The game involves a 3x3 block of color 9 that moves in a grid.
+    ACTION1: Left, ACTION2: Down, ACTION3: Up, ACTION4: Right.
+    Movement is blocked by walls (color 2) and boundaries.
+    """
+    new_grid = grid.copy()
+    
+    # Find the 3x3 block of color 9
+    pos_9 = np.where(grid == 9)
+    if len(pos_9[0]) == 0:
+        return new_grid
+    
+    # Get the top-left corner of the 3x3 block
+    r_min, c_min = np.min(pos_9[0]), np.min(pos_9[1])
+    r_max, c_max = np.max(pos_9[0]), np.max(pos_9[1])
+    
+    # Determine movement delta
+    dr, dc = 0, 0
+    if action == 1: # Left
+        dc = -3
+    elif action == 2: # Down
+        dr = 3
+    elif action == 3: # Up
+        dr = -3
+    elif action == 4: # Right
+        dc = 3
+    else:
+        return new_grid
+
+    # Calculate new position
+    nr, nc = r_min + dr, c_min + dc
+    
+    # Check boundaries
+    if nr < 0 or nr + 3 > grid.shape[0] or nc < 0 or nc + 3 > grid.shape[1]:
+        return new_grid
+    
+    # Check for collisions with walls (color 2)
+    # The block moves into a 3x3 area. We check if any cell in the target 3x3 area is a wall.
+    # However, the observed transitions show the block can move over color 0 and 5.
+    # Let's check if the target area contains color 2.
+    target_area = grid[nr:nr+3, nc:nc+3]
+    if np.any(target_area == 2):
+        # In some cases, it might be allowed to move if the wall is not blocking the whole path.
+        # But usually, any wall in the target 3x3 block prevents movement.
+        return new_grid
+    
+    # Move the block: clear old position, set new position
+    # Clear old 3x3 block of 9s
+    # The old position is (r_min, c_min) to (r_max, r_max)
+    # We must restore the background. Based on the grid, background is 5 or 0.
+    # We'll use the value that was there before the 9s, but we don't have that.
+    # Looking at the transitions, the cells become 0 or 5.
+    # Let's use a simple approach: clear 9s and fill new 9s.
+    # To determine what to clear with, we can look at the surrounding cells or the initial grid.
+    # But a simpler way is to see what the 9s are replacing.
+    # In the observed transitions, r15c21:0x3 means color 0.
+    
+    # For simplicity, we'll set the old position to the value of the cell 
+    # that is now being covered by the new position, or a default background.
+    # Actually, the most robust way is to use the grid values from the INITIAL grid.
+    # Since we don't have it, we'll use the value of the cell at (nr, nc) from the current grid.
+    
+    # Let's try to find the background color by looking at the grid.
+    # Most of the grid is color 5.
+    bg_color = 5
+    if np.any(grid == 0):
+        # If there are 0s, they might be the target.
+        # We'll just clear the 9s with the value that was at the target location.
+        pass
+
+    # Clear old position
+    # We need to know what was under the 9s. 
+    # Let's assume the cells under the 9s return to their "natural" state.
+    # In the observed transitions, when the 9s move, the old cells often become 0 or 5.
+    # We'll use a heuristic: if the cell was 9, and we move it, we'll set it to 0 if it's in a "hole" area, else 5.
+    # A better way: the cells that the 9s move into are the ones that become 9s.
+    # The cells the 9s move out of are restored.
+    
+    # Let's use the observed delta: ACTION4 (Right) r15c15:0x3, r15c21:9x3...
+    # This means the cells at r15c15-17 (where 9s were) became 0.
+    # The cells at r15c21-23 (where 9s move to) became 9.
+    
+    # To implement this, we need to know the "base" grid.
+    # Since we can't, we'll just use color 0 for the cleared area if it's in the "active" zone.
+    # Active zone is roughly r15-r47, c15-c50.
+    
+    # Let's refine the clearing:
+    # The cells that were 9s are replaced by the value they had before.
+    # Since we don't have the base grid, we'll use 0 if the cell is in the active zone, else 5.
+    for r in range(r_min, r_min + 3):
+        for c in range(c_min, c_min + 3):
+            if 15 <= r <= 47 and 15 <= c <= 50:
+                new_grid[r, c] = 0
+            else:
+                new_grid[r, c] = 5
+                
+    # Set new position to 9
+    new_grid[nr:nr+3, nc:nc+3] = 9
+    
+    return new_grid
+
+def is_level_complete(grid):
+    # The win state is not explicitly given, but usually it involves the block 
+    # reaching a goal (color 14).
+    pos_9 = np.where(grid == 9)
+    if len(pos_9[0]) == 0:
+        return False
+    
+    r_min, c_min = np.min(pos_9[0]), np.min(pos_9[1])
+    # Check if any part of the 3x3 block is on color 14
+    target_area = grid[r_min:r_min+3, c_min:c_min+3]
+    # This is tricky because the 9s cover the 14s.
+    # We check if the block is in the position where 14s were.
+    # In the initial grid, 14s are at r45-47, c33-35.
+    if r_min == 45 and c_min == 33:
+        return True
+        
+    return False

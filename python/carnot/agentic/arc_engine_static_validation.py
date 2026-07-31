@@ -200,19 +200,37 @@ def _falls_through(body: Sequence[ast.stmt]) -> bool:
 
 
 def _find_function(tree: ast.AST, name: str) -> Optional[ast.FunctionDef]:
-    """The LAST top-level or nested definition of `name`.
+    """The definition of `name` that the CALLER WILL ACTUALLY GET: the last TOP-LEVEL one.
 
-    LAST, not first, because Python binds the last definition -- and generated code really does
-    redefine a function (the ft09 frozen engine carries two `import numpy as np` lines from
+    Two rules, and both were mistakes waiting to happen:
+
+    **TOP-LEVEL, not any.** `exec`ing the module puts only module-level definitions in the
+    namespace, so a `def engine` nested inside another function is NOT what the verifier calls.
+    An earlier version used a bare `ast.walk` and would have graded the nested one, because
+    `ast.walk` is breadth-first: every module-level definition is visited before any nested one,
+    so "last visited" reliably picked the nested definition whenever one existed. A helper's
+    inner `engine` would then have decided the verdict for the real one, in either direction.
+
+    **LAST, not first**, because Python binds the last definition -- and generated code really
+    does redefine a function. The ft09 frozen engine carries two `import numpy as np` lines from
     `_combine_world_model`'s concatenation, and a model that writes a draft and then a final
-    version leaves both in the file). Checking the first definition would grade a function that
-    never runs.
+    version leaves both in the file. Grading the first would grade a function that never runs.
+
+    A nested definition is used only when there is no top-level one at all: in that case the
+    module defines nothing callable under this name, and reporting on the nested body is more
+    informative than reporting nothing.
     """
-    found: Optional[ast.FunctionDef] = None
+    top: Optional[ast.FunctionDef] = None
+    nested: Optional[ast.FunctionDef] = None
+    for node in getattr(tree, "body", []):
+        if isinstance(node, ast.FunctionDef) and node.name == name:
+            top = node
+    if top is not None:
+        return top
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef) and node.name == name:
-            found = node
-    return found
+            nested = node
+    return nested
 
 
 def missing_return_defects(code: str, func_name: str = _ENGINE_FN) -> list[EngineDefect]:
@@ -622,7 +640,12 @@ def validate_engine_code(
     return defects
 
 
-def repair_prompt_block(defects: Sequence[EngineDefect], *, code: Optional[str] = None) -> str:
+def repair_prompt_block(
+    defects: Sequence[EngineDefect],
+    *,
+    code: Optional[str] = None,
+    max_code_chars: int = 4000,
+) -> str:
     """The text to append to a re-induce prompt so the model can FIX what we measured.
 
     Only `repairable` defects go in. A truncation is not repairable by telling the model about
@@ -631,6 +654,15 @@ def repair_prompt_block(defects: Sequence[EngineDefect], *, code: Optional[str] 
     The block states the observation and asks for the corrected file; it deliberately does not
     hint at what the game's mechanic might be. Suggesting a mechanic would put our guess in the
     model's mouth and then grade the model on it.
+
+    `max_code_chars` EXISTS BECAUSE OF THE FAILURE THIS MODULE IS FOR. The completions being
+    repaired are frequently repetition-loop runaways -- ft09's live engine is 1112 of 1144 lines
+    of duplicated comment, and the Phase-1 sweep measured that at matched seed a doubled budget
+    leaves the set of DISTINCT emitted lines unchanged while the emitted length doubles. Echoing
+    such a wall back verbatim would spend thousands of prompt tokens re-showing the model the
+    exact text it is stuck repeating, which is the last thing a repetition loop needs. The head
+    of the code carries the structure worth keeping; the tail is the wall. The truncation is
+    marked in the prompt so the model is not told a partial file is the whole file.
     """
     actionable = [d for d in defects if d.repairable]
     if not actionable:
@@ -651,5 +683,12 @@ def repair_prompt_block(defects: Sequence[EngineDefect], *, code: Optional[str] 
         "`grid` on EVERY path, and must not raise on any observed transition.",
     ]
     if code:
-        lines += ["", "The code that failed:", "```python", code.strip(), "```"]
+        body = code.strip()
+        if len(body) > int(max_code_chars):
+            body = (
+                body[: int(max_code_chars)]
+                + f"\n# ... [{len(body) - int(max_code_chars)} further characters omitted;"
+                f" the answer was much longer than this] ..."
+            )
+        lines += ["", "The code that failed:", "```python", body, "```"]
     return "\n".join(lines) + "\n"

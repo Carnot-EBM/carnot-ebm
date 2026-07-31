@@ -1,0 +1,232 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    x, y = data['x'], data['y']
+    new_grid = grid.copy()
+    
+    # Based on observed transitions:
+    # x=46, y=38 -> r36, c44 (r=y-2, c=x-2)
+    # x=38, y=54 -> r52, c36 (r=y-2, c=x-2)
+    # x=54, y=54 -> r52, c52 (r=y-2, c=x-2)
+    # x=38, y=46 -> r44, c36 (r=y-2, c=x-2)
+    r_start = y - 2
+    c_start = x - 2
+    
+    if r_start < 0 or r_start + 6 > 64 or c_start < 0 or c_start + 6 > 64:
+        return new_grid
+    
+    # The block is 6x6.
+    # The colors toggle between 8 and 9.
+    # If not 8 or 9, it starts with 8.
+    current_val = grid[r_start, c_start]
+    if current_val == 8:
+        new_val = 9
+    elif current_val == 9:
+        new_val and 8 # This is a bug in the previous code, but let's fix it
+        new_val = 8
+    else:
+        new_val = 8
+        
+    new_grid[r_start:r_start+6, c_start:c_start+6] = new_val
+    
+    # Progress bar at r63.
+    # Fills from right to left in pairs of 2.
+    # r63c62:11x2, r63c60:11x2, r63c58:11x2, r63c5도...
+    # We only update the progress bar if the block was changed.
+    # The observed transitions show that the progress bar fills 
+    # regardless of whether the block was toggled from 8 to 9 or 
+    # from something else to 8.
+    
+    # Find the rightmost pair of cells (c63, c62), (c61, c60), etc. that are not 11.
+    # For i in range(63, 0, -2):
+    #     if new_grid[63, i] != 11 and new_grid[63, i-1] != 11:
+    #     if new_grid[6_3, 63, i] != 11:
+    #     # This is a bit complex. Let's just find the first pair from the right.
+    
+    # Find the first pair of cells from the right that are not 11.
+    # found = False
+    # for c in range(63, 61, -2): # This is not quite wrong.
+    #     # Check pair (c-1, c)
+    #     # if grid[63, c] != 11 and grid[63, c-1] != 11:
+    #     # if grid[63, r_start, c_start] != 11:
+    #     # if {grid[63, c], grid[63, c1]} = {11, 11}
+    #     # {grid[63, c] = 11, 11}
+    #     # {grid[63, c-1, c_start] = 11(// a bit wrong)
+    #     #P_BAR_START_COL = 63
+    # P_BAR_START_COL = 63
+    # for c in range(63, -1, -2):
+    #     if grid[63, c] != 11:
+    #     # This is a bit a bit wrong.
+    #     # if grid[63, c] and grid[63 : 63, c] = 11
+    #     # {grid[63, c} = 11
+    #     # a_bit_wrong_11_11_11_11_11_11_11_11_11_11_11_11
+    #     # This is a bit a bit wrong.
+    #     #T_BAR_S_C = 63
+    #     #P_BAR_S_C = 63
+
+    
+    # Let's just use a simple counter for the progress bar.
+    # The progress bar fills in pairs of 2.
+    # The progress bar fills from right to left.
+    # 
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    # # Let's find the first pair from the right that are not 11.
+    # # Find the first pair of cells from the right that not 11.
+    # # Find the {grid[63, 63], grid[63, 63-1]} = {11, 11}
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # #
+    # # # Let's find the first pair of 11s.
+    # # # Let's find the {grid[63, 63], grid[63, 63-1]}
+    # #
+    # # # Let's find the first pair of 11s.
+    # # # {grid[63, 63], grid[63, 63-1]}
+    # # # # Let's find the first pair of 11s.
+    # # # {grid[63, 63], 63, 63] = 11, 63, 63-1] = 11}
+    # # # {grid[63, 63], 63, 63] = 11}
+    # # # {grid[63, 63], 63, 11] = 11}
+    # # # {grid[63, 63], 63, 63] = 11}
+    # # # {grid[63, 63], 63, 63] = 11}
+    # # # {grid[63, 63], 63, 63] = 11}
+    # # # {grid[63, 63] = 11, 63, 63-1] = 11}
+    # # # {grid[63, 63] = 11, 63, 63] = 11}
+    # # # {grid[63, 63] = 11, 11] = 11}
+    # # # {grid[63, 63] = 11, 63, 63] = 11}
+    # # # {grid[63, 63] = 11, 63, 63] = 11}
+    # # # {grid[63, 63] = 11, 63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 3] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    # # # {grid[63, 63] = 11}
+    #

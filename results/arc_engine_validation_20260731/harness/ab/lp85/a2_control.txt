@@ -1,0 +1,30 @@
+# No changes needed to the same grid if action is not 6 or data is not provided.
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6 or data is None:
+        return grid.copy()
+    
+    # The observed transitions show that clicking (ACTION6) at a specific location 
+    # (4, 32) leads to a complex set of changes across the grid.
+    # Since the exact logic is not only fully described by 
+    # 
+    # # but this is a puzzle game, it's likely that the 
+    # # the click triggers a shift or rotation of colors in specific regions.
+    # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # #H# # # # # #
+    # # # # # # # # # # # #H# # # # # #
+    # # # # # # # # # # # #H# # # # # #
+    # # # # # # # # # # # # # # # # # #
+    # # # # # # #s# # # # # # # # # # # #
+    # # # # # # #s# # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # #
+    # # # # # # # # #s# # # # # # # # # #
+    # # # # # # # # #s# # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # #
+    # # # # # # # #<|channel>thought
+<channel|>
