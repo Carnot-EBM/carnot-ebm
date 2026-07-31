@@ -69,6 +69,34 @@ DEFAULT_IMAGE = "carnot-sandbox:latest"
 # Default gVisor runtime name (as configured in /etc/docker/daemon.json)
 DEFAULT_RUNTIME = "runsc"
 
+# GPU UNDER gVisor: NOT USABLE ON THIS MACHINE. Measured 2026-07-31.
+#
+# `DockerSandboxConfig.gpu` defaults to False, and on this host it must stay
+# that way. gVisor does not pass GPU calls through to the driver directly -- it
+# intercepts them via `nvproxy`, which whitelists SPECIFIC driver versions.
+# The numbers as measured:
+#
+#     host NVIDIA driver            610.43.03  (2x RTX 3090)
+#     runsc release-20260330.0      nvproxy supports up to 590.48.01
+#     nvidia-container-toolkit      NOT INSTALLED
+#     carnot-sandbox:latest         NOT BUILT
+#
+# So `gpu=True` with runtime="runsc" fails twice over here: the driver is newer
+# than anything this nvproxy build recognises, and the toolkit that provides
+# `--gpus` is absent regardless of runtime.
+#
+# This does NOT affect the project's GPU work. The sandbox runs LLM-generated
+# hypothesis code (CPU JAX experiments); training and inference run through
+# entirely separate paths (llama_cpp, torch directly) that never touch this
+# module. Nothing here contends for the 3090s.
+#
+# CLAUDE.md says gVisor "plays nicely with nvidia-container-toolkit". True in
+# general, NOT actionable on this host today -- see ops/known-issues.md
+# (2026-07-31). If you need isolation WITH GPU, the realistic option is
+# runtime="runc" plus nvidia-container-toolkit: that keeps the GPU and still
+# buys real namespaces, no network, and a read-only filesystem, but it drops the
+# gVisor syscall boundary. Do not "fix" a GPU failure by downgrading the driver.
+
 
 @dataclass
 class DockerSandboxConfig:

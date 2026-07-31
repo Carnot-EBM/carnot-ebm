@@ -1206,6 +1206,28 @@ If any answer is yes, the change is not ready.
 - **Code execution sandbox:** Use `CARNOT_USE_SANDBOX=1` for gvisor-sandboxed execution of untrusted code. Default is in-process exec for development speed.
 - **trust_remote_code is gated:** HuggingFace model loading requires `CARNOT_TRUST_REMOTE_CODE=1` to enable remote code execution. Default is False (safe).
 - **Production autoresearch:** Use Docker with the gVisor (runsc) runtime for sandbox isolation when running autonomous experiments in production. Firecracker was initially considered but cannot pass GPUs through, and the pipeline needs CUDA/ROCm; gVisor intercepts syscalls in userspace and plays nicely with nvidia-container-toolkit.
+  - **CORRECTION 2026-07-31 (measured, not a retraction of the above).** The
+    "plays nicely with nvidia-container-toolkit" claim is true of gVisor in
+    general but is **NOT actionable on this host today**. gVisor routes GPU
+    calls through `nvproxy`, which whitelists specific driver versions:
+    host driver is **610.43.03**, `runsc release-20260330.0` supports up to
+    **590.48.01**, and `nvidia-container-toolkit` is **not installed**. So
+    `gpu=True` + `runtime="runsc"` fails twice over here.
+    This does not affect the project's GPU work: the sandbox runs LLM-generated
+    *hypothesis* code (CPU JAX), while training/inference run through separate
+    paths (`llama_cpp`, torch) that never touch it, and
+    `DockerSandboxConfig.gpu` defaults to `False`. For isolation WITH GPU the
+    realistic option is `runtime="runc"` + nvidia-container-toolkit (keeps the
+    GPU and namespace isolation, drops the gVisor syscall boundary). Do NOT
+    downgrade the driver to fit nvproxy. See `ops/known-issues.md` 2026-07-31
+    and the constants block in `python/carnot/autoresearch/sandbox_docker.py`.
+  - **Reachability, 2026-07-31.** The gVisor path is reached by calling
+    `carnot.autoresearch.sandbox.execute_hypothesis()` with
+    `CARNOT_USE_SANDBOX=1` (prefer container, warn+fall back if unavailable) or
+    `CARNOT_REQUIRE_SANDBOX=1` (fail closed). Calling `run_in_sandbox()`
+    directly always runs in-process and ignores both. Until this date
+    `run_in_docker` was exported and invoked by nothing, so setting the env var
+    had no effect on the autoresearch pipeline at all. See REQ-SEC-003.
 
 ## Project Vision (Three Phases + Parallel Tracks)
 
