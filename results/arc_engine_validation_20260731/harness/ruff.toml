@@ -1,0 +1,27 @@
+# Lint config for the committed copy of this measurement's harness.
+#
+# WHY A LOCAL CONFIG RATHER THAN EDITING THE SCRIPTS. These files are the record of what was
+# actually run on 2026-07-31; the repo's convention (see results/arc_induce_budget_20260731/
+# harness/ruff.toml and pyproject.toml's ruff exclude block) is that a committed record of a run
+# is preserved as-run rather than rewritten to satisfy a linter.
+#
+# Two of the relaxations here are not merely stylistic and are worth stating plainly:
+#
+#   E501  mutation_check.py's MUTATIONS table holds VERBATIM source anchors that must match the
+#         module byte-for-byte. Wrapping one would make the mutation silently fail to apply --
+#         and the harness would then report ANCHOR_NOT_FOUND rather than a false pass, but the
+#         evidence would be lost. They are long because the code they anchor to is long.
+#   I001  scan_corpus.py's imports are ordered by WHEN they may happen: `numpy` and the carnot
+#         modules must be imported AFTER the os.environ mutations that redirect
+#         CARNOT_ARC_E3_DIR away from the evidence directory and pin JAX to CPU. Sorting them
+#         would move a carnot import above the redirect and let a scan write into
+#         results/arc_e3.
+#
+#   SIM115  `open(p).read()` without a context manager -- fine in a short-lived analysis process.
+extend = "../../../pyproject.toml"
+
+[lint]
+ignore = ["E501", "I001", "SIM115"]
+
+[format]
+exclude = ["*"]

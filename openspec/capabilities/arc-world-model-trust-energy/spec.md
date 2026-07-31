@@ -20503,3 +20503,94 @@ runs sharing an accept-trace hash and a plan ran the identical search.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6051 | `python/carnot/agentic/arc_executable_world_model.py:_state_key` — `b"%d:%d\|" % (h, w) + (a % 10).astype(np.uint8).tobytes()` on the 2-D integer fast path, `to_ascii(a)` otherwise. Swapped in at all **5** key sites: `plan_in_model`'s `seen` seed and both of its branches (best-first goal-energy and blind FIFO BFS), plus `plan_and_execute`'s `seen` seed and its keying site (whose `ndim == 2` guard is preserved). `to_ascii` itself is UNCHANGED and still used for prompts and for the fallback — this adds a key, it does not retire a renderer. | `tests/python/test_arc_state_key_dedup_2026_07_30.py` — 14 tests. **Mutation-proven: 7/7 mutations killed**, each by the test written for it — dropping the `% 10` kills 3 tests (incl. the `plan_in_model` end-to-end), dropping the shape prefix kills `::test_shape_is_part_of_the_key`, dropping the dtype fallback kills 2, and an unconditional fallback (which would satisfy every equivalence test and buy nothing) kills `::test_the_fast_path_is_actually_taken`. **Cross-game verification, 10 games at a 20,000-call cap:** the landed `_state_key` is partition-identical to `to_ascii` on ALL TEN — same engine calls, same unique states, same plan, same accept-trace SHA256. Speedup on the 4 games whose engines do enough work to time (the other 6 exhaust their search queue in 1–148 calls, which verifies the partition but gives no timing signal, and are excluded from the speed table rather than averaged in): **ka59 1.28x, sk48 4.59x, sc25 6.61x, lp85 7.18x** — no regression anywhere, minimum 1.28x. The spread is explained, not averaged: ka59's peak engine is expensive (`_blocks` alone was 48% of its search), so the key is a smaller share of its total, whereas the other three have cheap engines where the key dominated. An earlier version of this measurement reported "371x" on ka59 — an artefact of arm ORDER, since the control ran first and absorbed one-off engine warm-up; the measurement now discards a warm-up run and takes the minimum of two timed reps per arm. |
+
+## REQ-ARC-WMTE-6052: A Generated Engine SHALL Be Checked For MECHANICAL Defects Before It Is Scored
+
+The 2026-07-30 activation grid measured the ARC live agent's LLM tier firing on **6 of 6** games
+and reaching the policy on **1 of 6**. The 2026-07-30 gate-rejection audit then read every rejected
+engine and established that the rejections were CORRECT — but that four of the five failures were
+BROKEN CODE rather than a wrong model of the game:
+
+| game | the actual defect | what the gate recorded |
+|---|---|---|
+| ft09 | `engine()` returns on `action != 6`, and on the `action == 6` path ends in a 1112-of-1144-line comment wall with **no return** | held-out 1/8, `legacy_accuracy 0.0` — "predicted wrong" |
+| tu93 | both replicates "scan for the player and **fall off the end of `engine()`** with no return" | held-out 0/8, `cell_recall 0.0`, both arms |
+| lp85 | `UnboundLocalError: cannot access local variable 'cell'` raised out of **`is_level_complete`**, on the level ROOT grid | `goal_predicate_error` inside a satisfiability search |
+| ft09 round 2 | the completion **hit the 4096-token output cap** before writing either required symbol | `missing ('engine','is_level_complete')`, retried at the same budget, then discarded |
+
+Each of these is detectable from the source text alone, or by running the code once against
+transitions the agent has ALREADY observed. The system SHALL make that check, and it SHALL make it
+BEFORE the semantic trust gate, so that unusable code becomes an honest retry or a repair instead of
+a misattributed quality verdict.
+
+**THE CHECK IS NOT A GATE AND SHALL NEVER BECOME ONE.** It runs strictly upstream of
+`WorldModelVerifier` / `change_gate_decision` and has no power to ADMIT anything. Its only outputs
+are a defect list (which turns unusable code into a retry) and a repair prompt (which turns a
+crashing engine into a re-induce carrying the exception text). No threshold anywhere is lowered,
+softened or bypassed by it. This clause is load-bearing: a defect scanner that starts making quality
+judgements is a second, weaker gate sitting in front of the real one.
+
+### SCENARIO-ARC-WMTE-6052-1: A clean defect report is NOT a quality claim
+GIVEN the identity engine `def engine(grid, action, data): return grid` on both branches
+WHEN every check in this requirement is run against it
+THEN all of them MUST pass. The Phase-1 budget sweep (2026-07-31) found that the completions
+scoring best on every structural check — accepted, parsing, returning on every path, 19-of-25
+held-out exact — were exactly this function, and that 19 of ft09's 25 transitions are no-ops, so
+"nothing ever changes" gets every one of them right at `cell_recall 0.000`. Degeneracy is the
+change-aware gate's measurement, made downstream over a held-out split with a counterfactual this
+layer does not have. The requirement therefore ALSO mandates a separately-reported
+`engine_changes_anything` datum, so that "no defects found" is never READ as "the engine is good" —
+but that datum SHALL NOT appear in the defect list.
+
+### SCENARIO-ARC-WMTE-6052-2: The fall-through check is biased AGAINST flagging
+GIVEN any construct whose termination semantics are not unambiguous from the AST alone —
+`while True:` with no `break`, a `try` with a `finally`, a `match` without a wildcard case
+THEN the checker MUST assume the path TERMINATES and report nothing.
+A false `missing_return` REJECTS working code, which is strictly worse than the status quo: a
+non-returning engine is already caught downstream (as a wrong prediction, with a misleading reason),
+whereas a false positive throws away an engine that would have worked. Missed detections are the
+accepted cost of a trustworthy clean report. Measured on the real corpus: **439 generated
+`world_model*.py` files on disk, 9 flagged `missing_return`, 9 of 9 confirmed by EXECUTING the
+engine and observing a real `None` return, 0 unconfirmed.**
+
+### SCENARIO-ARC-WMTE-6052-3: The dry run covers BOTH generated functions
+GIVEN lp85's candidate, whose `engine` is a clean identity and whose `is_level_complete` raises
+`UnboundLocalError` on the root grid
+WHEN the dry run is performed
+THEN it MUST report the raise. An engine-only dry run reports NOTHING for this file and would miss
+one of the four failures this requirement exists for. The raise is located by the audit at
+`arc_llm_reinduction.py:750` with `reachable_grids_evaluated: 1`, which pins it to the level's
+opening grid.
+
+### SCENARIO-ARC-WMTE-6052-4: A truncated completion is a MISSING OBSERVATION
+GIVEN a completion whose `stop_type` is `limit` and which lacks a required symbol
+THEN it MUST be reported as `retryable` and MUST NOT be reported as having any other defect.
+A truncated file "has no return" because it has no END; saying so would be a false statement about
+it, and feeding a half-written file back as a repair spends the very budget the retry needs.
+Conversely, a completion that hits the cap AFTER writing every required symbol lost nothing that was
+needed and MUST NOT be flagged.
+
+### SCENARIO-ARC-WMTE-6052-5: A merely-WRONG prediction is not a defect
+GIVEN a well-formed engine that returns a correctly-shaped grid with the wrong contents
+THEN the dry run MUST report nothing. Being wrong about the game is the trust gate's judgement,
+measured properly over a held-out split; duplicating it here with a worse metric is the failure mode
+SCENARIO-1 and the no-gate clause exist to prevent.
+
+### SCENARIO-ARC-WMTE-6052-6: The repair prompt carries the EXCEPTION TEXT
+GIVEN a `goal_raised` defect naming an unbound variable
+THEN the repair block MUST contain the exception type and message, MUST NOT contain any truncation
+defect, and MUST NOT suggest what the game's mechanic might be. The exception text is what makes
+this a fix rather than a veto; a suggested mechanic would put our guess in the model's mouth and
+then grade the model on it.
+
+**WHAT THIS REQUIREMENT DOES NOT CLAIM.** It does not claim the funnel moves. Phase 1 measured that
+under the shipped sampler EVERY ft09 engine-only attempt at 4096, 8192 and 16384 tokens was
+non-returning, so on ft09 this check converts "accepted a `None`-returning engine" into "rejected
+after three tries" — a correct diagnosis, not a working engine. Whether the repair loop or a
+sampler change turns a rejection into a usable engine is a separate, live measurement.
+
+## Implementation Status (REQ-ARC-WMTE-6052)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6052 | `python/carnot/agentic/arc_engine_static_validation.py` — `missing_return_defects` (AST fall-through over `engine`, last-definition-wins, plus explicit `return None`), `truncation_defect` (keys on llama-server's own `stop_type == "limit"` + a missing required symbol), `dry_run_defects` (executes the module, runs `engine` over observed transitions AND `is_level_complete` over observed grids), `engine_changes_anything` (reported, never gated), `validate_engine_code` (truncation short-circuits the rest) and `repair_prompt_block`. Standalone module: the shipped induce path is UNCHANGED by this commit. | `tests/python/test_arc_engine_static_validation.py` — 42 tests, each check pinned to its observed failure (ft09's REAL engine read off disk, not a fixture) and to its false-positive direction. **Mutation-proven: 12/12 mutations killed**, harness + machine-readable record at `results/arc_engine_validation_20260731/mutation_check.json` (baseline green, module restored byte-identical). **Corpus scan, 439 real generated engines:** 9 `missing_return`, 9/9 execution-confirmed, 0 unconfirmed; the dry run additionally finds 7 raising engines and 1 `None`-returning one across the five audited games — including the BANKED `results/arc_e3/tu93/world_model.py`, which raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`. **Live-completion replay, 36 real Phase-1 completions with their recorded `stop_type`:** 13 that the shipped `generate()` ACCEPTED carry a `missing_return`, and 10 that it REJECTED are retryable truncations. Cross-checked against Phase 1's independently-written AST return check: **0 disagreements on all 28 comparable rows.** |

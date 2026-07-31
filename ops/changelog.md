@@ -1,5 +1,73 @@
 # Carnot — Changelog
 
+## 2026-07-31 (outer-loop, PHASE 2: static + dry-run validation of an induced engine — the four broken-code failures are all mechanically detectable, at 0 false positives in 439 real engines)
+
+**Instruction:** PHASE 2 — add STATIC validation + repair of the generated engine BEFORE the
+semantic gate. Prove each check against its OBSERVED failure: ft09 and tu93 by no-return, lp85 by
+the dry-run, ft09 round 2 by truncation-detection-and-retry. Report the funnel effect.
+Mutation-prove every new test. Commit if it lands.
+
+### Outcome: the checks are PROVEN; the funnel is UNCHANGED, and the module is deliberately not wired in
+
+Shipped `python/carnot/agentic/arc_engine_static_validation.py` (REQ-ARC-WMTE-6052), one check per
+observed failure, plus a repair prompt that carries the exception text back to the model. The
+shipped induce path is UNCHANGED by this commit — the module is standalone.
+
+**Each check proven against its own failure.** ft09 is proven on the REAL live engine read off disk
+(`results/arc_induce_budget_20260731/upstream_ft09_cells/on__ft09__s1__world_model.py.frozen`), not
+a fixture: the static check flags it, and executing it confirms `engine(grid, 6, data) is None`
+while the `action != 6` path is fine — a per-path defect, exactly as the audit describes. tu93's
+shape is caught by the same check. lp85 is caught only by the GOAL arm of the dry run, because its
+`UnboundLocalError` comes out of `is_level_complete`, not `engine` — an engine-only dry run reports
+nothing for that file, and a test pins that near-miss. ft09 round 2 is caught by truncation
+detection, which additionally must NOT report anything else about a truncated file: it has no end,
+so "it never returns" would be a false statement about it.
+
+**False-positive rate, 439 real generated engines** (every `world_model*.py` in `results/`): 9
+flagged `missing_return` (2.05%), **9 of 9 confirmed by EXECUTING the engine and observing a real
+`None` return, 0 unconfirmed**. The worst is vc33's, which reproduces the ft09 mode exactly — the
+model echoed its own refactor prompt back as comments, including the literal `REQUIRED OUTPUT
+STRUCTURE` block, and never wrote a `return`.
+
+**Sensitivity, 36 real live completions** replayed from the Phase-1 capture with their recorded
+`stop_type`: **13 that the shipped `generate()` ACCEPTED carry a `missing_return`** (broken code
+that reached the trust gate as a bad prediction), and **10 that it REJECTED are retryable
+truncations** (incomplete observations discarded as bad models). Cross-checked against Phase 1's
+independently-written AST return check: **0 disagreements on all 28 comparable rows.**
+
+**A live defect in a banked engine, not just a historical one:** `results/arc_e3/tu93/world_model.py`
+raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`.
+The trust gate can only see that as "failed the transition".
+
+**42 tests, 12/12 mutations killed** (`results/arc_engine_validation_20260731/mutation_check.json`,
+baseline green, module restored byte-identical). The mutations reverse design decisions, not
+characters: "an `if` without an `else` terminates" blinds the ft09/tu93 detection; "drop the goal
+arm" misses lp85; "the repair prompt includes unrepairable defects" spends the budget the retry
+needs.
+
+**THE FUNNEL IS UNCHANGED (tier reaches policy 1/6) AND THIS DOES NOT MOVE IT.** Stated rather than
+buried: Phase 1 already measured that under the shipped sampler EVERY ft09 engine-only attempt at
+4096, 8192 and 16384 was non-returning, so even wired in, this check converts "accepted a
+`None`-returning engine" into "rejected after three tries" — a correct diagnosis, not a working
+engine. Whether the REPAIR turns a rejection into a usable engine is a live measurement not yet
+made, and it is the obvious next one.
+
+**A clean report is not a quality claim, and the design refuses to let it become one.** The module
+has no power to admit anything and runs entirely upstream of the trust gate. The Phase-1 sweep's
+best-scoring completions were the identity function, which clears every check here trivially;
+`test_identity_engine_passes_every_check` pins that, and `engine_changes_anything` is reported
+beside a clean report so "no defects found" is never read as "the engine is good". No threshold was
+lowered.
+
+**Limitation, stated plainly:** lp85's actual failing source no longer exists (its engine store was
+a per-cell temp directory), so the `goal_raised` arm is proven against a RECONSTRUCTION of the
+documented mechanism and against 0 preserved instances in the corpus. The corpus confirms it is not
+trigger-happy — 71 engines x 50 grids, zero goal defects — but that arm's sensitivity rests on a
+reconstruction, not an artefact.
+
+Detail: `docs/research-notes/arc-engine-static-validation-2026-07-31.md`.
+Banked ARC levels remain 3/3 and the submission gate is NOT met.
+
 ## 2026-07-31 (outer-loop: "raise the induce completion budget" — it is not the lever; a repetition penalty is, and the scored path runs with every repetition control off)
 
 **Instruction:** PHASE 1 of the induction-reliability plan — raise the induce completion budget,
