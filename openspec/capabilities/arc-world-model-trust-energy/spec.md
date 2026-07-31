@@ -20727,11 +20727,67 @@ is "re-ask instead of accepting"; the mechanism that is NOT proven is "tell the 
 > Neither correction touches the finding that does survive, which is about arm A and is not close:
 > the shipped path accepted a defective candidate in 13 of 15 attempts and therefore never re-asks.
 
+> **CORRECTION 2026-07-31 #2 — THE MODULE IS NO LONGER STANDALONE. The sentence "the shipped
+> path is unchanged: the module is standalone and nothing calls it" (two paragraphs up, and the
+> matching "Standalone module: the shipped induce path is UNCHANGED; nothing calls it" in the
+> Implementation Status row below) became FALSE on 2026-07-31 and is superseded here. Original
+> text left unedited per never-prune.**
+>
+> `arc_engine_static_validation` is now called from the LIVE code-only induce path:
+> `LocalGGUFProposer._engine_defects` in `python/carnot/agentic/arc_executable_world_model.py`,
+> reached from `generate()` whenever the call is an ENGINE induce (`codeonly_eligible` AND
+> `engine` in `required`). On a mechanical defect the candidate is rejected and re-asked once
+> with a NEUTRAL block; `repair_prompt_block()` — the defect-NAMING block — remains deliberately
+> unwired, because head-to-head against the neutral block it measured p = 1.000 over 5 discordant
+> pairs on disjoint games. The defect TEXT bought nothing; the second ASK is the whole effect.
+> Wired in commit `d20533033`; `CARNOT_ARC_INDUCE_DEFECT_REASKS=0` disables it.
+>
+> **What justified wiring it, and what did not.** Phase 1 (`results/arc_induce_confirm_20260731/`,
+> 36 attempt-matched pairs over 6 games, scored OUT-OF-SAMPLE) measured attempts producing a
+> mechanically-usable engine at **13/36 → 22/36**. Two inferences, both reported:
+> **within-prompt p = 0.049** at 17 discordant pairs, and — the primary one, because the 36 pairs
+> are 6 games × 6 resamples of ONE prompt each and the unit that generalizes to a new game is the
+> GAME — **game-clustered p = 0.125** (4 games better, 0 worse, 2 tied; whole-game sign-flip
+> permutation test agrees exactly at 0.125, observed net +9). With 6 games the smallest reachable
+> clustered p is 2/2⁶ = 0.031, so significance required ALL SIX to improve and four did. The
+> direction is consistent — **no game got worse** — and the cost fell (47.2 s per attempt against
+> 100.3 s; token-cap hits 20/36 → 2/36; `missing_return` 13 → 2). It shipped on VALIDITY and COST.
+>
+> **It did NOT ship on quality, and the conjunction is sharper than the components.** Restricted
+> to the three games whose held-out set contains a CHANGING transition — the only games where
+> out-of-sample change prediction can be graded at all — the strict quality counts are
+> **4/36 control vs 4/36 treatment, identical**. The entire strict-funnel gain (2/6 games → 3/6)
+> is ft09, whose held-out set has ZERO changing rows and which therefore passes only on the weaker
+> zero-hallucinated-no-ops fallback. On tn36 — the one game with a substantial gradable held-out
+> set (17 changing rows) — both arms are 4/6 and each arm's best engine is the same 17/17 exact.
+> **The treatment produced no better engine on any game where out-of-sample change prediction
+> could actually be graded.** On tu93 and sc25 the best over EVERY scored completion in EVERY arm
+> is 0/19 and 0/1 changing transitions correct.
+>
+> **The clause this requirement is built on is intact, and the wiring respects it.** "THE CHECK IS
+> NOT A GATE AND SHALL NEVER BECOME ONE" still holds: the defect check runs strictly upstream of
+> `WorldModelVerifier` / `change_gate_decision`, has no power to ADMIT anything, and cannot convert
+> an accept into a hard failure — it spends at most one extra attempt and only while an attempt
+> remains, so on the last try the defective candidate is accepted exactly as before. That safety
+> invariant was got WRONG in the first draft (the `continue` fell through to the content-failure
+> return) and was caught by the mutation check, not by review. No threshold was lowered:
+> `min_heldout_accuracy`, `degenerate_goal_predicate` and `goal_predicate_true_at_root` are
+> untouched.
+>
+> **Consequences recorded elsewhere.** The module's allow-list entry in
+> `scripts/arc_orphan_solver_lint.py` was retired in the same commit (its own comment said "Retire
+> this entry when the module is wired"), verified by temporarily unwiring the import and confirming
+> the lint flags it. This spec text was NOT updated at the time — an omission of CLAUDE.md step 6
+> found by the 2026-07-31 adversarial review, which is why this correction exists. See
+> REQ-ARC-FCP-5699-41 in `openspec/capabilities/arc-human-replay-frame-change/spec.md` for the
+> requirement governing the induce sampler and the re-ask, and
+> `docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md` for the wiring narrative.
+
 ## Implementation Status (REQ-ARC-WMTE-6052)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6052 | `python/carnot/agentic/arc_engine_static_validation.py` — `missing_return_defects` (AST fall-through over `engine`, LAST TOP-LEVEL definition wins, plus explicit `return None`), `truncation_defect` (keys on llama-server's own `stop_type == "limit"` + a missing required symbol), `dry_run_defects` (executes the module, runs `engine` over observed transitions AND `is_level_complete` over observed grids), `engine_changes_anything` (reported, never gated), `validate_engine_code` (truncation short-circuits the rest) and `repair_prompt_block` (echoed code capped — the completions being repaired are repetition-loop runaways). Standalone module: **the shipped induce path is UNCHANGED**; nothing calls it. | `tests/python/test_arc_engine_static_validation.py` — 46 tests, each check pinned to its observed failure (ft09's REAL engine read off disk, not a fixture) and to its false-positive direction. **Mutation-proven: 14/14 mutations killed**, harness + machine-readable record at `results/arc_engine_validation_20260731/mutation_check.json` (baseline green, module restored byte-identical). **Corpus scan, 439 real generated engines:** 9 `missing_return`, 9/9 execution-confirmed, 0 unconfirmed; the dry run additionally finds 7 raising engines and 1 `None`-returning one across the five audited games — including the BANKED `results/arc_e3/tu93/world_model.py`, which raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`. **Live-completion replay, 36 real Phase-1 completions with their recorded `stop_type`:** 13 that the shipped `generate()` ACCEPTED carry a `missing_return`, and 10 that it REJECTED are retryable truncations. Cross-checked against Phase 1's independently-written AST return check: **0 disagreements on all 28 comparable rows.** **LIVE three-arm repair A/B (`results/arc_engine_validation_20260731/repair_ab.json`, `gate_scores.json`), 5 games x 3 attempts on gemma-4-31B-it Q4_K_M, CUDA build proven from `/proc/<pid>/exe` + 21416 MiB per-PID VRAM, prompts captured LLM-off from the agent and byte-identical to Phase 1's committed ft09 prompt (sha `78f829d86fa65938`):** shipped ACCEPTED a defective candidate **13 of 15** times and produced a usable engine **1 of 15**; repair 3 and control 2 over 13 matched pairs (**p = 1.000**, disjoint games); attempts producing PARSEABLE, NON-INERT code went **1 of 5 to 3 of 5 (offline; the live funnel is unchanged at 1 of 6)**, and on the artifact's own STRONG bar (`in_sample_cell_recall > 0.5`) the per-arm counts are round-0 {tn36} = 1, repair {sc25, tn36} = 2, control {ft09} = 1 — **net new strong game = sc25 alone, n = 1** (see CORRECTION 2026-07-31 above; the "1 of 5 to 3 of 5 at `in_sample_cell_recall > 0.5`" originally written on this line conflated the union of two arms with a per-arm count and is superseded). Three independent reproductions of the 2026-07-30 audit from the generator side: ft09's best completion scores `cell_recall 0.947` / `noop_hallucination 0/19` (audit: 0.947), tn36's round 0 scores `1.000/1.000/1.000, 25/25` (audit: the run's best engine), and lp85's best repair scores `accuracy 0.920` with `cell_recall 0.000` (audit: the vacuous pass a 0.5 bar would admit). |
+| REQ-ARC-WMTE-6052 | `python/carnot/agentic/arc_engine_static_validation.py` — `missing_return_defects` (AST fall-through over `engine`, LAST TOP-LEVEL definition wins, plus explicit `return None`), `truncation_defect` (keys on llama-server's own `stop_type == "limit"` + a missing required symbol), `dry_run_defects` (executes the module, runs `engine` over observed transitions AND `is_level_complete` over observed grids), `engine_changes_anything` (reported, never gated), `validate_engine_code` (truncation short-circuits the rest) and `repair_prompt_block` (echoed code capped — the completions being repaired are repetition-loop runaways). Standalone module: **the shipped induce path is UNCHANGED**; nothing calls it. **[SUPERSEDED 2026-07-31 — see CORRECTION #2 above. The module is now called from the LIVE induce path via `LocalGGUFProposer._engine_defects` (commit `d20533033`); this sentence describes the state up to 2026-07-31 and is retained per never-prune, not as current fact.]** | `tests/python/test_arc_engine_static_validation.py` — 46 tests, each check pinned to its observed failure (ft09's REAL engine read off disk, not a fixture) and to its false-positive direction. **Mutation-proven: 14/14 mutations killed**, harness + machine-readable record at `results/arc_engine_validation_20260731/mutation_check.json` (baseline green, module restored byte-identical). **Corpus scan, 439 real generated engines:** 9 `missing_return`, 9/9 execution-confirmed, 0 unconfirmed; the dry run additionally finds 7 raising engines and 1 `None`-returning one across the five audited games — including the BANKED `results/arc_e3/tu93/world_model.py`, which raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`. **Live-completion replay, 36 real Phase-1 completions with their recorded `stop_type`:** 13 that the shipped `generate()` ACCEPTED carry a `missing_return`, and 10 that it REJECTED are retryable truncations. Cross-checked against Phase 1's independently-written AST return check: **0 disagreements on all 28 comparable rows.** **LIVE three-arm repair A/B (`results/arc_engine_validation_20260731/repair_ab.json`, `gate_scores.json`), 5 games x 3 attempts on gemma-4-31B-it Q4_K_M, CUDA build proven from `/proc/<pid>/exe` + 21416 MiB per-PID VRAM, prompts captured LLM-off from the agent and byte-identical to Phase 1's committed ft09 prompt (sha `78f829d86fa65938`):** shipped ACCEPTED a defective candidate **13 of 15** times and produced a usable engine **1 of 15**; repair 3 and control 2 over 13 matched pairs (**p = 1.000**, disjoint games); attempts producing PARSEABLE, NON-INERT code went **1 of 5 to 3 of 5 (offline; the live funnel is unchanged at 1 of 6)**, and on the artifact's own STRONG bar (`in_sample_cell_recall > 0.5`) the per-arm counts are round-0 {tn36} = 1, repair {sc25, tn36} = 2, control {ft09} = 1 — **net new strong game = sc25 alone, n = 1** (see CORRECTION 2026-07-31 above; the "1 of 5 to 3 of 5 at `in_sample_cell_recall > 0.5`" originally written on this line conflated the union of two arms with a per-arm count and is superseded). Three independent reproductions of the 2026-07-30 audit from the generator side: ft09's best completion scores `cell_recall 0.947` / `noop_hallucination 0/19` (audit: 0.947), tn36's round 0 scores `1.000/1.000/1.000, 25/25` (audit: the run's best engine), and lp85's best repair scores `accuracy 0.920` with `cell_recall 0.000` (audit: the vacuous pass a 0.5 bar would admit). |
 
 ## REQ-ARC-WMTE-6047-E: `plan_in_model` SHALL NOT Report A Depth-Capped Search As An Exhausted One
 

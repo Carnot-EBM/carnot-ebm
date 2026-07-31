@@ -253,6 +253,49 @@ def test_goal_only_calls_do_not_run_the_engine_gate(monkeypatch: pytest.MonkeyPa
     assert prop.n_induce_defect_reasks == 0
 
 
+def test_goal_only_calls_do_not_carry_the_penalty_either(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """NARROWED 2026-07-31 (adversarial review). The penalty gate was `codeonly_eligible` alone,
+    which is ALSO True for `_split_induce`'s focused goal-only call -- so `repeat_penalty` was
+    shipping to a prompt shape Phase 1 never measured (the confirm harness sent ENGINE prompts
+    only). The defect gate above was already correctly narrower; the penalty now matches it.
+
+    MUTATION-VERIFIED: reverting the condition to `codeonly_eligible` makes this fail, because
+    the goal-only payload then carries the penalty.
+
+    This is the conservative direction, not the adventurous one: with no measurement in either
+    direction the goal-only call's correct state is the long-standing no-penalty baseline that
+    every banked result was produced under. It is also the call `_split_induce` exists to
+    protect precisely BECAUSE it does not exhibit the repetition-loop failure the penalty
+    treats -- it is 'valid in ~3.5s where the combined call fails'.
+    """
+    goal_only = "def is_level_complete(grid, data):\n    return False\n"
+    prop, srv = _proposer(monkeypatch, [f"```python\n{goal_only}\n```"])
+    ok, _ = prop.generate("p", ("is_level_complete",), tries=3, codeonly_eligible=True)
+    assert ok
+    assert "repeat_penalty" not in srv.payloads[0]
+    assert "repeat_last_n" not in srv.payloads[0]
+
+
+def test_the_engine_call_still_carries_the_penalty_after_the_narrowing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The other half of the narrowing: it must not have turned the measured intervention off.
+
+    Paired with the goal-only test above, these two pin the boundary from BOTH sides -- a
+    mutation that widens the condition back to `codeonly_eligible` fails the first, and one
+    that narrows it to something stricter (or drops the penalty entirely) fails this one.
+    `engine` alone in `required` is the `_split_induce` engine call, which is a real shipped
+    call shape and was measured.
+    """
+    prop, srv = _proposer(monkeypatch, [f"```python\n{GOOD_ENGINE}\n```"])
+    ok, _ = prop.generate("p", ("engine",), tries=3, codeonly_eligible=True)
+    assert ok
+    assert srv.payloads[0]["repeat_penalty"] == _INDUCE_REPEAT_PENALTY
+    assert srv.payloads[0]["repeat_last_n"] == _INDUCE_REPEAT_LAST_N
+
+
 # ---- SCENARIO-ARC-FCP-5699-41-3: the gate can never break the path it guards ------------------
 def test_a_raising_defect_checker_accepts_rather_than_propagating(
     monkeypatch: pytest.MonkeyPatch,

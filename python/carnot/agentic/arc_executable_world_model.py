@@ -3294,10 +3294,33 @@ _GENERATOR_CUDA_GUARD_MARGIN_MIB = 1500
 # penalty exactly (llama.cpp treats 1.0 as identity), so `CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0`
 # restores the pre-2026-07-31 payload byte-for-byte.
 #
-# SCOPE. Applied ONLY on the code-only induce path (`codeonly_eligible`), which is where it was
-# measured. `refactor()` is a reasoning task on a different prompt shape and is deliberately
-# untouched -- penalising repetition in a debugging explanation is not the same intervention and
-# has no measurement behind it here.
+# SCOPE. Applied ONLY on the ENGINE code-only induce path -- `codeonly_eligible` AND `engine` in
+# `required` -- which is exactly where it was measured. `refactor()` is a reasoning task on a
+# different prompt shape and is deliberately untouched: penalising repetition in a debugging
+# explanation is not the same intervention and has no measurement behind it here.
+#
+# NARROWED 2026-07-31 (adversarial review). As first wired, the gate was `codeonly_eligible`
+# alone -- which is ALSO True for the focused goal-only call in `_split_induce`
+# (`required=("is_level_complete",)`, see the `_goal_only_prompt` call site). So the penalty was
+# reaching a second prompt shape that Phase 1 never measured: the confirm harness sent ENGINE
+# prompts only. The source comment claimed the scope was "where it was measured", and that claim
+# was true of the flag but not of the measurement.
+#
+# The condition now matches the defect gate's (`_defect_check_on`), which was already correctly
+# narrower. Two reasons to narrow rather than merely disclose: (1) the project's standing rule is
+# that behaviour changes ship WITH measurement, and the goal-only call had none in either
+# direction -- so its correct state is the long-standing no-penalty baseline every banked result
+# was produced under, not an untested 1.1; (2) the failure mode the penalty targets is a decode
+# repetition loop that exhausts `n_predict`, and the goal-only call was split out of the combined
+# call precisely BECAUSE it does not have that problem ("valid in ~3.5s where the combined call
+# fails"). There is no mechanism for it to help there and no measurement saying it does.
+#
+# COST OF THE NARROWING, stated rather than buried: the 2026-07-31 Phase 3 pre-flight
+# (`results/arc_phase3_preflight_20260731/`) exercised the WIDER configuration, so the shipped
+# code no longer matches that artifact's config byte-for-byte. That artifact was a REFUSAL --
+# nothing downstream depends on it, and its finding (arms emit byte-identical action traces;
+# `n_plans_found` is 0 in every completed cell but one) is not a function of the goal-only
+# sampler. Recorded in the Phase 2 note under "config drift".
 _INDUCE_REPEAT_PENALTY = 1.1
 # The window the penalty looks back over. 256 tokens is what was measured; it must be wide enough
 # to span the repeating unit (a duplicated comment line plus its neighbours) or the penalty cannot
@@ -5105,7 +5128,13 @@ class LocalGGUFProposer:
         # DEFECT-REJECTION + PLAIN RE-ASK (2026-07-31). Armed only where it was measured: the
         # code-only induce path emitting an `engine`. Gap-fillers (a goal_distance heuristic, a
         # state_key) are a different artifact with a different contract and are left alone.
-        _defect_check_on = bool(codeonly_eligible) and "engine" in tuple(required)
+        # THE MEASURED CALL SHAPE. Phase 1 sent ENGINE induce prompts and nothing else, so this
+        # is the scope both 2026-07-31 interventions are armed on. Named once rather than
+        # spelled twice so the penalty and the defect gate cannot silently drift apart -- and
+        # named separately from `_defect_check_on` below so that narrowing one later does not
+        # move the other by accident.
+        _engine_induce_call = bool(codeonly_eligible) and "engine" in tuple(required)
+        _defect_check_on = _engine_induce_call
         _reasks_left = _induce_defect_reasks() if _defect_check_on else 0
         _reask_suffix = ""
         last = ""
@@ -5117,8 +5146,10 @@ class LocalGGUFProposer:
                 "cache_prompt": True,
             }
             # See _INDUCE_REPEAT_PENALTY: breaks the decode-level repetition loop that is the
-            # dominant induce failure. Scoped to the induce path; 1.0 restores the old payload.
-            if codeonly_eligible:
+            # dominant induce failure. Scoped to the ENGINE induce prompt -- the same condition
+            # as the defect gate, and the only prompt shape Phase 1 measured. 1.0 restores the
+            # old payload byte-for-byte.
+            if _engine_induce_call:
                 _rp = _induce_repeat_penalty()
                 if _rp != 1.0:
                     _payload["repeat_penalty"] = _rp

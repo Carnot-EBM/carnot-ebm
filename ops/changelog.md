@@ -1,5 +1,124 @@
 # Carnot — Changelog
 
+## 2026-07-31 (outer-loop, REVIEW RESPONSE #2: the induce headline was pseudo-replicated, and the spec never learned the module got wired)
+
+**Instruction:** apply every finding from the adversarial review of the induce-reliability Phases
+1–3, minor included; argue back with evidence if one is WRONG. **None were wrong — all 15 verified
+against the run's own data before being applied, and all 15 applied.** No new GPU time; a
+concurrent best-of-N run held GPU 1 throughout and was left untouched.
+
+### The headline that opened the Phase 2 gate was inflated twice over
+
+1. **"triples the rate of valid engines"** — the note title and the **immutable commit subject**
+   of `d2278313c`. No measured rate triples: usable 13/36 → 22/36 is **1.69×**, penalty-alone
+   1.54×, and the most generous framing available (defect-free 14/36 → 29/36) is 2.07×. The body
+   always stated 13/36 → 22/36 correctly, so the error lived entirely in the most-propagated
+   string. **The note H1 is amended; the commit subject cannot be, which is why the correction is
+   recorded here** so the git log is not the only surviving headline.
+2. **p = 0.049 is pseudo-replicated.** The 36 pairs are 6 games × 6 resamples of ONE induce prompt
+   each, but the sign test treated all 17 discordant pairs as independent. Clustered at the game
+   level — the unit that generalizes to an unseen game — it is **p = 0.125** (4 games better,
+   0 worse, 2 tied), and a whole-game sign-flip permutation test agrees exactly (net +9,
+   p = 0.1250, 8 of 64). This was the only sub-0.05 number in the run. **The wiring decision still
+   stands**, on the consistent direction (0 of 6 games worse) plus a cost effect large enough to
+   need no test — not on a p. Power bound now stated up front: with 6 games the reachable floor is
+   2/2⁶ = 0.031, so significance required all six to improve.
+
+### And the quality null is sharper than the note admitted
+
+Restricted to the three games whose held-out set contains a CHANGING transition — the only ones
+where out-of-sample change prediction can be graded at all — strict quality is **4 of 18 attempts
+in EVERY arm, identical**. The entire 2/6 → 3/6 strict-funnel gain is ft09, which has zero held-out
+changing rows and passes only on the weaker no-op fallback. On tn36, the one game with a
+substantial gradable held-out set, both arms are 4/6 and each arm's best engine is the same 17/17
+exact. Both components were disclosed in the note; the **conjunction** never was, and it is the
+result: *the treatment produced no better engine on any game where change prediction could be
+graded.* Also corrected: neither component is individually significant (penalty-alone p = 0.1185 /
+0.625 clustered; re-ask-alone p = 0.5) — the effect belongs to the compound, which is what shipped.
+
+### Two structural defects in the shipped scope, one of them a spec that had gone silently false
+
+- **`REQ-ARC-WMTE-6052` still said "the shipped induce path is UNCHANGED; nothing calls it"** —
+  false since `d20533033` wired `arc_engine_static_validation` into `LocalGGUFProposer`. That same
+  session removed the orphan-lint allow-list entry whose own comment read *"Retire this entry when
+  the module is wired"*, and never updated the spec the entry pointed at. `openspec/` was untouched
+  all session — a clean miss of CLAUDE.md step 6. Amended **additively** (original text retained,
+  dated CORRECTION #2 appended, Implementation Status row marked SUPERSEDED in place).
+- **`REQ-ARC-FCP-5699-41` did not exist.** Shipped code (`arc_executable_world_model.py:3269`) and
+  its test both cited it; the highest id in the chain was `-39`. The requirement is now written,
+  with 5 scenarios, an Implementation Status row, and an explicit clause that a quality claim
+  SHALL NOT be made from this change. Written at `-41` rather than renumbering so the two existing
+  citations stay valid.
+- **`repeat_penalty` was shipping to a call it was never measured on.** The gate was
+  `codeonly_eligible` alone, which is also True for `_split_induce`'s focused goal-only call.
+  **Narrowed** to `codeonly_eligible AND "engine" in required` (matching the defect gate, which was
+  already correct) — the conservative direction, since with no measurement either way that call's
+  correct state is the no-penalty baseline every banked result was produced under. 2 tests added
+  pinning the boundary from both sides; both mutations (widen back, drop entirely) killed.
+
+### Artifact repairs, all diffed leaf-by-leaf
+
+`confirm_scored.json` — the artifact carrying the headline, cited in 7 published artifacts'
+freshness acknowledgements — **failed `adversarial_verify.py` with METHODOLOGY_MISSING** while the
+Phase 3 artifact was fully compliant, so the discipline had been applied unevenly inside one
+session. Now carries `inference_substrate`, `model_specs`, `random_seed` + `random_seeds_used`,
+`reproducibility_checksum` (sha256 over every scored completion plus each game's split shape) and
+`duration_s`; **0 flagged.** Regenerated and diffed: **3009 → 3248 leaves, 0 removed, and exactly
+two changed — `run_date` and the `min_reachable_p_two_sided` bug itself.** No measurement moved.
+
+- **`min_reachable_p_two_sided` reported `0.0`** at 17 discordant pairs, a value no test can
+  attain (true value 1.526e-05) — a bare `round(p, 4)`. Fixed without collapsing small p to zero.
+- **`split.json` advertised a tautology as a check.** `no_heldout_line_in_prompt` was the literal
+  `True`, commented "true by construction of the loop above" — it could never have been False.
+  Replaced with the independent post-hoc assertion over the finished partition, plus a counting
+  identity computed a different way. **Mutation-verified**: making the loop keep ambiguous rows
+  flips it to False; under the old code it would have stayed True. Only `run_date` moved.
+- **The shared-server-process property was asserted, not measured.** `server_pid` was captured once
+  per GPU worker, not per call — and Phase 3 later proved the failure mode is real (a server WAS
+  replaced mid-session there; its guard excluded a game rather than score a confounded pair). Since
+  the sampler seed does not cross server instances, a pair straddling a restart is confounded by
+  variance alone. Per-call PID read and scorer guard retrofitted; the 72 existing arm-pairs are
+  recorded as **UNVERIFIED** rather than reported clean, because the PIDs were never written down.
+- **Phase 1 scored the wrong induce call site.** `CONFIRM_CALL_INDEX` defaults to 2, but
+  `_induce_and_plan`'s two induce calls are different call sites and all three gates plus
+  `_proposal_prefix` live on **call 1** — where **ft09 has 4 held-out changing rows against 0 at
+  call 2**. The note blamed the GAME for ft09's ungradability; it is an artifact of the call site.
+  The quality channel is scoped call-2-specific; the validity/cost verdict is unaffected.
+- **The measured config is not the shipped one.** All measurement pinned
+  `CARNOT_ARC_INDUCE_N_CTX=32768` while `_default_induce_n_ctx()` still returns 81920 — which does
+  not fit a 24 GiB card. The cost claim is completion-budget sensitive and is now explicitly
+  conditioned on 32768.
+
+**Also corrected:** the significant metric is **in-sample and mechanical** (`usable` reads the ≤ 8
+SHOWN rows), so the note's "scored OUT-OF-SAMPLE" lede sat beside the one number that never needed
+the split; and **38% of the validity gain is ft09 alone** (per-game 5–0, vc33 2–0, tn36 2–1,
+tu93 2–2, lp85 1–1, sc25 1–0) — the game with the weakest quality evidence. Both now in the
+artifact and the note.
+
+### The near-miss: two rebuilds ran against the wrong source, and nearly became evidence
+
+Narrowing the penalty changes the source hash, so the same 7 artifacts went stale again and the
+same 4 rebuilds were run. Same outcome as Phase 2 — **0 substantive movement across 77,543 compared
+leaves** (sole exception: 6012's `reproducibility_checksum`, a hash *over* the dependency set) — so
+all 7 were discharged by acknowledgement, **`+8 −0` on every file, zero deletions**, rather than by
+rebuild, which drops their accumulated `freshness_acknowledgements` and the
+`original_timings_superseded_by_rebuild` block that instructs exactly that.
+
+**But a concurrent process reverted the working tree mid-sequence.** The source file and both
+research notes were rolled back to HEAD while the git INDEX kept the correct staged content — the
+documented pre-commit stash/restore hazard this repo's own `.pre-commit-config.yaml` warns about
+("silently lost 5+ files during the .94 milestone"). Two of the four rebuilds consequently ran
+against the **pre-change** source and would have been written up as evidence for a change they
+never exercised. Caught by reading each rebuild's own `provenance.code` sha instead of trusting
+that the file on disk was the file that was edited; the invalid rebuilds were rerun and every
+acknowledgement now cites that check. **Generalizable lesson: after a failed pre-commit run, verify
+the working tree still matches the index before trusting anything measured afterwards.** Recovery
+was `git checkout --` FROM THE INDEX plus a copy of the source held outside git.
+
+**Untouched on purpose:** no threshold lowered, `MAX_ACTIONS`/`SUBMITTED_EARLY_STOP_GRACE`
+unchanged, no historical artifact rewritten, no skipped test added, nothing submitted, no scored
+or online ARC game played.
+
 ## 2026-07-31 (outer-loop, REVIEW RESPONSE: the sibling conflation, and four claims restated to what was actually measured)
 
 **Instruction:** apply every finding from the adversarial review of Phases 1-4, minor included;
