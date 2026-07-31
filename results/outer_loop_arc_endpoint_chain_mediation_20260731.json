@@ -1,0 +1,764 @@
+{
+ "experiment": "outer_loop_arc_endpoint_chain_mediation",
+ "schema": "carnot.arc_endpoint_chain_mediation.v1",
+ "milestone": "2026.07.outer_loop",
+ "run_date": "2026-07-31T13:41:35Z",
+ "duration_s": 0.123581,
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_note": "Pure re-analysis of banked evidence. No GPU, no model load, no live or scored ARC game, no submission. Reads upstream JSON and computes exact tests.",
+ "random_seed": 20260731,
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "No verifier-value or moat claim is made. This artifact measures whether an induce-side intervention can be decided at any endpoint; it makes no claim that a learned verifier adds value.",
+ "question": "Is there an endpoint closer to the repeat_penalty induce intervention than banked levels that is both RESPONSIVE to the intervention and PREDICTIVE of banked levels, and if so what n decides it?",
+ "headline": "No. Every stage that responds is either already saturated in the live pipeline or UNDECIDABLE as a predictor at n=12; every stage that predicts does so only post-bank. The 12-game/2-banker corpus cannot localize the break at all: only predictor group sizes {2,3,9,10} can reach p<0.05, and the only such predictors are the reverse-causal post-bank stages.",
+ "honest_verdict": "complete_no_valid_endpoint_closer_than_banked_levels_corpus_cannot_localize_break",
+ "n_paired_inductions": 36,
+ "n_live_games": 12,
+ "n_bankable_games": 2,
+ "a_response_paired_sign_tests": {
+  "S1_generator_returned": {
+   "control": 36,
+   "treatment": 36,
+   "n": 36,
+   "treat_only": 0,
+   "control_only": 0,
+   "discordant": 0,
+   "p_two_sided": 1.0,
+   "min_reachable_p": 1.0,
+   "constant": true,
+   "responds": false,
+   "decidable": false
+  },
+  "S2_parses": {
+   "control": 27,
+   "treatment": 30,
+   "n": 36,
+   "treat_only": 8,
+   "control_only": 5,
+   "discordant": 13,
+   "p_two_sided": 0.581055,
+   "min_reachable_p": 0.000244,
+   "constant": false,
+   "responds": false,
+   "decidable": true
+  },
+  "S3_returns_on_all_paths": {
+   "control": 23,
+   "treatment": 35,
+   "n": 36,
+   "treat_only": 13,
+   "control_only": 1,
+   "discordant": 14,
+   "p_two_sided": 0.001831,
+   "min_reachable_p": 0.000122,
+   "constant": false,
+   "responds": true,
+   "decidable": true
+  },
+  "S4_no_raise": {
+   "control": 34,
+   "treatment": 36,
+   "n": 36,
+   "treat_only": 2,
+   "control_only": 0,
+   "discordant": 2,
+   "p_two_sided": 0.5,
+   "min_reachable_p": 0.5,
+   "constant": false,
+   "responds": false,
+   "decidable": false
+  },
+  "S5_defect_free": {
+   "control": 14,
+   "treatment": 29,
+   "n": 36,
+   "treat_only": 19,
+   "control_only": 4,
+   "discordant": 23,
+   "p_two_sided": 0.002599,
+   "min_reachable_p": 0.0,
+   "constant": false,
+   "responds": true,
+   "decidable": true
+  },
+  "S6_usable_non_inert": {
+   "control": 13,
+   "treatment": 22,
+   "n": 36,
+   "treat_only": 13,
+   "control_only": 4,
+   "discordant": 17,
+   "p_two_sided": 0.049042,
+   "min_reachable_p": 1.5e-05,
+   "constant": false,
+   "responds": true,
+   "decidable": true
+  },
+  "S7_heldout_acc_gt0": {
+   "control": 7,
+   "treatment": 15,
+   "n": 36,
+   "treat_only": 10,
+   "control_only": 2,
+   "discordant": 12,
+   "p_two_sided": 0.038574,
+   "min_reachable_p": 0.000488,
+   "constant": false,
+   "responds": true,
+   "decidable": true
+  },
+  "S8_clears_dynamics_gate": {
+   "control": 5,
+   "treatment": 8,
+   "n": 36,
+   "treat_only": 4,
+   "control_only": 1,
+   "discordant": 5,
+   "p_two_sided": 0.375,
+   "min_reachable_p": 0.0625,
+   "constant": false,
+   "responds": false,
+   "decidable": false
+  },
+  "S9_strict_correct": {
+   "control": 6,
+   "treatment": 7,
+   "n": 36,
+   "treat_only": 3,
+   "control_only": 2,
+   "discordant": 5,
+   "p_two_sided": 1.0,
+   "min_reachable_p": 0.0625,
+   "constant": false,
+   "responds": false,
+   "decidable": false
+  },
+  "S9b_strict_correct_non_vacuous": {
+   "control": 4,
+   "treatment": 4,
+   "n": 36,
+   "treat_only": 1,
+   "control_only": 1,
+   "discordant": 2,
+   "p_two_sided": 1.0,
+   "min_reachable_p": 0.5,
+   "constant": false,
+   "responds": false,
+   "decidable": false
+  }
+ },
+ "b_prediction_fisher_tests_with_floors": {
+  "engine_scored_any": {
+   "n": 12,
+   "status": "CONSTANT",
+   "predictor_value": 1,
+   "decidable": false,
+   "note": "zero variance in the live population -> cannot carry anything"
+  },
+  "S7": {
+   "n": 12,
+   "status": "TESTED",
+   "table": [
+    2,
+    5,
+    0,
+    5
+   ],
+   "fisher_p": 0.469697,
+   "min_reachable_p": 0.151515,
+   "best_possible_table": [
+    0,
+    7,
+    2,
+    3
+   ],
+   "n_positive_predictor": 7,
+   "n_positive_endpoint": 2,
+   "observed_is_at_floor": false,
+   "decidable": false
+  },
+  "S8": {
+   "n": 12,
+   "status": "TESTED",
+   "table": [
+    2,
+    2,
+    0,
+    8
+   ],
+   "fisher_p": 0.090909,
+   "min_reachable_p": 0.090909,
+   "best_possible_table": [
+    2,
+    2,
+    0,
+    8
+   ],
+   "n_positive_predictor": 4,
+   "n_positive_endpoint": 2,
+   "observed_is_at_floor": true,
+   "decidable": false
+  },
+  "S9": {
+   "n": 11,
+   "status": "TESTED",
+   "table": [
+    0,
+    4,
+    1,
+    6
+   ],
+   "fisher_p": 1.0,
+   "min_reachable_p": 0.363636,
+   "best_possible_table": [
+    1,
+    3,
+    0,
+    7
+   ],
+   "n_positive_predictor": 4,
+   "n_positive_endpoint": 1,
+   "observed_is_at_floor": false,
+   "decidable": false
+  },
+  "S10": {
+   "n": 12,
+   "status": "TESTED",
+   "table": [
+    2,
+    0,
+    0,
+    10
+   ],
+   "fisher_p": 0.015152,
+   "min_reachable_p": 0.015152,
+   "best_possible_table": [
+    2,
+    0,
+    0,
+    10
+   ],
+   "n_positive_predictor": 2,
+   "n_positive_endpoint": 2,
+   "observed_is_at_floor": true,
+   "decidable": true
+  },
+  "S13": {
+   "n": 12,
+   "status": "TESTED",
+   "table": [
+    2,
+    0,
+    0,
+    10
+   ],
+   "fisher_p": 0.015152,
+   "min_reachable_p": 0.015152,
+   "best_possible_table": [
+    2,
+    0,
+    0,
+    10
+   ],
+   "n_positive_predictor": 2,
+   "n_positive_endpoint": 2,
+   "observed_is_at_floor": true,
+   "decidable": true
+  }
+ },
+ "b_decidability_map_n12_2bankers": {
+  "1": {
+   "min_reachable_p": 0.166667,
+   "can_reach_alpha": false
+  },
+  "2": {
+   "min_reachable_p": 0.015152,
+   "can_reach_alpha": true
+  },
+  "3": {
+   "min_reachable_p": 0.045455,
+   "can_reach_alpha": true
+  },
+  "4": {
+   "min_reachable_p": 0.090909,
+   "can_reach_alpha": false
+  },
+  "5": {
+   "min_reachable_p": 0.151515,
+   "can_reach_alpha": false
+  },
+  "6": {
+   "min_reachable_p": 0.454545,
+   "can_reach_alpha": false
+  },
+  "7": {
+   "min_reachable_p": 0.151515,
+   "can_reach_alpha": false
+  },
+  "8": {
+   "min_reachable_p": 0.090909,
+   "can_reach_alpha": false
+  },
+  "9": {
+   "min_reachable_p": 0.045455,
+   "can_reach_alpha": true
+  },
+  "10": {
+   "min_reachable_p": 0.015152,
+   "can_reach_alpha": true
+  },
+  "11": {
+   "min_reachable_p": 0.166667,
+   "can_reach_alpha": false
+  }
+ },
+ "b_design_limit": {
+  "group_sizes_that_can_reach_alpha": [
+   2,
+   3,
+   9,
+   10
+  ],
+  "interpretation": "With 12 games and 2 bankers, only a predictor positive in 2, 3, 9 or 10 games can attain p<0.05. Any stage true of 4-8 games is UNDECIDABLE BY CONSTRUCTION, so \"responds but does not predict\" is not an empirical result for those stages. This supersedes the first pass, which read those rows as nulls."
+ },
+ "b_missing_data": {
+  "games_with_no_change_gate_block": [
+   "vc33"
+  ],
+  "why_it_matters": "vc33 is the top-banking game (2 levels) and carries no change_gate block, so the correctness (b) test silently excluded the best performer. Imputed BOTH ways the test remains undecidable (floors 0.0909 and 0.1515)."
+ },
+ "pre_post_bank_split_S8": {
+  "pre_bank_only": {
+   "n": 10,
+   "games": [
+    "cd82",
+    "cn04",
+    "ft09",
+    "lp85",
+    "ls20",
+    "r11l",
+    "sc25",
+    "su15",
+    "tn36",
+    "tr87"
+   ],
+   "banked": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "stage_positive": [
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  "post_bank_present": {
+   "n": 2,
+   "games": [
+    "tu93",
+    "vc33"
+   ],
+   "banked": [
+    1,
+    2
+   ],
+   "stage_positive": [
+    1,
+    1
+   ]
+  }
+ },
+ "endpoint_movability": {
+  "_why": "A positive control for an endpoint is not \"the counter is sometimes nonzero\" but \"some manipulation MOVES it\". Three independent manipulations are on disk.",
+  "engine_retention_on_vs_off": {
+   "n_games": 12,
+   "n_games_moved": 0
+  },
+  "llm_tier_on_vs_off": {
+   "n_games": 6,
+   "n_ab_identical": 5,
+   "n_ab_perturbed": 1,
+   "banked_levels_discordant_pairs": 0
+  },
+  "force_admit_trust_gate": {
+   "n_admit_cells": 27,
+   "games_with_an_admit_cell": [
+    "ft09",
+    "lp85",
+    "sc25",
+    "tn36",
+    "tu93"
+   ],
+   "vc33_received_an_admit_cell": false,
+   "admit_cells_that_produced_a_real_plan": 4,
+   "plan_lengths": [
+    61,
+    6,
+    6,
+    6
+   ],
+   "levels_gained_in_those_cells": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "distinct_levels_gained_across_all_admit_cells": [
+    0
+   ]
+  },
+  "conclusion": "Three independent manipulations moved banked levels exactly zero times. The endpoint has no demonstrated dynamic range in this corpus, so every per-stage \"does not predict\" verdict is untestable rather than tested."
+ },
+ "branch1_force_admit_refutation_corrected": {
+  "first_pass_claim": "action traces byte-identical in 10 of 10 matched pairs",
+  "why_that_was_weak": "All 10 matched pairs have plan_length=0 in the admit arm, so byte-identical traces are MECHANICALLY ENTAILED, not independent evidence. Trace-identity was measured only where force-admit did nothing. All 10 sit on the five games whose engine arm provably changes nothing; vc33, the only game with dynamic range, has ZERO admit cells.",
+  "stronger_honest_form": "Where force-admit produced and executed REAL plans (lengths 61 and 6, on tn36) the action trace DID change and levels_gained was still 0. Levels gained across all 27 admit cells: [0].",
+  "scope_limit": "Force-admit was never applied to vc33. Branch 1 is therefore NOT refuted in general -- it is inert on five games that bank nothing under any condition."
+ },
+ "branch2_correctness_game_level": {
+  "note": "The first pass classified games from the PAIRED corpus and read the endpoint from the LIVE grid -- a cross-population inference. Both classifications are reported; they disagree, and both observed p values sit at their floor.",
+  "paired_classification": {
+   "n": 6,
+   "table": [
+    0,
+    3,
+    2,
+    1
+   ],
+   "fisher_p": 0.4,
+   "min_reachable_p": 0.4,
+   "decidable": false
+  },
+  "live_change_gate_classification": {
+   "n": 11,
+   "table": [
+    0,
+    4,
+    1,
+    6
+   ],
+   "fisher_p": 1.0,
+   "min_reachable_p": 0.3636,
+   "decidable": false
+  },
+  "withdrawn_claim": "\"certainly not positive\" is WITHDRAWN -- at these floors nothing about direction is established."
+ },
+ "bottleneck_attribution": {
+  "where_surviving_models_die": "the GOAL gate",
+  "funnel_rounds": {
+   "attempted": 64,
+   "scored_on_heldout": 46,
+   "cleared_dynamics_gate": 9,
+   "goal_predicate_satisfiable": 4,
+   "plan_found": 4
+  },
+  "corroboration": "the LLM-on/off artifact records 8 of 10 dynamics-gate survivors then killed by the goal gate, and goal_predicate_satisfiable false in 6 of 7 induction events on its primary on arm",
+  "attribution_NOT_decided": "The upstream artifact states verbatim: \"This experiment does NOT decide it. Both readings are consistent.\" Reading A (14 of 29 scored rounds at held-out accuracy exactly 0.0) is equally consistent: pre-bank goal predicates may be degenerate BECAUSE the engines feeding them are wrong -- still generator-limited. This artifact carries that non-attribution forward rather than resolving it."
+ },
+ "engine_corpus_filtering": {
+  "stored_engines_scanned": 439,
+  "stored_engines_clean": 430,
+  "stored_clean_rate": 0.9795,
+  "raw_control_arm_clean_rate": 0.3889,
+  "correction": "An earlier draft compared 97.9% clean against \"36.1% defect-carrying\". 36.1% is the control arm USABLE rate (13/36), a different quantity. The control clean rate is 14/36 = 38.9%; its defect-carrying rate is 61.1%."
+ },
+ "cost_channel_correct_engines_per_gpu_hour": {
+  "usable": {
+   "control_count": 13,
+   "control_gpu_hours": 1.00275,
+   "control_per_hour": 12.9643,
+   "treatment_count": 22,
+   "treatment_gpu_hours": 0.65247,
+   "treatment_per_hour": 33.7179,
+   "poisson_rate_ratio": {
+    "ratio": 2.6008,
+    "p": 0.005459,
+    "ci95": [
+     1.2535,
+     5.6202
+    ]
+   },
+   "paired_sign_test": {
+    "plus": 21,
+    "minus": 5,
+    "ties": 10,
+    "p": 0.002494
+   }
+  },
+  "strict_quality": {
+   "control_count": 6,
+   "control_gpu_hours": 1.00275,
+   "control_per_hour": 5.9835,
+   "treatment_count": 7,
+   "treatment_gpu_hours": 0.65247,
+   "treatment_per_hour": 10.7284,
+   "poisson_rate_ratio": {
+    "ratio": 1.793,
+    "p": 0.395234,
+    "ci95": [
+     0.516,
+     6.4579
+    ]
+   },
+   "paired_sign_test": {
+    "plus": 7,
+    "minus": 2,
+    "ties": 27,
+    "p": 0.179688
+   }
+  },
+  "strict_quality_non_vacuous": {
+   "control_count": 4,
+   "control_gpu_hours": 1.00275,
+   "control_per_hour": 3.989,
+   "treatment_count": 4,
+   "treatment_gpu_hours": 0.65247,
+   "treatment_per_hour": 6.1305,
+   "poisson_rate_ratio": {
+    "ratio": 1.5368,
+    "p": 0.72011,
+    "ci95": [
+     0.2862,
+     8.2512
+    ]
+   },
+   "paired_sign_test": {
+    "plus": 4,
+    "minus": 1,
+    "ties": 31,
+    "p": 0.375
+   }
+  }
+ },
+ "cost_channel_robustness": {
+  "why": "The Poisson rate-ratio is UNPAIRED and assumes independent events, but the attempts are seed-paired and clustered in 6 games (usable-count var/mean 1.18 control, 1.38 treatment -> overdispersed, so that p is anti-conservative).",
+  "game_cluster_bootstrap_usable_ratio_ci95": [
+   2.13,
+   6.75
+  ],
+  "game_cluster_bootstrap_frac_resamples_le_1": 0.0,
+  "verdict": "usable/GPU-hour survives all three tests (Poisson, paired sign, cluster bootstrap). strict-quality/GPU-hour does not survive any of them."
+ },
+ "required_n": {
+  "S1_generator_returned": {
+   "p_oneway_per_cell": 0.0,
+   "P_reach_6_of_12": 0.0,
+   "cells_at_stage_endpoint_50pct": null,
+   "cells_at_banked_levels_deterministic_50pct": null,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 284,
+    "0.05": 114,
+    "0.1": 57,
+    "0.2": 29
+   }
+  },
+  "S2_parses": {
+   "p_oneway_per_cell": 0.222222,
+   "P_reach_6_of_12": 0.031893,
+   "cells_at_stage_endpoint_50pct": 26,
+   "cells_at_banked_levels_deterministic_50pct": 34,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 31,
+    "0.05": 26,
+    "0.1": 21,
+    "0.2": 16
+   }
+  },
+  "S3_returns_on_all_paths": {
+   "p_oneway_per_cell": 0.361111,
+   "P_reach_6_of_12": 0.237806,
+   "cells_at_stage_endpoint_50pct": 16,
+   "cells_at_banked_levels_deterministic_50pct": 34,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 31,
+    "0.05": 26,
+    "0.1": 21,
+    "0.2": 16
+   }
+  },
+  "S4_no_raise": {
+   "p_oneway_per_cell": 0.055556,
+   "P_reach_6_of_12": 2e-05,
+   "cells_at_stage_endpoint_50pct": 102,
+   "cells_at_banked_levels_deterministic_50pct": 102,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 75,
+    "0.05": 54,
+    "0.1": 37,
+    "0.2": 22
+   }
+  },
+  "S5_defect_free": {
+   "p_oneway_per_cell": 0.527778,
+   "P_reach_6_of_12": 0.68553,
+   "cells_at_stage_endpoint_50pct": 11,
+   "cells_at_banked_levels_deterministic_50pct": 34,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 31,
+    "0.05": 26,
+    "0.1": 21,
+    "0.2": 16
+   }
+  },
+  "S6_usable_non_inert": {
+   "p_oneway_per_cell": 0.361111,
+   "P_reach_6_of_12": 0.237806,
+   "cells_at_stage_endpoint_50pct": 16,
+   "cells_at_banked_levels_deterministic_50pct": 34,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 31,
+    "0.05": 26,
+    "0.1": 21,
+    "0.2": 16
+   }
+  },
+  "S7_heldout_acc_gt0": {
+   "p_oneway_per_cell": 0.277778,
+   "P_reach_6_of_12": 0.08579,
+   "cells_at_stage_endpoint_50pct": 21,
+   "cells_at_banked_levels_deterministic_50pct": 34,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 31,
+    "0.05": 26,
+    "0.1": 21,
+    "0.2": 16
+   }
+  },
+  "S8_clears_dynamics_gate": {
+   "p_oneway_per_cell": 0.111111,
+   "P_reach_6_of_12": 0.000957,
+   "cells_at_stage_endpoint_50pct": 51,
+   "cells_at_banked_levels_deterministic_50pct": 51,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 43,
+    "0.05": 35,
+    "0.1": 27,
+    "0.2": 18
+   }
+  },
+  "S9_strict_correct": {
+   "p_oneway_per_cell": 0.083333,
+   "P_reach_6_of_12": 0.000199,
+   "cells_at_stage_endpoint_50pct": 68,
+   "cells_at_banked_levels_deterministic_50pct": 68,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 55,
+    "0.05": 43,
+    "0.1": 31,
+    "0.2": 20
+   }
+  },
+  "S9b_strict_correct_non_vacuous": {
+   "p_oneway_per_cell": 0.027778,
+   "P_reach_6_of_12": 0.0,
+   "cells_at_stage_endpoint_50pct": 204,
+   "cells_at_banked_levels_deterministic_50pct": 204,
+   "cells_at_banked_levels_leak_f": {
+    "0.02": 119,
+    "0.05": 73,
+    "0.1": 45,
+    "0.2": 25
+   }
+  }
+ },
+ "required_n_model": "Replicated exactly from the Phase-3 refusal (commit c39f4bde6): per-cell P(one-way discordant) = majority-direction discordant count / 36; significance needs >=6 one-way discordant pairs; \"cells\" = smallest n with P(Binom(n,p)>=6) >= 0.50. Reproduces the refusal's published 68 (channel A) and 16 (channel B) exactly.",
+ "required_n_determinism_caveat": "The banked-levels column inherits the refusal's assumption that levels are a deterministic function of the stage. The project's own evidence contradicts it in BOTH directions: vc33 banks 2 levels with zero pre-bank inductions (endpoint moved, stage did not), and force-admit changed the action trace with levels fixed at 0 (stage moved, endpoint did not). Leak terms f are therefore priced; larger f makes the endpoint CHEAPER, so the deterministic figure is an upper bound on n, not a lower one.",
+ "endpoint_ceiling": {
+  "n12_p_oneway_needed_for_50pct": 0.46,
+  "observed_ceiling_P_game_banks": 0.1667,
+  "verdict": "At n=12 the required one-way discordance exceeds the ceiling ~2.7x. Ten of twelve games bank nothing and cannot express a difference in either direction, so no 12-cell design at this endpoint can work whatever mediates it."
+ },
+ "global_caveat_all_b_inference": "EVERY (b) association in this analysis is determined by exactly 2 games (tu93=1, vc33=2). Outlier-dependence is a limitation of the stages declared NON-predictive just as much as of the reverse-causal ones.",
+ "answers": {
+  "cheapest_valid_endpoint": "NONE is established. The only surviving mediator CANDIDATE is S7 (held-out accuracy > 0): it responds (12 discordant, p=0.0386) and both banking games sit inside it, the maximum association its group size permits. Its (b) evidence sits AT the n=12 ceiling (floor 0.1515) rather than having been refuted. IF S7 mediates, banked levels costs 34 cells vs the refusal's 68 -- but whether it mediates cannot be decided by more cells at n=12; it needs a corpus with more bankable games (>= ~36 games at the observed 1-in-6 banking rate).",
+  "where_the_chain_breaks": "Not localizable on this corpus. The largest observed attrition is DYNAMICS -> GOAL (9 -> 4 rounds; 8 of 10 in the sibling corpus), and no induce-side intervention touches the goal predicate. But whether that is a goal-induction defect or a downstream symptom of wrong dynamics is explicitly UNDECIDED by the available data.",
+  "correct_engines_per_gpu_hour": "Usable engines per GPU-hour is a REAL gain: 2.60x, Poisson p=0.0055 CI[1.25,5.62], paired sign p=0.0025, game-cluster bootstrap CI[2.13,6.75] excluding 1. Correct engines per GPU-hour is NOT: 1.79x p=0.3952, and non-vacuous 1.54x p=0.7201 with identical counts 4 vs 4 -- the entire ratio there is the denominator. Deciding it needs ~7.4x more GPU-hours (266 attempts/arm), ~22x for non-vacuous (793/arm).",
+  "submission_status": "Banked levels remain 3/3 and the submission gate is UNMET. Nothing was submitted; no scored or online game was played."
+ },
+ "what_this_does_and_does_not_license": {
+  "licenses": [
+   "refusing to spend GPU-hours on a 12-cell banked-levels grid for this intervention",
+   "reporting usable-engines-per-GPU-hour as a real, thrice-confirmed cost win",
+   "treating the goal gate as the largest observed attrition point"
+  ],
+  "does_NOT_license": [
+   "claiming any stage was shown NOT to predict banked levels -- most were undecidable",
+   "claiming the trust gate is refuted as a lever (force-admit never ran on vc33)",
+   "claiming correctness predicts levels negatively -- direction is unestablished",
+   "attributing the bottleneck to goal induction rather than to weak dynamics"
+  ]
+ },
+ "cited_upstream_artifacts": [
+  {
+   "path": "results/arc_induce_confirm_20260731/confirm_scored.json",
+   "sha256": "d226b213bc35b27764a25fa7c5d8c28dc4c76fef54a663962a4e4b5c2143c1c1"
+  },
+  {
+   "path": "results/outer_loop_arc_llm_on_vs_off_activation_20260730.json",
+   "sha256": "5086ca1af43c7689b2952df2ff5daef48765ebad414323849b30f45310b85a07"
+  },
+  {
+   "path": "results/outer_loop_arc_gate_forceadmit_20260730.json",
+   "sha256": "33d34d2a2499c7b5d62eccb4515a453112c4df0b2da6977755617330b75fdb86"
+  },
+  {
+   "path": "results/arc_engine_validation_20260731/corpus_scan.json",
+   "sha256": "740c4a20dce763e40f715cc3b44639a6ac31d66cfc321fb8a85eb8a9b84ef1c2"
+  },
+  {
+   "path": "results/arc_engine_retention_20260729/cells/",
+   "n_files": 24,
+   "sha256": "c56ef095d1999d34dae93dd32bb50ecf13220619f8e463908711255fa34eb9d3"
+  }
+ ],
+ "preconditions_checked": [
+  {
+   "resource": "no GPU required",
+   "available": true
+  },
+  {
+   "resource": "upstream artifacts present",
+   "available": true
+  },
+  {
+   "resource": "retention cells present",
+   "available": true
+  }
+ ],
+ "field_provenance": {
+  "b_prediction_fisher_tests_with_floors": {
+   "principle": "Every (b) row carries min_reachable_p because a test whose floor exceeds alpha cannot reject; reporting such a test as a null is a category error that manufactures a finding out of a design limit.",
+   "satisfied_by": "exhaustive enumeration of all 2x2 tables consistent with the margins"
+  },
+  "endpoint_movability": {
+   "principle": "A nonzero endpoint counter is not a positive control; only a manipulation that MOVES the endpoint demonstrates it can be measured at all.",
+   "satisfied_by": "three independent manipulations recomputed from committed cells"
+  },
+  "required_n": {
+   "principle": "Priced with the refusal's exact model so the figures are comparable to the decision they are meant to revisit, not to a different power model.",
+   "satisfied_by": "replication of the refusal's published 68/16 as a scale check"
+  },
+  "honest_verdict": {
+   "principle": "Terminal-prefixed so the conductor reconciler classifies it as a completed determination rather than retrying it.",
+   "satisfied_by": "prefix complete_"
+  }
+ },
+ "git_sha": "c39f4bde6f95427b19f7f4a15f22090dbf827dd3",
+ "generated_by": "scratchpad/chain/r_emit.py (outer loop, adversarial-review revision)",
+ "reproducibility_checksum": "7075b417a6f7f9de1c437c9e46585caf7f7ff98aed5a9602b2c2a69c68a7e3d1"
+}
