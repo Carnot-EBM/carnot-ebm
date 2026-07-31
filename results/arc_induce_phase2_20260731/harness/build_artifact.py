@@ -57,6 +57,20 @@ def main() -> int:  # noqa: C901
                     "gate_kind": at[100].get("gate_kind"),
                     "plan_found": at[100].get("plan_found"),
                 },
+                # EVERY SWEPT DEPTH, not just the three the prose happened to discuss. Reporting
+                # only 40/61/100 is how the depth-70 disproof became invisible: the sweep measured
+                # it, the row dropped it, and the prose then attributed it to 61. A row that omits
+                # measured depths cannot contradict a claim made about them.
+                "at_every_depth": {
+                    str(dd): {
+                        "gate_kind": at[dd].get("gate_kind"),
+                        "plan_found": at[dd].get("plan_found"),
+                        "plan_length": at[dd].get("plan_length"),
+                        "plan_nodes_expanded": at[dd].get("plan_nodes_expanded"),
+                    }
+                    for dd in dp["depths_swept"]
+                    if dd in at
+                },
             }
         )
     plans_at_61 = [r for r in sweep_rows if r["at_depth_61"]["plan_found"]]
@@ -73,6 +87,30 @@ def main() -> int:  # noqa: C901
         and r["at_shipped_depth_40"]["gate_kind"] == "goal_unreached_within_depth"
     ]
     max_nodes_used = max(int(r["at_depth_61"]["plan_nodes_expanded"] or 0) for r in now_plans)
+
+    # THE DEPTH AT WHICH THE DISPROOFS ACTUALLY HAPPEN, read off the sweep instead of assumed.
+    # The prose originally attributed them to depth 61 and presented them as corroborating the
+    # depth-61 result. At 61 those three candidates are still `goal_unreached_within_depth` --
+    # they only flip to `degenerate_goal_predicate` at 70. The bidirectionality argument is sound
+    # and is what makes this a horizon fix rather than gate-widening, but it must be quoted at the
+    # depth where it is true.
+    def _first_disproof_depth(row: dict) -> int | None:
+        for dd in dp["depths_swept"]:
+            cell = row["at_every_depth"].get(str(dd))
+            if cell and cell.get("gate_kind") == "degenerate_goal_predicate":
+                return dd
+        return None
+
+    disproof_depths = sorted(
+        {d_ for d_ in (_first_disproof_depth(r) for r in now_disproved) if d_ is not None}
+    )
+    disproof_depth = disproof_depths[0] if len(disproof_depths) == 1 else disproof_depths
+    disproved_ids = sorted(int(r["candidate"]) for r in now_disproved)
+    # The candidates the horizon UNBLOCKS (plannable at 61, not at 40) vs the full plannable set
+    # at 61, which also contains k1 -- already plannable at the shipped depth. Arguments about
+    # what a SELECTION RULE would pick must range over the full set, not the newly-added slice.
+    newly_plannable_ids = sorted(int(r["candidate"]) for r in now_plans)
+    all_plannable_at_61_ids = sorted(int(r["candidate"]) for r in plans_at_61)
 
     # ---- Phase 1 cross-reference: which of these were dynamics-clean? ----------------------
     p1c = {
@@ -94,8 +132,24 @@ def main() -> int:  # noqa: C901
                 "phase2_plan_length_at_depth_61": r["at_depth_61"]["plan_length"],
             }
         )
-    n_dyn_clean_now_plan = sum(
-        1 for x in intersection if (x["phase1_heldout_accuracy"] or 0) >= 1.0
+    dyn_clean_now_plan = [x for x in intersection if (x["phase1_heldout_accuracy"] or 0) >= 1.0]
+    n_dyn_clean_now_plan = len(dyn_clean_now_plan)
+    dyn_clean_ids = sorted(int(x["candidate"]) for x in dyn_clean_now_plan)
+    # NODE COUNT FOR THE TRIO THE HEADLINE IS ABOUT, not the max across a wider set.
+    # `max_nodes_used` is a max over every newly-plannable candidate, and that set also contains
+    # k4 at 0.588 accuracy and 2229 nodes -- so quoting the max as the trio's figure is off by
+    # three, and it is also the number an independent replication would fail to reproduce. The
+    # sibling session independently quoted 2226 for exactly this trio.
+    _nodes_by_id = {int(r["candidate"]): int(r["at_depth_61"]["plan_nodes_expanded"] or 0) for r in now_plans}
+    trio_node_counts = sorted({_nodes_by_id[i] for i in dyn_clean_ids if i in _nodes_by_id})
+    trio_nodes = trio_node_counts[0] if len(trio_node_counts) == 1 else trio_node_counts
+    # The disproved candidates' held-out accuracies -- the anti-selectivity evidence. All three
+    # are accuracy 1.0, and the original prose named only two of them.
+    disproved_acc_1_ids = sorted(
+        int(r["candidate"])
+        for r in now_disproved
+        if float((p1c.get((r["game"], int(r["candidate"]))) or {}).get("heldout_accuracy") or 0.0)
+        >= 1.0
     )
 
     cp = ana["change_prediction"]
@@ -113,14 +167,17 @@ def main() -> int:  # noqa: C901
             "Phase 1's 'empty intersection' was a SEARCH-HORIZON ARTIFACT, not an absent "
             f"capability. The shipped goal gate and planner both cap `max_depth` at {SHIPPED_DEPTH}. "
             f"On tn36 the induced goal is reached at depth 61 -- {len(now_plans)} of 8 candidates, "
-            f"including {n_dyn_clean_now_plan} of the held-out-accuracy-1.0 engines that Phase 1 "
-            "recorded as `goal_unreached_within_depth`. Moving ONLY the depth cap to 61, with the "
-            f"20000-node budget untouched, the SHIPPED planner returns a 61-action plan in "
-            f"{max_nodes_used} nodes -- {round(100 * max_nodes_used / SHIPPED_NODES)}% of the "
+            f"including {n_dyn_clean_now_plan} of the held-out-accuracy-1.0 engines "
+            f"(k{', k'.join(str(i) for i in dyn_clean_ids)}) that Phase 1 recorded as "
+            "`goal_unreached_within_depth`. Moving ONLY the depth cap to 61, with the "
+            f"20000-node budget untouched, the SHIPPED planner returns a 61-action plan for that "
+            f"trio in {trio_nodes} nodes -- {round(100 * max_nodes_used / SHIPPED_NODES)}% of the "
             "budget it already had. So criterion (iii) -- dynamics-clean AND goal-satisfiable AND "
-            "plannable -- is satisfiable after all; the depth-40 BFS simply could not see it. The "
-            "same sweep also correctly DISPROVES 3 other candidates that depth 40 had left "
-            "undecided, so the horizon change cuts both ways rather than merely admitting passes. "
+            "plannable -- is satisfiable after all; the depth-40 BFS simply could not see it. At "
+            f"depth {disproof_depth} -- NOT at 61, where they are still undecided -- the same "
+            f"sweep correctly DISPROVES {len(now_disproved)} other candidates "
+            f"(k{', k'.join(str(i) for i in disproved_ids)}) that depth 40 had left undecided, so "
+            "the horizon change cuts both ways rather than merely admitting passes. "
             "The decoupling, by contrast, is NOT supported: engine change-prediction is at chance "
             "(median balanced accuracy 0.500, range 0.375-0.625), and the corpus cannot test it "
             "properly because the games with no-op headroom have inert engines while the games "
@@ -223,9 +280,28 @@ def main() -> int:  # noqa: C901
             "depths_swept": dp["depths_swept"],
             "rows": sweep_rows,
             "n_candidates_newly_plannable_at_depth_61": len(now_plans),
+            "candidates_newly_plannable_at_depth_61": newly_plannable_ids,
             "n_candidates_already_plannable_at_shipped_depth_40": len(already_planned_at_40),
+            "candidates_plannable_at_depth_61_full_set": all_plannable_at_61_ids,
             "n_candidates_newly_disproved_by_more_depth": len(now_disproved),
+            "candidates_newly_disproved": disproved_ids,
+            "depth_at_which_the_disproofs_first_land": disproof_depth,
+            "disproofs_do_not_land_at_depth_61": (
+                "At 61 all three are still `goal_unreached_within_depth`. They flip to "
+                "`degenerate_goal_predicate` only at 70. The bidirectionality of the sweep is real "
+                "and is the strongest evidence this is a horizon fix rather than gate-widening, "
+                "but it is a property of the SWEEP, not of depth 61, and quoting it as the latter "
+                "borrows corroboration the depth-61 result has not got."
+            ),
+            "candidates_disproved_despite_heldout_accuracy_1_0": disproved_acc_1_ids,
+            "plan_nodes_expanded_for_the_accuracy_1_0_trio": trio_nodes,
             "max_plan_nodes_expanded_at_depth_61": max_nodes_used,
+            "max_is_not_the_trio": (
+                f"{max_nodes_used} is the MAXIMUM across all newly-plannable candidates and "
+                f"belongs to k4, whose held-out accuracy is 0.588. The three accuracy-1.0 engines "
+                f"each expand {trio_nodes}. Quoting the max as the trio's figure is the number an "
+                "independent replication cannot reproduce."
+            ),
             "node_budget_utilisation_at_depth_61": round(max_nodes_used / SHIPPED_NODES, 4),
             "why_the_node_budget_was_never_the_constraint": (
                 "The effective branching factor is 1. On tn36 all 32 predicted-changing actions at "
@@ -340,22 +416,36 @@ def main() -> int:  # noqa: C901
         "what_it_would_take_to_bank_a_level": {
             "on_tn36_specifically": [
                 "1. A 61-action plan exists inside the induced model and the SHIPPED planner "
-                f"returns it, in {max_nodes_used} nodes, the moment `max_depth` is 61 rather than 40. "
+                f"returns it the moment `max_depth` is 61 rather than 40 -- in {trio_nodes} nodes "
+                f"for the three held-out-accuracy-1.0 engines (k{', k'.join(str(i) for i in dyn_clean_ids)}), "
+                f"and at most {max_nodes_used} across every newly-plannable candidate. "
                 "61 actions is affordable against the live MAX_ACTIONS budget of 400.",
                 "2. The blocker is a single integer in two places: `_goal_satisfiability_check("
                 "max_depth=40)` in arc_llm_reinduction.py and `plan_in_model(max_depth=40)` in "
                 "arc_executable_world_model.py. Neither has an environment override, though "
                 "`max_nodes` has one on both sides -- so the one knob that is binding is the one "
                 "that cannot be turned without editing production code.",
-                "3. Raising depth is NOT free and NOT uniformly favourable: on the same sweep it "
-                "converts 3 candidates from UNDECIDED to `degenerate_goal_predicate`. That is the "
-                "correct behaviour and it is the reason this is a horizon fix rather than a "
-                "threshold relaxation.",
-                "4. Selection must change too. At depth 61 the plannable set is {k0, k2, k4, k6} "
-                "while the shipped trust gate ranks on held-out dynamics accuracy, which k5 and k7 "
-                "also achieve at 1.0 with a goal that is provably wrong. Dynamics accuracy alone "
-                "still does not identify the plannable candidate -- Phase 1's anti-selectivity "
-                "finding survives; it is just no longer fatal.",
+                "3. Raising depth is NOT free and NOT uniformly favourable: at depth "
+                f"{disproof_depth} the same sweep converts {len(now_disproved)} candidates "
+                f"(k{', k'.join(str(i) for i in disproved_ids)}) from UNDECIDED to "
+                "`degenerate_goal_predicate`. That is the correct behaviour and it is the reason "
+                "this is a horizon fix rather than a threshold relaxation -- the search drains "
+                "the frontier in BOTH directions. Note the depth: at 61 those three are still "
+                "undecided, so this is not corroboration of the depth-61 result, it is what a "
+                "further 9 levels of horizon buys.",
+                "4. Selection must change too. The full plannable set at depth 61 is "
+                f"{{k{', k'.join(str(i) for i in all_plannable_at_61_ids)}}} -- of which "
+                f"{{k{', k'.join(str(i) for i in newly_plannable_ids)}}} are NEWLY plannable and "
+                f"k{already_planned_at_40[0]['candidate'] if already_planned_at_40 else '?'} was "
+                "already plannable at the shipped depth 40. Meanwhile the shipped trust gate ranks "
+                "on held-out dynamics accuracy, which "
+                f"k{', k'.join(str(i) for i in disproved_acc_1_ids)} also achieve at 1.0 with a "
+                "goal that is PROVABLY wrong. So dynamics accuracy alone still does not identify "
+                "the plannable candidate -- Phase 1's anti-selectivity finding survives; it is "
+                "just no longer fatal. The full set is quoted rather than the newly-added slice "
+                "because a selection rule ranges over everything available to it, and the "
+                "already-plannable member is the LOW-accuracy one, which is precisely the case "
+                "that weakens the anti-selectivity argument.",
             ],
             "not_verified_here": (
                 "Whether tn36's induced goal (row 1 filled with colour 3) is the TRUE win condition "

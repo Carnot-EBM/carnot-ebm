@@ -140,6 +140,15 @@ def test_depth_sweep_moved_only_the_horizon_and_produced_disproofs_too(artifact)
     assert sweep["n_candidates_newly_plannable_at_depth_61"] == 4
     # The bidirectional evidence: more depth also DISPROVED goals that 40 had left undecided.
     assert sweep["n_candidates_newly_disproved_by_more_depth"] >= 1
+    # ...AT WHAT DEPTH. This assertion was missing, and its absence is why the artifact could
+    # claim "at depth 61 the same sweep also disproves 3" while all three are still undecided at
+    # 61 and only flip at 70. A bidirectionality claim that never names its depth is untestable,
+    # and an untested claim in an artifact is the failure mode this suite exists to prevent.
+    assert sweep["depth_at_which_the_disproofs_first_land"] == 70
+    for row in sweep["rows"]:
+        if row["candidate"] in sweep["candidates_newly_disproved"]:
+            assert row["at_every_depth"]["61"]["gate_kind"] == "goal_unreached_within_depth"
+            assert row["at_every_depth"]["70"]["gate_kind"] == "degenerate_goal_predicate"
     # The node budget was never the binding constraint.
     assert sweep["max_plan_nodes_expanded_at_depth_61"] < 20000
     assert sweep["node_budget_utilisation_at_depth_61"] < 0.25

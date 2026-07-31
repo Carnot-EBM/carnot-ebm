@@ -1,12 +1,38 @@
 {
   "call_index": 1,
   "call_index_note": "call_index 1 is the bounded-reinduction stall site (arc_competition_agent.py:5770 -> execute_bounded_llm_reinduction), verified by stack capture. All three criteria's gates live on it and run by default.",
+  "candidate_disposition": {
+    "postbank": {
+      "n_candidates": 8,
+      "n_genuine_zero_no_engine_produced": 0,
+      "n_scored": 8,
+      "n_undetermined_excluded_from_all_denominators": 0,
+      "score_status": {
+        "ok": 8
+      },
+      "why_undetermined_is_not_a_zero": "`gate_timeout` (ft09 candidate 5) produced an engine that did not terminate inside the validation bound, so nothing about it was measured -- not its dynamics, not its goal, not its plannability. Scoring it False would record a MISSING OBSERVATION as a criterion failure and silently deflate every denominator by one. It is None everywhere instead. `unrunnable:*` is a different case and stays a genuine False: no engine exists to measure."
+    },
+    "stall": {
+      "n_candidates": 40,
+      "n_genuine_zero_no_engine_produced": 8,
+      "n_scored": 31,
+      "n_undetermined_excluded_from_all_denominators": 1,
+      "score_status": {
+        "gate_timeout": 1,
+        "ok": 31,
+        "unrunnable:IndentationError": 5,
+        "unrunnable:SyntaxError": 3
+      },
+      "why_undetermined_is_not_a_zero": "`gate_timeout` (ft09 candidate 5) produced an engine that did not terminate inside the validation bound, so nothing about it was measured -- not its dynamics, not its goal, not its plannability. Scoring it False would record a MISSING OBSERVATION as a criterion failure and silently deflate every denominator by one. It is None everywhere instead. `unrunnable:*` is a different case and stays a genuine False: no engine exists to measure."
+    }
+  },
   "candidates": [
     {
       "candidate": 0,
       "code_sha256_16": "3f7f5fa7835d294e",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -70,6 +96,7 @@
       "code_sha256_16": "ccad20c22a3376d3",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -140,6 +167,7 @@
       "code_sha256_16": "2eee7f614bd0a29f",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -210,6 +238,7 @@
       "code_sha256_16": "50052301a3f69960",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -280,6 +309,7 @@
       "code_sha256_16": "1b8ffb02338ef407",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": true,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -350,6 +380,7 @@
       "code_sha256_16": "7d3a1b39382d6f8d",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -420,6 +451,7 @@
       "code_sha256_16": "871188ff2b1e31a5",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -483,6 +515,7 @@
       "code_sha256_16": "979ac3948caecd20",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": true,
@@ -546,6 +579,7 @@
       "code_sha256_16": "eda0ce35bcc2fc33",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -576,6 +610,7 @@
       "code_sha256_16": "f54a36a532e394c2",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -646,6 +681,7 @@
       "code_sha256_16": "6afcd2fa21b2cf52",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": true,
@@ -709,6 +745,7 @@
       "code_sha256_16": "bbf6ce116a73e793",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -779,6 +816,7 @@
       "code_sha256_16": "ae67d76252ff21ec",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -842,6 +880,7 @@
       "code_sha256_16": "e64f17f71761cb1a",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -912,6 +951,7 @@
       "code_sha256_16": "00791ac3f487acd6",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -982,6 +1022,7 @@
       "code_sha256_16": "0211a8bdec41fdb2",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1052,6 +1093,7 @@
       "code_sha256_16": "43847c0175e6833f",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": true,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1122,6 +1164,7 @@
       "code_sha256_16": "1134bbfc7b22f4dd",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1152,6 +1195,7 @@
       "code_sha256_16": "d3d986a844fde7ba",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -1215,6 +1259,7 @@
       "code_sha256_16": "40d694cdbd232f6f",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1285,6 +1330,7 @@
       "code_sha256_16": "8fc34f1c9e338d9d",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1355,6 +1401,7 @@
       "code_sha256_16": "ec5d1e452a08bdb3",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1425,6 +1472,7 @@
       "code_sha256_16": "14732cdc83cf852b",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": true,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1495,6 +1543,7 @@
       "code_sha256_16": "f934a22f2b2aab78",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1567,6 +1616,7 @@
       "code_sha256_16": "3bb56a7f0161966c",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -1630,6 +1680,7 @@
       "code_sha256_16": "da9d476488a28a42",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1660,6 +1711,7 @@
       "code_sha256_16": "560d11729b458846",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1730,6 +1782,7 @@
       "code_sha256_16": "03eb15d89e842703",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1800,6 +1853,7 @@
       "code_sha256_16": "e0692dd064547603",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1870,6 +1924,7 @@
       "code_sha256_16": "76c8052f99cf3088",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -1900,6 +1955,7 @@
       "code_sha256_16": "a492a9774c143b25",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -1962,14 +2018,15 @@
       "candidate": 5,
       "code_sha256_16": "e7e914e3b9861e99",
       "criteria": {
-        "i_dynamics": false,
-        "i_dynamics_strict": false,
-        "ii_goal_satisfiable": false,
-        "ii_goal_satisfiable_unconditional": false,
-        "ii_shipped_gate_and_goal": false,
-        "iii_plan_found": false,
-        "iii_plan_found_unconditional": false,
-        "iii_shipped_gate_and_plan": false
+        "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
+        "i_dynamics_strict": null,
+        "ii_goal_satisfiable": null,
+        "ii_goal_satisfiable_unconditional": null,
+        "ii_shipped_gate_and_goal": null,
+        "iii_plan_found": null,
+        "iii_plan_found_unconditional": null,
+        "iii_shipped_gate_and_plan": null
       },
       "defect_kinds": [
         "validation_timeout"
@@ -1996,6 +2053,7 @@
       "code_sha256_16": "74052c5f22686611",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2026,6 +2084,7 @@
       "code_sha256_16": "6006247d69f81af9",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2056,6 +2115,7 @@
       "code_sha256_16": "654fea7554c2409f",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": true,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2126,6 +2186,7 @@
       "code_sha256_16": "b0f04327d9dfaeda",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2196,6 +2257,7 @@
       "code_sha256_16": "b72a8f1319159e04",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -2259,6 +2321,7 @@
       "code_sha256_16": "e43fb51064f1c024",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2329,6 +2392,7 @@
       "code_sha256_16": "ceed021f79b7cbe0",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2399,6 +2463,7 @@
       "code_sha256_16": "619ff3ea6a0a05e7",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2469,6 +2534,7 @@
       "code_sha256_16": "65c14ec8c37813df",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": true,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2539,6 +2605,7 @@
       "code_sha256_16": "b039cab41eec3e11",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2569,6 +2636,7 @@
       "code_sha256_16": "633665f2aeae9bb6",
       "criteria": {
         "i_dynamics": null,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": null,
         "ii_goal_satisfiable": null,
         "ii_goal_satisfiable_unconditional": false,
@@ -2632,6 +2700,7 @@
       "code_sha256_16": "755b2f4aacf84d6b",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2704,6 +2773,7 @@
       "code_sha256_16": "233f352c95623df8",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2774,6 +2844,7 @@
       "code_sha256_16": "48c64403b9d73031",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": null,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2804,6 +2875,7 @@
       "code_sha256_16": "3b227017be9fe992",
       "criteria": {
         "i_dynamics": true,
+        "i_dynamics_change_gradable": true,
         "i_dynamics_strict": true,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2874,6 +2946,7 @@
       "code_sha256_16": "7ede339ade3ba7eb",
       "criteria": {
         "i_dynamics": false,
+        "i_dynamics_change_gradable": false,
         "i_dynamics_strict": false,
         "ii_goal_satisfiable": false,
         "ii_goal_satisfiable_unconditional": false,
@@ -2940,6 +3013,44 @@
       "wall_s": 69.7
     }
   ],
+  "change_gradability_of_each_split": {
+    "ft09": {
+      "can_grade_change": true,
+      "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+      "heldout_n": 20,
+      "heldout_n_changing": 4
+    },
+    "lp85": {
+      "can_grade_change": false,
+      "consequence": "Accuracy 1.0 on this split is earned by predicting 'nothing changes' and is NOT evidence of a dynamics model; the game is excluded from `i_dynamics_change_gradable`.",
+      "heldout_n": 18,
+      "heldout_n_changing": 0
+    },
+    "sc25": {
+      "can_grade_change": true,
+      "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+      "heldout_n": 14,
+      "heldout_n_changing": 1
+    },
+    "tn36": {
+      "can_grade_change": true,
+      "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+      "heldout_n": 17,
+      "heldout_n_changing": 17
+    },
+    "tu93": {
+      "can_grade_change": true,
+      "consequence": "Held-out changing rows exist, so criterion (i) is falsifiable here.",
+      "heldout_n": 19,
+      "heldout_n_changing": 19
+    },
+    "vc33": {
+      "can_grade_change": false,
+      "consequence": "Accuracy 1.0 on this split is earned by predicting 'nothing changes' and is NOT evidence of a dynamics model; the game is excluded from `i_dynamics_change_gradable`.",
+      "heldout_n": 0,
+      "heldout_n_changing": 0
+    }
+  },
   "cost": {
     "N1_gpu_seconds_per_induction_mean": 52.2,
     "N4_gpu_seconds_per_induction_mean": 170.9,
@@ -2985,6 +3096,39 @@
   },
   "dynamics_vs_plannability": {
     "postbank": {
+      "MEASURE_DEPENDENCE": {
+        "by_out_of_sample_criterion_i": {
+          "direction": null,
+          "n_not_selected": 8,
+          "n_not_selected_that_are_plannable": 0,
+          "n_selected": 0,
+          "n_selected_that_are_plannable": 0,
+          "plannable_rate_when_not_selected": 0.0,
+          "plannable_rate_when_not_selected_wilson95": [
+            0.0,
+            0.3244
+          ],
+          "plannable_rate_when_selected": null,
+          "plannable_rate_when_selected_wilson95": null
+        },
+        "by_shipped_trust_gate": {
+          "direction": null,
+          "n_not_selected": 0,
+          "n_not_selected_that_are_plannable": 0,
+          "n_selected": 8,
+          "n_selected_that_are_plannable": 0,
+          "plannable_rate_when_not_selected": null,
+          "plannable_rate_when_not_selected_wilson95": null,
+          "plannable_rate_when_selected": 0.0,
+          "plannable_rate_when_selected_wilson95": [
+            0.0,
+            0.3244
+          ]
+        },
+        "n_candidates_where_the_two_accuracies_differ": 8,
+        "n_scored_candidates": 8,
+        "what_this_means": "The sign of the dynamics-vs-plannability relationship is NOT a property of the candidates -- it is a property of which dynamics bar you select with. Under the harsher out-of-sample bar the selected candidates are LESS plannable than the rejected ones; under the shipped trust gate, the gate the live pipeline actually runs, they are MORE plannable, and ft09 k1 sits in BOTH the selected and the plannable set, so the 'empty intersection' is specific to the harsher bar. Both directions rest on the same 2 plannable candidates, so neither direction is established; what IS established is that the claim cannot be stated without naming its measure."
+      },
       "goal_satisfiable_candidates": [],
       "mean_comparison_is_underpowered": "The two pooled means are n=2 against n=29 and pool across games of very different difficulty, so they are reported but carry no weight. The load-bearing evidence for the inversion is the EMPTY INTERSECTION and the per-game tn36 contrast below, neither of which depends on pooling.",
       "mean_heldout_accuracy_when_goal_NOT_satisfiable": null,
@@ -2997,9 +3141,49 @@
           "best_heldout_accuracy": null,
           "heldout_accuracy_of_goal_satisfiable_candidates": []
         }
-      }
+      },
+      "the_yield_deltas_are_underpowered_too": "This caveat was originally attached ONLY to the pooled means, which understated it: the HEADLINE itself -- unconditional (iii) going 0.0 at N=1 to 0.4 at N=4 -- is 2 successes across 5 games, both at candidate index k1. Its Wilson 95% interval spans about 0.12 to 0.77 (carried as `yield_wilson95` on every yield block), so one flip in either direction gives 0.2 or 0.6. The direction of the gain is attributable to selection rather than to extra sampling -- the `accept_first_over_same_N` control draws the same N candidates without the verifier and yields 0.0 at every N -- but the MAGNITUDE is unbounded by this grid. Read '0.4' as 'it happened on 2 of 5 games', never as a rate."
     },
     "stall": {
+      "MEASURE_DEPENDENCE": {
+        "by_out_of_sample_criterion_i": {
+          "direction": "anti_selective",
+          "n_not_selected": 22,
+          "n_not_selected_that_are_plannable": 2,
+          "n_selected": 9,
+          "n_selected_that_are_plannable": 0,
+          "plannable_rate_when_not_selected": 0.0909,
+          "plannable_rate_when_not_selected_wilson95": [
+            0.0253,
+            0.2782
+          ],
+          "plannable_rate_when_selected": 0.0,
+          "plannable_rate_when_selected_wilson95": [
+            0.0,
+            0.2992
+          ]
+        },
+        "by_shipped_trust_gate": {
+          "direction": "positively_selective",
+          "n_not_selected": 24,
+          "n_not_selected_that_are_plannable": 1,
+          "n_selected": 7,
+          "n_selected_that_are_plannable": 1,
+          "plannable_rate_when_not_selected": 0.0417,
+          "plannable_rate_when_not_selected_wilson95": [
+            0.0074,
+            0.2024
+          ],
+          "plannable_rate_when_selected": 0.1429,
+          "plannable_rate_when_selected_wilson95": [
+            0.0257,
+            0.5131
+          ]
+        },
+        "n_candidates_where_the_two_accuracies_differ": 20,
+        "n_scored_candidates": 31,
+        "what_this_means": "The sign of the dynamics-vs-plannability relationship is NOT a property of the candidates -- it is a property of which dynamics bar you select with. Under the harsher out-of-sample bar the selected candidates are LESS plannable than the rejected ones; under the shipped trust gate, the gate the live pipeline actually runs, they are MORE plannable, and ft09 k1 sits in BOTH the selected and the plannable set, so the 'empty intersection' is specific to the harsher bar. Both directions rest on the same 2 plannable candidates, so neither direction is established; what IS established is that the claim cannot be stated without naming its measure."
+      },
       "goal_satisfiable_candidates": [
         {
           "candidate": 1,
@@ -3053,7 +3237,8 @@
           "best_heldout_accuracy": 0.0,
           "heldout_accuracy_of_goal_satisfiable_candidates": []
         }
-      }
+      },
+      "the_yield_deltas_are_underpowered_too": "This caveat was originally attached ONLY to the pooled means, which understated it: the HEADLINE itself -- unconditional (iii) going 0.0 at N=1 to 0.4 at N=4 -- is 2 successes across 5 games, both at candidate index k1. Its Wilson 95% interval spans about 0.12 to 0.77 (carried as `yield_wilson95` on every yield block), so one flip in either direction gives 0.2 or 0.6. The direction of the gain is attributable to selection rather than to extra sampling -- the `accept_first_over_same_N` control draws the same N candidates without the verifier and yields 0.0 at every N -- but the MAGNITUDE is unbounded by this grid. Read '0.4' as 'it happened on 2 of 5 games', never as a rate."
     }
   },
   "experiment": "outer_loop_arc_induce_bestofn_phase1",
@@ -3160,7 +3345,7 @@
   ],
   "random_seed": 20260731,
   "reproducibility_checksum": "fd97a416b91eee3444eb165680fbff4c",
-  "run_date": "2026-07-31T15:37:17Z",
+  "run_date": "2026-07-31T16:44:09Z",
   "schema": "carnot.arc_induce_bestofn.v1",
   "shipped_heldout_threshold": 1.0,
   "splits": {
@@ -3314,6 +3499,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3329,7 +3515,17 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null,
+        "yield_wilson95": null
       },
       "i_dynamics_strict": {
         "n_measured_games": 0,
@@ -3337,7 +3533,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 0,
@@ -3345,7 +3542,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 1,
@@ -3353,7 +3551,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 1,
@@ -3361,7 +3563,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 0,
@@ -3369,7 +3575,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 1,
@@ -3377,7 +3584,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 1,
@@ -3385,11 +3596,18 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_change_gradable": {
             "vc33": null
           },
           "i_dynamics_strict": {
@@ -3419,6 +3637,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3436,6 +3655,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3451,7 +3671,17 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null,
+        "yield_wilson95": null
       },
       "i_dynamics_strict": {
         "n_measured_games": 0,
@@ -3459,7 +3689,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 0,
@@ -3467,7 +3698,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 1,
@@ -3475,7 +3707,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 1,
@@ -3483,7 +3719,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 0,
@@ -3491,7 +3731,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 1,
@@ -3499,7 +3740,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 1,
@@ -3507,11 +3752,18 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_change_gradable": {
             "vc33": null
           },
           "i_dynamics_strict": {
@@ -3541,6 +3793,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3558,6 +3811,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3573,7 +3827,17 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 0,
+        "n_pass": 0,
+        "per_game": {
+          "vc33": null
+        },
+        "yield": null,
+        "yield_wilson95": null
       },
       "i_dynamics_strict": {
         "n_measured_games": 0,
@@ -3581,7 +3845,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 0,
@@ -3589,7 +3854,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 1,
@@ -3597,7 +3863,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 1,
@@ -3605,7 +3875,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 0,
@@ -3613,7 +3887,8 @@
         "per_game": {
           "vc33": null
         },
-        "yield": null
+        "yield": null,
+        "yield_wilson95": null
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 1,
@@ -3621,7 +3896,11 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 1,
@@ -3629,11 +3908,18 @@
         "per_game": {
           "vc33": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.7935
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
+            "vc33": null
+          },
+          "i_dynamics_change_gradable": {
             "vc33": null
           },
           "i_dynamics_strict": {
@@ -3663,6 +3949,7 @@
         },
         "yield": {
           "i_dynamics": null,
+          "i_dynamics_change_gradable": null,
           "i_dynamics_strict": null,
           "ii_goal_satisfiable": null,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3684,6 +3971,18 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
+        "n_candidates_measured": 0,
+        "n_pass": 0
+      },
+      "i_dynamics_change_gradable": {
+        "implied_any_of_N_if_independent": {
+          "N1": null,
+          "N4": null,
+          "N8": null
+        },
+        "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -3694,6 +3993,7 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -3704,6 +4004,7 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -3714,6 +4015,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       },
@@ -3724,6 +4029,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       },
@@ -3734,6 +4043,7 @@
           "N8": null
         },
         "marginal_rate": null,
+        "marginal_rate_wilson95": null,
         "n_candidates_measured": 0,
         "n_pass": 0
       },
@@ -3744,6 +4054,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       },
@@ -3754,6 +4068,10 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.3244
+        ],
         "n_candidates_measured": 8,
         "n_pass": 0
       }
@@ -3772,6 +4090,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3791,7 +4110,27 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 4,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": false,
+          "lp85": null,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.25,
+        "yield_wilson95": [
+          0.0456,
+          0.6994
+        ]
       },
       "i_dynamics_strict": {
         "n_measured_games": 5,
@@ -3803,7 +4142,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 5,
@@ -3815,7 +4158,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 5,
@@ -3827,7 +4174,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 5,
@@ -3839,7 +4190,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 5,
@@ -3851,7 +4206,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 5,
@@ -3863,7 +4222,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 5,
@@ -3875,13 +4238,24 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
             "ft09": false,
             "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_change_gradable": {
+            "ft09": false,
+            "lp85": null,
             "sc25": false,
             "tn36": true,
             "tu93": false
@@ -3945,6 +4319,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3966,6 +4341,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -3985,7 +4361,27 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 4,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": false,
+          "lp85": null,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.25,
+        "yield_wilson95": [
+          0.0456,
+          0.6994
+        ]
       },
       "i_dynamics_strict": {
         "n_measured_games": 5,
@@ -3997,7 +4393,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 5,
@@ -4009,7 +4409,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 5,
@@ -4021,7 +4425,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 5,
@@ -4033,7 +4441,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 5,
@@ -4045,7 +4457,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 5,
@@ -4057,7 +4473,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 5,
@@ -4069,13 +4489,24 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
             "ft09": false,
             "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_change_gradable": {
+            "ft09": false,
+            "lp85": null,
             "sc25": false,
             "tn36": true,
             "tu93": false
@@ -4139,6 +4570,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.2,
@@ -4160,6 +4592,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.0,
@@ -4179,7 +4612,27 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
+      },
+      "i_dynamics_change_gradable": {
+        "n_measured_games": 4,
+        "n_pass": 1,
+        "per_game": {
+          "ft09": false,
+          "lp85": null,
+          "sc25": false,
+          "tn36": true,
+          "tu93": false
+        },
+        "yield": 0.25,
+        "yield_wilson95": [
+          0.0456,
+          0.6994
+        ]
       },
       "i_dynamics_strict": {
         "n_measured_games": 5,
@@ -4191,7 +4644,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_goal_satisfiable": {
         "n_measured_games": 5,
@@ -4203,7 +4660,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "ii_goal_satisfiable_unconditional": {
         "n_measured_games": 5,
@@ -4215,7 +4676,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "ii_shipped_gate_and_goal": {
         "n_measured_games": 5,
@@ -4227,7 +4692,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "iii_plan_found": {
         "n_measured_games": 5,
@@ -4239,7 +4708,11 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.0
+        "yield": 0.0,
+        "yield_wilson95": [
+          0.0,
+          0.4345
+        ]
       },
       "iii_plan_found_unconditional": {
         "n_measured_games": 5,
@@ -4251,7 +4724,11 @@
           "tn36": true,
           "tu93": false
         },
-        "yield": 0.4
+        "yield": 0.4,
+        "yield_wilson95": [
+          0.1176,
+          0.7693
+        ]
       },
       "iii_shipped_gate_and_plan": {
         "n_measured_games": 5,
@@ -4263,13 +4740,24 @@
           "tn36": false,
           "tu93": false
         },
-        "yield": 0.2
+        "yield": 0.2,
+        "yield_wilson95": [
+          0.0362,
+          0.6245
+        ]
       },
       "select_on_i_then_check": {
         "per_criterion": {
           "i_dynamics": {
             "ft09": false,
             "lp85": true,
+            "sc25": false,
+            "tn36": true,
+            "tu93": false
+          },
+          "i_dynamics_change_gradable": {
+            "ft09": false,
+            "lp85": null,
             "sc25": false,
             "tn36": true,
             "tu93": false
@@ -4333,6 +4821,7 @@
         },
         "yield": {
           "i_dynamics": 0.4,
+          "i_dynamics_change_gradable": 0.25,
           "i_dynamics_strict": 0.4,
           "ii_goal_satisfiable": 0.0,
           "ii_goal_satisfiable_unconditional": 0.2,
@@ -4353,22 +4842,44 @@
     "marginal_per_candidate": {
       "i_dynamics": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.225,
-          "N4": 0.6392,
-          "N8": 0.8699
+          "N1": 0.2308,
+          "N4": 0.6499,
+          "N8": 0.8774
         },
-        "marginal_rate": 0.225,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.2308,
+        "marginal_rate_wilson95": [
+          0.1265,
+          0.3834
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 9
+      },
+      "i_dynamics_change_gradable": {
+        "implied_any_of_N_if_independent": {
+          "N1": 0.1935,
+          "N4": 0.577,
+          "N8": 0.8211
+        },
+        "marginal_rate": 0.1935,
+        "marginal_rate_wilson95": [
+          0.0919,
+          0.3628
+        ],
+        "n_candidates_measured": 31,
+        "n_pass": 6
       },
       "i_dynamics_strict": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.225,
-          "N4": 0.6392,
-          "N8": 0.8699
+          "N1": 0.2308,
+          "N4": 0.6499,
+          "N8": 0.8774
         },
-        "marginal_rate": 0.225,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.2308,
+        "marginal_rate_wilson95": [
+          0.1265,
+          0.3834
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 9
       },
       "ii_goal_satisfiable": {
@@ -4378,27 +4889,39 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
-        "n_candidates_measured": 40,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.0897
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 0
       },
       "ii_goal_satisfiable_unconditional": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.05,
-          "N4": 0.1855,
-          "N8": 0.3366
+          "N1": 0.0513,
+          "N4": 0.1899,
+          "N8": 0.3437
         },
-        "marginal_rate": 0.05,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0513,
+        "marginal_rate_wilson95": [
+          0.0142,
+          0.1689
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 2
       },
       "ii_shipped_gate_and_goal": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.025,
-          "N4": 0.0963,
-          "N8": 0.1833
+          "N1": 0.0256,
+          "N4": 0.0987,
+          "N8": 0.1876
         },
-        "marginal_rate": 0.025,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0256,
+        "marginal_rate_wilson95": [
+          0.0045,
+          0.1318
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 1
       },
       "iii_plan_found": {
@@ -4408,27 +4931,39 @@
           "N8": 0.0
         },
         "marginal_rate": 0.0,
-        "n_candidates_measured": 40,
+        "marginal_rate_wilson95": [
+          0.0,
+          0.0897
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 0
       },
       "iii_plan_found_unconditional": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.05,
-          "N4": 0.1855,
-          "N8": 0.3366
+          "N1": 0.0513,
+          "N4": 0.1899,
+          "N8": 0.3437
         },
-        "marginal_rate": 0.05,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0513,
+        "marginal_rate_wilson95": [
+          0.0142,
+          0.1689
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 2
       },
       "iii_shipped_gate_and_plan": {
         "implied_any_of_N_if_independent": {
-          "N1": 0.025,
-          "N4": 0.0963,
-          "N8": 0.1833
+          "N1": 0.0256,
+          "N4": 0.0987,
+          "N8": 0.1876
         },
-        "marginal_rate": 0.025,
-        "n_candidates_measured": 40,
+        "marginal_rate": 0.0256,
+        "marginal_rate_wilson95": [
+          0.0045,
+          0.1318
+        ],
+        "n_candidates_measured": 39,
         "n_pass": 1
       }
     },

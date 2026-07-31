@@ -42,7 +42,7 @@
     "candidates[].goal_kind"
    ],
    "path": "results/outer_loop_arc_induce_bestofn_20260731.json",
-   "sha256": "130af035e5f8a1d8ec9c1900d27a1093cda0274ebdd7f1b0b8f3e85a216f6b95"
+   "sha256": "e7c6b1913af1292a2d9b520a08f1d8e8afbf3dd9c75f22f83813cbdb25df3da8"
   }
  ],
  "decoupling_dynamics_without_a_certified_goal": {
@@ -100,8 +100,8 @@
  "duration_s": 553.2,
  "duration_s_note": "Rollout/change-prediction pass wall-clock plus the depth sweep (8 candidates x 5 depths, run separately). CPU-only throughout.",
  "experiment": "outer_loop_arc_induce_phase2_early_induction_and_decoupling",
- "git_commit_at_build": "92a7ef5388823e3d0fcd498038710b21af56fd39",
- "headline": "Phase 1's 'empty intersection' was a SEARCH-HORIZON ARTIFACT, not an absent capability. The shipped goal gate and planner both cap `max_depth` at 40. On tn36 the induced goal is reached at depth 61 -- 4 of 8 candidates, including 3 of the held-out-accuracy-1.0 engines that Phase 1 recorded as `goal_unreached_within_depth`. Moving ONLY the depth cap to 61, with the 20000-node budget untouched, the SHIPPED planner returns a 61-action plan in 2229 nodes -- 11% of the budget it already had. So criterion (iii) -- dynamics-clean AND goal-satisfiable AND plannable -- is satisfiable after all; the depth-40 BFS simply could not see it. The same sweep also correctly DISPROVES 3 other candidates that depth 40 had left undecided, so the horizon change cuts both ways rather than merely admitting passes. The decoupling, by contrast, is NOT supported: engine change-prediction is at chance (median balanced accuracy 0.500, range 0.375-0.625), and the corpus cannot test it properly because the games with no-op headroom have inert engines while the games with working engines have zero headroom.",
+ "git_commit_at_build": "6f757bdefba5200670bf5d213c6c13372ed45f84",
+ "headline": "Phase 1's 'empty intersection' was a SEARCH-HORIZON ARTIFACT, not an absent capability. The shipped goal gate and planner both cap `max_depth` at 40. On tn36 the induced goal is reached at depth 61 -- 4 of 8 candidates, including 3 of the held-out-accuracy-1.0 engines (k0, k2, k6) that Phase 1 recorded as `goal_unreached_within_depth`. Moving ONLY the depth cap to 61, with the 20000-node budget untouched, the SHIPPED planner returns a 61-action plan for that trio in 2226 nodes -- 11% of the budget it already had. So criterion (iii) -- dynamics-clean AND goal-satisfiable AND plannable -- is satisfiable after all; the depth-40 BFS simply could not see it. At depth 70 -- NOT at 61, where they are still undecided -- the same sweep correctly DISPROVES 3 other candidates (k3, k5, k7) that depth 40 had left undecided, so the horizon change cuts both ways rather than merely admitting passes. The decoupling, by contrast, is NOT supported: engine change-prediction is at chance (median balanced accuracy 0.500, range 0.375-0.625), and the corpus cannot test it properly because the games with no-op headroom have inert engines while the games with working engines have zero headroom.",
  "honest_verdict": "complete_stall_path_goal_gate_failure_is_a_depth_horizon_artifact_decoupling_unsupported_and_untestable_on_this_corpus",
  "independent_replication": {
   "agreement": "Exact, including quantities neither session could have guessed: first depth with a non-empty intersection = 61; intersection members = {tn36 k0, k2, k6}; plan_length = 61; nodes_expanded = 2226. The sibling additionally shows the intersection SATURATES -- 80/120/200 add nothing over 61 -- which rules out the reading that a still-larger horizon keeps buying passes.",
@@ -208,8 +208,8 @@
  "question": "Why has the stall path never cleared the goal gate in 22 attempts, does best-of-N change that, and can a verified-correct dynamics engine steer exploration WITHOUT a certified goal?",
  "random_seed": 7100,
  "random_seed_note": "Inherited: the candidates are Phase 1's, generated from seed base 7100. This phase adds no sampling -- the rollout, the probes and the depth sweep are all deterministic.",
- "reproducibility_checksum": "29351983b3dcf5f068ed7937a781cb26",
- "run_date": "2026-07-31T16:28:48Z",
+ "reproducibility_checksum": "693e5c97deaea98502aca8685b65af1e",
+ "run_date": "2026-07-31T16:46:34Z",
  "schema": "carnot.arc_induce_phase2.v1",
  "scored_detail_paths": {
   "analysis": "results/arc_induce_phase2_20260731/phase2_analysis.json",
@@ -217,6 +217,30 @@
   "raw": "results/arc_induce_phase2_20260731/phase2_raw.json"
  },
  "shipped_depth_sweep": {
+  "candidates_disproved_despite_heldout_accuracy_1_0": [
+   3,
+   5,
+   7
+  ],
+  "candidates_newly_disproved": [
+   3,
+   5,
+   7
+  ],
+  "candidates_newly_plannable_at_depth_61": [
+   0,
+   2,
+   4,
+   6
+  ],
+  "candidates_plannable_at_depth_61_full_set": [
+   0,
+   1,
+   2,
+   4,
+   6
+  ],
+  "depth_at_which_the_disproofs_first_land": 70,
   "depths_swept": [
    40,
    50,
@@ -224,12 +248,15 @@
    70,
    100
   ],
+  "disproofs_do_not_land_at_depth_61": "At 61 all three are still `goal_unreached_within_depth`. They flip to `degenerate_goal_predicate` only at 70. The bidirectionality of the sweep is real and is the strongest evidence this is a horizon fix rather than gate-widening, but it is a property of the SWEEP, not of depth 61, and quoting it as the latter borrows corroboration the depth-61 result has not got.",
+  "max_is_not_the_trio": "2229 is the MAXIMUM across all newly-plannable candidates and belongs to k4, whose held-out accuracy is 0.588. The three accuracy-1.0 engines each expand 2226. Quoting the max as the trio's figure is the number an independent replication cannot reproduce.",
   "max_plan_nodes_expanded_at_depth_61": 2229,
   "n_candidates_already_plannable_at_shipped_depth_40": 1,
   "n_candidates_newly_disproved_by_more_depth": 3,
   "n_candidates_newly_plannable_at_depth_61": 4,
   "node_budget_utilisation_at_depth_61": 0.1114,
   "not_a_criterion_pass": "DIAGNOSTIC ONLY. Nothing here is counted as a Phase-1 criterion (ii)/(iii) pass; the Phase-1 yields stand exactly as reported at the shipped defaults.",
+  "plan_nodes_expanded_for_the_accuracy_1_0_trio": 2226,
   "rows": [
    {
     "at_depth_100": {
@@ -241,6 +268,38 @@
      "plan_found": true,
      "plan_length": 61,
      "plan_nodes_expanded": 2226
+    },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     },
+     "70": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     }
     },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
@@ -261,6 +320,38 @@
      "plan_length": 6,
      "plan_nodes_expanded": 191
     },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 6,
+      "plan_nodes_expanded": 191
+     },
+     "40": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 6,
+      "plan_nodes_expanded": 191
+     },
+     "50": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 6,
+      "plan_nodes_expanded": 191
+     },
+     "61": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 6,
+      "plan_nodes_expanded": 191
+     },
+     "70": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 6,
+      "plan_nodes_expanded": 191
+     }
+    },
     "at_shipped_depth_40": {
      "gate_kind": "satisfiable",
      "plan_found": true,
@@ -279,6 +370,38 @@
      "plan_found": true,
      "plan_length": 61,
      "plan_nodes_expanded": 2226
+    },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     },
+     "70": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     }
     },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
@@ -299,6 +422,38 @@
      "plan_length": 0,
      "plan_nodes_expanded": 2257
     },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "degenerate_goal_predicate",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2331
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2257
+     },
+     "70": {
+      "gate_kind": "degenerate_goal_predicate",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2331
+     }
+    },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
      "plan_found": false,
@@ -317,6 +472,38 @@
      "plan_found": true,
      "plan_length": 61,
      "plan_nodes_expanded": 2229
+    },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2229
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2229
+     },
+     "70": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2229
+     }
     },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
@@ -337,6 +524,38 @@
      "plan_length": 0,
      "plan_nodes_expanded": 2257
     },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "degenerate_goal_predicate",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2294
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2257
+     },
+     "70": {
+      "gate_kind": "degenerate_goal_predicate",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2294
+     }
+    },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
      "plan_found": false,
@@ -356,6 +575,38 @@
      "plan_length": 61,
      "plan_nodes_expanded": 2226
     },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     },
+     "70": {
+      "gate_kind": "satisfiable",
+      "plan_found": true,
+      "plan_length": 61,
+      "plan_nodes_expanded": 2226
+     }
+    },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
      "plan_found": false,
@@ -374,6 +625,38 @@
      "plan_found": false,
      "plan_length": 0,
      "plan_nodes_expanded": 2257
+    },
+    "at_every_depth": {
+     "100": {
+      "gate_kind": "degenerate_goal_predicate",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2294
+     },
+     "40": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1480
+     },
+     "50": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 1850
+     },
+     "61": {
+      "gate_kind": "goal_unreached_within_depth",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2257
+     },
+     "70": {
+      "gate_kind": "degenerate_goal_predicate",
+      "plan_found": false,
+      "plan_length": 0,
+      "plan_nodes_expanded": 2294
+     }
     },
     "at_shipped_depth_40": {
      "gate_kind": "goal_unreached_within_depth",
@@ -396,10 +679,10 @@
   "cheapest_next_test": "Execute the 61-action plan against the OFFLINE arcade for tn36 L1 and check `level_after`. That is a development-proxy run on a public game, needs no scored play, and would settle in one shot whether the horizon fix banks a level or merely certifies a plausible-but-wrong predicate.",
   "not_verified_here": "Whether tn36's induced goal (row 1 filled with colour 3) is the TRUE win condition of tn36 L1 is NOT established by this phase. Everything above is a statement about the engine's own model: the goal is reachable UNDER THE INDUCED DYNAMICS. No ARC game was played, no level was banked, and confirming the win condition requires the live env, which this phase deliberately did not touch.",
   "on_tn36_specifically": [
-   "1. A 61-action plan exists inside the induced model and the SHIPPED planner returns it, in 2229 nodes, the moment `max_depth` is 61 rather than 40. 61 actions is affordable against the live MAX_ACTIONS budget of 400.",
+   "1. A 61-action plan exists inside the induced model and the SHIPPED planner returns it the moment `max_depth` is 61 rather than 40 -- in 2226 nodes for the three held-out-accuracy-1.0 engines (k0, k2, k6), and at most 2229 across every newly-plannable candidate. 61 actions is affordable against the live MAX_ACTIONS budget of 400.",
    "2. The blocker is a single integer in two places: `_goal_satisfiability_check(max_depth=40)` in arc_llm_reinduction.py and `plan_in_model(max_depth=40)` in arc_executable_world_model.py. Neither has an environment override, though `max_nodes` has one on both sides -- so the one knob that is binding is the one that cannot be turned without editing production code.",
-   "3. Raising depth is NOT free and NOT uniformly favourable: on the same sweep it converts 3 candidates from UNDECIDED to `degenerate_goal_predicate`. That is the correct behaviour and it is the reason this is a horizon fix rather than a threshold relaxation.",
-   "4. Selection must change too. At depth 61 the plannable set is {k0, k2, k4, k6} while the shipped trust gate ranks on held-out dynamics accuracy, which k5 and k7 also achieve at 1.0 with a goal that is provably wrong. Dynamics accuracy alone still does not identify the plannable candidate -- Phase 1's anti-selectivity finding survives; it is just no longer fatal."
+   "3. Raising depth is NOT free and NOT uniformly favourable: at depth 70 the same sweep converts 3 candidates (k3, k5, k7) from UNDECIDED to `degenerate_goal_predicate`. That is the correct behaviour and it is the reason this is a horizon fix rather than a threshold relaxation -- the search drains the frontier in BOTH directions. Note the depth: at 61 those three are still undecided, so this is not corroboration of the depth-61 result, it is what a further 9 levels of horizon buys.",
+   "4. Selection must change too. The full plannable set at depth 61 is {k0, k1, k2, k4, k6} -- of which {k0, k2, k4, k6} are NEWLY plannable and k1 was already plannable at the shipped depth 40. Meanwhile the shipped trust gate ranks on held-out dynamics accuracy, which k3, k5, k7 also achieve at 1.0 with a goal that is PROVABLY wrong. So dynamics accuracy alone still does not identify the plannable candidate -- Phase 1's anti-selectivity finding survives; it is just no longer fatal. The full set is quoted rather than the newly-added slice because a selection rule ranges over everything available to it, and the already-plannable member is the LOW-accuracy one, which is precisely the case that weakens the anti-selectivity argument."
   ]
  },
  "why_the_stall_path_never_clears_the_goal_gate": {

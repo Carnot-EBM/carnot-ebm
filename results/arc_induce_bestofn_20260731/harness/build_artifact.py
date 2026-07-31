@@ -21,9 +21,26 @@ import time
 
 HERE = pathlib.Path(__file__).resolve().parent
 SCORED = HERE.parent / "bestofn_scored.json"
-OUT = pathlib.Path("/home/ianblenke/github.com/ianblenke/carnot/results") / (
-    "outer_loop_arc_induce_bestofn_20260731.json"
-)
+# DERIVED, not hardcoded. This was an absolute `/home/ianblenke/...` literal, which is the write
+# target CLAUDE.md's Test-Run Record Integrity rule 4 forbids: no worktree, env var, or tmp_path
+# fixture can isolate a process that writes there, and a fresh clone writes into the operator's
+# checkout instead of failing -- independently a G2 reproducibility defect. HERE is
+# <repo>/results/arc_induce_bestofn_20260731/harness, so two parents up is <repo>/results.
+RESULTS = HERE.parent.parent
+OUT = RESULTS / "outer_loop_arc_induce_bestofn_20260731.json"
+
+
+def _not_hip(wit: dict) -> bool | None:
+    """Read the exe check under its honest name, accepting the name it was RECORDED under.
+
+    The witness stored in `bon.json` predates the rename and carries the old key
+    `server_exe_is_cuda_build`, whose VALUE is `"build-hip" not in exe` -- exactly the negative
+    check the new name describes. Reading the old key here reports the recorded measurement
+    faithfully rather than rewriting a historical witness to match a newer vocabulary."""
+    for key in ("server_exe_is_not_hip_build", "server_exe_is_cuda_build"):
+        if key in wit:
+            return wit[key]
+    return None
 
 
 def main() -> int:  # noqa: C901
@@ -72,6 +89,14 @@ def main() -> int:  # noqa: C901
     marg_uncond = (marg.get("iii_plan_found_unconditional") or {}).get("n_pass")
     n_cands_total = (marg.get("iii_plan_found_unconditional") or {}).get("n_candidates_measured")
 
+    md = anti.get("MEASURE_DEPENDENCE", {})
+    by_i = md.get("by_out_of_sample_criterion_i", {})
+    by_gate = md.get("by_shipped_trust_gate", {})
+    i_grad = y(top, "i_dynamics_change_gradable") if top else None
+    marg_grad = marg.get("i_dynamics_change_gradable") or {}
+    ci_uncond = ((ys.get(f"N{top}") or {}).get("iii_plan_found_unconditional") or {}).get(
+        "yield_wilson95"
+    )
     if iii_top == 0.0 and iii_uncond:
         headline = (
             f"Criterion (iii) as posed is 0.0 at N={top} -- but that zero is an EMPTY "
@@ -79,15 +104,31 @@ def main() -> int:  # noqa: C901
             f"{n_cands_total}) is simultaneously dynamics-clean by (i) and goal-satisfiable by "
             f"(ii). Dropping the conjunction, {marg_uncond} of {n_cands_total} candidates reach a "
             f"satisfiable goal AND a found plan, and best-of-N finds them: unconditional (iii) "
-            f"yield goes {iii_uncond_n1} at N=1 to {iii_uncond} at N={top}, and the SHIPPED "
-            f"pipeline's own conjunction (trust gate AND goal AND plan) goes 0.0 to {iii_shipped}. "
-            "Selecting on dynamics accuracy is not merely insufficient for plannability -- on "
-            "this grid it is anti-selective: on tn36 the six candidates with held-out accuracy "
-            "1.0 (17 of 17 changing transitions exact) ALL fail the goal gate, while the one "
-            "candidate whose goal is satisfiable and plannable scores 0.235."
+            f"yield goes {iii_uncond_n1} at N=1 to {iii_uncond} at N={top} (Wilson 95% "
+            f"{ci_uncond} -- 2 successes over 5 games, NOT a rate), and the SHIPPED pipeline's "
+            f"own conjunction (trust gate AND goal AND plan) goes 0.0 to {iii_shipped}. "
+            "WHETHER DYNAMICS SELECTION HURTS OR HELPS DEPENDS ON WHICH DYNAMICS BAR YOU ASK "
+            "WITH, and the two available bars disagree in SIGN. Under this harness's harsher "
+            f"out-of-sample bar it is anti-selective ({by_i.get('n_selected_that_are_plannable')} "
+            f"of {by_i.get('n_selected')} selected candidates are plannable vs "
+            f"{by_i.get('n_not_selected_that_are_plannable')} of {by_i.get('n_not_selected')} "
+            "rejected), and the mechanism is visible on tn36: the six candidates with held-out "
+            "accuracy 1.0 ALL fail the goal gate while the one plannable candidate scores 0.235. "
+            "Under the SHIPPED trust gate -- the one the live pipeline actually runs -- the sign "
+            f"reverses ({by_gate.get('n_selected_that_are_plannable')} of "
+            f"{by_gate.get('n_selected')} vs {by_gate.get('n_not_selected_that_are_plannable')} "
+            f"of {by_gate.get('n_not_selected')}), and ft09 k1 is in BOTH sets, so the empty "
+            "intersection is specific to the harsher bar. Both directions rest on the same 2 "
+            "plannable candidates, so the DIRECTION is undetermined; what is established is that "
+            "the claim cannot be made without naming its measure. Finally, the (i) yield itself "
+            f"is inflated by a vacuous split: lp85's held-out rows are ALL no-ops, so its 3 "
+            f"(i)-passers earn accuracy 1.0 by predicting 'nothing changes'. Excluding games that "
+            f"cannot grade change, (i) is {i_grad} ({marg_grad.get('n_pass')} of "
+            f"{marg_grad.get('n_candidates_measured')} candidates), not {i_top}."
         )
         verdict = (
-            "complete_criterion_iii_zero_by_empty_intersection_dynamics_anti_selects_for_plannability"
+            "complete_criterion_iii_zero_by_empty_intersection_"
+            "dynamics_selection_sign_is_measure_dependent"
         )
     elif iii_top == 0.0 and ii_top == 0.0:
         basis = (
@@ -134,22 +175,57 @@ def main() -> int:  # noqa: C901
                 "then checks each row against the prompt TEXT by a different computation."
             ),
         },
+        "criterion_i_vacuity_is_disclosed_not_merely_recorded": {
+            "passed": bool(
+                marg.get("i_dynamics_change_gradable")
+                and "lp85" in str(headline)
+                and any(
+                    not v["can_grade_change"]
+                    for v in d.get("change_gradability_of_each_split", {}).values()
+                )
+            ),
+            "games_that_cannot_grade_change": [
+                g
+                for g, v in d.get("change_gradability_of_each_split", {}).items()
+                if not v["can_grade_change"]
+            ],
+            "principle": (
+                "A held-out split with zero CHANGING rows grades the identity function at 1.0, so "
+                "a criterion-(i) pass on it is not evidence of a dynamics model. This gate exists "
+                "because the fact WAS in the data (`heldout_can_grade_change: false`) and was in "
+                "no sentence anyone would read -- and a caveat that lives only in a nested field "
+                "is not a disclosure. It requires both that the change-gradable variant be "
+                "computed AND that the affected game be named in the headline prose."
+            ),
+        },
         "generator_proven_cuda_build_and_model": {
             "passed": bool(
-                wit.get("server_exe_is_cuda_build") is True
+                _not_hip(wit) is True
                 and wit.get("vram_rows_mine")
                 and "gemma-4-31B-it" in str(wit.get("observed_model_path"))
                 and int(wit.get("observed_n_ctx") or 0) == 32768
             ),
             "observed": {
-                k: wit.get(k)
-                for k in (
-                    "server_exe_is_cuda_build",
-                    "observed_n_ctx",
-                    "observed_model_path",
-                    "vram_rows_mine",
-                )
+                "server_exe": wit.get("server_exe"),
+                "server_exe_is_not_hip_build": _not_hip(wit),
+                "server_exe_links_cuda_runtime": wit.get("server_exe_links_cuda_runtime"),
+                "observed_n_ctx": wit.get("observed_n_ctx"),
+                "observed_model_path": wit.get("observed_model_path"),
+                "vram_rows_mine": wit.get("vram_rows_mine"),
             },
+            "what_the_exe_check_actually_tests": (
+                "`server_exe_is_not_hip_build` is `'build-hip' not in /proc/<pid>/exe` -- a "
+                "NEGATIVE path heuristic. It was originally recorded under the name "
+                "`server_exe_is_cuda_build`, which asserts a positive build property the check "
+                "does not test: a CUDA binary at an unexpected path, or a third build that is "
+                "neither, would both have reported True. It is renamed here to say what it does. "
+                "`server_exe_links_cuda_runtime` (ldd for libcudart/libcublas) is the positive "
+                "check and is now what the harness gates on; it is null on THIS run because the "
+                "run predates it, so the CUDA claim for this run rests entirely on the "
+                "independent per-PID `vram_rows_mine` evidence below -- an nvidia-smi compute-app "
+                "row attributing 21434 MiB on bus 62:00.0 to the server's own PID, which an iGPU "
+                "HIP process cannot produce."
+            ),
             "principle": (
                 "The 31B silently binds the iGPU HIP build at the shipped n_ctx and then runs "
                 "LLM-OFF while REPORTING LLM-ON. Proving the build from /proc/<pid>/exe plus a "
@@ -212,7 +288,7 @@ def main() -> int:  # noqa: C901
         ),
         "reproducibility_checksum": d["reproducibility_checksum"],
         "preconditions_checked": [
-            {"resource": "cuda_generator_build", "available": bool(wit.get("server_exe_is_cuda_build"))},
+            {"resource": "generator_exe_is_not_hip_build", "available": bool(_not_hip(wit))},
             {"resource": "gemma_4_31b_gguf_cached", "available": bool(wit.get("observed_model_path"))},
             {"resource": "per_pid_vram_residency", "available": bool(wit.get("vram_rows_mine"))},
             {"resource": "proven_heldout_split", "available": bool(gates["split_proven_on_every_scored_game"]["passed"])},
@@ -267,7 +343,49 @@ def main() -> int:  # noqa: C901
         "acceptance_gate_definitions": {k: v["principle"] for k, v in gates.items()},
         "acceptance_gates": {k: v for k, v in gates.items()},
         "acceptance_gate_passed": all(v["passed"] for v in gates.values()),
+        # THE HEADLINE (i) NUMBER IS INFLATED BY A SPLIT THAT CANNOT FALSIFY IT. Hoisted to the
+        # top level rather than left inside `splits`, because the original artifact DID carry
+        # `heldout_can_grade_change: false` down there and not one sentence of prose mentioned it.
+        "criterion_i_change_gradability": {
+            "headline_i_yield_all_games": i_top,
+            "i_yield_change_gradable_games_only": i_grad,
+            "marginal_all_games": {
+                "n_pass": (marg.get("i_dynamics") or {}).get("n_pass"),
+                "n": (marg.get("i_dynamics") or {}).get("n_candidates_measured"),
+            },
+            "marginal_change_gradable_only": {
+                "n_pass": marg_grad.get("n_pass"),
+                "n": marg_grad.get("n_candidates_measured"),
+                "why_the_denominator_is_31_and_not_32": (
+                    "Four gradable games x 8 candidates is 32. One of those 32 -- ft09 candidate "
+                    "5 -- is `gate_timeout`, an engine that was produced but never measured, and "
+                    "it is excluded from every denominator as UNDETERMINED rather than counted as "
+                    "a failure. 31 is therefore the count of change-gradable candidates about "
+                    "which anything is actually known."
+                ),
+            },
+            "per_game": d.get("change_gradability_of_each_split", {}),
+            "what_is_excluded_and_why": (
+                "lp85's held-out split is 18 rows of which 0 change, so its 3 criterion-(i) "
+                "passers scored accuracy 1.0 by predicting 'nothing changes' against a split "
+                "where nothing does -- true, and zero discriminative evidence about dynamics. "
+                "They are a third of the 9 (i)-passers on the stall path. `i_dynamics_strict` "
+                "does NOT filter them: where nothing changing is held out it falls back to 'no "
+                "hallucinated no-ops', which excludes only a wholly inert engine, so calling that "
+                "bar 'strict' overpromises. The change-gradable variant excludes such games "
+                "outright."
+            ),
+            "which_way_the_bias_runs": (
+                "AGAINST the conclusion drawn here, which is why it is disclosed rather than "
+                "buried: discounting lp85 leaves the change-gradable (i)-passing set entirely "
+                "tn36's dead engines, so it strengthens rather than weakens the finding that a "
+                "dynamics-clean engine need not be plannable. It also means the (i) yield that "
+                "reads best -- 0.4 -- is the one with the least evidence behind it."
+            ),
+        },
+        "dynamics_vs_plannability": d.get("dynamics_vs_plannability", {}),
         "goal_gate_failure_census": d["goal_gate_failure_census"],
+        "candidate_disposition": d.get("candidate_disposition", {}),
         "diversity": d["diversity"],
         "cost": cost,
         "yields_stall_path": ys,

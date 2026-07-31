@@ -229,7 +229,29 @@ def main() -> int:  # noqa: C901
     witness["server_pid"] = spid
     if spid is not None:
         witness["server_exe"] = os.path.realpath(f"/proc/{spid}/exe")
-        witness["server_exe_is_cuda_build"] = "build-hip" not in witness["server_exe"]
+        # NAME THE CHECK AFTER WHAT IT TESTS. This was `server_exe_is_cuda_build`, computed as
+        # `"build-hip" not in exe` -- a NEGATIVE path heuristic under a name asserting a POSITIVE
+        # build property, which is the naming-vs-implementation gap the Verifier Authenticity
+        # Discipline exists to catch. A CUDA binary at an unexpected path, or some third build
+        # that is neither, would both have reported True. The negative check is kept because it is
+        # what actually gates the run below, under a name that says so; the positive check is
+        # added alongside and is what the field name `..._is_cuda_build` was always claiming.
+        witness["server_exe_is_not_hip_build"] = "build-hip" not in witness["server_exe"]
+        try:
+            ldd = subprocess.run(
+                ["ldd", witness["server_exe"]], capture_output=True, text=True, timeout=15
+            ).stdout
+            witness["server_exe_links_cuda_runtime"] = bool(
+                re.search(r"libcud(art|a)\.so|libcublas\.so", ldd)
+            )
+            witness["server_exe_links_hip_runtime"] = bool(
+                re.search(r"libamdhip64\.so|libhipblas\.so|librocblas\.so", ldd)
+            )
+        except (OSError, subprocess.SubprocessError):
+            # UNVERIFIED, not verified-good. Left as None so the gate below can refuse rather than
+            # silently reading a missing key as a pass.
+            witness["server_exe_links_cuda_runtime"] = None
+            witness["server_exe_links_hip_runtime"] = None
         witness["server_cmdline"] = (
             open(f"/proc/{spid}/cmdline", "rb").read().replace(b"\0", b" ").decode()[:400]
         )
@@ -249,7 +271,13 @@ def main() -> int:  # noqa: C901
     log(f"witness: {json.dumps(witness)}")
     for bad, why in (
         (
-            witness.get("server_exe_is_cuda_build") is not True,
+            witness.get("server_exe_is_not_hip_build") is not True,
+            "blocked_generator_exe_is_hip_build",
+        ),
+        # Fail CLOSED on the positive check: None (ldd unreadable) refuses, exactly as False does.
+        # An unverifiable build is not a verified one.
+        (
+            witness.get("server_exe_links_cuda_runtime") is not True,
             "blocked_generator_not_proven_cuda_build",
         ),
         (not witness.get("vram_rows_mine"), "blocked_generator_no_vram_residency"),
