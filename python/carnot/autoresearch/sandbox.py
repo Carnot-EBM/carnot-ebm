@@ -37,9 +37,52 @@
 Executes hypothesis code in isolation with:
 - Hard timeout
 - Memory limit (tracked, not enforced at OS level -- use containers for hard limits)
-- Import whitelist enforcement
+- Import blocking, enforced both statically (AST) and at runtime (guarded __import__)
 - Read-only data access
 - Captured stdout/stderr and metrics
+
+**What this sandbox is NOT (read this before trusting it).**
+    This is a process-level GUARDRAIL, not a security boundary.  It runs
+    hypothesis code in the SAME interpreter as the caller, and a determined
+    adversary with arbitrary Python execution in-process cannot be reliably
+    contained -- CPython simply offers too many reflective paths
+    (``object.__subclasses__``, frame walking, C-extension internals) for a
+    blocklist to close.  Treat it as protection against an LLM that
+    *accidentally* reaches for ``os.system``, not against one that is actively
+    trying to escape.
+
+    **The actual security boundary is the gVisor container** in
+    ``sandbox_docker.py`` (``CARNOT_USE_SANDBOX=1``).  Anything genuinely
+    untrusted belongs there.
+
+    This paragraph exists because the docstring previously advertised "Import
+    whitelist enforcement" while the implementation handed hypothesis code the
+    real ``__builtins__``.  The 2026-07-31 security audit demonstrated the
+    bypass: the AST check only inspects ``ast.Import`` / ``ast.ImportFrom``
+    nodes, so ``__import__("subprocess").run([...])`` never appeared as an
+    import node and executed a shell command.  The runtime guard added below
+    closes that specific hole; the honest scope statement above is the part
+    that keeps the next reader from over-trusting the result.
+
+    **A residual escape that is still open, verified 2026-07-31.**  Do not read
+    the guard below as "the sandbox is now sealed".  This hypothesis still
+    reaches ``os`` and was confirmed to return the real cwd AFTER the fix::
+
+        def run(d):
+            for c in ().__class__.__base__.__subclasses__():
+                g = getattr(getattr(c, '__init__', None), '__globals__', None)
+                if g and 'sys' in g:
+                    return {'cwd': g['sys'].modules['os'].getcwd()}
+
+    It never calls ``__import__``, so no import guard can see it; it walks
+    ``object.__subclasses__()`` to a class whose own module globals already hold
+    ``sys``.  Closing this class of hole requires removing the interpreter's
+    reflective surface, which CPython does not support -- hence the gVisor
+    boundary above.  This example is kept here deliberately, so that a future
+    reader who is tempted to re-promote this module to "secure" has a working
+    counterexample in front of them.  ``tests/python/test_sandbox_import_guard.py``
+    asserts it still escapes, so if a CPython change ever DOES close it, the
+    test fails and this note gets revisited rather than silently rotting.
 
 Spec: REQ-AUTO-004, REQ-AUTO-009
 """
@@ -47,10 +90,12 @@ Spec: REQ-AUTO-004, REQ-AUTO-009
 from __future__ import annotations
 
 import ast
+import builtins
 import io
 import signal
 import time
 import traceback
+from collections.abc import Sequence
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
 from typing import Any
@@ -76,6 +121,123 @@ BLOCKED_MODULES = frozenset(
         "importlib",  # dynamic imports (could bypass our blocklist)
     }
 )
+
+# Modules that are not dangerous in themselves but hand back an unguarded route
+# to everything in BLOCKED_MODULES, so blocking those without blocking these is
+# theatre:
+#
+#   builtins  -> builtins.__import__ is the REAL importer; fetching it defeats
+#                the guarded __import__ installed below in one line.
+#   sys       -> sys.modules['os'] returns the already-imported module object
+#                without going through any importer at all.
+#   gc        -> gc.get_objects() walks every live object in the interpreter,
+#                including module objects and frames.
+#   inspect   -> frame introspection reaches the caller's globals.
+#
+# Kept separate from BLOCKED_MODULES because that constant is public API (it is
+# the documented default for SandboxConfig.blocked_modules, and callers pass
+# their own sets). These are enforced unconditionally regardless of the
+# caller-supplied blocklist -- a caller who narrows the blocklist must not be
+# able to accidentally re-open the escape hatches.
+_ESCAPE_HATCH_MODULES = frozenset({"builtins", "sys", "gc", "inspect"})
+
+# Builtins removed from the hypothesis namespace outright. `__import__` is NOT
+# in this set: it is REPLACED (see _guarded_import) rather than removed, because
+# the `import jax` statement compiles down to a __import__ call, so deleting it
+# would break every legitimate hypothesis, not just the malicious ones.
+_DENIED_BUILTINS = frozenset(
+    {
+        "open",  # direct filesystem access without importing anything
+        "eval",  # re-entry with an unrestricted namespace
+        "exec",  # ditto
+        "compile",  # builds code objects that eval/exec would run
+        "input",  # blocks forever on a non-interactive runner
+        "breakpoint",  # drops into pdb, which imports and runs arbitrary code
+        "help",  # pydoc spawns a pager subprocess
+    }
+)
+
+
+def _guarded_import(blocked: frozenset[str]) -> Any:
+    """Build an ``__import__`` replacement that enforces the blocklist at runtime.
+
+    **Researcher summary:**
+        The AST pre-check only sees literal ``import`` statements.  This closes
+        the dynamic route -- ``__import__("subprocess")`` -- by checking the
+        same blocklist when the import actually happens.
+
+    **Detailed explanation for engineers:**
+        Python's ``import x`` statement is sugar for a call to
+        ``builtins.__import__("x", ...)``.  Because the sandbox namespace gets
+        its own ``__builtins__`` mapping, substituting this function there means
+        BOTH the statement form and the explicit-call form route through one
+        check.  That is the property the static-only check lacked: it could be
+        walked around simply by not writing the word ``import``.
+
+        The blocked set is the caller's blocklist UNION
+        ``_ESCAPE_HATCH_MODULES``, so narrowing ``SandboxConfig.blocked_modules``
+        cannot re-expose ``builtins`` or ``sys``.
+
+        Submodules are matched on their root package (``os.path`` -> ``os``),
+        mirroring ``check_imports`` so the static and runtime layers agree.
+
+    Args:
+        blocked: Module root names the hypothesis may not import.
+
+    Returns:
+        A callable with ``__import__``'s signature, raising ImportError on a
+        blocked module and delegating to the real importer otherwise.
+
+    Spec: REQ-AUTO-009
+    """
+    effective = blocked | _ESCAPE_HATCH_MODULES
+    real_import = builtins.__import__
+
+    def guarded(
+        name: str,
+        globals: dict[str, Any] | None = None,  # noqa: A002 - __import__'s signature
+        locals: dict[str, Any] | None = None,  # noqa: A002 - __import__'s signature
+        fromlist: Sequence[str] = (),
+        level: int = 0,
+    ) -> Any:
+        root = name.split(".")[0]
+        if root in effective:
+            raise ImportError(f"Blocked import (sandbox policy): {root}")
+        # `from os import getcwd` arrives as name="os"; `from . import x` uses
+        # level>0 with a possibly-empty name, which cannot reach a top-level
+        # blocked module, so the root check above is sufficient.
+        module = real_import(name, globals, locals, fromlist, level)
+        # `import a.b` returns package `a`; a fromlist import returns the
+        # submodule. Either way the root check has already run on the full
+        # dotted name's root, so nothing further is needed here.
+        return module
+
+    return guarded
+
+
+def _restricted_builtins(blocked: frozenset[str]) -> dict[str, Any]:
+    """Build the ``__builtins__`` mapping handed to hypothesis code.
+
+    **Researcher summary:**
+        Everything normal Python code expects, minus the handful of builtins
+        that hand out filesystem or code-execution access directly, plus a
+        blocklist-enforcing ``__import__``.
+
+    **Detailed explanation for engineers:**
+        Previously the sandbox passed the module's own ``__builtins__`` object
+        straight through, which meant hypothesis code held the real
+        ``__import__`` and could reach any module regardless of the AST check.
+
+        This returns a COPY, so mutations by hypothesis code (deleting entries,
+        monkeypatching ``print``) cannot leak back into the host interpreter.
+
+    Spec: REQ-AUTO-009
+    """
+    # `__builtins__` is a module in __main__ and a dict when nested; normalise.
+    source = builtins.__dict__
+    safe = {k: v for k, v in source.items() if k not in _DENIED_BUILTINS}
+    safe["__import__"] = _guarded_import(blocked)
+    return safe
 
 
 @dataclass
@@ -282,8 +444,11 @@ def run_in_sandbox(
         timed_out = True
         raise TimeoutError("Hypothesis execution timed out")
 
-    # Create an isolated namespace with only builtins (no access to our globals)
-    namespace: dict[str, Any] = {"__builtins__": __builtins__}
+    # Create an isolated namespace with a RESTRICTED builtins mapping (no access
+    # to our globals). Passing the real `__builtins__` here is what made the
+    # static import check bypassable via `__import__("subprocess")` -- see the
+    # module docstring's scope note.
+    namespace: dict[str, Any] = {"__builtins__": _restricted_builtins(config.blocked_modules)}
 
     try:
         # Set up SIGALRM timeout (Unix only — will not work on Windows)
