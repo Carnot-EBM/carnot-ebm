@@ -1,0 +1,78 @@
+{
+  "anon_game_id": "hg1bcc01",
+  "arm": "on",
+  "decision_unchanged_satisfiable_false": true,
+  "game": "tn36",
+  "gate": {
+    "budget_unit": "engine_calls_matching_plan_in_model",
+    "depth_truncated_nodes": 1,
+    "engine_calls": 1480,
+    "engine_errors": 0,
+    "frontier_remaining": 0,
+    "max_depth": 40,
+    "max_nodes": 20000,
+    "reachable_grids_evaluated": 41,
+    "satisfiable": false,
+    "termination": "depth_capped"
+  },
+  "gate_counterexample": {
+    "budget_unit": "engine_calls_matching_plan_in_model",
+    "depth_truncated_nodes": 1,
+    "detail": "the probe drained its frontier only because 1 node(s) were discarded unexpanded at max_depth=40, so the reachable set was NOT searched exhaustively and whether this goal is reachable at greater depth is UNKNOWN. This is NOT evidence that the predicate is degenerate. It is still a correct veto, because plan_in_model is bounded by the same depth cap and therefore could not reach this goal either -- the goal is out of reach, not ill-formed.",
+    "engine_calls": 1480,
+    "frontier_remaining": 0,
+    "kind": "goal_unreached_within_depth",
+    "max_depth": 40,
+    "max_nodes": 20000,
+    "reachable_grids_evaluated": 41,
+    "termination": "depth_capped"
+  },
+  "gate_with_cap_lifted": {
+    "first_true_depth": 61,
+    "reachable_grids_evaluated": 62,
+    "satisfiable": true
+  },
+  "label_after_this_commit": "goal_unreached_within_depth",
+  "label_before_this_commit": "degenerate_goal_predicate",
+  "label_changed": true,
+  "n_captured_inductions": 1,
+  "plan_at_max_depth_40": {
+    "diagnostics": {
+      "is_level_complete_was_none": false,
+      "nodes_expanded": 1480,
+      "termination_reason": "queue_exhausted",
+      "used_goal_energy_search": false
+    },
+    "error": null,
+    "found": false,
+    "length": 0,
+    "wall_s": 0.061
+  },
+  "plan_at_max_depth_80": {
+    "diagnostics": {
+      "is_level_complete_was_none": false,
+      "nodes_expanded": 2226,
+      "termination_reason": "plan_found",
+      "used_goal_energy_search": false
+    },
+    "error": null,
+    "found": true,
+    "length": 61,
+    "wall_s": 0.094
+  },
+  "probe": "phase3_tn36_depth_label",
+  "root_grid_sha256": "f328c951a03d248d",
+  "root_grid_sha256_matches_audit": true,
+  "root_grid_shape": [
+    64,
+    64
+  ],
+  "seed": 1,
+  "src_engine_bytes": 5256,
+  "src_engine_exists": true,
+  "src_engine_md5": "6d96491f80bec0319828ba1a04f5841e",
+  "src_engine_md5_matches_audit": true,
+  "src_engine_path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p4/e3/on__tn36__s1/hg1bcc01/world_model.py",
+  "status": "ok",
+  "wall_s": 38.0
+}

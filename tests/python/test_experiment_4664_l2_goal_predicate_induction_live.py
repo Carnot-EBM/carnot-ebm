@@ -310,14 +310,26 @@ def test_req_arc_wmte_4664_goal_satisfiability_helper_defensive_branches() -> No
             return np.zeros((2, 2), dtype=np.int16)
         return np.asarray(current)
 
+    # UPDATED 2026-07-31 -- this assertion is the conflation, pinned. `max_depth=0` discards the
+    # ROOT unexpanded, so literally nothing was searched, and the gate used to call that
+    # "the reachable set was searched exhaustively (frontier empty)". The local variable was
+    # already named `depth_limited`; the kind now says so too. `satisfiable` is unchanged (False),
+    # which is the point: the veto stands, only its reason is corrected.
     depth_limited = reinduction._goal_satisfiability_check(
         engine=bad_or_misshapen_engine,
         goal=lambda _grid: False,
         start_grid=grid,
         max_depth=0,
     )
-    assert depth_limited["counterexample"]["kind"] == "degenerate_goal_predicate"
+    assert depth_limited["satisfiable"] is False
+    assert depth_limited["counterexample"]["kind"] == "goal_unreached_within_depth"
+    assert depth_limited["counterexample"]["termination"] == "depth_capped"
+    assert depth_limited["counterexample"]["depth_truncated_nodes"] == 1
 
+    # The CONTRAST that keeps the split honest: same engine, same constant-False goal, one more
+    # depth. Now the root IS expanded, every successor is an error / misshapen / a duplicate, so
+    # nothing is ever discarded at the cap and the frontier really did drain. That is the only
+    # shape entitled to `degenerate_goal_predicate`, and it still gets it.
     degenerate = reinduction._goal_satisfiability_check(
         engine=bad_or_misshapen_engine,
         goal=lambda _grid: False,
@@ -325,6 +337,8 @@ def test_req_arc_wmte_4664_goal_satisfiability_helper_defensive_branches() -> No
         max_depth=1,
     )
     assert degenerate["counterexample"]["kind"] == "degenerate_goal_predicate"
+    assert degenerate["counterexample"]["termination"] == "queue_exhausted"
+    assert degenerate["counterexample"]["depth_truncated_nodes"] == 0
 
     reached_limit = reinduction._goal_satisfiability_check(
         engine=lambda current, _action, _data: np.asarray(current) + 1,

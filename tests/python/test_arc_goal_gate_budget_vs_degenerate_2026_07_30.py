@@ -43,6 +43,18 @@ WHAT THESE TESTS PIN.
    cannot tell "drained because we saw everything" from "drained because we stopped".
 4. Depth-limited exhaustion is still reported as `queue_exhausted` (vetoing on
    unreachable-within-depth is sound: the planner it guards is bounded the same way).
+
+   SUPERSEDED 2026-07-31 -- kept verbatim per never-prune, and its parenthesis is still the
+   operative reason the veto stands. What changed is only the LABEL: item 4 above closed the
+   NODE-COUNT axis of the conflation and left the DEPTH axis open, so a search that discarded
+   nodes unexpanded at `max_depth` still reported `queue_exhausted` +
+   `degenerate_goal_predicate` under a `detail` string reading "the reachable set was searched
+   exhaustively (frontier empty)". Measured on tn36's real `on` engine: 1480 engine calls =
+   40 nodes x 37 candidates with 41 distinct grids, i.e. every node produced a NEW state and the
+   chain was still growing when the depth-40 cap stopped it -- and `budget_exhausted` could not
+   fire, because 1480 << 20000. Third kind `goal_unreached_within_depth` +
+   `termination: depth_capped` now covers it. The DECISION is unchanged in every case; see
+   `test_depth_limited_exhaustion_reports_its_own_kind_not_the_degenerate_one`.
 """
 
 import numpy as np
@@ -108,17 +120,30 @@ def test_budget_exhaustion_is_not_reported_as_a_degenerate_goal() -> None:
 
 
 def test_genuinely_unreachable_goal_still_reports_degenerate_with_ample_budget() -> None:
-    """The split must not blunt the real veto: unreachable-and-searched-out stays degenerate."""
+    """The split must not blunt the real veto: unreachable-and-searched-out stays degenerate.
+
+    FIXTURE CORRECTED 2026-07-31, and the correction is the point of the depth split rather than
+    an accommodation of it. This case was written with `max_depth=4` against a bar that saturates
+    at width 14, so the search was NOT "searched out" at all -- it was stopped by the depth cap
+    with 10 more states to go, and passed only because the gate reported depth truncation as
+    `queue_exhausted`. That is exactly the tn36 mislabel, sitting inside the test asserting the
+    label was right. The cap is now above saturation, so the frontier genuinely drains and the
+    verdict is genuinely earned: the assertions are unchanged and now mean what they say.
+    """
     result = reinduction._goal_satisfiability_check(
         engine=_make_engine(),
         goal=lambda g: False,
         start_grid=_start(),
         max_nodes=10_000,
-        max_depth=4,
+        max_depth=64,
     )
     assert result["satisfiable"] is False
     assert _kind(result) == "degenerate_goal_predicate"
     assert result["termination"] == "queue_exhausted"
+    assert result["depth_truncated_nodes"] == 0, (
+        "with the cap above the bar's saturation width nothing may be discarded unexpanded; "
+        "if this ever trips, the frontier did not drain and the verdict is not earned"
+    )
 
 
 def test_same_predicate_same_engine_flips_kind_on_budget_alone() -> None:
@@ -208,8 +233,21 @@ def test_empty_frontier_is_not_trusted_when_the_budget_is_what_stopped_us() -> N
     assert _kind(ample) == "degenerate_goal_predicate"
 
 
-def test_depth_limited_exhaustion_reports_queue_exhausted() -> None:
-    """Unreachable WITHIN max_depth is a sound veto and keeps the degenerate kind."""
+def test_depth_limited_exhaustion_reports_its_own_kind_not_the_degenerate_one() -> None:
+    """SUPERSEDES `test_depth_limited_exhaustion_reports_queue_exhausted` (2026-07-31).
+
+    The original assertion, kept here verbatim because HALF of it is still right:
+
+        "Unreachable WITHIN max_depth is a sound veto and keeps the degenerate kind."
+
+    The VETO half is right and is re-asserted below unchanged (`satisfiable is False`):
+    `plan_in_model` is bounded by the same `max_depth`, so a goal out of reach within the cap is
+    genuinely out of reach for the planner this gate guards. The KIND half was wrong, and it is
+    the tn36 mislabel: this fixture's goal sits at depth 11 and is REACHED at depth 11 whenever
+    the cap allows, so calling it `degenerate_goal_predicate` -- with a `detail` string that says
+    "the reachable set was searched exhaustively" about a search that discarded nodes unexpanded
+    -- accuses a correct predicate of being junk. Same decision, honest reason.
+    """
     result = reinduction._goal_satisfiability_check(
         engine=_make_engine(),
         goal=_goal_at(_TARGET),
@@ -217,10 +255,23 @@ def test_depth_limited_exhaustion_reports_queue_exhausted() -> None:
         max_nodes=10_000,
         max_depth=3,
     )
-    assert result["satisfiable"] is False
-    assert result["termination"] == "queue_exhausted"
-    assert _kind(result) == "degenerate_goal_predicate"
+    assert result["satisfiable"] is False, "the veto itself must not have been relaxed"
+    assert result["termination"] == "depth_capped"
+    assert _kind(result) == "goal_unreached_within_depth"
+    assert result["depth_truncated_nodes"] > 0
     assert result["engine_calls"] < 10_000
+
+    # And the SAME predicate on the SAME engine, given depth, is reached -- which is what makes
+    # `degenerate_goal_predicate` the wrong word for the row above.
+    reachable = reinduction._goal_satisfiability_check(
+        engine=_make_engine(),
+        goal=_goal_at(_TARGET),
+        start_grid=_start(),
+        max_nodes=10_000,
+        max_depth=64,
+    )
+    assert reachable["satisfiable"] is True
+    assert reachable["first_true_depth"] == _TARGET
 
 
 def test_budget_starved_gate_does_not_rewrite_the_goal_end_to_end() -> None:

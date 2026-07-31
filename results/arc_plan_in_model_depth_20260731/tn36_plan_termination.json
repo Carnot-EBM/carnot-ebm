@@ -1,0 +1,57 @@
+{
+ "arm": "on",
+ "game": "tn36",
+ "honest_verdict": "complete_plan_in_model_depth_axis_split_and_verified_on_the_real_tn36_cell",
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "label_after_this_commit": "depth_capped",
+ "label_before_this_commit": "queue_exhausted",
+ "plan_at_max_depth_40": {
+  "diagnostics": {
+   "depth_truncated_nodes": 1,
+   "is_level_complete_was_none": false,
+   "nodes_expanded": 1480,
+   "termination_reason": "depth_capped",
+   "used_goal_energy_search": false
+  },
+  "error": null,
+  "found": false,
+  "length": 0,
+  "wall_s": 0.801
+ },
+ "plan_at_max_depth_80": {
+  "diagnostics": {
+   "depth_truncated_nodes": 0,
+   "is_level_complete_was_none": false,
+   "nodes_expanded": 2226,
+   "termination_reason": "plan_found",
+   "used_goal_energy_search": false
+  },
+  "error": null,
+  "found": true,
+  "length": 61,
+  "wall_s": 0.098
+ },
+ "preconditions_checked": [
+  {
+   "available": true,
+   "resource": "tn36_engine_fixture"
+  },
+  {
+   "available": true,
+   "resource": "tn36_root_grid_fixture"
+  }
+ ],
+ "prior_artifact": "results/arc_goal_gate_depth_20260731/tn36_depth_label.json",
+ "probe": "plan_in_model_depth_termination_tn36",
+ "random_seed": 1,
+ "reproducibility_checksum": "4550e7f921bf9ddef85a615a83ffcb567f156b4d202c510332bde454483a663b",
+ "return_value_unchanged": true,
+ "root_grid_sha256": "f328c951a03d248d",
+ "root_grid_sha256_matches_audit": true,
+ "run_date": "2026-07-31T08:26:05Z",
+ "schema": "carnot.arc_plan_in_model_depth_label.v1",
+ "src_engine_md5": "6d96491f80bec0319828ba1a04f5841e",
+ "src_engine_md5_matches_audit": true,
+ "verifier_is_oracle": true,
+ "verifier_is_oracle_note": "There is no verifier claim here at all -- this probe reads a diagnostics string out of a search whose ground truth (does a plan exist at this depth) is decided by executing the engine. Declared True because the check IS the executable oracle; no moat / value-added claim is made or implied."
+}

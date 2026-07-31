@@ -3131,7 +3131,29 @@
   "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_gateway_accurate_rescore.py",
   "peer_artifact_deliberately_NOT_a_dependency": "results/outer_loop_arc_reset_charge_attribution_20260726.json",
   "submitted_nothing": true,
-  "max_actions_untouched": true
+  "max_actions_untouched": true,
+  "freshness_acknowledgements": [
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
+    "sha256_now": "0c9798dc9d2f5e92e9f38b3eaa5cad4983e8a3bbdfeb0ddec586e00ec13ddb9d",
+    "reason": "The upstream artifact's DATA did not change. Its only edit was an APPEND to `provenance.freshness_acknowledgements` -- a metadata block recording that a code dependency's 2026-07-31 change (the `plan_in_model` / plain-path goal-gate depth-label split) was verified inert. Not one measured value, row or field this rescore reads was touched, so every number derived here is unchanged by construction.",
+    "evidence": "`git diff --numstat` on the upstream file is 10 insertions / 0 DELETIONS, entirely inside `provenance.freshness_acknowledgements`. The file was rewritten with the serialisation it already used (indent=1, insertion order, trailing newline), which is why the diff is an append and not a whole-file reformat -- verified by round-tripping the original bytes before editing. This analyser reads measurement rows only; it never reads `provenance`.",
+    "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+    "acknowledged_date": "2026-07-31",
+    "why_not_rebuilt": "A rebuild would reprocess byte-identical measurement inputs to produce byte-identical numbers. The recorded rebuild_command stands for anyone wanting rebuild-strength proof; the inertness here is structural -- the upstream diff contains no data line."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
+    "sha256_now": "a11edff38a426057ded1ed47b244e0e4b4caef0fe9aa8bbfbe90af90aec496e2",
+    "reason": "The upstream artifact's DATA did not change. Its only edit was an APPEND to `provenance.freshness_acknowledgements` -- a metadata block recording that a code dependency's 2026-07-31 change (the `plan_in_model` / plain-path goal-gate depth-label split) was verified inert. Not one measured value, row or field this rescore reads was touched, so every number derived here is unchanged by construction.",
+    "evidence": "`git diff --numstat` on the upstream file is 10 insertions / 0 DELETIONS, entirely inside `provenance.freshness_acknowledgements`. The file was rewritten with the serialisation it already used (indent=1, insertion order, trailing newline), which is why the diff is an append and not a whole-file reformat -- verified by round-tripping the original bytes before editing. This analyser reads measurement rows only; it never reads `provenance`.",
+    "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
+    "acknowledged_date": "2026-07-31",
+    "why_not_rebuilt": "A rebuild would reprocess byte-identical measurement inputs to produce byte-identical numbers. The recorded rebuild_command stands for anyone wanting rebuild-strength proof; the inertness here is structural -- the upstream diff contains no data line."
+   }
+  ]
  },
  "duration_s": 10.317,
  "measurement_wall_s": 9649.5,

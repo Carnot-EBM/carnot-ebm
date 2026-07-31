@@ -20253,6 +20253,14 @@ OPPOSITE things about the predicate, and it MUST distinguish them:
 
 Both previously returned `counterexample.kind == "degenerate_goal_predicate"`.
 
+> **EXTENDED 2026-07-31 by REQ-ARC-WMTE-6047-D (below).** The first bullet's parenthesis
+> "(within `max_depth`)" is doing load-bearing work that this requirement did not enforce: a node
+> popped at the depth cap is discarded UNEXPANDED, so the frontier can empty without the reachable
+> set having been searched out at all. That case was still reported as `queue_exhausted` +
+> `degenerate_goal_predicate`, under a `detail` string asserting exhaustive search. REQ-6047-D
+> splits it out. Nothing in REQ-6047 is retracted — the budget axis is unchanged and every
+> scenario below still holds.
+
 ### SCENARIO-ARC-WMTE-6047-1: Budget exhaustion reports its own kind
 GIVEN a goal that becomes true only at a depth the budget cannot reach
 WHEN `_goal_satisfiability_check` runs with a starved `max_nodes`
@@ -20326,6 +20334,86 @@ error is never promoted.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6047 | `python/carnot/agentic/arc_llm_reinduction.py` — `_goal_satisfiability_check` now returns `termination` + `frontier_remaining` and selects `kind` on the budget alone (deliberately NOT on `q` being non-empty); the caller computes `goal_undecided_within_budget` and gates BOTH the GOAL-REPAIR call and the round-skip on genuine exhaustion, recording the undecided gate in `counterexamples` for the audit trail without setting `row["skipped"]`; and a plan that reaches the goal promotes `round_goal_satisfiable` with explicit evidence. | `tests/python/test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py` (7 tests) — the four kind/termination cases, the explicit UNKNOWN disclaimer, and an END-TO-END test through the real `execute_bounded_llm_reinduction` on a 5-way-branching depth-7 world (~19.5k states must be covered before the goal is reachable, comfortably past the shipped 20,000-call default) with an exemplar present so GOAL-REPAIR is armed. A first draft used a single-cell counter world and could not reach depth 11 at all: the gate dedups on `to_ascii`, whose key is the grid mod 10, so the counter wrapped and the search terminated at depth 9 reporting `queue_exhausted` — the test would have passed for a reason unrelated to the property. **Severity note:** this defect became live only when the 2026-07-29 counter fix made the gate's budget unit match `plan_in_model`'s. Before that the gate counted UNIQUE GRIDS while the planner counted RAW ENGINE CALLS, an ~11x gap on ka59, so the gate essentially never hit its ceiling first. After it, ka59's proven-correct depth-11 predicate (137,347 calls needed, 20,000 shipped) was rejected AND replaced by GOAL-REPAIR's looser "strictly fuller than root" proxy, and the agent planned to a NON-WINNING goal while the artifact reported a satisfiable predicate throughout. All 18 occurrences in the historical corpus were genuine frontier exhaustion, so no recorded result is invalidated by the split. |
+
+## REQ-ARC-WMTE-6047-D: A Goal Out Of Reach Within `max_depth` SHALL NOT Be Reported As A Degenerate Goal Predicate
+
+REQ-ARC-WMTE-6047 split the reachability pre-veto's stop conditions on the NODE-COUNT axis
+(`engine_calls >= max_nodes`). The DEPTH axis was left conflated: `if depth >= max_depth: continue`
+discards a popped node WITHOUT EXPANDING IT, so its successors are never generated and never enter
+the queue. When the deque then drains, the gate reported `termination: queue_exhausted`,
+`kind: degenerate_goal_predicate`, and the `detail` string *"the reachable set was searched
+exhaustively (frontier empty) and the goal was never true"* — a claim that is false by construction
+whenever a node was dropped at the cap.
+
+The gate therefore SHALL report a third termination:
+
+- the frontier empties with NOTHING discarded at the depth cap — genuinely searched out; the
+  degenerate verdict is EARNED. `termination: queue_exhausted`.
+- `engine_calls >= max_nodes` — the budget ran out; UNKNOWN (REQ-6047).
+  `termination: budget_exhausted`.
+- the frontier empties only because one or more nodes were discarded unexpanded at `max_depth` —
+  UNKNOWN with respect to greater depth. `kind: goal_unreached_within_depth`,
+  `termination: depth_capped`, plus a `depth_truncated_nodes` count.
+
+**The DECISION is unchanged in all three cases (`satisfiable: False`), and this is deliberate, not
+a compromise.** `plan_in_model` is bounded by the same `max_depth=40`
+(`arc_executable_world_model.py:5371`), so a goal out of reach within the cap is genuinely out of
+reach for the planner this gate guards — the veto is EARNED, unlike a spent node budget where the
+planner has an independent budget. Consequently `goal_unreached_within_depth` is routed like
+`degenerate_goal_predicate` (GOAL-REPAIR still fires) and NOT like `goal_unreached_within_budget`
+(which is deliberately routed away from repair, per SCENARIO-6047-5). This requirement changes what
+is RECORDED, never what is DECIDED, so it cannot be read as widening a named quality gate.
+
+**The origin incident.** The 2026-07-30 gate-rejection audit found tn36's `on` cell rejected as
+`degenerate_goal_predicate` — the one structurally sound engine in the run (heldout 8/8 byte-exact,
+`cell_recall` 1.0, `change_fidelity` 1.0, zero invented cells, and 61 of 61 replayed steps matching
+the real env byte-for-byte). Its recorded gate numbers are `engine_calls: 1480`,
+`reachable_grids_evaluated: 41`, `max_nodes: 20000`, `max_depth: 40`, `frontier_remaining: 0`:
+1480 = 40 expanded nodes x 37 candidates and 41 = root + 40 new grids, so EVERY node produced a
+brand-new state and the chain was still generating when the cap stopped it, with the budget 93%
+unspent. Measured against the same engine and root grid, the induced goal is reached at
+`first_true_depth: 61`.
+
+### SCENARIO-ARC-WMTE-6047-D-1: Depth truncation reports its own kind
+GIVEN a goal reachable only at a depth greater than `max_depth`, and a budget that is never spent
+WHEN `_goal_satisfiability_check` runs
+THEN `counterexample.kind` is `goal_unreached_within_depth`, `termination` is `depth_capped`,
+`depth_truncated_nodes >= 1`, and the `detail` states the reachable set was NOT searched
+exhaustively and that this is not evidence the predicate is degenerate.
+
+### SCENARIO-ARC-WMTE-6047-D-2: The veto is not relaxed
+GIVEN any depth-truncated search
+WHEN the gate returns
+THEN `satisfiable` is False, and the caller's routing is identical to the pre-split
+`degenerate_goal_predicate` path — GOAL-REPAIR is still attempted, and `goal_undecided_within_budget`
+stays False. "Attempted" is verified by observing the call to `_repair_degenerate_goal`, not inferred
+from the resulting skip label: the round reaches that label both when repair fires and returns None
+AND when repair is never reached, and only the second is the behaviour change this requirement
+forbids.
+
+### SCENARIO-ARC-WMTE-6047-D-3: A genuinely exhausted frontier keeps the degenerate kind
+GIVEN a search in which no node was discarded at the depth cap and the frontier drained
+WHEN the goal was never true
+THEN `kind` is `degenerate_goal_predicate`, `termination` is `queue_exhausted`, and
+`depth_truncated_nodes` is 0.
+
+### SCENARIO-ARC-WMTE-6047-D-4: Budget keeps priority and the new counter cannot reclassify it
+GIVEN a budget-exhausted search
+WHEN the gate returns
+THEN `kind` is `goal_unreached_within_budget` and `depth_truncated_nodes` is 0, so no scenario
+under REQ-6047 changes.
+
+### SCENARIO-ARC-WMTE-6047-D-5: The plain path discloses rather than flattens
+GIVEN the agent's plain-path goal-satisfiability check is enabled
+WHEN the gate returns `goal_unreached_within_depth`
+THEN `attempt["skipped"]` records that kind verbatim rather than flattening it to
+`degenerate_goal_predicate`. Behaviour is unchanged — all three kinds still skip.
+
+## Implementation Status (REQ-ARC-WMTE-6047-D)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6047-D | `python/carnot/agentic/arc_llm_reinduction.py` — `_goal_satisfiability_check` counts `depth_truncated_nodes` at the `depth >= max_depth` discard and selects `kind`/`termination`/`detail` three ways (budget first, then depth, then genuine exhaustion), reporting the counter in both the result and the counterexample. `python/carnot/agentic/arc_competition_agent.py` — the plain path's skip allow-list gains the new kind so it is disclosed rather than flattened. The GOAL-REPAIR routing in `execute_bounded_llm_reinduction` is UNTOUCHED: its `goal_undecided_within_budget` test is a literal equality against `goal_unreached_within_budget`, so the depth kind falls through to repair exactly as `degenerate_goal_predicate` did. | `tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py` (10 tests), including a drive of the real `execute_bounded_llm_reinduction` on a depth-45 chain against the shipped `max_depth=40` (`termination: depth_capped` at 239 engine calls, budget untouched) whose load-bearing assertion is a spy on `_repair_degenerate_goal`, and TWO against the REAL origin cell: `tests/fixtures/arc_goal_gate_depth_tn36/` carries the frozen rejected engine (md5 `6d96491f80bec0319828ba1a04f5841e`, byte-identical to the store the audit recorded) and its root grid (sha256[:16] `f328c951a03d248d`), both hash-asserted, so the incident is pinned rather than modelled. Those tests reproduce `engine_calls == 1480` / `41` grids exactly and assert `first_true_depth == 61` with the cap lifted. Two sibling suites were corrected in the same change: `test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py`'s depth case now asserts the new kind, and its "genuinely unreachable" fixture ran at `max_depth=4` against a bar saturating at 14 — it was itself a depth-truncated search passing as `queue_exhausted`, i.e. the tn36 mislabel sitting inside the test asserting the label was right; the cap is now above saturation so the verdict is earned. `test_experiment_4664_l2_goal_predicate_induction_live.py`'s `depth_limited` case (`max_depth=0`, which discards the root) likewise. Mutation-proven 6/6 on real mutations with a deliberate inert control correctly surviving, baseline green before and after, sources restored byte-identically (`results/arc_goal_gate_depth_20260731/mutation_check.json`). **Honest scope:** this does NOT make tn36 plannable — measured in `results/arc_goal_gate_depth_20260731/tn36_depth_label.json`, `plan_in_model` at the shipped `max_depth=40` still returns no plan, and finds the 61-action plan only at `max_depth=80`. The gate's decision was right; only its reason was wrong, and a wrong reason misdirects every subsequent fix. |
 
 ## REQ-ARC-WMTE-6048: The Tracked Engine-Evidence Store SHALL NOT Be Writable From A Test
 
@@ -20614,8 +20702,113 @@ that a second ask of either kind rescues some of those (5 usable across 26 follo
 the games reaching a non-degenerate engine from **1 of 5 to 3 of 5**. The mechanism that is proven
 is "re-ask instead of accepting"; the mechanism that is NOT proven is "tell the model what broke".
 
+> **CORRECTION 2026-07-31 (adversarial review of this requirement; original text above left
+> unedited per never-prune).** Two things in the paragraph above are stated in a way that reads
+> stronger than the measurement supports, and both are corrected here rather than rewritten in
+> place.
+>
+> 1. **"the games REACHING a non-degenerate engine ... 1 of 5 to 3 of 5" is not a funnel number,
+>    and the word "reaching" must not be used for it.** "Reaches the policy" is the project's funnel
+>    metric — the count of games where the LLM tier's output actually changes what the agent does,
+>    which is **1 of 6 and did not move**. What was measured here is offline and much weaker: this
+>    requirement's own `usable_definition` is *"`generate()` would accept it AND no mechanical defect
+>    AND it changes the grid"*, and `generate_would_accept` in `repair_ab.py` is literally
+>    `code and all(f"def {fn}" in code) and it parses` — PARSE-LEVEL acceptance, not the semantic
+>    trust gate. The honest restatement: **1 of 5 → 3 of 5 attempts produced PARSEABLE, NON-INERT
+>    code offline; the live funnel is unchanged at 1 of 6.**
+> 2. **The 3-of-5 count includes tu93, whose engine this same requirement calls junk two paragraphs
+>    up** (`cell_recall 0.112`, 144 invented cells, 0 of 25 changes correct — it clears the non-inert
+>    clause by changing the grid WRONGLY). On the artifact's own quality split
+>    (`repair_ab.json:quality.strong_by_arm`) the counts are **round-0 {tn36} = 1, repair
+>    {sc25, tn36} = 2, control {ft09} = 1**. tn36 was ALREADY the pre-existing success, so **the net
+>    new strong game is sc25 alone, n = 1, on a paired comparison whose exact two-sided sign test is
+>    p = 1.000.** That is the number to headline.
+>
+> Neither correction touches the finding that does survive, which is about arm A and is not close:
+> the shipped path accepted a defective candidate in 13 of 15 attempts and therefore never re-asks.
+
 ## Implementation Status (REQ-ARC-WMTE-6052)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6052 | `python/carnot/agentic/arc_engine_static_validation.py` — `missing_return_defects` (AST fall-through over `engine`, LAST TOP-LEVEL definition wins, plus explicit `return None`), `truncation_defect` (keys on llama-server's own `stop_type == "limit"` + a missing required symbol), `dry_run_defects` (executes the module, runs `engine` over observed transitions AND `is_level_complete` over observed grids), `engine_changes_anything` (reported, never gated), `validate_engine_code` (truncation short-circuits the rest) and `repair_prompt_block` (echoed code capped — the completions being repaired are repetition-loop runaways). Standalone module: **the shipped induce path is UNCHANGED**; nothing calls it. | `tests/python/test_arc_engine_static_validation.py` — 46 tests, each check pinned to its observed failure (ft09's REAL engine read off disk, not a fixture) and to its false-positive direction. **Mutation-proven: 14/14 mutations killed**, harness + machine-readable record at `results/arc_engine_validation_20260731/mutation_check.json` (baseline green, module restored byte-identical). **Corpus scan, 439 real generated engines:** 9 `missing_return`, 9/9 execution-confirmed, 0 unconfirmed; the dry run additionally finds 7 raising engines and 1 `None`-returning one across the five audited games — including the BANKED `results/arc_e3/tu93/world_model.py`, which raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`. **Live-completion replay, 36 real Phase-1 completions with their recorded `stop_type`:** 13 that the shipped `generate()` ACCEPTED carry a `missing_return`, and 10 that it REJECTED are retryable truncations. Cross-checked against Phase 1's independently-written AST return check: **0 disagreements on all 28 comparable rows.** **LIVE three-arm repair A/B (`results/arc_engine_validation_20260731/repair_ab.json`, `gate_scores.json`), 5 games x 3 attempts on gemma-4-31B-it Q4_K_M, CUDA build proven from `/proc/<pid>/exe` + 21416 MiB per-PID VRAM, prompts captured LLM-off from the agent and byte-identical to Phase 1's committed ft09 prompt (sha `78f829d86fa65938`):** shipped ACCEPTED a defective candidate **13 of 15** times and produced a usable engine **1 of 15**; repair 3 and control 2 over 13 matched pairs (**p = 1.000**, disjoint games); games reaching `in_sample_cell_recall > 0.5` went **1 of 5 to 3 of 5**. Three independent reproductions of the 2026-07-30 audit from the generator side: ft09's best completion scores `cell_recall 0.947` / `noop_hallucination 0/19` (audit: 0.947), tn36's round 0 scores `1.000/1.000/1.000, 25/25` (audit: the run's best engine), and lp85's best repair scores `accuracy 0.920` with `cell_recall 0.000` (audit: the vacuous pass a 0.5 bar would admit). |
+| REQ-ARC-WMTE-6052 | `python/carnot/agentic/arc_engine_static_validation.py` — `missing_return_defects` (AST fall-through over `engine`, LAST TOP-LEVEL definition wins, plus explicit `return None`), `truncation_defect` (keys on llama-server's own `stop_type == "limit"` + a missing required symbol), `dry_run_defects` (executes the module, runs `engine` over observed transitions AND `is_level_complete` over observed grids), `engine_changes_anything` (reported, never gated), `validate_engine_code` (truncation short-circuits the rest) and `repair_prompt_block` (echoed code capped — the completions being repaired are repetition-loop runaways). Standalone module: **the shipped induce path is UNCHANGED**; nothing calls it. | `tests/python/test_arc_engine_static_validation.py` — 46 tests, each check pinned to its observed failure (ft09's REAL engine read off disk, not a fixture) and to its false-positive direction. **Mutation-proven: 14/14 mutations killed**, harness + machine-readable record at `results/arc_engine_validation_20260731/mutation_check.json` (baseline green, module restored byte-identical). **Corpus scan, 439 real generated engines:** 9 `missing_return`, 9/9 execution-confirmed, 0 unconfirmed; the dry run additionally finds 7 raising engines and 1 `None`-returning one across the five audited games — including the BANKED `results/arc_e3/tu93/world_model.py`, which raises `ValueError: could not broadcast input array from shape (2,) into shape (3,)` on `action=4`. **Live-completion replay, 36 real Phase-1 completions with their recorded `stop_type`:** 13 that the shipped `generate()` ACCEPTED carry a `missing_return`, and 10 that it REJECTED are retryable truncations. Cross-checked against Phase 1's independently-written AST return check: **0 disagreements on all 28 comparable rows.** **LIVE three-arm repair A/B (`results/arc_engine_validation_20260731/repair_ab.json`, `gate_scores.json`), 5 games x 3 attempts on gemma-4-31B-it Q4_K_M, CUDA build proven from `/proc/<pid>/exe` + 21416 MiB per-PID VRAM, prompts captured LLM-off from the agent and byte-identical to Phase 1's committed ft09 prompt (sha `78f829d86fa65938`):** shipped ACCEPTED a defective candidate **13 of 15** times and produced a usable engine **1 of 15**; repair 3 and control 2 over 13 matched pairs (**p = 1.000**, disjoint games); attempts producing PARSEABLE, NON-INERT code went **1 of 5 to 3 of 5 (offline; the live funnel is unchanged at 1 of 6)**, and on the artifact's own STRONG bar (`in_sample_cell_recall > 0.5`) the per-arm counts are round-0 {tn36} = 1, repair {sc25, tn36} = 2, control {ft09} = 1 — **net new strong game = sc25 alone, n = 1** (see CORRECTION 2026-07-31 above; the "1 of 5 to 3 of 5 at `in_sample_cell_recall > 0.5`" originally written on this line conflated the union of two arms with a per-arm count and is superseded). Three independent reproductions of the 2026-07-30 audit from the generator side: ft09's best completion scores `cell_recall 0.947` / `noop_hallucination 0/19` (audit: 0.947), tn36's round 0 scores `1.000/1.000/1.000, 25/25` (audit: the run's best engine), and lp85's best repair scores `accuracy 0.920` with `cell_recall 0.000` (audit: the vacuous pass a 0.5 bar would admit). |
+
+## REQ-ARC-WMTE-6047-E: `plan_in_model` SHALL NOT Report A Depth-Capped Search As An Exhausted One
+
+REQ-ARC-WMTE-6047-D fixed this conflation in `_goal_satisfiability_check` — the goal GATE. The
+adversarial review of that change found the identical bug still live in `plan_in_model`, the
+PLANNER the gate exists to guard: both of its search loops closed with
+
+```
+"max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
+```
+
+while the loop body above did `if len(path) >= max_depth: continue`, discarding a popped node
+WITHOUT EXPANDING IT. So the frontier could drain purely because the cap threw work away, and the
+diagnostics called that `queue_exhausted` — "I searched the reachable set and there is no plan."
+
+This is not hypothetical, and REQ-6047-D's own evidence is the proof:
+`results/arc_goal_gate_depth_20260731/tn36_depth_label.json` records
+`plan_at_max_depth_40.diagnostics.termination_reason == "queue_exhausted"` for the tn36 engine +
+goal + root whose 61-action plan the SAME function finds at `max_depth=80`. Fixing the gate's label
+while leaving the planner's wrong would have left the misdirection exactly where the audit found it.
+
+`plan_in_model` SHALL therefore report `termination_reason` three ways, and SHALL populate
+`depth_truncated_nodes` (count of popped-but-unexpanded nodes) on every exit that ran a search:
+
+- `nodes >= max_nodes` -> `max_nodes_reached`. Budget-limited whatever else happened; raising
+  `max_depth` alone would not have helped, because it never got to look. **Budget keeps priority.**
+- budget intact, one or more nodes discarded at the cap -> `depth_capped`. UNKNOWN with respect to
+  greater depth.
+- budget intact, nothing discarded -> `queue_exhausted`, now meaning what it always claimed:
+  nothing left to search AND nothing thrown away, so the negative result is real evidence about the
+  engine rather than about the cap.
+
+**This is a REPORTING change and nothing else.** Every path returns exactly the plan, or the
+exactly the `None`, it returned before.
+
+### SCENARIO-ARC-WMTE-6047-E-1: A depth-capped search says so, on both loops
+GIVEN a reachable goal and a `max_depth` below the depth at which it becomes true
+WHEN `plan_in_model` runs with `goal_energy=None` (blind FIFO BFS) and again with a `goal_energy`
+(best-first heap)
+THEN both report `termination_reason == "depth_capped"` with `depth_truncated_nodes >= 1` and the
+budget unspent — and a control at an ample cap finds the plan, so the label is not being produced
+by a search that had nothing to find.
+
+### SCENARIO-ARC-WMTE-6047-E-2: The exhausted verdict stays EARNABLE
+GIVEN an engine whose successors all dedup against states already seen, so the frontier drains with
+nothing discarded at the cap
+THEN `termination_reason == "queue_exhausted"` and `depth_truncated_nodes == 0`. A fix that renamed
+every non-budget ending to `depth_capped` would satisfy the previous scenario and destroy the
+signal; this is the scenario that stops it.
+
+### SCENARIO-ARC-WMTE-6047-E-3: Budget precedence is LOAD-BEARING here, unlike in the gate
+GIVEN a best-first search that drops a deep node and then continues spending budget on shallower
+frontier — a state the gate's plain FIFO BFS cannot reach, where truncation begins only at the
+deepest layer and a discarded node costs no engine calls
+WHEN both `depth_truncated_nodes > 0` and `nodes >= max_nodes` hold at once
+THEN `termination_reason == "max_nodes_reached"`. REQ-6047-D documented its own precedence as
+merely DEFENSIVE for exactly this reason; that reasoning does not carry over to this function, and
+the scenario is pinned on a search that genuinely does both rather than on an argument.
+
+### SCENARIO-ARC-WMTE-6047-E-4: The change is inert for every consumer
+GIVEN the pre-change module materialised from git HEAD into a separate namespace
+WHEN both versions run over 600 randomised (engine, goal, root, `max_nodes`, `max_depth`,
+`goal_energy`) cases spanning four engine mechanic families and both loops
+THEN RETURN VALUES DIFFER IN 0 OF 600, with 146 cases relabelling `queue_exhausted -> depth_capped`
+(so the corpus is not vacuously exercising nothing) and 111 keeping `queue_exhausted` plus 152
+keeping `max_nodes_reached` (so it is a split, not a rename).
+
+### SCENARIO-ARC-WMTE-6047-E-5: `depth_truncated_nodes` is never absent where a search ran
+GIVEN any exit that ran a search, INCLUDING `plan_found`
+THEN `depth_truncated_nodes` is present. A field written only sometimes is worse than absent — a
+reader cannot tell a zero from a missing value, and `.get(k, 0)` silently converts "not measured"
+into "measured zero". The first draft of this change omitted the `plan_found` paths and the test
+caught it. (`is_level_complete_none` is deliberately excluded: it returns before a search exists.)
+
+## Implementation Status (REQ-ARC-WMTE-6047-E)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6047-E | `python/carnot/agentic/arc_executable_world_model.py` — new `_termination_reason(nodes, max_nodes, depth_truncated_nodes)` helper (budget, then depth, then exhaustion), a `depth_truncated_nodes` counter incremented at BOTH `if len(path) >= max_depth: continue` sites, and all four diagnostics-writing exits updated. `plan_in_model`'s docstring gains a DEPTH AXIS section naming the tn36 artifact that proves the mislabel was live. | `tests/python/test_arc_plan_in_model_depth_capped_2026_07_31.py` — 9 tests, **6/6 real mutations killed** with a deliberate inert control correctly SURVIVING (so the kill rate is falsifiable), sources restored byte-identically, baseline green before and after (`results/arc_plan_in_model_depth_20260731/mutation_check.json`). Two mutations exist specifically because the module has TWO copies of the same loop: `M1_revert_blind_bfs_to_two_way` and `M2_revert_best_first_to_two_way` — a single-loop fix would have survived one of them, and the best-first loop is the one the live path takes whenever a goal energy was induced. Inertness: `results/arc_plan_in_model_depth_20260731/inertness_differential.json` (600 differential cases vs git HEAD, 0 return-value differences). Origin cell: `results/arc_plan_in_model_depth_20260731/tn36_plan_termination.json` (the committed tn36 fixture, both hashes re-asserted against the 2026-07-30 audit's record, now `depth_capped` at 40 and still the identical 61-action plan at 80). |
+

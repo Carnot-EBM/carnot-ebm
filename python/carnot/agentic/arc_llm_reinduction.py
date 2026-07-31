@@ -819,9 +819,17 @@ def _goal_satisfiability_check(
     # in use. If graded bias is ever defaulted on, pass the same `goal_energy` into this probe
     # rather than leaving the two orders divergent.
     engine_calls = 0
+    # THE DEPTH AXIS OF THE SAME CONFLATION (2026-07-31). The budget/exhaustion split below keys
+    # only on `engine_calls >= max_nodes`. A node popped at `depth >= max_depth` is DISCARDED
+    # WITHOUT BEING EXPANDED -- its successors are never generated and never enter `q` -- so when
+    # the deque then drains, "frontier empty" is just as false a description of exhaustiveness as
+    # it is when the budget is what stopped us. This counter records that it happened; see the
+    # three-way termination below for what is done with it.
+    depth_truncated_nodes = 0
     while q and engine_calls < int(max_nodes):
         grid, depth = q.popleft()
         if depth >= int(max_depth):
+            depth_truncated_nodes += 1
             continue
         for candidate in _probe_candidates(grid):
             try:
@@ -901,21 +909,71 @@ def _goal_satisfiability_check(
     # NB `queue_exhausted` means exhaustive WITHIN `max_depth` -- nodes dropped by the depth cap
     # are not expanded either. Vetoing a goal as unreachable-within-depth is defensible (the
     # planner it guards is bounded the same way); vetoing on a spent budget is not.
+    #
+    # THE DEPTH AXIS, SPLIT OUT (2026-07-31). The NB immediately above was CORRECT and was left as
+    # prose, which is why this survived: the prose is not what any reader or any downstream
+    # consumer actually saw. What they saw was the `detail` string below, which said in so many
+    # words "the reachable set was searched exhaustively (frontier empty)" -- FALSE whenever a node
+    # was dropped at the cap. The NB's "vetoing unreachable-within-depth is defensible" conclusion
+    # survives intact and is exactly why the new kind KEEPS the veto; only the false claim goes.
+    #
+    # MEASURED, on tn36's real `on` engine (md5 6d96491f…, the one this gate rejected in the
+    # 2026-07-30 audit): engine_calls 1480 = 40 popped-and-expanded nodes x 37 candidates, and
+    # `reachable_grids_evaluated` 41 = root + 40 new grids, i.e. EVERY node produced a brand-new
+    # state and the chain was still generating when the depth cap stopped it. The engine fills one
+    # cell of row 1 per click and the goal is `np.all(grid[1, 1:62] == 3)`; measured on the real
+    # root grid, all 61 of those cells are still unfilled at the root (`(row[1,1:62] == 9).sum()`
+    # == 61), so the goal needs exactly 61 clicks against `max_depth=40`. That matches the
+    # measured `first_true_depth == 61` with the cap lifted. `budget_exhausted` cannot
+    # fire (1480 << 20000), so the gate reported `degenerate_goal_predicate` on a predicate the
+    # very same engine reaches at depth 61 when the cap is lifted (`plan_in_model` at
+    # max_depth=200 finds a 61-action plan in 2226 nodes).
+    #
+    # WHAT THIS DOES *NOT* CHANGE, stated plainly because it is the whole scope of the fix. The
+    # gate's DECISION was and remains `satisfiable: False`, and every caller still does exactly
+    # what it did before. That is not a compromise, it is the correct answer: `plan_in_model` is
+    # bounded by the SAME `max_depth=40` (arc_executable_world_model.py:5371), so a goal
+    # unreachable within the depth cap is genuinely unreachable BY THE PLANNER THIS GATE GUARDS.
+    # Vetoing on it is sound in a way that vetoing on a spent NODE budget is not -- which is why
+    # this kind, unlike `goal_unreached_within_budget`, does NOT get routed away from GOAL-REPAIR.
+    # Only the REASON was wrong, and a wrong reason is not cosmetic: `degenerate_goal_predicate`
+    # tells `refactor()` and every future reader "your win predicate is junk", which on tn36 sent
+    # attention at a goal predicate that was in fact reachable and an engine that was byte-exact
+    # on 61 of 61 replayed steps. Fixing the label does not by itself make tn36 plannable; it
+    # stops the next fix from being aimed at the wrong thing.
+    #
+    # PRECEDENCE IS BUDGET FIRST. If both fired, the budget is what terminated the `while`, and
+    # keeping it first leaves every existing budget assertion bit-identical. Both are "UNDECIDED";
+    # only `queue_exhausted` -- no budget, no dropped node -- is evidence against the predicate.
     budget_exhausted = engine_calls >= int(max_nodes)
-    kind = "goal_unreached_within_budget" if budget_exhausted else "degenerate_goal_predicate"
-    termination = "budget_exhausted" if budget_exhausted else "queue_exhausted"
-    detail = (
-        (
+    depth_truncated = (not budget_exhausted) and depth_truncated_nodes > 0
+    if budget_exhausted:
+        kind = "goal_unreached_within_budget"
+        termination = "budget_exhausted"
+        detail = (
             "the reachability probe ran out of budget with the frontier still non-empty, so "
             "whether this goal is reachable is UNKNOWN. This is NOT evidence that the "
             "predicate is degenerate and must not be treated as such."
         )
-        if budget_exhausted
-        else (
-            "the reachable set was searched exhaustively (frontier empty) and the goal was "
-            "never true, so this predicate is unreachable under this engine."
+    elif depth_truncated:
+        kind = "goal_unreached_within_depth"
+        termination = "depth_capped"
+        detail = (
+            f"the probe drained its frontier only because {depth_truncated_nodes} node(s) were "
+            f"discarded unexpanded at max_depth={int(max_depth)}, so the reachable set was NOT "
+            "searched exhaustively and whether this goal is reachable at greater depth is "
+            "UNKNOWN. This is NOT evidence that the predicate is degenerate. It is still a "
+            "correct veto, because plan_in_model is bounded by the same depth cap and therefore "
+            "could not reach this goal either -- the goal is out of reach, not ill-formed."
         )
-    )
+    else:
+        kind = "degenerate_goal_predicate"
+        termination = "queue_exhausted"
+        detail = (
+            "the reachable set was searched exhaustively (frontier empty, no node discarded at "
+            "the depth cap) and the goal was never true, so this predicate is unreachable under "
+            "this engine."
+        )
     return {
         "satisfiable": False,
         "reachable_grids_evaluated": int(evaluated),
@@ -926,11 +984,13 @@ def _goal_satisfiability_check(
         "budget_unit": "engine_calls_matching_plan_in_model",
         "termination": termination,
         "frontier_remaining": int(len(q)),
+        "depth_truncated_nodes": int(depth_truncated_nodes),
         "counterexample": {
             "kind": kind,
             "detail": detail,
             "termination": termination,
             "frontier_remaining": int(len(q)),
+            "depth_truncated_nodes": int(depth_truncated_nodes),
             "reachable_grids_evaluated": int(evaluated),
             "engine_calls": int(engine_calls),
             "max_nodes": int(max_nodes),
