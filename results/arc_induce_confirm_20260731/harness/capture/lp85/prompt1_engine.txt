@@ -1,0 +1,121 @@
+/no_think
+CRITICAL OUTPUT RULES -- obey EXACTLY:
+1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.
+2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write
+   step-by-step analysis, explanation, or commentary -- not even as comments.
+3. Your response MUST begin with the characters ```python and end with ```.
+4. Induce SIMPLE, GENERAL rules and write the requested function(s) directly. Skip all reasoning.
+
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'hg655fcd'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [1, 2, 3, 4, 5, 8, 9, 10, 11, 14, 15]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/hg655fcd/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:14x1,3x63
+r1:14x1,3x9,5x4,3x1,5x4,3x1,5x4,3x1,5x4,3x1,5x4,3x1,5x4,3x1,5x4,3x1,5x4,3x15
+r2:14x1,3x63
+r3:14x1,3x63
+r4:14x1,3x63
+r5:14x1,3x63
+r6:14x1,3x63
+r7:14x1,3x63
+r8:14x1,3x63
+r9:14x1,3x63
+r10:14x1,3x63
+r11:14x1,3x63
+r12:14x1,3x63
+r13:14x1,4x63
+r14:14x1,4x63
+r15:14x1,4x63
+r16:14x1,4x63
+r17:14x1,4x9,11x2,4x4,11x2,4x46
+r18:14x1,4x9,11x2,4x4,11x2,4x46
+r19:14x1,4x11,1x4,4x2,2x4,4x2,10x4,4x2,9x4,4x2,15x4,4x2,11x4,4x2,2x4,4x12
+r20:14x1,4x11,1x4,4x2,2x4,4x2,10x4,4x2,9x4,4x2,15x4,4x2,11x4,4x2,2x4,4x12
+r21:14x1,4x11,1x4,4x2,2x4,4x2,10x4,4x2,9x4,4x2,15x4,4x2,11x4,4x2,2x4,4x12
+r22:14x1,4x11,1x4,4x2,2x4,4x2,10x4,4x2,9x4,4x2,15x4,4x2,11x4,4x2,2x4,4x12
+r23:14x1,4x9,11x2,4x4,11x2,4x46
+r24:14x1,4x9,11x2,4x4,11x2,4x46
+r25:14x1,4x11,10x4,4x32,15x4,4x12
+r26:14x1,4x11,10x4,4x32,15x4,4x12
+r27:14x1,4x11,10x4,4x32,15x4,4x12
+r28:14x1,4x11,10x4,4x32,15x4,4x12
+r29:14x1,4x3,8x4,4x48,14x4,4x4
+r30:14x1,4x3,8x4,4x48,14x4,4x4
+r31:14x1,4x1,8x6,4x4,15x4,4x32,9x4,4x4,14x6,4x2
+r32:14x1,4x1,8x6,4x4,15x4,4x32,9x4,4x4,14x6,4x2
+r33:14x1,4x1,8x6,4x4,15x4,4x32,9x4,4x4,14x6,4x2
+r34:14x1,4x1,8x6,4x4,15x4,4x32,9x4,4x4,14x6,4x2
+r35:14x1,4x3,8x4,4x48,14x4,4x4
+r36:14x1,4x3,8x4,4x48,14x4,4x4
+r37:14x1,4x11,2x4,4x32,10x4,4x12
+r38:14x1,4x11,2x4,4x32,10x4,4x12
+r39:14x1,4x11,2x4,4x32,10x4,4x12
+r40:14x1,4x11,2x4,4x32,10x4,4x12
+r41:14x1,4x63
+r42:14x1,4x63
+r43:14x1,4x11,1x4,4x2,1x4,4x2,9x4,4x2,9x4,4x2,10x4,4x2,15x4,4x2,2x4,4x12
+r44:14x1,4x11,1x4,4x2,1x4,4x2,9x4,4x2,9x4,4x2,10x4,4x2,15x4,4x2,2x4,4x12
+r45:14x1,4x11,1x4,4x2,1x4,4x2,9x4,4x2,9x4,4x2,10x4,4x2,15x4,4x2,2x4,4x12
+r46:14x1,4x11,1x4,4x2,1x4,4x2,9x4,4x2,9x4,4x2,10x4,4x2,15x4,4x2,2x4,4x12
+r47:14x1,4x63
+r48:14x1,4x63
+r49:14x1,4x63
+r50:14x1,4x63
+r51:14x1,3x63
+r52:14x1,3x63
+r53:14x1,3x63
+r54:14x1,3x63
+r55:14x1,3x63
+r56:14x1,3x63
+r57:14x1,3x63
+r58:14x1,3x63
+r59:14x1,3x63
+r60:14x1,3x63
+r61:14x1,3x63
+r62:14x1,3x63
+r63:14x1,3x63
+--- ACTION6 data={'x': 4, 'y': 32} (level 0->0): changed cells (FULL, run-length) = r0c0:5x1 r1c0:5x1 r2c0:5x1 r3c0:5x1 r4c0:5x1 r19c12:2x4 r19c18:10x4 r19c24:9x4 r19c30:15x4 r19c36:11x4 r19c42:2x4 r19c48:15x4 r20c12:2x4 r20c18:10x4 r20c24:9x4 r20c30:15x4 r20c36:11x4 r20c42:2x4 r20c48:15x4 r21c12:2x4 r21c18:10x4 r21c24:9x4 r21c30:15x4 r21c36:11x4 r21c42:2x4 r21c48:15x4 r22c12:2x4 r22c18:10x4 r22c24:9x4 r22c30:15x4 r22c36:11x4 r22c42:2x4 r22c48:15x4 r25c12:1x4 r25c48:9x4 r26c12:1x4 r26c48:9x4 r27c12:1x4 r27c48:9x4 r28c12:1x4 r28c48:9x4 r31c12:10x4 r31c48:10x4 r32c12:10x4 r32c48:10x4 r33c12:10x4 r33c48:10x4 r34c12:10x4 r34c48:10x4 r37c12:15x4 r37c48:2x4 r38c12:15x4 r38c48:2x4 r39c12:15x4 r39c48:2x4 r40c12:15x4 r40c48:2x4 r43c12:2x4 r43c24:1x4 r43c36:9x4 r43c42:10x4 r43c48:15x4 r44c12:2x4 r44c24:1x4 r44c36:9x4 r44c42:10x4 r44c48:15x4 r45c12:2x4 r45c24:1x4 r45c36:9x4 r45c42:10x4 r45c48:15x4 r46c12:2x4 r46c24:1x4 r46c36:9x4 r46c42:10x4 r46c48:15x4
+--- ACTION6 data={'x': 4, 'y': 32} (level 0->0): changed cells (FULL, run-length) = r5c0:5x1 r6c0:5x1 r7c0:5x1 r8c0:5x1 r9c0:5x1 r19c12:10x4 r19c18:9x4 r19c24:15x4 r19c30:11x4 r19c36:2x4 r19c42:15x4 r19c48:9x4 r20c12:10x4 r20c18:9x4 r20c24:15x4 r20c30:11x4 r20c36:2x4 r20c42:15x4 r20c48:9x4 r21c12:10x4 r21c18:9x4 r21c24:15x4 r21c30:11x4 r21c36:2x4 r21c42:15x4 r21c48:9x4 r22c12:10x4 r22c18:9x4 r22c24:15x4 r22c30:11x4 r22c36:2x4 r22c42:15x4 r22c48:9x4 r25c12:2x4 r25c48:10x4 r26c12:2x4 r26c48:10x4 r27c12:2x4 r27c48:10x4 r28c12:2x4 r28c48:10x4 r31c12:1x4 r31c48:2x4 r32c12:1x4 r32c48:2x4 r33c12:1x4 r33c48:2x4 r34c12:1x4 r34c48:2x4 r37c12:10x4 r37c48:15x4 r38c12:10x4 r38c48:15x4 r39c12:10x4 r39c48:15x4 r40c12:10x4 r40c48:15x4 r43c12:15x4 r43c18:2x4 r43c30:1x4 r43c42:9x4 r43c48:10x4 r44c12:15x4 r44c18:2x4 r44c30:1x4 r44c42:9x4 r44c48:10x4 r45c12:15x4 r45c18:2x4 r45c30:1x4 r45c42:9x4 r45c48:10x4 r46c12:15x4 r46c18:2x4 r46c30:1x4 r46c42:9x4 r46c48:10x4
+--- ACTION6 data={'x': 43, 'y': 44} (level 0->0): changed cells (FULL, run-length) = (no change)
+--- ACTION6 data={'x': 16, 'y': 23} (level 0->0): changed cells (FULL, run-length) = (no change)
+
+
+Return ONLY one ```python code block defining engine(grid, action, data).
+```python
+
+```python
