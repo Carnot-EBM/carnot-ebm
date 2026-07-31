@@ -4,6 +4,133 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-31 (outer-loop): the induce budget is NOT the lever -- `repeat_penalty` is, and the scored path runs with every repetition control off. Plus: not one generated engine ever changes the grid, the seed does not reach across server instances, and the constant that names the budget binds nothing
+
+**The measurement.** ft09's induction was diagnosed as budget-starved ("spiralled into a wall of
+`#` comments and hit the 4096-token output cap"), so the fix was to raise the cap. Measured on the
+CURRENT generator (gemma-4-31B-it, live since 2026-07-28) against ft09's real 4343-token induction
+prompt, 4096/8192/16384 x 3 seeded attempts on both the combined and the engine-only induce call:
+**0 usable engines at every budget**, where "usable" means `generate()` would accept it AND
+`engine()` returns on every path. The banked ft09 engine passes the first half of that bar and
+returns `None` on every click, which is why the second half had to be measured separately.
+
+**THE BIGGER FINDING, which the budget question was hiding: under the SHIPPED sampler, not one
+generated engine ever changes the grid.** Every completion was RUN against ft09's 25 real captured transitions. Across
+both induce call shapes, the refactor call, and every budget, **zero** engines produce an output
+different from their input. The refactor lane's completions are the ones that look best on paper
+-- `generate()` accepts them, they parse, they return on every path, and they score **19 of 25
+heldout-EXACT** -- and they are the identity function (`if action == 6: return grid` / `return
+grid`). 19 of ft09's 25 transitions are no-ops, so predicting "nothing ever changes" gets every
+one of them right; their cell recall is 0.000. That is the vacuous pass the change-aware gate
+exists to catch, reproduced from the GENERATOR side, and it is a live argument for the gate that
+is computed today but left `gate_enabled: false`. It also reframes Phase 1: the engines are not
+incomplete, they are inert, and no completion budget fixes inert.
+
+**A second finding with reach beyond this note: `CARNOT_ARC_GENERATOR_SEED` does not reach across
+server instances.** The sampler control's shipped `off` arm is the same prompt, seed, temperature,
+budget, model file and flags as the budget lane, on a second llama-server on the other 3090. Its
+completions are NOT byte-identical (a=0 `0cbe655c…` vs `e4093870…`; a=1 `8dbdd3ca…` vs
+`d32557b8…`), while WITHIN one process the seed holds exactly (one completion is byte-identical
+across a 4x budget range). The plausible mechanism is `cache_prompt: true` reusing prompt KV
+differently given different request histories, changing batch shapes and float accumulation at
+temperature 0.2 -- **stated as a hypothesis, not confirmed here.** This is a live explanation for
+how ft09's round-2 refactor hit the cap 3/3 in the episode while the byte-identical prompt at the
+same budget completes naturally in replay, and it means any A/B whose arms are served by different
+server processes carries an uncontrolled term.
+
+**Why more budget cannot work here.** The failure is decode-level repetition, not a shortage of
+room. At matched seed and temperature, doubling the budget leaves the set of DISTINCT emitted
+lines exactly unchanged (46 -> 46, 118 -> 118 on two of three engine seeds) while the emitted
+length doubles: the model cycles what it already wrote. At 16384 one combined completion is 5345
+non-blank lines drawn from 24 distinct ones. Every capped call reported `predicted_n` equal to its
+own budget, so none of this is shared-pool truncation -- the lever was fairly tested and it does
+not move.
+
+This reproduces, on the current model and on both call shapes, the finding already inline in
+`arc_executable_world_model.induce()` from proto_l2_fix_finder (2026-06-25): "a budget bump does
+NOT help; the model just rambles more."
+
+**THE LEVER IS NOW FORMALLY RETIRED.** The rerun carried `retire_if_same_verdict: true` and came
+back with the same verdict, so per the Failed-Experiment Rerun Discipline the direction is retired
+in `ops/exclusion_manifest.yaml` as `arc-induce-completion-budget-raise`, with
+`blocked_patterns` covering "raising CARNOT_ARC_INDUCE_MAX_TOKENS to fix induction quality" and
+"treating `[HIT n_predict OUTPUT LIMIT]` as a budget shortage". The SAMPLER is explicitly NOT
+retired by that entry -- it is the open direction, and `reopen_requires_new_mechanism` says a
+budget raise only reopens alongside something that stops the repetition.
+
+**AND THE LEVER THAT DOES WORK, measured but deliberately NOT shipped: a repetition penalty.**
+The sampler control is the same prompt, seed, temperature and budget as the shipped arm, on one
+server and one card, one flag apart:
+
+| arm | hit the 4096 cap | accepted | returns on all paths | **changes the grid** | mean cell recall |
+|---|---|---|---|---|---|
+| `off` (SHIPPED) | 3/3 | 3/3 | 0/3 | **0/3** | 0.0000 |
+| `repeat_penalty 1.1` | 0/3 | 3/3 | 3/3 | **3/3** | 0.9474 |
+| `dry_multiplier 0.8` | 1/3 | 2/3 | 1/3 | **1/3** | 0.1053 |
+
+The two controls are NOT interchangeable, which is why both were run: `repeat_penalty 1.1` is
+3/3 and its one non-degenerate sibling under DRY reaches only 0.3158 cell recall. Any
+recommendation names `repeat_penalty`, not "a repetition penalty".
+
+The shipped configuration burns the entire budget and returns nothing. One repetition penalty
+stops naturally at 1133-1912 tokens with ft09's real mechanic in it -- a 6x6 block at `(y-2, x-2)`
+toggling between colours 8 and 9 -- on every attempt. It is the ONLY arm in the whole sweep that
+produces a non-degenerate engine.
+
+**The scorer was cross-validated against the shipped gate, to the cell.** A behavioural scorer
+written for this measurement is worth nothing if it disagrees with the gate the live agent runs.
+Scoring the `repeat_penalty 1.1` engine over the same 25 transitions gives 216 correct changed
+cells of 228 -> cell recall 0.9474; the live `onb` cell's recorded gate fields are
+`verify_correct_changed_cells: 216`, `verify_cell_recall: 0.9474`,
+`verify_change_fidelity: 0.947368`. Identical. Which also means the `repeat_penalty` arm reaches,
+on its FIRST naturally-stopped attempt in 1912 tokens, the same cell recall the live LLM-ON run
+only reached on one replicate after three refinement rounds.
+
+**Three caveats, all load-bearing.** (1) The cell recall is IN-SAMPLE: all 6 of ft09's 25
+grid-changing transitions appear in the induce prompt and the 16 held-out ones are every one a
+no-op, so there are ZERO held-out changed cells and this cannot speak to generalisation. (2) n=3,
+one game, one prompt. (3) It is NOT shipped -- changing how the scored agent samples is a
+behaviour change, not a measurement change. **Operator: this is the recommended next measurement
+-- run the same arm across the other five games before touching any default.**
+
+**Every repetition control is OFF, and nobody chose that.** Read from the running server's own
+`/props`: `repeat_penalty 1.0`, `dry_multiplier 0.0`, `frequency_penalty 0.0`,
+`presence_penalty 0.0`. `LocalGGUFProposer.generate()` sends only
+`{prompt, n_predict, temperature, cache_prompt, seed, stop}`, so those are the defaults every
+induce call in the scored path runs under. A sampler control arm was measured and is reported in
+the artifact; it is NOT shipped, because changing how the scored agent samples is a behaviour
+change, not a measurement change. **This is the open question the next session should pick up.**
+
+**DEFECT FOUND, FIX WRITTEN, NOT LANDED -- `ops/pending-fixes/2026-07-31-induce-budget-single-source.patch`.**
+`_INDUCE_DEFAULT_MAX_TOKENS` documents itself as binding `LocalGGUFProposer.max_tokens` and the
+`CARNOT_ARC_INDUCE_MAX_TOKENS` default at both construction sites, and `_default_induce_n_ctx()`'s
+docstring claims "both halves now come from the same arithmetic". Structurally neither holds: the
+constant had exactly ONE reader in the tree (the pool derivation) and the other three sites were
+independent hardcoded `4096` literals. The claims are true only via the ENV path -- editing the
+constant in source grows the llama-server context pool and leaves the completion budget alone,
+allocating KV cells for tokens nothing will request. Same class as REQ-ARC-FCP-5699-35's recorded
+incident, one level down.
+
+The fix (four sites reading one name, value unchanged at 4096), its regression test
+(mutation-verified: 2 of its cases fail against the pre-fix code), and its spec entry
+(REQ-ARC-FCP-5699-40) are all written and preserved in that patch. **They are not committed
+because `artifact-freshness-lint` refuses:** touching `arc_competition_agent.py` /
+`arc_executable_world_model.py` marks 12 registered artifacts stale, and discharging that needs 8
+rebuilds -- one of which is `arc_per_level_reset_attribution_capture.py --budget 400`, a LIVE
+capture whose re-run would replace published numbers with fresh nondeterministic ones -- plus 4
+`provenance.freshness_acknowledgements` for artifacts with no rebuild command. That is not a
+proportionate price for a comment-level change made unattended, and it is a decision the operator
+should make rather than one to force through at 4am. **Operator: apply with
+`git apply ops/pending-fixes/2026-07-31-induce-budget-single-source.patch` when you are ready to
+pay the rebuild, or say the acknowledgement path is acceptable for all 12 and it can land in
+minutes.**
+
+**Cross-refs:** `results/outer_loop_arc_induce_budget_phase1_20260731.json` (artifact, gates PASS,
+no adversarial flags) - `results/arc_induce_budget_20260731/` (every prompt and raw completion) -
+`docs/research-notes/arc-induce-completion-budget-2026-07-31.md` (the arithmetic, the 24 GiB fit
+table, and the provenance correction to the ft09 diagnosis).
+
+
 ### 2026-07-30 (outer-loop, DISCLOSURE — the entry `arc_llm_reinduction.py` has been pointing at since 764226c86): the budget-exhausted goal pre-veto
 
 **Why this entry exists.** `arc_llm_reinduction.py`'s caller comment cited

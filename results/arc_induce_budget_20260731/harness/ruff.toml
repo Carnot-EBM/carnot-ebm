@@ -1,0 +1,24 @@
+# Lint config for the committed copy of this measurement's harness.
+#
+# WHY A LOCAL CONFIG RATHER THAN EDITING THE SCRIPTS. These files are the record of what was
+# actually run on 2026-07-31; the repo's own convention (results/arc_e3_origin_fixtures, and the
+# reasoning in pyproject.toml's ruff exclude block) is that a committed record of a run is
+# preserved as-run rather than rewritten to satisfy a linter. Reformatting them would make the
+# committed harness differ from the code that produced the artifact, for no behavioural gain.
+#
+# The rules relaxed here are all style, and each is deliberate in a throwaway measurement script:
+#   SIM115  `open(p).read()` without a context manager -- fine for a short-lived analysis process.
+#   N806    non-lowercase locals -- module-level CONSTANTS assigned inside main().
+#   I001    import ordering -- imports are grouped by WHEN they must happen (several must follow
+#           an os.environ mutation), which is load-bearing here and import-sorting would break.
+#   E501    a few long lines, all of them GGUF paths and measured-number tables.
+#   E702    one deliberate `a; b` pair in a scoring loop.
+#   B905    a zip() without strict= over two slices of the same list, where unequal length is
+#           impossible by construction.
+extend = "../../../pyproject.toml"
+
+[lint]
+ignore = ["SIM115", "N806", "I001", "E501", "E702", "B905"]
+
+[format]
+exclude = ["*"]

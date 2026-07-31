@@ -1,0 +1,83 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    px, py = data['x'], data['y']
+    # The logical resolution is 64x64.
+    # We need to find the "block" that was clicked.
+    # Looking at the observed transitions, clicks occur on blocks of size 6x6.
+    # Blocks are aligned to specific coordinates.
+    # The a bit more carefully: r36c44 is a block from row 36-41 and col 44-49.
+    # In the other examples: r52c36 is row 52-57 and col 36-41.
+    # r52c52 is row 52-57 and col 52-57.
+    # r44c36 is row 44-49 and col 36-41.
+    # Based on this:
+    # Block top-left (r, c) where r = (py // 6) * 6? No.
+    # Let's check: y=38 -> r=36. 38//6=6; 6*6=36. Correct.
+    # y=54 -> r=52. 54//6=6; 54//6=9; 9*6=52? No. 54//6=9; 9*6=54.
+    # Wait, if py=54, then r=52. Maybe it's offset by something?
+    # Or maybe blocks are just defined as specific regions.
+    # Looking at the coordinates:
+    # y=38 -> r=36
+    # y=54 -> r=52
+    # y=46 -> r=44
+    # This suggests r = py - 2.
+    # x=46 -> c=44
+    # x=38 -> c=36
+    # x=54 -> c=52
+    # This suggests c = px - 2.
+    
+    # The block is a 6x6 area starting at (r, c).
+    r, c = py - 2, px - 2
+    
+    # Check if the click is within boundaries of the grid.
+    if r < 0 or r + 6 > 64 or c < 0 or c + 6 > 64:
+        return grid.copy()
+    
+    # Extract current values in the block.
+    # In the observed transitions, clicking a block changes its color to 8 or 9.
+    # It seems like a toggle or a state change.
+    # Let's look at the same block being clicked twice:
+    # Click 1: r36c44 becomes 8x6 (color 8)
+    # 8 then 9?
+    # Let's look at la-level 0->0 transition 1: ACTION6 {x:46, y:38} -> r36c44: 8x6.
+    # Then later: ACTION6 {x:46, y:38} again -> r36c44: 9x6.
+    # This means it toggles between colors 8 and 9.
+    
+    # Get the value of the first cell in the block.
+    current_val = grid[r, c]
+    
+    # Determine new value based on the transition rules.
+    if current_val == 8:
+        new_val = 9
+    elif current_val == 9:
+        new_val = 8 # Not quite, looking at data, it might be other values.
+    else:
+        # If not 8 or 9, maybe it starts as something else.
+        # In the initial grid, r36c44 is color 9. Wait, let me re-check.
+        # Initial grid r36: ... 2x2, 4x2, 9x6, 4x2, 9x6, 4x2, 9x6, 4x2, 2x2, 5x2
+        # Col indices for r36: 0-3(5), 4-9(8), 10-11(5), 12-17(9), 18-19(5), 20-25(9), 26-31(5), 32-33(2), 34-35(4), 36-41(9), 42-43(4), 44-49(9), 50-51(4), 52-57(9), 58-59(4), 60-61(2), 62-63(5)
+        # So r36c44 is indeed 9.
+        # First click on {x:46, y:38} -> r36c44 becomes 8.
+        # Second click on {x:46, y:38} -> r36c44 becomes 9.
+        # This is a simple toggle between 8 and 9.
+        new_val = 8 if current_val == 9 else 9
+    
+    # Apply the change to the block.
+    new_grid = grid.copy()
+    new_grid[r : r + 6, c : c + 6] = new_val
+    
+    return new_grid
+
+def is_level_complete(grid):
+    # In this game, we don't know the win state from the provided data.
+    # Usually it involves filling blocks or matching colors.
+    # Since no WIN STATE grid was provided, we return False unless a specific condition is met.
+    # However, looking at the 63rd row (r63), it changes with every successful click.
+    # It seems like progress is tracked there.
+    # We assume the level is complete when some target is reached in that row.
+    # return True if any cell in r63 has a certain value? No.
+    # Let's just return False as default forS since we is_level_complete is required.
+    return False
