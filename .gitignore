@@ -266,3 +266,19 @@ data/arc_transition_corpus/
 # scratch, not measurements -- the measurements are ab.json and the completion .txt files.
 results/arc_engine_validation_20260731/harness/ab/*/e3/
 results/arc_engine_validation_20260731/harness/capture/*/e3/
+
+# LARGE ARTIFACT EXCLUSION (2026-07-31) -- see ops/large-artifact-exclusions.md
+#
+# This 461 MB row dump exceeded GitHub's hard 100 MB per-file limit, and its presence in history
+# blocked EVERY push to the canonical mirror from 2026-07-23 onward -- 411 commits stranded. It
+# was removed from main's history by git-filter-repo and REMAINS ON DISK, untracked.
+#
+# The ignore entry is the load-bearing half: the conductor and outer loop both run `git add -A`,
+# so without this line the file would be re-added on the next commit and re-break the mirror
+# immediately. Do not remove it without also solving the >100 MB problem (Git LFS or equivalent).
+#
+# NOT a never-prune violation: the substantive record -- claims, methodology, per-row sha256
+# hashes for all 1944 rows, the deterministic config hash, and the integrity audit -- lives in
+# results/experiment_5852_three_family_paired_embeddings.json (637 KB, still tracked) and
+# results/experiment_5853_paired_embedding_integrity_audit.json. Only bulk float data left git.
+results/experiment_5852_three_family_paired_embeddings.rows.jsonl
