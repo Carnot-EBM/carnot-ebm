@@ -55,7 +55,7 @@ from carnot.autoresearch.consolidator import ConsolidatorConfig, consolidate_les
 from carnot.autoresearch.constitution import ActionCategory, ConstitutionChecker
 from carnot.autoresearch.evaluator import evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
-from carnot.autoresearch.sandbox import SandboxConfig, run_in_sandbox
+from carnot.autoresearch.sandbox import SandboxConfig, execute_hypothesis
 from carnot.autoresearch.skill_directory import SkillDirectory, SkillDirectoryConfig
 from carnot.autoresearch.trajectory_analyst import AnalystConfig, analyze_batch
 
@@ -275,7 +275,7 @@ def run_loop(
                 continue
 
         # --- Stage 1: Sandbox execution (REQ-AUTO-004) ---
-        sandbox_result = run_in_sandbox(code, benchmark_data, config.sandbox_config)
+        sandbox_result = execute_hypothesis(code, benchmark_data, config.sandbox_config)
 
         # --- Stage 2: Evaluation (REQ-AUTO-005) ---
         eval_result = evaluate_hypothesis(
@@ -422,7 +422,7 @@ def run_loop_with_generator(
             logger.info("Evaluating hypothesis %s: %s", exp_id, desc)
 
             # Sandbox execution
-            sandbox_result = run_in_sandbox(code, benchmark_data, config.sandbox_config)
+            sandbox_result = execute_hypothesis(code, benchmark_data, config.sandbox_config)
 
             # Evaluation
             eval_result = evaluate_hypothesis(
@@ -612,7 +612,7 @@ def run_loop_with_skills(
             exp_id = f"skill-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{iteration:03d}"
             logger.info("Evaluating hypothesis %s: %s", exp_id, desc)
 
-            sandbox_result = run_in_sandbox(code, benchmark_data, config.sandbox_config)
+            sandbox_result = execute_hypothesis(code, benchmark_data, config.sandbox_config)
             eval_result = evaluate_hypothesis(
                 sandbox_result,
                 baselines,

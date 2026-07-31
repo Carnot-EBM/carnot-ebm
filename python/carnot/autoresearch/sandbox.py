@@ -52,8 +52,19 @@ Executes hypothesis code in isolation with:
     trying to escape.
 
     **The actual security boundary is the gVisor container** in
-    ``sandbox_docker.py`` (``CARNOT_USE_SANDBOX=1``).  Anything genuinely
-    untrusted belongs there.
+    ``sandbox_docker.py``.  Anything genuinely untrusted belongs there, and it
+    is reached by calling ``execute_hypothesis()`` (below) with
+    ``CARNOT_USE_SANDBOX=1``, or ``CARNOT_REQUIRE_SANDBOX=1`` to refuse to run
+    at all when the container is unavailable.
+
+    Calling ``run_in_sandbox()`` DIRECTLY always runs in-process and ignores
+    both variables -- it is the backend, not the entry point.  Stated explicitly
+    because an earlier version of this note named the environment variable
+    without saying what had to call it, and at that time nothing in the
+    autoresearch pipeline did: ``run_in_docker`` was exported and invoked by
+    nothing, and the orchestrator called ``run_in_sandbox`` unconditionally, so
+    setting ``CARNOT_USE_SANDBOX=1`` had no effect on the one component that
+    executes LLM-generated code.
 
     This paragraph exists because the docstring previously advertised "Import
     whitelist enforcement" while the implementation handed hypothesis code the
@@ -95,6 +106,7 @@ import io
 import signal
 import time
 import traceback
+import warnings
 from collections.abc import Sequence
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass, field
@@ -517,3 +529,121 @@ def run_in_sandbox(
         stderr=stderr_capture.getvalue(),
         wall_clock_seconds=elapsed,
     )
+
+
+def execute_hypothesis(
+    hypothesis_code: str,
+    benchmark_data: dict[str, Any],
+    config: SandboxConfig | None = None,
+    docker_config: Any = None,
+) -> SandboxResult:
+    """Run hypothesis code on the backend the environment asks for.
+
+    **Researcher summary:**
+        The single entry point the autoresearch orchestrator should call.
+        Routes to the gVisor container when ``CARNOT_USE_SANDBOX=1`` or
+        ``CARNOT_REQUIRE_SANDBOX=1``, and to the in-process sandbox otherwise.
+
+    **Detailed explanation for engineers:**
+
+        **Why this exists.** ``sandbox_docker.run_in_docker`` was exported from
+        ``carnot.autoresearch`` and invoked by NOTHING. The orchestrator called
+        ``run_in_sandbox`` unconditionally at all three of its execution sites
+        and never read ``CARNOT_USE_SANDBOX``. So for the autoresearch
+        pipeline -- the component whose entire job is executing LLM-generated
+        code -- the container boundary was unreachable, and setting the
+        documented environment variable did nothing at all.
+
+        That is the same failure this module's own docstring warns about: a
+        control that reads as available and never fires. The in-process sandbox
+        is a guardrail with a KNOWN, still-open reflective escape
+        (``object.__subclasses__()``); the container is the only real boundary,
+        so it needs to be reachable from the code that runs untrusted input.
+
+        **Env-var semantics are copied from the existing project convention in**
+        ``carnot/verify/python_types.py``, deliberately, rather than inventing a
+        third spelling:
+
+        ``CARNOT_USE_SANDBOX=1``
+            Prefer the container. If Docker or the sandbox image is missing,
+            warn loudly and fall back to the in-process sandbox, so a dev
+            machine without Docker still runs.
+        ``CARNOT_REQUIRE_SANDBOX=1``
+            Demand the container. If it is unavailable, FAIL -- never execute
+            the hypothesis in-process. This is the setting for anything
+            genuinely untrusted.
+        Neither set
+            In-process sandbox, as before. Unchanged default so this does not
+            silently add a Docker dependency to existing callers.
+
+        **Availability is checked BEFORE running, not inferred from failure.**
+        ``run_in_docker`` returns a failed ``SandboxResult`` both when Docker is
+        missing AND when the hypothesis legitimately fails. Falling back on any
+        failed result would re-execute a failing hypothesis in-process --
+        double execution, and it would defeat the isolation precisely when the
+        code being run is misbehaving. So the infrastructure check
+        (``is_docker_available`` / ``is_image_available``) happens first, and
+        once the container is actually launched its result is returned
+        unconditionally.
+
+    Args:
+        hypothesis_code: Python source defining ``run(benchmark_data) -> dict``.
+        benchmark_data: Passed through to the hypothesis's ``run()``.
+        config: In-process sandbox configuration. Its ``timeout_seconds`` is
+            carried over to the container so the two backends agree.
+        docker_config: Optional ``DockerSandboxConfig`` override.
+
+    Returns:
+        SandboxResult from whichever backend ran.
+
+    Spec: REQ-AUTO-004, REQ-AUTO-009, REQ-SEC-003
+    """
+    import os
+
+    if config is None:
+        config = SandboxConfig()
+
+    use_sandbox = os.environ.get("CARNOT_USE_SANDBOX", "") == "1"
+    require_sandbox = os.environ.get("CARNOT_REQUIRE_SANDBOX", "") == "1"
+
+    if not (use_sandbox or require_sandbox):
+        return run_in_sandbox(hypothesis_code, benchmark_data, config)
+
+    # Imported lazily: sandbox_docker imports SandboxResult from this module, so
+    # a module-level import here would be circular.
+    from carnot.autoresearch.sandbox_docker import (
+        DockerSandboxConfig,
+        is_docker_available,
+        is_image_available,
+        run_in_docker,
+    )
+
+    if docker_config is None:
+        docker_config = DockerSandboxConfig(timeout_seconds=config.timeout_seconds)
+
+    if is_docker_available() and is_image_available(docker_config.image):
+        # Committed to the container. Its result stands, pass or fail.
+        return run_in_docker(hypothesis_code, benchmark_data, docker_config)
+
+    detail = (
+        f"Docker unavailable or image {docker_config.image!r} not built "
+        "(build with: docker build -f Dockerfile.sandbox -t carnot-sandbox .)"
+    )
+
+    if require_sandbox:
+        # Fail CLOSED. CARNOT_REQUIRE_SANDBOX is the caller stating the code is
+        # untrusted; running it in-process anyway would be the worst option.
+        return SandboxResult(
+            success=False,
+            error=f"blocked_sandbox_required_but_unavailable: {detail}",
+        )
+
+    warnings.warn(
+        f"CARNOT_USE_SANDBOX=1 requested container isolation but {detail}. "
+        "Falling back to the IN-PROCESS sandbox, which is a guardrail and not a "
+        "security boundary -- it has a known reflective escape. Set "
+        "CARNOT_REQUIRE_SANDBOX=1 to fail instead of falling back.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
+    return run_in_sandbox(hypothesis_code, benchmark_data, config)

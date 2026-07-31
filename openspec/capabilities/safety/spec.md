@@ -1955,6 +1955,45 @@ all verified benign; 378 suppressed as one class).
 
 **Verified by:** `tests/python/test_gitleaks_config.py`
 
+### REQ-SEC-003: The Container Sandbox Must Be Reachable From the Autoresearch Path
+
+**Statement:** Code paths that execute LLM-generated code MUST route through
+`carnot.autoresearch.sandbox.execute_hypothesis`, which selects the backend from
+the environment. Callers MUST NOT invoke `run_in_sandbox` directly, because that
+is the in-process backend and ignores both environment variables.
+
+- `CARNOT_USE_SANDBOX=1` — prefer the gVisor container; if Docker or the image
+  is unavailable, warn loudly and fall back to the in-process sandbox.
+- `CARNOT_REQUIRE_SANDBOX=1` — demand the container; if unavailable, FAIL
+  CLOSED and do not execute the hypothesis at all.
+- Neither set — in-process sandbox (unchanged default).
+
+Container availability MUST be checked BEFORE launching, never inferred from a
+failed result: `run_in_docker` returns failure both for a missing Docker and for
+a hypothesis that legitimately failed, so falling back on any failure would
+re-execute the code in-process — double execution, and it would drop isolation
+exactly when the code is misbehaving.
+
+**Why this matters:**
+    `run_in_docker` was exported from `carnot.autoresearch` and invoked by
+    NOTHING. `orchestrator.py` called `run_in_sandbox` unconditionally at all
+    three execution sites and contained zero references to `CARNOT_USE_SANDBOX`.
+    For the one component whose job is executing LLM-generated code, the
+    container boundary was unreachable and the documented environment variable
+    did nothing.
+
+    This matters more than an ordinary wiring bug because the in-process sandbox
+    is explicitly NOT a security boundary — it has a known, still-open reflective
+    escape via `object.__subclasses__()` (see REQ-AUTO-009 and
+    `tests/python/test_sandbox_import_guard.py`). The container was the only
+    real containment, and it could not be switched on.
+
+**Origin:** 2026-07-31 security audit, follow-up finding.
+
+**Verified by:** `tests/python/test_sandbox_backend_routing.py` — including a
+source-level assertion that the orchestrator calls the dispatcher, since this is
+a wiring defect that behavioural tests alone would not catch.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1994,3 +2033,4 @@ all verified benign; 378 suppressed as one class).
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
 | REQ-SEC-001 | Implemented | 2026-07-31 audit: carnot.serialization_safety confines pickle/torch code-executing loads |
 | REQ-SEC-002 | Implemented | 2026-07-31 audit: gitleaks allowlists + custom anthropic/openai rules, probe-tested |
+| REQ-SEC-003 | Implemented | 2026-07-31 audit: orchestrator routed through execute_hypothesis; CARNOT_REQUIRE_SANDBOX fails closed |
