@@ -51,6 +51,31 @@ moved"), or — if you accept that a comment-and-constant change cannot move a n
 The acknowledgement path is sanctioned but deliberately expensive to abuse, and the lint's own
 docstring says to prefer rebuilding where rebuilding is possible.
 
+**RE-EVALUATED 2026-07-31 (later the same day), and it STAYS unlanded.** The induce-reliability
+Phase 2 wiring edited `arc_executable_world_model.py` anyway, which raised the obvious question of
+whether this patch should ride along on an already-paid cost. It should not, and the blast radius
+was measured rather than argued — by touching each module and reading the lint:
+
+| edit | artifacts marked stale |
+|---|---|
+| `arc_executable_world_model.py` alone (the Phase 2 wiring) | **7** |
+| `+ arc_competition_agent.py` (this patch's second file) | **12** |
+
+The 5 it adds are `arc_gateway_card_ground_truth_20260727`, `arc_per_level_reset_attribution_20260726`,
+`outer_loop_arc_early_stop_grace_sweep_20260726`, `outer_loop_arc_gateway_rescore_20260726` and
+`outer_loop_arc_reset_charge_attribution_20260726` — including the live capture named above. So the
+patch does not ride along for free; it nearly doubles the discharge and drags in the one rebuild
+that would overwrite published live numbers. The value at stake is a comment-and-constant change
+whose value does not move (4096 either way). Still prepared, still applies cleanly.
+
+Also worth recording for whoever lands it: the Phase 2 work established that rebuilding these
+artifacts is **destructive** — the generator does not re-emit post-hoc provenance, so a rebuild
+drops the artifact's accumulated `freshness_acknowledgements` and its
+`original_timings_superseded_by_rebuild` block (verified by actually rebuilding four of them and
+measuring the drop). The "rebuild the 8 and diff each" route in the instructions below is therefore
+worse than it looks; prefer acknowledgement, per the guidance the artifacts themselves carry from
+commit `0da7f75ad`. See `docs/research-notes/arc-induce-repeat-penalty-wired-2026-07-31.md`.
+
 **Context:** `ops/known-issues.md` 2026-07-31 ·
 `docs/research-notes/arc-induce-completion-budget-2026-07-31.md` ·
 `results/outer_loop_arc_induce_budget_phase1_20260731.json`
