@@ -1,0 +1,221 @@
+{
+  "funnel": {
+    "A_shipped_defective_attempts": 13,
+    "A_shipped_games_with_a_usable_engine": [
+      "tn36"
+    ],
+    "A_shipped_usable_attempts": 1,
+    "B_repair_games_with_a_usable_engine": [
+      "sc25",
+      "tn36",
+      "tu93"
+    ],
+    "B_repair_usable_attempts": 3,
+    "C_control_games_with_a_usable_engine": [
+      "ft09"
+    ],
+    "C_control_usable_attempts": 2,
+    "attempts_that_took_the_truncation_retry_path": 0,
+    "attempts_whose_round0_was_already_clean": 2,
+    "attempts_with_a_repair_vs_control_pair": 13,
+    "games_NOT_run": [],
+    "games_run": [
+      "ft09",
+      "lp85",
+      "sc25",
+      "tn36",
+      "tu93"
+    ],
+    "paired_control_only_wins": 2,
+    "paired_discordant_pairs": 5,
+    "paired_repair_only_wins": 3,
+    "paired_sign_test_two_sided_p": 1.0,
+    "total_attempts": 15
+  },
+  "generated_by": "results/arc_engine_validation_20260731/harness/build_ab_artifact.py",
+  "per_game": {
+    "ft09": {
+      "A_shipped_accepted": 3,
+      "A_shipped_defective": 3,
+      "A_shipped_usable": 0,
+      "B_repair_usable": 0,
+      "C_control_usable": 2,
+      "followups": [
+        "repair_vs_control",
+        "repair_vs_control",
+        "repair_vs_control"
+      ],
+      "n_attempts": 3,
+      "n_transitions": 25,
+      "prompt_sha256_16": "78f829d86fa65938",
+      "round0_defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "server_exe_is_cuda_build": true,
+      "status": "ok",
+      "vram_rows_mine": [
+        "1098755, 21416, 00000000:03:00.0"
+      ],
+      "wall_s": 1114.4
+    },
+    "lp85": {
+      "A_shipped_accepted": 3,
+      "A_shipped_defective": 3,
+      "A_shipped_usable": 0,
+      "B_repair_usable": 0,
+      "C_control_usable": 0,
+      "followups": [
+        "repair_vs_control",
+        "repair_vs_control",
+        "repair_vs_control"
+      ],
+      "n_attempts": 3,
+      "n_transitions": 25,
+      "prompt_sha256_16": "b1997c13183e68cf",
+      "round0_defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "server_exe_is_cuda_build": true,
+      "status": "ok",
+      "vram_rows_mine": [
+        "1107326, 21416, 00000000:03:00.0"
+      ],
+      "wall_s": 978.7
+    },
+    "sc25": {
+      "A_shipped_accepted": 2,
+      "A_shipped_defective": 2,
+      "A_shipped_usable": 0,
+      "B_repair_usable": 1,
+      "C_control_usable": 0,
+      "followups": [
+        "repair_vs_control",
+        "repair_vs_control",
+        "skipped_round0_had_no_defects"
+      ],
+      "n_attempts": 3,
+      "n_transitions": 25,
+      "prompt_sha256_16": "edc4e636499a89ed",
+      "round0_defect_kinds": [
+        "engine_raised",
+        "engine_returned_none",
+        "missing_return",
+        "syntax_error"
+      ],
+      "server_exe_is_cuda_build": true,
+      "status": "ok",
+      "vram_rows_mine": [
+        "1109533, 21416, 00000000:03:00.0"
+      ],
+      "wall_s": 379.9
+    },
+    "tn36": {
+      "A_shipped_accepted": 2,
+      "A_shipped_defective": 2,
+      "A_shipped_usable": 1,
+      "B_repair_usable": 1,
+      "C_control_usable": 0,
+      "followups": [
+        "skipped_round0_had_no_defects",
+        "repair_vs_control",
+        "repair_vs_control"
+      ],
+      "n_attempts": 3,
+      "n_transitions": 25,
+      "prompt_sha256_16": "b14cf85555655836",
+      "round0_defect_kinds": [
+        "engine_returned_none",
+        "missing_return",
+        "syntax_error"
+      ],
+      "server_exe_is_cuda_build": true,
+      "status": "ok",
+      "vram_rows_mine": [
+        "1107325, 21416, 00000000:62:00.0"
+      ],
+      "wall_s": 587.1
+    },
+    "tu93": {
+      "A_shipped_accepted": 3,
+      "A_shipped_defective": 3,
+      "A_shipped_usable": 0,
+      "B_repair_usable": 1,
+      "C_control_usable": 0,
+      "followups": [
+        "repair_vs_control",
+        "repair_vs_control",
+        "repair_vs_control"
+      ],
+      "n_attempts": 3,
+      "n_transitions": 25,
+      "prompt_sha256_16": "3e0a090197f2acaf",
+      "round0_defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "server_exe_is_cuda_build": true,
+      "status": "ok",
+      "vram_rows_mine": [
+        "1098754, 21416, 00000000:62:00.0"
+      ],
+      "wall_s": 881.6
+    }
+  },
+  "quality": {
+    "IN_SAMPLE_WARNING": "Every transition scored here was IN the induce prompt. The live gate grades a HELD-OUT suffix (arc_llm_reinduction._proposal_prefix keeps round(n/3) out). These are NOT gate outcomes; they separate an engine that models something from one that models nothing.",
+    "bar": "in_sample_cell_recall > 0.5 -- models a real share of what reality changed",
+    "best_completion": {
+      "arm": "round0",
+      "defect_kinds": [],
+      "game": "tn36",
+      "in_sample_accuracy": 1.0,
+      "in_sample_cell_recall": 1.0,
+      "in_sample_change_fidelity": 1.0,
+      "invented_changed_cells": 0,
+      "n_changes_correct": 25,
+      "n_changing": 25,
+      "n_noop": 0,
+      "n_noop_hallucinated": 0,
+      "status": "ok",
+      "tag": "a0_round0",
+      "usable": true
+    },
+    "n_completions_scored": 26,
+    "strong_by_arm": {
+      "control": [
+        "ft09"
+      ],
+      "repair": [
+        "sc25",
+        "tn36"
+      ],
+      "round0": [
+        "tn36"
+      ]
+    },
+    "usable_but_degenerate": [
+      {
+        "arm": "control",
+        "game": "ft09",
+        "in_sample_cell_recall": 0.3158,
+        "invented_changed_cells": 0,
+        "n_changes_correct": 0,
+        "n_changing": 6
+      },
+      {
+        "arm": "repair",
+        "game": "tu93",
+        "in_sample_cell_recall": 0.1118,
+        "invented_changed_cells": 144,
+        "n_changes_correct": 0,
+        "n_changing": 25
+      }
+    ]
+  },
+  "question": "Does feeding a MEASURED mechanical defect back to the generator produce a usable engine, and is any gain attributable to the defect TEXT rather than to the retry?",
+  "run_date": "2026-07-31T05:55:38Z",
+  "usable_definition": "generate() would accept it AND it carries no mechanical defect AND it changes the grid on some observed transition. The last clause is load-bearing: an identity engine clears the first two trivially (Phase 1).",
+  "verdict": "A SECOND ASK RESCUES SOME ATTEMPTS; WHICH KIND OF ASK IS UNDECIDED. Repair 3 usable vs control 2 over the same round-0 candidates, 5 discordant pairs (3 repair-only, 2 control-only), exact two-sided sign test p = 1.000. That is indistinguishable from a coin, so the DEFECT TEXT is NOT shown to add anything over a contentless re-ask at this n. The finding that survives is about arm A: the shipped path ACCEPTED 13 defective candidates of 15 and therefore never re-asks at all."
+}

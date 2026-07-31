@@ -398,6 +398,34 @@ def test_last_definition_wins():
 # ---------------------------------------------------------------------------
 
 
+def test_a_nested_engine_does_not_shadow_the_real_one():
+    """`exec` binds only TOP-LEVEL definitions, so a helper's inner `engine` is not the callable.
+
+    This is not hypothetical bookkeeping: `ast.walk` is BREADTH-FIRST, so every module-level
+    definition is visited before any nested one. A "last definition wins" rule written over
+    `ast.walk` therefore picks the NESTED one whenever a nested one exists -- and a helper's
+    throwaway inner function would decide the verdict for the real engine. Here the top-level
+    engine is fine and the nested one is not; a walk-based rule reports a defect that the
+    caller can never hit.
+    """
+    code = (
+        "def make():\n"
+        "    def engine(grid, action, data):\n"
+        "        pass\n"
+        "    return engine\n"
+        "\n"
+        "def engine(grid, action, data):\n"
+        "    return grid\n"
+    )
+    assert missing_return_defects(code) == []
+
+
+def test_a_nested_engine_is_used_when_there_is_no_top_level_one():
+    """With no module-level `engine`, reporting on the nested body beats reporting nothing."""
+    code = "def make():\n    def engine(grid, action, data):\n        pass\n    return engine\n"
+    assert "missing_return" in _kinds(missing_return_defects(code))
+
+
 def test_explicit_return_none_is_flagged():
     code = "def engine(grid, action, data):\n    if action == 6:\n        return None\n    return grid\n"
     assert "returns_none_literal" in _kinds(missing_return_defects(code))
@@ -506,6 +534,37 @@ def test_repair_prompt_carries_the_exception_text_and_omits_truncation():
     assert "cell" in block
     assert "4096" not in block
     assert "same shape" in block.lower()
+
+
+def test_repair_prompt_caps_the_echoed_code():
+    """A repetition-loop runaway must NOT be echoed back in full.
+
+    ft09's live engine is 1112 of 1144 lines of duplicated comment, and Phase 1 measured that a
+    doubled budget leaves the DISTINCT emitted lines unchanged while the length doubles. Feeding
+    the wall back would spend thousands of prompt tokens re-showing the model the exact text it
+    is stuck repeating. The head is kept, the omission is stated so the model is not told a
+    partial file is the whole file.
+    """
+    wall = "def engine(grid, action, data):\n" + ("    # the same comment\n" * 4000)
+    block = repair_prompt_block(
+        [EngineDefect(kind="missing_return", detail="d", repairable=True)],
+        code=wall,
+        max_code_chars=500,
+    )
+    assert len(block) < 2000, len(block)
+    assert "further characters omitted" in block
+    assert "def engine" in block  # the head, which carries the structure, survives
+
+
+def test_repair_prompt_does_not_truncate_a_short_answer():
+    short = "def engine(grid, action, data):\n    pass\n"
+    block = repair_prompt_block(
+        [EngineDefect(kind="missing_return", detail="d", repairable=True)],
+        code=short,
+        max_code_chars=4000,
+    )
+    assert "omitted" not in block
+    assert short.strip() in block
 
 
 def test_repair_prompt_is_empty_when_nothing_is_repairable():

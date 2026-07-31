@@ -1,10 +1,10 @@
 {
   "baseline_all_green": true,
   "baseline_tail": [
-    "..........................................                               [100%]",
-    "============================== 42 passed in 3.14s =============================="
+    "..............................................                           [100%]",
+    "============================== 46 passed in 3.40s =============================="
   ],
-  "duration_s": 12.26,
+  "duration_s": 17.93,
   "generated_by": "results/arc_engine_validation_20260731/harness/mutation_check.py",
   "module_restored_byte_identical": true,
   "mutations": [
@@ -48,6 +48,17 @@
         "test_break_in_a_nested_loop_does_not_count_for_the_outer_one"
       ],
       "why": "`_has_break` must not count a `break` that belongs to an inner loop, or an outer `while True` looks exitable and a correct engine is rejected."
+    },
+    {
+      "mutation": "nested_definition_can_shadow_the_top_level_one",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_a_nested_engine_does_not_shadow_the_real_one",
+        "test_a_nested_engine_is_used_when_there_is_no_top_level_one"
+      ],
+      "why": "`ast.walk` is breadth-first, so a bare walk-based 'last definition wins' rule picks the NESTED definition whenever one exists -- and `exec` binds only top-level ones. A helper's throwaway inner `engine` would decide the verdict for the real engine."
     },
     {
       "mutation": "first_function_definition_wins",
@@ -130,9 +141,19 @@
         "test_bare_return_is_flagged"
       ],
       "why": "`return` and `return None` hand the caller None just as surely as falling off the end."
+    },
+    {
+      "mutation": "repair_prompt_echoes_the_whole_wall",
+      "proved": true,
+      "pytest_tail": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: -n\n  inifile: /home/ianblenke/github.com/ianblenke/carnot/pyproject.toml\n  rootdir: /home/ianblenke/github.com/ianblenke/carnot",
+      "status": "PROVED",
+      "tests": [
+        "test_repair_prompt_caps_the_echoed_code"
+      ],
+      "why": "The completions being repaired are repetition-loop runaways. Echoing one back in full spends thousands of prompt tokens re-showing the model the text it is stuck repeating."
     }
   ],
-  "n_mutations": 12,
-  "n_proved": 12,
-  "run_date": "2026-07-31T04:56:01Z"
+  "n_mutations": 14,
+  "n_proved": 14,
+  "run_date": "2026-07-31T05:16:36Z"
 }

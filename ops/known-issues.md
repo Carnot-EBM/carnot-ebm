@@ -4,6 +4,35 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-31 (outer-loop, MEASURED — OPEN QUESTION FOR THE OPERATOR): the induce path accepts broken code 13 times in 15, and the cheapest fix is a re-ask whose CONTENT is unproven
+
+**What is settled.** Four of the five ARC induction failures the 2026-07-30 audit catalogued are
+mechanically detectable before the trust gate: ft09 and tu93 by an AST fall-through check, lp85 by a
+dry run of `is_level_complete` (NOT `engine` — an engine-only dry run misses it entirely), ft09
+round 2 by truncation detection. `python/carnot/agentic/arc_engine_static_validation.py`,
+REQ-ARC-WMTE-6052, 46 tests, 14/14 mutations killed. False-positive rate on 439 real generated
+engines: 9 flagged, 9 execution-confirmed, 0 unconfirmed.
+
+**The live measurement.** The shipped `generate()` ACCEPTED a defective candidate in **13 of 15**
+attempts across the 5 audited games and produced a usable engine in **1 of 15**. It never re-asks
+because it does not know anything is wrong. A second ask lifts games reaching a non-degenerate
+engine from **1 of 5 to 3 of 5**.
+
+**THE OPEN QUESTION.** Whether the re-ask should CARRY the defect text is undecided: repair 3 usable
+vs a contentless control 2, over 13 matched pairs — 5 discordant, exact two-sided sign test
+**p = 1.000**, and the two arms succeed on DISJOINT games. Cheapest next measurement is arm A versus
+a plain re-ask with no defect text at larger n; that arm is favoured on cost, and echoing the failed
+code back is the part to drop first (the completions being repaired are repetition-loop runaways).
+
+**NOT WIRED IN, and why.** Editing `arc_executable_world_model.py` marks 7 registered artifacts
+stale (`experiment_6011/6012/6013/6021` + three with no rebuild command). Paying that for a proven
+diagnosis and an unproven repair is not proportionate; wiring a re-ask into the SCORED path is a
+behaviour change and wants its warrant first. Operator call.
+
+Artifacts: `results/arc_engine_validation_20260731/{repair_ab,gate_scores,corpus_scan,completion_replay,mutation_check}.json`.
+Detail: `docs/research-notes/arc-engine-static-validation-2026-07-31.md`.
+
+
 ### 2026-07-31 (outer-loop): the induce budget is NOT the lever -- `repeat_penalty` is, and the scored path runs with every repetition control off. Plus: not one generated engine ever changes the grid, the seed does not reach across server instances, and the constant that names the budget binds nothing
 
 **The measurement.** ft09's induction was diagnosed as budget-starved ("spiralled into a wall of

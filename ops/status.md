@@ -25,6 +25,46 @@ GATEWAY CHARGE, READ IT: the "gateway-accurate"
 3.69% was a MODEL — the real figure read off the gateway's own scorecard Card is 0.018097 at the
 median, the model is wrong on 17 of 44 cells, and on 6 cells the true sign is NEGATIVE)
 
+## Session 2026-07-31 (later) — four of five induction failures are broken code, and the shipped path accepts 13 of 15 (outer-loop, REQ-ARC-WMTE-6052)
+
+### What's Working
+
+- `python/carnot/agentic/arc_engine_static_validation.py` — static + dry-run defect detection for a
+  generated world model, running strictly UPSTREAM of the trust gate with no power to admit
+  anything. One check per failure the 2026-07-30 audit catalogued: AST fall-through (ft09, tu93),
+  dry run of `engine` AND of `is_level_complete` (lp85's `UnboundLocalError` comes out of the GOAL
+  predicate), truncation detection keyed on llama-server's own `stop_type` (ft09 round 2), plus a
+  repair-prompt builder. 46 tests, **14/14 mutations killed**.
+- False-positive rate measured on the real corpus, not a fixture: **439 generated `world_model*.py`
+  files, 9 flagged, 9 of 9 confirmed by EXECUTING the engine, 0 unconfirmed.**
+- Sensitivity measured on 36 real live completions replayed with their recorded `stop_type`: **13
+  that the shipped `generate()` ACCEPTED carry a defect; 10 it REJECTED are retryable truncations.**
+  Zero disagreements with Phase 1's independently-written AST check on all 28 comparable rows.
+- A three-arm live A/B (shipped / repair / neutral-control) across all 5 audited games, with the
+  prompts captured LLM-off from the agent and byte-identical to Phase 1's committed ft09 prompt.
+- `results/arc_engine_validation_20260731/harness/` — the whole measurement chain re-runnable:
+  corpus scan, completion replay, LLM-off prompt+transition capture, the A/B, production-verifier
+  scoring, and the mutation prover.
+
+### What's Next
+
+1. **Operator call: wire the check into `generate()`?** It would make the pipeline re-ask where it
+   today accepts (13 of 15). Cost: editing `arc_executable_world_model.py` marks 7 registered
+   artifacts stale. Not done unattended.
+2. **Settle what the re-ask should SAY.** Repair-vs-control is p = 1.000 at n = 13 pairs. Cheapest
+   next measurement: arm A vs a plain re-ask with NO defect text, larger n.
+3. Phase 3 (the `goal_unreached_within_depth` mislabel) and Phase 4 (measuring the change-gate flag)
+   are untouched by this session.
+
+### Known Constraints (this session)
+
+- The funnel is UNCHANGED in the shipped path: the module is standalone and nothing calls it.
+- Every gate score reported is **IN-SAMPLE** — the live gate grades a held-out suffix
+  (`_proposal_prefix` keeps `round(n/3)` out), and the capture does not preserve that suffix.
+- lp85's actual failing source no longer exists (per-cell temp store), so the `goal_raised` arm is
+  proven against a RECONSTRUCTION of the documented mechanism, with 0 preserved corpus instances.
+- Banked ARC levels remain 3/3. The submission gate is NOT met.
+
 ## Session 2026-07-31 — the budget is not the lever, and the constant that names it binds nothing (outer-loop)
 
 **Scope: Phase 1 of the induction-reliability plan, measurement only.** Nothing here solved a

@@ -70,10 +70,22 @@ MUTATIONS: list[tuple[str, str, str, str, list[str]]] = [
         ["test_break_in_a_nested_loop_does_not_count_for_the_outer_one"],
     ),
     (
+        "nested_definition_can_shadow_the_top_level_one",
+        "`ast.walk` is breadth-first, so a bare walk-based 'last definition wins' rule picks the "
+        "NESTED definition whenever one exists -- and `exec` binds only top-level ones. A "
+        "helper's throwaway inner `engine` would decide the verdict for the real engine.",
+        "    top: Optional[ast.FunctionDef] = None\n    nested: Optional[ast.FunctionDef] = None\n    for node in getattr(tree, \"body\", []):\n        if isinstance(node, ast.FunctionDef) and node.name == name:\n            top = node\n    if top is not None:\n        return top\n",
+        "    nested: Optional[ast.FunctionDef] = None\n",
+        [
+            "test_a_nested_engine_does_not_shadow_the_real_one",
+            "test_a_nested_engine_is_used_when_there_is_no_top_level_one",
+        ],
+    ),
+    (
         "first_function_definition_wins",
         "Python binds the LAST definition. Grading the first grades a function that never runs.",
-        "        if isinstance(node, ast.FunctionDef) and node.name == name:\n            found = node",
-        "        if isinstance(node, ast.FunctionDef) and node.name == name and found is None:\n            found = node",
+        "            top = node\n",
+        "            top = top or node\n",
         ["test_last_definition_wins"],
     ),
     (
@@ -135,6 +147,14 @@ MUTATIONS: list[tuple[str, str, str, str, list[str]]] = [
         "            node.value is None\n            or (isinstance(node.value, ast.Constant) and node.value.value is None)",
         "            isinstance(node.value, ast.Constant) and node.value.value is Ellipsis",
         ["test_explicit_return_none_is_flagged", "test_bare_return_is_flagged"],
+    ),
+    (
+        "repair_prompt_echoes_the_whole_wall",
+        "The completions being repaired are repetition-loop runaways. Echoing one back in full "
+        "spends thousands of prompt tokens re-showing the model the text it is stuck repeating.",
+        "        if len(body) > int(max_code_chars):",
+        "        if False:",
+        ["test_repair_prompt_caps_the_echoed_code"],
     ),
 ]
 

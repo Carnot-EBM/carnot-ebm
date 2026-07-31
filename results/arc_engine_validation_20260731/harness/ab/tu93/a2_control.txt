@@ -1,0 +1,41 @@
+import numpy as np
+
+def engine(grid, action, action_data):
+    """
+    Predicts the next grid state based on the action.
+    
+    The observed transitions suggest a movement-based puzzle where a 
+    certain object (color 9) is moving through a 
+    maze of walls (color 2) and empty spaces (color 0).
+    The grid contains a 
+    background (color 5).
+    """
+    # Find the current position of the object (color 9)
+    # Note: In the observed transitions, color 9 is the moving object.
+    # 9s are often in 3x3 blocks or 3x1 blocks.
+    # 3x3 blocks of color 9 are often the moving object.
+    
+    # Find all cells of color 9
+    coords_9 = np.argwhere(grid == 9)
+    if len(coords_9) == 0:
+        return grid
+    
+    # Find the center of the 3x3 block of color 9s
+    # Find the center of the center-most 9
+    # center_y, center_x = coords_9.mean(axis=0).astype(int)
+    # center_y, center_x = 0
+    
+    # Find the same 3x3 block of color 9
+    # s = 0. mesma 
+    # 3x3 blocks of 9s.
+    # 3x3 block of 9s.
+    # 3xs.
+    
+    # 64x64 grid.
+    #
+    # 
+    # a
+    # 
+    # 3x3 blocks of 9s.
+    #<|channel>thought
+<channel|>

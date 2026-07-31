@@ -1,0 +1,268 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    x, y = data['x'], data['y']
+    # The game seems to be a series of buttons or regions that change color
+    # The target regions are 6x6 blocks.
+    # The regions are defined by the same layout in the initial grid.
+    # We need to find if the center of the click is inside a 6x6 block.
+    
+    # Based on the observed transitions:
+    # Action6 (x=46, y=38) -> r36-41, c44-49 (6x6 block)
+    # Action6 (x=38, y=54) -> r52-57, c36-41 (6x6 block)
+    # Action6 (x=54, y=54) -> r52-57, c52-57 (6x6 block)
+    # Action6 (x=38, y=46) -> r44-49, c36-41 (6x6 block)
+    
+    # A click at (x, y) maps to a block starting at row y - 3, col x - 3?
+    # No, let's check:
+    # (46, 38) -> r36, c44. 38-36=2, 46-44=2.
+    # (38, 54) -> r52, c36. 54-52=2, 38-36=2.
+    # (54, 54) -> r52, c52. 54-52=2, 54-52=2.
+    # (38, 46) -> r44, c36. 46-44=2, 38-36=2.
+    # It seems the click (x, y) corresponds to a block starting at (y-2, x-2).
+    
+    # Let's identify all 6x6 blocks of non-5 color in the initial grid.
+    # The background is color 5.
+    # The blocks are 6x6.
+    # The blocks are likely centered at (x, y) or similar.
+    # Let's define the blocks based on the layout.
+    # The blocks are located at:
+    # r2-7, c4-9; r2-7, c12-17; r2-7, c24-29; r2-7, c36-41; r2-7, c48-44; ...
+    # The blocks are 6x6.
+    
+    # The blocks are 6x6 squares.
+    # The blocks change color when clicked.
+    # The blocks are not color 5.
+    # The blocks are 6x6.
+    # Let's find all 6x6 blocks of non-5 color.
+    
+    # The blocks are 6x6.
+    # The 6x6 blocks are likely the "buttons".
+    # The 6x6 blocks are likely toggleable.
+    # The 6x6 block at (y-2, x-2) is 6x6.
+    # The 6x6 block at (y-2, x-2)H
+    # a 6x6 block of non-5 color.
+    # Let's actually find the 6x6 blocks of non-5 blocks in the grid.
+    
+    # Let's find all 6x6 blocks of non-5 color.
+    # The blocks are 6x6.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block ofP
+    # a 6x6 block of non-5 color.
+    # a 6x6 block ofC
+    # a 6x6 block ofC
+    # a 6x6 block of non-5 color.
+    
+    # Let's find all 6x6 blocks of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6 block of non-5 color.
+    # a 6x6

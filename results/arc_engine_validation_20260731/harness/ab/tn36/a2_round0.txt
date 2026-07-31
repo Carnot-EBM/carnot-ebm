@@ -1,0 +1,113 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # The observed transitions show that clicking on specific coordinates 
+    # (31, 35) and (31, 14) causes cells in row 1 to change to color 3.
+    # Specifically, r1c61, r1c60, r1c59, r1c58, r1c57, r1c56 are changed.
+    # The pattern suggests that clicking certain areas of the grid 
+    # triggers a change in the same row.
+    # The same coordinates are clicked repeatedly.
+    # (31, 35) -> r1c61, then r1c60 (wait, the sequence is 0->0, 0->0, etc.)
+    # The observed sequence:
+    # click (31, 35) -> r1c61:3x1
+    # click (31, 14) -> r1c60:3x1
+    # click (31, 35) -> r1c61:3x1 (Wait, the prompt says r1c61, then r1c60, then r1c59...)
+    # Let's re-read:
+    # 1. (31, 35) -> r1c61:3x1
+    # 2. (31, 14) -> r1c60:3x1
+    # 3. (31, 35) -> r1c59:3x1
+    # 4. (31, 14) -> r1c58:3x1
+    # 5. (31, 14) -> r1c57:3x1
+    # 6. (31, 14) -> r1c56:3x1
+    
+    # This looks like a sequence of clicks that fills a row from right to left.
+    # We need to track the state of the row to know which cell to fill.
+    # However, the engine must be pure and deterministic based on the grid.
+    # Let's find the current rightmost empty cell in row 1.
+    
+    # The target row is row 1.
+    # The target color is 3.
+    # The target range of columns in row 1 are those that are not color 9 (the background of that row).
+    # In the initial grid, r1 is 5x1, 9x61, 5x2.
+    # The cells from col 1 to col 61 are color 9.
+    # The target cells are in the range [1, 61].
+    # 61 is the target rightmost cell.
+    #
+    # Let's check the current state of row 1.
+    # The cells from col 1 to col 61 are color 9.
+    # The target cells are target_cols = range(1, 62)
+    # The cells that are already color 3 are the ones at the end.
+    # The target cells that are still color 9 are those to the left.
+    #
+    # Let's look at the sequence again:
+    # 1. (31, 35) -> r1c61:3x1
+    # 2. (31, 14) -> r1c60:3x1
+    # 3. (31, 35) -> r1c59:3x1
+    # 4. (31, 14) -> r1c58:3x1
+    # 5. (31, 14) -> r1c57:3x1
+    # 6. (31, 14) -> r1c56:3x1
+    #
+    # It seems any click in the "active" area (like x=31, y=14 or 35) triggers the next cell in the sequence.
+    
+    new_grid = grid.copy()
+    
+    # Find the rightmost cell in row 1 that is color 9 and within the range [1, 61].
+    # Find all indices where row 1 is color 9.
+    row1 = grid[1, :]
+    target_indices = np.where(row1 == 9)[0]
+    
+    if len(target_indices) > 0:
+        # The rightmost index is the maximum of target_indices.
+        # The rightmost index that is <= 61 is the maximum of target_indices.
+        # The rightmost index that is 61, 60, 60...
+        # 
+        # The cells in row 1 are: col 0 (5), col 1-61 (9), col 62-63 (5).
+        # target_indices = np.where(row1 == 9)[0]
+        # If we find indices, and we find the index that is 61, 60, etc.
+        # The target cells are those that are 9.
+    
+    # To be deterministic, we must use the current grid state.
+    # The rightmost cell of color 9 in row 1 is the target.
+    # target_col = np.max(target_indices)
+    #
+    # Let's refine the target_indices to only those that are 9.
+    # target_indices = np.where(grid[1, :] == 9)[0]
+    #
+    # If we find any cells of color 9 in row 1, we change the rightmost one to color 3.
+    # target_indices = np.where(grid[1, :] == 9)[0]
+    # if len(target_indices) > 0:
+    #     new_grid[1, target_indices[-1]] = 3
+    
+    # Let's check if this matches the observed transitions.
+    # 1. Init: r1 is 5x1, 9x61, 5x2. Indices of 9 are 1 to 61. Max is 61. r1c61 becomes 3.
+    # 2. Next: Indices of 9 are 1 to 60. Max is 60. r1c60 becomes 3.
+    # 3. Next: Indices of 9 are 1 to 59. Max is 59. r1c59 becomes 3.
+    # This matches perfectly.
+    
+    target_indices = np.where(grid[1, :] == 9)[0]
+    if len(target_indices) > 0:
+        new_grid[1, target_indices[-1]] = 3
+        
+    return new_grid
+
+def is_level_complete(grid):
+    # Since we don't have a win state, we assume the level is complete 
+    # when all target cells in row 1 (cols 1-61) are no longer color 9.
+    # The target cells are those that were color 9 in the initial grid.
+    # We can't know the initial grid, but we we can only assume 
+    #
+    # Let's check if any cells in row 1 are still color 9.
+    # return not np.any(grid[1, :] == 9)
+    
+    # In the absence of a win state, a common ARC pattern is to complete a 
+    # filling task.
+    # return not np.any(grid[1, :] == 9)
+    
+    # Let's be a bit more conservative.
+    # return np.all(grid[1, 1:62] != 9)
+    
+    # We assume the level is complete when the row is filled.
+    return not np.any(grid[1, :] == 9)

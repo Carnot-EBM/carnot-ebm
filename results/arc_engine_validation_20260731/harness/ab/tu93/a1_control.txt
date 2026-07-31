@@ -1,0 +1,32 @@
+import numpy as np
+
+def engine(grid, action, action_data):
+    """
+    Predicts the next state of the grid based on the action.
+    The observed transitions suggest a movement of a 'cursor' or 'entity' (color 9)
+    across a set of predefined paths (color 0, 2, 4, 14).
+    """
+    # Find the current position of the entity (color 9)
+    # The entity is represented by a 3x3 block of color 9.
+    # Find the center of the center-most 3x3 block of color 9.
+    entity_pos = None
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if grid[r, c] == 9:
+                entity_pos = (r, c)
+                # We only care about the center of the 3x3 block
+                break
+        if entity_pos:
+            break
+    
+    # If no entity found, 9 is not used as a    
+    # (// a placeholder for placeholder)
+    if entity_pos == None:
+        # Return grid as copy
+        return grid.copy()
+    
+    # The entity is 3x3. Let's find the center of the 3x3 block.
+    # center_r = entity_pos[0] + 1
+    # center_c = entity_pos[0] + 1 # This is part of a mistake in the previous attempt.
+    #<|channel>thought
+<channel|>

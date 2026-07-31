@@ -1,0 +1,505 @@
+{
+  "attempts": [
+    {
+      "A_shipped": {
+        "any_repairable": true,
+        "any_retryable": false,
+        "completion_file": "a0_round0.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5463,
+        "prompt_n": 3006,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "a0_round0",
+        "usable": false,
+        "wall_s": 132.0
+      },
+      "B_repair": {
+        "any_repairable": true,
+        "any_retryable": false,
+        "completion_file": "a0_repair.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 10326,
+        "prompt_n": 2020,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "a0_repair",
+        "usable": false,
+        "wall_s": 134.5
+      },
+      "C_control": {
+        "any_repairable": true,
+        "any_retryable": false,
+        "completion_file": "a0_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5973,
+        "prompt_n": 634,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "a0_control",
+        "usable": false,
+        "wall_s": 129.7
+      },
+      "attempt": 0,
+      "control_block_chars": 509,
+      "followup": "repair_vs_control",
+      "repair_block_chars": 4862,
+      "round0_defects": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "seed": 3003000,
+      "temperature": 0.2
+    },
+    {
+      "A_shipped": {
+        "any_repairable": true,
+        "any_retryable": false,
+        "completion_file": "a1_round0.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "a1_round0",
+        "usable": false,
+        "wall_s": 127.6
+      },
+      "B_repair": {
+        "any_repairable": true,
+        "any_retryable": false,
+        "completion_file": "a1_repair.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 10327,
+        "prompt_n": 2013,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "a1_repair",
+        "usable": false,
+        "wall_s": 134.4
+      },
+      "C_control": {
+        "any_repairable": false,
+        "any_retryable": false,
+        "completion_file": "a1_control.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 353,
+        "prompt_chars": 5973,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "a1_control",
+        "usable": false,
+        "wall_s": 11.6
+      },
+      "attempt": 1,
+      "control_block_chars": 509,
+      "followup": "repair_vs_control",
+      "repair_block_chars": 4863,
+      "round0_defects": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "seed": 3003001,
+      "temperature": 0.3
+    },
+    {
+      "A_shipped": {
+        "any_repairable": true,
+        "any_retryable": false,
+        "completion_file": "a2_round0.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5463,
+        "prompt_n": 24,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "a2_round0",
+        "usable": false,
+        "wall_s": 126.8
+      },
+      "B_repair": {
+        "any_repairable": false,
+        "any_retryable": false,
+        "completion_file": "a2_repair.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1719,
+        "prompt_chars": 10327,
+        "prompt_n": 2274,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "a2_repair",
+        "usable": true,
+        "wall_s": 57.6
+      },
+      "C_control": {
+        "any_repairable": false,
+        "any_retryable": false,
+        "completion_file": "a2_control.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 397,
+        "prompt_chars": 5973,
+        "prompt_n": 126,
+        "prompt_truncated": false,
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "a2_control",
+        "usable": false,
+        "wall_s": 12.7
+      },
+      "attempt": 2,
+      "control_block_chars": 509,
+      "followup": "repair_vs_control",
+      "repair_block_chars": 4863,
+      "round0_defects": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "seed": 3003002,
+      "temperature": 0.4
+    }
+  ],
+  "budget": 4096,
+  "call_index": 2,
+  "game": "tu93",
+  "n_transitions": 25,
+  "prompt_sha256_16": "3e0a090197f2acaf",
+  "retry_budget": 8192,
+  "rows": [
+    {
+      "any_repairable": true,
+      "any_retryable": false,
+      "completion_file": "a0_round0.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5463,
+      "prompt_n": 3006,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "a0_round0",
+      "usable": false,
+      "wall_s": 132.0
+    },
+    {
+      "any_repairable": true,
+      "any_retryable": false,
+      "completion_file": "a0_repair.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 10326,
+      "prompt_n": 2020,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "a0_repair",
+      "usable": false,
+      "wall_s": 134.5
+    },
+    {
+      "any_repairable": true,
+      "any_retryable": false,
+      "completion_file": "a0_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5973,
+      "prompt_n": 634,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "a0_control",
+      "usable": false,
+      "wall_s": 129.7
+    },
+    {
+      "any_repairable": true,
+      "any_retryable": false,
+      "completion_file": "a1_round0.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "a1_round0",
+      "usable": false,
+      "wall_s": 127.6
+    },
+    {
+      "any_repairable": true,
+      "any_retryable": false,
+      "completion_file": "a1_repair.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 10327,
+      "prompt_n": 2013,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "a1_repair",
+      "usable": false,
+      "wall_s": 134.4
+    },
+    {
+      "any_repairable": false,
+      "any_retryable": false,
+      "completion_file": "a1_control.txt",
+      "defect_details": [
+        "generated code does not parse: invalid syntax"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 353,
+      "prompt_chars": 5973,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "a1_control",
+      "usable": false,
+      "wall_s": 11.6
+    },
+    {
+      "any_repairable": true,
+      "any_retryable": false,
+      "completion_file": "a2_round0.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5463,
+      "prompt_n": 24,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "a2_round0",
+      "usable": false,
+      "wall_s": 126.8
+    },
+    {
+      "any_repairable": false,
+      "any_retryable": false,
+      "completion_file": "a2_repair.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1719,
+      "prompt_chars": 10327,
+      "prompt_n": 2274,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "a2_repair",
+      "usable": true,
+      "wall_s": 57.6
+    },
+    {
+      "any_repairable": false,
+      "any_retryable": false,
+      "completion_file": "a2_control.txt",
+      "defect_details": [
+        "generated code does not parse: invalid syntax"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 397,
+      "prompt_chars": 5973,
+      "prompt_n": 126,
+      "prompt_truncated": false,
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "a2_control",
+      "usable": false,
+      "wall_s": 12.7
+    }
+  ],
+  "status": "ok",
+  "summary": {
+    "A_shipped_accepted": 3,
+    "A_shipped_defective": 3,
+    "A_shipped_usable": 0,
+    "B_repair_usable": 1,
+    "C_control_usable": 0,
+    "followups": [
+      "repair_vs_control",
+      "repair_vs_control",
+      "repair_vs_control"
+    ],
+    "n_attempts": 3
+  },
+  "wall_s": 881.6,
+  "witness": {
+    "gpu_requested": "1",
+    "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "observed_n_ctx": 32768,
+    "port": 8942,
+    "server_exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_exe_is_cuda_build": true,
+    "server_pid": 1098754,
+    "vram_rows_mine": [
+      "1098754, 21416, 00000000:62:00.0"
+    ]
+  }
+}

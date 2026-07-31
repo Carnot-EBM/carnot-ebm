@@ -260,3 +260,9 @@ recordings/arc_live_probe/
 
 # Generated transition-capture corpus (large npz; regenerated from probes + human replays)
 data/arc_transition_corpus/
+
+# Phase-2 repair-A/B scratch: each cell starts a llama-server with its own CARNOT_ARC_E3_DIR so
+# it cannot write into results/arc_e3 (which is EVIDENCE). Those redirect dirs are process
+# scratch, not measurements -- the measurements are ab.json and the completion .txt files.
+results/arc_engine_validation_20260731/harness/ab/*/e3/
+results/arc_engine_validation_20260731/harness/capture/*/e3/

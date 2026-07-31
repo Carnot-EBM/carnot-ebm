@@ -1,0 +1,80 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action == 6:
+        # The observed transitions show that clicking at (x, y) results in 
+        # a change in a specific cell (r1, c) where c is decremented.
+        # However, the pattern is not immediately obvious from the x, y.
+        # Let's look at the coordinates:
+        # (31, 35) -> r1c61:3
+        # (31, 14) -> r1c60:3
+        # (31, 35) -> r1c61:3 (Wait, the data says r1c61:3, then r1c60:3, then r1c61:3, then r1c58:3, etc.)
+        # 
+        # Let's analyze the sequence of clicks:
+        # Click 1: (31, 35) -> r1c61:3
+        # Click 2: (31, 14) -> r1c60:3
+        # Click 3: (31, 35) -> r1c61:3 (Wait, the data says r1c61:3 again?)
+        # No, the data says:
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c60:3
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3 (Wait, the data says r1c61:3:3x1, then r1c59:3x1)
+        # Let's re-read:
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c60:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c59:3x1 (Wait, the data says r1c59:3x1 for the 3rd action)
+        # Let's re-read again:
+        # 1: (31, 35) -> r1c61:3x1
+        # 2: (31, 14) -> r1c60:3x1
+        # 3: (31, 35) -> r1c61:3x1 (Wait, the data says r1c61:3x1? No, it's r1c59:3x1)
+        # Let's re-read the observed transitions:
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c60:3x1
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c59:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c58:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c57:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c56:3x1
+        # 
+        # The clicks are alternating between (31, 35) and (31, 14).
+        # The result is a sequence of cells in row 1 being changed to color 3.
+        # This looks like a "whack-a-mole" or a sequence puzzle where clicking 
+        # the correct target changes a cell in the "progress bar" (row 1).
+        # Based on thes limited data, the most likely rule is that clicking 
+        # the correct target (which changes) changes the next cell in the row 1 sequence.
+        # Since we don't have the win state, we have to guess the logic.
+        # However, the observed transitions are very specific.
+        # The cells being changed are r1c61, r1c60, r1c59, r1c58, r1c57, r1c56.
+        # This is a sequence of cells moving from right to left.
+        # Let's assume there that is a hidden state tracking the current target cell in row 1.
+        # We need to find which target (31, 35) or (31, 14) is the correct one.
+        # In the sequence:
+        # (31, 35) -> r1c61
+        # (31, 14) -> r1c60
+        # (31, 35) -> r1c59
+        # (31, 14) -> r1c58
+        # (31, 14) -> r1c57
+        # (31, 14) -> r1c56
+        # 
+        # This is not a simple alternation.
+        # Let's assume the target is determined by the current state of the grid.
+        # Let's assume the target is (31, 35) if the current target cell in row 1 is even, 
+        # and (31, 14) if it is odd.
+        # But the data is too sparse. Let's try a simple rule: 
+        # any click at (31, 35) or (31, 14) changes the next available cell in row 1.
+        
+        new_grid = grid.copy()
+        # Find the rightmost cell in row 1 that is NOT color 3 (and is within the 9x61 range)
+        # The range is r1c1 to r1c61.
+        # The progress bar is from c=1 to c=61.
+        # Find the rightmost cell that is color 9 and change it to 3.
+        # We search from c=61 down to 1.
+        for c in range(61, 0, -1):
+            if grid[1, c] == 9:
+                new_grid[1, c] = 3
+                break
+        return new_grid
+    return grid
+
+def is_level_complete(grid):
+    # Since we don't have the win state, we assume the level is complete 
+    # when the entire progress bar (r1c1 to r1c61) is color 3.
+    return np.all(grid[1, 1:62] == 3)
