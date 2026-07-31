@@ -1,5 +1,60 @@
 # Carnot — Changelog
 
+## 2026-07-31 (outer-loop, SECURITY AUDIT: no secrets leaked; five hardening gaps closed)
+
+**Instruction:** "Do a security audit and ensure no secrets or credentials have leaked into any
+files in this repo", then "do 1, 2, 3, 4, and 5" against the reported findings.
+
+### The headline answer: nothing leaked
+
+Full-history `gitleaks` across all **21,323 commits**, plus targeted scans of the working tree and
+staged files. **544 findings, zero real secrets** — every one was rule `generic-api-key`, and every
+one was verified benign by extracting the matched line from its git object and classifying it
+(378 content-hash cache keys, 103 snake_case verdict enums, 3 checksums, 60 prose/HTTP captures).
+The three `secrets/*.enc.yaml` are genuinely SOPS/age-encrypted; `.env` holds only `GATEWAY_PORT`
+and was never committed; no credentials in URLs, remotes, or CI.
+
+Worth recording: the config header claimed a clean full-history scan at **2,542** commits. Nobody
+had re-run it in the ~18,800 commits since.
+
+### Five fixes (commits f1af9d99ae, 8701ae1a0b, cd221fbd81, 81787ec4fe, c5e9cf86c7)
+
+1. **`.gitignore` did not cover `secrets/`.** `secrets.*.yaml` matches `secrets.prod.yaml` but not
+   `secrets/hf_token.yaml` — the exact plaintext path `docs/sops-hf-token-setup.md` told operators
+   to create. `git check-ignore` confirmed it, `ops/secrets.yaml`, and `secrets/id_rsa` were all
+   committable. Latent, not active.
+2. **The autoresearch sandbox's import blocklist was bypassable.** PoC-confirmed:
+   `__import__('subprocess').run(...)` executed a shell command, because the check only walked
+   `ast.Import` nodes while the namespace held the real `__builtins__`. Fixed with a guarded
+   `__import__`. The docstring's "Import whitelist enforcement" claim was corrected — and a
+   reflective escape via `object.__subclasses__()` was verified STILL OPEN and written down, with
+   a test asserting it, so the honest scope cannot rot into a false one.
+3. **Code-executing deserialization confined** (`carnot.serialization_safety`). The audit's first
+   pass OVERSTATED this: torch 2.6+ already defaults to `weights_only=True`, so the real surface
+   was 12 sites, not 30. Also documents that `isinstance` after `pickle.load` is not a control.
+4. **Dependency advisories 53 → 5.** GPU stack verified unchanged before/after; torch was
+   deliberately not upgraded (CUDA build). Three residuals accepted with reasons in known-issues.
+5. **gitleaks re-baselined**, and two blind spots closed: no rule existed for Anthropic `sk-ant-`
+   or OpenAI `sk-proj-` keys.
+
+### Two things this audit got wrong, caught before shipping
+
+- A proposed allowlist scoping benign shapes to artifact trees **applied repo-wide** — gitleaks ORs
+  allowlist conditions and `matchCondition = "AND"` silently no-ops in 8.30.1. It would have
+  blinded the scanner to a leaked **Kaggle key** (32 lowercase hex; this repo holds Kaggle creds).
+  Rejected, with the reasoning recorded so it is not re-attempted.
+- The first version of the probe suite invoked `gitleaks detect --source`, a legacy form this build
+  accepts and **ignores**. It scanned nothing, and two "must be suppressed" assertions passed
+  vacuously. Every scan now carries a positive control.
+
+### Working-tree hazard observed
+
+The conductor was running throughout and repeatedly reverted uncommitted edits and reset the index
+mid-session. Each fix was therefore committed immediately with an explicit pathspec rather than
+`git add -A`. One mutation marker was cleared deliberately after verifying its `attributed_to_run`
+was empty and its only flagged path was an authored edit — no research record was rewritten.
+
+
 ## 2026-07-31 (outer-loop, REVIEW RESPONSE #2: the induce headline was pseudo-replicated, and the spec never learned the module got wired)
 
 **Instruction:** apply every finding from the adversarial review of the induce-reliability Phases
