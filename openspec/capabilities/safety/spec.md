@@ -1920,6 +1920,41 @@ and centrally auditable.
 **Verified by:** `tests/python/test_serialization_safety.py`
 
 
+### REQ-SEC-002: Secret-Scanner Config Must Not Blind the Scanner
+
+**Statement:** `.gitleaks.toml` allowlists MUST suppress verified-benign
+CLASSES only, never individual secrets, and MUST NOT reduce detection of any
+real credential shape. Every allowlist and custom rule MUST have a regression
+probe in `tests/python/test_gitleaks_config.py`.
+
+**Why this matters:**
+    A scanner config is a guard, and a guard that is trusted and silent is worse
+    than none. Two concrete failures found on 2026-07-31:
+
+    1. gitleaks 8.30.1 ships NO rule for Anthropic (`sk-ant-`) or OpenAI project
+       (`sk-proj-`) keys, and `generic-api-key` catches neither. In a repository
+       developed with Claude Code that declares an `openai` extra, those were the
+       likeliest credentials to leak and the scanner could not see them.
+    2. An allowlist scoping benign value shapes to the artifact trees applied
+       REPO-WIDE, because gitleaks ORs allowlist conditions and the documented
+       fix (`matchCondition = "AND"`) silently no-ops in this build. It would
+       have blinded the scanner to a leaked Kaggle key -- 32 lowercase hex
+       characters, a credential this repo holds in `secrets/kaggle.enc.yaml`.
+
+    Both were found only because a probe asked the inverted question the
+    QA-Layer Authenticity Discipline mandates for guards: not "is this right"
+    but "name a real input this is SUPPOSED to catch and DOES NOT."
+
+**Also required:** every scan helper in the probe suite MUST carry a positive
+control. The first version of that suite invoked `gitleaks detect --source`, a
+legacy form this build accepts and ignores; the scan did nothing, and two
+"suppressed" assertions passed vacuously against an empty result.
+
+**Origin:** 2026-07-31 security audit re-baseline (544 full-history findings,
+all verified benign; 378 suppressed as one class).
+
+**Verified by:** `tests/python/test_gitleaks_config.py`
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1958,3 +1993,4 @@ and centrally auditable.
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
 | REQ-SEC-001 | Implemented | 2026-07-31 audit: carnot.serialization_safety confines pickle/torch code-executing loads |
+| REQ-SEC-002 | Implemented | 2026-07-31 audit: gitleaks allowlists + custom anthropic/openai rules, probe-tested |

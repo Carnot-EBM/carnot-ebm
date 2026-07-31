@@ -61,3 +61,129 @@ paths = [
     '''results/experiment_.*_milestone_retro.*\.json''',
 ]
 targetRules = ["generic-api-key"]
+
+# ---------------------------------------------------------------------------
+# 2026-07-31 security audit re-baseline.
+#
+# WHY THIS SECTION EXISTS. The header of this file records that a full-history
+# scan at 2,542 commits produced 3 findings. The repository is now at 21,323
+# commits and nobody had re-run that scan in the ~18,800 commits since. The
+# audit's run produced 544 findings -- every one of them `generic-api-key`, and
+# every one verified benign by extracting the matched line from the git object
+# and classifying it.
+#
+# That matters more than the count suggests: a 544-finding report is one nobody
+# reads, so a real leak would sit invisible inside it. Alert fatigue in a secret
+# scanner is itself a security problem, which is why these allowlists exist.
+# They suppress verified-benign CLASSES, never individual secrets.
+#
+# What the 544 actually were:
+#   378  {"key": "<32-hex>", "y": 1, ...} content-hash cache keys for math-corpus
+#        items -- the literal JSON field name "key" beside a high-entropy hex
+#        string is the textbook generic-api-key false positive
+#   103  snake_case values in result artifacts, e.g.
+#        "access_outcome": "excluded_by_exp5853_disqualification"
+#     3  reproducibility_checksum / digest fields
+#    60  assorted prose, HTTP response captures (x-amz-apigw-id request trace
+#        ids from a 429 body), and type annotations
+#
+# EXPECTED RESIDUAL AFTER THESE RULES: ~166 findings (544 minus the 378 cache
+# hits), all reviewed 2026-07-31 and benign. Not driven lower -- see the
+# ATTEMPTED AND REJECTED note below for why the obvious next step is unsafe.
+
+[[allowlists]]
+description = "Content-hash item keys in detector cache/manifest JSONL (378 of 544)"
+# These files are line-oriented caches whose every record literally begins
+# {"key": "<md5-length hex>", ...}. The "key" is a content hash of a GSM8K-style
+# math problem used for cache lookup -- there is no credential concept anywhere
+# in these files. Matched by path because the entire file is this one shape.
+stopwords = []
+paths = [
+    '''results/_cache_[A-Za-z0-9_]+\.jsonl''',
+    '''results/_detector_items_manifest\.jsonl''',
+]
+targetRules = ["generic-api-key"]
+
+# ATTEMPTED AND REJECTED: a second allowlist scoping two benign value shapes
+# (`^[0-9a-f]{32,64}$` checksums, `^[a-z][a-z0-9_]{7,}$` verdict enums) to the
+# results/docs/openspec artifact trees. It would have suppressed a further ~106
+# findings. It is NOT here, and the reason is worth recording:
+#
+#   gitleaks ORs the conditions inside an allowlist. The documented fix,
+#   `matchCondition = "AND"`, SILENTLY NO-OPS in this build (8.30.1) -- an
+#   isolation test with one allowed/ and one blocked/ path showed BOTH
+#   suppressed, and gitleaks emitted no warning about the field. So `paths`
+#   scoping is decorative next to `regexes`: the regexes apply repo-wide.
+#
+#   Repo-wide is disqualifying, not merely untidy. A Kaggle API key is a
+#   32-character lowercase hex string -- exactly `^[0-9a-f]{32,64}$` -- and this
+#   repository holds Kaggle credentials (secrets/kaggle.enc.yaml). Shipping that
+#   allowlist would have blinded the scanner to a leaked Kaggle key in ANY file,
+#   to buy a tidier report. Verified by regression probe: with the allowlist in
+#   place, a planted 32-hex credential in python/ went unreported.
+#
+#   If a future gitleaks honours matchCondition, re-add it AND re-run the
+#   probes; do not re-add it on the strength of the documentation alone.
+#
+# ON NOT DRIVING THE RESIDUAL TO ZERO. The remaining 60 are individually benign
+# but structurally varied (prose, HTTP captures, an `Ed25519PrivateKey` type
+# annotation). Allowlisting each one would mean either a fingerprint baseline
+# that silently rots as history is rewritten, or regexes broad enough to hide a
+# real key. A short, stable, human-reviewable residual is the safer end state.
+#
+# TREAT A RISE ABOVE ~60 AS SOMETHING TO TRIAGE, not as noise to re-suppress.
+# And per the rule at the top of this file: when gitleaks finds a REAL secret,
+# do not allowlist it -- rotate it, purge it from history, and force-push.
+
+# ---------------------------------------------------------------------------
+# Custom rules for provider keys gitleaks 8.30.1 does NOT detect.
+#
+# Found while validating the allowlists above: a planted Anthropic key was not
+# flagged, and the first suspicion was that these allowlists had suppressed it.
+# They had not -- re-running with a STOCK `useDefault = true` config missed it
+# too. gitleaks 8.30.1 simply ships no rule for either of the two formats below,
+# and `generic-api-key` does not catch them because the value is hyphen-rich
+# rather than a plain high-entropy blob.
+#
+# Verified undetected by the stock ruleset:
+#     sk-ant-api03-...    Anthropic
+#     sk-proj-...         OpenAI (current project-scoped format)
+# Verified already covered, so deliberately not duplicated here:
+#     hf_...  (huggingface)   AIza... (gcp-api-key)   xoxb-... (slack-bot-token)
+#     ghp_... (github-pat)    AKIA... (aws-access-token)   PEM (private-key)
+#
+# This matters disproportionately for THIS repository: it is developed with
+# Claude Code and declares an `openai` extra, so `sk-ant-` and `sk-proj-` are
+# among the likeliest credentials to ever land here -- and they were exactly the
+# two the scanner could not see.
+
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic API key"
+# sk-ant-<type><NN>-<body>. Body is base64url-ish with - and _.
+# The {32,} floor is set to clear the `sk-ant-access-secret` test fixture in
+# tests/python/test_agent_plan_usage.py (body is 6 chars) while still matching
+# real keys. An earlier {80,} guess was too tight and missed a planted key --
+# hence the regression probes below rather than a hand-checked regex.
+regex = '''\bsk-ant-[a-z0-9]+-[A-Za-z0-9_-]{32,}\b'''
+keywords = ["sk-ant-"]
+
+[[rules]]
+id = "openai-project-key"
+description = "OpenAI project-scoped API key"
+regex = '''\bsk-proj-[A-Za-z0-9_-]{40,}\b'''
+keywords = ["sk-proj-"]
+
+[[allowlists]]
+description = "Regression probes for this config deliberately contain fake secrets"
+# tests/python/test_gitleaks_config.py plants synthetic sk-ant- / sk-proj- /
+# ghp_ / hex values in order to assert they ARE detected. On first commit the
+# pre-commit hook refused the file, which is the custom rules working exactly as
+# intended -- they caught the planted keys.
+#
+# Scoped to this one path. The values inside are generated for the probes and
+# have never been valid credentials. Same precedent as the JAX-PRNG allowlist at
+# the top of this file: allowlist the file whose JOB is to contain the pattern,
+# never the pattern itself.
+stopwords = []
+paths = ['''tests/python/test_gitleaks_config\.py''']
