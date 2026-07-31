@@ -1,0 +1,55 @@
+{
+  "killed": 6,
+  "applied": 7,
+  "real_mutations_killed": "6/6",
+  "control_behaved_correctly": true,
+  "survived": [
+    "CONTROL_inert_edit_must_SURVIVE"
+  ],
+  "not_applied": [],
+  "baseline_green_before_and_after": true,
+  "results": [
+    {
+      "mutation": "M1_never_count_a_depth_drop",
+      "status": "KILLED",
+      "why": "The counter is the whole mechanism. Without it every depth-capped search reverts to `degenerate_goal_predicate` -- the tn36 mislabel, restored.",
+      "tail": "vetoes\nFAILED tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_depth_capped_kind_reaches_the_row_and_still_routes_through_goal_repair\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 3 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!\n========================= 3 failed, 5 passed in 10.83s =========================\n"
+    },
+    {
+      "mutation": "M2_depth_cap_is_off_by_one",
+      "status": "KILLED",
+      "why": "Expands one layer past the cap. Changes the SEARCH, not just the label, so tn36's 1480/41 arithmetic no longer reproduces -- which is why the real-cell test asserts the raw counts and not only the kind.",
+      "tail": "discards_the_root_and_says_so\nFAILED tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_tn36_the_real_cell_reports_depth_not_degeneracy\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 3 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!\n========================= 3 failed, 9 passed in 11.06s =========================\n"
+    },
+    {
+      "mutation": "CONTROL_inert_edit_must_SURVIVE",
+      "status": "SURVIVED",
+      "why": "NOT A MUTATION -- a deliberate inert edit (an unused local) that MUST survive. Without it a 7/7 kill rate would be unfalsifiable: it proves the harness is capable of reporting SURVIVED at all, so the other six kills mean something.",
+      "tail": " pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [55 items]\n\n.......................................................                  [100%]\n============================= 55 passed in 13.29s ==============================\n"
+    },
+    {
+      "mutation": "M3b_depth_truncation_flips_satisfiable",
+      "status": "KILLED",
+      "why": "THE DANGEROUS ONE: turning a label fix into a gate relaxation. Admitting a goal the planner cannot reach is exactly the widening this commit promises it is not doing.",
+      "tail": "vetoes\nFAILED tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_depth_capped_kind_reaches_the_row_and_still_routes_through_goal_repair\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 3 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!\n========================= 3 failed, 8 passed in 11.11s =========================\n"
+    },
+    {
+      "mutation": "M4_restore_the_false_exhaustiveness_claim",
+      "status": "KILLED",
+      "why": "The `detail` string WAS the damage -- the audit had to disbelieve it by hand. Dropping the negation restores a false claim while every kind/termination assertion stays green.",
+      "tail": "===================\nFAILED tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_depth_capped_search_reports_its_own_kind_and_still_vetoes\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!\n========================= 1 failed, 9 passed in 11.16s =========================\n"
+    },
+    {
+      "mutation": "M5_plain_path_flattens_the_depth_kind",
+      "status": "KILLED",
+      "why": "The agent's allow-list is a whitelist. Silently dropping the new kind reinstates the mislabel in the artifact while the gate itself reports correctly -- the worst shape, because the two records then disagree.",
+      "tail": "========================\nFAILED tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_agent_plain_path_allow_list_discloses_the_depth_kind\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!\n======================== 1 failed, 20 passed in 13.08s =========================\n"
+    },
+    {
+      "mutation": "M6_route_depth_away_from_goal_repair",
+      "status": "KILLED",
+      "why": "Treating depth-truncation like budget-exhaustion. It LOOKS principled (both are 'undecided') but is a real behaviour change: GOAL-REPAIR stops firing on a case where the veto is earned and a reachable proxy is the productive fallback. Not shipped without a measurement.",
+      "tail": "======\nFAILED tests/python/test_arc_goal_gate_depth_vs_degenerate_2026_07_31.py::test_depth_capped_kind_reaches_the_row_and_still_routes_through_goal_repair\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!\n======================== 1 failed, 19 passed in 13.30s =========================\n"
+    }
+  ]
+}

@@ -1,5 +1,252 @@
 # Carnot — Changelog
 
+## 2026-07-31 (outer-loop, REVIEW RESPONSE: the sibling conflation, and four claims restated to what was actually measured)
+
+**Instruction:** apply every finding from the adversarial review of Phases 1-4, minor included;
+argue back with evidence if one is WRONG. None were wrong. All 15 applied.
+
+### The one code change: the SAME bug, in the function the gate guards (REQ-ARC-WMTE-6047-E)
+
+Phase 3 split the depth axis out of `queue_exhausted` in `_goal_satisfiability_check`. The review
+pointed out that `plan_in_model` — the planner the gate exists to protect — still closed BOTH of
+its search loops with `"max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"` while
+`if len(path) >= max_depth: continue` discarded popped nodes unexpanded. Phase 3's own evidence
+file was the proof: `tn36_depth_label.json` records
+`plan_at_max_depth_40.diagnostics.termination_reason == "queue_exhausted"` on a goal the identical
+(engine, predicate, root) triple reaches at depth 61 once the cap is lifted. Fixing the gate's
+label while leaving the planner's wrong would have left the misdirection exactly where it was.
+
+`termination_reason` is now three-way (`max_nodes_reached` / `depth_capped` / `queue_exhausted`,
+budget-first precedence) with a `depth_truncated_nodes` count on every exit that ran a search.
+
+- **INERT, proven by differential execution rather than by reading the diff.** The pre-change
+  module is materialised from git HEAD into a separate namespace and both versions run over 600
+  randomised (engine, goal, root, caps) cases across four engine mechanic families and both search
+  loops: **return values differ in 0 of 600**. The vacuity guard says the corpus really does
+  exercise the change — 146 cases relabel `queue_exhausted -> depth_capped`, while 111 keep
+  `queue_exhausted` and 152 keep `max_nodes_reached`, so this is a split and not a blanket rename.
+  `results/arc_plan_in_model_depth_20260731/inertness_differential.json`.
+- **Verified on the real origin cell.** The committed tn36 fixture now reports `depth_capped` at
+  `max_depth=40` and still finds the identical 61-action plan at 80.
+  `results/arc_plan_in_model_depth_20260731/tn36_plan_termination.json`.
+- 9 tests, **6/6 real mutations killed**, deliberate inert control survives, source restored
+  byte-identically. One test earns its keep specifically: unlike the gate's plain BFS (where the
+  two axes are mutually exclusive, so precedence is merely defensive), the best-first loop can
+  drop a deep node and keep spending budget, so budget-over-depth precedence is LOAD-BEARING here
+  and is pinned on a search that genuinely does both.
+
+### Four claims restated to what was measured (originals preserved; never-prune)
+
+1. **Phase 2's "games REACHING a non-degenerate engine: 1/5 -> 3/5" is not a funnel number.** That
+   requirement's own `usable_definition` is parse-level (`generate_would_accept` is literally
+   "the code parses and defines the two functions"), not the semantic trust gate. Restated:
+   **1/5 -> 3/5 attempts produced PARSEABLE, NON-INERT code offline; the live funnel is unchanged
+   at 1 of 6.** "Reaching" is now reserved for policy reach.
+2. **That 3-of-5 counts tu93**, whose engine the same requirement separately calls junk
+   (`cell_recall 0.112`, 144 invented cells, 0 of 25 changes right — it clears "non-inert" by
+   changing the grid WRONGLY). On the artifact's own `quality.strong_by_arm`: round-0 {tn36} = 1,
+   repair {sc25, tn36} = 2, control {ft09} = 1. tn36 was already the pre-existing success, so the
+   **net new strong game is sc25 alone, n = 1, paired sign test p = 1.000**.
+3. **Phase 1's `cell_recall 0.9474` headline omitted `n_changes_correct: 0` of 6.** Cell recall
+   stays near 1.0 on a mostly-static grid while the engine gets not one transition fully right.
+   Any future quote of the number carries the pair.
+4. **The change-aware gate call is downgraded from QUALIFIED YES to NO for mask-off.** See below.
+
+### The change gate: NO for mask-off (not a tie — the priors agree, and they settle it)
+
+Phase 4 recorded an "unresolved exp6011-vs-exp6013 disagreement" about whether the gate rejects the
+hand-written CORRECT dc22 control with the mask off. It is not a disagreement.
+exp6011's `must_not_fire_control`: `whole_corpus_mask_off` False on 3/3 seeds (change_fidelity
+0.4694 / 0.4083 / 0.4103), `mask_flips_reject_to_admit_all_seeds: true`. exp6013 reports the same
+whole-corpus result and states it as a finding verbatim: *"the gate-only arm therefore rejects the
+one engine known to be genuinely good. Do not flip CARNOT_ARC_WM_CHANGE_GATE without also flipping
+CARNOT_ARC_WM_HUD_MASK."* Only exp6013's held-out-SPLIT row differs, and exp6013 resolves that
+itself — the split sits within 0.035 of the threshold so *"its verdict there is not robust"* and
+*"whole-corpus is the figure to quote for a flip decision"*. Phase 4 measured MASK OFF. Applying
+Phase 4's own recommendation rule to that evidence, the honest call is **NO**.
+
+Also surfaced, because a summary quoting the verdict must inherit it: tn36-on — the SOLE
+must-not-fire data point — passes with `n_noop = 0`, so **one of the gate's three sub-conditions
+was never exercised on it**. `noop_verdict_is_vacuous` / `pass_is_qualified` now live inside
+`verdict.must_not_fire`, not only in the row. And the exact counts: 9 rows, 8 usable, gate rejects
+7 and passes 1; minus the 2 pre-registered must-catch targets, **5** other rejected engines — the
+"six" in the earlier summary was reachable only by counting the sc25 row that same summary excludes.
+sc25 is excluded for two independent reasons, now stated together (its AUDIT record is all nulls,
+`proposer_failed_or_missing_root`, so corpus identity is unconfirmable — though its own MEASURED
+side is fully populated; AND it is a hidden-state game, so a plain-branch row is not its live
+decision).
+
+`SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED` remains `False`. No threshold touched.
+
+### The orphan guard was giving a false clean bill
+
+`scripts/arc_orphan_solver_lint.py` keys on `*world_model*` names, three solver function names, or
+a class with both `.engine` and `.is_lethal`. `arc_engine_static_validation.py` matches none, so
+the lint reported OK on a module genuinely unreachable from BOTH live entrypoints — a
+false-negative in the guard that exists to stop silent off-path work. The module IS deliberately
+unwired; what was wrong is that the decision was invisible. `_is_solver_like` now also matches the
+induce-path gating surface (`validate_engine_code` / `repair_prompt_block`), and the module is
+allow-listed with its reason. 5 tests pin both halves, including that removing the allow-list entry
+makes the lint FLAG — so the pass is an explicit decision, not an accident. The module's docstring
+now states plainly that "runs strictly BEFORE the trust gate" is a design property of an unwired
+module, never executed in production ordering, and that wiring it MUST bring an integration test
+asserting `validate_engine_code` precedes `WorldModelVerifier.score`.
+
+### Repository hygiene the review caught
+
+- **8 tracked historical artifacts** (experiment_1035 / 1038 / 1081 / 1089 / 1103 / 1717 / 2754 /
+  3350) carried test-suite timestamp rewrites in the working tree. Content-diffed one by one: all
+  8 were `run_date` / `started_at` / `duration_s` / `reproducibility_checksum` churn with **zero**
+  content lines lost. Reverted. Everything committed here was staged by explicit path; no
+  `git add -A`.
+- **Phase 3 was uncommitted while Phase 4 sat on top of it**, inverting the stated
+  commit-per-phase rule so an overnight failure would have lost Phase 3 specifically. Fixed by
+  this commit. The prior handoff called the dirty tree "20 files the suite rewrote"; 5 of them
+  were Phase 3's real source and test work, and an operator following the restore procedure would
+  have reverted a whole phase.
+- **13 registered artifacts** were stale against the two agentic modules. Discharged the sanctioned
+  way — per-dependency `freshness_acknowledgements` pinning the exact new hash with reason and
+  evidence (the 600-case differential above for the world-model module; the default-off,
+  label-only diff for the agent module) — never a silent hash bump and never `--no-verify`. Every
+  artifact diff is purely additive (10 or 20 insertions, 0 deletions).
+
+## 2026-07-31 (outer-loop, PHASE 3: the gate's tn36 rejection was right; its stated reason was false, and the false reason is what misdirects the next fix)
+
+**Instruction:** PHASE 3 — add `goal_unreached_within_depth`. Verify tn36 now reports it instead of
+`degenerate_goal_predicate`, and state plainly that this does not by itself make tn36 plannable.
+
+### What was wrong
+
+`_goal_satisfiability_check` had TWO ways to stop early and had split only ONE of them. Commit
+`764226c86` separated `goal_unreached_within_budget` on the NODE-COUNT axis
+(`engine_calls >= max_nodes`). The DEPTH axis was left conflated: `if depth >= max_depth: continue`
+discards a popped node WITHOUT EXPANDING IT, so the deque can drain with successors never
+generated — and the gate then reported `termination: queue_exhausted`, `kind:
+degenerate_goal_predicate`, and the detail string *"the reachable set was searched exhaustively
+(frontier empty)"*. That sentence is false by construction whenever a node was dropped at the cap.
+
+### Measured against the REAL rejected cell, not a model
+
+The 2026-07-30 audit's tn36 `on` engine (md5 `6d96491f80bec0319828ba1a04f5841e`) and its root grid
+(sha256[:16] `f328c951a03d248d`) were recovered and both hashes verified against the audit's own
+record. Running the shipped gate at live defaults:
+
+| | before this commit | after |
+|---|---|---|
+| `kind` | `degenerate_goal_predicate` | **`goal_unreached_within_depth`** |
+| `termination` | `queue_exhausted` | `depth_capped` |
+| `satisfiable` | False | **False (unchanged)** |
+| `engine_calls` / grids | 1480 / 41 | 1480 / 41 (identical) |
+| `depth_truncated_nodes` | (not reported) | 1 |
+
+1480 = 40 expanded nodes x 37 candidates and 41 = root + 40 new grids, so EVERY node produced a
+brand-new state: the chain was still generating when the depth-40 cap stopped it, with the 20,000
+budget 93% unspent. The same engine reaches its own induced goal at **`first_true_depth: 61`** once
+the cap is lifted. The predicate the gate called degenerate is reachable.
+
+Why 61 and not less: tn36's goal is `np.all(grid[1, 1:62] == 3)` and its engine fills one such cell
+per click, and at the PLANNING ROOT none of the 61 are filled — checked against the committed
+fixture, `(root[1, 1:62] == 9).sum() == 61`. My first draft of this work wrote "6 already filled, so
+>= 55 more steps", carried over from the count of observed transitions in the engine's own comments;
+that is what the MODEL saw in its induce prompt, not the state of the root the gate plans from. The
+measured `first_true_depth: 61` contradicted it and was in the artifact the whole time. Caught in
+adversarial self-review, corrected in the module comment and the test docstring, and now PINNED by
+an assertion that the depth equals the unfilled-cell count so it cannot drift back.
+
+### What this does NOT do, stated first rather than buried
+
+**It does not make tn36 plannable.** Measured in the same run:
+`plan_in_model` at the shipped `max_depth=40` still returns no plan; it finds the 61-action plan
+only at `max_depth=80`. And that is not a shortfall of the fix — it is why the DECISION was left
+alone. `plan_in_model` is bounded by the same `max_depth=40`
+(`arc_executable_world_model.py:5371`), so a goal out of reach within the cap is genuinely out of
+reach for the planner this gate guards. The veto is EARNED, unlike a spent node budget where the
+planner has an independent budget and the gate has learned nothing.
+
+So `goal_unreached_within_depth` is routed like `degenerate_goal_predicate` — GOAL-REPAIR still
+fires — and deliberately NOT like `goal_unreached_within_budget`, which is routed away from repair.
+The `execute_bounded_llm_reinduction` routing is untouched; its test is a literal equality against
+the budget kind, so the new kind falls through to repair exactly as before. `satisfiable` is False
+in all three cases. Nothing here widens a named quality gate.
+
+**What the wrong reason cost, which is the actual point.** `degenerate_goal_predicate` is the
+string handed to `refactor()` and to every future reader: "the induced win condition is junk." On
+tn36 that aimed attention at a predicate the engine reaches at depth 61 — the run's ONE structurally
+sound engine, 61 of 61 replayed steps byte-exact against the real env — and away from the depth cap
+that actually stopped it. The audit that caught this had to redo the arithmetic by hand to
+disbelieve the gate's own detail string.
+
+### Two sibling tests were themselves instances of the bug
+
+Found while making the change, and worth naming because they are the reason it survived:
+
+- `test_arc_goal_gate_budget_vs_degenerate_2026_07_30.py::test_genuinely_unreachable_goal_still_
+  reports_degenerate_with_ample_budget` ran at `max_depth=4` against a bar that saturates at width
+  14. It was a DEPTH-TRUNCATED search passing as `queue_exhausted` — the tn36 mislabel sitting
+  inside the test asserting the label was right. The cap is now above saturation, so the assertions
+  are unchanged and now mean what they say.
+- `test_experiment_4664_...::depth_limited` used `max_depth=0`, which discards the ROOT, so
+  literally nothing was searched and the gate called it exhaustive. The local variable was already
+  named `depth_limited`; the kind now says so too.
+
+That sibling suite's own docstring item 4 ("depth-limited exhaustion is still reported as
+`queue_exhausted`") and the in-module NB it came from were both CORRECT about soundness and were
+kept verbatim per never-prune, with the supersession noted beside them.
+
+### Evidence and proof
+
+- `results/arc_goal_gate_depth_20260731/tn36_depth_label.json` — the real-cell measurement above,
+  with both fixture hashes verified against the audit and the harness beside it.
+- `tests/fixtures/arc_goal_gate_depth_tn36/` — the frozen engine + root grid, committed so this
+  never needs re-deriving. The audit could not speak for lp85's rejected engine AT ALL because its
+  source lived in a temp store that no longer exists; tn36's was one `rm -rf /tmp` from the same
+  fate, and its root grid cost a 38-second env replay every time anyone asked a question about it.
+  Both hashes are asserted in the tests, so a fixture swap fails loudly.
+### Two findings from adversarial self-review, recorded rather than quietly fixed
+
+Both were in MY work, and both are the failure modes this project names by hand:
+
+1. **A number carried across without being checked** — see the "why 61" paragraph above. The
+   measurement contradicting it was in my own artifact from the first run.
+2. **A decorative test.** The first version of the routing test built a FAKE gate result and then
+   asserted things about the fake — it asserted precisely nothing about the shipped code. It passed,
+   and it made the suite look stronger than it was. Replaced with a drive of the real
+   `execute_bounded_llm_reinduction` on a depth-45 chain against the shipped `max_depth=40`, which
+   records `termination: depth_capped` at 239 engine calls with the 20,000 budget untouched. The
+   load-bearing assertion is now a SPY on `_repair_degenerate_goal` proving GOAL-REPAIR is actually
+   REACHED — not an inference from the skip label, because the round can arrive at that label either
+   by repair firing or by repair never being reached, and only the second is the behaviour change
+   this commit promises it is not making. (Repair fires, returns None here since its exemplar-derived
+   fallback is itself past the cap, and the round skips carrying the new kind.)
+
+- 10 tests, of which 2 run against the real engine and root. **6/6 real mutations killed**, with a
+  deliberate inert control correctly SURVIVING so the kill rate is falsifiable
+  (`results/arc_goal_gate_depth_20260731/mutation_check.json`); baseline green before and after,
+  sources restored byte-identically. The mutations reverse decisions: "never count a depth drop"
+  restores the tn36 mislabel; "flip `satisfiable` on depth truncation" turns the relabel into the
+  gate relaxation this commit promises it is not; "drop the negation from the detail string"
+  restores the false claim while every kind assertion stays green; "route depth away from
+  GOAL-REPAIR" is the plausible-looking behaviour change that was deliberately NOT made.
+
+### One thing not changed, and why
+
+`experiment_5727_arc_generalization_live_oracle_gap_v511.py`'s `stall_class_for_row` has a literal
+set of skip strings that classifies `degenerate_goal_predicate` as INDUCTION QUALITY, and the new
+kind is not in it. Traced rather than assumed: that test is `skipped in {...} or
+attempt.get("refinement_rounds_used") is not None`, and EVERY exit from
+`execute_bounded_llm_reinduction` sets `refinement_rounds_used` to an int (never None), which the
+agent writes onto the attempt at `arc_competition_agent.py:5668`/`:5805`. So for every row that can
+carry a goal-gate kind from the bounded loop, the classification is unchanged. The one path that
+could differ is the PLAIN path, whose attempt dict has no `refinement_rounds_used` — and that path
+is behind `CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK`, which is off by default and whose own
+in-code note says it needs a matched-budget validation before graduating. So the change is inert in
+production. Editing a shipped v511 module to add a string would mark its registered artifacts stale,
+for a classification that arguably belongs under SEARCH/BUDGET anyway. Left alone, and the reason it
+is safe is measured rather than asserted.
+
+No submission action taken; no scored or online ARC game played. The tn36 verification replayed the
+OFFLINE arcade env only. Banked ARC levels remain 3/3 and the submission gate remains unmet.
+
 ## 2026-07-31 (outer-loop, PHASE 2b LIVE: the shipped induce path accepts broken code 13 times in 15 — and a second ask of ANY kind is what rescues it; the defect text is p=1.000 against a contentless one)
 
 **Instruction:** PHASE 2 — report the funnel effect: how many of the 5 now produce a usable engine
@@ -254,6 +501,19 @@ cells of 228 -> cell recall 0.9474; the live `onb` cell's recorded gate fields a
 `verify_change_fidelity: 0.947368`. Identical. Which also means the `repeat_penalty` arm reaches,
 on its FIRST naturally-stopped attempt in 1912 tokens, the same cell recall the live LLM-ON run
 only reached on one replicate after three refinement rounds.
+
+> **CORRECTION 2026-07-31 (adversarial review; original text above left unedited per never-prune).**
+> The `0.9474` mean cell recall in the table above must never be quoted without the metric that
+> sits beside it in the same artifact row: that engine reproduces **`n_changes_correct: 0` of 6**
+> changing transitions (`results/arc_engine_validation_20260731/gate_scores.json`, the ft09
+> `a2_control` row). Cell recall is a PER-CELL score computed over a mostly-static grid, so it stays
+> near 1.0 while the engine gets **not one transition fully right**. The three caveats recorded
+> below (in-sample, n=3, one game) were given; this one was not, and it is the one that stops the
+> number being read as near-success. **Restated: the `repeat_penalty 1.1` arm produces engines that
+> are non-degenerate and structurally right about ft09's mechanic, at `cell_recall 0.9474` and
+> `0 of 6 transitions fully correct.`** The comparison to the live `onb` cell still holds exactly —
+> that cell also records 216/228 correct changed cells — which is the point: the live run's best
+> engine has the same shape of near-miss.
 
 **Three caveats, all load-bearing.** (1) The cell recall is IN-SAMPLE: all 6 of ft09's 25
 grid-changing transitions appear in the induce prompt and the 16 held-out ones are every one a

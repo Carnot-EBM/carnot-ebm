@@ -36,6 +36,19 @@ WHAT THIS MODULE IS NOT
 =======================
 **It is not a gate, and it must never be used as one.** It runs strictly BEFORE the semantic
 trust gate (`WorldModelVerifier` / `change_gate_decision`) and has no power to admit anything.
+
+*STATUS OF THAT "runs strictly BEFORE" CLAIM (be precise about it -- 2026-07-31 adversarial
+review).* It is a DESIGN PROPERTY OF AN UNWIRED MODULE. Nothing in the tree calls
+`validate_engine_code`, so the ordering has never executed in production; it is asserted here and
+pinned by unit tests, but it is not verified end to end. The separation is correct AS WRITTEN --
+this module returns defects and a prompt, never an admit/reject decision, so it CANNOT bypass the
+gate no matter where it is called from. What is unproven is the sequencing, not the safety.
+**When this module is wired into the induce path, the wiring change MUST add an integration test
+asserting `validate_engine_code` is called BEFORE `WorldModelVerifier.score` on the same
+candidate** -- so the ordering is enforced by a test rather than documented by this paragraph.
+Until then the module is deliberately orphaned and allow-listed in
+`scripts/arc_orphan_solver_lint.py` with that reason.
+
 Its only outputs are:
 
   * a defect list, which turns UNUSABLE code into an honest retry, and

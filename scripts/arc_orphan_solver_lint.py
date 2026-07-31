@@ -46,6 +46,22 @@ ALLOWLIST = {
     # NEW orphans without first requiring a re-wire of this pre-existing experiment. Flagged for future
     # review in docs/research-notes/arc-mechanism-parity-and-hazard-salvage-2026-06-22.md.
     "arc_execution_guided_world_model": "exp3979 prototype; imported only by its experiment + test",
+    # 2026-07-31. The Phase-2 induce-validation module: AST return-path check, truncation
+    # detection, and a dry run of the generated engine over the observed transitions. It is
+    # DELIBERATELY unwired -- wiring it edits `arc_executable_world_model.py`/
+    # `arc_llm_reinduction.py` and marks 12 registered artifacts stale, a price that should be
+    # paid for a PROVEN funnel gain and what is proven so far is a diagnosis (the shipped
+    # `generate()` accepts a defective candidate 13 times in 15) plus an UNDECIDED repair arm
+    # (repair 3 vs control 2, exact two-sided sign test p = 1.000). Listed here rather than left
+    # undetected because the lint's other solver-like tests do not match this module's shape, so
+    # before this entry its orphan status was INVISIBLE -- the guard returned a clean bill on a
+    # module that is genuinely unreachable from both live entrypoints. Retire this entry when the
+    # module is wired into the pre-gate path.
+    "arc_engine_static_validation": (
+        "diagnostic-only, deliberately unwired pending a proven funnel gain; see "
+        "REQ-ARC-WMTE-6052 and CORRECTION 2026-07-31 in "
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    ),
 }
 
 
@@ -128,6 +144,19 @@ def _is_solver_like(path: Path) -> str | None:
             "plan_in_model",
         ):
             return f"defines solver function {node.name}()"
+        # INDUCE-PATH GATING SURFACE (2026-07-31). A module that validates or repairs a GENERATED
+        # engine sits on the same critical path as a solver -- it decides whether the live agent
+        # gets a usable world model at all -- but matches none of the tests above: no
+        # `*world_model*` in its name, no solver function, no `.engine`/`.is_lethal` class. So
+        # `arc_engine_static_validation` was invisible to this lint and the lint reported a clean
+        # bill while the module was genuinely unreachable from BOTH live entrypoints. Detecting
+        # the shape is what makes its orphan status a recorded, allow-listed decision instead of
+        # a silent gap; the module itself is allow-listed above with its reason.
+        if isinstance(node, ast.FunctionDef) and node.name in (
+            "validate_engine_code",
+            "repair_prompt_block",
+        ):
+            return f"defines induce-path gating function {node.name}()"
         if isinstance(node, ast.ClassDef):
             methods = {n.name for n in node.body if isinstance(n, ast.FunctionDef)}
             if "engine" in methods and "is_lethal" in methods:

@@ -294,13 +294,36 @@ def main() -> int:
             "decision_population_n_changing": r["decision_population_n_changing"],
             "vacuous": r["decision_is_vacuous"],
         }
-    must_not_fire_result = {
-        f"{g}__{a}": {
+    # The no-op vacuity flag is surfaced INSIDE the must-not-fire verdict, not only in the row
+    # (2026-07-31 adversarial review). The gate has three sub-conditions and one of them --
+    # "does the engine hallucinate a change on a transition that did not change?" -- is
+    # UNTESTABLE when the engine's transition set contains no no-ops at all. tn36-on is exactly
+    # that case (`n_noop == 0`), so its pass exercises two of three conditions. The module's own
+    # docstring warns that a consumer treating such a verdict as a clean pass "will read a false
+    # pass"; presenting `passes_change_gate: True` with no qualifier alongside it is precisely
+    # that consumer. Carrying the flag here means any summary quoting the verdict inherits it.
+    _row_by_cell = {(r["game"], r["arm"]): r for r in rows}
+    must_not_fire_result = {}
+    for g, a in sorted(MUST_NOT_FIRE):
+        row = _row_by_cell.get((g, a), {})
+        meas = row.get("measured") or {}
+        vacuous_noop = bool(row.get("noop_verdict_is_vacuous"))
+        must_not_fire_result[f"{g}__{a}"] = {
             "passes_change_gate": (None if (g, a) not in caught else (not caught[(g, a)][0])),
             "reason": caught.get((g, a), (None, "not_measured"))[1],
+            "n_noop": meas.get("n_noop"),
+            "noop_channel_measurable": meas.get("noop_channel_measurable"),
+            "noop_verdict_is_vacuous": vacuous_noop,
+            "pass_is_qualified": vacuous_noop,
+            "qualification": (
+                "PASS IS QUALIFIED: n_noop == 0, so the no-op hallucination sub-condition was "
+                "not exercised at all. Two of the gate's three sub-conditions were tested on "
+                "this engine. Do not cite this as unqualified evidence that the gate spares "
+                "good engines."
+                if vacuous_noop
+                else "All three sub-conditions were exercised on a non-empty population."
+            ),
         }
-        for (g, a) in sorted(MUST_NOT_FIRE)
-    }
     catches_all_targets = all(v["measured"] is True for v in must_catch_result.values())
     spares_good = all(v["passes_change_gate"] is True for v in must_not_fire_result.values())
 
@@ -365,22 +388,35 @@ def main() -> int:
                 "report the measurement and leave the shipped default as-is."
             ),
             "recommendation": (
-                "QUALIFIED YES, and NOT ACTED ON. The stated criterion is met on this "
-                "population -- both named vacuous engines are rejected for discriminating "
-                "reasons, the good engine passes, and the admission swap adds ZERO new admits "
-                "against either incumbent configuration. But three limits sit between that and "
-                "flipping a submission default, all recorded in `scope_limits`: the must-not-"
-                "fire side is n=1; exp6011 and exp6013 disagree about whether the gate rejects "
-                "the hand-written correct control mask-off; and the flag does not govern the "
-                "call site where the lp85 acceptance the diagnosis names actually happened. "
+                "NO -- DO NOT ENABLE THE GATE MASK-OFF, and nothing was acted on. This "
+                "measurement's own two-sided criterion is met on THIS population (both named "
+                "vacuous engines rejected for discriminating reasons, tn36-on passes, and the "
+                "admission swap adds ZERO new admits against either incumbent). But the "
+                "criterion is a necessary condition, not the decision, and the decision is "
+                "settled AGAINST by the priors: this run was measured MASK OFF, and both "
+                "exp6011 and exp6013 measured the hand-written CORRECT dc22 control REJECTED "
+                "mask-off on 3 of 3 seeds on the whole corpus (change_fidelity 0.4694 / 0.4083 "
+                "/ 0.4103), with exp6013's own FINDING_gate_must_not_ship_without_mask stating "
+                "verbatim: 'the gate-only arm therefore rejects the one engine known to be "
+                "genuinely good. Do not flip CARNOT_ARC_WM_CHANGE_GATE without also flipping "
+                "CARNOT_ARC_WM_HUD_MASK.' An earlier draft of this field read QUALIFIED YES and "
+                "described that as an unresolved exp6011-vs-exp6013 disagreement; it is not a "
+                "disagreement (see scope_limits), and calling it one was this artifact's error. "
+                "Three further limits stand regardless: the must-not-fire side is n=1 AND that "
+                "one pass is QUALIFIED (tn36-on has n_noop == 0, so one of the gate's three "
+                "sub-conditions was never exercised); the flag does not govern the call site "
+                "where the lp85 acceptance the diagnosis names actually happened; and the "
+                "predicted funnel effect is zero. "
                 "SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED is left False, as shipped."
             ),
+            "recommendation_short": "NO for mask-off; not measured for mask-on",
             "what_would_settle_it": (
-                "A must-not-fire population larger than one: score a set of engines "
-                "INDEPENDENTLY known to be good (the hand-written controls exp6011/6013 "
-                "already build, plus any engine whose plan matched reality) through the plain "
-                "branch at both mask settings, and resolve the exp6011-vs-exp6013 "
-                "disagreement about the dc22 control before flipping anything."
+                "Re-run this two-sided measurement MASK ON, since mask-off is already decided "
+                "against by the dc22 control. Then widen the must-not-fire population beyond "
+                "one: score a set of engines INDEPENDENTLY known to be good (the hand-written "
+                "controls exp6011/6013 already build, plus any engine whose plan matched "
+                "reality) through the plain branch, and include at least one whose transition "
+                "set contains real no-ops so the third sub-condition is actually exercised."
             ),
         },
         "admission_swap_vs_incumbent": swap,
@@ -394,6 +430,26 @@ def main() -> int:
                 "sc25 is in HIDDEN_STATE_GAME_IDS, so its live admission runs the REQ-6013 "
                 "hidden-state branch instead and its row below is NOT its live decision. The "
                 "three pre-registered targets (lp85-on, ft09-onb, tn36-on) are all plain-branch."
+            ),
+            "WHY_sc25_IS_EXCLUDED_TWO_INDEPENDENT_REASONS": (
+                "Stated together because a summary quoting only one of them reads as a "
+                "contradiction of the other (2026-07-31 adversarial review). (1) FIDELITY: the "
+                "sc25-on AUDIT record has NO populated comparison fields -- its terminal induce "
+                "ended `proposer_failed_or_missing_root`, so all eight audit-side values are "
+                "null and corpus identity cannot be confirmed. That is what sets "
+                "`fidelity_ok: false` and drops it from `usable`. It does NOT mean the row has "
+                "no numbers: this run's OWN measured side is fully populated (n_changing 7, "
+                "n_noop 18, verify_accuracy 0.76, verify_cell_recall 0.2778) and is reported. "
+                "(2) BRANCH: sc25 is a hidden-state game, so even a fidelity-confirmed "
+                "plain-branch row would not be its live decision. Either reason alone excludes "
+                "it from the verdict; both are true."
+            ),
+            "REJECTED_ENGINE_COUNT_STATED_EXACTLY": (
+                "9 rows; 8 usable (sc25-on excluded, above); of those 8 the gate rejects 7 and "
+                "passes 1 (tn36-on). Two of the 7 are the pre-registered must-catch targets, so "
+                "the count of OTHER rejected engines is 5 -- lp85-onb, ft09-on, tn36-onb, "
+                "tu93-on, tu93-onb. A summary saying 'six other engines' is reachable only by "
+                "counting the sc25 row that the same summary excludes; the number is 5."
             ),
             "mask_condition": (
                 "Measured MASK OFF, matching every audit cell's own hud_mask_status='disabled'. "
@@ -453,13 +509,31 @@ def main() -> int:
             "n_equals_1_on_the_must_not_fire_side": (
                 "'Spares the good engine' rests on ONE engine (tn36-on), because that run "
                 "produced only one structurally sound engine. One passing engine cannot "
-                "establish a false-reject RATE. Two independent priors bear on it and they "
-                "DISAGREE: exp6011 measured the hand-written correct dc22 control REJECTED "
-                "mask-off on 3/3 seeds (whole-corpus change_fidelity 0.4694/0.4083/0.4103) and "
-                "concluded 'do not flip CARNOT_ARC_WM_CHANGE_GATE without CARNOT_ARC_WM_HUD_"
-                "MASK'; exp6013 measured the same control ADMITTED mask-off on 3/3 seeds "
-                "through the production path. That disagreement is unresolved and is not "
-                "resolved here."
+                "establish a false-reject RATE -- and that single pass is itself QUALIFIED: "
+                "tn36-on has n_noop == 0, so the gate's no-op hallucination sub-condition was "
+                "never exercised on it (surfaced as `noop_verdict_is_vacuous` / "
+                "`pass_is_qualified` inside verdict.must_not_fire, not only in the row)."
+            ),
+            "THE_PRIORS_DO_NOT_DISAGREE_AND_THEY_SETTLE_MASK_OFF": (
+                "CORRECTED 2026-07-31 (adversarial review). An earlier draft of this field "
+                "described exp6011 and exp6013 as an unresolved disagreement about the "
+                "hand-written correct dc22 control mask-off. They do not disagree on the "
+                "measurement that decides a flip. exp6011's `must_not_fire_control` records "
+                "whole_corpus_mask_off False on all three seeds (change_fidelity 0.4694 / "
+                "0.4083 / 0.4103) with `mask_flips_reject_to_admit_all_seeds: true`. exp6013 "
+                "reports the SAME whole-corpus result and states it as a FINDING: "
+                "'FINDING_gate_must_not_ship_without_mask ... the gate-only arm therefore "
+                "rejects the one engine known to be genuinely good. Do not flip "
+                "CARNOT_ARC_WM_CHANGE_GATE without also flipping CARNOT_ARC_WM_HUD_MASK.' What "
+                "differs is only exp6013's HELD-OUT-SPLIT row (the population the live "
+                "`select_trusted_world_model` actually owns), where the control is admitted "
+                "mask-off 3/3 -- and exp6013 resolves that itself: its "
+                "`held_out_split_vs_whole_corpus` field notes the split populations differ by "
+                "~3x, the control sits within 0.035 of the threshold there so 'its verdict "
+                "there is not robust', and 'whole-corpus is the figure to quote for a flip "
+                "decision'. Applying this artifact's own recommendation_rule to that, the "
+                "honest call for MASK OFF -- which is what this run measured -- is NO. Calling "
+                "it a tie was this artifact's error and is corrected rather than removed."
             ),
             "admit_rate_on_the_broader_engine_corpus_is_zero": (
                 "exp6011 reports new_gate_admits_ondisk_mask_on == 0 and _mask_off == 0 across "

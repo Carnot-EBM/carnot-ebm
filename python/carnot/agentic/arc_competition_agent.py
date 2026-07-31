@@ -6140,12 +6140,24 @@ class E3AgentPolicy:
                     # code rejected -- so this is a disclosure fix, not a relaxation of the veto.
                     # Matches the resolution in execute_bounded_llm_reinduction; see
                     # SCENARIO-ARC-WMTE-6047-5.
+                    #
+                    # `goal_unreached_within_depth` added to the allow-list 2026-07-31 for the
+                    # same disclosure reason and with the same non-effect on behaviour: the
+                    # gate splits a third termination -- nodes discarded unexpanded at
+                    # `max_depth` -- out of the frontier-empty case, and flattening it here
+                    # would reinstate exactly the "your goal is degenerate" mislabel on
+                    # tn36's measured-reachable predicate. All three still skip.
                     _kind = str((goal_check.get("counterexample") or {}).get("kind", "")) or (
                         "degenerate_goal_predicate"
                     )
                     attempt["skipped"] = (
                         _kind
-                        if _kind in ("degenerate_goal_predicate", "goal_unreached_within_budget")
+                        if _kind
+                        in (
+                            "degenerate_goal_predicate",
+                            "goal_unreached_within_budget",
+                            "goal_unreached_within_depth",
+                        )
                         else "degenerate_goal_predicate"
                     )
                     return

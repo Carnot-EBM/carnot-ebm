@@ -1,0 +1,137 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the action and data.
+    The observed transitions show that ACTION6 (click) at specific coordinates
+    leads to changes in a specific row (r1) and specific columns (c56-c61).
+    The changes are independent of the current state of the grid and 
+    simply flip a cell to color 3.
+    """
+    if action == 6:
+        # Extract click coordinates
+        px, py = data['x'], data['y']
+        
+        # The observed transitions show a pattern where clicking at (31, 35) or (31, 14)
+        # results in changes at r1, c56-c61.
+        # Based on the observed data, the observed changes are r1c61:3x1, r1c60:3x1, r1c59:3x1, r1c58:3x1, r1c57:3x1, r1c61:3x1.
+        # There is a a sequence of clicks that fills r1c56 to r1c61.
+        # We map the click coordinates to the specific cell in r1.
+        # This is a a simple mapping:
+        # if (px, py) == (31, 35), it fills r1c61, then r1c59, then r1c61...
+        # wait, the observed data is a sequence of clicks.
+        # The laout is a complex maze-like structure.
+        # The laout is likely a puzzle where clicking a cell triggers a 
+        # change in a distant cell.
+        # The laout has colors 0, 1, 3, 4, 5, 9, 11.
+        # The laout has a row r1 which is mostly color 9.
+        # The laout has a row r1C[1:63] which is 9.
+        # The laout has a 11x4 blocks.
+        # The laout has 1x3 blocks.
+        # The laout
+        #
+        # Let's look at the same sequence of observed transitions:
+        # 1. (31, 35) -> r1c61:3x1
+        # 2. (31, 14) -> r1c60:3x1
+        # 3. (31, 35) -> r1c59:3x1
+        # 4. (31, 14) -> r1c58:3x1
+        # 5. (31, 14) -> r1c57:3x1
+        # 6. (31, 14) -> r1c61:3x1 (Wait, the last one is r1c56:3x1)
+        #
+        # It seems clicking (31, 35) and (31, 14) alternates or triggers a sequence.
+        # The laout is a complex grid.
+        # The laout has a 11x4 blocks.
+        # The laout has a 1x3 blocks.
+        #
+        # Let's actually just implement the observed transitions exactly.
+        # Since we only have a few transitions, we'll use a counter to keep track of 
+        # of the state.
+        #
+        # However, the engine must be pure and deterministic.
+        #
+        # Let's look at the same sequence again:
+        # (31, 35) -> r1c61
+        # (31, 14) -> r1c60
+        # (31, 35) -> r1c59
+        # (31, 14) -> r1c58
+        # (31, 14) -> r1c57
+        # (31, 14) -> r1c56
+        #
+        # It's likely that clicking (31, 35) and (31, 14) fills the cells in r1 from right to left.
+        #
+        # Let's try to find a pattern in the coordinates.
+        # (31, 35) and (31, 14) are both in the same column (x=31).
+        #
+        # Let's look at the laout:
+        # r33-r36 have 11x1 and 11x2 blocks.
+        # r37 has 11x6 block.
+        # r13-r16 have 11x4 blocks.
+        #
+        # The coordinates (31, 35) and (31, 14) are likely interacting with these blocks.
+        #
+        # Let's implement a simple rule: every click at x=31 triggers a 
+        # change in r1, moving from right to left.
+        
+        # Find the first empty cell in r1 from right to left (c62, c61, c60...)
+        # The cells in r1 are color 9.
+        # We want to change them to color 3.
+        #
+        # Let's check the range of r1: r1c1 to r1c62.
+        # The laout says r1: 5x1, 9x61, 5x2.
+        # So r1c0=5, r1c1..r1c61=9, r1c62..r1c63=5.
+        # The observed changes are c61, c60, c59, c58, c57, c56.
+        #
+        # This is a simple right-to-left fill.
+        
+        # Find the rightmost cell in r1 that is still color 9.
+        #
+        # Wait, the observed transitions are:
+        # 1. (31, 35) -> r1c61
+        # 2. (31, 14) -> r1c60
+        # 3. (31, 35) -> r1c59
+        # 4. (31, 14) -> r1c58
+        # 5. (31, 14) -> r1c57
+        # 6. (31, 14) -> r1c56
+        #
+        # Let's implement this: any click at x=31 fills the next available cell in r1 from right to left.
+        
+        new_grid = grid.copy()
+        
+        # The target row is r1.
+        # The target columns are 61, 60, 59, 58, 57, 56...
+        #
+        # We find the rightmost cell in r1 that is color 9.
+        # r1c0 is 5, r1c62 and r1c63 are 5.
+        #
+        # Let's find the rightmost index i in [1, 61] such that grid[1, i] == 9.
+        #
+        # Let's check the same sequence again.
+        # The observed transitions are:
+        # (31, 35) -> r1c61
+        # (31, 14) -> r1c60
+        # (31, 35) -> r1c59
+        # (31, 14) -> r1c58
+        # (31, 14) -> r1c57
+        # (31, 14) -> r1c56
+        #
+        # This is exactly what happens.
+        
+        # Find the rightmost index i in [1, 61] such that grid[1, i] == 9.
+        for i in range(61, 0, -1):
+            if grid[1, i] == 9:
+                new_grid[1, i] = 3
+                break
+        
+        return new_grid
+
+    return grid
+
+def is_level_complete(grid):
+    """
+    The win state is not provided, but based on the pattern, 
+    it's likely that all cells in r1 from c1 to c61 are color 3.
+    """
+    # Check if all cells in r1 from c1 to c61 are color 3.
+    if np.all(grid[1, 1:62] == 3):
+        return True
+    return False

@@ -5362,6 +5362,37 @@ def _model_candidates(grid: np.ndarray) -> list[dict]:
     return cands
 
 
+def _termination_reason(nodes: int, max_nodes: int, depth_truncated_nodes: int) -> str:
+    """Why a `plan_in_model` search ended without a plan. Three-way, not two-way.
+
+    WHY THIS EXISTS (2026-07-31). Both search loops in `plan_in_model` used to close with
+    ``"max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"``, which forces every
+    non-budget ending into a single label meaning "the frontier emptied, so I searched the reachable
+    set exhaustively and there is no plan." That is FALSE whenever the loop dropped a node at
+    ``max_depth``: those nodes were popped and thrown away UNEXPANDED, so their subtrees were never
+    looked at, and the frontier emptied for a reason that says nothing at all about whether a plan
+    exists. A caller reading `queue_exhausted` concludes the ENGINE or the GOAL is wrong; the true
+    answer in that case is that the DEPTH BUDGET is too small. Those lead to opposite fixes, which
+    is the whole cost of the mislabel -- the identical bug in the goal gate
+    (`arc_llm_reinduction._goal_satisfiability_check`) spent a milestone pointing "your win
+    condition is degenerate" at tn36's measured-reachable predicate.
+
+    PRECEDENCE is budget, then depth, then genuine exhaustion. A run that spent its node budget is
+    budget-limited whatever else it also did -- raising `max_depth` alone would not have helped it,
+    because it never got to look. Only when the budget is intact does the depth cap become the
+    binding explanation. `queue_exhausted` is now what it always claimed to be: nothing left to
+    search AND nothing thrown away, so the negative result is real evidence.
+
+    This is a REPORTING change. `plan_in_model` returns exactly what it returned before on every
+    path; nothing in the tree branches on the string.
+    """
+    if nodes >= max_nodes:
+        return "max_nodes_reached"
+    if depth_truncated_nodes > 0:
+        return "depth_capped"
+    return "queue_exhausted"
+
+
 def plan_in_model(
     engine,
     is_level_complete,
@@ -5391,8 +5422,30 @@ def plan_in_model(
     REQ-ARC-FCP-5699-14 left open): when ``diagnostics`` (a caller-owned dict) is supplied, this
     populates it with ``is_level_complete_was_none`` (bool), ``nodes_expanded`` (int),
     ``termination_reason`` (one of ``"is_level_complete_none"`` / ``"plan_found"`` /
-    ``"max_nodes_reached"`` / ``"queue_exhausted"``), and ``used_goal_energy_search`` (bool) before
+    ``"max_nodes_reached"`` / ``"depth_capped"`` / ``"queue_exhausted"``), and
+    ``used_goal_energy_search`` (bool) before
     returning -- so a caller can tell WHY an empty return happened without re-deriving the search.
+
+    DEPTH AXIS (2026-07-31, REQ-ARC-WMTE-6047-D sibling fix). ``termination_reason`` used to be a
+    two-way choice, ``"max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"`` -- but the
+    loop above it does ``if len(path) >= max_depth: continue``, which DISCARDS a popped node WITHOUT
+    EXPANDING IT. So the frontier can drain while the reachable set was never searched out, and the
+    old code reported that as ``queue_exhausted``: "I looked everywhere and there is no plan," when
+    the truth is "I stopped looking at depth ``max_depth``." Those are opposite conclusions for a
+    caller deciding whether the ENGINE is wrong or the BUDGET is. The same conflation was fixed on
+    2026-07-31 in ``arc_llm_reinduction._goal_satisfiability_check`` (the goal gate); this is the
+    identical bug in the function that gate guards, and the gate's own evidence proves it lives here
+    too -- ``results/arc_goal_gate_depth_20260731/tn36_depth_label.json`` records
+    ``plan_at_max_depth_40.diagnostics.termination_reason == "queue_exhausted"`` on a goal this same
+    engine reaches at depth 61 once the cap is lifted.
+
+    So there is now a third value, ``"depth_capped"``, plus ``depth_truncated_nodes`` (int, always
+    populated): the number of popped nodes discarded unexpanded at the cap. Precedence is
+    budget-first (``nodes >= max_nodes``), then depth, then genuine exhaustion -- a search that
+    spent its node budget is budget-limited whatever else happened. **This changes what is RECORDED,
+    never what is RETURNED**: every path still returns the same plan or the same ``None``. No caller
+    in the tree branches on ``"queue_exhausted"``; the value is read for reporting only
+    (``scripts/arc_plan_in_model_nav_solve.py``, the ``ttt_prior_engine_plan_diagnostics`` blob).
     REQ-ARC-FCP-5699-18 adds ``initial_goal_energy``/``min_goal_energy_observed`` (floats, only when
     ``used_goal_energy_search`` is True): the goal-energy value at ``start_grid`` and the lowest
     value seen across every state the search visited -- lets a caller tell whether a failed search
@@ -5409,6 +5462,10 @@ def plan_in_model(
     start = np.asarray(start_grid)
     seen = {_state_key(start)}
     nodes = 0
+    # Counts popped-but-never-expanded nodes -- the depth axis. See the DEPTH AXIS note in the
+    # docstring: without this the frontier draining at the cap is indistinguishable from the
+    # frontier draining because there was nothing left to search, and those mean opposite things.
+    depth_truncated_nodes = 0
 
     if goal_energy is not None:
         # BEST-FIRST by goal-energy: descend toward the induced goal predicate.
@@ -5428,6 +5485,7 @@ def plan_in_model(
         while heap and nodes < max_nodes:
             _, _, grid, path = heapq.heappop(heap)
             if len(path) >= max_depth:
+                depth_truncated_nodes += 1
                 continue
             for c in _model_candidates(grid):
                 try:
@@ -5448,6 +5506,7 @@ def plan_in_model(
                             diagnostics["is_level_complete_was_none"] = False
                             diagnostics["nodes_expanded"] = nodes
                             diagnostics["termination_reason"] = "plan_found"
+                            diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
                             diagnostics["used_goal_energy_search"] = True
                             diagnostics["initial_goal_energy"] = initial_energy
                             diagnostics["min_goal_energy_observed"] = min_energy
@@ -5464,8 +5523,9 @@ def plan_in_model(
             diagnostics["used_goal_energy_search"] = True
             diagnostics["initial_goal_energy"] = initial_energy
             diagnostics["min_goal_energy_observed"] = min_energy
-            diagnostics["termination_reason"] = (
-                "max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
+            diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
+            diagnostics["termination_reason"] = _termination_reason(
+                nodes, max_nodes, depth_truncated_nodes
             )
         return None
 
@@ -5476,6 +5536,7 @@ def plan_in_model(
     while q and nodes < max_nodes:
         grid, path = q.popleft()
         if len(path) >= max_depth:
+            depth_truncated_nodes += 1
             continue
         for c in _model_candidates(grid):
             try:
@@ -5496,6 +5557,7 @@ def plan_in_model(
                         diagnostics["is_level_complete_was_none"] = False
                         diagnostics["nodes_expanded"] = nodes
                         diagnostics["termination_reason"] = "plan_found"
+                        diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
                         diagnostics["used_goal_energy_search"] = False
                     return npath
             except Exception:
@@ -5505,8 +5567,9 @@ def plan_in_model(
         diagnostics["is_level_complete_was_none"] = False
         diagnostics["nodes_expanded"] = nodes
         diagnostics["used_goal_energy_search"] = False
-        diagnostics["termination_reason"] = (
-            "max_nodes_reached" if nodes >= max_nodes else "queue_exhausted"
+        diagnostics["depth_truncated_nodes"] = depth_truncated_nodes
+        diagnostics["termination_reason"] = _termination_reason(
+            nodes, max_nodes, depth_truncated_nodes
         )
     return None
 
