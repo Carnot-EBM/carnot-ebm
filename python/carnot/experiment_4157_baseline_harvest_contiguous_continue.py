@@ -11,6 +11,8 @@ SCENARIO-LEARN-4157-FAITHFUL, SCENARIO-LEARN-4157-CONTINUE.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import csv
 import json
 import math
@@ -100,7 +102,11 @@ class Exp4157Config:
         if parent == DEFAULT_SAVE_PARENT and root != REPO_ROOT:
             parent = root / "results" / "trm_runs"
         nano_root = Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm"
-        stable = Path(self.stable_dir) if self.stable_dir is not None else parent / "sudoku_extreme_baseline"
+        stable = (
+            Path(self.stable_dir)
+            if self.stable_dir is not None
+            else parent / "sudoku_extreme_baseline"
+        )
         run_dir = (
             Path(self.contiguous_run_dir)
             if self.contiguous_run_dir is not None
@@ -165,7 +171,13 @@ class MetricsRow:
 
     @property
     def signature(self) -> tuple[str, int, int | None, int | None, float]:
-        return (str(self.metrics_path), self.row_number, self.epoch, self.step, self.val_exact_accuracy)
+        return (
+            str(self.metrics_path),
+            self.row_number,
+            self.epoch,
+            self.step,
+            self.val_exact_accuracy,
+        )
 
 
 @dataclass(frozen=True)
@@ -289,8 +301,13 @@ def _rounded(value: float | None, digits: int = 12) -> float | None:
     return None if value is None else round(float(value), digits)
 
 
-def _checks_to_dicts(checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
-    return [check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check) for check in checks]
+def _checks_to_dicts(
+    checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check)
+        for check in checks
+    ]
 
 
 def _version_number(metrics_path: Path) -> int:
@@ -345,11 +362,13 @@ def read_checkpoint_scalars(path: str | Path) -> CheckpointScalars:
     try:
         import torch
 
-        payload = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        payload = safe_torch_load(checkpoint_path, map_location="cpu", allow_unsafe_pickle=True)
     except Exception as exc:
         return CheckpointScalars(False, f"{type(exc).__name__}: {exc}", None, None)
     if not isinstance(payload, Mapping):
-        return CheckpointScalars(False, f"unexpected checkpoint payload: {type(payload).__name__}", None, None)
+        return CheckpointScalars(
+            False, f"unexpected checkpoint payload: {type(payload).__name__}", None, None
+        )
     return CheckpointScalars(
         load_ok=True,
         detail=f"loaded scalar checkpoint view: {checkpoint_path}",
@@ -527,7 +546,9 @@ def check_preconditions(
         exp4107.PreconditionCheck(
             "stable_checkpoint",
             checkpoint_ok,
-            f"exists: {config.stable_checkpoint_path}" if checkpoint_ok else f"missing: {config.stable_checkpoint_path}",
+            f"exists: {config.stable_checkpoint_path}"
+            if checkpoint_ok
+            else f"missing: {config.stable_checkpoint_path}",
         )
     )
     if not checks[0].available:
@@ -590,7 +611,9 @@ def launch_contiguous_run(  # pragma: no cover - launches native trainer.
             stdout_tail.append(
                 f"progress_proven manual_lr_step={checkpoint.manual_lr_step} val_rows={snapshot.val_row_count}"
             )
-            return LaunchResult(process_pid=proc.pid, return_code=None, stdout_tail=stdout_tail[-80:])
+            return LaunchResult(
+                process_pid=proc.pid, return_code=None, stdout_tail=stdout_tail[-80:]
+            )
         return_code = proc.poll()
         if return_code is not None:
             log_handle.close()
@@ -600,7 +623,9 @@ def launch_contiguous_run(  # pragma: no cover - launches native trainer.
                 log_tail = []
             stdout_tail.extend(log_tail)
             stdout_tail.append(f"return_code={return_code}")
-            return LaunchResult(process_pid=proc.pid, return_code=return_code, stdout_tail=stdout_tail[-80:])
+            return LaunchResult(
+                process_pid=proc.pid, return_code=return_code, stdout_tail=stdout_tail[-80:]
+            )
 
 
 def _artifact_base(
@@ -622,7 +647,9 @@ def _artifact_base(
         "honest_verdict": honest_verdict,
         "current_val": _rounded(current_val),
         "max_val": _rounded(metrics.max_val),
-        "baseline_faithful": bool(current_val is not None and current_val >= FAITHFUL_VAL_THRESHOLD),
+        "baseline_faithful": bool(
+            current_val is not None and current_val >= FAITHFUL_VAL_THRESHOLD
+        ),
         "run_alive": bool(liveness.run_alive),
         "manual_lr_step": checkpoint.manual_lr_step,
         "val_trajectory": metrics.to_trajectory(),
@@ -742,9 +769,7 @@ def build_launched_artifact(
         detail="task-launched contiguous run",
     )
     current_val = post_metrics.current_val
-    if not step_advanced:
-        verdict = "blocked_noop_step_unchanged"
-    elif not new_val_written:
+    if not step_advanced or not new_val_written:
         verdict = "blocked_noop_step_unchanged"
     elif current_val is not None and current_val >= FAITHFUL_VAL_THRESHOLD:
         verdict = f"complete: baseline_faithful_val_{current_val:.4f}"
@@ -803,13 +828,17 @@ def run_experiment(
     uv_resolver: Callable[[str], str | None] = shutil.which,
     cuda_checker: Callable[[], tuple[bool, str]] = exp4107._default_cuda_checker,
     liveness_checker: Callable[[Exp4157Config, MetricsSnapshot], RunLiveness] | None = None,
-    trainer_runner: Callable[[Exp4157Config, CheckpointScalars, MetricsSnapshot], LaunchResult] = launch_contiguous_run,
+    trainer_runner: Callable[
+        [Exp4157Config, CheckpointScalars, MetricsSnapshot], LaunchResult
+    ] = launch_contiguous_run,
 ) -> dict[str, Any]:
     """Run Exp 4157 and write the required harvest artifact."""
 
     started = time.time()
     config = Exp4157Config(repo_root=repo_root)
-    checks, blocker = check_preconditions(config, uv_resolver=uv_resolver, cuda_checker=cuda_checker)
+    checks, blocker = check_preconditions(
+        config, uv_resolver=uv_resolver, cuda_checker=cuda_checker
+    )
     if blocker is not None:
         artifact = _blocked_artifact(
             blocker,
@@ -904,7 +933,12 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     for key in ("current_val", "max_val"):
         value = artifact.get(key)
         parsed = value if isinstance(value, (int, float)) and not isinstance(value, bool) else None
-        if value is not None and (parsed is None or not math.isfinite(float(parsed)) or float(parsed) < 0.0 or float(parsed) > 1.0):
+        if value is not None and (
+            parsed is None
+            or not math.isfinite(float(parsed))
+            or float(parsed) < 0.0
+            or float(parsed) > 1.0
+        ):
             errors.append(f"{key} must be numeric between 0 and 1 or null")
     if not isinstance(artifact.get("baseline_faithful"), bool):
         errors.append("baseline_faithful must be a bare bool")
@@ -915,12 +949,16 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("manual_lr_step must be an integer or null")
     if not isinstance(artifact.get("val_trajectory"), list):
         errors.append("val_trajectory must be a list")
-    if not isinstance(artifact.get("stable_checkpoint_path"), str) or not artifact.get("stable_checkpoint_path"):
+    if not isinstance(artifact.get("stable_checkpoint_path"), str) or not artifact.get(
+        "stable_checkpoint_path"
+    ):
         errors.append("stable_checkpoint_path must be a non-empty string")
     if not isinstance(artifact.get("estimated_passes_to_085"), Mapping):
         errors.append("estimated_passes_to_085 must be an object")
     principles = artifact.get("field_principles")
-    if not isinstance(principles, Mapping) or any(principles.get(field) != FIELD_PRINCIPLES[field] for field in REQUIRED_ARTIFACT_FIELDS):
+    if not isinstance(principles, Mapping) or any(
+        principles.get(field) != FIELD_PRINCIPLES[field] for field in REQUIRED_ARTIFACT_FIELDS
+    ):
         errors.append("field_principles must include the required operator principles")
     if artifact.get("native_trainer_launched") is True:
         launched = artifact.get("task_launched_run")

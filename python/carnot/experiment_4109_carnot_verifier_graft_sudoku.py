@@ -6,6 +6,8 @@ SCENARIO-LEARN-4109-RFT.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import hashlib
 import json
 import os
@@ -22,7 +24,9 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_FILENAME = "experiment_4109_carnot_verifier_graft_sudoku.json"
 DEFAULT_OUTPUT = REPO_ROOT / "results" / RESULT_FILENAME
-DEFAULT_EXP4108_ARTIFACT = REPO_ROOT / "results" / "experiment_4108_nanotrm_sudoku_extreme_baseline.json"
+DEFAULT_EXP4108_ARTIFACT = (
+    REPO_ROOT / "results" / "experiment_4108_nanotrm_sudoku_extreme_baseline.json"
+)
 DEFAULT_EXP4107_ARTIFACT = REPO_ROOT / "results" / "experiment_4107_nanotrm_mechanism_smoke.json"
 DEFAULT_DATA_DIR = REPO_ROOT / "nano-trm" / "data" / "sudoku_extreme_1k_aug_1k"
 RANDOM_SEED = 4109
@@ -235,7 +239,9 @@ def score_sudoku_candidate(
 
 
 def _is_exact(candidate_tokens: Sequence[int], label_tokens: Sequence[int]) -> bool:
-    return tuple(int(token) for token in candidate_tokens) == tuple(int(token) for token in label_tokens)
+    return tuple(int(token) for token in candidate_tokens) == tuple(
+        int(token) for token in label_tokens
+    )
 
 
 def _vote_groups(candidates: Sequence[CandidateSample]) -> dict[tuple[int, ...], dict[str, Any]]:
@@ -324,7 +330,9 @@ def evaluate_rerank(
         vote_score = score_sudoku_candidate(pool.puzzle_tokens, vote.tokens)
         vote_correct = _is_exact(vote.tokens, pool.label_tokens)
         verifier_correct = _is_exact(verifier.tokens, pool.label_tokens)
-        oracle_correct = any(_is_exact(candidate.tokens, pool.label_tokens) for candidate in pool.candidates)
+        oracle_correct = any(
+            _is_exact(candidate.tokens, pool.label_tokens) for candidate in pool.candidates
+        )
         differences.append(float(verifier_correct) - float(vote_correct))
         rows.append(
             {
@@ -445,7 +453,10 @@ def _jsonable(value: Any) -> Any:
     if isinstance(value, Path):
         return str(value)
     if isinstance(value, Mapping):
-        return {str(key): _jsonable(item) for key, item in sorted(value.items(), key=lambda item: str(item[0]))}
+        return {
+            str(key): _jsonable(item)
+            for key, item in sorted(value.items(), key=lambda item: str(item[0]))
+        }
     if isinstance(value, (list, tuple)):
         return [_jsonable(item) for item in value]
     if hasattr(value, "item"):
@@ -453,7 +464,9 @@ def _jsonable(value: Any) -> Any:
     return value
 
 
-def compute_reproducibility_checksum(corpora: Mapping[str, Any], *, heldout_ids: Sequence[str]) -> str:
+def compute_reproducibility_checksum(
+    corpora: Mapping[str, Any], *, heldout_ids: Sequence[str]
+) -> str:
     """REQ-LEARN-4109: hash corpus rows and held-out split identifiers."""
 
     payload = {
@@ -505,7 +518,9 @@ def resolve_checkpoint_choice(
     return CheckpointChoice(None, "none", "no_exp4108_or_exp4107_checkpoint_available")
 
 
-def _default_cuda_checker() -> tuple[bool, str]:  # pragma: no cover - imports torch and probes host GPU.
+def _default_cuda_checker() -> tuple[
+    bool, str
+]:  # pragma: no cover - imports torch and probes host GPU.
     try:
         import torch  # pylint: disable=import-outside-toplevel
     except Exception as exc:  # pragma: no cover - depends on runtime.
@@ -541,7 +556,9 @@ def check_preconditions(
     return checks, choice
 
 
-def _candidate_score_from_logprobs(log_probs: Any, selected: Any) -> float:  # pragma: no cover - torch live sampler helper.
+def _candidate_score_from_logprobs(
+    log_probs: Any, selected: Any
+) -> float:  # pragma: no cover - torch live sampler helper.
     gathered = log_probs.gather(-1, selected.unsqueeze(-1)).squeeze(-1)
     return float(gathered.mean().detach().cpu().item())
 
@@ -571,7 +588,9 @@ def sample_checkpoint_candidate_pools(  # pragma: no cover - live GPU/checkpoint
     from src.nn.models.trm import TRMModule  # pylint: disable=import-outside-toplevel
 
     print(f"[exp4109] loading checkpoint={checkpoint_path}", flush=True)
-    checkpoint = torch.load(Path(checkpoint_path), map_location="cpu", weights_only=False)
+    checkpoint = safe_torch_load(
+        Path(checkpoint_path), map_location="cpu", allow_unsafe_pickle=True
+    )
     model = TRMModule(**checkpoint["hyper_parameters"])
     model.load_state_dict(checkpoint["state_dict"], strict=False)
     model.eval()
@@ -589,14 +608,15 @@ def sample_checkpoint_candidate_pools(  # pragma: no cover - live GPU/checkpoint
     for start in range(0, n, batch_size):
         stop = min(start + batch_size, n)
         print(
-            f"[exp4109] sampling TRM candidates split={split} rows={start}:{stop} "
-            f"k={k_candidates}",
+            f"[exp4109] sampling TRM candidates split={split} rows={start}:{stop} k={k_candidates}",
             flush=True,
         )
         batch = {
             "input": torch.as_tensor(inputs[start:stop], dtype=torch.long, device=device),
             "output": torch.as_tensor(labels[start:stop], dtype=torch.long, device=device),
-            "puzzle_identifiers": torch.as_tensor(identifiers[start:stop], dtype=torch.long, device=device),
+            "puzzle_identifiers": torch.as_tensor(
+                identifiers[start:stop], dtype=torch.long, device=device
+            ),
         }
         with torch.no_grad():
             carry = model.initial_carry(batch)
@@ -703,7 +723,9 @@ def build_result_artifact(
         "verifier_value_added": bool(value_added),
         "preconditions_checked": [_jsonable(check) for check in preconditions_checked],
         "checkpoint_choice": checkpoint_choice.to_dict(),
-        "checkpoint_path": None if checkpoint_choice.checkpoint_path is None else str(checkpoint_choice.checkpoint_path),
+        "checkpoint_path": None
+        if checkpoint_choice.checkpoint_path is None
+        else str(checkpoint_choice.checkpoint_path),
         "checkpoint_source_experiment": checkpoint_choice.source_experiment,
         "baseline_limitation": checkpoint_choice.limitation,
         "candidate_source": candidate_source,
@@ -872,9 +894,13 @@ def run_experiment(
         )
         candidate_source = "trm_checkpoint_final_logits_k_sampling"
 
-    rerank = evaluate_rerank(pools, random_seed=random_seed, bootstrap_resamples=bootstrap_resamples)
+    rerank = evaluate_rerank(
+        pools, random_seed=random_seed, bootstrap_resamples=bootstrap_resamples
+    )
     corpora = build_matched_corpora(pools)
-    rft_delta = evaluate_label_arms(corpora, random_seed=random_seed + 1, bootstrap_resamples=bootstrap_resamples)
+    rft_delta = evaluate_label_arms(
+        corpora, random_seed=random_seed + 1, bootstrap_resamples=bootstrap_resamples
+    )
     heldout_ids = [pool.puzzle_id for pool in pools]
     checksum = compute_reproducibility_checksum(corpora, heldout_ids=heldout_ids)
     artifact = build_result_artifact(

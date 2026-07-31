@@ -10,6 +10,8 @@ direct evidence that the update dynamics are outside ordinary EBT descent.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import hashlib
 import importlib
 import json
@@ -140,7 +142,7 @@ def resolve_checkpoint_path(source: Any, *, base_dir: Path | None = None) -> Pat
 def _torch_load(path: Path) -> Any:
     torch = importlib.import_module("torch")
     try:
-        return torch.load(path, map_location="cpu", weights_only=False)
+        return safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
     except TypeError:
         return torch.load(path, map_location="cpu")
 
@@ -180,8 +182,12 @@ def run_preconditions_check(
     preconditions["source_artifact_available"] = True
     checkpoint_source = source_artifact.get("trm_checkpoint_source")
     preconditions["trm_checkpoint_source"] = checkpoint_source
-    checkpoint_path = resolve_checkpoint_path(checkpoint_source, base_dir=source_artifact_path.parent)
-    preconditions["trm_checkpoint_path"] = str(checkpoint_path) if checkpoint_path is not None else None
+    checkpoint_path = resolve_checkpoint_path(
+        checkpoint_source, base_dir=source_artifact_path.parent
+    )
+    preconditions["trm_checkpoint_path"] = (
+        str(checkpoint_path) if checkpoint_path is not None else None
+    )
 
     if not preconditions["torch_available"] or not preconditions["numpy_available"]:
         preconditions["checkpoint_load_error"] = "torch_or_numpy_unavailable"
@@ -235,7 +241,9 @@ def make_delta_fn(model: Any) -> Callable[[Any], Any]:
         if isinstance(output, dict):
             output = output.get("h_next", output.get("next_state"))
         if output is None or getattr(output, "shape", None) != h.shape:
-            raise ValueError("model output must be a next latent state with the same shape as input")
+            raise ValueError(
+                "model output must be a next latent state with the same shape as input"
+            )
         return output - h
 
     return delta_fn
@@ -367,7 +375,9 @@ def scalar_potential_fit_residual(states: Any, deltas: Any) -> float:
         for output_dim in range(latent_dim):
             design_row = sample_idx * latent_dim + output_dim
             for input_dim in range(latent_dim):
-                key = (output_dim, input_dim) if output_dim <= input_dim else (input_dim, output_dim)
+                key = (
+                    (output_dim, input_dim) if output_dim <= input_dim else (input_dim, output_dim)
+                )
                 design[design_row, parameter_index[key]] += h[input_dim]
             design[design_row, bias_start + output_dim] = 1.0
 
@@ -398,7 +408,10 @@ def classify_verdict(
     positive_control_residual: float | None,
 ) -> str:
     """Apply the terminal gate for Exp 3823."""
-    if positive_control_residual is None or positive_control_residual > POSITIVE_CONTROL_MAX_RESIDUAL:
+    if (
+        positive_control_residual is None
+        or positive_control_residual > POSITIVE_CONTROL_MAX_RESIDUAL
+    ):
         return "complete: INCONCLUSIVE_curlfree_positive_control_failed"
     if scalar_potential_fit_residual_value <= LOW_TRM_RESIDUAL:
         return (
@@ -526,7 +539,9 @@ def build_artifact(
         "honest_verdict": verdict,
         "trm_checkpoint_source": preconditions.get("trm_checkpoint_source"),
         "jacobian_antisymmetry_fraction": principled("jacobian_antisymmetry_fraction", asymmetry),
-        "scalar_potential_fit_residual": principled("scalar_potential_fit_residual", potential_residual),
+        "scalar_potential_fit_residual": principled(
+            "scalar_potential_fit_residual", potential_residual
+        ),
         "positive_control_fit_residual": principled(
             "positive_control_fit_residual", positive_control_residual
         ),

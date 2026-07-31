@@ -6,6 +6,8 @@ SCENARIO-LEARN-4135-BLOCKED.
 
 from __future__ import annotations
 
+from carnot.serialization_safety import safe_torch_load
+
 import hashlib
 import json
 import math
@@ -109,9 +111,15 @@ class Exp4135Config:
         if parent == DEFAULT_SAVE_PARENT and root != REPO_ROOT:
             parent = root / "results" / "trm_runs"
         nano_root = Path(self.nano_trm_root) if self.nano_trm_root else root / "nano-trm"
-        stable = Path(self.stable_dir) if self.stable_dir is not None else parent / "sudoku_extreme_baseline"
+        stable = (
+            Path(self.stable_dir)
+            if self.stable_dir is not None
+            else parent / "sudoku_extreme_baseline"
+        )
         hydra_root = (
-            Path(self.hydra_run_root) if self.hydra_run_root is not None else parent / Path(DEFAULT_HYDRA_RUN_ROOT).name
+            Path(self.hydra_run_root)
+            if self.hydra_run_root is not None
+            else parent / Path(DEFAULT_HYDRA_RUN_ROOT).name
         )
         dataset = (
             Path(self.dataset_dir)
@@ -211,9 +219,13 @@ class PassMetricSummary:
 
     def to_dict(self) -> dict[str, Any]:
         row = asdict(self)
-        row["val_metrics_path"] = None if self.val_metrics_path is None else str(self.val_metrics_path)
+        row["val_metrics_path"] = (
+            None if self.val_metrics_path is None else str(self.val_metrics_path)
+        )
         row["first_train_lr_metrics_path"] = (
-            None if self.first_train_lr_metrics_path is None else str(self.first_train_lr_metrics_path)
+            None
+            if self.first_train_lr_metrics_path is None
+            else str(self.first_train_lr_metrics_path)
         )
         row["lr_continued_not_rewarmed"] = self.lr_continued_not_rewarmed
         return row
@@ -254,8 +266,13 @@ def _rounded(value: float | None, digits: int = 12) -> float | None:
     return None if value is None else round(float(value), digits)
 
 
-def _checks_to_dicts(checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
-    return [check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check) for check in checks]
+def _checks_to_dicts(
+    checks: Sequence[exp4107.PreconditionCheck | Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    return [
+        check.to_dict() if isinstance(check, exp4107.PreconditionCheck) else dict(check)
+        for check in checks
+    ]
 
 
 def lr_continued_not_rewarmed(first_lr: float | None) -> bool:
@@ -269,7 +286,10 @@ def lr_continued_not_rewarmed(first_lr: float | None) -> bool:
 def matches_published_087(value: float | None) -> bool:
     """REQ-LEARN-4135: compare validation exact accuracy to 0.87 within 0.02."""
 
-    return value is not None and abs(float(value) - PUBLISHED_EXACT_ACCURACY) <= PUBLISHED_TOLERANCE + 1e-12
+    return (
+        value is not None
+        and abs(float(value) - PUBLISHED_EXACT_ACCURACY) <= PUBLISHED_TOLERANCE + 1e-12
+    )
 
 
 def build_train_command(config: Exp4135Config) -> list[str]:
@@ -316,11 +336,13 @@ def _hash_path(hasher: Any, label: str, path: Path) -> None:
         _hash_file(hasher, path.parent, path)
         return
     if path.is_dir():
-        children = sorted((item for item in path.rglob("*") if item.is_file()), key=lambda item: str(item))
+        children = sorted(
+            (item for item in path.rglob("*") if item.is_file()), key=lambda item: str(item)
+        )
         for child in children:
             _hash_file(hasher, path, child)
         return
-    hasher.update(f"missing:{path}".encode("utf-8"))
+    hasher.update(f"missing:{path}".encode())
     hasher.update(b"\0")
 
 
@@ -371,20 +393,26 @@ def reset_checkpoint_timer_state(checkpoint_path: str | Path) -> TimerResetResul
         import torch  # pylint: disable=import-outside-toplevel
 
         try:
-            payload = torch.load(path, map_location="cpu", weights_only=False)
+            payload = safe_torch_load(path, map_location="cpu", allow_unsafe_pickle=True)
         except TypeError:
             payload = torch.load(path, map_location="cpu")
     except Exception as exc:
         return TimerResetResult(False, f"{type(exc).__name__}: {exc}", None)
     if not isinstance(payload, dict):
-        return TimerResetResult(False, f"unexpected checkpoint payload: {type(payload).__name__}", None)
+        return TimerResetResult(
+            False, f"unexpected checkpoint payload: {type(payload).__name__}", None
+        )
 
     manual_step = _float_or_none(payload.get("nano_trm_manual_lr_step"))
     callbacks = payload.get("callbacks")
     timer = callbacks.get("Timer") if isinstance(callbacks, dict) else None
     elapsed = timer.get("time_elapsed") if isinstance(timer, dict) else None
     if not isinstance(elapsed, dict):
-        return TimerResetResult(False, "no Lightning Timer time_elapsed state found", None if manual_step is None else int(manual_step))
+        return TimerResetResult(
+            False,
+            "no Lightning Timer time_elapsed state found",
+            None if manual_step is None else int(manual_step),
+        )
 
     changed = False
     for key in ("train", "sanity_check", "validate", "test", "predict"):
@@ -662,13 +690,19 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
 
     val = artifact.get("val_exact_accuracy")
     if val is not None:
-        number = _float_or_none(val) if isinstance(val, (int, float)) and not isinstance(val, bool) else None
+        number = (
+            _float_or_none(val)
+            if isinstance(val, (int, float)) and not isinstance(val, bool)
+            else None
+        )
         if number is None or not 0.0 <= number <= 1.0:
             errors.append("val_exact_accuracy must be numeric between 0 and 1 or null")
 
     delta = artifact.get("delta_vs_previous")
     if delta is not None and (
-        not isinstance(delta, (int, float)) or isinstance(delta, bool) or _float_or_none(delta) is None
+        not isinstance(delta, (int, float))
+        or isinstance(delta, bool)
+        or _float_or_none(delta) is None
     ):
         errors.append("delta_vs_previous must be numeric or null")
 
@@ -682,9 +716,13 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     if not isinstance(stable_checkpoint_path, str) or not stable_checkpoint_path.endswith(
         "results/trm_runs/sudoku_extreme_baseline/last.ckpt"
     ):
-        errors.append("stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path")
+        errors.append(
+            "stable_checkpoint_path must be the shared sudoku_extreme_baseline/last.ckpt path"
+        )
 
-    if not isinstance(artifact.get("random_seed"), int) or isinstance(artifact.get("random_seed"), bool):
+    if not isinstance(artifact.get("random_seed"), int) or isinstance(
+        artifact.get("random_seed"), bool
+    ):
         errors.append("random_seed must be a bare int")
 
     checksum = artifact.get("reproducibility_checksum")
@@ -703,7 +741,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
     if duration is None or duration < 0 or duration >= 4_800:
         errors.append("duration_s must be a scalar bounded number below 4800")
 
-    if artifact.get("matches_published_087") is True and not matches_published_087(_float_or_none(val)):
+    if artifact.get("matches_published_087") is True and not matches_published_087(
+        _float_or_none(val)
+    ):
         errors.append("matches_published_087=true requires val within 0.02 of 0.87")
 
     gate = artifact.get("acceptance_gate_passed")
@@ -716,7 +756,9 @@ def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
             lr_continued=artifact.get("lr_continued_not_rewarmed") is True,
             honest_verdict=str(verdict),
         ):
-            errors.append("acceptance_gate_passed=true requires val, LR continuity, and improvement or stall verdict")
+            errors.append(
+                "acceptance_gate_passed=true requires val, LR continuity, and improvement or stall verdict"
+            )
 
     return errors
 
@@ -751,7 +793,11 @@ def run_experiment(
 
     started = time.time()
     root = Path(repo_root)
-    lr_path = Path(lr_artifact_path) if lr_artifact_path is not None else root / "results" / exp4126.RESULT_FILENAME
+    lr_path = (
+        Path(lr_artifact_path)
+        if lr_artifact_path is not None
+        else root / "results" / exp4126.RESULT_FILENAME
+    )
     config = Exp4135Config(
         repo_root=root,
         save_parent=save_parent,
@@ -848,7 +894,13 @@ def run_experiment(
 
 def main() -> None:  # pragma: no cover - thin CLI wrapper.
     artifact = run_experiment()
-    print(json.dumps({field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS}, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {field: artifact.get(field) for field in REQUIRED_ARTIFACT_FIELDS},
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover
