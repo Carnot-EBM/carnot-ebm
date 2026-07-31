@@ -41,6 +41,10 @@ def main() -> int:  # noqa: C901
         return b[name]["yield"] if isinstance(b, dict) and name in b else None
 
     marg = ys.get("marginal_per_candidate", {})
+    # Every criterion the scorer computed, in its order -- NOT a hand-listed subset. An earlier
+    # version listed the original four by name and silently reported None for the unconditional
+    # and shipped-gate reads, which are exactly the ones that carry this phase's finding.
+    CRIT_NAMES = list(marg.keys())
     gen = next(iter(d["generation_runs"].values()))
     wit = gen.get("witness") or {}
 
@@ -231,10 +235,7 @@ def main() -> int:  # noqa: C901
         "n_stall_inductions": len(ys["games"]),
         "n_candidates_per_induction": n_avail,
         "yield_by_criterion_and_N": {
-            f"N{N}": {
-                name: y(N, name)
-                for name in ("i_dynamics", "i_dynamics_strict", "ii_goal_satisfiable", "iii_plan_found")
-            }
+            f"N{N}": {name: y(N, name) for name in CRIT_NAMES}
             for N in reached
         },
         "marginal_per_candidate_rate": {
@@ -255,12 +256,7 @@ def main() -> int:  # noqa: C901
                     if cost.get(f"N{N}_gpu_seconds_per_induction_mean")
                     else None
                 )
-                for name in (
-                    "i_dynamics",
-                    "i_dynamics_strict",
-                    "ii_goal_satisfiable",
-                    "iii_plan_found",
-                )
+                for name in CRIT_NAMES
             }
             for N in reached
         },
