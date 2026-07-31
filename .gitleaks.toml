@@ -87,9 +87,17 @@ targetRules = ["generic-api-key"]
 #    60  assorted prose, HTTP response captures (x-amz-apigw-id request trace
 #        ids from a 429 body), and type annotations
 #
-# EXPECTED RESIDUAL AFTER THESE RULES: ~166 findings (544 minus the 378 cache
-# hits), all reviewed 2026-07-31 and benign. Not driven lower -- see the
-# ATTEMPTED AND REJECTED note below for why the obvious next step is unsafe.
+# EXPECTED RESIDUAL AFTER THESE RULES: 170 findings. MEASURED, not predicted --
+# a full-history re-scan on 2026-07-31 with these rules in place returned exactly
+# 170 (544 before, 374 suppressed). Every one was diffed against the original
+# 544 and confirmed to be the same benign content; the 4 that were not in the
+# first scan verbatim are the SAME file:line at a different commit (a
+# `private_key: Ed25519PrivateKey` type annotation, and an
+# `"access_outcome": "excluded_by_..."` enum x3).
+#
+# TREAT A RISE ABOVE 170 AS SOMETHING TO TRIAGE, not as noise to re-suppress.
+# Not driven lower -- see the ATTEMPTED AND REJECTED note below for why the
+# obvious next step is unsafe.
 
 [[allowlists]]
 description = "Content-hash item keys in detector cache/manifest JSONL (378 of 544)"
@@ -131,7 +139,6 @@ targetRules = ["generic-api-key"]
 # that silently rots as history is rewritten, or regexes broad enough to hide a
 # real key. A short, stable, human-reviewable residual is the safer end state.
 #
-# TREAT A RISE ABOVE ~60 AS SOMETHING TO TRIAGE, not as noise to re-suppress.
 # And per the rule at the top of this file: when gitleaks finds a REAL secret,
 # do not allowlist it -- rotate it, purge it from history, and force-push.
 
