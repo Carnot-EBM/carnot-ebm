@@ -1,0 +1,96 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    The game seems to be a puzzle where clicking on specific areas (ACTION6)
+    causes a specific cell in the same column (r1) to change color to 3.
+    Based on the observed transitions:
+    - Click (31, 35) -> r1c61 becomes 3.
+    - Click (31, 14) -> r1c60 becomes 3.
+    - Click (31, 35) -> r1c61 becomes 3 (already 3, or re-triggers).
+    - Click (31, 14) -> r1c60 becomes 3.
+    - Click (31, 14) -> r1c60 becomes 3.
+    - Click (31, 14) -> r1c60 becomes 3.
+    Wait, looking closer at the deltas:
+    r1c61:3x1, r1c60:3x1, r1c59:3x1, r1c58:3x1, r1c57:3x1, r1c56:3x1.
+    The clicks are alternating between (31, 35) and (31, 14).
+    (31, 35) triggers r1c61, r1c59, etc.
+    (31, 14) triggers r1c60, r1c58, r1c57, r1c56.
+    
+    It looks like clicking a specific 'button' (a cell with a certain color) 
+    changes a corresponding cell in the top row (r1).
+    """
+    if action == 6:
+        # Extract pixel coordinates
+        px, py = data['x'], data['y']
+        
+        # In this game, the logical resolution is 1:1.
+        # The click is at (px, py).
+        # The observed deltas are in r1.
+        # We need to find which cell in r1 changes.
+        # There is a a pattern:
+        # (31, 35) -> r1c61, r1c59...
+        # (31, 14) -> r1c60, r1c60, r1c58, r1c57, r1c56...
+        # Actually, the deltas are just filling r1 from right to left.
+        # Let's check the coordinates again.
+        # (31, 35) is x=31, y=35.
+        # (31, 14) is x=31, y=14.
+        # The cells changing are r1c61, r1c60, r1c59, r1c58, r1c57, r1c56.
+        # This is a sequence.
+        # It seems clicking any button in a specific region triggers the next 
+        # available cell in r1 to change to 3.
+        
+        # Let's find the rightmost cell in r1 that is NOT 3 (and is not 5).
+        # Row 1 is mostly 9s.
+        # Row 1 columns 1 to 61 are 9s.
+        # We want to change the rightmost 9 to 3.
+        # Let's check the current state of r1.
+        # Row 1: 5x1, 9x61, 5x2.
+        # Columns 1 to 61 are 9s.
+        # The rightmost 9 is at index 61.
+        
+        # Find the rightmost index i in [1, 61] such that grid[1, i] == 9.
+        # Indices are 0-indexed.
+        # Row 1, Col 61 is the 62nd element.
+        # The 9s are from index 1 to 61.
+        # The rightmost 9 is index 61.
+        
+        # Let's look at the sequence of changes:
+        # 1: r1c61 -> 3
+        # 2: r1c60 -> 3
+        # 3: r1c59 -> 3
+        # 4: r1c58 -> 3
+        # 5: r1c57 -> 3
+        # 6: r1c56 -> 3
+        # This is exactly filling from right to left.
+        
+        # We need to determine if the click is on a "button".
+        # The buttons are likely the cells at (31, 35) and (31, 14).
+        # Let's check the colors of those cells in the INITIAL grid.
+        # r35c31: 5x4, 4x4, 5x4, 4x3, 11x1, 5x4, 11x1, 4x3, 5x4, 4x4, 5x4, 0x1, 5x13
+        # r14c31: 5x13, 0x1, 4x4, 5x4, 4x4, 5x4, 11x4, 5x4, 4x4, 5x4, 4x4, 0x1, 5x13
+        # Both are in the middle of the grid.
+        
+        # The logic is: if action is 6, find the rightmost index i in [1, 61] 
+        # such that grid[1, i] == 9, and set it to 3.
+        
+        # We need to check if the click is on a valid button.
+        # In the observed data, (31, 35) and (31, 14) are both valid.
+        # Let's assume any click in the central area (columns 13-50, rows 8-40) 
+        # is a valid button click.
+        
+        # Find the rightmost index i in [1, 61] such that grid[1, i] == 9.
+        for i in range(61, 0, -1):
+            if grid[1, i] == 9:
+                grid[1, i] = 3
+                break
+        return grid
+    
+    return grid
+
+def is_level_complete(grid):
+    # The win state is not provided, but usually it's when a certain 
+    # pattern is filled.
+    # Let's assume the level is complete when all 9s in r1 are replaced by 3s.
+    # We'll check if any 9s remain in r1 between columns 1 and 61.
+    return not np.any(grid[1, 1:62] == 9)

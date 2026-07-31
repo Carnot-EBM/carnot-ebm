@@ -1,0 +1,99 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # Action 6 is a click at (px, py)
+    # Logical coords are px, py since pixel=logical*1
+    px, py = data['x'], data['y']
+    
+    # The game seems to be based on clicking specific rectangular regions of colors.
+    # Based on the observed transitions:
+    # Click (46, 38) -> changes region [36:42, 44:50] from color 9/4 to 8 then back to 9.
+    # Click (38, 54) -> changes region [52:58, 36:42] from color 9/4 to 8.
+    # Click (54, 54) -> changes region [52:58, 52:58] from color 9/4 to 8.
+    # Click (38, 46) -> changes region [44:50, 36:42] from color 9/4 to 8.
+    
+    # Let's identify the target rectangles.
+    # A rectangle is defined by its boundaries and    
+    # r36-r41 (height 6), c44-c49 (width 6). Center approx (47, 38.5)
+    # r52-r57 (height 6), c36-c41 (width 6). Center approx (38.5, 54.5)
+    # r52-r57 (height 6), c52-c57 (width 6). Center approx (54.5, 54.5)
+    # r44-r49 (height 6), c36-c41 (width 6). Center approx (38.5, 46.5)
+    
+    # The observed transitions show that clicking these regions toggles their colors.
+    # Specifically, they change to 8 (Azure) or 9 (Maroon).
+    # It seems like a "button" mechanism where clicking a button changes its state.
+    
+    # We need to find which button was clicked.
+    # The grid contains several such 6x6 blocks of color 9 or 4.
+    # The observed clicks are at:
+    # x=46, y=38 -> Block [36:42, 44:50]
+    # x=38, y=54 -> Block [52:58, 36:42]
+    # x=38, y=46 -> Block [44:50, 36:42]
+    # x=54, y=54 -> Block [52:58, 52:58]
+    
+    # Map click coords to the 6x6 block index.
+    # Blocks start every 10 units? No.
+    # Let's look at thes coordinates again:
+    # r36-r41 is rows 36..41. c44-c49 is cols 44..49.
+    # Click (46, 38) is x=46, y=38. This matches row 38 and col 46.
+    # Row 38 is in [36, 41]. Col 46 is in [44, 49]. Correct.
+    
+    # The logic seems to be: if a cell (py, px) is part of a 6x6 block that consists primarily of color 9 or 4,
+    # it toggles between 8 and 9.
+    
+    new_grid = grid.copy()
+    cy, cx = py, px # data['y'], data['x']
+    
+    # Find the top-left corner of the 6x6 block containing (cx, cy)
+    # Based on the observed blocks:
+    # Block 1: r[36:42], c[44:50]
+    # Block 2: r[52:58], c[36:42]
+    # Block 3: r[52:58], c[52:58]
+    # Block 4: r[44:50], c[36:42]
+    
+    # These are all aligned to some grid? Let's check:
+    # Rows: 36, 44, 52. (Step 8)
+    # Cols: 36, 44, 52. (Step 8)
+    # The buttons are 6x6, centered in an 8x8 cell.
+    
+    start_row = (py // 8) * 8 + 2 if (py % 8 >= 2 and py % 8 <= 7) else (py // 8 - 1) * 8 + 2 # This is too complex.
+    # Simple alignment: start_row = (py // 8) * 8 + 4 ? No.
+    # 36 = 8*4 + 4. 44 = 8*5 + 4. 52 = 8*6 + 4.
+    # So start_row = (py // 8) * 8 + 4. Wait, 38 // 8 = 4. 4*8+4=36. Correct.
+    # 46 // 8 = 5. 5*8+4=44. Correct.
+    # 54 // 8 = 6. 6*8+4=52. Correct.
+    
+    start_row = (py // 8) * 8 + 4
+    start_col = (px // 8) * 8 + 4
+    
+    # Adjust for the fact that the buttons are at offset 4 from the 8x8 grid?
+    # Let's check if the cell clicked is actually inside a button region.
+    # The buttons are in rows [start_row : start_row + 6] and cols [start_col : start_col + 6].
+    # r36-r41, c44-c49 -> py=38, px=46. 38//8=4, 4*8+4=36. 46//8=5, 5*8+4=44. Matches!
+    
+    if 0 <= start_row < 64 and 0 <= start_col < 64:
+        # Check if the click is within the 6x6 block boundaries
+        if start_row <= py < start_row + 6 and start_col <= px < start_col + 6:
+            # Toggle color between 8 and 9
+            current_color = grid[py, px]
+            target_color = 8 if current_color == 9 else 9
+            
+            # Apply toggle to the whole 6x6 block
+            new_grid[start_row:start_row+6, start_col:start_col+6] = target_color
+            
+    return new_grid
+
+def is_level_complete(grid):
+    # Based on observed transitions, there's no clear win state provided.
+    # Usually, it involves clearing colors or matching a pattern.
+    # Since we only have ACTION6 clicks, let's assume completion is when all buttons are in a certain state.
+    # However, without a WIN STATE grid, we must return False unless a specific condition is met.
+    # In most ARC games, the same logic applies. Let's look at the r63 cells.
+    # They change from 12 (empty) to 11 (something).
+    # The r63 row seems to be a progress bar.
+    # If r63c52..63 are filled with 11, maybe that's the win?
+    # But we don't have enough data. Return False for now as is standard for unknown win states.
+    return False

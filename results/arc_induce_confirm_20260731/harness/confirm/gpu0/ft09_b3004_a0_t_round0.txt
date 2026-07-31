@@ -1,0 +1,128 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    px, py = data['x'], data['y']
+    # The game seems to be a puzzle where clicking on certain regions changes their color.
+    # Based on the observed transitions, we identify "blocks" of size 6x6.
+    # The blocks are located at specific column and row offsets.
+    # Let's define the blocks based on the observed delta patterns.
+    # The blocks are consistently 6x6 in size.
+    # Looking at the coordinates provided in the coordinates:
+    # The observed clicks are at x=46, y=38; x=38, y=54; x=54, y=54; etc.
+    # These correspond to the observed changes in r36c44, r52c36, r52c52, etc.
+    # This implies a mapping from click (px, py) to block indices.
+    # 
+    # Block columns start at c=10, 18, 26, 34, 42, 50... no, let's look closer.
+    # The blocks are actually aligned with the same grid structure.
+    # The blocks are 6x6.
+    # TheH = 64, W = 64.
+    # Observed: px=46, py=38 -> r36-41, c44-49.  (py-2=36, px-2=44)
+    # Observed: px=38, py=54 -> r52-57, c36-41.  (py-2=52, px-2=36)
+    # Observed: px=54, py=54 -> r52-57, c52-57.  (py-2=52, px-2=52)
+    # Observed: px=38, py=46 -> r44-49, c36-41.  (py-2=44, px-2=36)
+    # This suggests a simple mapping: block_row = py - 2, block_col = px - 2.
+    # It also suggests that these clicks target specific "button" areas.
+    # 
+    # Now let's determine the color change logic.
+    # In the first transition, click (46, 38) changed cells to color 8.
+    # In the fourth transition, click (46, 38) again changed them back to color 9.
+    # This suggests a toggle or a sequence of colors.
+    # The same applies to other blocks.
+    # 
+    # Let's check if theres any more information about to be completed.
+    # The grid contains some special values in row 63.
+    # Row 63 is likely a status bar or counter.
+    # 
+    # Based on the observed transitions, we only see ACTION6.
+    # We identify that the block being clicked is the 6x6 area starting at (py-2, px-2).
+    # We identify that the toggle logic: if current color is 9, it becomes 8; if 8, it becomes 9.
+    # However, looking at the initial grid, those regions were already 9 or 8.
+    # Looking at r36c44: initially it was 9? No, INITIAL GRID r36: ... 4x2, 9x6, 4x2, 9x6, 4x2, 9x6, 4x2, 2x2...
+    # c0-3(5), c4-9(8), c10-11(5), c12-17(9), c18-19(5), c20-25(9), c26-31(5), c32-33(2), c34-35(4), c36-41(9), c42-43(4), c44-49(9), c50-51(4), c52-57(9), c54-59(4), c60-61(2), c62-63(5).
+    # So r36c44 is color 9. Click (46, 38) changed it to 8. Then later click (46, 38) changed it back to 9.
+    # This is a toggle between 8 and 9.
+    # 
+    # Let's refine the mapping: block_row = py - 2, block_col = px - 2.
+    # The blocks are 6x6.
+    # 
+    # Now let's handle row 63. It seems to be updating based on some state.
+    # Row 63 starts as 12x64.
+    # Transition 1: r63c62: 11x2 -> cells (62, 63) become 11.
+    # Transition 2: r63c60: 11x2 -> cells (60, 61) become 11.
+    # Transition 3: r63c58: 11x2 -> cells (58, 59) become 11.
+    # Transition 4: r63c56: 11x2 -> cells (56, 57) become 11.
+    # Transition 5: r63c54: 11x2 -> cells (54, 55) become 11.
+    # Transition 6: r63c56: 11x2... no, wait.
+    # This is a sequence of filling row 63 from right to left in pairs.
+    # Let's look at the same clicks again:
+    # Click 1: (46, 38) -> r63c62: 11x2
+    # Click 2: (38, 54) -> r63c60: 11x2
+    # Click 3: (54, 54) -> r63c58: 11x2
+    # Click 4: (46, 38) -> r63c56: 11x2
+    # Click 5: (54, 54) -> r63c54: 11x2
+    # Click 6: (38, 46) -> r63c52: 11x2
+    # It seems every successful click on a valid block increments a counter in row 63.
+    # 
+    # The logic for "valid" blocks might be that they must be color 9 or 8.
+    # 
+    # Final Logic:
+    # 1. Identify target block: top-left = (py-2, px-2).
+    # 2. Check if the block is currently all one color (either 8 or 9).
+    # 3. If it's a toggle block, toggle its color between 8 and 9.
+    # 4. Increment the status bar in row 63 by filling pairs of cells with color 11 from right to left.
+    # 
+    # Let's refine the mapping again.
+    # py=38 -> r36. py=54 -> r52. py=46 -> r44.  (y - 2)
+    # px=46 -> c44. px=38 -> c36. px=54 -> c52. (x - 2)
+    # This matches perfectly.
+
+    new_grid = grid.copy()
+    if action != 6:
+        return new_grid
+    
+    px, py = data['x'], data['y']
+    r, c = py - 2, px - 2
+    
+    if r < 0 or r + 6 > 64 or c < 0 or c + 6 > 64:
+        return new_grid
+    
+    # Check if the clicked area is a "toggle" block (initially 8 or 9).
+    # We only toggle if the block is uniform in color.
+    current_color = new_grid[r, c]
+    if current_color not in [8, 9]:
+        return new_grid
+    
+    # Toggle color between 8 and 9
+    new_color = 8 if current_color == 9 else 9
+    new_grid[r:r+6, c:c+6] = new_color
+    
+    # Update status bar row 63
+    # Find the rightmost cell that is NOT color 11.
+    # Row 63 is initialized to 12.
+    status_row = new_grid[63, :]
+    last_empty_idx = -1
+    for i in range(63, -1, -1):
+        if status_row[i] != 11:
+            last_empty_idx = i
+            if last_empty_idx - 1 >= 0 and status_row[i-1] != 11:
+                break
+    
+    if last_empty_idx >= 1:
+        new_grid[63, last_empty_idx-1 : last_empty_idx+1] = 11
+    
+    return new_grid
+
+def is_level_complete(grid):
+    # The level is complete when the status bar (row 63) is filled with a certain number of cells of color 11.
+    # Based on the observed transitions, we don't see a win state.
+    # However, usually these games end when the status bar is full or some condition is met.
+    # Let's assume it's complete if row 63 has any cell of color 11 that reaches a certain point.
+    # We only saw it fill up to c52.
+    # Row 63 starts as all 12s.
+    # If there's no more space for 11s in row 63, let's just return False unless it's specifically told.
+    # Since we have no WIN STATE grid, we can't be sure.
+    # A common pattern is that row 63 would be completely filled with 11s.
+    return np.all(grid[63, :] == 11)

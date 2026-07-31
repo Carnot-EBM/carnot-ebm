@@ -1,0 +1,173 @@
+import numpy as np
+
+def engine(grid, action, action_data=None):
+    """
+    Predicts the next state of the grid based on the given action.
+    The game appears to be a puzzle where an agent moves through a maze or interacts with 
+    certain blocks. Based on the observed transitions, it seems that Action 2 (Down), 
+    Action 4 (Right), and Action 1 (Left/Up?) move a 'cursor' or 'entity' represented by color 0 (black) 
+    or change colors in specific patterns.
+    
+    Looking at the observed transitions:
+    - ACTION 4 (Right): Changes cells in columns 15-24 range.
+    - ACTION 2 (Down): Moves changes from row 15-17 to row 21-23, then to row 27-29.
+    - ACTION 1 (Left/Up?): Moves changes back up from row 27-29 to row 21-23.
+    - ACTION 3 (Up?): No significant movement but affects r63c63.
+    - The cell r63c63 is acting as a counter or progress indicator.
+    """
+    # We need to find the entity being moved. In this game, we likely have a player character.
+    # 
+    # Let's identify the player position based on the same grid state.
+    # Since the only thing changing are blocks of values, it
+    # 
+    # Let's look for the 'active' block of size 3x3.
+    # Based on the observed data, the initial grid has many 0s and 2s.
+    # 
+    # Let's actually simulate the movements based on the observed deltas.
+    # TheH = 64, theW = 64.
+    # 
+    # The transitions show that:
+    # Action 4 moves something Right.
+    # Action 2 moves something Down.
+    # Action 1 moves something Left/Up.
+    # Action 3 moves something Up.
+    # 
+    # Let's assume there is an agent at some starting position.
+    # However, the cells changed in ACTION 4 (r15c15:0x3) change from their original values to 0.
+    # 
+    # Looking closer at the INITIAL GRID:
+    # r15: ...9x3, 2x3, 0x3...
+    # After ACTION 4: r15c15 becomes 0x3. This means color 9 was replaced by 0.
+    # Color 0 is often a player or empty space.
+    # 
+    # In this game, itC=64, R=64.
+    # 
+    # Based on the observation, we only see changes in blocks of 3x3.
+    # 
+    # Let's find the current 'active' block (the one with color 0).
+    # 
+    # The entity seems to be a 3x3 block of color 0.
+    # 
+    # Initial state: No obvious single 3x3 block of 0s.
+    # 
+    # Let's actually just implement the movement of the 3x3 block of 0s.
+    # 
+    # If Action 4 (Right), move 3x3 block of 0s from (r, c) to (r, c+3).
+    # 
+    # { "action": 2, "data": null } -> moves from row 15-17 to 21-23.
+    # { "action": 2, "data": null } -> moves from row 15-17 to 21-23? No, 21-23 to 27-29.
+    # 
+    # It looks like the agent is moving in steps of 6 rows/cols.
+    # 
+    # Let's refine this:
+    # 
+    # ACTION 4: Right (c=15 -> c=18 or 21)
+    # ACTION 2: Down (r=15 -> r=21)
+    # ACTION 1: Up (r=21 -> r=15) - Wait, the delta shows ACTION 1 moved it back to 21-23 from 27-29.
+    # 
+    # So:
+    # Action 1: Up
+    # Action 2: Down
+    # Action 3: Left
+    # Action 4: Right
+    # 
+    # The entity is a 3x3 block of color 0.
+    # 
+    # Let's find the 3x3 block of 0s.
+    # 
+    # 
+    # 
+    # { "action": 2, "data": null } -> moves from row 15-17 to 21-23.
+    # 
+    # { "action": 2, "data": null } -> moves from row 21-23 to 27-29.
+    # 
+    # 
+    # 
+    # 
+    # 
+    # 
+    # 
+    # 
+    # { "action": 1, "data": null } -> moves from 27-29 to 21-23.
+    # 
+    # 
+    # 
+    # 
+    # 
+distance = 6
+    # Find current position of the 3x3 block of 0s.
+    # We search for a 3x3 area that is all 0s.
+    # For simplicity, we search for the top-left corner (r, c).
+    player_pos = None
+    for r in range(0, 64 - 2):
+        for c in range(0, 64 - 2):
+            if np.all(grid[r:r+3, c:c+3] == 0):
+                player_pos = (r, c)
+                break
+        if player_pos: break
+
+    # If no 3x3 block of 0s found, we assume a starting position based on observed data.
+    if player_pos is None:
+        # In the initial grid, there are many 0s. Let's look for the first one.
+        # The first 0 appears at r15c21? No, r15c21 is 9x3, then 2x3, then 0x3.
+        # So r15c21 is color 9, r15c24 is color 2, r15c27 is color 0.
+        # Start at (15, 27) or similar.
+        # Based on ACTION 4 delta: r15c15 becomes 0x3. Original was 9x3.
+        # So it moved to (15, 15).
+        player_pos = (15, 27) # Default start
+
+    # New position
+    r, c = player_pos
+    if action == 1: # Up
+        new_r, new_c = r - distance, c
+    elif action == 2: # Down
+        new_r, new_c = r + distance, c
+    elif action == 3: # Left
+        new_r, new_c = r, c - distance
+    elif action == 4: # Right
+        new_r, new_c = r, c + distance
+    else:
+        new_r, new_c = r, c
+
+    # Bounds check
+    new_r = max(0, min(61, new_r))
+    new_c = max(0, min(61, new_c))
+
+    # Create a copy of the grid
+    next_grid = grid.copy()
+    
+    # Restore old position with original values? 
+    # This is tricky because we don't know what was there before.
+    # In the la maze, we usually just swap or replace.
+    # Let's assume the 3x3 block moves and replaces whatever it hits.
+    
+    # The observed deltas show that when moving from (15, 15) to (21, 15), 
+    # the cells at (15, 15) are restored to their original values (likely color 9 or 2).
+    # Since we can't know the original values, we'll use a simple heuristic:
+    # if the cell was 0, it becomes something else.
+    # Based on INITIAL GRID, let's reconstruct the original colors for those areas.
+    # We search for the same relative positions in other blocks.
+    # 
+    # Actually, let's just implement the movement and set the new area to 0.
+    # 
+    # To be more accurate, we'll try to find the 'background' color of the maze.
+    # The background is mostly color 5.
+    # 
+    # For simplicity, we'll just set the new position to 0 and the old one back to its "original" value.
+    # What is the original value? In ACTION 4 delta: r15c15 became 0x3. Original was 9x3.
+    # When moving Down (ACTION 2), r15c15 became 0x3 again? No, r15c21 became 0x3.
+    # Let's actually just move the block of 0s.
+    
+    next_grid[r:r+3, c:c+3] = 5 # Heuristic: restore with background color
+    next_grid[new_r:new_r+3, new_c:new_c+3] = 0
+    
+    return next_grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the grid reaches a win state.
+    The observed transitions don't show a WIN STATE grid, but they only show changes in r63c63.
+    Usually, this means there's a goal cell or a specific pattern.
+    Since no win state is provided, we'll return False unless a specific condition is met.
+    """
+    return False

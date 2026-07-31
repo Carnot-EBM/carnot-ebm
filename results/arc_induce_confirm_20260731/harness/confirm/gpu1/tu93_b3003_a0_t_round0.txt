@@ -1,0 +1,185 @@
+import numpy as np
+
+def engine(grid, action, action_data=None):
+    """
+    World model for game 'hg45e09c'.
+    Induces transition rules from observed transitions.
+    """
+    # The grid is 64x64.
+    # Colors: [0, 2, 4, 5, 6, 9, 14]
+    # Background color is 5.
+    # Action mapping based on common ARC patterns and the provided delta logs:
+    # ACTION 1: Up?
+    # ACTION 2: Down?
+    # ACTION 3: Left?
+    # ACTION 4: Right?
+    # ACTION 6: Click (not explicitly used in a way that changes state here)
+    
+    # Based on the observed deltas:
+    # - ACTION 4 moves something to the right (r15-17, c15->21)
+    # - ACTION 2 moves something down (r15-17 -> r21-23 -> r27-29)
+    # - ACTION 1 moves something up (r27-29 -> r21-23)
+    # - ACTION 3 doesn't seem to move objects but affects r63c63.
+    
+    # Let's identify the "player" or "active object".
+    # The active object seems to be a block of colors (e.g., color 9).
+    # The active object starts at r15c15 (approx).
+    # The active3 action changed r63c63 to 0.
+    # 
+    # Looking at the grid layout, there are 'rooms' or 'zones' defined by walls (color 2).
+    # The player is likely moving between these zones.
+    # The active object is color 9.
+    # The
+    # Actually, looking closer at the laout:
+    # Color 9 blocks are placed in specific areas.
+    # Action 4 (Right) moved a 3x3 block of color 9 from c15 to c21.
+    # 
+    # Let's refine the movement:
+    # Action 1: Up
+    # Action 2: Down
+    # Action 3: Left
+    # Action 4: Right
+    # 
+    # It seems the player moves a 3x3 block of color 9.
+    # 
+    # Wait, the observed transitions show that ACTION 4 changes r15c15:0x3, r15c21:9x3...
+    # This means it replaces color 0 with color 9 and vice versa? Or just shifts them.
+    # 
+    # Let's look at thes cells again:
+    # INITIAL: r15c15: 9x3, r15c21: 2x3 (Wait, no, let me re-read).
+    # INITIAL r15: 5x15, 9x3, 2x3, 0x3, 5x3, 0x3, 2x3, 0x3, 2x3, 0x3, 5x22
+    # So at r15, c15 is 9x3, c18 is 2x3, c21 is 0x3.
+    # ACTION 4 (Right): r15c15 becomes 0x3, r15c21 becomes 9x3.
+    # The block of 9s moved from c15 to c21. It jumped over the wall (color 2) at c18.
+    # 
+    # Action 2 (Down): moves a block from r15-17 to r21-23.
+    # 
+    # This looks like a puzzle where you move a 3x3 block of color 9 between "slots" (color 0 areas).
+    # 
+    # Let's define the slots. Slots are 3x3 areas of color 0.
+    # The active object is a 3x3 block of color 9.
+    # 
+    # Movement:
+    # - Up (Action 1), Down (Action 2), Left (Action 3), Right (Action 4).
+    # 
+    # Logic:
+    # 1. Find current position of the 3x3 block of color 9.
+    # 2. Determine target slot based on action.
+    # 3. If target slot exists and is empty (color 0), move it.
+    # 
+    # However, looking at ACTION 2 again:
+    # INITIAL: r15c21 was 0x3. After ACTION 4, r15c21 became 9x3.
+    # Then ACTION 2 happened: r15c21 becomes 0x3, r21c21 becomes 9x3.
+    # This confirms movement between 3x3 slots of color 0.
+    # 
+    # Let's identify all 3x3 slots of color 0 in the grid.
+    # A slot is defined by its top-left corner (r, c).
+    # Slots are located where a 3x3 area is color 0.
+    # But wait, some areas are already color 9. We treat them as occupied slots.
+    # 
+    # The "slots" seem to be fixed positions.
+    # Looking at the layout, they are at:
+    # C: 15, 21, 27, 33... ? No.
+    # Rows: 15, 21, 27, 33, 39...
+    # Cols: 15, 21, 27, 33, 39...
+    # These are spaced by 6.
+    # 
+    # Let's implement this logic.
+    """
+    grid = grid.copy()
+    
+    # Find current position of the 3x3 block of color 9
+    pos = None
+    for r in range(0, 64 - 2):
+        for c in range(0, 64 - 2):
+            if np.all(grid[r:r+3, c:c+3] == 9):
+                pos = (r, c)
+                break
+        if pos: break
+
+    if pos is None:
+        return grid
+
+    r, c = pos
+    dr, dc = 0, 0
+    if action == 1: # Up
+        dr = -6
+    elif action == 2: # Down
+        dr = 6
+    elif action == 3: # Left
+        dc = -6
+    elif action == 4: # Right
+        dc = 6
+    else:
+        return grid
+
+    nr, nc = r + dr, c + dc
+    
+    # Check boundaries
+    if not (0 <= nr < 64 - 2 and 0 <= nc < 64 - 2):
+        return grid
+    
+    # Check if target slot is "empty" (contains only colors that can be replaced, like 0 or 9)
+    # In this game, slots are likely the areas of color 0.
+    # The observed transitions show it moves into areas that were color 0.
+    target_area = grid[nr:nr+3, nc:nc+3]
+    if np.all(target_area == 0):
+        # Move block
+        grid[r:r+3, c:c+3] = 0
+        grid[nr:nr+3, nc:nc+3] = 9
+    elif np.all(target_area == 9):
+        # Already there? Or blocked?
+        pass
+    else:
+        # Blocked by wall (color 2) or other objects
+        # Based on ACTION 4, it jumped over a wall at c18.
+        # So we don't check for walls in between, just the destination.
+        # If the destination is not all 0s, it might still move if it's a valid slot.
+        # Let's assume any 3x3 area that is currently all 0s OR was originally a slot.
+        # Since we don't have the original grid, we use the current state.
+        # But wait, the target_area could be something else.
+        # In the observed transitions, r21c21 was color 0 before Action 2 moved the block there.
+        # 
+        # Let's refine: The block moves to (nr, nc) if the 3x3 area at (nr, nc) consists only of 0s.
+        if np.all(target_area == 0):
+            grid[r:r+3, c:c+3] = 0
+            grid[nr:nr+3, nc:nc+3] = 9
+    
+    return grid
+
+def is_level_complete(grid):
+    """
+    Win state is usually when certain conditions are met.
+    In this game, we don't see a win state grid, but we look for patterns.
+    Often, it's about moving the block to a specific destination.
+    Looking at the layout, maybe there's a target slot?
+    Color 14 is present in the initial grid at r45-47, c33-35.
+    Maybe the goal is to move the block of 9s onto the color 14 area?
+    """
+    # Find position of block 9
+    pos = None
+    for r in range(0, 64 - 2):
+        for c in range(0, 64 - 2):
+            if np.all(grid[r:r+3, c:c+3] == 9):
+                pos = (r, c)
+                break
+        if pos: break
+    
+    if pos is None: return False
+    
+    # Check if it overlaps with any color 14 cells
+    # The color 14 cells are at r45-47, c33-35.
+    if np.any(grid[pos[0]:pos[0]+3, pos[1]:pos[1]+3] == 14):
+        # This is not possible because we replace the whole 3x3 area with 9s.
+        # So we check if the original layout had 14s there.
+        pass
+
+    # Since we don't have a clear win condition from the data, 
+    # and no WIN STATE grid was provided, let's assume a simple one or just return False.
+    # But usually, these games have a goal. Let's look for color 14 again.
+    # Color 14 is at r45-47, c33-35. If the block of 9s reaches that slot, it's likely a win.
+    # We can't know for sure without more data, but this is a common pattern.
+    
+    # However, based on the observed transitions, the game doesn't end.
+    # Let's just return False unless we see a specific target.
+    return False

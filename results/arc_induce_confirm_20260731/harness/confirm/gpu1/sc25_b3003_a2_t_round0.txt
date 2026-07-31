@@ -1,0 +1,30 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions are extremely limited and inconsistent.
+    # Based on the provided delta logs, it seems that actions shift or toggle colors in specific regions.
+    # However, the patterns do not clearly map to a simple global rule like "move character X".
+    # Many actions result in no change or ACTION6 clicks.
+    # Most changes occur around rows 19-22 and columns 35-41.
+    # The grid is 64x64.
+    
+    # Since we cannot induce a general movement/gravity rule from these few frames,
+    # and based on the nature of ARC tasks, if an action doesn't have a clear effect,
+    # return the grid as is.
+    
+    # In this a specific case, where the most frequent changes happen in the same small area,
+    # if we are unable to to derive a deterministic logic for the target state,
+    # returning the original grid is the closest approximation given the lack of a few examples.
+    
+    # Let's try to implement a basic identity function because the deltas provided are too sparse to 
+    # and actually contradict each other (e.g., ACTION1 shifting things differently across multiple calls).
+    
+    return grid.copy()
+
+def is_level_complete(grid):
+    # No win state was provided in the observed transitions.
+    # Without a win state example, we return False by default.
+    # return True if some condition like color 0 or 14 is gone.
+    # Check if any cell with value 14 exists.
+    # If there is no one, it's likely complete.
+    return not np.any(grid == 14)

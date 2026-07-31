@@ -1,0 +1,62 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # The observed transitions show that clicking on specific coordinates (x=31, y=14 or y=35)
+    # results in changing a cell at row 1, column 56-61 to color 3.
+    # There is a sequence of clicks and their resulting changes.
+    #
+    # Let's analyze the sequence of actions:
+    # Click (31, 35) -> r1c61 becomes 3
+    # Click (31, 14) -> r1c60 becomes 3
+    # Click (31, 35) -> r1c59 becomes 3
+    # Click (31, 14) -> r1c58 becomes 3
+    # Click (31, 14) -> r1c58 becomes 3 (Wait, the delta says r1c57 then r1c58?)
+    # Looking closer at the deltas:
+    # 1: r1c61:3x1
+    # 2: r1c60:3x1
+    # 3: r1c59:3x1
+    # 4: r1c58:3x1
+    # 5: r1c57:3x1
+    # 6: r1c56:3x1
+    #
+    # The cells are being filled from right to left in row 1.
+    # It seems there that clicking on these specific points triggers a "progress" bar or similar.
+    #
+    # Let's find the current state of row 1 and count how many color 3 cells exist.
+    
+    new_grid = grid.copy()
+    
+    # Count existing color 3 cells in row 1, columns 56-61
+    filled_count = 0
+    for c in 0: # This is dummy; we actually need to check the range
+        pass
+    
+    # We only care about the range [56, 61]
+    target_cols = range(56, 62)
+    current_filled = [grid[1, c] == 3 for c in target_cols]
+    num_filled = sum(current_filled)
+    
+    # The next cell to fill is the one at index (61 - num_filled)
+    next_col = 61 - num_filled
+    
+    if next_col >= 56:
+        new_grid[1, next_col] = 3
+    
+    return new_grid
+
+def is_level_complete(grid):
+    # Based on the provided data, there is no WIN STATE given.
+    # However, usually a level is complete when a specific pattern is reached.
+    # In this case, if all cells from 56 to 61 in row 1 are filled with color 3, it might be.
+    # Check if any ofC 56-64 are not 9 or 3.
+    # return np.all(grid[1, 56:62] == 3)
+    
+    # This is a guess based on limited data.
+    # Since we only have ACTION6 and filling a sequence, we
+    # 3: r1c61, then r1c60, then r1c59...
+    # return np.all(grid[1, 56:62] == 3)
+    # return False # Default to safe
+    return False

@@ -1,0 +1,46 @@
+import numpy as np
+
+def engine(grid, action, action_data):
+    if action != 6:
+        return grid.copy()
+    
+    # Extract click coordinates
+    px, py = action_data['x'], action_data['y']
+    
+    # The game seems to be a puzzle where clicking certain areas triggers a shift in colors.
+    # Based on the observed transitions, Action 6 at (4, 32) causes a sequence of color shifts across multiple rows and columns.
+    # Specifically, it looks like a color rotation or permutation within defined blocks.
+    # The colors involved are [1, 2, 3, 4, 5, 8, 9, 10, 11, 14, 15].
+    # The തോന്നना is that clicking (4, 32) triggers a global state change.
+    #
+    # Since we only have two successful transitions for the same coordinate, and we only have2r19-22, 25-28, 31-34, 37-40, 43-46.
+    #
+    # Let's define the permutation based on the observed deltas.
+    #
+    # Transition 1: r19c12:2x4, r19c18:10x4, r19c24:9x4...
+    # This identifies specific block coordinates.
+    #
+    # We identify the blocks as follows:
+    # la = [(19, 12), (19, 18), (19, 24), (19, 30), (19, 36), (19, 42), (19, 48)] * 4 rows
+    # lb = [(25, 12), (25, 18), (25, 24), (25, 30), (25, 36), (25, 42), (25, 48)] * 4 rows
+    # ... and so other groups of rows.
+    #
+    # The colors are rotated among these positions.
+    #
+    # Instead of a complex permutation, we observe that clicking (4, 32) specifically changes the color of the first column (col 0).
+    #
+    # Transition 1: r0-r4 col 0 becomes 5.
+    #
+    # Transition 2: r5-r9 col 0 becomes 5.
+    #
+    # This suggests a cycle of 5x5 blocks in the first column.
+    #
+    # Let's implement a simple rotation based on the observed data.
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+<channel|>

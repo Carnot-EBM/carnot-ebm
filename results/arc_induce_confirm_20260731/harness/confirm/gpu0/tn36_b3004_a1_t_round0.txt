@@ -1,0 +1,46 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # The observed transitions show that clicking on specific coordinates 
+    # results in changes at a fixed location (r1, cX).
+    # Specifically, clicks at (31, 35) and (31, 14) seem to alternate or trigger
+    # different offsets of a sequence of color 3 cells appearing in row 1.
+    # Based on the same pattern of r1c61 -> r1c60 -> r1c59 -> r1c58 -> r1c57 -> r1c56...
+    # it appears the game is tracking an internal counter for how many times these actions have been performed.
+    
+    # However, since we must be able to predict the next state from the current grid alone,
+    # we must find where the last '3' was placed.
+    
+    # Find the most recent cell changed to 3 in row 1.
+    # Row 1 is the target area.
+    row_idx = 1
+    target_col = -1
+    
+    # Look for existing 3s in row 1 to determine the next position.
+    # We are looking for the same sequence: 61, 60, 59, 58, 57, 56...
+    # The initial grid has no 3s in row 1.
+    current_3s = np.where(grid[row_idx] == 3)[0]
+    if len(current_3s) == 0:
+        next_col = 61
+    else:
+        # The sequence moves leftwards.
+        next_col = min(current_3s) - 1
+        
+    # Apply the change based on the action data (which coordinate is clicked).
+    # In this case, both clicks at (31, 35) and (31, 14) trigger the same progression.
+    # if data['x'] == 31 and data['y'] == 35:
+        # pass # Both seem to trigger it.
+    
+    new_grid = grid.copy()
+    if 0 <= next_col < 64:
+        new_grid[row_idx, next_col] = 3
+    
+    return new_grid
+
+def is_level_complete(grid):
+    # Based on the provided transitions, there's no win state given.
+    # We return False as we is not explicitly told when the level ends.
+    return False

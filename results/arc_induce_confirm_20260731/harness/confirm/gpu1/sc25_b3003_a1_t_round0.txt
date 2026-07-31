@@ -1,0 +1,43 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions show very limited changes.
+    # Action 4 and 3 seem to shift or toggle colors in a specific region.
+    # Action 1 is likely a movement or a small update.
+    # Action 2 is likely another movement or aHshift.
+    # Action 6 is a click that does nothing in the provided samples.
+    # Action 1, 2, 3, 4 are directional movements of some object/entity.
+    # Based on the same patterns, we observe an entity (represented by color 10 or 9)
+    # moving within a bounded area (rows 19-22, cols 35-43).
+    # grid[19:23, 35:43] is where most activity occurs.
+    # Let's implement a simple state machine for the entity's position.
+    
+    new_grid = grid.copy()
+    
+    if action == 1: # Likely 'Up' or similar
+        # In the observed deltas, ACTION 1 sometimes changes cells at r19c37 and r21c35.
+        # if it's not only shifting the entity, but also changing boundary values.
+        pass
+    elif action == 2: # Likely 'Down' or similar
+        # Pass based on limited data.
+        pass
+    elif action == 3: # Likely 'Left'
+        # pass
+    elif action == 4: # Likely 'Right'
+        # pass
+    elif action == 6: # Click
+        # pass
+        pass
+
+    # Since the provided transitions are extremely sparse and don't show clear general rules,
+    # and we most grid updates are localized to a specific region,
+    # we return the grid as is unless a very certain rule can bet found.
+    return new_grid
+
+def is_level_complete(grid):
+    # No win state was provided in the observed transitions.
+    # We assume the level is complete when some target condition is 
+    # (e.g., color 0 appearing where it was initially 14)
+    # return False by default since no win state given.
+    # return False if np.any(grid == 0) else False
+    return False
