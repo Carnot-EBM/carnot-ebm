@@ -4,6 +4,36 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-31 (security audit) — 3 dependency advisories ACCEPTED, cannot be fixed today
+
+Full OSV sweep of the 225 installed packages: **53 advisories across 10 packages
+-> 5 across 3**. Cleared by upgrade: GitPython (9, incl. command injection),
+pillow (26), pyasn1 (5), mcp, msgpack, httplib2, pydantic-settings.
+`pyproject.toml` floors were raised for `mcp` and `pillow` so a venv rebuild
+cannot silently regress them; the others are transitive.
+
+The three that remain are accepted risk with a stated reason, NOT oversights:
+
+| Package | Advisory | Why it stays |
+|---|---|---|
+| `setuptools==81.0.0` | GHSA-h35f-9h28-mq5c, PYSEC-2026-3447 | Fixed in 83.0.0, but **torch 2.11 requires `setuptools<82`** — installing 83 produced a real resolver conflict. 81.0.0 is the highest compatible version and it DOES fix the serious one (GHSA-5rjg-fvgr-3xxf, network-reachable path traversal -> arbitrary file write, fixed in 78.1.1). What remains is a local, user-interaction-required MANIFEST.in exclusion bypass when BUILDING an sdist with adversarially-named files. Revisit when torch relaxes the cap. |
+| `diskcache==5.6.3` | GHSA-w8v5-vhqr-4h9v, PYSEC-2026-2447 | **No fix published** — 5.6.3 is the latest release. Unsafe pickle deserialization, local vector. Transitive dependency with zero direct importers in this tree, so no Carnot code path constructs a cache from untrusted input. |
+| `torch==2.11.0+cu128` | GHSA-rrmf-rvhw-rf47 | Fixed in 2.13.0. **Deliberately not upgraded**: this is a CUDA-built wheel, and per CLAUDE.md a plain reinstall silently swaps in the CPU-only build, which would invalidate every `live_llm_inference` artifact's GPU provenance. Low severity (local, PR:L) and requires `torch.jit.script` on attacker-controlled input, which no Carnot path does. Bundle with a deliberate, verified CUDA rebuild. |
+
+**Verification protocol used** (repeat this if you touch the venv): record
+`llama_cpp.llama_supports_gpu_offload()` and `torch.cuda.is_available()` +
+`device_count()` BEFORE and AFTER, and pin torch/torchvision/torchaudio/
+llama-cpp-python/jax in a pip `--constraint` file so the resolver cannot replace
+them. Confirmed unchanged across this upgrade: GPU offload `True`, torch
+`2.11.0+cu128`, 2 CUDA devices, `pip check` clean.
+
+**Note on tooling:** `pip-audit -r` cannot audit this venv — it forces a
+dependency resolution that fails on the local `+cu128` torch build. The OSV
+batch API queried against exact installed versions is the working substitute;
+`uvx pip-audit` with no arguments audits its OWN isolated environment and
+returns a misleading "No known vulnerabilities found".
+
+
 ### 2026-07-31 (outer-loop, MEASURED — the ARC test selection is ORDER-UNSTABLE under xdist, so a failure count is not a fact about the tree)
 
 **What was measured.** The pinned selection `pytest tests/python -q --no-cov -p no:randomly -k "arc"`,

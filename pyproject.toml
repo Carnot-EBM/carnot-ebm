@@ -69,7 +69,15 @@ dependencies = [
     # MCP is part of the Phase-1 software ship surface. `python -m carnot.mcp`
     # must speak real stdio JSON-RPC after a plain package install, not only
     # after an optional extra.
-    "mcp>=1.0",
+    #
+    # Floor raised 1.0 -> 1.28.1 by the 2026-07-31 security audit:
+    # GHSA-vj7q-gjh5-988w (the WebSocket server transport performs no
+    # Host/Origin validation, so a browser page can drive a local MCP server)
+    # is fixed in 1.28.1. Capped below 2.0 deliberately -- 2.x is a major
+    # rewrite that pulls a different httpx stack, which is a migration to
+    # evaluate on its own merits, not something to acquire as a side effect of
+    # a security bump.
+    "mcp>=1.28.1,<2",
 ]
 
 [project.scripts]
@@ -103,7 +111,9 @@ dwave = [
     "dwave-ocean-sdk>=6.0",
 ]
 mcp = [
-    "mcp>=1.0",
+    # Same floor as the core dependency above: GHSA-vj7q-gjh5-988w
+    # (WebSocket transport lacks Host/Origin validation), fixed in 1.28.1.
+    "mcp>=1.28.1,<2",
 ]
 rust = [
     "maturin>=1.7,<2.0",
@@ -118,7 +128,10 @@ imagegen = [
     "diffusers>=0.30",
     "transformers>=4.44",
     "accelerate>=0.33",
-    "pillow>=10.0",
+    # Floor raised 10.0 -> 12.3.0 by the 2026-07-31 security audit: pillow
+    # carried 26 open advisories at 12.2.0, including OS command injection via
+    # WindowsViewer.get_command() and an out-of-bounds read on the mmap path.
+    "pillow>=12.3.0",
     "fastapi>=0.110",
     "uvicorn>=0.30",
 ]
