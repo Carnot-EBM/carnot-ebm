@@ -1,5 +1,62 @@
 # Carnot — Changelog
 
+## 2026-07-30 (outer-loop: "is the gate right or wrong about those five?" — right on four, right-with-a-wrong-label on the fifth; force-admit is NEUTRAL on all nine cells)
+
+**Instruction:** for each of the five world-model-trust-gate rejections in
+`results/outer_loop_arc_llm_on_vs_off_activation_20260730.json`, decide whether the gate was RIGHT
+(the engine is genuinely unusable) or WRONG (a false rejection), then apply a fourteen-item
+adversarial review and commit. No scored or online ARC game was played and no submission action was
+taken. No production code changed — the deliverables are one measurement artifact and one note.
+
+**Verdict: no gate change is proposed.** Force-admitting the rejected engine at the live induction
+point, with every gate skipped and the plan handed to the live planner and executor, moved **0 of 9
+admit cells** — zero banked levels, zero change in actions-to-first-solve. Seven of nine produced
+action traces byte-identical to their matched control, so the gate cost nothing on those. Shipping a
+widened gate because bypassing produced more plans would be the lower-the-bar anti-pattern; the two
+cells that did produce plans banked nothing.
+
+**Per game.** ft09, tu93, lp85 and sc25 are correct rejections on their own evidence: a 1112-of-1144-
+line comment-wall runaway whose `engine()` never returns, two engines with 0/8 held-out and zero cell
+recall, an engine getting 0 of 2 real changes right while inventing 96 cells, and a hardcoded
+per-action delta lookup with a constant-`False` win predicate. tn36 is reclassified
+**REASON_IMPRECISE, not a false rejection**: its engine is the run's best (8/8 held-out, cell recall
+1.0, and on force-admit its 61-action plan matched reality byte-exactly for **61 of 61 steps**), but
+its search was stopped by the **depth** cap, not by degeneracy, and `plan_in_model` is bounded at the
+same depth 40 — so the veto is correct while the label and detail string are wrong. It banked nothing
+anyway because the induced win predicate ("fill row 1 with colour 3") is not tn36's real win
+condition (`ops/arc_solve_registry.yaml`: match an object to a target on five attributes).
+
+**Two method corrections applied before any verdict was trusted.** (1) The first-pass probes called
+`e3.plan_in_model` directly with no `goal_energy`, so they ran plain BFS while the shipped accept
+path runs `_call_plan_in_model` (`arc_competition_agent.py:6156`). Every cell was re-run through the
+shipped wrapper using the repo's own dev-only `CARNOT_ARC_PLAN_MAX_NODES` override; node counts are
+identical to the digit, which now **measures** rather than assumes the source's claim that a flat
+binary goal energy degenerates to FIFO. (2) The control arm was an unvalidated reconstruction; it is
+now byte-identical to the **live** LLM-ON cell on all five games at budget 60, with vc33 (the one
+game where ON and OFF genuinely differ) as the internal consistency check.
+
+**Positive control, previously missing:** vc33 banks 2 levels with `actions_to_first_solve` = 15 in
+this same harness with the same inert proposer, so the 0-of-9 null has demonstrated dynamic range.
+
+**Two reporting errors corrected.** Rejection reasons are now read per CELL, not per game: tn36 and
+lp85 each have a replicate rejected for a *different* reason, so the false-rejection claim rests on
+at most 1 of 10 cells; and sc25's terminal label is `proposer_failed_or_missing_root` (a generation
+failure), so it is not counted as a terminal gate rejection. The first pass's "artifact-integrity
+inconsistency" on tn36 is **withdrawn**: `arc_competition_agent.py:5889` re-runs `induce()` after the
+refinement loop returns unplanned, so a terminal event legitimately mixes round-level fields with the
+post-fallthrough engine's `change_gate`/`verify_*`/`skipped`.
+
+**Also surfaced:** the TTT prior engine is gated on `cell_recall >= 0.5` while the LLM engine is
+gated on byte-exact 1.0. On tu93 the prior PASSES with **held-out exact accuracy 0.0** — a live gate
+false positive inside the audited cells. On tn36 a gate-PASSING prior reached the planner and the
+planner exhausted 20017 nodes, i.e. tn36 is planner-bound.
+
+**Frontier:** induction QUALITY (goal induction especially) and the perception feeding it — not the
+gate. Banked levels remain **3/3** and the submission gate remains **unmet**.
+
+- Artifact: `results/outer_loop_arc_gate_forceadmit_20260730.json`
+- Note: `docs/research-notes/arc-gate-rejection-audit-2026-07-30.md`
+
 ## 2026-07-30 (outer-loop: "revert the vc33 regression" — nothing was reverted, because half the regression was a confound and the other half is a tradeoff that a revert would not fix)
 
 **Instruction:** revert the vc33 regression (`actions_to_first_solve` 10 → 15, attributed to
