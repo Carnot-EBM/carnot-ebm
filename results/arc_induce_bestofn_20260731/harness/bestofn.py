@@ -69,6 +69,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import pickle
 import re
 import subprocess
 import sys
@@ -86,11 +87,22 @@ SEED_BASE = int(os.environ.get("BON_SEED_BASE", "7100"))
 TEMPERATURE = float(os.environ.get("BON_TEMPERATURE", "0.2"))
 CALL_TIMEOUT_S = float(os.environ.get("BON_CALL_TIMEOUT_S", "1800"))
 DEADLINE_S = float(os.environ.get("BON_DEADLINE_S", "10800"))  # 3h hard stop
+# The shipped dry run executes generated code and is NOT time-bounded; see
+# validate_worker.py for the 13-minute wedge that motivated this cap.
+VALIDATE_TIMEOUT_S = float(os.environ.get("BON_VALIDATE_TIMEOUT_S", "120"))
+RESUME = os.environ.get("BON_RESUME", "1") == "1"
 REPO_SUBSTR = "gemma-4-31B-it"
 TAG = os.environ.get("BON_TAG", f"gpu{GPU}")
 
 OUT = os.path.join(HERE, "bon", TAG)
 os.makedirs(OUT, exist_ok=True)
+# Working files for the validation subprocess live OUTSIDE the repo. They are LLM-written .py
+# and pickled transitions -- intermediates, not evidence (the evidence is the completion .txt
+# plus its recorded sha). Keeping them in-tree put generated code in front of the repo's own
+# ruff pre-commit hook, which would have REWRITTEN it; an auto-formatted copy of a model
+# completion is no longer the thing that was measured.
+SCRATCH = os.environ.get("BON_SCRATCH_DIR", f"/tmp/arc_bon_gen/{TAG}")
+os.makedirs(SCRATCH, exist_ok=True)
 
 os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = GPU
 os.environ["CARNOT_ARC_INDUCE_N_CTX"] = "32768"
@@ -130,6 +142,24 @@ def main() -> int:  # noqa: C901
     budget = e3._INDUCE_DEFAULT_MAX_TOKENS
 
     cells: dict = {}
+    shown_pkl: dict = {}
+    # RESUME. A wedged run leaves banked candidates behind; regenerating them would both waste
+    # GPU time and CHANGE THEM (a new server process gives different output for the same seed),
+    # so completed (game, candidate) pairs are carried forward verbatim rather than re-asked.
+    rows: list[dict] = []
+    done: set = set()
+    prev_path = os.path.join(OUT, "bon.json")
+    if RESUME and os.path.exists(prev_path):
+        try:
+            prev = json.load(open(prev_path))
+            for r in prev.get("rows", []):
+                if r.get("status") == "ok":
+                    rows.append(r)
+                    done.add((r["game"], r["candidate"]))
+            log(f"RESUME: carrying forward {len(rows)} banked candidates")
+        except Exception as exc:  # noqa: BLE001
+            log(f"RESUME: could not read prior rows ({exc!r}); starting clean")
+            rows, done = [], set()
     for game in GAMES:
         prompt_path = os.path.join(HERE, "capture", game, f"prompt{CALL_INDEX}_combined.txt")
         if not os.path.exists(prompt_path):
@@ -139,6 +169,12 @@ def main() -> int:  # noqa: C901
         if not s["split_proven"]:
             log(f"SKIP {game}: split not proven -> {s['checks']}")
             continue
+        # The shown rows are pickled once so the validation subprocess can load exactly the same
+        # objects the in-process check would have used -- no re-derivation, no chance of drift.
+        spkl = os.path.join(SCRATCH, f"_shown_{game}.pkl")
+        with open(spkl, "wb") as fh:
+            pickle.dump(s["_shown"], fh)
+        shown_pkl[game] = spkl
         cells[game] = {
             "prompt": open(prompt_path).read(),
             # ONLY the shown rows reach the mechanical defect check -- the same leak discipline
@@ -232,8 +268,6 @@ def main() -> int:  # noqa: C901
             prop.stop()
             return 4
 
-    rows: list[dict] = []
-
     def call(game: str, k: int) -> dict:
         prompt = cells[game]["prompt"]
         seed = SEED_BASE + k
@@ -267,25 +301,53 @@ def main() -> int:  # noqa: C901
         text = resp.get("content", "")
         timings = resp.get("timings") or {}
         code = e3._extract_python(text) or text.strip()
-        shown = cells[game]["shown"]
-        # `required` matches what the SHIPPED combined induce call passes to generate().
-        defects = sv.validate_engine_code(
-            code,
-            transitions=shown,  # SHOWN ONLY -- no held-out row informs this
-            stop_type=resp.get("stop_type"),
-            required=("engine", "is_level_complete"),
-            budget=budget,
-        )
+        # THE SHIPPED MECHANICAL CHECK, run in a SUBPROCESS with a wall-clock bound. See
+        # validate_worker.py: `validate_engine_code` executes the generated engine and is not
+        # time-bounded, and this loop wedged for 13 minutes on exactly that. An in-process alarm
+        # would be swallowed by the dry run's own exception handling and become a false CLEAN.
+        cp = os.path.join(SCRATCH, f"_code_{game}_k{k}.py")
+        with open(cp, "w") as fh:
+            fh.write(code)
+        vout: dict = {}
+        v_timeout = False
         try:
-            import ast as _ast
-
-            _ast.parse(code)
-            parses = True
-        except SyntaxError:
-            parses = False
+            vp = subprocess.run(
+                [
+                    sys.executable,
+                    os.path.join(HERE, "validate_worker.py"),
+                    cp,
+                    shown_pkl[game],
+                    str(resp.get("stop_type") or ""),
+                    str(budget),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=VALIDATE_TIMEOUT_S,
+            )
+            vout = json.loads(vp.stdout.strip().splitlines()[-1])
+        except subprocess.TimeoutExpired:
+            v_timeout = True
+            vout = {
+                "defect_kinds": ["validation_timeout"],
+                "defect_details": [
+                    f"the shipped dry run did not terminate within {VALIDATE_TIMEOUT_S}s"
+                ],
+                "parses": None,
+                "engine_changes_anything": None,
+            }
+        except Exception as exc:  # noqa: BLE001
+            vout = {
+                "defect_kinds": ["validation_worker_failed"],
+                "defect_details": [f"{type(exc).__name__}: {str(exc)[:200]}"],
+                "parses": None,
+                "engine_changes_anything": None,
+            }
+        parses = vout.get("parses")
         # The SHIPPED accept-first bar for the combined call: both functions present and parsing.
-        accepted = bool(code and "def engine" in code and "def is_level_complete" in code and parses)
-        changes = sv.engine_changes_anything(code, shown)
+        accepted = bool(
+            code and "def engine" in code and "def is_level_complete" in code and parses is True
+        )
+        changes = vout.get("engine_changes_anything")
         fn = f"{game}_k{k}.txt"
         with open(os.path.join(OUT, fn), "w") as fh:
             fh.write(text)
@@ -306,12 +368,13 @@ def main() -> int:  # noqa: C901
             "prompt_truncated": bool(resp.get("truncated")),
             "wall_s": round(time.monotonic() - t, 1),
             "generate_would_accept": accepted,
-            "defect_kinds": sorted({d.kind for d in defects}),
-            "defect_details": [d.detail[:240] for d in defects],
+            "defect_kinds": vout.get("defect_kinds", []),
+            "defect_details": vout.get("defect_details", []),
+            "validation_timed_out": v_timeout,
             "engine_changes_anything": changes,
             # The mechanical bar only. NOT a quality claim -- criteria (i)/(ii)/(iii) are the
             # scorer's job and are computed in a separate process against held-out evidence.
-            "usable": bool(accepted and not defects and changes is True),
+            "usable": bool(accepted and not vout.get("defect_kinds") and changes is True),
         }
         log(
             f"  {game} k{k}: stop={row['stop_type']} pred_n={row['predicted_n']} "
@@ -332,6 +395,8 @@ def main() -> int:  # noqa: C901
             "budget": budget,
             "sampler": sampler,
             "sampler_source": "repo constants: _induce_repeat_penalty() / _INDUCE_REPEAT_LAST_N",
+            "validate_timeout_s": VALIDATE_TIMEOUT_S,
+            "resumed_candidates": sorted(f"{g}_k{k}" for g, k in done),
             "witness": witness,
             "splits": {g: cells[g]["split"] for g in cells},
             "rows": rows,
@@ -345,6 +410,8 @@ def main() -> int:  # noqa: C901
     # balanced grid that is reportable at whatever N completed.
     for k in range(N_CANDIDATES):
         for game in list(cells):
+            if (game, k) in done:
+                continue
             if time.monotonic() - _T0 > DEADLINE_S:
                 stopped = "deadline_reached"
                 break

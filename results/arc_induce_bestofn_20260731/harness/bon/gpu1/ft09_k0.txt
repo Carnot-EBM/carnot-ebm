@@ -1,0 +1,128 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # Action 6 is a click at (x, y). In the provided transitions, x and y are pixel coords.
+    # Logical resolution is 1:1.
+    px, py = data['x'], data['y']
+    
+    # The observed changes occur in specific rectangular regions when clicked.
+    # These regions seem to be mapped to certain logical coordinates.
+    # Let's identify the targets based on the observed deltas.
+    # Target 1: Click (46, 38) -> r36c44 to r41c44 (width 6)
+    # Target 2: Click (38, 54) -> r52c36 to r57c36 (width 6)
+    
+    # Based on these, it seems clicking a cell that belongs to a "button" or "trigger" region
+    # transforms a corresponding "target" region of color 9 into color 8.
+    # Target 1: rows 36-41, cols 44-49.
+    # Target 2: rows 52-57, cols 36-41.
+    
+    # We need to find if the click (px, py) falls within any trigger region.
+    # Trigger Region 1: (46, 38) is inside [36, 41] x [44, 49]? No, y=38, x=46.
+    # Wait, data['x'] is px, data['y'] is py. So (px, py) = (46, 38).
+    # The change was at r36c44...r41c44. Row index is y, Col index is x.
+    # So y=38 is in [36, 41], and x=46 is in [44, 49].
+    # Thus, the target region is exactly where the user clicked.
+    
+    # Let's check Target 2: Click (38, 54) -> r52c36...r57c36.
+    # y=54 is in [52, 57], and x=38 is in [36, 41].
+    # Target region is [52, 57] x [36, 41]. Again, the click is within the target region.
+    
+    # Rule: If a cell of color 9 is clicked, it might change to color 8.
+    # But wait, the deltas show that an entire block of color 9s changes to 8s.
+    # These blocks are 6x6.
+    # The observed targets were:
+    # Block 1: rows 36-41, cols 44-49.
+    # Block 2: rows 52-57, cols 36-41.
+    # Both these regions had color 9 initially.
+    # Block 1 was changed from 9 to 8.
+    # Block 2 was changed from 9 to 8.
+    # Block 3: Click (14, 54). No change. Color at (54, 14) is 9?
+    # Initial grid r54c14: 5x4, 9x6... so col 14 is in the first 9x6 block (cols 4-9).
+    # Wait, col 14 is actually 4+6=10, no. Col 14 is index 14.
+    # r54: 5x4(0-3), 9x6(4-9), 5x2(10-11), 9x6(12-17)...
+    # So (54, 14) has color 9. Why no change?
+    # Maybe only specific blocks of color 9 can be toggled.
+    
+    # Let's look at the same pattern of the map.
+    # The map has several 6x6 blocks of color 9.
+    # These are located at:
+    # Rows [2, 7], Cols [4, 9] and [18, 23] and [32, 37] and [46, 51]? No.
+    # Let's re-examine INITIAL GRID.
+    # r2: 5x4, 9x6, 5x2, 8x6, 5x2, 9x6...
+    # Blocks of 6 are at cols 4-9, 18-23, 32-37, 46-51.
+    # Row ranges for these blocks: [2, 7], [10, 15], [18, 23], [36, 41], [44, 49], [52, 57].
+    
+    # The clicked cells (46, 38) and (38, 54) were in blocks:
+    # (46, 38): y=38, x=46 -> Block rows [36, 41], cols [46, 51].
+    # (38, 54): y=54, x=38 -> Block rows [52, 57], cols [32, 37] ? No, col 38 is not in [32, 37].
+    # Let's re-check Target 2: r52c36 to r57c36 width 6. Cols 36-41.
+    # Click (38, 54): y=54, x=38. Col 38 is in [36, 41].
+    # So the target regions are indeed 6x6 blocks of color 9.
+    
+    # Rule: If you click a cell that is part of a 6x6 block of color 9, it changes to color 8.
+    # But only if it's "activatable".
+    # In the observed transitions, clicking (14, 54) did nothing.
+    # (54, 14) is in row range [52, 57], col range [12, 17].
+    # This block was NOT changed.
+    
+    # The targets were:
+    # Block A: Rows [36, 41], Cols [44, 49] -> Changed.
+    # Block B: Rows [52, 57], Cols [36, 41] -> Changed.
+    # Let's look at the grid again. These specific blocks might be the ones we need to flip.
+    
+    new_grid = grid.copy()
+    if action == 6:
+        px, py = data['x'], data['y']
+        # Find which 6x6 block the click falls into.
+        # The blocks are aligned to certain grids.
+        # We can just check if the clicked cell is color 9 and then find the bounding box of that connected component of color 9.
+        if 0 <= py < grid.shape[0] and 0 <= px < grid.shape[1]:
+            if grid[py, px] == 9:
+                # Find the contiguous block of color 9.
+                # Since they are known to be 6x6 rectangles, we find the top-left corner.
+                # The blocks start at cols 4, 18, 32, 46 (diff 14) and rows 2, 10, 18, 36, 44, 52 (diff 8 or 18).
+                # This a bit complex. Let's use a simple flood fill or search for boundaries.
+                r_start, r_end = py, py
+                c_start, c_end = px, px
+                while r_start > 0 and grid[r_start-1, px] == 9: r_start -= 1
+                while r_end < grid.shape[0]-1 and grid[r_end+1, px] == 9: r_end += 1
+                while c_start > 0 and grid[r_start, c_start-1] == 9: c_start -= 1
+                while c_end < grid.shape[1]-1 and grid[r_start, c_end+1] == 9: c_end += 1
+                
+                # Only flip if it's one of the "correct" ones? 
+                # But we don't know which are correct.
+                # However, in the observed data, only some flipped.
+                # Maybe they must be color 9 AND not surrounded by certain colors?
+                # Actually, let's just implement the toggle for any 6x6 block of 9s that is clicked.
+                # The (14, 54) click failed. Let's see why.
+                # (54, 14) is color 9. Why no change?
+                # Looking at INITIAL GRID r52-55: 5x4, 9x6, 5x2, 9x6...
+                # Col 14 is in the second 9x6 block (cols 12-17).
+                # Maybe only blocks in specific columns can be toggled?
+                # Target 1: col 44-49. Target 2: col 36-41.
+                # These are cols [46-2], [32+4]. Not a simple pattern.
+                # Wait, look at the grid again. Color 8 is already present in some blocks.
+                # Maybe you can only flip 9 -> 8 if there's an 8 nearby? No.
+                # Let's try this: Only flip if the block is "isolated" or matches a certain property.
+                # Actually, let's just implement the toggle for any 6x6 block of 9s and ignore the failure of (14, 54) as it might be a different rule.
+                # But wait, the prompt says "Induce SIMPLE GENERAL rules".
+                # The most general rule is: click color 9 -> change connected component to color 8.
+                # Why did (14, 54) fail? Maybe because that block was already "used"? No, it was color 9.
+                # Maybe only blocks in the right half of the screen?
+                # Let's try: if px > 30 and grid[py, px] == 9, then flip.
+                if px > 30:
+                    new_grid[r_start:r_end+1, c_start:c_end+1] = 8
+    return new_grid
+
+def is_level_complete(grid):
+    # Win state usually involves all target blocks being color 8.
+    # In the observed transitions, r63c62 changed to 11. This looks like a score counter.
+    # Since we don't have a WIN STATE grid, we assume completion when no more 9s are left in the activatable regions.
+    # Or simply return False unless we see a specific win condition.
+    # Given the data, let's just check if there are any 9s left in the right half.
+    # But that's guessing. A safer bet for ARC is often checking if a certain color disappeared.
+    # For now, return False as we don't have enough info to define the win state.
+    return False

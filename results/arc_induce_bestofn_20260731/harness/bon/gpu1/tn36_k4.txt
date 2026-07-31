@@ -1,0 +1,70 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves clicking elements in a specific area to change colors of cells in row 1.
+    Based on the observed data, clicks at y=35 and y=14 are affecting cells in r1.
+    Specifically, click (31, 35) changes r1c61 to color 3, then r1c59 to color 3, etc.
+    And click (31, 14) changes r1c60, r1c58, r1c57, r1c56.
+    This suggests a pattern where certain coordinates trigger updates to a set of target cells.
+    Since we don't have enough data to actually map every coordinate to a cell, 
+    we implement the logic seen in the same few actions.
+    """
+    if action == 6:
+        # Extract pixel coordinates from data
+        px, py = data['x'], data['y']
+        
+        # The observations show that clicks at x=31, y=35 and x=31, y=14 
+        # result in changing cells in row 1 starting from the right side.
+        # We observe:
+        # (31, 35) -> r1c61
+        # (31, 14) -> r1c60
+        # (31, 35) -> r1c59
+        # (31, 14) -> r1c58
+        # (31, 14) -> r1c57
+        # (31, 14) -> r1c57... wait, let me re-examine.
+        
+        # Let's look at the sequence again:
+        # 1. (31, 35) -> r1c61
+        # 2. (31, 14) -> r1c60
+        # 3. (31, 35) -> r1c59
+        # 4. (31, 14) -> r1c58
+        # 5. (31, 14) -> r1c57
+        # 6. (31, 14) -> r1c56
+        
+        # It seems clicking these specific points alternates or fills a row from right to left.
+        # We find the first cell in row 1 that is NOT color 3 and is within the range [0, 63].
+        # The target cells are those with value 9 in the initial grid (r1 has values 5, 9, 5).
+        # Row 1 consists of 5x1, 9x61, 5x2.
+        # This means columns 1 to 61 inclusive are color 9.
+        
+        # Create a copy of the grid
+        new_grid = grid.copy()
+        
+        # Find the rightmost column in row 1 that is currently color 9
+        # We only care about columns 1 to 61.
+        for col in range(61, -1, -1):
+            if new_grid[1, col] == 9:
+                # If we click at y=35 or y=14, it's like "consuming" one of these cells.
+                # We check if the action matches the observed coordinates.
+                if (px == 31 and py == 35) or (px == 31 and py == 14):
+                    new_grid[1, col] = 3
+                    break
+        return new_grid
+    
+    return grid
+
+def is_level_complete(grid):
+    """
+    The win state is not provided, but typically in such puzzles, 
+    completing a sequence or changing all target cells to a specific color 
+    is common.
+    Based on the    r1c61:3x1 etc., we
+    assume the level is complete when all cells from r1c1 to r1c61 are color 3.
+    """
+    # Check if row 1, cols 1-61 are all color 3.
+    if grid.shape[0] < 2: return False
+    target_segment = grid[1, 1:62]
+    return np.all(target_segment == 3)
+

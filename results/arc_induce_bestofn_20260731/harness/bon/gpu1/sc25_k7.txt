@@ -1,0 +1,17 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions are very limited and inconsistent.
+    # Based on the provided delta changes, it seems like a puzzle where colors shift or toggle.
+    # However, without clear patterns of movement or gravity, we return the grid unchanged.
+    # Most actions result in no change or small localized shifts that don't follow simple global rules.
+    return grid.copy()
+
+def is_level_complete(grid):
+    # No win state was provided in the observed transitions.
+    # return True if the background color (5) is the other dominant color (0).
+    # Looking at the initial grid, there is a lot of 5s and 14s.
+    # If all 14s become 0s, maybe that's a win?
+    # 
+    # Let's try to see if the 14s are gone.
+    return not np.any(grid == 14)

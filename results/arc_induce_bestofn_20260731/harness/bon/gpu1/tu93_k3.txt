@@ -1,0 +1,187 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The game appears to be a maze or puzzle where the player controls an entity.
+    # Based on the observed transitions, it seems that Action 2, 3, 4, and 1 are directional movements.
+    # Action 2: Down? Action 3: Left? Action 4: Up? Action 1: Up?
+    # Let's analyze the movement of color 9 (the agent).
+    # Initial grid has no obvious single 'agent' cell.
+    # However, looking at the delta changes, we can find the agent's position.
+    #
+    # In ACTION4: r15c15:0x3, r15c21:9x3, etc. Color 9 moves from some place to (15-17, 21-23).
+    # In ACTION2: r15c21:0x3, r16c21:0x3, r17c21:0x3, r21c21:9x3...
+    # It looks like the agent is a 3x3 block of color 9.
+    #
+    # Movement rules:
+    # Action 4: Up
+    # Action 2: Down
+    # Action 1: Left/Right?
+    # Action 3: Right/Left?
+    #
+    # Let's refine based on the observed transitions:
+    # Action 4: Moves the 3x3 block of color 9 up.
+    # Action 2: Moves the 3x3 block of color 9 down.
+    # Action 2 again: Moves it further down.
+    # Action 1: Moves it back up or shifts it.
+    #
+    # The grid contains walls (color 2) and empty space (color 0).
+    # The agent (color 9) can move into empty spaces (color 0).
+    # There are also some special cells (color 14).
+    #
+    # Based on thes deltas, we can find the current position of the agent.
+    #
+    # Agent is always a 3x3 block of color 9.
+    #
+    # Let's map actions to directions:
+    # Action 2: Down (+y)
+    # Action 4: Up (-y)
+    # Action 1: Left (-x)
+    # Action 3: Right (+x)
+    #
+    # Wait, let's check ACTION 1 in the last transition:
+    # r21c21:9x1,4x1,9x1... r27c21:0x3 ...
+    # This doesn't perfectly match simple movement.
+    #
+    # However, the most consistent pattern is that the agent moves between "slots" of size 3x3.
+    #
+    # Slot-based movement:
+    # Grid is divided into 3x3 slots.
+    # Agent (3x3 block of color 9) moves from one slot to another.
+    #
+    # Let's identify the agent's starting position by finding all cells of color 9.
+    #
+    # The agent is a 3x3 block of color 9.
+    #
+    # Movement logic:
+    # Find current 3x3 block of color 9.
+    # Find target 3x3 block based on action.
+    #
+    # Directions:
+    # Action 2: Down
+    # Action 4: Up
+    # Action 1: Left
+    # Action 3: Right
+    #
+    # Let's actually look at the agent's position in the INITIAL grid:
+    # r15: ..., 9x3, ... (col 15-17)
+    # r16: ..., 9x2, 4x1, ... (col 15-17)
+    # r17: ..., 9x3, ... (col 15-17)
+    # This is a 3x3 block at (15, 15).
+    #
+    # ACTION 4 (Up): Moves it from (15, 15) to (15, 21)? No, that's right.
+    # Wait, let's re-examine:
+    # Initial: Agent at (15, 15).
+    # ACTION 4: Changed cells r15c15:0x3, r15c21:9x3... -> Agent moves to (15, 21).
+    # So Action 4 = Right.
+    # ACTION 2: Changed cells r15c21:0x3, r21c21:9x3... -> Agent moves to (21, 21).
+    # So Action 2 = Down.
+    # ACTION 2 again: Changed cells r21c21:0x3, r27c21:9x3... -> Agent moves to (27, 21).
+    # So Action 2 = Down.
+    # ACTION 1: Changed cells r27c21:0x3, r21c21:9x3... -> Agent moves back to (21, 21).
+    # So Action 1 = Up.
+    #
+    # Summary of actions:
+    # Action 1: Up
+    # Action 2: Down
+    # Action 3: Left? (No data for movement)
+    # Action 4: Right
+    #
+    # Movement is restricted by walls (color 2).
+    # The agent can move into a slot if it's not blocked by color 2.
+    # Let's actually implement this as moving the 3x3 block.
+
+    agent_pos = np.where(grid == 9)[0]
+    if len(agent_pos[0]) == 0: return grid # Should not happen
+    
+    # Find top-left corner of the 3x3 agent block
+    r_min = np.min(agent_pos[0])
+    c_min = np.min(agent_pos[1])
+    
+    # Map action to direction
+    dirs = {1: (-6, 0), 2: (6, 0), 3: (0, -6), 4: (0, 6)}
+    dr, dc = dirs.get(action, (0, 0))
+    
+    new_r, new_c = r_min + dr, c_min + dc
+    
+    # Check boundaries
+    if new_r < 0 or new_r + 3 > grid.shape[0] or new_c < 0 or new_c + 3 > grid.shape[1]:
+        return grid
+    
+    # Check if target slot is blocked by walls (color 2)
+    target_slot = grid[new_r:new_r+3, new_c:new_c+3]
+    if np.any(target_slot == 2):
+        return grid
+    
+    # Move agent
+    new_grid = grid.copy()
+    # Clear old position
+    new_grid[r_min:r_min+3, c_min:c_min+3] = 0 if grid[r_min:r_min+3, c_min:c_min+3].max() == 9 else 5 # This is a bit complex.
+    # Let's just set it to the background color of the maze.
+    # The observed transitions show that when the agent moves, the cells it leaves behind are often filled with 0 or 5.
+    # Looking at the INITIAL grid, the "empty" slots are color 0.
+    # The agent (color 9) replaces whatever was in the target slot.
+    
+    # To be safe, we use the logic from the deltas:
+    # ACTION 4: r15c15:0x3 -> Agent left (15, 15), now it's 0.
+    # ACTION 2: r15c21:0x3 -> Agent left (15, 21), now it's 0.
+    # So empty slots are color 0.
+    
+    # We need to handle the case where the agent might have moved over something other than 0.
+    # The background of the maze seems to be color 5.
+    # If the cell was not a wall (2), it can be move into.
+    
+    new_grid[r_min:r_min+3, c_min:c_min+3] = 0 # Simplified
+    # But wait, some cells were color 4? Let's check ACTION 4 delta: r16c21:9x2, 4x1.
+    # This means the agent block is NOT always a perfect 3x3 of color 9.
+    # It's more like a "brush" that moves and replaces colors.
+    
+    # Actually, let's look at the agent again. In INITIAL grid, r16 has 9x2, 4x1.
+    # That means the agent is actually just a set of cells that move together.
+    # Let's find all cells of color 9 and shift them.
+    
+    agent_cells = np.where(grid == 9)
+    new_grid = grid.copy()
+    
+    # We only shift if the target positions are not walls (color 2).
+    # Shifted positions
+    shifted_rs = agent_cells[0] + dr
+    shifted_cs = agent_cells[1] + dc
+    
+    can_move = True
+    for r, c in zip(shifted_rs, shifted_cs):
+        if r < 0 or r >= grid.shape[0] or c < 0 or c >= grid.shape[1] or grid[r, c] == 2:
+            can_move = False
+            break
+            
+    if can_move:
+        # Clear old agent cells
+        for r, c in zip(agent_cells[0], agent_cells[1]):
+            new_grid[r, c] = 0 # Simplified background
+        # Set new agent cells
+        for r, c in zip(shifted_rs, shifted_cs):
+            new_grid[r, c] = 9
+            
+    return new_grid
+
+def is_level_complete(grid):
+    # The win state usually involves reaching a goal.
+    # Color 14 is often a goal color.
+    # Let's check if any cell of color 9 (agent) overlaps with color 14.
+    agent_pos = np.where(grid == 9)
+    goal_pos = np.where(grid == 14)
+    if len(agent_pos[0]) == 0 or len(goal_pos[0]) == 0: return False
+    
+    # Check for overlap
+    for r, c in zip(agent_pos[0], agent_pos[1]):
+        if grid[r, c] == 14: # This is not possible since we just found where it is 9
+            pass
+        # We need to check if the agent's current position was a goal position.
+        # But our engine doesn't track the original goal positions.
+        # Since we don't have a WIN STATE grid, let's assume the goal is to reach color 14.
+        # In the INITIAL grid, color 14 is at (45-47, 36-38).
+        # If the agent moves into that slot, it's complete.
+        pass
+
+    # A simpler win condition: does the agent occupy any cell that was originally color 14?
+    # Let's just use a simple heuristic: are there any cells of color 14 left?
+    return np.sum(grid == 14) == 0

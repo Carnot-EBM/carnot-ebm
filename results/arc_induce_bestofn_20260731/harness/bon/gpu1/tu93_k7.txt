@@ -1,0 +1,150 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The game appears to be a puzzle where an agent moves through a maze of walls and paths.
+    # Based on the observed transitions, it seems like there are certain 'tokens' or 'entities' that move.
+    # The observed deltas show changes in colors at specific locations, which related to 
+    # movement of a color 9 entity.
+    # 
+    # Let's identify the player/entity position from the grid.
+    # Looking at the initial grid, we9 is likely the player.
+    # Color 9 is present in several places initially, but the deltas suggest 
+    # a movement pattern.
+    # 
+    # In ACTION 4 (Right), the cells r15c15-17, r16c15-17, r17c15-17, etc., change.
+    # 
+    # Actually, looking closer at the lapped movements:
+    # r15c21: 9x3 -> 0x3 (ACTION 2 - Up)
+    # r21c21: 0x3 -> 9x3 (ACTION 2 - Up)
+    # This suggests the "player" is a 3x3 block of color 9.
+    # 
+    # Movement rules:
+    # Action 1: Left?
+    # Action 2: Up?
+    # Action 3: Down?
+    # Action 4: Right?
+    # 
+    # Based on the observed transitions:
+    # ACTION 4 (Right): moves entity from c15 to c21.
+    # ACTION 2 (Up): moves entity from r15 to r21... wait, no.
+    # ACTION 2 (Up): moves entity from r15 to r21? No, that's increasing row index.
+    # Let's re-examine:
+    # ACTION 2 (Up): r15c21: 0x3 -> 9x3 (Wait, delta says r15c21: 0x3). 
+    # Delta for ACTION 2: r15c21: 0x3, r16c21: 0x3, r17c21: 0x3 AND r21c21: 9x3, r22c21: 9x3, r23c21: 9x3.
+    # This means it moved FROM (15,21) TO (21,21). That is DOWN movement.
+    # 
+    # Action mapping:
+    # Action 1: Left/Right?
+    # Action 2: Down
+    # Action 3: Up
+    # Action 4: Right
+    # Action 1: Left
+    # 
+    # The player is a 3x3 block of color 9.
+    # Walls are likely colors other than 0 or 5.
+    # Color 5 is background.
+    # Color 0 is path.
+    # 
+    # Let's refine the action map:
+    # Action 2 -> Row + 6
+    # Action 3 -> Row - 6
+    # Action 4 -> Col + 6
+    # Action 1 -> Col - 6
+    # 
+    # Movement is in steps of 6 cells (since blocks are 3x3 and gaps are 3).
+    # 
+    # Collision detection:
+    # If the target position is 'path' (color 0), the move is successful.
+    # If the target position is 'wall', it fails.
+    # 
+    # Let's check ACTION 1: r21c21: 9x1, 4x1, 9x1... this looks like it might be pushing something.
+    # But let's keep the only simple rule: 3x3 block moves by 6 units.
+
+    # Find current 3x3 block of color 9
+    rows, cols = np.where(grid == 9)
+    if len(rows) == 0: return grid
+    
+    # The player is the top-left corner of a 3x3 block.
+    # We assume there only is one such block for simplicity based on the transitions.
+    r_start = rows[0]
+    c_start = cols[0]
+    
+    # Action mapping to movement delta
+    move_map = {
+        1: (0, -6), # Left
+        2: (6, 0),  # Down
+        3: (-6, 0), # Up
+        4: (6, 0),  # Right? No, wait.
+    }
+    # Re-evaluating action map from deltas:
+    # ACTION 4: c15 -> c21 (Col + 6)
+    # ACTION 2: r15 -> r21 (Row + 6)
+    # ACTION 3: no change in entity position, but r63c63 changes.
+    # ACTION 1: r21c21 moves back to r15c21? No, delta says r27c21 becomes 0 and r21c21 becomes 9.
+    # So ACTION 1 moved it FROM r27 TO r21. That's Row - 6.
+    
+    # Corrected Map:
+    # Action 4: Col + 6
+    # Action 2: Row + 6
+    # Action 1: Row - 6
+    # Action 3: ? (Maybe Up/Down?)
+    
+    # Let's look at the transitions again.
+    # ACTION 2: r15->r21 then r21->r27.
+    # ACTION 1: r27->r21.
+    # ACTION 4: c15->c21.
+    # 
+    # This suggests:
+    # Action 2: Down (+6 row)
+    # Action 1: Up (-6 row)
+    # Action 4: Right (+6 col)
+    # Action 3: Left? (-6 col)
+    
+    dr, dc = 0, 0
+    if action == 1: dr, dc = -6, 0
+    elif action == 2: dr, dc = 6, 0
+    elif action == 3: dr, dc = 0, -6
+    elif action == 4: dr, dc = 0, 6
+    
+    new_r = r_start + dr
+    new_c = c_start + dc
+    
+    # Boundary check
+    if new_r < 0 or new_r + 2 >= grid.shape[0] or new_c < 0 or new_c + 2 >= grid.shape[1]:
+        return grid
+    
+    # Collision check: target area must be color 0 (path) or the current position's background.
+    # We only move if the target 3x3 block is currently all color 0.
+    target_area = grid[new_r:new_r+3, new_c:new_c+3]
+    if np.any(target_area != 0):
+        # If it's not a path, we can't move there unless it's part of the same entity.
+        # return grid # Simple collision
+        pass
+
+    # Create new grid
+    new_grid = grid.copy()
+    # Clear old position
+    for r in range(r_start, r_start+3):
+        for c in range(c_start, c_start+3):
+            new_grid[r, c] = 0 if grid[r, c] == 9 else grid[r, c]
+            # Based on deltas, when player moves, the cell they leave becomes 0.
+            # But wait, ACTION 4 delta says r15c15: 0x3. The original was 9x3? No, initial grid r15c15 is 9x3.
+            # So yes, it becomes 0.
+    
+    # Set new position
+    for r in range(new_r, new_r+3):
+        for c in range(new_c, new_c+3):
+            new_grid[r, c] = 9
+            
+    return new_grid
+
+def is_level_complete(grid):
+    # Win state usually involves reaching a specific target or clearing all paths.
+    # In this game, we don't have a win state provided, but based on common ARC patterns,
+    # 
+    # It looks like there are cells at (63, 63) that change color to 0.
+    # This might be a counter or progress bar.
+    # When the whole bottom row/right edge becomes 0, maybe it's complete.
+    # Let's assume completion is when the entity reaches a certain coordinate.
+    # Since no win state is given, return False unless a specific condition is met.
+    return False

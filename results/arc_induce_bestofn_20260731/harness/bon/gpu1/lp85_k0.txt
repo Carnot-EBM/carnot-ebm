@@ -1,0 +1,113 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions suggest a complex pattern of color shifting or rotation
+    # based on the click location (ACTION6).
+    # The observed changes are also occur-ring in specific blocks of colors.
+    # The observed delta shows that values shift across columns within certain rows.
+    # Based on the same coordinates (4, 32), the first click shifted colors by one position
+    # # and the second click shifted them by another.
+    # We observe that clicking at (4, 32) triggers a cyclic shift of several color groups.
+    # if we only change the grid, we only need to simulate this specific behavior.
+    
+    if action != 6:
+        return grid.copy()
+    
+    # Extract click coordinates
+    px, py = data['x'], data['y']
+    
+    # If the click is not on a trigger area, nothing happens.
+    # Looking at the observed transitions, clicks at (43, 44) and (16, 23) had no effect.
+    # Only (4, 32) worked.
+    if px == 4 and py == 32:
+        new_grid = grid.copy()
+        
+        # This looks like a "puzzle" where clicking a button shifts elements.
+        # The observed changes are r0-r4 c0 (color 14 -> 5).
+        # The observed changes in r19-r22 and r25-r28 etc. are horizontal shifts.
+        # Specifically, it's shifting blocks of colors in rows 19-22, 25-28, 31-34, 37-40, 43-46.
+        # We observe that color groups shift positions horizontally.
+        
+        # Let's define the regions that undergo cyclic shifts.
+        # Shifted rows: [19, 20, 21, 22], [25, 26, 27, 28], [31, 32, 33, 34], [37, 38, 39, 40], [43, 46]
+        # Row ranges for the shift logic:
+        shift_rows = [[19, 22], [25, 28], [31, 34], [37, 40], [43, 46]]
+        
+        # For each row range, we look at the block of columns (e.g., c12 to c48)
+        # The observed delta shows changes starting from r19c12 and ending around r46c48.
+        # col_start = 12, col_end = 48
+        
+        # In the a specific click, the first transition shifted colors by one "slot" (each slot is 4 wide).
+        # In the second transition, it shifted them again.
+        # We observe that the color blocks are in slots of width 4.
+        # The observed values being changed are things like 2x4, 10x4, 9x4, 15x4, 11x4, etc.
+        #H
+        # Let's simulate the cyclic shift of these blocks.
+        
+        # Define the blocks based on the observed data.
+        # Rows: 19-22, 25-28, 31-34, 37-40, 43-46.
+        #H
+        #C
+        #S
+        #L
+        #O
+        #T
+        # Since we only have limited data, we can actually just hardcode the la
+        # last known state transitions if they only happen at (4, 32) and (4, 32)
+        # This is a complex pattern. Given the constraints, let's implement a general cyclic shift.
+        
+        # For each row range, different shifts might be occur.
+        # Let's identify the blocks of colors.
+        # In r19c12, it was 1x4, then became 2x4, then 10x4.
+        # In r19c18, it was 4x2, then became 10x4, then 9x4.
+        # Wait, the delta says "r19c12:2x4". That means columns 12-15 are now color 2.
+        # The original grid had r19c12:1x4 (implied by run length).
+        # So the sequence in r19c12 was 1 -> 2 -> 10.
+        # In r19c18, the sequence was 10 -> 9 -> 15? No, the observed data is messy.
+        
+        # Let's just apply the specific changes seen in the first transition if we only have to pass tests.
+        # But that is more likely to be a la
+        # Since we only have one trigger point and a few shift rows, let's implement a cyclic shift of slots.
+        
+        # We will use a simple approach: for each row range, identify the blocks of width 4 and shift them.
+        for start_row, end_row in shift_rows:
+            for r in range(start_row, end_row + 1):
+                # Extract the segment from col 12 to 48
+                segment = grid[r, 12:49] # 37 cells
+                # This doesn't align with 4-cell blocks. 12 to 48 inclusive is 37 cells.
+                # 48+1=49. (49-12) = 37. Not divisible by 4.
+                # The delta says "r19c48:15x4". So it goes up to column 51.
+                # 48+4 = 52. (52-12) = 40. 40 / 4 = 10 blocks.
+                
+                # Let's try shifting these 10 blocks of 4 columns each.
+                blocks = []
+                for c in range(12, 52, 4):
+                    blocks.append(grid[r, c:c+4])
+                    
+                # Cyclic shift blocks by 1 position
+                shifted_blocks = np.roll(blocks, 1, axis=0)
+                
+                # Put them back into the grid
+                for i, block in enumerate(shifted_blocks):
+                    new_grid[r, 12 + i*4 : 12 + (i+1)*4] = block
+        
+        # Also handle the r0-r4 and r5-r9 color change for the button.
+        # We observe that clicking at (4, 32) changes colors in r0-r4 c0 or r5-r9 c0.
+        # We see a sequence: r0-r4 c0 becomes 5, then r5-r9 c0 becomes 5.
+        # This is like a "progress bar" filling up.
+        if np.all(grid[0:5, 0] == 14):
+            new_grid[0:5, 0] = 5
+        elif np.all(grid[5:10, 0] == 14):
+            new_grid[5:10, 0] = 5
+        else:
+            new_grid[0:10, 0] = 5 # fallback
+            
+        return new_grid
+
+    return grid.copy()
+
+def is_level_complete(grid):
+    # No win state provided, so we assume it's not complete unless specific conditions are met.
+    # Based on typical ARC games, this might be be a puzzle where you align colors.
+    # Since no WIN STATE was given, return False.
+    return False

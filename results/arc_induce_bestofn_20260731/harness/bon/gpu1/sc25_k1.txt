@@ -1,0 +1,86 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game appears to be a puzzle where certain blocks move or toggle colors.
+    Based on the limited evidence, we implement a movement logic for specific colored blocks.
+    """
+    new_grid = grid.copy()
+    h, w = new_grid.shape
+    
+    # Identify the "player" or active object if possible.
+    # In this case, the actions are directional (1-4).
+    # 
+    # Action mapping: 1=Up, 2=Down, 3=Left, 4=Right.
+    # Based on the observed deltas, it seems that some objects of color 9 and 10 
+    # shift positions horizontally or vertically.
+    
+    if action == 1: # Up
+        # Simple vertical shift for blocks of color 9, 10, 2
+        for r in range(h - 1, -1, -1):
+            for c in range(w):
+                val = grid[r, c]
+                if val in [2, 9, 10]:
+                    if r > 0 and grid[r-1, c] == 5:
+                        new_grid[r-1, c] = val
+                        new_grid[r, c] = 5
+        
+    elif action == 2: # Down
+        for r in range(h):
+            for c in range(w):
+                val = grid[r, c]
+                if val in [2, 9, 10]:
+                    if r < h - 1 and grid[r+1, c] == 5:
+                        new_grid[r+1, c] = val
+                        new_grid[r, c] = 5
+                        
+    elif action == 3: # Left
+        for r in range(h):
+            for c in range(w - 1, -1, -1):
+                val = grid[r, c]
+                if val in [2, 9, 10]:
+                    if c > 0 and grid[r, c-1] == 5:
+                        new_grid[r, c-1] = val
+                        new_grid[r, c] = 5
+                        
+    elif action == 4: # Right
+        for r in range(h):
+            for c in range(w - 1, -1, -1): # Correcting loop for right movement to avoid overwriting
+            # We need a process that move blocks as a group or shift them.
+            # The observed deltas show color 9/10 shifting right (Action 4).
+            # r19c39:10x2,9x2 means col 39,40 are 10, 41,42 are 9.
+            # This is a shift of the block at r19c35-38.
+            val = grid[r, c]
+            if val in [2, 9, 10]:
+                if c < w - 1 and grid[r, c+1] == 5:
+                    new_grid[r, c+1] = val
+                    new_grid[r, c] = 5
+    
+    # Special case: Action 1 also seems to affect cells on the far right edge (color 14 -> 0)
+    if action == 1:
+        # In the observed data, ACTION1 caused r2c62:0x2 and r4c62:0x2.
+        # This is likely a toggle or clear based on some condition.
+        for r in range(h):
+            for c in range(w - 2, w):
+                if grid[r, c] == 14:
+                    # We don't know the exact trigger, but we simulate it clearing.
+                    # Based on the same sequence, it seems to occur every few presses.
+                    pass
+
+    return new_grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the level is complete.
+    The win state usually involves clearing specific blocks or all of 14s.
+    """
+    # Looking at the initial grid, color 14 is present as a border/goal.
+    # return True if any cell is no longer 14? No, that's too not sure.
+    # Usually, completion is when certain colors are gone or 0.
+    # Since we have no WIN STATE provided, we we guess based on common ARC patterns.
+    # Check if all cells of color 14 are cleared (which ACTION1 did).
+    # return np.all(grid[:, -2:] != 14)
+    
+    # In this case, we'll use a simple heuristic: if there are many 0s where 14s were.
+    return np.sum(grid[:, -2:] == 0) > 0

@@ -1,0 +1,63 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves clicking on specific areas to change colors of a row.
+    Based on the same x coordinate (31), different y coordinates (35 and 14) 
+    trigger changes in row 1.
+    """
+    if action == 6:
+        # The clicks are at x=31, y=35 and x=31, y=14.
+        # Both affect row 1.
+        # Row 1 starts as 5x1, 9x61, 5x2.
+        # The changes occur at columns 61, 60, 59, 58, 57, 56.
+        # In each transition, one cell in row 1 is changed to color 3.
+        # 
+        # We need a track of how many cells have been changed so far.
+        # Since we don't have a persistent state outside the grid,
+        # we can infer the current progress from the grid itself.
+        
+        px = data['x']
+        py = data['y']
+        
+        # Find the first column from the right that is not yet color 3.
+        # We are filling row 1 from col 61 down to 0.
+        # Let's check the range [1, 62] (since col 0 and 63 are color 5).
+        # We identify the target column by counting existing 3s in row 1.
+        
+        current_row = grid[1, :]
+        # Count how many 3s are already there in the range [1, 62]
+        count_3s = np.sum(current_row[1:63] == 3)
+        
+        # The sequence of changes was: c61, c60, c59, c58, c57, c56...
+        # This suggests a click at y=35 or y=14 triggers one cell change.
+        # Each click effectively "fills" the next available slot from the right.
+        
+        target_col = 61 - count_3s
+        if 0 < target_col < 63:
+            grid_next = grid.copy()
+            grid_next[1, target_col] = 3
+            return grid_next
+        
+    return grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the level is complete.
+    The observed transitions do not show a win state, but usually, these games 
+    require filling a specific area or clearing it.
+    Given the only action is clicking and we are filling row 1 with color 3,
+    it is likely that all cells in row 1 (from col 1 to 62) 
+    should be color 3 or some other pattern.
+    However, without a WIN STATE provided, we must return False unless 
+    a clear condition is met.
+    """
+    # Based on the limited data, no explicit win state was provided.
+    # We common patterns in ARC-AGI tasks involve completing a sequence.
+    # In every transition, one cell changes.
+    # Since we only have ACTION6 (clicks), and we'll assume the 
+    # completion is 
+    # 
+    # return False as a default since no win state was seen.
+    return False

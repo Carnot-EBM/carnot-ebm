@@ -1,0 +1,58 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next grid state based on the observed transitions.
+    The game involves clicking pixels to change colors of specific cells in row 1.
+    Based on the observation, Action 6 (click) at certain coordinates changes a cell's color in row 1.
+    Specifically, clicks at x=31, y=35 and x=31, y=14 result in changes in row 1 from right to left.
+    """
+    if action == 6:
+        # The observed sequence shows that each click at either (31, 35) or (31, 14)
+        # results in a cell in row 1 being updated to color 3.
+        # We need to track which cells have already been changed.
+        # This is not immediately obvious from the world model but we's only got these few examples.
+        # Let's assume there is a pointer or internal state tracking the current target cell in row 1.
+        # 
+        # Sequence of changes: r1c61 -> r1c60 -> r1c59 -> r1c58 -> r1c57 -> r1c56
+        # The pattern is moving backwards from column 61 down to 56.
+        # 
+        # Since we cannot store persistent state across calls to engine() without using global variables 
+        # (which are forbidden/implied by not allowed), we must infer the state from the grid itself.
+        # The same grid passed into engine() will be the current state.
+        # 
+        # Find the first cell from the right in row 1 that is NOT yet color 3.
+        # Row 1, columns 0-63.
+        # Initial grid has r1 as 5x1, 9x61, 9x2 (wait, 5x1, 9x61, 5x2).
+        # So col 0 is 5, cols 1-61 are 9, cols 62-63 are 5.
+        # Let's check if any cells in row 1 are already color 3.
+        # We need to find the target column based on the observed sequence: 61, 60, 59, 58, 57, 56.
+        # These are all within the range [1, 61].
+        
+        # Logic: Find the rightmost column in row 1 (within index 1 to 61) that is still color 9.
+        # Find indices where row 1 is color 9.
+        row_1 = grid[1, :]
+        target_cols = np.where(row_1 == 9)[0]
+        if len(target_cols) > 0:
+            # The same logic applies regardless of whether x=31, y=35 or x=31, y=14 was clicked.
+            # Target the rightmost available cell.
+            col = target_cols[-1]
+            # Only change it if it's within the observed range [1, 61].
+            if 1 <= col <= 61:
+                grid_next = grid.copy()
+                grid_next[1, col] = 3
+                return grid_next
+    
+    return grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the level is complete. No win state provided, but typically 
+    it involves filling a certain area or completing a pattern.
+    Since no win state was given, we return False unless a specific condition is met.
+    """
+    # In the absence of a win state example, we return False.
+    # Usually, completion might be related to row 1 being filled with color 3.
+    # Or perhaps there is a a maze-like structure that needs to be solved.
+    # But weS only have these few transitions.
+    return False

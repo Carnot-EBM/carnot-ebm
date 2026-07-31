@@ -1,0 +1,34 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # The observed transitions are very limited and inconsistent.
+    # Based on the provided delta changes, it seems that some actions move or modify colors in a specific region.
+    # However, without clear patterns of movement or gravity, we'll implement a basic identity function
+    # to avoid making incorrect assumptions about complex rules.
+    # Most actions result in no change or small local modifications.
+    # 
+    # In a a few cases, ACTION1 might be slightly shifting things, but there
+    #  uma doesn't seem to be be a general rule.
+    # Since the only goal is to find a win state, and the most likely scenario for 
+    # is that the game ends when certain blocks are pushed into targets.
+    #  좌표 (row, col) corresponds to (y, x).
+    
+    return grid.copy()
+
+def is_level_complete(grid):
+    # A level is complete if the target color (likely 0 or 14) is cleared or reaches a specific configuration.
+    # Looking at the same observed transitions, there’s no "WIN STATE" grid given.
+    # 
+    # We will assume a common ARC-AGI pattern: completion occurs when all cells of a certain 
+    # 
+    # Based on the initial grid, column 62 and 63 are filled with color 14.
+    # Some actions (ACTION1, ACTION3, ACTION4) changed these to 0.
+    # This is likely the goal: clear the color 14 blocks from the right edge.
+    
+    # Check if any cell of value 14 remains in the last two columns.
+    # If they are gone, it's considered complete.
+    
+    last_two_cols = grid[:, -2:]
+    if np.all(last_two_cols == 0):
+        return True
+    return False
