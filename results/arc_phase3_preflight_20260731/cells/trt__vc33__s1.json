@@ -1,0 +1,2339 @@
+{
+  "agentic_content_sha": "f46e15ae23c55bbe",
+  "anon_game_id": "hgb6a5e8",
+  "arm": "trt",
+  "arm_commit_measured": "c39f4bde6f95427b19f7f4a15f22090dbf827dd3",
+  "arm_config_effective": {
+    "codeonly": "1",
+    "desc": "gemma-4-31B live pin: codeonly fence ON, NO /no_think prefix, 4096 n_predict",
+    "max_tokens": 4096,
+    "no_think_prefix": "",
+    "retrieval": "0",
+    "static": "0",
+    "tries": 3
+  },
+  "arm_config_name": "frozen_gemma_pin",
+  "arm_env_declared": {},
+  "arm_git_status_porcelain": "M docs/research-notes/arc-agi3-leaderboard-technique-watch.md\n M docs/research-notes/arc-agi3-news-watch.md\n M ops/.arc_leaderboard_technique_watch_state.json",
+  "arm_repo": "/home/ianblenke/github.com/ianblenke/carnot",
+  "assets_present": {
+    "data/arc_transition_corpus": true,
+    "results/experiment_4629_live_frame_change_cnn.pt": true
+  },
+  "budget": 60,
+  "cell_wall_s": 291.5,
+  "e3_dir_entries_at_start": [],
+  "e3_dir_resolved": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p4/pf/e3/trt__vc33__s1",
+  "e3_module_file": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_executable_world_model.py",
+  "explore_budget": 24,
+  "game": "vc33",
+  "generator_sampler_seed_effective": 3233000,
+  "generator_sampler_seed_env": "3233",
+  "gpu_requested": "1",
+  "induce_defect_reasks_effective": 1,
+  "induce_repeat_penalty_effective": 1.1,
+  "instrument_patched": true,
+  "live_action_effect_scorer": "LiveActionEffectScorer",
+  "liveness_witness": {
+    "generator_ffn_cpu_layers": 0,
+    "generator_ffn_cpu_layers_refit_note": "",
+    "generator_healthy_after": true,
+    "generator_max_tokens": 4096,
+    "generator_model_declared": "gemma-4-31B-it",
+    "generator_model_observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "generator_mtp_draft_path": "",
+    "generator_mtp_engaged": null,
+    "generator_mtp_evidence": "",
+    "generator_mtp_requested": false,
+    "generator_n_ctx": 32768,
+    "generator_n_ctx_declared": 32768,
+    "generator_n_ctx_source": "server_props_observed",
+    "generator_port": 8972,
+    "generator_reuse_model_check": "match",
+    "generator_reuse_n_ctx_check": "match",
+    "generator_reuse_refusals": [],
+    "generator_server_failure_diagnostics": [],
+    "generator_total_slots_observed": 4,
+    "llm": {
+      "calls": 3,
+      "content_failures": 0,
+      "errors": 0,
+      "induce_defect_reasks": 0,
+      "responses": 3
+    }
+  },
+  "max_inductions": 1,
+  "n_induce_defect_reasks_observed": 0,
+  "native_action_trace": [
+    "RESET",
+    "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+    "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":54,\"y\":46}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+    "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}"
+  ],
+  "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+  "observed_n_ctx": 32768,
+  "result": {
+    "action_trace": [
+      "RESET",
+      "ACTION6|{\"x\": 38, \"y\": 29}",
+      "ACTION6|{\"x\": 50, \"y\": 46}",
+      "ACTION6|{\"x\": 61, \"y\": 25}",
+      "ACTION6|{\"x\": 54, \"y\": 46}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 61, \"y\": 25}",
+      "ACTION6|{\"x\": 61, \"y\": 25}",
+      "ACTION6|{\"x\": 38, \"y\": 29}",
+      "ACTION6|{\"x\": 61, \"y\": 25}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 61, \"y\": 33}",
+      "ACTION6|{\"x\": 1, \"y\": 25}",
+      "ACTION6|{\"x\": 1, \"y\": 45}"
+    ],
+    "actions_to_first_solve": 15,
+    "arm": "frozen_gemma_pin",
+    "best_hv": 18.0,
+    "error": null,
+    "game": "vc33",
+    "hit_induction_cap": true,
+    "hv_distinct_values_observed": 2,
+    "hv_exception_count": 0,
+    "hv_progress": 0.0,
+    "hv_progress_best_level": 1.0,
+    "hv_progress_global_legacy": 0.0,
+    "hv_progress_measurable": true,
+    "hv_progress_per_level": {
+      "0": 1.0,
+      "1": 0.0
+    },
+    "hv_sentinel_frac": 0.0,
+    "induction_events": [
+      {
+        "counterexamples": [
+          {
+            "budget_unit": "engine_calls_matching_plan_in_model",
+            "depth_truncated_nodes": 0,
+            "detail": "the reachable set was searched exhaustively (frontier empty, no node discarded at the depth cap) and the goal was never true, so this predicate is unreachable under this engine.",
+            "engine_calls": 39,
+            "frontier_remaining": 0,
+            "kind": "degenerate_goal_predicate",
+            "max_depth": 40,
+            "max_nodes": 20000,
+            "reachable_grids_evaluated": 2,
+            "termination": "queue_exhausted"
+          },
+          {
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "kind": "heldout_transition_verification_failed",
+            "real_accuracy": 0.0,
+            "real_mismatches": [
+              {
+                "action": 6,
+                "error": "KeyError(6)",
+                "i": 0
+              }
+            ],
+            "real_n": 1,
+            "real_n_correct": 0,
+            "selected_candidate_name": "loaded_world_model.py"
+          },
+          {
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "kind": "heldout_transition_verification_failed",
+            "real_accuracy": 0.0,
+            "real_mismatches": [
+              {
+                "action": 6,
+                "data": {
+                  "x": 1,
+                  "y": 25
+                },
+                "i": 0,
+                "true_change": [
+                  [
+                    0,
+                    63,
+                    7,
+                    4
+                  ],
+                  [
+                    1,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    1,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    1,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    1,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    2,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    2,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    2,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    2,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    3,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    3,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    3,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    3,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    4,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    4,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    4,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    4,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    5,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    5,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    5,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    5,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    6,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    6,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    6,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    6,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    7,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    7,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    7,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    7,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    8,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    8,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    8,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    8,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    9,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    9,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    9,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    9,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    10,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    10,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    10,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    10,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    11,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    11,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    11,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    11,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    12,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    12,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    12,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    12,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    13,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    13,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    13,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    13,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    14,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    14,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    14,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    14,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    15,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    15,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    15,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    15,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    16,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    16,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    16,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    16,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    17,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    17,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    17,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    17,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    18,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    18,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    18,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    18,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    19,
+                    48,
+                    0,
+                    3
+                  ],
+                  [
+                    19,
+                    49,
+                    0,
+                    3
+                  ],
+                  [
+                    19,
+                    50,
+                    0,
+                    3
+                  ],
+                  [
+                    19,
+                    51,
+                    0,
+                    3
+                  ],
+                  [
+                    24,
+                    12,
+                    3,
+                    0
+                  ],
+                  [
+                    24,
+                    13,
+                    3,
+                    0
+                  ],
+                  [
+                    24,
+                    14,
+                    3,
+                    0
+                  ]
+                ],
+                "your_prediction_was_wrong_at": [
+                  [
+                    0,
+                    0,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    1,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    2,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    3,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    4,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    5,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    6,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    7,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    8,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    9,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    10,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    11,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    12,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    13,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    14,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    15,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    16,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    17,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    18,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    19,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    20,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    21,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    22,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    23,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    24,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    25,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    26,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    27,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    28,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    29,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    30,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    31,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    32,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    33,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    34,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    35,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    36,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    37,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    38,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    39,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    40,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    41,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    42,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    43,
+                    5,
+                    7
+                  ],
+                  [
+                    0,
+                    44,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    45,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    46,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    47,
+                    9,
+                    7
+                  ],
+                  [
+                    0,
+                    48,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    49,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    50,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    51,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    52,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    53,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    54,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    55,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    56,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    57,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    58,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    59,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    60,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    61,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    62,
+                    0,
+                    7
+                  ],
+                  [
+                    0,
+                    63,
+                    7,
+                    4
+                  ],
+                  [
+                    1,
+                    16,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    17,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    18,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    19,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    20,
+                    5,
+                    0
+                  ],
+                  [
+                    1,
+                    21,
+                    5,
+                    0
+                  ],
+                  [
+                    1,
+                    22,
+                    5,
+                    0
+                  ],
+                  [
+                    1,
+                    23,
+                    5,
+                    0
+                  ],
+                  [
+                    1,
+                    24,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    25,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    26,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    27,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    36,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    37,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    38,
+                    9,
+                    0
+                  ],
+                  [
+                    1,
+                    39,
+                    9,
+                    0
+                  ]
+                ]
+              }
+            ],
+            "real_n": 1,
+            "real_n_correct": 0,
+            "selected_candidate_name": "loaded_world_model.py"
+          }
+        ],
+        "dsl_transition_count": 1,
+        "dynamics_candidate_names": [
+          "loaded_world_model.py"
+        ],
+        "engine_retention": {
+          "best_round": 1,
+          "best_round_signal": 1.0,
+          "best_round_true_changed_cells": 141,
+          "enabled": true,
+          "restored": true,
+          "rounds_seen": 3,
+          "selection_signal": "heldout_change_consistency",
+          "signal_informative": true,
+          "store_path": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/p4/pf/e3/trt__vc33__s1/hgb6a5e8/world_model.py"
+        },
+        "expert_trust_weights": [],
+        "factored_planner_used": false,
+        "goal_candidate_names": [
+          "loaded_world_model.py"
+        ],
+        "goal_expression": "",
+        "goal_level": 2,
+        "goal_predicate_satisfiable": false,
+        "goal_satisfiability": {
+          "budget_unit": "engine_calls_matching_plan_in_model",
+          "counterexample": {
+            "budget_unit": "engine_calls_matching_plan_in_model",
+            "depth_truncated_nodes": 0,
+            "detail": "the reachable set was searched exhaustively (frontier empty, no node discarded at the depth cap) and the goal was never true, so this predicate is unreachable under this engine.",
+            "engine_calls": 39,
+            "frontier_remaining": 0,
+            "kind": "degenerate_goal_predicate",
+            "max_depth": 40,
+            "max_nodes": 20000,
+            "reachable_grids_evaluated": 2,
+            "termination": "queue_exhausted"
+          },
+          "depth_truncated_nodes": 0,
+          "engine_calls": 39,
+          "engine_errors": 0,
+          "frontier_remaining": 0,
+          "max_depth": 40,
+          "max_nodes": 20000,
+          "reachable_grids_evaluated": 2,
+          "satisfiable": false,
+          "termination": "queue_exhausted"
+        },
+        "model_specs": "gemma-4-31B-it",
+        "per_subgoal_reachable": [],
+        "plan_length": 0,
+        "planned": false,
+        "reason": "level_up_reinduction",
+        "refinement_rounds": [
+          {
+            "accepted_by_heldout_verifier": true,
+            "action": "induce",
+            "counterexample": {
+              "budget_unit": "engine_calls_matching_plan_in_model",
+              "depth_truncated_nodes": 0,
+              "detail": "the reachable set was searched exhaustively (frontier empty, no node discarded at the depth cap) and the goal was never true, so this predicate is unreachable under this engine.",
+              "engine_calls": 39,
+              "frontier_remaining": 0,
+              "kind": "degenerate_goal_predicate",
+              "max_depth": 40,
+              "max_nodes": 20000,
+              "reachable_grids_evaluated": 2,
+              "termination": "queue_exhausted"
+            },
+            "dynamics_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_predicate_satisfiable": false,
+            "goal_satisfiability": {
+              "budget_unit": "engine_calls_matching_plan_in_model",
+              "depth_truncated_nodes": 0,
+              "engine_calls": 39,
+              "engine_errors": 0,
+              "frontier_remaining": 0,
+              "max_depth": 40,
+              "max_nodes": 20000,
+              "reachable_grids_evaluated": 2,
+              "satisfiable": false,
+              "termination": "queue_exhausted"
+            },
+            "goal_undecided_within_budget": false,
+            "heldout_accuracy": 1.0,
+            "heldout_threshold": 1.0,
+            "message": "local gguf (GPU server) wrote world_model.py",
+            "prefix_accuracy": 1.0,
+            "proposer_ok": true,
+            "retained_as_best_engine": true,
+            "retention_signal_heldout_change_consistency": 1.0,
+            "retention_signal_true_changed_cells": 141,
+            "round": 1,
+            "selected_candidate_name": "loaded_world_model.py",
+            "skipped": "degenerate_goal_predicate",
+            "trust_energy": 7.304768
+          },
+          {
+            "accepted_by_heldout_verifier": false,
+            "action": "refactor",
+            "counterexample": {
+              "heldout_accuracy": 0.0,
+              "heldout_threshold": 1.0,
+              "kind": "heldout_transition_verification_failed",
+              "real_accuracy": 0.0,
+              "real_mismatches": [
+                {
+                  "action": 6,
+                  "error": "KeyError(6)",
+                  "i": 0
+                }
+              ],
+              "real_n": 1,
+              "real_n_correct": 0,
+              "selected_candidate_name": "loaded_world_model.py"
+            },
+            "dynamics_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "message": "local gguf (GPU server) wrote world_model.py",
+            "prefix_accuracy": 0.0,
+            "proposer_ok": true,
+            "retained_as_best_engine": false,
+            "retention_signal_heldout_change_consistency": 0.0,
+            "retention_signal_true_changed_cells": 0,
+            "round": 2,
+            "selected_candidate_name": "loaded_world_model.py",
+            "skipped": "heldout_transition_verification_failed",
+            "trust_energy": Infinity
+          },
+          {
+            "accepted_by_heldout_verifier": false,
+            "action": "refactor",
+            "counterexample": {
+              "heldout_accuracy": 0.0,
+              "heldout_threshold": 1.0,
+              "kind": "heldout_transition_verification_failed",
+              "real_accuracy": 0.0,
+              "real_mismatches": [
+                {
+                  "action": 6,
+                  "data": {
+                    "x": 1,
+                    "y": 25
+                  },
+                  "i": 0,
+                  "true_change": [
+                    [
+                      0,
+                      63,
+                      7,
+                      4
+                    ],
+                    [
+                      1,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      1,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      1,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      1,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      2,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      2,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      2,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      2,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      3,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      3,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      3,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      3,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      4,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      4,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      4,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      4,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      5,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      5,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      5,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      5,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      6,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      6,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      6,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      6,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      7,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      7,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      7,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      7,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      8,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      8,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      8,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      8,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      9,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      9,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      9,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      9,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      10,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      10,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      10,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      10,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      11,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      11,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      11,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      11,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      12,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      12,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      12,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      12,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      13,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      13,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      13,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      13,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      14,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      14,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      14,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      14,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      15,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      15,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      15,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      15,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      16,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      16,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      16,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      16,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      17,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      17,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      17,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      17,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      18,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      18,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      18,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      18,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      19,
+                      48,
+                      0,
+                      3
+                    ],
+                    [
+                      19,
+                      49,
+                      0,
+                      3
+                    ],
+                    [
+                      19,
+                      50,
+                      0,
+                      3
+                    ],
+                    [
+                      19,
+                      51,
+                      0,
+                      3
+                    ],
+                    [
+                      24,
+                      12,
+                      3,
+                      0
+                    ],
+                    [
+                      24,
+                      13,
+                      3,
+                      0
+                    ],
+                    [
+                      24,
+                      14,
+                      3,
+                      0
+                    ]
+                  ],
+                  "your_prediction_was_wrong_at": [
+                    [
+                      0,
+                      0,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      1,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      2,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      3,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      4,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      5,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      6,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      7,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      8,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      9,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      10,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      11,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      12,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      13,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      14,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      15,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      16,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      17,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      18,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      19,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      20,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      21,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      22,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      23,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      24,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      25,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      26,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      27,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      28,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      29,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      30,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      31,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      32,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      33,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      34,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      35,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      36,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      37,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      38,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      39,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      40,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      41,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      42,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      43,
+                      5,
+                      7
+                    ],
+                    [
+                      0,
+                      44,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      45,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      46,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      47,
+                      9,
+                      7
+                    ],
+                    [
+                      0,
+                      48,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      49,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      50,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      51,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      52,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      53,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      54,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      55,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      56,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      57,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      58,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      59,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      60,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      61,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      62,
+                      0,
+                      7
+                    ],
+                    [
+                      0,
+                      63,
+                      7,
+                      4
+                    ],
+                    [
+                      1,
+                      16,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      17,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      18,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      19,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      20,
+                      5,
+                      0
+                    ],
+                    [
+                      1,
+                      21,
+                      5,
+                      0
+                    ],
+                    [
+                      1,
+                      22,
+                      5,
+                      0
+                    ],
+                    [
+                      1,
+                      23,
+                      5,
+                      0
+                    ],
+                    [
+                      1,
+                      24,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      25,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      26,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      27,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      36,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      37,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      38,
+                      9,
+                      0
+                    ],
+                    [
+                      1,
+                      39,
+                      9,
+                      0
+                    ]
+                  ]
+                }
+              ],
+              "real_n": 1,
+              "real_n_correct": 0,
+              "selected_candidate_name": "loaded_world_model.py"
+            },
+            "dynamics_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "goal_candidate_names": [
+              "loaded_world_model.py"
+            ],
+            "heldout_accuracy": 0.0,
+            "heldout_threshold": 1.0,
+            "message": "local gguf (GPU server) wrote world_model.py",
+            "prefix_accuracy": 0.0,
+            "proposer_ok": true,
+            "retained_as_best_engine": false,
+            "retention_signal_heldout_change_consistency": 0.0,
+            "retention_signal_true_changed_cells": 141,
+            "round": 3,
+            "selected_candidate_name": "loaded_world_model.py",
+            "skipped": "heldout_transition_verification_failed",
+            "trust_energy": 131.816913
+          }
+        ],
+        "refinement_rounds_used": 3,
+        "selected_candidate_name": "loaded_world_model.py",
+        "skipped": "degenerate_goal_predicate",
+        "structural_goal_diagnostics": {},
+        "structured_engine_enabled": false,
+        "subgoal_decomposition": [],
+        "subgoal_search_used": false,
+        "transition_count": 1,
+        "ttt_prior_engine": {
+          "backend": "cnn",
+          "n_transitions": 1,
+          "prior_transition_count": 0,
+          "skip": "too_few_transitions",
+          "warm_start": false
+        },
+        "verifier_is_oracle": false,
+        "win_state_exemplar_injected": true
+      }
+    ],
+    "levels_gained": 1,
+    "mean_heldout_accuracy": 1.0,
+    "mean_prefix_accuracy": 1.0,
+    "n_inductions": 1,
+    "n_plans_found": 0,
+    "noop_frac": 0.0,
+    "plan_found_rate": 0.0,
+    "playbook_injection_modes": [
+      "none"
+    ],
+    "reached_level": 1,
+    "revisit_frac": 0.0,
+    "seed": 1,
+    "solved": true,
+    "start_hv": 18.0,
+    "start_level": 0,
+    "timed_out": false,
+    "total_actions": 17,
+    "variant": 0,
+    "wall_s": 288.0
+  },
+  "seed": 1,
+  "server_binary": "reused_existing",
+  "server_exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "server_pid": 1535385,
+  "server_port": 8972,
+  "server_started": true,
+  "status": "ok",
+  "trace_instrument": "native_action_trace_same_commit_both_arms",
+  "vram_rows_mine": [
+    "1535385, 21434, 00000000:62:00.0"
+  ],
+  "wall_s_cap": 1200.0
+}

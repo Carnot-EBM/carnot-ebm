@@ -1,0 +1,35 @@
+# Lint config for the committed copy of this pre-flight's harness.
+#
+# WHY A LOCAL CONFIG RATHER THAN EDITING THE SCRIPTS. These files are the record of what was
+# actually run on 2026-07-31. The repo's convention (see results/arc_induce_confirm_20260731/
+# harness/ruff.toml, results/arc_induce_budget_20260731/harness/ruff.toml, and pyproject.toml's
+# ruff exclude block) is that a committed record of a run is preserved AS-RUN rather than
+# rewritten to satisfy a linter -- otherwise the artifact stops being evidence of what executed.
+#
+# That matters more than usual here, because this harness found a bug in ITSELF mid-run
+# (`cell.py`'s ARM_ENV had no `trtb` entry, so vc33/trtb exited rc=1 with no record) and the
+# committed copy is the post-fix file. Reformatting it on top of that would make the diff
+# between "what ran" and "what is committed" harder to reason about, not easier.
+#
+# The relaxations, and why each is the right call rather than laziness:
+#
+#   N806    `_BasePolicy` is a CLASS bound to a local name (the shipped `E3AgentPolicy`, captured
+#           so the tracing subclass can call it), and `ARM_NAME` is a constant-in-function. Both
+#           are named for what they are; lowercasing `_BasePolicy` would disguise that it is a
+#           class, which is the one thing a reader needs to know at that line.
+#   SIM115  `json.load(open(p))` in build_pf_artifact.py -- a short-lived analysis process that
+#           reads a fixed set of files once and exits. A context manager buys nothing here.
+#   SIM117  the nested `with _lock: with open(LOG, "a")` in the two drivers is deliberate: the
+#           lock guards the append, and flattening the two into one statement obscures that the
+#           lock is the outer, coarser scope. This is a threaded driver; the nesting is the
+#           point.
+#   E501    two log f-strings that embed a subprocess result and a truncated child-stdout tail.
+#           Wrapping them would split a single log line's construction across sources for no
+#           reader benefit.
+extend = "../../../pyproject.toml"
+
+[lint]
+ignore = ["E501", "N806", "SIM115", "SIM117"]
+
+[format]
+exclude = ["*"]
