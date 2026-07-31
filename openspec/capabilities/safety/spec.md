@@ -1885,6 +1885,41 @@ are unavailable,
 `guided_decoding_used=false`, and a `blocked:` honest verdict, without falling
 back to CPU-only headline results or lifting guided-decoding quarantine.
 
+### REQ-SEC-001: Code-Executing Deserialization Must Be Confined
+
+**Statement:** Any load that executes code while parsing -- `pickle.load` and
+`torch.load(weights_only=False)` -- MUST go through
+`carnot.serialization_safety`, never be called directly in library code.
+`safe_torch_load` defaults to `weights_only=True`; `safe_pickle_load` defaults to
+refusing paths that resolve outside this checkout.
+
+Loaders with a fixed in-repo default path that feed the live verifier ensemble
+(`tier0e_eorm`, `tier0f_semantic_calibration`) MUST use the refusing mode.
+General-purpose `save`/`load` round-trip APIs MAY use `on_untrusted="warn"`,
+since writing to a scratch directory is ordinary usage for them.
+
+**Why this matters:**
+    A pickle stream is code, not data: its opcodes call arbitrary constructors
+    during parsing. The realistic exploit path for this project is its own
+    distribution model -- per the Decentralization-Respecting Design Constraints,
+    artifacts are mirrored to HuggingFace and IPFS, so a `.pkl`/`.pt` fetched
+    from a mirror into a cache directory and loaded by path is remote code
+    execution. Confining these loads to in-repo artifacts closes that route.
+
+    An `isinstance` check after `pickle.load` does NOT satisfy this requirement.
+    The payload has already executed by the time the type is inspected; two call
+    sites had exactly that pattern and it read as a mitigation for years.
+
+**Honest scope:** this is not protection against an attacker who can already
+write into the repository -- such an attacker edits the source directly. It
+blocks the supply-chain vector and makes every unsafe deserialization greppable
+and centrally auditable.
+
+**Origin:** 2026-07-31 security audit.
+
+**Verified by:** `tests/python/test_serialization_safety.py`
+
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -1922,3 +1957,4 @@ back to CPU-only headline results or lifting guided-decoding quarantine.
 | REQ-SAFE-5472 | Planned | Exp 5472: local SOTA GGUF evidence telemetry panel |
 | REQ-SAFETY-001 | Proposed | Exp 775: JailbreakDetectionKAN TF-IDF proxy for hidden-state probe |
 | REQ-SAFETY-002 | Proposed | Exp 775: Tier 0h pre-generation safety gate |
+| REQ-SEC-001 | Implemented | 2026-07-31 audit: carnot.serialization_safety confines pickle/torch code-executing loads |
