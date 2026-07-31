@@ -1,0 +1,2755 @@
+{
+  "attempts": [
+    {
+      "CONTROL": {
+        "completion_file": "tu93_b3003_a0_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5463,
+        "prompt_n": 3006,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a0_control",
+        "usable": false,
+        "wall_s": 131.9
+      },
+      "TREATMENT_final": {
+        "completion_file": "tu93_b3003_a0_t_reask.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1699,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a0_t_reask",
+        "usable": true,
+        "wall_s": 52.5
+      },
+      "TREATMENT_reask": {
+        "completion_file": "tu93_b3003_a0_t_reask.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1699,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a0_t_reask",
+        "usable": true,
+        "wall_s": 52.5
+      },
+      "TREATMENT_round0": {
+        "completion_file": "tu93_b3003_a0_t_round0.txt",
+        "defect_details": [
+          "generated code does not parse: unterminated string literal (detected at line 153)"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 2561,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a0_t_round0",
+        "usable": false,
+        "wall_s": 79.6
+      },
+      "attempt": 0,
+      "game": "tu93",
+      "reask_fired": true,
+      "seed": 3003000,
+      "seed_base": 3003,
+      "temperature": 0.2
+    },
+    {
+      "CONTROL": {
+        "completion_file": "lp85_b3003_a0_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 7010,
+        "prompt_n": 4455,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a0_control",
+        "usable": false,
+        "wall_s": 136.5
+      },
+      "TREATMENT_final": {
+        "completion_file": "lp85_b3003_a0_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1469,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a0_t_round0",
+        "usable": true,
+        "wall_s": 45.2
+      },
+      "TREATMENT_round0": {
+        "completion_file": "lp85_b3003_a0_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1469,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a0_t_round0",
+        "usable": true,
+        "wall_s": 45.2
+      },
+      "attempt": 0,
+      "game": "lp85",
+      "reask_fired": false,
+      "seed": 3003000,
+      "seed_base": 3003,
+      "temperature": 0.2
+    },
+    {
+      "CONTROL": {
+        "completion_file": "sc25_b3003_a0_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=4, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code.",
+          "`engine(grid, action=3, data=None)` raised ValueError: could not broadcast input array from shape (8,) into shape (6,)"
+        ],
+        "defect_kinds": [
+          "engine_raised",
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 2930,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a0_control",
+        "usable": false,
+        "wall_s": 132.6
+      },
+      "TREATMENT_final": {
+        "completion_file": "sc25_b3003_a0_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'for' statement on line 44"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 6003,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a0_t_reask",
+        "usable": false,
+        "wall_s": 129.7
+      },
+      "TREATMENT_reask": {
+        "completion_file": "sc25_b3003_a0_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'for' statement on line 44"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 6003,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a0_t_reask",
+        "usable": false,
+        "wall_s": 129.7
+      },
+      "TREATMENT_round0": {
+        "completion_file": "sc25_b3003_a0_t_round0.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=4, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a0_t_round0",
+        "usable": false,
+        "wall_s": 129.0
+      },
+      "attempt": 0,
+      "game": "sc25",
+      "reask_fired": true,
+      "seed": 3003000,
+      "seed_base": 3003,
+      "temperature": 0.2
+    },
+    {
+      "CONTROL": {
+        "completion_file": "tu93_b3003_a1_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a1_control",
+        "usable": false,
+        "wall_s": 132.3
+      },
+      "TREATMENT_final": {
+        "completion_file": "tu93_b3003_a1_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1185,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_round0",
+        "usable": false,
+        "wall_s": 38.4
+      },
+      "TREATMENT_round0": {
+        "completion_file": "tu93_b3003_a1_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1185,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_round0",
+        "usable": false,
+        "wall_s": 38.4
+      },
+      "attempt": 1,
+      "game": "tu93",
+      "reask_fired": false,
+      "seed": 3003001,
+      "seed_base": 3003,
+      "temperature": 0.3
+    },
+    {
+      "CONTROL": {
+        "completion_file": "lp85_b3003_a1_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a1_control",
+        "usable": false,
+        "wall_s": 129.0
+      },
+      "TREATMENT_final": {
+        "completion_file": "lp85_b3003_a1_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "lp85",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 637,
+        "prompt_chars": 7520,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_reask",
+        "usable": false,
+        "wall_s": 20.1
+      },
+      "TREATMENT_reask": {
+        "completion_file": "lp85_b3003_a1_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "lp85",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 637,
+        "prompt_chars": 7520,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_reask",
+        "usable": false,
+        "wall_s": 20.1
+      },
+      "TREATMENT_round0": {
+        "completion_file": "lp85_b3003_a1_t_round0.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'for' statement on line 110"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "lp85",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1731,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_round0",
+        "usable": false,
+        "wall_s": 53.7
+      },
+      "attempt": 1,
+      "game": "lp85",
+      "reask_fired": true,
+      "seed": 3003001,
+      "seed_base": 3003,
+      "temperature": 0.3
+    },
+    {
+      "CONTROL": {
+        "completion_file": "sc25_b3003_a1_control.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after function definition on line 3"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a1_control",
+        "usable": false,
+        "wall_s": 131.6
+      },
+      "TREATMENT_final": {
+        "completion_file": "sc25_b3003_a1_t_reask.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1381,
+        "prompt_chars": 6003,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_reask",
+        "usable": true,
+        "wall_s": 43.9
+      },
+      "TREATMENT_reask": {
+        "completion_file": "sc25_b3003_a1_t_reask.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1381,
+        "prompt_chars": 6003,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_reask",
+        "usable": true,
+        "wall_s": 43.9
+      },
+      "TREATMENT_round0": {
+        "completion_file": "sc25_b3003_a1_t_round0.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'elif' statement on line 24"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 519,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a1_t_round0",
+        "usable": false,
+        "wall_s": 16.9
+      },
+      "attempt": 1,
+      "game": "sc25",
+      "reask_fired": true,
+      "seed": 3003001,
+      "seed_base": 3003,
+      "temperature": 0.3
+    },
+    {
+      "CONTROL": {
+        "completion_file": "tu93_b3003_a2_control.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1372,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_control",
+        "usable": false,
+        "wall_s": 45.6
+      },
+      "TREATMENT_final": {
+        "completion_file": "tu93_b3003_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1319,
+        "prompt_chars": 5463,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_t_round0",
+        "usable": true,
+        "wall_s": 42.4
+      },
+      "TREATMENT_round0": {
+        "completion_file": "tu93_b3003_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1319,
+        "prompt_chars": 5463,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_t_round0",
+        "usable": true,
+        "wall_s": 42.4
+      },
+      "attempt": 2,
+      "game": "tu93",
+      "reask_fired": false,
+      "seed": 3003002,
+      "seed_base": 3003,
+      "temperature": 0.4
+    },
+    {
+      "CONTROL": {
+        "completion_file": "lp85_b3003_a2_control.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 2190,
+        "prompt_chars": 7010,
+        "prompt_n": 517,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_control",
+        "usable": false,
+        "wall_s": 69.2
+      },
+      "TREATMENT_final": {
+        "completion_file": "lp85_b3003_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1397,
+        "prompt_chars": 7010,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_t_round0",
+        "usable": false,
+        "wall_s": 43.5
+      },
+      "TREATMENT_round0": {
+        "completion_file": "lp85_b3003_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1397,
+        "prompt_chars": 7010,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_t_round0",
+        "usable": false,
+        "wall_s": 43.5
+      },
+      "attempt": 2,
+      "game": "lp85",
+      "reask_fired": false,
+      "seed": 3003002,
+      "seed_base": 3003,
+      "temperature": 0.4
+    },
+    {
+      "CONTROL": {
+        "completion_file": "sc25_b3003_a2_control.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after function definition on line 3"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3003_a2_control",
+        "usable": false,
+        "wall_s": 136.2
+      },
+      "TREATMENT_final": {
+        "completion_file": "sc25_b3003_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 390,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_t_round0",
+        "usable": false,
+        "wall_s": 13.3
+      },
+      "TREATMENT_round0": {
+        "completion_file": "sc25_b3003_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 390,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3003_a2_t_round0",
+        "usable": false,
+        "wall_s": 13.3
+      },
+      "attempt": 2,
+      "game": "sc25",
+      "reask_fired": false,
+      "seed": 3003002,
+      "seed_base": 3003,
+      "temperature": 0.4
+    },
+    {
+      "CONTROL": {
+        "completion_file": "tu93_b3004_a0_control.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 2035,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a0_control",
+        "usable": true,
+        "wall_s": 62.2
+      },
+      "TREATMENT_final": {
+        "completion_file": "tu93_b3004_a0_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a0_t_reask",
+        "usable": false,
+        "wall_s": 129.4
+      },
+      "TREATMENT_reask": {
+        "completion_file": "tu93_b3004_a0_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: invalid syntax"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a0_t_reask",
+        "usable": false,
+        "wall_s": 129.4
+      },
+      "TREATMENT_round0": {
+        "completion_file": "tu93_b3004_a0_t_round0.txt",
+        "defect_details": [
+          "generated code does not parse: unterminated triple-quoted string literal (detected at line 130)"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1752,
+        "prompt_chars": 5463,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a0_t_round0",
+        "usable": false,
+        "wall_s": 53.5
+      },
+      "attempt": 0,
+      "game": "tu93",
+      "reask_fired": true,
+      "seed": 3004000,
+      "seed_base": 3004,
+      "temperature": 0.2
+    },
+    {
+      "CONTROL": {
+        "completion_file": "lp85_b3004_a0_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a0_control",
+        "usable": false,
+        "wall_s": 135.4
+      },
+      "TREATMENT_final": {
+        "completion_file": "lp85_b3004_a0_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1284,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a0_t_round0",
+        "usable": false,
+        "wall_s": 42.0
+      },
+      "TREATMENT_round0": {
+        "completion_file": "lp85_b3004_a0_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1284,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a0_t_round0",
+        "usable": false,
+        "wall_s": 42.0
+      },
+      "attempt": 0,
+      "game": "lp85",
+      "reask_fired": false,
+      "seed": 3004000,
+      "seed_base": 3004,
+      "temperature": 0.2
+    },
+    {
+      "CONTROL": {
+        "completion_file": "sc25_b3004_a0_control.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'if' statement on line 57"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a0_control",
+        "usable": false,
+        "wall_s": 127.6
+      },
+      "TREATMENT_final": {
+        "completion_file": "sc25_b3004_a0_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 781,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a0_t_round0",
+        "usable": false,
+        "wall_s": 24.4
+      },
+      "TREATMENT_round0": {
+        "completion_file": "sc25_b3004_a0_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 781,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a0_t_round0",
+        "usable": false,
+        "wall_s": 24.4
+      },
+      "attempt": 0,
+      "game": "sc25",
+      "reask_fired": false,
+      "seed": 3004000,
+      "seed_base": 3004,
+      "temperature": 0.2
+    },
+    {
+      "CONTROL": {
+        "completion_file": "tu93_b3004_a1_control.txt",
+        "defect_details": [
+          "generated code does not parse: unmatched '}'"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1018,
+        "prompt_chars": 5463,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_control",
+        "usable": false,
+        "wall_s": 32.9
+      },
+      "TREATMENT_final": {
+        "completion_file": "tu93_b3004_a1_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: unterminated string literal (detected at line 160)"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 2280,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_reask",
+        "usable": false,
+        "wall_s": 72.8
+      },
+      "TREATMENT_reask": {
+        "completion_file": "tu93_b3004_a1_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: unterminated string literal (detected at line 160)"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 2280,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_reask",
+        "usable": false,
+        "wall_s": 72.8
+      },
+      "TREATMENT_round0": {
+        "completion_file": "tu93_b3004_a1_t_round0.txt",
+        "defect_details": [
+          "generated code does not parse: unexpected indent"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 2346,
+        "prompt_chars": 5463,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_round0",
+        "usable": false,
+        "wall_s": 74.1
+      },
+      "attempt": 1,
+      "game": "tu93",
+      "reask_fired": true,
+      "seed": 3004001,
+      "seed_base": 3004,
+      "temperature": 0.3
+    },
+    {
+      "CONTROL": {
+        "completion_file": "lp85_b3004_a1_control.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 2411,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_control",
+        "usable": true,
+        "wall_s": 78.7
+      },
+      "TREATMENT_final": {
+        "completion_file": "lp85_b3004_a1_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1603,
+        "prompt_chars": 7010,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_round0",
+        "usable": true,
+        "wall_s": 51.2
+      },
+      "TREATMENT_round0": {
+        "completion_file": "lp85_b3004_a1_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 1603,
+        "prompt_chars": 7010,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_round0",
+        "usable": true,
+        "wall_s": 51.2
+      },
+      "attempt": 1,
+      "game": "lp85",
+      "reask_fired": false,
+      "seed": 3004001,
+      "seed_base": 3004,
+      "temperature": 0.3
+    },
+    {
+      "CONTROL": {
+        "completion_file": "sc25_b3004_a1_control.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after function definition on line 3"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "sc25",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a1_control",
+        "usable": false,
+        "wall_s": 136.2
+      },
+      "TREATMENT_final": {
+        "completion_file": "sc25_b3004_a1_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 636,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_round0",
+        "usable": false,
+        "wall_s": 21.2
+      },
+      "TREATMENT_round0": {
+        "completion_file": "sc25_b3004_a1_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 636,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a1_t_round0",
+        "usable": false,
+        "wall_s": 21.2
+      },
+      "attempt": 1,
+      "game": "sc25",
+      "reask_fired": false,
+      "seed": 3004001,
+      "seed_base": 3004,
+      "temperature": 0.3
+    },
+    {
+      "CONTROL": {
+        "completion_file": "tu93_b3004_a2_control.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "tu93",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 2244,
+        "prompt_chars": 5463,
+        "prompt_n": 517,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_control",
+        "usable": true,
+        "wall_s": 70.3
+      },
+      "TREATMENT_final": {
+        "completion_file": "tu93_b3004_a2_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: unmatched '}'"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 270,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_reask",
+        "usable": false,
+        "wall_s": 8.7
+      },
+      "TREATMENT_reask": {
+        "completion_file": "tu93_b3004_a2_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: unmatched '}'"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 270,
+        "prompt_chars": 5973,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_reask",
+        "usable": false,
+        "wall_s": 8.7
+      },
+      "TREATMENT_round0": {
+        "completion_file": "tu93_b3004_a2_t_round0.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'if' statement on line 75"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "tu93",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1291,
+        "prompt_chars": 5463,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_round0",
+        "usable": false,
+        "wall_s": 39.9
+      },
+      "attempt": 2,
+      "game": "tu93",
+      "reask_fired": true,
+      "seed": 3004002,
+      "seed_base": 3004,
+      "temperature": 0.4
+    },
+    {
+      "CONTROL": {
+        "completion_file": "lp85_b3004_a2_control.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": true,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 3028,
+        "prompt_chars": 7010,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_control",
+        "usable": true,
+        "wall_s": 97.3
+      },
+      "TREATMENT_final": {
+        "completion_file": "lp85_b3004_a2_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'if' statement on line 32"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "lp85",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1955,
+        "prompt_chars": 7520,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_reask",
+        "usable": false,
+        "wall_s": 62.5
+      },
+      "TREATMENT_reask": {
+        "completion_file": "lp85_b3004_a2_t_reask.txt",
+        "defect_details": [
+          "generated code does not parse: expected an indented block after 'if' statement on line 32"
+        ],
+        "defect_kinds": [
+          "syntax_error"
+        ],
+        "engine_changes_anything": null,
+        "game": "lp85",
+        "generate_would_accept": false,
+        "n_predict_requested": 4096,
+        "predicted_n": 1955,
+        "prompt_chars": 7520,
+        "prompt_n": 141,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_reask",
+        "usable": false,
+        "wall_s": 62.5
+      },
+      "TREATMENT_round0": {
+        "completion_file": "lp85_b3004_a2_t_round0.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+        ],
+        "defect_kinds": [
+          "engine_returned_none",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "lp85",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 7010,
+        "prompt_n": 1,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a2_t_round0",
+        "usable": false,
+        "wall_s": 131.7
+      },
+      "attempt": 2,
+      "game": "lp85",
+      "reask_fired": true,
+      "seed": 3004002,
+      "seed_base": 3004,
+      "temperature": 0.4
+    },
+    {
+      "CONTROL": {
+        "completion_file": "sc25_b3004_a2_control.txt",
+        "defect_details": [
+          "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "`engine(grid, action=4, data=None)` raised TypeError: cannot unpack non-iterable numpy.int64 object"
+        ],
+        "defect_kinds": [
+          "engine_raised",
+          "missing_return"
+        ],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 4096,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {},
+        "status": "ok",
+        "stop_type": "limit",
+        "tag": "b3004_a2_control",
+        "usable": false,
+        "wall_s": 134.1
+      },
+      "TREATMENT_final": {
+        "completion_file": "sc25_b3004_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 761,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_round0",
+        "usable": false,
+        "wall_s": 24.9
+      },
+      "TREATMENT_round0": {
+        "completion_file": "sc25_b3004_a2_t_round0.txt",
+        "defect_details": [],
+        "defect_kinds": [],
+        "engine_changes_anything": false,
+        "game": "sc25",
+        "generate_would_accept": true,
+        "n_predict_requested": 4096,
+        "predicted_n": 761,
+        "prompt_chars": 5493,
+        "prompt_n": 5,
+        "prompt_truncated": false,
+        "sampler": {
+          "repeat_last_n": 256,
+          "repeat_penalty": 1.1
+        },
+        "status": "ok",
+        "stop_type": "word",
+        "tag": "b3004_a2_t_round0",
+        "usable": false,
+        "wall_s": 24.9
+      },
+      "attempt": 2,
+      "game": "sc25",
+      "reask_fired": false,
+      "seed": 3004002,
+      "seed_base": 3004,
+      "temperature": 0.4
+    }
+  ],
+  "attempts_per_base": 3,
+  "budget": 4096,
+  "call_index": 2,
+  "control_sampler": {},
+  "games": [
+    "tu93",
+    "lp85",
+    "sc25"
+  ],
+  "reask_block_chars": 509,
+  "rows": [
+    {
+      "completion_file": "tu93_b3003_a0_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5463,
+      "prompt_n": 3006,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a0_control",
+      "usable": false,
+      "wall_s": 131.9
+    },
+    {
+      "completion_file": "tu93_b3003_a0_t_round0.txt",
+      "defect_details": [
+        "generated code does not parse: unterminated string literal (detected at line 153)"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 2561,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a0_t_round0",
+      "usable": false,
+      "wall_s": 79.6
+    },
+    {
+      "completion_file": "tu93_b3003_a0_t_reask.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1699,
+      "prompt_chars": 5973,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a0_t_reask",
+      "usable": true,
+      "wall_s": 52.5
+    },
+    {
+      "completion_file": "lp85_b3003_a0_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 7010,
+      "prompt_n": 4455,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a0_control",
+      "usable": false,
+      "wall_s": 136.5
+    },
+    {
+      "completion_file": "lp85_b3003_a0_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1469,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a0_t_round0",
+      "usable": true,
+      "wall_s": 45.2
+    },
+    {
+      "completion_file": "sc25_b3003_a0_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=4, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code.",
+        "`engine(grid, action=3, data=None)` raised ValueError: could not broadcast input array from shape (8,) into shape (6,)"
+      ],
+      "defect_kinds": [
+        "engine_raised",
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 2930,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a0_control",
+      "usable": false,
+      "wall_s": 132.6
+    },
+    {
+      "completion_file": "sc25_b3003_a0_t_round0.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=4, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a0_t_round0",
+      "usable": false,
+      "wall_s": 129.0
+    },
+    {
+      "completion_file": "sc25_b3003_a0_t_reask.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after 'for' statement on line 44"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "sc25",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 6003,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a0_t_reask",
+      "usable": false,
+      "wall_s": 129.7
+    },
+    {
+      "completion_file": "tu93_b3003_a1_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=3, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a1_control",
+      "usable": false,
+      "wall_s": 132.3
+    },
+    {
+      "completion_file": "tu93_b3003_a1_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1185,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a1_t_round0",
+      "usable": false,
+      "wall_s": 38.4
+    },
+    {
+      "completion_file": "lp85_b3003_a1_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a1_control",
+      "usable": false,
+      "wall_s": 129.0
+    },
+    {
+      "completion_file": "lp85_b3003_a1_t_round0.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after 'for' statement on line 110"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "lp85",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 1731,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a1_t_round0",
+      "usable": false,
+      "wall_s": 53.7
+    },
+    {
+      "completion_file": "lp85_b3003_a1_t_reask.txt",
+      "defect_details": [
+        "generated code does not parse: invalid syntax"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "lp85",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 637,
+      "prompt_chars": 7520,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a1_t_reask",
+      "usable": false,
+      "wall_s": 20.1
+    },
+    {
+      "completion_file": "sc25_b3003_a1_control.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after function definition on line 3"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "sc25",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a1_control",
+      "usable": false,
+      "wall_s": 131.6
+    },
+    {
+      "completion_file": "sc25_b3003_a1_t_round0.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after 'elif' statement on line 24"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "sc25",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 519,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a1_t_round0",
+      "usable": false,
+      "wall_s": 16.9
+    },
+    {
+      "completion_file": "sc25_b3003_a1_t_reask.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1381,
+      "prompt_chars": 6003,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a1_t_reask",
+      "usable": true,
+      "wall_s": 43.9
+    },
+    {
+      "completion_file": "tu93_b3003_a2_control.txt",
+      "defect_details": [
+        "generated code does not parse: invalid syntax"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 1372,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a2_control",
+      "usable": false,
+      "wall_s": 45.6
+    },
+    {
+      "completion_file": "tu93_b3003_a2_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1319,
+      "prompt_chars": 5463,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a2_t_round0",
+      "usable": true,
+      "wall_s": 42.4
+    },
+    {
+      "completion_file": "lp85_b3003_a2_control.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 2190,
+      "prompt_chars": 7010,
+      "prompt_n": 517,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a2_control",
+      "usable": false,
+      "wall_s": 69.2
+    },
+    {
+      "completion_file": "lp85_b3003_a2_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1397,
+      "prompt_chars": 7010,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a2_t_round0",
+      "usable": false,
+      "wall_s": 43.5
+    },
+    {
+      "completion_file": "sc25_b3003_a2_control.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after function definition on line 3"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "sc25",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3003_a2_control",
+      "usable": false,
+      "wall_s": 136.2
+    },
+    {
+      "completion_file": "sc25_b3003_a2_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 390,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3003_a2_t_round0",
+      "usable": false,
+      "wall_s": 13.3
+    },
+    {
+      "completion_file": "tu93_b3004_a0_control.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 2035,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a0_control",
+      "usable": true,
+      "wall_s": 62.2
+    },
+    {
+      "completion_file": "tu93_b3004_a0_t_round0.txt",
+      "defect_details": [
+        "generated code does not parse: unterminated triple-quoted string literal (detected at line 130)"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 1752,
+      "prompt_chars": 5463,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a0_t_round0",
+      "usable": false,
+      "wall_s": 53.5
+    },
+    {
+      "completion_file": "tu93_b3004_a0_t_reask.txt",
+      "defect_details": [
+        "generated code does not parse: invalid syntax"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5973,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3004_a0_t_reask",
+      "usable": false,
+      "wall_s": 129.4
+    },
+    {
+      "completion_file": "lp85_b3004_a0_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3004_a0_control",
+      "usable": false,
+      "wall_s": 135.4
+    },
+    {
+      "completion_file": "lp85_b3004_a0_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1284,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a0_t_round0",
+      "usable": false,
+      "wall_s": 42.0
+    },
+    {
+      "completion_file": "sc25_b3004_a0_control.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after 'if' statement on line 57"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "sc25",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3004_a0_control",
+      "usable": false,
+      "wall_s": 127.6
+    },
+    {
+      "completion_file": "sc25_b3004_a0_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 781,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a0_t_round0",
+      "usable": false,
+      "wall_s": 24.4
+    },
+    {
+      "completion_file": "tu93_b3004_a1_control.txt",
+      "defect_details": [
+        "generated code does not parse: unmatched '}'"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 1018,
+      "prompt_chars": 5463,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a1_control",
+      "usable": false,
+      "wall_s": 32.9
+    },
+    {
+      "completion_file": "tu93_b3004_a1_t_round0.txt",
+      "defect_details": [
+        "generated code does not parse: unexpected indent"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 2346,
+      "prompt_chars": 5463,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a1_t_round0",
+      "usable": false,
+      "wall_s": 74.1
+    },
+    {
+      "completion_file": "tu93_b3004_a1_t_reask.txt",
+      "defect_details": [
+        "generated code does not parse: unterminated string literal (detected at line 160)"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 2280,
+      "prompt_chars": 5973,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a1_t_reask",
+      "usable": false,
+      "wall_s": 72.8
+    },
+    {
+      "completion_file": "lp85_b3004_a1_control.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 2411,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a1_control",
+      "usable": true,
+      "wall_s": 78.7
+    },
+    {
+      "completion_file": "lp85_b3004_a1_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 1603,
+      "prompt_chars": 7010,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a1_t_round0",
+      "usable": true,
+      "wall_s": 51.2
+    },
+    {
+      "completion_file": "sc25_b3004_a1_control.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after function definition on line 3"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "sc25",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3004_a1_control",
+      "usable": false,
+      "wall_s": 136.2
+    },
+    {
+      "completion_file": "sc25_b3004_a1_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 636,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a1_t_round0",
+      "usable": false,
+      "wall_s": 21.2
+    },
+    {
+      "completion_file": "tu93_b3004_a2_control.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "tu93",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 2244,
+      "prompt_chars": 5463,
+      "prompt_n": 517,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a2_control",
+      "usable": true,
+      "wall_s": 70.3
+    },
+    {
+      "completion_file": "tu93_b3004_a2_t_round0.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after 'if' statement on line 75"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 1291,
+      "prompt_chars": 5463,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a2_t_round0",
+      "usable": false,
+      "wall_s": 39.9
+    },
+    {
+      "completion_file": "tu93_b3004_a2_t_reask.txt",
+      "defect_details": [
+        "generated code does not parse: unmatched '}'"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "tu93",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 270,
+      "prompt_chars": 5973,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a2_t_reask",
+      "usable": false,
+      "wall_s": 8.7
+    },
+    {
+      "completion_file": "lp85_b3004_a2_control.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": true,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 3028,
+      "prompt_chars": 7010,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a2_control",
+      "usable": true,
+      "wall_s": 97.3
+    },
+    {
+      "completion_file": "lp85_b3004_a2_t_round0.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=6, ...)` returned None. np.asarray(None) is a 0-d object array, so downstream this reads as a wrong prediction rather than as absent code."
+      ],
+      "defect_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "lp85",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 7010,
+      "prompt_n": 1,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3004_a2_t_round0",
+      "usable": false,
+      "wall_s": 131.7
+    },
+    {
+      "completion_file": "lp85_b3004_a2_t_reask.txt",
+      "defect_details": [
+        "generated code does not parse: expected an indented block after 'if' statement on line 32"
+      ],
+      "defect_kinds": [
+        "syntax_error"
+      ],
+      "engine_changes_anything": null,
+      "game": "lp85",
+      "generate_would_accept": false,
+      "n_predict_requested": 4096,
+      "predicted_n": 1955,
+      "prompt_chars": 7520,
+      "prompt_n": 141,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a2_t_reask",
+      "usable": false,
+      "wall_s": 62.5
+    },
+    {
+      "completion_file": "sc25_b3004_a2_control.txt",
+      "defect_details": [
+        "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+        "`engine(grid, action=4, data=None)` raised TypeError: cannot unpack non-iterable numpy.int64 object"
+      ],
+      "defect_kinds": [
+        "engine_raised",
+        "missing_return"
+      ],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 4096,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {},
+      "status": "ok",
+      "stop_type": "limit",
+      "tag": "b3004_a2_control",
+      "usable": false,
+      "wall_s": 134.1
+    },
+    {
+      "completion_file": "sc25_b3004_a2_t_round0.txt",
+      "defect_details": [],
+      "defect_kinds": [],
+      "engine_changes_anything": false,
+      "game": "sc25",
+      "generate_would_accept": true,
+      "n_predict_requested": 4096,
+      "predicted_n": 761,
+      "prompt_chars": 5493,
+      "prompt_n": 5,
+      "prompt_truncated": false,
+      "sampler": {
+        "repeat_last_n": 256,
+        "repeat_penalty": 1.1
+      },
+      "status": "ok",
+      "stop_type": "word",
+      "tag": "b3004_a2_t_round0",
+      "usable": false,
+      "wall_s": 24.9
+    }
+  ],
+  "seed_bases": [
+    3003,
+    3004
+  ],
+  "splits": {
+    "lp85": {
+      "call_index": 2,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "no_prefix_call_matched_induce_received_full_list",
+      "game": "lp85",
+      "heldout_can_grade_change": false,
+      "heldout_n_changing": 0,
+      "heldout_n_noop": 18,
+      "n_ambiguous_dropped": 3,
+      "n_full": 25,
+      "n_heldout": 18,
+      "n_prefix": 25,
+      "n_shown": 4,
+      "n_strict_live_suffix": 0,
+      "prompt_sha256_16": "b1997c13183e68cf",
+      "shown_n_changing": 2,
+      "split_proven": true
+    },
+    "sc25": {
+      "call_index": 2,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "no_prefix_call_matched_induce_received_full_list",
+      "game": "sc25",
+      "heldout_can_grade_change": true,
+      "heldout_n_changing": 1,
+      "heldout_n_noop": 13,
+      "n_ambiguous_dropped": 3,
+      "n_full": 25,
+      "n_heldout": 14,
+      "n_prefix": 25,
+      "n_shown": 8,
+      "n_strict_live_suffix": 0,
+      "prompt_sha256_16": "edc4e636499a89ed",
+      "shown_n_changing": 6,
+      "split_proven": true
+    },
+    "tu93": {
+      "call_index": 2,
+      "checks": {
+        "every_shown_line_in_prompt": true,
+        "n_action_lines_matches_shown": true,
+        "no_heldout_line_in_prompt": true
+      },
+      "full_source": "no_prefix_call_matched_induce_received_full_list",
+      "game": "tu93",
+      "heldout_can_grade_change": true,
+      "heldout_n_changing": 19,
+      "heldout_n_noop": 0,
+      "n_ambiguous_dropped": 0,
+      "n_full": 25,
+      "n_heldout": 19,
+      "n_prefix": 25,
+      "n_shown": 6,
+      "n_strict_live_suffix": 0,
+      "prompt_sha256_16": "3e0a090197f2acaf",
+      "shown_n_changing": 6,
+      "split_proven": true
+    }
+  },
+  "status": "ok",
+  "tag": "gpu1",
+  "treatment_sampler": {
+    "repeat_last_n": 256,
+    "repeat_penalty": 1.1
+  },
+  "wall_s": 3376.4,
+  "witness": {
+    "gpu_requested": "1",
+    "observed_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "observed_n_ctx": 32768,
+    "port": 8952,
+    "server_exe": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_exe_is_cuda_build": true,
+    "server_pid": 1499940,
+    "vram_rows_mine": [
+      "1499940, 21416, 00000000:62:00.0"
+    ]
+  }
+}

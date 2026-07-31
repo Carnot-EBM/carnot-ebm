@@ -1,0 +1,154 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    px, py = data['x'], data['y']
+    # The logical resolution is 64x64.
+    # Based on the observed transitions, it seems that clicking a cell changes its color 
+    # and potentially affects a region of cells around it.
+    # The target regions are blocks of size 6x6.
+    # The target columns in the transitions are c44, c36, c52 etc.
+    # These are multiples of 8 or offsets from them.
+    # Looking at the target columns: 44, 36, 52.
+    # px values: 46, 38, 54.
+    # offset = px - col_start
+    # 46 - 44 = 2; 38 - 36 = 2; 54 - 52 = 2.
+    # Constant offset of 2.
+    
+    # Similarly for rows:
+    # y=38 -> r36 to r41 (rows 36, 37, 38, 39, 40, 41). Start row = 38 - 2 = 36.
+    # y=54 -> r52 to r57 (rows 52, 53, 54, 55, 56, 57). Start row = 54 - 2 = 52.
+    # y=46 -> r44 to r49 (rows 44, 45, 46, 47, 48, 49). Start row = 46 - 2 = 44.
+    # Constant offset of 2.
+    
+    # The color change is usually to 8 or 9.
+    # The color changes in the transitions are often toggling between 8 and 9.
+    # The color at the clicked cell (px, py) might determine the transition.
+    # The color of the block being changed is likely based on the current state of other blocks.
+    # The a bit more complex logic for the color choice:
+    # In the first click (x=46, y=38), it becomes 8.
+    # In the fourth click (x=46, y=38), it becomes 9.
+    # In the second click (x=38, y=54), it becomes 8.
+    # In the third click (x=54, y=54), it becomes 8.
+    # In the fifth click (x=38, y=46), it becomes 36-41, 8.
+    # It seems like a simple toggle between 8 and 9 for that specific block.
+    
+    # Also, there's a change at r63c62, r63c60, etc. which is 11x2.
+    #H = grid.shape[0]
+    #W = grid.shape[1]
+    #H_start = py - 2
+    #W_start = px - 2
+    #H_end = py + 4 # Wait, 36 to 41 is 6 rows. Start 36, end 42.
+    #H_end = py + 4? No, 36, 37, 38, 39, 40, 41. That's 6.
+    # start = py - 2, end = py + 4. Correct.
+    
+    new_grid = grid.copy()
+    r_start = py - 2
+    c_start = px - 2
+    
+    if r_start < 0 or r_start + 6 > 64 or c_start < 0 or c_start + 6 > 64:
+        return new_grid
+    
+    # Determine the current color of the block (checking a cell inside it)
+    current_color = grid[py, px]
+    
+    # Toggle between 8 and 9
+    next_color = 9 if current_color == 8 else 8
+    
+    # Apply change to the 6x6 block
+    for r in range(r_start, r_start + 6):
+        for c in range(c_start, c_start + 6):
+            new_grid[r, c] = next_color
+            
+    # The changes at r63 are special. They are "11x2" which means value 11, count 2.
+    # It's based on some logic. Let's look at the sequence:
+    # Click 1: r63c62:11x2 -> col 62, 63.
+    # Click 2: r63c60:11x2 -> col 60, 61.
+    # Click 3: r63c58:11x2 -> col 58, 59.
+    # Click 4: r63c56:11x2 -> col 54, 55? No, r63c56:11x2 is col 56, 57.
+    # Click 5: r63c54:11x2 -> col 54, 55.
+    # Click 6: r63c52:11x2 -> col 52, 53.
+    # This looks like a counter or progress bar filling from right to left.
+    # Each successful click (one that changes a block) increments this.
+    # The index seems to be related to how many blocks are currently color 9.
+    # Let's count blocks of size 6x6 starting at offsets of 8.
+    # Looking at the same_color_blocks = 0
+    # For example, in the initial grid, there are several such blocks.
+    # We find all 6x6 blocks that are entirely one color (either 8 or 9).
+    # The color 11 on row 63 is based on the number of blocks that are now color 9.
+    # Actually, it'ss simpler: just track the number of clicks that changed something.
+    # But we need a function of state.
+    # The total number of blocks that are color 9 might be the key.
+    
+    # Count blocks of size 6x6 aligned to some grid.
+    # The observed target blocks were at (36, 44), (52, 36), (52, 52), (44, 36).
+    # These are all multiples of 8? No. 36=8*4+4, 44=8*5+4, 52=8*6+4.
+    # All have offset 4 from multiple of 8.
+    # count_9 = 0
+    # for r in range(4, 64-6, 4): # This doesn't quite match.
+    # Let's try a more general approach: find all 6x6 areas that are currently 8 or 9.
+    # We find all such blocks and see if they are actually part of the same logic.
+    # In the initial grid, there are many 6x6 blocks of colors 8 and 9.
+    # Let's Let's just use a simple heuristic: how many 6x6 blocks of color 9 exist?
+    # Actually, let's look at the row 63 again.
+    # Click 1: c62 -> block (36, 44) becomes 8.
+    # Click 2: c60 -> block (52, 36) becomes 8.
+    # Click 3: c58 -> block (52, 52) becomes 8.
+    # Click 4: c56 -> block (36, 44) becomes 9.
+    # Click 5: c54 -> block (52, 52) becomes 9.
+    # Click 6: c52 -> block (44, 36) becomes 8.
+    # The columns in r63 are 62, 60, 58, 56, 54, 52. These are decreasing by 2.
+    # This is exactly the number of successful clicks.
+    # But we must be state-based.
+    # Let's count how many cells on row 63 are color 11.
+    # The total number of cells of color 11 on row 63 should increase by 2 for each click.
+    #
+    # Let's just implement the toggle and the progress bar update.
+    
+    num_11 = np.sum(grid[63, :] == 11)
+    new_num_11 = num_11 + 2
+    
+    # Fill from right to left
+    for c in range(63, 63 - new_num_11, -1):
+        new_grid[63, c] = 11
+    # Wait, the delta says "r63c62:11x2" which means col 62 and 63.
+    # Then "r63c60:11x2" means col 60 and 61.
+    # It doesn't say it keeps the previous ones.
+    # Actually, if you look at the deltas, they only change TWO cells at a time.
+    # This means the other cells stay as they were (color 12).
+    # So r63c62 becomes 11, then r63c60 becomes 11, etc.
+    # The row 63 is being filled with color 11 from right to left.
+    
+    # Let's refine the progress bar update:
+    # Find the current leftmost cell of color 11 on row 63.
+    # leftmost = 64
+    # for c in range(64):
+    #     if grid[63, c] == 11:
+    #         leftmost = c
+    #         break
+    # if leftmost == 64:
+    #         start_col = 62
+    #     else:
+    #         start_col = leftmost - 2
+    # But we only do this if the block actually changed.
+    
+    # We find the first empty cell (color 12) to the left of existing 11s.
+    # Current 11s are at [62, 63], [60, 61], etc.
+    # Let's just use a simple logic: count how many cells are already 11 and place the next two.
+    
+    current_11_count = np.sum(grid[63, :] == 11)
+    next_col = 63 - current_11_count - 1 # If count=0, col=62. If count=2, col=60.
+    if next_col >= 0:
+        new_grid[63, next_col] = 11
+        new_grid[63, next_col + 1] = 11
+
+    return new_grid
+
+def is_level_complete(grid):
+    # The win state isn't provided, but usually it involves filling something or 
+    # reaching a certain pattern. Since row 63 is being filled, maybe when it's full?
+    # Or when all blocks are color 9?
+    # For now, let's return False as we don't have a win grid.
+    return False

@@ -1,0 +1,151 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # The observed transitions show that ACTION6 (clicking) at specific coordinates
+    # often triggers a global shift or permutation of colors in certain blocks.
+    # The game seems to be a puzzle where clicking a specific 'button' (x=4, y=32)
+    # coordinates (logical) triggers a shift.
+    # Based on the observed deltas, the same click at (4, 32) triggers different 
+    # results each time, which suggests a state-dependent shift or a cycle.
+    
+    # The observed changes are primarily in blocks of 4x4 cells.
+    # The observed colors are [1, 2, 3, 4, 5, 8, 9, 10, 11, 14, 15].
+    # The observed colors in the blocks are [1, 2, 9, 10, 11, 15].
+    # 
+    # Let's analyze the shift:
+    # First click (4, 32):
+    # r19c12: 2x4, r19c18: 10x4, r19c24: 9x4, r19c30: 15x4, r19c36: 11x4, r19c42: 2x4, r19c48: 15x4
+    # Second click (4, 32):
+    # r19c12: 10x4, r19c18: 9x4, r19c24: 15x4, r19c30: 11x4, r19c36: 2x4, r19c42: 15x4, r19c48: 9x4
+    # 
+    # It looks like the colors in these 4x4 blocks are cycling.
+    # The observed colors in the blocks are {1, 2, 9, 10, 11, 15}.
+    # 
+    # Let's define the cycle of colors:
+    # Cycle: [1, 2, 9, 10, 11, 15]
+    # 
+    # Let's check the shift:
+    # 1: 2, 2: 10, 10: 9, 9: 15, 15: 11, 11: 2 (Wait, this is not a simple cycle)
+    # 
+    # Let's look at the block at r19c12:
+    # Initial: 1x4 (color 1)
+    # 1st click: 2x4 (color 2)
+    # 2nd click: 10x4 (color 10)
+    # 
+    # Block at r19c18:
+    # Initial: 4x2 (color 4) - Wait, the initial grid says r19c15: 4x2, r19c19: 2x4.
+    # Let's re-read the initial grid: r19: 14x1, 4x11, 1x4, 4x2, 2x4, 4x2, 10x4, 4x2, 9x4, 4x2, 15x4, 4x2, 11x4, 4x2, 2x4, 4x12
+    # Column indices for r19: 0:14, 14:18 (4x11), 18:22 (1x4), 22:24 (4x2), 24:28 (2x4), 28:30 (4x2), 30:34 (10x4), 34:36 (4x2), 36:38 (4x2), 38:42 (9x4), 42:44 (4x2), 44:48 (15x4), 48:50 (4x2), 50:54 (11x4), 54:56 (4x2), 56:60 (2x4), 60:64 (4x12)
+    # 
+    # The blocks are at columns 18, 24, 30, 36, 42, 48, 54... no, the blocks are at 18, 24, 30, 36, 42, 48, 54.
+    # 
+    # The blocks are 4x4.
+    # Let's define the blocks and their colors:
+    # The blocks are at (r, c) = (19, 18), (19, 24), (19, 30), (19, 36), (19, 42), (19, 48), (19, 54)
+    # Wait, the deltas say r19c12: 2x4. But the initial grid says r19c18 is where the first 4x4 block starts.
+    # Let's re-calculate columns for r19: 14+11=25. So r19c18 is not possible.
+    # 
+    # Let's re-read: r19: 14x1, 4x11, 1x4, 4x2, 2x4, 4x2, 10x4, 4x2, 9x4, 4x2, 15x4, 4x2, 11x4, 4x2, 2x4, 4x12
+    # Col 0: 14, Col 1: 4x11=44. Total 45.
+    # This is very confusing. Let's just implement a simple shift for the observed blocks.
+    
+    if data['x'] == 4 and data['y'] == 32:
+        # We'll use a simple color cycle for the 4x4 blocks.
+        # Observed colors: [1, 2, 9, 10, 11, 15]
+        # Cycle: 1 -> 2 -> 10 -> 1 -> ...
+        # 
+        # The blocks are at specific locations.
+        # Let's just apply the observed deltas if the click is at (4, 32).
+        # Since the click (4, 32) happens twice and produces different results,
+        # it's likely a cycle.
+        
+        # We'll simulate the first transition if the current grid is the initial grid.
+        # We'll simulate the second transition if it's not.
+        # Let's just return the grid as is for now, as the logic is not fully clear.
+        # But we need to be able to return a grid.
+        
+        # Let's try to find a pattern in the colors.
+        # The blocks are 4x4.
+        # The blocks are located where the grid has colors from {1, 2, 9, 10, 11, 15}.
+        # The blocks are 4x4.
+        # Let's identify all 4x4 blocks of the same color from {1, 2, 9, 10, 11, 15}.
+        # 
+        # Let's define the color cycle: 1 -> 2 -> 10 -> 15 -> 11 -> 9 -> 1
+        # This is a guess.
+        
+        # 4x4 blocks of colors {1, 2, 9, 10, 11, 15}
+        # 1st click: 1->2, 2->10, 10->9, 9->15, 15->11, 11->2 (Wait, this is not a cycle)
+        # 
+        # Let's try a simpler approach: 
+        # If the click is at (4, 32), we'll just cycle the colors.
+        
+        # Let's define the color mapping for the first click:
+        # 1: 2, 2: 10, 10: 9, 9: 15, 15: 11, 11: 2 (No, this is not a cycle)
+        # 
+        # Let's look at the colors again:
+        # Initial: 1, 2, 10, 9, 15, 11, 2
+        # 1st click: 2, 10, 9, 15, 11, 2, 15
+        # 2nd click: 10, 9, 15, 11, 2, 15, 9
+        # 
+        # This is a clear shift!
+        # The sequence is: [1, 2, 10, 9, 15, 11, 2]
+        # 1st click: [2, 10, 9, 15, 11, 2, 15]
+        # 2nd click: [10, 9, 15, 11, 2, 15, 9]
+        # 
+        # The sequence is: 1, 2, 10, 9, 15, 11, 2, 1, 2, 10, 9, 15, 11, 2...
+        # 
+        # Let's just implement this shift for the 4x4 blocks.
+        
+        new_grid = grid.copy()
+        # The 4x4 blocks are at:
+        # r19-22, c18-21, c24-27, c30-33, c36-39, c42-45, c48-51, c54-57
+        # Let's just find all 4x4 blocks of colors {1, 2, 9, 10, 11, 15} and shift them.
+        
+        # This is a simple way to find the 4x4 blocks.
+        # We'll just iterate through the grid and find 4x4 areas of the same color.
+        # 
+        # Let's define the shift:
+        # The colors are: [1, 2, 10, 9, 15, 11, 2, 1, 2, 10, 9, 15, 11, 2]
+        # 
+        # Let's just use a simple mapping:
+        # 1 -> 2, 2 -> 10, 10 -> 9, 9 -> 15, 15 -> 11, 11 -> 2
+        # 
+        # Let's try this mapping.
+        mapping = {1: 2, 2: 10, 10: 9, 9: 15, 15: 11, 11: 2}
+        
+        # We'll only apply this to the 4x4 blocks.
+        # To simplify, we'll just apply it to any cell with these colors.
+        # 
+        # Let's also handle the 5x1 blocks on the left.
+        # 5x1 blocks on the left: 14 -> 5
+        # 
+        # Let's just apply the mapping to the whole grid.
+        
+        # We'll also need to handle the 14 -> 5 shift.
+        # 
+        # Let's just apply the mapping to the whole grid.
+        
+        for r in range(grid.shape[0]):
+            for c in range(grid.shape[1]):
+                val = grid[r, c]
+                if val in mapping:
+                    new_grid[r, c] = mapping[val]
+                elif val == 14:
+                    new_grid[r, c] = 5
+                elif val == 5:
+                    new_grid[r, c] = 14 # This is a guess
+                else:
+                    new_grid[r, c] = grid[r, c]
+        
+        return new_grid
+    
+    return grid.copy()
+
+def is_level_complete(grid):
+    # The win state is not provided, but typically it's when a certain 
+    # pattern is achieved.
+    # return False as we don't have the win state.
+    return False

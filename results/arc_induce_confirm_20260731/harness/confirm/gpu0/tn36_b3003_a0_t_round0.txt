@@ -1,0 +1,73 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action == 6:
+        # The observed transitions show that clicking at certain coordinates (x, y)
+        # results in changing a cell in the first row (r1) of the grid.
+        # Specifically, clicks at x=31, y=35 and x=31, y=14 result in changes to r1c61, r1c59, etc.
+        # There is no obvious simple rule relating (x, y) to (r1, c).
+        # However, the pattern of changes is always color 3.
+        # The observed sequence of changes is:
+        # r1c61 -> 3, r1c60 -> 3, r1c61 -> 3 (wait, the delta says r1c61 then r1c60 then r1c59...)
+        #Heres the look at the la bit:
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c60:3x1
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3x1 (Wait, it's actually r1c61, r1c60, r1c59, r1c58, r1c57, r1c56)
+        # Looking closer:
+        # x=31, y=35 corresponds to a cell in the grid.
+        # Let's see if clicking on specific objects triggers these changes.
+        # The initial grid has color 9 at r1c1..r1c61.
+        # Clicks are at (31, 35) and (31, 14).
+        # The observed sequence of changes is:
+        #
+        # The cells being changed are in row 1, columns 61, 60, 59, 58, 57, 56.
+        # These are the same as column indices that were previously color 9.
+        # It's likely that clicking certain elements in the game world transforms them into color 3.
+        # The observed transitions only show a few clicks.
+        # In the words of the observed data:
+        # ACTION6 data={'x': 31, 'y': 35} -> r1c61:3x1
+        # ACTION6 data={'x': 31, 'y': 14} -> r1c60:3x1
+        # ACTION6 data
+        #
+        # Since we don't have enough information to deduce a general rule for which cell changes,
+        # but we only see these specific actions, we could implement a logic that tracks the 
+        # # sequence of clicks.
+        #
+        # However, usually ARC games have a a simple geometric or logical rule.
+        # # Let's look at the coordinates again. (31, 35) and (31, 14).
+        # # Row 35 is mostly empty (color 0), but has some objects.
+        # # Row 14 is also mostly empty.
+        # #Heres the look at the look.
+        # #S5C27_P1_L0_T0_A6_D{x:31, y:35} -> r1c61:3x1
+        # #S5C27_P1_L0_T0_A6_D{x:31, y: uma a bit more than 31, 14}
+        # #H0//r1c61:3x1
+        # #L1//r1c60:3x1
+        # #L2//r1c61:3x1 (Wait, it's actually r1c61, r1c60, r1c59...)
+        # # Actually, looking at the sequence of ACTION6 calls:
+        # # T0: x=31, y=35 -> r1c61:3x1
+        # # T1: x=31, y=14 -> r1c60:3x1
+        # # T2: x=31, y=35 -> r1c59:3x1
+        # # T3: x=31, y=14 -> r1c58:3x1
+        # # T4: x=31, y=14 -> r1c57:3x1
+        # # T5: x=31, y=14 -> r1c56:3x1
+        # # This looks like a toggle or a sequence. 
+        # # Let's try to find the last changed cell in row 1 and move left.
+        
+        new_grid = grid.copy()
+        # Find the rightmost cell in row 1 that is NOT color 9 (or is already color 3)
+        # Row 1 has colors [5, 9, 9... 9, 5, 5]
+        # The cells from index 1 to 61 are color 9.
+        #
+        # Find the first cell from the right (index 61) moving leftwards that is still color 9.
+        for c in range(61, 0, -1):
+            if grid[1, c] == 9:
+                new_grid[1, c] = 3
+                break
+        return new_grid
+    return grid
+
+def is_level_complete(grid):
+    # Based on the observed transitions, we don'tt know the win state.
+    # But usually it's when all target cells are filled or transformed.
+    # In this case, maybe when all color 9 cells in row 1 are converted to color 3.
+    return np.all(grid[1, 1:62] != 9)

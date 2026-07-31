@@ -1,0 +1,174 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    x, y = data['x'], data['y']
+    # The grid is 64x64.
+    # Based on thes observed transitions, ACTION6 (click) targets specific 6x6 blocks.
+    # The blocks are located at specific intervals.
+    # Let's identify the blocks from the delta:
+    # r36c44:8x6, etc. (r36-r41, c44-c49)
+    # r52c36:8x6, etc. (r52-r57, c36-c41)
+    # r52c52:8x6, etc. (r52-r57, c52-57)
+    # r44c36:8x6, etc. (r44-r49, c36-41)
+    #
+    # It seems the click targets a 6x6 block.
+    # The click coordinates (x, y) are mapped to the block's top-left corner (r, c).
+    # x is the column, y is the row.
+    # The block starts at r = y - (y % 6) if we assume blocks are 6x6 and aligned.
+    # However, looking at the data:
+    # (x=46, y=38) -> r=36, c=44. 
+    # # (x=38, y=54) -> r=52, c=36.
+    # # (x=54, y=54) -> r=52, c=52.
+    # # (x=38, y=46) -> r=44, c=36.
+    #
+    # Let's analyze the relation:
+    # # y=38 -> r=36. (38-2=36)
+    # # y=54 -> r=52. (54-2=52)
+    # # y=46 -> r=44. (46-2=44)
+    # # # So r = y - 2.
+    # # # x=46 -> c=44. (46-2=44)
+    # # # # So c = x - 2.
+    # # # x=38 -> c=36. (36=38-2)
+    # # # # x=54 -> c=52. (52=54-2)
+    # # # x=38 -> c=36. (36=30+8? No)
+    # # # # So c = x - 2.
+    #
+    # Let's actually check if the block is 6x6.
+    # # r36c44:8x6 means rows 36, 37, 38, 39, 40, 41 (6 rows) and 6 columns starting at 44.
+    # # # So yes, 6x6 block.
+    # # # r = y - 2, c = x - 2.
+    #
+    # Let's look at the values:
+    # # (x=46, y=38) first time: 8x6. Values change to 8.
+    # # # (x=46, y=38) second time: 9x6. Values change to 9.
+    # # # This suggests a toggle or a cycle: 8 -> 9 -> (original).
+    # # # (x=38, y=54) first time: 8x6.
+    # # # (x=54, y=54) first time: 8x6.
+    # # # (x=54, y=54) second time: 9x6.
+    # # # (x=54, y=54) second time: 9x6.
+    # # # (x=54, y=54) second time: 9x6.
+    # # # # Wait, the delta says r52c52:9x6.
+    # # # (x=38, y=46) first time: 8x6.
+    # # # (x=38, y=46) first time: 8x6.
+    # # # (x=38, y=46) first time: 8x6.
+    # # #
+    # # # It seems the block is toggled to 8, then to 9.
+    # # # Let's see the original values in the INITIAL grid for these blocks.
+    # # # r36-41, c44-49: 9x6, 9x6, 9x6, 9x6, 9x6, 9x6 (all 9s)
+    # # # r52-57, c36-41: 8x6, 8x6, 8x6, 8x6, 8x6, 8x6 (all 8s)
+    # # # r52-57, c52-57: 8x6, 8x6, 8x6, 8x6, 8x6, 8x6 (all 8s)
+    # # # r44-49, c36-41: 0x2, 2x4, 0x2, 8x2, 0x2, 2x4 (mixed)
+    # # #
+    # # # Looking at the delta again:
+    # # # r36c44:8x6 (first click) -> r36c44:9x6 (second click)
+    # # # # This is a cycle: Original -> 8 -> 9 -> Original.
+    # # # # But wait, the original for r36c44 was 9.
+    # # # # So 9 -> 8 -> 9.
+    # # # #
+    # # # Let's check r52c36: 8x6 (first click) -> Original was 8.
+    # # # # So 8 -> 8? No, the delta says it changed to 8.
+    # # # # If it was already 8, it wouldn't be in the delta.
+    # # # # But the INITIAL grid says r52c36 is 8x6.
+    # # # # Let's re-verify INITIAL grid r52: 5x4, 9x6, 5x2, 9x6, 5x2, 8x6...
+    # # # # c0-3: 5, c4-9: 9, c10-11: 5, c12-17: 9, c18-19: 5, c20-25: 8...
+    # # # # Wait, c20-25 is 8. c36-41 is 8x6?
+    # # # # Let's calculate: 4+6+2+6+2 = 20. So c20-25 is 8.
+    # # # # Then c26-31 is 5x6. Then c32-35 is 4x4. Then c36-41 is 9x6.
+    # # # # Okay, so r52c36-41 is 9.
+    # # # # So 9 -> 8 -> 9.
+    # # # #
+    # # # Let's check r52c52-57: 9x6?
+    # # # # r52: 5x4, 9x6, 5x2, 9x6, 5x2, 8x6, 5x6, 4x4, 9x6, 4x2, 9x6, 4x2, 9x6, 4x4, 5x2
+    # # # # c0-3: 5, c4-9: 9, c10-11: 5, c12-17: 9, c18-19: 5, c20-25: 8, c26-31: 5, c32-35: 4, c36-41: 9, c42-43: 4, c44-49: 9, c50-51: 4, c52-57: 9, c58-61: 4, c62-63: 5.
+    # # # # So r52c52-57 is 9.
+    # # # #
+    # # # So the rule is: if block is 9, change to 8. If block is 8, change to 9.
+    # # # If block is mixed, change to 8, then 9.
+    # # #
+    # # # Also, there look to be changes in r63.
+    # # # r63c62: 11x2, r63c60: 11x2, r63c58: 11x2, r63c56: 11x2, r63c54: 11x2, r63c52: 11x2.
+    # # # # These are at the very bottom right.
+    # # # It seems every click on a block updates a counter or a progress bar at r63.
+    # # #
+    # # # Let's implement the toggle 8 <-> 9 for the 6x6 block.
+    
+    new_grid = grid.copy()
+    r, c = y - 2, x - 2
+    if r < 0 or r + 6 > 64 or c < 0 or c + 6 > 64:
+        return new_grid
+    
+    # Determine the current value of the block to toggle
+    # We'll use the top-left cell of the block as a representative.
+    current_val = grid[r, c]
+    if current_val == 9:
+        new_val = 8
+    elif current_val == 8:
+        new_val = 9
+    else:
+        # For mixed blocks, we'll just toggle between 8 and 9.
+        # If most are 8, go to 9. If most are 9, go to 8.
+        # Or just use the top-left.
+        new_val = 8 if current_val != 8 else 9
+    
+    new_grid[r:r+6, c:c+6] = new_val
+    
+    # Update r63 progress bar
+    # The progress bar seems to be at r63, c62, 60, 58, 56, 54, 52.
+    # This is a sequence of 2-cell wide markers.
+    # We'll just simulate the observed changes.
+    # The clicks were: (46, 38), (38, 54), (54, 54), (46, 38), (54, 54), (38, 46).
+    # The r63 changes were: c62, c60, c58, c56, c54, c52.
+    # It's a counter that moves left by 2 each time a block is successfully toggled.
+    
+    # To track the counter, we find the current position of the 11s.
+    # We'll look for the last 11 in r63.
+    # We'll use a simple approach: find the rightmost 11 in r63.
+    # The 11s are placed at c62, 60, 58, 56, 54, 52.
+    #
+    # Let's find the current rightmost 11.
+    # r63 = grid[63, :]
+    # 11s are at c62, 60, 58, 56, 54, 52.
+    #
+    # Let's just find the current number of 11s.
+    #
+    # If we see 11s at c62, 60, 58, 56, 54, 52, we'll just move the marker.
+    #
+    # Let's just implement the marker movement.
+    
+    # Find current rightmost 11 in r63.
+    # If no 11s, start at c64.
+    # current_pos = 64
+    # if np.any(grid[63, :] == 11):
+    #     # Find the rightmost 11.
+    #     # But the delta says r63c62:11x2, then r63c60:11x2...
+    # # This is just a sequence of 11s being added.
+    # # Let's just count how many 11s are in r63.
+    # # # (62, 63), (60, 61), (58, 59), (56, 57), (54, 55), (52, 53).
+    # # #
+    # # # Let's count 11s and place the next one.
+    # # # The number of 11s in r63C[52:64]C.
+    # # # num_11s = np.sum(grid[63, 52:64] == 11) // 2
+    # # # next_pos = 62 - (num_11s * 2)
+    # # # if next_pos >= 52:
+    # # #     new_grid[63, next_pos:next_pos+2] = 11
+    # # #
+    # # # But wait, the clicks were (46, 38), (38, 54), (54, 54), (46, 38), (54, 54), (38, 46).
+    # # # All of them caused a change in r63.
+    # # #
+    # # # Let's just implement this.
+    
+    num_11s = np.sum(grid[63, 52:64] == 11) // 2
+    next_pos = 62 - (num_11s * 2)
+    if next_pos >= 52:
+        new_grid[63, next_pos:next_pos+2] = 11
+        
+    return new_grid
+
+def is_level_complete(grid):
+    # The level is complete when all blocks are toggled to a certain state or r63 is filled.
+    # Based on the observed data, we don't have a win state, but we'll assume r63 is filled.
+    # The number of 11s in r63C[52:64]C should be 6.
+    return np.sum(grid[63, 52:64] == 11) // 2 == 6

@@ -1,0 +1,100 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    px, py = data['x'], data['y']
+    # The game seems to be a click-based interaction where clicking on certain regions
+    # changes their color and updates a status bar at the bottom row (r63).
+    # The logical resolution is 64x64.
+    
+    # Based on thes observed transitions, we can identify specific target zones.
+    # Zone A: x=46, y=38 -> rows 36-41, cols 44-49 (color becomes 8 then 9)
+    # Zone B: x=38, y=54 -> rows 52-57, cols 36-41 (color becomes 8 then 9)
+    # Zone C: x=54, y=54 -> rows 52-57, cols 52-57 (color becomes 8 then 9)
+    # Zone D: x=38, y=46 -> rows 44-49, cols 36-41 (color becomes 8 then 9)
+    
+    zones = {
+        (46, 38): ((36, 41), (44, 49)),
+        (38, 54): ((52, 57), (36, 41)),
+        (54, 54): ((52, 57), (52, 57)),
+        (38, 46): ((44, 49), (36, 41))
+    }
+    
+    if (px, py) not in zones:
+        return grid.copy()
+    
+    row_range, col_range = zones[(px, py)]
+    r_start, r_end = row_range
+    c_start, c_end = col_range
+    
+    new_grid = grid.copy()
+    current_color = new_grid[r_start, c_start]
+    
+    # Toggle color between 8 and 9
+    next_color = 9 if current_color == 8 else 8
+    
+    # Fill the zone with the next color
+    for r in range(r_start, r_end + 1):
+        for c in range(c_start, c_end + 1):
+            new_grid[r, c] = next_color
+    
+    # Update status bar at r63
+    # The status bar updates based on the click location or a specific sequence.
+    # It seems to actually be track progress of which zones are activated.
+    # The delta shows r63c62:11x2, r63c60:11x2, etc.
+    # This means cells (63, 62) and (63, 61) are becoming color 11.
+    # Status bar indices mapped from clicks:
+    # (46, 38) -> cols 62, 61
+    # (38, 54) -> cols 60, 59
+    # (54, 54) -> cols 58, 57
+    # (38, 46) -> cols 52, 51? No, let's look closer.
+    # r63c62:11x2 means col 62 and 63 are color 11.
+    # r63c60:11x2 means col 60 and 61 are color 11.
+    # r63c58:11x2 -> col 58, 59
+    # r63c56:11x2 -> col 56, 57
+    # Wait, the sequence is descending by 2.
+    # Let's map them again:
+    # Click (46, 38) first time -> r63c62:11x2 (cols 62, 63)
+    # Click (38, 54) first time -> r63c60:11x2 (cols 60, 61)
+    # Click (54, 54) first time -> r63c60:11x2 ? No, r63c58:11x2 (cols 58, 59)
+    # Click (46, 38) second time -> r63c56:11x2 (cols 56, 57)
+    # Click (54, 54) second time -> r63c54:11x2 (cols 54, 55)
+    # Click (38, 46) first time -> r63c52:11x2 (cols 52, 53)
+    # This suggests a simple counter of successful clicks.
+    
+    # Count how many cells in row 63 are color 11.
+    filled_cells = np.sum(grid[63] == 11)
+    status_col = 63 - filled_cells - 1 # Start from the right
+    if status_col >= 0:
+        new_grid[63, status_col] = 11
+        new_grid[63, status_col + 1] = 11
+        # Wait, the delta says "r63c62:11x2", which means col 62 and 63.
+        # If we just fill them as they come, it's the next available pair.
+        # Let's use a simpler logic for the status bar based on current count.
+        pass
+
+    # Correcting status bar logic:
+    # The observed deltas show that every click updates the status bar by adding two more cells of color 11.
+    # current_count = np.sum(grid[63] == 11)
+    # new_col = 63 - (current_count + 2) # This is not quite correct.
+    # Let's look at r63c62:11x2 -> cols 62, 63. Then r63c60:11x2 -> cols 60, 61.
+    # So if current_count is 0, first click fills 62, 63.
+    # If current_count is 2, second click fills 60, 61.
+    # And so on.
+    
+    filled_cells = np.sum(grid[63] == 11)
+    target_col = 63 - filled_cells - 1
+    if target_col >= 0 and target_col >= 0:
+        new_grid[63, target_col] = 11
+        new_grid[63, target_col+1] = 11
+        
+    return new_grid
+
+def is_level_complete(grid):
+    # The level is complete when the status bar is sufficiently filled or all zones are color 9.
+    # return True if row 63 has a certain number of cells of color 11.
+    # Check if any cell in row 63 is not 12 (since initial grid r63 is 12x64).
+    # We don't have a win state, but usually it's filling a bar.
+    return False # No win state provided in observed transitions.

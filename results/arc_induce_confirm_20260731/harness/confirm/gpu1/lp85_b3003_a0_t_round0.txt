@@ -1,0 +1,53 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # Action 6 is a click. The provided transitions show that clicking at (4, 32) 
+    # triggers a global shift/permutation of colors in specific regions.
+    # Based on the observed deltas, it seems toP be a cyclic permutation of color values.
+    # The colors involved are [1, 2, 3, 4, 5, 8, 9, 10, 11, 14, 15].
+    # Looking at r19c12:2x4 -> 10x4 -> 15x4... wait, no.
+    # Let's analyze the shifts:
+    # Transition 1: r19c12 was 2x4? No, INITIAL r19c12 is 2x4 (from r19C11+1=12).
+    # Initial r19c12: 2x4, r19c18: 10x4, r19c24: 9x4, r19c30: 15x4, r19c36: 11x4, r19c42: 2x4, r19c48: 15x4 (wait, initial is different)
+    # Re-evaluating INITIAL grid for r19:
+    # r19: 14x1, 4x11, 1x4, 4x2, 2x4, 4x2, 10x4, 4x2, 9x4, 4x2, 15x4, 4x2, 11x4, 4x2, 2x4, 4x12
+    # Col indices for r19: 0(14), 1(4), 5(1), 9(4), 13(2), 15(4), 19(10), 21(4), 25(9), 27(4), 31(15), 33(4), 37(11), 39(4), 43(2), 45(4), 47... no.
+    # Let's re-calculate columns carefully:
+    # r19: 0:14x1, 1:4x11, 12:1x4, 16:4x2, 18:2x4, 22:4x2, 26:10x4, 30:4x2, 34:9x4, 38:4x2, 42:15x4, 46:4x2, 50:11x4, 54:4x2, 58:2x4, 62:4x12 (Wait, total cols = 1+11+4+2+4+2+4+2+4+2+4+2+4+2+4+12 = 64)
+    # Correct Col indices for r19: 0(14), 1(4), 12(1), 16(4), 18(2), 22(4), 26(10), 30(4), 34(9), 38(4), 42(15), 46(4), 50(11), 54(4), 58(2), 62(4).
+    # Transition 1 Delta: r19c12:2x4, r19c18:10x4, r19c24:9x4... wait, the delta says r19c12 is now 2.
+    # Initial r19c12 was 1. Now it's 2.
+    # Initial r19c18 was 2. Now it's 10.
+    # Initial r19c26 was 10. Now it's 9? No, delta says r19c24:9x4. (Wait, col index in delta is c24)
+    # Let's look at the colors again: [1, 2, 10, 9, 15, 11, 2, 15] ... this is confusing.
+    
+    # Simplest hypothesis: Action 6 at (4, 32) triggers a cyclic shift of color values for all "active" cells.
+    # The active cells are those that aren't background (3 or 4).
+    # Looking at the deltas, only certain blocks change.
+    # The permutation seems to be: 1 -> 2 -> 10 -> 9 -> 15 -> 11 -> 2... no.
+    # Let's try a simple rotation of the available palette.
+    
+    palette = [1, 2, 10, 9, 15, 11] # Observed shifting colors
+    
+    new_grid = grid.copy()
+    if data == {'x': 4, 'y': 32}:
+        # Apply a global mapping based on the observed transitions.
+        # Transition 1: 1->2, 2->10, 10->9, 9->15, 15->11, 11->2? No.
+        mapping = {1: 2, 2: 10, 10: 9, 9: 15, 15: 11, 11: 2}
+        # Also handle the side bar color shift: r0c0:5x1, etc. (14 -> 5)
+        mapping[14] = 5
+        mapping[5] = 14
+        for r in range(64):
+            for c in range(64):
+                if new_grid[r, c] in mapping:
+                    new_grid[r, c] = mapping[new_grid[r, c]]
+        return new_grid
+
+    return grid.copy()
+
+def is_level_complete(grid):
+    # No win state provided, return False by default.
+    return False

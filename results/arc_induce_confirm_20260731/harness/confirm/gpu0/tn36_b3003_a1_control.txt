@@ -1,0 +1,92 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # The observed transitions show ACTION6 (click) at specific (x, y) coordinates
+    # resulting in changes to cells in row 1, columns 56-61.
+    # The changes are consistently color 3.
+    # The logic seems to be: clicking a specific cell (x, y) toggles or sets a cell in row 1.
+    # Based on thes specific transitions:
+    # (31, 35) -> r1c61:3
+    # (31, 14) -> r1c60:3
+    # (31, 35) -> r1c61:3 (repeated)
+    # (31, 14) -> r1c58:3
+    # (31, 14) -> r1c57:3
+    # (31, 14) -> r1c58:3 (repeated)
+    # (31, 14) -> r1c56:3
+    # This suggests a sequence or a specific mapping.
+    # However, the provided transitions are very limited.
+    # In a typical ARC-AGI puzzle, the a click (ACTION6) might be 
+    # interact with an object.
+    # (31, 35) and (31, 14) are the same x, different y.
+    # The result is always in row 1.
+    # The result is color 3.
+    #
+    # Let's look at the same x=31.
+    # The result columns are 61, 60, 59, 58, 57, 56.
+    # TheHever, the result columns are not strictly mapped to (x, y).
+    # The result columns are 0, 1, 2... 
+    #
+    # Let's try to implement a simple rule: 
+    # if action is 6, we find the clicked cell (x, y).
+    # If the cell at (y, x) is color 11 (the "button" color),
+    # we change a corresponding cell in row 1 to color 3.
+    #
+    # Looking at thes data:
+    # (31, 35) is r35c31. r35c31 is color 11.
+    # (31, 14) is r14c31. r14c31 is color 11.
+    #
+    # The mapping seems to be: click (x, y) -> row 1, col (some function of x, y).
+    # The result columns are 61, 60, 59, 58, 57, 56.
+    # These are indices from the end of the row.
+    #
+    # Let's assume the logic is:
+    # click (x, y) where grid[y, x] == 11, then row 1, col (61 - count).
+    #
+    # Since the provided transitions are very few and we don't have a win state,
+    # we'll implement a basic version of this.
+    
+    new_grid = grid.copy()
+    if action == 6:
+        x, y = data['x'], data['y']
+        if 0 <= y < grid.shape[0] and 0 <= x < grid.shape[1]:
+            if grid[y, x] == 11:
+                # We need a way to determine which column in row 1 to change.
+                # We find all cells of color 11 in the grid.
+                # We find the index of the clicked cell among them.
+                # We find the laest cell in row 1 that is NOT color 3.
+                # We find the laest cell in row 1 that is NOT color 3.
+                #
+                # Based on thes data, the columns are 61, 60, 59, 58, 57, 56.
+                # This is a sequence.
+                #
+                # Let's implement: find the rightmost cell in row 1 that is not color 3,
+                # and is within the range [0, 63].
+                # But the initial grid r1 is 5x1, 9x61, 5x2.
+                # r1c0=5, r1c1-61=9, r1c62-63=5.
+                # The target columns are 61, 60, 59, 58, 57, 56.
+                #
+                # Let's find the rightmost cell in row 1 that is color 9.
+                # Let's find the index of the index of the index.
+                #
+                # Let's try a simple approach:
+                # click (x, y) -> change rightmost color 9 in row 1 to color 3.
+                
+                # Find all columns in row 1 that are color 9.
+                cols_9 = np.where(grid[1, :] == 9)[0]
+                if len(cols_9) > 0:
+                    # Change the rightmost one to 3.
+                    target_col = cols_9[-1]
+                    new_grid[1, target_col] = 3
+                    
+    return new_grid
+
+def is_level_complete(grid):
+    # Without a win state, we assume the level is complete when all 
+    # target cells in row 1 (the range [1, 61]) are color 3.
+    # The target cells in row 1 are columns 1 to 61.
+    # Let's check if all cells in row 1 from index 1 to 61 are color 3.
+    return np.all(grid[1, 1:62] == 3)
+

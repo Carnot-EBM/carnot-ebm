@@ -1,0 +1,181 @@
+import numpy as np
+
+def engine(grid, action, action_data):
+    """
+    Predicts the next state of the grid based on the action.
+    The game involves moving a cursor (represented by 0 in the bottom right)
+    and interacting with blocks of colors.
+    """
+    # The cursor is the cell with value 0 at the bottom right (r63, c63)
+    # We need to find the cursor's current position.
+    cursor_pos = None
+    for r in range(63, -1, -1):
+        for c in range(63, -1, -1):
+            if grid[r, c] == 0:
+                # In this game, the cursor is the cell with value 0 at the bottom right.
+                # However, the observed transitions show the cursor moving
+                # and changing values.
+                # We find the first 0 from the bottom right.
+                cursor_pos = (r, c)
+                break
+        if cursor_pos:
+            break
+
+    # If cursor not found, we'll assume a default position.
+    if cursor_pos is None:
+        cursor_pos = (63, 63)
+
+    # The cursor moves according to the action.
+    # The cursor is the cell with value 0.
+    # The cursor moves by changing the cell it's at to the background color (5)
+    # and the new cell to 0.
+    
+    # In this a game, the cursor is the cursor_pos (r, c)
+    # r, c = cursor_pos
+    # The cursor is the cell with #0.
+    # 
+    # ACTION 1: Left
+    # ACTION 2: Down
+    # ACTION 3: Right
+    # ACTION 4: Up
+    # ACTION 5: ?
+    # ACTION 6: Click
+    # ACTION 7: ?
+    
+    # The cursor is the cell with value 0.
+    # The cursor moves.
+    # ACTION 1: Left (c-1)
+    # ACTION 2: Down (r+1)
+    # ACTION 3: Right (c+1)
+    # ACTION 4: Up (r-1)
+    # ACTION 1: Left (c-1)
+    # 
+    # Let's check the action transitions.
+    # ACTION 3: r63c63:0x1 -> cursor was at (63,63), ACTION 3 (Right) moved it?
+    # No, ACTION 3 (Right) changed r63c63 to 0.
+    # Wait, the cursor is the 0 at (63,63).
+    # ACTION 3: r63c63:0x1. This means the cell (63,63) became 0.
+    # ACTION 4: r63c61:0x2. This means (63,61) and (63,62) became 0.
+    # ACTION 2: r63c60:0x1. This means (63,60) became 0.
+    # ACTION 2: r63c59:0x1. This means (63,59) became 0.
+    # ACTION 2: r63c58:0x1. This means (63,58) became 0.
+    # ACTION 1: r63c56:0x2. This means (63,56) and (63,57) became 0.
+    # 
+    # This is actually a cursor moving in the grid.
+    # The cursor is the value 0.
+    # ACTION 1: Left (c-1)
+    # ACTION 2: Left (c-1)
+    # ACTION 3: Right (c+1)
+    # ACTION 4: Up (r-1)
+    # 
+    # Let's re-examine the cursor movements:
+    # ACTION 3: r63c63:0x1 (Cursor at 63,63)
+    # ACTION 4: r63c61:0x2 (Cursor at 63,61)
+    # ACTION 2: r63c60:0x1 (Cursor at 63,60)
+    # ACTION 2: r63c63:0x59 (Cursor at 63,59)
+    # ACTION 2: r63c58:0x1 (Cursor at 63,60)
+    # ACTION 1: r63c56:0x2 (Cursor at 63,56)
+    # 
+    # This is a puzzle where you move a cursor and "activate" blocks.
+    # The cursor is the value 0.
+    # 
+    # Let's refine the cursor movement:
+    # ACTION 1: Left (c-1)
+    # ACTION 2: Left (c-1)
+    # ACTION 3: Right (c+1)
+    # ACTION 4: Up (r-1)
+    # 
+    # Wait, the observed transitions are very strange. 
+    # ACTION 4 (Up) changed cells in the middle of the grid (r15, r16, r17).
+    # ACTION 2 (Down) changed cells in the middle of the grid (r21, r22, r23).
+    # 
+    # This suggests the cursor (0) is not just moving, but it's acting on the grid.
+    # 
+    # Let's look at the cursor (0) and the blocks.
+    # The blocks are 3x3 areas.
+    # The cursor moves and when it's at a certain position, the action triggers a change.
+    # 
+    # Let's assume the cursor is the 0 at the bottom right.
+    # ACTION 4 (Up) triggered a change at (15, 15).
+    # ACTION 2 (Down) triggered a change at (21, 21).
+    # 
+    # This is a "remote control" puzzle.
+    # 
+    # The cursor is at (63, 63).
+    # ACTION 1: Left
+    # ACTION 2: Down
+    # ACTION 3: Right
+    # ACTION 4: Up
+    # 
+    # The cursor moves on the 64x64 grid.
+    # 
+    # Let's implement the cursor movement and the remote action.
+    
+    new_grid = grid.copy()
+    
+    # Find cursor
+    cursor_pos = None
+    for r in range(63, -1, -1):
+        for c in range(63, -1, -1):
+            if grid[r, c] == 0:
+                cursor_pos = (r, c)
+                break
+        if cursor_pos:
+            break
+    
+    if cursor_pos is None:
+        cursor_pos = (63, 63)
+    
+    r, c = cursor_pos
+    
+    # Cursor movement
+    if action == 1: # Left
+        new_c = c - 1
+        new_r = r
+    elif action == 2: # Down
+        new_c = c
+        new_r = r + 1
+    elif action == 3: # Right
+        new_c = c + 1
+        new_r = r
+    elif action == 4: # Up
+        new_c = c
+        new_r = r - 1
+    else:
+        new_c, new_r = c, r
+        
+    # Bound the cursor
+    new_r = max(0, min(63, new_r))
+    new_c = max(0, min(63, new_c))
+    
+    # Update cursor position in grid
+    new_grid[r, c] = 5 # background
+    new_grid[new_r, new_c] = 0
+    
+    # Remote action:
+    # The cursor position (r, c) might trigger a change in the grid.
+    # Based on the observed transitions, ACTION 4 (Up) and ACTION 2 (Down)
+    # trigger changes in the blocks.
+    # The changes are:
+    # ACTION 4: r15c15:0x3, r15c21:9x3, r16c15:0x3, r16c21:9x2, 4x1, r17c15:0x3, r17c21:9x3
+    # ACTION 2: r21c21:9x3, r22c21:9x3, r23c21:9x1, 4x1, 9x1
+    # 
+    # This is too complex to induce from 5 transitions.
+    # Let's implement the basic cursor movement and the remote action as a simplified version.
+    
+    return new_grid
+
+def is_level_complete(grid):
+    """
+    Check if the level is complete.
+    """
+    # A level is complete if all blocks are activated (e.g., no more 0s except the cursor)
+    # The only 0s in the grid should be the cursor.
+    # 0s_count = np.sum(grid == 0)
+    # return 0s_count == 1
+    
+    # The grid is not complete if the only 0 is the cursor.
+    # return False
+    
+    # We don'tt know the win state, so we'll just return False.
+    return False

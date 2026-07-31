@@ -1,0 +1,59 @@
+import numpy as np
+
+def engine(grid, action, data):
+    """
+    Predicts the next state of the grid based on the given action and data.
+    Based on the observed transitions, clicking on specific coordinates seems to 
+    trigger changes in a distant part of the grid (r1, c56-61).
+    The logic appears to be a simple mapping or a toggle mechanism where 
+    clicking certain points updates a cell in row 1.
+    """
+    if action == 6:
+        # Extract click coordinates
+        px, py = data['x'], data['y']
+        
+        # Observed mappings from Action 6 clicks:
+        # (31, 35) -> r1, c61 (value 3)
+        # (31, 14) -> r1, c60 (value 3)
+        # (31, 35) -> r1, c61 (value 3) - wait, it repeats?
+        # Let's look at the sequence again:
+        # Click (31, 35) -> r1c61:3x1
+        # Click (31, 14) -> r1c60:3x1
+        # Click (31, 35) -> r1c59:3x1
+        # Click (31, 14) -> r1c58:3x1
+        # Click (31, 14) -> r1c57:3x1
+        # Click (31, 14) -> r1c56:3x1
+        
+        # The pattern is that clicking these specific points fills row 1 from right to left.
+        # Find the current rightmost empty or non-3 cell in row 1 within the range [56, 61].
+        
+        target_row = 1
+        target_cols = range(56, 62) # columns 56 to 61 inclusive
+        
+        # We search for the first available slot from right to left.
+        # However, the observed data shows a strict sequence of clicks and updates.
+        # Let's implement a logic where any click at those coordinates triggers the next fill.
+        if (px == 31 and py == 35) or (px == 31 and py == 14):
+            # Find the same index as the sequence suggests
+            for col in range(61, 55, -1):
+                if grid[target_row, col] != 3:
+                    grid[target_row, col] = 3
+                    break
+        else:
+            # No change if clicked elsewhere
+            pass
+            
+    return grid
+
+def is_level_complete(grid):
+    """
+    Returns True if the level is complete based on the win state.
+    The provided transitions do not show a win state, but the target cells in row 1 are being filled with color 3.
+    A common pattern in ARC is that filling a specific region or a specific set of colors.
+    Since we only have one example, we'll assume completion when all targets in r1 are filled.
+    """
+    target_cols = range(56, 62)
+    for col in target_cols:
+        if grid[1, col] != 3:
+            return False
+    return True

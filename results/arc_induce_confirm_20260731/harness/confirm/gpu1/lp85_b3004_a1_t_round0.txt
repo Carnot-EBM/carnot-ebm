@@ -1,0 +1,86 @@
+import numpy as np
+
+def engine(grid, action, data):
+    if action != 6:
+        return grid.copy()
+    
+    # The observed transitions show that clicking at a specific location (4, 32)
+    # triggers a global shift or rotation of colors across multiple predefined blocks.
+    # The provided deltas are complex and suggest a color permutation.
+    # In thisH game, the game state is likely based on a set of "slots" or "blocks" of cells.
+    # Based on the observation, clicking (4, 32) shifts the colors in these slots.
+    # 
+    # Let's identify the slots from the laout.
+    # Slots are groups of 4x4 cells.
+    # Slot positions (row_start, col_start)
+    # Group A: r19-22, c12-15; r19-22, c18-21; r19-22, c24-27; r19-22, c30-33; r19-22, c36-39; r19-22, c42-45; r19-22, c48-51
+    # Group B: r25-28, c12-15; r25-28, c48-51
+    # Group C: r31-34, c12-15; r31-34, c48-51
+    # Group D: r37-40, c12-15; r37-40, c48-51
+    # Group E: r43-46, c12-15; r43-46, c18-21; r43-46, c24-27; r43-46, c30-33; r43-46, c36-39; r43-46, c42-45; r43-46, c48-51
+    
+    # We define the slots and their current colors.
+    # The observed color shifts are consistent with a permutation of values.
+    # Let's use a simple rotation based on the action data.
+    # If x=4, y=32 is clicked, it rotates the colors in these specific blocks.
+    #
+    # Since we only have two examples of clicking (4, 32), let's simulate the shift.
+    # First transition: (4, 32) -> new_colors = [2, 10, 9, 15, 11, 2, 15] for row 19-22
+    # Second transition: (4, 32) -> new_colors = [10, 9, 15, 11, 2, 15, 9] for row 19-22
+    # This looks like a cyclic shift of the same set of colors.
+    
+    if data['x'] == 4 and data['y'] == 32:
+        new_grid = grid.copy()
+        
+        # Define the regions to be updated
+        regions = [
+            ((19, 22), (12, 15)), ((19, 22), (18, 21)), ((19, 22), (24, 27)), 
+            ((19, 22), (30, 33)), ((19, 22), (36, 39)), ((19, 22), (42, 45)), ((19, 22), (48, 51)),
+            ((25, 28), (12, 15)), ((25, 28), (48, 51)),
+            ((31, 34), (12, 15)), ((31, 34), (48, 51)),
+            ((37, 40), (12, 15)), ((37, 40), (48, 51)),
+            ((43, 46), (12, 15)), ((43, 46), (18, 21)), ((43, 46), (24, 27)), 
+            ((43, 46), (30, 33)), ((43, 46), (36, 39)), ((43, 46), (42, 45)), ((43, 46), (48, 51))
+        ]
+        
+        # Extract current colors from the center of each region
+        colors = []
+        for r_range, c_range in regions:
+            r_start, r_end = r_range
+            c_start, c_end = c_range
+            colors.append(grid[r_start, c_start])
+            
+        # Rotate colors cyclicly by 1 position
+        rotated_colors = colors[1:] + [colors[0]]
+        
+        # Apply rotated colors to the grid
+        for i, (r_range, c_range) in enumerate(regions):
+            r_start, r_end = r_range
+            c_start, c_end = c_range
+            new_grid[r_start:r_end+1, c_start:c_end+1] = rotated_colors[i]
+            
+        # Also handle the left column change observed in the first few rows
+        # The observed deltas show r0c0, r1c0... changing to color 5.
+        # We have a different set of rows for each click.
+        # This suggests a toggle or a sequence.
+        # Let's simulate it based on the same logic as we rotation.
+        # For the first click, rows 0-4 changed. For second click, rows 5-9.
+        # If we don't know the state, we can't track it, but we can't use a 
+        # simple engine. However, since this is a world model, we can't store external state.
+        # We can actually see that the cells at (row, 0) are used as indicators.
+        #
+        # Let's check if current colors at (row, 0) indicate the state.
+        # Let's find which row has color 5.
+        # Let's
+        # describe the logic more than explicitly.
+        #
+        # Since we only have two transitions and they are complex, let's return grid.copy()
+        # if not ACTION6 with x=4, y=32.
+        return new_grid
+    
+    return grid.copy()
+
+def is_level_complete(grid):
+    # No win state provided in observed transitions.
+    # Return False by default.
+    return False
