@@ -91,6 +91,41 @@ retired_experiments:
   completed_milestone: 2026.04.68
   reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
 retired_extras:
+- id: arc-induce-completion-budget-raise
+  reason: >-
+    RETIRED AS A LEVER, 2026-07-31, honouring the retire_if_same_verdict:true this
+    direction was re-run under. Raising the induce completion budget was already
+    recorded as a negative inline in arc_executable_world_model.induce()
+    (proto_l2_fix_finder, 2026-06-25: "a budget bump does NOT help; the model just
+    rambles more"). The rerun was legitimate -- REQ-ARC-FCP-5699-34 had measured 8192
+    fixing the refactor call on a 27B, and REQ-ARC-FCP-5699-35 kept 4096 only because
+    that requirement "was specific to a 3x larger, non-live candidate", a reason that
+    expired when the live generator became gemma-4-31B-it on 2026-07-28. It was re-run
+    on the current model, across BOTH induce call shapes AND the refactor call, at
+    4096/8192/16384 x 3 seeded attempts, and came back with the SAME verdict: 0 usable
+    engines at every budget, 0 of 24 generated engines ever changing the grid at all,
+    and mean code lines flat (20.3 on the combined call at all three budgets) while
+    predicted_n tripled. So the direction retires.
+    WHAT IS NOT RETIRED: the SAMPLER. The same sweep's control arm found repeat_penalty
+    1.1 turns the shipped arm's 0/3 into 3/3 non-degenerate engines at cell recall
+    0.9474, in under half the budget. That is a different lever and is OPEN.
+  experiment_ids:
+  - outer_loop_arc_induce_budget_phase1_20260731
+  retired_milestone: '2026.07.31'
+  retired_by_artifact: results/outer_loop_arc_induce_budget_phase1_20260731.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - raising CARNOT_ARC_INDUCE_MAX_TOKENS or _INDUCE_DEFAULT_MAX_TOKENS to fix induction quality
+  - raising the induce or refactor n_predict budget as a truncation remedy without a sampler change
+  - treating "[HIT n_predict OUTPUT LIMIT]" on an induce/refactor call as a budget shortage
+  reopen_requires_new_mechanism: >-
+    A budget raise reopens only alongside a change that stops the decode-level
+    repetition -- a repetition penalty, a different generator, or a prompt that does
+    not lead the model into a self-repeating impasse. Budget alone has now been
+    measured twice, on two generators, and is closed. Note also the arithmetic: on a
+    24 GiB card the SHIPPED default already does not fit (81920 cells -> 23888 MiB +
+    1500 guard vs 24123 free), so a raise has a real VRAM cost on top of no benefit.
 - id: GGUF-model-download-for-code-repair
   reason: "CLI approach also failed; 12 total attempts (Exps 857-890). Code repair\
     \ via GGUF models is retired \u2014 use transformers loader (Exp 881) instead.\n"

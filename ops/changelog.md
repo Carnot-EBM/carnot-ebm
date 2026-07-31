@@ -1,5 +1,143 @@
 # Carnot — Changelog
 
+## 2026-07-31 (outer-loop: "raise the induce completion budget" — it is not the lever; a repetition penalty is, and the scored path runs with every repetition control off)
+
+**Instruction:** PHASE 1 of the induction-reliability plan — raise the induce completion budget,
+report the `n_ctx`/`max_tokens` arithmetic and what fits on a 24 GiB card, and say whether ft09
+now emits a complete `engine()` with a return on the click path. Commit if it lands.
+
+### Outcome: NOT RAISED — 0 usable engines at 4096, 8192 and 16384
+
+Measured live on gemma-4-31B-it Q4_K_M (CUDA build proven from `/proc/<pid>/exe`, per-PID VRAM
+21416 MiB on each of two idle 3090s — exactly the envelope's prediction), against ft09's REAL
+induction prompt, captured from the agent itself rather than reconstructed. Three budgets x three
+seeded attempts x both induce call shapes. **Zero usable engines in every arm**, where usable
+means `generate()` would accept it AND `engine()` returns on every path — the second half matters
+because ft09's banked engine passes the first and returns `None` on every click.
+
+The 4096 arm reproduces the live failure exactly (combined rejected 3/3, engine-only accepted 3/3
+and non-returning 3/3), so the higher budgets are read against a control that works. Both
+acceptance gates pass, including "the budget axis is uncensored": every capped call reported
+`predicted_n` equal to its own budget, never the short-of-budget signature of a shared-pool
+truncation. The lever was fairly tested.
+
+**Why it cannot work: the generator is in a repetition loop, not short of room.** At matched seed
+and temperature, doubling the budget leaves the set of DISTINCT emitted lines unchanged (46 -> 46,
+118 -> 118 on two of three engine seeds; 131 -> 133 on the combined arm) while the emitted length
+doubles or triples. On the combined call, mean code lines are **20.3 at 4096, 8192 AND 16384**
+while mean `predicted_n` goes 3813 -> 6544 -> 12005. One 16384 completion is 5345 non-blank lines
+drawn from 24 distinct ones. This reproduces, on the current model and on both call shapes, the
+finding already inline in `induce()` from proto_l2_fix_finder (2026-06-25): "a budget bump does NOT
+help; the model just rambles more."
+
+The rerun was justified rather than assumed: REQ-ARC-FCP-5699-34 measured 8192 fixing the refactor
+call on a 27B, and REQ-ARC-FCP-5699-35 kept 4096 saying in as many words that the 8192 requirement
+"was specific to a 3x larger, non-live candidate, not this one" — the 9B. The live generator BECAME
+that class on 2026-07-28 and the default never moved. That expiry is what made this worth
+re-measuring.
+
+### The arithmetic, and what fits on a 24 GiB card
+
+ft09's real induce prompt is **4343 tokens** (measured through the generator's own tokenizer via
+`vocab_only=True` on the `.gguf` path). `_default_induce_n_ctx()` asks for
+`ceil4096(4 * (15767 + max_tokens))`, and against 24123 MiB free:
+
+| max_tokens | -> n_ctx | VRAM (L=0) | +1500 guard | fits? | CPU-FFN layers to fit |
+|---|---|---|---|---|---|
+| 4096 (shipped) | 81920 | 23888 | 25388 | no | 7 |
+| 8192 | 98304 | 24712 | 26212 | no | 11 |
+| 16384 | 131072 | 26360 | 27860 | no | 20 |
+
+**The shipped default already does not fit a 24 GiB card** — that is the state of the tree, not a
+consequence of raising anything, and it is why every local measurement pins
+`CARNOT_ARC_INDUCE_N_CTX=32768`. The largest pool a 24 GiB card holds at `L=0` is **53248**.
+At the pinned 32768 and K=1, ft09 could have spent up to **28425** completion tokens; at K=4 — the
+eval framework's one-thread-per-game shape — the same pool leaves it **3849**, below today's 4096.
+
+**The bigger finding, which the budget question was hiding: under the SHIPPED sampler, not one
+generated engine ever changes the grid.** Every completion was RUN against ft09's 25 real captured transitions. Across
+both induce call shapes, the refactor call and every budget, **zero** engines produce an output
+different from their input. The refactor lane's look best on paper -- accepted, parsing, returning
+on every path, and **19 of 25 heldout-EXACT** -- and they are the identity function. 19 of ft09's
+25 transitions are no-ops, so "nothing ever changes" gets every one right; cell recall is 0.000.
+That is the vacuous pass the change-aware gate exists to catch, reproduced from the GENERATOR
+side, and a live argument for the gate that is computed today but left `gate_enabled: false`. It
+reframes Phase 1: the engines are not incomplete, they are inert, and no budget fixes inert. It is
+also why the headline metric here is not "returns on every path" -- an identity engine satisfies
+that trivially, and one did.
+
+**A second finding with reach beyond this note: `CARNOT_ARC_GENERATOR_SEED` does not reach across
+server instances.** Same prompt, seed, temperature, budget, model file and flags on a second
+llama-server on the other 3090 gives non-identical completions (a=0 `0cbe655c…` vs `e4093870…`),
+while WITHIN one process the seed holds exactly. Plausible mechanism: `cache_prompt: true` reusing
+prompt KV differently under different request histories -- stated as a hypothesis, not confirmed.
+This is a live explanation for how ft09's round-2 refactor hit the cap 3/3 in the episode while
+the byte-identical prompt at the same budget completes naturally in replay, and it means any A/B
+whose arms are served by different server processes carries an uncontrolled term.
+
+### Also found
+
+**AND THE LEVER THAT DOES WORK, measured but deliberately NOT shipped: a repetition penalty.**
+The sampler control is the same prompt, seed, temperature and budget as the shipped arm, on one
+server and one card, one flag apart:
+
+| arm | hit the 4096 cap | accepted | returns on all paths | **changes the grid** | mean cell recall |
+|---|---|---|---|---|---|
+| `off` (SHIPPED) | 3/3 | 3/3 | 0/3 | **0/3** | 0.0000 |
+| `repeat_penalty 1.1` | 0/3 | 3/3 | 3/3 | **3/3** | 0.9474 |
+| `dry_multiplier 0.8` | 1/3 | 2/3 | 1/3 | **1/3** | 0.1053 |
+
+The two controls are NOT interchangeable, which is why both were run: `repeat_penalty 1.1` is
+3/3 and its one non-degenerate sibling under DRY reaches only 0.3158 cell recall. Any
+recommendation names `repeat_penalty`, not "a repetition penalty".
+
+The shipped configuration burns the entire budget and returns nothing. One repetition penalty
+stops naturally at 1133-1912 tokens with ft09's real mechanic in it -- a 6x6 block at `(y-2, x-2)`
+toggling between colours 8 and 9 -- on every attempt. It is the ONLY arm in the whole sweep that
+produces a non-degenerate engine.
+
+**The scorer was cross-validated against the shipped gate, to the cell.** A behavioural scorer
+written for this measurement is worth nothing if it disagrees with the gate the live agent runs.
+Scoring the `repeat_penalty 1.1` engine over the same 25 transitions gives 216 correct changed
+cells of 228 -> cell recall 0.9474; the live `onb` cell's recorded gate fields are
+`verify_correct_changed_cells: 216`, `verify_cell_recall: 0.9474`,
+`verify_change_fidelity: 0.947368`. Identical. Which also means the `repeat_penalty` arm reaches,
+on its FIRST naturally-stopped attempt in 1912 tokens, the same cell recall the live LLM-ON run
+only reached on one replicate after three refinement rounds.
+
+**Three caveats, all load-bearing.** (1) The cell recall is IN-SAMPLE: all 6 of ft09's 25
+grid-changing transitions appear in the induce prompt and the 16 held-out ones are every one a
+no-op, so there are ZERO held-out changed cells and this cannot speak to generalisation. (2) n=3,
+one game, one prompt. (3) It is NOT shipped -- changing how the scored agent samples is a
+behaviour change, not a measurement change. **Operator: this is the recommended next measurement
+-- run the same arm across the other five games before touching any default.**
+
+- **Every repetition control on the generator is OFF** (`repeat_penalty 1.0`, `dry_multiplier
+  0.0`, `frequency_penalty 0.0`, `presence_penalty 0.0`, read from the server's own `/props`), and
+  `generate()` sends no sampler fields beyond temperature and seed. A control arm was measured; it
+  is NOT shipped, because changing how the scored agent samples is a behaviour change, not a
+  measurement change. This is the open lever for the next session.
+- **A provenance correction.** ft09's banked engine was attributed to round 1's induce. Its two
+  halves tokenize to 4093 + 81 against a 4096 budget and it carries `_combine_world_model()`'s
+  injected prefix, so it is the SPLIT fallback — written by the post-refinement re-induce at
+  `arc_competition_agent.py:5889`, whose message is discarded (`ok, _ = ...`) and never reaches
+  `refinement_rounds`. The round record and the file on disk are two different calls.
+- **A drift defect, fixed but NOT landed.** `_INDUCE_DEFAULT_MAX_TOKENS` documents itself as
+  binding the budget at four sites; it had one reader and the other three were independent
+  hardcoded `4096` literals, so editing it in source grew the context pool and left the budget
+  alone. Fix, mutation-verified regression test and REQ-ARC-FCP-5699-40 are preserved at
+  `ops/pending-fixes/2026-07-31-induce-budget-single-source.patch`. Not committed:
+  `artifact-freshness-lint` marks 12 registered artifacts stale on any edit to the two agentic
+  modules, and discharging that needs 8 rebuilds — one a LIVE capture whose re-run would replace
+  published numbers with fresh nondeterministic ones — plus 4 acknowledgements. That price is the
+  operator's call. See `ops/known-issues.md` 2026-07-31.
+- **Pre-existing test failures, unchanged by this session:** 8044 passed / 4 failed / 7 skipped,
+  and all 4 reproduce with the tree's code identical to HEAD.
+
+**The funnel is unchanged.** The LLM tier fires 6/6 and reaches the policy 1/6. This measures one
+game's induce calls in isolation; only a re-run live cell could move that count, and none was run.
+Banked ARC levels remain 3/3 and the submission gate is NOT met.
+
 ## 2026-07-30 (outer-loop: "is the gate right or wrong about those five?" — right on four, right-with-a-wrong-label on the fifth; force-admit is NEUTRAL on all nine cells)
 
 **Instruction:** for each of the five world-model-trust-gate rejections in

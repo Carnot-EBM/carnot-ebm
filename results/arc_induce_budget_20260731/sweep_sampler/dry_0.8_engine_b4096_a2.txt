@@ -1,0 +1,141 @@
+import numpy as np
+
+def engine(grid, action, action_data):
+    if action != 6:
+        return grid.copy()
+    
+    # Action 6 is a click.
+    # The provided data is {'x': px, 'y': py}.
+    # Logical coords are the same as pixel coords here.
+    px = action_data.get('x', 0)
+    py = action_data.get('y', 0)
+    
+    # We need to find the blocks of colors that the click targets.
+    # A block is defined as a contiguous region of the same color.
+    # In this game, the blocks are 6x6 rectangles.
+    # The block's top-left corner is (py, px) adjusted to the block grid.
+    # The blocks are arranged in a 6x6 grid of 6x6 blocks, but with padding.
+    # Based on the observed transitions, the target block is the block that contains (py, px).
+    # Let's identify the block based on the coordinates.
+    # The blocks seem to be located at specific x-offsets: 4, 12, 20, 28, 36, 44, 52, 60 (roughly).
+    # The blocks are 6x6.
+    # The block start coordinates are observed:
+    # r36-41, c44-49 (Block 1)
+    # r52-57, c36-41 (Block 2)
+    # r52-57 {c52-57} (Block 3)
+    # r44-49, c36-41 {Block 4}
+    
+    # Let's identify which 6x6 block was clicked.
+    # The observed blocks are:
+    # (36, 44), (52, 36), (52, 52), (44, 36)
+    # observed_blocks = [
+        # (36, 44)
+        # (52, 36)
+        # (52, 52)
+        # (44, 36)
+    ]
+    
+    # Find the block containing (py, px)
+    # Find the block that starts at (r, c)
+    # [36, 44], [52, 36], [52, 20], [44, 36], etc.
+    # The blocks are spaced by 12 units (6 width + 6 padding).
+    # The blocks are actually 6x6 and located at 
+    # x = 4 + 12*k, y = 2 + 12*j (approx)
+    # the observed blocks are:
+    # y: 36, 44-45, 52
+    # x: 4, 12... 36, 44... 52
+    # 60
+    # 
+    # Let's target the block that is actually present.
+    # The click is at (px, py).
+    # Let's actually just search for the 6x6 region around (py, px) that is 
+    # 
+    # Find the 6x6 block that contains the click.
+    # Find a block of the same color (excluding background 5).
+    # Find a 6x6 area that is uniform color (excluding 5).
+    # 
+    # Let's look at the observed transitions:
+    # click (46, 38) -> block (36, 44). 46 is in [44, 49], 38 is in [36, 41].
+    # click (38, 54) -> block (52, 36). 38 is in [36-41], 54 is in [52-57].
+    # click (54, 54) -> block (44, 54)? No, (52, 52). 54 is in [ {52, 57} ], 54 is in [ 52-57 ].
+    # click (38, 46) -> block (44,36). 38 in [36-41] 46 in [44-49].
+    # click (14, 54) -> no change.
+    # click (14,  4) -> no change.
+    
+    # The blocks are indeed 6x6.
+    # The block boundaries are:
+    # col: 4, 16, 28, 40, 52, 64? No.
+    # Let's check the observed blocks:
+    # c44, c36, c52, c36.
+    # These are possible start columns: 4, 16... 36, 48? No.
+    # observed start columns: 36, 44 (Wait, 44 is not 36+12).
+    # Let's re-examine:
+    # r36, r52, r52, r44.
+    # These are 36, 44(+8?), 52.
+    # The gap is 8.
+    # Let's try: r = (py // 8) * 8, c = (px // 8) * 8.
+    # No, that doesn't fit.
+    # Let's use a simpler approach: find a 6x6 block of non-5 color that contains (py, px)
+    
+    new_grid = grid.copy()
+    
+    # Search for a 6x6 uniform block of color != 5 that contains (py, px)
+    # We search in a small window around the click.
+    for r in range(py - 6, py + 1):
+        for c in range(px - 6, px + 1):
+            if r < 0 or r + 6 > 64 or c < 0 or c + 6 > 64:
+                continue
+            
+            # Check if this 6x6 area is uniform color
+            block = new_grid[r:r+6, c:c+6]
+            if np.all(block == block[0, 0]) and block[0, 0] != 5:
+                # Found the block!
+                color = block[0, 0]
+                # The observed transitions change the block color to 8 or 9.
+                # The observed changes:
+                # (46,38) -> 8x6 (r36-41,c44-49)
+                # (38,54) -> 8x6
+                # (44,54) -> (Wait, (54,54)) -> 8x6
+                # (46,38)-> 9x6
+                # (54,54)-> 9x6
+                # (38,46)-> 8x6
+                # It seems the color toggles between 8 and 9? Or it's a sequence.
+                # Let's assume it toggles.
+                new_color = 8 if color == 9 else 9
+                new_grid[r:r+6, c:c+6] = new_color
+                
+                # Also, a cell in the bottom row (r63) is updated.
+                # (46, 38): r63c62:11x2 -> r63c56:11x2 -> ...
+                # The r63 cells are updated based on the block clicked.
+                # Let's map the block to a position in r63.
+                # The blocks are likely in a grid.
+                # Let's count how many blocks are in the grid.
+                # r63C62, C60, C58, C56, C54, C52...
+                # These are decreasing by 2 each time.
+                # Let's just try to simulate the r63 update.
+                # The r63 change is "11x2".
+                # 11 is the color.
+                # The column is 62, 60, 58, 56, 54, 52.
+                # These correspond to the clicks.
+                # Let's find the block index.
+                # If we can't find the exact mapping, we'll just ignore r63 for now
+                # as it might not be the win condition.
+                
+                # We'll try to map the block (r, c) to a column in r63.
+                # Let's see:
+                # (36, 44): 62 -> 56
+                # (52, 36): 60
+                # (52, 52): 58
+                # (44, 36): 52
+                # This looks like: col = 62 - 2 * (some_index)
+                # Let's ignore r63 and focus on the blocks.
+                return new_grid
+                
+    return new_grid
+
+def is_level_complete(grid):
+    # The win state is not provided, but usually it's based on 
+    # all blocks being a certain color.
+    # Let's assume all non-5 blocks are color 9.
+    # For now, return False.
+    return False

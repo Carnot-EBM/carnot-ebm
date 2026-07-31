@@ -1,0 +1,179 @@
+"""REQ-ARC-FCP-5699-40: the induce completion budget must have ONE source, not four literals.
+
+THE INCIDENT (2026-07-31, while measuring whether a bigger budget fixes ft09's induction).
+
+`_INDUCE_DEFAULT_MAX_TOKENS` carried this comment:
+
+    Mirrors LocalGGUFProposer.max_tokens and the CARNOT_ARC_INDUCE_MAX_TOKENS default read at
+    both construction sites in arc_competition_agent.py. Named here so the context-pool
+    derivation and the completion budget cannot drift apart
+
+and `_default_induce_n_ctx()`'s docstring claimed, of the pool size and the budget, that "both
+halves now come from the same arithmetic, so an operator raising the completion budget raises the
+pool with it."
+
+Neither was structurally true. The constant had exactly ONE reader in the entire tree -- the pool
+derivation -- while the other three sites were independent hardcoded `4096` literals:
+
+    arc_executable_world_model.LocalGGUFProposer.max_tokens = 4096
+    arc_competition_agent._load_sge_candidate_router()  -> env default "4096"
+    arc_competition_agent.E3AgentPolicy._proposer()     -> env default "4096"
+
+The claims held only via the ENV path (`CARNOT_ARC_INDUCE_MAX_TOKENS` really did move both
+halves). Editing the constant in source -- the obvious way to "raise the induce completion
+budget", which is exactly what the 2026-07-31 measurement was scoped to do -- moved the llama.cpp
+context pool and left the completion budget where it was. The result would have been a bigger,
+more expensive KV allocation sized for tokens nothing was ever going to ask for, with no error
+and no warning.
+
+This is the same drift class the file has already been bitten by once: REQ-ARC-FCP-5699-35
+records `_load_sge_candidate_router()`'s budget silently NOT moving when `_proposer()`'s
+graduated, and that one was caught only by a "configured IDENTICALLY" test written for a
+different reason.
+
+WHAT THESE TESTS PIN.
+
+  1. Every one of the four sites reads the constant. Enforced STRUCTURALLY (over the source), not
+     by comparing values -- comparing values passes trivially today, because every literal
+     happens to be 4096. The whole failure mode is "the numbers agree until someone changes one",
+     so a value comparison cannot see it.
+  2. Moving the constant moves the pool. The behavioural half.
+  3. The env var still wins at both construction sites, and still moves the pool. The fix must not
+     cost the operator override that was the only working lever before it.
+"""
+
+from __future__ import annotations
+
+import ast
+import re
+from pathlib import Path
+
+import pytest
+
+from carnot.agentic import arc_competition_agent as aca
+from carnot.agentic import arc_executable_world_model as e3
+
+AWM_SRC = Path(e3.__file__).read_text()
+ACA_SRC = Path(aca.__file__).read_text()
+
+# The exact shape that regressed: an env lookup for the induce budget whose fallback is a bare
+# numeric literal instead of the shared constant.
+_LITERAL_FALLBACK = re.compile(
+    r"""CARNOT_ARC_INDUCE_MAX_TOKENS["']\s*,\s*["']\d+["']""",
+)
+
+
+# SCENARIO-ARC-FCP-5699-40-NO-LITERAL-BUDGET-FALLBACK
+def test_no_construction_site_falls_back_to_a_bare_budget_literal():
+    """A `"4096"` string next to CARNOT_ARC_INDUCE_MAX_TOKENS is the regression itself.
+
+    Checked over the SOURCE of both live construction sites. A test that instead compared
+    `proposer.max_tokens` to `_INDUCE_DEFAULT_MAX_TOKENS` would pass today no matter what,
+    because the literal that was there WAS 4096 -- it would only start failing after someone
+    edited the constant, i.e. after the damage.
+    """
+    for name, src in (("arc_competition_agent.py", ACA_SRC),
+                      ("arc_executable_world_model.py", AWM_SRC)):
+        hits = _LITERAL_FALLBACK.findall(src)
+        assert not hits, (
+            f"{name} falls back to a hardcoded induce budget {hits!r}. Use "
+            f"str(_INDUCE_DEFAULT_MAX_TOKENS) -- that constant also sizes the llama-server "
+            f"context pool via _default_induce_n_ctx(), and a literal here lets the pool and "
+            f"the budget be edited apart (REQ-ARC-FCP-5699-40)."
+        )
+
+
+# SCENARIO-ARC-FCP-5699-40-ALL-FOUR-SITES-READ-THE-CONSTANT
+def test_all_four_budget_sites_reference_the_shared_constant():
+    """The constant must have more than one reader, or its docstring's promise is prose only."""
+    assert ACA_SRC.count("_INDUCE_DEFAULT_MAX_TOKENS") >= 4, (
+        "both arc_competition_agent construction sites must IMPORT and USE the constant "
+        "(2 imports + 2 uses); found fewer references than that"
+    )
+    # The dataclass field default, read off the AST rather than by string search so that a
+    # renamed-but-still-literal field cannot pass.
+    tree = ast.parse(AWM_SRC)
+    field_default = None
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef) and node.name == "LocalGGUFProposer":
+            for stmt in node.body:
+                if (
+                    isinstance(stmt, ast.AnnAssign)
+                    and isinstance(stmt.target, ast.Name)
+                    and stmt.target.id == "max_tokens"
+                ):
+                    field_default = stmt.value
+    assert field_default is not None, "LocalGGUFProposer.max_tokens field not found"
+    assert isinstance(field_default, ast.Name) and (
+        field_default.id == "_INDUCE_DEFAULT_MAX_TOKENS"
+    ), (
+        "LocalGGUFProposer.max_tokens must default to _INDUCE_DEFAULT_MAX_TOKENS, not a literal: "
+        "a bare proposer and the context pool it will be served from have to agree"
+    )
+    # And the pool derivation, which was always the constant's one honest reader. Located via
+    # the AST rather than by slicing the source: this function's docstring is ~4kB, so any
+    # fixed-size window after the `def` line lands inside the prose and never reaches the body.
+    pool_fn = next(
+        n for n in ast.walk(tree)
+        if isinstance(n, ast.FunctionDef) and n.name == "_default_induce_n_ctx"
+    )
+    assert any(
+        isinstance(n, ast.Name) and n.id == "_INDUCE_DEFAULT_MAX_TOKENS"
+        for n in ast.walk(pool_fn)
+    ), "_default_induce_n_ctx() must derive the pool from the shared budget constant"
+
+
+# SCENARIO-ARC-FCP-5699-40-CONSTANT-MOVES-THE-POOL
+@pytest.mark.parametrize(
+    "budget,expected_n_ctx",
+    [
+        # ceil4096(4 * (15767 + budget)) -- the K=4 kv_unified admission requirement.
+        (4096, 81920),
+        (8192, 98304),
+        (16384, 131072),
+    ],
+)
+def test_moving_the_constant_moves_the_context_pool(monkeypatch, budget, expected_n_ctx):
+    """The behavioural half: raise the budget, and the pool that has to hold it rises too."""
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_MAX_TOKENS", raising=False)
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_N_CTX", raising=False)
+    monkeypatch.setattr(e3, "_INDUCE_DEFAULT_MAX_TOKENS", budget)
+    assert e3._default_induce_n_ctx() == expected_n_ctx
+
+
+# SCENARIO-ARC-FCP-5699-40-ENV-OVERRIDE-STILL-WINS
+def test_env_override_still_moves_both_halves(monkeypatch):
+    """The operator lever that DID work before the fix must keep working after it.
+
+    Both halves means both: the pool derivation reads the env var, and a proposer built with no
+    explicit `max_tokens` picks it up too. If only the pool moved, an operator raising the budget
+    would pay for KV cells nobody spends -- which is the failure this REQ is about, reintroduced
+    through the env path instead of the source path.
+    """
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_N_CTX", raising=False)
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
+    assert e3._default_induce_n_ctx() == 98304
+    # The construction sites read the env at call time; assert the expression they share.
+    import os
+
+    assert int(
+        os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", str(e3._INDUCE_DEFAULT_MAX_TOKENS))
+    ) == 8192
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_MAX_TOKENS")
+    assert int(
+        os.environ.get("CARNOT_ARC_INDUCE_MAX_TOKENS", str(e3._INDUCE_DEFAULT_MAX_TOKENS))
+    ) == e3._INDUCE_DEFAULT_MAX_TOKENS
+
+
+# SCENARIO-ARC-FCP-5699-40-DEFAULT-VALUE-UNCHANGED
+def test_the_shipped_default_is_still_4096():
+    """This REQ is a plumbing fix, NOT a budget raise.
+
+    Measured 2026-07-31 on the current gemma-4-31B-it generator against ft09's real induction
+    prompt: doubling and quadrupling the budget does not produce a usable engine, because the
+    failure is decode-level repetition rather than a shortage of room. So the value stays put and
+    only the drift path closes. See
+    results/outer_loop_arc_induce_budget_phase1_20260731.json.
+    """
+    assert e3._INDUCE_DEFAULT_MAX_TOKENS == 4096
+    assert e3.LocalGGUFProposer.max_tokens == 4096
