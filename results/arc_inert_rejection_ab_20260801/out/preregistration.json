@@ -1,0 +1,83 @@
+{
+  "AA_CONTROL": "replicate 0's control arm is re-run at the identical seed on 6 games. If A/A is not byte-identical the residual nondeterminism is reported as a FLOOR on any effect claim. The 2026-08-01 object-perception A/A came back byte-identical on only 1 of 4 cells, so a failure here is expected.",
+  "COST_secondaries": [
+    "completion calls per cell",
+    "wall seconds per cell"
+  ],
+  "MECHANISTIC_WITNESS": "for every (game, replicate) pair, whether arm A's final engine was inert is recorded. The arms may only diverge where it was. A divergence with no inert trigger is the nondeterminism floor, not the treatment, and is counted separately.",
+  "MISSING_VS_ZERO": {
+    "missing": "server failure, HTTP error, harness exception, or a completion truncated by the token cap. The cell is EXCLUDED and counted -- never scored 0.",
+    "zero": "a complete response whose code is mechanically defective. That is a real failure and scores 0 on usable-engine yield."
+  },
+  "POWER_STATED_UP_FRONT": {
+    "CAN_THE_PRIMARY_REACH_0.05": "PROBABLY NOT. This design is well powered to detect a LARGE cost (a re-ask that usually returns junk) and underpowered for a small one. A null on the primary must therefore be reported as 'no large cost detected', NOT as 'no cost'. Said here, before any result, rather than as a post-hoc excuse.",
+    "HONEST_EXPECTATION": "The treatment can only fire on a cell whose attempt-0 engine is clean AND inert. The taxonomy's base rate is 12-15%, so over 20 games x 4 replicates roughly 10-12 cells are expected to fire, spread across perhaps 8-10 distinct games. On the PRIMARY a fired cell only creates a discordance if the re-ask returns DEFECTIVE code, which the taxonomy puts at roughly 1 in 5. So the expected number of primary-discordant games is about 2-3, and 6 are needed for p<0.05.",
+    "min_reachable_two_sided_p_if_all_20_games_discordant": 1.907349e-06,
+    "n_discordant_needed_for_p_below_0.05": 6,
+    "the_secondary_is_better_powered": "every fired cell that converts inert -> live is a discordance, so roughly 6-8 discordant games are plausible there"
+  },
+  "PRIMARY": {
+    "alpha": 0.05,
+    "clustering": "GAME. Replicates within a game are averaged into ONE per-game mean before pairing: 20 games x 4 replicates is 20 units, not 80.",
+    "direction_of_interest": "NON-INFERIORITY. Under the shipped definition an inert engine is CLEAN, so the treatment cannot gain here; it can only stay flat or lose. The question is what it costs.",
+    "metric": "usable-engine yield: the fraction of a game's replicates whose FINAL accepted engine has validate_engine_code(...) == [] under the SHIPPED definition (required=('engine',), the cell's own transitions, the proposer's stop_type and budget) -- i.e. exactly the arguments _engine_defects passes on the live path",
+    "test": "exact two-sided paired sign test over GAMES (ties dropped)",
+    "why_the_shipped_definition": "folding inertness into validate_engine_code would make the treatment and the outcome the same object, and arm B would win by construction"
+  },
+  "SECONDARIES_downstream_quality": [
+    "held-out change_fidelity (WorldModelVerifier) -- a yield win that produces only inert or wrong engines must be visible as such",
+    "probe_depth_reached -- the bounded 600-call state-graph probe that results/outer_loop_arc_metric_validity_20260801.json found predicts plannability (AUC 0.787) where change_fidelity does not (AUC 0.609, CI contains chance). Imported as the currently-best-known proxy, NOT as a validated selector: that artifact states it was SELECTED as a family maximum and needs a prospective test.",
+    "accuracy, cell_recall, change_accuracy"
+  ],
+  "SECONDARY_the_taxonomy_claim": {
+    "CAVEAT_stated_before_results": "arm B TARGETS this metric, so part of any gain is definitional. It is not fully definitional: the re-ask budget is 1, so a still-inert second answer is accepted anyway and counts against the treatment.",
+    "metric": "live-engine yield: usable AND engine_changes_anything_bounded is True",
+    "predicted": "+9.8pp live engines per candidate (taxonomy leave-one-out within game)"
+  },
+  "STOPPING_RULE": "every roster game x both arms x N replicates, or the wall budget. Analysis runs ONCE, after collection stops. No peeking-and-extending. Only (game, replicate) pairs where BOTH arms ran enter the analysis.",
+  "arms": {
+    "aa": "CARNOT_ARC_INDUCE_REJECT_INERT unset, re-run at the identical seed -- the nondeterminism floor",
+    "control": "CARNOT_ARC_INDUCE_REJECT_INERT unset (the shipped default)",
+    "treatment": "CARNOT_ARC_INDUCE_REJECT_INERT=1"
+  },
+  "experiment": "arc_inert_engine_rejection_ab_usable_yield",
+  "flag_remains_default_off": true,
+  "generator": {
+    "cuda_gpu": "0",
+    "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "one_server_both_arms": true,
+    "port": 41791,
+    "repo_substr": "gemma-4-31B-it-qat",
+    "sampler_seeded": true,
+    "seed_scheme": "CARNOT_ARC_GENERATOR_SEED = SEED_BASE + replicate, the SAME seed in both arms of a (game, replicate) pair"
+  },
+  "multiplicity": "One primary. The secondaries are exploratory; a p<0.05 on any of them reads against a Bonferroni threshold of 0.05/6 = 0.00833.",
+  "n_games": 20,
+  "n_replicates_per_cell": 4,
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+  "question": "Does rejecting a clean-but-INERT induced engine and re-asking cost usable-engine yield, as measured by the SHIPPED validate_engine_code?",
+  "roster": [
+    "ls20",
+    "s5i5",
+    "tu93",
+    "cn04",
+    "m0r0",
+    "sk48",
+    "ar25",
+    "tr87",
+    "g50t",
+    "re86",
+    "bp35",
+    "sb26",
+    "lf52",
+    "su15",
+    "lp85",
+    "cd82",
+    "wa30",
+    "sc25",
+    "tn36",
+    "ka59"
+  ],
+  "roster_provenance": "reused UNCHANGED from results/arc_object_perception_ab_change_fidelity_20260801, so it cannot have been chosen after seeing which games favour the treatment",
+  "written_before_any_llm_call": true
+}

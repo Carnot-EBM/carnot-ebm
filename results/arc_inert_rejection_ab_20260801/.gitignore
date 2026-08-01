@@ -1,0 +1,11 @@
+# The per-cell E3 store. `run_ab.py` points CARNOT_ARC_E3_DIR here so nothing can write into
+# results/arc_e3, which is EVIDENCE. It holds one directory per collected cell and is pure
+# scratch: every engine that matters is copied to out/engines/ with a stable name, and every
+# number derived from one is in out/cells/ and out/scored.json.
+e3_store/
+__pycache__/
+.ruff_cache/
+out/_job.json
+# The window pickles are binary and rebuildable from the roster; the split they encode is
+# recorded in meta.json:split_meta, which is what a reader needs.
+out/windows/
