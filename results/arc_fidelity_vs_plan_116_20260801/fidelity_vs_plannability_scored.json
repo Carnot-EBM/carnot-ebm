@@ -1,0 +1,64 @@
+{
+ "schema": "carnot.arc_fidelity_vs_plannability.v1",
+ "experiment": "arc_fidelity_vs_plan_116_20260801",
+ "question": "Does held-out change_fidelity ORDER induced engines by their planning value (plan_in_model finding a plan from the level root)?",
+ "run_date": "2026-08-01T00:00:00Z",
+ "duration_s": 370.2,
+ "random_seed": 0,
+ "random_seed_note": "Seeds the bootstrap resampling only. plan_in_model and the engines are deterministic; no generation happens in this experiment.",
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "inference_substrate_note": "No model is loaded and no GPU is touched. This executes 116 already-induced Python engines inside the shipped planner, each in a killable subprocess.",
+ "verifier_is_oracle": true,
+ "verifier_is_oracle_note": "Declared True and no moat claim is made: whether a plan exists is decided by EXECUTING the engine, so the check IS the executable oracle. The finding is about whether one measurement predicts another.",
+ "preconditions_checked": [
+  {
+   "resource": "committed_engines",
+   "available": true
+  },
+  {
+   "resource": "ab_rows_with_change_fidelity",
+   "available": true
+  },
+  {
+   "resource": "offline_window_rebuild",
+   "available": true
+  }
+ ],
+ "n_scored": 111,
+ "n_plannable": 17,
+ "n_unplannable": 94,
+ "plannable_by_game": {
+  "ls20": 2,
+  "cn04": 2,
+  "tr87": 2,
+  "g50t": 2,
+  "sc25": 3,
+  "ka59": 2,
+  "tu93": 2,
+  "re86": 1,
+  "bp35": 1
+ },
+ "n_games_contributing_plannable": 9,
+ "PRIMARY_auc_change_fidelity": 0.574468,
+ "PRIMARY_bootstrap_ci95": [
+  0.435232,
+  0.705882
+ ],
+ "PRIMARY_ci_spans_no_information": true,
+ "mean_change_fidelity_plannable": 0.196589,
+ "mean_change_fidelity_unplannable": 0.170537,
+ "competing_predictors_auc": {
+  "cell_recall": 0.6374,
+  "accuracy": 0.4947,
+  "spurious_changed_cells": 0.6658,
+  "n_changing": 0.6583,
+  "distinct_successors_at_root": 0.5939
+ },
+ "competing_predictors_caveat": "NOT offered as replacement metrics. `n_changing` is a property of the WINDOW rather than the engine, so it is a corpus effect. `spurious_changed_cells` ordering the 'wrong' way most plausibly says an engine that writes more cells reaches SOME goal more often. No CI is computed for these; they are exploratory and were not pre-registered.",
+ "not_driven_by_one_cluster": "plannable engines come from 9 distinct games, so this is not the tn36 bar-ticker cluster that made the n=2 join look negative.",
+ "what_this_does_NOT_say": "It does not say the object-perception effect is fake -- that effect on change_fidelity is real and was reproduced under a corrected (HUD-masked) instrument. It says the effect is UNCASHABLE at present: a real movement in a number whose downstream value is unestablished. It also does not establish that the relationship is ABSENT; an AUC CI of [0.435, 0.706] is wide, and a larger n could still resolve it either way.",
+ "consequence": "Representation changes (object perception, image/hybrid prompts, HUD masking) should not be adopted on the strength of a change_fidelity movement until some metric is shown to order engines by planning value. The weak signals that DO track plannability point at engines that ACT rather than engines that predict accurately, which favours attacking the generation failure classes (13 of 40 candidates inert, 9 unrunnable) over further representation work.",
+ "reproducibility_checksum": "34cf4e61e12a0601223c5c408d30cc1d7cb839751cbb5093ecc73db2fd0f58ee",
+ "reproducibility_checksum_covers": "the (engine key -> plan_found, change_fidelity) map only. Wall-times are excluded so an exact reproduction does not read as drift.",
+ "honest_verdict": "complete_change_fidelity_does_not_predict_plannability_at_n17_ci_spans_no_information"
+}
