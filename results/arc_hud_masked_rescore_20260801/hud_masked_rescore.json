@@ -6,7 +6,7 @@
  "git_head": "cde595c970af64a439d1c12e457c4f55a0f13abc",
  "requirement": "REQ-ARC-WMTE-6010 / 6015 / 6017",
  "milestone": "outer-loop 2026-08-01",
- "honest_verdict": "complete_masked_rescore_effect_survives_p_0_0075_but_the_p_gain_is_a_lost_negative_game_not_new_evidence_and_the_tn36_degeneracy_does_not_die_because_the_shipped_guard_refuses_that_mask_and_forcing_it_deletes_the_whole_corpus\n\nTHE HEADLINE, WHICH IS NOT THE ONE THE TASK EXPECTED. Masking does NOT fix the degeneracy, and the reason is not that the mask is wrong -- it is that on tn36's best-of-N window there is nothing else to measure. All 25 changed cells across all 25 changing transitions of that corpus lie inside row 1, one cell per transition. So the six perfect-1.0 bar-tickers are a perfect model of that corpus, the metric was indeed measuring the HUD, and masking the HUD leaves a corpus with zero dynamics. change_fidelity then reads 0.0 for ALL EIGHT tn36 candidates -- including the single PLANNABLE one, which falls from 0.235294 to 0.0 alongside the tickers. The degeneracy dies by the metric becoming undefined, not by the metric becoming discriminating. This is a CORPUS defect, not a masking switch.\n\nAND THE SHIPPED GUARD ALREADY REFUSES IT, CORRECTLY. Two independent shipped mechanisms both decline to apply that mask, neither of which was touched here: the capture artifact WITHHELD tn36 row 1 from the default mask at its stage-2 gate (so the default arm resolves `unresolved` and the six stay at 1.0), and when the withheld band is folded in anyway, REQ-ARC-WMTE-6015's swallow guard refuses it `refused_swallows_dynamics` / `no_changed_cells_outside_mask_cannot_distinguish` at changed_cell_overlap 1.0000, 25 changing transitions -> 0. Only a deliberate, labelled guard bypass produces the 0.0 figures above. The guard is doing exactly the job over-masking asymmetry demands of it.\n\nQ2 SURVIVES, AND ITS APPARENT IMPROVEMENT IS A DATA LOSS. Masked with the shipped default masks: mean per-game delta +0.07402 (unmasked +0.07208), sign test +15/-3/=2, p=0.0075378, bootstrap CI [+0.01336, +0.13277] -- same direction, essentially the same magnitude, CI still excludes 0. But p did NOT fall from 0.0192 to 0.0075 because the evidence got stronger. It fell because s5i5 -- one of the FOUR games that disagreed with the effect -- went from delta -0.030303 to EXACTLY 0.0 and was dropped as a tie, taking the discordant count from 19 to 18. Masking zeroed the single non-zero score s5i5 had (its r0 control cell, 0.090909 -> 0.0), so both arms are all-zero there and the game now contributes nothing at all. Losing a disagreeing game makes the test look better while the evidence base gets smaller. The mean delta, which does not drop ties, moved +0.0019. That is the number to read, and this p should not be quoted without this sentence.\n\nQ3 IS UNESTABLISHED AND MASKING DOES NOT IMPROVE IT. The plannability association is AUC 0.431034 unmasked and 0.431034 under every guard-respecting masked arm -- IDENTICAL, because the default mask reaches only tu93's 5 candidates on that corpus and neither plannable candidate is tu93. CI [0.207, 0.690] spans 0.5 at n_plannable = 2. Under the forced arm it is 0.396552. There is no evidence here that masking makes fidelity rank plannable engines higher, and n=2 could not establish it either way.\n\nONE PERFECT SCORE WAS ACTUALLY MASKED, AND IT SURVIVED. Exactly one of the 116 A/B engines scores a perfect unmasked change_fidelity -- tn36__r2__on -- and on the A/B window the tn36 row-1 mask IS applied. It stays at 1.0: 4 correct changed cells unmasked, 3 masked, i.e. one of its four cells was the bar and it modelled the other three correctly too. So a perfect change_fidelity is NOT by itself the degeneracy. It rests on ONE gradable transition and cannot carry a claim, but it points the opposite way to the best-of-N result and is reported for that reason. The same game yields opposite corpora: 25 of 25 changed cells inside row 1 in the best-of-N window, 12 of 2636 in the A/B window.\n\nMASKING IS REAL AND IT IS SMALL. Proof it activated: hud_mask_status `applied` with hud_mask_cells 64 on 36 of 116 A/B cells (6 of 20 games), and 24 of those 36 changed their change_fidelity. Proof it barely matters: over the masked units Spearman rho between masked and unmasked scores is 0.978079 (6 pairwise inversions in 630), mean absolute shift 0.010190. On the 14 unmasked games the arm is identical to unmasked BY CONSTRUCTION and is labelled so rather than presented as a second measurement.",
+ "honest_verdict": "complete_masked_rescore_effect_survives_p_0_0075_but_the_p_gain_is_a_lost_negative_game_not_new_evidence_and_the_tn36_degeneracy_does_not_die_because_the_shipped_guard_refuses_that_mask_and_forcing_it_deletes_the_whole_corpus\n\nTHE HEADLINE, WHICH IS NOT THE ONE THE TASK EXPECTED. Masking does NOT fix the degeneracy, and the reason is not that the mask is wrong -- it is that on tn36's best-of-N window there is nothing else to measure. All 25 changed cells across all 25 changing transitions of that corpus lie inside row 1, one cell per transition. So the six perfect-1.0 bar-tickers are a perfect model of that corpus, the metric was indeed measuring the HUD, and masking the HUD leaves a corpus with zero dynamics. change_fidelity then reads 0.0 for ALL EIGHT tn36 candidates -- including the single PLANNABLE one, which falls from 0.235294 to 0.0 alongside the tickers. The degeneracy dies by the metric becoming undefined, not by the metric becoming discriminating. This is a CORPUS defect, not a masking switch.\n\nAND THE SHIPPED GUARD ALREADY REFUSES IT, CORRECTLY. Two independent shipped mechanisms both decline to apply that mask, neither of which was touched here: the capture artifact WITHHELD tn36 row 1 from the default mask at its stage-2 gate (so the default arm resolves `unresolved` and the six stay at 1.0), and when the withheld band is folded in anyway, REQ-ARC-WMTE-6015's swallow guard refuses it `refused_swallows_dynamics` / `no_changed_cells_outside_mask_cannot_distinguish` at changed_cell_overlap 1.0000, 25 changing transitions -> 0. Only a deliberate, labelled guard bypass produces the 0.0 figures above. The guard is doing exactly the job over-masking asymmetry demands of it.\n\nQ2 SURVIVES, AND ITS APPARENT IMPROVEMENT IS A DATA LOSS. Masked with the shipped default masks: mean per-game delta +0.07402 (unmasked +0.07208), sign test +15/-3/=2, p=0.0075378, bootstrap CI [+0.01336, +0.13277] -- same direction, essentially the same magnitude, CI still excludes 0. But p did NOT fall from 0.0192 to 0.0075 because the evidence got stronger. It fell because s5i5 -- one of the FOUR games that disagreed with the effect -- went from delta -0.030303 to EXACTLY 0.0 and was dropped as a tie, taking the discordant count from 19 to 18. Masking zeroed the single non-zero score s5i5 had (its r0 control cell, 0.090909 -> 0.0), so both arms are all-zero there and the game now contributes nothing at all. Losing a disagreeing game makes the test look better while the evidence base gets smaller. The mean delta, which does not drop ties, moved +0.0019. That is the number to read, and this p should not be quoted without this sentence.\n\nQ3 IS UNESTABLISHED AND MASKING DOES NOT IMPROVE IT. The plannability association is AUC 0.431034 unmasked and 0.431034 under every guard-respecting masked arm -- IDENTICAL, because the default mask reaches only tu93's 5 candidates on that corpus and neither plannable candidate is tu93. CI [0.207, 0.690] spans 0.5 at n_plannable = 2. Under the forced arm it is 0.396552. There is no evidence here that masking makes fidelity rank plannable engines higher, and n=2 could not establish it either way.\n\nONE PERFECT SCORE WAS ACTUALLY MASKED, AND IT SURVIVED. Exactly one of the 116 A/B engines scores a perfect unmasked change_fidelity -- tn36__r2__on -- and on the A/B window the tn36 row-1 mask IS applied. It stays at 1.0: 4 correct changed cells unmasked, 3 masked, i.e. one of its four cells was the bar and it modelled the other three correctly too. So a perfect change_fidelity is NOT by itself the degeneracy. It rests on ONE gradable transition and cannot carry a claim, but it points the opposite way to the best-of-N result and is reported for that reason. The same game yields opposite corpora: 25 of 25 changed cells inside row 1 in the best-of-N window, 12 of 2636 in the A/B window.\n\nMASKING IS REAL AND IT IS SMALL. Proof it activated: hud_mask_status `applied` with hud_mask_cells 64 on 36 of 116 A/B cells (6 of 20 games), and 24 of those 36 changed their change_fidelity. Proof it barely matters: over the masked units Spearman rho between masked and unmasked scores is 0.978079 (6 pairwise inversions in 630), mean absolute shift 0.010190. On the 14 unmasked games the arm is identical to unmasked BY CONSTRUCTION and is labelled so rather than presented as a second measurement.\n\nADDENDUM 2026-08-01, AFTER ADVERSARIAL REVIEW -- THE p-VALUE SHOULD NOT BE QUOTED AT ALL. The verdict above already said the p gain 'is a data loss, not evidence' and named s5i5 as the dropped game. Two things it did not say, both verified from this run's own per-cell record: FIRST, the MECHANISM. s5i5's tie was manufactured by the mask deleting that engine's only three correct changed cells -- 3 correct removed, 0 spurious -- so the arm went 0.090909 to exactly 0.0. SECOND, the CONCENTRATION: that single game is 78.1% of the mask's entire aggregate benefit (+0.030303 of +0.038808); the other five masked games together move the effect +0.0085 and tu93 moves it negatively. And a third thing neither the verdict nor the review said: the destroyed negative was ITSELF at the A/A floor. The upstream A/B re-ran that same off arm at the same seed and got a DIFFERENT engine scoring 0.0 -- an A/A divergence of 0.090909, which is both the largest in the control and exactly the number at stake. So the p improvement is not merely a data loss; the data lost was noise of precisely that size. Use the MEAN (+0.07208 -> +0.07402, a +0.0019 shift, ties kept) and the bootstrap CI. The conclusion is unchanged. Separately: masking removed 27 correct cells against 491 spurious (5.2%), and in four cells removed only correct ones, three of which then scored HIGHER -- engines improving by being graded on less, small in magnitude but real; and 22 of 24 moving cells rose, with the rise tracking baseline fidelity (r=+0.45) rather than spurious cells removed (r=-0.05), so masking flatters whichever arm was ahead. See adversarial_review_2026_08_01 and review_verification.json.",
  "WHAT_WAS_ACTUALLY_RUN": {
   "n_ab_engines_rescored": 116,
   "n_ab_engines_committed": 116,
@@ -3622,7 +3622,11 @@
   "THE FORCED ARM DELIBERATELY BYPASSES A SHIPPED SAFETY GUARD. It exists only because the guard's refusal would otherwise leave Q1 answered with 'the guard declined to find out'. Its numbers are a counterfactual, are labelled guard_bypassed_on_this_arm: true on every record, and carry the true measured verdict under real_* keys. No decision should be taken from it.",
   "OVER-MASKING REMAINS THE ASYMMETRIC RISK AND THIS PASS DOES NOT RE-AUDIT IT. It consumes the capture artifact's masks as given, including its own stated residual risks -- notably that ls20 row 62 is the one shipped band no second detector corroborates. A band that is really playfield would make every engine score BETTER while modelling LESS, and the direction of the score shift observed here (mean signed +0.004851 on the A/B corpus, i.e. scores go UP under masking) is exactly the direction that would look like over-masking if the bands were wrong. The bands clearing their swallow checks on this corpus is the only counter-evidence offered.",
   "CLAUDE.md's ops-update steps (status.md, changelog.md, traceability.md) were NOT performed. This ran on a shared checkout alongside another outer-loop session and a concurrent regression, under an explicit instruction to touch only files this pass creates; ops/*.md are shared files that session also commits to, and editing them concurrently risks clobbering its work. The omission is deliberate and is recorded here rather than left silent, so the next session can fold this artifact into the ops record. Nothing outside results/arc_hud_masked_rescore_20260801/ was written.",
-  "NO SHIPPED DEFAULT WAS CHANGED, so nothing here tells you what the live agent does today. This measures whether compare-time masking SHOULD be turned on; turning it on is a separate operator decision."
+  "NO SHIPPED DEFAULT WAS CHANGED, so nothing here tells you what the live agent does today. This measures whether compare-time masking SHOULD be turned on; turning it on is a separate operator decision.",
+  "ADDED 2026-08-01 after adversarial review: the masked arm's p = 0.0075 must not be quoted. The improvement over the unmasked p = 0.0192 comes entirely from s5i5 becoming a tie and leaving the sign test. That tie was manufactured by the mask deleting the engine's only three correct changed cells (3 correct, 0 spurious removed), and the same engine is one the upstream A/A control does not reproduce -- an identical re-run at the same seed produced a different engine scoring 0.0 instead of 0.090909, the largest A/A divergence in the whole control. Use the mean (+0.0019 shift) instead; it keeps ties.",
+  "ADDED 2026-08-01 after adversarial review: 78.1% of the mask's aggregate benefit to the headline effect is that one game. The other five masked games together move it +0.0085, and tu93 moves it NEGATIVELY (-0.0029).",
+  "ADDED 2026-08-01 after adversarial review: masking deleted 27 correctly-predicted changed cells alongside 491 spurious ones (5.2% of removals were correct), across 10 of the 36 masked cells. In 4 cells it removed ONLY correct cells and no spurious ones, and 3 of those 4 scored HIGHER afterwards -- engines improving by being graded on less. Small in magnitude, real in kind, and previously reported for tn36 only.",
+  "ADDED 2026-08-01 after adversarial review: 22 of the 24 masked cells that moved at all moved UP (2 down, 12 flat; sign test p = 3.6e-05), and the rise correlates with baseline fidelity (r = +0.45) rather than with the number of spurious cells removed (r = -0.05). Masking therefore flatters whichever arm was already ahead, which is the ON arm. The artifact reported only the mean signed shift (+0.0049), which understates how systematic the direction is."
  ],
  "WHAT_THIS_DOES_NOT_CLAIM": "It does not claim compare-time masking should be enabled, nor that it should not. It does not re-run the A/B's treatment, re-induce any engine, or touch CARNOT_ARC_OBJECT_PERCEPTION or CARNOT_ARC_WM_HUD_MASK. It does not establish any relationship between change_fidelity and plannability. It does not claim the six perfect scores were 'fixed' -- it shows they were entirely bar-ticking and that masking the bar leaves no corpus behind.",
  "determinism_witness": {
@@ -3718,5 +3722,194 @@
   "results/arc_hud_mask_capture_20260801/ -- the masks and their two-corpus over-masking audit",
   "results/arc_induce_bestofn_20260731/ -- the corpus carrying plan_found",
   "REQ-ARC-WMTE-6010 (compare-time masking), 6015 (the swallow guard), 6017 (a verdict is about (mask, corpus))"
- ]
+ ],
+ "adversarial_review_2026_08_01": {
+  "what_prompted_this": "An adversarial review accepted this artifact's own disclosure -- that the masked arm's better p-value came from a game dropping out of the sign test as a tie, and 'should never be quoted without this sentence' -- and then made three sharper points the artifact did not carry: the MECHANISM of that tie, the CONCENTRATION of the mask's benefit in one game, and the fact that masking deleted cells engines were getting RIGHT. All three are recomputed from this run's own per-cell record by harness/review_verification.py (committed) and written to review_verification.json. One of the review's figures did not reproduce on its stated basis and is corrected.",
+  "F3_masking_deleted_correct_predictions_too": {
+   "verdict": "VERIFIED EXACTLY",
+   "correct_changed_cells_removed": 27,
+   "spurious_changed_cells_removed": 491,
+   "correct_share_of_removed": 0.052124,
+   "n_cells_that_lost_at_least_one_correct_cell": 10,
+   "n_masked_cells": 36,
+   "cells_where_ONLY_correct_was_removed": [
+    {
+     "cell": "s5i5__r0__off",
+     "change_fidelity_masked": 0.0,
+     "change_fidelity_unmasked": 0.090909,
+     "correct_cells_removed": 3,
+     "scored_higher_after_masking": false,
+     "spurious_cells_removed": 0
+    },
+    {
+     "cell": "tu93__r0__on",
+     "change_fidelity_masked": 0.944444,
+     "change_fidelity_unmasked": 0.931579,
+     "correct_cells_removed": 3,
+     "scored_higher_after_masking": true,
+     "spurious_cells_removed": 0
+    },
+    {
+     "cell": "tu93__r2__off",
+     "change_fidelity_masked": 0.944444,
+     "change_fidelity_unmasked": 0.931579,
+     "correct_cells_removed": 3,
+     "scored_higher_after_masking": true,
+     "spurious_cells_removed": 0
+    },
+    {
+     "cell": "tu93__r2__on",
+     "change_fidelity_masked": 0.888889,
+     "change_fidelity_unmasked": 0.879825,
+     "correct_cells_removed": 3,
+     "scored_higher_after_masking": true,
+     "spurious_cells_removed": 0
+    }
+   ],
+   "n_of_those_that_still_scored_higher": 3,
+   "reading": "yes, some engines improved because they stopped being graded on something they were getting right. The magnitude is small and the profile is mostly-noise (5.2% of removed cells were correct), which is why this is not playfield deletion -- but it is a real cost and the artifact reported per-cell correct-cell counts for tn36 only. The aggregate belongs next to them."
+  },
+  "F4_the_rise_is_near_unanimous_in_direction": {
+   "verdict": "VERIFIED; two magnitude figures reproduce only on a stated basis",
+   "n_rose": 22,
+   "n_fell": 2,
+   "n_flat": 12,
+   "sign_test_on_movers_p_two_sided": 3.5882e-05,
+   "mean_signed_delta": 0.004851,
+   "per_game_direction_up_down_flat": {
+    "ar25": [
+     5,
+     0,
+     0
+    ],
+    "bp35": [
+     2,
+     1,
+     3
+    ],
+    "ka59": [
+     4,
+     0,
+     2
+    ],
+    "ls20": [
+     5,
+     0,
+     1
+    ],
+    "s5i5": [
+     0,
+     1,
+     5
+    ],
+    "tu93": [
+     6,
+     0,
+     1
+    ]
+   },
+   "riser_magnitude_spread": 88.3,
+   "riser_magnitude_cv_population": 1.0308,
+   "riser_magnitude_cv_sample": 1.0551,
+   "r_delta_vs_spurious_cells_removed": -0.0513,
+   "r_delta_vs_baseline_fidelity": 0.4518,
+   "signal_removal_or_noise_removal": "UNIFORM IN DIRECTION, NOT IN MAGNITUDE, AND NOT EXPLAINED BY NOISE REMOVAL. If the rise were simply the removal of spurious writes, cells that lost more spurious cells would rise more -- r = -0.05, i.e. no relationship at all. What the rise DOES track is how well the engine was already doing (r = +0.45), so masking systematically flatters whichever engine was ahead. That is a mild, direction-consistent bias toward the leading arm, not a discovery. It is why the direction count must be reported next to the mean: the mean is small (+0.0049) and reads as noise, while the direction is near-unanimous and does not."
+  },
+  "F5_the_benefit_is_concentrated_in_one_game": {
+   "verdict": "VERIFIED EXACTLY on concentration and mechanism",
+   "sum_of_per_game_delta_changes": 0.038808,
+   "mean_shift_over_20_games": 0.00194,
+   "per_game_contribution": {
+    "ar25": {
+     "delta_change": 0.005442,
+     "share_of_aggregate": 0.1402
+    },
+    "bp35": {
+     "delta_change": 0.002997,
+     "share_of_aggregate": 0.0772
+    },
+    "ka59": {
+     "delta_change": 0.002692,
+     "share_of_aggregate": 0.0694
+    },
+    "ls20": {
+     "delta_change": 0.000284,
+     "share_of_aggregate": 0.0073
+    },
+    "s5i5": {
+     "delta_change": 0.030303,
+     "share_of_aggregate": 0.7808
+    },
+    "tu93": {
+     "delta_change": -0.00291,
+     "share_of_aggregate": -0.075
+    }
+   },
+   "s5i5_share_of_aggregate": 0.7808,
+   "the_other_five_masked_games_together": 0.008505,
+   "tu93_contributes_negatively": -0.00291,
+   "mechanism": "s5i5's off-arm engine had exactly 3 correct changed cells in the ENTIRE game, all of them inside row 63. Masking removed 3 correct and 0 spurious cells, the arm went 0.030303 -> 0.0, and the game's delta went -0.030303 -> exactly 0.0. That converted one of only four negatives into a TIE, which the sign test then drops (discordant 19 -> 18) and which is where most of the p improvement comes from. The tie was manufactured by deleting an engine's entire correct-prediction set, not by a neutral rounding.",
+   "differential_arm_boost": {
+    "basis": "flat mean over the 36 MASKED cells, split by the upstream A/B's own arm tags: 15 `on`, 18 `off`, 3 `offAA`. `offAA` is the A/A control (the off arm re-run at the same seed) and is NOT an independent off observation, so it is reported on its own line rather than folded in. The arms are unbalanced in this subset, so this is a descriptive split, not a paired comparison.",
+    "on": 0.008223,
+    "off_strict": 0.000385,
+    "offAA_control": 0.014786,
+    "off_plus_offAA_the_reviews_basis": 0.002442,
+    "ratio_strict": 21.37,
+    "ratio_reviews_basis": 3.37,
+    "reading": "masking helps the object-perception (ON) arm more than the control arm on every basis: 3.4x if the A/A control cells are folded into `off` (the review's basis), 21x if they are not. The absolute bias is small and the mean-based conclusion is unaffected -- the mean delta moved only +0.0019 -- but every secondary bias in this re-score points in the direction of the hypothesis, and a reader is entitled to know that before reading the improved p-value as corroboration."
+   }
+  },
+  "AND_THE_DESTROYED_NEGATIVE_WAS_ITSELF_AT_THE_A_A_FLOOR": {
+   "found_while_verifying_the_review_not_by_it": true,
+   "why": "the 3 correct cells masking deleted were not a stable property of the off arm. The upstream A/B ran an A/A control -- the SAME off arm, SAME seed, re-run -- and on s5i5 it produced a DIFFERENT engine (base sha e904e32d..., repeat sha d4da9cc7...) scoring 0.0 instead of 0.090909. So the negative the mask converted into a tie was, on the pipeline's own control, indistinguishable from run-to-run nondeterminism. The review's objection stands -- the tie WAS manufactured by deleting correct cells -- and this is why it does not rescue the p-value either: the destroyed quantity was noise of exactly that magnitude.",
+   "aa_pairs": [
+    {
+     "abs_delta": 0.0,
+     "base_change_fidelity": 0.034813,
+     "game": "ls20",
+     "mask_applied_on_headline_arm": "applied",
+     "repeat_change_fidelity": 0.034813
+    },
+    {
+     "abs_delta": 0.090909,
+     "base_change_fidelity": 0.090909,
+     "game": "s5i5",
+     "mask_applied_on_headline_arm": "applied",
+     "repeat_change_fidelity": 0.0
+    },
+    {
+     "abs_delta": 0.0,
+     "base_change_fidelity": 0.513158,
+     "game": "tu93",
+     "mask_applied_on_headline_arm": "applied",
+     "repeat_change_fidelity": 0.513158
+    },
+    {
+     "abs_delta": 0.028133,
+     "base_change_fidelity": 0.07971,
+     "game": "cn04",
+     "mask_applied_on_headline_arm": "unresolved",
+     "repeat_change_fidelity": 0.107843
+    }
+   ],
+   "aa_max_abs_delta": 0.090909,
+   "s5i5_unmasked_off_score": 0.090909,
+   "these_are_the_same_number": true,
+   "upstream_record_that_should_have_been_carried_forward": "results/arc_object_perception_ab_change_fidelity_20260801/analysis.json AA_control + AA_FLOOR_vs_EFFECT, which already reported aa_abs_delta_values [0.0, 0.090909, 0.0, 0.028133] and only 1 of 4 engines byte-identical. This re-score did not carry that forward next to its own p-value; it should have.",
+   "conclusion": "the masked arm's p = 0.0075 must not be quoted. The mean shift (+0.0019) is the honest summary of what masking did to the effect, and the mean-based conclusion is unchanged."
+  },
+  "THE_OPERATIVE_INSTRUCTION": "Do not quote the masked arm's p = 0.0075 at all. It differs from the unmasked p = 0.0192 because one game left the sign test as a tie; that tie was created by deleting an engine's only three correct cells; and that engine is one the pipeline's own A/A control does not reproduce, diverging by exactly the 0.090909 at stake. The honest summary of what masking did to the object-perception effect is the MEAN, which keeps ties: +0.07208 unmasked -> +0.07402 masked, a shift of +0.0019. The conclusion -- the effect survives the corrected instrument -- is unchanged, and rests on the mean and the bootstrap CI, not on the p.",
+  "what_did_NOT_change": "No score was recomputed and no arm was re-run. Every figure in this section is arithmetic over rescore_masked_raw.json, which is unchanged. The reproduction gate against the published primary, the determinism witness, and every Q1/Q2/Q3 number stand as originally reported.",
+  "evidence_files": {
+   "harness/review_verification.py": "the recomputation, re-runnable, pure arithmetic",
+   "review_verification.json": "its output, including the two basis discrepancies"
+  }
+ },
+ "upstream_module_drift_note_2026_08_01": {
+  "what": "python/carnot/agentic/arc_executable_world_model.py changed after this run, in a concurrent session's commit b6787cb603. This artifact's provenance still pins the sha256 the run actually used (94fd91a4...), which is correct and is deliberately NOT updated -- provenance records what produced the numbers, not what is on disk today.",
+  "does_it_move_any_number_here": "No.",
+  "why_not": "the change adds `_reject_inert_engines()` and one opt-in branch inside `LocalGGUFProposer`'s induce path, gated on CARNOT_ARC_INDUCE_REJECT_INERT which defaults OFF. It touches neither `change_fidelity`, nor `hud_mask_swallow_check`, nor `logical_hud_mask` -- the three functions every figure in this artifact depends on. With the flag unset the module is behaviourally identical on this path.",
+  "how_a_reader_should_treat_it": "as a provenance-drift note, not a staleness warning. Neither of these artifacts is registered in ops/analyzer_artifact_index.json, so scripts/artifact_freshness_lint.py does not cover them; that is a real coverage gap and this note is the manual substitute for it."
+ }
 }
