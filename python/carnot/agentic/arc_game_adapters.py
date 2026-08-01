@@ -31,6 +31,14 @@ class GameAdapter:
     state_key: Callable[[Any], Any]
     featurize: Optional[Callable[[Any], Sequence[float]]] = None
     hand_verifier: Optional[Callable[[Any], float]] = None
+    # How a solution LABEL maps to the (action_id, data) pair that a Transition records.
+    # Most games label actions with a plain integer, so the default `int(label)` in the
+    # consumers is right and this stays None. It exists for games whose labels carry a
+    # payload -- ka59 emits "C:<sprite_index>" for a click, which is action 6 plus {x,y}
+    # data resolved against the live env. Without this hook `build_window` did
+    # `int("C:1")` and raised, so ka59 had NO induction window at all and was silently
+    # absent from every A/B corpus built that way (found 2026-07-31).
+    label_to_action_data: Optional[Callable[[Any, str], tuple]] = None
     warmup_label: Optional[str] = None
     depth_caps: dict = field(default_factory=lambda: {})
     level_tails: dict[int, Sequence[str]] = field(default_factory=dict)
@@ -168,6 +176,21 @@ def hidden_state_registers(game_id: str, game: Any) -> dict[str, Any]:
             "step_counter_limit": _maybe_int(getattr(hud, "oro", None)),
         }
     return {}
+
+
+def _default_json_apply(env: Any, label: str, _frame: Any = None) -> Any:
+    """Apply a `_json_action_label` string: {"action": N, "data": {...}}.
+
+    Several adapters defined this inline (sp80's is the original). Hoisted so tn36, whose
+    labels are generated rather than listed, can share one implementation instead of a
+    fourth copy that could drift from the others.
+    """
+    from arcengine import GameAction
+
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    step = json.loads(label)
+    return env.step(_game_action(GameAction, int(step["action"])), data=step.get("data"))
 
 
 def _hidden_state_key(game_id: str, game: Any, frame: Any = None) -> tuple[Any, ...]:
@@ -338,9 +361,7 @@ FT09_L3_TAIL_LABELS: tuple[str, ...] = (
 
 FT09_L3_SOLUTION_LABELS: tuple[str, ...] = FT09_L2_SOLUTION_LABELS + FT09_L3_TAIL_LABELS
 
-VC33_L1_LABELS: tuple[str, ...] = tuple(
-    _json_action_label(6, {"x": 61, "y": 33}) for _ in range(3)
-)
+VC33_L1_LABELS: tuple[str, ...] = tuple(_json_action_label(6, {"x": 61, "y": 33}) for _ in range(3))
 
 VC33_L2_TAIL_LABELS: tuple[str, ...] = (
     _json_action_label(6, {"x": 1, "y": 25}),
@@ -709,8 +730,7 @@ BP35_L2_SOLUTION_LABELS: tuple[str, ...] = BP35_L1_LABELS + BP35_L2_TAIL_LABELS
 
 
 G50T_L1_LABELS: tuple[str, ...] = tuple(
-    _json_action_label(action)
-    for action in (4, 4, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4)
+    _json_action_label(action) for action in (4, 4, 4, 4, 5, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4)
 )
 
 G50T_L2_TAIL_LABELS: tuple[str, ...] = tuple(
@@ -1391,7 +1411,11 @@ def _sb26():
         return filled, len(targets)
 
     def state_key(game, frame=None):
-        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0)
+        level = (
+            kit.frame_level(frame)
+            if frame is not None
+            else int(getattr(game, "level_index", 0) or 0)
+        )
         selected = getattr(game, "lqcskynzr", None)
         filled, total = _target_fill_count(game)
         return (
@@ -1410,9 +1434,7 @@ def _sb26():
         filled, total = _target_fill_count(game)
         selected = getattr(game, "lqcskynzr", None)
         placed = sum(
-            1
-            for _name, _x, y, _color, visible in _clickable_rows(game)
-            if visible and int(y) < 53
+            1 for _name, _x, y, _color, visible in _clickable_rows(game) if visible and int(y) < 53
         )
         return [
             float(getattr(game, "level_index", 0) or 0),
@@ -1430,7 +1452,9 @@ def _sb26():
         apply=apply,
         state_key=state_key,
         featurize=featurize,
-        hand_verifier=lambda game, _frame=None: float(max(0, _target_fill_count(game)[1] - _target_fill_count(game)[0])),
+        hand_verifier=lambda game, _frame=None: float(
+            max(0, _target_fill_count(game)[1] - _target_fill_count(game)[0])
+        ),
         warmup_label=None,
         depth_caps={1: len(SB26_L1_LABELS), 2: len(SB26_L2_TAIL_LABELS), 3: 2},
         level_tails={1: SB26_L1_LABELS, 2: SB26_L2_TAIL_LABELS},
@@ -2208,6 +2232,7 @@ def _ka59():
         game="ka59",
         action_labels=action_labels,
         apply=exp4350._apply_ka59_label,
+        label_to_action_data=exp4350._label_to_action_data,
         state_key=state_key,
         featurize=None,
         hand_verifier=lambda _game, _frame=None: 0.0,
@@ -2350,7 +2375,9 @@ def _vc33():
         return float(max(1, width_residual))
 
     def state_key(game, frame=None):
-        level = kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0))
+        level = (
+            kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0))
+        )
         return (
             int(level),
             _frame_grid_state_key(frame),
@@ -2673,7 +2700,9 @@ def _r11l():
         )
 
     def _handles(game):
-        return tuple(sorted(_sprite_row(sprite) for sprite in getattr(game, "bbijaigbknc", []) or []))
+        return tuple(
+            sorted(_sprite_row(sprite) for sprite in getattr(game, "bbijaigbknc", []) or [])
+        )
 
     def _pieces(game):
         rows = []
@@ -2693,7 +2722,9 @@ def _r11l():
 
     def state_key(game, frame=None):
         return (
-            kit.frame_level(frame) if frame is not None else int(getattr(game, "level_index", 0) or 0),
+            kit.frame_level(frame)
+            if frame is not None
+            else int(getattr(game, "level_index", 0) or 0),
             int(getattr(game, "holbcmkehyf", -1) or -1),
             _handles(game),
             _pieces(game),
@@ -2861,6 +2892,121 @@ def _lf52():
     )
 
 
+def _sc25():
+    """sc25 -- cast-grid spell puzzle. L1 replays exp4468's banked plan.
+
+    The RE was already done and captured (registry: win_condition + action_model); this
+    adapter only exposes it through the GameAdapter interface so `solve_adaptered` can reach
+    L1 and `build_progress_window` can cut an induction window. Before this, sc25 had no
+    adapter at all, so `_live_verifier_for_adapter` hit `None.hand_verifier` and the game was
+    silently absent from every offline A/B corpus.
+    """
+    from carnot import experiment_4468_bank_sc25_provisional_levels as exp4468
+
+    l1_labels = tuple(exp4468.SC25_PLANS_BY_LEVEL[1])
+
+    def action_labels(env, frame=None, path=None):
+        from carnot.agentic import arc_solver_kit as kit
+
+        level = kit.frame_level(frame) if frame is not None else 0
+        i = len(path or ())
+        # Force the banked L1 plan while at level 0. Same shape as _ka59: the search becomes
+        # a straight line to the level-up, which is all a window builder needs. Past L1 we
+        # hand back the real action space rather than pretending the plan continues.
+        if level == 0 and i < len(l1_labels):
+            return [l1_labels[i]]
+        if level >= 1:
+            return [f"move{d}" for d in (1, 2, 3, 4)]
+        return []
+
+    def state_key(game, frame=None):
+        return _hidden_state_key("sc25", game, frame)
+
+    return GameAdapter(
+        game="sc25",
+        action_labels=action_labels,
+        apply=exp4468.apply_sc25_label,
+        label_to_action_data=lambda _env, label: exp4468.sc25_label_to_action_data(label),
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label="warmup",
+        branch_mode="replay",
+    )
+
+
+def _tn36():
+    """tn36 -- PROGRAM-EDITOR mechanic. Drives scripts/arc3_tn36_offline_solver.py's logic.
+
+    NOT a replayed label list, deliberately. The registry's own RE note says the slot layout
+    "RE-LAYS-OUT per level -> DISCOVER, don't hardcode", and the solver's `clk` re-issues a
+    click while an animation flag is set, so a fixed sequence would desynchronise. This
+    adapter is STATE-DRIVEN instead: on each call it compares the live program to the target
+    program and emits the next single bit-toggle still needed, then the run button. A click
+    that did not register leaves the state unchanged and is simply re-emitted, which is the
+    same convergence the solver's retry loop gets.
+    """
+    import importlib.util
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    from carnot.paths import repo_root
+
+    # The solver lives in scripts/, which is not an importable package.
+    _spec = importlib.util.spec_from_file_location(
+        "_arc3_tn36_offline_solver", _Path(repo_root()) / "scripts" / "arc3_tn36_offline_solver.py"
+    )
+    _tn = importlib.util.module_from_spec(_spec)
+    _sys.modules[_spec.name] = _tn
+    _spec.loader.exec_module(_tn)
+
+    def _target_program(env):
+        """The slot program that nets the current obj->target delta, or None if unreachable."""
+        obj, tgt = _tn._obj_tgt(env)
+        moves, why = _tn.compute_moves(obj, tgt)
+        if not moves:
+            return None
+        n = len(_tn._slot_tops(env))
+        orders = _tn._orderings(moves, n)
+        return list(orders[0]) if orders else None
+
+    def action_labels(env, frame=None, path=None):
+        from carnot.agentic import arc_solver_kit as kit
+
+        level = kit.frame_level(frame) if frame is not None else 0
+        if level >= 1:
+            return []  # L1 is all the window builder needs; do not invent a deeper action set
+        target = _target_program(env)
+        if target is None:
+            return []
+        cur, tops = _tn._program(env), _tn._slot_tops(env)
+        for i, top in enumerate(tops):
+            if i >= len(target):
+                break
+            diff = int(cur[i]) ^ int(target[i])
+            if diff:
+                b = (diff & -diff).bit_length() - 1  # lowest set bit still wrong
+                return [
+                    _json_action_label(6, {"x": int(top[0]), "y": int(top[1]) + _tn.BIT_DY * b})
+                ]
+        rx, ry = _tn._run_xy(env)
+        return [_json_action_label(6, {"x": int(rx), "y": int(ry)})]
+
+    def state_key(game, frame=None):
+        return _hidden_state_key("tn36", game, frame)
+
+    return GameAdapter(
+        game="tn36",
+        action_labels=action_labels,
+        apply=_default_json_apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        branch_mode="replay",
+    )
+
+
 _BUILDERS = {
     "ar25": _ar25,
     "bp35": _bp35,
@@ -2884,6 +3030,8 @@ _BUILDERS = {
     "cd82": _cd82,
     "m0r0": _m0r0,
     "vc33": _vc33,
+    "sc25": _sc25,
+    "tn36": _tn36,
 }
 
 

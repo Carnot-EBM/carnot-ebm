@@ -45,6 +45,9 @@ collect_explore_lemmas = exp4340.collect_explore_lemmas
 adaptive_world_model_tests = exp4340.adaptive_world_model_tests
 execute_model_grounded_plan = exp4340.execute_model_grounded_plan
 _apply_ka59_label = exp4340._apply_ka59_label
+# Re-exported so adapters can record a click label as (6, {x,y}) instead of
+# crashing on int("C:1"). See GameAdapter.label_to_action_data.
+_label_to_action_data = exp4340._label_to_action_data
 
 
 def preconditions(repo: Path) -> dict[str, Any]:
