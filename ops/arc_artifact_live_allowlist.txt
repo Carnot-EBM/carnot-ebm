@@ -1,2 +1,13 @@
 # Explicit ARC solve/scoring artifacts that legitimately declare live_llm_inference.
 # Keep one repository-relative or absolute artifact path per line.
+
+# 2026-08-01, ARC multimodal fidelity gate. Declares live_llm_inference because it
+# really did run one: a llama-server process held the 18.3 GB gemma-4-31B-it Q4_K_M
+# GGUF plus the 1.14 GiB mmproj-F16 vision projector resident on GPU 1 and served full
+# autoregressive generation for 512 probes over 4.2 hours. The liveness claim is not
+# taken on trust -- the artifact carries a four-layer server_proof whose decisive layer
+# is a DIFFERENTIAL test (four byte-identical text prompts paired with four different
+# solid-colour images returned four distinct correct colour names, which no text-only
+# fallback path can do). No ARC level was solved, attempted or claimed and no game was
+# played scored or online; solve_provenance is development_proxy.
+results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_20260801.json
