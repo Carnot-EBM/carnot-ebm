@@ -1,8 +1,9 @@
 """Per-game ADAPTERS for the standing ARC learning loop — the output of each
 game's (irreducible) per-game reverse-engineering, captured as a reusable plug-in
-for arc_solver_kit.OfflineSolver. A new game, once its win/action/state delta is
-RE'd, registers an adapter here and is then solvable + reproducible + learnable by
-the standing loop (scripts/arc_loop_solve.py) with no further bespoke code.
+for arc_solver_kit.OfflineSolver. A new game, once a level's win/action/state delta
+is RE'd, registers an adapter here and that level is then solvable + reproducible +
+learnable by the standing loop (scripts/arc_loop_solve.py) with no further bespoke
+code.
 
 An adapter provides the four game-specific callables the kit needs:
   action_labels(env) -> [str]   : env-discovered action vocabulary
@@ -10,6 +11,49 @@ An adapter provides the four game-specific callables the kit needs:
   state_key(game)               : the dedup key (every load-bearing piece of state)
   featurize(game) -> [float]    : features for the LEARNED verifier (optional)
 plus optional warmup_label and a hand verifier (goal-distance) for cold start.
+
+SCOPE: AN ADAPTER COVERS A SHALLOW LEVEL PREFIX, NOT THE WHOLE GAME (corrected
+2026-07-31). This paragraph exists because the sentence above used to read "once
+its win/action/state delta is RE'd" — singular, per GAME — which invites the
+reasonable conclusion that a registered adapter solves every level. It does not,
+and 22 of the 24 registered adapters do not.
+
+    The delta is PER LEVEL, not per game. ARC-AGI-3 levels are not difficulty
+    scaling; each level generally introduces NEW MECHANICS, so a level is closer
+    to a new game than to a harder instance of the same one. lf52 L2 adds
+    rail-carried peg-jump removal; sk48 L3 adds a second, dark-headed vertical
+    manipulator; wa30 L2 adds a helper-robot NPC, L3 a fence-socket relay, L4
+    three side-affiliated robots; tn36 re-lays-out its program slots per level
+    (L1: 5 slots, L2: 4, different x/y). An adapter's `action_labels` and
+    `state_key` encode ONE level's mechanics, so the next level is usually not
+    expressible in them at all. That is why the registry's failure vocabulary is
+    `no_grounded_lN_delta` / `<mechanic>_L2_delta_not_adaptered_this_run` rather
+    than "adapter broken" — see the `dead_ends` field on nearly every game in
+    ops/arc_solve_registry.yaml.
+
+    THIS SHALLOWNESS IS DELIBERATE, NOT DEBT. If these adapters covered all 183
+    registered levels, that would mean 183 hand-RE'd level-deltas — precisely the
+    `outer_loop_re` anti-pattern CLAUDE.md names, where the outer loop solves
+    games by hand and the LIVE agent learns nothing. The live agent is the
+    deliverable and it faces games that can never have an adapter. So an adapter
+    is added when generic search has demonstrably failed on a level worth banking
+    (e.g. `Exp4884 retired the prior g50t adapter-free L2 bounded-search dead end
+    by registering _g50t`), and deeper levels are left to whatever generic method
+    can earn them (sk48 L3-L4 were won by probe campaigns, not by extending the
+    adapter).
+
+    Depth is therefore a MEASURED property, not a promised one. The registry's
+    per-game `solver` prose ("L1-L2: GameAdapter _lf52 ... L3: <other mechanism>")
+    is the intent; `scripts/arc_adapter_depth_probe.py` measures what each adapter
+    actually reaches, and ops/arc_adapter_depth_baseline.json records it so a
+    silent regression is visible.
+
+    NOT ON THE SCORED PATH. `arc_competition_agent.E3AgentPolicy` makes ZERO calls
+    to get_adapter / solve_adaptered / adaptered_games — verified by import-closure
+    analysis over its 43 carnot modules. A hidden game can never have an adapter,
+    so adapter depth cannot affect a submission; it bounds offline development
+    work only (which levels can be searched, and which games can produce an
+    induction window via build_progress_window).
 """
 
 from __future__ import annotations
