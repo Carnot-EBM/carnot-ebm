@@ -3585,6 +3585,30 @@ def _induce_defect_reasks() -> int:
         return _INDUCE_DEFECT_REASKS
 
 
+def _reject_inert_engines() -> bool:
+    """Should a CLEAN-BUT-INERT induced engine be rejected and re-asked? DEFAULT OFF.
+
+    An INERT engine is one that predicts no action changes anything -- the identity function,
+    modulo whatever code shape it wears. It clears every mechanical check in
+    `arc_engine_static_validation` and it is, per the 2026-08-01 taxonomy, the LARGEST single
+    failure class of the live generator: 26 of 172 gemma-4-31B candidates (15.1%), more than
+    every code-validity class combined, and the only class the induce path took no action on
+    despite `engine_changes_anything` being shipped and already imported here.
+
+    WHY IT SHIPS OFF. This is a live-path behaviour change on the scored agent, and the only
+    evidence for it is observational (a frozen corpus, scored after the fact). Default OFF makes
+    it a true A/B: with the flag unset `_engine_defects` is behaviourally identical to the code
+    that preceded it, so the control arm of any measurement IS the shipped path rather than a
+    reimplementation of it. Flipping the default is an operator decision that belongs after the
+    measurement, not inside it.
+
+    A malformed value falls back to OFF rather than raising -- a typo'd env var must not change
+    how the scored agent behaves, and must certainly not take down a live episode.
+    """
+    raw = os.environ.get("CARNOT_ARC_INDUCE_REJECT_INERT")
+    return bool(raw) and raw.strip() == "1"
+
+
 def _generator_cuda_min_free_mb(
     ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
 ) -> int:
@@ -5406,6 +5430,18 @@ class LocalGGUFProposer:
                 required=("engine",),
                 budget=self.max_tokens,
             )
+            # OPT-IN INERTNESS REJECTION (2026-08-01, CARNOT_ARC_INDUCE_REJECT_INERT, DEFAULT
+            # OFF). Deliberately OUTSIDE `validate_engine_code` rather than folded into it, for
+            # two reasons. First, `validate_engine_code` is the definition an A/B measures
+            # usable-engine yield WITH; moving the flag inside it would make the treatment and
+            # the outcome the same object and the measurement circular. Second, the ordering is
+            # load-bearing: it runs only when the mechanical checks came back CLEAN, so an
+            # engine that hangs or raises is reported as hanging or raising -- its actual
+            # defect -- and is never relabelled "inert" by a probe that could not run it.
+            if _reject_inert_engines() and not defects and transitions:
+                inert = _sv.engine_inertness_defect(code, list(transitions))
+                if inert is not None:
+                    defects = [inert]
             return sorted({d.kind for d in defects})
         except Exception:
             return []
