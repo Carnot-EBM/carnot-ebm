@@ -1,0 +1,35 @@
+"""Held-out rows the VERIFIER will actually grade for change_fidelity.
+
+The probe counted "grid changed". WorldModelVerifier.score `continue`s on any row with
+level_after > level_before BEFORE incrementing n_changing, so a level-up row contributes
+nothing. A held-out tail whose only changing row IS the level-up therefore yields
+change_fidelity == 0.0 for EVERY engine -- a silent per-game floor of exactly the kind
+exp6018 hit globally.
+"""
+import json, os, sys
+from pathlib import Path
+ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+sys.path.insert(0, str(ROOT / "python"))
+os.environ["CARNOT_ARC_E3_DIR"] = str(Path(__file__).resolve().parent / "e3_store_probe")
+from carnot.agentic import arc_actions_to_progress as atp
+from carnot.agentic import arc_world_model_trust_energy as wmte
+
+ROSTER = ["ls20","s5i5","tu93","cn04","m0r0","sk48","ar25","tr87","g50t","re86",
+          "bp35","sb26","lf52","su15","r11l","lp85","cd82","sp80","ft09","vc33",
+          "wa30","sc25","tn36","ka59"]
+out=[]
+for g in ROSTER:
+    w = atp.build_progress_window(g)
+    win, _f, cell = w
+    shown, held = wmte._split_prefix_heldout(list(win))
+    n_lvl = sum(1 for t in held if t.level_after > t.level_before)
+    n_grad = sum(1 for t in held
+                 if t.level_after <= t.level_before and not (t.grid == t.next_grid).all())
+    out.append({"game": g, "n_heldout": len(held), "heldout_levelup_rows": n_lvl,
+                "heldout_gradable_changing": n_grad})
+    print(f"{g:6} held={len(held):2} levelup={n_lvl} GRADABLE_CHANGING={n_grad}")
+Path("gradable_check.json").write_text(json.dumps(out, indent=2))
+z=[r["game"] for r in out if r["heldout_gradable_changing"]==0]
+print("\nZERO-GRADABLE (change_fidelity structurally 0.0 for every engine):", z)
+print("gradable>=1:", sum(1 for r in out if r['heldout_gradable_changing']>=1))
+print("gradable>=3:", sum(1 for r in out if r['heldout_gradable_changing']>=3))

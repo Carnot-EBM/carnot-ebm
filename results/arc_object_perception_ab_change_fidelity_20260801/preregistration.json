@@ -1,0 +1,105 @@
+{
+  "AA_CONTROL": "A subset of control cells is re-run with the identical seed and arm. sampling_seed's docstring records a MEASURED 40% divergence under identical code when the seed is absent. If A/A is not byte-identical the residual nondeterminism is reported as a floor on any effect claim.",
+  "MISSING_VS_ZERO": {
+    "missing": "server failure, HTTP error, or a completion truncated by the token cap (stop_type=length). The cell is EXCLUDED and counted -- never scored 0.",
+    "zero": "the model returned a complete response whose code does not import or whose engine raises. That is a real failure of the treatment and scores 0.0."
+  },
+  "PRIMARY": {
+    "alpha": 0.05,
+    "clustering": "GAME, not attempt. Replicates within a game are averaged into ONE per-game mean before pairing -- 24 games x 3 replicates is 24 independent units, not 72. Treating replicates as trials inflated a p from 0.125 to 0.049 on 2026-07-31 and had to be corrected.",
+    "metric": "change_fidelity (WorldModelVerifier.change_fidelity) on the held-out tail",
+    "test": "exact two-sided paired sign test over GAMES (ties dropped)",
+    "why": "results/arc_metric_headroom_20260801/metric_headroom.json searched 13 metrics and recommended it as the only one with headroom that does not reward inertness; exp6018's primary (exact-match) floored at 0.0 in both arms"
+  },
+  "SECONDARIES_reported_not_primary": [
+    "accuracy (exact-full-grid) -- exp6018's floored primary, reported as the control",
+    "cell_recall",
+    "change_accuracy",
+    "correct_changed_cells",
+    "spurious_changed_cells",
+    "n_changes_correct"
+  ],
+  "STOPPING_RULE": "every roster game x both arms x N replicates, or the wall budget. Analysis is run ONCE, after collection stops. No peeking-and-extending.",
+  "arms": {
+    "control": "CARNOT_ARC_OBJECT_PERCEPTION unset (the shipped default)",
+    "treatment": "CARNOT_ARC_OBJECT_PERCEPTION=1"
+  },
+  "experiment": "arc_object_perception_heldout_ab_change_fidelity",
+  "flag_remains_default_off": true,
+  "generator": {
+    "cuda_gpu": "0",
+    "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "one_server_both_arms": true,
+    "port": 41777,
+    "repo_substr": "gemma-4-31B-it-qat",
+    "sampler_seeded": true,
+    "seed_scheme": "CARNOT_ARC_GENERATOR_SEED = SEED_BASE + replicate; the SAME seed in both arms of a (game, replicate) pair. sampling_seed() then emits seed*1000+attempt so the retry ladder stays distinct.",
+    "why_not_the_exp6018_model": "exp6018 ran Qwen3.5-9B-MTP, RETIRED by the 2026-07-28 operator directive. Measuring the flag on a retired generator would not inform a live-path decision."
+  },
+  "min_reachable_two_sided_p_if_all_games_discordant": 1.907349e-06,
+  "min_reachable_two_sided_p_sensitivity_roster": 0.000122070312,
+  "multiplicity": "One primary. The six secondaries are exploratory; a p<0.05 on any of them reads against a Bonferroni threshold of 0.00833, and means 'worth one confirmatory run', not 'established'.",
+  "n_discordant_needed_for_p_below_0.05": 6,
+  "n_games": 20,
+  "n_replicates_per_cell": 3,
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+  "question": "Does CARNOT_ARC_OBJECT_PERCEPTION=1 improve held-out world-model induction quality on the CURRENT live generator?",
+  "requirement": "REQ-ARC-WMTE-5830",
+  "roster": [
+    "ls20",
+    "s5i5",
+    "tu93",
+    "cn04",
+    "m0r0",
+    "sk48",
+    "ar25",
+    "tr87",
+    "g50t",
+    "re86",
+    "bp35",
+    "sb26",
+    "lf52",
+    "su15",
+    "lp85",
+    "cd82",
+    "wa30",
+    "sc25",
+    "tn36",
+    "ka59"
+  ],
+  "roster_amendment": {
+    "collection_state_when_caught": "2 cells written, no change_fidelity value read",
+    "effect_on_power": "min reachable two-sided p rises from 1.19e-07 to 1.907e-06; the dropped games could only ever have contributed guaranteed ties, which do not add power and would have made a null look better supported than it is",
+    "games_dropped": {
+      "ft09": "held-out tail is the level-up row only; WorldModelVerifier excludes it, so change_fidelity is structurally 0.0 for every engine in both arms",
+      "r11l": "held-out tail is the level-up row only; WorldModelVerifier excludes it, so change_fidelity is structurally 0.0 for every engine in both arms",
+      "sp80": "held-out tail is the level-up row only; WorldModelVerifier excludes it, so change_fidelity is structurally 0.0 for every engine in both arms",
+      "vc33": "held-out tail is the level-up row only; WorldModelVerifier excludes it, so change_fidelity is structurally 0.0 for every engine in both arms"
+    },
+    "made_before_any_outcome_was_inspected": true,
+    "n_games_after": 20,
+    "n_games_before": 24,
+    "original_rule": "heldout tail has >=1 CHANGING transition (grid-change only)",
+    "why_it_was_wrong": "WorldModelVerifier.score `continue`s on rows where level_after > level_before before incrementing n_changing. Every window straddles exactly one level-up and it always lands in the tail, so a game whose tail IS that row grades nothing and returns change_fidelity 0.0 for every engine in BOTH arms -- exp6018's instrument floor, re-created per game inside the experiment written to escape it."
+  },
+  "roster_rule": "builds a progress window AND its held-out tail has >=1 VERIFIER-GRADABLE changing transition (grid changes AND the row is not the level-up, which WorldModelVerifier.score excludes) AND leak-free (no held-out transition line in the prompt, none textually identical to a shown one).",
+  "roster_sensitivity_prespecified": [
+    "ls20",
+    "s5i5",
+    "tu93",
+    "cn04",
+    "m0r0",
+    "sk48",
+    "ar25",
+    "tr87",
+    "g50t",
+    "re86",
+    "bp35",
+    "wa30",
+    "sc25",
+    "ka59"
+  ],
+  "roster_sensitivity_rule": "heldout_gradable_changing >= 3, so a per-game mean is not carried by one or two transitions",
+  "treatment_witness": "For every game, `on` minus the OBJECT STRUCTURE block must be BYTE-EQUAL to `off`. Verified before the first LLM call.",
+  "written_before_any_llm_call": true
+}
