@@ -48,3 +48,40 @@ the runner and will be skipped, so this is ~2h wall-clock in parallel, not a re-
 The roster is now exp5760's 13 PLUS 7. This is a further departure from the frozen exp6021
 protocol, which is already recorded as running arms concurrently. Both deviations belong in
 the artifact.
+
+---
+
+## AMENDMENT (2026-07-31, before the extension completed) — the exclusion reason was mischaracterised
+
+Appended, not edited, per never-prune: the original text above is wrong in a way worth
+keeping visible.
+
+It said the 5 excluded games fail for "a property of the fixtures that is independent of
+either arm's score". The independence half is correct and is what protects the comparison.
+The "property of the fixtures" half is correct for only ONE of the five. Measured:
+
+| game | failure | property of the GAME? |
+|---|---|---|
+| dc22 | `build_progress_window` returns None | YES -- the documented "cannot be solved to L1 offline" |
+| ka59 | `ValueError: invalid literal for int(): 'C:1'` in `build_window` | NO -- unhandled action encoding (a coordinate click) |
+| sc25 | `AttributeError: 'NoneType' has no attribute 'hand_verifier'` | NO -- no registered GameAdapter |
+| tn36 | same | NO -- no registered GameAdapter |
+| wa30 | same | NO -- no registered GameAdapter |
+
+**What this does NOT change.** All five fail BEFORE any LLM is invoked, so the exclusion
+cannot favour either arm. The 20-game extension remains unbiased and its result stands on
+its own terms.
+
+**What this DOES change.** The stopping rule. The original says "20 is the ceiling of this
+corpus, so this is the last extension". That is false as written: 20 is the ceiling of the
+CURRENT HARNESS. Registering three `GameAdapter`s and teaching `build_window` the `'C:1'`
+action encoding would raise the ceiling to 24 games -- ~20% more games, and materially more
+discordant pairs if the informative rate holds.
+
+**Revised stopping rule.** 20 games remains the last extension *at current tooling*, and a
+null there is still reported as a null. But it may NOT be described as "the corpus is
+exhausted". The honest statement is: *4 of 25 public games are unreachable by this harness
+for reasons unrelated to the models under test, and fixing that is a prerequisite to any
+better-powered rerun.* Whether that fix is worth doing is a separate decision, on its own
+merits, and must not be made by reading the 20-game result first -- that would reintroduce
+exactly the outcome-dependent stopping this pre-registration exists to prevent.
