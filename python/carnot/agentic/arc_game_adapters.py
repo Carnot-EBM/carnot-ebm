@@ -3051,6 +3051,77 @@ def _tn36():
     )
 
 
+def _wa30():
+    """wa30 -- block-delivery puzzle with helper-robot NPCs. Replays the verified L1 prefix.
+
+    THE LAST OF THE 25 PUBLIC GAMES TO GET AN ADAPTER (2026-07-31). wa30 was solved by a
+    16-round OUTER-LOOP agent probe campaign (gpt-5.6-sol v1-v8 stalled at L1; claude-fable-5
+    v9-v16 cleared it to L9), never by the standing loop -- so no adapter was ever produced as
+    a by-product, and `_live_verifier_for_adapter` raised `AttributeError` on the None, which
+    read as "unsolvable" rather than "unregistered". That is why wa30 sat outside every
+    offline induction corpus.
+
+    L1 SOURCE, and why it is a replay rather than a computed solver: unlike tn36 -- whose
+    registry entry records a full mechanic (bit-toggle program editor) that a solver can
+    compute from live state -- wa30's captured RE is a per-level ACTION SEQUENCE plus prose
+    about NPC behaviour. There is no per-level parameterisation to compute from, so the
+    honest thing is to replay the banked prefix and say so, not to dress a fixed list up as
+    a general solver.
+
+    PROVENANCE: the 33 labels below are the first 33 of the 670-action route in
+    `results/outer_loop_fable5_wa30_probe_l9.json`, whose full sequence was gate-verified to
+    L9 on 2026-07-31 (`results/outer_loop_arc_wa30_reproduction_gate_20260731.json`). 33 is
+    the MINIMAL L1 prefix -- measured by replaying prefixes 20..45, not taken from the prose.
+    All actions are plain ACTION1-5 keyboard steps; the route contains zero ACTION6 clicks,
+    so there is no live out-of-bounds risk.
+
+    SCOPE: L1 only, like the majority of adapters here -- see this module's docstring on why
+    the delta is per LEVEL. wa30's own levels bear that out sharply: L2 adds a passive
+    helper-robot NPC, L3 a fence-socket relay, L4 three side-affiliated robots. None of that
+    is expressible in an L1 action vocabulary, and hand-adaptering each would be the
+    outer_loop_re treadmill rather than progress.
+    """
+    import json as _json
+    from pathlib import Path as _Path
+
+    from carnot.paths import repo_root
+
+    _probe = _Path(repo_root()) / "results" / "outer_loop_fable5_wa30_probe_l9.json"
+    _seq = _json.loads(_probe.read_text())["action_sequence"]
+    # Read from the artifact rather than pasting 33 literals: if the banked route is ever
+    # re-derived, the adapter follows it instead of silently diverging from the gated one.
+    L1_PREFIX = 33
+    l1_labels = tuple(_json_action_label(int(a["action"])) for a in _seq[:L1_PREFIX])
+
+    def action_labels(env, frame=None, path=None):
+        from carnot.agentic import arc_solver_kit as kit
+
+        level = kit.frame_level(frame) if frame is not None else 0
+        i = len(path or ())
+        if level == 0 and i < len(l1_labels):
+            return [l1_labels[i]]
+        if level >= 1:
+            # Past L1 the banked route continues, but its mechanics (helper robots, fence
+            # relay) are not modelled here. Hand back the bare keyboard vocabulary rather
+            # than implying a capability this adapter does not have.
+            return [_json_action_label(a) for a in (1, 2, 3, 4, 5)]
+        return []
+
+    def state_key(game, frame=None):
+        return _hidden_state_key("wa30", game, frame)
+
+    return GameAdapter(
+        game="wa30",
+        action_labels=action_labels,
+        apply=_default_json_apply,
+        state_key=state_key,
+        featurize=None,
+        hand_verifier=lambda _game, _frame=None: 0.0,
+        warmup_label=None,
+        branch_mode="replay",
+    )
+
+
 _BUILDERS = {
     "ar25": _ar25,
     "bp35": _bp35,
@@ -3076,6 +3147,7 @@ _BUILDERS = {
     "vc33": _vc33,
     "sc25": _sc25,
     "tn36": _tn36,
+    "wa30": _wa30,
 }
 
 
