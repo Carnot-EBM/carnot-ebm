@@ -2,7 +2,7 @@
   "acceptance_gate_both_arms_complete": true,
   "acceptance_gate_coverage_separation": true,
   "acceptance_gate_criterion_fixed_before_unblinding": true,
-  "aggregation_wall_s": 216.672,
+  "aggregation_wall_s": 218.822,
   "arm_meta": {
     "gemma31b": {
       "arm": "gemma31b",
@@ -199,9 +199,9 @@
           "qwen27b": false
         },
         "dirty_vs_head": true,
-        "mtime_utc": "2026-08-01T02:27:58Z",
+        "mtime_utc": "2026-08-01T03:20:08Z",
         "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256": "0973e0b5a199ff70de4af2ea30788c95a603869b5d9738e3f97d43e65b5d77a3"
+        "sha256": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
       },
       {
         "arm_import_is_provably_this_sha256": {
@@ -284,8 +284,8 @@
         "sha256": "80a46d6cee89d824a5ac24a9394a4e4c165a6dabab80a69472c6d1fc8384b833"
       }
     ],
-    "diff_stat_vs_head_for_declared_deps": ".../carnot/agentic/arc_executable_world_model.py   | 45 ++++++++++++++++++++--\n 1 file changed, 41 insertions(+), 4 deletions(-)",
-    "git_head": "54652608f6cd041b7d9932ee6e4da47f37fbff87",
+    "diff_stat_vs_head_for_declared_deps": ".../carnot/agentic/arc_executable_world_model.py   | 141 ++++++++++++++++++++-\n 1 file changed, 136 insertions(+), 5 deletions(-)",
+    "git_head": "204bf713b16a9aa8c4bc7f1061abefde67735785",
     "git_head_describes_tree_only_for_clean_files": true,
     "inertness_checked_at_runtime_not_only_by_reading": {
       "check": "Constructed WorldModelVerifier(list(window)) exactly as run_reason_cell_budget does, with hud_mask_swallow_clean wrapped in a counting spy.",
@@ -1256,7 +1256,7 @@
     "code": [
       {
         "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256": "0973e0b5a199ff70de4af2ea30788c95a603869b5d9738e3f97d43e65b5d77a3"
+        "sha256": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
       },
       {
         "path": "python/carnot/agentic/arc_actions_to_progress.py",
@@ -1980,5 +1980,20 @@
       "fields_dropped_by_the_rebuild": 0
     }
   },
-  "rebuild_note_20260731": "Rebuilt 2026-07-31 to clear artifact_freshness_lint after the live generator pin moved to QAT. EXACTLY ONE numeric field changed: aggregation_wall_s 213.187 -> 216.672, which is the aggregation run's own wall clock, not a measured result. Every headline number is unchanged and honest_verdict is byte-identical. The rebuild DROPPED the pre-existing `original_timings_superseded_by_rebuild` block, which records an EARLIER rebuild's audit trail; it has been restored by hand here. A rebuild that quietly deletes a prior correction record is the never-prune failure this project keeps finding executed by machine -- noted rather than silently accepted."
+  "rebuild_note_20260731": "Rebuilt 2026-07-31 to clear artifact_freshness_lint after the live generator pin moved to QAT. EXACTLY ONE numeric field changed: aggregation_wall_s 213.187 -> 216.672, which is the aggregation run's own wall clock, not a measured result. Every headline number is unchanged and honest_verdict is byte-identical. The rebuild DROPPED the pre-existing `original_timings_superseded_by_rebuild` block, which records an EARLIER rebuild's audit trail; it has been restored by hand here. A rebuild that quietly deletes a prior correction record is the never-prune failure this project keeps finding executed by machine -- noted rather than silently accepted.",
+  "rebuild_note_20260731_layer_split": {
+    "why_rebuilt": "artifact_freshness_lint flagged this STALE because python/carnot/agentic/arc_executable_world_model.py drifted when multi-GPU layer split was wired into the live generator (CARNOT_ARC_GENERATOR_CUDA_GPU gained a comma-list form). Rebuilt rather than acknowledged: the lint prefers a rebuild wherever one is possible, since it proves inertness by construction.",
+    "substantive_values_changed": 3,
+    "substantive_value_names": [
+      "code_provenance.dependencies_at_build_time[0].mtime_utc",
+      "code_provenance.diff_stat_vs_head_for_declared_deps",
+      "code_provenance.git_head"
+    ],
+    "values_changed_total": 6,
+    "keys_restored_after_wholesale_rewrite": [
+      "original_timings_superseded_by_rebuild",
+      "rebuild_note_20260731"
+    ],
+    "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
+  }
 }

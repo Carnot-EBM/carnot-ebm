@@ -3731,6 +3731,72 @@ def _free_port() -> int:
         return int(s.getsockname()[1])
 
 
+# Aggregate VRAM across all cards RISES when a model is layer-split, because each card carries
+# its own compute buffers and non-layer state. Measured 2026-07-31 over five arms on 2x RTX 3090
+# (results/outer_loop_arc_gpu_layer_split_sweep_20260731.json):
+#     n_ctx 32768: 20428 MiB single -> 21412 MiB summed across two cards (x1.048)
+#     n_ctx 81920: 22900 MiB single -> 24604 MiB summed across two cards (x1.074)
+# 1.10 rounds the worse of the two up. It is deliberately a headroom multiplier and NOT a
+# saving: a split does not reduce total memory, it redistributes it. The per-card requirement is
+# min_free * this / n_cards, so admitting a card is still gated on real measured arithmetic.
+_SPLIT_AGGREGATE_OVERHEAD = 1.10
+
+
+def _parse_generator_cuda_gpus(raw: str) -> list[int]:
+    """Parse CARNOT_ARC_GENERATOR_CUDA_GPU into physical CUDA indices.
+
+    Accepts a single index ("1", the historical form -- behaviour unchanged) or a comma list
+    ("0,1") requesting a layer-split across those cards. Malformed entries yield [] so the caller
+    falls through to its existing refusal path rather than binding an arbitrary card.
+    """
+    out: list[int] = []
+    for part in raw.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        try:
+            idx = int(part)
+        except ValueError:
+            return []
+        if idx < 0 or idx in out:  # negatives and duplicates are both operator typos
+            return []
+        out.append(idx)
+    return out
+
+
+def _split_args_for_env(launch_env: Optional[dict]) -> list[str]:
+    """Layer-split flags derived FROM the env that will actually launch the server.
+
+    WHY DERIVED AND NOT DECIDED SEPARATELY. The card list and the `-ts` ratio must agree, and
+    this module already carries a hard-won rule that a guard which validates a configuration the
+    server is not about to run is worse than no guard (see `_generator_cuda_min_free_mb`). If
+    this read the env var a second time it could size `-ts` for a split the headroom check had
+    already refused. Reading CUDA_VISIBLE_DEVICES makes the argv a function of the one thing
+    that determines what the process can see, so the two cannot drift apart.
+
+    `-sm layer` IS llama.cpp's default and is passed anyway, deliberately: it is the difference
+    between an argv that documents its own intent and one where a reader has to know the default
+    to understand what the run did. `last_launch_argv` is what tests and artifacts assert on.
+
+    `-ts` values are positional over the VISIBLE devices, not physical indices, so `1,1` is
+    correct for CUDA_VISIBLE_DEVICES="0,1" and equally for "1,2". It is passed because
+    llama.cpp's default splits by AVAILABLE VRAM -- on two cards holding different amounts of
+    someone else's work that yields a lopsided split, which is exactly the failure the sweep's
+    evenness gate was written to catch.
+
+    Returns [] for a single card (the flags are meaningless with one visible device) and [] when
+    `launch_env` is None. None is the Kaggle/scored path, which inherits the ambient environment
+    with ALL devices visible -- llama.cpp is already layer-splitting there by default, and this
+    function deliberately does not second-guess a placement that has never been measured on L4s.
+    """
+    if not launch_env:
+        return []
+    visible = [p for p in (launch_env.get("CUDA_VISIBLE_DEVICES") or "").split(",") if p.strip()]
+    if len(visible) < 2:
+        return []
+    return ["-sm", "layer", "-ts", ",".join("1" for _ in visible)]
+
+
 def _generator_server_and_env(
     ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
 ) -> tuple[Path, Optional[dict]]:
@@ -3773,17 +3839,68 @@ def _generator_server_and_env(
     hip = base / "build-hip" / "bin" / "llama-server"
     gpu = (os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU") or "").strip()
     if gpu and cuda.exists():
-        try:
-            idx = int(gpu)
-        except ValueError:
-            idx = -1
+        idxs = _parse_generator_cuda_gpus(gpu)
         # `ffn_cpu_layers` is threaded through from `_ensure_server()` so the guard budgets for the
         # offload the server will REALLY launch with -- see `_generator_cuda_min_free_mb()`.
         layers = _default_ffn_cpu_layers() if ffn_cpu_layers is None else int(ffn_cpu_layers)
         # ...and `mtp` for the same reason: the draft head is a real, n_ctx-scaled VRAM cost, so a
         # guard that does not know whether this launch loads one is sizing a different server.
         mtp_on = _mtp_default_on() if mtp is None else bool(mtp)
-        if idx >= 0 and _cuda_gpu_has_headroom(idx, _generator_cuda_min_free_mb(layers, mtp_on)):
+        need_total = _generator_cuda_min_free_mb(layers, mtp_on)
+        # MULTI-CARD (layer split). The per-card requirement is the total scaled by the measured
+        # aggregate overhead and divided by the card count -- NOT the total.
+        #
+        # WHAT THIS BUYS, measured 2026-07-31 through this exact code path at the shipped
+        # n_ctx 81920 (NOT extrapolated from the sweep harness):
+        #     single card, CARNOT_ARC_GENERATOR_CUDA_GPU=1  -> 20.47 tok/s decode, 288 prefill
+        #     layer split, CARNOT_ARC_GENERATOR_CUDA_GPU=0,1 -> 38.83 tok/s decode, 908 prefill
+        #     i.e. +89.7% decode and +215% prefill.
+        #
+        # WHY the single-card number is so much worse, and a correction to a wrong first
+        # explanation. `need_total` is 25388 MiB here while a 3090's TOTAL is 24576, so the
+        # single-card branch below cannot be satisfied outright. It does NOT then fail over to
+        # the iGPU -- the auto-fit re-reads free VRAM and spills FFN layers to system RAM until
+        # the model fits, landing on ffn_cpu_layers=7. That launch SUCCEEDS, which is precisely
+        # why the cost was invisible: nothing errors, the CUDA build is used, and the only
+        # symptom is roughly half the throughput.
+        #
+        # So the split's win is avoiding that forced offload (ffn_cpu 7 -> 0), not rescuing a
+        # launch that would otherwise not happen. Both configurations run; one runs degraded.
+        #
+        # EVERY card must clear, and a partial pass is a refusal, not a smaller split. Silently
+        # binding one card when two were asked for would put the operator back on the degraded
+        # auto-fit path while believing the split was in effect.
+        if len(idxs) > 1:
+            per_card = int(need_total * _SPLIT_AGGREGATE_OVERHEAD / len(idxs)) + 1
+            missing = [i for i in idxs if not _cuda_gpu_has_headroom(i, per_card)]
+            if not missing:
+                _note_generator_selection(
+                    f"using the CUDA build LAYER-SPLIT across gpus {idxs} "
+                    f"(per-card need {per_card} MiB = {need_total} x "
+                    f"{_SPLIT_AGGREGATE_OVERHEAD} / {len(idxs)}; ffn_cpu_layers={layers}, "
+                    f"n_ctx={_default_induce_n_ctx()}, mtp={mtp_on})."
+                )
+                return cuda, dict(os.environ, CUDA_VISIBLE_DEVICES=",".join(str(i) for i in idxs))
+            _note_generator_selection(
+                f"LAYER-SPLIT across {idxs} REFUSED: gpu(s) {missing} lack the {per_card} MiB "
+                "per-card requirement (each card's own reason is logged above). Degrading to a "
+                "SINGLE-CARD pin on the first requested card that has room."
+            )
+        # DEGRADE TO ONE CARD, NEVER STRAIGHT TO THE iGPU. Without this, a refused split left
+        # `idx = -1` and fell through to the HIP build at ~2 tok/s -- i.e. asking for "0,1" would
+        # have been MORE fragile than asking for "1", because any transient contention on either
+        # card cost the whole LLM (agent runs LLM-off) instead of dropping to the ~20 tok/s
+        # auto-fit path. A degraded single card is worse than a split and enormously better than
+        # no generator, so the ordering is split -> single -> iGPU.
+        #
+        # The narrower split (e.g. 3 cards requested, 2 available) is deliberately NOT attempted:
+        # fewer cards means a HIGHER per-card requirement, which is the arithmetic that was just
+        # refused, so it would be a guess dressed as a fallback.
+        # Single evaluation per card: `_cuda_gpu_has_headroom` RETRIES WITH SLEEPS, so a
+        # check-then-recheck would double that latency on every launch and, worse, could return
+        # a different answer the second time on a card whose VRAM is in flux.
+        idx = next((c for c in idxs if _cuda_gpu_has_headroom(c, need_total)), -1)
+        if idx >= 0:
             _note_generator_selection(
                 f"using the CUDA build pinned to gpu{idx} "
                 f"(ffn_cpu_layers={layers}, n_ctx={_default_induce_n_ctx()}, mtp={mtp_on})."
@@ -4320,6 +4437,11 @@ class LocalGGUFProposer:
     # the first launch. Pinned by tests/python/test_arc_ffn_cpu_offload.py.
     last_launch_argv: tuple = ()
     last_ffn_cpu_override: str = ""
+    # The `-sm layer -ts 1,1...` flags THIS launch used, or () for a single card / the scored
+    # path. Same rationale as `last_ffn_cpu_override`: without it, "did this run split?" is only
+    # answerable by re-deriving it from the env, which is precisely the second read that
+    # `_split_args_for_env` exists to avoid.
+    last_split_args: tuple = ()
     # WHAT `--model-draft` ACTUALLY RECEIVED, and -- when MTP was asked for and not delivered --
     # why. These exist because a misconfigured MTP is invisible: llama.cpp accepts a draft it
     # cannot use, warns, and serves normally with speculation silently disabled. "The server is
@@ -4944,6 +5066,15 @@ class LocalGGUFProposer:
         self.last_ffn_cpu_override = _ffn_cpu_override_regex(self.ffn_cpu_layers)
         if self.last_ffn_cpu_override:
             args += ["-ot", self.last_ffn_cpu_override]
+        # LAYER SPLIT. Derived from `launch_env` -- the env this very launch will use -- so the
+        # `-ts` ratio cannot be sized for a split the headroom guard already refused. [] on a
+        # single card and on the scored path (env=None, all devices visible, llama.cpp already
+        # layer-splits by default there). Recorded on the instance for the same reason as
+        # `last_ffn_cpu_override`: a flag that is accepted and ignored is worse than no flag, and
+        # an artifact must be able to answer "was this run split?" without re-deriving it.
+        self.last_split_args = tuple(_split_args_for_env(launch_env))
+        if self.last_split_args:
+            args += list(self.last_split_args)
         if self.extra_server_args:  # e.g. ("-fit", "off") -- see field docstring
             args += list(self.extra_server_args)
         # env=launch_env: None inherits the ambient env (legacy iGPU path); a dict pins CUDA_VISIBLE_DEVICES.
