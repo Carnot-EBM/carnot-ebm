@@ -834,5 +834,21 @@
       "principle": "an intervention recommendation whose size is not computed is a preference. The yield here is +0.75 plannable candidates per 100 generations with a multiplier CI that includes zero, and the artifact says so in the headline."
     }
   },
-  "acceptance_gate_passed": true
+  "acceptance_gate_passed": true,
+  "addendum_20260801_ceiling_superseded": {
+    "filed_at": "2026-08-01T17:00Z",
+    "filed_by": "outer-loop (Claude), reconciling two corpora",
+    "what_is_superseded": "ceiling_on_an_inertness_intervention.plannability_given_live = 0.0769 (2 of 26 live-and-clean engines). That was measured on the best-of-N corpus alone, at the OLD depth-40 planner default.",
+    "superseding_measurement": "results/outer_loop_arc_metric_validity_20260801.json corrigendum_20260801_post_review.CORRECTION_6_the_intervention_ceiling_is_higher_than_the_taxonomy_said",
+    "p_plannable_given_live": 0.2366,
+    "game_clustered_ci95": [
+      0.1333,
+      0.3409
+    ],
+    "measured_on": "93 live engines across both corpora at the shipped depth-80 default",
+    "expected_additional_plannable_engines_if_12_1_inert_convert": 2.86,
+    "as_share_of_a_124_candidate_corpus": 0.0231,
+    "not_a_contradiction": "the older figure is not withdrawn -- it is correct for the corpus and depth it was measured on. The newer one is the better estimate of what an inert-rejection intervention can buy on the shipped path.",
+    "the_ceiling_is_still_small": "roughly three additional plannable engines across a 124-candidate corpus, about 2 percent -- and 'plannable' means only that the goal gate believes a goal-true state is reachable inside the model. Nothing here has been executed against a real environment."
+  }
 }
