@@ -37,17 +37,32 @@ WHAT THIS MODULE IS NOT
 **It is not a gate, and it must never be used as one.** It runs strictly BEFORE the semantic
 trust gate (`WorldModelVerifier` / `change_gate_decision`) and has no power to admit anything.
 
-*STATUS OF THAT "runs strictly BEFORE" CLAIM (be precise about it -- 2026-07-31 adversarial
-review).* It is a DESIGN PROPERTY OF AN UNWIRED MODULE. Nothing in the tree calls
-`validate_engine_code`, so the ordering has never executed in production; it is asserted here and
-pinned by unit tests, but it is not verified end to end. The separation is correct AS WRITTEN --
-this module returns defects and a prompt, never an admit/reject decision, so it CANNOT bypass the
-gate no matter where it is called from. What is unproven is the sequencing, not the safety.
-**When this module is wired into the induce path, the wiring change MUST add an integration test
-asserting `validate_engine_code` is called BEFORE `WorldModelVerifier.score` on the same
-candidate** -- so the ordering is enforced by a test rather than documented by this paragraph.
-Until then the module is deliberately orphaned and allow-listed in
-`scripts/arc_orphan_solver_lint.py` with that reason.
+*STATUS OF THAT "runs strictly BEFORE" CLAIM -- WIRED 2026-07-31, ordering PROVEN 2026-08-01.*
+`LocalGGUFProposer._engine_defects` (`arc_executable_world_model.py`) calls
+`validate_engine_code` on the live code-only induce path, and the orphan-lint allow-list entry
+was removed in the same change. The separation remains correct as written -- this module returns
+defects and a prompt, never an admit/reject decision, so it CANNOT bypass the gate no matter
+where it is called from.
+
+The paragraph this replaces said the opposite ("Nothing in the tree calls `validate_engine_code`
+... deliberately orphaned and allow-listed"), and stayed false for a day after the wiring landed.
+It also set an obligation -- "the wiring change MUST add an integration test asserting
+`validate_engine_code` is called BEFORE `WorldModelVerifier.score` on the same candidate" -- that
+the wiring change did not discharge. Both are fixed here rather than quietly dropped:
+`tests/python/test_arc_dry_run_wallclock_bound_2026_08_01.py::
+test_validate_engine_code_runs_BEFORE_the_trust_gate_scores_the_candidate` drives the real
+proposer against a scripted server and asserts the call order, so the sequencing is now enforced
+by a test rather than described by this paragraph. Worth noting WHY the order matters: this
+module reports mechanical defects and the trust gate judges quality, so scoring first grades
+broken code as merely WRONG -- exactly what the 2026-07-30 audit found, four of five rejections
+being broken code reported as bad predictions.
+
+*EXECUTION IS BOUNDED (2026-08-01).* `dry_run_defects` runs generated code in a KILLABLE
+SUBPROCESS with a wall-clock bound, because a non-terminating induced engine wedged the
+generation loop for 13 minutes on 2026-07-31 and the shipped induce path reaches the same code.
+A signal alarm cannot substitute: the loop's own `except Exception` and `_engine_defects`'
+broad catch would absorb it and record a false CLEAN. See `dry_run_defects` for the full
+reasoning and `CARNOT_ARC_DRY_RUN_TIMEOUT_S` for the disable switch.
 
 Its only outputs are:
 
@@ -77,7 +92,14 @@ The cost of that choice is missed detections; the benefit is that a clean report
 from __future__ import annotations
 
 import ast
+import json
+import os
+import pickle
+import subprocess
+import sys
+import tempfile
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Optional, Sequence
 
 __all__ = [
@@ -85,6 +107,7 @@ __all__ = [
     "missing_return_defects",
     "truncation_defect",
     "dry_run_defects",
+    "dry_run_timeout_default",
     "engine_changes_anything",
     "validate_engine_code",
     "repair_prompt_block",
@@ -390,7 +413,91 @@ def _exec_namespace(code: str) -> tuple[Optional[dict], Optional[EngineDefect]]:
     return ns, None
 
 
+_DRY_RUN_DEFAULT_TIMEOUT_S = 30.0
+
+
+def dry_run_timeout_default() -> float:
+    """Wall-clock bound for EXECUTING generated code, resolved at call time.
+
+    `CARNOT_ARC_DRY_RUN_TIMEOUT_S` overrides it. A value <= 0 disables the bound and restores the
+    pre-2026-07-31 in-process behaviour exactly -- kept as a true A/B switch, and as the escape
+    hatch if subprocess isolation ever proves worse than the hazard it removes.
+
+    30s is chosen against what a REAL dry run costs, not by guesswork: it executes at most
+    `limit=25` transitions of pure Python over 64x64 grids, which is milliseconds. A legitimate
+    engine has three orders of magnitude of headroom here. The bound exists to catch
+    non-termination, not to race slow-but-finite code, so it is set far above any honest run
+    rather than tuned tight.
+    """
+
+    raw = os.environ.get("CARNOT_ARC_DRY_RUN_TIMEOUT_S")
+    if raw is None:
+        return _DRY_RUN_DEFAULT_TIMEOUT_S
+    try:
+        return float(str(raw).strip())
+    except (TypeError, ValueError):
+        return _DRY_RUN_DEFAULT_TIMEOUT_S
+
+
 def dry_run_defects(
+    code: str,
+    transitions: Sequence[Any],
+    *,
+    limit: int = 25,
+    func_name: str = _ENGINE_FN,
+    timeout_s: Optional[float] = None,
+) -> list[EngineDefect]:
+    """Bounded wrapper around the dry run. EXECUTES LLM-WRITTEN CODE, so it is bounded by a
+    process that can be killed from outside rather than by anything inside the interpreter.
+
+    THE INCIDENT (2026-07-31). The best-of-N generation loop wedged for 13 minutes in state R at
+    32% CPU, no open socket, both GPUs idle -- spinning inside this function's dry run of ft09
+    candidate 5, a generated engine that does not terminate. The completion had already arrived,
+    so no HTTP timeout applied, and the agent's own wall budget is checked BETWEEN actions rather
+    than inside one. The shipped induce path reaches here identically, via
+    `LocalGGUFProposer.generate` -> `_engine_defects` -> `validate_engine_code` -> here, so this
+    was never a harness-only hazard: a non-terminating induced engine hangs a live episode, and
+    on a scored submission that is the whole run.
+
+    WHY NOT A SIGNAL ALARM, which is the cheap and obvious fix. It would be SWALLOWED. The loop
+    below wraps every engine invocation in `except Exception` because the exception IS the
+    observation it is looking for, so a SIGALRM-raised exception inside the engine call is caught
+    and recorded as an ordinary `engine_raised` defect -- or worse, `_engine_defects` upstream
+    catches broadly and returns `[]`, which means ACCEPT. That turns a hang into a false CLEAN,
+    which is strictly worse than the hang: the hang is at least visible. A signal is also
+    main-thread-only and cannot interrupt a tight loop inside a C-level numpy call. A subprocess
+    killed from outside can be swallowed by nothing.
+
+    A TIMEOUT IS A DEFECT, NOT AN ERROR, and that distinction is load-bearing. Returning
+    `engine_nonterminating` in the ordinary defect list means the existing caller path rejects
+    the candidate through machinery that already exists. Raising instead would hit
+    `_engine_defects`'s broad `except Exception: return []` and be converted into acceptance --
+    the precise failure this function is being changed to prevent. The honest reading is that an
+    engine the pipeline cannot finish CHECKING is not an engine the pipeline could have used.
+
+    RESIDUAL RISK, stated rather than hidden. If the subprocess cannot be started at all, this
+    falls back to running in-process -- i.e. to the old hazard -- because
+    `arc_engine_static_validation` is an optional quality gate and a detector that can take down
+    the path it checks is worse than no detector (the same reasoning that justifies
+    `_engine_defects`'s swallow). That fallback is recorded in the returned defect's evidence
+    when it happens, so it cannot be silent.
+    """
+
+    if timeout_s is None:
+        timeout_s = dry_run_timeout_default()
+    if timeout_s is None or float(timeout_s) <= 0:
+        return _dry_run_defects_inprocess(code, transitions, limit=limit, func_name=func_name)
+
+    bounded = _dry_run_defects_subprocess(
+        code, transitions, limit=limit, func_name=func_name, timeout_s=float(timeout_s)
+    )
+    if bounded is not None:
+        return bounded
+    # Subprocess unavailable -- see RESIDUAL RISK above.
+    return _dry_run_defects_inprocess(code, transitions, limit=limit, func_name=func_name)
+
+
+def _dry_run_defects_inprocess(
     code: str,
     transitions: Sequence[Any],
     *,
@@ -398,6 +505,12 @@ def dry_run_defects(
     func_name: str = _ENGINE_FN,
 ) -> list[EngineDefect]:
     """Run `engine` against transitions the agent has ALREADY observed and report what breaks.
+
+    UNBOUNDED BY CONSTRUCTION -- it executes generated code in this interpreter. Callers should
+    reach it through `dry_run_defects`, which supplies the wall-clock bound. It stays a separate
+    function so the child process has something to call that does not recurse, and so the
+    disable path (`CARNOT_ARC_DRY_RUN_TIMEOUT_S=0`) is exactly the old code rather than an
+    approximation of it.
 
     THE OBSERVED FAILURE THIS CATCHES. lp85's round-3 engine raised
     `UnboundLocalError: cannot access local variable 'cell' where it is not associated with a
@@ -497,6 +610,187 @@ def dry_run_defects(
                 )
     out.extend(_goal_defects(ns, transitions, limit=limit))
     return out
+
+
+def _defect_to_dict(d: EngineDefect) -> dict:
+    return {
+        "kind": d.kind,
+        "detail": d.detail,
+        "line": d.line,
+        "retryable": bool(d.retryable),
+        "repairable": bool(d.repairable),
+        "evidence": d.evidence,
+    }
+
+
+def _defect_from_dict(raw: dict) -> EngineDefect:
+    return EngineDefect(
+        kind=str(raw.get("kind", "unknown")),
+        detail=str(raw.get("detail", "")),
+        line=raw.get("line"),
+        retryable=bool(raw.get("retryable")),
+        repairable=bool(raw.get("repairable")),
+        evidence=dict(raw.get("evidence") or {}),
+    )
+
+
+@dataclass(frozen=True)
+class _ShimTransition:
+    """What the child reconstructs a transition as: exactly the three attributes the dry run
+    reads, and nothing else.
+
+    WHY NOT PICKLE THE CALLER'S OBJECT (found by testing, not by review). This module's contract
+    is duck-typed and says so: "Any object with those three attributes works, so callers can pass
+    test doubles." Pickling the object itself silently breaks that -- the child unpickles by
+    importing the class, so a locally-defined transition double dies with
+    `AttributeError: Can't get attribute 'T'`, and because the child then exits non-zero the
+    parent reports `engine_crashed_validator`: a defect blamed on the ENGINE for something that
+    is purely an artifact of how the check ships work across a process boundary. The first
+    version of this did exactly that, and the first test written against it caught it.
+
+    Passing the three attributes instead preserves the duck-typed contract. It costs nothing in
+    fidelity: `grid` is a numpy array and pickles bit-exactly, `action` is an int, and `data` is
+    whatever the caller had. Attributes beyond these three are dropped, which is correct -- the
+    dry run reads no others, so carrying them would only widen what has to be picklable.
+    """
+
+    grid: Any
+    action: Any
+    data: Any
+
+
+def _dry_run_defects_subprocess(
+    code: str,
+    transitions: Sequence[Any],
+    *,
+    limit: int,
+    func_name: str,
+    timeout_s: float,
+) -> Optional[list[EngineDefect]]:
+    """Run the dry run in a killable child. Returns None when the child could not be USED at all.
+
+    The None-vs-list distinction is the whole contract, and it is deliberately narrow. A list --
+    including an empty one -- means the check RAN and this is its verdict. `None` means the
+    isolation machinery itself was unavailable (no interpreter, spawn refused, unreadable
+    result, unpicklable input), which is an infrastructure fact and NOT evidence about the
+    engine. Only `None` sends the caller to the in-process fallback; a timeout does not, because
+    a timeout IS a real observation about the code.
+    """
+
+    tmp = None
+    try:
+        staged = [
+            _ShimTransition(grid=t.grid, action=t.action, data=getattr(t, "data", None))
+            for t in list(transitions)[: int(limit)]
+        ]
+        with tempfile.NamedTemporaryFile(prefix="arc_dry_run_", suffix=".pkl", delete=False) as fh:
+            pickle.dump(
+                {
+                    "code": code,
+                    "transitions": staged,
+                    "limit": int(limit),
+                    "func_name": str(func_name),
+                },
+                fh,
+                protocol=pickle.HIGHEST_PROTOCOL,
+            )
+            tmp = Path(fh.name)
+    except Exception:  # noqa: BLE001 - cannot stage the job; not a fact about the engine
+        if tmp is not None:
+            tmp.unlink(missing_ok=True)
+        return None
+
+    env = dict(os.environ)
+    # The child imports this package; make sure it can, whatever the parent's install layout is.
+    pkg_root = str(Path(__file__).resolve().parents[2])
+    env["PYTHONPATH"] = pkg_root + os.pathsep + env.get("PYTHONPATH", "")
+    # The child executes untrusted code and needs no accelerator. Denying it one also stops a
+    # generated engine from grabbing a GPU the live agent is using.
+    env["CUDA_VISIBLE_DEVICES"] = ""
+    env["JAX_PLATFORMS"] = "cpu"
+
+    try:
+        proc = subprocess.run(  # noqa: S603
+            [
+                sys.executable,
+                "-m",
+                "carnot.agentic.arc_engine_static_validation",
+                "--dry-run-job",
+                str(tmp),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=float(timeout_s),
+            env=env,
+        )
+    except subprocess.TimeoutExpired:
+        # THE INCIDENT'S SIGNATURE. `subprocess.run` kills the child on timeout, so unlike a
+        # signal there is nothing left spinning and nothing that can catch this.
+        return [
+            EngineDefect(
+                kind="engine_nonterminating",
+                detail=(
+                    f"executing `{func_name}` over the observed transitions did not finish "
+                    f"within {float(timeout_s):g}s and the check was killed. An engine whose "
+                    f"dry run does not terminate cannot be validated, and cannot be planned "
+                    f"with either -- the planner would call it thousands of times."
+                ),
+                # NOT repairable: there is no exception text to feed back. The model produced
+                # code that runs forever, and the actionable response is to re-induce, not to
+                # describe a failure we never observed the end of.
+                evidence={
+                    "timeout_s": float(timeout_s),
+                    "transitions_attempted": min(int(limit), len(list(transitions))),
+                    "isolation": "subprocess",
+                },
+            )
+        ]
+    except Exception:  # noqa: BLE001 - spawn refused; infrastructure, not the engine
+        return None
+    finally:
+        tmp.unlink(missing_ok=True)
+
+    if proc.returncode != 0:
+        # A CRASHED child is a fact about the engine (a segfault or OOM in generated code is a
+        # real defect), but it is reported distinctly from a clean verdict so it can never be
+        # mistaken for one.
+        return [
+            EngineDefect(
+                kind="engine_crashed_validator",
+                detail=(
+                    f"the isolated dry run exited with code {proc.returncode} without "
+                    f"reporting. Generated code that takes the interpreter down -- a segfault "
+                    f"in a native call, or an allocation the OS refused -- is a defect, and is "
+                    f"reported here rather than as a passing check."
+                ),
+                evidence={
+                    "returncode": int(proc.returncode),
+                    "stderr_tail": (proc.stderr or "")[-400:],
+                    "isolation": "subprocess",
+                },
+            )
+        ]
+
+    try:
+        payload = json.loads((proc.stdout or "").strip().splitlines()[-1])
+        return [_defect_from_dict(d) for d in payload["defects"]]
+    except Exception:  # noqa: BLE001 - unreadable result; do not guess a verdict
+        return None
+
+
+def _dry_run_child_main(job_path: str) -> int:
+    """Child entry point. Prints one JSON line: the defect list, or nothing on a crash."""
+
+    with open(job_path, "rb") as fh:
+        job = pickle.load(fh)  # noqa: S301 - written by this process's parent, not untrusted input
+    defects = _dry_run_defects_inprocess(
+        job["code"],
+        job["transitions"],
+        limit=int(job["limit"]),
+        func_name=str(job["func_name"]),
+    )
+    print(json.dumps({"defects": [_defect_to_dict(d) for d in defects]}, default=str))
+    return 0
 
 
 def _goal_defects(
@@ -705,3 +999,14 @@ def repair_prompt_block(
             )
         lines += ["", "The code that failed:", "```python", body, "```"]
     return "\n".join(lines) + "\n"
+
+
+if __name__ == "__main__":  # pragma: no cover - exercised via subprocess, asserted by test
+    # Sole purpose: be the killable child for `_dry_run_defects_subprocess`. This module is
+    # otherwise a library; the entry point exists because executing LLM-written code needs a
+    # process boundary that can be terminated from outside, and a boundary is only a boundary if
+    # something lives on the far side of it.
+    if len(sys.argv) == 3 and sys.argv[1] == "--dry-run-job":
+        raise SystemExit(_dry_run_child_main(sys.argv[2]))
+    print("usage: python -m carnot.agentic.arc_engine_static_validation --dry-run-job <path>")
+    raise SystemExit(2)
