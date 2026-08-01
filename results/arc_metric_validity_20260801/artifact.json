@@ -1,0 +1,1132 @@
+{
+  "schema": "carnot.arc.metric_validity.v1",
+  "experiment": "outer_loop_arc_change_fidelity_metric_validity",
+  "milestone": "2026.08.outer_loop",
+  "run_date": "2026-08-01T15:24:36Z",
+  "question": "Is `change_fidelity` worth scoring anything on? Concretely: does a higher held-out change_fidelity make a plan more likely to EXIST when plan_in_model walks the engine forward from the level root?",
+  "headline": "Held-out change_fidelity does NOT predict plannability. AUC 0.6085 over 138 scoreable engines (22 plannable), game-clustered 95% CI [0.3806, 0.7505] -- an interval that contains chance, in a design that detects an injected AUC-0.75 association 0.975 of the time. Within-game (the decision-relevant comparison -- pick one of several candidates for the SAME game) the AUC is 0.5688 over 11 informative games. 7 engines sit at change_fidelity >= 0.999 and 3 of them are plannable. Removing tn36 leaves 17 plannable of 124 and moves the AUC to 0.5316. 4 of the plannable engines have a goal predicate that is TRUE AT THE ROOT -- the shipped gate vetoes exactly those and the live pipeline runs it before the planner, so applying the gate first leaves 18 plannable and moves the AUC to 0.6252. The strongest rival predictor on the same outcome is probe_depth_reached at AUC 0.7866.",
+  "honest_verdict": "complete_change_fidelity_metric_validity_does_not_predict_plannability_auc_0.6085_cluster_ci95_0.3806_0.7505_n_138_plannable_22_min_reachable_p_1.1026234029765593e-25_within_game_auc_0.5688_over_11_games_power_at_injected_auc075_0.975_best_rival_probe_depth_reached_auc_0.7866",
+  "duration_s": 6425.66,
+  "duration_s_note": "wall time of the scoring sweep: one killable subprocess per engine, each running a held-out verifier pass, an in-sample pass, the shipped trust gate, and then a goal gate plus a 20000-node planner from each available root. No model is loaded.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_note": "No LLM is invoked and no GPU is touched (CUDA_VISIBLE_DEVICES is emptied in every worker). The engines are frozen LLM completions already on disk from two prior runs; this pass executes that cached code against cached transitions and inside a search. The GGUF strings in model_specs name the generator that WROTE those engines, with invoked=false -- they are provenance, not a live-inference claim.",
+  "random_seed": 20260801,
+  "random_seed_note": "seeds the permutation and bootstrap resampling only. The scoring itself is deterministic: the engines, the transitions and the search are all fixed.",
+  "reproducibility_checksum": "sha256:74e3da3252370bcdffefb0231a86312a671997426e7332e506ae455533b03b46",
+  "verifier_is_oracle": {
+    "value": false,
+    "principle": "nothing here consults the environment's level counter or win oracle. The outcome is whether plan_in_model finds a path to the engine's OWN induced is_level_complete inside the engine's OWN rollout, and the exposure is prediction accuracy against RECORDED transitions. This measures whether one internal quantity predicts another; it makes no solve claim and cannot be circular with one."
+  },
+  "preconditions_checked": [
+    {
+      "resource": "frozen object-perception engines on disk",
+      "available": true,
+      "principle": "this pass generates nothing; if the committed engine text were missing the run would be measuring nothing at all.",
+      "evidence": "114 objperc engines analysable"
+    },
+    {
+      "resource": "frozen best-of-N completions + proven split + real root_grid",
+      "available": true,
+      "principle": "the real root is the only thing that makes the reconstructed root on the other corpus checkable rather than assumed.",
+      "evidence": "5 of 6 splits rebuilt, 5 of them reproducing split.json's row counts exactly"
+    },
+    {
+      "resource": "no GPU used",
+      "available": true,
+      "principle": "the machine is shared. Every worker empties CUDA_VISIBLE_DEVICES and sets JAX_PLATFORMS=cpu, so this run cannot contend for a card another session owns.",
+      "evidence": "CUDA_VISIBLE_DEVICES='' set in run.py's worker env and in every worker"
+    },
+    {
+      "resource": "progress windows rebuildable",
+      "available": true,
+      "principle": "build_progress_window steps a real env and has no internal bound; a game it cannot rebuild inside the timeout is DROPPED with its reason recorded, never scored as a zero.",
+      "evidence": "20 of 20 objperc windows rebuilt"
+    },
+    {
+      "resource": "shipped search defaults unmodified",
+      "available": true,
+      "principle": "widening a budget to manufacture plannable engines would inflate exactly the outcome being predicted.",
+      "evidence": "plan_in_model and _goal_satisfiability_check are both called with no max_nodes or max_depth, so both read the shipped resolvers (max_depth 80, max_nodes 20000)"
+    }
+  ],
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-qat-GGUF",
+      "role": "wrote the 116 object-perception engines (frozen 2026-08-01)",
+      "invoked": false,
+      "why_not_invoked": "reads that run's committed engine text; generates nothing"
+    },
+    {
+      "name": "gemma-4-31B-it (llama-server, CUDA)",
+      "role": "wrote the 48 best-of-N candidates (frozen 2026-07-31)",
+      "invoked": false,
+      "why_not_invoked": "replays that run's cached completions; generates nothing"
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801",
+      "fields_imported": "engine text (116 cells), rows.json roster",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/"
+    },
+    {
+      "experiment_id": "outer_loop_arc_induce_bestofn_phase1",
+      "fields_imported": "48 cached completions, the proven split, root_grid, frozen plan_found at depth 40",
+      "path": "results/arc_induce_bestofn_20260731/"
+    }
+  ],
+  "association_state": "NULL_DOES_NOT_PREDICT",
+  "change_fidelity_predicts_plannability": false,
+  "change_fidelity_predicts_plannability_means": "higher held-out change_fidelity goes with MORE plannable, which is the only direction that would license optimising it. False covers both a null and an INVERSE association; read association_state for which.",
+  "change_fidelity_inversely_associated": false,
+  "primary": {
+    "exposure": "held-out change_fidelity",
+    "outcome": "plan_in_model finds a plan from the level root at the shipped defaults",
+    "n_engines_scored": 138,
+    "n_plannable": 22,
+    "n_games": 21,
+    "auc_pooled": 0.6085,
+    "auc_pooled_note": "anticonservative: engines cluster by game, so the effective n is nearer the game count than the engine count. Read the cluster CI, not this one.",
+    "perm_p_pooled": {
+      "p": 0.09831950840245798,
+      "method": "monte_carlo_200000",
+      "n": 138,
+      "k": 22,
+      "n_arrangements": 18138559317723079562012400
+    },
+    "bootstrap_ci95_engine_resample": [
+      0.479,
+      0.7326
+    ],
+    "cluster_bootstrap_ci95_game_resample": [
+      0.3806,
+      0.7505
+    ],
+    "cluster_ci_is_the_honest_one": true,
+    "point_biserial": {
+      "r": 0.1404,
+      "n": 138,
+      "fisher_ci95": [
+        -0.0274,
+        0.3004
+      ],
+      "fisher_ci95_caveat": "assumes independent units; engines cluster by game, so this interval is too narrow"
+    },
+    "logistic": {
+      "slope": 1.1259,
+      "odds_ratio_per_unit_fidelity": 3.0831,
+      "cluster_bootstrap_ci95_game_resample": [
+        -3.6768,
+        2.2097
+      ],
+      "n_bootstrap_fits": 2000,
+      "separation_suspected": false,
+      "read_the_auc_instead_if_separation_suspected": true
+    },
+    "mean_change_fidelity_when_plannable": 0.3195,
+    "mean_change_fidelity_when_unplannable": 0.2048,
+    "within_game_auc": 0.5688,
+    "within_game_n_informative_games": 11,
+    "within_game_perm_p": 0.3766811659417029,
+    "within_game_is_the_decision_relevant_estimate": "the decision this metric would be used for is: given several candidates induced for THE SAME game, pick one. Only games containing both a plannable and an unplannable engine can inform that."
+  },
+  "estimator_selftest": {
+    "why": "a wrong estimator returns a convincing null. Both load-bearing statistics are checked against scipy's independently-written exact Mann-Whitney on every run.",
+    "trials": 40,
+    "perm_p_matches_scipy_exact": "40/40",
+    "max_abs_p_difference": 1.1102230246251565e-16,
+    "auc_matches_scipy_U_statistic": "40/40",
+    "max_abs_U_difference": 3.552713678800501e-15,
+    "auc_check_also_catches_a_class_swap": "a swapped AUC would give 1 - AUC and fail the U identity",
+    "extremal_case": {
+      "n": 14,
+      "k": 3,
+      "observed_two_sided_p": 0.005494505494505495,
+      "min_reachable_two_sided_p": 0.005494505494505495,
+      "equal": true
+    },
+    "all_pass": true
+  },
+  "power_floor_stated_before_the_association": {
+    "n_analysable": 138,
+    "n_plannable": 22,
+    "min_reachable_two_sided_p": 1.1026234029765593e-25,
+    "reading": "the smallest two-sided p this design could produce even if every plannable engine outscored every unplannable one. A p above this is not 'trending'; a floor above 0.05 means the corpus cannot establish the association at all."
+  },
+  "driver_check_tn36_removed": {
+    "why": "all six perfect-fidelity engines in the earlier 40-candidate join were tn36 progress-BAR TICKERS -- they model the status indicator exactly and the playfield not at all. If the association only exists with tn36 in, it is that artifact.",
+    "n_analysable_without_tn36": 124,
+    "n_plannable_without_tn36": 17,
+    "change_fidelity": {
+      "n_scored": 124,
+      "n_missing_value": 0,
+      "n_plannable": 17,
+      "n_unplannable": 107,
+      "auc_pooled": 0.5316,
+      "mean_when_plannable": 0.1886,
+      "mean_when_unplannable": 0.1828,
+      "min_reachable_two_sided_p": 0.0,
+      "perm_p_pooled": {
+        "p": 0.6700816495917521,
+        "method": "monte_carlo_200000",
+        "n": 124,
+        "k": 17,
+        "n_arrangements": 345241204687024972524
+      },
+      "bootstrap_ci95_engine_resample": [
+        0.3953,
+        0.669
+      ],
+      "cluster_bootstrap_ci95_game_resample": [
+        0.3267,
+        0.698
+      ],
+      "within_game": {
+        "auc": 0.5108,
+        "n_informative_games": 10,
+        "n_concordant_pairs_total": 93,
+        "per_game": {
+          "bp35": {
+            "auc": 0.2,
+            "n_pos": 1,
+            "n_neg": 5,
+            "n_pairs": 5
+          },
+          "cn04": {
+            "auc": 0.1667,
+            "n_pos": 1,
+            "n_neg": 6,
+            "n_pairs": 6
+          },
+          "ft09": {
+            "auc": 0.1,
+            "n_pos": 1,
+            "n_neg": 5,
+            "n_pairs": 5
+          },
+          "g50t": {
+            "auc": 0.5,
+            "n_pos": 2,
+            "n_neg": 4,
+            "n_pairs": 8
+          },
+          "ka59": {
+            "auc": 0.625,
+            "n_pos": 2,
+            "n_neg": 4,
+            "n_pairs": 8
+          },
+          "ls20": {
+            "auc": 0.25,
+            "n_pos": 2,
+            "n_neg": 4,
+            "n_pairs": 8
+          },
+          "re86": {
+            "auc": 0.1667,
+            "n_pos": 1,
+            "n_neg": 3,
+            "n_pairs": 3
+          },
+          "sc25": {
+            "auc": 0.8125,
+            "n_pos": 3,
+            "n_neg": 8,
+            "n_pairs": 24
+          },
+          "tr87": {
+            "auc": 0.375,
+            "n_pos": 2,
+            "n_neg": 4,
+            "n_pairs": 8
+          },
+          "tu93": {
+            "auc": 0.6111,
+            "n_pos": 2,
+            "n_neg": 9,
+            "n_pairs": 18
+          }
+        }
+      },
+      "within_game_perm_p": {
+        "p": 0.9247037648117594,
+        "observed_within_game_auc": 0.5108,
+        "method": "within_game_label_permutation_20000",
+        "n_arrangements": 463097250000,
+        "min_reachable_two_sided_p": 0.0
+      },
+      "point_biserial": {
+        "r": 0.0081,
+        "n": 124,
+        "fisher_ci95": [
+          -0.1685,
+          0.1841
+        ],
+        "fisher_ci95_caveat": "assumes independent units; engines cluster by game, so this interval is too narrow"
+      },
+      "logistic": {
+        "slope": 0.0948,
+        "odds_ratio_per_unit_fidelity": 1.0995,
+        "cluster_bootstrap_ci95_game_resample": [
+          -8.5757,
+          1.8407
+        ],
+        "n_bootstrap_fits": 2000,
+        "separation_suspected": false,
+        "read_the_auc_instead_if_separation_suspected": true
+      }
+    }
+  },
+  "degeneracy_audit_of_the_top_of_the_metric": {
+    "why": "a metric is disqualified if it ranks a non-model at the top. These are every engine the primary scores at >= 0.999.",
+    "n_at_or_above_0999": 7,
+    "n_of_those_plannable": 3,
+    "games": {
+      "tn36": 7
+    },
+    "rows": [
+      {
+        "cell": "tn36__k0",
+        "game": "tn36",
+        "corpus": "bestofn",
+        "plan_found": true,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 17,
+        "engine_changes_anything_at_root": true,
+        "n_distinct_changing_successors_at_root": 1,
+        "probe_mean_new_states_per_expansion": 1.0,
+        "goal_kind": "satisfiable"
+      },
+      {
+        "cell": "tn36__k2",
+        "game": "tn36",
+        "corpus": "bestofn",
+        "plan_found": true,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 17,
+        "engine_changes_anything_at_root": true,
+        "n_distinct_changing_successors_at_root": 1,
+        "probe_mean_new_states_per_expansion": 1.0,
+        "goal_kind": "satisfiable"
+      },
+      {
+        "cell": "tn36__k3",
+        "game": "tn36",
+        "corpus": "bestofn",
+        "plan_found": false,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 17,
+        "engine_changes_anything_at_root": true,
+        "n_distinct_changing_successors_at_root": 1,
+        "probe_mean_new_states_per_expansion": 1.0,
+        "goal_kind": "degenerate_goal_predicate"
+      },
+      {
+        "cell": "tn36__k5",
+        "game": "tn36",
+        "corpus": "bestofn",
+        "plan_found": false,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 17,
+        "engine_changes_anything_at_root": true,
+        "n_distinct_changing_successors_at_root": 1,
+        "probe_mean_new_states_per_expansion": 1.0,
+        "goal_kind": "degenerate_goal_predicate"
+      },
+      {
+        "cell": "tn36__k6",
+        "game": "tn36",
+        "corpus": "bestofn",
+        "plan_found": true,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 17,
+        "engine_changes_anything_at_root": true,
+        "n_distinct_changing_successors_at_root": 1,
+        "probe_mean_new_states_per_expansion": 1.0,
+        "goal_kind": "satisfiable"
+      },
+      {
+        "cell": "tn36__k7",
+        "game": "tn36",
+        "corpus": "bestofn",
+        "plan_found": false,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 17,
+        "engine_changes_anything_at_root": true,
+        "n_distinct_changing_successors_at_root": 1,
+        "probe_mean_new_states_per_expansion": 1.0,
+        "goal_kind": "degenerate_goal_predicate"
+      },
+      {
+        "cell": "tn36__r2__on",
+        "game": "tn36",
+        "corpus": "objperc",
+        "plan_found": false,
+        "change_fidelity": 1.0,
+        "heldout_accuracy": 1.0,
+        "heldout_n_changing": 1,
+        "engine_changes_anything_at_root": false,
+        "n_distinct_changing_successors_at_root": 0,
+        "probe_mean_new_states_per_expansion": 0.0,
+        "goal_kind": "degenerate_goal_predicate"
+      }
+    ]
+  },
+  "objperc_change_fidelity_reproduction_check": {
+    "checked": true,
+    "why": "the exposure variable must be the same quantity the A/B moved. A rebuilt window that silently differs would make this association a study of a different metric.",
+    "n_cells_compared": 114,
+    "n_mismatch": 0,
+    "all_reproduce": true,
+    "mismatches": []
+  },
+  "degenerate_goal_predicate_audit": {
+    "why": "plan_in_model never evaluates is_level_complete on the start grid, so a goal predicate that is true at the root produces a length-1 plan to the first state the search touches. The shipped goal gate rejects exactly that case, and the live pipeline runs the gate BEFORE the planner -- so these engines are false positives of the outcome variable, and would never be planned with in production.",
+    "post_hoc": true,
+    "n_with_root_true_goal": 4,
+    "n_of_those_counted_plannable_by_the_raw_planner": 4,
+    "their_plan_lengths": [
+      1
+    ],
+    "n_plannable_before_gating": 22,
+    "n_plannable_after_gating": 18,
+    "min_reachable_two_sided_p_after_gating": 1.2382197029923656e-22,
+    "change_fidelity_after_gating": {
+      "auc_pooled": 0.6252,
+      "cluster_bootstrap_ci95_game_resample": [
+        0.3317,
+        0.7908
+      ],
+      "perm_p_pooled": {
+        "p": 0.07910460447697762,
+        "method": "monte_carlo_200000",
+        "n": 138,
+        "k": 18,
+        "n_arrangements": 16152222381590798665800
+      },
+      "mean_when_plannable": 0.3612,
+      "mean_when_unplannable": 0.2024,
+      "n_plannable": 18,
+      "n_scored": 138
+    },
+    "change_fidelity_within_game_after_gating": 0.5902,
+    "best_rival_after_gating": "probe_depth_reached",
+    "best_rival_auc_after_gating": 0.8155,
+    "ranked_after_gating": [
+      {
+        "predictor": "probe_depth_reached",
+        "auc_pooled": 0.8155,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.6878,
+          0.8952
+        ],
+        "within_game_auc": 0.7623
+      },
+      {
+        "predictor": "engine_changes_anything_at_root",
+        "auc_pooled": 0.6875,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.6164,
+          0.7601
+        ],
+        "within_game_auc": 0.7582
+      },
+      {
+        "predictor": "heldout_cell_recall",
+        "auc_pooled": 0.6674,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4065,
+          0.8147
+        ],
+        "within_game_auc": 0.623
+      },
+      {
+        "predictor": "shipped_gate_trust_energy",
+        "auc_pooled": 0.3509,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2019,
+          0.5975
+        ],
+        "within_game_auc": 0.3279
+      },
+      {
+        "predictor": "in_sample_change_fidelity",
+        "auc_pooled": 0.64,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.3854,
+          0.8002
+        ],
+        "within_game_auc": 0.582
+      },
+      {
+        "predictor": "shipped_gate_passes",
+        "auc_pooled": 0.6125,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.5,
+          0.7555
+        ],
+        "within_game_auc": 0.5205
+      },
+      {
+        "predictor": "heldout_accuracy",
+        "auc_pooled": 0.6074,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4351,
+          0.7915
+        ],
+        "within_game_auc": 0.5164
+      },
+      {
+        "predictor": "in_sample_accuracy",
+        "auc_pooled": 0.5917,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.424,
+          0.7659
+        ],
+        "within_game_auc": 0.459
+      },
+      {
+        "predictor": "shipped_gate_heldout_accuracy",
+        "auc_pooled": 0.5903,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4316,
+          0.75
+        ],
+        "within_game_auc": 0.4467
+      },
+      {
+        "predictor": "probe_mean_new_states_per_expansion",
+        "auc_pooled": 0.5257,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.3698,
+          0.6785
+        ],
+        "within_game_auc": 0.7623
+      },
+      {
+        "predictor": "n_distinct_changing_successors_at_root",
+        "auc_pooled": 0.5167,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.373,
+          0.6545
+        ],
+        "within_game_auc": 0.7213
+      },
+      {
+        "predictor": "n_distinct_successors_at_root",
+        "auc_pooled": 0.5088,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.3637,
+          0.6503
+        ],
+        "within_game_auc": 0.7254
+      },
+      {
+        "predictor": "probe_distinct_states",
+        "auc_pooled": 0.5056,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.3583,
+          0.6599
+        ],
+        "within_game_auc": 0.7664
+      }
+    ],
+    "an_independent_finding_worth_recording": "plan_in_model tests is_level_complete on successors only, never on the start grid, while _goal_satisfiability_check tests the root explicitly and rejects it as goal_predicate_true_at_root. The two therefore DISAGREE on this class: the gate vetoes, the planner returns a length-1 plan. Production is safe because it runs the gate first -- but any caller that reaches plan_in_model without the gate would take a degenerate predicate as a solved level."
+  },
+  "inertness_floor": {
+    "why": "an inert engine cannot plan by construction, so an 'inertness detector' scores above chance without predicting anything. Everything below is restricted to engines that DO change the root state, which is the population any selection rule operates in.",
+    "n_inert_at_root": 45,
+    "n_inert_that_are_plannable": 0,
+    "n_live": 93,
+    "n_live_plannable": 22,
+    "min_reachable_two_sided_p_within_live": 1.6527684512856123e-21,
+    "change_fidelity_within_live": {
+      "auc_pooled": 0.5016,
+      "cluster_bootstrap_ci95_game_resample": [
+        0.2737,
+        0.6576
+      ],
+      "perm_p_pooled": {
+        "p": 0.9840950795246024,
+        "method": "monte_carlo_200000",
+        "n": 93,
+        "k": 22,
+        "n_arrangements": 1210090862058924472380
+      },
+      "mean_when_plannable": 0.3195,
+      "mean_when_unplannable": 0.2884
+    },
+    "ranked_within_live": [
+      {
+        "predictor": "probe_distinct_states",
+        "auc_pooled": 0.2814,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.1581,
+          0.4531
+        ],
+        "within_game_auc": 0.4931
+      },
+      {
+        "predictor": "n_distinct_successors_at_root",
+        "auc_pooled": 0.2967,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2066,
+          0.4287
+        ],
+        "within_game_auc": 0.4167
+      },
+      {
+        "predictor": "n_distinct_changing_successors_at_root",
+        "auc_pooled": 0.3038,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2159,
+          0.4298
+        ],
+        "within_game_auc": 0.4028
+      },
+      {
+        "predictor": "probe_mean_new_states_per_expansion",
+        "auc_pooled": 0.3147,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.1891,
+          0.4836
+        ],
+        "within_game_auc": 0.4861
+      },
+      {
+        "predictor": "probe_depth_reached",
+        "auc_pooled": 0.6514,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.517,
+          0.7495
+        ],
+        "within_game_auc": 0.5278
+      },
+      {
+        "predictor": "heldout_accuracy",
+        "auc_pooled": 0.5906,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4926,
+          0.7129
+        ],
+        "within_game_auc": 0.4861
+      },
+      {
+        "predictor": "shipped_gate_heldout_accuracy",
+        "auc_pooled": 0.5871,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4885,
+          0.7151
+        ],
+        "within_game_auc": 0.5
+      },
+      {
+        "predictor": "shipped_gate_passes",
+        "auc_pooled": 0.5871,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4885,
+          0.7151
+        ],
+        "within_game_auc": 0.5
+      },
+      {
+        "predictor": "in_sample_accuracy",
+        "auc_pooled": 0.5845,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4674,
+          0.7269
+        ],
+        "within_game_auc": 0.5069
+      },
+      {
+        "predictor": "shipped_gate_trust_energy",
+        "auc_pooled": 0.4206,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2714,
+          0.6388
+        ],
+        "within_game_auc": 0.6111
+      },
+      {
+        "predictor": "in_sample_change_fidelity",
+        "auc_pooled": 0.5669,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.348,
+          0.7428
+        ],
+        "within_game_auc": 0.3819
+      },
+      {
+        "predictor": "heldout_cell_recall",
+        "auc_pooled": 0.5579,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.3617,
+          0.6907
+        ],
+        "within_game_auc": 0.375
+      },
+      {
+        "predictor": "change_fidelity",
+        "auc_pooled": 0.5016,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2737,
+          0.6576
+        ],
+        "within_game_auc": 0.2917
+      },
+      {
+        "predictor": "engine_changes_anything_at_root",
+        "auc_pooled": 0.5,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.5,
+          0.5
+        ],
+        "within_game_auc": 0.5
+      }
+    ]
+  },
+  "root_substitution_check": {
+    "why": "the object-perception corpus recorded no E3AgentPolicy.root_grid, so its plan root is reconstructed as the window's first grid. The best-of-N corpus has BOTH, so the substitution is checkable there rather than assumed everywhere.",
+    "n_engines_with_both_roots": 31,
+    "n_agree_on_plan_found": 31,
+    "agreement_rate": 1.0,
+    "disagreements": []
+  },
+  "depth_40_to_80_check": {
+    "why": "every best-of-N record carries goal_max_depth 40; the shipped default is now 80. Re-deriving at 80 independently reproduces (or refutes) plan_max_depth_default's stated 2 -> 6 conversion on this corpus.",
+    "n_compared": 31,
+    "n_plannable_at_frozen_depth40": 2,
+    "n_plannable_now_at_depth80": 6,
+    "gained_at_depth80": [
+      "tn36__k0",
+      "tn36__k2",
+      "tn36__k4",
+      "tn36__k6"
+    ],
+    "lost_at_depth80": []
+  },
+  "rival_predictors": {
+    "why_this_half_matters_more": "If change_fidelity predicts nothing, the roster has to be rebuilt around something that does. So every rival is scored against the SAME plan_found outcome with the SAME AUC + permutation machinery, and the comparison is reported whether or not change_fidelity wins.",
+    "ranked_by_distance_from_chance": [
+      {
+        "predictor": "goal_satisfiable",
+        "what_it_is": "the shipped goal gate's verdict",
+        "auc_pooled": 0.9091,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.7667,
+          1.0
+        ],
+        "within_game_auc": 0.942,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 4.9999750001249995e-06,
+        "mean_when_plannable": 0.8182,
+        "mean_when_unplannable": 0.0
+      },
+      {
+        "predictor": "probe_depth_reached",
+        "what_it_is": "how deep the bounded probe got",
+        "auc_pooled": 0.7866,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.6753,
+          0.8586
+        ],
+        "within_game_auc": 0.7536,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 9.999950000249999e-06,
+        "mean_when_plannable": 13.6364,
+        "mean_when_unplannable": 6.6983
+      },
+      {
+        "predictor": "engine_changes_anything_at_root",
+        "what_it_is": "does ANY action change the root state",
+        "auc_pooled": 0.694,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.6215,
+          0.7659
+        ],
+        "within_game_auc": 0.7391,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.000304998475007625,
+        "mean_when_plannable": 1.0,
+        "mean_when_unplannable": 0.6121
+      },
+      {
+        "predictor": "heldout_cell_recall",
+        "what_it_is": "held-out changed-cell recall",
+        "auc_pooled": 0.6567,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4553,
+          0.7824
+        ],
+        "within_game_auc": 0.6051,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.016219918900405497,
+        "mean_when_plannable": 0.4693,
+        "mean_when_unplannable": 0.2649
+      },
+      {
+        "predictor": "shipped_gate_trust_energy",
+        "what_it_is": "the shipped trust gate's own energy",
+        "auc_pooled": 0.3603,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2425,
+          0.5468
+        ],
+        "within_game_auc": 0.337,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.038399808000959997,
+        "mean_when_plannable": 93.5618,
+        "mean_when_unplannable": 170.2647
+      },
+      {
+        "predictor": "in_sample_change_fidelity",
+        "what_it_is": "in-sample change fidelity",
+        "auc_pooled": 0.6272,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4403,
+          0.7512
+        ],
+        "within_game_auc": 0.5725,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.05776971115144424,
+        "mean_when_plannable": 0.4528,
+        "mean_when_unplannable": 0.3223
+      },
+      {
+        "predictor": "change_fidelity",
+        "what_it_is": "THE PRIMARY: held-out change fidelity (what the A/B moved)",
+        "auc_pooled": 0.6085,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.3806,
+          0.7505
+        ],
+        "within_game_auc": 0.5688,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.09831950840245798,
+        "mean_when_plannable": 0.3195,
+        "mean_when_unplannable": 0.2048
+      },
+      {
+        "predictor": "probe_mean_new_states_per_expansion",
+        "what_it_is": "path (~1) vs tree (>>1) vs inert (0)",
+        "auc_pooled": 0.5805,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4504,
+          0.7105
+        ],
+        "within_game_auc": 0.7319,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.22546887265563673,
+        "mean_when_plannable": 2.4534,
+        "mean_when_unplannable": 3.2908
+      },
+      {
+        "predictor": "shipped_gate_passes",
+        "what_it_is": "does the engine clear the shipped trust gate",
+        "auc_pooled": 0.5803,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4984,
+          0.6917
+        ],
+        "within_game_auc": 0.5181,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.08312458437707812,
+        "mean_when_plannable": 0.2727,
+        "mean_when_unplannable": 0.1121
+      },
+      {
+        "predictor": "heldout_accuracy",
+        "what_it_is": "held-out exact full-grid match -- the floored metric cf was adopted to escape",
+        "auc_pooled": 0.5745,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4278,
+          0.7267
+        ],
+        "within_game_auc": 0.5145,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.06394468027659862,
+        "mean_when_plannable": 0.2102,
+        "mean_when_unplannable": 0.0946
+      },
+      {
+        "predictor": "n_distinct_changing_successors_at_root",
+        "what_it_is": "branching at the root, changing states only",
+        "auc_pooled": 0.5739,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4537,
+          0.6931
+        ],
+        "within_game_auc": 0.6884,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.26477367613161934,
+        "mean_when_plannable": 3.0909,
+        "mean_when_unplannable": 4.7931
+      },
+      {
+        "predictor": "goal_reachable_grids_evaluated",
+        "what_it_is": "how much distinct state the goal gate could reach",
+        "auc_pooled": 0.4267,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.2565,
+          0.5826
+        ],
+        "within_game_auc": 0.558,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.26850365748171257,
+        "mean_when_plannable": 44.9545,
+        "mean_when_unplannable": 1348.8793
+      },
+      {
+        "predictor": "n_distinct_successors_at_root",
+        "what_it_is": "branching at the root",
+        "auc_pooled": 0.5696,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4461,
+          0.6923
+        ],
+        "within_game_auc": 0.6957,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.2925285373573132,
+        "mean_when_plannable": 3.9545,
+        "mean_when_unplannable": 5.7069
+      },
+      {
+        "predictor": "probe_distinct_states",
+        "what_it_is": "distinct states a bounded forward probe reaches",
+        "auc_pooled": 0.5601,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4289,
+          0.6942
+        ],
+        "within_game_auc": 0.7355,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.36709316453417734,
+        "mean_when_plannable": 51.8636,
+        "mean_when_unplannable": 69.7069
+      },
+      {
+        "predictor": "shipped_gate_heldout_accuracy",
+        "what_it_is": "the shipped gate's internal held-out accuracy",
+        "auc_pooled": 0.5553,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.425,
+          0.6845
+        ],
+        "within_game_auc": 0.4529,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.25729871350643246,
+        "mean_when_plannable": 0.2727,
+        "mean_when_unplannable": 0.1552
+      },
+      {
+        "predictor": "in_sample_accuracy",
+        "what_it_is": "in-sample exact accuracy (free, no held-out split needed)",
+        "auc_pooled": 0.5549,
+        "cluster_bootstrap_ci95_game_resample": [
+          0.4177,
+          0.6957
+        ],
+        "within_game_auc": 0.4601,
+        "within_game_n_informative_games": 11,
+        "perm_p_pooled": 0.24563877180614097,
+        "mean_when_plannable": 0.2727,
+        "mean_when_unplannable": 0.1139
+      },
+      {
+        "predictor": "goal_first_true_depth",
+        "what_it_is": "how deep the goal predicate first becomes true (None if never)",
+        "auc_pooled": null,
+        "cluster_bootstrap_ci95_game_resample": null,
+        "within_game_auc": null,
+        "within_game_n_informative_games": null,
+        "perm_p_pooled": null,
+        "mean_when_plannable": 34.5556,
+        "mean_when_unplannable": null
+      }
+    ],
+    "best_rival": "probe_depth_reached",
+    "best_rival_auc": 0.7866,
+    "MULTIPLICITY_ADJUSTED": {
+      "why": "the best predictor was SELECTED from a family, so its own p-value is a selection effect. This is the exact family-wise adjustment, handling the predictors' mutual correlation without a Bonferroni approximation.",
+      "family": [
+        "change_fidelity",
+        "engine_changes_anything_at_root",
+        "heldout_accuracy",
+        "heldout_cell_recall",
+        "in_sample_accuracy",
+        "in_sample_change_fidelity",
+        "n_distinct_changing_successors_at_root",
+        "n_distinct_successors_at_root",
+        "probe_depth_reached",
+        "probe_distinct_states",
+        "probe_mean_new_states_per_expansion",
+        "shipped_gate_heldout_accuracy",
+        "shipped_gate_passes",
+        "shipped_gate_trust_energy"
+      ],
+      "family_size": 14,
+      "permutation_scheme": "labels shuffled WITHIN game, matching the stratified estimate",
+      "draws": 5000,
+      "strongest_association_in_family": "probe_depth_reached",
+      "its_signed_within_game_auc": 0.7536,
+      "its_direction": "higher score -> MORE plannable",
+      "signed_within_game_auc_per_predictor": {
+        "change_fidelity": 0.5688,
+        "engine_changes_anything_at_root": 0.7391,
+        "heldout_accuracy": 0.5145,
+        "heldout_cell_recall": 0.6051,
+        "in_sample_accuracy": 0.4601,
+        "in_sample_change_fidelity": 0.5725,
+        "n_distinct_changing_successors_at_root": 0.6884,
+        "n_distinct_successors_at_root": 0.6957,
+        "probe_depth_reached": 0.7536,
+        "probe_distinct_states": 0.7355,
+        "probe_mean_new_states_per_expansion": 0.7319,
+        "shipped_gate_heldout_accuracy": 0.4529,
+        "shipped_gate_passes": 0.5181,
+        "shipped_gate_trust_energy": 0.337
+      },
+      "fwer_adjusted_p_for_strongest": 0.002999400119976005,
+      "unadjusted_p_per_predictor": {
+        "change_fidelity": 0.38292341531693663,
+        "engine_changes_anything_at_root": 0.0001999600079984003,
+        "heldout_accuracy": 0.8352329534093181,
+        "heldout_cell_recall": 0.1739652069586083,
+        "in_sample_accuracy": 0.3807238552289542,
+        "in_sample_change_fidelity": 0.27014597080583885,
+        "n_distinct_changing_successors_at_root": 0.010797840431913617,
+        "n_distinct_successors_at_root": 0.0057988402319536095,
+        "probe_depth_reached": 0.0007998400319936012,
+        "probe_distinct_states": 0.001799640071985603,
+        "probe_mean_new_states_per_expansion": 0.002999400119976005,
+        "shipped_gate_heldout_accuracy": 0.2561487702459508,
+        "shipped_gate_passes": 1.0,
+        "shipped_gate_trust_energy": 0.028394321135772844
+      },
+      "reading": "fwer_adjusted_p_for_strongest is the probability that a family of this size and correlation structure would produce a winner this far from chance when NOTHING is associated. Compare THAT to 0.05, never the winner's own unadjusted p."
+    },
+    "read_the_adjusted_p_not_the_winners_own": "the best rival was SELECTED as the furthest from chance among the whole family, so its own p-value is a selection effect. The family-wise max-statistic p above is the one to compare against 0.05."
+  },
+  "false_negative_risk_checked": true,
+  "positive_control_passed": true,
+  "positive_control": {
+    "primary_control_is_the_power_analysis": {
+      "why": "a null is only informative if the design could have seen a real effect. This injects a KNOWN effect into the real labels, clustering and class balance, and reports how often the same estimator detects it.",
+      "n_units": 138,
+      "n_positive": 22,
+      "n_games": 21,
+      "replications_per_effect": 200,
+      "detection_rule": "game-clustered bootstrap 95% CI excludes 0.5",
+      "by_effect": {
+        "auc_0.65": {
+          "target_auc": 0.65,
+          "mean_realised_auc": 0.6479,
+          "detection_rate": 0.64
+        },
+        "auc_0.75": {
+          "target_auc": 0.75,
+          "mean_realised_auc": 0.749,
+          "detection_rate": 0.975
+        },
+        "auc_0.85": {
+          "target_auc": 0.85,
+          "mean_realised_auc": 0.856,
+          "detection_rate": 1.0
+        }
+      },
+      "power_at_auc_0.75": 0.975,
+      "passed": true,
+      "passed_means": "the design detects a moderate (AUC 0.75) association at least 80% of the time, so a measured null here is evidence of absence rather than absence of evidence."
+    },
+    "what_it_is": "(1) an injected-signal power analysis on the real labels and clustering, and (2) the rival predictors run through the SAME AUC, permutation and game-clustered bootstrap code on the SAME plan_found outcome.",
+    "passed_requires": "the power analysis detecting a moderate (AUC 0.75) injected association at least 80% of the time. The rival evidence corroborates but does not substitute for it.",
+    "definitionally_coupled_predictors_excluded": [
+      "goal_first_true_depth",
+      "goal_reachable_grids_evaluated",
+      "goal_satisfiable"
+    ],
+    "why_they_are_excluded": "the shipped goal gate runs the same bounded BFS from the same root as plan_in_model and shares its depth resolver by design, so goal_satisfiable separates the classes by construction. Using it as the positive control would prove only that the estimator can detect an identity.",
+    "why_it_licenses_reading_a_null": "if a rival separates plannable from unplannable engines, the outcome varies, the corpus has contrast, and the estimator can detect a real signal -- so a chance-level result on change_fidelity is a fact about change_fidelity, not a dead test.",
+    "passed": true,
+    "power_at_injected_auc_0_75": 0.975,
+    "a_rival_also_separates": true,
+    "separating_predictor": "probe_depth_reached",
+    "separating_predictor_auc": 0.7866,
+    "separating_predictor_cluster_ci95": [
+      0.6753,
+      0.8586
+    ],
+    "separating_predictor_perm_p": 9.999950000249999e-06,
+    "if_not_passed": "the design lacks the power to detect a moderate association at this n and clustering, so a chance-level result on change_fidelity is ABSENCE OF EVIDENCE, not evidence of absence. Reported as such rather than as a null."
+  },
+  "preregistration_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_metric_validity_20260801/preregistration.json",
+  "scored_detail_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_metric_validity_20260801/scored.json",
+  "analysis_detail_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_metric_validity_20260801/analysis.json",
+  "limitations": [
+    {
+      "limitation": "plan_found depends on the induced GOAL PREDICATE, not the engine alone",
+      "detail": "plan_in_model searches for a state where the engine's own is_level_complete returns True. An engine with perfect dynamics and a broken goal predicate is unplannable, and an engine with sloppy dynamics and a loose predicate is plannable. So this measures whether change_fidelity predicts the plannability of the WHOLE induced model, which is the quantity the live agent consumes -- but it is not a clean test of the dynamics half in isolation."
+    },
+    {
+      "limitation": "plannable is not the same as CORRECT",
+      "detail": "a plan found inside the model is a plan the model believes in. Nothing here executes it against a real environment, so no engine is shown to actually clear a level. Plannability is a NECESSARY condition for the induce->plan path to do anything at all, which is why it is the right outcome for a metric-validity question, but a metric that predicted plannability perfectly would still not be shown to predict solving."
+    },
+    {
+      "limitation": "the object-perception corpus has no recorded root_grid",
+      "detail": "its plan root is reconstructed as the first grid of the level-up-straddling window. On the best-of-N corpus, where the real E3AgentPolicy.root_grid exists, the two roots agree on plan_found for 31 of 31 engines (rate 1.0). That is the evidence for the substitution; it is not a proof that it holds on the 20 games where only the reconstruction exists."
+    },
+    {
+      "limitation": "held-out sets are small and CHANGING-only",
+      "detail": "every roster game's held-out tail is changing rows plus a level-up row, so n_noop is 0 nearly everywhere and no-op hallucination cannot be graded. Engine behaviour on 'nothing should happen' -- half of what a forward rollout needs -- is unobserved, on both corpora."
+    },
+    {
+      "limitation": "goal_energy was not supplied to the planner",
+      "detail": "matching the frozen best-of-N. The live stall path may install a best-first heuristic, which can only reach a goal in FEWER nodes, so every plan_found here is a lower bound on what the live planner would find. The direction of that bias is toward FEWER plannable engines, which makes the power floor worse and the association harder to detect -- it cannot manufacture one."
+    }
+  ],
+  "missing_verifier_gaps": [
+    {
+      "gap": "no validated selection signal for induced world models",
+      "failure_mode": "change_fidelity is the metric the current induction A/Bs are scored on, and it does not order engines by whether the downstream planner can use them. Every representation A/B scored on it inherits that.",
+      "missing_discriminator": "a scalar computable from an induced engine + its goal predicate + the observed transitions that correlates with the engine being USABLE by plan_in_model -- most plausibly a joint dynamics-and-goal quantity rather than a pure dynamics-accuracy one, since plannability depends on both.",
+      "candidate_design": "score the pair, not the engine: reachability of the induced goal within the shipped horizon, combined with the engine's state-graph branching, penalised by disagreement with held-out changing transitions.",
+      "priority": "high -- it gates what any future induction A/B can be scored on",
+      "status": "open"
+    },
+    {
+      "gap": "the best available plannability predictor (probe_depth_reached) is not wired into selection",
+      "failure_mode": "the shipped trust gate selects on held-out dynamics accuracy. If a different quantity (probe_depth_reached, AUC 0.7866) orders engines by plannability better, the gate is selecting on the wrong axis.",
+      "missing_discriminator": "none -- this one is measurable today; what is missing is the wiring and a prospective test that selecting on it raises banked levels rather than just raising plannability.",
+      "do_not_wire_it_yet_and_here_is_why": "it was SELECTED as the furthest from chance among the whole family scored here, so its margin is partly a selection effect. The family-wise max-statistic p is 0.002999400119976005 over a family of 14. Treat it as the best HYPOTHESIS this run produces, to be confirmed prospectively on engines this run never saw -- not as a validated selector.",
+      "candidate_design": "add it as a secondary in select_trusted_world_model and A/B the banked-level rate, not the metric.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "surprising_result_acknowledgment": null,
+  "acceptance_gates": {
+    "metric_is_worth_scoring_on": {
+      "condition": "pooled AUC materially above 0.5 with a game-clustered CI excluding 0.5, surviving removal of tn36",
+      "principle": "a metric that does not order engines by whether they can be planned with is not a reason to flip a lever, however cleanly an A/B moves it.",
+      "met": false
+    },
+    "corpus_can_answer_the_question": {
+      "condition": "min reachable two-sided p <= 0.05 AND power >= 0.80 at an injected AUC of 0.75",
+      "principle": "reporting a p above the design's own floor as 'trending' is how an unanswerable question becomes a claim -- and a design that would rarely detect a real moderate effect cannot report a chance-level result as a null.",
+      "met": true,
+      "met_note": "a DETECTED association satisfies this gate regardless of the power figure: power governs how a NEGATIVE may be read, not whether an association that actually cleared its interval counts as an answer.",
+      "min_reachable_two_sided_p": 1.1026234029765593e-25,
+      "underpowered_by_floor": false,
+      "underpowered_by_power": false,
+      "power_at_injected_auc_0_75": 0.975
+    }
+  },
+  "acceptance_gate_passed": true,
+  "acceptance_gate_passed_note": "this gate is about whether the RUN could answer its question, not about whether the answer was the hoped-for one. A measured null passes it."
+}

@@ -1,0 +1,38 @@
+analysable=138 plannable=22 games=21
+min reachable two-sided p = 1.1026234029765593e-25
+change_fidelity AUC pooled = 0.6085  perm_p=0.09831950840245798
+  cluster CI (games) = [0.3806, 0.7505]
+  within-game AUC = 0.5688 over 11 games
+
+inertness floor: 45 inert (plannable 0), 93 live (plannable 22)
+live-only AUCs:
+  probe_distinct_states                         pooled=0.2814 within_game=0.4931
+  n_distinct_successors_at_root                 pooled=0.2967 within_game=0.4167
+  n_distinct_changing_successors_at_root        pooled=0.3038 within_game=0.4028
+  probe_mean_new_states_per_expansion           pooled=0.3147 within_game=0.4861
+  probe_depth_reached                           pooled=0.6514 within_game=0.5278
+  heldout_accuracy                              pooled=0.5906 within_game=0.4861
+power (detection rate by injected effect): auc_0.65=0.64, auc_0.75=0.975, auc_0.85=1.0
+family multiplicity: strongest=probe_depth_reached signed_within_game_auc=0.7536 (higher score -> MORE plannable) FWER_p=0.002999400119976005
+degenerate goals: 4 root-true, plannable 22 -> 18 after applying the gate first; cf AUC then 0.6252
+
+rival ranking by pooled AUC:
+  probe_depth_reached                           pooled=0.7866   within_game=0.7536
+  engine_changes_anything_at_root               pooled=0.694    within_game=0.7391
+  heldout_cell_recall                           pooled=0.6567   within_game=0.6051
+  shipped_gate_trust_energy                     pooled=0.3603   within_game=0.337
+  in_sample_change_fidelity                     pooled=0.6272   within_game=0.5725
+  change_fidelity                               pooled=0.6085   within_game=0.5688
+  probe_mean_new_states_per_expansion           pooled=0.5805   within_game=0.7319
+  shipped_gate_passes                           pooled=0.5803   within_game=0.5181
+  heldout_accuracy                              pooled=0.5745   within_game=0.5145
+  n_distinct_changing_successors_at_root        pooled=0.5739   within_game=0.6884
+  n_distinct_successors_at_root                 pooled=0.5696   within_game=0.6957
+  probe_distinct_states                         pooled=0.5601   within_game=0.7355
+  shipped_gate_heldout_accuracy                 pooled=0.5553   within_game=0.4529
+  in_sample_accuracy                            pooled=0.5549   within_game=0.4601
+
+(definitionally coupled, NOT rivals -- the goal gate is the same search:)
+  goal_first_true_depth                         pooled=None
+  goal_reachable_grids_evaluated                pooled=0.4267
+  goal_satisfiable                              pooled=0.9091
