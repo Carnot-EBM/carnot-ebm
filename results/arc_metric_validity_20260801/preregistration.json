@@ -1,0 +1,79 @@
+{
+  "written_before": "any association statistic was computed. The scoring sweep had not been run when this file was written; the only plannability numbers in hand were the frozen best-of-N's 2-of-40 at the OLD depth-40 default, and plan_max_depth_default()'s own docstring stating that 6 of 48 plan at depth 80.",
+  "question": "Is `change_fidelity` worth scoring anything on? Concretely: does a higher held-out change_fidelity make a plan more likely to EXIST when plan_in_model walks the engine forward from the level root?",
+  "why_it_has_to_be_asked_now": "The object-perception A/B moved change_fidelity (p=0.0192, +15/-4/=1) and that result is currently the reason to flip a lever. But joining the frozen best-of-N's plan_found to held-out fidelity showed all six candidates at a PERFECT 1.0 are UNPLANNABLE, and both plannable ones sit in the bottom half -- because the six perfect ones model tn36's progress-BAR TICKER exactly and the playfield not at all. If that is the general case, the A/B moved a number that does not matter, and so does every representation A/B scored on it.",
+
+  "primary_analysis": {
+    "unit": "one induced engine",
+    "exposure": "held-out change_fidelity (continuous, 0..1)",
+    "outcome": "plan_found (bool) from plan_in_model at the CURRENT shipped defaults (max_nodes 20000, max_depth = plan_max_depth_default() = 80), goal_energy NOT supplied",
+    "root": "window_root -- the first grid of the level-up-straddling window. It is the only root reconstructible on BOTH corpora. real_root (E3AgentPolicy.root_grid) exists only on the best-of-N corpus and is used there to CHECK the substitution.",
+    "statistic": "AUC = P(fidelity of a plannable engine > fidelity of an unplannable one) + 0.5 P(tie), i.e. Mann-Whitney U / (n_pos * n_neg)",
+    "p_value": "exact two-sided permutation test on the rank-sum, enumerated when C(N,k) is small enough and Monte-Carlo (>= 200000 draws) otherwise",
+    "ci": "bootstrap percentile over engines, and separately a CLUSTER bootstrap resampling GAMES, which is the honest one"
+  },
+
+  "the_clustering_problem_stated_up_front": {
+    "issue": "Engines are not independent. Several were induced for the same game, and every engine for one game shares that game's window, root, difficulty and goal structure. A pooled AUC over ~160 engines from ~22 games has an effective n far closer to 22, and pooled p-values will be anticonservative.",
+    "response": "Two estimates are reported side by side and NEITHER is hidden: (1) POOLED AUC, which is anticonservative and is labelled so; (2) WITHIN-GAME STRATIFIED AUC, restricted to games that contain BOTH a plannable and an unplannable engine, with labels permuted only WITHIN game. (2) is the decision-relevant one, because the decision this metric would be used for is 'given several candidates induced for THE SAME game, pick one'."
+  },
+
+  "the_degeneracies_that_must_be_excluded_and_why": [
+    {
+      "rule": "An engine whose held-out set has n_changing == 0 is EXCLUDED from the association.",
+      "why": "change_fidelity averages over changing transitions only, so with none it returns 0.0 -- and 0.0 is also the value meaning 'this engine got every change wrong'. Two of the best-of-N games (lp85, vc33) have heldout_n_changing == 0 by split.json's own record. Leaving them in would enter a NOT-MEASURED as a measured worst score."
+    },
+    {
+      "rule": "An engine with no determined plan outcome (worker timeout, unrunnable, no engine symbol) leaves BOTH numerator and denominator.",
+      "why": "Scoring a hang as a failed plan biases exactly the quantity being estimated. This is the rule the frozen best-of-N applied to its one non-terminating candidate."
+    }
+  ],
+
+  "prespecified_secondary_and_falsification_checks": [
+    "DRIVER CHECK (mandatory, not optional): recompute every statistic with tn36 REMOVED. The known mechanism -- six perfect-fidelity engines that model a progress bar -- lives entirely in tn36. If the association only exists with tn36 in, it is that artifact.",
+    "ROOT-SUBSTITUTION CHECK: on the best-of-N corpus, where real_root exists, report agreement between plan_found from real_root and from window_root. A disagreement rate near zero is what licenses using window_root on the object-perception corpus.",
+    "DEPTH CHECK: report how many best-of-N candidates change plan_found between the frozen depth-40 record and this depth-80 re-derivation, as an independent reproduction of plan_max_depth_default()'s stated 2 -> 6.",
+    "INERT/TICKER DEGENERACY: report, for every engine at change_fidelity >= 0.999, whether it is inert at root, whether its state graph is a path, and which game it belongs to."
+  ],
+
+  "rival_predictors_tested_on_the_same_outcome": {
+    "why_this_half_matters_more": "If change_fidelity predicts nothing, the roster has to be rebuilt around something that does. So every rival is scored against the SAME plan_found outcome with the SAME AUC + permutation machinery, and the comparison is reported whether or not change_fidelity wins.",
+    "list": [
+      "goal_gate first_true_depth (goal-predicate reachability depth)",
+      "goal_gate satisfiable (bool)",
+      "engine_changes_anything_at_root (bool)",
+      "n_distinct_changing_successors_at_root (int)",
+      "probe_mean_new_states_per_expansion (path vs tree shape)",
+      "probe_distinct_states within a bounded probe",
+      "in-sample accuracy",
+      "in-sample change_fidelity",
+      "shipped_gate_trust_energy",
+      "shipped_gate_heldout_accuracy",
+      "held-out full-grid accuracy (the exact-match metric change_fidelity was adopted to escape)"
+    ]
+  },
+
+  "decision_rules_fixed_in_advance": {
+    "if_n_plannable_is_tiny": "If the number of plannable engines with a measurable fidelity is small enough that the minimum reachable two-sided p (2 / C(N,k)) is above 0.05, the association is reported as UNESTABLISHED and no p-value is presented as evidence for or against. The AUC point estimate is still reported, with its CI, and the verdict says the corpus cannot answer the question rather than manufacturing an answer.",
+    "what_counts_as_the_metric_being_worth_scoring": "AUC materially above 0.5 with a CI excluding 0.5, surviving the tn36 driver check. Anything less does not license flipping a lever on a change_fidelity delta.",
+    "what_counts_as_a_null": "A CI comfortably spanning 0.5, or a point estimate at/below 0.5. A null is a publishable result here: it would mean the object-perception effect is not a reason to flip anything, and the roster must be rebuilt around a metric that does predict.",
+    "no_metric_will_be_swapped_in_post_hoc_as_the_primary": "change_fidelity is the primary because it is what the A/B moved. If a rival beats it, that is reported as 'a rival predicts better', not as a new primary that was always the plan."
+  },
+
+  "min_reachable_p_is_computed_and_stated_BEFORE_the_association": "The artifact records min_reachable_two_sided_p from the observed N and k, computed and printed before the observed statistic, so a reader can see the floor the design allows before seeing what it produced.",
+
+  "ADDENDUM_1_added_after_this_plan_was_written_and_before_the_final_numbers": {
+    "when": "during the scoring sweep, while the corpus was still being scored. Recorded as an addendum rather than edited into the plan above, because a preregistration that is quietly rewritten is not one.",
+    "what_changed": [
+      "A POWER POSITIVE CONTROL was added: a synthetic predictor with a KNOWN association is injected into the real labels, clustering and class balance, and the fraction of replications whose game-clustered CI excludes 0.5 is reported as this design's empirical power at that effect size.",
+      "A FAMILY-WISE MAX-STATISTIC PERMUTATION was added over the rival predictors.",
+      "The decision rule for what counts as a null was TIGHTENED accordingly: a chance-level result is only reported as a NULL when power at an injected AUC of 0.75 is at least 0.80; otherwise it is reported as UNESTABLISHED_UNDERPOWERED."
+    ],
+    "why_each": {
+      "power_control": "the original plan's only power statement was `min_reachable_two_sided_p`, which is the floor at the most extreme possible arrangement. That is a necessary condition and a weak one: a design can have a tiny reachable floor and still almost never detect a real, moderate effect, because the floor is about the single best case and power is about the average case. A null was going to be a plausible outcome of this run, and a null without a power statement is not interpretable.",
+      "family_wise": "the rival half of this run scores a dozen-plus predictors against one outcome and reports the furthest from chance. Under a global null the MAXIMUM of a dozen sample AUCs is far from 0.5 by construction, so the winner's own p-value would be a selection effect quoted as a discovery -- in exactly the half of the run intended to be actionable."
+    },
+    "direction_of_the_change": "STRICTLY CONSERVATIVE with respect to this run's headline. Both additions make it HARDER to claim a result: one can only downgrade a null to `unestablished`, the other can only widen the p on the best rival. Neither can turn a null into a positive finding, which is the direction a post-hoc amendment would have to move for it to be self-serving.",
+    "what_was_NOT_changed": "the primary exposure, the primary outcome, the primary statistic, the root, the exclusion rules, and the tn36 driver check are all exactly as planned above."
+  }
+}

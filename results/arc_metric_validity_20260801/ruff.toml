@@ -1,0 +1,37 @@
+# Lint config for the committed copy of this measurement's harness.
+#
+# WHY A LOCAL CONFIG RATHER THAN EDITING THE SCRIPTS. `run.py`, `score_worker.py`,
+# `window_worker.py` and `bon_window_worker.py` are the AS-RUN record: `scored.json` was produced
+# by exactly these bytes, and the artifact's `reproducibility_checksum` hashes them. Reformatting
+# them after the fact would make the checksum describe code that never ran, which is the same
+# class of provenance lie the sibling post-hoc pass named when it refused to edit a harness
+# mid-collection (results/arc_object_perception_ab_change_fidelity_20260801/rescore.py). So the
+# relaxations are scoped to those four files and nothing else.
+#
+# `analyse.py` and `build_artifact.py` are NOT relaxed. They read frozen inputs and can be
+# re-run at zero cost, so there is no as-run argument for them and they are held to the repo's
+# normal standard.
+#
+# The two relaxed rules, and why each is genuinely unavoidable here rather than merely annoying:
+#
+#   I001  every worker mutates `os.environ` at module scope BEFORE importing anything from
+#         `carnot` -- `CUDA_VISIBLE_DEVICES=""` and `JAX_PLATFORMS=cpu` so a CPU-only pass can
+#         never contend for a GPU another session on this shared machine owns, and
+#         `CARNOT_ARC_E3_DIR` redirected to /tmp so nothing can write into the evidence tree.
+#         `bon_window_worker.py` additionally pins `CARNOT_ARC_INDUCE_TRANSITIONS_K=8`, without
+#         which the frozen split reshapes. Import sorting moves those imports above the
+#         mutations and silently defeats all of it. Same reasoning as
+#         results/arc_induce_bestofn_20260731/harness/ruff.toml's I001 entry.
+#   E501  one line in `run.py`, inside a literal path string that must stay byte-exact.
+
+extend = "../../pyproject.toml"
+
+[lint.per-file-ignores]
+"run.py" = ["I001", "E501"]
+"score_worker.py" = ["I001", "E501"]
+"window_worker.py" = ["I001", "E501"]
+"bon_window_worker.py" = ["I001", "E501"]
+
+[format]
+# Same as-run argument. `analyse.py` / `build_artifact.py` are formatted normally.
+exclude = ["run.py", "score_worker.py", "window_worker.py", "bon_window_worker.py"]
