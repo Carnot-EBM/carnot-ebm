@@ -7,7 +7,8 @@ registered, and this function walked straight into `adapter.hand_verifier` on th
 The resulting `AttributeError: 'NoneType' object has no attribute 'hand_verifier'` reads
 like a broken solve rather than a missing registration -- so sc25, tn36 and wa30 looked
 UNSOLVABLE offline when they were merely UNREGISTERED, and sat outside every A/B corpus
-built through `build_progress_window` until someone read the traceback carefully.
+built through `build_progress_window` until someone read the traceback carefully. All three
+were registered on 2026-07-31; the guard remains for the next unregistered game.
 
 The distinction the guard buys is not cosmetic. "This game has no adapter" is actionable
 and cheap to fix; "AttributeError deep in a verifier loader" sends you looking for a bug in
@@ -77,7 +78,7 @@ class TestUnregisteredGameIsNamed:
 
 
 class TestRegisteredGamesUnaffected:
-    """The guard must not change behaviour for the 24 games that DO have adapters."""
+    """The guard must not change behaviour for the 25 games that DO have adapters."""
 
     def test_registered_game_still_resolves_a_verifier(self, loop, adapters) -> None:
         ad = adapters.get_adapter("tr87")
@@ -86,14 +87,21 @@ class TestRegisteredGamesUnaffected:
         assert verifier is not None
         assert isinstance(source, str) and source
 
-    def test_wa30_is_the_only_unregistered_public_game(self, adapters) -> None:
-        """Pins the current state so re-registering wa30 -- or losing an adapter -- is a
-        deliberate, visible edit rather than a silent drift.
+    def test_all_25_public_games_are_registered(self, adapters) -> None:
+        """Pins full coverage so LOSING an adapter is a deliberate, visible edit.
 
-        wa30 is unregistered because its registry row has no runnable reproduction path at
-        all (`reproduce: None`, `action_model: None`), filed in ops/known-issues.md
-        2026-07-31. Every other public game's RE was already captured and its adapter
-        either existed or was transcribable from the registry.
+        History, kept because the test changed meaning and the reason matters. It was
+        originally `test_wa30_is_the_only_unregistered_public_game`, asserting 24/25 -- wa30
+        was excluded because its registry row had no runnable reproduction path
+        (`reproduce: None`, `action_model: None`). That turned out to be a budget artifact,
+        not a lost solve: the banked 670-action route gate-verified to L9 in 0.8s offline
+        once run outside an interactive step budget
+        (results/outer_loop_arc_wa30_reproduction_gate_20260731.json). wa30 got its adapter
+        the same day, and this assertion inverted from "one is missing" to "none are".
+
+        The failure it caught is the point: adding `_wa30` broke this test, which is exactly
+        what a pinning test is for -- it forced this edit to be conscious rather than
+        letting coverage drift silently in either direction.
         """
         public_25 = {
             "ar25",
@@ -123,7 +131,8 @@ class TestRegisteredGamesUnaffected:
             "wa30",
         }
         unregistered = public_25 - set(adapters.adaptered_games())
-        assert unregistered == {"wa30"}, (
-            f"expected only wa30 unregistered, got {sorted(unregistered)}. If an adapter was "
-            "added or removed, update this test deliberately."
+        assert unregistered == set(), (
+            f"public games with no GameAdapter: {sorted(unregistered)}. All 25 were registered "
+            "as of 2026-07-31; losing one silently removes a game from every offline induction "
+            "corpus. If this is intentional, update this test deliberately."
         )
