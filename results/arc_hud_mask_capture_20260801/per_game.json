@@ -1,0 +1,3287 @@
+{
+  "games": [
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 12,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.010531,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 13,
+                "mean_changed_cell_overlap_per_changing_transition": 0.016852,
+                "n_changed_cells_inside_mask": 22,
+                "n_changed_cells_total": 2089,
+                "n_transitions": 13,
+                "n_transitions_shape_matched": 13,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 13,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 0.923077,
+              "far_changed": 12,
+              "far_min_cells": 4,
+              "far_opportunities": 13,
+              "median_far_distance": 31.5,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "1": {
+                  "n": 7,
+                  "rate": 0.857143
+                },
+                "3": {
+                  "n": 3,
+                  "rate": 1.0
+                },
+                "4": {
+                  "n": 3,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "1",
+                "3",
+                "4"
+              ]
+            },
+            "acted_location_kinds": {
+              "mover_centroid": 13
+            },
+            "band_changed_on": 12,
+            "changed_fraction_on_this_corpus": 0.923077,
+            "n_changing_transitions": 13,
+            "n_transitions": 13
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 12,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.010309,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 12,
+                "mean_changed_cell_overlap_per_changing_transition": 0.016654,
+                "n_changed_cells_inside_mask": 21,
+                "n_changed_cells_total": 2037,
+                "n_transitions": 12,
+                "n_transitions_shape_matched": 12,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 12,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 0.916667,
+              "far_changed": 11,
+              "far_min_cells": 4,
+              "far_opportunities": 12,
+              "median_far_distance": 34.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "1": {
+                  "n": 7,
+                  "rate": 0.857143
+                },
+                "3": {
+                  "n": 2,
+                  "rate": 1.0
+                },
+                "4": {
+                  "n": 3,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "1",
+                "3",
+                "4"
+              ]
+            },
+            "acted_location_kinds": {
+              "mover_centroid": 12
+            },
+            "band_changed_on": 11,
+            "changed_fraction_on_this_corpus": 0.916667,
+            "n_changing_transitions": 12,
+            "n_transitions": 12
+          },
+          "axis": "row",
+          "changed_fraction": 0.917,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1",
+              "P2"
+            ],
+            "reason": "defended:P1+P2",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 62,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.923,
+          "direction": "counter",
+          "index": 62,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.917,
+          "direction": "counter",
+          "index": 62,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.010531,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 13,
+        "mean_changed_cell_overlap_per_changing_transition": 0.016852,
+        "n_changed_cells_inside_mask": 22,
+        "n_changed_cells_total": 2089,
+        "n_transitions": 13,
+        "n_transitions_shape_matched": 13,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 13,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.010309,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 12,
+        "mean_changed_cell_overlap_per_changing_transition": 0.016654,
+        "n_changed_cells_inside_mask": 21,
+        "n_changed_cells_total": 2037,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 12,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 12,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 1.721,
+      "game": "ls20",
+      "hud_cols": [],
+      "hud_rows": [
+        62
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": {
+        "alignment": 1.0,
+        "color": 12,
+        "evidence": 12
+      },
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 13,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": false,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.02991,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 13,
+                "mean_changed_cell_overlap_per_changing_transition": 0.106718,
+                "n_changed_cells_inside_mask": 30,
+                "n_changed_cells_total": 1003,
+                "n_transitions": 13,
+                "n_transitions_shape_matched": 13,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 13,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 13,
+              "far_min_cells": 4,
+              "far_opportunities": 13,
+              "median_far_distance": 42.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 13,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 13
+            },
+            "band_changed_on": 13,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 13,
+            "n_transitions": 13
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.029234,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 12,
+                "mean_changed_cell_overlap_per_changing_transition": 0.108035,
+                "n_changed_cells_inside_mask": 29,
+                "n_changed_cells_total": 992,
+                "n_transitions": 12,
+                "n_transitions_shape_matched": 12,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 12,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 12,
+              "far_min_cells": 4,
+              "far_opportunities": 12,
+              "median_far_distance": 29.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 12,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 12
+            },
+            "band_changed_on": 12,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 12,
+            "n_transitions": 12
+          },
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1"
+            ],
+            "reason": "defended:P1",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.02991,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 13,
+        "mean_changed_cell_overlap_per_changing_transition": 0.106718,
+        "n_changed_cells_inside_mask": 30,
+        "n_changed_cells_total": 1003,
+        "n_transitions": 13,
+        "n_transitions_shape_matched": 13,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 13,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.029234,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 12,
+        "mean_changed_cell_overlap_per_changing_transition": 0.108035,
+        "n_changed_cells_inside_mask": 29,
+        "n_changed_cells_total": 992,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 12,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 12,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.091,
+      "game": "s5i5",
+      "hud_cols": [],
+      "hud_rows": [
+        63
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": null,
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 13,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": false,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 9,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.04147,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 18,
+                "mean_changed_cell_overlap_per_changing_transition": 0.064533,
+                "n_changed_cells_inside_mask": 44,
+                "n_changed_cells_total": 1061,
+                "n_transitions": 18,
+                "n_transitions_shape_matched": 18,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 18,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 18,
+              "far_min_cells": 4,
+              "far_opportunities": 18,
+              "median_far_distance": 29.062,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "1": {
+                  "n": 2,
+                  "rate": 1.0
+                },
+                "2": {
+                  "n": 7,
+                  "rate": 1.0
+                },
+                "3": {
+                  "n": 2,
+                  "rate": 1.0
+                },
+                "4": {
+                  "n": 7,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "1",
+                "2",
+                "3",
+                "4"
+              ]
+            },
+            "acted_location_kinds": {
+              "mover_centroid": 18
+            },
+            "band_changed_on": 18,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 18,
+            "n_transitions": 18
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 9,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.038095,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 12,
+                "mean_changed_cell_overlap_per_changing_transition": 0.062589,
+                "n_changed_cells_inside_mask": 36,
+                "n_changed_cells_total": 945,
+                "n_transitions": 12,
+                "n_transitions_shape_matched": 12,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 12,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 12,
+              "far_min_cells": 4,
+              "far_opportunities": 12,
+              "median_far_distance": 23.062,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "1": {
+                  "n": 1,
+                  "rate": 1.0
+                },
+                "2": {
+                  "n": 5,
+                  "rate": 1.0
+                },
+                "3": {
+                  "n": 2,
+                  "rate": 1.0
+                },
+                "4": {
+                  "n": 4,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "2",
+                "3",
+                "4"
+              ]
+            },
+            "acted_location_kinds": {
+              "mover_centroid": 12
+            },
+            "band_changed_on": 12,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 12,
+            "n_transitions": 12
+          },
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1",
+              "P2"
+            ],
+            "reason": "defended:P1+P2",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.04147,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 18,
+        "mean_changed_cell_overlap_per_changing_transition": 0.064533,
+        "n_changed_cells_inside_mask": 44,
+        "n_changed_cells_total": 1061,
+        "n_transitions": 18,
+        "n_transitions_shape_matched": 18,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 18,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.038095,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 12,
+        "mean_changed_cell_overlap_per_changing_transition": 0.062589,
+        "n_changed_cells_inside_mask": 36,
+        "n_changed_cells_total": 945,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 12,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 12,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 15.746,
+      "game": "tu93",
+      "hud_cols": [],
+      "hud_rows": [
+        63
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": {
+        "alignment": 1.0,
+        "color": 9,
+        "evidence": 17
+      },
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 18,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": false,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": true,
+              "available": true,
+              "mover_color": 0,
+              "n_frames_with_mover_in_band": 12,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.00653,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 13,
+                "mean_changed_cell_overlap_per_changing_transition": 0.002535,
+                "n_changed_cells_inside_mask": 42,
+                "n_changed_cells_total": 6432,
+                "n_transitions": 13,
+                "n_transitions_shape_matched": 13,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 13,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 0.461538,
+              "far_changed": 6,
+              "far_min_cells": 4,
+              "far_opportunities": 13,
+              "median_far_distance": 19.511,
+              "pass": false,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "2": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "3": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "4": {
+                  "n": 9,
+                  "rate": 0.444444
+                },
+                "5": {
+                  "n": 1,
+                  "rate": 1.0
+                },
+                "6": {
+                  "n": 1,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": []
+            },
+            "acted_location_kinds": {
+              "click": 1,
+              "mover_centroid": 12
+            },
+            "band_changed_on": 6,
+            "changed_fraction_on_this_corpus": 0.461538,
+            "n_changing_transitions": 13,
+            "n_transitions": 13
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": true,
+              "available": true,
+              "mover_color": 0,
+              "n_frames_with_mover_in_band": 12,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.006679,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 12,
+                "mean_changed_cell_overlap_per_changing_transition": 0.002746,
+                "n_changed_cells_inside_mask": 42,
+                "n_changed_cells_total": 6288,
+                "n_transitions": 12,
+                "n_transitions_shape_matched": 12,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 12,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 0.5,
+              "far_changed": 6,
+              "far_min_cells": 4,
+              "far_opportunities": 12,
+              "median_far_distance": 19.583,
+              "pass": false,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "3": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "4": {
+                  "n": 9,
+                  "rate": 0.444444
+                },
+                "5": {
+                  "n": 1,
+                  "rate": 1.0
+                },
+                "6": {
+                  "n": 1,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": []
+            },
+            "acted_location_kinds": {
+              "click": 1,
+              "mover_centroid": 11
+            },
+            "band_changed_on": 6,
+            "changed_fraction_on_this_corpus": 0.5,
+            "n_changing_transitions": 12,
+            "n_transitions": 12
+          },
+          "axis": "row",
+          "changed_fraction": 0.5,
+          "decision": {
+            "accepted": false,
+            "alarms": [
+              "A2_mover_occupies_band@window",
+              "A2_mover_occupies_band@trajectory"
+            ],
+            "positives_passed": [],
+            "reason": "playfield_alarm",
+            "suspected_false_positive": true
+          },
+          "detected_on_full_trajectory": false,
+          "detected_on_window": true,
+          "direction": "fill",
+          "index": 0,
+          "monotone_ratio": 1.0
+        }
+      ],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.5,
+          "direction": "fill",
+          "index": 0,
+          "monotone_ratio": 1.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 13,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": false,
+      "duration_s": 0.08,
+      "game": "cn04",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "refused_all_bands_excluded",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 1.0,
+        "color": 0,
+        "evidence": 11
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 1,
+      "n_trajectory_transitions": 13,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 15,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.18,
+      "game": "m0r0",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": null,
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 15,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 14,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.252,
+      "game": "sk48",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 0.903,
+        "color": 8,
+        "evidence": 7
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 14,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 0,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.012647,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 15,
+                "mean_changed_cell_overlap_per_changing_transition": 0.009927,
+                "n_changed_cells_inside_mask": 28,
+                "n_changed_cells_total": 2214,
+                "n_transitions": 15,
+                "n_transitions_shape_matched": 15,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 15,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 15,
+              "far_min_cells": 4,
+              "far_opportunities": 15,
+              "median_far_distance": 54.8,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "2": {
+                  "n": 10,
+                  "rate": 1.0
+                },
+                "3": {
+                  "n": 5,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "2",
+                "3"
+              ]
+            },
+            "acted_location_kinds": {
+              "mover_centroid": 15
+            },
+            "band_changed_on": 15,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 15,
+            "n_transitions": 15
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 0,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.013249,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 12,
+                "mean_changed_cell_overlap_per_changing_transition": 0.010115,
+                "n_changed_cells_inside_mask": 25,
+                "n_changed_cells_total": 1887,
+                "n_transitions": 12,
+                "n_transitions_shape_matched": 12,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 12,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 12,
+              "far_min_cells": 4,
+              "far_opportunities": 12,
+              "median_far_distance": 54.8,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "2": {
+                  "n": 10,
+                  "rate": 1.0
+                },
+                "3": {
+                  "n": 2,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "2",
+                "3"
+              ]
+            },
+            "acted_location_kinds": {
+              "mover_centroid": 12
+            },
+            "band_changed_on": 12,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 12,
+            "n_transitions": 12
+          },
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1",
+              "P2"
+            ],
+            "reason": "defended:P1+P2",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.012647,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 15,
+        "mean_changed_cell_overlap_per_changing_transition": 0.009927,
+        "n_changed_cells_inside_mask": 28,
+        "n_changed_cells_total": 2214,
+        "n_transitions": 15,
+        "n_transitions_shape_matched": 15,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 15,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.013249,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 12,
+        "mean_changed_cell_overlap_per_changing_transition": 0.010115,
+        "n_changed_cells_inside_mask": 25,
+        "n_changed_cells_total": 1887,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 12,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 12,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.357,
+      "game": "ar25",
+      "hud_cols": [
+        63
+      ],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": {
+        "alignment": 1.0,
+        "color": 0,
+        "evidence": 14
+      },
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 15,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 14,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 196.295,
+      "game": "tr87",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 1.0,
+        "color": 0,
+        "evidence": 4
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 14,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 17,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.282,
+      "game": "g50t",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 0.934,
+        "color": 9,
+        "evidence": 16
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 17,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 20,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.393,
+      "game": "re86",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 1.0,
+        "color": 9,
+        "evidence": 11
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 20,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 9,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.004957,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 17,
+                "mean_changed_cell_overlap_per_changing_transition": 0.017246,
+                "n_changed_cells_inside_mask": 32,
+                "n_changed_cells_total": 6455,
+                "n_transitions": 17,
+                "n_transitions_shape_matched": 17,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 17,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 17,
+              "far_min_cells": 4,
+              "far_opportunities": 17,
+              "median_far_distance": 24.5,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "3": {
+                  "n": 6,
+                  "rate": 1.0
+                },
+                "4": {
+                  "n": 6,
+                  "rate": 1.0
+                },
+                "6": {
+                  "n": 5,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "3",
+                "4",
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 5,
+              "mover_centroid": 12
+            },
+            "band_changed_on": 17,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 17,
+            "n_transitions": 17
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 9,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.00705,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 12,
+                "mean_changed_cell_overlap_per_changing_transition": 0.018978,
+                "n_changed_cells_inside_mask": 27,
+                "n_changed_cells_total": 3830,
+                "n_transitions": 12,
+                "n_transitions_shape_matched": 12,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 12,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 12,
+              "far_min_cells": 4,
+              "far_opportunities": 12,
+              "median_far_distance": 24.5,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "3": {
+                  "n": 6,
+                  "rate": 1.0
+                },
+                "4": {
+                  "n": 2,
+                  "rate": 1.0
+                },
+                "6": {
+                  "n": 4,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "3",
+                "4",
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 4,
+              "mover_centroid": 8
+            },
+            "band_changed_on": 12,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 12,
+            "n_transitions": 12
+          },
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1",
+              "P2"
+            ],
+            "reason": "defended:P1+P2",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.004957,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 17,
+        "mean_changed_cell_overlap_per_changing_transition": 0.017246,
+        "n_changed_cells_inside_mask": 32,
+        "n_changed_cells_total": 6455,
+        "n_transitions": 17,
+        "n_transitions_shape_matched": 17,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 17,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.00705,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 12,
+        "mean_changed_cell_overlap_per_changing_transition": 0.018978,
+        "n_changed_cells_inside_mask": 27,
+        "n_changed_cells_total": 3830,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 12,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 12,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.941,
+      "game": "bp35",
+      "hud_cols": [],
+      "hud_rows": [
+        63
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": {
+        "alignment": 1.0,
+        "color": 9,
+        "evidence": 12
+      },
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 17,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 9,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 9,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.391,
+      "game": "sb26",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": null,
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 9,
+      "n_window_transitions": 9,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.007121,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 8,
+                "mean_changed_cell_overlap_per_changing_transition": 0.024341,
+                "n_changed_cells_inside_mask": 14,
+                "n_changed_cells_total": 1966,
+                "n_transitions": 8,
+                "n_transitions_shape_matched": 8,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 8,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 8,
+              "far_min_cells": 4,
+              "far_opportunities": 8,
+              "median_far_distance": 19.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 8,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 8
+            },
+            "band_changed_on": 8,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 8,
+            "n_transitions": 8
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.007121,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 8,
+                "mean_changed_cell_overlap_per_changing_transition": 0.024341,
+                "n_changed_cells_inside_mask": 14,
+                "n_changed_cells_total": 1966,
+                "n_transitions": 8,
+                "n_transitions_shape_matched": 8,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 8,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 8,
+              "far_min_cells": 4,
+              "far_opportunities": 8,
+              "median_far_distance": 19.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 8,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 8
+            },
+            "band_changed_on": 8,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 8,
+            "n_transitions": 8
+          },
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1"
+            ],
+            "reason": "defended:P1",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.007121,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 8,
+        "mean_changed_cell_overlap_per_changing_transition": 0.024341,
+        "n_changed_cells_inside_mask": 14,
+        "n_changed_cells_total": 1966,
+        "n_transitions": 8,
+        "n_transitions_shape_matched": 8,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 8,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.007121,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 8,
+        "mean_changed_cell_overlap_per_changing_transition": 0.024341,
+        "n_changed_cells_inside_mask": 14,
+        "n_changed_cells_total": 1966,
+        "n_transitions": 8,
+        "n_transitions_shape_matched": 8,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 8,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.232,
+      "game": "lf52",
+      "hud_cols": [],
+      "hud_rows": [
+        0
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": null,
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 8,
+      "n_window_transitions": 8,
+      "playfield_touches_border_outside_detected_bands": false,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.062663,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 7,
+                "mean_changed_cell_overlap_per_changing_transition": 0.092232,
+                "n_changed_cells_inside_mask": 24,
+                "n_changed_cells_total": 383,
+                "n_transitions": 7,
+                "n_transitions_shape_matched": 7,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 7,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 7,
+              "far_min_cells": 4,
+              "far_opportunities": 7,
+              "median_far_distance": 28.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 7,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 7
+            },
+            "band_changed_on": 7,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 7,
+            "n_transitions": 7
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.062663,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 7,
+                "mean_changed_cell_overlap_per_changing_transition": 0.092232,
+                "n_changed_cells_inside_mask": 24,
+                "n_changed_cells_total": 383,
+                "n_transitions": 7,
+                "n_transitions_shape_matched": 7,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 7,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 7,
+              "far_min_cells": 4,
+              "far_opportunities": 7,
+              "median_far_distance": 28.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 7,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 7
+            },
+            "band_changed_on": 7,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 7,
+            "n_transitions": 7
+          },
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1"
+            ],
+            "reason": "defended:P1",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.062663,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 7,
+        "mean_changed_cell_overlap_per_changing_transition": 0.092232,
+        "n_changed_cells_inside_mask": 24,
+        "n_changed_cells_total": 383,
+        "n_transitions": 7,
+        "n_transitions_shape_matched": 7,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 7,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.062663,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 7,
+        "mean_changed_cell_overlap_per_changing_transition": 0.092232,
+        "n_changed_cells_inside_mask": 24,
+        "n_changed_cells_total": 383,
+        "n_transitions": 7,
+        "n_transitions_shape_matched": 7,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 7,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.106,
+      "game": "su15",
+      "hud_cols": [],
+      "hud_rows": [
+        63
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": null,
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 7,
+      "n_window_transitions": 7,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.014942,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 5,
+                "mean_changed_cell_overlap_per_changing_transition": 0.01631,
+                "n_changed_cells_inside_mask": 40,
+                "n_changed_cells_total": 2677,
+                "n_transitions": 5,
+                "n_transitions_shape_matched": 5,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 5,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": false,
+              "far_action_change_rate": null,
+              "far_changed": 0,
+              "far_min_cells": 4,
+              "far_opportunities": 0,
+              "median_far_distance": null,
+              "pass": false,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "0": {
+                  "n": 5,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "0"
+              ]
+            },
+            "acted_location_kinds": {
+              "unavailable": 5
+            },
+            "band_changed_on": 5,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 5,
+            "n_transitions": 5
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.014942,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 5,
+                "mean_changed_cell_overlap_per_changing_transition": 0.01631,
+                "n_changed_cells_inside_mask": 40,
+                "n_changed_cells_total": 2677,
+                "n_transitions": 5,
+                "n_transitions_shape_matched": 5,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 5,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": false,
+              "far_action_change_rate": null,
+              "far_changed": 0,
+              "far_min_cells": 4,
+              "far_opportunities": 0,
+              "median_far_distance": null,
+              "pass": false,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "0": {
+                  "n": 5,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "0"
+              ]
+            },
+            "acted_location_kinds": {
+              "unavailable": 5
+            },
+            "band_changed_on": 5,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 5,
+            "n_transitions": 5
+          },
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": false,
+            "alarms": [],
+            "positives_passed": [],
+            "reason": "undefendable_no_discriminator_available",
+            "suspected_false_positive": true
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 0,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 5,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 5,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.086,
+      "game": "lp85",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "refused_all_bands_excluded",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": null,
+      "n_bands_accepted": 0,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 1,
+      "n_trajectory_transitions": 5,
+      "n_window_transitions": 5,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 5,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 5,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.053,
+      "game": "cd82",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 0.993,
+        "color": 15,
+        "evidence": 4
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 5,
+      "n_window_transitions": 5,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 33,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.239,
+      "game": "wa30",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": {
+        "alignment": 0.972,
+        "color": 0,
+        "evidence": 27
+      },
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 33,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [],
+      "bands_detected_full_trajectory": [],
+      "bands_detected_window": [],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 16,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.0,
+        "changing_transition_survival": 0.0,
+        "changing_transitions_deleted": 0,
+        "checked": false,
+        "masked_changing_transitions": 0,
+        "mean_changed_cell_overlap_per_changing_transition": 0.0,
+        "n_changed_cells_inside_mask": 0,
+        "n_changed_cells_total": 0,
+        "n_transitions": 12,
+        "n_transitions_shape_matched": 0,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 0,
+        "reason": "no_mask",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": false,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.235,
+      "game": "sc25",
+      "hud_cols": [],
+      "hud_rows": [],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "no_bands_detected",
+      "masked_cell_fraction": 0.0,
+      "masked_cells": 0,
+      "mover": null,
+      "n_bands_accepted": 0,
+      "n_bands_detected": 0,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 16,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.004552,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 7,
+                "mean_changed_cell_overlap_per_changing_transition": 0.214614,
+                "n_changed_cells_inside_mask": 12,
+                "n_changed_cells_total": 2636,
+                "n_transitions": 7,
+                "n_transitions_shape_matched": 7,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 7,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 7,
+              "far_min_cells": 4,
+              "far_opportunities": 7,
+              "median_far_distance": 43.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 7,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 7
+            },
+            "band_changed_on": 7,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 7,
+            "n_transitions": 7
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": false,
+              "mover_color": null,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.004552,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 7,
+                "mean_changed_cell_overlap_per_changing_transition": 0.214614,
+                "n_changed_cells_inside_mask": 12,
+                "n_changed_cells_total": 2636,
+                "n_transitions": 7,
+                "n_transitions_shape_matched": 7,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 7,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 1.0,
+              "far_changed": 7,
+              "far_min_cells": 4,
+              "far_opportunities": 7,
+              "median_far_distance": 43.0,
+              "pass": true,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": false,
+              "pass": false,
+              "per_action": {
+                "6": {
+                  "n": 7,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "6"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 7
+            },
+            "band_changed_on": 7,
+            "changed_fraction_on_this_corpus": 1.0,
+            "n_changing_transitions": 7,
+            "n_transitions": 7
+          },
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P1"
+            ],
+            "reason": "defended:P1",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 1,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 1,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "direction": "counter",
+          "index": 1,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.004552,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 7,
+        "mean_changed_cell_overlap_per_changing_transition": 0.214614,
+        "n_changed_cells_inside_mask": 12,
+        "n_changed_cells_total": 2636,
+        "n_transitions": 7,
+        "n_transitions_shape_matched": 7,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 7,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.004552,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 7,
+        "mean_changed_cell_overlap_per_changing_transition": 0.214614,
+        "n_changed_cells_inside_mask": 12,
+        "n_changed_cells_total": 2636,
+        "n_transitions": 7,
+        "n_transitions_shape_matched": 7,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 7,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.131,
+      "game": "tn36",
+      "hud_cols": [],
+      "hud_rows": [
+        1
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": null,
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 7,
+      "n_window_transitions": 7,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    },
+    {
+      "bands": [
+        {
+          "audit_full_trajectory": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 14,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.003243,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 11,
+                "mean_changed_cell_overlap_per_changing_transition": 0.053729,
+                "n_changed_cells_inside_mask": 12,
+                "n_changed_cells_total": 3700,
+                "n_transitions": 11,
+                "n_transitions_shape_matched": 11,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 11,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 0.636364,
+              "far_changed": 7,
+              "far_min_cells": 4,
+              "far_opportunities": 11,
+              "median_far_distance": 32.0,
+              "pass": false,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "1": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "2": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "3": {
+                  "n": 4,
+                  "rate": 0.75
+                },
+                "4": {
+                  "n": 4,
+                  "rate": 0.75
+                },
+                "6": {
+                  "n": 1,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "3",
+                "4"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 1,
+              "mover_centroid": 10
+            },
+            "band_changed_on": 7,
+            "changed_fraction_on_this_corpus": 0.636364,
+            "n_changing_transitions": 11,
+            "n_transitions": 11
+          },
+          "audit_window": {
+            "A1_solution_acts_in_band": {
+              "alarm": false,
+              "n_click_actions_targeting_band": 0,
+              "principle": "if the offline arcade's own winning route has to ACT inside the band, the band is interactive playfield and masking it deletes a required mechanic"
+            },
+            "A2_mover_occupies_band": {
+              "alarm": false,
+              "available": true,
+              "mover_color": 14,
+              "n_frames_with_mover_in_band": 0,
+              "principle": "if the PLAYER entity can be inside the band, the band is somewhere the game is played, not a status readout"
+            },
+            "A3_swallow_guard": {
+              "alarm": false,
+              "clean": true,
+              "principle": "REQ-ARC-WMTE-6015's shipped guard: a mask that covers the majority of the corpus's changed cells, or that leaves no changing transition at all, is refused on doubt -- over-masking destroys correctness, under-masking only costs efficiency",
+              "record": {
+                "changed_cell_overlap": 0.003243,
+                "changing_transition_survival": 1.0,
+                "changing_transitions_deleted": 0,
+                "checked": true,
+                "masked_changing_transitions": 11,
+                "mean_changed_cell_overlap_per_changing_transition": 0.053729,
+                "n_changed_cells_inside_mask": 12,
+                "n_changed_cells_total": 3700,
+                "n_transitions": 11,
+                "n_transitions_shape_matched": 11,
+                "n_transitions_skipped_shape_mismatch": 0,
+                "overlap_threshold": 0.5,
+                "raw_changing_transitions": 11,
+                "reason": "ok",
+                "swallows": false
+              }
+            },
+            "P1_far_action_decoupling": {
+              "available": true,
+              "far_action_change_rate": 0.636364,
+              "far_changed": 7,
+              "far_min_cells": 4,
+              "far_opportunities": 11,
+              "median_far_distance": 32.0,
+              "pass": false,
+              "principle": "a counter advances no matter where you act; a board region changes only where you act on it, so a band that keeps changing when the action is >=4 cells away is decoupled from the action's LOCATION"
+            },
+            "P2_action_type_decoupling": {
+              "available": true,
+              "pass": true,
+              "per_action": {
+                "1": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "2": {
+                  "n": 1,
+                  "rate": 0.0
+                },
+                "3": {
+                  "n": 4,
+                  "rate": 0.75
+                },
+                "4": {
+                  "n": 4,
+                  "rate": 0.75
+                },
+                "6": {
+                  "n": 1,
+                  "rate": 1.0
+                }
+              },
+              "principle": "a counter ticks on the mere fact of acting, so it changes under several DIFFERENT action types; a board region responds to the specific action that touches it",
+              "qualifying_action_ids": [
+                "3",
+                "4"
+              ]
+            },
+            "acted_location_kinds": {
+              "click": 1,
+              "mover_centroid": 10
+            },
+            "band_changed_on": 7,
+            "changed_fraction_on_this_corpus": 0.636364,
+            "n_changing_transitions": 11,
+            "n_transitions": 11
+          },
+          "axis": "row",
+          "changed_fraction": 0.636,
+          "decision": {
+            "accepted": true,
+            "alarms": [],
+            "positives_passed": [
+              "P2"
+            ],
+            "reason": "defended:P2",
+            "suspected_false_positive": false
+          },
+          "detected_on_full_trajectory": true,
+          "detected_on_window": true,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_full_trajectory": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.636,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "bands_detected_window": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.636,
+          "direction": "counter",
+          "index": 63,
+          "monotone_ratio": 0.0
+        }
+      ],
+      "cell": 1,
+      "combined_mask_swallow_check_trajectory": {
+        "changed_cell_overlap": 0.003243,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 11,
+        "mean_changed_cell_overlap_per_changing_transition": 0.053729,
+        "n_changed_cells_inside_mask": 12,
+        "n_changed_cells_total": 3700,
+        "n_transitions": 11,
+        "n_transitions_shape_matched": 11,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 11,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_check_window": {
+        "changed_cell_overlap": 0.003243,
+        "changing_transition_survival": 1.0,
+        "changing_transitions_deleted": 0,
+        "checked": true,
+        "masked_changing_transitions": 11,
+        "mean_changed_cell_overlap_per_changing_transition": 0.053729,
+        "n_changed_cells_inside_mask": 12,
+        "n_changed_cells_total": 3700,
+        "n_transitions": 11,
+        "n_transitions_shape_matched": 11,
+        "n_transitions_skipped_shape_mismatch": 0,
+        "overlap_threshold": 0.5,
+        "raw_changing_transitions": 11,
+        "reason": "ok",
+        "swallows": false
+      },
+      "combined_mask_swallow_clean": true,
+      "detection_agrees_window_vs_trajectory": true,
+      "duration_s": 0.21,
+      "game": "ka59",
+      "hud_cols": [],
+      "hud_rows": [
+        63
+      ],
+      "logical_shape": [
+        64,
+        64
+      ],
+      "mask_status": "accepted",
+      "masked_cell_fraction": 0.015625,
+      "masked_cells": 64,
+      "mover": {
+        "alignment": 1.0,
+        "color": 14,
+        "evidence": 9
+      },
+      "n_bands_accepted": 1,
+      "n_bands_detected": 1,
+      "n_bands_suspected_false_positive": 0,
+      "n_trajectory_transitions": 11,
+      "n_window_transitions": 11,
+      "playfield_touches_border_outside_detected_bands": true,
+      "status": "ok"
+    }
+  ]
+}

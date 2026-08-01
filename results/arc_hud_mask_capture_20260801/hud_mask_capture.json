@@ -1,0 +1,1260 @@
+{
+  "acceptance_gates": {
+    "gate_1_sharp_test_tn36_row1_detected": {
+      "passed": true,
+      "principle": "tn36's engines model row 1 and nothing else, so row 1 is the band whose masking decides whether the six perfect-1.0 candidates stay perfect. A detector that cannot see it cannot fix the metric. NOTE this gate is about DETECTION only -- gate 4 is what decides whether it may be used."
+    },
+    "gate_2_every_stage1_accepted_band_carries_positive_evidence": {
+      "n_stage1_accepted": 9,
+      "passed": true,
+      "principle": "changed_fraction alone cannot distinguish a counter row from the row the player walks along, so 'the detector flagged it' is not by itself a licence to delete cells. Every accepted band passed at least one decoupling discriminator."
+    },
+    "gate_3_no_stage1_accepted_band_tripped_a_playfield_alarm": {
+      "passed": true,
+      "principle": "over-masking destroys CORRECTNESS while under-masking only costs efficiency (logical_hud_mask's own docstring), so any alarm on either corpus excludes the band."
+    },
+    "gate_4_every_shipped_mask_is_clean_on_BOTH_corpora": {
+      "n_masks_shipped": 6,
+      "n_masks_withheld": 3,
+      "passed": true,
+      "principle": "REQ-ARC-WMTE-6017: a verdict is a statement about (mask, corpus), never about the mask alone. A mask cleared only on the corpus it was derived from is not cleared."
+    },
+    "gate_5_documented_over_masking_table_reproduced": {
+      "detail": [
+        {
+          "documented_overlap": 1.0,
+          "documented_raw_to_masked": [
+            60,
+            0
+          ],
+          "game": "lf52",
+          "matches": true,
+          "measured_overlap": 1.0,
+          "measured_raw_to_masked": [
+            60,
+            0
+          ],
+          "same_band_as_explorer": true
+        },
+        {
+          "documented_overlap": 0.7568,
+          "documented_raw_to_masked": [
+            28,
+            1
+          ],
+          "game": "su15",
+          "matches": true,
+          "measured_overlap": 0.756757,
+          "measured_raw_to_masked": [
+            28,
+            1
+          ],
+          "same_band_as_explorer": true
+        }
+      ],
+      "passed": true,
+      "principle": "If this audit could not reproduce the two over-masking cases the project already knows about, its clean verdicts on the other games would carry no weight. Reproducing them to four decimals is what makes the accepts meaningful."
+    },
+    "gate_6_detector_thresholds_untouched": {
+      "passed": true,
+      "principle": "detect_hud_registers was called with its shipped defaults on all 20 games, and the audit can only ever REMOVE a band. Hand-tuning a threshold until a game came out the way the hypothesis wanted would make the capture unfalsifiable -- and tn36, the game the hypothesis most wanted, is the one that got withheld."
+    },
+    "gate_7_capture_is_repeatable": {
+      "passed": true,
+      "principle": "Two full independent runs must detect the same bands, or the masks are not re-derivable by anyone else and the audit is unauditable."
+    }
+  },
+  "cited_upstream_artifacts": [
+    {
+      "fields_imported": [
+        "split_meta (the 20-game roster)"
+      ],
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/meta.json",
+      "sha256": "sha256:77228c1afd62e033374c7974bf67af3c682aa8843002a7545e44cb702eb0b02b"
+    }
+  ],
+  "detector_comparison_vs_explorer_edge_bar": {
+    "band_definition": "a row/col the explorer covers to >=90%; the strict all-cells test misreported tn36's 61-of-64 bar as no band at all",
+    "both_propose_but_differ": [
+      "ar25"
+    ],
+    "both_propose_the_same_band": [
+      "bp35",
+      "ka59",
+      "lf52",
+      "lp85",
+      "s5i5",
+      "su15",
+      "tn36",
+      "tu93"
+    ],
+    "neither_proposes_a_band": [
+      "sb26",
+      "sk48"
+    ],
+    "only_the_explorer_proposes_a_band": [
+      "cd82",
+      "g50t",
+      "m0r0",
+      "re86",
+      "sc25",
+      "tr87",
+      "wa30"
+    ],
+    "only_this_capture_proposes_a_band": [
+      "cn04",
+      "ls20"
+    ],
+    "shipped_masks_no_other_detector_corroborates": [
+      "ls20"
+    ]
+  },
+  "determinism_note": "The route replay, the detectors and the audit are deterministic functions of the offline environment_files, so random_seed is recorded for provenance rather than because a sampler consumed it -- stating that plainly is better than implying a seed swept a distribution it never touched. The one genuinely seeded component is the SECOND corpus, collect_transitions(n=60, seed=0); seed 0 is not this artifact's seed but the one REQ-ARC-WMTE-6015's table was measured at, chosen so the comparison to that table is meaningful. Repeatability is measured, not asserted -- see determinism_recheck.",
+  "determinism_recheck": {
+    "available": true,
+    "differences": [],
+    "n_games_compared": 20,
+    "n_games_with_differing_bands": 0,
+    "what_this_does_not_test": "Both runs used the same checkout, the same environment_files and any learned verifier checkpoints already on disk. It is a same-machine repeatability check, not an independent reproduction.",
+    "what_this_tests": "Two independent full runs of capture.py, each re-solving every game through solve_adaptered and re-cutting its window. Identical detected bands mean the route, the window and the detector are all reproducible -- the thing a third party needs in order to re-derive these masks rather than take them on trust.",
+    "witness_file": "per_game_run1_determinism_witness.json"
+  },
+  "duration_s": 220.708,
+  "duration_s_note": "Sum of the per-game capture durations recorded in per_game.json plus the cross-corpus check's own duration. Excludes interpreter startup and artifact assembly.",
+  "experiment": "arc_hud_mask_capture_20260801",
+  "games_with_a_default_mask": [
+    "ar25",
+    "bp35",
+    "ka59",
+    "ls20",
+    "s5i5",
+    "tu93"
+  ],
+  "games_withheld_at_stage_2": [
+    "lf52",
+    "su15",
+    "tn36"
+  ],
+  "gpu_used": false,
+  "honest_verdict": "complete_hud_bands_captured_and_over_masking_audited_tn36_row1_detected_then_withheld_at_second_corpus_gate_6_of_20_games_carry_a_default_mask_2_bands_excluded_at_stage1_3_withheld_at_stage2",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_note": "CPU-only. The offline arcade is stepped through each game's own winning route to rebuild the induction window (build_progress_window), and separately with random salience-ordered actions (collect_transitions) for the second corpus. Pure-numpy detectors (detect_hud_registers, detect_mover) and the shipped swallow guard then run over the resulting (grid, action, grid) transitions. NO LLM is loaded, no GGUF is invoked, no llama-server is contacted, no GPU is used, and none of the 116 A/B induced engines is imported or executed.",
+  "limitations": [
+    "The masks are derived from ONE route per game -- the offline arcade's own winning route to L1 -- plus one 60-action random corpus. A band that only reveals itself as playfield on a third corpus is invisible to this audit, and that error direction is not symmetric: a missed playfield alarm ships an over-mask.",
+    "Six of the 20 windows are shorter than 10 transitions (lp85 5, cd82 5, tn36 7, su15 7, lf52 8, sb26 9). On those the stage-1 statistics rest on single-digit denominators, so a passing discriminator is weak evidence even when its rate is 1.0.",
+    "A2 keys on the mover's COLOR occupying the band, not a tracked instance, so a HUD sharing the player's palette trips it and the band is excluded. That is a deliberate under-mask, chosen because the opposite error is the catastrophic one. detect_mover returned None on several games, so A2 was simply unavailable there.",
+    "P1 falls back to the mover's centroid as 'where the agent acted' for directional actions -- a proxy for an action that has no coordinate. On lp85 the recorded action id was 0 with no data and no mover, so no discriminator was available at all and the band was refused rather than guessed at.",
+    "detect_hud_registers only ever proposes bands within edge_margin=2. A status readout drawn in the grid's interior is outside this detector's reach by construction.",
+    "This capture does NOT re-score the A/B and makes no claim about change_fidelity. It produces masks and the evidence that they may be used."
+  ],
+  "llm_enabled": false,
+  "masked_cell_fraction_per_masked_game": [
+    0.015625
+  ],
+  "masks_written": {
+    "consumption_note": "Each file gives (logical_shape, hud_rows, hud_cols) -- a lossless encoding of the boolean mask, since a band is a whole row or column. A re-score materialises it with two numpy assignments and passes it to arc_executable_world_model.apply_hud_mask on BOTH sides of the comparison. An EMPTY mask is a refusal, not an absence: apply nothing and record mask_status. conditionally_clean_bands are NOT in hud_rows/hud_cols and require a deliberate opt-in.",
+    "coordinate_space": "logical_grid",
+    "dir": "results/arc_hud_mask_capture_20260801/masks",
+    "files": [
+      "_index.json",
+      "ar25.json",
+      "bp35.json",
+      "cd82.json",
+      "cn04.json",
+      "g50t.json",
+      "ka59.json",
+      "lf52.json",
+      "lp85.json",
+      "ls20.json",
+      "m0r0.json",
+      "re86.json",
+      "s5i5.json",
+      "sb26.json",
+      "sc25.json",
+      "sk48.json",
+      "su15.json",
+      "tn36.json",
+      "tr87.json",
+      "tu93.json",
+      "wa30.json"
+    ],
+    "index": "results/arc_hud_mask_capture_20260801/masks/_index.json",
+    "stage": "final_after_second_corpus_gate"
+  },
+  "n_bands_accepted_stage_1": 9,
+  "n_bands_detected": 11,
+  "n_bands_excluded_stage_1": 2,
+  "n_bands_withheld_stage_2": 3,
+  "n_games": 20,
+  "n_games_mask_refused_or_empty": 14,
+  "n_games_with_a_default_mask": 6,
+  "n_games_with_window": 20,
+  "no_solve_is_claimed_note": "No ARC level is solved, reproduced or claimed here. The winning routes replayed to build the windows are already-banked registry routes used purely as a transition source; solve_provenance is therefore not declared, because declaring one would assert a solve this artifact does not make.",
+  "over_masking_audit": {
+    "stage_1_single_corpus": {
+      "A1_solution_acts_in_band": "the offline arcade's own winning route clicks inside the band => the band is interactive playfield",
+      "A2_mover_occupies_band": "the detected PLAYER entity's color occupies band cells in some observed frame => the band is somewhere the game is played",
+      "A3_swallow_guard": "REQ-ARC-WMTE-6015's shipped hud_mask_swallow_check / hud_mask_swallow_clean on the band-alone mask; anything that is not the affirmative 'ok' verdict is a refusal, including the unmeasurable ones",
+      "P1_far_action_decoupling": "the band changes even when the action was >= 4 cells away along the band's axis, at a rate >= 0.7 over >= 3 far opportunities",
+      "P2_action_type_decoupling": ">= 2 distinct action ids each change the band on >= 50% of their frame-changing transitions",
+      "accepted_positive_evidence_counts": {
+        "P1": 8,
+        "P2": 5
+      },
+      "alarm_counts": {
+        "A2_mover_occupies_band@trajectory": 1,
+        "A2_mover_occupies_band@window": 1
+      },
+      "alarms_are_OR_ed_across_window_and_trajectory": true,
+      "audit_can_only_remove_a_band_never_add_one": true,
+      "corpus": "the game's own winning route to L1 (window + full trajectory)",
+      "excluded_bands": [
+        {
+          "alarms": [
+            "A2_mover_occupies_band@window",
+            "A2_mover_occupies_band@trajectory"
+          ],
+          "axis": "row",
+          "changed_fraction": 0.5,
+          "game": "cn04",
+          "index": 0,
+          "reason": "playfield_alarm"
+        },
+        {
+          "alarms": [],
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "game": "lp85",
+          "index": 0,
+          "reason": "undefendable_no_discriminator_available"
+        }
+      ],
+      "exclusion_reason_counts": {
+        "playfield_alarm": 1,
+        "undefendable_no_discriminator_available": 1
+      },
+      "positive_evidence_required_on_the_full_trajectory": true,
+      "threshold_provenance": "0.7 is the detector's own pos_independent_min and 0.5 is its own mixed_changed_min, reused rather than chosen fresh so the audit adds no new tunable. 4 cells is edge_margin=2 plus a two-cell buffer, so a FAR action provably did not land on or beside the band."
+    },
+    "stage_2_second_corpus": {
+      "corpus": {
+        "kind": "collect_transitions random actions from reset",
+        "n": 60,
+        "seed": 0,
+        "why_this_scope": "REQ-ARC-WMTE-6019 records that REQ-ARC-WMTE-6015's over-masking table was measured at n=60, seed=0, and that n=60 is a strict prefix of n=120 under the same seed. Matching the scope is what makes a comparison to that table meaningful rather than a fresh unrelated measurement."
+      },
+      "documented_table_reproduction": [
+        {
+          "documented_overlap": 1.0,
+          "documented_raw_to_masked": [
+            60,
+            0
+          ],
+          "game": "lf52",
+          "matches": true,
+          "measured_overlap": 1.0,
+          "measured_raw_to_masked": [
+            60,
+            0
+          ],
+          "same_band_as_explorer": true
+        },
+        {
+          "documented_overlap": 0.7568,
+          "documented_raw_to_masked": [
+            28,
+            1
+          ],
+          "game": "su15",
+          "matches": true,
+          "measured_overlap": 0.756757,
+          "measured_raw_to_masked": [
+            28,
+            1
+          ],
+          "same_band_as_explorer": true
+        }
+      ],
+      "gate": "a band reaches hud_rows/hud_cols only if affirmatively clean on BOTH corpora; otherwise it is moved to conditionally_clean_bands in the mask file, which is NOT part of the mask a consumer materialises",
+      "refusal_classes_are_not_the_same_claim": "'mask_overlaps_majority_of_changed_cells' (su15) is MEASURED evidence the mask covers what changes. 'no_changed_cells_outside_mask_cannot_distinguish' (lf52, tn36) is the shipped guard's explicitly UNMEASURABLE verdict -- the corpus cannot tell an honest counter from a mask that covers the game. Both are refusals under hud_mask_swallow_clean's default-refuse contract, and they are reported separately because they are different facts and an operator acts on them differently.",
+      "why": "Stage 1 accepted a band on lf52 and su15 -- the exact two games REQ-ARC-WMTE-6015 documents as over-masking cases. A single-corpus accept is therefore not enough to ship a mask, because REQ-ARC-WMTE-6017 already recorded that lf52's verdict FLIPS between a random-action corpus (refused) and a live episode (applied).",
+      "withheld": [
+        {
+          "game": "lf52",
+          "reason": "no_changed_cells_outside_mask_cannot_distinguish",
+          "same_band_as_explorer": true
+        },
+        {
+          "game": "su15",
+          "reason": "mask_overlaps_majority_of_changed_cells",
+          "same_band_as_explorer": true
+        },
+        {
+          "game": "tn36",
+          "reason": "no_changed_cells_outside_mask_cannot_distinguish",
+          "same_band_as_explorer": true
+        }
+      ]
+    },
+    "the_finding_that_survives_regardless_of_the_gate": "The two detectors agree on the band on 8 of 20 games (bp35, ka59, lf52, lp85, s5i5, su15, tn36, tu93) -- including tn36, where both independently pick row 1, the exact row the induced engines model. Two unrelated methods converging on the same band is stronger evidence that it is chrome than either alone. They differ in BOTH directions elsewhere: 7 games where only the explorer proposes a band (cd82, g50t, m0r0, re86, sc25, tr87, wa30) and 2 where only this capture does (cn04, ls20). Those directions are not equivalent: a band only this detector proposes is a candidate over-mask the shipped path never risked, while a band only the explorer proposes is coverage this transition-derived path does not reproduce. Both facts are properties of the detectors and hold whichever mask is used.",
+    "why_this_is_the_first_deliverable": "If a flagged band is really playfield, masking deletes real dynamics: every engine's score IMPROVES while it models LESS, and nothing in the numbers says so. logical_hud_mask's own docstring names the asymmetry -- 'over-masking destroys CORRECTNESS while under-masking only costs efficiency' -- so the audit GATES the mask instead of annotating it."
+  },
+  "per_game": [
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.917,
+          "far_action_change_rate": 0.923077,
+          "index": 62,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1+P2",
+          "winning_route_changed_cell_overlap": 0.010531
+        }
+      ],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [],
+      "final_hud_cols": [],
+      "final_hud_rows": [
+        62
+      ],
+      "final_mask_status": "accepted_clean_on_both_corpora",
+      "game": "ls20",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.015625,
+      "mover": {
+        "alignment": 1.0,
+        "color": 12,
+        "evidence": 12
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 13,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": false,
+      "same_band_as_explorer_edge_bar_detector": null,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": true,
+      "second_corpus_reason": "ok"
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 63,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1",
+          "winning_route_changed_cell_overlap": 0.02991
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [
+        63
+      ],
+      "final_mask_status": "accepted_clean_on_both_corpora",
+      "game": "s5i5",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.015625,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 13,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": false,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": true,
+      "second_corpus_reason": "ok"
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 63,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1+P2",
+          "winning_route_changed_cell_overlap": 0.04147
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [
+        63
+      ],
+      "final_mask_status": "accepted_clean_on_both_corpora",
+      "game": "tu93",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.015625,
+      "mover": {
+        "alignment": 1.0,
+        "color": 9,
+        "evidence": 17
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 18,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": false,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": true,
+      "second_corpus_reason": "ok"
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.5,
+          "far_action_change_rate": 0.461538,
+          "index": 0,
+          "monotone_ratio": 1.0,
+          "stage_1_accepted": false,
+          "stage_1_alarms": [
+            "A2_mover_occupies_band@window",
+            "A2_mover_occupies_band@trajectory"
+          ],
+          "stage_1_reason": "playfield_alarm",
+          "winning_route_changed_cell_overlap": 0.00653
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 0.5,
+        "jaccard": 0.5,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 32,
+        "n_cells_masked_by_explorer": 32
+      },
+      "detection_agrees_window_vs_trajectory": false,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "refused_all_bands_excluded",
+      "game": "cn04",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 1.0,
+        "color": 0,
+        "evidence": 11
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 13,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        0,
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "m0r0",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 15,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "sk48",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 0.903,
+        "color": 8,
+        "evidence": 7
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 14,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": null,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 63,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1+P2",
+          "winning_route_changed_cell_overlap": 0.012647
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 0.503937,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 127
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [
+        63
+      ],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [
+        63
+      ],
+      "final_hud_rows": [],
+      "final_mask_status": "accepted_clean_on_both_corpora",
+      "game": "ar25",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.015625,
+      "mover": {
+        "alignment": 1.0,
+        "color": 0,
+        "evidence": 14
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 15,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": true,
+      "second_corpus_reason": "ok"
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "tr87",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 1.0,
+        "color": 0,
+        "evidence": 4
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 14,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "g50t",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 0.934,
+        "color": 9,
+        "evidence": 16
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 17,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "re86",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 1.0,
+        "color": 9,
+        "evidence": 11
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 20,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 63,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1+P2",
+          "winning_route_changed_cell_overlap": 0.004957
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [
+        63
+      ],
+      "final_mask_status": "accepted_clean_on_both_corpora",
+      "game": "bp35",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.015625,
+      "mover": {
+        "alignment": 1.0,
+        "color": 9,
+        "evidence": 12
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 17,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": true,
+      "second_corpus_reason": "ok"
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "sb26",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 9,
+      "n_window_transitions": 9,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": null,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 0,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1",
+          "winning_route_changed_cell_overlap": 0.007121
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        0
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "withheld_second_corpus_swallow_refusal",
+      "game": "lf52",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 1,
+      "n_trajectory_transitions": 8,
+      "n_window_transitions": 8,
+      "playfield_touches_border_outside_detected_bands": false,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": "no_changed_cells_outside_mask_cannot_distinguish"
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 63,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1",
+          "winning_route_changed_cell_overlap": 0.062663
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "withheld_second_corpus_swallow_refusal",
+      "game": "su15",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 1,
+      "n_trajectory_transitions": 7,
+      "n_window_transitions": 7,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": "mask_overlaps_majority_of_changed_cells"
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "col",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": null,
+          "index": 0,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": false,
+          "stage_1_alarms": [],
+          "stage_1_reason": "undefendable_no_discriminator_available",
+          "winning_route_changed_cell_overlap": 0.014942
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [
+        0
+      ],
+      "explorer_edge_bar_rows": [],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "refused_all_bands_excluded",
+      "game": "lp85",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 5,
+      "n_window_transitions": 5,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "cd82",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 0.993,
+        "color": 15,
+        "evidence": 4
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 5,
+      "n_window_transitions": 5,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "wa30",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": {
+        "alignment": 0.972,
+        "color": 0,
+        "evidence": 27
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 33,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [],
+      "detected_band_vs_explorer_cells": null,
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [
+        62,
+        63
+      ],
+      "explorer_edge_bar_rows": [],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "no_bands_detected",
+      "game": "sc25",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 16,
+      "n_window_transitions": 12,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": false,
+      "second_corpus_gate_applies": false,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": null
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 1.0,
+          "far_action_change_rate": 1.0,
+          "index": 1,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P1",
+          "winning_route_changed_cell_overlap": 0.004552
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 0.953125,
+        "jaccard": 0.953125,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 61,
+        "n_cells_masked_by_explorer": 61
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        1
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [],
+      "final_mask_status": "withheld_second_corpus_swallow_refusal",
+      "game": "tn36",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.0,
+      "mover": null,
+      "n_bands_withheld_at_stage_2": 1,
+      "n_trajectory_transitions": 7,
+      "n_window_transitions": 7,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": false,
+      "second_corpus_reason": "no_changed_cells_outside_mask_cannot_distinguish"
+    },
+    {
+      "bands_detected": [
+        {
+          "axis": "row",
+          "changed_fraction": 0.636,
+          "far_action_change_rate": 0.636364,
+          "index": 63,
+          "monotone_ratio": 0.0,
+          "stage_1_accepted": true,
+          "stage_1_alarms": [],
+          "stage_1_reason": "defended:P2",
+          "winning_route_changed_cell_overlap": 0.003243
+        }
+      ],
+      "detected_band_vs_explorer_cells": {
+        "fraction_of_my_band_the_explorer_also_masks": 1.0,
+        "jaccard": 1.0,
+        "n_cells_detected_by_this_capture": 64,
+        "n_cells_in_both": 64,
+        "n_cells_masked_by_explorer": 64
+      },
+      "detection_agrees_window_vs_trajectory": true,
+      "explorer_edge_bar_cols": [],
+      "explorer_edge_bar_rows": [
+        63
+      ],
+      "final_hud_cols": [],
+      "final_hud_rows": [
+        63
+      ],
+      "final_mask_status": "accepted_clean_on_both_corpora",
+      "game": "ka59",
+      "logical_shape": [
+        64,
+        64
+      ],
+      "masked_cell_fraction": 0.015625,
+      "mover": {
+        "alignment": 1.0,
+        "color": 14,
+        "evidence": 9
+      },
+      "n_bands_withheld_at_stage_2": 0,
+      "n_trajectory_transitions": 11,
+      "n_window_transitions": 11,
+      "playfield_touches_border_outside_detected_bands": true,
+      "same_band_as_explorer_edge_bar_detector": true,
+      "second_corpus_gate_applies": true,
+      "second_corpus_gate_passed": true,
+      "second_corpus_reason": "ok"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "results/arc_object_perception_ab_change_fidelity_20260801/meta.json",
+      "resource": "roster_source_meta_json"
+    },
+    {
+      "available": true,
+      "detail": "environment_files/",
+      "resource": "offline_environment_files"
+    },
+    {
+      "available": true,
+      "detail": "detect_hud_registers + detect_mover importable",
+      "resource": "detector_module_arc_entity_hud_perception"
+    },
+    {
+      "available": true,
+      "detail": "hud_mask_swallow_check + hud_mask_swallow_clean importable",
+      "resource": "swallow_guard_arc_executable_world_model"
+    },
+    {
+      "available": true,
+      "detail": "edge_bar_hud_mask importable, for the same-band comparison",
+      "resource": "explorer_edge_bar_detector_arc_hud_bar_detector"
+    },
+    {
+      "available": true,
+      "detail": "CPU-only: offline arcade env-stepping plus numpy detectors",
+      "resource": "no_gpu_required"
+    }
+  ],
+  "provenance": {
+    "code": [
+      {
+        "bytes": 29790,
+        "path": "results/arc_hud_mask_capture_20260801/capture.py",
+        "sha256": "c1b0851cd122f1ad3734a1212253b91788daeb0ce45d1b0bf9db3dca017b0824"
+      },
+      {
+        "bytes": 11120,
+        "path": "results/arc_hud_mask_capture_20260801/cross_corpus_check.py",
+        "sha256": "54a6a5b700f74f924687b7fc6bdbfeb89841865f2a1e2878a84bd15b144065c9"
+      },
+      {
+        "bytes": 12351,
+        "path": "results/arc_hud_mask_capture_20260801/finalize_masks.py",
+        "sha256": "faebdbe1a777fc117e65fec36e43d77bb7cf3613dfd075f667adedc49804a4e4"
+      },
+      {
+        "bytes": 39669,
+        "path": "results/arc_hud_mask_capture_20260801/build_artifact.py",
+        "sha256": "3c2c52c07586216f1ab8ffe6bac86f8c2a6ea663445d8dc572d9d29811be86e8"
+      },
+      {
+        "bytes": 25759,
+        "path": "python/carnot/agentic/arc_entity_hud_perception.py",
+        "sha256": "87ea0541d1b38d70f2a8c2b4271b2e4a09869de8d2951eaea8d752825f1a34ae"
+      },
+      {
+        "bytes": 363824,
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6"
+      },
+      {
+        "bytes": 62001,
+        "path": "python/carnot/agentic/arc_actions_to_progress.py",
+        "sha256": "d2d813a9bcaadcec9b2e902ef6e555c401b5c7330930f71f818d1bfb8a931f0d"
+      },
+      {
+        "bytes": 71946,
+        "path": "python/carnot/agentic/arc_hud_bar_detector.py",
+        "sha256": "455bf0975a020b02ebd732abafaa49edc4b069e71c8cd68473f6424d7cd59dd7"
+      }
+    ],
+    "code_sha256_format": "bare hex digest, no 'sha256:' prefix -- the format scripts/artifact_freshness_lint.py compares against",
+    "git_head": "76e409b5be5370983e4517fa7bf2aef1564efc24",
+    "pipeline_order": [
+      "capture.py -> per_game.json",
+      "cross_corpus_check.py -> cross_corpus_check.json",
+      "finalize_masks.py -> masks/*.json (final) + final_decisions.json",
+      "build_artifact.py -> hud_mask_capture.json"
+    ],
+    "rebuild_command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python results/arc_hud_mask_capture_20260801/capture.py && .venv/bin/python results/arc_hud_mask_capture_20260801/cross_corpus_check.py && .venv/bin/python results/arc_hud_mask_capture_20260801/finalize_masks.py && .venv/bin/python results/arc_hud_mask_capture_20260801/build_artifact.py",
+    "roster_source": "results/arc_object_perception_ab_change_fidelity_20260801/meta.json"
+  },
+  "random_seed": 20260801,
+  "random_seeds_used": [
+    20260801
+  ],
+  "reproducibility_checksum": "sha256:037ce532b8b48b9662390a29a5393170dcea4ee7d471165a98202792fc2b6e00",
+  "roster": [
+    "ls20",
+    "s5i5",
+    "tu93",
+    "cn04",
+    "m0r0",
+    "sk48",
+    "ar25",
+    "tr87",
+    "g50t",
+    "re86",
+    "bp35",
+    "sb26",
+    "lf52",
+    "su15",
+    "lp85",
+    "cd82",
+    "wa30",
+    "sc25",
+    "tn36",
+    "ka59"
+  ],
+  "run_date": "2026-08-01T15:39:40Z",
+  "schema": "carnot.arc_hud_mask_capture",
+  "spec": [
+    "REQ-ARC-WMTE-6010",
+    "REQ-ARC-WMTE-6015",
+    "REQ-ARC-WMTE-6017",
+    "REQ-ARC-WMTE-5833"
+  ],
+  "the_sharp_test": {
+    "a_correction_this_artifact_makes_to_itself": "An earlier build of this artifact asserted that the explorer proposes NOTHING on tn36. That was false and came from summarising the explorer's mask by strictly-complete rows only: its tn36 mask covers row 1 columns 1..61, a band by any reading, which an `.all()` test reports as no rows at all. The comparison now counts a row/col as a band at >=90% coverage AND reports raw cell-level overlap, so the claim does not depend on that threshold. Recorded rather than silently fixed, because the false version made this capture look more novel than it is.",
+    "answer_detected": true,
+    "detector_thresholds_were_shipped_defaults": true,
+    "in_default_mask": false,
+    "no_band_was_hand_added": true,
+    "principle": "Reported either way. A MISS would have been a finding about the detector, not a reason to hand-add the band; a HIT that fails the second corpus is a finding about the mask, not a reason to relax the gate.",
+    "question": "tn36's induced goal predicate is literally the progress bar -- `np.all(grid[1, 1:62] == 3)`, ROW 1, inside the edge band. If detect_hud_registers misses row 1, the whole hypothesis fails at step one.",
+    "stage_1_audit_verdict": {
+      "accepted": true,
+      "alarms": [],
+      "positives_passed": [
+        "P1"
+      ],
+      "reason": "defended:P1",
+      "suspected_false_positive": false
+    },
+    "stage_2_second_corpus_verdict": "no_changed_cells_outside_mask_cannot_distinguish",
+    "the_honest_reading": "The detector PASSES the sharp test: row 1 is found on the shipped defaults, changed_fraction 1.0, and it is the exact row the engines model. The explorer's own frame-space edge_bar detector INDEPENDENTLY masks the same row 1 (61 of its 64 cells, cell-level Jaccard 0.953) -- two unrelated detectors agreeing on the band, which is stronger evidence that row 1 is chrome than either alone. What this path adds is not a band the explorer missed but a RECONSTRUCTION route: the band comes from transitions in LOGICAL coordinates, so it exists where the A/B said a mask was 'not reconstructible from this run's evidence'. But it does NOT reach the default mask: on the random-action corpus it shows the same 1.0000 overlap / 60 changing -> 0 surviving signature as lf52, the documented over-masking case. Detection succeeded; licensing failed. The consequence is stated rather than softened -- this capture does NOT deliver a default mask that fixes the six perfect-1.0 tn36 bar-ticker candidates.",
+    "tn36_band_vs_explorer": {
+      "fraction_of_my_band_the_explorer_also_masks": 0.953125,
+      "jaccard": 0.953125,
+      "n_cells_detected_by_this_capture": 64,
+      "n_cells_in_both": 61,
+      "n_cells_masked_by_explorer": 61
+    },
+    "tn36_random_corpus_numbers": {
+      "changed_cell_overlap": 1.0,
+      "masked_changing_transitions": 0,
+      "raw_changing_transitions": 60,
+      "reason": "no_changed_cells_outside_mask_cannot_distinguish"
+    },
+    "tn36_row1_band": {
+      "axis": "row",
+      "changed_fraction": 1.0,
+      "direction": "counter",
+      "index": 1,
+      "monotone_ratio": 0.0
+    }
+  },
+  "title": "Per-game LOGICAL HUD-band capture for the object-perception A/B roster, gated by a two-corpus over-masking audit",
+  "verifier_is_oracle_not_applicable_note": "This artifact makes no verifier-value, moat or efficiency claim -- it emits no score and reranks nothing. It is perception capture, so the circularity question does not arise.",
+  "what_this_delivers": "6 of 20 roster games carry a default logical HUD mask that is affirmatively clean on BOTH the winning-route corpus and the random-action corpus, written to masks/*.json in a form a re-score materialises with two numpy assignments. Every other game ships an EMPTY mask, which is a refusal with a recorded reason, not an absence.",
+  "what_this_does_not_deliver": "It does not re-score the A/B, and it does not fix the tn36 degeneracy: tn36 row 1 is detected and then withheld. Any claim that masking changes change_fidelity, or that the six perfect-1.0 candidates stop being perfect, requires a separate measurement that has not been run."
+}
