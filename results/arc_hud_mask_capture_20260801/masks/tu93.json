@@ -1,0 +1,57 @@
+{
+  "cell": 1,
+  "conditionally_clean_bands": [],
+  "coordinate_space": "logical_grid",
+  "coordinate_space_note": "Indices are LOGICAL-grid rows/cols -- the same space as Transition.grid and Transition.next_grid. No frame-coordinate mask and no logical_hud_mask() downsample is required; that is the whole reason this path is reconstructible where the A/B's was not.",
+  "excluded_bands": [],
+  "explorer_edge_bar_mask": {
+    "band_coverage_min": 0.9,
+    "cell": 1,
+    "col_coverage_counts": {},
+    "cols": [],
+    "cols_full": [],
+    "logical_shape": [
+      64,
+      64
+    ],
+    "n_masked_cells": 64,
+    "note": "`rows`/`cols` are bands covered at least BAND_COVERAGE_MIN; `rows_full`/`cols_full` are the strictly-complete ones. They differ whenever the explorer masks a band minus its end-caps -- tn36 row 1 is 61 of 64 cells, a band by any reading and invisible to a strict test.",
+    "resolved": true,
+    "row_coverage_counts": {
+      "63": 64
+    },
+    "rows": [
+      63
+    ],
+    "rows_full": [
+      63
+    ]
+  },
+  "game": "tu93",
+  "how_to_apply": "mask = np.zeros(tuple(logical_shape), bool); mask[hud_rows, :] = True; mask[:, hud_cols] = True; then arc_executable_world_model.apply_hud_mask(grid, mask) on BOTH sides of any exact-match comparison. hud_rows/hud_cols already exclude every withheld band, so materialising them is the safe default. An EMPTY mask is a REFUSAL, not an absence -- apply nothing and record mask_status as the reason. Do NOT fold conditionally_clean_bands in without reading their warning.",
+  "hud_cols": [],
+  "hud_rows": [
+    63
+  ],
+  "logical_shape": [
+    64,
+    64
+  ],
+  "mask_status": "accepted_clean_on_both_corpora",
+  "masked_cell_fraction": 0.015625,
+  "masked_cells": 64,
+  "same_band_as_explorer_edge_bar_detector": true,
+  "second_corpus_gate": {
+    "applies": true,
+    "changed_cell_overlap": 0.176201,
+    "clean": true,
+    "corpus": "collect_transitions(n=60, seed=0) -- random actions from reset",
+    "masked_changing_transitions": 20,
+    "passed": true,
+    "raw_changing_transitions": 60,
+    "reason": "ok",
+    "union_mask_equals_single_band": true
+  },
+  "stage": "final_after_second_corpus_gate",
+  "supersedes": "the provisional mask file written by capture.py"
+}

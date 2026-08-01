@@ -1,0 +1,41 @@
+{
+  "cell": 1,
+  "conditionally_clean_bands": [],
+  "coordinate_space": "logical_grid",
+  "coordinate_space_note": "Indices are LOGICAL-grid rows/cols -- the same space as Transition.grid and Transition.next_grid. No frame-coordinate mask and no logical_hud_mask() downsample is required; that is the whole reason this path is reconstructible where the A/B's was not.",
+  "excluded_bands": [],
+  "explorer_edge_bar_mask": {
+    "cell": 1,
+    "cols": [],
+    "cols_full": [],
+    "n_masked_cells": 0,
+    "resolved": false,
+    "rows": [],
+    "rows_full": []
+  },
+  "game": "sk48",
+  "how_to_apply": "mask = np.zeros(tuple(logical_shape), bool); mask[hud_rows, :] = True; mask[:, hud_cols] = True; then arc_executable_world_model.apply_hud_mask(grid, mask) on BOTH sides of any exact-match comparison. hud_rows/hud_cols already exclude every withheld band, so materialising them is the safe default. An EMPTY mask is a REFUSAL, not an absence -- apply nothing and record mask_status as the reason. Do NOT fold conditionally_clean_bands in without reading their warning.",
+  "hud_cols": [],
+  "hud_rows": [],
+  "logical_shape": [
+    64,
+    64
+  ],
+  "mask_status": "no_bands_detected",
+  "masked_cell_fraction": 0.0,
+  "masked_cells": 0,
+  "same_band_as_explorer_edge_bar_detector": null,
+  "second_corpus_gate": {
+    "applies": false,
+    "changed_cell_overlap": null,
+    "clean": null,
+    "corpus": "collect_transitions(n=60, seed=0) -- random actions from reset",
+    "masked_changing_transitions": null,
+    "passed": false,
+    "raw_changing_transitions": null,
+    "reason": null,
+    "union_mask_equals_single_band": true
+  },
+  "stage": "final_after_second_corpus_gate",
+  "supersedes": "the provisional mask file written by capture.py"
+}
