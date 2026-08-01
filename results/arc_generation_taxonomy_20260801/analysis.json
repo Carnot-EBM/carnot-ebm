@@ -1,0 +1,676 @@
+{
+  "n_units": 412,
+  "windows_not_rebuilt": {},
+  "corpora": {
+    "ab0728_qwen9B_retired_generator": {
+      "n": 240,
+      "n_games": 20,
+      "primary_classes_mutually_exclusive": [
+        {
+          "class": "clean_and_live",
+          "what_it_is": "no mechanical defect, engine does change the grid",
+          "count": 127,
+          "share": 0.5292,
+          "share_ci95_game_clustered": [
+            0.4042,
+            0.6583
+          ],
+          "mechanically_detectable_before_trust_gate": null,
+          "live_induce_path_acts_on_it_today": null
+        },
+        {
+          "class": "inert_no_defect",
+          "what_it_is": "predicts that nothing ever changes",
+          "count": 81,
+          "share": 0.3375,
+          "share_ci95_game_clustered": [
+            0.2125,
+            0.4667
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": false
+        },
+        {
+          "class": "engine_raised",
+          "what_it_is": "raises on an observed transition",
+          "count": 18,
+          "share": 0.075,
+          "share_ci95_game_clustered": [
+            0.0375,
+            0.1167
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "missing_return",
+          "what_it_is": "returns None on some path",
+          "count": 6,
+          "share": 0.025,
+          "share_ci95_game_clustered": [
+            0.0083,
+            0.05
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "goal_raised",
+          "what_it_is": "goal predicate raises",
+          "count": 5,
+          "share": 0.0208,
+          "share_ci95_game_clustered": [
+            0.0083,
+            0.0375
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "engine_wrong_shape",
+          "what_it_is": "wrong output shape",
+          "count": 2,
+          "share": 0.0083,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.025
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "module_exec_raised",
+          "what_it_is": "import-time failure",
+          "count": 1,
+          "share": 0.0042,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0125
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        }
+      ],
+      "defect_kinds_NON_exclusive": {
+        "engine_raised": 18,
+        "missing_return": 6,
+        "goal_raised": 5,
+        "engine_returned_none": 3,
+        "engine_wrong_shape": 2,
+        "module_exec_raised": 1
+      },
+      "n_unusable": 32,
+      "n_inert": 81,
+      "n_clean_and_live": 127
+    },
+    "abcf_31B_after_3_tries": {
+      "n": 124,
+      "n_games": 20,
+      "primary_classes_mutually_exclusive": [
+        {
+          "class": "clean_and_live",
+          "what_it_is": "no mechanical defect, engine does change the grid",
+          "count": 98,
+          "share": 0.7903,
+          "share_ci95_game_clustered": [
+            0.7107,
+            0.864
+          ],
+          "mechanically_detectable_before_trust_gate": null,
+          "live_induce_path_acts_on_it_today": null
+        },
+        {
+          "class": "inert_no_defect",
+          "what_it_is": "predicts that nothing ever changes",
+          "count": 15,
+          "share": 0.121,
+          "share_ci95_game_clustered": [
+            0.0574,
+            0.1905
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": false
+        },
+        {
+          "class": "no_code_after_all_tries",
+          "what_it_is": "terminal generation failure",
+          "count": 8,
+          "share": 0.0645,
+          "share_ci95_game_clustered": [
+            0.0244,
+            0.1066
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "engine_raised",
+          "what_it_is": "raises on an observed transition",
+          "count": 1,
+          "share": 0.0081,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0246
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "goal_raised",
+          "what_it_is": "goal predicate raises",
+          "count": 1,
+          "share": 0.0081,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0246
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "engine_nonterminating",
+          "what_it_is": "runs forever",
+          "count": 1,
+          "share": 0.0081,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0246
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        }
+      ],
+      "defect_kinds_NON_exclusive": {
+        "engine_raised": 1,
+        "goal_raised": 1,
+        "engine_nonterminating": 1
+      },
+      "n_unusable": 11,
+      "n_inert": 15,
+      "n_clean_and_live": 98
+    },
+    "bestofn_31B_single_shot": {
+      "n": 48,
+      "n_games": 6,
+      "primary_classes_mutually_exclusive": [
+        {
+          "class": "clean_and_live",
+          "what_it_is": "no mechanical defect, engine does change the grid",
+          "count": 26,
+          "share": 0.5417,
+          "share_ci95_game_clustered": [
+            0.25,
+            0.8333
+          ],
+          "mechanically_detectable_before_trust_gate": null,
+          "live_induce_path_acts_on_it_today": null
+        },
+        {
+          "class": "inert_no_defect",
+          "what_it_is": "predicts that nothing ever changes",
+          "count": 11,
+          "share": 0.2292,
+          "share_ci95_game_clustered": [
+            0.0417,
+            0.4792
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": false
+        },
+        {
+          "class": "syntax_error",
+          "what_it_is": "invalid Python",
+          "count": 7,
+          "share": 0.1458,
+          "share_ci95_game_clustered": [
+            0.0625,
+            0.2292
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "engine_raised",
+          "what_it_is": "raises on an observed transition",
+          "count": 2,
+          "share": 0.0417,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0833
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        },
+        {
+          "class": "undetermined:worker_timeout",
+          "what_it_is": "undetermined:worker_timeout",
+          "count": 1,
+          "share": 0.0208,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0625
+          ],
+          "mechanically_detectable_before_trust_gate": null,
+          "live_induce_path_acts_on_it_today": null
+        },
+        {
+          "class": "truncated_before_required_symbols",
+          "what_it_is": "output cap",
+          "count": 1,
+          "share": 0.0208,
+          "share_ci95_game_clustered": [
+            0.0,
+            0.0625
+          ],
+          "mechanically_detectable_before_trust_gate": true,
+          "live_induce_path_acts_on_it_today": true
+        }
+      ],
+      "defect_kinds_NON_exclusive": {
+        "syntax_error": 7,
+        "engine_raised": 2,
+        "truncated_before_required_symbols": 1
+      },
+      "n_unusable": 11,
+      "n_inert": 11,
+      "n_clean_and_live": 26
+    }
+  },
+  "reproduction_check_vs_frozen_bestofn": {
+    "n_compared": 47,
+    "n_agree": 47,
+    "n_disagree": 0,
+    "disagreements": [],
+    "sha_reproduces": [
+      [
+        "True",
+        48
+      ]
+    ],
+    "why_this_matters": "the taxonomy is only about the frozen corpus if it is reading the same bytes the frozen corpus was scored on. The extracted-code sha is checked per candidate and the detector's verdict is re-derived; a disagreement here would mean the detector changed under the record, not that the corpus did."
+  },
+  "what_retry_buys": {
+    "claim": "the ONLY wired difference between these two corpora is tries=1 vs tries=3 on the same generator, prompt family and sampler, so the difference in the rate of 'no loadable engine at all' is an estimate of what the shipped retry already buys.",
+    "single_shot_no_engine": [
+      7,
+      48,
+      0.1458
+    ],
+    "after_3_tries_no_engine": [
+      8,
+      124,
+      0.0645
+    ],
+    "single_shot_ci95_game_clustered": [
+      0.0625,
+      0.2292
+    ],
+    "after_3_tries_ci95_game_clustered": [
+      0.0244,
+      0.1066
+    ],
+    "fisher_exact_p": 0.128518,
+    "odds_ratio": 2.4756,
+    "confounds_stated": "the two corpora also differ in game roster (6 vs 20) and in prompt arm (the A/B corpus varies an object-perception header). Both are stated rather than adjusted for: with 6 games in one arm there is no honest way to adjust, and the direction of the effect is large enough that the roster difference would have to be extreme to explain it. This is evidence about retry, not proof."
+  },
+  "is_inertness_a_property_of_the_game": {
+    "why_this_decides_the_intervention": "'reject inert engines and re-ask' only works if a re-sample on the same game has a real chance of being live. If inertness is a property of the GAME, the re-ask returns another inert engine and the intervention buys nothing but latency.",
+    "per_game_inert_vs_live": {
+      "ar25": {
+        "inert": 0,
+        "live": 5
+      },
+      "bp35": {
+        "inert": 1,
+        "live": 5
+      },
+      "cd82": {
+        "inert": 1,
+        "live": 5
+      },
+      "cn04": {
+        "inert": 0,
+        "live": 7
+      },
+      "ft09": {
+        "inert": 0,
+        "live": 5
+      },
+      "g50t": {
+        "inert": 1,
+        "live": 5
+      },
+      "ka59": {
+        "inert": 1,
+        "live": 5
+      },
+      "lf52": {
+        "inert": 1,
+        "live": 5
+      },
+      "lp85": {
+        "inert": 3,
+        "live": 9
+      },
+      "ls20": {
+        "inert": 0,
+        "live": 6
+      },
+      "m0r0": {
+        "inert": 1,
+        "live": 4
+      },
+      "re86": {
+        "inert": 0,
+        "live": 3
+      },
+      "s5i5": {
+        "inert": 3,
+        "live": 3
+      },
+      "sb26": {
+        "inert": 0,
+        "live": 6
+      },
+      "sc25": {
+        "inert": 6,
+        "live": 5
+      },
+      "sk48": {
+        "inert": 3,
+        "live": 3
+      },
+      "su15": {
+        "inert": 0,
+        "live": 5
+      },
+      "tn36": {
+        "inert": 0,
+        "live": 14
+      },
+      "tr87": {
+        "inert": 2,
+        "live": 3
+      },
+      "tu93": {
+        "inert": 3,
+        "live": 8
+      },
+      "vc33": {
+        "inert": 0,
+        "live": 8
+      },
+      "wa30": {
+        "inert": 0,
+        "live": 5
+      }
+    },
+    "chi2_homogeneity_ASYMPTOTIC_UNRELIABLE_AT_THESE_CELL_COUNTS": {
+      "chi2": 36.064,
+      "p": 0.0215,
+      "dof": 21
+    },
+    "permutation_p_20000_shuffles": 0.015949202539873007,
+    "which_p_to_believe": "the permutation p. Most cells hold 0-6 observations, far below the expected-count-5 rule the chi-square approximation needs; the permutation test assumes nothing and is reported as the primary result.",
+    "reading": "a small p means the per-game inertness rates are NOT the same, i.e. inertness is concentrated in particular games -- which is the bad case for a blind re-ask."
+  },
+  "ceiling_on_an_inertness_intervention": {
+    "logic": "converting an inert engine into a live one is worth exactly what a live engine is worth. On the frozen best-of-N corpus, plannability among engines that are already live and defect-free is the ceiling on any such conversion.",
+    "live_and_clean": 26,
+    "of_which_plannable": 2,
+    "plannability_given_live": 0.0769,
+    "ci95_unclustered_OPTIMISTIC": [
+      0.0095,
+      0.2513
+    ],
+    "ci95_game_clustered": [
+      0.0,
+      0.15
+    ]
+  },
+  "does_rejecting_inert_destroy_a_plannable_candidate": {
+    "why_asked": "an intervention that rejects a class must be checked against the outcomes IN that class before it is recommended. If a plannable candidate is inert, 'reject inert and re-ask' throws away the thing the pipeline exists to produce.",
+    "n_inert": 11,
+    "n_inert_that_were_plannable": 0,
+    "plannable_cells_and_their_class": [
+      {
+        "cell": "ft09_k1",
+        "class": "clean_and_live"
+      },
+      {
+        "cell": "tn36_k1",
+        "class": "clean_and_live"
+      }
+    ]
+  },
+  "expected_yield_of_rejecting_inert_and_reasking": {
+    "method": "ONE extra ask per inert candidate (the shipped `_INDUCE_DEFECT_REASKS = 1` budget, unchanged). Conversion probability is estimated leave-one-out WITHIN the game, because inertness is game-clustered; a pooled rate would assume the homogeneity the chi-square above rejects, and would overstate the yield on exactly the games where inertness concentrates.",
+    "after_3_tries_corpus": {
+      "n": 124,
+      "n_inert": 15,
+      "expected_converted_to_live_by_ONE_reask": 12.1,
+      "as_share_of_all_candidates": 0.0976,
+      "per_game": {
+        "s5i5": {
+          "inert": 3,
+          "live": 3,
+          "p_live_on_resample_loo": 0.6,
+          "expected_converted": 1.8
+        },
+        "tu93": {
+          "inert": 1,
+          "live": 6,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "m0r0": {
+          "inert": 1,
+          "live": 4,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "sk48": {
+          "inert": 3,
+          "live": 3,
+          "p_live_on_resample_loo": 0.6,
+          "expected_converted": 1.8
+        },
+        "tr87": {
+          "inert": 2,
+          "live": 3,
+          "p_live_on_resample_loo": 0.75,
+          "expected_converted": 1.5
+        },
+        "g50t": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "bp35": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "lf52": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "cd82": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "ka59": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        }
+      }
+    },
+    "single_shot_corpus": {
+      "n": 48,
+      "n_inert": 11,
+      "expected_converted_to_live_by_ONE_reask": 3.13,
+      "as_share_of_all_candidates": 0.0653,
+      "per_game": {
+        "sc25": {
+          "inert": 6,
+          "live": 0,
+          "p_live_on_resample_loo": 0.0,
+          "expected_converted": 0.0
+        },
+        "lp85": {
+          "inert": 3,
+          "live": 3,
+          "p_live_on_resample_loo": 0.6,
+          "expected_converted": 1.8
+        },
+        "tu93": {
+          "inert": 2,
+          "live": 2,
+          "p_live_on_resample_loo": 0.6667,
+          "expected_converted": 1.333
+        }
+      }
+    },
+    "downstream_plannable_gain_after_3_tries": {
+      "expected_extra_live_engines": 12.1,
+      "plannability_given_live": 0.0769,
+      "expected_extra_PLANNABLE_engines": 0.93,
+      "per_100_candidates": 0.75
+    },
+    "what_this_number_is_not": "it is an upper bound on the MECHANICAL conversion, not a prediction of banked levels. It assumes re-samples within a game are exchangeable, which is the most favourable assumption available: if the model is inert on a game because it cannot see the mechanic, re-sampling returns another inert engine and the true yield is lower than this."
+  },
+  "where_a_fixed_candidate_lands": {
+    "why": "every generation-side fix moves candidates INTO `clean_and_live`. What that class is worth is therefore the return on any such fix, and it is measured here rather than assumed.",
+    "clean_and_live_heldout_change_fidelity": {
+      "n": 98,
+      "mean": 0.2223,
+      "median": 0.0921,
+      "n_exactly_zero": 25,
+      "n_at_or_above_0p5": 16
+    },
+    "inert_heldout_change_fidelity": {
+      "n": 15,
+      "mean": 0.0,
+      "n_exactly_zero": 15
+    }
+  },
+  "how_much_of_zero_fidelity_is_mechanically_visible": {
+    "n_cells_scored": 124,
+    "n_with_heldout_change_fidelity_exactly_zero": 49,
+    "of_which_mechanically_inert": 15,
+    "of_which_live_but_wrong_INVISIBLE_to_any_static_or_dry_run_check": 34,
+    "share_of_zero_fidelity_that_a_mechanical_gate_can_see": 0.3061,
+    "reading": "an engine that predicts NOTHING and an engine that predicts the WRONG THING both score 0. Only the first leaves a mechanical signature. This ratio bounds what any generation-time validity check can do about the zero-fidelity population."
+  },
+  "wasted_generation_calls": {
+    "definition": "a call is wasted when the candidate it produced cannot survive the downstream trust gate under any circumstances -- it does not load, or it predicts that nothing ever changes. Verified for the inert class on the frozen best-of-N corpus: the shipped trust gate rejected 11 of 11 inert candidates, while `generate()` ACCEPTED all 11. That is the wasted work -- the generation call is spent and the candidate is thrown away one stage later.",
+    "single_shot": {
+      "n": 48,
+      "mechanically_unusable": 11,
+      "inert": 11,
+      "guaranteed_downstream_reject": 22,
+      "share": 0.4583
+    },
+    "after_3_tries": {
+      "n": 124,
+      "mechanically_unusable": 11,
+      "inert": 15,
+      "guaranteed_downstream_reject": 26,
+      "share": 0.2097
+    },
+    "shipped_trust_gate_admitted_any_inert_candidate": 0,
+    "generate_accepted_inert_candidates": 11
+  },
+  "truncation_verified_not_assumed": {
+    "current_generator_31B_with_repeat_penalty": {
+      "stop_type": {
+        "word": 46,
+        "limit": 2
+      },
+      "hit_output_cap": [
+        2,
+        48,
+        0.0417
+      ],
+      "of_which_actually_missing_a_required_symbol": 1
+    },
+    "retired_generator_9B_no_repeat_penalty": {
+      "stop_type": {
+        "word": 213,
+        "limit": 27
+      },
+      "hit_output_cap": [
+        27,
+        240,
+        0.1125
+      ]
+    },
+    "fisher_exact_p": 0.18934545,
+    "caveat": "GENERATOR AND SAMPLER MOVED TOGETHER between these two corpora, so this comparison cannot attribute the drop to repeat_penalty alone. It establishes the thing that was asked -- that truncation is no longer a live failure class on the CURRENT generator -- and nothing more."
+  },
+  "headline": {
+    "n_31B_candidates": 172,
+    "classes_by_size": [
+      {
+        "class": "clean_and_live",
+        "count": 124,
+        "share": 0.7209
+      },
+      {
+        "class": "inert_no_defect",
+        "count": 26,
+        "share": 0.1512
+      },
+      {
+        "class": "no_code_after_all_tries",
+        "count": 8,
+        "share": 0.0465
+      },
+      {
+        "class": "syntax_error",
+        "count": 7,
+        "share": 0.0407
+      },
+      {
+        "class": "engine_raised",
+        "count": 3,
+        "share": 0.0174
+      },
+      {
+        "class": "undetermined:worker_timeout",
+        "count": 1,
+        "share": 0.0058
+      },
+      {
+        "class": "truncated_before_required_symbols",
+        "count": 1,
+        "share": 0.0058
+      },
+      {
+        "class": "goal_raised",
+        "count": 1,
+        "share": 0.0058
+      },
+      {
+        "class": "engine_nonterminating",
+        "count": 1,
+        "share": 0.0058
+      }
+    ],
+    "POOLING_CAVEAT": "these 172 candidates mix TWO retry regimes -- 48 single-shot and 124 after 3 tries -- so the pooled shares are descriptive of what is on disk, NOT a rate for either path. The per-corpus tables are the numbers to quote. Pooling changes the inertness share in particular: 11/48 (22.9%) single-shot against 15/124 (12.1%) after retry.",
+    "precedence_sensitivity": {
+      "inert_under_the_precedence_used": 26,
+      "inert_if_inertness_took_top_precedence": 28,
+      "all_code_validity_classes_combined": 21,
+      "does_the_ordering_change": "no -- inertness is the largest single failure class under either assignment, and exceeds every code-validity class combined either way."
+    }
+  }
+}

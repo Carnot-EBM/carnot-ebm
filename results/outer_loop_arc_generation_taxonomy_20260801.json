@@ -1,0 +1,838 @@
+{
+  "experiment": "outer_loop_arc_generation_taxonomy",
+  "schema": "carnot.arc_generation_taxonomy.v1",
+  "milestone": "2026.08.outer_loop",
+  "run_date": "2026-08-01T16:25:15Z",
+  "duration_s": 593.1,
+  "duration_s_note": "Wall time of the classification pass (412 candidates, each in its own killable subprocess, executing LLM-written engine code against the transitions it was shown) plus artifact assembly. No LLM was invoked and no GPU was used; this pass re-derives verdicts over FROZEN candidates with the shipped detector.",
+  "question": "22 of 40 frozen best-of-N candidates were unusable. What ARE the failure classes across every frozen candidate on disk, how large is each, which are mechanically detectable BEFORE the trust gate, and which one is worth attacking?",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_note": "No model is loaded and no token is generated. The pass runs the SHIPPED mechanical detector `arc_engine_static_validation.validate_engine_code` -- plus its sibling `engine_changes_anything` -- against pre-existing frozen candidates and their frozen prompt-shown transitions, exactly as the frozen best-of-N harness did. GGUF names appear in `model_specs` to identify WHICH generator produced each corpus; `invoked: false` records that none was called here.",
+  "model_specs": {
+    "invoked": false,
+    "generator_of_the_primary_corpora": "unsloth/gemma-4-31B-it-qat-GGUF :: gemma-4-31B-it-qat-UD-Q4_K_XL.gguf (best-of-N used gemma-4-31B-it-Q4_K_M.gguf; same model family, the CURRENT live generator per the 2026-07-28 operator directive)",
+    "generator_of_the_secondary_contrast_corpus": "unsloth/Qwen3.5-9B-MTP-GGUF -- RETIRED as the ARC generator on 2026-07-28. Kept strictly separate and never pooled with the primary corpora.",
+    "detector_under_which_every_verdict_was_derived": "python/carnot/agentic/arc_engine_static_validation.py @ 6458c353d95afe92"
+  },
+  "random_seed": 20260801,
+  "random_seed_note": "Used ONLY by the analysis: the game-clustered bootstrap (5000 resamples) and the 20000-shuffle permutation test. The classification itself is deterministic -- it re-executes frozen code against frozen transitions.",
+  "reproducibility_checksum": "1dc3ec079faf1883c97aa0b616ebadd0",
+  "reproducibility_checksum_note": "md5 over the sha256 of every input corpus file, the shipped detector's source, and this directory's four harness scripts. It changes if the corpus, the detector, or the harness changes -- which is the point, since a taxonomy is only about the corpus it was derived from with the detector it was derived by.",
+  "git_rev": "ad43a0c7fce3",
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No moat, efficiency, or verifier-value claim is made. The 'verifier' here is a mechanical defect detector (does the code parse, return, terminate, change anything) and is not the executable oracle that defines a win. This artifact measures the FAILURE DISTRIBUTION of a generator, not the value of a verifier.",
+  "preconditions_checked": [
+    {
+      "resource": "frozen_bestofn_corpus_present",
+      "available": true
+    },
+    {
+      "resource": "frozen_change_fidelity_corpus_present",
+      "available": true
+    },
+    {
+      "resource": "shipped_detector_importable",
+      "available": true
+    },
+    {
+      "resource": "extracted_code_sha_reproduces_frozen_record",
+      "available": true
+    },
+    {
+      "resource": "frozen_shown_transitions_reconstructible_and_proven",
+      "available": true
+    },
+    {
+      "resource": "no_gpu_required",
+      "available": true
+    }
+  ],
+  "headline": "THE PREMISE DOES NOT HOLD ON THE SHIPPED PATH, and the taxonomy says where the mass actually is. '22 of 40 unusable' is a SINGLE-SHOT figure: with retry off, 45.8% of best-of-N candidates (22/48) are guaranteed downstream rejects. Under the shipped 3-try induce loop the same generator leaves 11 of 124 cells (8.9%) mechanically unusable and 26 of 124 (21.0%) guaranteed-reject. Across all 172 gemma-4-31B candidates the classes are: clean-and-live 124 (72.1%), INERT 26 (15.1%), no code after all tries 8 (4.7%), syntax error 7 (4.1%), engine raises 3 (1.7%), and one each of truncated / non-terminating / goal-predicate-raises (0.6% each). Inertness is thus the largest failure class and is 2.2x every code-validity class combined (26 vs 12). It is also the only class the live induce path does nothing about: `generate()` ACCEPTED 11 of 11 inert candidates and the trust gate then rejected 11 of 11, so those generation calls are spent on a guaranteed reject. Wiring the already-shipped `engine_changes_anything` into the existing defect gate is 3 lines, is provably safe (0 of 11 inert candidates were plannable; both plannable ones are clean-and-live), and is worth +0.75 PLANNABLE candidates per 100 generations under the most favourable assumption available. THAT SMALL NUMBER IS THE FINDING: 49 of 124 cells score EXACTLY 0.0 held-out change fidelity and only 15 of those 49 (30.6%) are mechanically visible -- the other 34 are live engines predicting the wrong cells, which no static check, dry run, grammar, or repair loop can see. Generation VALIDITY is no longer the binding constraint; generation CORRECTNESS is, and it has no mechanical signature.",
+  "honest_verdict": "complete_generation_taxonomy_inertness_is_the_largest_class_but_validity_is_no_longer_the_binding_constraint",
+  "corpora": {
+    "primary_31B_single_shot_bestofn": {
+      "path": "results/arc_induce_bestofn_20260731/",
+      "n": 48,
+      "n_games": 6,
+      "tries_per_candidate": 1,
+      "why_separate": "single-shot, so the RAW per-completion failure rate is visible. Pooling it with the 3-try corpus would average a pre-retry and a post-retry rate."
+    },
+    "primary_31B_after_3_tries": {
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/",
+      "n": 124,
+      "n_games": 20,
+      "tries_per_candidate": 3,
+      "why_separate": "the output of the SHIPPED induce loop, so its failures are the ones that survived retry. This is the corpus that describes production."
+    },
+    "secondary_contrast_qwen9B_RETIRED_generator": {
+      "path": "results/arc_object_perception_ab_20260728/",
+      "n": 240,
+      "n_games": 20,
+      "never_pooled_with_primary": true,
+      "why_included": "it is the only corpus that recorded `stop_type` per cell at scale, and it answers whether a failure class is a property of THIS model or of induced-code generation generally. Its generator was retired 2026-07-28, so every number from it is a contrast, never a headline."
+    }
+  },
+  "taxonomy_31B_all_172_candidates": [
+    {
+      "class": "clean_and_live",
+      "count": 124,
+      "share": 0.7209
+    },
+    {
+      "class": "inert_no_defect",
+      "count": 26,
+      "share": 0.1512
+    },
+    {
+      "class": "no_code_after_all_tries",
+      "count": 8,
+      "share": 0.0465
+    },
+    {
+      "class": "syntax_error",
+      "count": 7,
+      "share": 0.0407
+    },
+    {
+      "class": "engine_raised",
+      "count": 3,
+      "share": 0.0174
+    },
+    {
+      "class": "undetermined:worker_timeout",
+      "count": 1,
+      "share": 0.0058
+    },
+    {
+      "class": "truncated_before_required_symbols",
+      "count": 1,
+      "share": 0.0058
+    },
+    {
+      "class": "goal_raised",
+      "count": 1,
+      "share": 0.0058
+    },
+    {
+      "class": "engine_nonterminating",
+      "count": 1,
+      "share": 0.0058
+    }
+  ],
+  "taxonomy_per_corpus": {
+    "ab0728_qwen9B_retired_generator": [
+      {
+        "class": "clean_and_live",
+        "what_it_is": "no mechanical defect, engine does change the grid",
+        "count": 127,
+        "share": 0.5292,
+        "share_ci95_game_clustered": [
+          0.4042,
+          0.6583
+        ],
+        "mechanically_detectable_before_trust_gate": null,
+        "live_induce_path_acts_on_it_today": null
+      },
+      {
+        "class": "inert_no_defect",
+        "what_it_is": "predicts that nothing ever changes",
+        "count": 81,
+        "share": 0.3375,
+        "share_ci95_game_clustered": [
+          0.2125,
+          0.4667
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": false
+      },
+      {
+        "class": "engine_raised",
+        "what_it_is": "raises on an observed transition",
+        "count": 18,
+        "share": 0.075,
+        "share_ci95_game_clustered": [
+          0.0375,
+          0.1167
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "missing_return",
+        "what_it_is": "returns None on some path",
+        "count": 6,
+        "share": 0.025,
+        "share_ci95_game_clustered": [
+          0.0083,
+          0.05
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "goal_raised",
+        "what_it_is": "goal predicate raises",
+        "count": 5,
+        "share": 0.0208,
+        "share_ci95_game_clustered": [
+          0.0083,
+          0.0375
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "engine_wrong_shape",
+        "what_it_is": "wrong output shape",
+        "count": 2,
+        "share": 0.0083,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.025
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "module_exec_raised",
+        "what_it_is": "import-time failure",
+        "count": 1,
+        "share": 0.0042,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0125
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      }
+    ],
+    "abcf_31B_after_3_tries": [
+      {
+        "class": "clean_and_live",
+        "what_it_is": "no mechanical defect, engine does change the grid",
+        "count": 98,
+        "share": 0.7903,
+        "share_ci95_game_clustered": [
+          0.7107,
+          0.864
+        ],
+        "mechanically_detectable_before_trust_gate": null,
+        "live_induce_path_acts_on_it_today": null
+      },
+      {
+        "class": "inert_no_defect",
+        "what_it_is": "predicts that nothing ever changes",
+        "count": 15,
+        "share": 0.121,
+        "share_ci95_game_clustered": [
+          0.0574,
+          0.1905
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": false
+      },
+      {
+        "class": "no_code_after_all_tries",
+        "what_it_is": "terminal generation failure",
+        "count": 8,
+        "share": 0.0645,
+        "share_ci95_game_clustered": [
+          0.0244,
+          0.1066
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "engine_raised",
+        "what_it_is": "raises on an observed transition",
+        "count": 1,
+        "share": 0.0081,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0246
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "goal_raised",
+        "what_it_is": "goal predicate raises",
+        "count": 1,
+        "share": 0.0081,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0246
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "engine_nonterminating",
+        "what_it_is": "runs forever",
+        "count": 1,
+        "share": 0.0081,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0246
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      }
+    ],
+    "bestofn_31B_single_shot": [
+      {
+        "class": "clean_and_live",
+        "what_it_is": "no mechanical defect, engine does change the grid",
+        "count": 26,
+        "share": 0.5417,
+        "share_ci95_game_clustered": [
+          0.25,
+          0.8333
+        ],
+        "mechanically_detectable_before_trust_gate": null,
+        "live_induce_path_acts_on_it_today": null
+      },
+      {
+        "class": "inert_no_defect",
+        "what_it_is": "predicts that nothing ever changes",
+        "count": 11,
+        "share": 0.2292,
+        "share_ci95_game_clustered": [
+          0.0417,
+          0.4792
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": false
+      },
+      {
+        "class": "syntax_error",
+        "what_it_is": "invalid Python",
+        "count": 7,
+        "share": 0.1458,
+        "share_ci95_game_clustered": [
+          0.0625,
+          0.2292
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "engine_raised",
+        "what_it_is": "raises on an observed transition",
+        "count": 2,
+        "share": 0.0417,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0833
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      },
+      {
+        "class": "undetermined:worker_timeout",
+        "what_it_is": "undetermined:worker_timeout",
+        "count": 1,
+        "share": 0.0208,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0625
+        ],
+        "mechanically_detectable_before_trust_gate": null,
+        "live_induce_path_acts_on_it_today": null
+      },
+      {
+        "class": "truncated_before_required_symbols",
+        "what_it_is": "output cap",
+        "count": 1,
+        "share": 0.0208,
+        "share_ci95_game_clustered": [
+          0.0,
+          0.0625
+        ],
+        "mechanically_detectable_before_trust_gate": true,
+        "live_induce_path_acts_on_it_today": true
+      }
+    ]
+  },
+  "defect_kinds_non_exclusive_per_corpus": {
+    "ab0728_qwen9B_retired_generator": {
+      "engine_raised": 18,
+      "missing_return": 6,
+      "goal_raised": 5,
+      "engine_returned_none": 3,
+      "engine_wrong_shape": 2,
+      "module_exec_raised": 1
+    },
+    "abcf_31B_after_3_tries": {
+      "engine_raised": 1,
+      "goal_raised": 1,
+      "engine_nonterminating": 1
+    },
+    "bestofn_31B_single_shot": {
+      "syntax_error": 7,
+      "engine_raised": 2,
+      "truncated_before_required_symbols": 1
+    }
+  },
+  "how_to_read_the_shares": "each candidate gets exactly ONE primary class by a fixed precedence that follows the shipped detector's own early-return order, so shares sum to 1 and a reader can subtract. `defect_kinds_non_exclusive_per_corpus` is the raw multiset and does NOT sum to the candidate count -- one candidate can carry several defects.",
+  "detectability_before_the_trust_gate": {
+    "every_failure_class_is_mechanically_detectable": true,
+    "classes_the_live_induce_path_does_NOT_act_on": [
+      "inert_no_defect"
+    ],
+    "why_inertness_is_the_exception": "`validate_engine_code` deliberately EXCLUDES inertness -- its docstring calls degeneracy a quality judgement belonging to the trust gate -- and `LocalGGUFProposer._engine_defects` only consults `validate_engine_code`. So the signal exists, is shipped, is already imported on that path, and is not read. That is the whole of the recommendation below.",
+    "a_second_gap_found_while_checking_this": "`_engine_defects` calls the detector with `required=('engine',)`, not `('engine','is_level_complete')`. A completion that hits the output cap after `def engine` but before `def is_level_complete` is therefore NOT seen as truncated by the live path. Exactly one frozen candidate (tu93_k6) has that shape, so the class is real but currently tiny -- recorded, not acted on."
+  },
+  "what_retry_already_buys": {
+    "claim": "the ONLY wired difference between these two corpora is tries=1 vs tries=3 on the same generator, prompt family and sampler, so the difference in the rate of 'no loadable engine at all' is an estimate of what the shipped retry already buys.",
+    "single_shot_no_engine": [
+      7,
+      48,
+      0.1458
+    ],
+    "after_3_tries_no_engine": [
+      8,
+      124,
+      0.0645
+    ],
+    "single_shot_ci95_game_clustered": [
+      0.0625,
+      0.2292
+    ],
+    "after_3_tries_ci95_game_clustered": [
+      0.0244,
+      0.1066
+    ],
+    "fisher_exact_p": 0.128518,
+    "odds_ratio": 2.4756,
+    "confounds_stated": "the two corpora also differ in game roster (6 vs 20) and in prompt arm (the A/B corpus varies an object-perception header). Both are stated rather than adjusted for: with 6 games in one arm there is no honest way to adjust, and the direction of the effect is large enough that the roster difference would have to be extreme to explain it. This is evidence about retry, not proof."
+  },
+  "truncation_verified_not_assumed": {
+    "current_generator_31B_with_repeat_penalty": {
+      "stop_type": {
+        "word": 46,
+        "limit": 2
+      },
+      "hit_output_cap": [
+        2,
+        48,
+        0.0417
+      ],
+      "of_which_actually_missing_a_required_symbol": 1
+    },
+    "retired_generator_9B_no_repeat_penalty": {
+      "stop_type": {
+        "word": 213,
+        "limit": 27
+      },
+      "hit_output_cap": [
+        27,
+        240,
+        0.1125
+      ]
+    },
+    "fisher_exact_p": 0.18934545,
+    "caveat": "GENERATOR AND SAMPLER MOVED TOGETHER between these two corpora, so this comparison cannot attribute the drop to repeat_penalty alone. It establishes the thing that was asked -- that truncation is no longer a live failure class on the CURRENT generator -- and nothing more."
+  },
+  "wasted_generation_calls": {
+    "definition": "a call is wasted when the candidate it produced cannot survive the downstream trust gate under any circumstances -- it does not load, or it predicts that nothing ever changes. Verified for the inert class on the frozen best-of-N corpus: the shipped trust gate rejected 11 of 11 inert candidates, while `generate()` ACCEPTED all 11. That is the wasted work -- the generation call is spent and the candidate is thrown away one stage later.",
+    "single_shot": {
+      "n": 48,
+      "mechanically_unusable": 11,
+      "inert": 11,
+      "guaranteed_downstream_reject": 22,
+      "share": 0.4583
+    },
+    "after_3_tries": {
+      "n": 124,
+      "mechanically_unusable": 11,
+      "inert": 15,
+      "guaranteed_downstream_reject": 26,
+      "share": 0.2097
+    },
+    "shipped_trust_gate_admitted_any_inert_candidate": 0,
+    "generate_accepted_inert_candidates": 11
+  },
+  "is_inertness_a_property_of_the_game": {
+    "why_this_decides_the_intervention": "'reject inert engines and re-ask' only works if a re-sample on the same game has a real chance of being live. If inertness is a property of the GAME, the re-ask returns another inert engine and the intervention buys nothing but latency.",
+    "per_game_inert_vs_live": {
+      "ar25": {
+        "inert": 0,
+        "live": 5
+      },
+      "bp35": {
+        "inert": 1,
+        "live": 5
+      },
+      "cd82": {
+        "inert": 1,
+        "live": 5
+      },
+      "cn04": {
+        "inert": 0,
+        "live": 7
+      },
+      "ft09": {
+        "inert": 0,
+        "live": 5
+      },
+      "g50t": {
+        "inert": 1,
+        "live": 5
+      },
+      "ka59": {
+        "inert": 1,
+        "live": 5
+      },
+      "lf52": {
+        "inert": 1,
+        "live": 5
+      },
+      "lp85": {
+        "inert": 3,
+        "live": 9
+      },
+      "ls20": {
+        "inert": 0,
+        "live": 6
+      },
+      "m0r0": {
+        "inert": 1,
+        "live": 4
+      },
+      "re86": {
+        "inert": 0,
+        "live": 3
+      },
+      "s5i5": {
+        "inert": 3,
+        "live": 3
+      },
+      "sb26": {
+        "inert": 0,
+        "live": 6
+      },
+      "sc25": {
+        "inert": 6,
+        "live": 5
+      },
+      "sk48": {
+        "inert": 3,
+        "live": 3
+      },
+      "su15": {
+        "inert": 0,
+        "live": 5
+      },
+      "tn36": {
+        "inert": 0,
+        "live": 14
+      },
+      "tr87": {
+        "inert": 2,
+        "live": 3
+      },
+      "tu93": {
+        "inert": 3,
+        "live": 8
+      },
+      "vc33": {
+        "inert": 0,
+        "live": 8
+      },
+      "wa30": {
+        "inert": 0,
+        "live": 5
+      }
+    },
+    "chi2_homogeneity_ASYMPTOTIC_UNRELIABLE_AT_THESE_CELL_COUNTS": {
+      "chi2": 36.064,
+      "p": 0.0215,
+      "dof": 21
+    },
+    "permutation_p_20000_shuffles": 0.015949202539873007,
+    "which_p_to_believe": "the permutation p. Most cells hold 0-6 observations, far below the expected-count-5 rule the chi-square approximation needs; the permutation test assumes nothing and is reported as the primary result.",
+    "reading": "a small p means the per-game inertness rates are NOT the same, i.e. inertness is concentrated in particular games -- which is the bad case for a blind re-ask."
+  },
+  "does_rejecting_inert_destroy_a_plannable_candidate": {
+    "why_asked": "an intervention that rejects a class must be checked against the outcomes IN that class before it is recommended. If a plannable candidate is inert, 'reject inert and re-ask' throws away the thing the pipeline exists to produce.",
+    "n_inert": 11,
+    "n_inert_that_were_plannable": 0,
+    "plannable_cells_and_their_class": [
+      {
+        "cell": "ft09_k1",
+        "class": "clean_and_live"
+      },
+      {
+        "cell": "tn36_k1",
+        "class": "clean_and_live"
+      }
+    ]
+  },
+  "ceiling_on_an_inertness_intervention": {
+    "logic": "converting an inert engine into a live one is worth exactly what a live engine is worth. On the frozen best-of-N corpus, plannability among engines that are already live and defect-free is the ceiling on any such conversion.",
+    "live_and_clean": 26,
+    "of_which_plannable": 2,
+    "plannability_given_live": 0.0769,
+    "ci95_unclustered_OPTIMISTIC": [
+      0.0095,
+      0.2513
+    ],
+    "ci95_game_clustered": [
+      0.0,
+      0.15
+    ]
+  },
+  "expected_yield_of_rejecting_inert_and_reasking": {
+    "method": "ONE extra ask per inert candidate (the shipped `_INDUCE_DEFECT_REASKS = 1` budget, unchanged). Conversion probability is estimated leave-one-out WITHIN the game, because inertness is game-clustered; a pooled rate would assume the homogeneity the chi-square above rejects, and would overstate the yield on exactly the games where inertness concentrates.",
+    "after_3_tries_corpus": {
+      "n": 124,
+      "n_inert": 15,
+      "expected_converted_to_live_by_ONE_reask": 12.1,
+      "as_share_of_all_candidates": 0.0976,
+      "per_game": {
+        "s5i5": {
+          "inert": 3,
+          "live": 3,
+          "p_live_on_resample_loo": 0.6,
+          "expected_converted": 1.8
+        },
+        "tu93": {
+          "inert": 1,
+          "live": 6,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "m0r0": {
+          "inert": 1,
+          "live": 4,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "sk48": {
+          "inert": 3,
+          "live": 3,
+          "p_live_on_resample_loo": 0.6,
+          "expected_converted": 1.8
+        },
+        "tr87": {
+          "inert": 2,
+          "live": 3,
+          "p_live_on_resample_loo": 0.75,
+          "expected_converted": 1.5
+        },
+        "g50t": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "bp35": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "lf52": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "cd82": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        },
+        "ka59": {
+          "inert": 1,
+          "live": 5,
+          "p_live_on_resample_loo": 1.0,
+          "expected_converted": 1.0
+        }
+      }
+    },
+    "single_shot_corpus": {
+      "n": 48,
+      "n_inert": 11,
+      "expected_converted_to_live_by_ONE_reask": 3.13,
+      "as_share_of_all_candidates": 0.0653,
+      "per_game": {
+        "sc25": {
+          "inert": 6,
+          "live": 0,
+          "p_live_on_resample_loo": 0.0,
+          "expected_converted": 0.0
+        },
+        "lp85": {
+          "inert": 3,
+          "live": 3,
+          "p_live_on_resample_loo": 0.6,
+          "expected_converted": 1.8
+        },
+        "tu93": {
+          "inert": 2,
+          "live": 2,
+          "p_live_on_resample_loo": 0.6667,
+          "expected_converted": 1.333
+        }
+      }
+    },
+    "downstream_plannable_gain_after_3_tries": {
+      "expected_extra_live_engines": 12.1,
+      "plannability_given_live": 0.0769,
+      "expected_extra_PLANNABLE_engines": 0.93,
+      "per_100_candidates": 0.75
+    },
+    "what_this_number_is_not": "it is an upper bound on the MECHANICAL conversion, not a prediction of banked levels. It assumes re-samples within a game are exchangeable, which is the most favourable assumption available: if the model is inert on a game because it cannot see the mechanic, re-sampling returns another inert engine and the true yield is lower than this."
+  },
+  "how_much_of_zero_fidelity_is_mechanically_visible": {
+    "n_cells_scored": 124,
+    "n_with_heldout_change_fidelity_exactly_zero": 49,
+    "of_which_mechanically_inert": 15,
+    "of_which_live_but_wrong_INVISIBLE_to_any_static_or_dry_run_check": 34,
+    "share_of_zero_fidelity_that_a_mechanical_gate_can_see": 0.3061,
+    "reading": "an engine that predicts NOTHING and an engine that predicts the WRONG THING both score 0. Only the first leaves a mechanical signature. This ratio bounds what any generation-time validity check can do about the zero-fidelity population."
+  },
+  "where_a_fixed_candidate_lands": {
+    "why": "every generation-side fix moves candidates INTO `clean_and_live`. What that class is worth is therefore the return on any such fix, and it is measured here rather than assumed.",
+    "clean_and_live_heldout_change_fidelity": {
+      "n": 98,
+      "mean": 0.2223,
+      "median": 0.0921,
+      "n_exactly_zero": 25,
+      "n_at_or_above_0p5": 16
+    },
+    "inert_heldout_change_fidelity": {
+      "n": 15,
+      "mean": 0.0,
+      "n_exactly_zero": 15
+    }
+  },
+  "recommended_intervention": {
+    "what": "Wire the already-shipped `engine_changes_anything` into `LocalGGUFProposer._engine_defects` as one more defect kind, reusing the existing `_INDUCE_DEFECT_REASKS = 1` budget and the existing neutral re-ask block. No new prompt, no new sampler, no new model.",
+    "why_this_one_and_not_the_others": {
+      "constrained_decoding_GBNF": "REJECTED on the evidence. Its target is 15 of 172 candidates (8.7%: 7 syntax errors + 8 no-code-after-all-tries), and 5 of the 8 parse failures are IndentationError. Python's INDENT/DEDENT is not context-free -- it needs a lexer stack -- so a GBNF grammar cannot express it, and the largest sub-class is the one this intervention structurally cannot fix. It also costs decode throughput on the live path.",
+      "repair_loop_fed_the_dry_run_counterexample": "REJECTED on size, not on principle. It is genuinely different from `repair_prompt_block` (a failing transition is evidence; a defect name is a label), and the p=1.000 result does not refute it. But its target is 4 of 172 candidates (2.3%: 3 engine_raised + 1 goal_raised). A perfect repair loop moves the pipeline by 2.3% of candidates times a 7.7% plannability rate. There is no version of this that matters at the current corpus size.",
+      "raise_tries": "ALREADY LARGELY BANKED. 1 try leaves 14.6% of candidates with no engine; 3 tries leaves 6.5% (OR 2.48, Fisher p=0.129, roster-confounded). A 4th try attacks a 6.5% base with diminishing returns and costs a full generation.",
+      "different_sampling_regime": "ALREADY BANKED. repeat_penalty 1.1 + repeat_last_n 256 is wired, and this pass independently VERIFIES the truncation half of its effect: 2 of 48 current-generator candidates hit the output cap and only 1 of those actually lost a required symbol, against 27 of 240 on the retired generator. Truncation is not a live failure class any more.",
+      "reject_inert_and_reask": "SELECTED. Largest failure class (26 of 172, 15.1% -- 2.2x every code-validity class combined). The only class the live path ignores. The detector already exists and is already imported there. Provably safe: 0 of 11 inert candidates were plannable, and all 15 inert cells with a held-out score have change_fidelity EXACTLY 0.0, so the class it rejects is exactly the class the downstream gate rejects anyway."
+    },
+    "expected_size_HONEST": {
+      "mechanical": "+12.1 live engines per 124 candidates (+9.8pp), leave-one-out within game.",
+      "downstream": "+0.75 PLANNABLE candidates per 100 generations, i.e. LESS THAN ONE.",
+      "and_the_multiplier_CI_includes_zero": [
+        0.0,
+        0.15
+      ],
+      "why_it_is_still_worth_doing": "it costs one re-ask on 15% of calls, reuses shipped code, cannot destroy a plannable candidate, and converts a spent generation call into a second chance. It is a floor-raiser with a computed price, not a fix.",
+      "why_it_is_NOT_the_fix": "69.4% of zero-change-fidelity cells are LIVE engines predicting the wrong cells. No generation-time mechanical check can see them. The binding constraint moved from validity to correctness and this intervention does not touch correctness."
+    },
+    "MANDATORY_PRECONDITION_measured_not_assumed": {
+      "hazard": "`engine_changes_anything` is NOT bounded. The 2026-08-01 hardening put `dry_run_defects` behind a killable subprocess and left this sibling calling `_exec_namespace` and then the engine directly, in-process, with no timeout parameter. Wiring it onto the live induce path as-is REINTRODUCES the 2026-07-31 13-minute hang inside the fix for a different problem.",
+      "measured": {
+        "candidate": "ft09_k5 -- the frozen non-terminating engine (bestofn score_status=gate_timeout)",
+        "validate_engine_code": {
+          "call": "validate",
+          "outcome": "returned",
+          "s": 30.11,
+          "kinds": [
+            "engine_nonterminating",
+            "missing_return"
+          ]
+        },
+        "engine_changes_anything": {
+          "call": "changes",
+          "outcome": "DID_NOT_RETURN",
+          "killed_after_s": 45.0,
+          "elapsed_s": 45.06
+        },
+        "verdict": "GAP CONFIRMED: validate_engine_code returns inside its own subprocess bound while engine_changes_anything does not return at all. Wiring the inertness check onto the live induce path AS-IS would reintroduce the 2026-07-31 hang. It must be given the same killable-subprocess treatment dry_run_defects already has."
+      },
+      "required_change": "give `engine_changes_anything` the same killable-subprocess treatment `dry_run_defects` has (or fold the inertness observation into the existing bounded child, which already executes the engine over the same transitions and would make the check free). Do not wire it before that."
+    }
+  },
+  "reproduction_and_provenance": {
+    "frozen_record_reproduction": {
+      "n_compared": 47,
+      "n_agree": 47,
+      "n_disagree": 0,
+      "disagreements": [],
+      "sha_reproduces": [
+        [
+          "True",
+          48
+        ]
+      ],
+      "why_this_matters": "the taxonomy is only about the frozen corpus if it is reading the same bytes the frozen corpus was scored on. The extracted-code sha is checked per candidate and the detector's verdict is re-derived; a disagreement here would mean the detector changed under the record, not that the corpus did."
+    },
+    "window_reproduction": "the rebuilt A/B window matched the recorded `n_shown` for 20 of 20 games. The best-of-N corpus needed a DIFFERENT reconstruction (its own captured prefix at the HISTORICAL k=8, not the current k=None), proven by split.py's own two checks plus agreement with split.json's recorded n_shown, on 6 of 6 games.",
+    "a_bug_this_pass_made_and_caught": "the first version fed best-of-N the rebuilt A/B window. That is the wrong transition set for that corpus and it produced 10 spurious 'inert' verdicts, including on ft09_k1 -- one of only two plannable candidates in the corpus. The error was caught because `engine_changes_anything` is MONOTONE in the transition set, so every one of the 10 disagreements ran True(frozen)->False(mine) and none the other way. Recorded rather than quietly fixed: had it not been cross-checked against the frozen record, this artifact would have recommended an intervention that destroys half the plannable candidates it has ever seen.",
+    "inputs_sha256_16": {
+      "results/arc_induce_bestofn_20260731/bestofn_scored.json": "9ab9e1d3263b88be",
+      "results/arc_induce_bestofn_20260731/harness/bon/gpu1/bon.json": "dbd06b11f3373bc8",
+      "results/arc_induce_bestofn_20260731/split.json": "d600d43c6edf20b2",
+      "results/arc_object_perception_ab_change_fidelity_20260801/rows.json": "cfbe141a1c58aa3e",
+      "results/arc_object_perception_ab_change_fidelity_20260801/meta.json": "77228c1afd62e033",
+      "results/arc_object_perception_ab_20260728/rows.json": "94535dc0e7b53ff5",
+      "python/carnot/agentic/arc_engine_static_validation.py": "6458c353d95afe92"
+    },
+    "harness_sha256_16": {
+      "classify.py": "71b49df181663305",
+      "classify_worker.py": "279c074fb27b53a5",
+      "window_worker.py": "83cd87913c58bcb4",
+      "analyse.py": "7a8f463eda9b9d3f"
+    },
+    "detail_paths": [
+      "results/arc_generation_taxonomy_20260801/classification.json",
+      "results/arc_generation_taxonomy_20260801/classified_rows.json",
+      "results/arc_generation_taxonomy_20260801/analysis.json",
+      "results/arc_generation_taxonomy_20260801/probe_unbounded_inertness.json"
+    ]
+  },
+  "limitations": [
+    "BOTH primary corpora were generated under the OLD induce prompt (k=8 transitions shown; `_induce_transitions_k()` returned 8 until 2026-08-01, and returns None -- show ALL transitions -- since). This taxonomy therefore characterises the pre-change prompt. The all-transitions prompt could move every class and has not been measured.",
+    "ONE generator family (gemma-4-31B-it). The Qwen3.5-9B contrast is a retired model and is reported separately; nothing here generalises to a third model.",
+    "22 games, 172 primary candidates. Every rate is reported with a game-clustered interval because candidates within a game share a prompt and a window, and several of those intervals are wide enough to include no effect.",
+    "`plannability_given_live` rests on 2 successes over 6 games. It is a ceiling with a clustered CI that includes zero, not a rate, and the expected-yield figure inherits that uncertainty entirely.",
+    "The leave-one-out conversion estimate assumes re-samples within a game are exchangeable. sc25 (6 inert, 0 live in the single-shot corpus) is the visible counterexample: where the model cannot see a mechanic, a re-ask returns another inert engine and the true yield is below the estimate.",
+    "One candidate (ft09_k5) is UNDETERMINED rather than classified: it does not terminate, so nothing about it was measured. It is counted in the denominator and excluded from no rate, exactly as the frozen best-of-N run treated it."
+  ],
+  "missing_verifier_gaps": [
+    {
+      "failure_mode": "34 of 124 A/B cells (27.4%) produce an engine that IS live and IS defect-free and still scores EXACTLY 0.0 held-out change fidelity -- it changes cells, just never the right ones. No static check, dry run, grammar or repair loop distinguishes these from the 16 cells that score >= 0.5, because the distinction is not a property of the code.",
+      "missing_discriminator": "a generation-time signal that separates 'this engine changes the cells the shown transitions changed' from 'this engine changes some cells'. The dry run already executes the engine over the shown transitions and already has the observed next_grid in hand; it deliberately does not compare them, because comparing them is the trust gate's job on HELD-OUT data. An IN-SAMPLE agreement score is not a quality gate and would not be leak-free as one -- but as a REJECT-ONLY signal (the engine disagrees with the very transitions it was shown) it needs no held-out data and is strictly stronger than the binary inertness check recommended above.",
+      "candidate_design": "extend the bounded dry-run child to return, alongside its defect list, the count of shown transitions on which the engine's prediction differs from the observed next_grid. Report it; gate only on the degenerate end (disagrees with ALL of them), which is a strict superset of the inertness signal and costs nothing extra because the child already ran the engine.",
+      "priority": "HIGH -- it is 2.3x the size of the inertness class this artifact recommends acting on, and it is the only mechanically-available signal that touches correctness rather than validity.",
+      "status": "open"
+    }
+  ],
+  "surprising_result_acknowledgment": "The headline reverses the premise the task was set from ('22 of 40 unusable is the binding constraint'), so it is flagged rather than asserted. The reversal has one concrete cause that is checkable in the data: 22/40 is a SINGLE-SHOT figure and the shipped path runs 3 tries. Both corpora are reported side by side with their tries count so a reader can verify the reconciliation rather than take it. The two corpora also differ in game roster (6 vs 22 games) and prompt arm, which is stated as a confound and not adjusted away; the retry comparison is Fisher p=0.129 and is reported as evidence, not proof. The claim that does NOT depend on that comparison -- that 69.4% of zero-fidelity cells are live-but-wrong and mechanically invisible -- is measured within the single 3-try corpus and carries no cross-corpus confound.",
+  "acceptance_gates": {
+    "every_verdict_comes_from_the_shipped_detector": {
+      "passed": true,
+      "principle": "a parallel classifier would produce a taxonomy of the classifier. Every class here is `validate_engine_code`'s own output, and where the detector is deliberately coarse (IndentationError folded into syntax_error; inertness excluded by design) that coarseness is recorded rather than patched out."
+    },
+    "reproduces_the_frozen_record_it_reclassifies": {
+      "passed": true,
+      "n_agree": 47,
+      "n_compared": 47,
+      "principle": "a reclassification that disagrees with the record it is reclassifying is measuring drift, not the corpus. Extracted-code sha reproduces on 48 of 48 candidates and defect kinds on 47 of 47 scorable ones (the 48th does not terminate)."
+    },
+    "recommended_intervention_checked_against_outcomes_inside_the_class_it_rejects": {
+      "passed": true,
+      "principle": "recommending 'reject class X' without looking at what is IN class X is how a pipeline throws away the thing it exists to produce. 0 of 11 inert candidates were plannable; both plannable candidates are clean-and-live."
+    },
+    "the_recommended_intervention_was_checked_for_the_hazard_it_reintroduces": {
+      "passed": true,
+      "principle": "the check being wired executes LLM-written code. Recommending it without measuring whether it is bounded would reintroduce a known incident. It was measured on the one frozen non-terminating candidate: bounded call returns in 30s, unbounded sibling does not return."
+    },
+    "expected_size_is_computed_and_small_rather_than_asserted_and_large": {
+      "passed": true,
+      "principle": "an intervention recommendation whose size is not computed is a preference. The yield here is +0.75 plannable candidates per 100 generations with a multiplier CI that includes zero, and the artifact says so in the headline."
+    }
+  },
+  "acceptance_gate_passed": true
+}

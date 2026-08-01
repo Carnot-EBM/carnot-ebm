@@ -1,0 +1,21 @@
+{
+  "what_this_is": "Is `engine_changes_anything` -- the check this artifact recommends wiring -- itself bounded?\n\nWHY THIS PROBE EXISTS. The recommendation that comes out of this taxonomy is to reject INERT\nengines at generation time, which means calling `arc_engine_static_validation.engine_changes_\nanything` on the live induce path. Recommending that without checking whether it can hang would\nbe reintroducing the 2026-07-31 incident -- a non-terminating induced engine wedged a generation\nloop for 13 minutes -- inside the fix for a different problem.\n\nThe 2026-08-01 hardening put `dry_run_defects` behind a killable subprocess. It did NOT put\n`engine_changes_anything` behind one: that function calls `_exec_namespace` and then the engine\ndirectly, in this interpreter, with no timeout parameter and no subprocess. Reading the source is\nsuggestive; this probe MEASURES it, on the one frozen candidate known to be non-terminating\n(ft09 candidate 5), by timing the two calls separately.\n\nEXPECTED, IF THE GAP IS REAL: `validate_engine_code` returns within its own bound carrying\n`engine_nonterminating`, and `engine_changes_anything` does not return at all.\n\nThis probe runs the engine in a killable child of its own, so the probe cannot hang the session\nit is diagnosing.\n",
+  "candidate": "ft09_k5 -- the frozen non-terminating engine (bestofn score_status=gate_timeout)",
+  "outer_bound_s": 45.0,
+  "validate_engine_code": {
+    "call": "validate",
+    "outcome": "returned",
+    "s": 30.11,
+    "kinds": [
+      "engine_nonterminating",
+      "missing_return"
+    ]
+  },
+  "engine_changes_anything": {
+    "call": "changes",
+    "outcome": "DID_NOT_RETURN",
+    "killed_after_s": 45.0,
+    "elapsed_s": 45.06
+  },
+  "verdict": "GAP CONFIRMED: validate_engine_code returns inside its own subprocess bound while engine_changes_anything does not return at all. Wiring the inertness check onto the live induce path AS-IS would reintroduce the 2026-07-31 hang. It must be given the same killable-subprocess treatment dry_run_defects already has."
+}
