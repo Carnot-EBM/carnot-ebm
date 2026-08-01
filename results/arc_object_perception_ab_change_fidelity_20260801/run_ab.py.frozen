@@ -1,0 +1,612 @@
+"""Object-perception induction A/B on a HELD-OUT set, scored on change_fidelity.
+
+WHY THIS EXISTS. experiment_6018 A/B'd CARNOT_ARC_OBJECT_PERCEPTION and returned
+`..._unmeasurable_instrument_floor_primary_zero_both_arms_...`: its PRE-REGISTERED
+primary (held-out exact-full-grid accuracy) was exactly 0.0 in both arms on all 168
+cells, so zero per-game pairs were discordant and no test was possible.
+`results/arc_metric_headroom_20260801/metric_headroom.json` then searched 13 metrics
+for one with headroom and recommended `change_fidelity`.
+
+WHAT IS DIFFERENT HERE, stated plainly because it changes how the result should be read:
+
+  1. change_fidelity is the PRE-REGISTERED PRIMARY (exp6018 had it as 1 of 5
+     exploratory secondaries under a Bonferroni threshold of 0.00833).
+  2. The GENERATOR is gemma-4-31B-it-qat -- the CURRENT live inducer per the
+     2026-07-28 operator directive. exp6018 ran Qwen3.5-9B-MTP, which that directive
+     RETIRED. This matters for the instrument-floor diagnosis: the 31B's measured
+     induce-loadability is 38/39 against the retired models' 21/39, so exp6018's floor
+     may itself be a property of a generator the project no longer runs.
+  3. The held-out split is EXPLICIT. exp6018 derived held-out as `full \\ shown`, which
+     depends on the prompt's k-cap withholding something. Commit 253e1b60ed (2026-08-01)
+     made `_induce_transitions_k()` return None ("show ALL"), so that design now yields an
+     EMPTY held-out set. Splitting explicitly (wmte._split_prefix_heldout, the project's
+     canonical prefix/tail split) keeps the prompt in its CURRENT live shape -- every
+     transition handed to induce is rendered -- while still withholding a real test set.
+     It also un-blocks 10 games exp6018 could not use, taking the roster 14 -> 24.
+  4. The sampler is SEEDED (CARNOT_ARC_GENERATOR_SEED). `LocalGGUFProposer.sampling_seed`
+     documents a MEASURED 40% run-to-run divergence under identical code when the seed is
+     absent, "at least as large as any treatment effect yet measured on this path". An A/A
+     control arm tests that the seeding actually removed it.
+
+DEFAULTS ARE NOT TOUCHED. This measures whether the flag should be flipped. Flipping it
+is a separate, operator-visible decision.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+import urllib.request
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+
+# ---- isolation: E3_DIR is read at IMPORT time, so it must be set before the import ----
+SCRATCH = HERE / "e3_store"
+SCRATCH.mkdir(parents=True, exist_ok=True)
+os.environ["CARNOT_ARC_E3_DIR"] = str(SCRATCH)
+
+if str(ROOT / "python") not in sys.path:
+    sys.path.insert(0, str(ROOT / "python"))
+
+PORT = int(os.environ.get("OPAB2_PORT", "41777"))
+GPU = os.environ.get("OPAB2_GPU", "0")
+N_REPLICATES = int(os.environ.get("OPAB2_REPLICATES", "3"))
+SEED_BASE = int(os.environ.get("OPAB2_SEED_BASE", "6100"))
+WALL_BUDGET_S = float(os.environ.get("OPAB2_WALL_BUDGET_S", "30000"))
+
+OUT = HERE / "out"
+OUT.mkdir(exist_ok=True)
+CELLS = OUT / "cells"
+CELLS.mkdir(exist_ok=True)
+PREREG_PATH = OUT / "preregistration.json"
+
+# Frozen BEFORE any LLM call, and AMENDED once -- also before any outcome was inspected.
+#
+# THE AMENDMENT, recorded rather than quietly applied. The first rule counted a held-out row
+# as gradable if the grid CHANGED. `WorldModelVerifier.score` does not: it `continue`s on any
+# row with `level_after > level_before` BEFORE incrementing `n_changing`, because the
+# completing action re-lays out the playfield and no engine can predict a layout it has never
+# seen. Every one of these windows straddles exactly one level-up, and it always lands in the
+# tail. So on r11l, sp80, ft09 and vc33 -- whose held-out tail is that single row -- the
+# verifier grades NOTHING and `change_fidelity` is 0.0 for every engine in BOTH arms, by
+# construction. Including them would have re-created exp6018's instrument floor per-game,
+# inside the very experiment written to escape it, and would have padded the roster with 4
+# guaranteed ties that look like evidence of no effect.
+#
+# Caught by check_gradable.py after collection had produced 2 cells and before any
+# change_fidelity value was read, so this is a pre-result correction, not a post-hoc subset.
+ROSTER = [
+    "ls20", "s5i5", "tu93", "cn04", "m0r0", "sk48", "ar25", "tr87", "g50t", "re86",
+    "bp35", "sb26", "lf52", "su15", "lp85", "cd82", "wa30", "sc25", "tn36", "ka59",
+]
+# Pre-registered SENSITIVITY roster: games with >=3 VERIFIER-GRADABLE changing held-out rows,
+# so a per-game mean is not carried by one or two transitions. Named now so it cannot be
+# chosen after seeing which subset is favourable.
+ROSTER_WELL_SUPPORTED = [
+    "ls20", "s5i5", "tu93", "cn04", "m0r0", "sk48", "ar25", "tr87", "g50t", "re86",
+    "bp35", "wa30", "sc25", "ka59",
+]
+DROPPED_ZERO_GRADABLE = {
+    g: "held-out tail is the level-up row only; WorldModelVerifier excludes it, so "
+       "change_fidelity is structurally 0.0 for every engine in both arms"
+    for g in ("r11l", "sp80", "ft09", "vc33")
+}
+
+
+def sha(t: str) -> str:
+    return hashlib.sha256(t.encode()).hexdigest()
+
+
+def min_reachable_two_sided_p(n_disc: int) -> float:
+    """The smallest two-sided sign-test p attainable at `n_disc` discordant pairs -- the
+    all-one-direction outcome. Stated BEFORE results so a design that cannot reach 0.05 is
+    reported as such rather than as a null."""
+    if n_disc <= 0:
+        return 1.0
+    return min(1.0, 2.0 * (0.5 ** n_disc))
+
+
+def _binom_tail_ge(k: int, n: int) -> float:
+    from math import comb
+    return sum(comb(n, i) for i in range(k, n + 1)) / (2.0 ** n)
+
+
+def sign_test(deltas: list[float]) -> dict:
+    pos = sum(1 for d in deltas if d > 0)
+    neg = sum(1 for d in deltas if d < 0)
+    ties = sum(1 for d in deltas if d == 0)
+    nd = pos + neg
+    if nd == 0:
+        return {"n_pairs": len(deltas), "n_positive": pos, "n_negative": neg,
+                "n_ties": ties, "n_discordant": 0, "p_two_sided": 1.0,
+                "test_was_possible": False,
+                "min_reachable_two_sided_p_at_this_discordance": 1.0}
+    k = max(pos, neg)
+    p = min(1.0, 2.0 * _binom_tail_ge(k, nd))
+    return {"n_pairs": len(deltas), "n_positive": pos, "n_negative": neg, "n_ties": ties,
+            "n_discordant": nd, "p_two_sided": round(p, 8), "test_was_possible": True,
+            "min_reachable_two_sided_p_at_this_discordance":
+                round(min_reachable_two_sided_p(nd), 10)}
+
+
+def transition_line(e3, t) -> str:
+    click = f" data={t.data}" if t.data else ""
+    return (
+        f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
+        f"changed cells (FULL, run-length) = {e3._rle_delta_compact(t.grid, t.next_grid)}"
+    )
+
+
+def server_props(port: int) -> dict:
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/props", timeout=20) as r:
+            return json.loads(r.read().decode())
+    except Exception as exc:  # noqa: BLE001
+        return {"error": f"{type(exc).__name__}: {exc}"}
+
+
+def listening_pid(port: int) -> int | None:
+    out = subprocess.run(["ss", "-ltnp"], capture_output=True, text=True, check=False).stdout
+    for line in out.splitlines():
+        if f"127.0.0.1:{port}" in line and "pid=" in line:
+            try:
+                return int(line.split("pid=")[1].split(",")[0])
+            except (IndexError, ValueError):
+                return None
+    return None
+
+
+def main() -> int:  # noqa: C901
+    t0 = time.time()
+    from carnot.agentic import arc_actions_to_progress as atp
+    from carnot.agentic import arc_executable_world_model as e3
+    from carnot.agentic import arc_world_model_trust_energy as wmte
+
+    assert Path(e3.E3_DIR) == SCRATCH, f"E3_DIR isolation failed: {e3.E3_DIR}"
+
+    # ---------------- PRECONDITIONS -------------------------------------------------
+    gguf = e3._resolve_gguf(e3.ARC_LIVE_GENERATOR_REPO_SUBSTR)
+    conductor = subprocess.run(
+        ["systemctl", "--user", "is-active", "carnot-conductor.service"],
+        capture_output=True, text=True, check=False).stdout.strip()
+    import numpy as np
+    pg = np.zeros((8, 8), dtype=int)
+    pn = pg.copy()
+    pn[2, 3] = 5
+    probe = [e3.Transition(grid=pg, action=1, data=None, next_grid=pn,
+                           level_before=0, level_after=0)]
+    try:
+        ob = e3.objects_block(probe, previous_level_complete_grid=None)
+        objects_importable = isinstance(ob, str) and "OBJECT" in ob.upper()
+    except Exception:  # noqa: BLE001
+        objects_importable = False
+    free_mb = e3._cuda_gpu_free_mb(int(GPU))
+    pre = [
+        {"resource": "gemma-4-31B-it-qat gguf cached", "available": bool(gguf),
+         "detail": str(gguf),
+         "principle": "the live generator must be on disk; without it the honest verdict is "
+                      "blocked_model_not_cached, never a fabricated run"},
+        {"resource": "conductor_inactive", "available": conductor != "active",
+         "detail": f"systemctl is-active -> {conductor!r}",
+         "principle": "a live conductor would contend for the same GPU and interleave its own "
+                      "induction into this store"},
+        {"resource": f"cuda_gpu_{GPU}_has_headroom", "available": free_mb >= 20000,
+         "detail": f"free={free_mb} MiB",
+         "principle": "a concurrent workflow holds the other card; launching without headroom "
+                      "would evict work this session does not own"},
+        {"resource": "objects_block_importable", "available": objects_importable,
+         "principle": "if the treatment cannot render, the ON arm is the control relabelled -- "
+                      "the exact defect exp6013 shipped with its HUD mask"},
+        {"resource": "object_perception_flag_default_off",
+         "available": not e3._object_perception_on(),
+         "principle": "the shipped default is the control arm; if it were already on, this "
+                      "measures ON vs ON"},
+        {"resource": "port_free", "available": listening_pid(PORT) is None,
+         "detail": f"port {PORT}",
+         "principle": "reusing a stale server on the default port is how an arm silently gets a "
+                      "different model or context size"},
+    ]
+    if not all(p["available"] for p in pre):
+        missing = [p["resource"] for p in pre if not p["available"]]
+        (OUT / "blocked.json").write_text(json.dumps(
+            {"honest_verdict": "blocked_precondition_" + "_".join(missing)[:120],
+             "preconditions_checked": pre}, indent=2))
+        print("BLOCKED:", missing)
+        return 1
+    print("preconditions OK")
+
+    # ---------------- WINDOWS + EXPLICIT SPLIT (no LLM yet) --------------------------
+    windows: dict[str, tuple] = {}
+    split_meta: dict[str, dict] = {}
+    for game in ROSTER:
+        w = atp.build_progress_window(game)
+        if w is None:
+            raise SystemExit(f"roster game {game} lost its window since the probe")
+        win, _full, cell = w
+        win = list(win)
+        shown, held = wmte._split_prefix_heldout(win)
+        n_chg = sum(1 for t in held if not (t.grid == t.next_grid).all())
+        n_lvl = sum(1 for t in held if t.level_after > t.level_before)
+        # what the VERIFIER will actually grade -- level-up rows excluded, matching
+        # WorldModelVerifier.score's own exclusion. This is the number the roster rule uses.
+        n_grad = sum(1 for t in held
+                     if t.level_after <= t.level_before and not (t.grid == t.next_grid).all())
+        windows[game] = (shown, held, int(cell))
+        split_meta[game] = {
+            "n_transitions": len(win), "n_shown": len(shown), "n_heldout": len(held),
+            "heldout_n_changing_raw": n_chg, "heldout_levelup_rows_excluded_by_verifier": n_lvl,
+            "heldout_gradable_changing": n_grad, "cell": int(cell),
+        }
+        assert n_grad >= 1, (
+            f"{game} has no verifier-gradable changing held-out row; change_fidelity would be "
+            f"structurally 0.0 in both arms")
+    print(f"windows built for {len(windows)} games")
+
+    # ---------------- TREATMENT WITNESS (prompt diff), still no LLM ------------------
+    treatment = []
+    for game, (shown, held, cell) in windows.items():
+        os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
+        p_off = e3.induce_prompt(game, shown, cell)
+        os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = "1"
+        p_on = e3.induce_prompt(game, shown, cell)
+        os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
+        held_lines = [transition_line(e3, t) for t in held]
+        # The ONLY difference must be the object block. Compute the diff by removing the
+        # object section from `on` and demanding byte-equality with `off`.
+        marker = "OBJECT STRUCTURE"
+        idx = p_on.find(marker)
+        on_minus_objects = None
+        if idx >= 0:
+            # the block runs to the end of the objects table; reconstruct by deleting the
+            # contiguous span that `off` does not contain
+            head = p_on[:idx]
+            tail_start = idx
+            # find the longest suffix of p_off that matches a suffix of p_on
+            k = 0
+            while k < min(len(p_off), len(p_on)) and p_off[len(p_off) - 1 - k] == p_on[len(p_on) - 1 - k]:
+                k += 1
+            suffix = p_on[len(p_on) - k:] if k else ""
+            on_minus_objects = head + suffix
+            block = p_on[tail_start:len(p_on) - k] if k else p_on[tail_start:]
+        else:
+            block = ""
+        treatment.append({
+            "game": game,
+            "prompt_chars_off": len(p_off), "prompt_chars_on": len(p_on),
+            "object_header_in_off": marker in p_off,
+            "object_header_in_on": marker in p_on,
+            "object_block_chars": len(block),
+            "on_minus_object_block_equals_off": on_minus_objects == p_off,
+            "no_heldout_line_in_off": not any(ln in p_off for ln in held_lines),
+            "no_heldout_line_in_on": not any(ln in p_on for ln in held_lines),
+            "all_shown_lines_in_off": all(transition_line(e3, t) in p_off for t in shown),
+            "off_sha256": sha(p_off), "on_sha256": sha(p_on),
+        })
+    bad = [t for t in treatment if not (
+        t["object_header_in_on"] and not t["object_header_in_off"]
+        and t["on_minus_object_block_equals_off"]
+        and t["no_heldout_line_in_off"] and t["no_heldout_line_in_on"]
+        and t["all_shown_lines_in_off"])]
+    if bad:
+        (OUT / "blocked.json").write_text(json.dumps(
+            {"honest_verdict": "blocked_treatment_witness_failed",
+             "failing_games": [b["game"] for b in bad], "treatment": treatment}, indent=2))
+        print("TREATMENT WITNESS FAILED:", [b["game"] for b in bad])
+        return 1
+    print(f"treatment witness OK on {len(treatment)} games "
+          f"(object block {min(t['object_block_chars'] for t in treatment)}-"
+          f"{max(t['object_block_chars'] for t in treatment)} chars)")
+
+    # ---------------- PRE-REGISTRATION (before the first LLM call) --------------------
+    prereg = {
+        "experiment": "arc_object_perception_heldout_ab_change_fidelity",
+        "requirement": "REQ-ARC-WMTE-5830",
+        "written_before_any_llm_call": True,
+        "question": "Does CARNOT_ARC_OBJECT_PERCEPTION=1 improve held-out world-model "
+                    "induction quality on the CURRENT live generator?",
+        "arms": {"control": "CARNOT_ARC_OBJECT_PERCEPTION unset (the shipped default)",
+                 "treatment": "CARNOT_ARC_OBJECT_PERCEPTION=1"},
+        "PRIMARY": {
+            "metric": "change_fidelity (WorldModelVerifier.change_fidelity) on the held-out tail",
+            "why": "results/arc_metric_headroom_20260801/metric_headroom.json searched 13 "
+                   "metrics and recommended it as the only one with headroom that does not "
+                   "reward inertness; exp6018's primary (exact-match) floored at 0.0 in both arms",
+            "test": "exact two-sided paired sign test over GAMES (ties dropped)",
+            "clustering": "GAME, not attempt. Replicates within a game are averaged into ONE "
+                          "per-game mean before pairing -- 24 games x 3 replicates is 24 "
+                          "independent units, not 72. Treating replicates as trials inflated a "
+                          "p from 0.125 to 0.049 on 2026-07-31 and had to be corrected.",
+            "alpha": 0.05,
+        },
+        "SECONDARIES_reported_not_primary": [
+            "accuracy (exact-full-grid) -- exp6018's floored primary, reported as the control",
+            "cell_recall", "change_accuracy", "correct_changed_cells",
+            "spurious_changed_cells", "n_changes_correct",
+        ],
+        "multiplicity": "One primary. The six secondaries are exploratory; a p<0.05 on any of "
+                        "them reads against a Bonferroni threshold of 0.00833, and means 'worth "
+                        "one confirmatory run', not 'established'.",
+        "roster": ROSTER,
+        "roster_rule": "builds a progress window AND its held-out tail has >=1 "
+                       "VERIFIER-GRADABLE changing transition (grid changes AND the row is not "
+                       "the level-up, which WorldModelVerifier.score excludes) AND leak-free "
+                       "(no held-out transition line in the prompt, none textually identical to "
+                       "a shown one).",
+        "roster_amendment": {
+            "made_before_any_outcome_was_inspected": True,
+            "collection_state_when_caught": "2 cells written, no change_fidelity value read",
+            "original_rule": "heldout tail has >=1 CHANGING transition (grid-change only)",
+            "why_it_was_wrong": "WorldModelVerifier.score `continue`s on rows where "
+                                "level_after > level_before before incrementing n_changing. "
+                                "Every window straddles exactly one level-up and it always "
+                                "lands in the tail, so a game whose tail IS that row grades "
+                                "nothing and returns change_fidelity 0.0 for every engine in "
+                                "BOTH arms -- exp6018's instrument floor, re-created per game "
+                                "inside the experiment written to escape it.",
+            "games_dropped": DROPPED_ZERO_GRADABLE,
+            "n_games_before": 24, "n_games_after": len(ROSTER),
+            "effect_on_power": "min reachable two-sided p rises from 1.19e-07 to "
+                               f"{min_reachable_two_sided_p(len(ROSTER)):.3e}; the dropped games "
+                               "could only ever have contributed guaranteed ties, which do not "
+                               "add power and would have made a null look better supported "
+                               "than it is",
+        },
+        "roster_sensitivity_prespecified": ROSTER_WELL_SUPPORTED,
+        "roster_sensitivity_rule": "heldout_gradable_changing >= 3, so a per-game mean is not "
+                                   "carried by one or two transitions",
+        "n_games": len(ROSTER),
+        "n_replicates_per_cell": N_REPLICATES,
+        "min_reachable_two_sided_p_if_all_games_discordant":
+            round(min_reachable_two_sided_p(len(ROSTER)), 12),
+        "min_reachable_two_sided_p_sensitivity_roster":
+            round(min_reachable_two_sided_p(len(ROSTER_WELL_SUPPORTED)), 12),
+        "n_discordant_needed_for_p_below_0.05": 6,
+        "STOPPING_RULE": "every roster game x both arms x N replicates, or the wall budget. "
+                         "Analysis is run ONCE, after collection stops. No peeking-and-extending.",
+        "MISSING_VS_ZERO": {
+            "missing": "server failure, HTTP error, or a completion truncated by the token cap "
+                       "(stop_type=length). The cell is EXCLUDED and counted -- never scored 0.",
+            "zero": "the model returned a complete response whose code does not import or whose "
+                    "engine raises. That is a real failure of the treatment and scores 0.0.",
+        },
+        "generator": {
+            "repo_substr": e3.ARC_LIVE_GENERATOR_REPO_SUBSTR,
+            "gguf": str(gguf),
+            "why_not_the_exp6018_model": "exp6018 ran Qwen3.5-9B-MTP, RETIRED by the 2026-07-28 "
+                                         "operator directive. Measuring the flag on a retired "
+                                         "generator would not inform a live-path decision.",
+            "one_server_both_arms": True, "port": PORT, "cuda_gpu": GPU,
+            "sampler_seeded": True,
+            "seed_scheme": "CARNOT_ARC_GENERATOR_SEED = SEED_BASE + replicate; the SAME seed in "
+                           "both arms of a (game, replicate) pair. sampling_seed() then emits "
+                           "seed*1000+attempt so the retry ladder stays distinct.",
+        },
+        "AA_CONTROL": "A subset of control cells is re-run with the identical seed and arm. "
+                      "sampling_seed's docstring records a MEASURED 40% divergence under "
+                      "identical code when the seed is absent. If A/A is not byte-identical the "
+                      "residual nondeterminism is reported as a floor on any effect claim.",
+        "treatment_witness": "For every game, `on` minus the OBJECT STRUCTURE block must be "
+                             "BYTE-EQUAL to `off`. Verified before the first LLM call.",
+        "flag_remains_default_off": True,
+        "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+    }
+    prereg_text = json.dumps(prereg, indent=2, sort_keys=True)
+    PREREG_PATH.write_text(prereg_text)
+    prereg_sha = "sha256:" + sha(prereg_text)
+    print(f"pre-registration {PREREG_PATH} {prereg_sha}")
+    print(f"  PRIMARY = change_fidelity; {len(ROSTER)} games; "
+          f"min reachable two-sided p = "
+          f"{prereg['min_reachable_two_sided_p_if_all_games_discordant']:.3e}")
+    print(f"  p<0.05 needs >=6 discordant pairs of {len(ROSTER)}")
+
+    if os.environ.get("OPAB2_DRY") == "1":
+        (OUT / "meta_dry.json").write_text(json.dumps(
+            {"split_meta": split_meta, "treatment_witness": treatment,
+             "prereg_sha256": prereg_sha}, indent=2))
+        print("DRY RUN: stopping before the first LLM call")
+        return 0
+
+    # ---------------- SERVER (one, both arms) ---------------------------------------
+    # n_ctx 32768, NOT the shipped 81920, and the reason is declared because an undeclared
+    # config deviation is how a measurement silently stops describing the thing it names.
+    # The shipped 81920 exists for CONCURRENCY: llama-server runs 4 kv_unified slots and the
+    # eval framework fires one induce per game at once, so the pool must hold
+    # 4*(prompt+max_tokens). This harness issues requests STRICTLY SEQUENTIALLY (K=1), where
+    # one request needs ~4k prompt + 4096 generated. At 81920 the guard measured the model
+    # needing 25388 MiB against 24123 MiB free and auto-offloaded 7 FFN layers to system RAM
+    # -- a large, purely-throughput deviation taken to fit a pool this run cannot use. 32768
+    # keeps every layer on the card. Identical in BOTH arms, so it cannot confound the
+    # contrast; it only buys replicates.
+    os.environ["CARNOT_ARC_INDUCE_N_CTX"] = os.environ.get("OPAB2_N_CTX", "32768")
+    os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = GPU
+    prop = e3.LocalGGUFProposer(port=PORT)
+    print(f"launching {prop.repo_substr} on port {PORT} gpu {GPU} n_ctx {prop.n_ctx} ...")
+    if not prop._ensure_server():
+        (OUT / "blocked.json").write_text(json.dumps(
+            {"honest_verdict": "blocked_generator_server_failed_to_start"}, indent=2))
+        return 1
+    # `_ensure_server` MOVES to a fresh port if ours is unusable, so read the port back off the
+    # instance rather than trusting the one we asked for -- otherwise the witness would describe
+    # a server this run is not talking to.
+    actual_port = prop.port
+    pid = listening_pid(actual_port)
+    exe = os.readlink(f"/proc/{pid}/exe") if pid else None
+    props = server_props(actual_port)
+    server_witness = {
+        "pid": pid, "exe_from_proc": exe,
+        "port_requested": PORT, "port_actual": actual_port, "cuda_gpu": GPU,
+        "reuse_refusals": list(getattr(prop, "reuse_refusals", [])),
+        "generator_server_path": getattr(prop, "generator_server_path", None),
+        "n_ctx_declared": prop.n_ctx,
+        "n_ctx_from_props": props.get("default_generation_settings", {}).get("n_ctx")
+                            or props.get("n_ctx"),
+        "model_from_props": props.get("model_path") or props.get("model"),
+        # The HIP build lives in build-hip/ and is the AMD iGPU path; the CUDA build is build/.
+        # A run that silently landed on the iGPU would be ~6x slower and is a different substrate.
+        "is_cuda_build": bool(exe and "build-hip" not in exe and exe.endswith("llama-server")),
+        "mtp": prop.mtp, "kv_quant": prop.kv_quant, "n_gpu_layers": prop.n_gpu_layers,
+        "max_tokens": prop.max_tokens,
+    }
+    if not server_witness["is_cuda_build"]:
+        (OUT / "blocked.json").write_text(json.dumps(
+            {"honest_verdict": "blocked_generator_not_on_the_cuda_build",
+             "server_witness": server_witness}, indent=2))
+        print("BLOCKED: not the CUDA build ->", exe)
+        return 1
+    print("server:", json.dumps(server_witness))
+    (OUT / "server_witness.json").write_text(json.dumps(server_witness, indent=2))
+
+    # ---------------- CELLS ----------------------------------------------------------
+    def run_cell(game: str, rep: int, arm: str, tag: str) -> dict:
+        shown, held, cell = windows[game]
+        cell_dir = SCRATCH / f"{game}__r{rep}__{tag}"
+        if cell_dir.exists():
+            shutil.rmtree(cell_dir)
+        cell_dir.mkdir(parents=True)
+        e3.E3_DIR = cell_dir  # module global, read at call time by write + load
+
+        if arm == "on":
+            os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = "1"
+        else:
+            os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
+        os.environ["CARNOT_ARC_GENERATOR_SEED"] = str(SEED_BASE + rep)
+
+        prompt = e3.induce_prompt(game, shown, cell)
+        # NAMES MATTER HERE. These are `n_server_failures` / `n_content_failures`; an earlier
+        # draft read `_server_failures`, which does not exist, so getattr's default silently
+        # returned 0 forever and the MISSING-vs-ZERO rule below could never have fired. A
+        # missing observation would have been scored as a real zero -- the precise failure the
+        # rule exists to prevent. Read them off the instance with no default so a rename fails
+        # loudly instead of degrading into "nothing was ever missing".
+        sf0 = prop.n_server_failures
+        cf0 = prop.n_content_failures
+        t = time.time()
+        try:
+            ok, msg = prop.induce(game, shown, cell)
+            exc = None
+        except Exception as e:  # noqa: BLE001
+            ok, msg, exc = False, "", f"{type(e).__name__}: {e}"[:300]
+        elapsed = time.time() - t
+        sf1 = prop.n_server_failures
+        cf1 = prop.n_content_failures
+
+        row = {
+            "game": game, "replicate": rep, "arm": arm, "tag": tag,
+            "seed": SEED_BASE + rep, "elapsed_s": round(elapsed, 2),
+            "induce_ok": bool(ok), "induce_msg": str(msg)[:300], "exception": exc,
+            "prompt_chars": len(prompt), "prompt_sha256": sha(prompt),
+            "object_header_in_prompt": "OBJECT STRUCTURE" in prompt,
+            "server_failures_delta": sf1 - sf0, "content_failures_delta": cf1 - cf0,
+            "n_shown": len(shown), "n_heldout": len(held),
+            "e3_dir": str(cell_dir),
+        }
+        # arm integrity: the ON arm's prompt MUST carry the block, the OFF arm's must not
+        row["arm_prompt_consistent"] = (row["object_header_in_prompt"] == (arm == "on"))
+
+        wm = cell_dir / game / "world_model.py"
+        row["engine_file_exists"] = wm.exists()
+        if wm.exists():
+            code = wm.read_text()
+            row["engine_sha256"] = sha(code)
+            row["engine_bytes"] = len(code)
+        engine = None
+        if wm.exists():
+            try:
+                engine, is_done = e3._load_engine_from(cell_dir, game)
+                row["engine_loaded"] = engine is not None
+                row["is_level_complete_present"] = is_done is not None
+            except Exception as e:  # noqa: BLE001
+                row["engine_loaded"] = False
+                row["engine_load_error"] = f"{type(e).__name__}: {e}"[:200]
+        else:
+            row["engine_loaded"] = False
+
+        # MISSING vs ZERO. A server-side failure is a missing observation. A complete
+        # response that produced no usable engine is a real zero.
+        row["missing"] = bool(row["server_failures_delta"] > 0 or exc is not None)
+        row["missing_reason"] = (
+            "server_failure" if row["server_failures_delta"] > 0
+            else ("harness_exception" if exc else None))
+
+        if engine is not None:
+            try:
+                vr = e3.WorldModelVerifier(list(held)).score(engine)
+                row["heldout"] = {
+                    "measurable": True, "n": int(vr.n), "n_correct": int(vr.n_correct),
+                    "accuracy": round(float(vr.accuracy), 6),
+                    "cell_recall": round(float(vr.cell_recall), 6),
+                    "n_changing": int(vr.n_changing),
+                    "n_changes_correct": int(vr.n_changes_correct),
+                    "change_accuracy": round(float(vr.change_accuracy), 6),
+                    "change_fidelity": round(float(vr.change_fidelity), 6),
+                    "correct_changed_cells": int(vr.correct_changed_cells),
+                    "spurious_changed_cells": int(vr.spurious_changed_cells),
+                    "error": vr.error,
+                }
+            except Exception as e:  # noqa: BLE001
+                row["heldout"] = {"measurable": False,
+                                  "error": f"{type(e).__name__}: {e}"[:200]}
+        elif not row["missing"]:
+            # complete response, no usable engine -> genuine zero on every similarity metric
+            row["heldout"] = {"measurable": True, "n": len(held), "n_correct": 0,
+                              "accuracy": 0.0, "cell_recall": 0.0,
+                              "n_changing": sum(1 for t in held
+                                                if not (t.grid == t.next_grid).all()),
+                              "n_changes_correct": 0, "change_accuracy": 0.0,
+                              "change_fidelity": 0.0, "correct_changed_cells": 0,
+                              "spurious_changed_cells": 0,
+                              "error": "no_engine_fail_as_zero"}
+        else:
+            row["heldout"] = {"measurable": False, "error": "missing_observation"}
+
+        (CELLS / f"{game}__r{rep}__{tag}.json").write_text(json.dumps(row, indent=2))
+        return row
+
+    rows: list[dict] = []
+    order: list[tuple[str, int, str, str]] = []
+    for rep in range(N_REPLICATES):
+        for game in ROSTER:
+            # alternate which arm goes first so any server drift is not confounded with arm
+            arms = ["off", "on"] if (rep + ROSTER.index(game)) % 2 == 0 else ["on", "off"]
+            for a in arms:
+                order.append((game, rep, a, a))
+    # A/A control: repeat replicate 0's control arm on the first 4 games with the same seed
+    for game in ROSTER[:4]:
+        order.append((game, 0, "off", "offAA"))
+
+    print(f"\n{len(order)} cells queued\n")
+    for i, (game, rep, arm, tag) in enumerate(order, 1):
+        if time.time() - t0 > WALL_BUDGET_S:
+            print(f"WALL BUDGET reached after {i-1} cells; stopping collection")
+            break
+        r = run_cell(game, rep, arm, tag)
+        rows.append(r)
+        h = r.get("heldout", {})
+        print(f"[{i}/{len(order)}] {game} r{rep} {tag:6} ok={r['induce_ok']} "
+              f"eng={r['engine_loaded']} cf={h.get('change_fidelity')} "
+              f"acc={h.get('accuracy')} {r['elapsed_s']}s")
+        (OUT / "rows.json").write_text(json.dumps(rows, indent=2))
+
+    meta = {
+        "prereg_sha256": prereg_sha, "server_witness": server_witness,
+        "split_meta": split_meta, "treatment_witness": treatment,
+        "n_cells_run": len(rows), "n_cells_queued": len(order),
+        "duration_s": round(time.time() - t0, 2),
+        "seed_base": SEED_BASE, "n_replicates": N_REPLICATES,
+        "roster": ROSTER, "roster_well_supported": ROSTER_WELL_SUPPORTED,
+        "gguf": str(gguf),
+    }
+    (OUT / "meta.json").write_text(json.dumps(meta, indent=2))
+    print(f"\ncollection done: {len(rows)} cells in {meta['duration_s']}s")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

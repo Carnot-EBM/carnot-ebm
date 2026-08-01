@@ -1,0 +1,129 @@
+"""CPU-only probe: which public games give a CHANGE-GRADABLE held-out split?
+
+Runs BEFORE any LLM call so the roster is selected on gradability rather than on
+whatever the results happen to look like. Writes windows_probe.json.
+
+The held-out split here is EXPLICIT (wmte._split_prefix_heldout, the project's
+canonical prefix/tail split) rather than inferred from the induce prompt's k-cap.
+That matters as of 2026-08-01: commit 253e1b60ed made `_induce_transitions_k()`
+return None ("show ALL transitions"), so exp6018's `full \\ shown` design would
+yield an EMPTY held-out set on the current default. Splitting explicitly lets the
+prompt keep the CURRENT live shape (every transition we hand it is rendered) while
+still withholding a real test set.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import sys
+import time
+from pathlib import Path
+
+ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+if str(ROOT / "python") not in sys.path:
+    sys.path.insert(0, str(ROOT / "python"))
+
+OUT = Path(__file__).resolve().parent / "windows_probe.json"
+
+# The 25 public survey games (all cleared per ops/arc_solve_registry.yaml).
+GAMES = [
+    "ls20", "s5i5", "tu93", "cn04", "m0r0", "sk48", "ar25", "tr87", "g50t",
+    "re86", "bp35", "sb26", "lf52", "su15", "r11l", "lp85", "cd82", "sp80",
+    "ft09", "vc33", "wa30", "sc25", "tn36", "ka59", "dc22",
+]
+
+
+def main() -> int:
+    os.environ.setdefault("CARNOT_ARC_OFFLINE", "1")
+    from carnot.agentic import arc_actions_to_progress as atp
+    from carnot.agentic import arc_executable_world_model as e3
+    from carnot.agentic import arc_world_model_trust_energy as wmte
+
+    rows = []
+    for game in GAMES:
+        t0 = time.time()
+        rec: dict = {"game": game}
+        try:
+            w = atp.build_progress_window(game)
+        except Exception as exc:  # noqa: BLE001
+            rec.update(built=False, error=f"{type(exc).__name__}: {exc}"[:200])
+            rows.append(rec)
+            print(f"  {game}: window FAILED {type(exc).__name__}")
+            continue
+        if w is None:
+            rec.update(built=False, error="no_window")
+            rows.append(rec)
+            print(f"  {game}: no window")
+            continue
+
+        win, _full, cell = w
+        win = list(win)
+        shown, held = wmte._split_prefix_heldout(win)
+
+        # change-gradability: change_fidelity is defined only over CHANGING transitions.
+        def _n_changing(ts):
+            return sum(1 for t in ts if not (t.grid == t.next_grid).all())
+
+        rec.update(
+            built=True,
+            cell=int(cell),
+            n_transitions=len(win),
+            n_shown=len(shown),
+            n_heldout=len(held),
+            heldout_n_changing=_n_changing(held),
+            heldout_n_noop=len(held) - _n_changing(held),
+            shown_n_changing=_n_changing(shown),
+            grid_shape=list(win[0].grid.shape),
+            build_s=round(time.time() - t0, 2),
+        )
+
+        # Prompt-membership proof, on the CURRENT default (k=None -> render all shown).
+        try:
+            p = e3.induce_prompt(game, shown, cell)
+            lines_held = [_line(e3, t) for t in held]
+            lines_shown = [_line(e3, t) for t in shown]
+            rec["prompt_chars"] = len(p)
+            rec["all_shown_lines_in_prompt"] = all(ln in p for ln in lines_shown)
+            rec["no_heldout_line_in_prompt"] = not any(ln in p for ln in lines_held)
+            # A held-out line can be textually identical to a shown one (same delta) --
+            # that is a genuine leak for grading purposes, so count it explicitly.
+            rec["n_heldout_lines_colliding_with_shown"] = sum(
+                1 for ln in lines_held if ln in set(lines_shown)
+            )
+        except Exception as exc:  # noqa: BLE001
+            rec["prompt_error"] = f"{type(exc).__name__}: {exc}"[:200]
+
+        rows.append(rec)
+        print(
+            f"  {game}: n={rec['n_transitions']} shown={rec['n_shown']} "
+            f"held={rec['n_heldout']} held_changing={rec['heldout_n_changing']} "
+            f"chars={rec.get('prompt_chars')} "
+            f"noleak={rec.get('no_heldout_line_in_prompt')} "
+            f"collide={rec.get('n_heldout_lines_colliding_with_shown')}"
+        )
+
+    OUT.write_text(json.dumps(rows, indent=2))
+    gradable = [
+        r for r in rows
+        if r.get("built")
+        and r.get("heldout_n_changing", 0) >= 1
+        and r.get("no_heldout_line_in_prompt")
+        and r.get("n_heldout_lines_colliding_with_shown", 1) == 0
+    ]
+    print(f"\nBUILT: {sum(1 for r in rows if r.get('built'))}/{len(rows)}")
+    print(f"CHANGE-GRADABLE + LEAK-FREE: {len(gradable)}")
+    print("  ", [r["game"] for r in gradable])
+    return 0
+
+
+def _line(e3, t) -> str:
+    click = f" data={t.data}" if t.data else ""
+    return (
+        f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
+        f"changed cells (FULL, run-length) = {e3._rle_delta_compact(t.grid, t.next_grid)}"
+    )
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
