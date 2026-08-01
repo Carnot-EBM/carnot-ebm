@@ -1,0 +1,244 @@
+{
+  "what_this_is": "an independent from-scratch recomputation of results/outer_loop_arc_metric_validity_20260801.json, written without importing analyse.py, plus three post-hoc findings the original analysis did not report.",
+  "raw_rows": 156,
+  "dropped_by_preregistered_exclusions": {
+    "status_not_ok": 11,
+    "heldout_n_changing_zero": 7
+  },
+  "n_analysable": 138,
+  "n_plannable": 22,
+  "n_games": 21,
+  "reproduction_of_published_numbers": {
+    "auc_pooled": 0.6085,
+    "mean_when_plannable": 0.3195,
+    "mean_when_unplannable": 0.2048,
+    "min_reachable_two_sided_p": 1.1026234029765593e-25,
+    "within_game_auc": 0.5688,
+    "within_game_n_informative_games": 11,
+    "tn36_removed": {
+      "n": 124,
+      "k": 17,
+      "auc_pooled": 0.5316,
+      "within_game_auc": 0.5108
+    },
+    "engines_at_or_above_0999": {
+      "n": 7,
+      "games": {
+        "tn36": 7
+      },
+      "n_plannable": 3
+    },
+    "inertness_floor": {
+      "n_inert": 45,
+      "n_inert_plannable": 0,
+      "n_live": 93,
+      "n_live_plannable": 22,
+      "auc_within_live": 0.5016
+    },
+    "probe_depth_reached_pooled_auc": 0.7866,
+    "shipped_gate_trust_energy_pooled_auc": 0.3603,
+    "scipy_cross_check_abs_delta": 0.0
+  },
+  "FINDING_1_game_unweighted_view": {
+    "post_hoc": true,
+    "why_it_matters": "the published within-game AUC of 0.5688 is PAIR-weighted, so the three largest games supply most of the evidence. Weighting games equally -- which is the same clustering logic the artifact uses for its CI -- gives a different picture, and it makes the null STRONGER, not weaker.",
+    "pair_weighted_within_game_auc": 0.5688,
+    "game_unweighted_mean_of_per_game_aucs": 0.4087,
+    "n_games_below_chance": 6,
+    "n_games_above_chance": 4,
+    "pair_mass_share_of_top_three_games": 0.6304,
+    "per_game": {
+      "ls20": {
+        "auc": 0.25,
+        "pairs": 8
+      },
+      "tu93": {
+        "auc": 0.6111,
+        "pairs": 18
+      },
+      "cn04": {
+        "auc": 0.1667,
+        "pairs": 6
+      },
+      "tr87": {
+        "auc": 0.375,
+        "pairs": 8
+      },
+      "g50t": {
+        "auc": 0.5,
+        "pairs": 8
+      },
+      "re86": {
+        "auc": 0.1667,
+        "pairs": 3
+      },
+      "bp35": {
+        "auc": 0.2,
+        "pairs": 5
+      },
+      "sc25": {
+        "auc": 0.8125,
+        "pairs": 24
+      },
+      "tn36": {
+        "auc": 0.6889,
+        "pairs": 45
+      },
+      "ka59": {
+        "auc": 0.625,
+        "pairs": 8
+      },
+      "ft09": {
+        "auc": 0.1,
+        "pairs": 5
+      }
+    },
+    "observed_per_game_auc_sd": 0.249,
+    "null_spread_check": {
+      "null_mean_sd": 0.2818,
+      "null_ci95": [
+        0.1795,
+        0.3713
+      ]
+    },
+    "CAVEAT_THAT_MUST_TRAVEL_WITH_THIS": "the per-game AUCs range from 0.10 to 0.81 and 6 of 11 sit below chance, which LOOKS like the effect varies by game. It does not. The observed spread is INSIDE the range that pure sampling noise produces at these pair counts (as few as 3 pairs per game), so the direction flips are consistent with chance alone and must NOT be reported as evidence of between-game heterogeneity."
+  },
+  "FINDING_2_both_controls_together": {
+    "post_hoc": true,
+    "post_hoc_note": "each control is pre-registered separately -- the inertness floor and the within-game stratification are both in preregistration.json. Their CONJUNCTION is not, so this is a hypothesis this run generated, not one it tested. It needs a prospective replication before it is acted on.",
+    "why_it_matters": "inert engines are unplannable BY CONSTRUCTION (0 of 45), so leaving them in lets a metric look predictive merely by being correlated with inertness. Removing them AND comparing within game isolates the question actually being asked: among engines that do something, for the same game, does a higher score mean a better candidate?",
+    "results": {
+      "change_fidelity": {
+        "within_game_auc_among_live_engines": 0.2917,
+        "n_pairs": 72,
+        "n_informative_games": 11,
+        "game_clustered_ci95": [
+          0.1917,
+          0.3679
+        ],
+        "n_games_below_chance": 9,
+        "per_game": {
+          "ls20": 0.25,
+          "tu93": 0.4167,
+          "cn04": 0.25,
+          "tr87": 0.0,
+          "g50t": 0.5,
+          "re86": 0.1667,
+          "bp35": 0.125,
+          "sc25": 0.25,
+          "ka59": 0.5,
+          "ft09": 0.0,
+          "tn36": 0.3
+        },
+        "within_game_permutation_p": 0.009,
+        "leave_one_game_out": {
+          "ar25": 0.2917,
+          "bp35": 0.3015,
+          "cd82": 0.2917,
+          "cn04": 0.2941,
+          "ft09": 0.3088,
+          "g50t": 0.2727,
+          "ka59": 0.2727,
+          "lf52": 0.2917,
+          "lp85": 0.2917,
+          "ls20": 0.2969,
+          "m0r0": 0.2917,
+          "re86": 0.2971,
+          "sc25": 0.2955,
+          "sk48": 0.2917,
+          "su15": 0.2917,
+          "tn36": 0.2895,
+          "tr87": 0.3088,
+          "tu93": 0.2667,
+          "wa30": 0.2917
+        }
+      },
+      "probe_depth_reached": {
+        "within_game_auc_among_live_engines": 0.5278,
+        "n_pairs": 72,
+        "n_informative_games": 11,
+        "game_clustered_ci95": [
+          0.4167,
+          0.6875
+        ],
+        "n_games_below_chance": 2,
+        "per_game": {
+          "ls20": 0.5,
+          "tu93": 0.25,
+          "cn04": 0.875,
+          "tr87": 0.75,
+          "g50t": 0.6667,
+          "re86": 0.5,
+          "bp35": 0.5,
+          "sc25": 0.5,
+          "ka59": 0.75,
+          "ft09": 0.875,
+          "tn36": 0.4
+        }
+      }
+    },
+    "reading": "change_fidelity does not merely fail to predict under both controls -- it is INVERSELY associated, with an interval that excludes chance on the wrong side, 9 of 11 games below chance, a within-game permutation p of about 0.009, and no single game carrying it (leave-one-game-out never moves it above ~0.31). probe_depth_reached, the rival the original run nominated, falls to roughly chance under the same two controls -- so its headline advantage is substantially an inertness-and-graph-shape detector rather than a quality signal."
+  },
+  "FINDING_3_plannability_is_a_goal_predicate_property": {
+    "post_hoc": true,
+    "why_it_matters": "the artifact lists 'plan_found depends on the induced GOAL PREDICATE, not the engine alone' as limitation [0]. The data show it is not a caveat on the result -- it IS the result. plan_found is an EXACT function of the goal gate's verdict across all analysable engines, with zero exceptions. So the outcome variable this run scored every dynamics metric against is a restatement of whether the induced goal predicate is reachable. That is why no dynamics metric predicts it, and it means a null here is NOT evidence that dynamics accuracy is worthless -- it is evidence that plannability is the wrong outcome for testing a dynamics metric.",
+    "plan_found_equals_goal_kind_in_admitting_set": {
+      "n_checked": 138,
+      "n_mismatches": 0,
+      "is_an_identity": true,
+      "admitting_kinds": [
+        "goal_predicate_true_at_root",
+        "satisfiable"
+      ]
+    },
+    "goal_kind_distribution_all_analysable": {
+      "degenerate_goal_predicate": 69,
+      "goal_unreached_within_budget": 45,
+      "satisfiable": 18,
+      "goal_predicate_true_at_root": 4,
+      "goal_predicate_error": 1,
+      "goal_unreached_within_depth": 1
+    },
+    "goal_kind_distribution_live_only": {
+      "goal_unreached_within_budget": 45,
+      "degenerate_goal_predicate": 24,
+      "satisfiable": 18,
+      "goal_predicate_true_at_root": 4,
+      "goal_predicate_error": 1,
+      "goal_unreached_within_depth": 1
+    },
+    "live_engines_that_cannot_yield_a_plan": {
+      "n": 71,
+      "of_n_live": 93,
+      "share": 0.7634,
+      "breakdown": {
+        "goal_unreached_within_budget": 45,
+        "degenerate_goal_predicate": 24,
+        "goal_predicate_error": 1,
+        "goal_unreached_within_depth": 1
+      }
+    },
+    "the_goal_gates_own_satisfiable_flag_is_NOT_the_identity": {
+      "why": "the gate records BOTH a `kind` and a `satisfiable` boolean, and they disagree. Every engine with kind `goal_predicate_true_at_root` carries satisfiable=False, yet all of them ARE plannable -- the goal predicate is already true at the root, so the planner returns immediately. So the identity holds against `kind`, not against `satisfiable`. Anything gating on the boolean alone would reject engines the planner can plan with. Those particular four are the degenerate root-true ones and arguably SHOULD be rejected, but the disagreement is a real inconsistency in the shipped gate and is recorded here rather than smoothed over.",
+      "n_engines_where_flag_and_outcome_disagree": 4
+    },
+    "the_actionable_decomposition": "among the 93 engines that actually run and change something, the induce->plan path fails for 71. The single largest cause is the goal predicate never becoming true anywhere the bounded search reaches (45 of 93, about 48 percent); the next is a goal predicate the gate classifies as degenerate (24 of 93, about 26 percent). The binding constraint on this path is the induced GOAL PREDICATE, not the induced dynamics."
+  },
+  "FINDING_4_reconciled_intervention_ceiling": {
+    "post_hoc": true,
+    "why_it_matters": "the taxonomy artifact put the ceiling on inert-rejection at 2 plannable of 26 live-and-clean engines (0.077), measured on the smaller best-of-N corpus at the OLD depth-40 default. This corpus is larger and runs at the shipped depth 80, and gives a higher rate. The two are not in conflict; the newer one supersedes.",
+    "p_plannable_given_live": 0.2366,
+    "game_clustered_ci95": [
+      0.1333,
+      0.3409
+    ],
+    "taxonomy_estimate_it_supersedes": 0.0769,
+    "expected_additional_plannable_engines_if_12_1_inert_convert": 2.86,
+    "expected_additional_ci95": [
+      1.61,
+      4.12
+    ],
+    "as_share_of_a_124_candidate_corpus": 0.0231,
+    "reading": "converting every inert candidate the shipped one-reask budget can convert buys roughly three more plannable engines across a 124-candidate corpus, about 2 percent. And 'plannable' here means only that the goal gate believes a goal-true state is reachable INSIDE the model -- nothing has been executed against a real environment."
+  }
+}
