@@ -1,0 +1,89 @@
+{
+  "arm": "q4km",
+  "arm_wall_s": 8288.19,
+  "budget": 16384,
+  "cells_completed": 60,
+  "cells_missing": [],
+  "cells_total": 60,
+  "e3_dir": "/tmp/qat_h2h/e3_q4km",
+  "ended_iso": "2026-08-01T02:04:49Z",
+  "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+  "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+  "kv_quant": "q8_0",
+  "label": "gemma-4-31B-it Q4_K_M (non-QAT, shipped)",
+  "mtp": false,
+  "n_ctx_deployed": 32768,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "resource": "gguf_cached::gemma-4-31B-it Q4_K_M (non-QAT, shipped)"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "resource": "llama_server_binary"
+    },
+    {
+      "available": true,
+      "detail": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "resource": "gpu_on_pci_bus"
+    },
+    {
+      "available": true,
+      "detail": "CUDA build check",
+      "resource": "llama_cpp_gpu_offload"
+    },
+    {
+      "available": true,
+      "detail": "no pre-existing server on our port",
+      "resource": "port_8981_free_or_ours"
+    }
+  ],
+  "quantisation": "Q4_K_M",
+  "roster": [
+    "tu93",
+    "tr87",
+    "sp80",
+    "sb26",
+    "re86",
+    "g50t",
+    "r11l",
+    "cd82",
+    "ar25",
+    "lp85",
+    "sk48",
+    "vc33",
+    "ft09",
+    "bp35",
+    "cn04",
+    "lf52",
+    "ls20",
+    "m0r0",
+    "s5i5",
+    "su15"
+  ],
+  "server": {
+    "completion_probe": {
+      "alive": true,
+      "content": "4$\n<|channel>.g own own",
+      "s": 0.29
+    },
+    "gpu_uuid_proven": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "health_wait_s": 10.0,
+    "n_ctx_deployed": 32768,
+    "pid": 1791368,
+    "port": 8981,
+    "props_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "residency_mib_gpu1": 21416
+  },
+  "started_iso": "2026-07-31T23:46:41Z",
+  "status": "complete",
+  "trials": [
+    0,
+    1,
+    2
+  ],
+  "use_chat_template": true,
+  "wedge": null
+}
