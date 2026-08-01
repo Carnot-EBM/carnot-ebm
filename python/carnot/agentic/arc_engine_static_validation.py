@@ -109,6 +109,8 @@ __all__ = [
     "dry_run_defects",
     "dry_run_timeout_default",
     "engine_changes_anything",
+    "engine_changes_anything_bounded",
+    "engine_inertness_defect",
     "validate_engine_code",
     "repair_prompt_block",
 ]
@@ -659,22 +661,35 @@ class _ShimTransition:
     data: Any
 
 
-def _dry_run_defects_subprocess(
+def _run_isolated_job(
     code: str,
     transitions: Sequence[Any],
     *,
     limit: int,
     func_name: str,
     timeout_s: float,
-) -> Optional[list[EngineDefect]]:
-    """Run the dry run in a killable child. Returns None when the child could not be USED at all.
+    job_kind: str,
+) -> tuple[str, Any]:
+    """Stage a job, run it in a KILLABLE CHILD, and report what happened -- nothing more.
 
-    The None-vs-list distinction is the whole contract, and it is deliberately narrow. A list --
-    including an empty one -- means the check RAN and this is its verdict. `None` means the
-    isolation machinery itself was unavailable (no interpreter, spawn refused, unreadable
-    result, unpicklable input), which is an infrastructure fact and NOT evidence about the
-    engine. Only `None` sends the caller to the in-process fallback; a timeout does not, because
-    a timeout IS a real observation about the code.
+    Extracted 2026-08-01 so that a SECOND check which executes generated code
+    (`engine_changes_anything_bounded`) gets the identical process boundary rather than a
+    hand-copied approximation of it. Two near-duplicate spawn paths is exactly how one of them
+    quietly loses the `CUDA_VISIBLE_DEVICES=""` line, or the `PYTHONPATH` line, and starts
+    behaving differently from the one that was reasoned about.
+
+    This function deliberately makes NO judgement about the engine. It returns a status and a
+    payload; turning either into an `EngineDefect` is the caller's job, because what a timeout
+    MEANS differs by check (for the dry run it is `engine_nonterminating`, a real defect; for
+    the inertness probe it is "undetermined", which must not become a rejection).
+
+    status is one of:
+      ``"ok"``          -- `payload` is the child's decoded JSON dict.
+      ``"timeout"``     -- the child was killed at the wall-clock bound; `payload` is None.
+      ``"crashed"``     -- the child exited non-zero; `payload` is ``(returncode, stderr_tail)``.
+      ``"unavailable"`` -- the isolation machinery itself could not be used (unpicklable input,
+                           spawn refused, unreadable result). This is an INFRASTRUCTURE fact and
+                           never evidence about the engine; `payload` is None.
     """
 
     tmp = None
@@ -690,6 +705,7 @@ def _dry_run_defects_subprocess(
                     "transitions": staged,
                     "limit": int(limit),
                     "func_name": str(func_name),
+                    "job_kind": str(job_kind),
                 },
                 fh,
                 protocol=pickle.HIGHEST_PROTOCOL,
@@ -698,7 +714,7 @@ def _dry_run_defects_subprocess(
     except Exception:  # noqa: BLE001 - cannot stage the job; not a fact about the engine
         if tmp is not None:
             tmp.unlink(missing_ok=True)
-        return None
+        return "unavailable", None
 
     env = dict(os.environ)
     # The child imports this package; make sure it can, whatever the parent's install layout is.
@@ -726,6 +742,48 @@ def _dry_run_defects_subprocess(
     except subprocess.TimeoutExpired:
         # THE INCIDENT'S SIGNATURE. `subprocess.run` kills the child on timeout, so unlike a
         # signal there is nothing left spinning and nothing that can catch this.
+        return "timeout", None
+    except Exception:  # noqa: BLE001 - spawn refused; infrastructure, not the engine
+        return "unavailable", None
+    finally:
+        tmp.unlink(missing_ok=True)
+
+    if proc.returncode != 0:
+        return "crashed", (int(proc.returncode), (proc.stderr or "")[-400:])
+
+    try:
+        return "ok", json.loads((proc.stdout or "").strip().splitlines()[-1])
+    except Exception:  # noqa: BLE001 - unreadable result; do not guess a verdict
+        return "unavailable", None
+
+
+def _dry_run_defects_subprocess(
+    code: str,
+    transitions: Sequence[Any],
+    *,
+    limit: int,
+    func_name: str,
+    timeout_s: float,
+) -> Optional[list[EngineDefect]]:
+    """Run the dry run in a killable child. Returns None when the child could not be USED at all.
+
+    The None-vs-list distinction is the whole contract, and it is deliberately narrow. A list --
+    including an empty one -- means the check RAN and this is its verdict. `None` means the
+    isolation machinery itself was unavailable (no interpreter, spawn refused, unreadable
+    result, unpicklable input), which is an infrastructure fact and NOT evidence about the
+    engine. Only `None` sends the caller to the in-process fallback; a timeout does not, because
+    a timeout IS a real observation about the code.
+    """
+
+    status, payload = _run_isolated_job(
+        code,
+        transitions,
+        limit=limit,
+        func_name=func_name,
+        timeout_s=timeout_s,
+        job_kind="dry_run",
+    )
+    if status == "timeout":
         return [
             EngineDefect(
                 kind="engine_nonterminating",
@@ -745,44 +803,58 @@ def _dry_run_defects_subprocess(
                 },
             )
         ]
-    except Exception:  # noqa: BLE001 - spawn refused; infrastructure, not the engine
-        return None
-    finally:
-        tmp.unlink(missing_ok=True)
-
-    if proc.returncode != 0:
+    if status == "crashed":
         # A CRASHED child is a fact about the engine (a segfault or OOM in generated code is a
         # real defect), but it is reported distinctly from a clean verdict so it can never be
         # mistaken for one.
+        returncode, stderr_tail = payload
         return [
             EngineDefect(
                 kind="engine_crashed_validator",
                 detail=(
-                    f"the isolated dry run exited with code {proc.returncode} without "
+                    f"the isolated dry run exited with code {returncode} without "
                     f"reporting. Generated code that takes the interpreter down -- a segfault "
                     f"in a native call, or an allocation the OS refused -- is a defect, and is "
                     f"reported here rather than as a passing check."
                 ),
                 evidence={
-                    "returncode": int(proc.returncode),
-                    "stderr_tail": (proc.stderr or "")[-400:],
+                    "returncode": int(returncode),
+                    "stderr_tail": stderr_tail,
                     "isolation": "subprocess",
                 },
             )
         ]
-
+    if status != "ok":
+        return None
     try:
-        payload = json.loads((proc.stdout or "").strip().splitlines()[-1])
         return [_defect_from_dict(d) for d in payload["defects"]]
     except Exception:  # noqa: BLE001 - unreadable result; do not guess a verdict
         return None
 
 
 def _dry_run_child_main(job_path: str) -> int:
-    """Child entry point. Prints one JSON line: the defect list, or nothing on a crash."""
+    """Child entry point. Prints one JSON line: the job's verdict, or nothing on a crash.
+
+    `job_kind` selects which check runs in the child. It defaults to ``"dry_run"`` so that a job
+    staged by an older parent still means what it meant.
+    """
 
     with open(job_path, "rb") as fh:
         job = pickle.load(fh)  # noqa: S301 - written by this process's parent, not untrusted input
+    kind = str(job.get("job_kind") or "dry_run")
+    if kind == "changes_anything":
+        print(
+            json.dumps(
+                _change_census_inprocess(
+                    job["code"],
+                    job["transitions"],
+                    limit=int(job["limit"]),
+                    func_name=str(job["func_name"]),
+                ),
+                default=str,
+            )
+        )
+        return 0
     defects = _dry_run_defects_inprocess(
         job["code"],
         job["transitions"],
@@ -885,17 +957,65 @@ def engine_changes_anything(
     (`change_fidelity`, `cell_recall`, no-op hallucination rate) over a held-out split.
 
     Returns None when the engine could not be run at all.
+
+    UNBOUNDED, AND MEASURED TO BE (2026-08-01). This executes generated code IN THIS
+    INTERPRETER with no wall-clock bound, exactly as `_dry_run_defects_inprocess` does. On the
+    ft09 candidate 5 that caused the 2026-07-31 13-minute wedge, `validate_engine_code` returns
+    in 30.07s with `engine_nonterminating` while THIS function does not return at all
+    (`results/arc_generation_taxonomy_20260801/probe_unbounded_inertness.json`). Any caller on a
+    live path must use `engine_changes_anything_bounded` instead. This name is kept, and kept
+    unbounded, because it is the reporting helper the docstring above describes and changing its
+    semantics under existing callers would be a behaviour change smuggled in as a refactor.
+    """
+    return _engine_changes_anything_inprocess(code, transitions, limit=limit, func_name=func_name)
+
+
+def _engine_changes_anything_inprocess(
+    code: str, transitions: Sequence[Any], *, limit: int = 25, func_name: str = _ENGINE_FN
+) -> Optional[bool]:
+    """The unbounded worker. Separate so the child process has something to call that does not
+    recurse, mirroring `_dry_run_defects_inprocess`."""
+    census = _change_census_inprocess(code, transitions, limit=limit, func_name=func_name)
+    return census["changes_anything"]
+
+
+def _change_census_inprocess(
+    code: str, transitions: Sequence[Any], *, limit: int = 25, func_name: str = _ENGINE_FN
+) -> dict:
+    """`changes_anything`, PLUS how many transitions the engine actually answered usably.
+
+    THE SECOND NUMBER IS WHY THIS EXISTS, and it was found by a test rather than by review.
+    `engine_changes_anything` `continue`s past a raise and past a `None` return, because from
+    its own point of view neither is a change. So an engine that raises on EVERY transition
+    returns False from it -- indistinguishable, at that return value, from an engine that ran
+    cleanly and predicted nothing ever changes. Those are different failures with different
+    repairs, and only the second one is inertness.
+
+    At the wired call site the ordering already prevents the confusion (`dry_run_defects` reports
+    `engine_raised` first, so the inertness probe never sees a raising engine). But
+    `engine_inertness_defect` is a public function and must not depend on its caller getting the
+    order right to avoid mislabelling. `n_usable_predictions` is what lets it require positive
+    evidence that the engine RAN before it concludes the engine does NOTHING.
+
+    COST NOTE: counting requires visiting every transition, so this loses the early exit
+    `engine_changes_anything` had on its first observed change. The VERDICT is identical; only
+    the work is. At `limit=25` transitions of pure Python that is milliseconds, and it is now
+    wrapped in a wall-clock bound in any case.
     """
     import numpy as np
 
+    out = {"changes_anything": None, "n_usable_predictions": 0, "n_tried": 0}
     ns, defect = _exec_namespace(code)
     if defect is not None:
-        return None
+        return out
     assert ns is not None
     engine = ns.get(func_name)
     if not callable(engine):
-        return None
-    for t in list(transitions)[: int(limit)]:
+        return out
+    changed = False
+    n_usable = 0
+    tried = list(transitions)[: int(limit)]
+    for t in tried:
         grid = np.asarray(t.grid)
         try:
             pred = engine(grid.copy(), t.action, t.data)
@@ -904,9 +1024,154 @@ def engine_changes_anything(
         if pred is None:
             continue
         arr = np.asarray(pred)
-        if arr.shape == grid.shape and not np.array_equal(arr, grid):
-            return True
-    return False
+        if arr.shape != grid.shape:
+            # A wrong-shaped return is not a usable prediction either -- `dry_run_defects`
+            # reports it as `engine_wrong_shape`, and it is not evidence about inertness.
+            continue
+        n_usable += 1
+        if not np.array_equal(arr, grid):
+            changed = True
+    out["changes_anything"] = changed
+    out["n_usable_predictions"] = n_usable
+    out["n_tried"] = len(tried)
+    return out
+
+
+def engine_changes_anything_bounded(
+    code: str,
+    transitions: Sequence[Any],
+    *,
+    limit: int = 25,
+    func_name: str = _ENGINE_FN,
+    timeout_s: Optional[float] = None,
+) -> Optional[bool]:
+    """`engine_changes_anything` with the SAME killable-subprocess bound the dry run uses.
+
+    Returns True (something changed), False (nothing ever changed on the transitions tried), or
+    None for UNDETERMINED -- the engine could not be run, the child could not be spawned, or the
+    probe was killed at the bound.
+
+    THE THREE-VALUED RETURN IS THE POINT. `engine_changes_anything` already returned None for
+    "could not run", and a caller that treats None as False turns "we do not know" into "reject
+    it". Every consumer of this must branch on `is False`, never on falsiness.
+    """
+    census = _change_census_bounded(
+        code, transitions, limit=limit, func_name=func_name, timeout_s=timeout_s
+    )
+    if census is None:
+        return None
+    verdict = census.get("changes_anything")
+    return verdict if isinstance(verdict, bool) else None
+
+
+def _change_census_bounded(
+    code: str,
+    transitions: Sequence[Any],
+    *,
+    limit: int = 25,
+    func_name: str = _ENGINE_FN,
+    timeout_s: Optional[float] = None,
+) -> Optional[dict]:
+    """`_change_census_inprocess` behind the killable-subprocess bound. None = UNDETERMINED."""
+    if timeout_s is None:
+        timeout_s = dry_run_timeout_default()
+    if timeout_s is None or float(timeout_s) <= 0:
+        # Same escape hatch, same meaning, as CARNOT_ARC_DRY_RUN_TIMEOUT_S=0 on the dry run:
+        # restore the unbounded in-process behaviour exactly.
+        return _change_census_inprocess(code, transitions, limit=limit, func_name=func_name)
+    status, payload = _run_isolated_job(
+        code,
+        transitions,
+        limit=limit,
+        func_name=func_name,
+        timeout_s=float(timeout_s),
+        job_kind="changes_anything",
+    )
+    if status != "ok":
+        # timeout / crashed / unavailable all mean UNDETERMINED here. A crash or a hang is a real
+        # defect, but it is the DRY RUN's defect to report -- reporting it a second time from the
+        # inertness probe would double-count one broken engine as two findings.
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def engine_inertness_defect(
+    code: str,
+    transitions: Sequence[Any],
+    *,
+    limit: int = 25,
+    func_name: str = _ENGINE_FN,
+    timeout_s: Optional[float] = None,
+) -> Optional[EngineDefect]:
+    """An `engine_inert` defect when the engine is ESTABLISHED to change nothing; else None.
+
+    WHY THIS IS A DEFECT AND NOT A QUALITY JUDGEMENT -- the distinction this module's docstring
+    draws, and the reason inertness sat outside `validate_engine_code` until now. An engine that
+    predicts NO action changes ANYTHING is not merely a poor model; it is unusable by the thing
+    downstream that consumes it. `plan_in_model` searches for an action sequence that reaches a
+    goal state, and against an engine whose successor function is the identity there are no
+    distinct states to search, so the planner cannot return a plan no matter how much budget it
+    is given. That is a mechanical property of the code, checkable by running it -- the same
+    class of fact as "raises" or "returns None", and the same class of fact this module exists
+    to report.
+
+    THE MEASUREMENT BEHIND IT (`results/outer_loop_arc_generation_taxonomy_20260801.json`).
+    Inertness is the largest single failure class at 26 of 172 gemma-4-31B candidates (15.1%),
+    exceeding every code-validity class combined, and it was the only class the live induce path
+    took no action on despite the detector being shipped and already imported at that call site.
+    Rejecting it is safe in the direction that matters: 0 of 11 inert candidates in the frozen
+    corpus were plannable, and all 15 inert cells carrying a held-out score had `change_fidelity`
+    EXACTLY 0.0. Nothing measurable was lost by rejecting them.
+
+    STILL NOT PART OF `validate_engine_code`. It is offered as a separate function that a caller
+    opts into, and the caller that does so
+    (`LocalGGUFProposer._engine_defects`, behind `CARNOT_ARC_INDUCE_REJECT_INERT`) is DEFAULT OFF.
+    Two reasons, both load-bearing: `validate_engine_code` is the definition an A/B measures
+    usable-engine yield WITH, so changing it would make the measurement circular; and an
+    identity engine really does clear every other check in this file, so folding inertness in
+    would blur the honest statement that a clean report here is not a quality claim.
+
+    UNDETERMINED IS NOT INERT, and neither is BROKEN. This returns None -- fail-OPEN, i.e.
+    accept -- in two distinct situations, and both matter:
+
+      * the probe could not reach a verdict (killed at the bound, child unavailable, the code
+        does not import). Rejecting on "we could not tell" would be a fabricated observation,
+        and the two ways to get here that really are the engine's fault (it hangs, it crashes
+        the validator) are ALREADY rejected upstream by `dry_run_defects`, which runs first.
+      * the engine never produced a single usable prediction -- it raised on everything, or
+        returned None, or returned a wrongly-shaped array. `engine_changes_anything` reports
+        False for that, because from its point of view nothing changed, but it is NOT inertness:
+        the engine did not run. Each of those has its own defect kind and its own repair, and
+        relabelling one as inertness would hand the model the wrong instruction. Requiring at
+        least one usable prediction is what keeps this a POSITIVE finding rather than the
+        absence of one. Found by a test, not by review.
+    """
+    census = _change_census_bounded(
+        code, transitions, limit=limit, func_name=func_name, timeout_s=timeout_s
+    )
+    if census is None or census.get("changes_anything") is not False:
+        return None
+    n_usable = int(census.get("n_usable_predictions") or 0)
+    if n_usable < 1:
+        return None
+    return EngineDefect(
+        kind="engine_inert",
+        detail=(
+            f"`{func_name}(grid, action, data)` ran on {n_usable} observed transitions and "
+            f"returned a grid IDENTICAL to its input every time -- it predicts that no action "
+            f"changes anything. A planner cannot search a state graph with one state, so this "
+            f"engine cannot produce a plan whatever budget it is given. Model what the action "
+            f"actually does to the grid."
+        ),
+        # Repairable: unlike a hang, we can say exactly what was observed, and the observation
+        # ("your engine ran and never changed the grid") is a fact the model can act on.
+        repairable=True,
+        evidence={
+            "transitions_tried": int(census.get("n_tried") or 0),
+            "n_usable_predictions": n_usable,
+            "changed_on_any": False,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
