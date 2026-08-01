@@ -45,6 +45,7 @@ import os
 import sys
 import time
 from pathlib import Path
+from collections.abc import Callable, Sequence
 from typing import Any, Optional
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -145,13 +146,52 @@ def _first_precondition_miss(preconds: JsonDict) -> Optional[str]:
 # --------------------------------------------------------------------------------------
 # window + full-trajectory collection (adapts exp5714.build_levelup_window)
 # --------------------------------------------------------------------------------------
-def build_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, list, int]]:
-    """Solve `game` to L1 offline, replay the winning labels, and return
-    (induction_window, full_trajectory, cell): the k-window ending at the L0->L1 boundary
-    (induction evidence) and EVERY transition on the winning path (held-out-beyond-window
-    verification set). Returns None if L1 is not reached / no level-up captured."""
-    import arc_loop_solve as loop
-    from carnot.agentic import arc_game_adapters as adapters
+def build_window_from_labels(
+    game: str,
+    labels: Sequence[str],
+    apply: Callable[[Any, str, Any], Any],
+    *,
+    k: int = WINDOW_K,
+    warmup_label: Optional[str] = None,
+    label_to_action_data: Optional[Callable[[Any, str], tuple]] = None,
+) -> Optional[tuple[list, list, int]]:
+    """Replay `labels` offline and cut the induction window. NO GameAdapter required.
+
+    WHY THIS EXISTS (2026-07-31). `build_window` took a game name and obtained its labels by
+    calling `solve_adaptered`, which requires a registered GameAdapter. That coupling forced
+    an adapter to exist for any game that was to appear in an induction corpus -- and for 18
+    of the 25 public games the adapter's `action_labels` just replays a BANKED plan one label
+    at a time. The verifier-routed search, hazard pruning, learned-verifier warm start and
+    state dedup that `solve_adaptered` provides are all unexercised when the action set is a
+    single forced label: the search is a straight line through a solution that was already
+    known.
+
+    So those 18 adapters were not solving anything. They were satisfying a function
+    signature. `arc_solver_kit.reproduce()` already proves the coupling is unnecessary -- it
+    takes `(labels, apply)` directly, and was used on 2026-07-31 to gate-verify wa30's entire
+    670-action L9 route with no adapter at all.
+
+    This function is that same contract for window building. A game with a banked route can
+    now produce an induction window from the route directly, and `GameAdapter` can go back to
+    meaning ONE thing: "this game has a searchable action space".
+
+    Args:
+        game: game id, used to open the offline env and for error messages.
+        labels: the winning action labels, in order, from a fresh reset.
+        apply: `(env, label, frame) -> frame`. `arc_game_adapters._default_json_apply`
+            handles the common `{"action": N}` JSON label.
+        k: window size; the returned window is the k transitions ending at the L0->L1 boundary.
+        warmup_label: applied once before the route if the game consumes its first step
+            (sc25 does).
+        label_to_action_data: `(env, label) -> (action_id, data)` for games whose labels
+            carry a payload (ka59's "C:<sprite_index>" click). Without it a non-integer
+            label raises rather than silently recording action 0.
+
+    Returns:
+        (induction_window, full_trajectory, cell), or None if no level-up was captured.
+
+    Spec: REQ-ARC-WMTE-5717
+    """
     from carnot.agentic import arc_solver_kit as kit
     from carnot.agentic.arc_agi3_world_model import grid_of
     from carnot.agentic.arc_executable_world_model import Transition, detect_cell, to_logical
@@ -162,22 +202,21 @@ def build_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, list, int
     except Exception:
         _select_levelup_window = None  # type: ignore[assignment]
 
-    res = loop.solve_adaptered(game, 1)
-    labels = res.get("solution_labels") or []
-    if not labels or int(res.get("reached_level", 0)) < 1:
+    if not labels:
         return None
-    ad = adapters.get_adapter(game)
+
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     f = env.reset()
     cell = detect_cell(grid_of(f))
-    if ad.warmup_label is not None:
-        f = ad.apply(env, ad.warmup_label, f)
+    if warmup_label is not None:
+        f = apply(env, warmup_label, f)
     prev_g = to_logical(grid_of(f), cell)
     prev_lvl = frame_level(f)
+
     trans: list = []
     for lbl in labels:
-        f = ad.apply(env, lbl, f)
+        f = apply(env, lbl, f)
         g1 = to_logical(grid_of(f), cell)
         lvl = frame_level(f)
         act = (
@@ -194,21 +233,21 @@ def build_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, list, int
         # A Transition is the induction evidence the LLM reads; recording the wrong action
         # for a click would not crash, it would quietly teach the model a false dynamics,
         # which is far worse than a missing game.
-        hook = getattr(ad, "label_to_action_data", None)
         raw_action = act.get("action", 0)
-        if hook is not None and isinstance(raw_action, str):
-            act_id, act_data = hook(env, raw_action)
+        if label_to_action_data is not None and isinstance(raw_action, str):
+            act_id, act_data = label_to_action_data(env, raw_action)
         else:
             try:
                 act_id, act_data = int(raw_action), act.get("data")
             except (TypeError, ValueError) as exc:
                 raise ValueError(
                     f"{game}: cannot parse action label {raw_action!r} into (action, data). "
-                    "The game's GameAdapter needs a `label_to_action_data` hook -- see "
-                    "ka59's, which maps 'C:<i>' to (6, {x,y})."
+                    "Pass a `label_to_action_data` callable -- see ka59's, which maps "
+                    "'C:<i>' to (6, {x,y})."
                 ) from exc
         trans.append(Transition(prev_g, act_id, act_data, g1, prev_lvl, lvl))
         prev_g, prev_lvl = g1, lvl
+
     if _select_levelup_window is not None:
         window = _select_levelup_window(trans, k)
     else:  # pragma: no cover - defensive fallback if the sibling helper moves
@@ -217,6 +256,32 @@ def build_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, list, int
     if not window:
         return None
     return window, trans, cell
+
+
+def build_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, list, int]]:
+    """Solve `game` to L1 offline via its GameAdapter, then cut the induction window.
+
+    Thin caller over `build_window_from_labels` since 2026-07-31: this path is now only
+    responsible for OBTAINING the labels (by search, through the adapter). The replay and
+    window-cutting are shared, so a game with a banked route can skip the adapter entirely.
+    See `build_window_from_labels` for why that separation matters.
+    """
+    import arc_loop_solve as loop
+    from carnot.agentic import arc_game_adapters as adapters
+
+    res = loop.solve_adaptered(game, 1)
+    labels = res.get("solution_labels") or []
+    if not labels or int(res.get("reached_level", 0)) < 1:
+        return None
+    ad = adapters.get_adapter(game)
+    return build_window_from_labels(
+        game,
+        labels,
+        ad.apply,
+        k=k,
+        warmup_label=ad.warmup_label,
+        label_to_action_data=getattr(ad, "label_to_action_data", None),
+    )
 
 
 # --------------------------------------------------------------------------------------
