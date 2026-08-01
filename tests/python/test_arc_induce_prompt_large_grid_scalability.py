@@ -7,6 +7,7 @@ SCENARIO-ARC-WMTE-5593-2-REAL-BUDGET-FIT.
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
 from carnot.agentic import arc_executable_world_model as e3
 
@@ -133,10 +134,23 @@ def test_req_arc_wmte_5593_2_spec_declares_scalability_fix() -> None:
 
 
 # ---------------------------------------------------------------------------
-# REQ-ARC-FCP-5699-23: DEV-ONLY override so the LLM can be shown more than the
-# default ~6 grid-changing transitions -- REQ-ARC-FCP-5699-22 found the default
-# starves the dynamics half to roughly one example per action type, producing
-# hardcoded-literal-coordinate memorization instead of general rules (g50t).
+# REQ-ARC-FCP-5699-23: how many transitions the induce prompt shows.
+# REQ-ARC-FCP-5699-22 found the old cap "starves the dynamics half to roughly
+# one example per action type, producing hardcoded-literal-coordinate
+# memorization instead of general rules" (g50t).
+#
+# UPDATED 2026-08-01. -23 shipped `_induce_transitions_k()` + the env override,
+# but NOTHING ON THE LIVE PATH CALLED IT -- `induce_prompt` carried a literal
+# `k: int = 8` and the only callers were python/carnot/experiment_*.py. So the
+# diagnosis landed, the instrument was built, and the agent never got the fix.
+# The resolver is now wired into `induce_prompt`, and its default is ALL
+# transitions: measured worst case ~1,255 tokens against a 16,384-token budget,
+# i.e. the cap was discarding 68% of the evidence to save ~4% of a budget
+# nothing was near.
+#
+# The parity anchor below is DELIBERATELY INVERTED rather than deleted: what it
+# protected (an exactly recoverable pre-existing prompt) is still protected, but
+# now via the env switch instead of via the default.
 # ---------------------------------------------------------------------------
 
 
@@ -150,9 +164,19 @@ def _transitions(n, *, shape=(8, 8)):
     return out
 
 
-def test_req_arc_fcp_5699_23_induce_transitions_k_defaults_to_8_when_unset(monkeypatch):
+def test_req_arc_fcp_5699_23_induce_transitions_k_defaults_to_ALL_when_unset(monkeypatch):
+    """`None` means "show every observed transition" -- see the resolver for the measurement."""
     monkeypatch.delenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", raising=False)
-    assert e3._induce_transitions_k() == 8
+    assert e3._induce_transitions_k() is None
+
+
+@pytest.mark.parametrize("raw", ["0", "-3", "abc", "", "all", "none"])
+def test_req_arc_fcp_5699_23_unusable_values_mean_all_not_nothing(monkeypatch, raw):
+    """Fail-safe direction is MORE evidence. A cap of 0 would render a transitions block with no
+    examples in it -- an induce prompt asking the model to explain a game it was shown nothing
+    about -- so a non-positive or malformed value resolves to "all" rather than to "none"."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", raw)
+    assert e3._induce_transitions_k() is None
 
 
 def test_req_arc_fcp_5699_23_induce_transitions_k_env_override(monkeypatch):
@@ -160,13 +184,44 @@ def test_req_arc_fcp_5699_23_induce_transitions_k_env_override(monkeypatch):
     assert e3._induce_transitions_k() == 20
 
 
-def test_req_arc_fcp_5699_23_induce_prompt_default_k_matches_pre_existing_behavior():
-    """Regression-safety anchor: induce_prompt with NO explicit k arg (every pre-5699-23 call
-    site) must show the exact same transitions as before -- k defaults to 8, byte-identical."""
+def test_req_arc_fcp_5699_23_the_env_switch_restores_the_pre_existing_prompt(monkeypatch):
+    """The parity anchor, moved from the default onto the env switch.
+
+    It used to assert `induce_prompt()` with no `k` equalled `k=8`. That is no longer true and
+    is no longer wanted -- the whole point of the 2026-08-01 change is that the default shows
+    everything. What the anchor was PROTECTING, though, is still worth protecting: the previous
+    prompt must remain exactly recoverable, so an A/B against it measures one variable rather
+    than an approximation of the old renderer. That is what this now asserts.
+    """
     trans = _transitions(25)
-    prompt_default = e3.induce_prompt("paritytest", trans, cell=1)
-    prompt_explicit_8 = e3.induce_prompt("paritytest", trans, cell=1, k=8)
-    assert prompt_default == prompt_explicit_8
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", "8")
+    assert e3.induce_prompt("paritytest", trans, cell=1) == e3.induce_prompt(
+        "paritytest", trans, cell=1, k=8
+    )
+
+
+def test_req_arc_fcp_5699_23_the_default_now_shows_every_transition(monkeypatch):
+    """The change itself. 25 synthetic transitions, all grid-changing, no no-ops: the old
+    default rendered 6 (`changed[:k-2]`), the new one renders all 25."""
+    trans = _transitions(25)
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", raising=False)
+    assert e3.induce_prompt("paritytest", trans, cell=1).count("--- ACTION") == 25
+    assert e3.induce_prompt("paritytest", trans, cell=1, k=8).count("--- ACTION") == 6
+
+
+def test_req_arc_fcp_5699_23_the_resolver_is_actually_wired_to_the_live_prompt(monkeypatch):
+    """THE DEFECT THIS RELEASE FIXES, pinned so it cannot silently return.
+
+    `_induce_transitions_k()` existed from -23 onward and `induce_prompt` ignored it, carrying a
+    literal `k: int = 8`. The env override therefore moved the prompt for every
+    `python/carnot/experiment_*.py` caller that passed it explicitly, and moved nothing at all
+    for the live agent. If a future edit re-hardcodes the default, this fails.
+    """
+    trans = _transitions(25)
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", "4")
+    assert e3.induce_prompt("paritytest", trans, cell=1).count("--- ACTION") == 2  # k-2, no no-ops
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TRANSITIONS_K", "12")
+    assert e3.induce_prompt("paritytest", trans, cell=1).count("--- ACTION") == 10
 
 
 def test_req_arc_fcp_5699_23_raising_k_shows_more_transitions_to_the_llm():

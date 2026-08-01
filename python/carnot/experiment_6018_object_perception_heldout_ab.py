@@ -70,6 +70,19 @@ if str(ROOT / "python") not in sys.path:  # pragma: no cover - script bootstrap
 
 import numpy as np  # noqa: E402
 
+
+# THE CAP THIS EXPERIMENT WAS MEASURED AGAINST (pinned 2026-08-01, behaviour-preserving).
+# This module's held-out design is `full \ shown`: it pops CARNOT_ARC_INDUCE_TRANSITIONS_K to
+# get "the production prompt", derives the withheld indices from it, then RAISES the env as a
+# positive control that shows the model every transition. That only works while the production
+# default withholds something. On 2026-08-01 the default became "show every transition", which
+# would have made `held` empty -- and `if not held: continue` would then have skipped the
+# positive control SILENTLY, turning a leak check into a no-op without failing.
+# 8 was the production default when this experiment ran and is what its published artifact
+# measured, so pinning it keeps the result reproducible rather than tracking a default that has
+# since moved underneath it.
+_PRODUCTION_K_AT_MEASUREMENT = 8
+
 EXPERIMENT_ID = 6018
 REQUIREMENT = "REQ-ARC-WMTE-5830"
 RANDOM_SEED = 6018
@@ -602,7 +615,7 @@ def run() -> int:  # noqa: C901 - one linear measurement procedure, kept in one 
             continue
         windows[game] = w
         win, _full, cell = w
-        p_off = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+        p_off = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
         shown, held = split_shown_heldout(e3, game, list(win), cell, p_off)
         prefix, tail = wmte._split_prefix_heldout(list(win))
         window_meta[game] = {
@@ -626,10 +639,10 @@ def run() -> int:  # noqa: C901 - one linear measurement procedure, kept in one 
     for game, (win, _full, cell) in windows.items():
         os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
         assert not e3._object_perception_on()
-        p_off = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+        p_off = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
         os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = "1"
         assert e3._object_perception_on()
-        p_on = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+        p_on = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
         os.environ.pop("CARNOT_ARC_OBJECT_PERCEPTION", None)
         treatment_witness.append(
             {
@@ -727,7 +740,7 @@ def run() -> int:  # noqa: C901 - one linear measurement procedure, kept in one 
                 os.environ["CARNOT_ARC_OBJECT_PERCEPTION"] = flag
                 assert e3._object_perception_on() is (flag == "1"), "arm flag not in effect"
                 e3.E3_DIR = e3_dir  # per-cell isolation: no cell can read another's engine
-                prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+                prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
                 shown, held = split_shown_heldout(e3, game, list(win), cell, prompt)
                 sf0, cf0 = prop.n_server_failures, prop.n_content_failures
                 t0 = time.time()
@@ -1508,7 +1521,7 @@ def reverify_rows(rows: list[dict], windows: dict[str, tuple], *, e3: Any) -> di
 
 def window_heldout_indices(e3: Any, game: str, window_tuple: tuple) -> list[int]:
     win, _full, cell = window_tuple
-    prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+    prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
     _shown, held = split_shown_heldout(e3, game, list(win), cell, prompt)
     return held
 
@@ -1659,12 +1672,12 @@ def run_positive_control(reps: int = 2) -> dict:
         win, _full, cell = w
         # the PRODUCTION-withheld indices, computed from the production k=8 prompt
         os.environ.pop("CARNOT_ARC_INDUCE_TRANSITIONS_K", None)
-        prod_prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+        prod_prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
         _shown, held = split_shown_heldout(e3, game, list(win), cell, prod_prompt)
         if not held:
             continue
         os.environ["CARNOT_ARC_INDUCE_TRANSITIONS_K"] = str(len(win) + 4)
-        leak_prompt = e3.induce_prompt(game, list(win), cell, k=e3._induce_transitions_k())
+        leak_prompt = e3.induce_prompt(game, list(win), cell, k=_PRODUCTION_K_AT_MEASUREMENT)
         leak_shown, leak_held = split_shown_heldout(e3, game, list(win), cell, leak_prompt)
         for rep in range(reps):
             e3.E3_DIR = OUT_DIR / "e3_positive_control" / f"{game}__r{rep}"
