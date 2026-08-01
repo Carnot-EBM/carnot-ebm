@@ -1,0 +1,3722 @@
+{
+ "experiment": "arc_hud_masked_rescore_20260801",
+ "schema": "carnot.arc.hud_masked_rescore.v1",
+ "title": "Re-score of 116 induced world-model engines with compare-time HUD masking ON, and of the 31 best-of-N candidates that carry plan_found",
+ "run_date": "2026-08-01T16:29:58Z",
+ "git_head": "cde595c970af64a439d1c12e457c4f55a0f13abc",
+ "requirement": "REQ-ARC-WMTE-6010 / 6015 / 6017",
+ "milestone": "outer-loop 2026-08-01",
+ "honest_verdict": "complete_masked_rescore_effect_survives_p_0_0075_but_the_p_gain_is_a_lost_negative_game_not_new_evidence_and_the_tn36_degeneracy_does_not_die_because_the_shipped_guard_refuses_that_mask_and_forcing_it_deletes_the_whole_corpus\n\nTHE HEADLINE, WHICH IS NOT THE ONE THE TASK EXPECTED. Masking does NOT fix the degeneracy, and the reason is not that the mask is wrong -- it is that on tn36's best-of-N window there is nothing else to measure. All 25 changed cells across all 25 changing transitions of that corpus lie inside row 1, one cell per transition. So the six perfect-1.0 bar-tickers are a perfect model of that corpus, the metric was indeed measuring the HUD, and masking the HUD leaves a corpus with zero dynamics. change_fidelity then reads 0.0 for ALL EIGHT tn36 candidates -- including the single PLANNABLE one, which falls from 0.235294 to 0.0 alongside the tickers. The degeneracy dies by the metric becoming undefined, not by the metric becoming discriminating. This is a CORPUS defect, not a masking switch.\n\nAND THE SHIPPED GUARD ALREADY REFUSES IT, CORRECTLY. Two independent shipped mechanisms both decline to apply that mask, neither of which was touched here: the capture artifact WITHHELD tn36 row 1 from the default mask at its stage-2 gate (so the default arm resolves `unresolved` and the six stay at 1.0), and when the withheld band is folded in anyway, REQ-ARC-WMTE-6015's swallow guard refuses it `refused_swallows_dynamics` / `no_changed_cells_outside_mask_cannot_distinguish` at changed_cell_overlap 1.0000, 25 changing transitions -> 0. Only a deliberate, labelled guard bypass produces the 0.0 figures above. The guard is doing exactly the job over-masking asymmetry demands of it.\n\nQ2 SURVIVES, AND ITS APPARENT IMPROVEMENT IS A DATA LOSS. Masked with the shipped default masks: mean per-game delta +0.07402 (unmasked +0.07208), sign test +15/-3/=2, p=0.0075378, bootstrap CI [+0.01336, +0.13277] -- same direction, essentially the same magnitude, CI still excludes 0. But p did NOT fall from 0.0192 to 0.0075 because the evidence got stronger. It fell because s5i5 -- one of the FOUR games that disagreed with the effect -- went from delta -0.030303 to EXACTLY 0.0 and was dropped as a tie, taking the discordant count from 19 to 18. Masking zeroed the single non-zero score s5i5 had (its r0 control cell, 0.090909 -> 0.0), so both arms are all-zero there and the game now contributes nothing at all. Losing a disagreeing game makes the test look better while the evidence base gets smaller. The mean delta, which does not drop ties, moved +0.0019. That is the number to read, and this p should not be quoted without this sentence.\n\nQ3 IS UNESTABLISHED AND MASKING DOES NOT IMPROVE IT. The plannability association is AUC 0.431034 unmasked and 0.431034 under every guard-respecting masked arm -- IDENTICAL, because the default mask reaches only tu93's 5 candidates on that corpus and neither plannable candidate is tu93. CI [0.207, 0.690] spans 0.5 at n_plannable = 2. Under the forced arm it is 0.396552. There is no evidence here that masking makes fidelity rank plannable engines higher, and n=2 could not establish it either way.\n\nONE PERFECT SCORE WAS ACTUALLY MASKED, AND IT SURVIVED. Exactly one of the 116 A/B engines scores a perfect unmasked change_fidelity -- tn36__r2__on -- and on the A/B window the tn36 row-1 mask IS applied. It stays at 1.0: 4 correct changed cells unmasked, 3 masked, i.e. one of its four cells was the bar and it modelled the other three correctly too. So a perfect change_fidelity is NOT by itself the degeneracy. It rests on ONE gradable transition and cannot carry a claim, but it points the opposite way to the best-of-N result and is reported for that reason. The same game yields opposite corpora: 25 of 25 changed cells inside row 1 in the best-of-N window, 12 of 2636 in the A/B window.\n\nMASKING IS REAL AND IT IS SMALL. Proof it activated: hud_mask_status `applied` with hud_mask_cells 64 on 36 of 116 A/B cells (6 of 20 games), and 24 of those 36 changed their change_fidelity. Proof it barely matters: over the masked units Spearman rho between masked and unmasked scores is 0.978079 (6 pairwise inversions in 630), mean absolute shift 0.010190. On the 14 unmasked games the arm is identical to unmasked BY CONSTRUCTION and is labelled so rather than presented as a second measurement.",
+ "WHAT_WAS_ACTUALLY_RUN": {
+  "n_ab_engines_rescored": 116,
+  "n_ab_engines_committed": 116,
+  "n_bestofn_candidates_rescored": 31,
+  "n_bestofn_candidates_attempted": 40,
+  "bestofn_not_scored": {
+   "n": 9,
+   "breakdown": {
+    "undetermined_worker_timeout": 1,
+    "unrunnable:IndentationError": 5,
+    "unrunnable:SyntaxError": 3
+   },
+   "why_this_is_not_a_zero": "an engine whose source does not parse produced no prediction under ANY arm, so it is absent from every arm equally and cannot bias a masked-vs-unmasked comparison. The 9 excluded here are the same 9 the frozen fidelity_vs_plan.json excluded, so the 31-candidate ranking is the same population."
+  },
+  "the_two_corpora_are_different_and_the_distinction_is_load_bearing": {
+   "Q2_corpus": "the 116 A/B engines over 20 games (arc_object_perception_ab_change_fidelity_20260801)",
+   "Q1_and_Q3_corpus": "the 31 scorable best-of-N candidates over 5 games (arc_induce_bestofn_20260731) -- the ONLY corpus that records plan_found per candidate, and where the six perfect-change_fidelity tn36 bar-tickers actually live. They are NOT among the 116."
+  },
+  "cpu_only": "no LLM, no GPU, no llama-server, no generation. Every engine is frozen text on disk; this pass adds a GRADING SETTING and re-derives scores.",
+  "every_engine_executed_in_a_killable_subprocess": "at least one non-terminating induced engine exists in this corpus. WorldModelVerifier.score wraps engine(...) in `except Exception`, so an in-process SIGALRM would be SWALLOWED and a hang would become a clean 0.0 -- invisible. One best-of-N candidate did time out and is recorded `undetermined_worker_timeout`, which leaves both numerator and denominator."
+ },
+ "PROOF_MASKING_WAS_GENUINELY_ACTIVE": {
+  "why_this_section_exists": "the A/B recorded that setting CARNOT_ARC_WM_HUD_MASK=1 without supplying a mask yields status `unresolved`, which is not masking and 'would have produced a second column of identical numbers wearing a different name'. So activation is PROVEN per arm rather than asserted.",
+  "mechanism": "every arm passes hud_mask_enabled EXPLICITLY to the shipped WorldModelVerifier. The module flag SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED is not touched and CARNOT_ARC_WM_HUD_MASK is not set, so no shipped default moved. Passing hud_mask= without hud_mask_enabled is the documented silent no-op (arc_world_model_trust_energy.hud_mask_silently_dropped) and is never done here.",
+  "HOW_MANY_OF_THE_SEVEN_ARMS_ARE_ACTUALLY_DISTINCT": {
+   "why_this_is_here": "added after adversarial review. Seven arms are reported; on the A/B corpus only THREE of them are distinct. Presenting seven without saying so would make one measurement look like several agreeing measurements -- the same 'second column of identical numbers wearing a different name' failure this re-score exists to avoid, committed one level up.",
+   "ab_116_engines": {
+    "corpus": "116 A/B engines",
+    "n_units": 116,
+    "n_arms_reported": 7,
+    "n_arms_DISTINCT": 3,
+    "identical_arm_groups": [
+     [
+      "unmasked"
+     ],
+     [
+      "default_swallow_full",
+      "default_swallow_slice",
+      "default_forced_guard_bypassed"
+     ],
+     [
+      "conditional_swallow_full",
+      "conditional_swallow_slice",
+      "conditional_forced_guard_bypassed"
+     ]
+    ]
+   },
+   "bestofn_31_candidates": {
+    "corpus": "31 best-of-N candidates",
+    "n_units": 31,
+    "n_arms_reported": 7,
+    "n_arms_DISTINCT": 4,
+    "identical_arm_groups": [
+     [
+      "unmasked"
+     ],
+     [
+      "default_swallow_full",
+      "default_swallow_slice",
+      "default_forced_guard_bypassed"
+     ],
+     [
+      "conditional_swallow_full",
+      "conditional_swallow_slice"
+     ],
+     [
+      "conditional_forced_guard_bypassed"
+     ]
+    ]
+   },
+   "what_it_means": "on the A/B corpus the *_swallow_slice and *_forced_guard_bypassed arms are BYTE-IDENTICAL to their *_swallow_full counterparts, because the swallow guard never fired there at all -- every supplied mask cleared the check on both the whole window and the 3-4 row tail. So on the A/B corpus the choice of swallow corpus made NO difference and the guard bypass changed NOTHING. That is a real (null) result about the guard, and it means the A/B side of this pass rests on three distinct arms, not seven. On the best-of-N corpus the forced arm IS distinct, which is the only place the bypass does any work."
+  },
+  "hud_mask_status_x_cells_over_the_116_ab_cells": {
+   "unmasked": {
+    "disabled__0_cells": 116
+   },
+   "default_swallow_full": {
+    "unresolved__0_cells": 80,
+    "applied__64_cells": 36
+   },
+   "conditional_swallow_full": {
+    "unresolved__0_cells": 63,
+    "applied__64_cells": 53
+   }
+  },
+  "per_game_cell_counts_that_DIFFER_from_unmasked": {
+   "unmasked_is_always": {
+    "hud_mask_status": "disabled",
+    "hud_mask_cells": 0
+   },
+   "default_arm_applied_on_games": [
+    "ar25",
+    "bp35",
+    "ka59",
+    "ls20",
+    "s5i5",
+    "tu93"
+   ],
+   "default_arm_hud_mask_cells_on_those_games": 64,
+   "conditional_arm_applied_on_games": [
+    "ar25",
+    "bp35",
+    "ka59",
+    "lf52",
+    "ls20",
+    "s5i5",
+    "su15",
+    "tn36",
+    "tu93"
+   ],
+   "n_ab_cells_whose_change_fidelity_MOVED_under_the_default_mask": 24,
+   "n_ab_cells_where_the_default_mask_was_applied": 36,
+   "reading": "64 cells collapsed per masked game (one full 64-wide row or column of a 64x64 logical grid, 1.5625% of it), and the score actually moved on 24 of the 36 masked cells.",
+   "the_12_masked_cells_whose_score_did_NOT_move_CHECKED_not_assumed": "all 12 score change_fidelity 0.0 in BOTH arms, with cell_recall 0.0 and n_correct 0 unmasked. They are already at the floor, and collapsing 64 cells cannot lift a fidelity whose numerator is already zero. (An earlier draft of this artifact asserted the reason was 'the engine never wrote inside the band'; that was never measured and is wrong -- e.g. bp35__r1__off has spurious_changed_cells 30. The claim was checked against the per-cell records and replaced rather than left as a plausible story.)",
+   "composition_of_the_36_masked_cells": "33 primary on/off cells (6 masked games x 3 replicates x 2 arms = 36, minus the 3 whose engine file does not exist: ls20__r1__on, s5i5__r1__on, ar25__r1__on) plus the 3 A/A control cells that fall on masked games. The A/A cells are included in the rank-stability count, which is a score-vs-score comparison, and excluded from the Q2 primary, which is the pre-registered on/off contrast."
+  }
+ },
+ "Q1_DOES_THE_DEGENERACY_DIE": {
+  "question": "unmasked, six tn36 best-of-N bar-tickers score change_fidelity 1.0 and are unplannable. Masked, what do they score?",
+  "answer": "UNCHANGED at 1.0 under both shipped arms, because both shipped mechanisms refuse that mask. 0.0 only under a deliberate guard bypass -- and there the PLANNABLE candidate falls to 0.0 too, so nothing is discriminated.",
+  "the_bar_WAS_the_explanation_measured_directly": {
+   "tn36_bestofn_corpus_swallow_record": {
+    "checked": true,
+    "swallows": true,
+    "reason": "no_changed_cells_outside_mask_cannot_distinguish",
+    "changed_cell_overlap": 1.0,
+    "overlap_threshold": 0.5,
+    "raw_changing_transitions": 25,
+    "masked_changing_transitions": 0,
+    "n_changed_cells_total": 25,
+    "n_changed_cells_inside_mask": 25,
+    "n_transitions": 25,
+    "n_transitions_shape_matched": 25,
+    "n_transitions_skipped_shape_mismatch": 0,
+    "changing_transitions_deleted": 25,
+    "changing_transition_survival": 0.0,
+    "mean_changed_cell_overlap_per_changing_transition": 1.0
+   },
+   "reading": "n_changed_cells_inside_mask == n_changed_cells_total == 25 over raw_changing_transitions == 25: exactly ONE cell changes per transition and it is always in row 1. tn36's induced goal predicate is `np.all(grid[1, 1:62] == 3)` -- the same row. So the perfect scores are 100% bar-ticking accuracy, which CONFIRMS the diagnosis in the A/B's hud_mask_limitation. It also means the corpus contains no playfield dynamics at all to fall back on."
+  },
+  "six_perfect_candidates_every_arm": [
+   {
+    "candidate": 0,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 2,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 3,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 5,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 6,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 7,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   }
+  ],
+  "all_eight_tn36_candidates": [
+   {
+    "candidate": 0,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 1,
+    "plan_found": true,
+    "goal_satisfiable": true,
+    "unmasked": {
+     "change_fidelity": 0.235294,
+     "accuracy": 0.235294,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 0.235294,
+     "accuracy": 0.235294,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 0.235294,
+     "accuracy": 0.235294,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 0.235294,
+     "accuracy": 0.235294,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 0.235294,
+     "accuracy": 0.235294,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 0.235294,
+     "accuracy": 0.235294,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 2,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 3,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 4,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 0.588235,
+     "accuracy": 0.588235,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 0.588235,
+     "accuracy": 0.588235,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 0.588235,
+     "accuracy": 0.588235,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 0.588235,
+     "accuracy": 0.588235,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 0.588235,
+     "accuracy": 0.588235,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 0.588235,
+     "accuracy": 0.588235,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 5,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 6,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   },
+   {
+    "candidate": 7,
+    "plan_found": false,
+    "goal_satisfiable": false,
+    "unmasked": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "disabled",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "default_forced_guard_bypassed": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "unresolved",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_full": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_swallow_slice": {
+     "change_fidelity": 1.0,
+     "accuracy": 1.0,
+     "n_changing": 17,
+     "n_noop": 0,
+     "hud_mask_status": "refused_swallows_dynamics",
+     "hud_mask_cells": 0
+    },
+    "conditional_forced_guard_bypassed": {
+     "change_fidelity": 0.0,
+     "accuracy": 1.0,
+     "n_changing": 0,
+     "n_noop": 17,
+     "hud_mask_status": "applied",
+     "hud_mask_cells": 64
+    }
+   }
+  ],
+  "what_would_have_been_concluded_from_the_forced_arm_alone": "'masking collapses the degenerate scores from 1.0 to 0.0, so the masked metric is better' -- which is FALSE. The plannable candidate collapses identically (0.235294 -> 0.0), and change_fidelity returns 0.0 there by the `no changing transitions` convention (n_changing 17 -> 0), not because any engine was measured as wrong. A metric that returns 0.0 for every engine is not a discriminating metric; it is an absent one.",
+  "THE_ONE_PERFECT_SCORE_THAT_WAS_ACTUALLY_MASKED_added_after_adversarial_review": {
+   "why_this_was_nearly_missed": "the first build answered Q1 only on the best-of-N corpus, where the six perfect scores live and where the mask is REFUSED -- so every reported perfect score was one the mask never touched. Exactly one of the 116 A/B engines also scores a perfect unmasked change_fidelity (tn36__r2__on), and on the A/B window the tn36 row-1 mask IS applied. That is the ONLY case in this entire pass where a perfect tn36 score was genuinely graded with the bar removed, which makes it the sharpest single datum available, and the first draft did not report it.",
+   "n_perfect_among_the_116_unmasked": 1,
+   "the_cell": [
+    {
+     "cell": "tn36__r2__on",
+     "unmasked": {
+      "change_fidelity": 1.0,
+      "accuracy": 1.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 4,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 1.0,
+      "accuracy": 1.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 3,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    }
+   ],
+   "reading": "tn36__r2__on scores change_fidelity 1.0 UNMASKED with 4 correct changed cells, and 1.0 MASKED (hud_mask_status applied, 64 cells) with 3. Exactly one of its four cells was the bar; it modelled the other three correctly too. So this perfect score is NOT bar-ticking, and masking correctly leaves it perfect. A perfect change_fidelity is therefore not by itself evidence of the degeneracy -- the six best-of-N tickers are degenerate because of what their CORPUS contains, not because their score is 1.0.",
+   "how_thin_this_is_STATED": "n = 1. tn36's A/B held-out window has a SINGLE gradable transition (it is one of the four single-gradable-row games the A/B's own CO_PRIMARY_roster_comparison names), changing 4 cells. One transition cannot carry a claim; it is reported because it points the opposite way to the best-of-N result and suppressing it would be selective.",
+   "all_six_ab_tn36_cells": [
+    {
+     "cell": "tn36__r0__off",
+     "unmasked": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    },
+    {
+     "cell": "tn36__r0__on",
+     "unmasked": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    },
+    {
+     "cell": "tn36__r1__on",
+     "unmasked": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    },
+    {
+     "cell": "tn36__r1__off",
+     "unmasked": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    },
+    {
+     "cell": "tn36__r2__off",
+     "unmasked": {
+      "change_fidelity": 0.2,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 1,
+      "spurious_changed_cells": 1,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 0.0,
+      "accuracy": 0.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 0,
+      "spurious_changed_cells": 1,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    },
+    {
+     "cell": "tn36__r2__on",
+     "unmasked": {
+      "change_fidelity": 1.0,
+      "accuracy": 1.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 4,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "disabled",
+      "hud_mask_cells": 0
+     },
+     "conditional_swallow_full": {
+      "change_fidelity": 1.0,
+      "accuracy": 1.0,
+      "n": 1,
+      "n_changing": 1,
+      "correct_changed_cells": 3,
+      "spurious_changed_cells": 0,
+      "hud_mask_status": "applied",
+      "hud_mask_cells": 64
+     }
+    }
+   ]
+  },
+  "THE_SAME_GAME_GIVES_OPPOSITE_CORPORA": {
+   "bestofn_tn36_window": "25 transitions, all changing, 25 changed cells TOTAL, all 25 inside row 1. Pure bar.",
+   "ab_tn36_window": "7 changing transitions, 2636 changed cells, only 12 inside row 1 (overlap 0.004552). Overwhelmingly playfield.",
+   "why_this_is_the_actual_finding": "the identical game, the identical 64-cell band, and two harnesses produce corpora of opposite character. change_fidelity is not broken and the mask is not wrong; the best-of-N tn36 window simply contains no dynamics other than the counter. That is a corpus-construction defect, and no compare-time grading setting can repair it."
+  },
+  "the_same_band_on_the_AB_window_is_NOT_refused": {
+   "tn36_row1_on_the_ab_progress_window": "applied, 64 cells, swallow reason ok, changed_cell_overlap 0.004552, 7 changing transitions -> 7 surviving",
+   "why_both_verdicts_are_real": "REQ-ARC-WMTE-6017 already established that a swallow verdict is a statement about (mask, corpus) and never about the mask alone. This is a third instance of that: the identical 64-cell band is refused on the best-of-N window (which contains only bar movement) and clean on the A/B progress window (2636 changed cells, 12 of them inside the band). Neither is the band's 'true' status."
+  }
+ },
+ "Q2_DOES_THE_OBJECT_PERCEPTION_EFFECT_SURVIVE": {
+  "what_this_is": "a RE-ANALYSIS of a PRE-REGISTERED primary under a corrected instrument -- not a new hypothesis and not a second bite. Metric, clustering, test and alpha are fixed by the A/B's preregistration and were not re-chosen. See prelook_statement.json, written before any masked delta was computed.",
+  "min_reachable_two_sided_p_STATED_BEFORE_LOOKING": 1.9073486328125e-06,
+  "min_reachable_p_at_the_observed_masked_discordance": 7.62939453125e-06,
+  "SIDE_BY_SIDE": {
+   "unmasked_published": {
+    "mean_delta": 0.07208408,
+    "sign": "+15/-4/=1",
+    "p_two_sided": 0.01921082,
+    "bootstrap_ci": [
+     0.01022333,
+     0.13160043
+    ]
+   },
+   "unmasked_rederived_here": {
+    "mean_delta": 0.07208405,
+    "sign": "+15/-4/=1",
+    "p_two_sided": 0.0192108154296875,
+    "bootstrap_ci": [
+     0.01103939,
+     0.13160966
+    ],
+    "signflip_p": 0.03639984
+   },
+   "MASKED_default_shipped_masks_HEADLINE": {
+    "mean_delta": 0.07402445,
+    "sign": "+15/-3/=2",
+    "p_two_sided": 0.007537841796875,
+    "bootstrap_ci": [
+     0.01336216,
+     0.13277253
+    ],
+    "signflip_p": 0.03139496,
+    "n_games_masked": 6,
+    "games_masked": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "ls20",
+     "s5i5",
+     "tu93"
+    ],
+    "games_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "su15",
+     "tn36",
+     "tr87",
+     "wa30"
+    ]
+   },
+   "MASKED_conditional_includes_the_WITHHELD_bands": {
+    "mean_delta": 0.07794105,
+    "sign": "+15/-3/=2",
+    "p_two_sided": 0.007537841796875,
+    "bootstrap_ci": [
+     0.01593284,
+     0.13929209
+    ],
+    "n_games_masked": 9,
+    "THE_WITHHOLDING_THIS_ARM_OVERRIDES": "tn36 row 1, lf52 row 0 and su15 row 63 were WITHHELD by the capture artifact's stage-2 second-corpus gate. Its own warning: using one is 'an explicit opt-in to a mask whose safety is corpus-conditional, and any result obtained with it must report the refusal alongside'. This is that report. This arm is NOT the headline."
+   }
+  },
+  "THE_P_IMPROVEMENT_IS_A_LOST_NEGATIVE_GAME_NOT_NEW_EVIDENCE": {
+   "what_happened": "s5i5 delta -0.030303 (unmasked) -> exactly 0.0 (masked), dropped as a tie. n_discordant 19 -> 18, n_negative 4 -> 3.",
+   "mechanism": "s5i5 had exactly one non-zero cell in either arm: r0 control, change_fidelity 0.090909. Masking row 63 took it to 0.0. Both arms are now all-zero on that game, so it carries no information under masking at all.",
+   "why_it_matters": "the ONE game masking removed from the test is one that DISAGREED with the effect. A p that improves by deleting a disagreeing unit is not stronger evidence. The mean delta -- which keeps ties -- moved only +0.0019, and that is the honest measure of how much masking changed the answer.",
+   "no_game_changed_SIGN": "s5i5 is the ONLY game whose delta sign changed under either masked arm, and it changed to zero, not to positive. 19 of 20 games kept their sign."
+  },
+  "verdict": "SURVIVES. Same direction, mean delta within 0.002 of unmasked, CI still excludes 0 in both masked arms. The effect was not an artifact of HUD bookkeeping. The smaller p should be reported with the tie-drop explanation attached, never alone.",
+  "REPRODUCTION_GATE": {
+   "per_field": {
+    "mean_delta": {
+     "rederived": 0.07208405,
+     "published": 0.07208408,
+     "reproduces": true
+    },
+    "n_games_paired": {
+     "rederived": 20,
+     "published": 20,
+     "reproduces": true
+    },
+    "n_positive": {
+     "rederived": 15,
+     "published": 15,
+     "reproduces": true
+    },
+    "n_negative": {
+     "rederived": 4,
+     "published": 4,
+     "reproduces": true
+    },
+    "n_ties": {
+     "rederived": 1,
+     "published": 1,
+     "reproduces": true
+    },
+    "p_two_sided": {
+     "rederived": 0.0192108154296875,
+     "published": 0.01921082,
+     "reproduces": true
+    },
+    "bootstrap_lo": {
+     "rederived": 0.01103939,
+     "published": 0.01022333,
+     "reproduces": false
+    },
+    "bootstrap_hi": {
+     "rederived": 0.13160966,
+     "published": 0.13160043,
+     "reproduces": false
+    }
+   },
+   "all_reproduce": true,
+   "bootstrap_bounds_excluded_from_the_gate_because": "a percentile bootstrap depends on the resampling RNG stream, which this pass does not claim to reproduce. The point estimate and the exact test ARE gated."
+  },
+  "why_the_rederived_mean_differs_in_the_8th_decimal": "0.07208405 here vs 0.07208408 published: this harness rounds each per-game delta to 6 decimals before averaging and the published analysis did not. A 3e-8 discrepancy on a quantity whose bootstrap CI is 0.12 wide. It is stated rather than hidden because an unexplained difference in a reproduction gate is exactly what a reader should distrust, however small.",
+  "per_arm_full": {
+   "unmasked": {
+    "arm": "unmasked",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 0,
+    "games_where_mask_was_APPLIED": [],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "ar25",
+     "bp35",
+     "cd82",
+     "cn04",
+     "g50t",
+     "ka59",
+     "lf52",
+     "lp85",
+     "ls20",
+     "m0r0",
+     "re86",
+     "s5i5",
+     "sb26",
+     "sc25",
+     "sk48",
+     "su15",
+     "tn36",
+     "tr87",
+     "tu93",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07208405,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 4,
+     "n_ties": 1,
+     "n_discordant": 19,
+     "p_two_sided": 0.0192108154296875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 3.814697265625e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 19,
+     "observed_mean": 0.07587795,
+     "p_two_sided": 0.03639984,
+     "n_enumerated": 524288
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07208405,
+     "lo": 0.01103939,
+     "hi": 0.13160966,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08029,
+      "on": 0.341556,
+      "delta": 0.261267,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.030303,
+      "on": 0.0,
+      "delta": -0.030303,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.481579,
+      "on": 0.743748,
+      "delta": 0.262169,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.457593,
+      "on": 0.465878,
+      "delta": 0.008285,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.001735,
+      "on": 0.08865,
+      "delta": 0.086915,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.046544,
+      "on": 0.041934,
+      "delta": -0.00461,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.413793,
+      "on": 0.415266,
+      "delta": 0.001473,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.066667,
+      "on": 0.333333,
+      "delta": 0.266667,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.054606,
+      "on": 0.270868,
+      "delta": 0.216262,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   "default_swallow_full": {
+    "arm": "default_swallow_full",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 6,
+    "games_where_mask_was_APPLIED": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "ls20",
+     "s5i5",
+     "tu93"
+    ],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "su15",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07402445,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 3,
+     "n_ties": 2,
+     "n_discordant": 18,
+     "p_two_sided": 0.007537841796875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 7.62939453125e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 18,
+     "observed_mean": 0.08224939,
+     "p_two_sided": 0.03139496,
+     "n_enumerated": 262144
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07402445,
+     "lo": 0.01336216,
+     "hi": 0.13277253,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08645,
+      "on": 0.348002,
+      "delta": 0.261551,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.5,
+      "on": 0.759259,
+      "delta": 0.259259,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.466408,
+      "on": 0.480134,
+      "delta": 0.013727,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.0,
+      "on": 0.089912,
+      "delta": 0.089912,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.046544,
+      "on": 0.041934,
+      "delta": -0.00461,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.413793,
+      "on": 0.415266,
+      "delta": 0.001473,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.066667,
+      "on": 0.333333,
+      "delta": 0.266667,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.055556,
+      "on": 0.27451,
+      "delta": 0.218954,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   "default_swallow_slice": {
+    "arm": "default_swallow_slice",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 6,
+    "games_where_mask_was_APPLIED": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "ls20",
+     "s5i5",
+     "tu93"
+    ],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "su15",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07402445,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 3,
+     "n_ties": 2,
+     "n_discordant": 18,
+     "p_two_sided": 0.007537841796875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 7.62939453125e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 18,
+     "observed_mean": 0.08224939,
+     "p_two_sided": 0.03139496,
+     "n_enumerated": 262144
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07402445,
+     "lo": 0.01336216,
+     "hi": 0.13277253,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08645,
+      "on": 0.348002,
+      "delta": 0.261551,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.5,
+      "on": 0.759259,
+      "delta": 0.259259,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.466408,
+      "on": 0.480134,
+      "delta": 0.013727,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.0,
+      "on": 0.089912,
+      "delta": 0.089912,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.046544,
+      "on": 0.041934,
+      "delta": -0.00461,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.413793,
+      "on": 0.415266,
+      "delta": 0.001473,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.066667,
+      "on": 0.333333,
+      "delta": 0.266667,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.055556,
+      "on": 0.27451,
+      "delta": 0.218954,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   "default_forced_guard_bypassed": {
+    "arm": "default_forced_guard_bypassed",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 6,
+    "games_where_mask_was_APPLIED": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "ls20",
+     "s5i5",
+     "tu93"
+    ],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lf52",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "su15",
+     "tn36",
+     "tr87",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07402445,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 3,
+     "n_ties": 2,
+     "n_discordant": 18,
+     "p_two_sided": 0.007537841796875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 7.62939453125e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 18,
+     "observed_mean": 0.08224939,
+     "p_two_sided": 0.03139496,
+     "n_enumerated": 262144
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07402445,
+     "lo": 0.01336216,
+     "hi": 0.13277253,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08645,
+      "on": 0.348002,
+      "delta": 0.261551,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.5,
+      "on": 0.759259,
+      "delta": 0.259259,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.466408,
+      "on": 0.480134,
+      "delta": 0.013727,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.0,
+      "on": 0.089912,
+      "delta": 0.089912,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.046544,
+      "on": 0.041934,
+      "delta": -0.00461,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.413793,
+      "on": 0.415266,
+      "delta": 0.001473,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.066667,
+      "on": 0.333333,
+      "delta": 0.266667,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.055556,
+      "on": 0.27451,
+      "delta": 0.218954,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   "conditional_swallow_full": {
+    "arm": "conditional_swallow_full",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 9,
+    "games_where_mask_was_APPLIED": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "lf52",
+     "ls20",
+     "s5i5",
+     "su15",
+     "tn36",
+     "tu93"
+    ],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tr87",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07794105,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 3,
+     "n_ties": 2,
+     "n_discordant": 18,
+     "p_two_sided": 0.007537841796875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 7.62939453125e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 18,
+     "observed_mean": 0.08660117,
+     "p_two_sided": 0.02867889,
+     "n_enumerated": 262144
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07794105,
+     "lo": 0.01593284,
+     "hi": 0.13929209,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08645,
+      "on": 0.348002,
+      "delta": 0.261551,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.5,
+      "on": 0.759259,
+      "delta": 0.259259,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.466408,
+      "on": 0.480134,
+      "delta": 0.013727,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.0,
+      "on": 0.089912,
+      "delta": 0.089912,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.032388,
+      "on": 0.028571,
+      "delta": -0.003816,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.419753,
+      "on": 0.432099,
+      "delta": 0.012345,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.0,
+      "on": 0.333333,
+      "delta": 0.333333,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.055556,
+      "on": 0.27451,
+      "delta": 0.218954,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   "conditional_swallow_slice": {
+    "arm": "conditional_swallow_slice",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 9,
+    "games_where_mask_was_APPLIED": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "lf52",
+     "ls20",
+     "s5i5",
+     "su15",
+     "tn36",
+     "tu93"
+    ],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tr87",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07794105,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 3,
+     "n_ties": 2,
+     "n_discordant": 18,
+     "p_two_sided": 0.007537841796875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 7.62939453125e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 18,
+     "observed_mean": 0.08660117,
+     "p_two_sided": 0.02867889,
+     "n_enumerated": 262144
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07794105,
+     "lo": 0.01593284,
+     "hi": 0.13929209,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08645,
+      "on": 0.348002,
+      "delta": 0.261551,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.5,
+      "on": 0.759259,
+      "delta": 0.259259,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.466408,
+      "on": 0.480134,
+      "delta": 0.013727,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.0,
+      "on": 0.089912,
+      "delta": 0.089912,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.032388,
+      "on": 0.028571,
+      "delta": -0.003816,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.419753,
+      "on": 0.432099,
+      "delta": 0.012345,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.0,
+      "on": 0.333333,
+      "delta": 0.333333,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.055556,
+      "on": 0.27451,
+      "delta": 0.218954,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   },
+   "conditional_forced_guard_bypassed": {
+    "arm": "conditional_forced_guard_bypassed",
+    "n_games_paired": 20,
+    "n_games_where_mask_was_APPLIED": 9,
+    "games_where_mask_was_APPLIED": [
+     "ar25",
+     "bp35",
+     "ka59",
+     "lf52",
+     "ls20",
+     "s5i5",
+     "su15",
+     "tn36",
+     "tu93"
+    ],
+    "games_where_this_arm_is_identical_to_unmasked_by_construction": [
+     "cd82",
+     "cn04",
+     "g50t",
+     "lp85",
+     "m0r0",
+     "re86",
+     "sb26",
+     "sc25",
+     "sk48",
+     "tr87",
+     "wa30"
+    ],
+    "mean_delta_over_games": 0.07794105,
+    "sign_test": {
+     "n_pairs": 20,
+     "n_positive": 15,
+     "n_negative": 3,
+     "n_ties": 2,
+     "n_discordant": 18,
+     "p_two_sided": 0.007537841796875,
+     "test_was_possible": true,
+     "min_reachable_two_sided_p_at_this_discordance": 7.62939453125e-06
+    },
+    "signflip_test": {
+     "test_was_possible": true,
+     "n_nonzero": 18,
+     "observed_mean": 0.08660117,
+     "p_two_sided": 0.02867889,
+     "n_enumerated": 262144
+    },
+    "bootstrap_ci_over_games": {
+     "mean": 0.07794105,
+     "lo": 0.01593284,
+     "hi": 0.13929209,
+     "n": 20,
+     "n_resamples": 20000,
+     "excludes_zero": true
+    },
+    "per_game": {
+     "ls20": {
+      "off": 0.08645,
+      "on": 0.348002,
+      "delta": 0.261551,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "s5i5": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tu93": {
+      "off": 0.5,
+      "on": 0.759259,
+      "delta": 0.259259,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cn04": {
+      "off": 0.131636,
+      "on": 0.192488,
+      "delta": 0.060852,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "m0r0": {
+      "off": 0.001068,
+      "on": 0.241253,
+      "delta": 0.240184,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sk48": {
+      "off": 0.004108,
+      "on": 0.032653,
+      "delta": 0.028545,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ar25": {
+      "off": 0.466408,
+      "on": 0.480134,
+      "delta": 0.013727,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tr87": {
+      "off": 0.0,
+      "on": 0.223608,
+      "delta": 0.223608,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "g50t": {
+      "off": 0.0,
+      "on": 0.0,
+      "delta": 0.0,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "re86": {
+      "off": 0.248598,
+      "on": 0.056164,
+      "delta": -0.192434,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "bp35": {
+      "off": 0.0,
+      "on": 0.089912,
+      "delta": 0.089912,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sb26": {
+      "off": 0.0,
+      "on": 0.053459,
+      "delta": 0.053459,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lf52": {
+      "off": 0.032388,
+      "on": 0.028571,
+      "delta": -0.003816,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "su15": {
+      "off": 0.419753,
+      "on": 0.432099,
+      "delta": 0.012345,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "lp85": {
+      "off": 0.343796,
+      "on": 0.118039,
+      "delta": -0.225757,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "cd82": {
+      "off": 0.053812,
+      "on": 0.091909,
+      "delta": 0.038097,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "wa30": {
+      "off": 0.029644,
+      "on": 0.155482,
+      "delta": 0.125838,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "sc25": {
+      "off": 0.494709,
+      "on": 0.515873,
+      "delta": 0.021164,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "tn36": {
+      "off": 0.0,
+      "on": 0.333333,
+      "delta": 0.333333,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     },
+     "ka59": {
+      "off": 0.055556,
+      "on": 0.27451,
+      "delta": 0.218954,
+      "n_matched_replicates": 3,
+      "matched_replicates": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   }
+  }
+ },
+ "Q3_DOES_MASKING_CHANGE_WHAT_THE_METRIC_MEANS": {
+  "plannability_join_bestofn_n_plannable_is_2": {
+   "unmasked": {
+    "n_candidates_scored": 31,
+    "n_candidates_where_mask_was_APPLIED": 0,
+    "n_plannable": 2,
+    "where_the_plannable_ones_rank": [
+     {
+      "game": "tn36",
+      "candidate": 1,
+      "change_fidelity": 0.235294,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "13/31",
+      "n_candidates_strictly_above": 12,
+      "n_candidates_tied_with_it": 0,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "disabled"
+     },
+     {
+      "game": "ft09",
+      "candidate": 1,
+      "change_fidelity": 0.0,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "18/31",
+      "n_candidates_strictly_above": 14,
+      "n_candidates_tied_with_it": 16,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "disabled"
+     }
+    ],
+    "n_perfect_fidelity_candidates": 6,
+    "n_perfect_fidelity_candidates_that_are_plannable": 0,
+    "association_plannable_vs_change_fidelity": {
+     "auc": 0.431034,
+     "n_pos": 2,
+     "n_neg": 29,
+     "n_concordant_pairs": 17,
+     "n_discordant_pairs": 25,
+     "n_tied_pairs": 16,
+     "n_pairs_total": 58,
+     "bootstrap_ci_95": [
+      0.206897,
+      0.689655
+     ],
+     "ci_excludes_0.5": false,
+     "computable": true
+    },
+    "n_candidates_at_exactly_zero": 17,
+    "n_candidates_with_zero_changing_transitions": 7
+   },
+   "default_swallow_full": {
+    "n_candidates_scored": 31,
+    "n_candidates_where_mask_was_APPLIED": 5,
+    "n_plannable": 2,
+    "where_the_plannable_ones_rank": [
+     {
+      "game": "tn36",
+      "candidate": 1,
+      "change_fidelity": 0.235294,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "13/31",
+      "n_candidates_strictly_above": 12,
+      "n_candidates_tied_with_it": 0,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "unresolved"
+     },
+     {
+      "game": "ft09",
+      "candidate": 1,
+      "change_fidelity": 0.0,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "18/31",
+      "n_candidates_strictly_above": 14,
+      "n_candidates_tied_with_it": 16,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "unresolved"
+     }
+    ],
+    "n_perfect_fidelity_candidates": 6,
+    "n_perfect_fidelity_candidates_that_are_plannable": 0,
+    "association_plannable_vs_change_fidelity": {
+     "auc": 0.431034,
+     "n_pos": 2,
+     "n_neg": 29,
+     "n_concordant_pairs": 17,
+     "n_discordant_pairs": 25,
+     "n_tied_pairs": 16,
+     "n_pairs_total": 58,
+     "bootstrap_ci_95": [
+      0.206897,
+      0.689655
+     ],
+     "ci_excludes_0.5": false,
+     "computable": true
+    },
+    "n_candidates_at_exactly_zero": 17,
+    "n_candidates_with_zero_changing_transitions": 7
+   },
+   "conditional_swallow_full": {
+    "n_candidates_scored": 31,
+    "n_candidates_where_mask_was_APPLIED": 5,
+    "n_plannable": 2,
+    "where_the_plannable_ones_rank": [
+     {
+      "game": "tn36",
+      "candidate": 1,
+      "change_fidelity": 0.235294,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "13/31",
+      "n_candidates_strictly_above": 12,
+      "n_candidates_tied_with_it": 0,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "refused_swallows_dynamics"
+     },
+     {
+      "game": "ft09",
+      "candidate": 1,
+      "change_fidelity": 0.0,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "18/31",
+      "n_candidates_strictly_above": 14,
+      "n_candidates_tied_with_it": 16,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "unresolved"
+     }
+    ],
+    "n_perfect_fidelity_candidates": 6,
+    "n_perfect_fidelity_candidates_that_are_plannable": 0,
+    "association_plannable_vs_change_fidelity": {
+     "auc": 0.431034,
+     "n_pos": 2,
+     "n_neg": 29,
+     "n_concordant_pairs": 17,
+     "n_discordant_pairs": 25,
+     "n_tied_pairs": 16,
+     "n_pairs_total": 58,
+     "bootstrap_ci_95": [
+      0.206897,
+      0.689655
+     ],
+     "ci_excludes_0.5": false,
+     "computable": true
+    },
+    "n_candidates_at_exactly_zero": 17,
+    "n_candidates_with_zero_changing_transitions": 7
+   },
+   "conditional_forced_guard_bypassed": {
+    "n_candidates_scored": 31,
+    "n_candidates_where_mask_was_APPLIED": 13,
+    "n_plannable": 2,
+    "where_the_plannable_ones_rank": [
+     {
+      "game": "ft09",
+      "candidate": 1,
+      "change_fidelity": 0.0,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "11/31",
+      "n_candidates_strictly_above": 6,
+      "n_candidates_tied_with_it": 24,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "unresolved"
+     },
+     {
+      "game": "tn36",
+      "candidate": 1,
+      "change_fidelity": 0.0,
+      "ordinal_rank_TIE_ORDER_IS_ARBITRARY": "13/31",
+      "n_candidates_strictly_above": 6,
+      "n_candidates_tied_with_it": 24,
+      "strictly_beaten_by_fewer_than_half": true,
+      "hud_mask_status": "applied"
+     }
+    ],
+    "n_perfect_fidelity_candidates": 0,
+    "n_perfect_fidelity_candidates_that_are_plannable": 0,
+    "association_plannable_vs_change_fidelity": {
+     "auc": 0.396552,
+     "n_pos": 2,
+     "n_neg": 29,
+     "n_concordant_pairs": 0,
+     "n_discordant_pairs": 12,
+     "n_tied_pairs": 46,
+     "n_pairs_total": 58,
+     "bootstrap_ci_95": [
+      0.310345,
+      0.465517
+     ],
+     "ci_excludes_0.5": true,
+     "computable": true
+    },
+    "n_candidates_at_exactly_zero": 25,
+    "n_candidates_with_zero_changing_transitions": 15
+   }
+  },
+  "IS_IT_ESTABLISHED": "NO, and it cannot be at this sample size. n_plannable = 2 against 29. The unmasked AUC is 0.431034 with a bootstrap CI of [0.206897, 0.689655], which spans 0.5 -- consistent with no association in either direction. Every guard-respecting masked arm returns the IDENTICAL 0.431034, because the default mask reaches only tu93's 5 candidates on this corpus and neither plannable candidate is a tu93 one. The forced arm gives 0.396552. Nothing here supports 'the masked metric ranks plannable engines higher', and nothing here refutes it.",
+  "why_the_ordinal_ranks_are_reported_tie_aware": "under the forced arm 25 of 31 candidates sit at exactly 0.0, so an ordinal rank among them is decided by sort stability. n_candidates_strictly_above and n_candidates_tied_with_it are the fields any positional claim must be made from; reading 'rank 11/31' as better than 'rank 13/31' there would be reading input order as a result.",
+  "RANK_STABILITY_the_same_question_where_n_is_not_2": {
+   "why": "Q3's plannability join has n_plannable = 2 and cannot establish anything. This asks the same question where n is not 2: does the mask REORDER engines, or only move the numbers? A masked score that is a monotone transform of the unmasked one ranks every engine identically, so turning masking on would change no selection the metric is used for.",
+   "ab_116_engines": {
+    "default_swallow_full": {
+     "n_units_masked": 36,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 0.978079,
+     "n_pairwise_rank_inversions": 6,
+     "n_pairs_compared": 630,
+     "n_units_whose_score_moved_at_all": 24,
+     "mean_absolute_score_shift": 0.01019,
+     "mean_signed_score_shift": 0.004851
+    },
+    "default_swallow_slice": {
+     "n_units_masked": 36,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 0.978079,
+     "n_pairwise_rank_inversions": 6,
+     "n_pairs_compared": 630,
+     "n_units_whose_score_moved_at_all": 24,
+     "mean_absolute_score_shift": 0.01019,
+     "mean_signed_score_shift": 0.004851
+    },
+    "default_forced_guard_bypassed": {
+     "n_units_masked": 36,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 0.978079,
+     "n_pairwise_rank_inversions": 6,
+     "n_pairs_compared": 630,
+     "n_units_whose_score_moved_at_all": 24,
+     "mean_absolute_score_shift": 0.01019,
+     "mean_signed_score_shift": 0.004851
+    },
+    "conditional_swallow_full": {
+     "n_units_masked": 53,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 0.962952,
+     "n_pairwise_rank_inversions": 32,
+     "n_pairs_compared": 1378,
+     "n_units_whose_score_moved_at_all": 35,
+     "mean_absolute_score_shift": 0.017977,
+     "mean_signed_score_shift": -0.000746
+    },
+    "conditional_swallow_slice": {
+     "n_units_masked": 53,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 0.962952,
+     "n_pairwise_rank_inversions": 32,
+     "n_pairs_compared": 1378,
+     "n_units_whose_score_moved_at_all": 35,
+     "mean_absolute_score_shift": 0.017977,
+     "mean_signed_score_shift": -0.000746
+    },
+    "conditional_forced_guard_bypassed": {
+     "n_units_masked": 53,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 0.962952,
+     "n_pairwise_rank_inversions": 32,
+     "n_pairs_compared": 1378,
+     "n_units_whose_score_moved_at_all": 35,
+     "mean_absolute_score_shift": 0.017977,
+     "mean_signed_score_shift": -0.000746
+    }
+   },
+   "bestofn_31_candidates": {
+    "default_swallow_full": {
+     "n_units_masked": 5,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 1.0,
+     "n_pairwise_rank_inversions": 0,
+     "n_pairs_compared": 10,
+     "n_units_whose_score_moved_at_all": 2,
+     "mean_absolute_score_shift": 0.064828,
+     "mean_signed_score_shift": 0.064828
+    },
+    "default_swallow_slice": {
+     "n_units_masked": 5,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 1.0,
+     "n_pairwise_rank_inversions": 0,
+     "n_pairs_compared": 10,
+     "n_units_whose_score_moved_at_all": 2,
+     "mean_absolute_score_shift": 0.064828,
+     "mean_signed_score_shift": 0.064828
+    },
+    "default_forced_guard_bypassed": {
+     "n_units_masked": 5,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 1.0,
+     "n_pairwise_rank_inversions": 0,
+     "n_pairs_compared": 10,
+     "n_units_whose_score_moved_at_all": 2,
+     "mean_absolute_score_shift": 0.064828,
+     "mean_signed_score_shift": 0.064828
+    },
+    "conditional_swallow_full": {
+     "n_units_masked": 5,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 1.0,
+     "n_pairwise_rank_inversions": 0,
+     "n_pairs_compared": 10,
+     "n_units_whose_score_moved_at_all": 2,
+     "mean_absolute_score_shift": 0.064828,
+     "mean_signed_score_shift": 0.064828
+    },
+    "conditional_swallow_slice": {
+     "n_units_masked": 5,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": 1.0,
+     "n_pairwise_rank_inversions": 0,
+     "n_pairs_compared": 10,
+     "n_units_whose_score_moved_at_all": 2,
+     "mean_absolute_score_shift": 0.064828,
+     "mean_signed_score_shift": 0.064828
+    },
+    "conditional_forced_guard_bypassed": {
+     "n_units_masked": 13,
+     "computable": true,
+     "spearman_rho_masked_vs_unmasked": -0.16641,
+     "n_pairwise_rank_inversions": 14,
+     "n_pairs_compared": 78,
+     "n_units_whose_score_moved_at_all": 10,
+     "mean_absolute_score_shift": 0.549821,
+     "mean_signed_score_shift": -0.499953
+    }
+   },
+   "reading": "on the A/B corpus masking is very nearly rank-preserving: Spearman rho 0.978079 (default) and 0.962952 (conditional) over the masked units, with 6 of 630 and 32 of 1378 pairwise inversions and mean absolute shifts of 0.0102 and 0.0180. On the best-of-N corpus under the default mask rho is exactly 1.0 with zero inversions. So turning compare-time masking on with the shipped defaults would change the NUMBERS slightly and the ORDERING almost not at all -- and any selection this metric drives is an ordering. The only arm that reorders is the forced one (rho -0.166410), and that reordering is the tn36 corpus collapsing to a single tied value, not discrimination."
+  },
+  "verdict": "No evidence that masking makes the metric mean something better, and strong evidence it changes very little: near-perfect rank preservation on both corpora under the shipped defaults, and an unchanged, unestablished plannability association."
+ },
+ "MASKS_USED": {
+  "source": "results/arc_hud_mask_capture_20260801/masks/<game>.json",
+  "coordinate_space": "logical_grid with cell == 1 on all 20 games, i.e. already the same space as Transition.grid. logical_hud_mask() is therefore NOT called -- at cell 1 it is the identity. This is precisely why this path is reconstructible where the A/B's was not: the A/B needed a FRAME-coordinate mask it never recorded, and detect_hud_registers() returns bands in transition coordinates.",
+  "default_arm": {
+   "n_games_with_a_non_empty_default_mask": 6,
+   "games": [
+    "ar25",
+    "bp35",
+    "ka59",
+    "ls20",
+    "s5i5",
+    "tu93"
+   ],
+   "cells_per_masked_game": 64,
+   "fraction_of_grid_masked_per_game": 0.015625,
+   "the_other_14_games": "ship an EMPTY default mask. The capture artifact is explicit that empty is a REFUSAL with a recorded reason, not an absence: 8 are `no_bands_detected`, 2 are `refused_all_bands_excluded` (cn04 row 0 on a playfield alarm, lp85 col 0 undefendable), 3 are `withheld_second_corpus_swallow_refusal`, and ft09 (a best-of-N game) has no capture record at all because it is not on the A/B roster."
+  },
+  "conditional_arm": {
+   "n_games": 9,
+   "games": [
+    "ar25",
+    "bp35",
+    "ka59",
+    "lf52",
+    "ls20",
+    "s5i5",
+    "su15",
+    "tn36",
+    "tu93"
+   ],
+   "bands_folded_in": [
+    "tn36 row 1",
+    "lf52 row 0",
+    "su15 row 63"
+   ],
+   "status": "explicit opt-in over a documented withholding; reported alongside, never as the headline"
+  },
+  "MASK_MATERIALISATION_CROSS_CHECK": {
+   "what": "on 4 of the 9 bands the A/B window's transition count coincides with the capture's stage-1 winning-route trajectory, and there the swallow record this harness computes from its own independently-materialised mask matches the capture's to the digit: ka59 (11 transitions, 12/3700), lf52 (8, 14/1966), su15 (7, 24/383), tn36 (7, 12/2636).",
+   "what_it_proves": "the mask this harness builds is the mask the capture published.",
+   "what_it_does_NOT_prove": "it is NOT independent corroboration that the masks are safe. The A/B progress window is built by build_progress_window from the same winning route the capture's stage-1 audit used -- on the other 5 bands it is simply a SHORTER slice of it (e.g. tu93 12 transitions here vs 18 there). This is largely the same evidence, not a third corpus, and is not counted as one."
+  }
+ },
+ "LIMITATIONS": [
+  "MASKING TOUCHES A MINORITY OF THE ROSTER. 6 of 20 games under the default arm, 9 of 20 under the conditional. On the other 14 (or 11) the masked arm is byte-identical to unmasked BY CONSTRUCTION, and is labelled so. A masked p over 20 games is therefore mostly the unmasked p, and reading the two as independent measurements would double-count.",
+  "THE HELD-OUT TAIL IS 3-4 TRANSITIONS PER GAME. cd82, lp85, su15 and tn36 rest on a SINGLE gradable row in the A/B corpus -- the CO_PRIMARY_roster_comparison the A/B already disclosed. Masking does not improve that and this pass does not re-run the narrower >=3-gradable-row sensitivity roster.",
+  "Q3's PLANNABILITY SIDE HAS n_plannable = 2. That is stated as unestablished everywhere it appears and no directional claim is made from it. A 116-cell plan_in_model regression with far more plannable units was in flight in a CONCURRENT session while this ran; it is deliberately NOT used here because it is uncommitted and still changing, and joining a headline to another session's in-flight file would make this artifact unreproducible. That join is the obvious follow-up and would answer Q3 properly.",
+  "THE FORCED ARM DELIBERATELY BYPASSES A SHIPPED SAFETY GUARD. It exists only because the guard's refusal would otherwise leave Q1 answered with 'the guard declined to find out'. Its numbers are a counterfactual, are labelled guard_bypassed_on_this_arm: true on every record, and carry the true measured verdict under real_* keys. No decision should be taken from it.",
+  "OVER-MASKING REMAINS THE ASYMMETRIC RISK AND THIS PASS DOES NOT RE-AUDIT IT. It consumes the capture artifact's masks as given, including its own stated residual risks -- notably that ls20 row 62 is the one shipped band no second detector corroborates. A band that is really playfield would make every engine score BETTER while modelling LESS, and the direction of the score shift observed here (mean signed +0.004851 on the A/B corpus, i.e. scores go UP under masking) is exactly the direction that would look like over-masking if the bands were wrong. The bands clearing their swallow checks on this corpus is the only counter-evidence offered.",
+  "CLAUDE.md's ops-update steps (status.md, changelog.md, traceability.md) were NOT performed. This ran on a shared checkout alongside another outer-loop session and a concurrent regression, under an explicit instruction to touch only files this pass creates; ops/*.md are shared files that session also commits to, and editing them concurrently risks clobbering its work. The omission is deliberate and is recorded here rather than left silent, so the next session can fold this artifact into the ops record. Nothing outside results/arc_hud_masked_rescore_20260801/ was written.",
+  "NO SHIPPED DEFAULT WAS CHANGED, so nothing here tells you what the live agent does today. This measures whether compare-time masking SHOULD be turned on; turning it on is a separate operator decision."
+ ],
+ "WHAT_THIS_DOES_NOT_CLAIM": "It does not claim compare-time masking should be enabled, nor that it should not. It does not re-run the A/B's treatment, re-induce any engine, or touch CARNOT_ARC_OBJECT_PERCEPTION or CARNOT_ARC_WM_HUD_MASK. It does not establish any relationship between change_fidelity and plannability. It does not claim the six perfect scores were 'fixed' -- it shows they were entirely bar-ticking and that masking the bar leaves no corpus behind.",
+ "determinism_witness": {
+  "what_this_proves": "two independent full runs of run.py, each rebuilding every window from scratch by stepping the real environment, produce identical scores under EVERY mask arm. Without it, a masked-vs-unmasked difference could be env nondeterminism.",
+  "n_units_run_A": 156,
+  "n_units_run_B": 156,
+  "units_only_in_A": [],
+  "units_only_in_B": [],
+  "n_units_compared": 156,
+  "n_units_differing": 0,
+  "identical": true,
+  "fields_compared_per_arm": [
+   "change_fidelity",
+   "accuracy",
+   "n_changing",
+   "n_noop",
+   "hud_mask_status",
+   "hud_mask_cells"
+  ],
+  "differing_units": []
+ },
+ "inference_substrate": {
+  "value": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "principle": "pure Python env-stepping (build_progress_window) plus world-model verifier scoring, with no GGUF load, no CUDA and no generation. Same substrate as the upstream HUD-band capture. The GGUF strings reachable through the cited A/B artifact name the generator that PRODUCED the frozen engines; nothing here invoked it."
+ },
+ "duration_s": 453.62,
+ "random_seed": 20260801,
+ "random_seed_note": "used only for the bootstrap and AUC resampling. The scoring itself is deterministic and takes no seed -- proven by determinism_witness, two independent full runs agreeing on every arm of every unit.",
+ "reproducibility_checksum": "sha256:175764d3de98bcf5d7277e645767c06b71f7970a9993e9cce7c91f326b8bf0d8",
+ "input_file_sha256": {
+  "ab_rows": "sha256:cfbe141a1c58aa3e1879ac3740f95caba1c2663aee2a13ed6fe3bab832c57acd",
+  "ab_analysis": "sha256:bbddafbb996454ca76cfb919d2e5134a8e24f871e2a98b54aa7ac11ec5142dfb",
+  "ab_fidelity_vs_plan": "sha256:4d95d8caa6b2781990a9e8b9ed44a846e3b8b4ad0f925110063ed526fd32f9b1",
+  "capture_mask_index": "sha256:5629d3bb75ae02d19c1cb38b6922a49665807c9a8885b50b0a683d1511520df9",
+  "bestofn_scored": "sha256:9ab9e1d3263b88be416b9b17ceb1701117530683de5c3ab6b3573af6c65a822c"
+ },
+ "harness_sha256": {
+  "ab_worker.py": "sha256:73fcf7d90c7aed3021ab3bd172dbbcbd8d12fb930b132878fb73713910b02c34",
+  "analyse.py": "sha256:771250551dd80d62958f9874c7728e95f11a962786a20aff5474c8b9febe8979",
+  "bon_worker.py": "sha256:987aacbe125b4d77950658170f08b9235126e13234881beec2ab5715210375a2",
+  "build_artifact.py": "sha256:70e996bf7dc18a88a8afab8316fdc17324300827a350e158587219c574654f34",
+  "determinism_witness.py": "sha256:dc7e8f427a21c02af0f97d18df75dbddc96d4519b79ebfd056fbfcb49330f343",
+  "hud_masks.py": "sha256:c1cff7d0c811000f6007668d9b83216ecf2aed57f357ab359b9cfe14312f6d0d",
+  "run.py": "sha256:07413f9bfc91330d26536987d4bbaa19a216b4ba3af901e66ca0319dd9d73935",
+  "score_arms.py": "sha256:257649276127d5f28ca17a1acbbfcaea6f277b2f31b8ee647542c54284f4c6d3",
+  "window_worker.py": "sha256:52e6acd32d5a09e6542c7629de9c8f951b5274ddc8113752c40bce9602e904cf"
+ },
+ "preconditions_checked": [
+  {
+   "resource": "committed A/B engines",
+   "available": true,
+   "detail": "116 world_model.py"
+  },
+  {
+   "resource": "capture masks",
+   "available": true,
+   "detail": "20 mask files, cell==1"
+  },
+  {
+   "resource": "bestofn corpus",
+   "available": true,
+   "detail": "bestofn_scored.json + harness/bon"
+  },
+  {
+   "resource": "no GPU required",
+   "available": true,
+   "detail": "CUDA_VISIBLE_DEVICES='' in every worker"
+  }
+ ],
+ "verifier_is_oracle": {
+  "value": false,
+  "principle": "the grader compares predicted next grids to RECORDED transitions. The env's level counter and win oracle are never consulted, so nothing measured here can be circular with a solve. plan_found is IMPORTED from the frozen best-of-N corpus, not recomputed, so it cannot have been influenced by this pass."
+ },
+ "solve_provenance": {
+  "value": "development_proxy",
+  "principle": "an offline grading-instrument measurement on the dev twin. No level is claimed, no game is solved, no ARC level was played."
+ },
+ "not_submitted": {
+  "value": true,
+  "principle": "submission is operator-only"
+ },
+ "played_scored_or_online_game": false,
+ "flag_remains_default_off": {
+  "value": true,
+  "principle": "SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED is still False and CARNOT_ARC_WM_HUD_MASK was never set. Every arm passed its setting explicitly to the constructor. Likewise CARNOT_ARC_OBJECT_PERCEPTION was not touched."
+ },
+ "evidence_is_recomputable_without_a_gpu": {
+  "how": "python results/arc_hud_masked_rescore_20260801/harness/run.py then analyse.py then build_artifact.py. Inputs are frozen engine text plus a deterministically rebuilt window; no network, no model, no GPU.",
+  "n_engines": 147
+ },
+ "cross_references": [
+  "results/arc_object_perception_ab_change_fidelity_20260801/ -- the A/B whose hud_mask_limitation this answers",
+  "results/arc_hud_mask_capture_20260801/ -- the masks and their two-corpus over-masking audit",
+  "results/arc_induce_bestofn_20260731/ -- the corpus carrying plan_found",
+  "REQ-ARC-WMTE-6010 (compare-time masking), 6015 (the swallow guard), 6017 (a verdict is about (mask, corpus))"
+ ]
+}
