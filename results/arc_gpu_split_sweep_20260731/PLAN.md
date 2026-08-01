@@ -19,8 +19,23 @@ bare run measures QAT, not Q4_K_M.
 
 **That breaks the control as originally specified**, and the break is recorded rather than
 papered over. Arms 1 and 2 were written to reproduce the 2026-07-28 figures (36.07 tok/s @
-21416 MiB; 15.05 tok/s @ 19072 MiB). Those were measured on Q4_K_M. Run against QAT they
-**will not** reproduce, and a mismatch would say nothing about harness health.
+21416 MiB; 15.05 tok/s @ 19072 MiB), measured on Q4_K_M.
+
+The two halves of those targets are NOT in the same epistemic position, and an earlier draft
+of this amendment wrongly said both "will not reproduce":
+
+- **VRAM will not reproduce — measured, not predicted.** QAT UD-Q4_K_XL is 16.10 GiB on disk
+  vs Q4_K_M's 17.07 GiB, a 993 MiB difference, and the QAT head-to-head independently recorded
+  `residency_mib_at_cell_start = 20430` against arm 1's pinned 21416 — 986 MiB lower. Those
+  two independent figures agree to ~7 MiB. Do not read arm 1 landing near 20.4 GB as a harness
+  fault; that is the ~1 GB the switch was made to save.
+- **Throughput is UNKNOWN, not expected-to-differ.** No QAT decode rate has ever been measured
+  here. The head-to-head captured only per-cell `elapsed_s` (~300 s), which is dominated by
+  induction and says nothing about tok/s. A different quant block layout makes some shift
+  plausible, but arm 1 could well land inside the +-10% window around 36.07. **If it does,
+  that is informative** — it is evidence the single-GPU baseline is sound and the split arms
+  can be trusted against it. Treating a near-match as a meaningless coincidence would throw
+  away the one cross-session check available.
 
 Resolution — the arms are unchanged, but they are read differently:
 
