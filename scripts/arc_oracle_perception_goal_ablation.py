@@ -134,7 +134,13 @@ def _goal(proposer, rules: str, perception: str, seed: int) -> str:
 
 def main() -> int:
     port = int(os.environ.get("ABLATION_PORT", "8957"))
-    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")  # outer-loop owns GPU 1
+    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1,0")
+    # Layer-split across BOTH 3090s: +89.7% decode / +215% prefill vs one card at the
+    # shipped n_ctx (results/outer_loop_arc_gpu_layer_split_sweep_20260731.json), because it
+    # avoids the auto-fit's forced CPU offload. Order is "1,0" NOT "0,1": if the conductor
+    # restarts and holds GPU 0 the split is refused, and the fallback scans this list in
+    # order -- so the outer loop degrades onto its OWN card (2026-06-27 allocation) rather
+    # than trying to take the conductor's. setdefault, so an explicit export still wins.
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     # PRECONDITION is handled by LocalGGUFProposer._ensure_server(): if the GGUF is uncached or the
@@ -155,7 +161,9 @@ def main() -> int:
     for game, spec in GAMES.items():
         conds = {
             "A_naive": spec["naive"],
-            "B_entities": spec["entities"] + "\nObserved side-effect while acting: " + spec["naive"],
+            "B_entities": spec["entities"]
+            + "\nObserved side-effect while acting: "
+            + spec["naive"],
             "C_oracle": spec["hud_label"],
         }
         goals: dict[str, list[str]] = {}
@@ -184,7 +192,12 @@ def main() -> int:
         "random_seed": 5831,
         "random_seeds_used": seeds,
         "model_specs": [
-            {"name": "gemma-4-31B-it-GGUF", "repo": "unsloth/gemma-4-31B-it-GGUF", "gpu": 1, "port": port}
+            {
+                "name": "gemma-4-31B-it-GGUF",
+                "repo": "unsloth/gemma-4-31B-it-GGUF",
+                "gpu": os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU", "1"),
+                "port": port,
+            }
         ],
         "methodology_note": "Same model + same learned RULES per game (held constant); only the PERCEPTION varies (A naive HUD/decoy, B +true entities, C +entities+HUD-labeled). Perception facts contain entity presence/role ONLY, never the goal. Source facts read for offline dev analysis (authorized), never used in the hidden submission. Judging of goal-match is done offline by the outer loop.",
         "conditions": {
@@ -197,9 +210,9 @@ def main() -> int:
     }
     import hashlib
 
-    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(
-        json.dumps(art, sort_keys=True).encode()
-    ).hexdigest()
+    art["reproducibility_checksum"] = (
+        "sha256:" + hashlib.sha256(json.dumps(art, sort_keys=True).encode()).hexdigest()
+    )
     out = ROOT / "results" / "outer_loop_arc_oracle_perception_goal_ablation_20260723.json"
     out.write_text(json.dumps(art, indent=2))
     print("wrote", out, f"({art['duration_s']}s)")

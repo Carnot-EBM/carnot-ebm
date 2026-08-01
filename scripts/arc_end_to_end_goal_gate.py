@@ -39,7 +39,13 @@ def main() -> int:
     from carnot.agentic.arc_entity_hud_perception import perceive_entities
 
     port = int(os.environ.get("E2E_PORT", "8958"))
-    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")  # outer-loop owns GPU 1
+    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1,0")
+    # Layer-split across BOTH 3090s: +89.7% decode / +215% prefill vs one card at the
+    # shipped n_ctx (results/outer_loop_arc_gpu_layer_split_sweep_20260731.json), because it
+    # avoids the auto-fit's forced CPU offload. Order is "1,0" NOT "0,1": if the conductor
+    # restarts and holds GPU 0 the split is refused, and the fallback scans this list in
+    # order -- so the outer loop degrades onto its OWN card (2026-06-27 allocation) rather
+    # than trying to take the conductor's. setdefault, so an explicit export still wins.
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     t0 = time.time()
@@ -71,8 +77,13 @@ def main() -> int:
                 "perception_blocked": spec["perception_blocked"],
                 "n_transitions": len(trans),
                 "detector_perception": percept_text,
-                "detector_hud": [f"{b.axis}{b.index}/{b.direction}" for b in (percept.hud_bands if percept else [])],
-                "detector_mover": None if not percept or percept.mover is None else percept.mover.color,
+                "detector_hud": [
+                    f"{b.axis}{b.index}/{b.direction}"
+                    for b in (percept.hud_bands if percept else [])
+                ],
+                "detector_mover": None
+                if not percept or percept.mover is None
+                else percept.mover.color,
                 "goals_under_detector_perception": goals,
             }
         )
@@ -94,14 +105,21 @@ def main() -> int:
         "random_seed": 5834,
         "random_seeds_used": seeds,
         "model_specs": [
-            {"name": "gemma-4-31B-it-GGUF", "repo": "unsloth/gemma-4-31B-it-GGUF", "gpu": 1, "port": port}
+            {
+                "name": "gemma-4-31B-it-GGUF",
+                "repo": "unsloth/gemma-4-31B-it-GGUF",
+                "gpu": os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU", "1"),
+                "port": port,
+            }
         ],
         "methodology_note": "Same model + same learned RULES per game as REQ-ARC-WMTE-5832; the ONLY change is the perception SOURCE -- hand-authored oracle facts (5832) replaced by perceive_entities() output run on real offline-arcade transitions (5833 detectors). Compares detector perception to the oracle's 7/8. Detectors + arcade use no LLM. Public-game frames stepped for offline dev validation (authorized), never in the hidden submission.",
         "baseline_oracle_result": "REQ-ARC-WMTE-5832 hand-authored oracle: 7/8 correct + 1 partial, 0 wrong (naive was 0/8).",
         "per_game": per_game,
         "duration_s": round(time.time() - t0, 2),
     }
-    art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(json.dumps(art, sort_keys=True).encode()).hexdigest()
+    art["reproducibility_checksum"] = (
+        "sha256:" + hashlib.sha256(json.dumps(art, sort_keys=True).encode()).hexdigest()
+    )
     out = ROOT / "results" / "outer_loop_arc_end_to_end_goal_gate_20260723.json"
     out.write_text(json.dumps(art, indent=2))
     print("wrote", out, f"({art['duration_s']}s)")

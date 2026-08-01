@@ -98,7 +98,13 @@ def _run(game: str, structured_nav: bool, proposer) -> dict:
 
 
 def main() -> int:
-    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")  # outer-loop owns GPU 1
+    os.environ.setdefault("CARNOT_ARC_GENERATOR_CUDA_GPU", "1,0")
+    # Layer-split across BOTH 3090s: +89.7% decode / +215% prefill vs one card at the
+    # shipped n_ctx (results/outer_loop_arc_gpu_layer_split_sweep_20260731.json), because it
+    # avoids the auto-fit's forced CPU offload. Order is "1,0" NOT "0,1": if the conductor
+    # restarts and holds GPU 0 the split is refused, and the fallback scans this list in
+    # order -- so the outer loop degrades onto its OWN card (2026-06-27 allocation) rather
+    # than trying to take the conductor's. setdefault, so an explicit export still wins.
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
     prop = LocalGGUFProposer(
@@ -168,7 +174,11 @@ def main() -> int:
         "solve_provenance": "development_proxy",
         "random_seed": SEED,
         "model_specs": [
-            {"name": "Qwen3.5-9B-MTP-GGUF", "gpu": 1, "role": "world_model_induction_proposer"}
+            {
+                "name": "Qwen3.5-9B-MTP-GGUF",
+                "gpu": os.environ.get("CARNOT_ARC_GENERATOR_CUDA_GPU", "1"),
+                "role": "world_model_induction_proposer",
+            }
         ],
         "config": {
             "budget": BUDGET,
