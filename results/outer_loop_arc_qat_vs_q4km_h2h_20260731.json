@@ -1,0 +1,587 @@
+{
+  "experiment": "outer_loop_arc_qat_vs_q4km_h2h_20260731",
+  "question": "Is unsloth/gemma-4-31B-it-qat-GGUF UD-Q4_K_XL a better ARC world-model inducer than the shipped unsloth/gemma-4-31B-it-GGUF Q4_K_M? Quantisation is the ONLY variable; both arms are the same 31B model, same protocol, same 13 games x 3 trials.",
+  "decisive_criterion": "Per-game zero-imputed held-out mean (mean-B), exact two-sided sign test over the 13 paired games. Fixed before unblinding, and identical to the criterion exp6021 used to select gemma-4-31B in the first place.",
+  "decision": "indistinguishable_keep_shipped_q4km",
+  "primary_mean_B": {
+    "qat_better_games": 6,
+    "q4km_better_games": 6,
+    "ties": 8,
+    "p_two_sided_sign": 1.0,
+    "min_reachable_p": 0.000488,
+    "discordant_pairs": 12
+  },
+  "secondary_coverage": {
+    "nonzero_games": {
+      "q4km": 11,
+      "qat": 12
+    },
+    "qat_only": 2,
+    "q4km_only": 1,
+    "p_two_sided_sign": 1.0,
+    "min_reachable_p": 0.25,
+    "discordant_pairs": 3
+  },
+  "pooled_mean_B": {
+    "q4km": 0.199995,
+    "qat": 0.193748
+  },
+  "induce_ok_rate": {
+    "q4km": "60/60",
+    "qat": "59/60"
+  },
+  "overran_cells": {
+    "q4km": 0,
+    "qat": 1
+  },
+  "vram_mib_at_cell_start": {
+    "q4km": [
+      21418
+    ],
+    "qat": [
+      20430
+    ]
+  },
+  "arm_wall_hours": {
+    "q4km": 6.24,
+    "qat": 6.58
+  },
+  "per_game_delta": {
+    "ar25": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "bp35": {
+      "q4km": 0.3636,
+      "qat": 0.333333,
+      "delta_qat_minus_q4km": -0.030267
+    },
+    "cd82": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "cn04": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "ft09": {
+      "q4km": 1.0,
+      "qat": 0.333333,
+      "delta_qat_minus_q4km": -0.666667
+    },
+    "g50t": {
+      "q4km": 0.0303,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": -0.0303
+    },
+    "lf52": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "lp85": {
+      "q4km": 0.0,
+      "qat": 0.25,
+      "delta_qat_minus_q4km": 0.25
+    },
+    "ls20": {
+      "q4km": 0.0,
+      "qat": 0.1212,
+      "delta_qat_minus_q4km": 0.1212
+    },
+    "m0r0": {
+      "q4km": 0.3333,
+      "qat": 0.1515,
+      "delta_qat_minus_q4km": -0.1818
+    },
+    "r11l": {
+      "q4km": 0.333333,
+      "qat": 0.333333,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "re86": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "s5i5": {
+      "q4km": 0.0909,
+      "qat": 0.0303,
+      "delta_qat_minus_q4km": -0.0606
+    },
+    "sb26": {
+      "q4km": 0.333333,
+      "qat": 0.625,
+      "delta_qat_minus_q4km": 0.291667
+    },
+    "sk48": {
+      "q4km": 0.0909,
+      "qat": 0.242433,
+      "delta_qat_minus_q4km": 0.151533
+    },
+    "sp80": {
+      "q4km": 0.666667,
+      "qat": 1.0,
+      "delta_qat_minus_q4km": 0.333333
+    },
+    "su15": {
+      "q4km": 0.666667,
+      "qat": 0.333333,
+      "delta_qat_minus_q4km": -0.333334
+    },
+    "tr87": {
+      "q4km": 0.0909,
+      "qat": 0.1212,
+      "delta_qat_minus_q4km": 0.0303
+    },
+    "tu93": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    },
+    "vc33": {
+      "q4km": 0.0,
+      "qat": 0.0,
+      "delta_qat_minus_q4km": 0.0
+    }
+  },
+  "per_game_detail": {
+    "ar25": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.290767,
+        "wall_s": 1306.4
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.9741,
+        "wall_s": 1318.0
+      }
+    },
+    "bp35": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.3636,
+        "mean_B_zero_imputed": 0.3636,
+        "mean_cell_recall": 0.501067,
+        "wall_s": 1018.5
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.333333,
+        "mean_B_zero_imputed": 0.333333,
+        "mean_cell_recall": 0.631433,
+        "wall_s": 923.5
+      }
+    },
+    "cd82": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.0627,
+        "wall_s": 873.9
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.0,
+        "wall_s": 1119.8
+      }
+    },
+    "cn04": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.613467,
+        "wall_s": 1147.8
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.675467,
+        "wall_s": 1316.4
+      }
+    },
+    "ft09": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 1.0,
+        "mean_B_zero_imputed": 1.0,
+        "mean_cell_recall": 1.0,
+        "wall_s": 741.4
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.333333,
+        "mean_B_zero_imputed": 0.333333,
+        "mean_cell_recall": 0.964933,
+        "wall_s": 1077.1
+      }
+    },
+    "g50t": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0303,
+        "mean_B_zero_imputed": 0.0303,
+        "mean_cell_recall": 0.4073,
+        "wall_s": 1119.5
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.236733,
+        "wall_s": 1009.6
+      }
+    },
+    "lf52": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.443967,
+        "wall_s": 1247.8
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.2043,
+        "wall_s": 1229.4
+      }
+    },
+    "lp85": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.192567,
+        "wall_s": 1340.2
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 2,
+        "overran": 1,
+        "mean_A_scorable_only": 0.375,
+        "mean_B_zero_imputed": 0.25,
+        "mean_cell_recall": 0.72695,
+        "wall_s": 1341.2
+      }
+    },
+    "ls20": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.5039,
+        "wall_s": 1407.0
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.1212,
+        "mean_B_zero_imputed": 0.1212,
+        "mean_cell_recall": 0.859867,
+        "wall_s": 1850.3
+      }
+    },
+    "m0r0": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.3333,
+        "mean_B_zero_imputed": 0.3333,
+        "mean_cell_recall": 0.794567,
+        "wall_s": 1203.8
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.1515,
+        "mean_B_zero_imputed": 0.1515,
+        "mean_cell_recall": 0.6028,
+        "wall_s": 1455.8
+      }
+    },
+    "r11l": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.333333,
+        "mean_B_zero_imputed": 0.333333,
+        "mean_cell_recall": 0.413333,
+        "wall_s": 1138.4
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.333333,
+        "mean_B_zero_imputed": 0.333333,
+        "mean_cell_recall": 0.6284,
+        "wall_s": 1268.8
+      }
+    },
+    "re86": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.426933,
+        "wall_s": 1226.6
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.857167,
+        "wall_s": 1077.5
+      }
+    },
+    "s5i5": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0909,
+        "mean_B_zero_imputed": 0.0909,
+        "mean_cell_recall": 0.499,
+        "wall_s": 1047.2
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0303,
+        "mean_B_zero_imputed": 0.0303,
+        "mean_cell_recall": 0.446067,
+        "wall_s": 1064.3
+      }
+    },
+    "sb26": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.333333,
+        "mean_B_zero_imputed": 0.333333,
+        "mean_cell_recall": 0.9308,
+        "wall_s": 963.2
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.625,
+        "mean_B_zero_imputed": 0.625,
+        "mean_cell_recall": 0.864,
+        "wall_s": 936.5
+      }
+    },
+    "sk48": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0909,
+        "mean_B_zero_imputed": 0.0909,
+        "mean_cell_recall": 0.233733,
+        "wall_s": 936.3
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.242433,
+        "mean_B_zero_imputed": 0.242433,
+        "mean_cell_recall": 0.3045,
+        "wall_s": 1107.8
+      }
+    },
+    "sp80": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.666667,
+        "mean_B_zero_imputed": 0.666667,
+        "mean_cell_recall": 0.9902,
+        "wall_s": 936.6
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 1.0,
+        "mean_B_zero_imputed": 1.0,
+        "mean_cell_recall": 1.0,
+        "wall_s": 949.2
+      }
+    },
+    "su15": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.666667,
+        "mean_B_zero_imputed": 0.666667,
+        "mean_cell_recall": 0.833333,
+        "wall_s": 1181.2
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.333333,
+        "mean_B_zero_imputed": 0.333333,
+        "mean_cell_recall": 0.7,
+        "wall_s": 1283.3
+      }
+    },
+    "tr87": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0909,
+        "mean_B_zero_imputed": 0.0909,
+        "mean_cell_recall": 0.276567,
+        "wall_s": 1279.7
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.1212,
+        "mean_B_zero_imputed": 0.1212,
+        "mean_cell_recall": 0.449833,
+        "wall_s": 1298.8
+      }
+    },
+    "tu93": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.7818,
+        "wall_s": 1169.2
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.583467,
+        "wall_s": 996.2
+      }
+    },
+    "vc33": {
+      "q4km": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.7552,
+        "wall_s": 1179.1
+      },
+      "qat": {
+        "cells": 3,
+        "induce_ok": 3,
+        "overran": 0,
+        "mean_A_scorable_only": 0.0,
+        "mean_B_zero_imputed": 0.0,
+        "mean_cell_recall": 0.912133,
+        "wall_s": 1079.8
+      }
+    }
+  },
+  "labels": {
+    "q4km": "gemma-4-31B-it Q4_K_M (non-QAT, shipped)",
+    "qat": "gemma-4-31B-it QAT UD-Q4_K_XL"
+  },
+  "n_games": 20,
+  "roster": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sk48",
+    "sp80",
+    "su15",
+    "tr87",
+    "tu93",
+    "vc33"
+  ],
+  "protocol_provenance": "h2h_arm_runner.py derived from results/inducer_h2h_6021/h2h_arm_runner.py.frozen by changing ONLY the ARMS dict, then (2026-07-31) parameterising the GPU pin per arm so the two arms could run concurrently on one RTX 3090 each. n_ctx 32768, budget 16384, q8_0 KV, ROSTER/TRIALS imported from exp5760 -- all unchanged.",
+  "deviation_from_frozen_protocol": "Arms ran CONCURRENTLY on separate GPUs, not sequentially on GPU 1. This run is therefore equivalent-in-substance to exp6021, NOT byte-identical. Defensible here because the measured outcome is induction QUALITY on two physically identical RTX 3090s; it would NOT be defensible for a throughput comparison. Each arm still proved its own card by UUID from residency rather than from CUDA_VISIBLE_DEVICES.",
+  "known_log_defect": "The per-arm 'healthy in Ns; residency=N MiB on GPU1' log line hardcodes the string GPU1 for both arms. The VALUE is correct (computed against each arm's own UUID; the qat arm's 20428 MiB matches nvidia-smi's GPU 0 reading), but the LABEL is wrong in the qat log. Cosmetic, recorded rather than silently fixed.",
+  "inference_substrate": "live_llm_inference",
+  "random_seed": 6021,
+  "verifier_is_oracle": false,
+  "solve_provenance": "development_proxy"
+}

@@ -2991,9 +2991,28 @@ class CodexProposer:
 # and would consume it as literal prompt text -- the silently-dead-channel defect class this
 # project keeps finding. (The 31B scored 0.3843 in the head-to-head WITH the prefix still present,
 # so it was not load-bearing; that is a reason to remove it cleanly, not a reason to keep it.)
-ARC_LIVE_GENERATOR_REPO_SUBSTR = "gemma-4-31B-it"
-ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/gemma-4-31B-it-GGUF"
-ARC_LIVE_GENERATOR_MODEL_FILENAME = "gemma-4-31B-it-Q4_K_M.gguf"
+# QAT (2026-07-31, operator directive after the head-to-head below). The repo substring is
+# the QAT one specifically: "gemma-4-31B-it" alone matches BOTH cache dirs
+# (`...-it-GGUF` and `...-it-qat-GGUF`) and would resolve ambiguously.
+ARC_LIVE_GENERATOR_REPO_SUBSTR = "gemma-4-31B-it-qat"
+ARC_LIVE_GENERATOR_MODEL_ID = "unsloth/gemma-4-31B-it-qat-GGUF"
+ARC_LIVE_GENERATOR_MODEL_FILENAME = "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
+# WHY QAT, AND WHY NOT FOR QUALITY. A 20-game x 3-trial head-to-head against the shipped
+# Q4_K_M (results/outer_loop_arc_qat_vs_q4km_h2h_20260731.json) came back INDISTINGUISHABLE:
+# mean-B 6-6 with 8 ties, exact two-sided sign test p = 1.0 over 12 discordant pairs (min
+# reachable p 0.000488, so the null had real power). Pooled mean-B 0.1937 QAT vs 0.1999
+# Q4_K_M -- if anything marginally worse, well inside noise.
+#
+# An earlier 13-game read had QAT ahead 5-2 (p = 0.453) and pooled +0.028. That lead did not
+# survive the pre-registered extension to 20 games; it inverted. Recorded because it is the
+# reason the switch is NOT justified on quality and must never be described as if it were.
+#
+# The switch is on the two axes QAT actually wins, both measured:
+#   VRAM  20430 MiB resident vs 21418 MiB  (~1 GB, observed across 60 cells per arm)
+#   disk  17.3 GB vs 18.3 GB
+# plus it ships matching QAT MTP drafters, which Google's model card states are REQUIRED when
+# speculating against a QAT target: "the assistant model must also be a QAT checkpoint with
+# the same precision".
 # LOCAL default. "0" because at n_ctx 81920 a 24 GB card must offload ~14 FFN blocks to host the
 # MTP-on server and the offload costs more throughput than MTP returns -- see the arithmetic above.
 ARC_LIVE_GENERATOR_MTP_DEFAULT = "0"
@@ -3014,6 +3033,13 @@ ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT = "1"
 # `rglob`, and the head and the main model are both `*.gguf` under the same mount root.
 ARC_LIVE_GENERATOR_MTP_HEAD_FILENAME = "mtp-gemma-4-31B-it-Q8_0.gguf"
 ARC_LIVE_GENERATOR_MTP_HEAD_SUBSTR = "mtp-gemma-4-31B-it"
+# The drafter must come from the SAME repo as the target. Both the QAT and non-QAT repos ship
+# a file called `mtp-gemma-4-31B-it-Q8_0.gguf`, so the filename substring above CANNOT tell
+# them apart -- and `_resolve_mtp_head` globs every `models--*GGUF` root and takes sorted()[0].
+# Before this constant existed, switching the target to QAT while leaving a non-QAT head on
+# disk would have silently paired a non-QAT drafter with a QAT target: accepted by llama.cpp,
+# forbidden by Google's card, and invisible except as degraded acceptance.
+ARC_LIVE_GENERATOR_MTP_HEAD_REPO_SUBSTR = "gemma-4-31B-it-qat"
 ARC_LIVE_GENERATOR_MTP_HEAD_ARCH = "gemma4-assistant"  # read from the head GGUF's own header
 ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on gemma-4
 
@@ -3090,7 +3116,18 @@ def _resolve_mtp_head(head_substr: str = ARC_LIVE_GENERATOR_MTP_HEAD_SUBSTR) -> 
     if env:
         return env if Path(env).exists() else None
     hub = Path.home() / ".cache" / "huggingface" / "hub"
-    roots = list(hub.glob("models--*GGUF")) + [Path.home() / ".cache" / "kaggle_mtp_head_upload"]
+    # REPO-SCOPED FIRST (2026-07-31). Both `gemma-4-31B-it-GGUF` and `gemma-4-31B-it-qat-GGUF`
+    # ship a file named `mtp-gemma-4-31B-it-Q8_0.gguf`, so `head_substr` cannot tell them
+    # apart and the old `sorted(...)[0]` over every GGUF root bound whichever sorted first.
+    # After the 2026-07-31 switch to a QAT target that would have paired a NON-QAT drafter
+    # with it -- accepted by llama.cpp, forbidden by Google's card ("the assistant model must
+    # also be a QAT checkpoint with the same precision"), and invisible except as degraded
+    # draft acceptance. So prefer a head living in the target's own repo, and only fall back
+    # to the unscoped search when none is found there.
+    repo_substr = ARC_LIVE_GENERATOR_MTP_HEAD_REPO_SUBSTR
+    scoped = [r for r in hub.glob("models--*GGUF") if repo_substr in r.name]
+    unscoped = [r for r in hub.glob("models--*GGUF") if repo_substr not in r.name]
+    roots = scoped + unscoped + [Path.home() / ".cache" / "kaggle_mtp_head_upload"]
     for root in roots:
         try:
             hits = sorted(p for p in root.rglob("*.gguf") if head_substr in p.name)

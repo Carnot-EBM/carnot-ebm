@@ -75,10 +75,21 @@ def mods(monkeypatch):
 
 
 def test_the_canonical_pin_is_gemma_4_31b(mods) -> None:
+    """Updated 2026-07-31: the pin moved from Q4_K_M to the QAT quant of the SAME model.
+
+    Not a generator change -- gemma-4-31B-it either way, so every retired-marker assertion
+    below still applies unchanged. Only the quantisation moved, and only on non-quality
+    grounds: a 20-game x 3-trial head-to-head found the two INDISTINGUISHABLE (mean-B 6-6-8,
+    sign test p = 1.0), so the switch was made for ~1 GB less VRAM and a matching QAT MTP
+    drafter. See tests/python/test_arc_live_generator_qat_pairing.py.
+
+    The repo substring is deliberately the QAT-specific one: "gemma-4-31B-it" matches BOTH
+    cache directories and would resolve ambiguously.
+    """
     agent, wm = mods
-    assert wm.ARC_LIVE_GENERATOR_REPO_SUBSTR == "gemma-4-31B-it"
-    assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/gemma-4-31B-it-GGUF"
-    assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "gemma-4-31B-it-Q4_K_M.gguf"
+    assert wm.ARC_LIVE_GENERATOR_REPO_SUBSTR == "gemma-4-31B-it-qat"
+    assert wm.ARC_LIVE_GENERATOR_MODEL_ID == "unsloth/gemma-4-31B-it-qat-GGUF"
+    assert wm.ARC_LIVE_GENERATOR_MODEL_FILENAME == "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
     for marker in RETIRED_GENERATOR_MARKERS:
         assert marker not in wm.ARC_LIVE_GENERATOR_REPO_SUBSTR
         assert marker not in wm.ARC_LIVE_GENERATOR_MODEL_ID
