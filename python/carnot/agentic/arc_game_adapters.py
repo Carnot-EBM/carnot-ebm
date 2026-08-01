@@ -82,6 +82,25 @@ class GameAdapter:
     # data resolved against the live env. Without this hook `build_window` did
     # `int("C:1")` and raised, so ka59 had NO induction window at all and was silently
     # absent from every A/B corpus built that way (found 2026-07-31).
+    # Does this adapter REPLAY a stored solution, or SEARCH a real action space?
+    #
+    # Measured 2026-07-31: 18 of 25 replay. Their `action_labels` hand back the next label of
+    # a banked plan (or, for s5i5, one fixed click), so `solve_adaptered`'s verifier-routed
+    # search, hazard pruning, learned-verifier warm start and state dedup are all unexercised
+    # -- the search is a straight line through a solution that was already known. Removing the
+    # plan does not reveal a search space underneath: 17 of the 18 return NO labels at all at
+    # L0 once the plan is exhausted. The plan IS the L0 behaviour.
+    #
+    # This flag exists because the distinction was previously invisible without reading each
+    # adapter's source, and because it makes downstream numbers honest: a replay adapter
+    # "reaching L1" in ops/arc_adapter_depth_baseline.json measures the STORED PLAN, not any
+    # capability of the adapter. Branching factor alone cannot separate the classes -- tn36
+    # also returns a single label at L0, but COMPUTES it from live state, so it survives a
+    # layout change where a stored plan would not.
+    replay: bool = False
+    # Where a replay adapter's plan comes from. Required when replay=True so the claim is
+    # traceable to an artifact or constant rather than asserted.
+    replay_source: Optional[str] = None
     label_to_action_data: Optional[Callable[[Any, str], tuple]] = None
     warmup_label: Optional[str] = None
     depth_caps: dict = field(default_factory=lambda: {})
@@ -894,6 +913,8 @@ def _g50t():
 
     return GameAdapter(
         game="g50t",
+        replay=True,
+        replay_source="banked L1 plan; registered by Exp4884 after adapter-free L2 search dead-ended",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -999,6 +1020,8 @@ def _re86():
 
     return GameAdapter(
         game="re86",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -1124,6 +1147,8 @@ def _bp35():
 
     return GameAdapter(
         game="bp35",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -1324,6 +1349,8 @@ def _s5i5():
 
     return GameAdapter(
         game="s5i5",
+        replay=True,
+        replay_source="single fixed ACTION6 click at (48,21) -- constant, not a plan index; registered by Exp4873",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -1387,6 +1414,8 @@ def _su15():
 
     return GameAdapter(
         game="su15",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -1492,6 +1521,8 @@ def _sb26():
 
     return GameAdapter(
         game="sb26",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -1555,6 +1586,8 @@ def _sp80():
 
     return GameAdapter(
         game="sp80",
+        replay=True,
+        replay_source="SP80_L1_LABELS (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -1615,6 +1648,8 @@ def _cn04():
 
     return GameAdapter(
         game="cn04",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -2229,6 +2264,8 @@ def _ar25():
 
     return GameAdapter(
         game="ar25",
+        replay=True,
+        replay_source="AR25_L1_LABELS (module constant)",
         action_labels=action_labels,
         apply=exp4339._apply_ar25_label,
         state_key=state_key,
@@ -2274,6 +2311,8 @@ def _ka59():
 
     return GameAdapter(
         game="ka59",
+        replay=True,
+        replay_source="exp4350.L1_SOLUTION_LABELS",
         action_labels=action_labels,
         apply=exp4350._apply_ka59_label,
         label_to_action_data=exp4350._label_to_action_data,
@@ -2346,6 +2385,8 @@ def _ft09():
 
     return GameAdapter(
         game="ft09",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=exp4363._apply_ft09_label,
         state_key=state_key,
@@ -2446,6 +2487,8 @@ def _vc33():
 
     return GameAdapter(
         game="vc33",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -2586,6 +2629,8 @@ def _ls20():
 
     return GameAdapter(
         game="ls20",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -2699,6 +2744,8 @@ def _sk48():
 
     return GameAdapter(
         game="sk48",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -2804,6 +2851,8 @@ def _r11l():
 
     return GameAdapter(
         game="r11l",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -2924,6 +2973,8 @@ def _lf52():
 
     return GameAdapter(
         game="lf52",
+        replay=True,
+        replay_source="banked L1 plan (module constant)",
         action_labels=action_labels,
         apply=apply,
         state_key=state_key,
@@ -2968,6 +3019,8 @@ def _sc25():
 
     return GameAdapter(
         game="sc25",
+        replay=True,
+        replay_source="exp4468.SC25_PLANS_BY_LEVEL[1]",
         action_labels=action_labels,
         apply=exp4468.apply_sc25_label,
         label_to_action_data=lambda _env, label: exp4468.sc25_label_to_action_data(label),
@@ -3112,6 +3165,8 @@ def _wa30():
 
     return GameAdapter(
         game="wa30",
+        replay=True,
+        replay_source="first 33 actions of results/outer_loop_fable5_wa30_probe_l9.json (gate-verified to L9)",
         action_labels=action_labels,
         apply=_default_json_apply,
         state_key=state_key,
