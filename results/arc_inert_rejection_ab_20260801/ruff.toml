@@ -1,0 +1,42 @@
+# Lint config for this measurement's harness.
+#
+# ---------------------------------------------------------------------------
+# `exclude` IS A DATA-INTEGRITY CONTROL, NOT A STYLE PREFERENCE. READ THIS.
+# ---------------------------------------------------------------------------
+# `out/engines/` holds LLM-EMITTED code, verbatim, as the AS-RUN record of what the generator
+# produced. `run_ab.py` records each file's sha256 at the moment it was emitted, `score.py`
+# grades exactly those bytes, and the A/A control decides whether the seeded sampler reproduced
+# by comparing those hashes.
+#
+# On 2026-08-01 a `ruff format results/arc_inert_rejection_ab_20260801/` -- run on the DIRECTORY
+# rather than on the named source files -- reformatted all five collected engines mid-collection.
+# Every recorded `engine_sha256` stopped matching its file. Nothing warned; the run would simply
+# have scored prettified code while claiming to score what the model wrote. The files were
+# recoverable only because `e3_store/` is gitignored and ruff honours .gitignore, so the
+# per-cell copies were untouched and could be restored with their hashes re-verified.
+#
+# Two rules follow, and the second matters more than the first:
+#   1. This exclude keeps `out/` off-limits to every ruff invocation that reads this config.
+#   2. NEVER run a formatter at a directory that contains collected artifacts. Name the source
+#      files. A config can only defend the paths someone thought to list.
+exclude = ["out/", "e3_store/"]
+
+extend = "../../pyproject.toml"
+
+[lint.per-file-ignores]
+# I001: every worker mutates `os.environ` at module scope BEFORE importing anything from
+# `carnot` -- `CUDA_VISIBLE_DEVICES=""` and `JAX_PLATFORMS=cpu` so a CPU-only scoring pass can
+# never contend for a GPU another session on this shared machine owns, and `CARNOT_ARC_E3_DIR`
+# redirected out of the evidence tree. Import sorting moves those imports above the mutations
+# and silently defeats all of it. Same reasoning, same wording, as
+# results/arc_metric_validity_20260801/ruff.toml.
+"score_worker.py" = ["I001"]
+# B007: `for game, (shown, held, cell) in windows.items()` does not use `held` in the treatment
+# witness loop. Renaming it `_held` would be the right fix in ordinary code, but `run_ab.py` is
+# the AS-RUN RECORD -- collection was already in flight when this was found, `rows.json` was
+# produced by exactly these bytes, and editing it afterwards would make the committed harness
+# describe code that never ran. The name also documents the tuple's shape at the point of use.
+# Same as-run reasoning as results/arc_metric_validity_20260801/ruff.toml applies to its workers.
+"run_ab.py" = ["I001", "B007"]
+# The invariant tests import `carnot` only after `sys.path.insert`, for the same reason.
+"test_harness_invariants.py" = ["I001"]

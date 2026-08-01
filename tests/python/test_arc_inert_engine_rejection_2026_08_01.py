@@ -347,6 +347,22 @@ class TestTheFlag:
         monkeypatch.delenv("CARNOT_ARC_INDUCE_REJECT_INERT", raising=False)
         assert _Proposer()._engine_defects(IDENTITY, transitions) == []
 
+    def test_default_off_DOES_NOT_EVEN_RUN_THE_PROBE(self, transitions, monkeypatch):
+        """ "Ships inert" is a claim about BEHAVIOUR, not about the return value.
+
+        The sibling test above only pins that the RESULT is [] with the flag off -- which would
+        still hold if the probe ran on every induce and its finding were discarded. That would
+        cost a subprocess spawn per induction on the live scored path, which is a real
+        regression wearing an identical return value. `and` short-circuits, so the probe is
+        genuinely not reached; this asserts it rather than trusting the operator precedence."""
+        monkeypatch.delenv("CARNOT_ARC_INDUCE_REJECT_INERT", raising=False)
+        called: list = []
+        monkeypatch.setattr(
+            sv, "engine_inertness_defect", lambda *a, **kw: called.append(a) or None
+        )
+        assert _Proposer()._engine_defects(IDENTITY, transitions) == []
+        assert called == [], "the flag is off but the inertness probe still ran"
+
     def test_flag_on_reports_engine_inert(self, transitions, monkeypatch):
         monkeypatch.setenv("CARNOT_ARC_INDUCE_REJECT_INERT", "1")
         assert _Proposer()._engine_defects(IDENTITY, transitions) == ["engine_inert"]
