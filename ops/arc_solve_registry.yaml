@@ -1152,6 +1152,25 @@ games:
   reproducibility: reproduced
   levels_reproduced: 9
   full_game_clear: true
+  reproduce: >-
+    VERIFIED 2026-07-31. arc_solver_kit.reproduce(wa30, the 670 plain {"action": N} labels in
+    results/outer_loop_fable5_wa30_probe_l9.json:action_sequence, _default_json_apply,
+    claimed_level=9) -> reproduced=True, reached_level=9, in 0.8s offline, deterministic across
+    3 replays. Artifact: results/outer_loop_arc_wa30_reproduction_gate_20260731.json. This field
+    and action_model were previously ABSENT while the row claimed levels_reproduced=9, and every
+    L4-L9 probe self-reported reproduction_verified=False -- not because the solve was lost but
+    because the gate replays the whole prefix from reset, so by L9 verifying cost as much as
+    solving and each interactive round exhausted its LIVE step budget first. Offline that budget
+    does not apply. The gate discriminates: prefixes of 604/477/415/170/94 actions reproduce
+    exactly L8/L7/L6/L3/L2. No GameAdapter exists for wa30 and none is required -- reproduce()
+    takes an explicit apply callable.
+  action_model: >-
+    ACTION1-5 keyboard only across all 9 levels. The banked 670-action route contains ZERO
+    ACTION6 clicks, so any_oob_action6_clicks=False and it carries none of the live
+    out-of-bounds risk that broke lf52's original L9 route. Solved by a 16-round OUTER-LOOP
+    agent probe campaign (gpt-5.6-sol v1-v8 stalled at L1; claude-fable-5 v9-v16 broke
+    through), NOT by an adapter and NOT by the live agent -- solve_provenance outer_loop_re,
+    so it is never headline-eligible as live-agent capability.
   final_game_state: 'GameState.WIN'
   win_condition: 'L1 first-solve, ACTION+kind sequence replays offline. L2: deliver
     five blocks into five of six bay target slots (player hand-carry PLUS a passive

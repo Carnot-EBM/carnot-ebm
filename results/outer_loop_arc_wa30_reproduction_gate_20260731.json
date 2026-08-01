@@ -1,0 +1,84 @@
+{
+  "experiment": "outer_loop_arc_wa30_reproduction_gate_20260731",
+  "honest_verdict": "complete_wa30_l9_reproduction_gate_PASSES_670_actions_reached_level_9_full_game_clear_verified",
+  "question": "wa30's registry row claimed levels_reproduced=9 / full_game_clear=true with reproduce=None and action_model=None. Its L4-L9 probe artifacts all self-report reproduction_verified=False. Do the banked actions actually reproduce L9 offline?",
+  "answer": "YES. The 670-action sequence reproduces level 9 offline, deterministically, in 0.8s.",
+  "why_it_was_never_verified": "Not a lost solve and not a missing artifact -- a BUDGET artifact. Every L4-L9 probe round records the same reason, e.g. L9: 'Budget discipline: 810 of 1200 steps used across three L9 episodes ... the gate replay costs 604 more'. The gate replays the whole prefix from a fresh reset, so by L9 verifying cost as much as solving, and each interactive session ran out of its step budget first. That budget is a LIVE/session constraint; offline the same replay is 0.8 seconds. Nobody re-ran it outside a session, so 6 of the 183 headline levels sat unverified for ~3 weeks.",
+  "gate_result_full": {
+    "game": "wa30",
+    "reached_level": 9,
+    "claimed_level": 9,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota",
+    "checked_action6_clicks": 0,
+    "oob_action6_clicks": [],
+    "any_oob_action6_clicks": false
+  },
+  "gate_result_prefixes": {
+    "604_actions_claimed_L8": {
+      "game": "wa30",
+      "reached_level": 8,
+      "claimed_level": 8,
+      "reproduced": true,
+      "mode": "offline_reproduction_gate_no_quota",
+      "checked_action6_clicks": 0,
+      "oob_action6_clicks": [],
+      "any_oob_action6_clicks": false
+    },
+    "477_actions_claimed_L7": {
+      "game": "wa30",
+      "reached_level": 7,
+      "claimed_level": 7,
+      "reproduced": true,
+      "mode": "offline_reproduction_gate_no_quota",
+      "checked_action6_clicks": 0,
+      "oob_action6_clicks": [],
+      "any_oob_action6_clicks": false
+    },
+    "415_actions_claimed_L6": {
+      "game": "wa30",
+      "reached_level": 6,
+      "claimed_level": 6,
+      "reproduced": true,
+      "mode": "offline_reproduction_gate_no_quota",
+      "checked_action6_clicks": 0,
+      "oob_action6_clicks": [],
+      "any_oob_action6_clicks": false
+    },
+    "170_actions_claimed_L3": {
+      "game": "wa30",
+      "reached_level": 3,
+      "claimed_level": 3,
+      "reproduced": true,
+      "mode": "offline_reproduction_gate_no_quota",
+      "checked_action6_clicks": 0,
+      "oob_action6_clicks": [],
+      "any_oob_action6_clicks": false
+    },
+    "94_actions_claimed_L2": {
+      "game": "wa30",
+      "reached_level": 2,
+      "claimed_level": 2,
+      "reproduced": true,
+      "mode": "offline_reproduction_gate_no_quota",
+      "checked_action6_clicks": 0,
+      "oob_action6_clicks": [],
+      "any_oob_action6_clicks": false
+    }
+  },
+  "discriminates": "The gate is not rubber-stamping: truncating to 604/415/170 actions yields reached_level 8/6/3 and reproduced=False against claimed_level=9, and each prefix reproduces EXACTLY its own documented level. A pass that could not fail would be worthless.",
+  "source_artifact": "results/outer_loop_fable5_wa30_probe_l9.json",
+  "n_actions": 670,
+  "action_shapes": "all plain {'action': N} keyboard actions; no ACTION6 clicks, so no live out-of-bounds risk",
+  "any_oob_action6_clicks": false,
+  "determinism": "identical result across 3 independent replays in separate processes",
+  "duration_s": 1.61,
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_note": "Pure offline env-stepping, no LLM and no GPU. Strictly this is a REPLAY of a banked sequence, not runtime self-discovery; the substrate value is chosen as the project's no-LLM offline-arcade category and the distinction is stated here rather than hidden by the label.",
+  "solve_provenance": "outer_loop_re",
+  "solve_provenance_note": "Declared honestly. wa30 was solved by a 16-round OUTER-LOOP agent probe campaign (gpt-5.6-sol v1-v8 stalled at L1; claude-fable-5 v9-v16 broke through), not by the live agent and not by a GameAdapter. This artifact VERIFIES that prior solve; it does not claim a new one. Per the ARC Live-Path Reachability Discipline an outer_loop_re solve is never headline-eligible as live-agent capability, and this does not make it so -- it only establishes that the banked levels meet the reproduction gate.",
+  "random_seed": 30,
+  "reproducibility_checksum": "6dc437e7cb7c3e03d84bce150af473e5519446a38c1e5bd7ea489e70f004b485",
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_note": "The offline env IS the oracle here; this is a reproduction check, not a verifier-value claim."
+}

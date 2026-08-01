@@ -45,6 +45,45 @@ levels that do not meet the discipline's own bar.
 **Not blocking** the QAT head-to-head: wa30 is excluded from that corpus for a reason that
 predates and is independent of either arm.
 
+#### RESOLVED same day (2026-07-31) — the gate PASSES; my framing above was wrong
+
+Ran it. `arc_solver_kit.reproduce(wa30, <670 actions>, _default_json_apply, claimed_level=9)`
+returns **`reproduced=True, reached_level=9`, in 0.8 seconds**, deterministic across three
+replays in separate processes. Artifact:
+`results/outer_loop_arc_wa30_reproduction_gate_20260731.json`. The registry row now carries
+the `reproduce` and `action_model` fields it was missing.
+
+**The gate discriminates — this is not a rubber stamp.** Truncated to 604/415/170 actions it
+returns `reproduced=False` with `reached_level` 8/6/3 against `claimed_level=9`; and each
+prefix reproduces EXACTLY its own documented level (604->L8, 477->L7, 415->L6, 170->L3,
+94->L2). A pass that could not fail would have been worthless.
+
+**Correcting the entry above.** It said the 9 levels were "backed by prose", "cannot be
+re-verified today without redoing the reverse engineering", and framed this as possible
+record-integrity rot. That was wrong on the facts. The action sequences were complete on
+disk the whole time; the L1-L8 prefix is described in its own artifact as "5x gate-verified,
+replayed identically a 10th time this session". Nothing was lost and no RE needed redoing.
+
+**What was actually true** is narrower and more interesting: every L4-L9 probe round records
+`reproduction_verified: False` for the SAME stated reason -- budget. The gate replays the
+whole prefix from a fresh reset, so by L9 verifying cost as much as solving
+("Budget discipline: 810 of 1200 steps used across three L9 episodes ... the gate replay
+costs 604 more"). That is a LIVE/session step budget. Offline it does not apply, and the
+replay takes under a second. The verification was never hard -- it just never ran outside a
+session, so 6 of the 183 headline levels sat unverified for ~3 weeks.
+
+**Generalisable lesson worth more than this one game:** an interactive agent session can
+produce a result it structurally cannot afford to verify, and will then honestly record
+`verified: False` and move on. Nothing downstream distinguishes "unverified because it
+failed" from "unverified because the session ran out of budget". Both look identical in the
+registry. Anywhere else that pattern exists, the cheap fix is the same -- re-run the gate
+outside the session.
+
+**Still true and NOT resolved by this:** wa30 has no `GameAdapter` (24 of 25 public games do),
+so it remains unreachable by `solve_adaptered` / `build_progress_window` and stays outside
+offline induction corpora. That is a separate, lower-stakes gap -- and `reproduce()` takes an
+explicit apply callable, so the verification above needed no adapter at all.
+
 ### 2026-07-31 (security audit) — gVisor GPU passthrough is NOT usable on this host (measured)
 
 Raised by the operator while reviewing the sandbox-routing fix: *"We don't want to
