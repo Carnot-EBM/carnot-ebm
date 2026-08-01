@@ -4,6 +4,47 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-07-31 — wa30 claims 9 reproduced levels with NO recorded reproduction path
+
+Found while extending the QAT-vs-Q4_K_M inducer corpus. `ops/arc_solve_registry.yaml`
+records for **wa30**:
+
+```
+reproducibility: reproduced
+levels_reproduced: 9
+full_game_clear: true
+final_game_state: GameState.WIN
+reproduce:     None      <-- 
+action_model:  None      <-- 
+```
+
+Every other cleared game carries an executable reproduction path — `tn36` names
+`scripts/arc3_tn36_offline_solver.py` (a 340-line general from-scratch solver), `sc25` names
+`arc_solver_kit.reproduce(sc25, experiment_4468.SC25_PLANS_BY_LEVEL[5], apply_sc25_label, ...)`,
+`ka59` names its label sequence plus a checksum. wa30 has a detailed prose `win_condition`
+and `gotchas`, and nothing runnable.
+
+**Why this matters more than a missing field.** The ARC Solve Reproducibility discipline was
+created by the operator directive *"we must require capturing the winning conditions for
+reproducibility ... otherwise the effort is effectively wasted"*, and its gate is that only
+levels which reproduce offline may be counted. wa30's 9 levels are currently counted toward
+`reproducible_total_levels: 183` on the strength of prose. They cannot be re-verified today
+without redoing the reverse engineering, which is the exact failure the discipline exists to
+prevent — the same shape as the sc25/lp85 re-derivation that motivated it.
+
+**This is a record-integrity issue, not a solving issue.** The game was almost certainly
+solved; what is missing is the captured artifact. Do NOT quietly decrement the headline
+count — per never-prune the claim stays and gets annotated.
+
+**Next step (unscheduled).** Either (a) recover the reproduction path from whatever run
+banked those 9 levels and write it into the registry, or (b) mark wa30's contribution to
+`reproducible_total_levels` as `provisional` until it can be reproduced, per the discipline's
+own provisional/counted distinction. Until one of those happens, the 183 total contains 9
+levels that do not meet the discipline's own bar.
+
+**Not blocking** the QAT head-to-head: wa30 is excluded from that corpus for a reason that
+predates and is independent of either arm.
+
 ### 2026-07-31 (security audit) — gVisor GPU passthrough is NOT usable on this host (measured)
 
 Raised by the operator while reviewing the sandbox-routing fix: *"We don't want to
