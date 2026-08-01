@@ -185,9 +185,29 @@ def build_window(game: str, k: int = WINDOW_K) -> Optional[tuple[list, list, int
             if isinstance(lbl, str) and lbl.strip().startswith("{")
             else {"action": lbl}
         )
-        trans.append(
-            Transition(prev_g, int(act.get("action", 0)), act.get("data"), g1, prev_lvl, lvl)
-        )
+        # Resolve the label to (action_id, data). `int(...)` alone is right for the games
+        # whose labels ARE integers, but ka59 emits "C:<sprite_index>" for a click and this
+        # line raised `ValueError: invalid literal for int(): 'C:1'` -- so ka59 produced NO
+        # induction window and was silently missing from every corpus built here.
+        #
+        # Deliberately FAIL LOUD on an unparseable label rather than defaulting to action 0.
+        # A Transition is the induction evidence the LLM reads; recording the wrong action
+        # for a click would not crash, it would quietly teach the model a false dynamics,
+        # which is far worse than a missing game.
+        hook = getattr(ad, "label_to_action_data", None)
+        raw_action = act.get("action", 0)
+        if hook is not None and isinstance(raw_action, str):
+            act_id, act_data = hook(env, raw_action)
+        else:
+            try:
+                act_id, act_data = int(raw_action), act.get("data")
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    f"{game}: cannot parse action label {raw_action!r} into (action, data). "
+                    "The game's GameAdapter needs a `label_to_action_data` hook -- see "
+                    "ka59's, which maps 'C:<i>' to (6, {x,y})."
+                ) from exc
+        trans.append(Transition(prev_g, act_id, act_data, g1, prev_lvl, lvl))
         prev_g, prev_lvl = g1, lvl
     if _select_levelup_window is not None:
         window = _select_levelup_window(trans, k)
