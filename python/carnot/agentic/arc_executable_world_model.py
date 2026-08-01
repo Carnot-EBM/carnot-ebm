@@ -2410,9 +2410,119 @@ def _rle_delta_compact(g0: np.ndarray, g1: np.ndarray) -> str:
     return " ".join(runs) if runs else "(no change)"
 
 
+# Characters, not tokens, because that is what this module can count without loading a
+# tokenizer. ~4 chars/token puts 40,000 chars near 10,000 tokens, against a REAL prompt budget of
+# 16,384 (n_ctx 81920, shared 4-way under kv_unified, minus max_tokens 4096). Deliberately a
+# backstop rather than a target: the measured worst case is ~5,000 chars, so this should never
+# bind. It exists so a future game with far larger deltas degrades by dropping the least
+# informative transitions instead of overflowing the context pool.
+_INDUCE_TRANSITION_CHAR_BUDGET = 40000
+
+
+def _transition_salience_key(t: Transition) -> tuple:
+    """Ordering key for WHICH transitions to keep when the char budget forces a cut.
+
+    Mage-VL selects patches by residual energy -- how much a region actually moved -- rather than
+    by position. The analogue here is that a transition teaches the model something only insofar
+    as it is not already explained by one already shown, so the rank is by NOVELTY of the
+    (action, change-shape) pair rather than by arrival order. `changed[:6]` is arrival order,
+    which is the thing being replaced.
+
+    Returns a sort key; the caller dedupes on the leading signature. Kept deliberately cheap --
+    grid comparison, no encoding -- because it runs on every induce call.
+    """
+
+    diff = np.asarray(t.grid) != np.asarray(t.next_grid)
+    n_changed = int(diff.sum())
+    rows = np.flatnonzero(diff.any(axis=1)) if diff.ndim == 2 else np.array([])
+    cols = np.flatnonzero(diff.any(axis=0)) if diff.ndim == 2 else np.array([])
+    span = (
+        (int(rows[-1] - rows[0]) + 1 if rows.size else 0),
+        (int(cols[-1] - cols[0]) + 1 if cols.size else 0),
+    )
+    return (int(t.action), n_changed, span)
+
+
+def _select_transitions_for_prompt(
+    changed: list[Transition],
+    noop: list[Transition],
+    *,
+    k: Optional[int] = None,
+    char_budget: Optional[int] = None,
+) -> list[Transition]:
+    """Choose the transitions the induce prompt shows.
+
+    ORDER OF PREFERENCE, and each step exists for a measured reason:
+
+      1. Every CHANGED transition, in observation order. Observation order is kept because the
+         prompt reads as a narrative of what the agent did, and reordering it would imply a
+         sequence the agent never took.
+      2. Up to two NO-OPS. Unchanged from before: a couple of inert actions tell the model the
+         game HAS inert actions, and more than a couple is just budget.
+      3. If and only if the result exceeds the char budget, drop the LEAST NOVEL changed
+         transitions -- those whose (action, change-shape) signature is already represented --
+         rather than simply truncating. Truncation is what `changed[:k-2]` did.
+
+    An explicit `k` still caps the count, so every existing caller and test that pins one keeps
+    exactly its old behaviour.
+    """
+
+    if k is None:
+        # THE WIRING that REQ-ARC-FCP-5699-23 was missing: the live prompt now reads the same
+        # resolver the diagnostics have been reading since that REQ shipped.
+        k = _induce_transitions_k()
+    budget = _INDUCE_TRANSITION_CHAR_BUDGET if char_budget is None else int(char_budget)
+
+    keep_noop = noop[:2]
+    if k is not None:
+        # LITERALLY the historical expression, `changed[: k - 2] + noop[:2]`, and it must stay
+        # literal. The obvious "improvement" -- reserving only as many slots as there are no-ops,
+        # `changed[: k - len(keep_noop)]` -- is a BEHAVIOUR CHANGE on any game with no inert
+        # actions: tn36 and tu93 have 25 changed and 0 no-ops, so it yields 8 changed where the
+        # old code yielded 6. That silently makes `k=8` mean something new and destroys the A/B
+        # switch this parameter exists to provide. Written wrong first, caught by comparing
+        # against the shipped renderer rather than against the new one.
+        return changed[: max(0, int(k) - 2)] + keep_noop
+
+    selected = list(changed)
+
+    # Cheap upper bound on cost: the delta encoding dominates, so estimate from it directly
+    # rather than rendering the whole block repeatedly.
+    def _cost(t: Transition) -> int:
+        try:
+            return len(_rle_delta_compact(t.grid, t.next_grid))
+        except Exception:  # noqa: BLE001 - a cost estimate must never break the prompt
+            return 0
+
+    total = sum(_cost(t) for t in selected)
+    if total > budget and selected:
+        # Over budget: keep first occurrence of each signature, then re-add the rest in
+        # observation order until the budget is spent. Never drops below one transition.
+        seen: set[tuple] = set()
+        primary: list[Transition] = []
+        secondary: list[Transition] = []
+        for t in selected:
+            sig = _transition_salience_key(t)
+            (primary if sig not in seen else secondary).append(t)
+            seen.add(sig)
+        kept: list[Transition] = []
+        spent = 0
+        for t in primary + secondary:
+            c = _cost(t)
+            if kept and spent + c > budget:
+                continue
+            kept.append(t)
+            spent += c
+        # Restore observation order: selection is by novelty, presentation is chronological.
+        order = {id(t): i for i, t in enumerate(selected)}
+        selected = sorted(kept, key=lambda t: order[id(t)])
+
+    return selected + keep_noop
+
+
 def _transitions_block(
     trans: list[Transition],
-    k: int = 8,
+    k: Optional[int] = 8,
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
     hud_mask: Optional[np.ndarray] = None,
@@ -2454,7 +2564,7 @@ def _transitions_block(
 
     changed = [t for t in trans if _is_changed(t)]
     noop = [t for t in trans if not _is_changed(t)]
-    sample = changed[: k - 2] + noop[:2]
+    sample = _select_transitions_for_prompt(changed, noop, k=k)
     out = []
     if sample:
         out.append(
@@ -2631,15 +2741,67 @@ _L2_CODEONLY_DIRECTIVE = (
 )
 
 
-def _induce_transitions_k() -> int:
-    """REQ-ARC-FCP-5699-23: DEV-ONLY override (unset in production -- returns 8, the
-    pre-existing _transitions_block/induce_prompt default, byte-identical behavior). Lets a
-    diagnostic run test whether showing the LLM more per-action-type examples reduces the
-    literal-coordinate-memorization pattern REQ-ARC-FCP-5699-22 found under the default cap."""
+def _induce_transitions_k() -> Optional[int]:
+    """How many transitions the induce prompt shows. `None` means ALL of them (the default since
+    2026-08-01). An int caps the sample at `changed[:k-2] + noop[:2]`, the historical shape.
+
+    IT WAS 8, AND -- WORSE -- IT WAS NOT WIRED. REQ-ARC-FCP-5699-22 found that the cap "starves
+    the dynamics half to roughly one example per action type, producing hardcoded-literal-
+    coordinate memorization instead of general rules". REQ-ARC-FCP-5699-23 responded by adding
+    this resolver and `CARNOT_ARC_INDUCE_TRANSITIONS_K` so a diagnostic could test raising it.
+    But NOTHING ON THE LIVE PATH EVER CALLED IT: `induce_prompt` carried a literal `k: int = 8`,
+    and the only callers of this function were `python/carnot/experiment_*.py`. So the knob moved
+    the prompt for experiments and did nothing whatsoever for the agent -- the diagnosis landed,
+    the instrument was built, and the fix never reached the thing being diagnosed. It is wired
+    now, via `induce_prompt(k=None)` -> `_select_transitions_for_prompt`.
+
+    WHY THE DEFAULT IS NOW "ALL" (measured 2026-08-01; prompted by Mage-VL, arXiv 2607.24904).
+    That paper's video result is that once you encode an anchor frame plus DELTAS for the rest,
+    subsampling frames stops being necessary -- it keeps every frame at ~1/8 the tokens and gains
+    accuracy. This module already did the first half: `_transitions_block` emits ONE full grid
+    plus per-transition deltas. It then subsampled anyway, discarding 17 of 25 transitions.
+
+    The cap was correct when written -- before `_rle_grid`, a SINGLE 64x64 transition overflowed
+    the budget. After the run-length fixes it is not. Rendering ALL transitions instead of 8,
+    measured on the six captured games:
+
+        game   n   changed   k=8 chars   ALL chars   ratio
+        ft09  25         6       4,046       4,046   1.00x    <- already showed everything
+        lp85  25         2       4,064       4,064   1.00x    <- already showed everything
+        sc25  25         7       2,557       2,718   1.06x
+        tn36  25        25       3,218       5,023   1.56x
+        tu93  25        25       2,532       4,924   1.94x
+                                             TOTAL   1.24x
+
+    Worst case ~5,000 chars, about 1,255 tokens, against a 16,384-token prompt budget. The cap
+    was discarding 68% of the evidence to save roughly 4% of a budget nothing was near; the
+    prompt uses under 8% of what is available.
+
+    WHAT THIS DOES *NOT* CLAIM. Action coverage was checked and was NOT being lost -- `changed[:6]`
+    already covers every distinct action on all six games, so the stronger story ("whole actions
+    were hidden from the model") is false and is not being told. What the extra transitions buy
+    is more examples of the SAME actions, which matters for a positional mechanic (tn36 is 25
+    clicks whose effect depends on WHERE you click, of which 6 were shown) and is exactly the
+    starvation REQ-5699-22 described. Whether it actually improves induction is an empirical
+    question this change makes measurable; the token arithmetic alone does not settle it.
+
+    `CARNOT_ARC_INDUCE_TRANSITIONS_K=8` restores the previous prompt byte-for-byte.
+    """
     import os
 
     override = os.environ.get("CARNOT_ARC_INDUCE_TRANSITIONS_K")
-    return int(override) if override else 8
+    if override is None:
+        return None
+    text = str(override).strip().lower()
+    if text in {"all", "none", ""}:
+        return None
+    try:
+        value = int(text)
+    except (TypeError, ValueError):
+        return None
+    # A non-positive cap would render an empty transitions block -- an induce prompt with no
+    # evidence at all. Treat it as "all" rather than as "show nothing".
+    return value if value > 0 else None
 
 
 def _object_perception_on() -> bool:
@@ -2686,7 +2848,10 @@ def induce_prompt(
     cell: int,
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
-    k: int = 8,
+    # `None` -> `_induce_transitions_k()`, which is "all" as of 2026-08-01. This was a literal
+    # `8` that never consulted that resolver at all, so REQ-ARC-FCP-5699-23's knob moved the
+    # prompt for diagnostics and did nothing for the live agent. An explicit int still caps.
+    k: Optional[int] = None,
     include_playbook_exemplars: bool | str = False,
     hud_mask: Optional[np.ndarray] = None,
     hud_mask_enabled: Optional[bool] = None,

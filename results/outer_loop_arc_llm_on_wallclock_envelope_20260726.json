@@ -209,6 +209,22 @@
         "reason": "The drift is one line: os.environ.setdefault(\"CARNOT_ARC_GENERATOR_CUDA_GPU\", \"1\") -> \"1,0\", enabling the two-GPU layer split on FUTURE runs of this harness, plus its explanatory comment. This harness PRODUCED the rows summarised here; a change to which GPU it will use next time cannot alter rows already written.",
         "why_not_rebuilt": "No rebuild_command exists: this artifact came from a multi-hour live GPU measurement, not a deterministic analyser. Re-running would produce a NEW measurement, not a reproduction.",
         "evidence": "The three sibling artifacts that DO have rebuild commands and share this exact dependency were rebuilt in this same commit and moved 0 substantive values."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
+        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
+        "acknowledged_on": "2026-07-31",
+        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
+        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
+        "acknowledged_on": "2026-07-31",
+        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+        "evidence": "ARGUED FROM REACHABILITY, NOT PROVEN BY REBUILD -- this artifact registers no rebuild_command, so the stronger proof available to its siblings is not available here and is not claimed. The change touches only the induce-prompt path and this artifact's producing code reaches none of it. Corroborating: the four sibling artifacts that DO carry a rebuild_command were rebuilt against this exact source revision and moved ZERO substantive leaves; every difference was provenance bookkeeping a rebuild deletes."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."

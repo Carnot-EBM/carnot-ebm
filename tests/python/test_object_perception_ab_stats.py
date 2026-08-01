@@ -213,10 +213,18 @@ def _synthetic_window(n: int = 12) -> list[e3.Transition]:
     return rows
 
 
+# The induce prompt's default became "show every transition" on 2026-08-01 (REQ-ARC-FCP-5699-23
+# rewired + default flipped). These tests are ABOUT the shown/held split, and a split only exists
+# when something is withheld -- so they pin the cap that produced the split they assert, rather
+# than inheriting a default whose whole purpose is now to withhold nothing. 8 is the historical
+# production cap these expectations were measured against.
+_PRODUCTION_K_AT_MEASUREMENT = 8
+
+
 class TestHeldoutSplitAgainstTheRealPrompt:
     def test_default_k_shows_six_of_twelve_and_holds_out_the_rest(self) -> None:
         window = _synthetic_window(12)
-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
         assert len(shown) + len(held) == 12
         # k=8 -> changed[:6] + noop[:2]; this window is all-changing, so 6 are shown.
@@ -241,7 +249,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
                 after = before.copy()
                 after[i % 8, (i * 3) % 8] = i + 2
                 window.append(_t(before, after, action=(i % 5) + 1))
-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
         assert shown != list(range(len(shown))), (
             "with no-ops present the shown set must not be a positional prefix, or this test "
@@ -257,7 +265,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
 
     def test_every_heldout_line_is_genuinely_absent_from_the_prompt(self) -> None:
         window = _synthetic_window(12)
-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         _shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
         assert held, "the split must find something held out on a 12-transition window"
         for i in held:
@@ -265,7 +273,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
 
     def test_every_shown_line_is_genuinely_present_in_the_prompt(self) -> None:
         window = _synthetic_window(12)
-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         shown, _held = split_shown_heldout(e3, "zz00", window, 1, prompt)
         for i in shown:
             assert transition_prompt_line(e3, window[i]) in prompt
@@ -276,7 +284,7 @@ class TestHeldoutSplitAgainstTheRealPrompt:
         # THE exp5831 defect, pinned: a window the prompt shows entirely yields NO held-out
         # transition, so any accuracy on it is training accuracy.
         window = _synthetic_window(4)
-        prompt = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        prompt = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         shown, held = split_shown_heldout(e3, "zz00", window, 1, prompt)
         assert len(shown) == 4
         assert held == []
@@ -284,9 +292,9 @@ class TestHeldoutSplitAgainstTheRealPrompt:
     def test_object_block_changes_the_prompt_but_not_the_split(self, monkeypatch) -> None:
         window = _synthetic_window(12)
         monkeypatch.delenv("CARNOT_ARC_OBJECT_PERCEPTION", raising=False)
-        p_off = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        p_off = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "1")
-        p_on = e3.induce_prompt("zz00", window, 1, k=e3._induce_transitions_k())
+        p_on = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         assert p_on != p_off
         assert p_on.startswith(p_off)
         assert "OBJECT STRUCTURE" in p_on

@@ -1310,7 +1310,25 @@
         "sha256": "e51fec6a88846c281cc5b79715c4a12b0ca567764c08830b42cede4de9297d60"
       }
     ],
-    "what_this_block_does_and_does_not_certify": "artifact_freshness_lint compares these sha256s against the files on disk, so a later edit to any of them marks this artifact STALE. That is a statement about the AGGREGATION and about the gemma arm, both of which ran against the bytes recorded here. It is NOT a statement about the qwen arm: see code_provenance -- arc_executable_world_model.py was rewritten mid-run, the qwen arm imported the earlier bytes, and those bytes were never snapshotted. A 'fresh' verdict from the lint must not be read as 'both arms ran identical code'. They did not."
+    "what_this_block_does_and_does_not_certify": "artifact_freshness_lint compares these sha256s against the files on disk, so a later edit to any of them marks this artifact STALE. That is a statement about the AGGREGATION and about the gemma arm, both of which ran against the bytes recorded here. It is NOT a statement about the qwen arm: see code_provenance -- arc_executable_world_model.py was rewritten mid-run, the qwen arm imported the earlier bytes, and those bytes were never snapshotted. A 'fresh' verdict from the lint must not be read as 'both arms ran identical code'. They did not.",
+    "freshness_acknowledgements": [
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
+        "acknowledged_on": "2026-07-31",
+        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
+        "acknowledged_on": "2026-07-31",
+        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
+      }
+    ]
   },
   "question": "WHICH INDUCER? base Qwen3.6-27B vs gemma-4-31B-it on world-model induction quality, matched on quantisation (both Q4_K_M, verified from GGUF general.file_type==15), corpus (exp5764's 13 games), mechanism (exp5726.run_reason_cell_budget at budget 16384), repeats (3/game), n_ctx (32768), and card (GPU 1, sequential, one server at a time). Decides which model the ARC induction path should use.",
   "qwen_zero_reason_split": {
