@@ -1,0 +1,31 @@
+{
+ "written": "BEFORE any masked per-game delta or masked p-value was computed or displayed",
+ "what_this_is": "Q2 is a RE-ANALYSIS of a PRE-REGISTERED primary under a corrected instrument. It is not a new hypothesis and it is not a second bite: the hypothesis, the metric, the clustering, the test and the alpha are all fixed by results/arc_object_perception_ab_change_fidelity_20260801/preregistration.json and are NOT re-chosen here. The only thing that changes is whether the HUD band is inside the graded comparison.",
+ "test_fixed_in_advance_by_the_original_preregistration": {
+  "metric": "change_fidelity on the held-out tail",
+  "clustering": "GAME, not attempt -- the 3 replicates within a game are averaged into ONE per-game mean before pairing, so 20 games is 20 independent units, not 60",
+  "test": "exact two-sided paired sign test over games, ties dropped",
+  "alpha": 0.05,
+  "interval": "percentile bootstrap over games, 20000 resamples, alpha 0.05",
+  "arms": "control = CARNOT_ARC_OBJECT_PERCEPTION unset; treatment = CARNOT_ARC_OBJECT_PERCEPTION=1"
+ },
+ "min_reachable_two_sided_p_STATED_BEFORE_LOOKING": {
+  "if_all_20_games_are_discordant": 1.9073486328125e-06,
+  "formula": "2 * 0.5**n_discordant, capped at 1.0",
+  "at_the_unmasked_discordance_of_19": 3.814697265625e-06,
+  "why_this_is_stated_first": "an exact sign test on a small number of games has a hard floor, and quoting a p without it lets a reader mistake 'the smallest value this test can produce' for 'strong evidence'. Masking can only REDUCE the number of discordant games (it collapses per-game means toward each other whenever it deletes the cells that differed), so the masked floor can only be HIGHER than the unmasked one -- i.e. the masked test is weaker by construction, before any data is seen.",
+  "consequence_if_masking_creates_ties": "every game whose masked delta is exactly 0.0 is DROPPED as a tie, which raises the floor. A masked p that is larger than the unmasked p is therefore NOT by itself evidence the effect went away; the number of discordant pairs has to be read next to it."
+ },
+ "what_would_count_as_the_effect_SURVIVING": "same sign (positive mean delta), p < 0.05, and a bootstrap CI excluding 0 -- the same bar the unmasked analysis had to clear. Anything weaker is reported as weakened or unestablished, not as a null.",
+ "what_would_count_as_the_effect_DYING": "the direction flips, or p >= 0.05 with a CI spanning 0. In that case the honest reading is that the unmasked effect was at least partly HUD bookkeeping, which is exactly what this re-score exists to find out.",
+ "unmasked_values_already_known_at_the_time_this_was_written": {
+  "n_positive": 15,
+  "n_negative": 4,
+  "n_ties": 1,
+  "p_two_sided": 0.01921082,
+  "mean_delta": 0.07208408,
+  "bootstrap_ci": [0.01022333, 0.13160043],
+  "why_disclosed": "these are the numbers the re-analysis is being compared against and they were published before this pass ran. Pretending they were unknown would be a false blind."
+ },
+ "no_multiplicity_laundering": "The masked arms are NOT six independent chances at a significant primary. ONE arm carries the headline (default mask, guard verdict computed on the whole window); the others are a sensitivity on the guard's corpus, an arm that folds in bands the capture artifact WITHHELD, and a diagnostic that bypasses the guard entirely. Each is labelled as such and reported whatever it says, including when it disagrees with the headline arm."
+}
