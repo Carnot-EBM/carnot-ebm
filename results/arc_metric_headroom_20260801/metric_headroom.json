@@ -1,0 +1,1064 @@
+{
+ "acceptance_gate_at_least_one_metric_has_headroom": true,
+ "acceptance_gate_passed": true,
+ "acceptance_gate_recommended_metric_separates_candidates": true,
+ "acceptance_gate_reproduces_frozen_run_numbers": true,
+ "acceptance_gate_split_provenance_verified": true,
+ "agreement_with_frozen_run": {
+  "identical": true,
+  "mismatches": [],
+  "n_compared": 117,
+  "n_mismatched": 0,
+  "what_this_checks": "the three held-out channels the frozen 2026-07-31 scoring already recorded re-derive EXACTLY from the same completions through the same shipped WorldModelVerifier, on the split re-proven against the frozen prompt text"
+ },
+ "corpus": {
+  "candidate_disposition": {
+   "n_undetermined_worker_timeout": 1,
+   "n_unrunnable_no_engine": 8,
+   "why_undetermined_is_not_a_zero": "ft09 candidate 5 produced an engine that does not terminate -- the same candidate that wedged the generation loop for 13 minutes on 2026-07-31. Nothing about it was measured, so it is None everywhere and leaves both numerator and denominator. `unrunnable:*` is different: no engine exists, which is a genuine zero on every similarity metric."
+  },
+  "games": [
+   "ft09",
+   "lp85",
+   "sc25",
+   "tn36",
+   "tu93",
+   "vc33"
+  ],
+  "n_candidates_on_stall_path": 40,
+  "n_candidates_total": 48,
+  "postbank_games_excluded_from_headline": [
+   "vc33"
+  ],
+  "source": "results/arc_induce_bestofn_20260731 (frozen 2026-07-31, not modified here)",
+  "stall_games": [
+   "ft09",
+   "lp85",
+   "sc25",
+   "tn36",
+   "tu93"
+  ],
+  "why_stall_only": "A post-bank induction at transition_count=1 passes both gates near-trivially and has 0 held-out rows, so including vc33 would flatter every metric. Same partition score_bon.py measured rather than assumed."
+ },
+ "cross_references": {
+  "experiment_6018": "results/experiment_6018_object_perception_heldout_ab.json",
+  "frozen_corpus": "results/arc_induce_bestofn_20260731/bestofn_scored.json",
+  "object_segmentation_source": "python/carnot/agentic/arc_color_blob_salience.py:connected_color_blobs/object_hash",
+  "proven_split": "results/arc_induce_bestofn_20260731/split.json",
+  "shipped_metric_source": "python/carnot/agentic/arc_executable_world_model.py:VerifyResult/WorldModelVerifier.score",
+  "subprocess_isolation_precedent": "python/carnot/agentic/arc_engine_static_validation.py:dry_run_defects"
+ },
+ "duration_s": 316.972,
+ "exp6018_leak_prompt_control_is_the_decisive_independent_evidence": {
+  "exp6018_own_field_metric_demonstrably_moves": false,
+  "max_cell_recall": 0.442505,
+  "max_exact_match_accuracy": 0.0,
+  "n_cells": 28,
+  "n_cells_with_nonzero_cell_recall": 12,
+  "n_cells_with_nonzero_exact_match_accuracy": 0,
+  "what_exp6018_did": "raised k past the window so EVERY held-out transition was shown in the induction prompt, then graded on exactly the indices the production k=8 prompt withholds. The model was handed the answers.",
+  "why_this_settles_it": "This is the objection-killer, and it is exp6018's own recorded number rather than anything this phase computed. The strongest case against the present recommendation is that on THIS 5-game corpus exact-match actually has MORE spread than change_fidelity -- 52 discordant within-game candidate pairs across 4 gradable games against 39 across 3 -- so disqualifying it looks like a threshold chosen to reach a conclusion. But exp6018 ran the maximal possible treatment, showing the inducer the very transitions it would be graded on, and held-out exact-match was 0.0 in all 28 cells. An instrument that does not move when the answer is placed in the prompt cannot detect a representation change; cell_recall moved in 12 of the same 28 cells. The spread exact-match shows on this corpus is therefore not the instrument working -- the no-op decomposition identifies what it is instead."
+ },
+ "experiment": "arc_metric_headroom_20260801",
+ "flag_remains_default_off": {
+  "principle": "CARNOT_ARC_OBJECT_PERCEPTION is untouched by this phase. Only the operator flips a default, and this phase measured instruments rather than the treatment, so it produced no evidence that could justify one",
+  "value": true
+ },
+ "harness_sha256": {
+  "build_artifact.py": "44e99a0120ed8c146439addbaa175839d892ba6a0ee37266b4745efcd54658ef",
+  "metric_worker.py": "869e5bdede477689bb7a3721c4e333f297f0f6437c33d9d901a184d7430f6f9a",
+  "positive_control.py": "d5e8f23e475d8aba45d044c9edbeec233f090784c09ed18c5b90add8abc17d51",
+  "score_metrics.py": "c3d7cc85e2755af1124d6470633fcc303decc407ba74b07d5a93cd16b28f3bf7"
+ },
+ "harness_sha256_at_census_time": {
+  "build_artifact.py": "c9d2f8f9b8fdcfc86b99273bf17111b924f0ca54f44f6d1fae6a1153075ee759",
+  "metric_worker.py": "869e5bdede477689bb7a3721c4e333f297f0f6437c33d9d901a184d7430f6f9a",
+  "positive_control.py": "d5e8f23e475d8aba45d044c9edbeec233f090784c09ed18c5b90add8abc17d51",
+  "score_metrics.py": "c3d7cc85e2755af1124d6470633fcc303decc407ba74b07d5a93cd16b28f3bf7"
+ },
+ "has_headroom": true,
+ "honest_verdict": "complete_graded_metric_with_headroom_found_change_fidelity_39_discordant_within_game_candidate_pairs_vs_0_for_exact_match_on_change_dominated_splits_object_and_grid_metrics_disqualified_for_ranking_the_identity_engine_above_real_engines",
+ "induce_transitions_k_pinned": "8",
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "inference_substrate_note": "No model is loaded and no token is generated. Every candidate's completion text was frozen on 2026-07-31; this run extracts the engine, executes it against RECORDED transitions in a killable subprocess, and computes metrics. That is exactly the `verifier_ensemble_against_cached_candidates` substrate: the verifier scored against pre-existing (input, candidate, label) triples, no LLM in the loop. The GGUF named in model_specs is the generator that PRODUCED the frozen candidates and is NOT invoked here.",
+ "input_file_sha256": {
+  "results/arc_induce_bestofn_20260731/bestofn_scored.json": "9ab9e1d3263b88be416b9b17ceb1701117530683de5c3ab6b3573af6c65a822c",
+  "results/arc_induce_bestofn_20260731/split.json": "d600d43c6edf20b2e3af91407b3baab8d3f617acb926c989574dd6e68c725233",
+  "results/arc_metric_headroom_20260801/harness/build_artifact.py": "44e99a0120ed8c146439addbaa175839d892ba6a0ee37266b4745efcd54658ef",
+  "results/arc_metric_headroom_20260801/harness/metric_worker.py": "869e5bdede477689bb7a3721c4e333f297f0f6437c33d9d901a184d7430f6f9a",
+  "results/arc_metric_headroom_20260801/harness/score_metrics.py": "c3d7cc85e2755af1124d6470633fcc303decc407ba74b07d5a93cd16b28f3bf7",
+  "results/arc_metric_headroom_20260801/metric_scores_raw.json": "e99ace0c1c5ca6cac655582d4b3eadc5e0dec359880bb36b862037c446df209a",
+  "results/arc_metric_headroom_20260801/positive_control.json": "78ef4495f5ac708a059a65889b31b1ca2ef86b321a28598e67e69c5461d40dad",
+  "results/experiment_6018_object_perception_heldout_ab.json": "24a2f7c26c35461e7fba4e1d2d821f296b2aef37dbd2e3b39129d2dbb37fdcbe"
+ },
+ "is_this_gate_vacuous_honest_answer": "PARTLY, and the part that is not pre-registered is named here rather than left for a reader to find. The gate COULD have failed: 'no metric has headroom' was an explicitly permitted -- and arguably more important -- outcome, and it is what would have been reported if change_fidelity had floored like exact-match did. Two of the four gates are independent of the metric analysis entirely (the split reproduces the one proven on 2026-07-31, prompt sha included; and 117 of 117 re-derived values match the frozen run's own recorded numbers), and either could have failed on its own -- indeed the shipped `_induce_transitions_k()` default moving that morning is exactly the kind of thing that breaks the first one. What is NOT pre-registered: the five H-criteria were fixed after the positive control had been read. H1-H4 are properties any A/B primary must have on any corpus, and H4's threshold is derived arithmetic (2 * 0.5**1 == 1.0), not a fitted number -- but H5's 0.5 bar was chosen knowing the ladder ranges. A reader who distrusts it should apply their own; the per-metric raw `control_min_dynamic_range` is reported for that purpose, and the surviving set is unchanged for any bar from 0.14 to 1.0.",
+ "limitations": [
+  "ONE ARM. This corpus was generated with CARNOT_ARC_OBJECT_PERCEPTION at its default (off), so for the metrics this phase ADDED (object_*, changed_cell_jaccard, grid_agreement_*) the `floored in BOTH arms` question cannot be answered from this data at all. It is answered only for the six channels exp6018 itself measured in two arms, and those fields are named `exp6018_*` to keep the provenance visible. The new metrics' single-arm spread plus the positive control is the evidence offered; it is not two-arm evidence and is not presented as such.",
+  "FIVE GAMES, of which only three are gradable for change quality and only two are change-dominated. The 39 discordant within-game candidate pairs are a real count, not an estimate, but they come from 3 games. exp6018's 14-game roster is the right venue for the actual A/B and its recorded n_discordant of 12 of 14 for this metric is the number that should govern the design.",
+  "NO CAUSAL CLAIM ABOUT OBJECT PERCEPTION. This phase measures instruments, not the treatment. That all four object-OVERLAP metrics reward inertness says nothing about whether feeding an object table to the inducer helps; it says those metrics cannot be used to find out.",
+  "SC25 IS MEASURABLE BUT NOT GRADABLE. Its held-out split contains exactly one changing transition and every candidate gets it wrong, so change_fidelity is a constant 0.0 there. A roster for the A/B should require a floor on heldout_n_changing, not merely that it be non-zero.",
+  "The recommended metric is NOT new. It is `WorldModelVerifier.change_fidelity`, already shipped, already computed by exp6018 as an exploratory secondary, and already recorded there as non-degenerate. The contribution of this phase is the evidence that it should be the PRIMARY, plus the elimination of the alternatives -- not the invention of an instrument."
+ ],
+ "measurement_duration_s": {
+  "candidate_census": 307.676,
+  "positive_control": 9.293
+ },
+ "measurement_sources_unchanged_since_census": true,
+ "metrics_tried": [
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": true,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 1.0,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "mean over changing transitions of the fraction of the UNION of (cells reality changed) and (cells the engine wrote) that the engine got right -- symmetric, so a spurious write costs what a miss costs (WorldModelVerifier.change_fidelity)",
+   "distinct_values": 8,
+   "exp6018_floored_in_both_arms": false,
+   "exp6018_min_reachable_two_sided_p": 0.00048828,
+   "exp6018_n_discordant_per_game_pairs_of_14": 12,
+   "exp6018_n_distinct_cell_values_over_168_cells": 44,
+   "exp6018_test_was_possible": true,
+   "exp6018_two_arm_measured": true,
+   "failed_criteria": [],
+   "family": "cell",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 32,
+   "n_discordant_pairs_available": 39,
+   "n_gradable_games_of_5_stall": 3,
+   "n_within_game_pairs": 99,
+   "name": "change_fidelity",
+   "recommendable_as_ab_primary": true,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.127688,
+    "sc25": null,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.189844,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": false,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": true,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 1.0,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": false,
+   "definition": "mean over changing transitions of the fraction of truly-changed cells given the right value (WorldModelVerifier.cell_recall); documented as BLIND to spurious writes",
+   "distinct_values": 8,
+   "exp6018_floored_in_both_arms": false,
+   "exp6018_min_reachable_two_sided_p": 0.00048828,
+   "exp6018_n_discordant_per_game_pairs_of_14": 12,
+   "exp6018_n_distinct_cell_values_over_168_cells": 44,
+   "exp6018_test_was_possible": true,
+   "exp6018_two_arm_measured": true,
+   "failed_criteria": [
+    "H3_penalises_spurious_writes"
+   ],
+   "family": "cell",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 32,
+   "n_discordant_pairs_available": 39,
+   "n_gradable_games_of_5_stall": 3,
+   "n_within_game_pairs": 99,
+   "name": "cell_recall",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.127688,
+    "sc25": null,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.189844,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": false,
+   "H5_adequate_dynamic_range": true,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 1.0,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "fraction of the CHANGING held-out transitions predicted exactly (WorldModelVerifier.change_accuracy); None where no changing row is held out",
+   "distinct_values": 4,
+   "exp6018_floored_in_both_arms": true,
+   "exp6018_min_reachable_two_sided_p": 1.0,
+   "exp6018_n_discordant_per_game_pairs_of_14": 0,
+   "exp6018_n_distinct_cell_values_over_168_cells": 1,
+   "exp6018_test_was_possible": false,
+   "exp6018_two_arm_measured": true,
+   "failed_criteria": [
+    "H4_separates_frozen_candidates_on_2plus_games"
+   ],
+   "family": "transition_exact",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 32,
+   "n_discordant_pairs_available": 13,
+   "n_gradable_games_of_5_stall": 1,
+   "n_within_game_pairs": 99,
+   "name": "change_exact_accuracy",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": null,
+    "sc25": null,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.202245,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 0.138889,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 2,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "Jaccard between the cell-set the engine WROTE and the cell-set reality CHANGED, ignoring the values -- 'did you change the right cells'",
+   "distinct_values": 8,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "change_set",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 33,
+   "n_discordant_pairs_available": 41,
+   "n_gradable_games_of_5_stall": 3,
+   "n_within_game_pairs": 106,
+   "name": "changed_cell_jaccard",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.127688,
+    "sc25": null,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.189844,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": false,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 0.0,
+   "control_n_games_ladder_collapsed": 1,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 5,
+   "control_penalises_spurious_writes": false,
+   "definition": "COUNT of truly-changed cells predicted correctly (unnormalised, so it scales with how much the game moves; kept because exp6018 tested it)",
+   "distinct_values": 8,
+   "exp6018_floored_in_both_arms": false,
+   "exp6018_min_reachable_two_sided_p": 0.00048828,
+   "exp6018_n_discordant_per_game_pairs_of_14": 12,
+   "exp6018_n_distinct_cell_values_over_168_cells": 31,
+   "exp6018_test_was_possible": true,
+   "exp6018_two_arm_measured": true,
+   "failed_criteria": [
+    "H3_penalises_spurious_writes",
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "cell",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 39,
+   "n_discordant_pairs_available": 41,
+   "n_gradable_games_of_5_stall": 3,
+   "n_within_game_pairs": 133,
+   "name": "correct_changed_cells",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.127688,
+    "lp85": null,
+    "sc25": null,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.054526,
+   "value_max": 224.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 0.0,
+   "control_n_games_ladder_collapsed": 1,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 5,
+   "control_penalises_spurious_writes": true,
+   "definition": "fraction of ALL held-out transitions whose predicted next grid equals the observed one exactly (WorldModelVerifier.accuracy) -- THE CONTROL, and exp6018's floored primary",
+   "distinct_values": 8,
+   "exp6018_floored_in_both_arms": true,
+   "exp6018_min_reachable_two_sided_p": 1.0,
+   "exp6018_n_discordant_per_game_pairs_of_14": 0,
+   "exp6018_n_distinct_cell_values_over_168_cells": 1,
+   "exp6018_test_was_possible": false,
+   "exp6018_two_arm_measured": true,
+   "failed_criteria": [
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "transition_exact",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 39,
+   "n_discordant_pairs_available": 52,
+   "n_gradable_games_of_5_stall": 4,
+   "n_within_game_pairs": 133,
+   "name": "exact_match_accuracy",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 1.0,
+    "lp85": 1.0,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 1.0,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 0.0,
+   "control_n_games_ladder_collapsed": 1,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 5,
+   "control_penalises_spurious_writes": true,
+   "definition": "1 - normalised Hamming distance between predicted and observed next grid, over ALL held-out rows",
+   "distinct_values": 14,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "grid_distance",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 39,
+   "n_discordant_pairs_available": 79,
+   "n_gradable_games_of_5_stall": 5,
+   "n_within_game_pairs": 133,
+   "name": "grid_agreement_all",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.906327,
+    "lp85": 1.0,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.883458,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": true,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 0,
+   "control_min_dynamic_range": 0.000244,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "1 - normalised Hamming distance, over CHANGING held-out rows only",
+   "distinct_values": 12,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "grid_distance",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 33,
+   "n_discordant_pairs_available": 64,
+   "n_gradable_games_of_5_stall": 4,
+   "n_within_game_pairs": 106,
+   "name": "grid_agreement_changing",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.368037,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.779549,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": false,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 3,
+   "control_min_dynamic_range": 0.037535,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 3,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "multiset Jaccard over TRANSLATION-INVARIANT object hashes -- 'did you get the object inventory right', ignoring where each object ended up",
+   "distinct_values": 12,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H2_does_not_reward_inertness",
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "object",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 33,
+   "n_discordant_pairs_available": 64,
+   "n_gradable_games_of_5_stall": 4,
+   "n_within_game_pairs": 106,
+   "name": "object_inventory_jaccard",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.511163,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.641316,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": false,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 3,
+   "control_min_dynamic_range": 0.000401,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "mean over changing transitions of the pixel-count-weighted F1 of best same-colour object-to-object pixel-IoU between the predicted and observed next grid -- GRADED per-object correctness (an object off by one pixel scores ~0.97, not 0)",
+   "distinct_values": 12,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H2_does_not_reward_inertness",
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "object",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 33,
+   "n_discordant_pairs_available": 64,
+   "n_gradable_games_of_5_stall": 4,
+   "n_within_game_pairs": 106,
+   "name": "object_match_iou",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.368037,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.779549,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": false,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 3,
+   "control_min_dynamic_range": 0.000372,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "the recall half of object_match_iou (true objects matched), blind to invented objects",
+   "distinct_values": 12,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H2_does_not_reward_inertness",
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "object",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 33,
+   "n_discordant_pairs_available": 64,
+   "n_gradable_games_of_5_stall": 4,
+   "n_within_game_pairs": 106,
+   "name": "object_match_recall",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.368037,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.779549,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": false,
+   "H3_penalises_spurious_writes": true,
+   "H4_separates_frozen_candidates_on_2plus_games": true,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 3,
+   "control_min_dynamic_range": 0.037535,
+   "control_n_games_ladder_collapsed": 0,
+   "control_n_games_ladder_resolved": 3,
+   "control_n_games_measurable": 4,
+   "control_penalises_spurious_writes": true,
+   "definition": "multiset Jaccard over (object hash, bbox top-left) -- object inventory AND position, all-or-nothing per object",
+   "distinct_values": 12,
+   "exp6018_floored_in_both_arms": null,
+   "exp6018_min_reachable_two_sided_p": null,
+   "exp6018_n_discordant_per_game_pairs_of_14": null,
+   "exp6018_n_distinct_cell_values_over_168_cells": null,
+   "exp6018_test_was_possible": null,
+   "exp6018_two_arm_measured": false,
+   "failed_criteria": [
+    "H2_does_not_reward_inertness",
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "object",
+   "higher_is_better": true,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 33,
+   "n_discordant_pairs_available": 64,
+   "n_gradable_games_of_5_stall": 4,
+   "n_within_game_pairs": 106,
+   "name": "object_positional_jaccard",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": 0.511163,
+    "sc25": 1.0,
+    "tn36": 1.0
+   },
+   "spearman_vs_exact_match_pooled": 0.641316,
+   "value_max": 1.0,
+   "value_min": 0.0
+  },
+  {
+   "H1_resolves_quality_ladder": true,
+   "H2_does_not_reward_inertness": false,
+   "H3_penalises_spurious_writes": false,
+   "H4_separates_frozen_candidates_on_2plus_games": false,
+   "H5_adequate_dynamic_range": false,
+   "control_identity_engine_outranks_a_real_engine_on_n_games": 4,
+   "control_min_dynamic_range": 0.0,
+   "control_n_games_ladder_collapsed": 1,
+   "control_n_games_ladder_resolved": 4,
+   "control_n_games_measurable": 5,
+   "control_penalises_spurious_writes": false,
+   "definition": "COUNT of cells the engine wrote that are not the observed value; minimised trivially by an engine that writes nothing, which is why it is reported and not recommended",
+   "distinct_values": 3,
+   "exp6018_floored_in_both_arms": false,
+   "exp6018_min_reachable_two_sided_p": 0.00012207,
+   "exp6018_n_discordant_per_game_pairs_of_14": 14,
+   "exp6018_n_distinct_cell_values_over_168_cells": 63,
+   "exp6018_test_was_possible": true,
+   "exp6018_two_arm_measured": true,
+   "failed_criteria": [
+    "H2_does_not_reward_inertness",
+    "H3_penalises_spurious_writes",
+    "H4_separates_frozen_candidates_on_2plus_games",
+    "H5_adequate_dynamic_range"
+   ],
+   "family": "cell",
+   "higher_is_better": false,
+   "is_constant_across_candidates": false,
+   "is_hard_floored_all_zero": false,
+   "n_candidates_measured": 39,
+   "n_discordant_pairs_available": 13,
+   "n_gradable_games_of_5_stall": 1,
+   "n_within_game_pairs": 133,
+   "name": "spurious_changed_cells",
+   "recommendable_as_ab_primary": false,
+   "separates_candidates": true,
+   "spearman_vs_exact_match_per_game": {
+    "ft09": null,
+    "lp85": null,
+    "sc25": null,
+    "tn36": null
+   },
+   "spearman_vs_exact_match_pooled": null,
+   "value_max": 99.0,
+   "value_min": 0.0
+  }
+ ],
+ "milestone": "outer-loop 2026-08-01",
+ "min_reachable_two_sided_p": 0.00048828,
+ "min_reachable_two_sided_p_basis": "exp6018's OWN two-arm run already computed change_fidelity as an exploratory secondary on its 14-game roster and recorded n_discordant = 12 of 14 per-game pairs, test_was_possible = True, min reachable two-sided p = 2 * 0.5**12 = 0.00048828. That is the figure that matters for the A/B design, because it is measured on the roster the A/B actually uses. On THIS phase's 5-game stall corpus the same metric grades 3 games, so its own min reachable p here is only 2 * 0.5**3 = 0.25 -- reported separately as `recommended_metric_on_this_corpus` and NOT used as the headline, because a 5-game corpus is not the A/B roster.",
+ "missing_verifier_gaps": [
+  {
+   "candidate_design": "diff the g0 and g1 partitions by translation-invariant hash to get the CHANGED object set, then score the prediction's best same-colour pixel-IoU against that set only; identity would score 0 by construction, as it does on change_fidelity",
+   "failure_mode": "all four whole-partition object metrics rank the identity engine above a real-but-bad engine on 3 of 4 measurable games, because a 64x64 ARC frame's partition is dominated by static background an inert engine reproduces perfectly",
+   "gap": "no held-out metric scores object correctness RESTRICTED to the objects the dynamics touch",
+   "missing_discriminator": "the sub-partition of objects that appeared, vanished, moved or recoloured between g0 and g1 -- scored per changing object rather than over the whole frame, so background cannot pay for the score",
+   "priority": "medium -- change_fidelity already unblocks the A/B, so this is about getting object-granular resolution, not about unblocking",
+   "status": "open"
+  }
+ ],
+ "model_specs": [
+  {
+   "invoked_by_this_experiment": false,
+   "name": "Qwen3.5-9B-MTP-GGUF",
+   "role": "generator that produced the 48 frozen candidates on 2026-07-31",
+   "why_listed": "provenance of the candidates being re-scored, not a compute claim by this run"
+  }
+ ],
+ "n_discordant_pairs_available": 39,
+ "n_metrics_recommendable": 1,
+ "n_metrics_tried": 13,
+ "noop_credit_decomposition": {
+  "ft09": {
+   "change_dominated": false,
+   "change_fidelity_distinct_values": [
+    0.0,
+    0.236842,
+    0.473684
+   ],
+   "every_candidate_got_zero_changing_rows_exact": true,
+   "exact_match_distinct_values": [
+    0.2,
+    0.6,
+    0.8
+   ],
+   "exact_match_variation_is_purely_noop_credit": true,
+   "exact_match_varies": true,
+   "heldout_n_changing": 4,
+   "heldout_n_noop": 16,
+   "n_changes_correct_across_candidates": [
+    0
+   ],
+   "n_heldout": 20
+  },
+  "lp85": {
+   "change_dominated": false,
+   "change_fidelity_distinct_values": [],
+   "every_candidate_got_zero_changing_rows_exact": true,
+   "exact_match_distinct_values": [
+    1.0
+   ],
+   "exact_match_variation_is_purely_noop_credit": false,
+   "exact_match_varies": false,
+   "heldout_n_changing": 0,
+   "heldout_n_noop": 18,
+   "n_changes_correct_across_candidates": [
+    0
+   ],
+   "n_heldout": 18
+  },
+  "sc25": {
+   "change_dominated": false,
+   "change_fidelity_distinct_values": [
+    0.0
+   ],
+   "every_candidate_got_zero_changing_rows_exact": true,
+   "exact_match_distinct_values": [
+    0.928571
+   ],
+   "exact_match_variation_is_purely_noop_credit": false,
+   "exact_match_varies": false,
+   "heldout_n_changing": 1,
+   "heldout_n_noop": 13,
+   "n_changes_correct_across_candidates": [
+    0
+   ],
+   "n_heldout": 14
+  },
+  "tn36": {
+   "change_dominated": true,
+   "change_fidelity_distinct_values": [
+    0.235294,
+    0.588235,
+    1.0
+   ],
+   "every_candidate_got_zero_changing_rows_exact": false,
+   "exact_match_distinct_values": [
+    0.235294,
+    0.588235,
+    1.0
+   ],
+   "exact_match_variation_is_purely_noop_credit": false,
+   "exact_match_varies": true,
+   "heldout_n_changing": 17,
+   "heldout_n_noop": 0,
+   "n_changes_correct_across_candidates": [
+    4,
+    10,
+    17
+   ],
+   "n_heldout": 17
+  },
+  "tu93": {
+   "change_dominated": true,
+   "change_fidelity_distinct_values": [
+    0.0,
+    0.112292,
+    0.61385
+   ],
+   "every_candidate_got_zero_changing_rows_exact": true,
+   "exact_match_distinct_values": [
+    0.0
+   ],
+   "exact_match_variation_is_purely_noop_credit": false,
+   "exact_match_varies": false,
+   "heldout_n_changing": 19,
+   "heldout_n_noop": 0,
+   "n_changes_correct_across_candidates": [
+    0
+   ],
+   "n_heldout": 19
+  }
+ },
+ "not_submitted": {
+  "principle": "ARC/Kaggle submission is operator-only; this run plays no scored or online game and reaches no submission gate",
+  "value": true
+ },
+ "positive_control": {
+  "corruption_ladder": [
+   0.0,
+   0.05,
+   0.1,
+   0.25,
+   0.5,
+   0.75,
+   1.0
+  ],
+  "duration_s": 9.293,
+  "exact_match_ladder_by_game": {
+   "ft09": [
+    1.0,
+    0.8,
+    0.8,
+    0.8,
+    0.8,
+    0.8,
+    0.8
+   ],
+   "lp85": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "sc25": [
+    1.0,
+    0.928571,
+    0.928571,
+    0.928571,
+    0.928571,
+    0.928571,
+    0.928571
+   ],
+   "tn36": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0
+   ],
+   "tu93": [
+    1.0,
+    0.263158,
+    0.263158,
+    0.263158,
+    0.157895,
+    0.0,
+    0.0
+   ]
+  },
+  "headline": "On the two no-op-dominated games the control metric drops from 1.0 to the IDENTITY engine's score the moment 5% of changed cells are corrupted and never moves again -- a 5%-wrong engine and a 100%-wrong engine are the same number. change_fidelity spans the full [0,1] monotonically over the same ladder on every game whose changed-cell sets are large enough to corrupt fractionally.",
+  "known_artifact_of_the_ladder": "tn36's held-out transitions change roughly one cell each, so round(p * 1) is 0 for every p below 0.75 and the ladder cannot bite until then -- which is why tn36 shows 2 distinct values for EVERY metric including change_fidelity. That is a property of the game's tiny change sets, not of the metrics, and it is recorded rather than smoothed over.",
+  "n_reference_arms_per_game": 12,
+  "ran": true,
+  "recommended_metric_ladder_by_game": {
+   "ft09": [
+    1.0,
+    0.947368,
+    0.894737,
+    0.736842,
+    0.5,
+    0.263158,
+    0.0
+   ],
+   "sc25": [
+    1.0,
+    0.944444,
+    0.888889,
+    0.75,
+    0.5,
+    0.25,
+    0.0
+   ],
+   "tn36": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0
+   ],
+   "tu93": [
+    1.0,
+    0.961634,
+    0.923269,
+    0.808172,
+    0.563712,
+    0.191828,
+    0.0
+   ]
+  },
+  "spurious_write_counts": [
+   1,
+   8,
+   64,
+   256
+  ],
+  "what_it_is": "Reference engines of CONSTRUCTED quality graded on the same proven held-out splits: identity, a perfect oracle, a 7-rung ladder of oracles with a fraction p of the truly-changed cells overwritten with a wrong in-palette colour, and oracles that additionally invent k writes on cells reality left alone. Candidate variance alone cannot tell resolution from noise; this can."
+ },
+ "preconditions_checked": [
+  {
+   "available": true,
+   "principle": "the whole phase is a re-analysis of a frozen corpus; without it there is nothing to score and the honest verdict would be blocked_corpus_missing",
+   "resource": "frozen_bestofn_corpus_present"
+  },
+  {
+   "available": true,
+   "principle": "the shipped induce-prompt default moved on the day of this re-analysis; grading against a split the frozen prompts never had would silently invalidate every number, so the derived split is checked field-by-field against the split proven on 2026-07-31, prompt sha included",
+   "resource": "proven_split_reproduces_with_k_pinned_to_8"
+  },
+  {
+   "available": true,
+   "principle": "a non-terminating induced engine wedged a run for 13 minutes on 2026-07-31 and an in-process alarm would be swallowed by the scoring loop's own `except Exception`; only an external kill is a real bound",
+   "resource": "no_generated_code_executed_in_the_driver_interpreter"
+  },
+  {
+   "available": true,
+   "principle": "GPU 1 was held by a concurrent workflow at 20726 MiB / 99% util for the duration; this run touches neither card, so no GPU-backed claim is made and none could be",
+   "resource": "cpu_only_no_gpu_claimed"
+  },
+  {
+   "available": true,
+   "principle": "the `floored in BOTH arms` question can only be answered from a two-arm run; without 6018 the answer for every metric would have to be 'unknown'",
+   "resource": "experiment_6018_artifact_present_for_two_arm_cross_reference"
+  }
+ ],
+ "random_seed": 20260801,
+ "random_seed_note": "Used only by the positive control's corruption/spurious-write choice. The 48-candidate census is fully deterministic: same frozen code, same recorded transitions, same arithmetic.",
+ "recommended_metric": "change_fidelity",
+ "recommended_metric_definition": "mean over changing transitions of the fraction of the UNION of (cells reality changed) and (cells the engine wrote) that the engine got right -- symmetric, so a spurious write costs what a miss costs (WorldModelVerifier.change_fidelity)",
+ "recommended_metric_on_this_corpus": {
+  "min_reachable_two_sided_p_at_this_gradability": 0.25,
+  "n_discordant_within_game_candidate_pairs": 39,
+  "n_gradable_games_of_5_stall": 3,
+  "n_within_game_candidate_pairs": 99
+ },
+ "reproducibility_checksum": "sha256:99c884d03fd7f9a1866dc1d51d4b4a475cdb58c410d5fe79200bc65e25868d4f",
+ "requirement": "REQ-ARC-WMTE-5830 (blocked on instrumentation, per experiment_6018)",
+ "run_date": "2026-08-01",
+ "shipped_default_moved_under_this_frozen_corpus": "`_induce_transitions_k()` returned 8 when these 48 candidates were generated (2026-07-31); commit 253e1b60ed changed its default to None ('show ALL transitions') on 2026-08-01, the day of this re-analysis. `split.py` derives the held-out set by replicating `changed[:k-2] + noop[:2]` with the CURRENT resolver, so an unpinned re-analysis grades against a split the frozen prompts never had. It happens to raise `TypeError: unsupported operand type(s) for -: 'NoneType' and 'int'` rather than silently mis-splitting, but relying on that is luck. CARNOT_ARC_INDUCE_TRANSITIONS_K is pinned to 8 (the resolver's own docstring says 8 'restores the previous prompt byte-for-byte') and the derived split is then verified field-by-field against the frozen split.json, prompt sha included -- all 6 games match and all 3 of split.py's text-level proofs pass. Anyone re-running this MUST keep the pin.",
+ "solve_provenance": {
+  "principle": "an offline instrument-calibration measurement on the dev twin. NO level is claimed, no game is solved, and nothing here is evidence that the live agent self-discovered anything",
+  "value": "development_proxy"
+ },
+ "spearman_reading": "The task's guard is that a graded metric which DISAGREES with exact-match where exact-match works is measuring something else. Applied naively here it would reject the right answer: change_fidelity's pooled within-game-centred Spearman against exact-match is only 0.19. But 3 of the 4 games where exact-match is non-degenerate are the no-op-credit games above, where exact-match is not working -- it is ranking inertness. On tn36, the ONLY game where exact-match is non-degenerate for a dynamics reason, change_fidelity's Spearman against it is exactly 1.0, as is cell_recall's, changed_cell_jaccard's and correct_changed_cells'. So the graded metrics are graded versions of exact-match wherever exact-match means what it claims to, and they diverge from it precisely where it does not.",
+ "split_provenance": [
+  {
+   "checks": {
+    "every_shown_line_in_prompt": true,
+    "n_action_lines_matches_shown": true,
+    "no_heldout_line_in_prompt": true
+   },
+   "game": "ft09",
+   "heldout_can_grade_change": true,
+   "heldout_n_changing": 4,
+   "matches_frozen_split_json": true,
+   "n_heldout": 20,
+   "split_proven": true
+  },
+  {
+   "checks": {
+    "every_shown_line_in_prompt": true,
+    "n_action_lines_matches_shown": true,
+    "no_heldout_line_in_prompt": true
+   },
+   "game": "lp85",
+   "heldout_can_grade_change": false,
+   "heldout_n_changing": 0,
+   "matches_frozen_split_json": true,
+   "n_heldout": 18,
+   "split_proven": true
+  },
+  {
+   "checks": {
+    "every_shown_line_in_prompt": true,
+    "n_action_lines_matches_shown": true,
+    "no_heldout_line_in_prompt": true
+   },
+   "game": "sc25",
+   "heldout_can_grade_change": true,
+   "heldout_n_changing": 1,
+   "matches_frozen_split_json": true,
+   "n_heldout": 14,
+   "split_proven": true
+  },
+  {
+   "checks": {
+    "every_shown_line_in_prompt": true,
+    "n_action_lines_matches_shown": true,
+    "no_heldout_line_in_prompt": true
+   },
+   "game": "tn36",
+   "heldout_can_grade_change": true,
+   "heldout_n_changing": 17,
+   "matches_frozen_split_json": true,
+   "n_heldout": 17,
+   "split_proven": true
+  },
+  {
+   "checks": {
+    "every_shown_line_in_prompt": true,
+    "n_action_lines_matches_shown": true,
+    "no_heldout_line_in_prompt": true
+   },
+   "game": "tu93",
+   "heldout_can_grade_change": true,
+   "heldout_n_changing": 19,
+   "matches_frozen_split_json": true,
+   "n_heldout": 19,
+   "split_proven": true
+  },
+  {
+   "checks": {
+    "every_shown_line_in_prompt": true,
+    "n_action_lines_matches_shown": true,
+    "no_heldout_line_in_prompt": true
+   },
+   "game": "vc33",
+   "heldout_can_grade_change": false,
+   "heldout_n_changing": 0,
+   "matches_frozen_split_json": true,
+   "n_heldout": 0,
+   "split_proven": true
+  }
+ ],
+ "the_control_metric_did_not_floor_on_this_corpus_and_that_is_explained": "Read on its own, this corpus would say exact-match is fine: it takes 8 distinct values over the 48 candidates and grades 4 of 5 games. That reading is wrong, and `noop_credit_decomposition` is why. Three of the five stall games have no-op-dominated held-out splits (ft09 16/20, sc25 13/14, lp85 18/18), and on every one of them `n_changes_correct` is 0 for every single candidate -- so all of exact-match's variation there is scored on transitions where the correct answer is 'nothing happens'. On the two change-dominated games it behaves exactly as exp6018 found: flat 0.0 across all candidates on tu93, and on tn36 it agrees with change_fidelity perfectly (Spearman 1.0) because with 17 of 17 changing and no no-ops the two measures coincide. The instrument floor is real; this corpus merely has three games where the instrument measures something else instead of flooring.",
+ "title": "Is there ANY graded held-out induction metric with headroom? Re-scoring the 48 frozen best-of-N candidates under 13 metrics, plus a constructed-quality positive control.",
+ "verifier_is_oracle": {
+  "principle": "the graders here compare predicted next grids to RECORDED next grids; the level counter and the win oracle are never consulted, so nothing measured here can be circular with a solve",
+  "value": false
+ },
+ "what_this_changes_for_the_next_ab": [
+  "Pre-register change_fidelity as the PRIMARY and exact-match as a reported secondary, inverting exp6018's choice. exp6018's own recorded numbers say a 14-game paired sign test on this primary reaches a minimum two-sided p of 0.00048828, against 1.0 for the primary it actually used.",
+  "Select the game roster on `heldout_n_changing`, not merely on the game existing. exp6018's own finding[0] already recorded that 6 of 20 games contribute ZERO held-out transitions; this phase adds that a game with 1 changing held-out row (sc25) or 0 (lp85) is equally useless for a change-quality primary while looking fine in a count of games.",
+  "Report cell_recall and change_fidelity together, never cell_recall alone. They agree on the corruption ladder and disagree completely on invented writes, so a gap between them localises the failure to spurious writing.",
+  "Do NOT use object-partition overlap as an outcome measure, in either arm. If the object hypothesis is to be tested at object granularity, the metric needs to be restricted to objects the dynamics actually touch -- scoring the whole partition hands the win to whichever arm produces more inert engines."
+ ],
+ "why_change_fidelity_and_not_the_others": {
+  "vs_cell_recall": "Identical to change_fidelity on the corruption ladder, and it fails H3: the positive control's oracle-plus-256-invented-cells engine scores cell_recall 1.0 on every measurable game. `VerifyResult` documents this blindness; this is the measurement of it. An arm could win on cell_recall by producing engines that write everywhere.",
+  "vs_change_exact_accuracy": "The honest strict form of exact-match, and it does not floor to a single value corpus-wide -- but it is gradable on only ONE of five games (tn36) and takes just 2 distinct values on 3 of the 4 games where the positive control can measure it. Near-binary is the original problem, restated.",
+  "vs_changed_cell_jaccard": "Deliberately value-blind -- it asks WHERE the engine wrote, not WHAT. It therefore does not resolve a value-corruption ladder (2 of 4 games) and is correctly non-monotone there. Keep as the complementary channel that separates 'knows where the action lands but not what it draws' from 'no idea'; it is not a substitute for the primary.",
+  "vs_exact_match_accuracy": "Exact-match is not merely coarse, it is ANTI-CORRELATED with dynamics quality on this corpus. On ft09 it ranks candidate 1 BEST (0.8) while that candidate's change_fidelity is 0.0 -- it earns the score by predicting that nothing ever changes on a split that is 16 no-ops to 4 changes. Its between-candidate variation on ft09 is 100% no-op credit: `n_changes_correct` is 0 for every candidate on that game. On tu93, whose held-out split is 19 of 19 CHANGING, exact-match is 0.0 for all five runnable candidates -- exp6018's floor, reproduced on an independent corpus. It floors exactly where the split is change-dominated, which is the regime that matters.",
+  "vs_grid_agreement": "Does not reward inertness outright, but identity TIES the worst rung of the quality ladder on tu93 (0.996454 both) and the whole ladder spans 0.0002 to 0.0035. 99.6% of the number is background the engine never wrote. Usable as a diagnostic, hopeless as a primary.",
+  "vs_object_metrics": "The metrics this phase ADDED, and the finding is negative and worth stating plainly: all four object metrics rank the DEGENERATE IDENTITY ENGINE above a real-but-bad engine on 3 of the 4 games where they can be measured. This is visible on real candidates, not only synthetic ones -- on tu93, object_match_iou scores candidates 0 and 1 (change_fidelity 0.0, i.e. nothing correct) at 0.996162, ABOVE candidate 5 (change_fidelity 0.112292) at 0.995117. The cause is structural: a 64x64 ARC frame's connected-component partition is dominated by large static background objects that an inert engine reproduces perfectly, so the score is mostly about the part of the board the dynamics never touch. object_match_iou's entire dynamic range across the quality ladder is 0.0004 to 0.011 depending on game. Object perception may still be the right LEVER -- this says nothing about the treatment -- but object-partition OVERLAP is the wrong instrument to measure it with.",
+  "vs_spurious_changed_cells": "Has the most per-game discordance in exp6018 (14 of 14) but is minimised trivially by an engine that writes nothing: identity scores 0, the best possible value, on every game. It fails H2 the hardest of any metric here."
+ },
+ "why_this_exists": "experiment_6018 A/B'd object perception and returned `complete_object_perception_heldout_ab_unmeasurable_instrument_floor_primary_zero_both_arms_no_test_possible_zero_discordant_pairs_n_support_games_14`. Its pre-registered primary -- held-out exact-full-grid transition accuracy -- was exactly 0.0 in BOTH arms on all 168 cells, so there were zero discordant per-game pairs and the minimum reachable two-sided p was 1.0 whatever the treatment did. That is an instrument floor, not a null about object perception: it is the FALSE_NEGATIVE_RISK pattern in which 'the method does not help' and 'the measurement had no headroom' are indistinguishable. No representation change can be evaluated until a graded metric with headroom exists, so this phase looks for one and is explicitly willing to report that none does."
+}
