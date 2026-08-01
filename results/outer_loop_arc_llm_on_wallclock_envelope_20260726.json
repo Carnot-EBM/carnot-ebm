@@ -198,6 +198,17 @@
         "reason": "The drift is the multi-GPU layer-split wiring: CARNOT_ARC_GENERATOR_CUDA_GPU gained a comma-list form, plus _parse_generator_cuda_gpus/_split_args_for_env and a split->single->iGPU fallback ordering. All of it is INERT unless the env var holds more than one index, and nothing in the repo sets that. The scalar form is byte-for-byte unchanged, so every number in this artifact -- measured under the scalar form -- is unaffected.",
         "why_not_rebuilt": "No rebuild_command exists for this artifact: it was produced by a live multi-hour GPU measurement, not a deterministic analyser. Re-running it would produce a genuinely NEW measurement, not a reproduction, which is a worse answer to 'are these numbers still valid' than a stated argument for inertness.",
         "evidence": "tests/python/test_arc_generator_layer_split.py::TestPartialHeadroomIsARefusal::test_single_card_form_still_pins_one_card asserts the scalar form yields CUDA_VISIBLE_DEVICES=<idx> with NO split flags; ::test_single_card_gets_nothing asserts _split_args_for_env returns [] for one visible device."
+      },
+      {
+        "path": "scripts/arc_scored_path_lever_harness.py",
+        "sha256_was": null,
+        "sha256_now": "e4d3951d8cad4e2616a416ff56c4042eb5f66eff95bdcc141013eaa785208376",
+        "acknowledged": true,
+        "acknowledged_date": "2026-07-31",
+        "acknowledged_at_commit": "0bc69d25a5cd700c4f84fa674f7feab6952cc132",
+        "reason": "The drift is one line: os.environ.setdefault(\"CARNOT_ARC_GENERATOR_CUDA_GPU\", \"1\") -> \"1,0\", enabling the two-GPU layer split on FUTURE runs of this harness, plus its explanatory comment. This harness PRODUCED the rows summarised here; a change to which GPU it will use next time cannot alter rows already written.",
+        "why_not_rebuilt": "No rebuild_command exists: this artifact came from a multi-hour live GPU measurement, not a deterministic analyser. Re-running would produce a NEW measurement, not a reproduction.",
+        "evidence": "The three sibling artifacts that DO have rebuild commands and share this exact dependency were rebuilt in this same commit and moved 0 substantive values."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
