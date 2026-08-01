@@ -43,8 +43,40 @@ def _ckpt_path(game: str) -> Path:
     return CKPT_DIR / f"arc_verifier_{game}.json"
 
 
+class NoAdapterForGame(LookupError):
+    """Raised when an adaptered solve is asked for a game that has no GameAdapter.
+
+    A distinct type, not a bare LookupError, so a caller sweeping many games can tell
+    "this game is not registered" apart from a real failure inside a solve and skip it
+    rather than abort.
+    """
+
+
 def _live_verifier_for_adapter(game: str, adapter):
-    """Return the live warm-start verifier for an adaptered solve."""
+    """Return the live warm-start verifier for an adaptered solve.
+
+    `adapters.get_adapter()` returns None for a game that has not been registered, and
+    this function used to walk straight into `adapter.hand_verifier` on that None. The
+    resulting `AttributeError: 'NoneType' object has no attribute 'hand_verifier'` is
+    what sc25, tn36 and wa30 raised, and it reads like a broken solve rather than a
+    missing registration -- which is why those games looked unsolvable offline and sat
+    silently outside every A/B corpus built through `build_progress_window` until
+    2026-07-31.
+
+    Fail with a message that names the actual condition and the fix. This is offline
+    dev-path only: the scored agent (`arc_competition_agent.E3AgentPolicy`) has ZERO
+    adapter references -- verified by import-closure analysis -- because hidden games
+    can never have one, so nothing here can affect a submission.
+    """
+    if adapter is None:
+        from carnot.agentic import arc_game_adapters as _adapters
+
+        raise NoAdapterForGame(
+            f"no GameAdapter registered for {game!r}; an adaptered solve is impossible. "
+            f"Registered: {', '.join(_adapters.adaptered_games())}. "
+            "Add one to arc_game_adapters._BUILDERS (see _sc25/_tn36 for the shape -- both "
+            "wrap RE already captured in ops/arc_solve_registry.yaml rather than redoing it)."
+        )
 
     spatial = load_live_spatial_value_head(root=REPO, game=game)
     if spatial is not None:
