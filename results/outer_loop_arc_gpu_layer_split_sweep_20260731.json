@@ -1,0 +1,298 @@
+{
+  "experiment": "outer_loop_arc_gpu_layer_split_sweep_20260731",
+  "schema": "carnot.gpu_layer_split_sweep.v1",
+  "question": "Does `-sm layer` across both RTX 3090s give near-single-GPU throughput at roughly half the per-device VRAM, and does it do so EVENLY? The only VRAM lever the ARC agent uses today is `-ot ...=CPU`, which spills dense FFN weights to host RAM.",
+  "honest_verdict": "complete_layer_split_is_free_and_dominates_the_cpu_offload_lever",
+  "acceptance_gate_splitting_is_free": true,
+  "acceptance_gate_per_card_roughly_halved": true,
+  "acceptance_gate_split_is_even": true,
+  "acceptance_gate_passed": true,
+  "gate_principles": {
+    "acceptance_gate_splitting_is_free": "decode within +-10% of the single-GPU arm. Distinguishes 'splitting costs nothing' from 'splitting costs less than CPU offload' -- only the former justifies making it the default lever.",
+    "acceptance_gate_per_card_roughly_halved": "peak per-card <= -40%. A split that does not actually halve per-card residency buys no headroom and the whole exercise is moot.",
+    "acceptance_gate_split_is_even": "imbalance < 5% of a card's share. `-ts 1,1` is passed explicitly because llama.cpp's DEFAULT splits by AVAILABLE VRAM, so a busy card would skew it; this gate is what proves the explicit ratio took effect."
+  },
+  "headline": "Layer-splitting is FREE: +1.0% decode at n_ctx 32768 and +0.6% at the shipped 81920, while cutting peak per-card residency 47.2% / 45.9% (-9640 / -10516 MiB). The CPU-offload lever in use today costs 59.8% of decode throughput to save only 10.5% of per-card VRAM. Layer split strictly dominates it on both axes.",
+  "the_caveat_that_must_travel_with_the_headline": "AGGREGATE VRAM across both cards goes UP when split: +984 MiB at 32768 and +1704 MiB at 81920, because each card carries its own compute buffers and non-layer state. The win is PER-CARD headroom, not total memory. On a single-GPU host there is no win at all -- there is a small loss. Anyone quoting 'halves VRAM' without this qualifier is overstating it.",
+  "operational_consequence": "The shipped n_ctx 81920 DOES fit one 3090 (22900 MiB of 24576), but with only 1676 MiB spare -- tight enough that the MTP draft head plus any fragmentation is a real risk. Split leaves 12192 MiB free per card. That, not raw throughput, is the reason to prefer it.",
+  "comparisons": {
+    "split_vs_single_ctx32768": {
+      "baseline_arm": "single_ctx32768",
+      "arm": "split2_ctx32768",
+      "decode_tok_s": {
+        "baseline": 38.51,
+        "arm": 38.9,
+        "pct_change": 1.0
+      },
+      "peak_per_card_mib": {
+        "baseline": 20428,
+        "arm": 10788,
+        "delta_mib": -9640,
+        "pct_change": -47.2
+      },
+      "aggregate_mib": {
+        "baseline": 20428,
+        "arm": 21412,
+        "delta_mib": 984
+      },
+      "imbalance_mib": 164,
+      "imbalance_pct_of_card_share": 1.52
+    },
+    "split_vs_single_ctx81920": {
+      "baseline_arm": "single_ctx81920",
+      "arm": "split2_ctx81920",
+      "decode_tok_s": {
+        "baseline": 38.6,
+        "arm": 38.84,
+        "pct_change": 0.6
+      },
+      "peak_per_card_mib": {
+        "baseline": 22900,
+        "arm": 12384,
+        "delta_mib": -10516,
+        "pct_change": -45.9
+      },
+      "aggregate_mib": {
+        "baseline": 22900,
+        "arm": 24604,
+        "delta_mib": 1704
+      },
+      "imbalance_mib": 164,
+      "imbalance_pct_of_card_share": 1.32
+    },
+    "cpu_offload_vs_single_ctx32768": {
+      "baseline_arm": "single_ctx32768",
+      "arm": "cpu12_ctx32768",
+      "decode_tok_s": {
+        "baseline": 38.51,
+        "arm": 15.47,
+        "pct_change": -59.8
+      },
+      "peak_per_card_mib": {
+        "baseline": 20428,
+        "arm": 18282,
+        "delta_mib": -2146,
+        "pct_change": -10.5
+      },
+      "aggregate_mib": {
+        "baseline": 20428,
+        "arm": 18282,
+        "delta_mib": -2146
+      },
+      "imbalance_mib": 0,
+      "imbalance_pct_of_card_share": 0.0
+    }
+  },
+  "observation_fixed_not_proportional_imbalance": "The imbalance is 164 MiB in BOTH split arms, despite their per-card shares differing by ~1.6 GB. That is a fixed asymmetry (one card carries extra non-layer state, e.g. output/embedding tensors), not a proportional effect -- so it should not grow with context or model size. Recorded as an observation; not separately verified against the tensor map.",
+  "prefill_collapses_worse_than_decode_under_cpu_offload": "The CPU-offload arm's prefill fell 908 -> 195 tok/s (-78.5%), worse than its decode fall (-59.8%). The 2026-07-28 characterisation of the lever's cost as '58-86% of decode throughput' therefore understates its impact on prompt-heavy work, which ARC induction is.",
+  "control_arm_reading": "Arm 1 was written to reproduce the 2026-07-28 figures of 36.07 tok/s @ 21416 MiB. Those were measured on Q4_K_M; this ran on the newly-shipped QAT UD-Q4_K_XL. VRAM landed at 20428 MiB (-988), matching the 993 MiB model-file size difference and the head-to-head's independent 20430 MiB to within 2 MiB. Decode landed at 38.51 tok/s, +6.8% -- INSIDE the +-10% window, i.e. the throughput target effectively DID reproduce, slightly faster as a smaller model should be. An earlier draft of PLAN.md predicted both halves would fail to reproduce; that was corrected before the run (commit b44fb77cf) and the run confirms the correction was right.",
+  "what_this_does_NOT_establish": "(1) Nothing here was measured on Kaggle's 4xL4, which is the substrate the scored submission actually runs on -- 4-way split across a different interconnect is unmeasured. (2) Only decode and prefill rate were measured; induction QUALITY under split was not, though there is no mechanism by which layer placement would change logits. (3) One run per arm, no repeats, so the ~1% throughput differences are within plausible run-to-run noise and should NOT be read as split being genuinely faster -- only as not-slower.",
+  "arms": [
+    {
+      "arm": "single_ctx32768",
+      "n_cpu_ffn_layers": 0,
+      "n_ctx": 32768,
+      "argv_has_ot": false,
+      "ot_regex": null,
+      "cuda_visible_devices": "1",
+      "split_mode": "none(single-gpu)",
+      "tensor_split": null,
+      "load_s": 12.0,
+      "resident_mib": 20428,
+      "resident_card_index": "1",
+      "residency": {
+        "per_card_mib": {
+          "1": 20428
+        },
+        "total_mib": 20428,
+        "n_cards": 1,
+        "max_minus_min_mib": 0
+      },
+      "pid": 1845292,
+      "gen_wall_s": 7.06,
+      "predicted_n": 256,
+      "prompt_n": 238,
+      "decode_tok_s": 38.51,
+      "prefill_tok_s": 907.96,
+      "resident_mib_after": 20438,
+      "log_tensor_override_lines": 0
+    },
+    {
+      "arm": "cpu12_ctx32768",
+      "n_cpu_ffn_layers": 12,
+      "n_ctx": 32768,
+      "argv_has_ot": true,
+      "ot_regex": "blk\\.(0|1|2|3|4|5|6|7|8|9|10|11)\\.ffn_(gate|up|down)\\.weight=CPU",
+      "cuda_visible_devices": "1",
+      "split_mode": "none(single-gpu)",
+      "tensor_split": null,
+      "load_s": 12.0,
+      "resident_mib": 18282,
+      "resident_card_index": "1",
+      "residency": {
+        "per_card_mib": {
+          "1": 18282
+        },
+        "total_mib": 18282,
+        "n_cards": 1,
+        "max_minus_min_mib": 0
+      },
+      "pid": 1845469,
+      "gen_wall_s": 17.93,
+      "predicted_n": 256,
+      "prompt_n": 238,
+      "decode_tok_s": 15.47,
+      "prefill_tok_s": 195.45,
+      "resident_mib_after": 18292,
+      "log_tensor_override_lines": 1
+    },
+    {
+      "arm": "split2_ctx32768",
+      "n_cpu_ffn_layers": 0,
+      "n_ctx": 32768,
+      "argv_has_ot": false,
+      "ot_regex": null,
+      "cuda_visible_devices": "0,1",
+      "split_mode": "layer",
+      "tensor_split": "1,1",
+      "load_s": 14.0,
+      "resident_mib": 10624,
+      "resident_card_index": "1",
+      "residency": {
+        "per_card_mib": {
+          "0": 10624,
+          "1": 10788
+        },
+        "total_mib": 21412,
+        "n_cards": 2,
+        "max_minus_min_mib": 164
+      },
+      "pid": 1845702,
+      "gen_wall_s": 7.0,
+      "predicted_n": 256,
+      "prompt_n": 238,
+      "decode_tok_s": 38.9,
+      "prefill_tok_s": 907.47,
+      "resident_mib_after": 10634,
+      "log_tensor_override_lines": 0
+    },
+    {
+      "arm": "single_ctx81920",
+      "n_cpu_ffn_layers": 0,
+      "n_ctx": 81920,
+      "argv_has_ot": false,
+      "ot_regex": null,
+      "cuda_visible_devices": "1",
+      "split_mode": "none(single-gpu)",
+      "tensor_split": null,
+      "load_s": 12.0,
+      "resident_mib": 22900,
+      "resident_card_index": "1",
+      "residency": {
+        "per_card_mib": {
+          "1": 22900
+        },
+        "total_mib": 22900,
+        "n_cards": 1,
+        "max_minus_min_mib": 0
+      },
+      "pid": 1845846,
+      "gen_wall_s": 7.04,
+      "predicted_n": 256,
+      "prompt_n": 238,
+      "decode_tok_s": 38.6,
+      "prefill_tok_s": 909.88,
+      "resident_mib_after": 22910,
+      "log_tensor_override_lines": 0
+    },
+    {
+      "arm": "split2_ctx81920",
+      "n_cpu_ffn_layers": 0,
+      "n_ctx": 81920,
+      "argv_has_ot": false,
+      "ot_regex": null,
+      "cuda_visible_devices": "0,1",
+      "split_mode": "layer",
+      "tensor_split": "1,1",
+      "load_s": 14.0,
+      "resident_mib": 12220,
+      "resident_card_index": "1",
+      "residency": {
+        "per_card_mib": {
+          "0": 12220,
+          "1": 12384
+        },
+        "total_mib": 24604,
+        "n_cards": 2,
+        "max_minus_min_mib": 164
+      },
+      "pid": 1845999,
+      "gen_wall_s": 7.0,
+      "predicted_n": 256,
+      "prompt_n": 238,
+      "decode_tok_s": 38.84,
+      "prefill_tok_s": 908.38,
+      "resident_mib_after": 12230,
+      "log_tensor_override_lines": 0
+    }
+  ],
+  "n_arms": 5,
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-qat",
+      "hf_id": "unsloth/gemma-4-31B-it-qat-GGUF",
+      "file": "gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+      "size_gib": 16.1,
+      "quantisation": "UD-Q4_K_XL (QAT)",
+      "invoked": true,
+      "resolved_from": "arc_executable_world_model.ARC_LIVE_GENERATOR_* -- the shipped pin, not a hardcoded path, so this sweep tracks the generator if it is repinned"
+    }
+  ],
+  "serving_config": {
+    "kv_quant": "q8_0",
+    "n_gpu_layers": 999,
+    "n_predict": 256,
+    "temperature": 0.0,
+    "cache_prompt": false,
+    "mtp_draft_head": false,
+    "mtp_note": "No draft head in any arm. Speculation would confound a decode-rate comparison, since acceptance rate varies with content. The MTP head is what the freed per-card headroom is FOR, but it is deliberately not measured here."
+  },
+  "hardware": "2x NVIDIA GeForce RTX 3090 (24576 MiB each), both idle at run start",
+  "inference_substrate": "live_llm_inference",
+  "duration_s": 199.8,
+  "run_start": "2026-07-31T22:59:41-04:00",
+  "run_end": "2026-07-31T23:03:01-04:00",
+  "duration_note": "Wall clock of the whole sweep. The per-arm load_s + gen_wall_s sums to only 110.0 s; that excludes health polling, teardown and eviction between arms and would understate the run by ~2x, so it is not used as duration_s.",
+  "random_seed": 0,
+  "random_seed_note": "temperature=0.0 and cache_prompt=false on a fixed prompt, so generation is deterministic and no seed is consulted. The seed field is 0 to satisfy the methodology check honestly rather than inventing a value that steers nothing.",
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No verifier claim is made. This is a throughput/residency measurement, not a verifier-value experiment; the field is present because the linter requires it.",
+  "solve_provenance": "development_proxy",
+  "preconditions_checked": [
+    {
+      "resource": "both_3090s_idle",
+      "available": true
+    },
+    {
+      "resource": "carnot_conductor_stopped",
+      "available": true
+    },
+    {
+      "resource": "llama_server_binary",
+      "available": true
+    },
+    {
+      "resource": "port_8971_clear",
+      "available": true
+    }
+  ],
+  "provenance": {
+    "harness": "results/arc_gpu_split_sweep_20260731/harness/gpu_split_measure.py",
+    "plan": "results/arc_gpu_split_sweep_20260731/PLAN.md",
+    "raw_log": "results/arc_gpu_split_sweep_20260731/sweep_run.log",
+    "raw_rows": "results/arc_gpu_split_sweep_20260731/gpu_split_results.json",
+    "builder": "scripts/build_gpu_split_sweep_artifact.py",
+    "git_head": "b44fb77cfd838c323198dd3d703c956e424018b7"
+  },
+  "reproducibility_checksum": "a13a98ffb56bb0c5bb45cdee471af353ae04719437f5ab2a04b9d35f08a93560"
+}
