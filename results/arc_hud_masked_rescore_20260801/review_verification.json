@@ -1,0 +1,273 @@
+{
+ "F3_did_masking_delete_correct_predictions": {
+  "answer": "yes to both, on a small and mostly-noise-shaped removal",
+  "cells_where_ONLY_correct_cells_were_removed": [
+   {
+    "cell": "s5i5__r0__off",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.090909,
+    "correct_cells_removed": 3,
+    "scored_higher_after_masking": false,
+    "spurious_cells_removed": 0
+   },
+   {
+    "cell": "tu93__r0__on",
+    "change_fidelity_masked": 0.944444,
+    "change_fidelity_unmasked": 0.931579,
+    "correct_cells_removed": 3,
+    "scored_higher_after_masking": true,
+    "spurious_cells_removed": 0
+   },
+   {
+    "cell": "tu93__r2__off",
+    "change_fidelity_masked": 0.944444,
+    "change_fidelity_unmasked": 0.931579,
+    "correct_cells_removed": 3,
+    "scored_higher_after_masking": true,
+    "spurious_cells_removed": 0
+   },
+   {
+    "cell": "tu93__r2__on",
+    "change_fidelity_masked": 0.888889,
+    "change_fidelity_unmasked": 0.879825,
+    "correct_cells_removed": 3,
+    "scored_higher_after_masking": true,
+    "spurious_cells_removed": 0
+   }
+  ],
+  "correct_changed_cells_removed": 27,
+  "correct_share_of_all_removed_cells": 0.052124,
+  "n_cells_that_lost_at_least_one_correct_cell": 10,
+  "n_masked_cells": 36,
+  "n_of_those_that_still_scored_HIGHER": 3,
+  "question": "did masking delete cells an engine was getting RIGHT, and did any engine's score improve as a result?",
+  "spurious_changed_cells_removed": 491,
+  "what_it_IS": "a real, reportable cost. Four cells lost only-correct cells and three of those four scored higher afterwards, which is precisely the 'improved by being graded on less' shape, at small magnitude.",
+  "why_this_is_not_playfield_deletion": "5.2% of the removed cells were correct. A mask that was eating real dynamics would remove correct and spurious cells at roughly the rate the engine gets them right, not at 1-in-19. The mechanism is the shipped definition of change_fidelity (arc_executable_world_model.py: per-transition mean of |correct AND union| / |union|): the band's LOCAL fidelity sat below the engine's mean, so deleting it raised the average even where the destroyed credit was real."
+ },
+ "F4_direction_of_the_shift": {
+  "how_the_two_were_told_apart": "UNIFORM IN DIRECTION, NOT IN MAGNITUDE, AND NOT EXPLAINED BY NOISE REMOVAL. If the rise were simply the removal of spurious writes, cells that lost more spurious cells would rise more -- r = -0.05, i.e. no relationship at all. What the rise DOES track is how well the engine was already doing (r = +0.45), so masking systematically flatters whichever engine was ahead. That is a mild, direction-consistent bias toward the leading arm, not a discovery. It is why the direction count must be reported next to the mean: the mean is small (+0.0049) and reads as noise, while the direction is near-unanimous and does not.",
+  "mean_signed_delta_over_all_masked_cells": 0.004851,
+  "n_fell": 2,
+  "n_flat": 12,
+  "n_moving": 24,
+  "n_rose": 22,
+  "per_game_direction_up_down_flat": {
+   "ar25": [
+    5,
+    0,
+    0
+   ],
+   "bp35": [
+    2,
+    1,
+    3
+   ],
+   "ka59": [
+    4,
+    0,
+    2
+   ],
+   "ls20": [
+    5,
+    0,
+    1
+   ],
+   "s5i5": [
+    0,
+    1,
+    5
+   ],
+   "tu93": [
+    6,
+    0,
+    1
+   ]
+  },
+  "question": "when scores rose across the board, was that signal removal or noise removal?",
+  "r_delta_vs_baseline_unmasked_fidelity": 0.4518,
+  "r_delta_vs_spurious_cells_removed": -0.0513,
+  "riser_magnitude_cv_population_stdev": 1.0308,
+  "riser_magnitude_cv_sample_stdev": 1.0551,
+  "riser_magnitude_max": 0.042398,
+  "riser_magnitude_min": 0.00048,
+  "riser_magnitude_spread_max_over_min": 88.3,
+  "sign_test_on_movers_p_two_sided": 3.5882e-05
+ },
+ "F5_where_the_benefit_came_from": {
+  "AND_THE_DESTROYED_NEGATIVE_WAS_AT_THE_A_A_FLOOR": {
+   "aa_max_abs_delta": 0.090909,
+   "aa_pairs_recomputed_here": [
+    {
+     "abs_delta": 0.0,
+     "base_change_fidelity": 0.034813,
+     "game": "ls20",
+     "mask_applied_on_headline_arm": "applied",
+     "repeat_change_fidelity": 0.034813
+    },
+    {
+     "abs_delta": 0.090909,
+     "base_change_fidelity": 0.090909,
+     "game": "s5i5",
+     "mask_applied_on_headline_arm": "applied",
+     "repeat_change_fidelity": 0.0
+    },
+    {
+     "abs_delta": 0.0,
+     "base_change_fidelity": 0.513158,
+     "game": "tu93",
+     "mask_applied_on_headline_arm": "applied",
+     "repeat_change_fidelity": 0.513158
+    },
+    {
+     "abs_delta": 0.028133,
+     "base_change_fidelity": 0.07971,
+     "game": "cn04",
+     "mask_applied_on_headline_arm": "unresolved",
+     "repeat_change_fidelity": 0.107843
+    }
+   ],
+   "conclusion": "the masked arm's p = 0.0075 must not be quoted. The mean shift (+0.0019) is the honest summary of what masking did to the effect, and the mean-based conclusion is unchanged.",
+   "s5i5_unmasked_off_score": 0.090909,
+   "these_are_the_same_number": true,
+   "upstream_record": "results/arc_object_perception_ab_change_fidelity_20260801/analysis.json AA_control + AA_FLOOR_vs_EFFECT, which already reported aa_abs_delta_values [0.0, 0.090909, 0.0, 0.028133] and only 1 of 4 engines byte-identical. This re-score did not carry that forward next to its own p-value; it should have.",
+   "why_this_is_the_other_half_of_the_story": "the 3 correct cells masking deleted were not a stable property of the off arm. The upstream A/B ran an A/A control -- the SAME off arm, SAME seed, re-run -- and on s5i5 it produced a DIFFERENT engine (base sha e904e32d..., repeat sha d4da9cc7...) scoring 0.0 instead of 0.090909. So the negative the mask converted into a tie was, on the pipeline's own control, indistinguishable from run-to-run nondeterminism. The review's objection stands -- the tie WAS manufactured by deleting correct cells -- and this is why it does not rescue the p-value either: the destroyed quantity was noise of exactly that magnitude."
+  },
+  "arm_boost_basis": "flat mean over the 36 MASKED cells, split by the upstream A/B's own arm tags: 15 `on`, 18 `off`, 3 `offAA`. `offAA` is the A/A control (the off arm re-run at the same seed) and is NOT an independent off observation, so it is reported on its own line rather than folded in. The arms are unbalanced in this subset, so this is a descriptive split, not a paired comparison.",
+  "mean_boost_offAA_control_cells_masked": 0.014786,
+  "mean_boost_off_arm_masked_cells": 0.000385,
+  "mean_boost_off_plus_offAA_the_reviews_basis": 0.002442,
+  "mean_boost_on_arm_masked_cells": 0.008223,
+  "mean_shift_over_20_games": 0.00194,
+  "mean_shift_reported_by_the_artifact": 0.00194,
+  "on_over_off_ratio_reviews_basis": 3.37,
+  "on_over_off_ratio_strict_off": 21.37,
+  "per_game_contribution": {
+   "ar25": {
+    "delta_change": 0.005442,
+    "share_of_aggregate": 0.1402
+   },
+   "bp35": {
+    "delta_change": 0.002997,
+    "share_of_aggregate": 0.0772
+   },
+   "ka59": {
+    "delta_change": 0.002692,
+    "share_of_aggregate": 0.0694
+   },
+   "ls20": {
+    "delta_change": 0.000284,
+    "share_of_aggregate": 0.0073
+   },
+   "s5i5": {
+    "delta_change": 0.030303,
+    "share_of_aggregate": 0.7808
+   },
+   "tu93": {
+    "delta_change": -0.00291,
+    "share_of_aggregate": -0.075
+   }
+  },
+  "question": "where did the aggregate benefit of masking actually come from?",
+  "s5i5_cells": [
+   {
+    "cell": "s5i5__r0__on",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.0,
+    "correct_changed_cells": [
+     0,
+     0
+    ],
+    "spurious_changed_cells": [
+     0,
+     0
+    ]
+   },
+   {
+    "cell": "s5i5__r0__off",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.090909,
+    "correct_changed_cells": [
+     3,
+     0
+    ],
+    "spurious_changed_cells": [
+     0,
+     0
+    ]
+   },
+   {
+    "cell": "s5i5__r1__off",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.0,
+    "correct_changed_cells": [
+     0,
+     0
+    ],
+    "spurious_changed_cells": [
+     6,
+     0
+    ]
+   },
+   {
+    "cell": "s5i5__r2__on",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.0,
+    "correct_changed_cells": [
+     0,
+     0
+    ],
+    "spurious_changed_cells": [
+     0,
+     0
+    ]
+   },
+   {
+    "cell": "s5i5__r2__off",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.0,
+    "correct_changed_cells": [
+     0,
+     0
+    ],
+    "spurious_changed_cells": [
+     0,
+     0
+    ]
+   },
+   {
+    "cell": "s5i5__r0__offAA",
+    "change_fidelity_masked": 0.0,
+    "change_fidelity_unmasked": 0.0,
+    "correct_changed_cells": [
+     0,
+     0
+    ],
+    "spurious_changed_cells": [
+     0,
+     0
+    ]
+   }
+  ],
+  "s5i5_mechanism": "s5i5's off-arm engine had exactly 3 correct changed cells in the ENTIRE game, all of them inside row 63. Masking removed 3 correct and 0 spurious cells, the arm went 0.030303 -> 0.0, and the game's delta went -0.030303 -> exactly 0.0. That converted one of only four negatives into a TIE, which the sign test then drops (discordant 19 -> 18) and which is where most of the p improvement comes from. The tie was manufactured by deleting an engine's entire correct-prediction set, not by a neutral rounding.",
+  "s5i5_share_of_aggregate": 0.7808,
+  "sum_of_per_game_delta_changes": 0.038808,
+  "the_other_five_masked_games_together": 0.008505,
+  "tu93_contributes_NEGATIVELY": -0.00291,
+  "why_this_matters": "masking helps the object-perception (ON) arm more than the control arm on every basis: 3.4x if the A/A control cells are folded into `off` (the review's basis), 21x if they are not. The absolute bias is small and the mean-based conclusion is unaffected -- the mean delta moved only +0.0019 -- but every secondary bias in this re-score points in the direction of the hypothesis, and a reader is entitled to know that before reading the improved p-value as corroboration."
+ },
+ "discrepancies_vs_the_review": [
+  {
+   "claim": "riser magnitude spread 88x, CV 1.03",
+   "material": false,
+   "reproduced": "spread 88.3x and CV 1.031 -- but only over the 22 RISING cells and only with a POPULATION stdev. Over all 24 moving cells the spread is 189x, and with the sample stdev the CV is 1.055. Same conclusion (magnitude is far from uniform) under every reading; the exact figure depends on two choices the review did not state, so all four are recorded here."
+  },
+  {
+   "claim": "masking boosts the ON arm +0.008223 vs OFF +0.002442",
+   "material": false,
+   "reproduced": "exactly, on the basis 'flat mean over the 36 masked cells split by arm, with the 3 A/A-control (`offAA`) cells counted as off'. Recording the basis matters, and this one flatters the finding LESS than the alternative: counting only the 18 true `off` cells the control-arm boost is +0.000385 and the ratio is 21x, not 3.4x. Averaged per-game over all 20 games the same quantities are +0.002573 / +0.000741. The direction of the finding is robust across every basis; the magnitude is not, and the review chose the conservative one."
+  }
+ ],
+ "headline_arm": "default_swallow_full",
+ "what_this_is": "an independent recomputation of three adversarial-review claims about this re-score, from the run's own per-cell record. It changes no score and no verdict; it adds figures the artifact should have carried."
+}
