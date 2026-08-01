@@ -1,0 +1,514 @@
+{
+ "experiment": "arc_goal_predicate_anatomy",
+ "schema": "carnot.arc_goal_predicate_anatomy.v1",
+ "run_date": "2026-08-01T23:08:12Z",
+ "random_seed": 20260801,
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_note": "No LLM, no GPU, no generation, and no induced code executed. Every predicate property is decided from the abstract syntax tree. The one piece of real compute is replaying banked action routes through the OFFLINE arcade to rebuild each game's induction window so the prompt can be re-derived and sha-gated against the frozen run's record -- env stepping only, in killable per-game subprocesses, no model load.",
+ "preconditions_checked": [
+  {
+   "resource": "metric_validity_analysis",
+   "available": true
+  },
+  {
+   "resource": "objperc_engine_store",
+   "available": true
+  },
+  {
+   "resource": "objperc_rows",
+   "available": true
+  },
+  {
+   "resource": "bestofn_completions",
+   "available": true
+  },
+  {
+   "resource": "bestofn_frozen_prompts",
+   "available": true
+  },
+  {
+   "resource": "live_agent_source",
+   "available": true
+  },
+  {
+   "resource": "world_model_source",
+   "available": true
+  }
+ ],
+ "cited_upstream_artifacts": [
+  {
+   "experiment_id": "arc_metric_validity_20260801",
+   "fields_imported": [
+    "rows[].cell",
+    "rows[].game",
+    "rows[].corpus",
+    "rows[].goal_kind",
+    "rows[].goal_satisfiable",
+    "rows[].plan_found",
+    "rows[].engine_changes_anything_at_root"
+   ],
+   "sha256": "496e86fd06d45aa1684fa2268e8b677e4f5c31a838ae9b57a8092e9344c5d303"
+  },
+  {
+   "experiment_id": "arc_object_perception_ab_change_fidelity_20260801",
+   "fields_imported": [
+    "engines/**/world_model.py",
+    "rows[].prompt_sha256",
+    "meta.json:split_meta"
+   ],
+   "sha256": "cfbe141a1c58aa3e1879ac3740f95caba1c2663aee2a13ed6fe3bab832c57acd"
+  },
+  {
+   "experiment_id": "arc_induce_bestofn_20260731",
+   "fields_imported": [
+    "harness/bon/gpu1/<game>_k<N>.txt",
+    "harness/capture/<game>/prompt1_combined.txt",
+    "bestofn_scored.json:stall_games"
+   ],
+   "sha256": "9ab9e1d3263b88be416b9b17ceb1701117530683de5c3ab6b3573af6c65a822c"
+  }
+ ],
+ "corpus": {
+  "n_engines": 138,
+  "n_games": 21,
+  "n_live": 93,
+  "n_failing_live": 71,
+  "n_plannable": 22,
+  "n_inert": 45,
+  "goal_kind_census_of_failing_live": {
+   "goal_unreached_within_budget": 45,
+   "degenerate_goal_predicate": 24,
+   "goal_predicate_error": 1,
+   "goal_unreached_within_depth": 1
+  }
+ },
+ "clusters_of_the_71_failing_goals": [
+  {
+   "cluster": "A_DECLINED",
+   "what_it_checks": "unconditional `return False` -- no state can satisfy it",
+   "count": 34,
+   "share_of_subset": 0.4789,
+   "games": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "re86",
+    "sc25",
+    "sk48",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93"
+   ],
+   "example_cell": "ls20__r0__on",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r0__on/ls20/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    return False",
+   "never_true_by_construction": true,
+   "goal_kinds": {
+    "goal_unreached_within_budget": 18,
+    "degenerate_goal_predicate": 15,
+    "goal_unreached_within_depth": 1
+   }
+  },
+  {
+   "cluster": "C_UNIFORMITY",
+   "what_it_checks": "'the whole board becomes one colour'",
+   "count": 11,
+   "share_of_subset": 0.1549,
+   "games": [
+    "ar25",
+    "bp35",
+    "cn04",
+    "g50t",
+    "sc25",
+    "tu93",
+    "wa30"
+   ],
+   "example_cell": "tu93__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r0__off/tu93/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is that all cells in the grid are the same color (specifically, color 1).\n    \"\"\"\n    grid = np.array(grid)\n    return np.all(grid == 1)",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "goal_unreached_within_budget": 7,
+    "degenerate_goal_predicate": 4
+   }
+  },
+  {
+   "cluster": "E_FIXED_BAND",
+   "what_it_checks": "decides on a LITERAL grid region (a HUD row, an edge column, a rectangle)",
+   "count": 9,
+   "share_of_subset": 0.1268,
+   "games": [
+    "cd82",
+    "lf52",
+    "ls20",
+    "su15",
+    "tu93"
+   ],
+   "example_cell": "tu93__r0__on",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r0__on/tu93/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    return not np.any(grid[63, :] == 6)",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "goal_unreached_within_budget": 7,
+    "degenerate_goal_predicate": 2
+   }
+  },
+  {
+   "cluster": "B_COLOUR_ELIMINATION",
+   "what_it_checks": "'colour X is gone' / 'X occurs N times' over the whole board",
+   "count": 9,
+   "share_of_subset": 0.1268,
+   "games": [
+    "cd82",
+    "ft09",
+    "g50t",
+    "lf52",
+    "sk48",
+    "su15",
+    "tu93"
+   ],
+   "example_cell": "lf52__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r0__off/lf52/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    return not np.any(grid == 14)",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "goal_unreached_within_budget": 8,
+    "degenerate_goal_predicate": 1
+   }
+  },
+  {
+   "cluster": "D_NO_PREDICATE",
+   "what_it_checks": "generation defect: no return at all, or raises NameError when called",
+   "count": 3,
+   "share_of_subset": 0.0423,
+   "games": [
+    "ar25",
+    "m0r0",
+    "re86"
+   ],
+   "example_cell": "ar25__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ar25__r0__off/ar25/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    import numpy as np",
+   "never_true_by_construction": true,
+   "goal_kinds": {
+    "goal_unreached_within_budget": 1,
+    "goal_predicate_error": 1,
+    "degenerate_goal_predicate": 1
+   }
+  },
+  {
+   "cluster": "F_OBJECT_POSITION",
+   "what_it_checks": "locate an object by colour, then test its coordinates",
+   "count": 3,
+   "share_of_subset": 0.0423,
+   "games": [
+    "lf52",
+    "wa30"
+   ],
+   "example_cell": "wa30__r0__on",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/wa30__r0__on/wa30/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    player_coords = np.argwhere(grid == 14)\n    target_coords = np.argwhere(grid == 0)\n    if len(player_coords) == 0 or len(target_coords) == 0:\n        return False\n    for py, px in player_coords:\n        for ty, tx in target_coords:\n            if py == ty and px == tx:\n                return True\n    return False",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "degenerate_goal_predicate": 1,
+    "goal_unreached_within_budget": 2
+   }
+  },
+  {
+   "cluster": "G_CONNECTIVITY",
+   "what_it_checks": "flood-fill / 'every colour forms one connected region'",
+   "count": 2,
+   "share_of_subset": 0.0282,
+   "games": [
+    "bp35",
+    "ls20"
+   ],
+   "example_cell": "bp35__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r0__off/bp35/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for bp35 is that all cells of the same color \n    must be connected (4-connectivity) and each color must form a \n    single contiguous region.\n    \"\"\"\n    grid = np.array(grid)\n    unique_colors = np.unique(grid)\n    for color in unique_colors:\n        cells = np.argwhere(np.array(grid) == color)\n        if len(cells) == 0:\n            continue\n        start_node = tuple(cells[0])\n        visited = {start_node}\n        queue = [start_node]\n        while queue:\n            curr = queue.pop(0)\n            r, c = tuple(curr)\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                nr, nc = (r + dr, c + dc)\n                if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                    if grid[nr, nc] == color and (nr, nc) not in visited:\n                        visited.add((nr, nc))\n                        queue.append((nr, nc))\n        if len(visited) != len(cells):\n            return False\n    return True",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "goal_unreached_within_budget": 2
+   }
+  }
+ ],
+ "clusters_of_the_22_plannable_goals_for_contrast": [
+  {
+   "cluster": "E_FIXED_BAND",
+   "what_it_checks": "decides on a LITERAL grid region (a HUD row, an edge column, a rectangle)",
+   "count": 11,
+   "share_of_subset": 0.5,
+   "games": [
+    "bp35",
+    "ft09",
+    "re86",
+    "sc25",
+    "tn36",
+    "tr87"
+   ],
+   "example_cell": "sc25__r0__on",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r0__on/sc25/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    return np.all(grid[6:64, 62:64] == 0)",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "satisfiable": 9,
+    "goal_predicate_true_at_root": 2
+   }
+  },
+  {
+   "cluster": "F_OBJECT_POSITION",
+   "what_it_checks": "locate an object by colour, then test its coordinates",
+   "count": 7,
+   "share_of_subset": 0.3182,
+   "games": [
+    "g50t",
+    "ls20",
+    "tr87",
+    "tu93"
+   ],
+   "example_cell": "ls20__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r0__off/ls20/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    coords = np.argwhere((grid >= 9) & (grid <= 12))\n    if coords.size == 0:\n        return False\n    return coords.min(axis=0)[0] < 5",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "satisfiable": 7
+   }
+  },
+  {
+   "cluster": "G_CONNECTIVITY",
+   "what_it_checks": "flood-fill / 'every colour forms one connected region'",
+   "count": 2,
+   "share_of_subset": 0.0909,
+   "games": [
+    "cn04",
+    "ka59"
+   ],
+   "example_cell": "cn04__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r0__off/cn04/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for cn04 is that all cells of the same color\n    must be connected (4-connectivity) and each color must form a \n    single contiguous region.\n    \"\"\"\n    grid = np.array(grid)\n    unique_colors = np.unique(grid)\n    for color in unique_colors:\n        mask = grid == color\n        coords = np.argwhere(mask)\n        if len(coords) == 0:\n            continue\n        start_node = tuple(coords[0])\n        visited = set()\n        queue = [start_node]\n        while queue:\n            curr = queue.pop(0)\n            if curr not in visited:\n                visited.add(curr)\n                r, c = curr\n                for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                    nr, nc = (curr[0] + dr, curr[1] + dc)\n                    if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                        if grid[nr, nc] == color:\n                            queue.append((nr, nc))\n        if len(visited) != len(coords):\n            return False\n    return True",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "satisfiable": 1,
+    "goal_predicate_true_at_root": 1
+   }
+  },
+  {
+   "cluster": "B_COLOUR_ELIMINATION",
+   "what_it_checks": "'colour X is gone' / 'X occurs N times' over the whole board",
+   "count": 1,
+   "share_of_subset": 0.0455,
+   "games": [
+    "ka59"
+   ],
+   "example_cell": "ka59__r0__off",
+   "example_source_path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r0__off/ka59/world_model.py",
+   "example_predicate": "def is_level_complete(grid):\n    return np.any(grid == 0)",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "goal_predicate_true_at_root": 1
+   }
+  },
+  {
+   "cluster": "H_OTHER",
+   "what_it_checks": "unclassified",
+   "count": 1,
+   "share_of_subset": 0.0455,
+   "games": [
+    "tn36"
+   ],
+   "example_cell": "tn36__k1",
+   "example_source_path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k1.txt",
+   "example_predicate": "def is_level_complete(grid):\n    \"\"\"\n    Returns True if the level is complete (win state).\n    The win state isn't explicitly provided, but typically involves filling a certain pattern or \n    # based on the observed transitions, it might be be when all target cells in r1 are filled with 3.\n    \"\"\"\n    target_range = range(56, 62)\n    for col in target_range:\n        if grid[1, col] != 3:\n            return False\n    return True",
+   "never_true_by_construction": false,
+   "goal_kinds": {
+    "satisfiable": 1
+   }
+  }
+ ],
+ "headline": {
+  "n_failing_live": 71,
+  "n_never_true_by_construction": 37,
+  "share_never_true_by_construction": 0.5211,
+  "reading": "Just over half of the failing goals are predicates NO state can satisfy -- an unconditional `return False`, a function with no return, or one that raises. The bounded search was hopeless before it expanded a node, and this is decidable from the syntax tree at generation time without an environment, a search, or a win example."
+ },
+ "was_it_knowable": {
+  "the_question": "Could the model have written a better predicate FROM WHAT IT WAS SHOWN, or was the information genuinely absent?",
+  "first_and_largest_fact": {
+   "n_prompts_examined": 25,
+   "n_containing_a_positive_win_example": 0,
+   "n_containing_the_opening_board_block": 1,
+   "the_opening_board_is_not_a_win_example": "The one prompt carrying that block is vc33's, the only post-bank game here. The block is the CURRENT level's opening layout and, since the 2026-07-29 correction, says so in terms -- 'is_level_complete must return False here'. It is object-vocabulary evidence, not a positive example, and is counted separately for that reason rather than folded into the zero above.",
+   "detail": "Across every prompt on disk -- the object-perception prompts rebuilt here and sha-verified against the frozen run, plus the six best-of-N prompts committed verbatim -- the WIN TRANSITION block appears ZERO times. `is_level_complete` is mentioned once or twice in a ~5,000-character prompt, both times as an interface stub. There is no instruction about the win condition, no example of one, and no pointer to evidence for one. The win predicate is not being induced badly; it is barely being asked for."
+  },
+  "not_one_plannable_goal_came_from_a_trope": {
+   "plannable_clusters": [
+    "B_COLOUR_ELIMINATION",
+    "E_FIXED_BAND",
+    "F_OBJECT_POSITION",
+    "G_CONNECTIVITY",
+    "H_OTHER"
+   ],
+   "reading": "No plannable goal in the corpus is a constant, and none is a 'whole board becomes one colour' predicate. Every one of the 22 names a concrete grid region or a concrete object the agent had watched change. The clusters that dominate the failures are precisely the ones that never appear among the successes."
+  },
+  "split": {
+   "information_was_available_to_the_agent_but_not_in_the_prompt": {
+    "n": 62,
+    "n_measured_directly": 60,
+    "n_inferred_structurally_only": 2,
+    "inferred_cells": [
+     "tr87__r0__on",
+     "tr87__r2__on"
+    ],
+    "basis": "Every object-perception window straddles a real level-up -- build_progress_window ends the window AT the level-up row, and _split_prefix_heldout puts the last third in the held-out half. Measured on 19 of 20 games: 1 level-up in the window, 0 in the shown half, 1 in the held-out half, every time. The agent's own rollout contained the positive example; the prompt did not.",
+    "the_unmeasured_remainder": "The games whose window did not rebuild inside the bound are counted here on the structural argument alone (window ends at the level-up; held-out is the last third; therefore the level-up cannot be in the shown half). That is a weaker basis than the 19 measured games and is separated out rather than pooled, so the measured claim is never inflated by the inferred one."
+   },
+   "information_was_genuinely_absent": {
+    "n": 9,
+    "basis": "The best-of-N corpus is the recorded prefix of STALL runs (ft09, sc25, tn36, tu93). Every shown transition in those prompts is annotated (level 0->0): the agent had never won, so no positive example existed anywhere in its observation stream. This is the bootstrap case in its pure form."
+   }
+  },
+  "but_absence_of_a_win_is_not_absence_of_goal_evidence": {
+   "counterexample": "tn36",
+   "what_happened": "tn36 is a STALL game: zero level-ups in its window, zero win examples, the pure bootstrap case. Five of its eight best-of-N candidates nevertheless induced a SATISFIABLE, plannable goal -- all five by reading the progress bar out of the transition deltas they were shown (`np.all(grid[1, 1:62] == 3)` and variants). The evidence for the goal was in the ordinary transitions; the successful samples used it and the failing ones did not.",
+   "n_games_where_at_least_one_sample_induced_a_satisfiable_goal": 8,
+   "games": [
+    "cn04",
+    "ft09",
+    "g50t",
+    "ls20",
+    "sc25",
+    "tn36",
+    "tr87",
+    "tu93"
+   ],
+   "n_failing_engines_in_such_a_game": 28,
+   "reading": "28 of 71 failing engines sit in a game where another sample, from the same frozen window, proved the evidence sufficed. For those the information was demonstrably available. The remaining 43 are in games where no sample ever succeeded -- which is 4 to 8 attempts per game, far too few to call the information absent. Undetermined is the honest label, not impossible."
+  },
+  "verdict": "PROMPT PROBLEM FIRST, BOOTSTRAP PROBLEM SECOND. The bootstrap problem is real and is not solved by anything here. But it is not the binding constraint, because a constraint upstream of it is currently absolute: not one of the prompts that produced these 138 engines contained a positive example of winning, and the focused goal-only prompt contains no observations whatsoever. Fixing the bootstrap problem cannot be evaluated until the evidence-routing problem in front of it is."
+ },
+ "wiring_check": {
+  "question": "Is `_goal_only_prompt` / the split-induce fallback reached on the LIVE path (arc_competition_agent.make_carnot_agent -> E3AgentPolicy), or only from experiments?",
+  "verdict": "REACHED_ON_THE_LIVE_PATH_BUT_WITH_ZERO_EVIDENCE_ATTACHED",
+  "there_is_no_function_named__split_induce": {
+   "n_defs_in_repo": 0,
+   "n_files_mentioning_the_name_under_python/": 1,
+   "what_it_actually_is": "the FALLBACK BRANCH inside LocalGGUFProposer.induce(): when the combined engine+is_level_complete call fails, induce() makes two focused calls, the second of which is self._goal_only_prompt(...). The name appears exactly once in the whole package, in a comment."
+  },
+  "live_induce_call_sites": [
+   {
+    "line": 6179,
+    "text": "ok, _ = self._proposer().induce(self.short, active_transitions, self.cell)"
+   }
+  ],
+  "live_call_passes_previous_level_complete_grid": false,
+  "why_that_matters": "E3AgentPolicy._induce_and_plan calls `self._proposer().induce(self.short, active_transitions, self.cell)` with NO previous_level_complete_grid. So on the first-contact and stall paths the kwarg defaults to None, `_goal_only_prompt`'s `win` block is the empty string, and the focused win-condition prompt contains no grid, no transition and no observation of any kind -- only the game's opaque id. The level-up REINDUCTION path is different: it routes through execute_bounded_llm_reinduction and does pass the exemplar.",
+  "goal_only_prompt_def": [
+   {
+    "line": 5737,
+    "text": "def _goal_only_prompt("
+   }
+  ],
+  "goal_only_prompt_call_sites_in_package": [
+   {
+    "line": 5838,
+    "text": "self._goal_only_prompt(game, previous_level_complete_grid),"
+   }
+  ],
+  "levelup_row_is_excluded_from_every_live_induction": {
+   "claim": "`_active_transitions()` -- the transition list every live induction prompt is built from -- can never contain a level-up row, so the WIN TRANSITION block added by the 2026-07-29 win-state correction is unreachable on the live path.",
+   "mechanism": "In next_move the level-up transition is APPENDED to self.transitions first; _observe_level_boundary then runs and _begin_level_goal_episode sets _episode_transition_start = len(self.transitions), i.e. one past the row just appended. _active_transitions() slices from that index.",
+   "append_line": [
+    {
+     "line": 5527,
+     "text": "self.transitions.append(transition)"
+    }
+   ],
+   "observe_boundary_line": [
+    {
+     "line": 5572,
+     "text": "boundary_events = self._observe_level_boundary(latest, frames_seen=len(frames))"
+    }
+   ],
+   "episode_start_assignment": [
+    {
+     "line": 4704,
+     "text": "self._episode_transition_start = len(self.transitions)"
+    }
+   ],
+   "active_transitions_slice": [
+    {
+     "line": 4656,
+     "text": "return list(self.transitions[self._episode_transition_start :])"
+    }
+   ],
+   "ordering_holds": true,
+   "also_true_if_the_row_is_rejected": "If the transition-cycle verifier refuses the level-up row it is never appended at all, so it is excluded either way. There is no ordering under which the boundary row survives into the next episode's induction window."
+  },
+  "plain_path_goal_gate_is_default_off": {
+   "env_flag": "CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK",
+   "sites": [
+    {
+     "line": 6414,
+     "text": "if os.environ.get(\"CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK\") == \"1\":"
+    }
+   ],
+   "meaning": "On the first-contact/stall live path the goal predicate is not checked for satisfiability at all unless this dev-only flag is set. A degenerate goal is not detected there; the planner simply searches and finds nothing."
+  }
+ },
+ "shadowing_defect": {
+  "what": "22 of the 114 object-perception engines define is_level_complete TWICE. Python binds the LAST top-level definition, so the planner calls the second one and the first is dead code.",
+  "n_with_two_definitions": 22,
+  "n_with_the_combine_world_model_signature": 22,
+  "the_two_sets_are_identical": true,
+  "mechanism": "_combine_world_model concatenates the focused ENGINE block with the focused GOAL block. The engine call is asked for `engine` only but the model routinely writes is_level_complete alongside it -- with the transitions in context. The goal-only block is then appended, and it was generated from a prompt containing no observations. The evidence-grounded predicate is shadowed by the evidence-free one.",
+  "bound_predicate_clusters": {
+   "C_UNIFORMITY": 12,
+   "G_CONNECTIVITY": 6,
+   "D_NO_PREDICATE": 3,
+   "A_DECLINED": 1
+  },
+  "note_on_the_dominant_cluster": "12 of the 13 'whole board becomes one colour' predicates in the entire corpus come from these 22 cells. That trope is very nearly the fingerprint of the evidence-free goal-only prompt.",
+  "examples": [
+   {
+    "cell": "s5i5__r0__off",
+    "shadowed_first_definition": "def is_level_complete(grid):\n    return np.all(grid[63] == 4)",
+    "bound_last_definition": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for s5i5 is that all cells are the same color (specifically, color 1).\n    \"\"\"\n    grid = np.array(grid)\n    return np.all(grid == 1)"
+   },
+   {
+    "cell": "tu93__r0__off",
+    "shadowed_first_definition": "def is_level_complete(grid):\n    player_coords = np.argwhere(grid == 9)\n    goal_coords = np.argwhere(grid == 14)\n    if len(player_coords) == 0 or len(goal_coords) == 0:\n        return False\n    for pr, pc in player_coords:\n        for gr, gc in goal_coords:\n            if abs(pr - gr) <= 2 and abs(pc - gc) <= 2:\n                return True\n    return False",
+    "bound_last_definition": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is that all cells in the grid are the same color (specifically, color 1).\n    \"\"\"\n    grid = np.array(grid)\n    return np.all(grid == 1)"
+   },
+   {
+    "cell": "cn04__r0__off",
+    "shadowed_first_definition": "def is_level_complete(grid):\n    \"\"\"\n    Returns True if the level is complete (win state).\n    Based on typical ARC games, this usually means reaching a target configuration.\n    Since no win state was provided, we return False unless a known condition is met.\n    \"\"\"\n    return False",
+    "bound_last_definition": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for cn04 is that all cells of the same color\n    must be connected (4-connectivity) and each color must form a \n    single contiguous region.\n    \"\"\"\n    grid = np.array(grid)\n    unique_colors = np.unique(grid)\n    for color in unique_colors:\n        mask = grid == color\n        coords = np.argwhe"
+   },
+   {
+    "cell": "ar25__r0__off",
+    "shadowed_first_definition": "def is_level_complete(grid):\n    return False",
+    "bound_last_definition": "def is_level_complete(grid):\n    import numpy as np"
+   }
+  ],
+  "confound_stated": "The split path fires only when the combined call already failed, which correlates with harder games, so the plan-rate difference (2/22 split vs 14/92 combined) is NOT evidence of causation and is not claimed as such. The shadowing itself is a property of the code and does not depend on that comparison."
+ },
+ "recommendation": {
+  "one_intervention": "Extend the accept-time defect check in LocalGGUFProposer.generate() from engine() to is_level_complete(): reject a predicate that is constant, has no return, or raises, and re-ask -- with the observed transitions attached to the goal-only prompt, which today receives none.",
+  "why_this_one": "The machinery already exists and covers only half the file. generate() takes `engine_transitions` and DRY-RUNS the emitted engine before accepting it; its own docstring records that this caught 22 of 36 mechanically defective candidates, `missing_return` being the largest kind. There is no equivalent check for the goal predicate, and 37 of the 71 failing goals -- 52% -- are exactly that defect class. The second half, attaching the transitions to _goal_only_prompt, is a one-line reuse of _transitions_block and removes the only condition in the pipeline where the model is asked a question with literally zero evidence in front of it.",
+  "does_it_escape_the_bootstrap_problem": "PARTLY, and the halves must be stated separately. DETECTION escapes it completely: 'is this predicate constant' needs no positive example, no environment and no win, so the 37-engine slice is a generation defect rather than an information deficit and is fixable today. REPAIR does not escape it: a model that has seen no win may re-emit a different generic trope. The evidence that re-asking is not hopeless is tn36 -- five of eight candidates induced a satisfiable goal from a window with zero level-ups -- and the best-of-N result that unconditional plan-yield went 0.0 at N=1 to 0.4 at N=4 under a goal filter. Both are small-n; neither is a guarantee.",
+  "what_it_does_not_fix": "It does not give the live agent a positive win example. That needs the separate one-line fix named in wiring_check: _active_transitions() excludes the level-up row because _episode_transition_start is set one past it, so the WIN TRANSITION block can never fire live. Fixing that helps only AFTER the first win, which is why it is listed as a bug to fix and not as the intervention to measure.",
+  "how_to_falsify": "Re-run the object-perception A/B unchanged except for the accept check, on the same 20 frozen windows, and pre-register the outcome as the count of LIVE engines whose goal is satisfiable. The prediction is that the A_DECLINED cluster shrinks toward zero. If the freed samples land in C_UNIFORMITY and B_COLOUR_ELIMINATION instead, with no gain in satisfiable goals, the intervention is refuted and the bootstrap reading is the right one after all."
+ },
+ "reproducibility_checksum": "e7c14c2d7b7b90c764b00abfcbbc7f8b4e94df2c9d2917a6acb6aef2aac15c37",
+ "duration_s": 475.821,
+ "honest_verdict": "complete_goal_induction_is_evidence_starved_not_bootstrap_blocked"
+}
