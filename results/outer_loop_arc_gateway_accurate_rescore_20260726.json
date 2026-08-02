@@ -3168,6 +3168,22 @@
     "acknowledged_on": "2026-08-01",
     "reason": "CASCADED, not caused by a code change. This artifact declares an upstream ARTIFACT dependency whose bytes changed only because a freshness acknowledgement was appended to its provenance block on 2026-08-01. No measured value in the upstream moved.",
     "evidence": "The upstream diff is purely additive -- an appended `freshness_acknowledgements` entry, zero deletions, zero changes to any measured field (verified by git numstat). The underlying code change, an optional `win_transition` parameter defaulting to None, was separately shown to leave `induce_prompt` output BYTE-IDENTICAL to the renderer recovered from git on all six captured games."
+   },
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": "3df7242f16da34e04a4015cfdec1725444c765550c7a8a1920dc818b9cdc42cd",
+    "sha256_now": "dc800f7f68c68ce5c0e92df5320bc92d42652f2eece0c31fef6918d82fe2c164",
+    "acknowledged_on": "2026-08-02",
+    "reason": "CASCADE, not a re-measurement. The upstream artifact's NUMBERS did not move: the only edit to it on 2026-08-02 was appending one `provenance.freshness_acknowledgements` entry recording that REQ-ARC-WMTE-6071's default-OFF change to python/carnot/agentic/arc_competition_agent.py is verified inert. Acknowledging a provenance-block append as inert downstream is the same judgement, one level up.",
+    "evidence": "PROVEN BY DIFF. `git diff` on the upstream artifact for this date shows insertions only, entirely inside `provenance.freshness_acknowledgements`, and zero deletions and zero changed result keys. The underlying code inertness it records was itself proven by a 25-of-25 byte-identical action-trace differential against git HEAD -- see that entry's own `evidence` field and results/arc_inert_label_defer_20260802/arc_inert_label_defer.json."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": "78a2a3dbe415af25b0c6e32b7a5fbcb9cd9814829b6b24e8e7fe503ee9592fbc",
+    "sha256_now": "73427fa2dea423ad74249c0b0f038b9cdf93420ddee1a0fec32cb6e7c6fdcc38",
+    "acknowledged_on": "2026-08-02",
+    "reason": "CASCADE, not a re-measurement. The upstream artifact's NUMBERS did not move: the only edit to it on 2026-08-02 was appending one `provenance.freshness_acknowledgements` entry recording that REQ-ARC-WMTE-6071's default-OFF change to python/carnot/agentic/arc_competition_agent.py is verified inert. Acknowledging a provenance-block append as inert downstream is the same judgement, one level up.",
+    "evidence": "PROVEN BY DIFF. `git diff` on the upstream artifact for this date shows insertions only, entirely inside `provenance.freshness_acknowledgements`, and zero deletions and zero changed result keys. The underlying code inertness it records was itself proven by a 25-of-25 byte-identical action-trace differential against git HEAD -- see that entry's own `evidence` field and results/arc_inert_label_defer_20260802/arc_inert_label_defer.json."
    }
   ]
  },

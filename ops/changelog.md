@@ -1,5 +1,66 @@
 # Carnot — Changelog
 
+## 2026-08-02 (outer-loop, REQ-ARC-WMTE-6071: cut the largest AVOIDABLE action class -- inert probes)
+
+**Instruction:** cut the largest avoidable class from the 2026-08-02 ARC action census, behind an
+env flag, default OFF; score on actions-to-PROGRESS, not raw action count; a null is a result.
+
+**What the census said to attack.** `expansion.probe_was_inert_frame_unchanged` -- actions after
+which the raw frame is byte-identical -- is 19.1% of the budget at 240 actions and 18.4% at 2000.
+The cause is structural: a node's `untested` list is built once per node, so two nodes showing the
+same object each pay separately for the same click. The most-repeated inert label on the roster
+was probed 356 times in one run.
+
+**Built (`REQ-ARC-WMTE-6071`, DEFAULT OFF).**
+`python/carnot/agentic/arc_inert_label_memory.py` + wiring in `arc_competition_agent.py`: an
+online memory keyed on the LITERAL `(action_id, x, y)`, learned from the agent's own transitions
+via `_ingest`'s unconditionally-maintained unmasked frame hash. It never drops a row -- it changes
+only WHICH row a node pops next, and abstains entirely once every remaining row is deferrable, so
+`_node_has_open_tier`, the frontier schedule and the node's drain time are untouched. Three axes
+of difference from the RETIRED `InertClickSigPruner` (key, consequence, learning channel) are
+recorded in the module docstring and in the artifact's `prior_failures`.
+
+**Measured (`results/arc_inert_label_defer_20260802/`, 3 arms x 25 games x 3 seeds, budget 2000,
+offline arcade, LLM off, 0 missing observations, adversarial-verify clean).**
+* **A/A noise floor: 75 of 75 identical action traces.** The agent is deterministic here, so every
+  treatment divergence is causal, not sampled.
+* **Target class: 9,208 -> 4,239 actions (-54.0%), 13 games better / 1 worse, p = 0.0018.**
+* **Live 400-action budget: games banking a level 3 -> 6** (ft09 x59.5, lp85 x9.0, su15 x2.5 on
+  the first level's score; `min((baseline/agent)**2, 115)` with the baseline cancelling).
+* **But every PRE-REGISTERED progress axis is NULL.** Levels 14 -> 13 at budget 2000 (cd82 loses
+  one, at BOTH evidence floors); hand-verifier progress flat; states p = 0.79. And NAVIGATION IS
+  SIGNIFICANTLY WORSE (12,146 -> 13,903, 12 games worse, p = 0.013): the saved probes buy a deeper
+  graph whose RESET-replay navigation costs 1 + depth.
+* **The design could not have reached p<0.05 on the primary axis**: only 1 game moved, and a paired
+  game-clustered sign test needs 6 discordant games. Stated before the result, not after.
+* **The seed axis is decorative**: 0 of 25 games differ across the three seeds in either arm,
+  because `random.seed`/`np.random.seed` do not reach the explorer's frontier RNG.
+
+**Recommendation: DO NOT flip `SUBMITTED_INERT_LABEL_DEFER_ENABLED`.** Next is a LIVE-BUDGET
+(400-action) A/B where the primary axis is reachable, plus an investigation of cd82 -- not another
+2000-action roster sweep.
+
+**Two process failures recorded rather than quietly fixed.**
+1. The FIRST A/B corpus was DISCARDED, not repaired. This session hot-swapped
+   `arc_competition_agent.py` for ~20s to check three unrelated pre-existing test failures while
+   the A/B ran in the background; 7 of 225 cells provably ran against the pre-change source. Those
+   7 are the cells that ANNOUNCED the swap via an AttributeError in their own diagnostics -- a
+   flag-off cell in the same window would have been silent -- so the contaminated set could not be
+   bounded and the whole corpus was re-run with the source sha256 pinned before and after.
+2. The level-up SACRED veto was DECORATIVE when first written: deleting it left the suite GREEN,
+   because `observe` counts a level-up as an effect too, so the frame-change veto already covered
+   it. Found by mutation, not by reading. `set_counts_for_test` now exists solely to reach the one
+   state `observe` cannot, and 6 of 6 mutations are killed.
+
+**Inertness of the default-OFF path, proven by differential.** git HEAD's
+`arc_competition_agent.py` was swapped into this checkout (same untracked assets, nothing else
+running) and all 25 games re-run at budget 2000: **25 of 25 byte-identical action traces**; source
+restored and sha256 re-verified. This is what backs the `provenance.freshness_acknowledgements`
+entries added to the 12 artifacts the freshness lint flagged (insertions only, 8-16 lines each).
+NOTE FOR THE NEXT AUTHOR: a git-WORKTREE differential does NOT work for this agent -- a fresh
+worktree lacks untracked assets the live path reads (`results/experiment_4629_live_frame_change_cnn.pt`
+among them) and diverges on 19 of 25 games for reasons unrelated to the change under test.
+
 ## 2026-08-02 (outer-loop, VERIFICATION PASS on the goal-evidence A/B: a hidden-game reach claim retracted, and GROUNDED shown not to discriminate)
 
 **Instruction:** verify each review finding against the run's own data BEFORE applying it; do not
