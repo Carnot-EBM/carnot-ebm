@@ -95,12 +95,33 @@ adapter, no curated win example. `_previous_level_complete_grid` is passed as `N
 
 The transitions shown are the prefix split, so **`levelup_rows_in_shown` is 0 for all 20 games**:
 every predicate in this run was written by a model that had never seen the game won. Verified by
-inspecting a rendered treatment prompt directly — every delta line reads `level 0->0`. This is
-exactly the condition a hidden game presents, which is why stall games are in the roster on
-purpose.
+inspecting a rendered treatment prompt directly — every delta line reads `level 0->0`.
 
 `solve_provenance: development_proxy` — no game is solved and no level is banked; the measurement
 is offline on public games.
+
+### CORRECTION 2026-08-02 (post-review, same day): this does *not* extend to an unsolved game
+
+The paragraph above used to end "…This is exactly the condition a hidden game presents, which is
+why stall games are in the roster on purpose." That is wrong twice, and the artifact's
+`works_on_an_unsolved_game` has been flipped from `true` to `false`.
+
+- **There are no stall games in the roster.** All 20 are `full_game_clear: true` in
+  `ops/arc_solve_registry.yaml` (`levels_reproduced` 6–10), and every window is built by
+  `build_progress_window` → `exp5717.build_window` → `arc_loop_solve.solve_adaptered(game, 1)`,
+  which returns `None` unless the game solves to L1 offline through a registered `GameAdapter`.
+  The window builder logged `levelups=1` for all 20, and `split_meta` records
+  `levelup_rows_in_heldout: 1` for all 20. The verified claim is the narrower one:
+  `levelup_rows_in_shown == 0`, i.e. no *arm* was shown a win.
+- **Prompt content is clean; transition *selection* is not.** The window is the last k actions of
+  a banked winning route, cut at the L0→L1 boundary. On a hidden game the live `trans` at a
+  `_split_induce` call is a stall-triggered exploration buffer instead — the same field, a
+  different distribution. `_goal_prompt_transitions_on`'s docstring has been narrowed to say the
+  field is available on a hidden game and the distribution is untested.
+
+What would settle it: run the same contrast on a game with no registered adapter and no banked
+route. That needs a different harness, because `build_progress_window` returns `None` for such a
+game by construction.
 
 ## The mechanism finding
 
@@ -210,11 +231,48 @@ whole-board uniformity claim names nothing observed by construction. MISSING is 
 The circularity is confined to GROUNDED. It was **not** "fixed", because removing it would mean
 changing a pre-registered outcome definition after seeing data.
 
+> **UPGRADED 2026-08-02 (post-review): the disclosure above was necessary but not sufficient.**
+> It still assumed the label at least *measures* the agent's own transitions. A placebo test on
+> this run's own cells — `results/arc_goal_evidence_20260802/placebo.py`, output in
+> `out/grounded_placebo.json` — shows it does not. Re-scoring every captured predicate against a
+> **different game's** transitions preserves the label on **91.9%** of comparisons (262 of 285),
+> and all four GROUNDED cells stay GROUNDED under 17–19 of 19 foreign games — including
+> `bp35__r0__gB`, the single surviving cell that produced the treatment arm's headline
+> `grounded_rate = 1.0` (GROUNDED under 18 of 19).
+>
+> The cause is measurable: `_int_literals` harvests every integer 0–63 anywhere in the body —
+> array indices, `!= 0` background masks, `range`/`axis` arguments — and intersects that flat set
+> against the pooled union of observed rows, columns and colours. The accepting set averages
+> **65.9% of the whole literal space** (min 32.8% on `tn36`, max 96.9% on `bp35`, the game that
+> supplied half the GROUNDED cells), and literal `0` alone grounds on 17 of 20 games.
+>
+> Two behaviour-preserving rewrites, run against real captured cells, not fixtures:
+>
+> - `return False` → `return False and grid[0, 0] == 4` short-circuits to a bit-identical
+>   function, and flips **all five** real DECLINED cells to GROUNDED — exactly inverting the
+>   reported S2-B/S2-C result (declined 1.0 / grounded 0.0 → declined 0.0 / grounded 1.0) from a
+>   model that got strictly no better.
+> - Alpha-renaming `non_zero_colors` → `nzc` flips `bp35__r0__gAA` TROPE → GROUNDED, and swapping
+>   the operands of `np.all(grid == grid[0, 0])` flips `ar25__r0__gA` TROPE → GROUNDED, because
+>   `C_UNIFORMITY` is a hardcoded five-substring match over `ast.unparse` and every paraphrase
+>   escapes into `H_OTHER`.
+>
+> **`GROUNDED` is a syntax label, not an evidence label, and its rates must not be quoted as
+> evidence-use rates.** The PRIMARY (DECLINED) and TROPE are re-checked and still clean: a
+> constant-`False` predicate references nothing and a whole-board claim names nothing observed, so
+> neither can be manufactured by prompt content.
+
 **2. Arm order within a game is fixed, not randomised — and that confounds the timing measure.**
 Cells run `A, B, C, AA` (and `gA, gB, gAA`) always in that order, so anything drifting with
 position — llama.cpp prompt-cache warmth, GPU thermal state — is confounded with the arm label.
-Shape is protected by the fixed seed, and the byte-identity result above is direct evidence that
-order is not perturbing the sampled output. **Timing is not protected**, and the run shows it: on
+~~Shape is protected by the fixed seed, and the byte-identity result above is direct evidence that
+order is not perturbing the sampled output.~~ **Corrected 2026-08-02:** that sentence contradicted
+this note's own byte-identity result and the `DIAGNOSIS` recorded in the artifact. The check
+*fired*: on `bp35` the control wrote 3,722 bytes and both treatments 4,150, at the same seed 8300,
+with the goal-only call firing in none of the three — so neither knob could have acted. A fixed
+`CARNOT_ARC_GENERATOR_SEED` does **not** fix the completion on this server, the pairing is
+approximate, and **arm order is a confound on shape, not only on timing**. **Timing is not
+protected either**, and the run shows it: on
 `ar25` the control took 111.4s against 55.2/55.1s for the treatments, while on `bp35` the control
 took 44.5s against 67.5/67.6s — the sign flips between games. Stage-2 `median_elapsed_s` is
 therefore descriptive only and carries no p-value.
@@ -245,6 +303,24 @@ truncated mid-definition. A future run should counterbalance arm order regardles
   column or colour. That biases toward calling a predicate grounded, so the analysis separates
   `groundable_rate` (did the model write a region-naming predicate at all) from
   `grounded_given_groundable` (was the thing it named something it had actually seen).
+  **Corrected 2026-08-02: "easy to pass" understated it — it does not discriminate at all.** See
+  the placebo box above; `GROUNDED` is a syntax label and neither split rescues it.
+- **No contrast in this run could have reached α = 0.05, whatever the model did.** With one
+  treatment and one control cell per game the permutation reference set is `2**n_games`, so the
+  smallest attainable two-sided *p* is `2 / 2**n_games`: **1.0** on the PRIMARY (one paired game),
+  **0.5** on stage 2 (two games) and **0.25** on the three-game stage-1 blocks. The artifact's
+  `min_reachable_p: 0.0` is the *design's* floor at the pre-registered 20 games and says nothing
+  about the truncated run; `min_reachable_p_at_achieved_n` now reports both. This is what makes
+  NON-TEST a structural fact rather than a reading of the observed *p*-values.
+- **The split-vs-combined partition behind the "3.4 point ceiling" is a one-directional proxy.**
+  Split-induce is inferred as `n_defs >= 2` (the shadowing signature), which holds on all 116
+  frozen cells *by construction* — it is the definition used, not an independent measurement.
+  `_split_induce` writes one definition whenever the engine half supplied no `is_level_complete`,
+  so such a cell has `n_defs == 1` and is counted as combined. The error runs one way, and split
+  cells decline far less (0.174 vs 0.495), so **3.4 points is a lower bound on the knobs' reach,
+  not a ceiling**. The direction of the finding is unaffected. To settle it, persist
+  `_write_world_model`'s split-induce note per cell — today it is returned to the caller and never
+  written down.
 
 ## What this does not license
 

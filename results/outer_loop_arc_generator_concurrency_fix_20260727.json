@@ -1034,6 +1034,15 @@
         "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
         "acknowledged_date": "2026-08-02",
         "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
+        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
+        "acknowledged_on": "2026-08-02",
+        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
+        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
+        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."

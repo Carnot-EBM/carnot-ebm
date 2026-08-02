@@ -1,5 +1,107 @@
 # Carnot — Changelog
 
+## 2026-08-02 (outer-loop, VERIFICATION PASS on the goal-evidence A/B: a hidden-game reach claim retracted, and GROUNDED shown not to discriminate)
+
+**Instruction:** verify each review finding against the run's own data BEFORE applying it; do not
+apply one that could not be verified. Leave the tree clean.
+
+Every finding below was reproduced from the run's own files before anything was edited. Nothing in
+`out/preregistration.json`, `out/rows.json` or `out/analysis.json` was touched, so
+`reproducibility_checksum` and `prereg_sha256` both still verify against the committed values.
+
+### 1. `works_on_an_unsolved_game` was FALSE. Retracted.
+
+Not one unsolved game was measured. All 20 roster games are `full_game_clear: true` in
+`ops/arc_solve_registry.yaml` (`levels_reproduced` 6–10), and every window came from
+`build_progress_window` → `exp5717.build_window` → `arc_loop_solve.solve_adaptered(game, 1)`,
+which returns `None` unless the game solves to L1 offline through a registered `GameAdapter` —
+its own docstring says so. The window builder logged `levelups=1` for all 20 and `split_meta`
+records `levelup_rows_in_heldout: 1` for all 20, so the harness's claim that "stall games with
+zero observed wins are in the roster on purpose" is contradicted by its own witness. The verified
+claim is the narrower `levelup_rows_in_shown == 0`: no *arm* was shown a win.
+
+The named existence proof was worse: `tn36` is `full_game_clear: true` with `levels_reproduced: 7`
+and four explicit outer-loop source reads in its registry entry (`tn36.py:2153`, `:2171`, `:2269`,
+`:2500`) — and it contributed **zero** cells to this run (`rows.json` holds only `ar25`, `bp35`,
+`cd82`). That field is deleted.
+
+The unstated confound behind it: prompt *content* is clean, but transition **selection** is
+solve-conditioned. The window is the last k actions of a banked winning route cut at the L0→L1
+boundary; on a hidden game the live `trans` at a `_split_induce` call is a stall-triggered
+exploration buffer — the same field, a different distribution. `_goal_prompt_transitions_on`'s
+docstring claim "It is exactly as available on a hidden game as on a solved one" has been narrowed
+in place to say the field is available and the distribution untested. **This is not a provenance
+violation** — `solve_provenance: development_proxy` was declared correctly, no level is banked and
+`adversarial_verify` flags nothing. It is an overclaimed reach boundary on an otherwise
+honestly-scoped artifact.
+
+### 2. `GROUNDED` is a syntax label, not an evidence label
+
+The artifact already disclosed the circularity (the treatment prompt *is* the deltas the outcome
+checks for). That was necessary but not sufficient: it still assumed the label at least *measures*
+the agent's transitions. A placebo test on the run's own cells
+(`results/arc_goal_evidence_20260802/placebo.py` → `out/grounded_placebo.json`) shows it does not.
+
+- Re-scoring every captured predicate against a **different game's** transitions preserves the
+  label on **262 of 285 comparisons (91.9%)**. All four GROUNDED cells stay GROUNDED under 17–19
+  of 19 foreign games — including `bp35__r0__gB`, the single surviving cell that produced the
+  treatment arm's headline `grounded_rate = 1.0` (GROUNDED under 18 of 19).
+- Cause: `_int_literals` harvests every integer 0–63 anywhere in the body (indices, `!= 0` masks,
+  `range`/`axis` args) and intersects that flat set against the pooled union of observed rows,
+  columns and colours. The accepting set averages **65.9% of the literal space** (min 32.8% on
+  `tn36`, max 96.9% on `bp35` — the game that supplied half the GROUNDED cells), and literal `0`
+  alone grounds on 17 of 20 games.
+- Two behaviour-preserving rewrites, run on real captured cells: `return False` →
+  `return False and grid[0, 0] == 4` short-circuits to a bit-identical function and flips **all
+  five** real DECLINED cells to GROUNDED, exactly inverting the reported S2-B/S2-C result from a
+  model that got strictly no better; alpha-renaming a local or swapping `==` operands flips TROPE
+  cells to GROUNDED, because `C_UNIFORMITY` is a five-substring match over `ast.unparse`.
+
+The PRIMARY (DECLINED) and TROPE were re-checked and are still clean — a constant-`False`
+predicate references nothing and a whole-board claim names nothing observed.
+
+### 3. Three smaller corrections
+
+- **`min_reachable_p: 0.0` was the design's floor, not the run's.** With one treatment and one
+  control cell per game the permutation reference set is `2**n_games`, so the smallest attainable
+  two-sided *p* is `2 / 2**n_games`: **1.0** on the PRIMARY (one paired game), **0.5** on stage 2,
+  **0.25** on the three-game stage-1 blocks. No contrast in this run could have reached α = 0.05
+  whatever the model did. Added as `min_reachable_p_at_achieved_n` beside the design-time value.
+  (The 0.5002 that reached the summary as `min_reachable_p` is the *observed* p of the stage-1
+  missingness contrast — a mislabel in the summary only; the artifact was internally consistent.)
+- **The split-vs-combined partition is a one-directional proxy.** `split == (n_defs >= 2)` holds on
+  all 116 frozen cells *by construction* — it is the definition used. `_split_induce` writes one
+  definition whenever the engine half supplied no `is_level_complete`, so such a cell counts as
+  combined. Split cells decline far less (0.174 vs 0.495), so **3.4 points is a lower bound on the
+  knobs' reach, not a ceiling**. Sign of the finding unaffected. Fix: persist
+  `_write_world_model`'s split-induce note per cell — today it is returned and never written down.
+- **An internal contradiction is resolved.** `known_confounds` claimed the byte-identity check was
+  "direct evidence that order is not perturbing the sampled output" while the `DIAGNOSIS` field in
+  the same artifact recorded that identity FAILED on `bp35`. The DIAGNOSIS was right; the confound
+  entry was stale prose and now says arm order confounds shape, not only timing.
+
+### 4. Found while applying the above: the artifact was not the output of its own builder
+
+`exhibit_truncation` and `known_confounds` were present in the committed artifact and in **no code
+path**; `artifacts{}` carried annotations `build_artifact.py` did not emit. Rebuilding produced 47
+leaf differences. Both blocks are now constructed in `build_artifact.py`, so a rebuild reproduces
+the file. This is exactly the class `scripts/artifact_freshness_lint.py` exists for — it did not
+fire because this artifact is not in `ops/analyzer_artifact_index.json`, the coverage limit that
+lint's own docstring names out loud, demonstrated on a live artifact one day later.
+
+`out/preregistration.json` was deliberately **not** edited despite containing the retracted
+sentence — a pre-registration rewritten after seeing data is not a pre-registration. `run_ab.py`
+carries an in-place retraction comment beside the emit site and emits the same bytes.
+
+The `arc_executable_world_model.py` docstring narrowing left 7 registered artifacts stale. Each
+carries a new `freshness_acknowledgements` entry whose evidence is mechanical rather than
+argued: both versions parsed, **every** docstring stripped from the AST, `ast.dump` compared —
+identical (`bb71fe38bdc9dd71` on both). A change that cannot alter the stripped AST cannot alter
+any recorded value.
+
+**Defaults unchanged.** Both knobs still ship OFF. `adversarial_verify` 0-flagged after the
+rebuild; `artifact-freshness-lint: OK`. No scored or online ARC game was played.
+
 ## 2026-08-02 (outer-loop, ARC goal-evidence A/B: the two shipped goal knobs are aimed at the wrong 20% of cells)
 
 **Instruction:** measure whether giving the goal prompt the agent's own observed evidence stops
