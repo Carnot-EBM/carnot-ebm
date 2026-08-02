@@ -3152,6 +3152,22 @@
     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
     "acknowledged_date": "2026-07-31",
     "why_not_rebuilt": "A rebuild would reprocess byte-identical measurement inputs to produce byte-identical numbers. The recorded rebuild_command stands for anyone wanting rebuild-strength proof; the inertness here is structural -- the upstream diff contains no data line."
+   },
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": null,
+    "sha256_now": "3df7242f16da34e04a4015cfdec1725444c765550c7a8a1920dc818b9cdc42cd",
+    "acknowledged_on": "2026-08-01",
+    "reason": "CASCADED, not caused by a code change. This artifact declares an upstream ARTIFACT dependency, and that upstream's bytes changed only because a freshness acknowledgement was appended to its own provenance block on 2026-08-01. No measured value in the upstream moved.",
+    "evidence": "The upstream diff is +8 -0: a single appended `freshness_acknowledgements` entry, zero deletions and zero changes to any measured field. Verified by numstat at the time of writing. The underlying code change (an optional `win_transition` parameter defaulting to None) was separately shown to leave `induce_prompt` output BYTE-IDENTICAL to the renderer recovered from git on all six captured games."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": null,
+    "sha256_now": "78a2a3dbe415af25b0c6e32b7a5fbcb9cd9814829b6b24e8e7fe503ee9592fbc",
+    "acknowledged_on": "2026-08-01",
+    "reason": "CASCADED, not caused by a code change. This artifact declares an upstream ARTIFACT dependency whose bytes changed only because a freshness acknowledgement was appended to its provenance block on 2026-08-01. No measured value in the upstream moved.",
+    "evidence": "The upstream diff is purely additive -- an appended `freshness_acknowledgements` entry, zero deletions, zero changes to any measured field (verified by git numstat). The underlying code change, an optional `win_transition` parameter defaulting to None, was separately shown to leave `induce_prompt` output BYTE-IDENTICAL to the renderer recovered from git on all six captured games."
    }
   ]
  },

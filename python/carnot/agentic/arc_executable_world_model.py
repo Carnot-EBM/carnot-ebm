@@ -2527,6 +2527,10 @@ def _transitions_block(
     previous_level_complete_grid: Optional[np.ndarray] = None,
     hud_mask: Optional[np.ndarray] = None,
     hud_mask_enabled: Optional[bool] = None,
+    # The level-up transition, supplied rather than found. `None` preserves the historical
+    # behaviour exactly: scan `trans` for `level_after > level_before`. See the WIN TRANSITION
+    # block below for why supplying it is not the same as appending it to `trans`.
+    win_transition: Optional[Transition] = None,
 ) -> str:
     """Compact transition encoding for the induce prompt: ONE full grid (the layout) +
     per-transition DELTAS (changed cells), + the full WIN state if observed. Prefers
@@ -2577,7 +2581,20 @@ def _transitions_block(
             f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
             f"changed cells (FULL, run-length) = {_rle_delta_compact(t.grid, t.next_grid)}"
         )
-    win = next((t for t in trans if t.level_after > t.level_before), None)
+    # `win_transition` lets a caller SUPPLY the level-up transition instead of relying on one
+    # being present in `trans`. That is not a convenience -- on the live path the win transition
+    # is structurally absent from `trans`, so this block could never fire (see the parameter's
+    # docstring note). Falling back to the scan keeps every existing caller byte-identical.
+    #
+    # IT IS A SEPARATE PARAMETER, NOT AN APPEND TO `trans`, and that is the load-bearing choice.
+    # `changed`/`noop` above are built from `trans`, so a level-up transition placed there would
+    # ALSO be rendered as an ordinary dynamics example -- and the completing action re-lays out
+    # the whole playfield (measured: 3527 of 4096 cells on ka59, against an ordinary-step median
+    # of 18.5). Teaching the proposer that a single action can change 86% of the board is a worse
+    # defect than the one being fixed.
+    win = win_transition
+    if win is None:
+        win = next((t for t in trans if t.level_after > t.level_before), None)
     if win is not None:
         # THE WIN STATE IS NOT A RENDERED FRAME (measured 2026-07-29). This block used to emit
         # `win.next_grid` under the label "is_level_complete must return True here". That claim is
@@ -2848,6 +2865,9 @@ def induce_prompt(
     cell: int,
     *,
     previous_level_complete_grid: Optional[np.ndarray] = None,
+    # The level-up transition, SUPPLIED. On the live path it is absent from `trans` by
+    # construction, so the WIN TRANSITION block could never fire; see `_transitions_block`.
+    win_transition: Optional[Transition] = None,
     # `None` -> `_induce_transitions_k()`, which is "all" as of 2026-08-01. This was a literal
     # `8` that never consulted that resolver at all, so REQ-ARC-FCP-5699-23's knob moved the
     # prompt for diagnostics and did nothing for the live agent. An explicit int still caps.
@@ -2917,7 +2937,7 @@ Use only numpy + stdlib. Do not read files or network. Make engine() pure and
 deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
-{_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled)}
+{_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled, win_transition=win_transition)}
 {("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}"""
 
 
@@ -3021,6 +3041,7 @@ class CodexProposer:
         cell: int,
         *,
         previous_level_complete_grid: Optional[np.ndarray] = None,
+        win_transition: Optional[Transition] = None,
     ) -> tuple[bool, str]:
         _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
@@ -3030,6 +3051,7 @@ class CodexProposer:
                 trans,
                 cell,
                 previous_level_complete_grid=previous_level_complete_grid,
+                win_transition=win_transition,
                 k=_induce_transitions_k(),
                 include_playbook_exemplars=self.include_playbook_exemplars,
             ),
@@ -3583,6 +3605,126 @@ def _induce_defect_reasks() -> int:
         return max(0, int(raw))
     except (TypeError, ValueError):
         return _INDUCE_DEFECT_REASKS
+
+
+_GOAL_DEFECT_REASKS = 2
+# Wall-clock ceiling for the whole goal probe, and the cap on how many observed grids it runs
+# against. Constancy needs TWO DISTINCT ANSWERS, not every frame, so capping the grid count
+# costs almost no detection power while making the check's cost bounded and roughly constant
+# across games -- wa30's window would otherwise probe 66 grids per candidate against cd82's 10.
+_GOAL_PROBE_TIMEOUT_S = 10.0
+_GOAL_PROBE_MAX_GRIDS = 12
+
+
+class _GoalProbeTimeout(Exception):
+    """The goal probe exceeded its wall-clock ceiling. Deliberately NOT a defect verdict: a
+    probe that could not finish is an absence of evidence, and the caller converts it to
+    "accept, as before" rather than to `goal_raises`. Conflating "I could not check" with "I
+    checked and it is broken" is how a guard starts inventing findings."""
+
+
+def _goal_probe_timeout(_signum, _frame):  # pragma: no cover - signal path
+    raise _GoalProbeTimeout
+
+
+# The re-ask text for a mechanically defective GOAL. It is deliberately the same SHAPE as
+# `_INDUCE_PLAIN_REASK_BLOCK` -- neutral, naming nothing about what was wrong -- because the
+# project already ran that head-to-head for the engine: a defect-NAMING block against this
+# neutral one over 5 discordant pairs on disjoint games came back p = 1.000. The defect TEXT
+# bought nothing there; the second ASK was the whole effect. Re-deriving that on the goal
+# would spend GPU time to relearn a settled negative, so the goal inherits the settled answer.
+#
+# What it does NOT say, and this is the line the whole intervention lives or dies on: it never
+# tells the model what winning looks like. It says the answer was CONSTANT, which is a property
+# of the answer, not a fact about the game. A predicate that returns the same value on every
+# frame the agent has seen carries no information regardless of which game it is, so this text
+# is exactly as available on a hidden game as on a solved one.
+_GOAL_PLAIN_REASK_BLOCK = """
+YOUR PREVIOUS `is_level_complete` WAS RUN ON THE OBSERVED FRAMES AND RETURNED THE SAME ANSWER
+ON EVERY ONE OF THEM, so it carries no information. Please try again from the same evidence:
+
+  * a win condition that is never true, or always true, cannot distinguish anything
+  * look at what the deltas above actually CHANGE, and write a condition on THAT
+  * prefer a simple condition on a specific region, row, column or object over a whole-board
+    property like "every cell is one colour"
+
+Write `def is_level_complete(grid):` again. It must RETURN a bool on every path.
+"""
+
+
+def _goal_defect_check_on() -> bool:
+    """Should a mechanically defective induced `is_level_complete` be rejected and re-asked?
+    DEFAULT OFF (env `CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK=1`).
+
+    WHY THIS EXISTS. `generate()` has dry-run defect rejection for the emitted `engine()` and
+    NONE for the emitted goal -- its own `_engine_induce_call` gate is keyed on `"engine" in
+    required`, so the focused goal-only call in `_split_induce` (`required=("is_level_complete",)`)
+    is not merely unchecked, it is unreachable by the check. That asymmetry is not incidental:
+    measured over 138 induced engines from 21 games, 71 of the 93 LIVE engines (76%) cannot
+    yield a plan because of the GOAL rather than the dynamics, and the single largest slice --
+    34 unconditional `return False` plus 3 with no return at all -- is mechanically detectable
+    without knowing anything whatsoever about the game.
+
+    THE BOOTSTRAP PROBLEM, and exactly how much of it this escapes. On a game the agent has
+    never solved it has never seen a win, so it has NO positive example by construction; you
+    need a win to learn what a win looks like. DETECTION escapes that completely -- "is this
+    predicate constant over the frames I have already observed" needs no win, no positive
+    example, and no environment, only the agent's own observations. REPAIR does not escape it:
+    a model that has seen no win may simply re-emit a different trope, and this flag has no
+    answer to that. So the honest claim is narrow: this converts a detectable generation defect
+    into another sample, and makes no claim to supply information the agent does not have.
+
+    WHY IT SHIPS OFF. It is a live-path behaviour change on the scored agent whose only
+    evidence is observational (a frozen corpus, scored after the fact). Default OFF makes the
+    control arm of any measurement the SHIPPED path rather than a reimplementation of it.
+    Flipping the default is an operator decision that belongs after the measurement.
+
+    A malformed value falls back to OFF rather than raising -- a typo'd env var must not change
+    how the scored agent behaves, and must certainly not take down a live episode.
+    """
+    raw = os.environ.get("CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK")
+    return bool(raw) and raw.strip() == "1"
+
+
+def _goal_defect_reasks() -> int:
+    """How many goal-defect re-asks `generate()` may spend. Its OWN budget, deliberately NOT
+    shared with `_induce_defect_reasks()`.
+
+    THE CONFOUND THIS AVOIDS, which is a measurement bug and not a nicety. On the combined
+    induce call one budget serves both functions. 89% of induced goals are constant over every
+    observed frame (measured, pre-flight over 115 frozen engines), so a shared counter would be
+    consumed by the goal on almost every cell and the ENGINE would silently lose its re-ask in
+    the treatment arm only. The arm difference would then be part goal-check and part
+    engine-check-removal, and no analysis could separate them afterwards.
+
+    A malformed value falls back to the default rather than raising.
+    """
+    raw = os.environ.get("CARNOT_ARC_INDUCE_GOAL_DEFECT_REASKS")
+    if raw is None or raw.strip() == "":
+        return _GOAL_DEFECT_REASKS
+    try:
+        return max(0, int(raw))
+    except (TypeError, ValueError):
+        return _GOAL_DEFECT_REASKS
+
+
+def _goal_prompt_transitions_on() -> bool:
+    """Should the focused goal-only prompt CARRY the observed transitions? DEFAULT OFF
+    (env `CARNOT_ARC_GOAL_PROMPT_TRANSITIONS=1`).
+
+    `_goal_only_prompt` today receives a game name and one grid, and no transitions at all --
+    it is the evidence-free prompt in the pair, and the 2026-08-01 taxonomy traced 12 of 13
+    whole-board "every cell is one colour" predicates to exactly the cells it produced. Those
+    cells are split-induce cells, where the model writes an evidence-GROUNDED predicate
+    alongside the engine and it is then SHADOWED by a second definition generated from a
+    prompt containing no grid and no deltas; Python binds the second one.
+
+    The transitions are the agent's OWN observations, so showing them crosses no line: it is
+    help USING what the agent has already seen for itself, not a fact about the game supplied
+    from outside. It is exactly as available on a hidden game as on a solved one.
+    """
+    raw = os.environ.get("CARNOT_ARC_GOAL_PROMPT_TRANSITIONS")
+    return bool(raw) and raw.strip() == "1"
 
 
 def _reject_inert_engines() -> bool:
@@ -4693,6 +4835,13 @@ class LocalGGUFProposer:
     # which is the only number that says whether the wired re-ask is doing anything at all in a
     # live episode -- 0 here means the gate never fired, not that it fired and found nothing.
     n_induce_defect_reasks: int = 0
+    # The same fact for the GOAL half (2026-08-01), counted SEPARATELY rather than folded into
+    # the number above. Two reasons, both about what a witness has to be able to say. First,
+    # the two gates have independent budgets, so one shared count could not tell an operator
+    # which budget was spent. Second, the goal gate is opt-in and default OFF: a 0 here on a
+    # run with the flag on is evidence the gate never fired, and merging it into a counter
+    # that the always-on engine gate also increments would make that reading impossible.
+    n_goal_defect_reasks: int = 0
     server_failure_diagnostics: list = field(default_factory=list)
     last_generated_tokens: int = -1
     # DECLARED-VS-ACTUAL (2026-07-27 review finding 1). `n_ctx` above is what we INTEND to
@@ -4844,6 +4993,7 @@ class LocalGGUFProposer:
                 "errors": int(self.n_server_failures),
                 "content_failures": int(self.n_content_failures),
                 "induce_defect_reasks": int(self.n_induce_defect_reasks),
+                "goal_defect_reasks": int(self.n_goal_defect_reasks),
             },
             "generator_healthy_after": bool(healthy),
             "generator_server_failure_diagnostics": list(self.server_failure_diagnostics),
@@ -5446,6 +5596,135 @@ class LocalGGUFProposer:
         except Exception:
             return []
 
+    def _goal_defects(self, code: str, transitions: Optional[Sequence[Any]]) -> list[str]:
+        """The MECHANICAL defect kinds in an emitted `is_level_complete`, or [] -- never a
+        quality judgement. OPT-IN via `_goal_defect_check_on()`; returns [] when off, so with
+        the flag unset this method is behaviourally identical to not existing.
+
+        The three kinds, and why each needs no knowledge of the game:
+
+          * `goal_missing_return` -- the function body contains no `return` on any path, so it
+            yields None. Purely syntactic (AST), no execution, no evidence required. This is
+            the `D_NO_PREDICATE` class: a bare `import numpy as np` body, a truncated
+            `thought // no_think` fragment.
+          * `goal_raises` -- raises on an observed frame. Detected by RUNNING it on grids the
+            agent has already seen, which is the same dry-run principle `_engine_defects`
+            already applies to `engine()`.
+          * `goal_constant` -- returns the SAME value on every observed frame. This is the big
+            one: 34 unconditional `return False` (`A_DECLINED`, four of which say in their own
+            docstring that they had been told nothing about the goal), plus every whole-board
+            trope that happens to be false everywhere the agent has been.
+
+        WHAT `goal_constant` DOES NOT CLAIM. Constant-over-observed-frames is not "wrong". A
+        correct win condition on a game the agent has never won IS false on every frame it has
+        seen -- that is what not having won means. So this check cannot distinguish a lazy
+        `return False` from a correct-but-unreached predicate, and it is not trying to: it is
+        a check on whether the answer carries INFORMATION for the search that is about to use
+        it, and a predicate constant across everything the agent has observed carries none
+        either way. The cost of being wrong here is bounded to one extra sample.
+
+        SANDBOXING. The probe runs LLM-written code, so every call is wrapped: an exception is
+        a DEFECT (`goal_raises`), and any failure of the machinery itself falls through to []
+        -- "accept, as before". A defect detector that can break the thing it is checking is
+        worse than no detector.
+
+        THE HANG, named because this flag INTRODUCES the exposure rather than inheriting it.
+        The shipped induce path never executes `is_level_complete`; with this flag on, it does.
+        So a predicate containing an unbounded loop would hang induction where it previously
+        would not. Two bounds, neither perfect and both stated:
+
+          * a SIGALRM watchdog around the whole probe. It is best-effort by construction --
+            `signal.setitimer` only works on the main thread of the main interpreter and raises
+            otherwise, and the induce path is sometimes threaded. The failure is safe in the
+            right direction: setting the alarm is itself inside the try, so a thread that
+            cannot arm it proceeds unguarded rather than refusing to check, and a fired alarm
+            lands in the same `except` that returns [] -- accept, as before.
+          * the probe grid count is CAPPED (`_GOAL_PROBE_MAX_GRIDS`). Constancy needs two
+            distinct answers, not every frame, so a cap costs almost no detection power while
+            making the cost of the check bounded and roughly constant across games. Without it
+            a 33-transition window would probe 66 grids on every candidate.
+
+        `_engine_defects` carries the same hang exposure for `engine()` and does not bound it;
+        that is a pre-existing gap, not one this method should silently inherit.
+        """
+        if not _goal_defect_check_on():
+            return []
+        import ast
+
+        try:
+            tree = ast.parse(code)
+        except SyntaxError:
+            return []  # the pre-existing parse gate above already owns this case
+        fn = None
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if node.name == "is_level_complete":
+                    fn = node  # LAST definition wins, mirroring Python's own binding
+        if fn is None:
+            return []  # the `required` check above already owns this case
+        defects: list[str] = []
+        if not any(isinstance(n, ast.Return) and n.value is not None for n in ast.walk(fn)):
+            defects.append("goal_missing_return")
+
+        grids = []
+        for t in list(transitions or []):
+            for attr in ("grid", "next_grid"):
+                g = getattr(t, attr, None)
+                if g is not None:
+                    grids.append(g)
+        if not grids:
+            # NO EVIDENCE IS NOT A CLEAN BILL. Without frames the runtime probes cannot run,
+            # so only the syntactic defect is reported -- and it is reported, rather than
+            # returning [] wholesale, because a body with no return is defective whether or
+            # not anything was observed.
+            return sorted(set(defects))
+
+        seen: set = set()
+        raised = False
+        _alarm_armed = False
+        try:
+            # Best-effort watchdog; see the docstring's THE HANG note for why it is inside the
+            # try and why failing to arm it must not refuse the check.
+            import signal as _signal
+
+            try:
+                _signal.signal(_signal.SIGALRM, _goal_probe_timeout)
+                _signal.setitimer(_signal.ITIMER_REAL, _GOAL_PROBE_TIMEOUT_S)
+                _alarm_armed = True
+            except (ValueError, OSError, AttributeError):
+                _alarm_armed = False
+            ns: dict = {}
+            exec(compile(code, "<induced_goal>", "exec"), ns)  # noqa: S102
+            probe = ns.get("is_level_complete")
+            if probe is None:
+                return sorted(set(defects))
+            for g in grids[:_GOAL_PROBE_MAX_GRIDS]:
+                try:
+                    v = probe(np.asarray(g))
+                except _GoalProbeTimeout:
+                    raise  # the watchdog, not the predicate: do NOT swallow it as goal_raises
+                except Exception:  # noqa: BLE001
+                    raised = True
+                    continue
+                try:
+                    seen.add(bool(v))
+                except Exception:  # noqa: BLE001
+                    raised = True
+        except Exception:  # noqa: BLE001
+            # Includes _GoalProbeTimeout. A probe we could not finish is NOT evidence of a
+            # defect, so this returns "accept, as before" rather than inventing a verdict.
+            return sorted(set(defects))
+        finally:
+            if _alarm_armed:
+                import signal as _signal
+
+                _signal.setitimer(_signal.ITIMER_REAL, 0)
+        if raised:
+            defects.append("goal_raises")
+        if len(seen) <= 1:
+            defects.append("goal_constant")
+        return sorted(set(defects))
+
     def generate(
         self,
         prompt: str,
@@ -5510,6 +5789,16 @@ class LocalGGUFProposer:
         _engine_induce_call = bool(codeonly_eligible) and "engine" in tuple(required)
         _defect_check_on = _engine_induce_call
         _reasks_left = _induce_defect_reasks() if _defect_check_on else 0
+        # OPT-IN GOAL DEFECT REJECTION (2026-08-01, CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK,
+        # DEFAULT OFF). Scoped to `"is_level_complete" in required`, which is DELIBERATELY a
+        # wider gate than the engine's: it covers BOTH the combined induce call (where ~84% of
+        # live inductions happen) AND the focused goal-only call in `_split_induce`, which the
+        # engine gate cannot reach at all because `"engine"` is not in its `required`. That
+        # unreachability is the defect this closes, so keying on the same token would have
+        # reproduced it. `codeonly_eligible` is still required so that gap-fillers and the
+        # reasoning-mode refactor path stay untouched.
+        _goal_check_on = bool(codeonly_eligible) and "is_level_complete" in tuple(required)
+        _goal_reasks_left = _goal_defect_reasks() if _goal_check_on else 0
         _reask_suffix = ""
         last = ""
         for attempt in range(tries):
@@ -5611,6 +5900,24 @@ class LocalGGUFProposer:
                     _reask_suffix = _INDUCE_PLAIN_REASK_BLOCK
                     last = f"mechanically defective engine: {_defects}"
                     self.n_induce_defect_reasks += 1
+                    continue
+            # The GOAL half. It runs AFTER the engine check, and that order is load-bearing:
+            # on the combined call one answer carries both functions, so a re-ask regenerates
+            # both. Checking the engine first means a candidate with a broken engine is
+            # re-asked for its engine and reported as such, and is never relabelled a goal
+            # defect. `_goal_reasks_left` is its OWN budget (see `_goal_defect_reasks`), so
+            # the goal can never consume the engine's and silently degrade the engine in the
+            # treatment arm only. The `attempt < tries - 1` guard is repeated verbatim for the
+            # same reason it exists above: on the final attempt a `continue` would fall out of
+            # the loop and convert an accept into a hard False, so the last try takes the
+            # defective candidate exactly as the shipped path does.
+            if _goal_check_on and _goal_reasks_left > 0 and attempt < tries - 1:
+                _gdefects = self._goal_defects(code, engine_transitions)
+                if _gdefects:
+                    _goal_reasks_left -= 1
+                    _reask_suffix = _GOAL_PLAIN_REASK_BLOCK
+                    last = f"mechanically defective goal: {_gdefects}"
+                    self.n_goal_defect_reasks += 1
                     continue
             self.n_completion_ok += 1
             return True, code
@@ -5735,7 +6042,10 @@ class LocalGGUFProposer:
         return True, (f"{msg} ({note})" if note else msg)
 
     def _goal_only_prompt(
-        self, game: str, previous_level_complete_grid: Optional[np.ndarray]
+        self,
+        game: str,
+        previous_level_complete_grid: Optional[np.ndarray],
+        trans: Optional[list] = None,
     ) -> str:
         """A FOCUSED is_level_complete-only prompt, so the model spends its whole budget on the win
         condition (not the engine).
@@ -5753,7 +6063,38 @@ class LocalGGUFProposer:
         gate immediately threw out as `goal_predicate_true_at_root`.
         The grid is still shown -- the object vocabulary and geometry are genuinely useful -- but
         labelled for what it is, with the polarity stated correctly.
+
+        `trans` (2026-08-01, OPT-IN via `_goal_prompt_transitions_on()`, DEFAULT OFF) attaches
+        the SAME observed transitions the engine half is built from. Until this existed the
+        block received a game name and one grid and nothing else -- it was the evidence-free
+        prompt of the pair, and the taxonomy traced 12 of 13 whole-board "every cell is one
+        colour" predicates to precisely the cells it produced. When the flag is off the
+        argument is ignored and the returned string is byte-identical to the shipped one, which
+        is what keeps the control arm of the measurement the SHIPPED prompt rather than a
+        re-rendering of it.
+
+        This shows the model nothing the live agent does not already have: the transitions ARE
+        the agent's own observations, rendered exactly as `induce_prompt` renders them. It is
+        help USING what has already been seen, not a fact about the game from outside, so it
+        works identically on a game nobody has ever solved.
         """
+        obs = ""
+        if trans and _goal_prompt_transitions_on():
+            # `_transitions_block` -- the SAME renderer `induce_prompt` uses, at the same k
+            # resolver. Reusing it rather than writing a second encoder means the two prompts
+            # cannot drift into disagreeing about what the agent observed, and the model meets
+            # one delta format instead of two.
+            obs = (
+                "These are the transitions YOU observed in this game -- the action taken and "
+                "the FULL set of cells it changed. Whatever a win requires, it has to be "
+                "expressible in terms of what these deltas move, clear, fill or count:\n"
+                + _transitions_block(
+                    list(trans),
+                    _induce_transitions_k(),
+                    previous_level_complete_grid=None,
+                )
+                + "\n\n"
+            )
         win = ""
         if previous_level_complete_grid is not None:
             win = (
@@ -5766,6 +6107,7 @@ class LocalGGUFProposer:
             )
         return (
             f"You are inducing ONLY the win condition for the ARC-AGI-3 game '{game}'.\n"
+            + obs
             + win
             + "Write ONLY `def is_level_complete(grid):` returning True iff `grid` is a level-complete "
             "/ win state, else False. numpy + stdlib only; pure and deterministic. Prefer a SIMPLE "
@@ -5795,12 +6137,14 @@ class LocalGGUFProposer:
         cell: int,
         *,
         previous_level_complete_grid: Optional[np.ndarray] = None,
+        win_transition: Optional[Transition] = None,
     ) -> tuple[bool, str]:
         base = induce_prompt(
             game,
             trans,
             cell,
             previous_level_complete_grid=previous_level_complete_grid,
+            win_transition=win_transition,
             k=_induce_transitions_k(),
             include_playbook_exemplars=self.include_playbook_exemplars,
         )
@@ -5835,10 +6179,17 @@ class LocalGGUFProposer:
         if not ok_e:
             return False, f"split induce: engine failed: {str(eng)[:150]}"
         ok_g, goal = self.generate(
-            self._goal_only_prompt(game, previous_level_complete_grid),
+            self._goal_only_prompt(game, previous_level_complete_grid, trans),
             ("is_level_complete",),
             tries=self.tries,
             codeonly_eligible=True,
+            # The observed transitions reach BOTH halves of the opt-in goal intervention: the
+            # prompt (gated by `_goal_prompt_transitions_on`) and the dry-run probe (gated by
+            # `_goal_defect_check_on`). Passing them unconditionally is inert with the flags
+            # off -- `_goal_defects` returns [] immediately when its flag is unset, and
+            # `_goal_only_prompt` ignores the argument when its own flag is unset -- so the
+            # shipped path is byte-identical either way.
+            engine_transitions=trans,
         )
         if not ok_g:
             return False, f"split induce: goal failed: {str(goal)[:150]}"

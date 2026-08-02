@@ -5327,7 +5327,17 @@
       ]
     },
     "rebuild_command": "python scripts/analyze_arc_early_stop_sweep.py --rows results/early_stop_sweep_20260726/rows_b400.json results/early_stop_sweep_20260726/rows_b400_g350.json results/early_stop_sweep_20260726/rows_b2000.json results/early_stop_sweep_20260726/rows_b4000_stress.json --reproduction-rows results/early_stop_sweep_20260726/rows_reproduction.json --contention-serial-rows results/early_stop_sweep_20260726/rows_contention_serial.json --contention-concurrent-rows results/early_stop_sweep_20260726/rows_contention_conc_1.json results/early_stop_sweep_20260726/rows_contention_conc_2.json results/early_stop_sweep_20260726/rows_contention_conc_3.json --out results/outer_loop_arc_early_stop_grace_sweep_20260726.json",
-    "note": "principle: an artifact that cannot say which code produced it cannot be known to be current, and a stale artifact's numbers are quoted exactly as confidently as a fresh one's. Every ROW-SOURCE DESIGN is fingerprinted, not just --rows, so a swapped contention or reproduction file cannot pass unnoticed."
+    "note": "principle: an artifact that cannot say which code produced it cannot be known to be current, and a stale artifact's numbers are quoted exactly as confidently as a fresh one's. Every ROW-SOURCE DESIGN is fingerprinted, not just --rows, so a swapped contention or reproduction file cannot pass unnoticed.",
+    "freshness_acknowledgements": [
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "sha256_now": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
+        "acknowledged_on": "2026-08-01",
+        "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+        "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
+      }
+    ]
   },
   "reproducibility_checksum": "3cc118e09335cf705ec469cab70ba2cf58b3608d3fa5f590067397f7daec0713",
   "reproducibility_checksum_note": "sha256 over the WHOLE artifact except run_date and duration_s (wall-clock noise). Every analysed condition, gate, witness and row-source list is inside the hash.",

@@ -16826,7 +16826,17 @@
       ]
     },
     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python scripts/analyze_arc_reset_charge_attribution.py",
-    "concurrent_edit_disclosure": "scripts/arc_leaderboard_eval.py was edited by a CONCURRENT lane during this session (a pure addition of reset counters). Parts B/C/D were re-run end-to-end AFTER that edit so every live number in this artifact comes from one single version of the harness. The reads Parts B/D depend on -- `actions`, `frame_sequence`, `navigation_diagnostics` -- are untouched by that edit in any case."
+    "concurrent_edit_disclosure": "scripts/arc_leaderboard_eval.py was edited by a CONCURRENT lane during this session (a pure addition of reset counters). Parts B/C/D were re-run end-to-end AFTER that edit so every live number in this artifact comes from one single version of the harness. The reads Parts B/D depend on -- `actions`, `frame_sequence`, `navigation_diagnostics` -- are untouched by that edit in any case.",
+    "freshness_acknowledgements": [
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "sha256_now": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
+        "acknowledged_on": "2026-08-01",
+        "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+        "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
+      }
+    ]
   },
   "reproducibility_checksum": "sha256:799e1449ce75d002d0df695bb7a9cea79cdec085cacbb61253c926e51b5b1cbb",
   "rebuild_note_20260731_split_enable": {
