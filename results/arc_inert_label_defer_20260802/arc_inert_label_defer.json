@@ -1298,5 +1298,83 @@
   ],
   "result": "3/3 exact match, and control banks 0 levels on all three at a native 400 budget. The 3 -> 6 reading is not a truncation artifact: the first-level path is budget-independent over this range.",
   "still_not_significant": "This does not rescue the axis. k=3 discordant games gives min reachable p = 0.25, so the live-budget reading could not have reached 0.05 either. It is a real effect on three games, not a corpus result."
+ },
+ "benchmark_score_conversion": {
+  "formula_correction": "The task premise used min((baseline/agent)^2, 115). The INSTALLED competition scorer (arc_agi.scorecard, the package the gateway runs) is min((baseline/agent)^2 * 100, 115.0) per LEVEL, an unsolved level scores 0.0, and the GAME score is an index-weighted mean over the full level list CLAMPED to max_weights/total_weights*100. Two consequences the premise omits: (1) a game can never score above what human-speed play on the levels it solved would have scored, so superhuman efficiency is worth exactly zero as a bonus and efficiency only pays as COMPENSATION for being slower than human; (2) DEPTH is the dominant lever, not speed. See docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md (2026-07-26 correction).",
+  "method": "EnvironmentScoreCalculator driven exactly as scripts/arc_leaderboard_eval.py:718-762 drives it. Human baselines are the ones the ENV ITSELF exposes, not an assumed number.",
+  "budget": 400,
+  "rows": [
+   {
+    "game": "ft09",
+    "human_L1_actions": 43,
+    "control_a2f": null,
+    "defer_a2f": 256,
+    "defer_slower_than_human": "6.0x",
+    "control_game_score": 0.0,
+    "defer_game_score": 0.1344,
+    "human_speed_ceiling_for_1_level": 4.7619,
+    "pct_of_ceiling_captured": 2.8
+   },
+   {
+    "game": "lp85",
+    "human_L1_actions": 17,
+    "control_a2f": null,
+    "defer_a2f": 154,
+    "defer_slower_than_human": "9.1x",
+    "control_game_score": 0.0,
+    "defer_game_score": 0.0338,
+    "human_speed_ceiling_for_1_level": 2.7778,
+    "pct_of_ceiling_captured": 1.2
+   },
+   {
+    "game": "su15",
+    "human_L1_actions": 22,
+    "control_a2f": null,
+    "defer_a2f": 300,
+    "defer_slower_than_human": "13.6x",
+    "control_game_score": 0.0,
+    "defer_game_score": 0.012,
+    "human_speed_ceiling_for_1_level": 2.2222,
+    "pct_of_ceiling_captured": 0.5
+   },
+   {
+    "game": "sp80",
+    "control_a2f": 366,
+    "defer_a2f": 366,
+    "control_game_score": 0.0541,
+    "defer_game_score": 0.0541
+   },
+   {
+    "game": "tu93",
+    "control_a2f": 342,
+    "defer_a2f": 342,
+    "control_game_score": 0.0069,
+    "defer_game_score": 0.0069
+   },
+   {
+    "game": "vc33",
+    "control_a2f": 16,
+    "defer_a2f": 16,
+    "control_game_score": 0.6836,
+    "defer_game_score": 0.6836
+   }
+  ],
+  "roster_total_25_games": {
+   "control": 0.7445,
+   "defer": 0.9247,
+   "delta": 0.1802,
+   "note": "the other 19 games bank no level at 400 in either arm and score 0"
+  },
+  "roster_mean_25_games": {
+   "control": 0.0298,
+   "defer": 0.037,
+   "relative": "1.242x"
+  },
+  "the_honest_reading": "The gain is a DEPTH gain, which is the right lever: three games go from 0 levels to 1 inside the live budget, and an unbanked level scores exactly 0 however few actions were spent on it. It is NOT a speed gain in the scoring sense -- the agent is still 6.0x to 13.6x SLOWER than the human baseline on the levels it does bank, so it captures only 0.5 to 2.8 percent of what solving that SAME single level at human speed would have scored. The 59.5x / 9.0x / 2.5x per-level ratios are real but they are ratios between two arms of a very slow agent, not distance to the frontier.",
+  "caveats": [
+   "Offline development-proxy numbers on PUBLIC games, not hidden-game scores.",
+   "RESET is charged as an action by the gateway and as zero by the offline harness, so offline efficiency is optimistic by the number of in-level resets.",
+   "Three games at k=3 discordant: min reachable sign-test p = 0.25, so this is not a significant corpus result."
+  ]
  }
 }
