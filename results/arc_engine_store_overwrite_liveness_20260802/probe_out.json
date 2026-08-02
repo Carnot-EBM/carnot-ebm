@@ -1,0 +1,255 @@
+{
+  "cells": {
+    "cell1_within_call_retention_default": {
+      "tag": "cell1",
+      "retention_env": null,
+      "retention_enabled_reported": true,
+      "best_round": 1,
+      "rounds_seen": 3,
+      "best_round_signal": 0.857143,
+      "restored": true,
+      "store_after": "GOOD",
+      "planned": false,
+      "skipped": "no_reachable_plan_after_refinement"
+    },
+    "cell2_within_call_retention_off": {
+      "tag": "cell2",
+      "retention_env": "0",
+      "retention_enabled_reported": false,
+      "best_round": 3,
+      "rounds_seen": 3,
+      "best_round_signal": 0.0,
+      "restored": false,
+      "store_after": "WORST",
+      "planned": false,
+      "skipped": "no_reachable_plan_after_refinement"
+    },
+    "cell3_cross_call": {
+      "call1": {
+        "tag": "cell3_call1",
+        "retention_env": null,
+        "retention_enabled_reported": true,
+        "best_round": 1,
+        "rounds_seen": 3,
+        "best_round_signal": 0.857143,
+        "restored": true,
+        "store_after": "GOOD",
+        "planned": false,
+        "skipped": "no_reachable_plan_after_refinement"
+      },
+      "store_between_calls": "GOOD",
+      "call2": {
+        "tag": "cell3_call2",
+        "retention_env": null,
+        "retention_enabled_reported": true,
+        "best_round": 1,
+        "rounds_seen": 3,
+        "best_round_signal": 0.0,
+        "restored": true,
+        "store_after": "WORSE",
+        "planned": false,
+        "skipped": "no_reachable_plan_after_refinement"
+      },
+      "incumbent_survived_call2": false
+    },
+    "cell4_live_single_shot_induce_then_load": {
+      "incumbent_before": "GOOD",
+      "induce_ok": true,
+      "store_after": "WORSE",
+      "loaded_engine_is_noop": true,
+      "note": "models arc_competition_agent.py:6497 induce() -> 6506 e3.load_engine()"
+    },
+    "cell5_planner_on_stored_engine": {
+      "GOOD": {
+        "plan_found": true,
+        "plan_length": 4
+      },
+      "WORSE": {
+        "plan_found": false,
+        "plan_length": 0
+      }
+    }
+  },
+  "events": [
+    {
+      "op": "WRITE",
+      "call": "cell1",
+      "round": 1,
+      "incumbent_before_write": "ABSENT",
+      "writing": "GOOD",
+      "destroyed_incumbent": false
+    },
+    {
+      "op": "READ",
+      "call": "cell1",
+      "read_label": "GOOD"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell1",
+      "round": 2,
+      "incumbent_before_write": "GOOD",
+      "writing": "WORSE",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell1",
+      "read_label": "WORSE"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell1",
+      "round": 3,
+      "incumbent_before_write": "WORSE",
+      "writing": "WORST",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell1",
+      "read_label": "WORST"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell2",
+      "round": 1,
+      "incumbent_before_write": "ABSENT",
+      "writing": "GOOD",
+      "destroyed_incumbent": false
+    },
+    {
+      "op": "READ",
+      "call": "cell2",
+      "read_label": "GOOD"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell2",
+      "round": 2,
+      "incumbent_before_write": "GOOD",
+      "writing": "WORSE",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell2",
+      "read_label": "WORSE"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell2",
+      "round": 3,
+      "incumbent_before_write": "WORSE",
+      "writing": "WORST",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell2",
+      "read_label": "WORST"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell3_call1",
+      "round": 1,
+      "incumbent_before_write": "ABSENT",
+      "writing": "GOOD",
+      "destroyed_incumbent": false
+    },
+    {
+      "op": "READ",
+      "call": "cell3_call1",
+      "read_label": "GOOD"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell3_call1",
+      "round": 2,
+      "incumbent_before_write": "GOOD",
+      "writing": "WORSE",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell3_call1",
+      "read_label": "WORSE"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell3_call1",
+      "round": 3,
+      "incumbent_before_write": "WORSE",
+      "writing": "WORST",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell3_call1",
+      "read_label": "WORST"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell3_call2",
+      "round": 1,
+      "incumbent_before_write": "GOOD",
+      "writing": "WORSE",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell3_call2",
+      "read_label": "WORSE"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell3_call2",
+      "round": 2,
+      "incumbent_before_write": "WORSE",
+      "writing": "WORST",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell3_call2",
+      "read_label": "WORST"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell3_call2",
+      "round": 3,
+      "incumbent_before_write": "WORST",
+      "writing": "WORST",
+      "destroyed_incumbent": false
+    },
+    {
+      "op": "READ",
+      "call": "cell3_call2",
+      "read_label": "WORST"
+    },
+    {
+      "op": "WRITE",
+      "call": "cell4_singleshot",
+      "round": 1,
+      "incumbent_before_write": "GOOD",
+      "writing": "WORSE",
+      "destroyed_incumbent": true
+    },
+    {
+      "op": "READ",
+      "call": "cell4_singleshot",
+      "read_label": "WORSE"
+    },
+    {
+      "op": "READ",
+      "call": "cell5_GOOD",
+      "read_label": "GOOD"
+    },
+    {
+      "op": "READ",
+      "call": "cell5_WORSE",
+      "read_label": "WORSE"
+    }
+  ],
+  "duration_s": 1.0674
+}

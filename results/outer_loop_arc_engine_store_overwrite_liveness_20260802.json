@@ -1,0 +1,469 @@
+{
+  "experiment": "outer_loop_arc_engine_store_overwrite_liveness_20260802",
+  "experiment_id": "outer_loop_arc_engine_store_overwrite_liveness_20260802",
+  "title": "Is the engine-store overwrite regression still live? Within-call FIXED and delivered; CROSS-call structurally live but near-inert on the real corpus",
+  "run_date": "2026-08-02",
+  "commit": "a721dff76c",
+  "schema": "carnot.outer_loop.arc_engine_store_overwrite_liveness.v1",
+  "inference_substrate": "deterministic_qa_regression_no_llm",
+  "inference_substrate_note": "Five real invocations of the SHIPPED execute_bounded_llm_reinduction driven by a scripted proposer (no GGUF load, no CUDA, no env), plus a read-only pool over 72 upstream live cells. No model was invoked; model_specs is deliberately absent because there is no model to name.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "No ARC level is claimed. This is an offline code-path probe on the development twin; it is not a live-agent solve and must never be counted as one.",
+  "random_seed": 20260802,
+  "reproducibility_checksum": "f0d97968b3ac10b0",
+  "reproducibility_checksum_inputs": "sha256 over the probe script + arc_llm_reinduction.py + arc_executable_world_model.py + arc_competition_agent.py + the 14 arc_live_action_provenance_20260801 cells, truncated to 16 hex chars",
+  "duration_s": 1.0674,
+  "duration_note": "1.07s is the probe process. It is NOT an inference duration: the substrate is deterministic no-LLM code execution, whose floor is 0.0001s.",
+  "honest_verdict": "complete_within_call_retention_verified_delivered_cross_call_overwrite_structurally_live_but_measured_near_inert_and_does_NOT_independently_block_planning",
+  "STATED_BEFORE_LOOKING": {
+    "statistical_claims_made": "NONE. No hypothesis test is run and no p-value is computed anywhere in this artifact. The corpus-exposure section reports raw counts and a per-game distribution only.",
+    "why": "The one endpoint that could carry a test -- does the overwrite change banked levels -- was already run on 2026-07-29 and is UNINTERPRETABLE (8 of 12 pairs byte-identical; smallest reachable two-sided p = 1.0). Re-running it was out of scope and would have inherited the same ceiling.",
+    "min_reachable_p_if_a_test_had_been_run": "1.0 on the 2026-07-29 grid, per ops/known-issues.md 2026-07-29 entry."
+  },
+  "Q1_PRIOR_ART": {
+    "answer": "YES -- found, and a fix WAS committed. It is NOT the whole defect.",
+    "original_measurement": {
+      "memory_note": "project_arc_engine_store_regression (2026-07-29)",
+      "spec": "openspec/capabilities/arc-world-model-trust-energy/spec.md :: REQ-ARC-WMTE-6035 (lines 19541-19659)",
+      "counterfactual_numbers": "last-write-wins mean change_fidelity 0.0042 / change-gate 0 of 12; retain-best 0.3979 / 5 of 12; sliding 3-write windows helped 24 / HURT 3 / tied 28, sign test p = 4.923e-05 over the 27 discordant windows.",
+      "ka59_and_ar25": "ka59 peaked at change_fidelity 1.0000 (2026-06-17) and is 0.0000 on disk; ar25 peaked at 0.8157 and is 0.0000."
+    },
+    "IMPORTANT_CORRECTION_TO_THE_TASK_FRAMING": {
+      "claim_as_given": "'Retention was reported worth p = 4.9e-5.'",
+      "what_that_p_actually_is": "An OFFLINE counterfactual over 55 sliding 3-write windows replayed from the store's own git history. It is NOT a live A/B on any behavioural endpoint.",
+      "the_live_A_B_result": "results/outer_loop_arc_engine_retention_banked_levels_20260729.json -- 12 matched pairs, 0 discordant, sign test p = 1.0, banked_total 3 vs 3. Its own EFFECTIVE_SUPPORT section reports only 2 of 12 pairs carry information, and its POWER_CEILING section states the design is 'UNDERPOWERED BY CONSTRUCTION'.",
+      "and_that_null_is_itself_uninterpretable": "ops/known-issues.md 2026-07-29 -- 8 of 12 pairs were byte-IDENTICAL between arms, so the two arms were the same agent and the smallest reachable p was 1.0 before the first cell ran. Do not cite either p as evidence about live behaviour."
+    },
+    "fix_committed": {
+      "commits": [
+        "11cd3c3a92 / 111f5d3314 -- '[outer-loop] Retain the BEST induction round, not the last one (REQ-ARC-WMTE-6035) + diagnose the second serial gate'",
+        "14752454c9 -- 'The induce->plan horizon was 40 when the goals were at 61, and retention threw plannability away' (adds should_promote_on_plannability as a TIEBREAK)"
+      ],
+      "scope_of_the_fix": "ONE call of execute_bounded_llm_reinduction. It ranks that call's rounds 1..3 and rolls the store back to the best of THEM.",
+      "scope_NOT_covered_by_any_committed_REQ": "The incumbent already on disk from a PREVIOUS call. No REQ in the capability spec covers it -- REQ-6041/6043/6048 cover test-suite and path-centralisation writes, not quality-conditioned overwrite. Searched REQ-ARC-WMTE-6036..6071."
+    }
+  },
+  "Q2_IS_IT_LIVE_NOW": {
+    "headline": "SPLIT ANSWER. Within-call: FIXED and DELIVERED (verified by running the shipped function, not by reading it). Cross-call: STRUCTURALLY LIVE -- no write anywhere conditions on the incumbent's quality.",
+    "static_read_of_the_write_path": {
+      "unconditional_writers": [
+        "arc_executable_world_model.LocalGGUFProposer._gen_to_file -> (E3_DIR/game/'world_model.py').write_text(code) on ok, no quality condition",
+        "arc_executable_world_model.LocalGGUFProposer._write_world_model -> same, no quality condition"
+      ],
+      "retention_write": "arc_llm_reinduction._retain_engine_source_on_disk -- rolls the store back to the best round OF THIS CALL. best_signal is initialised to float('-inf') at the top of every call (arc_llm_reinduction.py:1464), so the incumbent on disk is never a candidate and cannot win.",
+      "consequence": "Round 1 of every new call overwrites the incumbent BEFORE anything is scored, and retention then re-writes the best of the new (possibly far worse) rounds -- reporting restored=true while doing it."
+    },
+    "DEMONSTRATED_ON_A_REAL_RUN": {
+      "cell1_within_call_retention_default": {
+        "tag": "cell1",
+        "retention_env": null,
+        "retention_enabled_reported": true,
+        "best_round": 1,
+        "rounds_seen": 3,
+        "best_round_signal": 0.857143,
+        "restored": true,
+        "store_after": "GOOD",
+        "planned": false,
+        "skipped": "no_reachable_plan_after_refinement"
+      },
+      "cell2_within_call_retention_off": {
+        "tag": "cell2",
+        "retention_env": "0",
+        "retention_enabled_reported": false,
+        "best_round": 3,
+        "rounds_seen": 3,
+        "best_round_signal": 0.0,
+        "restored": false,
+        "store_after": "WORST",
+        "planned": false,
+        "skipped": "no_reachable_plan_after_refinement"
+      },
+      "cell3_cross_call": {
+        "call1": {
+          "tag": "cell3_call1",
+          "retention_env": null,
+          "retention_enabled_reported": true,
+          "best_round": 1,
+          "rounds_seen": 3,
+          "best_round_signal": 0.857143,
+          "restored": true,
+          "store_after": "GOOD",
+          "planned": false,
+          "skipped": "no_reachable_plan_after_refinement"
+        },
+        "store_between_calls": "GOOD",
+        "call2": {
+          "tag": "cell3_call2",
+          "retention_env": null,
+          "retention_enabled_reported": true,
+          "best_round": 1,
+          "rounds_seen": 3,
+          "best_round_signal": 0.0,
+          "restored": true,
+          "store_after": "WORSE",
+          "planned": false,
+          "skipped": "no_reachable_plan_after_refinement"
+        },
+        "incumbent_survived_call2": false
+      },
+      "cell4_live_single_shot_induce_then_load": {
+        "incumbent_before": "GOOD",
+        "induce_ok": true,
+        "store_after": "WORSE",
+        "loaded_engine_is_noop": true,
+        "note": "models arc_competition_agent.py:6497 induce() -> 6506 e3.load_engine()"
+      },
+      "cell5_planner_on_stored_engine": {
+        "GOOD": {
+          "plan_found": true,
+          "plan_length": 4
+        },
+        "WORSE": {
+          "plan_found": false,
+          "plan_length": 0
+        }
+      }
+    },
+    "reading_of_the_demonstration": {
+      "cell1": "retention default ON: store holds GOOD (round 1, signal 0.857), restored=true. The shipped fix IS delivered -- availability confirmed AT THE RECEIVING END by reading the store bytes back, not by reading the call site.",
+      "cell2": "CARNOT_ARC_ENGINE_RETENTION=0: store holds WORST. The treatment axis genuinely varies, so cell1 is not a zero-floor design bug.",
+      "cell3": "THE ANSWER. Call 1 retains GOOD (signal 0.857). Call 2's proposer is worse; the store ends holding WORSE at best_round_signal 0.0, restored=true. incumbent_survived_call2 = FALSE. Retention itself performed the destroying write.",
+      "cell4": "The live single-shot path shape (arc_competition_agent.py:6497 induce() -> 6506 e3.load_engine()) has NO retention at all: GOOD incumbent -> WORSE, and the loaded engine is a verified no-op.",
+      "cell5": "The stored engine identity is decisive for planning in isolation: e3.plan_in_model finds a 4-step plan against GOOD and none against WORSE."
+    },
+    "write_read_interleaving_instrumented_at_the_receiving_end": [
+      {
+        "op": "WRITE",
+        "call": "cell1",
+        "round": 1,
+        "incumbent_before_write": "ABSENT",
+        "writing": "GOOD",
+        "destroyed_incumbent": false
+      },
+      {
+        "op": "READ",
+        "call": "cell1",
+        "read_label": "GOOD"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell1",
+        "round": 2,
+        "incumbent_before_write": "GOOD",
+        "writing": "WORSE",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell1",
+        "read_label": "WORSE"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell1",
+        "round": 3,
+        "incumbent_before_write": "WORSE",
+        "writing": "WORST",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell1",
+        "read_label": "WORST"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell2",
+        "round": 1,
+        "incumbent_before_write": "ABSENT",
+        "writing": "GOOD",
+        "destroyed_incumbent": false
+      },
+      {
+        "op": "READ",
+        "call": "cell2",
+        "read_label": "GOOD"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell2",
+        "round": 2,
+        "incumbent_before_write": "GOOD",
+        "writing": "WORSE",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell2",
+        "read_label": "WORSE"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell2",
+        "round": 3,
+        "incumbent_before_write": "WORSE",
+        "writing": "WORST",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell2",
+        "read_label": "WORST"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell3_call1",
+        "round": 1,
+        "incumbent_before_write": "ABSENT",
+        "writing": "GOOD",
+        "destroyed_incumbent": false
+      },
+      {
+        "op": "READ",
+        "call": "cell3_call1",
+        "read_label": "GOOD"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell3_call1",
+        "round": 2,
+        "incumbent_before_write": "GOOD",
+        "writing": "WORSE",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell3_call1",
+        "read_label": "WORSE"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell3_call1",
+        "round": 3,
+        "incumbent_before_write": "WORSE",
+        "writing": "WORST",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell3_call1",
+        "read_label": "WORST"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell3_call2",
+        "round": 1,
+        "incumbent_before_write": "GOOD",
+        "writing": "WORSE",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell3_call2",
+        "read_label": "WORSE"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell3_call2",
+        "round": 2,
+        "incumbent_before_write": "WORSE",
+        "writing": "WORST",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell3_call2",
+        "read_label": "WORST"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell3_call2",
+        "round": 3,
+        "incumbent_before_write": "WORST",
+        "writing": "WORST",
+        "destroyed_incumbent": false
+      },
+      {
+        "op": "READ",
+        "call": "cell3_call2",
+        "read_label": "WORST"
+      },
+      {
+        "op": "WRITE",
+        "call": "cell4_singleshot",
+        "round": 1,
+        "incumbent_before_write": "GOOD",
+        "writing": "WORSE",
+        "destroyed_incumbent": true
+      },
+      {
+        "op": "READ",
+        "call": "cell4_singleshot",
+        "read_label": "WORSE"
+      },
+      {
+        "op": "READ",
+        "call": "cell5_GOOD",
+        "read_label": "GOOD"
+      },
+      {
+        "op": "READ",
+        "call": "cell5_WORSE",
+        "read_label": "WORSE"
+      }
+    ],
+    "damage_from_the_ORIGINAL_incident_is_UNREPAIRED": "results/arc_e3/ka59/world_model.py is still the hardcoded-cell-writes engine (verified by reading it at HEAD a721dff76c); its peak versions 341f776c90 / a7488e97a1 were never restored. The pytest guard added 2026-07-30 (_guard_engine_write, REQ-ARC-WMTE-6048) is scoped to PYTEST_CURRENT_TEST only, so a non-test experiment run still overwrites this tracked evidence."
+  },
+  "Q3_CAN_IT_BLOCK_PLANNING_INDEPENDENTLY": {
+    "blocks_planning_independently": false,
+    "verdict": "NO -- and this is the finding that most changes what a phase 2 would mean.",
+    "argument": "For a destroyed incumbent to block a plan, some consumer must READ the store without first overwriting it. There is no such consumer. e3.load_engine has exactly FOUR references in the entire live agent (arc_competition_agent.py:6198, 6209, 6359, 6506), all inside E3AgentPolicy._induce_and_plan, and each is preceded by a proposer write in the SAME call. There is no warm-start read at episode or level start, and _world_model_candidates takes an already-loaded engine rather than reading the store itself.",
+    "empirical_backing": "The instrumented runs recorded 11 READ events and 0 read-before-write events: every READ in every cell is immediately preceded by a WRITE in the same call (see write_read_interleaving_instrumented_at_the_receiving_end).",
+    "what_the_overwrite_ACTUALLY_costs": "Not a blocked plan. It destroys the OPTION of ever reusing a previously-good engine. Realising that option needs TWO changes -- a quality-conditioned write AND a reader willing to keep an incumbent -- so a store-semantics fix alone would be INERT on behaviour by construction.",
+    "therefore_it_is_NOT_an_alternative_explanation_for_0_of_136": "The 0-of-136 induce attempts were rejected by the accuracy and hidden-state-trust gates, which score the engine the proposer JUST wrote. A destroyed incumbent is not in that path.",
+    "honesty_note": "This is a MEASURED and READ zero over the four live call sites and 11 instrumented reads, not a proof that no such reader can exist. A future warm-start reader would make the same defect blocking."
+  },
+  "REAL_CORPUS_EXPOSURE": {
+    "why_this_section_exists": "An inert mechanism's effect size is undefined, not zero. Before treating the cross-call overwrite as an explanation for anything, measure how often it can fire on real runs.",
+    "corpora_pooled": [
+      "results/arc_engine_retention_20260729/cells",
+      "results/arc_goalspec_f9a458e87_preflight_20260730/cells",
+      "results/arc_heldout_31b_vs_9b_20260728/cells",
+      "results/arc_live_action_provenance_20260801/cells",
+      "results/arc_phase3_preflight_20260731/cells"
+    ],
+    "n_cells_with_an_induction_event_list": 72,
+    "n_induction_events_total": 83,
+    "events_per_cell_distribution": {
+      "min": 1,
+      "q1": 1.0,
+      "median": 1.0,
+      "q3": 1.0,
+      "max": 2
+    },
+    "cells_with_ge_2_events_the_ONLY_ones_exposed": 11,
+    "exposure_rate": 0.1528,
+    "by_game_clustered": {
+      "cd82": {
+        "cells": 2,
+        "median_events": 1.0,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "cn04": {
+        "cells": 2,
+        "median_events": 1.0,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "ft09": {
+        "cells": 12,
+        "median_events": 1.0,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "lp85": {
+        "cells": 7,
+        "median_events": 1,
+        "max_events": 2,
+        "cells_ge_2": 2
+      },
+      "ls20": {
+        "cells": 4,
+        "median_events": 1.0,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "r11l": {
+        "cells": 3,
+        "median_events": 1,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "sc25": {
+        "cells": 6,
+        "median_events": 1.0,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "su15": {
+        "cells": 3,
+        "median_events": 1,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "tn36": {
+        "cells": 7,
+        "median_events": 1,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "tr87": {
+        "cells": 7,
+        "median_events": 1,
+        "max_events": 1,
+        "cells_ge_2": 0
+      },
+      "tu93": {
+        "cells": 5,
+        "median_events": 2,
+        "max_events": 2,
+        "cells_ge_2": 3
+      },
+      "vc33": {
+        "cells": 14,
+        "median_events": 1.0,
+        "max_events": 2,
+        "cells_ge_2": 6
+      }
+    },
+    "eligible_cells_ge2_events_with_ge2_recorded_signals": 7,
+    "cells_where_a_later_stored_engine_scored_BELOW_the_running_peak": 1,
+    "destructive_writes_observed": [
+      {
+        "corpus": "arc_engine_retention_20260729",
+        "cell": "ret1__vc33__s1.json",
+        "game": "vc33",
+        "signal_sequence": [
+          1.0,
+          0.931818
+        ],
+        "regressive_writes": [
+          {
+            "index": 1,
+            "running_peak": 1.0,
+            "stored": 0.931818,
+            "delta": -0.068182
+          }
+        ]
+      }
+    ],
+    "READING": "11 of 72 cells (15.3%) can be exposed at all; nine of twelve games NEVER induce twice. Among the 7 cells eligible to show it, ONE did (ret1__vc33__s1, 1.0 -> 0.931818, delta -0.068) -- a small regression, not a ka59-class 1.0 -> 0.0 collapse. Exposure is concentrated: vc33 6 of 14 cells, tu93 3 of 5, lp85 2 of 7.",
+    "DO_NOT_OVERREAD": "This is 72 cells across five corpora with different budgets, generators and commits; it is a descriptive exposure count, not a rate estimate, and the 1-of-7 is one observation. The ka59/ar25 catastrophes happened on a DIFFERENT and much longer timescale -- whole experiment RUNS overwriting the committed store across weeks (mass-overwrite commits 5c9fef74a6 2026-07-17 and f2b82c89a6 2026-07-19) -- which this within-episode census cannot see and does not bound."
+  },
+  "SCOPING_FOR_A_FUTURE_CHANGE_NOT_MADE_HERE": {
+    "instruction_followed": "Not fixed in this run, per the task.",
+    "what_a_fix_would_have_to_be": "BOTH halves or neither: (1) a write that conditions on the incumbent's held-out signal, which requires persisting that signal beside the engine because it is not recoverable from the source bytes; and (2) a reader that can decline to overwrite -- otherwise the retained incumbent is written and never read, and the change is inert by construction.",
+    "why_it_deserves_its_own_measured_change": "It changes what the SCORED agent writes and would need a default-OFF env flag, a both-directions test, a treatment-activation pre-flight (REQ-HARNESS-6050) and a per-grid A/A floor -- the 2026-07-29 retention grid is the standing proof that an A/B on this path without those is uninterpretable.",
+    "cheapest_honest_first_step": "Persist the retention signal alongside the engine (a sidecar), which is observation-only and changes no behaviour, then measure how often a new call's best signal is BELOW the persisted incumbent's on live runs. Exposure is 15% of cells, so a grid sized off the current corpus would be badly underpowered."
+  },
+  "adversarial_self_check": {
+    "availability_vs_delivery": "Retention delivery was confirmed by reading the STORE BYTES back after a real call and by instrumenting _load_engine_from at the receiving end, not by reading the call site.",
+    "exposure_before_effect": "Exposure measured (11/72 cells) BEFORE any claim about effect; the effect claim is correspondingly weak.",
+    "one_game_is_not_the_roster": "Per-game distribution reported; the single destructive observation is vc33, which is also the highest-exposure game in the pool -- named rather than generalised.",
+    "explored_less_trap": "Not applicable -- no efficiency or saving metric is reported.",
+    "seed_reachability": "Cell2 confirms the CARNOT_ARC_ENGINE_RETENTION axis moves the outcome, so cell1's result is not a zero floor.",
+    "missing_is_not_zero": "Cells whose induction events carry no engine_retention field (pre-11cd3c3a9 corpora) are EXCLUDED from the destruction denominator rather than counted as non-destructive; that is why the eligible n is 7 and not 11.",
+    "empirical_vs_structural": "The 0 read-before-write result is stated as MEASURED over 11 instrumented reads plus a read of 4 live call sites, not as a structural impossibility."
+  },
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No verifier value-added or moat claim is made; this artifact reports a code-path liveness finding.",
+  "flagged_adversarial": false,
+  "Q4_TRUST_VERDICT_STALENESS_INTERACTION": {
+    "hypothesis_as_posed": "Is the stored engine what the gate scores, so an overwrite between score and use makes the gate's verdict stale?",
+    "answer": "NO. The gate is not made stale by an overwrite.",
+    "why": "Inside execute_bounded_llm_reinduction the order is fixed per round: proposer writes -> load_engine reads -> select_trusted_world_model scores -> heldout_accuracy gate. The gate therefore always scores the bytes the proposer wrote microseconds earlier, in the same round. Retention's rollback write happens strictly AFTER the loop, when no further scoring occurs in that call.",
+    "the_ONE_divergence_that_does_exist_is_already_documented": "On a PLANNED return the store holds the retained round while the returned engine is the planning round's (REQ-ARC-WMTE-6035 honest limit 2, ft09-shaped all-no-op held-out split). That is a store-vs-return divergence, not a stale gate verdict, and engine_retention['best_round'] exists precisely to make it visible.",
+    "residual": "A stale-read hazard IS real for OFFLINE harnesses, where a FAILED induce leaves the prior run's engine on disk for load_engine to re-read and mis-attribute -- arc_actions_to_progress.py:873/924/1060 already deletes the file to defend against it. In the live agent a failed induce returns early WITHOUT reading (arc_competition_agent.py:6501-6505), so the same hazard does not reach the scored path."
+  }
+}
