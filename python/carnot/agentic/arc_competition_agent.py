@@ -56,6 +56,15 @@ from carnot.agentic.arc_program_synthesis_filter import (
 )
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 
+# REQ-ARC-WMTE-6071: TOP-LEVEL (not function-local) for the same reason `arc_hazard_pruner` is,
+# below -- `scripts/arc_orphan_solver_lint.py` computes the live entrypoints' import closure from
+# module-level imports, and a solver-side component the lint cannot see is exactly the orphan class
+# the ARC Live-Path Reachability Discipline exists to refuse.
+from carnot.agentic.arc_inert_label_memory import (
+    InertLabelMemory,
+    coerce_inert_label_memory,
+)
+
 # REQ-ARC-WMTE-5970: TOP-LEVEL (not function-local) so `scripts/arc_orphan_solver_lint.py` sees
 # `arc_hazard_pruner` in the SCORED entrypoint's import closure. Before this import the module was
 # reachable only from `scripts/arc_loop_solve.py` (the offline dev twin), which is itself an allowed
@@ -231,6 +240,25 @@ SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE = (
 # reproduced levels) per the solve_rate_dropped guardrail -- not assumed safe just because it's
 # reachable. See python/carnot/agentic/arc_inert_click_pruner.py module docstring.
 SUBMITTED_INERT_CLICK_PRUNER_ENABLED = False
+# REQ-ARC-WMTE-6071 (2026-08-02): exact-label inert-action DEFERRAL, DEFAULT-OFF.
+#
+# Targets the largest AVOIDABLE class in the 2026-08-02 roster action census
+# (`results/arc_explorer_renavigation_20260802/`): `expansion.probe_was_inert_frame_unchanged`,
+# 19.1% of the budget at 240 actions and 18.4% at 2000 -- actions after which the raw frame was
+# byte-identical. A node's `untested` list is built once, per node, so two nodes showing the same
+# object each pay separately for the same coordinate; the most-repeated inert label on the roster
+# was probed 356 times in one run. An exact `(action_id, x, y)` already watched doing nothing, and
+# never watched doing anything, is inert again at 98.4% precision / 71.7% recall.
+#
+# NOT a re-run of SUBMITTED_INERT_CLICK_PRUNER_ENABLED above, which is RETIRED-NEGATIVE
+# (`results/outer_loop_inert_click_pruner_shipped_config_ab_20260726.json`). That lever keys on a
+# structural blob signature and DROPS rows, shortening `untested`, retiring nodes from the frontier
+# early and buying navigation (+12.0% states_expanded). This one keys on the literal action and
+# never drops: it changes only WHICH row a node pops next, and only while a non-deferred row
+# remains. See python/carnot/agentic/arc_inert_label_memory.py for the full contrast.
+SUBMITTED_INERT_LABEL_DEFER_ENABLED = False
+SUBMITTED_INERT_LABEL_DEFER_MODE = "exact_action_label_online_raw_frame_inertness_deferral"
+SUBMITTED_INERT_LABEL_DEFER_MIN_OBSERVATIONS = 1
 # REQ-ARC-WMTE-5970 (2026-07-26): HazardMovePruner on the SCORED path, DEFAULT-OFF.
 #
 # WHY IT IS WIRED AT ALL. Every pruning lever this project has measured was CLICK-side
@@ -1052,6 +1080,11 @@ class StepwiseExplorer:
         object_centric_proposal: Any | bool | None = SUBMITTED_OBJECT_CENTRIC_PROPOSAL_ENABLED,
         program_synthesis_filter: Any | None = None,
         inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+        # REQ-ARC-WMTE-6071: default None (not the SUBMITTED_* value) for the same reason as
+        # `hazard_move_pruner` below -- this is a GATED flag resolved through the `_fd_gate` ladder,
+        # where None means "no explicit kwarg; fall through to CARNOT_ARC_INERT_LABEL_DEFER, then
+        # to SUBMITTED_INERT_LABEL_DEFER_ENABLED".
+        inert_label_memory: Any | bool | None = None,
         # REQ-ARC-WMTE-5970: default None (not the SUBMITTED_* value) because this is a GATED flag
         # resolved through the `_fd_gate` ladder below, where None means "no explicit kwarg -- fall
         # through to the env override, then to SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED".
@@ -1425,6 +1458,39 @@ class StepwiseExplorer:
         )
         self.program_synthesis_filter = coerce_program_synthesis_filter(program_synthesis_filter)
         self.inert_click_pruner = coerce_inert_click_pruner(inert_click_pruner)
+        # REQ-ARC-WMTE-6071: the exact-label inert memory, resolved through the SAME
+        # explicit-kwarg > env override > SUBMITTED_* ladder as every other gated flag. A
+        # PRE-BUILT INSTANCE COUNTS AS AN EXPLICIT ENABLE (same translation as the hazard pruner
+        # below), so a test or an A/B arm can inject a memory with a different evidence floor.
+        _il_explicit: bool | None
+        if inert_label_memory is None or isinstance(inert_label_memory, bool):
+            _il_explicit = inert_label_memory
+        else:
+            _il_explicit = True
+        self.inert_label_defer_enabled = _fd_gate(
+            _il_explicit,
+            "CARNOT_ARC_INERT_LABEL_DEFER",
+            SUBMITTED_INERT_LABEL_DEFER_ENABLED,
+        )
+        if not self.inert_label_defer_enabled:
+            self.inert_label_memory = None
+        elif isinstance(inert_label_memory, bool) or inert_label_memory is None:
+            self.inert_label_memory = InertLabelMemory(
+                min_observations=SUBMITTED_INERT_LABEL_DEFER_MIN_OBSERVATIONS
+            )
+        else:
+            self.inert_label_memory = coerce_inert_label_memory(inert_label_memory)
+        # Fire-counters, for exactly the reason the hazard block below states: a zero-delta A/B
+        # cell must be CLASSIFIABLE. `_inert_label_observed == 0` is a dead observe channel (a
+        # wiring bug); a populated memory with `_inert_label_deferred_pops == 0` is a real "this
+        # game never re-offers a known-inert label"; and `_inert_label_abstained` counts the
+        # fail-open cases where every remaining row at a node was deferrable and the memory stood
+        # down. Conflating those three is how a harness artifact reads as a lever null.
+        self._inert_label_observed = 0
+        self._inert_label_observe_errors = 0
+        self._inert_label_deferred_pops = 0
+        self._inert_label_rows_deferred = 0
+        self._inert_label_abstained = 0
         # REQ-ARC-WMTE-5970: the nav-side hazard move-pruner, resolved through the SAME
         # explicit-kwarg > env override > SUBMITTED_* ladder as every other gated flag (`_fd_gate`
         # is a closure defined earlier in this __init__ and is still in scope here). The env path
@@ -1983,6 +2049,45 @@ class StepwiseExplorer:
             return frame_hash(grid_of(frame_or_grid))
         except Exception:
             return None
+
+    def inert_label_defer_diagnostics(self) -> dict:
+        """REQ-ARC-WMTE-6071: per-run FIRE-COUNTERS for the exact-label inert deferral.
+
+        Always safe to call (``enabled: False`` with zeroed counters when the lever is off).
+
+        READ IT IN THIS ORDER, for the same reason the hazard block below spells out -- a zero
+        here has several distinct causes and an A/B must not pool them:
+          1. ``observe_calls == 0``      -> DEAD OBSERVE CHANNEL. A wiring bug, not a null.
+          2. ``labels_tracked > 0`` but ``labels_deferrable == 0`` -> the game never re-offered a
+             label it had already watched do nothing, OR every such label eventually did
+             something. Real, and means the lever has no jurisdiction HERE.
+          3. ``labels_deferrable > 0`` but ``deferred_pops == 0`` -> the memory had opinions but
+             every node it was consulted at was all-deferrable or single-row, so it abstained.
+             Check ``abstained`` before reading this as a behavioural null.
+          4. ``deferred_pops > 0`` -> the lever actually redirected pops; ``rows_deferred`` is the
+             total number of row-choices it withheld across those pops.
+        ``abstained`` counts the fail-open: nodes where EVERY remaining row was deferrable and the
+        memory stood down rather than emptying the choice. A large count means the search is deep
+        into known-inert territory and the lever is (correctly) no longer helping there.
+        """
+
+        mem = getattr(self, "inert_label_memory", None)
+        out = {
+            "enabled": mem is not None,
+            "flag_resolved": bool(getattr(self, "inert_label_defer_enabled", False)),
+            "observe_calls": int(getattr(self, "_inert_label_observed", 0)),
+            "observe_errors": int(getattr(self, "_inert_label_observe_errors", 0)),
+            "deferred_pops": int(getattr(self, "_inert_label_deferred_pops", 0)),
+            "rows_deferred": int(getattr(self, "_inert_label_rows_deferred", 0)),
+            "abstained": int(getattr(self, "_inert_label_abstained", 0)),
+        }
+        if mem is None:
+            return out
+        try:
+            out.update(mem.stats())
+        except Exception:
+            pass
+        return out
 
     def hazard_move_pruner_diagnostics(self) -> dict:
         """REQ-ARC-WMTE-5970: per-run FIRE-COUNTERS for the nav-side hazard move-pruner.
@@ -2823,6 +2928,43 @@ class StepwiseExplorer:
                     self._hazard_observed += 1
                 except Exception:
                     self._hazard_observe_errors += 1
+            # REQ-ARC-WMTE-6071: feed the exact-label inert memory this realized transition.
+            #
+            # THE ANTECEDENT IS A HASH, NOT A FRAME, AND THAT IS THE POINT. Both sibling hooks
+            # above had to be repaired because their antecedent (`awaiting["previous_frame"]` /
+            # `awaiting["grid"]`) is populated only when one of NINE unrelated optional components
+            # happens to be attached, so their only learning channel could be silenced by turning
+            # off a component they have nothing to do with -- a dead channel that reads exactly
+            # like a real lever null. `unmasked_before`/`unmasked_now` are `self._last_unmasked_hash`
+            # and `self._unmasked_hash(latest)`, which THIS METHOD maintains unconditionally at its
+            # top, so this channel is alive on any configuration, including a bare
+            # `CarnotAgentPolicy` with every optional component off.
+            #
+            # UNMASKED, not `h`: node identity is the HUD-MASKED hash and answers "is this new to
+            # the search"; inertness is the cheaper "did any pixel change at all". An action that
+            # only ticks a HUD counter is NOT inert (something happened; the mask merely hides it),
+            # and an action that lands back on a known node is NOT inert either (that is
+            # `expansion.probe_revisited_known_state`, which the census marks unavoidable because
+            # the transition edge it buys is real). Keying on the masked hash would silently pool
+            # all three.
+            #
+            # `unmasked_before is None` on the FIRST observed transition of a run (there is no
+            # previous frame yet), and skipping it is correct: an unknown antecedent cannot
+            # witness "nothing changed".
+            inert_label_memory = getattr(self, "inert_label_memory", None)
+            if inert_label_memory is not None and unmasked_before is not None:
+                try:
+                    inert_label_memory.observe(
+                        o["action"],
+                        o.get("data"),
+                        unchanged=bool(
+                            unmasked_now is not None and unmasked_now == unmasked_before
+                        ),
+                        leveled_up=bool(level_increased),
+                    )
+                    self._inert_label_observed += 1
+                except Exception:
+                    self._inert_label_observe_errors += 1
             generic_causal_primitive = getattr(self, "generic_causal_primitive", None)
             if generic_causal_primitive is not None and o.get("previous_frame") is not None:
                 try:
@@ -3510,15 +3652,51 @@ class StepwiseExplorer:
         node["untested"].append(fresh)
         self._cps_redraws += 1
 
-    def _pop_untested_inner(self, node):
-        """The pop itself. Split out from ``_pop_untested`` so REQ-ARC-WMTE-5950's redraw hook
-        wraps EVERY return path (tier-admitted draw, tier fail-open, stall-diversity draw, plain
-        pop(0)) instead of having to be repeated at four ``return`` statements. Note the redraw
-        deliberately does NOT wrap ``_pop_frontier_batch``: a batch is expanded wholesale
-        downstream, so re-appending mid-batch would change batch semantics as well as the
-        coordinate, and this experiment varies one thing at a time."""
+    def _inert_label_keep_indices(self, lst) -> Optional[list[int]]:
+        """REQ-ARC-WMTE-6071: indices of rows the exact-label memory does NOT expect to be no-ops.
 
-        lst = node["untested"]
+        Returns None -- meaning "the memory has no opinion, pop exactly as today" -- in three
+        cases, and the three are the whole safety story of this lever:
+
+          * the memory is not attached (flag off): the caller's path is then byte-identical to
+            the pre-6071 code, which is what makes this a true A/B rather than a rewrite;
+          * NOTHING here is deferrable: there is no reordering to do;
+          * EVERYTHING here is deferrable: the memory ABSTAINS rather than emptying the choice.
+            This is the fail-open that keeps deferral from ever becoming a drop -- a node whose
+            remaining work is all known-inert drains on exactly today's schedule, so
+            `_node_has_open_tier`, the frontier, and therefore the navigation budget are
+            untouched. Dropping instead is what the RETIRED signature pruner did, and its
+            post-mortem attributes its +12.0% states_expanded to precisely that.
+
+        Deliberately index-based rather than list-based: the caller pops from `node["untested"]`
+        by index, and the row objects are plain dicts that can compare equal to one another
+        (two clicks on the same pixel from different generators), so mapping a filtered choice
+        back by identity or equality would be ambiguous.
+        """
+
+        mem = self.inert_label_memory
+        if mem is None or len(lst) < 2:
+            return None
+        keep = [i for i, row in enumerate(lst) if not mem.is_deferrable_row(row)]
+        if not keep or len(keep) == len(lst):
+            if keep and len(keep) == len(lst):
+                return None
+            self._inert_label_abstained += 1
+            return None
+        return keep
+
+    def _select_untested_index(self, lst) -> Optional[int]:
+        """The index this explorer would pop from `lst`, under whichever draw is configured.
+
+        Extracted VERBATIM from `_pop_untested_inner`'s three branches (tier-admitted draw,
+        stall-diversity draw, plain head) so REQ-ARC-WMTE-6071 can run the SAME draw over a
+        filtered view of the list without duplicating -- or drifting from -- the draw rule.
+        Returns None only where `tier_policy.select_index` does: the tier barrier admitted
+        nothing in `lst`. The caller owns the `_tier_deferrals` accounting and the fail-open,
+        because "nothing admitted in a FILTERED view" and "nothing admitted in the WHOLE node"
+        are different events and only the second is a barrier/node disagreement.
+        """
+
         if self._tier_active():
             rng = self._fd_rng if self.tier_uniform_random_enabled else None
             # top_k=None => UNRESTRICTED uniform draw over every tier-admitted row, which is what
@@ -3532,21 +3710,50 @@ class StepwiseExplorer:
             # diversity would have silently changed the experiment. The frontier-discipline draw
             # now has its OWN knob, unset by default = faithful to the reference.
             top_k = self._fd_draw_topk if self.tier_uniform_random_enabled else None
-            idx = self.tier_policy.select_index(lst, self._active_tier, rng=rng, top_k=top_k)
-            if idx is not None:
-                return lst.pop(idx)
-            # Nothing admitted at this tier. Defensive only: every caller gates on
-            # _node_has_open_tier first, so reaching here means the barrier state and the node
-            # disagree. Fail OPEN (take the row) rather than crash the live agent.
-            self._tier_deferrals += 1
-            return lst.pop(0)
+            return self.tier_policy.select_index(lst, self._active_tier, rng=rng, top_k=top_k)
         if (
             self._hybrid_diversity
             and self._steps_since_progress > self._stall_threshold
             and len(lst) > 1
         ):
-            return lst.pop(self._div_rng.randrange(min(len(lst), self._div_topk)))
-        return lst.pop(0)
+            return self._div_rng.randrange(min(len(lst), self._div_topk))
+        return 0
+
+    def _pop_untested_inner(self, node):
+        """The pop itself. Split out from ``_pop_untested`` so REQ-ARC-WMTE-5950's redraw hook
+        wraps EVERY return path (tier-admitted draw, tier fail-open, stall-diversity draw, plain
+        pop(0)) instead of having to be repeated at four ``return`` statements. Note the redraw
+        deliberately does NOT wrap ``_pop_frontier_batch``: a batch is expanded wholesale
+        downstream, so re-appending mid-batch would change batch semantics as well as the
+        coordinate, and this experiment varies one thing at a time.
+
+        REQ-ARC-WMTE-6071 adds ONE thing to this method: when the exact-label inert memory is
+        attached AND this node still holds at least one row the memory has no complaint about,
+        the SAME draw runs over just those rows. The deferred rows stay in `node["untested"]`.
+        With the memory absent (`inert_label_defer_enabled` False, the shipped default) the
+        first branch returns immediately and this method's behaviour -- including how many
+        values it draws from `self._fd_rng` -- is what it was before."""
+
+        lst = node["untested"]
+        keep = self._inert_label_keep_indices(lst)
+        if keep is not None:
+            view = [lst[i] for i in keep]
+            idx = self._select_untested_index(view)
+            if idx is not None:
+                self._inert_label_deferred_pops += 1
+                self._inert_label_rows_deferred += len(lst) - len(keep)
+                return lst.pop(keep[idx])
+            # The barrier admitted nothing in the filtered view but may still admit a deferred
+            # row. Fall through to the unfiltered draw -- the memory yields to the tier barrier,
+            # never the other way round.
+        idx = self._select_untested_index(lst)
+        if idx is None:
+            # Nothing admitted at this tier. Defensive only: every caller gates on
+            # _node_has_open_tier first, so reaching here means the barrier state and the node
+            # disagree. Fail OPEN (take the row) rather than crash the live agent.
+            self._tier_deferrals += 1
+            idx = 0
+        return lst.pop(idx)
 
     def _tier_active(self, frame: Any = None) -> bool:
         """Is the tier barrier active RIGHT NOW? (see SUBMITTED_FRONTIER_TIER_CLICK_VOCAB_ONLY_ENABLED)
@@ -4293,6 +4500,12 @@ class E3AgentPolicy:
             SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
         ),
         inert_click_pruner: Any | bool | None = SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+        # REQ-ARC-WMTE-6071: None = "no explicit kwarg", for the same reason spelled out for
+        # `hazard_move_pruner` immediately below -- the explorer's `_fd_gate` ladder must be the
+        # one that decides, so `CARNOT_ARC_INERT_LABEL_DEFER` still works when this policy is the
+        # constructor. Passing SUBMITTED_INERT_LABEL_DEFER_ENABLED here would make it explicit and
+        # pin every arm to the shipped default.
+        inert_label_memory: Any | bool | None = None,
         # REQ-ARC-WMTE-5970: None = "no explicit kwarg", so the explorer's `_fd_gate` ladder decides
         # (env override, then SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED = False). Passing the SUBMITTED_*
         # value here instead would make it an EXPLICIT kwarg and silently defeat the env path the
@@ -4439,6 +4652,7 @@ class E3AgentPolicy:
             object_centric_proposal=object_centric_proposal,
             program_synthesis_filter=initial_program_filter,
             inert_click_pruner=inert_click_pruner,
+            inert_label_memory=inert_label_memory,
             hazard_move_pruner=hazard_move_pruner,
             amortized_first_contact_prior=amortized_first_contact_prior,
             go_explore_archive=go_explore_archive,
@@ -6830,6 +7044,10 @@ SUBMITTED_AGENT_CONFIG = {
         SUBMITTED_PROGRAM_SYNTHESIS_PROPOSAL_FILTER_TRUST_THRESHOLD
     ),
     "inert_click_pruner_enabled": SUBMITTED_INERT_CLICK_PRUNER_ENABLED,
+    "inert_label_defer_enabled": SUBMITTED_INERT_LABEL_DEFER_ENABLED,
+    "inert_label_defer_mode": SUBMITTED_INERT_LABEL_DEFER_MODE,
+    "inert_label_defer_min_observations": SUBMITTED_INERT_LABEL_DEFER_MIN_OBSERVATIONS,
+    "inert_label_defer_wired": True,
     "hazard_move_pruner_enabled": SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED,
     "hazard_move_pruner_mode": SUBMITTED_HAZARD_MOVE_PRUNER_MODE,
     "hazard_move_pruner_wired": True,

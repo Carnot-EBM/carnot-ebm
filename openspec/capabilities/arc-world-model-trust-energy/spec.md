@@ -20868,3 +20868,139 @@ caught it. (`is_level_complete_none` is deliberately excluded: it returns before
 |---|---|---|
 | REQ-ARC-WMTE-6047-E | `python/carnot/agentic/arc_executable_world_model.py` — new `_termination_reason(nodes, max_nodes, depth_truncated_nodes)` helper (budget, then depth, then exhaustion), a `depth_truncated_nodes` counter incremented at BOTH `if len(path) >= max_depth: continue` sites, and all four diagnostics-writing exits updated. `plan_in_model`'s docstring gains a DEPTH AXIS section naming the tn36 artifact that proves the mislabel was live. | `tests/python/test_arc_plan_in_model_depth_capped_2026_07_31.py` — 9 tests, **6/6 real mutations killed** with a deliberate inert control correctly SURVIVING (so the kill rate is falsifiable), sources restored byte-identically, baseline green before and after (`results/arc_plan_in_model_depth_20260731/mutation_check.json`). Two mutations exist specifically because the module has TWO copies of the same loop: `M1_revert_blind_bfs_to_two_way` and `M2_revert_best_first_to_two_way` — a single-loop fix would have survived one of them, and the best-first loop is the one the live path takes whenever a goal energy was induced. Inertness: `results/arc_plan_in_model_depth_20260731/inertness_differential.json` (600 differential cases vs git HEAD, 0 return-value differences). Origin cell: `results/arc_plan_in_model_depth_20260731/tn36_plan_termination.json` (the committed tn36 fixture, both hashes re-asserted against the 2026-07-30 audit's record, now `depth_capped` at 40 and still the identical 61-action plan at 80). |
 
+
+## REQ-ARC-WMTE-6071: The Explorer SHALL Be Able To Defer An Action It Has Already Watched Do Nothing
+
+The 2026-08-02 roster action census (`results/arc_explorer_renavigation_20260802/`) decomposed
+the scored explorer's action budget into named classes and found the largest AVOIDABLE class is
+not re-navigation -- it is `expansion.probe_was_inert_frame_unchanged`: **1,148 of 6,000 actions
+(19.1%)** at budget 240, and **9,208 of 50,000 (18.4%)** on the same 25-game roster at budget
+2000. An inert action is one after which the RAW frame is byte-identical to the frame before it:
+the agent spent an action and not one pixel moved.
+
+The cause is structural rather than accidental. `StepwiseExplorer` builds a node's `untested`
+candidate list ONCE, per node, from that node's own frame, so two nodes showing the same object
+each offer -- and each separately pay for -- the same click coordinate. The search's
+"have I tried this?" bookkeeping is per-node and cannot see that this exact action already did
+nothing somewhere else. Measured on the budget-2000 traces the single most-repeated inert label
+was probed **356 times** in one run (s5i5), 245 in another (ar25), and 148-164 in three more.
+
+This matters in the benchmark's own units. ARC-AGI-3 scores a level as
+`min((baseline_actions/agent_actions)**2, 115)` -- QUADRATIC in actions -- so a class worth ~18%
+of the budget is worth ~1.5x on per-level score if it could be recovered in full.
+
+### SCENARIO-ARC-WMTE-6071-1: The key SHALL be the literal action, not a structural generalization
+GIVEN a candidate row `{"action": 6, "data": {"x": X, "y": Y}}`
+WHEN the memory keys it
+THEN the key is `(6, X, Y)` -- the literal action the agent will send -- and two clicks on
+different pixels are different keys even when they land on identical-looking objects.
+This is the first of the three axes on which this requirement differs from the RETIRED
+`InertClickSigPruner` (`results/outer_loop_inert_click_pruner_shipped_config_ab_20260726.json`:
+zero new wins on 75 matched pairs, lost ft09 on 2 of 3 seeds, states_expanded +12.0% pooled and
++37.9% in the non-HUD stratum, "DO NOT FLIP ... retire the lever in its current RAW-GRID-inertness
+form"). That lever keyed on Reki's `(color, pixel_count, is_rect, twin_count)` blob signature, so
+evidence about one blob suppressed clicks on every look-alike blob anywhere on the board, which
+is why it needed a 4-observation floor plus a 0.9 specificity threshold and still mis-fired.
+Keying on the literal action generalizes across STATES -- which is where the waste is -- and
+across nothing else. Measured over 43,533 probe actions on the 25-game roster: a label already
+observed inert at least once and never observed doing anything was inert again **6,601 of 6,710
+predictions, 98.4% precision at 71.7% recall**.
+
+### SCENARIO-ARC-WMTE-6071-2: Deferral SHALL NOT be a drop
+GIVEN a node whose `untested` list holds both known-inert and unknown rows
+WHEN the explorer pops
+THEN the same draw runs over just the rows the memory has no complaint about, and the deferred
+rows STAY IN `node["untested"]`.
+GIVEN a node where EVERY remaining row is deferrable
+THEN the memory ABSTAINS entirely and the node pops exactly as it does today.
+This is the second differing axis, and the one the retired pruner's own post-mortem attributes
+its +12.0% states_expanded to: dropping rows shortens the list, changes `_node_has_open_tier`,
+retires the node from the frontier earlier and buys navigation. Because deferral never changes
+the list LENGTH, `_node_has_open_tier`, the frontier schedule and the node's drain time are
+untouched; only the ORDER of spending inside the node changes. A single-row node is never
+consulted at all, since a one-row node is not a choice and consulting it could only turn a defer
+into a drop.
+
+### SCENARIO-ARC-WMTE-6071-3: The learning channel SHALL NOT depend on unrelated components
+GIVEN a realized transition ingested by `StepwiseExplorer._ingest`
+WHEN the memory records it
+THEN the antecedent is `self._last_unmasked_hash`, which `_ingest` maintains UNCONDITIONALLY,
+NOT `awaiting["previous_frame"]`.
+This is the third differing axis. Both sibling observe hooks in the same method had to be
+repaired because `awaiting["previous_frame"]` is `graph[origin]["frame"]`, retained only when one
+of NINE unrelated optional components is attached -- so their only learning channel could be
+silenced by turning off a component they have nothing to do with, producing a zero-error,
+byte-identical null that is pure harness artifact. The fix is pre-applied here rather than left
+to be discovered.
+
+The hash is UNMASKED rather than the node-identity hash on purpose: node identity is the
+HUD-masked hash and answers "is this new to the search", while inertness is the strictly cheaper
+"did any pixel change at all". An action that only ticks a HUD counter is NOT inert, and an
+action that lands back on a known node is NOT inert either (that is
+`expansion.probe_revisited_known_state`, which the census marks unavoidable because the
+transition edge it buys is real information). The masked hash would pool all three.
+
+### SCENARIO-ARC-WMTE-6071-4: A label that has ever done anything SHALL NOT be deferrable
+GIVEN a label observed producing a frame change even once
+THEN it is never deferrable again, regardless of how many inert observations follow.
+GIVEN a label that has ever produced a LEVEL-UP
+THEN it is SACRED -- vetoed by a SEPARATE rule kept even though `observe` also counts a level-up
+as an effect.
+The two vetoes are exercised INDEPENDENTLY by the test suite. This is not decoration: the
+level-up veto was DECORATIVE when first written -- deleting the `n_leveled > 0` line left the
+whole suite GREEN, because along every path `observe` can produce, the frame-change veto already
+covered it. That is the "untested pattern" class CLAUDE.md's Test-Run Record Integrity Discipline
+names, found by mutation rather than by reading. `set_counts_for_test` exists solely to reach
+`leveled > 0, effective == 0`, the one state `observe` cannot reach and the only state in which
+the second veto is load-bearing.
+
+Checked against the traces the mechanism was designed on: of the **24 level-up actions** the
+25-game budget-2000 roster produced, **0** would have been deferred.
+
+### SCENARIO-ARC-WMTE-6071-5: The lever SHALL ship INERT
+GIVEN `SUBMITTED_INERT_LABEL_DEFER_ENABLED = False` and `CARNOT_ARC_INERT_LABEL_DEFER` unset
+WHEN `_pop_untested_inner` runs
+THEN `_inert_label_keep_indices` returns None immediately and the method executes the pre-6071
+path, including drawing exactly as many values from `self._fd_rng` as it did before.
+Resolution is the standard explicit-kwarg > env override > `SUBMITTED_*` ladder (`_fd_gate`), and
+a pre-built instance counts as an explicit enable so an A/B arm can vary the evidence floor
+without mutating module globals.
+
+### SCENARIO-ARC-WMTE-6071-6: The A/B SHALL score PROGRESS, not action count
+GIVEN that an explorer which simply EXPLORES LESS also spends fewer actions
+WHEN the lever is measured
+THEN both arms receive the SAME action budget and the comparison is on what they REACHED:
+`levels_gained` (the oracle), per-level hand-verifier progress (the shipped
+`arc_actions_to_progress` implementation, including its measurability guard), and distinct states
+discovered. An arm that saves actions and reaches less is a REGRESSION and is reported as one.
+The unit of analysis is the GAME (25 units, seeds averaged within a game first), because
+replicates of one game share its entire mechanics and are not independent trials.
+
+### SCENARIO-ARC-WMTE-6071-7: The design's own limits SHALL be stated before the result
+GIVEN a two-sided paired sign test clustered at the game
+THEN min p = `2 * 0.5**k` with k discordant games, so p <= 0.05 needs k >= 6 -- stated up front,
+not discovered afterwards. On the primary axis (levels) only ONE game moved, so the design COULD
+NOT have reached 0.05 there whatever the effect size.
+GIVEN three seeds
+THEN the seed axis is DECORATIVE and the artifact says so: 0 of 25 games produced a different
+action trace across seeds in either arm, because `random.seed`/`np.random.seed` do not reach the
+explorer's own frontier RNG. Three seeds are ONE observation repeated.
+GIVEN two identically-configured arms in separate processes (the A/A noise floor)
+THEN 75 of 75 pairs hash to the same action trace, so the agent is DETERMINISTIC here and every
+treatment divergence is causal rather than sampled -- a stronger statement than any p-value.
+
+### SCENARIO-ARC-WMTE-6071-8: A measurement run SHALL NOT be repaired after contamination
+GIVEN a background A/B whose source file was hot-swapped mid-run
+WHEN 7 of 225 cells are found to have run against the pre-change source
+THEN the WHOLE corpus is discarded and re-run, not the 7 cells.
+The 7 are the cells that ANNOUNCED the swap through an AttributeError in their own diagnostics; a
+cell that ran during the same window with the flag OFF would have been behaviourally identical
+and silent, so the contaminated set cannot be bounded from the artifacts alone. The re-run pins
+the source sha256 before and after and verifies it byte-identical. (This happened, in this
+session, and is recorded rather than quietly fixed.)
+
+## Implementation Status (REQ-ARC-WMTE-6071)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6071 | `python/carnot/agentic/arc_inert_label_memory.py` — `label_key`, `InertLabelMemory` (`observe`, `is_deferrable_key`/`is_deferrable_row`, `set_counts_for_test`, `stats`), `coerce_inert_label_memory`. `python/carnot/agentic/arc_competition_agent.py` — `SUBMITTED_INERT_LABEL_DEFER_ENABLED = False` (+ `_MODE`, `_MIN_OBSERVATIONS`), a top-level import so `scripts/arc_orphan_solver_lint.py` sees the module in the live closure, an `inert_label_memory` kwarg on BOTH `StepwiseExplorer` and `E3AgentPolicy` resolved through the `_fd_gate` ladder, five fire-counters, `inert_label_defer_diagnostics()`, the observe hook in `_ingest` keyed on `unmasked_before`/`unmasked_now`, and the pop hook: `_inert_label_keep_indices` + `_select_untested_index` (the draw rule extracted so the filtered and unfiltered paths cannot drift) called from `_pop_untested_inner`. Drivers: `scripts/arc_inert_label_defer_worker.py` (one cell, one killable subprocess, refuses if `E3_DIR` is the tracked evidence store or induction is not disabled), `scripts/arc_inert_label_defer_ab.py` (3 arms x 25 games x 3 seeds, per-arm scratch engine store), `scripts/arc_inert_label_defer_report.py`. | `tests/python/test_arc_inert_label_memory.py` — 17 tests. **Mutation-proven, 6/6 killed, sources restored byte-identically (sha256 verified):** reverting the pop hook to the pre-6071 rule kills 2; deleting the level-up SACRED veto kills 1; deleting the frame-change veto kills 1; deleting the all-deferrable fail-open kills 1; turning the defer into a DROP kills 1; raising the default evidence floor kills 6. The level-up-veto test was ADDED after the first mutation round found the veto decorative. RESULT: `results/arc_inert_label_defer_20260802/arc_inert_label_defer.json`, adversarial-verify clean, 0 missing observations, A/A 75/75 identical. The lever cuts its own target class **9,208 -> 4,239 actions (-54.0%), 13 games better / 1 worse, p = 0.0018**, and takes the games banking a level inside the LIVE 400-action budget from **3 to 6** (ft09 x59.5, lp85 x9.0, su15 x2.5 on the first level's score). But EVERY pre-registered progress axis is NULL — levels 14 -> 13 at budget 2000 (cd82 loses one at BOTH evidence floors), hand-verifier progress flat, states p = 0.79 — and NAVIGATION IS SIGNIFICANTLY WORSE (12,146 -> 13,903, 12 games worse, p = 0.013): the saved probes buy a deeper graph whose RESET-replay navigation costs 1 + depth. Recommendation: DO NOT flip the default; the next measurement is a LIVE-BUDGET (400-action) A/B where the primary axis is reachable, plus an investigation of cd82. |
