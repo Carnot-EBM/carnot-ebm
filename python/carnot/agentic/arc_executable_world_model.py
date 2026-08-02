@@ -3684,6 +3684,24 @@ def _goal_probe_timeout(_signum, _frame):  # pragma: no cover - signal path
 # of the answer, not a fact about the game. A predicate that returns the same value on every
 # frame the agent has seen carries no information regardless of which game it is, so this text
 # is exactly as available on a hidden game as on a solved one.
+#
+# SCOPED 2026-08-02 after adversarial review, because the paragraph above was written as if it
+# covered all three bullets and it does not. Bullets 1-2 are properties of the ANSWER, computed
+# on frames the agent observed for itself, and are bootstrap-free exactly as claimed. BULLET 3
+# ("prefer a simple condition on a specific region, row, column or object over a whole-board
+# property") IS NOT. It is a distributional prior about the SHAPE of ARC-AGI-3 win conditions,
+# derived by the 2026-08-01 taxonomy from the 25 SOLVED public games: C_UNIFORMITY never wins,
+# and E_FIXED_BAND is 11 of the 22 successes. A live agent meeting a hidden game would not have
+# derived it on its own.
+#
+# It is disclosed rather than removed because it does not cross the line the discipline draws:
+# it is game-agnostic, it names no specific win condition, and it would still function on a game
+# nobody has ever solved -- which is the operative test. It is the same class of public-corpus
+# scaffolding the ARC Solve Reproducibility discipline positively MANDATES be captured and
+# reused (`general_gotchas`). Nothing scored depends on it either way: the flag ships OFF and
+# the run that measured it recommends against flipping it. But if that default is ever flipped,
+# this bullet -- not bullets 1-2 -- is the sentence an adversarial reviewer will pull on, and it
+# should be disclosed before that happens rather than after.
 _GOAL_PLAIN_REASK_BLOCK = """
 YOUR PREVIOUS `is_level_complete` WAS RUN ON THE OBSERVED FRAMES AND RETURNED THE SAME ANSWER
 ON EVERY ONE OF THEM, so it carries no information. Please try again from the same evidence:
@@ -5962,6 +5980,34 @@ class LocalGGUFProposer:
                     last = f"mechanically defective engine: {_defects}"
                     self.n_induce_defect_reasks += 1
                     continue
+            # CORRECTION 2026-08-02, MEASURED, and it applies to the ENGINE block ABOVE as much
+            # as to the goal block below. The comment above says a defect re-ask "NEVER FAILS
+            # WHERE THE OLD PATH SUCCEEDED". THAT CLAIM IS FALSE, and the live A/B is what
+            # falsified it: the treatment arm hard-failed induction on 17 of 21 cells against
+            # 1 of 22 in control, and 0 of 21 in an A/A arm. (An earlier revision of this
+            # comment said "16 of 20 against 1 of 20" -- those were interim counts written
+            # while the run was still in flight; the final artifact's numbers are the ones
+            # above.)
+            #
+            # `attempt < tries - 1` stops the LAST attempt from `continue`-ing out of the loop.
+            # It does NOT stop an EARLIER re-ask from spending the attempt that would have been
+            # the accept. Concretely, with `tries=3` and a candidate that is usable-but-defective
+            # on attempt 0 followed by two malformed completions:
+            #     flag off -> attempt 0 is ACCEPTED                       -> (True, code)
+            #     flag on  -> attempt 0 is re-asked, 1 and 2 are content
+            #                 failures, the loop ends                     -> (False, "unusable")
+            # Reproduced deterministically against a scripted server in
+            # tests/python/test_arc_goal_defect_reask_wiring.py::
+            # test_reask_CAN_convert_an_accept_into_a_hard_failure.
+            #
+            # The re-ask is therefore NOT free: it trades a defective-but-usable artifact for a
+            # fresh sample AND for the risk that no later attempt parses at all. Both defect
+            # gates carry this, so the shipped engine gate's measured 13/36 -> 22/36 was obtained
+            # under the same trade. The fix is to give the defect gates their own attempts rather
+            # than borrowing from the content-failure retry ladder; that is a behaviour change to
+            # shipped code and is deliberately NOT made here, because it was discovered by a
+            # measurement that is still running and would be invalidated by changing its subject.
+            #
             # The GOAL half. It runs AFTER the engine check, and that order is load-bearing:
             # on the combined call one answer carries both functions, so a re-ask regenerates
             # both. Checking the engine first means a candidate with a broken engine is

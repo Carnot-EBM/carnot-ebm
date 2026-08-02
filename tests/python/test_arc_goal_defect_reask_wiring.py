@@ -197,9 +197,13 @@ def test_reask_CAN_convert_an_accept_into_a_hard_failure(monkeypatch, proposer):
     the attempt that would have BEEN the accept. If the later attempts then produce malformed
     output, the loop ends in a hard failure that the shipped path never had.
 
-    Measured live before it was reproduced here: the treatment arm hard-failed induction on 16
-    of 20 cells against 1 of 20 in control, 11 of those on the focused goal-only call. The
-    survivors are therefore a BIASED subset and no goal-quality comparison can be read off them.
+    Measured live before it was reproduced here: the treatment arm hard-failed induction on 17
+    of 21 cells against 1 of 22 in control (and 0 of 21 in an A/A arm), 11 of the first 16 on
+    the focused goal-only call. The survivors are therefore a BIASED subset and no goal-quality
+    comparison can be read off them. (This docstring said "16 of 20 against 1 of 20" until
+    2026-08-02: interim counts written while the run was still in flight, never refreshed
+    against the final artifact. The mechanism this test proves is scripted and does not depend
+    on either count.)
 
     This is NOT specific to the goal gate. The shipped ENGINE gate has the identical structure
     and the identical false comment, so its measured 13/36 -> 22/36 was obtained under the same
