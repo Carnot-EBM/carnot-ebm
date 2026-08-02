@@ -1267,6 +1267,14 @@
     "acknowledged_at_commit": "7d81fa816bb35173f2daae0a01bfad6602290389",
     "acknowledged_date": "2026-07-31",
     "why_not_rebuilt": "Rebuilding would overwrite MEASURED, non-reproducible timings and live-run records in these artifacts; a previous commit did exactly that to four of them and 132 timing values had to be restored from git history. Inertness here is established by direct differential measurement (see evidence), so a rebuild would trade recorded facts for a formality. Any recorded `rebuild_command` still stands for anyone who wants rebuild-strength proof."
+   },
+   {
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+    "sha256_now": "e4ff6dc9f3f266636bf3c51938680d99b04cfead5c3589775af3d46b88a84463",
+    "acknowledged_on": "2026-08-01",
+    "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+    "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
    }
   ]
  },

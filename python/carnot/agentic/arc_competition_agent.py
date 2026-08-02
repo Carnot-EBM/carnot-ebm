@@ -3346,8 +3346,10 @@ class StepwiseExplorer:
         item = self.pending.pop(0)
         if item["kind"] == "RESET":
             self.awaiting = None  # RESET has no forward edge to attribute
+            self._prov_serve_kind = "reset"  # provenance label; see arc_action_provenance
             return ("RESET", None)
         if item.get("probe"):
+            self._prov_serve_kind = "probe"  # provenance label; see arc_action_provenance
             origin = item.get("origin", self.cur)
             if "origin" not in item:
                 self._drop_queued_action_from_current_frontier(origin, item)
@@ -3365,6 +3367,7 @@ class StepwiseExplorer:
             # were never learned -> _shortest_path returned None -> every backtrack RESET-replayed from root,
             # burning actions (the 2026-06-20 regression: lp85 7792 actions vs bare BFS's 21). Recording
             # these edges lets future navigation use _shortest_path (forward-walk) instead of RESET-replay.
+            self._prov_serve_kind = "navigation"  # provenance label; see arc_action_provenance
             self.awaiting = {
                 "origin": self.cur,
                 "action": item["kind"],
@@ -3829,7 +3832,19 @@ class StepwiseExplorer:
         return self._serve()
 
     def next_move(self, frames, latest) -> tuple:
+        # PROVENANCE LABELS (`self._prov_branch = "<constant>"`, one per return site below).
+        # They exist so `arc_action_provenance` can say WHICH of this function's nine exits
+        # chose an action instead of re-deriving it from residual state -- re-derivation is
+        # exactly the inference-instead-of-accounting failure the instrument was built to
+        # end. Each is a bare constant-string assignment: it cannot alter control flow,
+        # cannot consume randomness, and is written unconditionally precisely BECAUSE an
+        # unconditional constant assignment is trivially provable inert, whereas a
+        # flag-guarded one adds a branch whose two sides must then be argued equivalent.
+        # `_prov_serve_kind` is reset here (not in `_serve`) so a row can never inherit the
+        # kind from a previous action on a path where `_serve` was not reached at all.
+        self._prov_serve_kind = None
         if self.root is None and latest is None:  # bootstrap: RESET to get the first frame
+            self._prov_branch = "bootstrap_reset"
             return ("RESET", None)
         self._ingest(latest)
         if self._hybrid_diversity and latest is not None:  # track stall for the diversity injection
@@ -3840,6 +3855,7 @@ class StepwiseExplorer:
             else:
                 self._steps_since_progress += 1
         if self.pending:
+            self._prov_branch = "pending_drain"
             return self._serve()
         over = latest is not None and self._game_over(latest)
         cur_node = self.graph.get(self.cur) if not over else None
@@ -3853,6 +3869,7 @@ class StepwiseExplorer:
         ):
             replay = self._go_explore_replay_sequence(current_path=cur_node.get("path") or [])
             if replay:
+                self._prov_branch = "go_explore_replay"
                 return self._begin_go_explore_replay(replay)
         # 1) DEPTH-first ride (search_mode="depth_first_ride", default): expand the current state's
         #    untested SALIENT actions while under the depth cap (no nav cost; reaches the deep wins
@@ -3866,6 +3883,7 @@ class StepwiseExplorer:
         ):
             qd_sequence = self._qd_sequence_for_node(cur_node)
             if qd_sequence:
+                self._prov_branch = "depth_ride.qd_sequence"
                 return self._begin_qd_sequence(qd_sequence)
             a = self._pop_untested(cur_node)
             self.awaiting = {
@@ -3876,6 +3894,7 @@ class StepwiseExplorer:
                 "level_before": int(self.best_level),
                 "previous_frame": self.graph.get(self.cur, {}).get("frame"),
             }
+            self._prov_branch = "depth_ride.pop_untested"
             return (a["action"], a["data"])
         # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
         #    depth_first_ride it fires when the current node is exhausted / dead-end / depth-capped.
@@ -3893,6 +3912,7 @@ class StepwiseExplorer:
             th = self._frontier()
         if th is None:
             self.explored_out = True
+            self._prov_branch = "explored_out"
             return (None, None)
         node = self.graph[th]
         if (
@@ -3900,6 +3920,7 @@ class StepwiseExplorer:
         ):  # best frontier IS the current state -> expand in place (no nav)
             qd_sequence = self._qd_sequence_for_node(node)
             if qd_sequence:
+                self._prov_branch = "frontier.qd_sequence"
                 return self._begin_qd_sequence(qd_sequence)
             a = self._pop_untested(node)
             self.awaiting = {
@@ -3910,6 +3931,7 @@ class StepwiseExplorer:
                 "level_before": int(self.best_level),
                 "previous_frame": self.graph.get(self.cur, {}).get("frame"),
             }
+            self._prov_branch = "frontier.pop_untested"
             return (a["action"], a["data"])
         batch = self._pop_frontier_batch(node)
         self._nav_attempts += 1
@@ -3941,6 +3963,7 @@ class StepwiseExplorer:
             if idx == 0:
                 item["origin"] = th
             self.pending.append(item)
+        self._prov_branch = "frontier.navigate"
         return self._serve()
 
     def is_done(self, frames, latest) -> bool:
@@ -4432,6 +4455,18 @@ class E3AgentPolicy:
         )
         self.proposer = proposer  # default set lazily to LocalGGUFProposer
         self.transition_cycle_verifier = transition_cycle_verifier
+        # PER-ACTION PROVENANCE. `None` -- the inert state -- unless
+        # CARNOT_ARC_ACTION_PROVENANCE=1 is set, so the shipped agent is unchanged and the
+        # only cost on the default path is one `is None` test per action in `next_move`.
+        # Constructed here, once, rather than looked up per action: reading the environment
+        # inside the decision loop would put an os.environ hit on the hot path AND make the
+        # instrument arm-able mid-episode, which would produce a partial accounting that
+        # looks like a complete one. See python/carnot/agentic/arc_action_provenance.py.
+        from carnot.agentic.arc_action_provenance import maybe_make_recorder
+
+        self._provenance = maybe_make_recorder(self.short, run_label=str(game_id))
+        self._prov_top: Optional[str] = None
+        self._prov_prev_frame_key: Optional[str] = None
         self.phase = "explore"
         self.plan: list = []
         self.pi = 0
@@ -4454,6 +4489,11 @@ class E3AgentPolicy:
         self._start_level: Optional[int] = None
         self._current_goal_level: Optional[int] = None
         self._previous_level_complete_grid: Any = None
+        # The transition whose action incremented the level counter -- the ONLY positive example
+        # of "winning" this agent ever produces for itself. Carried separately from
+        # `self.transitions` because `_episode_transition_start` deliberately excludes it from the
+        # new level's dynamics window; see `_begin_level_goal_episode`.
+        self._win_transition: Any = None
         self._episode_transition_start = 0
         self._episode_dsl_transition_start = 0
         self._level_reinduction_pending = False
@@ -4666,6 +4706,30 @@ class E3AgentPolicy:
     ) -> dict[str, Any]:
         next_goal = int(completed_level) + 1
         self._current_goal_level = next_goal
+        # CAPTURE THE WIN TRANSITION BEFORE THE WINDOW MOVES PAST IT (2026-08-01).
+        #
+        # `next_move` appends the level-up transition to `self.transitions` and only THEN calls
+        # `_observe_level_boundary`, which lands here. So at this instant `self.transitions[-1]`
+        # IS the transition whose action completed the level -- and the very next statement sets
+        # `_episode_transition_start = len(self.transitions)`, one PAST it. Since
+        # `_active_transitions()` slices from that index and every live induction prompt is built
+        # from it, the agent's single self-produced positive example was unreachable: measured
+        # across every rebuilt live prompt, `_transitions_block`'s WIN TRANSITION block fired
+        # ZERO times, while 34 of 71 goal-failing engines returned an unconditional False.
+        #
+        # WHY NOT JUST MOVE THE START INDEX BACK ONE. Because the completing action ALSO re-lays
+        # out the playfield for the next level (3527 of 4096 cells on ka59, against an
+        # ordinary-step median of 18.5). Leaving it inside the new level's dynamics window would
+        # teach the proposer that one action can change 86% of the board -- trading a starved
+        # goal prompt for a corrupted dynamics prompt. The window stays clean; the example is
+        # carried beside it.
+        #
+        # GUARDED for the two ways this is reachable without a real win row: an empty transition
+        # list (unit tests construct the policy bare), and the `for new_level in range(...)` loop
+        # above, which calls this once PER level when several complete at once -- every call in
+        # that burst would otherwise re-record the same transition.
+        if self.transitions:
+            self._win_transition = self.transitions[-1]
         self._episode_transition_start = len(self.transitions)
         self._episode_dsl_transition_start = len(self._dsl_transitions)
         self.induced = False
@@ -5203,7 +5267,247 @@ class E3AgentPolicy:
         return candidates
 
     def next_move(self, frames, latest):
+        """THE choke point: every action the SCORED agent emits leaves through here.
+
+        `make_carnot_agent` -> `CarnotAgent.choose_action` -> `self._policy.next_move`, so
+        this is the one function that sees every action, in order, with the policy's full
+        state at the moment of choice. That is why the per-action provenance instrument
+        hangs here and nowhere else.
+
+        THIS IS A PASSTHROUGH WHEN THE INSTRUMENT IS OFF, which is the default and the
+        shipped configuration. `self._provenance` is None unless
+        `CARNOT_ARC_ACTION_PROVENANCE=1` was set at construction time, so the unarmed cost
+        is one attribute load, one `is None` test, and one delegating call -- no allocation,
+        no I/O, no RNG draw, and, critically, not a single different decision. The routing
+        logic itself was not modified: it lives verbatim in `_next_move_routed` below,
+        which is the pre-instrument `next_move` with constant-string branch labels added at
+        its return sites.
+        """
+        if self._provenance is None:
+            return self._next_move_routed(frames, latest)
+        return self._next_move_recorded(frames, latest)
+
+    def _next_move_recorded(self, frames, latest):
+        """Run the real routing and append one provenance row. Observation only.
+
+        Every step that could raise is guarded: an instrument that crashes the agent
+        trades a silent measurement gap for a zeroed game, which is strictly worse. The
+        routed call itself is deliberately OUTSIDE the try -- a policy crash is a real
+        datum and must propagate exactly as it would with the instrument off.
+        """
+        rec = self._provenance
+        pre: dict[str, Any] = {}
+        try:
+            pre = self._provenance_pre_state(frames, latest)
+        except Exception as exc:  # pragma: no cover - never let capture break the run
+            rec.errors.append(f"pre_state: {exc!r}"[:200])
+        plan_before = self.plan
+        # The routing call. NOT guarded, on purpose (see the docstring).
+        move = self._next_move_routed(frames, latest)
+        try:
+            rec.note_plan_object(
+                self.plan,
+                (len(self.induction_attempts) - 1) if self.induction_attempts else None,
+            )
+            row = self._provenance_post_state(pre, move, plan_before, frames, latest)
+            rec.record(row)
+        except Exception as exc:  # pragma: no cover
+            rec.errors.append(f"post_state: {exc!r}"[:200])
+        return move
+
+    def _provenance_pre_state(self, frames, latest) -> dict[str, Any]:
+        """Snapshot the state the policy was in BEFORE it chose, plus the observable
+        outcome of the PREVIOUS action.
+
+        `frame_changed` is computed here rather than in the driver because this is the
+        only place that sees both the previous frame the policy acted on and the frame
+        that action produced. It answers "did the last action do anything at all" -- an
+        observation, NOT a check against what any induced engine predicted. This
+        instrument never invokes an induced engine (that would both violate the repo's
+        run-induced-code-in-a-subprocess-only rule and make the instrument re-run the
+        computation it is measuring), so no field here should be read as model-prediction
+        agreement.
+        """
+        prev = getattr(self, "_prov_prev_frame_key", None)
+        cur_key = None
+        try:
+            if latest is not None:
+                from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
+
+                cur_key = frame_hash(grid_of(latest))
+        except Exception:
+            cur_key = None
+        explorer = getattr(self, "explorer", None)
+        return {
+            "phase_before": self.phase,
+            "plan_len_before": len(self.plan),
+            "plan_pi_before": int(self.pi),
+            "induction_attempts_before": len(self.induction_attempts),
+            "induced_flag_before": bool(self.induced),
+            "transitions_before": len(self.transitions),
+            "frames_seen": len(frames) if frames is not None else None,
+            "level_before": _level_of(latest) if latest is not None else None,
+            "frame_key": cur_key,
+            "frame_changed": (None if (prev is None or cur_key is None) else bool(cur_key != prev)),
+            "explorer_explored_out_before": bool(getattr(explorer, "explored_out", False)),
+            "explorer_pending_before": len(getattr(explorer, "pending", []) or []),
+            "pending_induction_reason": self._pending_induction_reason,
+        }
+
+    def _provenance_post_state(self, pre, move, plan_before, frames, latest) -> dict[str, Any]:
+        """Build the row: the action, the branch that chose it, and why that branch won."""
+        rec = self._provenance
+        explorer = getattr(self, "explorer", None)
+        kind, data = move if isinstance(move, tuple) and len(move) == 2 else (None, None)
+        top = getattr(self, "_prov_top", None)
+        explorer_used = bool(top and str(top).endswith("explorer"))
+        # The induction attempt that is CURRENT for this row. `attempt_index` is the last
+        # appended attempt; `induction_ran_this_action` says whether it was appended during
+        # THIS action, which is what distinguishes "an induction just happened" from "an
+        # induction happened at some point earlier and its plan is still executing".
+        attempts = self.induction_attempts
+        attempt = attempts[-1] if attempts else {}
+        ran_now = len(attempts) > int(pre.get("induction_attempts_before") or 0)
+        sel = getattr(self, "world_model_trust_selection", None)
+        sel_score = getattr(sel, "selected_score", None)
+        plan_remaining = max(0, len(self.plan) - int(self.pi))
+        # PLAN ABANDONMENT, observationally defined. A plan is "abandoned" when the policy
+        # leaves the execute phase with steps still unconsumed. This is NOT a claim that
+        # reality diverged from the model's prediction -- nothing here asks the engine what
+        # it predicted -- it is the weaker, checkable statement that the plan stopped being
+        # followed before it ran out.
+        left_execute = pre.get("phase_before") == "execute" and self.phase != "execute"
+        if left_execute:
+            if int(pre.get("plan_len_before") or 0) > int(pre.get("plan_pi_before") or 0):
+                rec.plans_abandoned += 1
+            else:
+                rec.plans_consumed_fully += 1
+        try:
+            self._prov_prev_frame_key = pre.get("frame_key") if kind not in (None,) else None
+        except Exception:
+            pass
+        row = {
+            "i": len(rec.rows),
+            "game": self.short,
+            # -- the action -------------------------------------------------------------
+            "action": "RESET" if kind == "RESET" else (int(kind) if kind is not None else None),
+            # A DEFENSIVE COPY, not the live object. The same `data` dict is handed straight
+            # to the environment step, and `Recorder.record` only shallow-copies the row, so
+            # storing the reference would let a downstream mutation rewrite an
+            # already-recorded action -- a record that changes after the fact is the one
+            # failure mode an accounting cannot survive. Cheap: these dicts are
+            # `{"x": int, "y": int}` at most.
+            "data": (dict(data) if isinstance(data, dict) else data),
+            # -- WHICH BRANCH CHOSE IT --------------------------------------------------
+            "top_branch": top,
+            "explorer_branch": (getattr(explorer, "_prov_branch", None) if explorer_used else None),
+            "explorer_serve_kind": (
+                getattr(explorer, "_prov_serve_kind", None) if explorer_used else None
+            ),
+            # -- the policy's state at the moment of choice -----------------------------
+            "phase_before": pre.get("phase_before"),
+            "phase_after": self.phase,
+            "plan_len": len(self.plan),
+            "plan_pi": int(self.pi),
+            "plan_remaining": plan_remaining,
+            "plan_present": bool(self.plan),
+            "plan_replaced_this_action": self.plan is not plan_before,
+            "plan_epoch": rec.plan_epoch,
+            "plan_installed_by_attempt": rec.plan_installed_by_attempt,
+            "plan_abandoned_this_action": bool(
+                left_execute
+                and int(pre.get("plan_len_before") or 0) > int(pre.get("plan_pi_before") or 0)
+            ),
+            "execute_plan_from_current": bool(self._execute_plan_from_current),
+            # -- did an induced engine exist, and was it trusted? -----------------------
+            # Recorded as the RAW fields the induction path itself writes, not as a
+            # pre-digested verdict. `skipped` is the load-bearing one: it distinguishes
+            # "no engine was ever produced" (`no_active_transitions`, `disabled_by_env`,
+            # `proposer_failed_or_missing_root`) from "an engine was produced and the
+            # trust gate REJECTED it" (`hidden_state_trust_below_threshold`,
+            # `hidden_state_change_gate_*`, `trust_below_threshold`). Collapsing those two
+            # into one boolean is precisely how a pipeline gets credited with work it did
+            # not do, so the mapping is left to the analysis and written down there.
+            "induction_attempts_n": len(attempts),
+            "induction_attempt_index": (len(attempts) - 1) if attempts else None,
+            "induction_ran_this_action": ran_now,
+            "induction_reason": attempt.get("reason"),
+            "induction_skipped": attempt.get("skipped"),
+            "induction_planned": bool(attempt.get("planned")),
+            "engine_source": attempt.get("engine_source"),
+            "trust_energy": attempt.get("trust_energy"),
+            "heldout_accuracy": attempt.get("heldout_accuracy"),
+            "verify_accuracy": attempt.get("verify_accuracy"),
+            "verify_cell_recall": attempt.get("verify_cell_recall"),
+            "binary_gate_pass": attempt.get("binary_gate_pass"),
+            "plan_termination_reason": (attempt.get("plan_diagnostics") or {}).get(
+                "termination_reason"
+            ),
+            "trust_selection_present": sel is not None,
+            "trust_selection_trust_pass": (
+                bool(getattr(sel_score, "trust_pass", False)) if sel_score is not None else None
+            ),
+            # -- environment ------------------------------------------------------------
+            "level_before": pre.get("level_before"),
+            "level_after": _level_of(latest) if latest is not None else None,
+            "frame_changed_since_last_action": pre.get("frame_changed"),
+            "frames_seen": pre.get("frames_seen"),
+            "transitions_n": len(self.transitions),
+            "explore_budget": int(self.explore_budget),
+            "explorer_explored_out": bool(getattr(explorer, "explored_out", False)),
+            "explorer_pending_len": len(getattr(explorer, "pending", []) or []),
+            # -- WHY the explorer branch won --------------------------------------------
+            # The branch label says WHICH exit fired; these say what made its guard true.
+            # `StepwiseExplorer.next_move` picks between the depth-first ride and the
+            # frontier expansion on exactly two quantities -- whether the CURRENT node still
+            # has untested actions at the active tier, and whether its path has hit
+            # `max_depth` -- so recording those two makes the choice reconstructable instead
+            # of merely labelled. Read AFTER the call, i.e. post-pop, which is why
+            # `untested_at_cur` can be one lower than the value the guard saw; that is the
+            # honest reading of the state the NEXT action will face and the field is named
+            # for the node, not for the guard.
+            **self._provenance_explorer_state(explorer),
+        }
+        return row
+
+    @staticmethod
+    def _provenance_explorer_state(explorer) -> dict[str, Any]:
+        """Search-shape fields that explain which explorer guard fired. Never raises."""
+        try:
+            graph = getattr(explorer, "graph", None) or {}
+            cur = getattr(explorer, "cur", None)
+            node = graph.get(cur) if isinstance(graph, dict) else None
+            return {
+                "explorer_graph_nodes": len(graph) if isinstance(graph, dict) else None,
+                "explorer_cur_depth": (len(node.get("path") or []) if node else None),
+                "explorer_untested_at_cur": (len(node.get("untested") or []) if node else None),
+                "explorer_max_depth": getattr(explorer, "max_depth", None),
+                "explorer_best_level": getattr(explorer, "best_level", None),
+                "explorer_search_mode": getattr(explorer, "search_mode", None),
+            }
+        except Exception:
+            return {
+                "explorer_graph_nodes": None,
+                "explorer_cur_depth": None,
+                "explorer_untested_at_cur": None,
+                "explorer_max_depth": None,
+                "explorer_best_level": None,
+                "explorer_search_mode": None,
+            }
+
+    def _next_move_routed(self, frames, latest):
         from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
+
+        # PROVENANCE LABELS. `self._prov_top = "<constant>"` at each of this function's six
+        # return sites; `arc_action_provenance.TOP_BRANCHES` is the closed vocabulary. Same
+        # reasoning as the explorer's labels: an exit site is a fact this function knows and
+        # every other observer would have to guess. Cleared here so a plan-step row can
+        # never inherit a stale explorer label from a previous action.
+        self._prov_top = None
+        explorer = getattr(self, "explorer", None)
+        if explorer is not None:
+            explorer._prov_branch = None
+            explorer._prov_serve_kind = None
 
         if self.epistemic_ledger is not None and latest is not None:
             try:
@@ -5349,6 +5653,7 @@ class E3AgentPolicy:
                     self._pending_induction_reason = reason
                     if reason != "level_up_reinduction":
                         self._execute_plan_from_current = False
+                self._prov_top = "explore.explorer"
                 return mv
         if self.phase == "induce" and not self.induced:
             self.induced = True
@@ -5360,16 +5665,30 @@ class E3AgentPolicy:
                 if self._execute_plan_from_current:
                     mv = self._next_plan_move()
                     self._remember_active_probe_origin(mv, latest)
+                    self._prov_top = "induce.plan_from_current"
                     return mv
+                self._prov_top = "induce.plan_needs_reset"
                 return ("RESET", None)
+            self._prov_top = "induce.no_plan.explorer"
             return self.explorer.next_move(frames, latest)
         if self.phase == "execute" and self.pi < len(self.plan):
             mv = self._next_plan_move()
             self._remember_active_probe_origin(mv, latest)
+            self._prov_top = "execute.plan_step"
             return mv
         # plan exhausted / no model -> keep exploring
         self.phase = "explore"
+        self._prov_top = "exhausted.explorer"
         return self.explorer.next_move(frames, latest)
+
+    def action_provenance(self):
+        """The per-action provenance recorder, or None when the instrument is not armed.
+
+        Public because a driver (or `CarnotAgent.cleanup`) has to be able to flush the rows
+        without reaching into a private attribute, and because "is this run producing an
+        accounting at all?" must be answerable from outside the policy.
+        """
+        return self._provenance
 
     def _world_model_hud_mask(self):
         """REQ-ARC-WMTE-6010: the explorer's live HUD mask, in LOGICAL-grid coordinates.
@@ -5886,7 +6205,19 @@ class E3AgentPolicy:
                     self.active_probe_diagnostics = controller.diagnostics()
                 except Exception as probe_exc:
                     attempt["active_probe_error"] = repr(probe_exc)[:160]
-            ok, _ = self._proposer().induce(self.short, active_transitions, self.cell)
+            # `win_transition` is passed SEPARATELY from `active_transitions`, not merged into
+            # it: `_active_transitions()` deliberately starts one past the level-up row so the
+            # new level's dynamics window is not polluted by the completing action's full-board
+            # re-layout. Supplying it here is what lets `_transitions_block`'s WIN TRANSITION
+            # block fire at all on the live path -- measured across every rebuilt live prompt, it
+            # had fired ZERO times. `None` before the first level-up, which is the honest state:
+            # the agent has not yet produced a positive example of winning.
+            ok, _ = self._proposer().induce(
+                self.short,
+                active_transitions,
+                self.cell,
+                win_transition=self._win_transition,
+            )
             if not ok or self.root_grid is None:
                 attempt["skipped"] = "proposer_failed_or_missing_root"
                 return
@@ -6795,6 +7126,17 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                 try:
                     self._emit_generator_liveness_witness()
                 except Exception:  # pragma: no cover - the witness must never break the run
+                    pass
+                # Flush the per-action provenance rows, if the instrument was armed. Inside
+                # the same once-only guard and for the same reason the witness is: cleanup()
+                # is called 2-3 times per agent from two different threads, and a second
+                # flush from the teardown thread would rewrite this game's rows. No-op (and
+                # silent) when CARNOT_ARC_ACTION_PROVENANCE is unset, which is the default.
+                try:
+                    recorder = self._policy.action_provenance()
+                    if recorder is not None:
+                        recorder.flush()
+                except Exception:  # pragma: no cover - measurement must never break the run
                     pass
             super().cleanup(scorecard)
 
