@@ -1,5 +1,75 @@
 # Carnot — Changelog
 
+## 2026-08-02 (outer-loop, VERIFICATION PASS: the shipped re-ask gate was never the gate that was measured)
+
+**Instruction:** verify each overnight finding against the run's own data BEFORE applying it; do
+not apply one that could not be verified.
+
+### What the verification reproduced
+
+Recomputed from the 160 raw per-cell JSONs and from the founding measurement's 36 raw attempt
+records rather than from the summaries. Every headline number reproduced exactly: net **38 / 38 /
+38** across gate-off, shipped and fixed, A/A floor **35**; **0 engine-defect re-asks in 160 cells**
+and 0 in the 9 counterfactual cells; `reask_budget_seen` 0/1/1/0 so the arms genuinely differed; 0
+server failures and 0 driver exceptions, so all 4 hard failures are real content failures. The
+preregistration predates the first cell by ~3 minutes and its declared sha256 matches on disk.
+
+### The finding that matters, and it was not in any summary
+
+The founding harness (`results/arc_induce_confirm_20260731/harness/confirm_ab.py:405-433`) issues
+the re-ask as an **EXTRA `/completion` call**. There is no retry ladder for it to borrow from —
+that is `CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS=1` semantics, which is **DEFAULT OFF**. What
+shipped into `generate()` CONSUMES an attempt instead. **The shipped configuration of this gate
+has never been measured**, and arm C is not a speculative fix awaiting evidence — it is the
+configuration the existing evidence was collected under.
+
+The gate half of that headline was never statistically supported either. The identified within-arm
+contrast (`usable__treatment_final_vs_round0` — same arm, same seed, same penalty, differing only
+in the re-ask) is **2 better / 0 worse on 2 discordant attempts, p = 0.5**, at an n where p <= 0.05
+is arithmetically unreachable. The spec's "the penalty carries 11 of the 13 paired wins and the
+re-ask 2" is an accurate decomposition of WINS and should not be read as evidence for the re-ask.
+
+### Corrections applied (commit 599d52fd7)
+
+- Hard-failure denominator: "1 in 160" mixed one arm's numerator with four arms' denominator. It is
+  **4/160 overall, 1/40 for `b_shipped`** — so the counterfactual contrast is ~18x, not ~71x.
+- Exposure comparator: the gate's own **fire rate was 25% (9/36)**, not the 61% control defect
+  rate. The gate cannot fire on a control-arm defect; the penalty has already removed most defects
+  by the time it looks. Like-for-like the collapse is 25% -> 0%.
+- The pro-gate alternative reading (3/78 defective gate-OFF vs 0/78 gate-ON, and 2 of those 3 drive
+  the primary's discordance) is now **named and rebutted** at the single counter-increment site
+  (`arc_executable_world_model.py:6122`), with Fisher p = 0.245 recorded as secondary.
+- Scorer wording reconciled; the A/A floor's seed-base-with-request-position confound declared.
+
+### One proposed correction REFUTED, and recorded as such
+
+A review held that "61% (22/36)" should be the pre-gate defect rate "23/36 = 64%". **23/36 appears
+nowhere in the corpus.** `confirm_scored.json` carries `control_accepted_a_defective_candidate: 22`
+of 36, recomputed independently as 22 (61.1%). 22/36 is BOTH the treatment usable count AND the
+control defective-accept count — a genuine coincidence that misled the review. The underlying
+concern was right; the replacement figure was not.
+
+### Two guard defects found and fixed
+
+1. **`_fisher_exact_2x2` used an ABSOLUTE tie-breaking epsilon** (`v <= obs + 1e-12`). On the
+   near-perfectly-separated 23/23 vs 0/93 table `obs` is 8.8e-25 — thirteen orders of magnitude
+   below the epsilon — so the tail summed every table under 1e-12. Reported **2.3e-14 where the
+   truth is 8.81e-25**. Direction was conservative (it understated the finding), so no conclusion
+   moves. The contingency table was re-derived from all 116 corpus files and reproduces exactly.
+2. **`prove_inertness.py` reported a VACUOUS pass once its subject was committed.** Its baseline is
+   `git show HEAD:<target>`, so after the commit the diff is empty and checks 1-3 pass by having
+   nothing to examine — while it overwrote `inertness_proof.json` with an empty report and printed
+   `INERT WITH FLAG UNSET: True`, exit 0. A check with no subject ABSTAINS; it must never render as
+   a pass. This is SILENT_NON_FIRING committed by a guard whose own docstring promised the
+   opposite. Added Check 0: fails closed, refuses to overwrite the proof, and names the pre-change
+   commit to pass as `--baseline`. Both paths verified (exit 1 vacuous, exit 0 and byte-identical
+   evidence at `--baseline e5c5a976e`).
+
+### Not changed
+
+No shipped default. Both goal and engine defect flags remain OFF. No scored or online ARC game was
+played — submission is operator-only.
+
 ## 2026-07-31 (outer-loop, SECURITY AUDIT: no secrets leaked; five hardening gaps closed)
 
 **Instruction:** "Do a security audit and ensure no secrets or credentials have leaked into any
