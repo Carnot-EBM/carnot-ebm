@@ -1,0 +1,94 @@
+{
+  "target": "python/carnot/agentic/arc_executable_world_model.py",
+  "sha256_was": "e579e667d5b777511c7d01046035726d2ca3878cf94c1855d5741179102407b9",
+  "sha256_now": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
+  "guard": "_goal_dedup_on()",
+  "changed_functions": [
+    {
+      "function": "LocalGGUFProposer._combine_world_model",
+      "guarded_ranges": [
+        [
+          6393,
+          6393
+        ]
+      ],
+      "unguarded_new_statements": []
+    },
+    {
+      "function": "LocalGGUFProposer.induce",
+      "guarded_ranges": [
+        [
+          6481,
+          6485
+        ]
+      ],
+      "unguarded_new_statements": []
+    }
+  ],
+  "n_changed_preexisting_functions": 2,
+  "new_functions": [
+    "_engine_half_goal_usable",
+    "_goal_dedup_on",
+    "_goal_predicate_is_constant_false",
+    "_strip_top_level_goal_defs"
+  ],
+  "new_function_callsites": {
+    "_engine_half_goal_usable": [
+      {
+        "in": "LocalGGUFProposer.induce",
+        "line": 6471,
+        "lexically_guarded": true
+      }
+    ],
+    "_goal_dedup_on": [
+      {
+        "in": "LocalGGUFProposer._combine_world_model",
+        "line": 6392,
+        "lexically_guarded": false
+      },
+      {
+        "in": "LocalGGUFProposer.induce",
+        "line": 6471,
+        "lexically_guarded": true
+      }
+    ],
+    "_goal_predicate_is_constant_false": [
+      {
+        "in": "_engine_half_goal_usable",
+        "line": 3901,
+        "lexically_guarded": false
+      }
+    ],
+    "_strip_top_level_goal_defs": [
+      {
+        "in": "LocalGGUFProposer._combine_world_model",
+        "line": 6393,
+        "lexically_guarded": true
+      }
+    ]
+  },
+  "unreachable_with_flag_off": [
+    "_engine_half_goal_usable",
+    "_goal_dedup_on",
+    "_goal_predicate_is_constant_false",
+    "_strip_top_level_goal_defs"
+  ],
+  "flag_probe": {
+    "unset": false,
+    "''": false,
+    "'0'": false,
+    "'true'": false,
+    "'yes'": false,
+    "'2'": false,
+    "' '": false,
+    "'01'": false,
+    "'1 '": true,
+    "' 1'": true,
+    "'11'": false,
+    "'1'": true,
+    "'TRUE'": false
+  },
+  "flag_convention": "enabled iff os.environ[...].strip() == '1'",
+  "failures": [],
+  "inert_with_flag_unset": true
+}

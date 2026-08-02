@@ -1,0 +1,2254 @@
+{
+  "totals": {
+    "files": 164,
+    "parse_error": 8,
+    "single": 133,
+    "multi": 23
+  },
+  "rows": [
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ar25__r0__off",
+      "game": "ar25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ar25__r0__off/ar25/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 2,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 118,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "ffd0a135d94b7143",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Win state usually involves reaching a target or clearing blocks.\n    # No win state provided, but typically it's when objects reach a certain area.\n    # For now, return False as no one has won in the observed transitions.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 124,
+          "role": "bound",
+          "n_lines": 2,
+          "sha256_16": "13b778ac29a213c2",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [
+            {
+              "kind": "missing_return",
+              "detail": "`is_level_complete` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+              "line": 2
+            }
+          ],
+          "source": "def is_level_complete(grid):\n    import numpy as np"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ar25__r0__on",
+      "game": "ar25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ar25__r0__on/ar25/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 97,
+          "role": "shadowed",
+          "n_lines": 7,
+          "sha256_16": "15ea0ed184bae648",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state isn't explicitly given, but usually it's when objects reach a target.\n    # In this game, maybe when they hit the bottom?\n    # Let's check for any active colors at the very bottom row.\n    active_colors = [4, 5, 11]\n    bottom_row = grid[-1, :]\n    return any(np.isin(bottom_row, active_colors))"
+        },
+        {
+          "index": 1,
+          "lineno": 107,
+          "role": "bound",
+          "n_lines": 13,
+          "sha256_16": "4d9f78875568f58e",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for ar25 is that the grid contains only \n    one color (excluding background 0).\n    \"\"\"\n    grid = np.array(grid)\n    mask = grid != 0\n    if not np.any(mask):\n        return False\n    \n    unique_colors = np.unique(grid[mask])\n    return len(unique_colors) == 1"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ar25__r1__off",
+      "game": "ar25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ar25__r1__off/ar25/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 90,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "e7cc66331a222564",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state isn't explicitly provided as a full grid, but usually involves\n    # moving objects to specific target locations or clearing the board.\n    # For now, we return False unless a clear condition is met.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 98,
+          "role": "bound",
+          "n_lines": 16,
+          "sha256_16": "370bba22e91e6eee",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is based on the presence of a specific pattern or \n    the same color filling the same area.\n    \"\"\"\n    grid = np.array(grid)\n    \n    # The win condition for ar25 is typically that the grid \n    # contains only one color (excluding background 0).\n    # We check if all non-zero elements are the same color.\n    non_zero = grid[grid != 0]\n    if non_zero.size == 0:\n        return False\n    \n    return np.all(non_zero == non_zero[0])"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ar25__r2__off",
+      "game": "ar25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ar25__r2__off/ar25/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ar25__r2__on",
+      "game": "ar25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ar25__r2__on/ar25/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "bp35__r0__off",
+      "game": "bp35",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r0__off/bp35/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 129,
+          "role": "shadowed",
+          "n_lines": 7,
+          "sha256_16": "0055e90960253e1e",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The level is complete when row 63 is filled with 15s (or reaches a certain length).\n    # return np.all(grid[63, :] == 15)\n    # Based on INITIAL GRID, row 63 starts with five 15s.\n    # We don't have WIN STATE grid, but usually ARC games end when a goal is reached.\n    # Let's assume completion is when row 63 has more than 60 15s.\n    return np.sum(grid[63, :] == 15) >= 60"
+        },
+        {
+          "index": 1,
+          "lineno": 139,
+          "role": "bound",
+          "n_lines": 38,
+          "sha256_16": "1464191734f76dd2",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for bp35 is that all cells of the same color \n    must be connected (4-connectivity) and each color must form a \n    single contiguous region.\n    \"\"\"\n    grid = np.array(grid)\n    unique_colors = np.unique(grid)\n    \n    for color in unique_colors:\n        # Find all cells of the current color\n        cells = np.argwhere(np.array(grid) == color)\n        if len(cells) == 0:\n            continue\n            \n        # Use BFS to find all reachable cells of the same color\n        start_node = tuple(cells[0])\n        visited = {start_node}\n        queue = [start_node]\n        \n        while queue:\n            curr = queue.pop(0)\n            r, c = tuple(curr)\n            # Check 4-connectivity\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                nr, nc = (r + dr, c + dc)\n                if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                    if grid[nr, nc] == color and (nr, nc) not in visited:\n                        visited.add((nr, nc))\n                        queue.append((nr, nc))\n        \n        # If the number of visited cells is not equal to the total cells of that color,\n        # the color is not connected.\n        if len(visited) != len(cells):\n            return False\n            \n    return True"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "bp35__r0__on",
+      "game": "bp35",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r0__on/bp35/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "bp35__r1__off",
+      "game": "bp35",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r1__off/bp35/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "bp35__r1__on",
+      "game": "bp35",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r1__on/bp35/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "bp35__r2__off",
+      "game": "bp35",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r2__off/bp35/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "bp35__r2__on",
+      "game": "bp35",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/bp35__r2__on/bp35/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cd82__r0__off",
+      "game": "cd82",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cd82__r0__off/cd82/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cd82__r0__on",
+      "game": "cd82",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cd82__r0__on/cd82/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cd82__r1__off",
+      "game": "cd82",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cd82__r1__off/cd82/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cd82__r1__on",
+      "game": "cd82",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cd82__r1__on/cd82/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cd82__r2__off",
+      "game": "cd82",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cd82__r2__off/cd82/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cd82__r2__on",
+      "game": "cd82",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cd82__r2__on/cd82/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r0__off",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r0__off/cn04/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 72,
+          "role": "shadowed",
+          "n_lines": 9,
+          "sha256_16": "e16bf5f7bbb2a7c5",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Returns True if the level is complete (win state).\n    Based on typical ARC games, this usually means reaching a target configuration.\n    Since no win state was provided, we return False unless a known condition is met.\n    \"\"\"\n    # In many of these levels, completion is when all 'voids' (color 0) are gone or aligned.\n    # For now, without a target grid, we assume it's not complete.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 84,
+          "role": "bound",
+          "n_lines": 41,
+          "sha256_16": "21e4561e7780e171",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for cn04 is that all cells of the same color\n    must be connected (4-connectivity) and each color must form a \n    single contiguous region.\n    \"\"\"\n    grid = np.array(grid)\n    unique_colors = np.unique(grid)\n    \n    for color in unique_colors:\n        # Mask for the current color\n        mask = (grid == color)\n        # Find the first cell of this color\n        coords = np.argwhere(mask)\n        if len(coords) == 0:\n            continue\n            \n        # Breadth-First Search to find all connected cells of the same color\n        start_node = tuple(coords[0])\n        visited = set()\n        queue = [start_node]\n        \n        while queue:\n            curr = queue.pop(0)\n            if curr not in visited:\n                visited.add(curr)\n                # Check 4-neighbors\n                r, c = curr\n                for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                    nr, nc = curr[0] + dr, curr[1] + dc\n                    if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                        if grid[nr, nc] == color:\n                            queue.append((nr, nc))\n        \n        # If the number of visited cells equals the total number of cells of that color,\n        # the color forms a single contiguous region.\n        if len(visited) != len(coords):\n            return False\n            \n    return True"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r0__offAA",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r0__offAA/cn04/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r0__on",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r0__on/cn04/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r1__off",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r1__off/cn04/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r1__on",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r1__on/cn04/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 101,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "94b03cefd7137cd0",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Win state usually involves blocks reaching a target or a specific configuration.\n    # Given no win state provided, we return False unless a known condition is met.\n    # In many ARC games, completing means all blocks of one color are gone or aligned.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 109,
+          "role": "bound",
+          "n_lines": 11,
+          "sha256_16": "e9e0a215c7ad0a6b",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for cn04 is that all cells in the grid are the same color.\n    \"\"\"\n    grid = np.array(grid)\n    if grid.size == 0:\n        return False\n    \n    # Check if all elements are the same\n    return np.all(grid == grid[0, 0])"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r2__off",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r2__off/cn04/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "cn04__r2__on",
+      "game": "cn04",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/cn04__r2__on/cn04/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 52,
+          "role": "shadowed",
+          "n_lines": 13,
+          "sha256_16": "31115065a8d31abd",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # A level is complete when the object reaches a target or matches a win state.\n    # In this specific game 'cn04', no win state was provided in the observed transitions.\n    # However, usually it involves aligning objects or filling holes.\n    # Based on typical ARC games, we check if the same pattern has reached a certain boundary.\n    # The black region (color 0) moving rightward suggests it might be trying to reach something.\n    # Let's assume for now that completion is based on the existence of color 4 at the top.\n    # # Actually, without a WIN STATE grid, we must induce a general rule.\n    # Looking at the initial grid, there is a yellow line (color 4) at r0c16-r0c47.\n    # The hole moves under it.\n    # Completion likely occurs when the hole aligns with the end of the yellow line or similar.\n    # Since no win state is given, return False unless a clear condition is found.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 68,
+          "role": "bound",
+          "n_lines": 41,
+          "sha256_16": "76ea82050a7d3d6f",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is that all cells of the same color (excluding background 0)\n    must be connected (4-connectivity) and form a single contiguous block.\n    \"\"\"\n    grid = np.array(grid)\n    colors = np.unique(grid)\n    colors = colors[colors != 0]\n    \n    if len(colors) == 0:\n        return False\n        \n    for color in colors:\n        # Find all coordinates of the current color\n        coords = np.argwhere(grid == color)\n        if len(coords) == 0:\n            return False\n            \n        # Start BFS to find all reachable cells of the same color\n        start_node = tuple(coords[0])\n        visited = {start_node}\n        queue = [start_node]\n        \n        while queue:\n            curr = queue.pop(0)\n            r, c = curr\n            # Check 4-neighbors\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                nr, nc = curr[0] + dr, curr[1] + dc\n                if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                    if grid[nr, nc] == color and (nr, nc) not in visited:\n                        visited.add((nr, nc))\n                        queue.append((nr, nc))\n        \n        # If the number of visited cells equals the total number of cells of that color,\n        # the color is connected.\n        if len(visited) != len(coords):\n            return False\n            \n    return True"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "g50t__r0__off",
+      "game": "g50t",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/g50t__r0__off/g50t/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "g50t__r0__on",
+      "game": "g50t",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/g50t__r0__on/g50t/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "g50t__r1__off",
+      "game": "g50t",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/g50t__r1__off/g50t/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "g50t__r1__on",
+      "game": "g50t",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/g50t__r1__on/g50t/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "g50t__r2__off",
+      "game": "g50t",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/g50t__r2__off/g50t/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "g50t__r2__on",
+      "game": "g50t",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/g50t__r2__on/g50t/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 77,
+          "role": "shadowed",
+          "n_lines": 4,
+          "sha256_16": "30c8b6c856ae1805",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The level is complete when the pixel of color 1 reaches the far left (column 0).\n    # Check if grid[63, 0] == 1.\n    return grid[63, 0] == 1"
+        },
+        {
+          "index": 1,
+          "lineno": 84,
+          "role": "bound",
+          "n_lines": 4,
+          "sha256_16": "a45b6675dbdf8985",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state is when all cells in the grid are the same color (all zeros).\n    # This is a a general rule for many ARC-AGI games.\n    return np.all(grid == 0)"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ka59__r0__off",
+      "game": "ka59",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r0__off/ka59/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ka59__r0__on",
+      "game": "ka59",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r0__on/ka59/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 117,
+          "role": "shadowed",
+          "n_lines": 12,
+          "sha256_16": "796dab6f6abeb3de",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state isn't provided, but usually it involves reaching a target.\n    # Looking at the deltas, there are some cells becoming 0 or 5.\n    # Let's assume the level is complete when no more moves can be made or a specific pattern is reached.\n    # Since no WIN STATE was given, let's return False unless something happens.\n    # But wait, look at the \"changed cells\" for ACTION4: \"r63c63:0x1\".\n    # This means cell (63, 63) changed to color 0.\n    # And then (63, 62), (63, 61), etc.\n    # This looks like a progress bar or a countdown own the bottom row.\n    # Maybe the game ends when that counter reaches 0?\n    # For now, we will just return False as we don't have the win condition.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 132,
+          "role": "bound",
+          "n_lines": 47,
+          "sha256_16": "02b811d76c7664a6",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win state is characterized by a single connected component of color 2 (red)\n    that forms a closed loop or a specific pattern.\n    \"\"\"\n    grid = np.array(grid)\n    # Find all cells of color 2\n    red_cells = np.argwhere(grid == 2)\n    if len(red_cells) == 0:\n        return False\n    \n    # Check if all red cells form a single connected component (4-connectivity)\n    num_red_cells = len(red_cells)\n    visited = np.zeros_like(grid, dtype=bool)\n    stack = [tuple(red_cells[0])]\n    visited[tuple(red_cells[0])] = True\n    count = 0\n    \n    while stack:\n        curr = stack.pop()\n        count += 1\n        r, c = curr\n        for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                if grid[nr, nc] == 2 and not visited[nr, nc]:\n                    visited[nr, nc] = True\n                    stack.append((nr, nc))\n    \n    # If not all red cells are connected, it's not a win state\n    if count != num_red_cells:\n        return False\n    \n    # In this game, the win state typically involves the red cells forming a \n    # specific shape or a specific number of red cells.\n    # For the a59 game, a common win condition is the red cells forming a \n    # closed loop or a specific size.\n    # For the same level, the a59 game's target is often a \n    # the red cells filling a specific area.\n    # return True if the red cells form a single connected component of a specific size.\n    # return True if the red cells (color 2) of the same color are connected.\n    # return True if the only non-zero cells are color 2.\n    \n    # Based on the same game family, the win condition is often that the red cells \n    # form a single connected component.\n    return True"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ka59__r1__off",
+      "game": "ka59",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r1__off/ka59/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ka59__r1__on",
+      "game": "ka59",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r1__on/ka59/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ka59__r2__off",
+      "game": "ka59",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r2__off/ka59/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ka59__r2__on",
+      "game": "ka59",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ka59__r2__on/ka59/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lf52__r0__off",
+      "game": "lf52",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r0__off/lf52/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lf52__r0__on",
+      "game": "lf52",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r0__on/lf52/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lf52__r1__off",
+      "game": "lf52",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r1__off/lf52/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lf52__r1__on",
+      "game": "lf52",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r1__on/lf52/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lf52__r2__off",
+      "game": "lf52",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r2__off/lf52/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lf52__r2__on",
+      "game": "lf52",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lf52__r2__on/lf52/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lp85__r0__off",
+      "game": "lp85",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lp85__r0__off/lp85/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lp85__r0__on",
+      "game": "lp85",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lp85__r0__on/lp85/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lp85__r1__off",
+      "game": "lp85",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lp85__r1__off/lp85/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lp85__r1__on",
+      "game": "lp85",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lp85__r1__on/lp85/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lp85__r2__off",
+      "game": "lp85",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lp85__r2__off/lp85/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 84,
+          "role": "shadowed",
+          "n_lines": 4,
+          "sha256_16": "b7338509a51dab97",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # No win state provided, but usually it involves clearing or matching.\n    # Given the data, we can't induce a win condition. Return False.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 91,
+          "role": "bound",
+          "n_lines": 9,
+          "sha256_16": "5673f82e3680ac71",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for lp85 is that the grid contains only \n    one color (excluding background color 0).\n    \"\"\"\n    grid = np.array(grid)\n    non_zero_colors = np.unique(grid[grid != 0])\n    return len(non_zero_colors) == 1"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "lp85__r2__on",
+      "game": "lp85",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/lp85__r2__on/lp85/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ls20__r0__off",
+      "game": "ls20",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r0__off/ls20/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ls20__r0__offAA",
+      "game": "ls20",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r0__offAA/ls20/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ls20__r0__on",
+      "game": "ls20",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r0__on/ls20/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ls20__r1__off",
+      "game": "ls20",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r1__off/ls20/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 97,
+          "role": "shadowed",
+          "n_lines": 6,
+          "sha256_16": "7d9006b858e06fe7",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Level complete usually means the player block reached a target or collected something.\n    # In this specific game, we don't have a win state provided, but typically it's when \n    # the entity reaches a certain coordinate or color.\n    # For now, return False as no win condition was observed.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 106,
+          "role": "bound",
+          "n_lines": 40,
+          "sha256_16": "65fd5f634db3a1d3",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is that all cells of the same color (excluding background 0)\n    must be connected (4-connectivity) and form a single contiguous block.\n    \"\"\"\n    grid = np.array(grid)\n    colors = np.unique(grid)\n    colors = colors[colors != 0]\n    \n    if len(colors) == 0:\n        return False\n        \n    for color in colors:\n        # Find all cells of this color\n        cells = np.argwhere(grid == color)\n        if len(cells) == 0:\n            return False\n        \n        # Check connectivity\n        start_node = cells[0]\n        visited = set()\n        stack = [start_node]\n        \n        while stack:\n            curr = stack.pop()\n            curr_tuple = tuple(curr)\n            if curr_tuple not in visited:\n                visited.add(curr_tuple)\n                # Find neighbors of the same color\n                for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                    nx, ny = curr[0] + dx, curr[1] + dy\n                    if 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1]:\n                        if grid[nx, ny] == color:\n                            stack.append([nx, ny])\n        \n        if len(visited) != len(cells):\n            return False\n            \n    return True"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ls20__r2__off",
+      "game": "ls20",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r2__off/ls20/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "ls20__r2__on",
+      "game": "ls20",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r2__on/ls20/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "m0r0__r0__off",
+      "game": "m0r0",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/m0r0__r0__off/m0r0/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "m0r0__r1__off",
+      "game": "m0r0",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/m0r0__r1__off/m0r0/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "m0r0__r1__on",
+      "game": "m0r0",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/m0r0__r1__on/m0r0/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "m0r0__r2__off",
+      "game": "m0r0",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/m0r0__r2__off/m0r0/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 2,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 91,
+          "role": "shadowed",
+          "n_lines": 3,
+          "sha256_16": "ac2891907c895e9c",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Level complete when all color 5s are gone? Or markers reach end?\n    return np.sum(grid == 5) == 0 or np.any(grid[0, :10] == 0)"
+        },
+        {
+          "index": 1,
+          "lineno": 95,
+          "role": "bound",
+          "n_lines": 2,
+          "sha256_16": "e3f26d32d55f3399",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [
+            {
+              "kind": "missing_return",
+              "detail": "`is_level_complete` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+              "line": 2
+            }
+          ],
+          "source": "def is_level_complete(grid):\n    thought = \"The same color pixels own the same area. The same color pixels own same area. The same color pixels own same area. The same color pixels own same<|channel>thought\""
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "m0r0__r2__on",
+      "game": "m0r0",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/m0r0__r2__on/m0r0/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "re86__r0__off",
+      "game": "re86",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/re86__r0__off/re86/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "re86__r1__off",
+      "game": "re86",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/re86__r1__off/re86/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "re86__r1__on",
+      "game": "re86",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/re86__r1__on/re86/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 157,
+          "role": "shadowed",
+          "n_lines": 10,
+          "sha256_16": "da1dbdd65e7fe359",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Win state usually involves moving blocks to specific locations or collecting them.\n    # In the observed data, we don't have a win state, but typically it's when color 1 is at some pos.\n    # Or maybe when all color 9 are gone?\n    # Let's check if any cell of color 1 exists in a certain area.\n    # Based on INITIAL GRID, color 1 is at (63, 59-63).\n    # The deltas show ACTION 1 reducing the count of color 1 cells from 5 down to 1.\n    # This suggests that \"collecting\" something reduces the size of the goal/exit.\n    # Level complete might be when no more movable blocks exist or player reaches exit.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 170,
+          "role": "bound",
+          "n_lines": 5,
+          "sha256_16": "7516c7bc053e95cf",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [
+            {
+              "kind": "missing_return",
+              "detail": "`is_level_complete` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+              "line": 5
+            }
+          ],
+          "source": "def is_level_complete(grid):\n    # The same color must be the same color\n    # The win state is when the same color is a rectangle\n    # A simple general rule: a block of same-color pixels own a\n    thought//no_think"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "re86__r2__off",
+      "game": "re86",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/re86__r2__off/re86/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "s5i5__r0__off",
+      "game": "s5i5",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/s5i5__r0__off/s5i5/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 114,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "4e30fc1b6d5e9ca9",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Level complete usually means some target state reached.\n    # In this case, maybe when the progress bar in row 63 is full or specific cells are filled.\n    # Since no win state was provided, we return False unless it looks \"finished\".\n    return np.all(grid[63] == 4)"
+        },
+        {
+          "index": 1,
+          "lineno": 122,
+          "role": "bound",
+          "n_lines": 7,
+          "sha256_16": "ed4f83a622495b85",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for s5i5 is that all cells are the same color (specifically, color 1).\n    \"\"\"\n    grid = np.array(grid)\n    return np.all(grid == 1)"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "s5i5__r0__offAA",
+      "game": "s5i5",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/s5i5__r0__offAA/s5i5/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "s5i5__r0__on",
+      "game": "s5i5",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/s5i5__r0__on/s5i5/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "s5i5__r1__off",
+      "game": "s5i5",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/s5i5__r1__off/s5i5/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "s5i5__r2__off",
+      "game": "s5i5",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/s5i5__r2__off/s5i5/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "s5i5__r2__on",
+      "game": "s5i5",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/s5i5__r2__on/s5i5/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 80,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "0f0d6b977dd5c778",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Level complete when row 63 is all color 4 or some other condition.\n    # In observed data, it never reaches completion.\n    # But usually, completing the progress bar wins.\n    return np.all(grid[63, :] == 4)"
+        },
+        {
+          "index": 1,
+          "lineno": 88,
+          "role": "bound",
+          "n_lines": 41,
+          "sha256_16": "a9ccdb92f738b357",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for s5i5 is that all cells of the same color \n    must be connected (4-connectivity) and each color must form a \n    single contiguous region.\n    \"\"\"\n    grid = np.array(grid)\n    unique_colors = np.unique(grid)\n    \n    for color in unique_colors:\n        # Mask for the current color\n        mask = (grid == color)\n        \n        # Find the first cell of this color\n        coords = np.argwhere(mask)\n        if len(coords) == 0:\n            continue\n            \n        # Breadth-First Search to find all connected cells of the same color\n        start_node = tuple(coords[0])\n        visited = {start_node}\n        queue = [start_node]\n        \n        while queue:\n            curr = queue.pop(0)\n            r, c = curr\n            # Check 4-neighbors\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                nr, nc = curr[0] + dr, curr[1] + dc\n                if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:\n                    if mask[nr, nc] and (nr, nc) not in visited:\n                        visited.add((nr, nc))\n                        queue.append((nr, nc))\n        \n        # If the number of visited cells equals the total number of cells of this color,\n        # then the color forms a single contiguous region.\n        if len(visited) != len(coords):\n            return False\n            \n    return True"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sb26__r0__off",
+      "game": "sb26",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sb26__r0__off/sb26/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sb26__r0__on",
+      "game": "sb26",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sb26__r0__on/sb26/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sb26__r1__off",
+      "game": "sb26",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sb26__r1__off/sb26/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sb26__r1__on",
+      "game": "sb26",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sb26__r1__on/sb26/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sb26__r2__off",
+      "game": "sb26",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sb26__r2__off/sb26/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sb26__r2__on",
+      "game": "sb26",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sb26__r2__on/sb26/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sc25__r0__off",
+      "game": "sc25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r0__off/sc25/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sc25__r0__on",
+      "game": "sc25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r0__on/sc25/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sc25__r1__off",
+      "game": "sc25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r1__off/sc25/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sc25__r1__on",
+      "game": "sc25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r1__on/sc25/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 67,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "2d1f7c78448975eb",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Level complete if the object reaches a certain position or progress bar is gone.\n    # In this specific case, we don't have the win state grid, but usually it's when \n    # the target object reaches its destination.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 75,
+          "role": "bound",
+          "n_lines": 13,
+          "sha256_16": "0a4643df60e5ce37",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is based on the presence of a specific pattern or \n    the absence of certain elements.\n    \"\"\"\n    grid = np.array(grid)\n    # The win condition for sc25 is that all non-zero elements \n    # must be the same color.\n    non_zero = grid[grid != 0]\n    if non_zero.size == 0:\n        return False\n    return np.all(non_zero == non_zero[0])"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sc25__r2__off",
+      "game": "sc25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r2__off/sc25/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 60,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "d79f3a810eb3eae6",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state is not provided, but typically it's when a target pattern \n    # is reached or certain objects are collected.\n    # Based on the data, we can assume completion occurs when the 14s are gone.\n    return np.all(grid[:, 62:64] != 14)"
+        },
+        {
+          "index": 1,
+          "lineno": 68,
+          "role": "bound",
+          "n_lines": 70,
+          "sha256_16": "3ba049df4b1db039",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for sc25 is that all cells of the same color \n    (excluding background color 0) are contiguous.\n    \"\"\"\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    unique_colors = np.unique(grid)\n    unique_colors = unique_colors[unique_colors != 0]\n    \n    if len(unique_colors) == 0:\n        return False\n    \n    for color in unique_colors:\n        # Find all cells of the current color\n        cells = np.argwhere(grid == color)\n        if len(cells) == 0:\n            return False\n        \n        # Use BFS to find all reachable cells of the same color\n        start_node = tuple(cells[0])\n        visited = {start_node}\n        queue = [start_node]\n        \n        while queue:\n            current_node = tuple(cells[0]) # This is a bug in the logic, should be queue.pop(0)\n            # Wait, the prompt asks for a simple general rule. \n            # Let's refine the logic to be correct.\n            pass\n            \n    # For sc25, the win condition is usually a specific pattern or \n    # a specific arrangement of colors. \n    # Let's assume the win condition is that all non-zero cells \n    # form a single connected component.\n    \n    # Correct BFS implementation\n    def get_connected_component(start_node, color, grid):\n        visited = set()\n        queue = [start_node]\n        visited.add(start_node)\n        \n        while queue:\n            curr = queue.pop(0)\n            r, c = curr\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                nr, nc = curr[0] + dr, curr[1] + dc\n                if 0 <= nr < rows and 0 <= nc < cols and (nr, nc) not in visited:\n                    if grid[nr, nc] == color:\n                        visited.add((nr, nc))\n                        queue.append((nr, nc))\n                \n    # Re-evaluating sc25: it's often about filling a region or \n    # a specific color match.\n    # Let's use a simpler rule: the grid contains no zeros.\n    # return np.all(grid != 0)\n    \n    # Let's try a common ARC win condition: all non-zero cells are the same color.\n    # return len(np.unique(grid[grid != 0])) <= 1\n    \n    # Let's try a common ARC win condition: all non-zero cells are the same color \n    # and they form a single connected component.\n    \n    # Let's try a common ARC win condition: all non-zero cells are thes \n    # same color and they form a single connected component.\n    \n    # Let's try a common<|channel>thought\n    # Let's just check if any non-zero cells exist and they are all the same color.\n    \n    return len(np.unique(grid[grid != 0])) == 1"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sc25__r2__on",
+      "game": "sc25",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sc25__r2__on/sc25/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sk48__r0__off",
+      "game": "sk48",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sk48__r0__off/sk48/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sk48__r0__on",
+      "game": "sk48",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sk48__r0__on/sk48/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sk48__r1__off",
+      "game": "sk48",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sk48__r1__off/sk48/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sk48__r1__on",
+      "game": "sk48",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sk48__r1__on/sk48/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sk48__r2__off",
+      "game": "sk48",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sk48__r2__off/sk48/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 81,
+          "role": "shadowed",
+          "n_lines": 5,
+          "sha256_16": "f798432137daf0a3",
+          "classification": "A_DECLINED",
+          "constant_false": true,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Win state usually involves reaching a target or clearing objects.\n    # Based on provided data, no win state was explicitly shown.\n    # We return False unless we see a specific pattern.\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 89,
+          "role": "bound",
+          "n_lines": 28,
+          "sha256_16": "8477f7f44d70d0a6",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [
+            {
+              "kind": "missing_return",
+              "detail": "`is_level_complete` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+              "line": 28
+            }
+          ],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is based on the grid containing only 0s and 1s,\n    and the 1s forming a specific pattern or filling a specific area.\n    \"\"\"\n    grid = np.array(grid)\n    # The win condition for sk48 is that the grid contains only 0s and 1s,\n    # and the 1s form a single connected component of a specific size or shape.\n    # For this specific task, we check if the 1s form a single connected component.\n    # However, a simpler general rule for this level is to check if the 1s are\n    # present and there are any other colors.\n    if np.any((grid != 0) & (grid != 1)):\n        return False\n    \n    # Check if there are any 1s present.\n    if not np.any(grid == 1):\n        return False\n    \n    # Check if the 1s form a single connected component (4-connectivity).\n    # We use a a simple BFS to check connectivity.\n    rows, cols = grid.shape\n    start_node = np.argwhere(grid == 1)[0]\n    visited = set()\n    queue = [start_node]\n    \n    while queue:\n        node = np.array(node)"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "sk48__r2__on",
+      "game": "sk48",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/sk48__r2__on/sk48/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "su15__r0__on",
+      "game": "su15",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/su15__r0__on/su15/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "su15__r1__off",
+      "game": "su15",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/su15__r1__off/su15/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "su15__r1__on",
+      "game": "su15",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/su15__r1__on/su15/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "su15__r2__off",
+      "game": "su15",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/su15__r2__off/su15/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "su15__r2__on",
+      "game": "su15",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/su15__r2__on/su15/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tn36__r0__off",
+      "game": "tn36",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tn36__r0__off/tn36/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tn36__r0__on",
+      "game": "tn36",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tn36__r0__on/tn36/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tn36__r1__off",
+      "game": "tn36",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tn36__r1__off/tn36/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tn36__r1__on",
+      "game": "tn36",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tn36__r1__on/tn36/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tn36__r2__off",
+      "game": "tn36",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tn36__r2__off/tn36/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tn36__r2__on",
+      "game": "tn36",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tn36__r2__on/tn36/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tr87__r0__off",
+      "game": "tr87",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tr87__r0__off/tr87/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tr87__r0__on",
+      "game": "tr87",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tr87__r0__on/tr87/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tr87__r1__off",
+      "game": "tr87",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tr87__r1__off/tr87/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tr87__r1__on",
+      "game": "tr87",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tr87__r1__on/tr87/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tr87__r2__off",
+      "game": "tr87",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tr87__r2__off/tr87/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tr87__r2__on",
+      "game": "tr87",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tr87__r2__on/tr87/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r0__off",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r0__off/tu93/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 90,
+          "role": "shadowed",
+          "n_lines": 16,
+          "sha256_16": "e01d56a1cba9e35b",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state isn't explicitly provided as a grid, but usually involves reaching a target.\n    # In the observed data, there are no win states shown.\n    # Based on common ARC patterns, we check if the object reached a certain area (e.g., color 14).\n    # Let's look for any overlap between the player (color 9) and the goal (color 14).\n    player_coords = np.argwhere(grid == 9)\n    goal_coords = np.argwhere(grid == 14)\n    if len(player_coords) == 0 or len(goal_coords) == 0:\n        return False\n    \n    # Check if any player cell is near or on a goal cell\n    for pr, pc in player_coords:\n        for gr, gc in goal_coords:\n            if abs(pr - gr) <= 2 and abs(pc - gc) <= 2:\n                return True\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 109,
+          "role": "bound",
+          "n_lines": 7,
+          "sha256_16": "c38ae5279d54e166",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is that all cells in the grid are the same color (specifically, color 1).\n    \"\"\"\n    grid = np.array(grid)\n    return np.all(grid == 1)"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r0__offAA",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r0__offAA/tu93/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 90,
+          "role": "shadowed",
+          "n_lines": 16,
+          "sha256_16": "e01d56a1cba9e35b",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # The win state isn't explicitly provided as a grid, but usually involves reaching a target.\n    # In the observed data, there are no win states shown.\n    # Based on common ARC patterns, we check if the object reached a certain area (e.g., color 14).\n    # Let's look for any overlap between the player (color 9) and the goal (color 14).\n    player_coords = np.argwhere(grid == 9)\n    goal_coords = np.argwhere(grid == 14)\n    if len(player_coords) == 0 or len(goal_coords) == 0:\n        return False\n    \n    # Check if any player cell is near or on a goal cell\n    for pr, pc in player_coords:\n        for gr, gc in goal_coords:\n            if abs(pr - gr) <= 2 and abs(pc - gc) <= 2:\n                return True\n    return False"
+        },
+        {
+          "index": 1,
+          "lineno": 109,
+          "role": "bound",
+          "n_lines": 15,
+          "sha256_16": "8b2395fca2d238c3",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition for 'tu93' is that all cells are the same color (excluding background).\n    \"\"\"\n    grid = np.array(grid)\n    # Find all non-zero colors\n    non_zero_colors = np.unique(grid[grid != 0])\n    \n    # If there are no non-zero colors, it's not a win state\n    if len(non_zero_colors) == 0:\n        return False\n    \n    # If there are only one non-zero color, it's a win state\n    return len(non_zero_colors) == 1"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r0__on",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r0__on/tu93/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r1__off",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r1__off/tu93/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r1__on",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r1__on/tu93/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r2__off",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r2__off/tu93/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "tu93__r2__on",
+      "game": "tu93",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/tu93__r2__on/tu93/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "wa30__r0__on",
+      "game": "wa30",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/wa30__r0__on/wa30/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "wa30__r1__off",
+      "game": "wa30",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/wa30__r1__off/wa30/world_model.py",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "wa30__r1__on",
+      "game": "wa30",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/wa30__r1__on/wa30/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 2,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 89,
+          "role": "shadowed",
+          "n_lines": 6,
+          "sha256_16": "d4b6313809a18cd4",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Win state usually involves collecting something or reaching a goal.\n    # In this game, maybe it's when color 14 reaches a certain area or all color 4 are gone.\n    # Looking at the INITIAL GRID, there are blocks of color 4.\n    # Let's assume win if no more color 4 cells exist.\n    return not np.any(grid == 4)"
+        },
+        {
+          "index": 1,
+          "lineno": 96,
+          "role": "bound",
+          "n_lines": 10,
+          "sha256_16": "6ecc8b4cb6337ed3",
+          "classification": "GROUNDED",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # A level is complete when the grid contains only one type of own-////-\n    # This is a<|channel>thought-process-////-\n    # The user wants a function to determine if a grid is a win state.\n    # The same-color-grid rule is a common general rule for these types of problems.\n    # I must not analyze the grids or describe the same-color-grid rule.\n    # I must only output the python code block.\n    \n    # Check if all elements in the grid are the same.\n    return np.all(grid == grid[0, 0])"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "wa30__r2__off",
+      "game": "wa30",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/wa30__r2__off/wa30/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 59,
+          "role": "shadowed",
+          "n_lines": 6,
+          "sha256_16": "76a32809e4d7aebc",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Level complete usually means the player reached a goal or collected all items.\n    # In the initial grid, r63c57-63 are color 4. Maybe reaching them?\n    rows, cols = np.where(grid == 0)\n    if len(rows) == 0: return False\n    return rows[0] >= 63 and cols[0] >= 56"
+        },
+        {
+          "index": 1,
+          "lineno": 68,
+          "role": "bound",
+          "n_lines": 14,
+          "sha256_16": "5b013759abc7ed99",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is based on the target pattern.\n    \"\"\"\n    grid = np.array(grid)\n    # The win condition for wa30 is typically a specific configuration \n    # of colors. In this case, it's checking if the grid is fully \n    # filled with a specific color or a specific pattern.\n    # For the same task, we often see that the win condition is \n    # a specific target grid.\n    # Based on the same task, the win condition is that the grid \n    # is fully filled with color 1 (blue).\n    return np.all(grid == 1)"
+        }
+      ]
+    },
+    {
+      "corpus": "ab_change_fidelity",
+      "cell": "wa30__r2__on",
+      "game": "wa30",
+      "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/wa30__r2__on/wa30/world_model.py",
+      "n_goal_defs": 2,
+      "n_numpy_imports": 3,
+      "split_induce_signature": true,
+      "engine_defect": [],
+      "bound_index": 1,
+      "bound_is_last": true,
+      "defs": [
+        {
+          "index": 0,
+          "lineno": 83,
+          "role": "shadowed",
+          "n_lines": 8,
+          "sha256_16": "996b45b9b937a482",
+          "classification": "OTHER",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    # Win state usually involves reaching a certain configuration.\n    # In this game, looking at the INITIAL GRID, there are blocks of colors 4, 9, 2, 0, 14.\n    # The win state isn't explicitly given, but often it's when all \"player\" pieces reach a goal.\n    # Based on ACTION 4 (Right), some cells change to 4 at r63c56.\n    # This suggests that moving objects to the bottom-right might be the goal.\n    # Let's check if any color 4 block has reached the boundary area (row 63).\n    return np.any((grid == 4) & (np.arange(64)[:, None] == 63))"
+        },
+        {
+          "index": 1,
+          "lineno": 94,
+          "role": "bound",
+          "n_lines": 10,
+          "sha256_16": "8b01d8ad02e7e3e1",
+          "classification": "TROPE",
+          "constant_false": false,
+          "static_defects": [],
+          "source": "def is_level_complete(grid):\n    \"\"\"\n    Checks if the grid is in a win state.\n    The win condition is that all cells are the same color (excluding background 0).\n    \"\"\"\n    grid = np.array(grid)\n    non_zero = grid[grid != 0]\n    if non_zero.size == 0:\n        return False\n    return np.all(non_zero == non_zero[0])"
+        }
+      ]
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k0",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k0.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k1",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k1.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k2",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k2.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k3",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k3.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k4",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k4.txt",
+      "parse_error": "invalid syntax (line 43)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k5",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k5.txt",
+      "n_goal_defs": 0,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": [
+        {
+          "kind": "missing_return",
+          "detail": "`engine` can reach the end of its body without returning, so it returns None on that path. Every branch must return a grid-shaped array.",
+          "line": 45
+        }
+      ]
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k6",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k6.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "ft09_k7",
+      "game": "ft09",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/ft09_k7.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k0",
+      "game": "lp85",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k0.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k1",
+      "game": "lp85",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k1.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k2",
+      "game": "lp85",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k2.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k3",
+      "game": "lp85",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k3.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k4",
+      "game": "lp85",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k4.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k5",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k5.txt",
+      "parse_error": "unterminated triple-quoted string literal (detected at line 158) (line 157)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k6",
+      "game": "lp85",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k6.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "lp85_k7",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/lp85_k7.txt",
+      "parse_error": "expected an indented block after 'for' statement on line 62 (line 67)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k0",
+      "game": "sc25",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k0.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k1",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k1.txt",
+      "parse_error": "expected an indented block after 'for' statement on line 49 (line 54)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k2",
+      "game": "sc25",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k2.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k3",
+      "game": "sc25",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k3.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k4",
+      "game": "sc25",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k4.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k5",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k5.txt",
+      "parse_error": "invalid syntax (line 45)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k6",
+      "game": "sc25",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k6.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "sc25_k7",
+      "game": "sc25",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/sc25_k7.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k0",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k0.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k1",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k1.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k2",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k2.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k3",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k3.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k4",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k4.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k5",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k5.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k6",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k6.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tn36_k7",
+      "game": "tn36",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tn36_k7.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k0",
+      "game": "tu93",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k0.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k1",
+      "game": "tu93",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k1.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k2",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k2.txt",
+      "parse_error": "expected an indented block after function definition on line 3 (line 105)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k3",
+      "game": "tu93",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k3.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k4",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k4.txt",
+      "parse_error": "expected an indented block after 'else' statement on line 87 (line 89)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k5",
+      "game": "tu93",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k5.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k6",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k6.txt",
+      "parse_error": "expected an indented block after function definition on line 3 (line 578)",
+      "n_goal_defs": null
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "tu93_k7",
+      "game": "tu93",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/tu93_k7.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k0",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k0.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k1",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k1.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k2",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k2.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k3",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k3.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k4",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k4.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k5",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k5.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k6",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k6.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    },
+    {
+      "corpus": "induce_bestofn",
+      "cell": "vc33_k7",
+      "game": "vc33",
+      "path": "results/arc_induce_bestofn_20260731/harness/bon/gpu1/vc33_k7.txt",
+      "n_goal_defs": 1,
+      "n_numpy_imports": 1,
+      "split_induce_signature": false,
+      "engine_defect": []
+    }
+  ]
+}
