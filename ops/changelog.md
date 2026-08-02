@@ -16076,3 +16076,39 @@ justification ("a gate must not out-search the planner it guards") is now measur
 
 **Banked ARC levels remain 3/3 and the submission gate is NOT met.** Nothing here solved a level,
 played a game scored or offline, or measured a score.
+
+## 2026-08-01 — CORRECTION: commit 102d4cb33c shipped ~300 lines it did not describe
+
+`102d4cb33c` ("The agent produces exactly one positive example of winning, then hides it from the
+prompt that asks") is described in its own message as a scoped win-transition reachability fix. It
+added **343 lines** to `python/carnot/agentic/arc_competition_agent.py`. Roughly **30 of those are
+that fix**; the other **~300 are the action-provenance instrumentation** (`_next_move_recorded`,
+`_provenance_pre_state`, the `CARNOT_ARC_ACTION_PROVENANCE` flag) authored by a concurrent
+workflow, which had deliberately NOT committed them because it judged the artifact-freshness cost
+too broad to take on unasked.
+
+**Nothing is broken, and nothing was lost.** The instrumentation is default-OFF with three
+independent inertness proofs recorded in `results/outer_loop_arc_action_provenance_*`: an AST-level
+diff showing no decision, threshold, ordering or RNG draw altered; a three-arm (off/ON/off) runtime
+identity check on the real `E3AgentPolicy` whose 240-action traces all hash to
+`9ccc8c2e6bc00b3e…`; and a mutation-proven unit test. The companion module and tests landed
+separately and intentionally in `721bb8f772`. The defect is in the RECORD, not the code: a reader
+of `102d4cb33c` would not learn that the scored agent gained an instrumentation layer.
+
+**Mechanism, because the mitigation that failed is a common one.** The commit was staged with
+explicit per-file paths, specifically to avoid sweeping in another agent's work. That discipline
+gives FILE-level isolation and no LINE-level isolation: `git add <path>` stages the file's entire
+working-tree content, and this file already carried the other workflow's restored changes.
+`git diff --cached --numstat` WAS run beforehand — but was inspected only for deletions, so `+343`
+against a thirty-line change went unquestioned.
+
+**Working rule this adds** to the shared-tree practice already in CLAUDE.md: on a shared working
+tree, before committing, read `git diff --cached --stat` for VOLUME as well as for deletions. A
+line count that does not match the change you believe you are making is the signal that another
+writer's work is inside your staged file. Path-level staging is not authorship isolation.
+
+Recorded rather than amended: the commit subject is immutable, which is why this correction lives
+here — the same reasoning applied on 2026-07-31 when a "triples the rate" subject could not be
+fixed in place.
+
+**Banked ARC levels remain 3/3.**
