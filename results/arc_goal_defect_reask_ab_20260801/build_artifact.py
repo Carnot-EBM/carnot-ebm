@@ -188,6 +188,39 @@ def main() -> int:
         "shared_machine_note": "a concurrent workflow owned both RTX 3090s for the whole "
         "session. This run never evicted, killed, or reused another session's server; it "
         "polled and bound a card only once one was already free.",
+        "structural_blind_spot_found_during_the_run": {
+            "what": "`attempt < tries - 1` guards BOTH defect gates, so every attempt the model "
+            "spends on a CONTENT failure (no code block, missing `def`, syntax error) consumes "
+            "an attempt the defect gate needs -- and an answer accepted on the FINAL attempt is "
+            "never checked at all.",
+            "consequence": "the gate is quietest exactly where it is most needed. A game the "
+            "model finds hard burns its attempts on malformed output and then lands its one "
+            "parseable answer on the attempt where no gate is armed.",
+            "how_it_surfaced": "the live A/B's first treatment cell (ar25 r0) accepted a "
+            "textbook `return False` -- the model's own comment reads 'no win state was given "
+            "... maybe just return False' -- with goal_defect_reasks == 0 AND "
+            "engine_defect_reasks == 0. Both gates silent at once pointed at a shared cause "
+            "rather than a bug in the new gate.",
+            "confirmed_how": "offline, against a scripted fake server: accepted on attempt 0 -> "
+            "2 goal re-asks; two content failures then the SAME defective answer on the final "
+            "attempt -> 0 re-asks, accepted unchecked. Pinned by "
+            "tests/python/test_arc_goal_defect_reask_wiring.py::"
+            "test_content_failures_CANNIBALISE_the_defect_gate.",
+            "not_a_regression_introduced_here": "the SHIPPED engine defect gate carries the "
+            "identical guard and therefore the identical blind spot. Its measured 13/36 -> "
+            "22/36 benefit was obtained WITH this suppression already present, so that figure "
+            "is a floor on what the engine gate could do, not a ceiling.",
+            "why_it_was_not_fixed_mid_run": "the fix -- giving the defect gates attempts that "
+            "content failures cannot consume -- is a behaviour change to shipped code. Applying "
+            "it while the A/B was in flight would have measured two different treatments under "
+            "one label. It is the recommended follow-up, not a same-session patch.",
+            "effect_on_this_measurement": "the treatment is WEAKER than designed: the gate can "
+            "only act on cells whose answer arrives before the final attempt. `armedness."
+            "cells_where_gate_fired` reports the realised rate against the 94.8% that were "
+            "DETECTABLE, and the gap between those two numbers is this blind spot measured. A "
+            "null must therefore be read as 'this weakened treatment did not move the primary', "
+            "not as 'goal re-asking does not help'.",
+        },
         "repo_blocker_found_incidentally": {
             "what": "`artifact-freshness-lint` currently REFUSES every commit that touches "
             "python/carnot/agentic/arc_executable_world_model.py or any results/*.json, "
