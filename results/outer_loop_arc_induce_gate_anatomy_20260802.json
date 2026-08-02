@@ -1,0 +1,1185 @@
+{
+ "experiment": "outer_loop_arc_induce_gate_anatomy_20260802",
+ "title": "ARC induce->plan gate anatomy: the gate is BINDING and mechanically reached, the rejections are not near-misses, and one skip class is unattributable",
+ "run_date": "2026-08-02",
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "substrate_note": "CPU only. No GGUF load, no GPU, no llama-server, no generator. Part A is a recount of cached per-cell JSON. Part B scores hand-written / structural engines against offline-arcade transitions through the production E3AgentPolicy._induce_and_plan path. No model is invoked, so model_specs names none.",
+ "model_specs": {
+  "note": "no model invoked; injected engines are hand-written Python"
+ },
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "No level was solved and no solve is claimed. This is a gate diagnostic run against the offline development twin, not a live self-discovery advance.",
+ "verifier_is_oracle": false,
+ "random_seed": 0,
+ "random_seeds_used": [
+  0,
+  1,
+  2
+ ],
+ "preconditions_checked": [
+  {
+   "resource": "results/first_win_llm_on_20260727/cells",
+   "available": true
+  },
+  {
+   "resource": "offline arcade (environment_files/)",
+   "available": true
+  },
+  {
+   "resource": "no GPU / no GGUF required",
+   "available": true
+  }
+ ],
+ "provenance": {
+  "code": [
+   {
+    "path": "python/carnot/agentic/arc_competition_agent.py",
+    "sha256": "8406b89ab202056116460404b9a2edbf3b6d5611b49712d464549b1ef88baa5d"
+   },
+   {
+    "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
+    "sha256": "f7bbe936177c9b00ea679ea22f7c19006c79686ddf085d46685d0bc80134a8a4"
+   },
+   {
+    "path": "python/carnot/agentic/arc_executable_world_model.py",
+    "sha256": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380"
+   },
+   {
+    "path": "python/carnot/agentic/arc_llm_reinduction.py",
+    "sha256": "e07ed5c0f1cef8234c79c3ff6ec3b7fbccd5ab04720fc997eceee6c2aa87d70d"
+   }
+  ],
+  "rebuild_command": "JAX_PLATFORMS=cpu .venv/bin/python scripts/experiments/outer_loop_arc_induce_gate_anatomy_20260802.py",
+  "nothing_tracked_is_written": "load_engine is monkeypatched, so results/arc_e3/<game>/world_model.py is never written; collect_transitions only reads environment_files/."
+ },
+ "prior_art_built_on": [
+  {
+   "path": "results/experiment_6012_hidden_state_trust_gate_hole.json",
+   "what_it_already_answered": "the shipped hidden-state trust gate REJECTS the hand-written correct dc22 engine on 2 of 3 seeds (dc22@0, dc22@1) and admits it on dc22@2. This run reproduces that same 2-of-3 split through a DIFFERENT path (end-to-end _induce_and_plan rather than a direct select_trusted_world_model call), so it is a corroboration, not a re-derivation."
+  },
+  {
+   "path": "results/experiment_6013_hidden_state_change_gate_closure.json",
+   "what_it_already_answered": "the default-OFF change gate admits the same hand-written control 3/3 with the HUD mask on and rejects it 3/3 with the mask off."
+  },
+  {
+   "path": "results/outer_loop_arc_win_transition_exposure_20260802.json",
+   "what_it_already_answered": "already stated the ~30 breakdown in prose (19 generation-side, 11 downstream). This run reproduces it from the raw cells and adds the per-game clustering plus the mislabel finding."
+  },
+  {
+   "path": "scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py",
+   "what_it_already_answered": "supplies dc22_navigation_engine, the hand-written correct control. IMPORTED, never re-typed."
+  }
+ ],
+ "INDUCE_TO_PLAN_CHAIN_IN_ORDER": [
+  {
+   "stage": "0. GENERATION",
+   "where": "proposer.induce() then e3.load_engine() (import/exec world_model.py)",
+   "threshold": "binary: ok=True AND the module exposes `engine`",
+   "threshold_provenance": "not a number; a parse/exec success",
+   "rejected_of_136": 19,
+   "skip_names": [
+    "proposer_failed (13)",
+    "proposer_failed_or_missing_root (6)"
+   ]
+  },
+  {
+   "stage": "1. REFINEMENT-LOOP HELD-OUT ACCURACY",
+   "where": "arc_llm_reinduction.execute_bounded_llm_reinduction, per round, K<=3",
+   "threshold": "heldout_accuracy >= min_heldout_accuracy, LIVE VALUE 1.0",
+   "threshold_provenance": "HARDCODED at both live call sites (arc_competition_agent.py:6225 and :6362). Not tuned: the function's own default is 0.0 and the module's sibling binary_exact_gate_pass defaults to 0.5. The in-code note says it is 'rarely met (0/6 rounds across a full real run on g50t)'. This is full-grid EXACT match on 100% of the held-out split.",
+   "rejected_of_136": "not separately counted -- see the label note below"
+  },
+  {
+   "stage": "2. GOAL SATISFIABILITY (bounded BFS from root)",
+   "where": "arc_llm_reinduction._goal_satisfiability_check",
+   "threshold": "reach a predicate-True state within max_nodes=20000",
+   "threshold_provenance": "compute budget, not quality. In-code measurement: ka59's concept-correct depth-11 predicate needs ~160,000 engine calls to certify and 137,347 planner nodes to use -- both far past 20,000.",
+   "rejected_of_136": 1,
+   "skip_names": [
+    "degenerate_goal_predicate (1)"
+   ]
+  },
+  {
+   "stage": "3. GOAL PREDICATE CONSISTENCY",
+   "where": "score_goal_predicate_consistency",
+   "threshold": "accuracy >= min_goal_predicate_consistency, LIVE VALUE 1.0",
+   "threshold_provenance": "hardcoded at the same two call sites. STRUCTURALLY INERT before the first level-up: it only fires when the window contains >=1 real level-up, and a first-contact stall window has none.",
+   "rejected_of_136": 0
+  },
+  {
+   "stage": "4. PLAIN-PATH ADMISSION -- two mutually exclusive branches",
+   "where": "arc_competition_agent._induce_and_plan",
+   "branch_hidden_state": {
+    "games": "the 11 HIDDEN_STATE_GAME_IDS",
+    "threshold": "trust_pass = correct_changed_cells >= 1 AND heldout_change_consistency >= 0.5",
+    "threshold_provenance": "INHERITED. In-code: 0.5 is 'the threshold recorded in ops/verifier_gaps.md's GAP-WM-TRUST-GATE entry and used by binary_exact_gate_pass's default'. It was not fitted to induced engines. The sibling constant that WAS calibrated is WORLD_MODEL_MAX_NOOP_HALLUCINATION_RATE=0.25, whose comment shows the honest/attack separation it was set between -- and that gate is default-OFF.",
+    "rejected_of_136": 43
+   },
+   "branch_plain": {
+    "games": "the other 14",
+    "threshold": "verify_accuracy >= 0.5 (full-grid exact over ALL transitions including no-ops), or verify_cell_recall >= 0.5 when CARNOT_ARC_TRUST_METRIC=cell_recall",
+    "threshold_provenance": "same inherited 0.5",
+    "rejected_of_136": 63
+   }
+  },
+  {
+   "stage": "5. PLANNER",
+   "where": "e3.plan_in_model via _call_plan_in_model, post-gate",
+   "threshold": "returns a non-empty plan",
+   "rejected_of_136": "AT LEAST 2, and up to 10 -- see FINDING_unattributable_skip_class. These are recorded under the stage-1 label because attempt['skipped'] is only overwritten when the stage-4 gate REJECTS."
+  }
+ ],
+ "PART_A_recount_of_the_real_generator_corpus": {
+  "n_cells": 124,
+  "n_attempts": 136,
+  "n_planned": 0,
+  "n_skip_entries": 136,
+  "skip_census": {
+   "hidden_state_trust_below_threshold": 43,
+   "world_model_accuracy_below_threshold": 63,
+   "proposer_failed_or_missing_root": 6,
+   "degenerate_goal_predicate": 1,
+   "proposer_failed": 13,
+   "no_reachable_plan_after_refinement": 10
+  },
+  "per_arm": {
+   "llm_on_16k": {
+    "rows": 25,
+    "rows_with_llm_on_row_valid": 2,
+    "attempts": 26
+   },
+   "llm_on_16k_probe": {
+    "rows": 12,
+    "rows_with_llm_on_row_valid": 0,
+    "attempts": 16
+   },
+   "llm_on_fix": {
+    "rows": 25,
+    "rows_with_llm_on_row_valid": 25,
+    "attempts": 26
+   },
+   "llm_on_fix_cellrecall": {
+    "rows": 25,
+    "rows_with_llm_on_row_valid": 25,
+    "attempts": 26
+   },
+   "llm_on_fix_diag": {
+    "rows": 25,
+    "rows_with_llm_on_row_valid": 25,
+    "attempts": 26
+   },
+   "llm_on_fix_probe": {
+    "rows": 12,
+    "rows_with_llm_on_row_valid": 6,
+    "attempts": 16
+   }
+  },
+  "valid_rows_only_subset": {
+   "why": "the 136 pools two arms whose generator was broken (llm_on_16k: 2/25 rows valid; llm_on_16k_probe: 0/12). Restricting to rows the project's own llm_on_row_valid flag accepts is the defensible denominator.",
+   "n_attempts": 88,
+   "n_planned": 0,
+   "skip_census": {
+    "world_model_accuracy_below_threshold": 43,
+    "hidden_state_trust_below_threshold": 34,
+    "proposer_failed": 3,
+    "no_reachable_plan_after_refinement": 8
+   }
+  },
+  "per_game_skip_census": {
+   "ar25": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "bp35": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "cd82": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "cn04": {
+    "proposer_failed_or_missing_root": 1,
+    "hidden_state_trust_below_threshold": 3
+   },
+   "dc22": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "ft09": {
+    "world_model_accuracy_below_threshold": 3,
+    "no_reachable_plan_after_refinement": 1
+   },
+   "g50t": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "ka59": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "lf52": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "lp85": {
+    "degenerate_goal_predicate": 1,
+    "proposer_failed_or_missing_root": 5,
+    "proposer_failed": 5,
+    "world_model_accuracy_below_threshold": 2,
+    "no_reachable_plan_after_refinement": 1
+   },
+   "ls20": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "m0r0": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "r11l": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "re86": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "s5i5": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "sb26": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "sc25": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "sk48": {
+    "hidden_state_trust_below_threshold": 4
+   },
+   "sp80": {
+    "world_model_accuracy_below_threshold": 12,
+    "proposer_failed": 3,
+    "no_reachable_plan_after_refinement": 1
+   },
+   "su15": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "tn36": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "tr87": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "tu93": {
+    "world_model_accuracy_below_threshold": 4
+   },
+   "vc33": {
+    "world_model_accuracy_below_threshold": 6,
+    "proposer_failed": 5,
+    "no_reachable_plan_after_refinement": 7
+   },
+   "wa30": {
+    "hidden_state_trust_below_threshold": 4
+   }
+  },
+  "per_game_attempts_distribution": {
+   "n_games": 25,
+   "min": 4,
+   "q1": 4,
+   "median": 4,
+   "q3": 4,
+   "max": 18,
+   "note": "22 of 25 games contributed exactly 4 attempts; the three long tails (lp85 14, sp80 16, vc33 18) are where all 30 non-gate skips live."
+  },
+  "branch_partition_finding": {
+   "claim": "the 63/43 split is NOT two kinds of engine failure -- it is the HIDDEN_STATE_GAME_IDS partition. Every one of the 11 hidden-state games recorded only hidden_state_trust_below_threshold; every one of the 14 plain games recorded only world_model_accuracy_below_threshold.",
+   "hidden_state_games_with_only_trust_skips": [
+    "ar25",
+    "cd82",
+    "cn04",
+    "dc22",
+    "g50t",
+    "ka59",
+    "m0r0",
+    "re86",
+    "sc25",
+    "sk48",
+    "wa30"
+   ],
+   "plain_games_with_only_accuracy_skips": [
+    "bp35",
+    "ft09",
+    "lf52",
+    "lp85",
+    "ls20",
+    "r11l",
+    "s5i5",
+    "sb26",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33"
+   ]
+  },
+  "gate_margins": {
+   "why": "MARGINS, not just verdicts. Recorded on 52 of the 136 attempts (the two arms that ran after induction_attempt_gate_diagnostics was added). This is the only direct evidence about whether the rejections were near-misses.",
+   "n_records": 52,
+   "n_records_missing_of_136": 84,
+   "hidden_state_branch": {
+    "gate": "heldout_change_consistency >= 0.5 AND correct_changed_cells >= 1",
+    "n": 22,
+    "heldout_change_consistency": {
+     "n": 22,
+     "min": 0.0,
+     "q1": 0.0,
+     "median": 0.0,
+     "q3": 0.027397,
+     "max": 0.17806
+    },
+    "heldout_accuracy": {
+     "n": 22,
+     "min": 0.0,
+     "q1": 0.0,
+     "median": 0.009175,
+     "q3": 0.125,
+     "max": 0.875
+    },
+    "n_at_or_above_threshold": 0,
+    "n_with_zero_correct_changed_cells": 16,
+    "per_game_values": {
+     "ar25": [
+      0.0274,
+      0.0
+     ],
+     "cd82": [
+      0.0,
+      0.0
+     ],
+     "cn04": [
+      0.0564,
+      0.1781
+     ],
+     "dc22": [
+      0.0,
+      0.0
+     ],
+     "g50t": [
+      0.0,
+      0.0
+     ],
+     "ka59": [
+      0.0,
+      0.0
+     ],
+     "m0r0": [
+      0.0,
+      0.0
+     ],
+     "re86": [
+      0.0,
+      0.0
+     ],
+     "sc25": [
+      0.0278,
+      0.0
+     ],
+     "sk48": [
+      0.0769,
+      0.109
+     ],
+     "wa30": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "plain_branch": {
+    "gate": "verify_accuracy (or verify_cell_recall) >= 0.5",
+    "n": 30,
+    "verify_accuracy": {
+     "n": 28,
+     "min": 0.0,
+     "q1": 0.0,
+     "median": 0.0,
+     "q3": 0.04,
+     "max": 0.96
+    },
+    "verify_cell_recall": {
+     "n": 28,
+     "min": 0.0,
+     "q1": 0.0,
+     "median": 0.0,
+     "q3": 0.0,
+     "max": 0.2474
+    },
+    "by_trust_metric": {
+     "exact": {
+      "n": 14,
+      "n_at_or_above_threshold": 2
+     },
+     "cell_recall": {
+      "n": 14,
+      "n_at_or_above_threshold": 0
+     }
+    }
+   }
+  },
+  "FINDING_unattributable_skip_class": {
+   "class": "no_reachable_plan_after_refinement",
+   "n_in_census": 10,
+   "concentration": "7 of 10 are vc33 alone; 1 each ft09/lp85/sp80. Not spread across the roster.",
+   "ambiguity": "attempt['skipped'] is written by the STALL refinement loop and then only OVERWRITTEN if the plain single-shot path rejects. An attempt that CLEARS the plain gate and whose planner returns nothing therefore keeps the stale refinement-loop label. Demonstrated live in the injection probe below, and witnessed directly in the corpus by the records listed here.",
+   "witnessed_in_corpus": [
+    {
+     "arm": "llm_on_fix_diag",
+     "game": "ft09",
+     "skipped": "no_reachable_plan_after_refinement",
+     "trust_metric": "exact",
+     "verify_accuracy": 0.96,
+     "verify_cell_recall": 0.0,
+     "gate_value_that_cleared": 0.96,
+     "why": "skip string names a refinement-loop outcome, but the recorded plain-path gate value is >= 0.5, i.e. this attempt CLEARED the live admission gate and the planner then returned nothing"
+    },
+    {
+     "arm": "llm_on_fix_diag",
+     "game": "lp85",
+     "skipped": "no_reachable_plan_after_refinement",
+     "trust_metric": "exact",
+     "verify_accuracy": 0.92,
+     "verify_cell_recall": 0.0,
+     "gate_value_that_cleared": 0.92,
+     "why": "skip string names a refinement-loop outcome, but the recorded plain-path gate value is >= 0.5, i.e. this attempt CLEARED the live admission gate and the planner then returned nothing"
+    }
+   ],
+   "n_witnessed": 2,
+   "MISSING_IS_NOT_ZERO": "margins exist for only 3 of the 10; the other 7 are UNKNOWN, not zero. Do not read n_witnessed=2 as 'only 2 of the 10 are mislabelled'."
+  }
+ },
+ "PART_B_injection_probe": {
+  "question": "if an engine PASSED every gate, would a plan actually install -- or is there a further step (a store write, an overwrite, a separate planner precondition) that would drop it anyway?",
+  "method": "instrument the CALLEE (plan_in_model) and read the caller off the stack; read 'a plan installed' from policy.plan and induction_attempts[-1], not from the call site.",
+  "rows": [
+   {
+    "label": "known_good_dc22_nav_engine",
+    "game": "dc22",
+    "seed": 0,
+    "goal_kind": "reachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.441718,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "hidden_state_trust_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "hidden_state_trust_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 15.78
+   },
+   {
+    "label": "identity_engine_control",
+    "game": "dc22",
+    "seed": 0,
+    "goal_kind": "reachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.0,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "hidden_state_trust_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "hidden_state_trust_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 14.157
+   },
+   {
+    "label": "known_good_dc22_nav_engine",
+    "game": "dc22",
+    "seed": 1,
+    "goal_kind": "reachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.397351,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "hidden_state_trust_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "hidden_state_trust_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 14.238
+   },
+   {
+    "label": "identity_engine_control",
+    "game": "dc22",
+    "seed": 1,
+    "goal_kind": "reachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.0,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "hidden_state_trust_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "hidden_state_trust_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 14.336
+   },
+   {
+    "label": "known_good_dc22_nav_engine",
+    "game": "dc22",
+    "seed": 2,
+    "goal_kind": "reachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.542986,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": true,
+    "attempt_planned": true,
+    "attempt_skipped": "no_reachable_plan_after_refinement",
+    "attempt_plan_length": 1,
+    "policy_plan_installed_len": 1,
+    "witness_induction_attempts_planned": 1,
+    "witness_induction_attempts_skipped": [
+     "no_reachable_plan_after_refinement"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 2,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ],
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6781"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0,
+      1
+     ],
+     "reached_post_gate_call_site": true,
+     "engine_identity_matches_injected": true,
+     "goal_identity_matches_injected": true,
+     "post_gate_caller": [
+      "_call_plan_in_model:5268",
+      "_induce_and_plan:6781"
+     ]
+    },
+    "elapsed_s": 14.677
+   },
+   {
+    "label": "identity_engine_control",
+    "game": "dc22",
+    "seed": 2,
+    "goal_kind": "reachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.0,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "hidden_state_trust_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "hidden_state_trust_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 14.461
+   },
+   {
+    "label": "known_good_engine_UNREACHABLE_goal",
+    "game": "dc22",
+    "seed": 2,
+    "goal_kind": "unreachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.542986,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": true,
+    "attempt_planned": false,
+    "attempt_skipped": "no_reachable_plan_after_refinement",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "no_reachable_plan_after_refinement"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 2,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ],
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6781"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0,
+      0
+     ],
+     "reached_post_gate_call_site": true,
+     "engine_identity_matches_injected": true,
+     "goal_identity_matches_injected": true,
+     "post_gate_caller": [
+      "_call_plan_in_model:5268",
+      "_induce_and_plan:6781"
+     ]
+    },
+    "elapsed_s": 14.905
+   },
+   {
+    "label": "known_good_engine_UNREACHABLE_goal",
+    "game": "dc22",
+    "seed": 2,
+    "goal_kind": "unreachable",
+    "stall_refactor_loop": "0",
+    "n_transitions": 120,
+    "hidden_state_branch": true,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": 0.542986,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "trust_metric": null,
+    "gate_threshold": 0.5,
+    "gate_passed": true,
+    "attempt_planned": false,
+    "attempt_skipped": "",
+    "attempt_plan_length": null,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [],
+    "callee_witness": {
+     "plan_in_model_calls": 2,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ],
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6781"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0,
+      0
+     ],
+     "reached_post_gate_call_site": true,
+     "engine_identity_matches_injected": true,
+     "goal_identity_matches_injected": true,
+     "post_gate_caller": [
+      "_call_plan_in_model:5268",
+      "_induce_and_plan:6781"
+     ]
+    },
+    "elapsed_s": 14.904
+   },
+   {
+    "label": "structured_nav_known_good",
+    "game": "tu93",
+    "seed": 0,
+    "goal_kind": "structural",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": false,
+    "structural_nav_fit": {
+     "displacement_per_action": {
+      "4": [
+       0,
+       6
+      ],
+      "3": [
+       0,
+       -6
+      ],
+      "2": [
+       6,
+       0
+      ],
+      "1": [
+       -6,
+       0
+      ]
+     },
+     "goal_color": 14,
+     "is_confident_nav": true
+    },
+    "heldout_change_consistency": null,
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.2752,
+    "trust_metric": "exact",
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "world_model_accuracy_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "world_model_accuracy_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 13.683
+   },
+   {
+    "label": "identity_engine_control",
+    "game": "tu93",
+    "seed": 0,
+    "goal_kind": "unreachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": false,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": null,
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.0,
+    "trust_metric": "exact",
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "world_model_accuracy_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "world_model_accuracy_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 13.111
+   },
+   {
+    "label": "structured_nav_known_good",
+    "game": "tu93",
+    "seed": 1,
+    "goal_kind": "structural",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": false,
+    "structural_nav_fit": {
+     "displacement_per_action": {
+      "4": [
+       0,
+       6
+      ],
+      "2": [
+       6,
+       0
+      ],
+      "1": [
+       -6,
+       0
+      ],
+      "3": [
+       0,
+       -6
+      ]
+     },
+     "goal_color": 14,
+     "is_confident_nav": true
+    },
+    "heldout_change_consistency": null,
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.353,
+    "trust_metric": "exact",
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "world_model_accuracy_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "world_model_accuracy_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 14.582
+   },
+   {
+    "label": "identity_engine_control",
+    "game": "tu93",
+    "seed": 1,
+    "goal_kind": "unreachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": false,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": null,
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.0,
+    "trust_metric": "exact",
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "world_model_accuracy_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "world_model_accuracy_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 13.371
+   },
+   {
+    "label": "structured_nav_known_good",
+    "game": "tu93",
+    "seed": 2,
+    "goal_kind": "structural",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": false,
+    "structural_nav_fit": {
+     "displacement_per_action": {
+      "4": [
+       0,
+       6
+      ],
+      "3": [
+       0,
+       -6
+      ],
+      "2": [
+       6,
+       0
+      ],
+      "1": [
+       -6,
+       0
+      ]
+     },
+     "goal_color": 14,
+     "is_confident_nav": true
+    },
+    "heldout_change_consistency": null,
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.311,
+    "trust_metric": "exact",
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "world_model_accuracy_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "world_model_accuracy_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 13.329
+   },
+   {
+    "label": "identity_engine_control",
+    "game": "tu93",
+    "seed": 2,
+    "goal_kind": "unreachable",
+    "stall_refactor_loop": "1",
+    "n_transitions": 120,
+    "hidden_state_branch": false,
+    "structural_nav_fit": null,
+    "heldout_change_consistency": null,
+    "verify_accuracy": 0.0,
+    "verify_cell_recall": 0.0,
+    "trust_metric": "exact",
+    "gate_threshold": 0.5,
+    "gate_passed": false,
+    "attempt_planned": false,
+    "attempt_skipped": "world_model_accuracy_below_threshold",
+    "attempt_plan_length": 0,
+    "policy_plan_installed_len": 0,
+    "witness_induction_attempts_planned": 0,
+    "witness_induction_attempts_skipped": [
+     "world_model_accuracy_below_threshold"
+    ],
+    "callee_witness": {
+     "plan_in_model_calls": 1,
+     "callers": [
+      [
+       "_call_plan_in_model:5268",
+       "_induce_and_plan:6136"
+      ]
+     ],
+     "returned_plan_lengths": [
+      0
+     ],
+     "reached_post_gate_call_site": false,
+     "engine_identity_matches_injected": null,
+     "goal_identity_matches_injected": null
+    },
+    "elapsed_s": 13.516
+   }
+  ],
+  "n_rows": 14,
+  "n_gate_passed": 3,
+  "n_plans_installed": 1,
+  "n_reached_post_gate_plan_in_model": 3,
+  "ROSTER_LIMIT_STATED_PLAINLY": "TWO games, not the roster. dc22 (hidden-state branch, 3 seeds) and tu93 (plain branch, 3 seeds). The binding claim rests on ONE gate-passing observation (dc22 seed 2); dc22 seeds 0 and 1 and all three tu93 seeds were rejected, so the pass region was reached once out of six known-good arms. That is enough to prove the channel is not bypassed and is NOT enough to characterise the pass region's size.",
+  "FINDING_plain_gate_does_not_separate_good_from_identity_on_tu93": {
+   "claim": "on tu93 the shipped plain-branch metric (full-grid exact accuracy, CARNOT_ARC_TRUST_METRIC unset -> 'exact') scores the structural nav model and the `return grid` identity engine at EXACTLY the same value, 0.0000, on all 3 seeds. The gate rejects both identically, while verify_cell_recall -- computed and recorded but not gating by default -- separates them 0.275/0.353/0.311 vs 0.0/0.0/0.0.",
+   "measured_not_structural": "This is MEASURED on tu93 x 3 seeds. It is not asserted as a structural property of the metric: on a no-op-heavy corpus the same metric scores identity 0.725 and ADMITS it (the documented GAP-WM-TRUST-GATE, lp85, ~87 no-ops to 33 changing). Which failure direction the gate exhibits depends on the no-op fraction of the transition window, which collect_transitions' salience-biased sampling makes corpus-specific.",
+   "structural_nav_verify_accuracy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "structural_nav_verify_cell_recall": [
+    0.2752,
+    0.353,
+    0.311
+   ],
+   "identity_verify_accuracy": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "identity_verify_cell_recall": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "why_this_bounds_a_threshold_relaxation": "a structural fit recovering 27-35% of truly-changed cells is ~6-7x better on that axis than the LIVE induced engines were (plain-branch cell_recall max 0.0476 over 14 recorded margins) -- and it is still rejected. Lowering the 0.5 threshold on the exact metric cannot admit it, because its score is 0.0, not 0.4."
+  }
+ },
+ "PART_C_rejected_engine_source_recoverability": {
+  "question": "can the 136 rejected engines be recovered for scoring?",
+  "for_the_specific_136": {
+   "recoverable": false,
+   "why": "the per-cell liveness_witness schema persists no engine source. The richest record is induction_attempt_gate_diagnostics, present on 52 of 136 attempts, and it carries scalars only (planned / skipped / trust_metric / verify_accuracy / verify_cell_recall / trust_energy / heldout_accuracy / heldout_change_consistency / correct_changed_cells / binary_gate_pass). No source text, no AST, no hash."
+  },
+  "what_IS_on_disk": [
+   {
+    "path": "results/arc_e3/<game>/world_model.py",
+    "n": 25,
+    "what": "ONE file per game, overwritten by every refinement round and every subsequent run. Holds the LAST engine only, never a per-attempt history. ft09 and lp85 still carry files whose mtime falls inside the 2026-07-27 run window and whose content matches the documented degenerates -- ft09 is `return grid` on every branch with is_level_complete -> False. mtime is suggestive, not proof of attribution."
+   },
+   {
+    "path": "git history of results/arc_e3/*/world_model.py",
+    "n_commits": 324,
+    "n_distinct_blobs": 309,
+    "what": "these files are TRACKED, so ~309 distinct historical engine bodies are recoverable by `git show <sha>:<path>`. They are not attributable to individual induce attempts and they span many months and several generator models."
+   },
+   {
+    "path": "results/arc_e3_origin_fixtures/",
+    "n": 27,
+    "what": "frozen, never-written copies of the origin-incident engines."
+   },
+   {
+    "path": "results/arc_inert_rejection_ab_20260801/out/engines/",
+    "n": 151,
+    "what": "151 live-generator engine sources across 20 games from a 2026-08-01 run, persisted per (game, replicate, arm). This is the closest thing to a scoreable rejected-engine corpus that exists. IT IS ANOTHER WRITER'S IN-FLIGHT, UNTRACKED WORK -- read as evidence, never written or staged."
+   }
+  ],
+  "consequence_for_a_phase_2": "scoring THE 136 is impossible; it would be a REGENERATION task. But the 151-engine corpus already on disk plus the 52 recorded margins largely pre-empt the question a regeneration would ask."
+ },
+ "acceptance_gate_recount_reproduces_136_attempts_0_planned": true,
+ "acceptance_gate_the_30_are_fully_accounted": true,
+ "acceptance_gate_a_gate_passing_engine_installs_a_plan": true,
+ "acceptance_gate_the_control_is_rejected_every_seed": true,
+ "acceptance_gate_both_branches_probed": true,
+ "acceptance_gate_mislabel_demonstrated": true,
+ "acceptance_gate_nonempty_measurement": true,
+ "acceptance_gate_passed": true,
+ "interpretation": {
+  "the_gate_IS_binding": "PROVEN AT THE RECEIVING END, not by reading the call site. On dc22 seed 2 the hand-written correct engine scored heldout_change_consistency 0.542986, cleared the 0.5 trust gate, and the instrumented plan_in_model recorded a call from _induce_and_plan's POST-GATE call site with the injected engine and goal object identities matching. attempt['planned'] became True and policy.plan holds 1 step. No store write, no overwrite, and no separate planner precondition drops a gate-passing engine.",
+  "but_clearing_the_gate_is_necessary_not_sufficient": "the same engine on the same seed with an UNREACHABLE goal also cleared the gate and reached the same call site, and the planner returned nothing. Opening the gate converts a rejection into an ATTEMPT to plan, not into a plan.",
+  "the_rejections_are_not_near_misses": "MEASURED, on the 52 of 136 attempts that carry margins. Hidden-state branch: median heldout_change_consistency 0.0000, max 0.1781 against a 0.5 threshold, and 16 of 22 records have correct_changed_cells == 0 -- the engine got ZERO held-out changed cells right, which fails the nondegeneracy conjunct outright at any threshold. This is an empirical statement about these 52; the other 84 have NO recorded margin and are unknown, not zero.",
+  "so_a_threshold_relaxation_is_not_the_lever": "on the plain branch a structural nav model recovering 27-35% of truly-changed cells is still rejected, because its full-grid exact score is 0.0 rather than 0.4 -- nothing between 0.0 and 0.5 admits it. And the cell_recall metric that WOULD separate it already shipped as a flag and already ran as an arm (llm_on_fix_cellrecall): still 0 plans installed, with plain-branch cell_recall maxing at 0.0476 over 14 records against the structural fit's ~0.31.",
+  "what_this_does_NOT_show": "no episode was played, no level solved, no live win-rate effect measured. The injection probe covers TWO games and SIX known-good arms, of which ONE reached the pass region. It proves the channel is open; it does not size the pass region, and it says nothing about how a REAL induced engine would behave if the gate were changed.",
+  "no_p_value_is_reported_and_none_is_reachable": "this is a mechanism anatomy, not an A/B. There is no treatment, no pairing, and no discordant-pair count, so no significance claim is made anywhere in this artifact. The recount is a census of a fixed corpus; the probe is a demonstration with n=1 positive."
+ },
+ "honest_verdict": "complete_gate_is_binding_and_reached_but_rejections_are_not_near_misses",
+ "measurement_wall_s": 200.326,
+ "duration_s": 200.326,
+ "reproducibility_checksum": "c7714a2ab4df265b3794d19ca09ca5c4b726fc6b1b0b0f2a12a7e97b1594671a"
+}
