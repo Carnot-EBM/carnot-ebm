@@ -380,7 +380,8 @@
      "defer": 0.8000000000000002,
      "delta": 0.0667
     }
-   ]
+   ],
+   "reading": "NOT 'flat'. Pooled 16.4897 -> 16.223 (mean delta -0.014) hides the game-level picture: one game lost HALF its progress proxy (g50t 0.6667 -> 0.3333, -50.0 percent, a full step of a 3-step measure) and one gained a twelfth (m0r0 0.7333 -> 0.8000, +9.1 percent). 1 better / 1 worse, but a 5x asymmetry in magnitude, and the loss is the collapse game."
   },
   "inert": {
    "metric": "inert",
@@ -1028,7 +1029,8 @@
     "control_states": 654,
     "k4_states": 654
    }
-  ]
+  ],
+  "levels_net_at_k4": "NET NEUTRAL, not net-negative. cd82 loses a level at k=4 as it does at k=1 (2 -> 1), but m0r0 GAINS one (0 -> 1), so the k=4 total is 14 -- equal to control's 14. The recommendation's phrase 'cd82 loses a level at both evidence floors' is true of cd82 and must not be read as the k=4 arm being behind on levels overall."
  },
  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
  "inference_substrate_note": "The live E3AgentPolicy cascade takes real actions against the offline arcade with CARNOT_ARC_DISABLE_INDUCTION=1 and CUDA_VISIBLE_DEVICES empty. No GGUF is loaded, no llama-server is started, no GPU is touched, and no scored or online game is played.",
@@ -1158,9 +1160,10 @@
   "pre_registered_secondary_states": "FAIL (8 better, 6 worse, p = 0.79)",
   "mechanism_gate_target_class_reduced": "PASS (13 better, 1 worse, p = 0.0018)",
   "post_hoc_disclosed_as_such_live_400_budget": "3 -> 6 games banking a level; 3 gained, 0 lost; p = 0.25, and min reachable p is ALSO 0.25 with k=3, so this axis could not have been significant either. Promoted because the pre-registered budget-2000 level count answers a question the live eval does not ask, not because it read better.",
-  "recommendation": "DO NOT flip SUBMITTED_INERT_LABEL_DEFER_ENABLED yet. The mechanism is confirmed and the per-level efficiency effect on the inert-heavy games is large (ft09 x59.5, lp85 x9.0, su15 x2.5 on the first level's score), but no progress axis reached significance, cd82 loses a level at BOTH evidence floors, and navigation is significantly worse. The next measurement is a LIVE-BUDGET (400-action) A/B with enough games banking to make the primary axis reachable, plus an investigation of why cd82 regresses -- not another 2000-action roster sweep."
+  "recommendation": "DO NOT flip SUBMITTED_INERT_LABEL_DEFER_ENABLED yet. The mechanism is confirmed (54 percent cut in its target class, p=0.0018) and the per-level efficiency effect on the inert-heavy games is large and now natively reproduced at the live 400-action budget (ft09 x59.5, lp85 x9.0, su15 x2.5 on the first level's score, control banking 0 levels on all three). But no progress axis reached significance, navigation is significantly worse (p=0.013), one game (g50t) collapses -- frontier exhausted at 1022 of 2000 actions with 60 percent fewer states and half the hv progress -- and cd82 loses a level at both evidence floors (though k=4 is net-neutral on levels because m0r0 gains one). The next measurement is a LIVE-BUDGET (400-action) A/B with enough games banking to make the primary axis reachable, plus a diagnosis of the g50t frontier collapse, which is the mechanism's real failure mode -- not another 2000-action roster sweep.",
+  "corrected_after_adversarial_review": "Two rows of the original artifact were misleading and are corrected in `action_ledger_correction`: (1) `actions` (games_better 1, games_worse 0) is not an efficiency result -- its sole mover g50t is this arm's worst capability regression, and the budget is binding in 75/75 control cells so no saving was observable at all; (2) `hv` was described as flat, which is the pooled reading and hides a game that lost half its progress proxy. The recommendation below is unchanged and, if anything, better supported."
  },
- "honest_verdict": "complete_exact_label_inert_deferral_cuts_its_target_class_54pct_9208_to_4239_p0.0018_and_triples_the_games_banking_a_level_inside_the_live_400_action_budget_3_to_6_ft09_x59.5_lp85_x9.0_su15_x2.5_per_level_score_but_EVERY_pre_registered_progress_axis_is_NULL_levels_14_to_13_hv_flat_states_p0.79_navigation_significantly_WORSE_p0.013_cd82_loses_a_level_at_both_evidence_floors_and_with_only_1_discordant_game_the_design_could_not_reach_p0.05_on_the_primary_axis_recommend_do_not_flip_the_default",
+ "honest_verdict": "complete_exact_label_inert_deferral_cuts_its_target_class_54pct_9208_to_4239_p0.0018_and_triples_the_games_banking_a_level_inside_the_live_400_action_budget_3_to_6_ft09_x59.5_lp85_x9.0_su15_x2.5_per_level_score_now_reproduced_by_running_natively_at_budget_400_but_EVERY_pre_registered_progress_axis_is_NULL_levels_14_to_13_states_p0.79_navigation_significantly_WORSE_p0.013_and_on_correction_hv_is_NOT_flat_one_game_lost_half_its_progress_g50t_0.667_to_0.333_while_one_gained_a_twelfth_and_NO_action_saving_was_measured_or_could_be_75_of_75_control_cells_are_budget_bound_and_the_entire_978_action_corpus_reduction_IS_g50t_collapsing_frontier_exhausted_at_1022_actions_with_60pct_fewer_states_with_80.3pct_of_the_freed_actions_re_spent_in_the_same_budget_recommend_do_not_flip_the_default",
  "reproducibility_checksum": "sha256:502c317753ebe75fe10264b212c0bc76866b489ef04f515aa6ffba08e8537060",
  "source_sha256": {
   "python/carnot/agentic/arc_inert_label_memory.py": "158292fb868e7a0ea184b2cbe45c1de7170059e81388467d4e7fd5fd5b2ce033",
@@ -1168,5 +1171,132 @@
   "scripts/arc_inert_label_defer_worker.py": "f1af66a6e4879be50ee2a2077466a06b580ccc5676916fefb778b9acd13adedf",
   "scripts/arc_inert_label_defer_ab.py": "00753b80aa4d79a7c30d538f26420997126aaf30e0e095dbfc1eec9bea78e217"
  },
- "git_head": "937992eadd4d6385a11760fe6847997198e01801"
+ "git_head": "937992eadd4d6385a11760fe6847997198e01801",
+ "action_ledger_correction": {
+  "why": "The `paired_game_clustered.actions` row reads `games_better 1, games_worse 0` and 50000 -> 49022. Read alone that is a 978-action saving. It is not one: the single mover is g50t, and g50t is this arm's worst capability regression. This block is the correction, added after an adversarial review of the committed artifact.",
+  "the_budget_is_binding_so_a_saving_is_structurally_unobservable": {
+   "control_cells_at_budget": "75/75",
+   "defer_cells_at_budget": "72/75",
+   "the_only_cells_below_budget": "g50t, all three seeds, 1022 of 2000 actions, timed_out=false",
+   "reading": "Every control cell spends the entire 2000-action budget. An arm that reached the same place in fewer actions would simply keep exploring and still report 2000. So NO action saving was measured by this design, and none could have been. What was measured is a COMPOSITION shift inside a fixed budget."
+  },
+  "the_sole_action_mover_is_a_collapse_g50t": {
+   "actions": {
+    "control": 2000,
+    "defer": 1022,
+    "delta": -978,
+    "share_of_corpus_wide_action_reduction": "978/978 = 100 percent"
+   },
+   "states_discovered": {
+    "control": 142,
+    "defer": 56,
+    "pct": -60.6
+   },
+   "hv_progress": {
+    "control": 0.6667,
+    "defer": 0.3333,
+    "pct": -50.0
+   },
+   "navigation": {
+    "control": 1302,
+    "defer": 741,
+    "delta": -561,
+    "note": "also the largest single nav improvement in the corpus"
+   },
+   "terminated": "frontier exhausted at action 1022; timed_out=false, so this is not a wall-clock cut",
+   "mechanism": "The lever fired 31 times on g50t (deferred_pops=31, rows_deferred=53, abstained=0, labels_tracked=5). It never DROPS a row, so per-node work is unchanged -- but it changes the ORDER in which states are discovered, and on g50t that order closed the reachable frontier out at 56 states instead of 142. Fewer actions here means less exploration, not cheaper exploration.",
+   "consequence_for_the_two_rows_it_dominates": "`actions` and `nav` are UNINFORMATIVE as reported. g50t is the only mover of `actions` and the largest mover of `nav`, and in both it moves because the run stopped early having explored 60 percent less. Neither row should be cited as an efficiency result."
+  },
+  "where_the_freed_actions_went": {
+   "unit": "actions per single pass over the 25-game roster (cell sums / 3 seeds)",
+   "inert_frame_unchanged": {
+    "control": 9208,
+    "defer": 4239,
+    "delta": -4969
+   },
+   "re_spent": {
+    "expansion.probe_moved_the_board": 2234,
+    "renavigation.walk_or_replay": 1281,
+    "renavigation.reset_action": 476
+   },
+   "re_spent_total": 3991,
+   "freed_total": 4969,
+   "pct_of_freed_actions_re_spent_in_the_same_budget": 80.3,
+   "reading": "3991 of the 4969 actions freed from the inert class (80.3 percent) were re-spent inside the same budget -- mostly on board-moving probes (+2234) and on navigation (+1281 walk/replay, +476 resets). This is why a 54 percent cut in the target class moves total actions by 2 percent."
+  },
+  "score_conversion_not_supported_by_this_run": "The task premise that motivated this work converted a class cut into a score multiplier (zero the inert class -> -19.13 percent actions -> min((baseline/agent)^2,115) = 1.53x). That conversion requires the TRAJECTORY to shorten, and under a binding budget it did not. This artifact never asserted the 1.53x figure and the review's claim that it did is wrong -- but the premise is retracted here explicitly so it is not carried forward. The `per_level_score_conversion` block is a DIFFERENT and still-valid quantity: actions to the FIRST level-up, which is not budget-bound because it is reached before the budget."
+ },
+ "arm_is_decided_by_the_env_var_not_the_arm_flag": {
+  "fact": "scripts/arc_inert_label_defer_worker.py sets out['arm']=args.arm AFTER run_cell returns; run_cell never sees it.",
+  "consequence": "Re-running the worker with --arm defer but WITHOUT CARNOT_ARC_INERT_LABEL_DEFER=1 silently produces a CONTROL trace under a defer label.",
+  "what_proves_each_cell_was_armed": "the per-cell `flag_env` field, which records the env var as the worker actually saw it",
+  "flag_env_census": {
+   "control": "75/75 null",
+   "control_b": "75/75 null",
+   "defer": "75/75 \"1\""
+  }
+ },
+ "solve_conditioning_audit": {
+  "why": "Solve-conditioning invalidated an earlier run in this program, so it is answered explicitly here rather than assumed.",
+  "no_game_adapter_reaches_the_agent": {
+   "checked": "grep for get_adapter across python/carnot/agentic/arc_competition_agent.py and arc_solver_kit.py",
+   "result": "zero call sites; no per-game hand-built adapter can influence a decision in this chain"
+  },
+  "no_solved_trajectory_is_fed_in": {
+   "checked": "grep for build_progress_window / solve_adaptered across the three A/B scripts",
+   "result": "build_progress_window appears exactly once, as a docstring line in arc_inert_label_defer_worker.py explaining why it is avoided (it requires the game already solved to L1 and returns a winning trajectory). solve_adaptered is never imported."
+  },
+  "every_cell_starts_from_a_cold_reset": {
+   "checked": "all 250 cells (cells/ + cells_k4/)",
+   "result": "250/250 start_level=0 and exactly one bootstrap.reset; no adapter warmup is applied"
+  },
+  "induction_is_genuinely_off": {
+   "checked": "plan.execute_step summed over all 250 cells",
+   "result": "0; the induce/verify/plan path never engaged, so this measures the SEARCH"
+  },
+  "the_one_bit_of_identity_keyed_knowledge_that_DOES_reach_the_run": {
+   "what": "arc_strategy_router.detect_mechanic reads the recorded `mechanic_class` for the NAMED game out of ops/arc_solve_registry.yaml. That value is solve-derived, and it sets uses_goal_distance_heuristic, which sets the explore budget.",
+   "scope": "2 of 25 games. sb26 -> color_match_slot_sequence and tn36 -> program_editor; the other 23 resolve to DEFAULT_MECHANIC=graph_explore, which is exactly what a game absent from the registry (i.e. a hidden game) would get. Recomputed fresh: routed explore_budget matches the recorded per-cell explore_budget in 25/25 games (24 for sb26 and tn36, 80 for the rest).",
+   "is_it_load_bearing": {
+    "test": "force the hidden-game budget (80) on the two routed games, and the routed budget (24) on a control game; compare trace_sha256 against the banked cell",
+    "sb26_forced_80": "DIVERGED (states 769 -> 714) -- load-bearing on this game",
+    "tn36_forced_80": "IDENTICAL trace sha256 -- not load-bearing",
+    "cd82_forced_24": "IDENTICAL trace sha256 -- not load-bearing",
+    "reading": "exactly one game of 25 has a trace that depends on registry-derived knowledge. Note this is only PARTIALLY inert even with induction off: no plan.execute_step ever fired, yet the stall test still flips phase on the explore budget."
+   },
+   "can_it_bias_the_A_B": "No. Both arms receive the identical routed value on every game, and the A/A floor is 75/75 identical traces. It is a scope caveat on HIDDEN-GAME transfer, not a defect in the comparison.",
+   "why_the_provenance_label_is_already_correct": "solve_provenance is development_proxy, not live_agent_self_discovery, precisely because of this. It faithfully mirrors what the SHIPPED E3AgentPolicy does on a public game."
+  }
+ },
+ "live_400_budget_natively_reproduced": {
+  "why": "The 3 -> 6 headline was computed by re-reading 2000-budget traces at a 400-action cutoff. If the agent's behaviour depended on the budget it was given, that truncation would be invalid. Tested by running the three gained games NATIVELY at --budget 400.",
+  "rows": [
+   {
+    "game": "ft09",
+    "control_levels": 0,
+    "defer_levels": 1,
+    "defer_actions_to_first_levelup_native_400": 256,
+    "defer_actions_to_first_levelup_truncated_from_2000": 256,
+    "match": true
+   },
+   {
+    "game": "lp85",
+    "control_levels": 0,
+    "defer_levels": 1,
+    "defer_actions_to_first_levelup_native_400": 154,
+    "defer_actions_to_first_levelup_truncated_from_2000": 154,
+    "match": true
+   },
+   {
+    "game": "su15",
+    "control_levels": 0,
+    "defer_levels": 1,
+    "defer_actions_to_first_levelup_native_400": 300,
+    "defer_actions_to_first_levelup_truncated_from_2000": 300,
+    "match": true
+   }
+  ],
+  "result": "3/3 exact match, and control banks 0 levels on all three at a native 400 budget. The 3 -> 6 reading is not a truncation artifact: the first-level path is budget-independent over this range.",
+  "still_not_significant": "This does not rescue the axis. k=3 discordant games gives min reachable p = 0.25, so the live-budget reading could not have reached 0.05 either. It is a real effect on three games, not a corpus result."
+ }
 }
