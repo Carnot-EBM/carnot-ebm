@@ -1,0 +1,50 @@
+{
+ "what_this_is": "post-hoc determinacy check of the SHIPPED goal gate against the pre-registered primary O6, run with the shipped `_goal_defects` rather than a reimplementation of it.",
+ "n_scored": 115,
+ "shipped_gate": {
+  "n_rejected": 111,
+  "n_kept": 4,
+  "kept_cells": [
+   "cd82__r1__off",
+   "lf52__r1__off",
+   "lf52__r1__on",
+   "sb26__r1__off"
+  ],
+  "defect_kind_engine_counts": {
+   "goal_constant": 111,
+   "goal_missing_return": 3,
+   "goal_raises": 1
+  },
+  "n_engines_with_more_than_one_defect_kind": 3,
+  "inert_when_flag_off": 0
+ },
+ "O6_determinacy": {
+  "kept_and_O6_positive": 4,
+  "kept_and_O6_negative_FN": 0,
+  "rejected_and_O6_positive": 3,
+  "P_O6_given_accept": 1.0,
+  "P_O6_given_reject": 0.027,
+  "verdict": "FN=0 -- the gate's accept decision DETERMINES O6 in the keep direction, which is the same defect that disqualified O4."
+ },
+ "O4_determinacy_for_comparison": {
+  "kept_and_O4_positive": 4,
+  "kept_and_O4_negative_FN": 0
+ },
+ "root_cause_the_prereg_used_a_more_permissive_stand_in": {
+  "uncapped_const_over_all_shown_frames_kept": 6,
+  "uncapped_kept_cells": [
+   "cd82__r1__off",
+   "lf52__r1__off",
+   "lf52__r1__on",
+   "sb26__r1__off",
+   "tu93__r1__on",
+   "tu93__r2__on"
+  ],
+  "uncapped_kept_and_O6_negative": [
+   "tu93__r1__on",
+   "tu93__r2__on"
+  ],
+  "shipped_probe_grid_cap": "_GOAL_PROBE_MAX_GRIDS = 12 (the first 6 transitions)",
+  "reading": "capping can only make a predicate look MORE constant, so the shipped gate is strictly stricter. The cells the pre-registration counted as evidence that the gate does NOT determine O6 are exactly the cells the cap rejects."
+ }
+}

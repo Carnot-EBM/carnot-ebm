@@ -1352,6 +1352,14 @@
         "acknowledged_on": "2026-08-01",
         "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
         "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
+        "sha256_now": "e579e667d5b777511c7d01046035726d2ca3878cf94c1855d5741179102407b9",
+        "acknowledged_on": "2026-08-02",
+        "reason": "The 2026-08-02 change to this module is COMMENT-ONLY: 46 added lines, 0 deleted, and 0 added lines that are not a comment. It corrects two stale interim counts in a comment block (\"16 of 20\" -> the final \"17 of 21 / 1 of 22\") and scopes an over-broad disclosure above `_GOAL_PLAIN_REASK_BLOCK`, which claimed all three of its bullets were bootstrap-free when the third is a public-corpus prior about the shape of ARC win conditions. No executable statement, signature, constant or default was added, removed or altered.",
+        "evidence": "PROVEN INERT BY AST IDENTITY, which is stronger than a rebuild-and-diff because it rules the change out at the language level rather than observing that one run did not move. `ast.dump(ast.parse(src))` of this module at HEAD and in the working tree are IDENTICAL (sha256 of the dump 06cba8b110cc97ffc7ca456a9575721b5adc1747d8de5e5638dc583d0b6dbd4e); comments do not survive parsing, so no behaviour reachable from any artifact's script can differ. Verified mechanically in the same step that wrote this entry: the writer asserts AST equality and asserts that the diff contains zero non-comment additions, and refuses to write otherwise."
       }
     ]
   },

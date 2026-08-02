@@ -245,6 +245,122 @@ def main() -> int:
             "concurrent workflow is committing. Rebuilding them here would also bake that "
             "other session's in-flight edit to the same module into published figures. Left "
             "for the operator, reported rather than worked around; --no-verify was never used.",
+            "CORRECTION_20260802_this_was_WRONG_and_the_remedy_is_cheap": {
+                "what_was_wrong": "`it_is_pre_existing_not_caused_here` above is FALSE. It "
+                "reasoned from the raw sha alone and missed that the acknowledgement "
+                "mechanism had already RESOLVED that drift. The decisive check: each of the 7 "
+                "artifacts already carried a `freshness_acknowledgements` entry for this "
+                "module, dated 2026-08-01, whose `sha256_now` equals HEAD's sha for the module "
+                "EXACTLY (a04fc14cf08eb6a9...). So at HEAD all 7 were [fresh]; they flip to "
+                "[STALE] only in the dirty tree, because changing the module invalidates the "
+                "pin. The refusal was CAUSED by this session's edit, not inherited.",
+                "a_worktree_is_NOT_a_sound_way_to_measure_this": "the first attempt at this "
+                "check ran the lint in a clean `git worktree` at HEAD and reported two OTHER "
+                "artifacts (early_stop_grace_sweep_20260726, reset_charge_attribution_20260726) "
+                "as pre-existing-STALE against arc_competition_agent.py. That is a MEASUREMENT "
+                "ARTIFACT: those two record their dependency as an ABSOLUTE path, which "
+                "resolves back into the main checkout no matter which worktree the lint runs "
+                "in, so a worktree cannot isolate them. Both report [fresh] in the checkout "
+                "itself. Comparing an acknowledgement's pinned sha against `git show HEAD:` is "
+                "the sound check and needs no worktree at all.",
+                "why_the_stated_remedy_was_also_wrong": "it claimed fixing this meant "
+                "rebuilding artifacts this session did not author. It did not. This session's "
+                "entire diff to the module is ADDED COMMENT LINES ONLY, 0 deletions and 0 "
+                "added non-comment lines -- proven inert by comparing "
+                "`ast.dump(ast.parse(...))` of the module at HEAD against the working tree: "
+                "IDENTICAL (sha256 of the dump 06cba8b110cc97ff...), because comments do not "
+                "survive parsing. That is a stronger inertness proof than the rebuild-and-diff the "
+                "prior acknowledgements on these same artifacts used, and appending a "
+                "`freshness_acknowledgements` entry is the designed, already-precedented "
+                "mechanism (a prior session appended exactly such an entry for this module on "
+                "2026-07-31). Applied 2026-08-02; no artifact's numbers were touched.",
+                "the_transferable_lesson": "a guard that reports [fresh] via an "
+                "acknowledgement looks identical, from a raw sha comparison, to one that was "
+                "never stale. Read the guard's own output before concluding what it is doing.",
+            },
+        },
+        "CORRECTION_20260802_the_pre_registered_PRIMARY_is_circular": {
+            "finding": "O6_pre_win_and_not_open carries the EXACT defect that disqualified O4, "
+            "measured against the SHIPPED gate rather than a stand-in for it. "
+            "`LocalGGUFProposer._goal_defects` (flag ON, real `shown` transitions, killable "
+            "subprocess) keeps 4 of the 115 frozen engines, and 4 of 4 are O6-positive: FN=0, "
+            "P(O6 | accept) = 1.000 against P(O6 | reject) = 0.027. The gate's accept decision "
+            "DETERMINES the primary in the keep direction.",
+            "why_the_pre_registration_concluded_otherwise": "it graded the shipped treatment "
+            "using a more permissive reimplementation of it. `pre/circularity_gap.json` "
+            "computes constancy with a local `const()` over ALL shown frames and keeps 6, of "
+            "which 2 (tu93__r1__on, tu93__r2__on) fail O6 -- which is precisely the '2 of the "
+            "6 the gate would keep still FAIL O6' the swap was justified on. The shipped gate "
+            "probes at most `_GOAL_PROBE_MAX_GRIDS = 12` grids (the first 6 transitions), and "
+            "capping can only make a predicate look MORE constant, so the shipped gate is "
+            "strictly stricter: it rejects exactly those two tu93 cells. The two cells that "
+            "made O6 look undetermined are the two the cap removes.",
+            "what_this_does_and_does_not_change": "it does NOT touch the headline. The "
+            "headline is differential ATTRITION (17/21 vs 1/22 hard induction failures), which "
+            "is measured on cells that never reach an outcome and is independent of which "
+            "outcome was chosen. The primary was ALREADY reported as uninterpretable for that "
+            "reason. This adds a SECOND and independent reason it was never a valid primary: "
+            "even with no attrition at all, it could not have been read as evidence about goal "
+            "quality. The demoted O4 and the reported secondaries inherit the same defect.",
+            "the_transferable_lesson": "when a design decision turns on what a gate would do, "
+            "CALL THE GATE. Both the pre-registration's determinacy cross-tab and its "
+            "circularity gap were computed from a hand-written stand-in that was never diffed "
+            "against the shipped function it stood in for.",
+            "reproduce": "results/arc_goal_defect_reask_ab_20260801/verify_o6_determinacy.py "
+            "-> out/o6_determinacy_20260802.json. Deterministic across consecutive runs.",
+            "found_by": "adversarial review of this artifact, 2026-08-02; verified "
+            "independently before being applied.",
+        },
+        "CORRECTION_20260802_detector_coverage_presentation": {
+            "defect_kinds_do_not_sum_to_the_rejected_count": "`pre/detector_coverage.json` "
+            "reports defect_kinds summing to 113 against n_would_be_rejected 109 because the "
+            "kinds OVERLAP and nothing said so: a body with no return yields None on every "
+            "frame, so it is `goal_missing_return` AND `goal_constant`. Re-measured against "
+            "the shipped gate, 3 engines carry more than one kind (111 + 3 + 1 = 115 kind-"
+            "instances over 111 rejected engines).",
+            "two_identical_looking_rates_are_different_quantities": "`rejection_rate` (0.9478 "
+            "in detector_coverage) and `agreement_rate` (0.9478 in circularity_gap) are NOT "
+            "the same measurement. The first is 109/115 rejected; the second is "
+            "(constant_on_both 103 + constant_on_neither 6)/115. They coincide only because "
+            "constant_on_shown_only and constant_on_neither both happen to equal 6. The "
+            "underlying computations are distinct; this reads like a copy-paste and is not.",
+            "note": "these are presentation defects in the pre-flight files, not errors in "
+            "the numbers, and the pre-flight files are left as they were written.",
+        },
+        "CORRECTION_20260802_the_re_ask_text_is_not_fully_bootstrap_free": {
+            "what": "`bootstrap_honesty` above says the re-ask text 'names a property of the "
+            "ANSWER rather than any fact about the game'. That is true of the block's first "
+            "two bullets and NOT of its third, which prefers 'a simple condition on a specific "
+            "region, row, column or object over a whole-board property'. That is a "
+            "distributional prior about the SHAPE of ARC-AGI-3 win conditions, derived from "
+            "the taxonomy over the 25 SOLVED public games (C_UNIFORMITY never wins; "
+            "E_FIXED_BAND is 11 of 22 successes). A live agent on a hidden game would not have "
+            "derived it.",
+            "why_it_is_disclosed_rather_than_removed": "it does not cross the line: it is "
+            "game-agnostic, names no specific win condition, and would still function on a "
+            "game nobody has ever solved -- the operative test. It is the same class of "
+            "public-corpus scaffolding the ARC Solve Reproducibility discipline mandates be "
+            "captured and reused. Nothing scored depends on it: the flag ships OFF and this "
+            "run recommends against flipping it. The disclosure is scoped in the module "
+            "comment above `_GOAL_PLAIN_REASK_BLOCK` so it is read before any future flip.",
+        },
+        "CORRECTION_20260802_the_anatomy_s_tn36_existence_proof_is_weaker_than_stated": {
+            "what": "the goal-failure anatomy cites tn36 as the existence proof that "
+            "goal-relevant evidence lives in ordinary transitions, on the grounds that tn36 is "
+            "a STALL game with zero wins observed yet still yields 5 plannable fixed-band "
+            "candidates. This project's own "
+            "results/outer_loop_arc_metric_validity_20260801.json describes tn36's "
+            "perfect-fidelity engines as 'progress-BAR TICKERS -- they model the status "
+            "indicator exactly and the playfield not at all', and runs a dedicated "
+            "`driver_check_tn36_removed` leave-one-out precisely because tn36 was suspected of "
+            "being an artifact (pooled AUC 0.6085 -> 0.5316 without it). tn36's cited "
+            "fixed-band predicate is on row 1, a HUD row.",
+            "effect_on_the_split": "the available-vs-absent split in the anatomy is defended "
+            "partly from what an auditor could see ACROSS solved games, not purely from what "
+            "the agent observed within one. It is not overturned -- the runtime measurement "
+            "supersedes the syntactic estimate anyway (94.8% of predicates are constant on "
+            "observed frames, against the taxonomy's 52%) -- but tn36 should not be quoted as "
+            "a clean existence proof that WIN-relevant evidence is available pre-win.",
         },
     }
 
@@ -384,6 +500,7 @@ def main() -> int:
                 "results/arc_goal_defect_reask_ab_20260801/analyse.py",
                 "results/arc_goal_defect_reask_ab_20260801/score_cells.py",
                 "results/arc_goal_defect_reask_ab_20260801/build_artifact.py",
+                "results/arc_goal_defect_reask_ab_20260801/verify_o6_determinacy.py",
             )
         ],
         "rebuild_command": (
