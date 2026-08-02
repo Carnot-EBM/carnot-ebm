@@ -3559,6 +3559,51 @@ _INDUCE_REPEAT_LAST_N = 256
 # measured (round 0 + one plain re-ask). This is a floor on quality, never a cap on attempts: when
 # the budget is spent the candidate is accepted anyway rather than failing the call -- see
 # `generate()`.
+_INDUCE_DEFECT_OWNS_ATTEMPTS_DEFAULT = "0"
+
+
+def _defect_gate_owns_attempts() -> bool:
+    """Do the defect gates get attempts a CONTENT failure cannot consume? Default NO.
+
+    THE INCIDENT (2026-08-01, found in a live A/B's first treatment cell, not in review). ar25
+    accepted a textbook `return False` -- the model's own comment reads "no win state was given
+    ... maybe just return False" -- with `goal_defect_reasks == 0` AND `engine_defect_reasks == 0`.
+    Both gates silent at once is what pointed at a shared cause rather than a bug in either.
+
+    `attempt < tries - 1` guards both defect gates, and it is there for a real reason: a
+    `continue` on the final attempt falls out of the loop into the content-failure return, which
+    would convert an accept into a hard failure. But `tries` is ALSO the budget that content
+    failures draw from -- a reply with no code block, a missing `def`, a syntax error. So every
+    attempt the model wastes on malformed output is an attempt the defect gate needed, and an
+    answer that finally parses on the last attempt is never checked at all.
+
+    THE GATE IS THEREFORE QUIETEST EXACTLY WHERE IT IS MOST NEEDED. A game the model finds hard
+    burns its attempts on unusable output, then lands its one parseable answer on the attempt
+    where nothing is armed. Confirmed against a scripted server: accepted on attempt 0 gives 2
+    re-asks; two content failures followed by the SAME defective answer gives 0, accepted
+    unchecked.
+
+    NOT A REGRESSION FROM THE GOAL GATE. The shipped ENGINE gate carries the identical guard and
+    the identical blind spot, so its measured 13/36 -> 22/36 is a FLOOR on what that gate can do,
+    not a ceiling.
+
+    WHEN ON, a defect re-ask GRANTS one extra attempt instead of consuming a content attempt. That
+    keeps the "never fails where the old path succeeded" guarantee intact by construction: the
+    change only ever ADDS an iteration, and can never turn an accept into a failure. It is bounded
+    without needing a cap, because the grant is gated on `_reasks_left` / `_goal_reasks_left`,
+    which are finite (1 each by default) -- so the loop can grow by at most the re-ask budgets.
+
+    DEFAULT OFF, and deliberately so: this changes shipped induce behaviour, and it was written
+    while the A/B that found it was still collecting. Flipping it mid-run would have measured two
+    treatments under one label. `CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS=1` enables it.
+    """
+
+    raw = os.environ.get("CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS")
+    if raw is None:
+        raw = _INDUCE_DEFECT_OWNS_ATTEMPTS_DEFAULT
+    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+
 _INDUCE_DEFECT_REASKS = 1
 # The re-ask text. It names NOTHING about what went wrong, and that is a measured choice rather
 # than laziness: `arc_engine_static_validation.repair_prompt_block()` builds a defect-naming block,
@@ -5801,7 +5846,18 @@ class LocalGGUFProposer:
         _goal_reasks_left = _goal_defect_reasks() if _goal_check_on else 0
         _reask_suffix = ""
         last = ""
-        for attempt in range(tries):
+        # ATTEMPT BUDGET. `tries` is the CONTENT budget -- attempts spent on a reply that is
+        # unusable (no code block, missing `def`, syntax error). With
+        # `_defect_gate_owns_attempts()` OFF, `_budget` never grows and this loop is exactly
+        # `for attempt in range(tries)`; with it ON, a defect re-ask GRANTS an attempt rather
+        # than consuming one. See that resolver for the incident.
+        _own_attempts = _defect_gate_owns_attempts()
+        _budget = int(tries)
+        attempt = -1
+        while True:
+            attempt += 1
+            if attempt >= _budget:
+                break
             _payload = {
                 "prompt": prompt + _reask_suffix,
                 "n_predict": self.max_tokens,
@@ -5893,9 +5949,14 @@ class LocalGGUFProposer:
             # guarantee TRUE rather than merely intended: on the final attempt a `continue` would
             # fall out of the loop into the content-failure return and convert an accept into a
             # hard False. On the last try we take the defective candidate, exactly as before.
-            if _defect_check_on and _reasks_left > 0 and attempt < tries - 1:
+            if _defect_check_on and _reasks_left > 0 and (attempt < _budget - 1 or _own_attempts):
                 _defects = self._engine_defects(code, engine_transitions)
                 if _defects:
+                    # Grant rather than consume: without this the `continue` below would fall out
+                    # of the loop and turn an accept into a hard failure, which is precisely what
+                    # the old `attempt < tries - 1` guard existed to prevent.
+                    if attempt >= _budget - 1:
+                        _budget += 1
                     _reasks_left -= 1
                     _reask_suffix = _INDUCE_PLAIN_REASK_BLOCK
                     last = f"mechanically defective engine: {_defects}"
@@ -5911,9 +5972,15 @@ class LocalGGUFProposer:
             # same reason it exists above: on the final attempt a `continue` would fall out of
             # the loop and convert an accept into a hard False, so the last try takes the
             # defective candidate exactly as the shipped path does.
-            if _goal_check_on and _goal_reasks_left > 0 and attempt < tries - 1:
+            if (
+                _goal_check_on
+                and _goal_reasks_left > 0
+                and (attempt < _budget - 1 or _own_attempts)
+            ):
                 _gdefects = self._goal_defects(code, engine_transitions)
                 if _gdefects:
+                    if attempt >= _budget - 1:
+                        _budget += 1
                     _goal_reasks_left -= 1
                     _reask_suffix = _GOAL_PLAIN_REASK_BLOCK
                     last = f"mechanically defective goal: {_gdefects}"

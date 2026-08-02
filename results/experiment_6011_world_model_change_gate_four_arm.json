@@ -52581,6 +52581,14 @@
         "acknowledged_on": "2026-08-01",
         "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
         "evidence": "PROVEN BY REBUILD plus a byte-identity proof. The artifact's own rebuild_command was run against the changed source and compared to the published file leaf by leaf: ZERO substantive movement. All 20 differing keys are provenance bookkeeping the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each) -- whose own recorded verdict is `substantive_values_changed: 0`. Independently, `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games (ft09, lp85, sc25, tn36, tu93, vc33), which covers the exact function this artifact's code path would use."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
+        "acknowledged_on": "2026-08-01",
+        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
+        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
       }
     ]
   },
