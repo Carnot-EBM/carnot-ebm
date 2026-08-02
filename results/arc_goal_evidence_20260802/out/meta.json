@@ -1,0 +1,475 @@
+{
+  "meta_reconstructed": true,
+  "meta_reconstructed_why": "the run was ended by the stopping rule before the driver reached its own meta.json write; every field here is read from artefacts the run produced, none is hand-entered",
+  "prereg_sha256": "sha256:93828c64561106ac278ee6e2ba210931eae1b6fe42a4262dd01b431673d2c8e0",
+  "preconditions_checked": [
+    {
+      "resource": "arc_live_generator_gguf_cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+      "principle": "the live generator must be on disk; without it the honest verdict is blocked_model_not_cached, never a fabricated run"
+    },
+    {
+      "resource": "conductor_inactive",
+      "available": true,
+      "detail": "systemctl is-active -> 'inactive'",
+      "principle": "a live conductor contends for the same card and would interleave its own induction into this store"
+    },
+    {
+      "resource": "cuda_gpu_0_has_headroom",
+      "available": true,
+      "detail": "free=24123 MiB (dry run makes no LLM call)",
+      "principle": "a concurrent workflow holds the other card; launching without headroom would evict work this session does not own"
+    },
+    {
+      "resource": "goal_prompt_transitions_flag_default_off",
+      "available": true,
+      "principle": "the shipped default IS the control arm; if it were already on this measures ON vs ON, which is the silent-no-op defect exp6013 shipped with"
+    },
+    {
+      "resource": "goal_dedup_flag_default_off",
+      "available": true,
+      "principle": "same, for the dedup half"
+    },
+    {
+      "resource": "port_free",
+      "available": true,
+      "detail": "port 41871 (non-default on purpose)",
+      "principle": "reusing a stale server on the default port is how an arm silently gets a different model or a different context size"
+    },
+    {
+      "resource": "progress_windows_cached",
+      "available": true,
+      "detail": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalev/windows.pkl",
+      "principle": "windows are built from recorded frames before any LLM call, so every arm is scored against the identical observations"
+    }
+  ],
+  "server_witness": {
+    "pid": 2633197,
+    "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "port_requested": 41871,
+    "port_actual": 41871,
+    "cuda_gpu": "0",
+    "n_ctx_declared": 32768,
+    "n_ctx_from_props": 32768,
+    "model_from_props": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "is_cuda_build": true,
+    "mtp": false,
+    "kv_quant": "q8_0",
+    "n_gpu_layers": 999,
+    "max_tokens": 4096
+  },
+  "split_meta": {
+    "ar25": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "bp35": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "cd82": {
+      "n_shown": 3,
+      "n_heldout": 2,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "cn04": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "g50t": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "ka59": {
+      "n_shown": 7,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "lf52": {
+      "n_shown": 5,
+      "n_heldout": 3,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "lp85": {
+      "n_shown": 3,
+      "n_heldout": 2,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "ls20": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "m0r0": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "re86": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "s5i5": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "sb26": {
+      "n_shown": 6,
+      "n_heldout": 3,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "sc25": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "sk48": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "su15": {
+      "n_shown": 5,
+      "n_heldout": 2,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "tn36": {
+      "n_shown": 5,
+      "n_heldout": 2,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "tr87": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "tu93": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    },
+    "wa30": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "levelup_rows_in_shown": 0,
+      "levelup_rows_in_heldout": 1
+    }
+  },
+  "treatment_witness": [
+    {
+      "game": "ar25",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4980,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "009a4459efd08fa83e8db80007786472baa6448dba48fc1f186ae944562ad94e",
+      "goal_prompt_sha256_on": "9d776b3e505e7d02f0888cfc79b9747f74c1ecc804c0269cc0f98c4db04e98a7",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "44b6837d2893708ecdfbd25f3e8c4b4838f219a7dc83a505e20e07700c582c7b",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "bp35",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 7654,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "6ef4e967ed4689315c6180a68e6395e9a080d6a6541a7f5d3a1411be414a5605",
+      "goal_prompt_sha256_on": "857fd893518b966e80f043a27742a54013cbe313e7217be638ffd85d7ac027f5",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "a4bc413ba79ef6794b8929e843cccbbd983104e3d602c7542c529571ee9dd421",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "cd82",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3248,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "624a22cec706d7250a03a9b7ea25c6408102a12f5e176f21656be02a561af132",
+      "goal_prompt_sha256_on": "3bcb3968f51a116dc9ff382ec55db32cca324f3441057b2c564feeb7098f968b",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "4f670a97ac77955130f419312c7bb3703a0d148f5a5aff225dd595a75ff96453",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "cn04",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 6631,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "22b52b6d03c128dd6c87dd57fca6f6f30b156dd56116395594b146410e3e2857",
+      "goal_prompt_sha256_on": "24e9f68792b9072e12efb469de07f3a0df7602f4111184da49c7f5d9a3918f6e",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "6f322bc29800e1ca7763c0e3cb24f1a51c209a5c6ddf9446e881db14b48bb74c",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "g50t",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4621,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "a69338ad82be05d7c0c365b6444f4489f0326a13c7450f0762cf1fc484621a90",
+      "goal_prompt_sha256_on": "64ff273b95eecfc56c7fc9434e1ec600f9efdd3eab1f52c9a622538d3b5d7194",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "c5771b9941250dcf324a1d61e188cbf62dd646fe5a474b388c61c2e91f620fd1",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "ka59",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 2838,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "a181ed66bab859ef3886eb43088d4239fe1dea1b261621ded219a551043169d3",
+      "goal_prompt_sha256_on": "8543da018073dd6dab18833f442e9ca9db746d128e679d45c65cb3ac91a3dcab",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "b04ba442abb952ead6348aeaddbb2b83a8429fd31bf52b16032e86b2262c4170",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "lf52",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4807,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "15dbbf67b214f2092c73958da6743a0022f9c8a6b9171630125331d213e15710",
+      "goal_prompt_sha256_on": "01ba1956019e168fc3a85b85fa67f41d88b7868a56fc673efe7c3cb075dffeb1",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "65ad1f4ee3e7381af09c0f9cfbdc4016164352122c1ef7e5b4f02650daa81a6b",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "lp85",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 5348,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "15534236d94825198f2f3c494dac2c4c739d528b46e5683a5ab26fc87e6e94d4",
+      "goal_prompt_sha256_on": "9af161d99f45316c7bea1de86fdf07e11513f512347c2719e60c4d874c4ba7ca",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "c081d2c8803d01cd043d21057643aef53bcc0fc4dd6bc3a1b5ee8ce4276ff442",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "ls20",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3852,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "3f2082ed8db5f97e78e50c731c3e5bdef28ac1ee96c39bb9cd0f0ff425dc00a2",
+      "goal_prompt_sha256_on": "ff98794e9876c0082cbe59fab847feba4fe47580d14d776aba7b6fae6619181d",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "4ec5b2fffd2094965d0609b5c776cd12f062632225a22c2b435856d0b4c22dba",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "m0r0",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4759,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "b30f398044edb92f1edb10fd280cf450ef3b3e8692090f2d603898956c07c3eb",
+      "goal_prompt_sha256_on": "acfca9d74e70854ee62590f2d9dae9d9cea1309d418d605ed3e9076a2f335c4e",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "72138005226bce4c0156126c0ba4964dde15a1a711cd6e6b0c3571ae3c6403b7",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "re86",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4813,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "9f7c7208d1dbc3b13b431559c9b97417c3953bf383b318a03e109cfb599ec201",
+      "goal_prompt_sha256_on": "083e35fad0a18ca119442149d6226585e139011e99b0d05b91838b79883b1cba",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "67801d0a4339ae96cf33b0ca253665ecf8d0cd923c9cc79d5d3c1a29ea2cd3fe",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "s5i5",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3198,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "bc3c55de72725d517cfe4979d392b10046585f0bfba37f647f60b152e8114ac4",
+      "goal_prompt_sha256_on": "54bfa38b1e5bb0b2ffe93dcb977c17f62244cf28a7db8f68424af39d933af663",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "5079dfd5f1080bc0bb04cc0113a9bde93f5c9e8b8d0466a7050680bf93b1bbfd",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "sb26",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3370,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "323b1624806893d640856bacdc0bdfb3da065c13bbcb926e6c5135154bf40ddc",
+      "goal_prompt_sha256_on": "c4174b04d15e4d9f640b891e6cee8a63be5c6bccde3e406c6ab6169f14936f3e",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "ccac6519055aa99f96838cfed605f868e38ddf4bb7eb044f9c25232714e9744c",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "sc25",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3184,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "689b40e5f7e97a546b9ca474cba193c8f1b0da2b5c0a9b819c90cf6b5ec10aa3",
+      "goal_prompt_sha256_on": "95930664da2d1bb7169243158884ba3679e1b3e9a5468c95387e8756d6bd8512",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "078ee046d9310e8e0a797f9da9f3680020da08ff81ecbf1added29758e229fb5",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "sk48",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4024,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "726f2f896f9c725f1799828a9ce3ef2414a74ecc16214eb7b07366e02205111e",
+      "goal_prompt_sha256_on": "7d41e997eedf572679fd89f4d07e46c9b13439664ed76740a6c030a941ec769d",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "94bb0603de7eaa27b8f561ee37e2c7bd8984069ac0c93868c0d6df4d891c19e8",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "su15",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 2461,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "0305e27ac73bcb87d7392d928f0131ee1eae77351ac8ea5953a54ed77a83075b",
+      "goal_prompt_sha256_on": "ffc5dee0e36168f48babddbf258241e2e5cd658dcd5dacf76810bdd84e48a4e3",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "f2fdd301babb77cc94c3050535687ba1c5effb361a6e90aca501b0b500b54462",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "tn36",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3807,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "456e294bc9d181564a27e2b669291d555f4205fb4214e768de6b31192f1ddc47",
+      "goal_prompt_sha256_on": "251253dac592ad0bece0cd04d778f078a7f2934d686af10f163b01cdf58eeae3",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "ea6017d2d28fb5459a479525a0fa39da6d01f2f94ceff5a24816685a65337d08",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "tr87",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 4903,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "be2b455189e2306eb37fb9880ec8f8d53688c7aa46eb36772355a75d36a5cfc4",
+      "goal_prompt_sha256_on": "eac4229370694de7cdb677959f420e644318fc623f9ddb5664b31ec6a0594d82",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "fcda8f9e91a126790d2a48d0fbeb2258ad5d6fa38c8063a207147f7339c69310",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "tu93",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 3549,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "f4b381e397e563e330d579719e8f2392398d0895dcb3a2a1f02fdbc6a4b96370",
+      "goal_prompt_sha256_on": "cbb81387a0ba05c20100e3820a01f90077656bf8f988def01a0ebadc1c1c97f0",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "7844f6c5a8faacaafee67f47f90adb15b75a377b786f15e480f66e4fcefbc47e",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    },
+    {
+      "game": "wa30",
+      "goal_prompt_chars_off": 365,
+      "goal_prompt_chars_on": 2621,
+      "goal_prompt_differs": true,
+      "goal_prompt_grows": true,
+      "goal_prompt_sha256_off": "39f44d979bd68604dbec05ecfcc9057314c60b8d4b5dfd5d30c530de71b0cb2a",
+      "goal_prompt_sha256_on": "5d7e76a31de3fba5d1aa5e2fbe1b4be3e90f377f1cc08bc277f9375a941567fa",
+      "combined_prompt_identical": true,
+      "combined_prompt_sha256": "51af4f9ca5117157ba82b487e6806957929fdf45a29cb8a2e2800d54304b3703",
+      "dedup_inert_when_off": true,
+      "dedup_excises_when_on": true
+    }
+  ],
+  "n_cells": 17,
+  "n_jobs": 140,
+  "n_jobs_note": "20 games x (3 stage-1 arms + 4 stage-2 arms) at one replicate each; the shortfall against n_cells is the truncation, documented in out/stopping_rule.json",
+  "duration_s": 2011.9,
+  "duration_s_definition": "wall span from the first to the last cached cell, measured from file mtimes. Excludes server load; see this module's docstring for why the conservative definition was chosen.",
+  "run_log_mtime": 1785682747.1574612,
+  "liveness_witness": {
+    "note": "the driver's in-process liveness witness is unavailable when the driver is stopped early; the server witness above carries the substrate proof (pid, /proc/<pid>/exe, model path, n_ctx read back from /props)"
+  }
+}

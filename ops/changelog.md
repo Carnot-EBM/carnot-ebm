@@ -1,5 +1,51 @@
 # Carnot — Changelog
 
+## 2026-08-02 (outer-loop, ARC goal-evidence A/B: the two shipped goal knobs are aimed at the wrong 20% of cells)
+
+**Instruction:** measure whether giving the goal prompt the agent's own observed evidence stops
+the model declining to write a win condition. Arms A/B/C/AA, primary = mechanical AST predicate
+shape (DECLINED / TROPE / GROUNDED), explicitly NOT `plan_found` or the goal gate. Change no
+shipped default.
+
+### Honest headline: this is a NON-TEST on the primary, not a null
+
+The run was truncated by its own stopping rule at **17 of 140 cells**, so the primary contrast
+stands on ONE paired game against a design powered on twenty. Nothing is claimed about whether
+evidence in the goal prompt moves the declined rate. The stopping rule, all three amendments, and
+what had been observed when each was written are timestamped in
+`results/arc_goal_evidence_20260802/out/stopping_rule.json`.
+
+### What the run did establish, none of which depends on that n
+
+1. **The two knobs are structurally misdirected.** A pre-flight over the 116-engine frozen
+   shipped-path corpus, run before any GPU time, classified DECLINED at **0.495 on combined-path
+   cells and 0.174 on split-induce cells**, with split-induce only 19.8% of cells. Both knobs live
+   *only* in the split-induce fallback and `_goal_only_prompt` is never built when the combined
+   call succeeds — so 46 of the 50 declines are somewhere neither flag can reach, and the
+   arithmetic ceiling on any live-path effect is **3.4 percentage points**. Declared before
+   running, not discovered after.
+2. **The evidence-carrying goal prompt drives the model into its generation cap.** Control prompt
+   365 chars → 314 tokens, clean. Treatment prompt 3.2k–7.7k chars → **4,096 of 4,096 tokens**,
+   12,288 chars, tail degenerating into **819 empty ` ```python ` fences**; live cells fail with
+   `syntax error line 192: expected an indented block`. Median goal-call wall time 3s → 343s.
+3. **A fixed generator seed does NOT fix the completion on this server.** The harness's own
+   byte-identity check fired: on `bp35` the control wrote 3,722 bytes and both treatments wrote
+   4,150, at the same seed, with zero content failures and the goal-only call never invoked in any
+   arm. B and C match each other 2/2, so it is position (KV-cache state), not the knob. The
+   seeded pairing is therefore approximate, and arm order — fixed, not counterbalanced — is a
+   confound on shape as well as timing.
+
+### Also recorded, self-found
+
+`GROUNDED` is partially determined by the treatment (the outcome checks for literals the
+treatment prints into the prompt); the PRIMARY and TROPE are not. The pre-registered rule was
+**not** changed after seeing data — a labelled post-hoc sensitivity is reported beside it.
+
+**Defaults unchanged.** `CARNOT_ARC_GOAL_PROMPT_TRANSITIONS` and `CARNOT_ARC_GOAL_DEDUP` both
+still ship OFF. Artifact `results/outer_loop_arc_goal_evidence_ab_20260802.json`
+(adversarial_verify 0-flagged); note `docs/research-notes/arc-goal-evidence-ab-2026-08-02.md`;
+harness `results/arc_goal_evidence_20260802/`. No scored or online ARC game was played.
+
 ## 2026-08-02 (outer-loop, VERIFICATION PASS: the shipped re-ask gate was never the gate that was measured)
 
 **Instruction:** verify each overnight finding against the run's own data BEFORE applying it; do

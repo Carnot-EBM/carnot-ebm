@@ -1,0 +1,40 @@
+import numpy as np
+
+def is_level_complete(grid):
+    """
+    Checks if the grid is in a win state.
+    The win state is defined by the presence of a specific pattern of colors.
+    """
+    grid = np.array(grid)
+    # The target pattern is a 3x3 square of color 2 (red)
+    # We search for this 3x3 square anywhere in the grid.
+    # In the context of this specific task, the win state is typically 
+    # when the target object is correctly placed or formed.
+    
+    # Check for a 3x3 block of color 2
+    for r in range(grid.shape[0] - 2):
+        for c in range(grid.shape[0] - 2): # Assuming square grid
+            if np.all(grid[r:r+3, c:c+3] == 2):
+                return True
+    
+    # Alternatively, check if the grid contains only 0s and 2s, 
+    # and the 2s form a 3x3 square.
+    # Check if the 3x3 block of 2s exists.
+    # Check if the rest of the grid is 0.
+    
+    # Check for 3x3 block of 2s
+    found_3x3 = False
+    for r in range(grid.shape[0] - 2):
+        for c in range(grid.shape[1] - 2):
+            if np.all(grid[r:r+3, c:c+3] == 2):
+                found_3x3 = True
+                break
+        if found_3x3:
+            break
+            
+    # Check if any other non-zero cells are present
+    # Check if the total number of 2s is exactly 9
+    if found_3x3 and np.sum(grid != 0) == 9:
+        return True
+        
+    return False

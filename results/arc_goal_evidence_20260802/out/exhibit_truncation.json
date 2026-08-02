@@ -1,0 +1,38 @@
+{
+  "what_this_is": "an EXHIBIT, not a measurement. No cell, no rate, no test uses it.",
+  "game": "ar25",
+  "server_port": 41871,
+  "arms": {
+    "control_no_transitions": {
+      "prompt_chars": 365,
+      "tokens_predicted": 314,
+      "tokens_evaluated": 96,
+      "stopped_eos": null,
+      "stopped_limit": null,
+      "closed_code_fence": true,
+      "chars": 1064,
+      "saved_to": "results/arc_goal_evidence_20260802/out/exhibit_control_no_transitions.txt",
+      "first_code_block_parses": true,
+      "first_code_block_parse_error": null,
+      "first_code_block_defines_is_level_complete": false,
+      "hit_generation_cap": false,
+      "empty_code_fence_repeats": 1
+    },
+    "treatment_with_transitions": {
+      "prompt_chars": 4980,
+      "tokens_predicted": 4096,
+      "tokens_evaluated": 3981,
+      "stopped_eos": null,
+      "stopped_limit": null,
+      "closed_code_fence": true,
+      "chars": 12288,
+      "saved_to": "results/arc_goal_evidence_20260802/out/exhibit_treatment_with_transitions.txt",
+      "first_code_block_parses": true,
+      "first_code_block_parse_error": null,
+      "first_code_block_defines_is_level_complete": false,
+      "hit_generation_cap": true,
+      "empty_code_fence_repeats": 819
+    }
+  },
+  "closed_code_fence_is_NOT_a_validity_signal": "both arms report closed_code_fence true, and for the treatment that is an artefact of the degenerate tail: after it exhausts its budget the completion repeats empty ```python``` pairs, which satisfies a count-based fence check while carrying no code. tokens_predicted == the 4096 cap, and empty_code_fence_repeats, are the honest signals. Recorded rather than silently replaced, because a check that looks like it validates something and does not is exactly the class of defect this project's guards exist to name."
+}

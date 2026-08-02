@@ -1,0 +1,17 @@
+{
+  "honest_verdict": "complete_goal_evidence_ab_NON_TEST_truncated_primary_underpowered_knobs_shown_structurally_misdirected",
+  "headline": "NON-TEST, not a null. The run was truncated by its stopping rule at 17 of 140 cells, so the PRIMARY (declined rate) rests on 1 game(s) against a design powered on 20, and 2 of 3 treatment cells returned no parseable predicate at all. Nothing is claimed about whether evidence in the goal prompt changes the declined rate. What the run DID establish does not depend on that n: (1) the two shipped knobs are STRUCTURALLY MISDIRECTED -- they live only in the split-induce fallback, and 46 of the 50 declines in the 116-engine frozen corpus come from the combined path where the goal-only prompt is never built, capping any live-path effect at ~3.4 points; (2) on every stage-2 cell where the mechanism did not fire, the two TREATMENT arms produced byte-identical world models (2 of 2) while the CONTROL diverged on 1 of 2 at the same seed -- so a fixed CARNOT_ARC_GENERATOR_SEED does NOT fix the completion on this server, and the non-firing majority contributes NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed; (3) the evidence-carrying goal prompt drives the model into its generation cap -- 4096 of 4096 tokens against the control's 314, with 819 empty code fences in the degenerate tail.",
+  "findings": [
+    "STAGE 1 missingness moved but CANNOT BE RESOLVED at this n: no-predicate-returned goes 0.000 -> 0.667 (delta +0.667, 95% CI [0.0, 1.0]) over only 3 paired game(s), where the permutation reference set cannot reach alpha=0.05 whatever the shift -- observed p=0.50020. Read this as UNRESOLVED, never as absence. A shift of this size, if real, would mean every shape rate here is conditioned on surviving a post-treatment filter.",
+    "A/A floor on the same missingness measure: 0.000 -> 0.000 (delta +0.000, p=1.00000) -- two runs of the IDENTICAL control arm at different seed bases. This is what 'no effect' looks like on this instrument.",
+    "PRIMARY (stage 1, DECLINED rate among cells that returned a predicate): 0.000 -> 0.000 (delta +0.000, 95% CI [0.0, 0.0], p=1.00000, n_control=1, n_treat=1). NOT RESOLVABLE: only 1 paired game(s), below the point where alpha=0.05 is reachable at all. This is an absence of evidence, not evidence of absence.",
+    "A/A floor on the PRIMARY: delta +0.333, p=1.00000. A treatment delta smaller than this floor is not distinguishable from the sampler.",
+    "SECONDARY TROPE (stage 1): 0.000 -> 0.000 (delta +0.000, p=1.00000).",
+    "SECONDARY GROUNDED (stage 1): 1.000 -> 1.000 (delta +0.000, p=1.00000).",
+    "The model's OWN WORDS: declined predicates whose docstring says a win state was never provided -- control 0, treatment 0, A/A 0 (counts, not rates).",
+    "STAGE 2 mechanism firing (the column that separates an UNTESTED arm from a REFUTED one): A 0/2, B 0/2, C 0/2, AA 2/2. Both knobs live ONLY in the split-induce fallback, so on every cell where the combined induce call succeeded neither arm differs from control BY CONSTRUCTION.",
+    "STAGE 2 ITT PRIMARY, B vs A: 0.500 -> 1.000 (delta +0.500, p=1.00000). DECLARED UNDERPOWERED BEFORE THE RUN: the arithmetic ceiling on this contrast is ~3.4 points.",
+    "STAGE 2 ITT PRIMARY, C vs A (evidence + dedup): 0.500 -> 1.000 (delta +0.500, p=1.00000). Same ceiling applies.",
+    "STAGE 2 missingness, B vs A: 0.000 -> 0.000 (p=1.00000) -- whether the stage-1 truncation failure reaches the live path, where it can only act on the split-induce minority."
+  ]
+}

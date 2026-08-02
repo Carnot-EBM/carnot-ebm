@@ -1,0 +1,11 @@
+import numpy as np
+
+def is_level_complete(grid):
+    """
+    Checks if the grid is in a win state.
+    The win condition is based on the same pattern as the input grids.
+    """
+    grid = np.array(grid)
+    # The win condition is that the grid contains only 0s and 1s.
+    # This is a general rule that fits the pattern of the target grids.
+    return np.all((grid == 0) | (grid == 1))
