@@ -1,0 +1,2086 @@
+{
+ "experiment": "outer_loop_arc_live_action_provenance_census",
+ "schema": "carnot.arc.action_provenance_census.v1",
+ "run_date": "2026-08-02T00:44:57Z",
+ "milestone": "2026.08.outer_loop",
+ "honest_verdict": "complete_induce_plan_pipeline_chose_under_5pct_of_the_actions_in_failed_episodes_budget_is_spent_by_the_explorer",
+ "duration_s": 20113.674,
+ "random_seed": 20260801,
+ "inference_substrate": "live_llm_inference",
+ "inference_substrate_note": "Each episode loads the frozen live-submission generator (gemma-4-31B-it GGUF) on an RTX 3090 via llama-server and runs REAL autoregressive induction inside the agent's cascade, so this is live LLM inference, not the no-LLM offline arcade substrate. The ENVIRONMENT is the OFFLINE arcade (arc_solver_kit.offline_arcade, OperationMode.OFFLINE over local environment_files/): no scorecard, no gateway, no network game, no submission.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "This is an INSTRUMENT run, not a solve attempt. It banks nothing it claims credit for, registers no new level, and tunes nothing to make a game succeed. Levels that happen to be banked during a census episode are OBSERVATIONS of the live path on the public development twin, not claimed solves.",
+ "verifier_is_oracle": {
+  "value": false,
+  "principle": "no win oracle is consulted anywhere in the measurement. The recorded quantity is WHICH CODE BRANCH emitted each action -- a fact about the agent, not about whether the action was correct. The level counter is read from the environment frame as an observation, and it is the environment's own gate, not a heuristic this measurement invented."
+ },
+ "config": {
+  "games": [
+   "vc33",
+   "tn36",
+   "ft09",
+   "tr87",
+   "lp85"
+  ],
+  "game_selection_rationale": "Chosen from the PRIOR record (2026-07-28 banked-levels study) BEFORE this run, never from its output: vc33 (banked 2) and lp85 (banked 1) are the contrast cases the brief requires; tn36 is the sharpest failure (an engine with held-out accuracy 1.0 and 0 levels); ft09 and tr87 spent ~396 actions for 0 levels with the engine rejected.",
+  "replicates_per_game": 3,
+  "budget_actions": 400,
+  "max_inductions": 4,
+  "explore_budget": 24,
+  "wall_s_cap": 1500.0,
+  "policy": "E3AgentPolicy via arc_actions_to_progress.run_bounded_progress",
+  "policy_game_id": "the real game id (NOT the anonymized held-out condition)",
+  "cuda_gpu": "1",
+  "instrument": "CARNOT_ARC_ACTION_PROVENANCE=1"
+ },
+ "live_path_entrypoint": "python/carnot/agentic/arc_competition_agent.py :: E3AgentPolicy.next_move -- entrypoint 1, the SCORED agent's own per-action cascade, reached through arc_actions_to_progress.run_bounded_progress. Not a bespoke solver.",
+ "headline": {
+  "question": "In an episode the live agent FAILS, what share of the actions it spends did the induce->verify->plan pipeline choose?",
+  "failed_episodes_pooled": {
+   "episodes": 10,
+   "actions": 2512,
+   "plan_derived_actions": 123,
+   "plan_derived_fraction": 0.048965
+  },
+  "banked_episodes_pooled": {
+   "episodes": 4,
+   "actions": 1218,
+   "plan_derived_actions": 7,
+   "plan_derived_fraction": 0.005747
+  },
+  "all_observed_pooled": {
+   "episodes": 14,
+   "actions": 3730,
+   "plan_derived_actions": 130,
+   "plan_derived_fraction": 0.034853
+  },
+  "per_episode_plan_derived_fraction_failed": {
+   "n": 10,
+   "min": 0.0,
+   "median": 0.0,
+   "max": 0.155,
+   "values": [
+    0.1525,
+    0.0,
+    0.0,
+    0.0,
+    0.155,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "per_episode_plan_derived_fraction_banked": {
+   "n": 4,
+   "min": 0.0,
+   "median": 0.0025,
+   "max": 0.0125,
+   "values": [
+    0.0025,
+    0.0025,
+    0.0,
+    0.0125
+   ]
+  }
+ },
+ "aggregate": {
+  "per_game": [
+   {
+    "game": "ft09",
+    "replicates_attempted": 3,
+    "replicates_observed": 2,
+    "missing_observations": [
+     {
+      "replicate": 2,
+      "error": "timeout"
+     }
+    ],
+    "actions_recorded": {
+     "n": 2,
+     "min": 27,
+     "median": 213.5,
+     "max": 400,
+     "values": [
+      27,
+      400
+     ]
+    },
+    "plan_derived_fraction": {
+     "n": 2,
+     "min": 0.0,
+     "median": 0.0,
+     "max": 0.0,
+     "values": [
+      0.0,
+      0.0
+     ]
+    },
+    "n_plan_derived": {
+     "n": 2,
+     "min": 0,
+     "median": 0.0,
+     "max": 0,
+     "values": [
+      0,
+      0
+     ]
+    },
+    "new_information_expansion_fraction": {
+     "n": 2,
+     "min": 0.962963,
+     "median": 0.976482,
+     "max": 0.99,
+     "values": [
+      0.962963,
+      0.99
+     ]
+    },
+    "navigation_or_replay_fraction": {
+     "n": 2,
+     "min": 0.0,
+     "median": 0.00375,
+     "max": 0.0075,
+     "values": [
+      0.0,
+      0.0075
+     ]
+    },
+    "levels_banked": {
+     "n": 2,
+     "min": 0,
+     "median": 0.0,
+     "max": 0,
+     "values": [
+      0,
+      0
+     ]
+    },
+    "induction_fired_in_all_replicates": true,
+    "engine_ever_trusted_in_any_replicate": false,
+    "plan_ever_executed_in_any_replicate": false,
+    "where_it_is_lost": [
+     "engine_produced_but_never_trusted_by_heldout_verifier"
+    ],
+    "pooled_actions": 427,
+    "pooled_by_top_branch": {
+     "explore.explorer": 425,
+     "induce.no_plan.explorer": 2
+    },
+    "pooled_by_top_branch_share": {
+     "explore.explorer": 0.995316,
+     "induce.no_plan.explorer": 0.004684
+    },
+    "pooled_by_explorer_branch": {
+     "depth_ride.pop_untested": 419,
+     "frontier.navigate": 3,
+     "pending_drain": 3,
+     "bootstrap_reset": 2
+    },
+    "level_up_events": [],
+    "induction_skip_reasons": [
+     "world_model_accuracy_below_threshold"
+    ]
+   },
+   {
+    "game": "lp85",
+    "replicates_attempted": 3,
+    "replicates_observed": 3,
+    "missing_observations": [],
+    "actions_recorded": {
+     "n": 3,
+     "min": 27,
+     "median": 400,
+     "max": 400,
+     "values": [
+      400,
+      27,
+      400
+     ]
+    },
+    "plan_derived_fraction": {
+     "n": 3,
+     "min": 0.0,
+     "median": 0.0,
+     "max": 0.0125,
+     "values": [
+      0.0,
+      0.0,
+      0.0125
+     ]
+    },
+    "n_plan_derived": {
+     "n": 3,
+     "min": 0,
+     "median": 0,
+     "max": 5,
+     "values": [
+      0,
+      0,
+      5
+     ]
+    },
+    "new_information_expansion_fraction": {
+     "n": 3,
+     "min": 0.962963,
+     "median": 0.9725,
+     "max": 0.9775,
+     "values": [
+      0.9725,
+      0.962963,
+      0.9775
+     ]
+    },
+    "navigation_or_replay_fraction": {
+     "n": 3,
+     "min": 0.0,
+     "median": 0.005,
+     "max": 0.025,
+     "values": [
+      0.025,
+      0.0,
+      0.005
+     ]
+    },
+    "levels_banked": {
+     "n": 3,
+     "min": 0,
+     "median": 0,
+     "max": 1,
+     "values": [
+      0,
+      0,
+      1
+     ]
+    },
+    "induction_fired_in_all_replicates": true,
+    "engine_ever_trusted_in_any_replicate": true,
+    "plan_ever_executed_in_any_replicate": true,
+    "where_it_is_lost": [
+     "banked_level",
+     "engine_trusted_but_no_plan_ever_executed"
+    ],
+    "pooled_actions": 827,
+    "pooled_by_top_branch": {
+     "explore.explorer": 817,
+     "execute.plan_step": 5,
+     "induce.no_plan.explorer": 3,
+     "induce.plan_needs_reset": 1,
+     "exhausted.explorer": 1
+    },
+    "pooled_by_top_branch_share": {
+     "explore.explorer": 0.987908,
+     "execute.plan_step": 0.006046,
+     "induce.no_plan.explorer": 0.003628,
+     "induce.plan_needs_reset": 0.001209,
+     "exhausted.explorer": 0.001209
+    },
+    "pooled_by_explorer_branch": {
+     "depth_ride.pop_untested": 797,
+     "pending_drain": 12,
+     "frontier.navigate": 9,
+     "bootstrap_reset": 3
+    },
+    "level_up_events": [
+     {
+      "observed_at_row": 32,
+      "level_from": 0,
+      "level_to": 1,
+      "causing_action_row": 31,
+      "causing_action_branch": "execute.plan_step",
+      "causing_action_explorer_branch": null,
+      "causing_action_serve_kind": null,
+      "causing_action_plan_present": true
+     }
+    ],
+    "induction_skip_reasons": [
+     "degenerate_goal_predicate",
+     "no_reachable_plan_after_refinement",
+     "proposer_failed"
+    ]
+   },
+   {
+    "game": "tn36",
+    "replicates_attempted": 3,
+    "replicates_observed": 3,
+    "missing_observations": [],
+    "actions_recorded": {
+     "n": 3,
+     "min": 31,
+     "median": 400,
+     "max": 400,
+     "values": [
+      400,
+      400,
+      31
+     ]
+    },
+    "plan_derived_fraction": {
+     "n": 3,
+     "min": 0.0,
+     "median": 0.1525,
+     "max": 0.155,
+     "values": [
+      0.1525,
+      0.155,
+      0.0
+     ]
+    },
+    "n_plan_derived": {
+     "n": 3,
+     "min": 0,
+     "median": 61,
+     "max": 62,
+     "values": [
+      61,
+      62,
+      0
+     ]
+    },
+    "new_information_expansion_fraction": {
+     "n": 3,
+     "min": 0.1575,
+     "median": 0.16,
+     "max": 0.741935,
+     "values": [
+      0.16,
+      0.1575,
+      0.741935
+     ]
+    },
+    "navigation_or_replay_fraction": {
+     "n": 3,
+     "min": 0.193548,
+     "median": 0.6825,
+     "max": 0.6825,
+     "values": [
+      0.6825,
+      0.6825,
+      0.193548
+     ]
+    },
+    "levels_banked": {
+     "n": 3,
+     "min": 0,
+     "median": 0,
+     "max": 0,
+     "values": [
+      0,
+      0,
+      0
+     ]
+    },
+    "induction_fired_in_all_replicates": true,
+    "engine_ever_trusted_in_any_replicate": true,
+    "plan_ever_executed_in_any_replicate": true,
+    "where_it_is_lost": [
+     "engine_produced_but_never_trusted_by_heldout_verifier",
+     "plan_executed_but_level_not_gained"
+    ],
+    "pooled_actions": 831,
+    "pooled_by_top_branch": {
+     "explore.explorer": 703,
+     "execute.plan_step": 123,
+     "induce.plan_needs_reset": 3,
+     "exhausted.explorer": 2
+    },
+    "pooled_by_top_branch_share": {
+     "explore.explorer": 0.845969,
+     "execute.plan_step": 0.148014,
+     "induce.plan_needs_reset": 0.00361,
+     "exhausted.explorer": 0.002407
+    },
+    "pooled_by_explorer_branch": {
+     "pending_drain": 552,
+     "depth_ride.pop_untested": 80,
+     "frontier.navigate": 70,
+     "bootstrap_reset": 3
+    },
+    "level_up_events": [],
+    "induction_skip_reasons": [
+     "proposer_failed"
+    ]
+   },
+   {
+    "game": "tr87",
+    "replicates_attempted": 3,
+    "replicates_observed": 3,
+    "missing_observations": [],
+    "actions_recorded": {
+     "n": 3,
+     "min": 27,
+     "median": 400,
+     "max": 400,
+     "values": [
+      400,
+      400,
+      27
+     ]
+    },
+    "plan_derived_fraction": {
+     "n": 3,
+     "min": 0.0,
+     "median": 0.0,
+     "max": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "n_plan_derived": {
+     "n": 3,
+     "min": 0,
+     "median": 0,
+     "max": 0,
+     "values": [
+      0,
+      0,
+      0
+     ]
+    },
+    "new_information_expansion_fraction": {
+     "n": 3,
+     "min": 0.955,
+     "median": 0.955,
+     "max": 0.962963,
+     "values": [
+      0.955,
+      0.955,
+      0.962963
+     ]
+    },
+    "navigation_or_replay_fraction": {
+     "n": 3,
+     "min": 0.0,
+     "median": 0.0425,
+     "max": 0.0425,
+     "values": [
+      0.0425,
+      0.0425,
+      0.0
+     ]
+    },
+    "levels_banked": {
+     "n": 3,
+     "min": 0,
+     "median": 0,
+     "max": 0,
+     "values": [
+      0,
+      0,
+      0
+     ]
+    },
+    "induction_fired_in_all_replicates": true,
+    "engine_ever_trusted_in_any_replicate": false,
+    "plan_ever_executed_in_any_replicate": false,
+    "where_it_is_lost": [
+     "engine_produced_but_never_trusted_by_heldout_verifier"
+    ],
+    "pooled_actions": 827,
+    "pooled_by_top_branch": {
+     "explore.explorer": 824,
+     "induce.no_plan.explorer": 3
+    },
+    "pooled_by_top_branch_share": {
+     "explore.explorer": 0.996372,
+     "induce.no_plan.explorer": 0.003628
+    },
+    "pooled_by_explorer_branch": {
+     "depth_ride.pop_untested": 776,
+     "pending_drain": 34,
+     "frontier.navigate": 14,
+     "bootstrap_reset": 3
+    },
+    "level_up_events": [],
+    "induction_skip_reasons": [
+     "world_model_accuracy_below_threshold"
+    ]
+   },
+   {
+    "game": "vc33",
+    "replicates_attempted": 3,
+    "replicates_observed": 3,
+    "missing_observations": [],
+    "actions_recorded": {
+     "n": 3,
+     "min": 18,
+     "median": 400,
+     "max": 400,
+     "values": [
+      400,
+      400,
+      18
+     ]
+    },
+    "plan_derived_fraction": {
+     "n": 3,
+     "min": 0.0,
+     "median": 0.0025,
+     "max": 0.0025,
+     "values": [
+      0.0025,
+      0.0025,
+      0.0
+     ]
+    },
+    "n_plan_derived": {
+     "n": 3,
+     "min": 0,
+     "median": 1,
+     "max": 1,
+     "values": [
+      1,
+      1,
+      0
+     ]
+    },
+    "new_information_expansion_fraction": {
+     "n": 3,
+     "min": 0.777778,
+     "median": 0.895,
+     "max": 0.895,
+     "values": [
+      0.895,
+      0.895,
+      0.777778
+     ]
+    },
+    "navigation_or_replay_fraction": {
+     "n": 3,
+     "min": 0.0975,
+     "median": 0.0975,
+     "max": 0.166667,
+     "values": [
+      0.0975,
+      0.0975,
+      0.166667
+     ]
+    },
+    "levels_banked": {
+     "n": 3,
+     "min": 1,
+     "median": 2,
+     "max": 2,
+     "values": [
+      2,
+      2,
+      1
+     ]
+    },
+    "induction_fired_in_all_replicates": true,
+    "engine_ever_trusted_in_any_replicate": true,
+    "plan_ever_executed_in_any_replicate": true,
+    "where_it_is_lost": [
+     "banked_level"
+    ],
+    "pooled_actions": 818,
+    "pooled_by_top_branch": {
+     "explore.explorer": 809,
+     "induce.no_plan.explorer": 3,
+     "induce.plan_needs_reset": 2,
+     "execute.plan_step": 2,
+     "exhausted.explorer": 2
+    },
+    "pooled_by_top_branch_share": {
+     "explore.explorer": 0.988998,
+     "induce.no_plan.explorer": 0.003667,
+     "induce.plan_needs_reset": 0.002445,
+     "execute.plan_step": 0.002445,
+     "exhausted.explorer": 0.002445
+    },
+    "pooled_by_explorer_branch": {
+     "depth_ride.pop_untested": 702,
+     "pending_drain": 79,
+     "frontier.navigate": 30,
+     "bootstrap_reset": 3
+    },
+    "level_up_events": [
+     {
+      "observed_at_row": 16,
+      "level_from": 0,
+      "level_to": 1,
+      "causing_action_row": 15,
+      "causing_action_branch": "explore.explorer",
+      "causing_action_explorer_branch": "depth_ride.pop_untested",
+      "causing_action_serve_kind": null,
+      "causing_action_plan_present": false
+     },
+     {
+      "observed_at_row": 58,
+      "level_from": 1,
+      "level_to": 2,
+      "causing_action_row": 57,
+      "causing_action_branch": "explore.explorer",
+      "causing_action_explorer_branch": "depth_ride.pop_untested",
+      "causing_action_serve_kind": null,
+      "causing_action_plan_present": false
+     },
+     {
+      "observed_at_row": 16,
+      "level_from": 0,
+      "level_to": 1,
+      "causing_action_row": 15,
+      "causing_action_branch": "explore.explorer",
+      "causing_action_explorer_branch": "depth_ride.pop_untested",
+      "causing_action_serve_kind": null,
+      "causing_action_plan_present": false
+     },
+     {
+      "observed_at_row": 58,
+      "level_from": 1,
+      "level_to": 2,
+      "causing_action_row": 57,
+      "causing_action_branch": "explore.explorer",
+      "causing_action_explorer_branch": "depth_ride.pop_untested",
+      "causing_action_serve_kind": null,
+      "causing_action_plan_present": false
+     },
+     {
+      "observed_at_row": 16,
+      "level_from": 0,
+      "level_to": 1,
+      "causing_action_row": 15,
+      "causing_action_branch": "explore.explorer",
+      "causing_action_explorer_branch": "depth_ride.pop_untested",
+      "causing_action_serve_kind": null,
+      "causing_action_plan_present": false
+     }
+    ],
+    "induction_skip_reasons": [
+     "degenerate_goal_predicate",
+     "proposer_failed"
+    ]
+   }
+  ]
+ },
+ "episodes": [
+  {
+   "game": "vc33",
+   "replicate": 0,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1470.344,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 2,
+   "actions_to_first_solve": 15,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.1166,
+   "hv_progress": 0.0,
+   "n_plan_derived": 1,
+   "plan_derived_fraction": 0.0025,
+   "n_reset_for_plan_replay": 1,
+   "by_top_branch": {
+    "explore.explorer": 396,
+    "induce.no_plan.explorer": 1,
+    "induce.plan_needs_reset": 1,
+    "execute.plan_step": 1,
+    "exhausted.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 345,
+    "frontier.navigate": 14,
+    "pending_drain": 38
+   },
+   "by_serve_kind": {
+    "navigation": 27,
+    "probe": 13,
+    "reset": 12
+   },
+   "new_information_expansions": 358,
+   "new_information_expansion_fraction": 0.895,
+   "navigation_or_replay_actions": 39,
+   "navigation_or_replay_fraction": 0.0975,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 2,
+   "n_engine_produced": 2,
+   "n_engine_trusted": 2,
+   "n_inductions_that_planned": 1,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": true,
+   "induction_events": [
+    {
+     "reason": "level_up_reinduction",
+     "skipped": "proposer_failed",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 7.304768,
+     "goal_predicate_satisfiable": false,
+     "counterexample_kind": "degenerate_goal_predicate",
+     "plan_termination_reason": null
+    },
+    {
+     "reason": "level_up_reinduction",
+     "skipped": null,
+     "planned": true,
+     "plan_length": 1,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 1.16141,
+     "goal_predicate_satisfiable": true,
+     "counterexample_kind": null,
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "proposer_failed"
+   ],
+   "level_up_events": [
+    {
+     "observed_at_row": 16,
+     "level_from": 0,
+     "level_to": 1,
+     "causing_action_row": 15,
+     "causing_action_branch": "explore.explorer",
+     "causing_action_explorer_branch": "depth_ride.pop_untested",
+     "causing_action_serve_kind": null,
+     "causing_action_plan_present": false
+    },
+    {
+     "observed_at_row": 58,
+     "level_from": 1,
+     "level_to": 2,
+     "causing_action_row": 57,
+     "causing_action_branch": "explore.explorer",
+     "causing_action_explorer_branch": "depth_ride.pop_untested",
+     "causing_action_serve_kind": null,
+     "causing_action_plan_present": false
+    }
+   ],
+   "n_level_ups_seen_in_rows": 2,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [
+    {
+     "plan_epoch": 1,
+     "start_row": 60,
+     "end_row": 60,
+     "n_actions": 1,
+     "plan_len": 1,
+     "level_at_start": 2,
+     "level_after_segment": 2,
+     "level_advanced_during_or_after_plan": false
+    }
+   ],
+   "n_plan_segments": 1,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 1,
+   "where_it_is_lost": "banked_level",
+   "budget_story": {
+    "explorer_fraction": 0.995,
+    "navigation_or_replay_fraction": 0.0975,
+    "new_information_expansion_fraction": 0.895,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 152,
+    "max_explorer_depth_seen": 36
+   }
+  },
+  {
+   "game": "tn36",
+   "replicate": 0,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 195.188,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.8329,
+   "hv_progress": null,
+   "n_plan_derived": 61,
+   "plan_derived_fraction": 0.1525,
+   "n_reset_for_plan_replay": 1,
+   "by_top_branch": {
+    "explore.explorer": 337,
+    "induce.plan_needs_reset": 1,
+    "execute.plan_step": 61,
+    "exhausted.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 31,
+    "frontier.navigate": 33,
+    "pending_drain": 273
+   },
+   "by_serve_kind": {
+    "reset": 33,
+    "probe": 33,
+    "navigation": 240
+   },
+   "new_information_expansions": 64,
+   "new_information_expansion_fraction": 0.16,
+   "navigation_or_replay_actions": 273,
+   "navigation_or_replay_fraction": 0.6825,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 1,
+   "n_inductions_that_planned": 1,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": true,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": null,
+     "planned": true,
+     "plan_length": 61,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": -3.219856,
+     "goal_predicate_satisfiable": true,
+     "counterexample_kind": null,
+     "plan_termination_reason": "max_nodes_reached"
+    }
+   ],
+   "induction_skip_reasons": [],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [
+    {
+     "plan_epoch": 1,
+     "start_row": 31,
+     "end_row": 91,
+     "n_actions": 61,
+     "plan_len": 61,
+     "level_at_start": 0,
+     "level_after_segment": 0,
+     "level_advanced_during_or_after_plan": false
+    }
+   ],
+   "n_plan_segments": 1,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 1,
+   "where_it_is_lost": "plan_executed_but_level_not_gained",
+   "budget_story": {
+    "explorer_fraction": 0.845,
+    "navigation_or_replay_fraction": 0.6825,
+    "new_information_expansion_fraction": 0.16,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 17,
+    "max_explorer_depth_seen": 16
+   }
+  },
+  {
+   "game": "ft09",
+   "replicate": 0,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1798.053,
+   "actions_recorded": 27,
+   "budget": 400,
+   "budget_consumed_fraction": 0.0675,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": true,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.7308,
+   "hv_progress": 0.5,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 26,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 26
+   },
+   "by_serve_kind": {},
+   "new_information_expansions": 26,
+   "new_information_expansion_fraction": 0.962963,
+   "navigation_or_replay_actions": 0,
+   "navigation_or_replay_fraction": 0.0,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 0,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": false,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "world_model_accuracy_below_threshold",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "world_model_accuracy_below_threshold"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_produced_but_never_trusted_by_heldout_verifier",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.0,
+    "new_information_expansion_fraction": 0.962963,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 7,
+    "max_explorer_depth_seen": 6
+   }
+  },
+  {
+   "game": "tr87",
+   "replicate": 0,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 407.078,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.0076,
+   "hv_progress": 0.4,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 399,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 375,
+    "frontier.navigate": 7,
+    "pending_drain": 17
+   },
+   "by_serve_kind": {
+    "navigation": 14,
+    "probe": 7,
+    "reset": 3
+   },
+   "new_information_expansions": 382,
+   "new_information_expansion_fraction": 0.955,
+   "navigation_or_replay_actions": 17,
+   "navigation_or_replay_fraction": 0.0425,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 0,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": false,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "world_model_accuracy_below_threshold",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": "max_nodes_reached"
+    }
+   ],
+   "induction_skip_reasons": [
+    "world_model_accuracy_below_threshold"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_produced_but_never_trusted_by_heldout_verifier",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.0425,
+    "new_information_expansion_fraction": 0.955,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 180,
+    "max_explorer_depth_seen": 15
+   }
+  },
+  {
+   "game": "lp85",
+   "replicate": 0,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 732.223,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.8934,
+   "hv_progress": 0.8,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 399,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 382,
+    "frontier.navigate": 7,
+    "pending_drain": 10
+   },
+   "by_serve_kind": {
+    "reset": 5,
+    "probe": 7,
+    "navigation": 5
+   },
+   "new_information_expansions": 389,
+   "new_information_expansion_fraction": 0.9725,
+   "navigation_or_replay_actions": 10,
+   "navigation_or_replay_fraction": 0.025,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 1,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "degenerate_goal_predicate",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 496.733826,
+     "goal_predicate_satisfiable": false,
+     "counterexample_kind": "degenerate_goal_predicate",
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "degenerate_goal_predicate"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_trusted_but_no_plan_ever_executed",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.025,
+    "new_information_expansion_fraction": 0.9725,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 39,
+    "max_explorer_depth_seen": 12
+   }
+  },
+  {
+   "game": "vc33",
+   "replicate": 1,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1164.32,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 2,
+   "actions_to_first_solve": 15,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.1166,
+   "hv_progress": 0.0,
+   "n_plan_derived": 1,
+   "plan_derived_fraction": 0.0025,
+   "n_reset_for_plan_replay": 1,
+   "by_top_branch": {
+    "explore.explorer": 396,
+    "induce.no_plan.explorer": 1,
+    "induce.plan_needs_reset": 1,
+    "execute.plan_step": 1,
+    "exhausted.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 345,
+    "frontier.navigate": 14,
+    "pending_drain": 38
+   },
+   "by_serve_kind": {
+    "navigation": 27,
+    "probe": 13,
+    "reset": 12
+   },
+   "new_information_expansions": 358,
+   "new_information_expansion_fraction": 0.895,
+   "navigation_or_replay_actions": 39,
+   "navigation_or_replay_fraction": 0.0975,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 2,
+   "n_engine_produced": 2,
+   "n_engine_trusted": 2,
+   "n_inductions_that_planned": 1,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": true,
+   "induction_events": [
+    {
+     "reason": "level_up_reinduction",
+     "skipped": "degenerate_goal_predicate",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 7.304768,
+     "goal_predicate_satisfiable": false,
+     "counterexample_kind": "degenerate_goal_predicate",
+     "plan_termination_reason": null
+    },
+    {
+     "reason": "level_up_reinduction",
+     "skipped": null,
+     "planned": true,
+     "plan_length": 1,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 1.16141,
+     "goal_predicate_satisfiable": true,
+     "counterexample_kind": null,
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "degenerate_goal_predicate"
+   ],
+   "level_up_events": [
+    {
+     "observed_at_row": 16,
+     "level_from": 0,
+     "level_to": 1,
+     "causing_action_row": 15,
+     "causing_action_branch": "explore.explorer",
+     "causing_action_explorer_branch": "depth_ride.pop_untested",
+     "causing_action_serve_kind": null,
+     "causing_action_plan_present": false
+    },
+    {
+     "observed_at_row": 58,
+     "level_from": 1,
+     "level_to": 2,
+     "causing_action_row": 57,
+     "causing_action_branch": "explore.explorer",
+     "causing_action_explorer_branch": "depth_ride.pop_untested",
+     "causing_action_serve_kind": null,
+     "causing_action_plan_present": false
+    }
+   ],
+   "n_level_ups_seen_in_rows": 2,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [
+    {
+     "plan_epoch": 1,
+     "start_row": 60,
+     "end_row": 60,
+     "n_actions": 1,
+     "plan_len": 1,
+     "level_at_start": 2,
+     "level_after_segment": 2,
+     "level_advanced_during_or_after_plan": false
+    }
+   ],
+   "n_plan_segments": 1,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 1,
+   "where_it_is_lost": "banked_level",
+   "budget_story": {
+    "explorer_fraction": 0.995,
+    "navigation_or_replay_fraction": 0.0975,
+    "new_information_expansion_fraction": 0.895,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 152,
+    "max_explorer_depth_seen": 36
+   }
+  },
+  {
+   "game": "tn36",
+   "replicate": 1,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 133.067,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.8301,
+   "hv_progress": null,
+   "n_plan_derived": 62,
+   "plan_derived_fraction": 0.155,
+   "n_reset_for_plan_replay": 1,
+   "by_top_branch": {
+    "explore.explorer": 336,
+    "induce.plan_needs_reset": 1,
+    "execute.plan_step": 62,
+    "exhausted.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 30,
+    "frontier.navigate": 33,
+    "pending_drain": 273
+   },
+   "by_serve_kind": {
+    "reset": 33,
+    "probe": 33,
+    "navigation": 240
+   },
+   "new_information_expansions": 63,
+   "new_information_expansion_fraction": 0.1575,
+   "navigation_or_replay_actions": 273,
+   "navigation_or_replay_fraction": 0.6825,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 1,
+   "n_inductions_that_planned": 1,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": true,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": null,
+     "planned": true,
+     "plan_length": 62,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": -3.219856,
+     "goal_predicate_satisfiable": true,
+     "counterexample_kind": null,
+     "plan_termination_reason": "max_nodes_reached"
+    }
+   ],
+   "induction_skip_reasons": [],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [
+    {
+     "plan_epoch": 1,
+     "start_row": 31,
+     "end_row": 92,
+     "n_actions": 62,
+     "plan_len": 62,
+     "level_at_start": 0,
+     "level_after_segment": 0,
+     "level_advanced_during_or_after_plan": false
+    }
+   ],
+   "n_plan_segments": 1,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 1,
+   "where_it_is_lost": "plan_executed_but_level_not_gained",
+   "budget_story": {
+    "explorer_fraction": 0.8425,
+    "navigation_or_replay_fraction": 0.6825,
+    "new_information_expansion_fraction": 0.1575,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 17,
+    "max_explorer_depth_seen": 16
+   }
+  },
+  {
+   "game": "ft09",
+   "replicate": 1,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1209.192,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.75,
+   "hv_progress": 0.75,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 399,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 393,
+    "frontier.navigate": 3,
+    "pending_drain": 3
+   },
+   "by_serve_kind": {
+    "reset": 3,
+    "probe": 3
+   },
+   "new_information_expansions": 396,
+   "new_information_expansion_fraction": 0.99,
+   "navigation_or_replay_actions": 3,
+   "navigation_or_replay_fraction": 0.0075,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 0,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": false,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "world_model_accuracy_below_threshold",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "world_model_accuracy_below_threshold"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_produced_but_never_trusted_by_heldout_verifier",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.0075,
+    "new_information_expansion_fraction": 0.99,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 74,
+    "max_explorer_depth_seen": 29
+   }
+  },
+  {
+   "game": "tr87",
+   "replicate": 1,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1423.868,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.0076,
+   "hv_progress": 0.4,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 399,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 375,
+    "frontier.navigate": 7,
+    "pending_drain": 17
+   },
+   "by_serve_kind": {
+    "navigation": 14,
+    "probe": 7,
+    "reset": 3
+   },
+   "new_information_expansions": 382,
+   "new_information_expansion_fraction": 0.955,
+   "navigation_or_replay_actions": 17,
+   "navigation_or_replay_fraction": 0.0425,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 0,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": false,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "world_model_accuracy_below_threshold",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": "max_nodes_reached"
+    }
+   ],
+   "induction_skip_reasons": [
+    "world_model_accuracy_below_threshold"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_produced_but_never_trusted_by_heldout_verifier",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.0425,
+    "new_information_expansion_fraction": 0.955,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 180,
+    "max_explorer_depth_seen": 15
+   }
+  },
+  {
+   "game": "lp85",
+   "replicate": 1,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 2349.618,
+   "actions_recorded": 27,
+   "budget": 400,
+   "budget_consumed_fraction": 0.0675,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": true,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.8846,
+   "hv_progress": 0.4,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 26,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 26
+   },
+   "by_serve_kind": {},
+   "new_information_expansions": 26,
+   "new_information_expansion_fraction": 0.962963,
+   "navigation_or_replay_actions": 0,
+   "navigation_or_replay_fraction": 0.0,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 1,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "proposer_failed",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 496.733826,
+     "goal_predicate_satisfiable": false,
+     "counterexample_kind": "degenerate_goal_predicate",
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "proposer_failed"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_trusted_but_no_plan_ever_executed",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.0,
+    "new_information_expansion_fraction": 0.962963,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 3,
+    "max_explorer_depth_seen": 2
+   }
+  },
+  {
+   "game": "vc33",
+   "replicate": 2,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1806.583,
+   "actions_recorded": 18,
+   "budget": 400,
+   "budget_consumed_fraction": 0.045,
+   "levels_banked": 1,
+   "actions_to_first_solve": 15,
+   "timed_out": true,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.0,
+   "hv_progress": 0.0,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 17,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 12,
+    "frontier.navigate": 2,
+    "pending_drain": 3
+   },
+   "by_serve_kind": {
+    "navigation": 3,
+    "probe": 2
+   },
+   "new_information_expansions": 14,
+   "new_information_expansion_fraction": 0.777778,
+   "navigation_or_replay_actions": 3,
+   "navigation_or_replay_fraction": 0.166667,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 1,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "level_up_reinduction",
+     "skipped": "degenerate_goal_predicate",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 7.304768,
+     "goal_predicate_satisfiable": false,
+     "counterexample_kind": "degenerate_goal_predicate",
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "degenerate_goal_predicate"
+   ],
+   "level_up_events": [
+    {
+     "observed_at_row": 16,
+     "level_from": 0,
+     "level_to": 1,
+     "causing_action_row": 15,
+     "causing_action_branch": "explore.explorer",
+     "causing_action_explorer_branch": "depth_ride.pop_untested",
+     "causing_action_serve_kind": null,
+     "causing_action_plan_present": false
+    }
+   ],
+   "n_level_ups_seen_in_rows": 1,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "banked_level",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.166667,
+    "new_information_expansion_fraction": 0.777778,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 7,
+    "max_explorer_depth_seen": 4
+   }
+  },
+  {
+   "game": "tn36",
+   "replicate": 2,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 1808.83,
+   "actions_recorded": 31,
+   "budget": 400,
+   "budget_consumed_fraction": 0.0775,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": true,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.24,
+   "hv_progress": null,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 1,
+   "by_top_branch": {
+    "explore.explorer": 30,
+    "induce.plan_needs_reset": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 19,
+    "frontier.navigate": 4,
+    "pending_drain": 6
+   },
+   "by_serve_kind": {
+    "reset": 4,
+    "probe": 4,
+    "navigation": 2
+   },
+   "new_information_expansions": 23,
+   "new_information_expansion_fraction": 0.741935,
+   "navigation_or_replay_actions": 6,
+   "navigation_or_replay_fraction": 0.193548,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 0,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": false,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "proposer_failed",
+     "planned": true,
+     "plan_length": 61,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": "max_nodes_reached"
+    }
+   ],
+   "induction_skip_reasons": [
+    "proposer_failed"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_produced_but_never_trusted_by_heldout_verifier",
+   "budget_story": {
+    "explorer_fraction": 0.967742,
+    "navigation_or_replay_fraction": 0.193548,
+    "new_information_expansion_fraction": 0.741935,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 17,
+    "max_explorer_depth_seen": 16
+   }
+  },
+  {
+   "game": "ft09",
+   "replicate": 2,
+   "missing_observation": true,
+   "error": "timeout",
+   "wall_s": 2700.663
+  },
+  {
+   "game": "tr87",
+   "replicate": 2,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 2145.961,
+   "actions_recorded": 27,
+   "budget": 400,
+   "budget_consumed_fraction": 0.0675,
+   "levels_banked": 0,
+   "actions_to_first_solve": null,
+   "timed_out": true,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.0,
+   "hv_progress": 0.2,
+   "n_plan_derived": 0,
+   "plan_derived_fraction": 0.0,
+   "n_reset_for_plan_replay": 0,
+   "by_top_branch": {
+    "explore.explorer": 26,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 26
+   },
+   "by_serve_kind": {},
+   "new_information_expansions": 26,
+   "new_information_expansion_fraction": 0.962963,
+   "navigation_or_replay_actions": 0,
+   "navigation_or_replay_fraction": 0.0,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 1,
+   "n_engine_produced": 1,
+   "n_engine_trusted": 0,
+   "n_inductions_that_planned": 0,
+   "engine_ever_trusted": false,
+   "plan_ever_executed": false,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": "world_model_accuracy_below_threshold",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": "max_nodes_reached"
+    }
+   ],
+   "induction_skip_reasons": [
+    "world_model_accuracy_below_threshold"
+   ],
+   "level_up_events": [],
+   "n_level_ups_seen_in_rows": 0,
+   "level_ups_from_plan_branch": 0,
+   "plan_segments": [],
+   "n_plan_segments": 0,
+   "n_plan_segments_that_advanced_level": 0,
+   "plans_abandoned": 0,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "engine_produced_but_never_trusted_by_heldout_verifier",
+   "budget_story": {
+    "explorer_fraction": 1.0,
+    "navigation_or_replay_fraction": 0.0,
+    "new_information_expansion_fraction": 0.962963,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 15,
+    "max_explorer_depth_seen": 8
+   }
+  },
+  {
+   "game": "lp85",
+   "replicate": 2,
+   "missing_observation": false,
+   "error": null,
+   "wall_s": 709.884,
+   "actions_recorded": 400,
+   "budget": 400,
+   "budget_consumed_fraction": 1.0,
+   "levels_banked": 1,
+   "actions_to_first_solve": 30,
+   "timed_out": false,
+   "hit_induction_cap": false,
+   "revisit_frac": 0.7551,
+   "hv_progress": 0.8,
+   "n_plan_derived": 5,
+   "plan_derived_fraction": 0.0125,
+   "n_reset_for_plan_replay": 1,
+   "by_top_branch": {
+    "explore.explorer": 392,
+    "induce.plan_needs_reset": 1,
+    "execute.plan_step": 5,
+    "exhausted.explorer": 1,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 389,
+    "frontier.navigate": 2,
+    "pending_drain": 2
+   },
+   "by_serve_kind": {
+    "reset": 2,
+    "probe": 2
+   },
+   "new_information_expansions": 391,
+   "new_information_expansion_fraction": 0.9775,
+   "navigation_or_replay_actions": 2,
+   "navigation_or_replay_fraction": 0.005,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": [],
+   "induction_fired": true,
+   "n_inductions": 2,
+   "n_engine_produced": 2,
+   "n_engine_trusted": 1,
+   "n_inductions_that_planned": 1,
+   "engine_ever_trusted": true,
+   "plan_ever_executed": true,
+   "induction_events": [
+    {
+     "reason": "stall",
+     "skipped": null,
+     "planned": true,
+     "plan_length": 12,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": true,
+     "heldout_accuracy": 1.0,
+     "trust_energy": 496.733826,
+     "goal_predicate_satisfiable": true,
+     "counterexample_kind": null,
+     "plan_termination_reason": null
+    },
+    {
+     "reason": "level_up_reinduction",
+     "skipped": "no_reachable_plan_after_refinement",
+     "planned": false,
+     "plan_length": 0,
+     "engine_produced": true,
+     "engine_trusted_by_heldout_verifier": false,
+     "heldout_accuracy": null,
+     "trust_energy": null,
+     "goal_predicate_satisfiable": null,
+     "counterexample_kind": null,
+     "plan_termination_reason": null
+    }
+   ],
+   "induction_skip_reasons": [
+    "no_reachable_plan_after_refinement"
+   ],
+   "level_up_events": [
+    {
+     "observed_at_row": 32,
+     "level_from": 0,
+     "level_to": 1,
+     "causing_action_row": 31,
+     "causing_action_branch": "execute.plan_step",
+     "causing_action_explorer_branch": null,
+     "causing_action_serve_kind": null,
+     "causing_action_plan_present": true
+    }
+   ],
+   "n_level_ups_seen_in_rows": 1,
+   "level_ups_from_plan_branch": 1,
+   "plan_segments": [
+    {
+     "plan_epoch": 1,
+     "start_row": 27,
+     "end_row": 31,
+     "n_actions": 5,
+     "plan_len": 12,
+     "level_at_start": 0,
+     "level_after_segment": 1,
+     "level_advanced_during_or_after_plan": true
+    }
+   ],
+   "n_plan_segments": 1,
+   "n_plan_segments_that_advanced_level": 1,
+   "plans_abandoned": 1,
+   "plans_consumed_fully": 0,
+   "where_it_is_lost": "banked_level",
+   "budget_story": {
+    "explorer_fraction": 0.985,
+    "navigation_or_replay_fraction": 0.005,
+    "new_information_expansion_fraction": 0.9775,
+    "explored_out_reached": false,
+    "final_explorer_graph_nodes": 95,
+    "max_explorer_depth_seen": 45
+   }
+  }
+ ],
+ "missing_observations": [
+  {
+   "game": "ft09",
+   "replicate": 2,
+   "error": "timeout"
+  }
+ ],
+ "missing_observation_policy": "A crash, a worker non-zero exit, a wall-clock timeout or a policy error inside the run is recorded as MISSING and excluded from every aggregate. It is never folded in as a zero: a zero means the agent spent its budget and none of it was plan-derived; a missing observation means we did not see what it would have done.",
+ "card_waits_between_cells": [
+  {
+   "free_mb": 23815,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "tn36_r0",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 23815,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "ft09_r0",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.2,
+   "ok": true,
+   "before_cell": "tr87_r0",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.1,
+   "ok": true,
+   "before_cell": "lp85_r0",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.1,
+   "ok": true,
+   "before_cell": "vc33_r1",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.1,
+   "ok": true,
+   "before_cell": "tn36_r1",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.1,
+   "ok": true,
+   "before_cell": "ft09_r1",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 23813,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "tr87_r1",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.2,
+   "ok": true,
+   "before_cell": "lp85_r1",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 24123,
+   "waited_s": 5.1,
+   "ok": true,
+   "before_cell": "vc33_r2",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 23815,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "tn36_r2",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 23813,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "ft09_r2",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 23813,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "tr87_r2",
+   "reaped_servers": 1
+  },
+  {
+   "free_mb": 23813,
+   "waited_s": 0.1,
+   "ok": true,
+   "before_cell": "lp85_r2",
+   "reaped_servers": 1
+  }
+ ],
+ "cells_dir": "results/arc_live_action_provenance_20260801/cells",
+ "reproducibility_checksum": "sha256:b4878f534471777b2c4780d56b5065a42f3d5e34ccd015e972d88b4258457853"
+}
