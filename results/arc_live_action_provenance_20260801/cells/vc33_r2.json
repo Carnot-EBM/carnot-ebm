@@ -1,0 +1,5166 @@
+{
+ "arm_label": "vc33_r2",
+ "game": "vc33",
+ "seed": 20260801,
+ "provenance_armed": true,
+ "generator": "live",
+ "generator_witness": {
+  "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "is_cuda_build": true,
+  "launch_env_cuda_visible_devices": "1",
+  "requested_cuda_gpu": "1",
+  "ambient_cuda_visible_devices": null
+ },
+ "induction_disabled_env": null,
+ "budget": 400,
+ "max_inductions": 4,
+ "explore_budget": 24,
+ "wall_s_measured": 1806.583,
+ "action_trace": [
+  "RESET",
+  "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+  "{\"action\":6,\"data\":{\"x\":50,\"y\":46}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+  "{\"action\":6,\"data\":{\"x\":54,\"y\":46}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+  "{\"action\":6,\"data\":{\"x\":38,\"y\":29}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":25}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":61,\"y\":33}}",
+  "{\"action\":6,\"data\":{\"x\":1,\"y\":25}}",
+  "{\"action\":6,\"data\":{\"x\":1,\"y\":45}}"
+ ],
+ "result_row": {
+  "game": "vc33",
+  "arm": "frozen",
+  "seed": 20260801,
+  "variant": 0,
+  "start_level": 0,
+  "reached_level": 1,
+  "levels_gained": 1,
+  "solved": true,
+  "actions_to_first_solve": 15,
+  "total_actions": 17,
+  "noop_frac": 0.0,
+  "revisit_frac": 0.0,
+  "start_hv": 18.0,
+  "best_hv": 18.0,
+  "hv_progress": 0.0,
+  "n_inductions": 1,
+  "n_plans_found": 0,
+  "plan_found_rate": 0.0,
+  "mean_heldout_accuracy": 1.0,
+  "mean_prefix_accuracy": 1.0,
+  "playbook_injection_modes": [
+   "none"
+  ],
+  "wall_s": 1805.4,
+  "timed_out": true,
+  "hit_induction_cap": false,
+  "error": null,
+  "induction_events": [
+   {
+    "reason": "level_up_reinduction",
+    "goal_level": 2,
+    "transition_count": 1,
+    "dsl_transition_count": 1,
+    "model_specs": "gemma-4-31B-it-qat",
+    "planned": false,
+    "skipped": "degenerate_goal_predicate",
+    "ttt_prior_engine": {
+     "backend": "cnn",
+     "n_transitions": 1,
+     "warm_start": false,
+     "prior_transition_count": 0,
+     "skip": "too_few_transitions"
+    },
+    "structured_engine_enabled": false,
+    "plan_length": 0,
+    "selected_candidate_name": "loaded_world_model.py",
+    "goal_candidate_names": [
+     "loaded_world_model.py"
+    ],
+    "dynamics_candidate_names": [
+     "loaded_world_model.py"
+    ],
+    "refinement_rounds_used": 3,
+    "refinement_rounds": [
+     {
+      "round": 1,
+      "action": "induce",
+      "proposer_ok": true,
+      "message": "local gguf (GPU server) wrote world_model.py",
+      "retention_signal_heldout_change_consistency": 1.0,
+      "retention_signal_true_changed_cells": 141,
+      "retained_as_best_engine": true,
+      "selected_candidate_name": "loaded_world_model.py",
+      "goal_candidate_names": [
+       "loaded_world_model.py"
+      ],
+      "dynamics_candidate_names": [
+       "loaded_world_model.py"
+      ],
+      "prefix_accuracy": 1.0,
+      "heldout_accuracy": 1.0,
+      "heldout_threshold": 1.0,
+      "accepted_by_heldout_verifier": true,
+      "trust_energy": 7.304768,
+      "goal_predicate_satisfiable": false,
+      "goal_satisfiability": {
+       "satisfiable": false,
+       "reachable_grids_evaluated": 2,
+       "engine_calls": 39,
+       "engine_errors": 0,
+       "max_nodes": 20000,
+       "max_depth": 80,
+       "budget_unit": "engine_calls_matching_plan_in_model",
+       "termination": "queue_exhausted",
+       "frontier_remaining": 0,
+       "depth_truncated_nodes": 0
+      },
+      "goal_undecided_within_budget": false,
+      "counterexample": {
+       "kind": "degenerate_goal_predicate",
+       "detail": "the reachable set was searched exhaustively (frontier empty, no node discarded at the depth cap) and the goal was never true, so this predicate is unreachable under this engine.",
+       "termination": "queue_exhausted",
+       "frontier_remaining": 0,
+       "depth_truncated_nodes": 0,
+       "reachable_grids_evaluated": 2,
+       "engine_calls": 39,
+       "max_nodes": 20000,
+       "max_depth": 80,
+       "budget_unit": "engine_calls_matching_plan_in_model"
+      },
+      "skipped": "degenerate_goal_predicate"
+     },
+     {
+      "round": 2,
+      "action": "refactor",
+      "proposer_ok": true,
+      "message": "local gguf (GPU server) wrote world_model.py",
+      "retention_signal_heldout_change_consistency": 0.0,
+      "retention_signal_true_changed_cells": 141,
+      "retained_as_best_engine": false,
+      "selected_candidate_name": "loaded_world_model.py",
+      "goal_candidate_names": [
+       "loaded_world_model.py"
+      ],
+      "dynamics_candidate_names": [
+       "loaded_world_model.py"
+      ],
+      "prefix_accuracy": 0.0,
+      "heldout_accuracy": 0.0,
+      "heldout_threshold": 1.0,
+      "accepted_by_heldout_verifier": false,
+      "trust_energy": 497.777964,
+      "counterexample": {
+       "kind": "heldout_transition_verification_failed",
+       "selected_candidate_name": "loaded_world_model.py",
+       "heldout_accuracy": 0.0,
+       "heldout_threshold": 1.0,
+       "real_n": 1,
+       "real_n_correct": 0,
+       "real_accuracy": 0.0,
+       "real_mismatches": [
+        {
+         "i": 0,
+         "action": 6,
+         "data": {
+          "x": 1,
+          "y": 25
+         },
+         "true_change": [
+          [
+           0,
+           63,
+           7,
+           4
+          ],
+          [
+           1,
+           48,
+           0,
+           3
+          ],
+          [
+           1,
+           49,
+           0,
+           3
+          ],
+          [
+           1,
+           50,
+           0,
+           3
+          ],
+          [
+           1,
+           51,
+           0,
+           3
+          ],
+          [
+           2,
+           48,
+           0,
+           3
+          ],
+          [
+           2,
+           49,
+           0,
+           3
+          ],
+          [
+           2,
+           50,
+           0,
+           3
+          ],
+          [
+           2,
+           51,
+           0,
+           3
+          ],
+          [
+           3,
+           48,
+           0,
+           3
+          ],
+          [
+           3,
+           49,
+           0,
+           3
+          ],
+          [
+           3,
+           50,
+           0,
+           3
+          ],
+          [
+           3,
+           51,
+           0,
+           3
+          ],
+          [
+           4,
+           48,
+           0,
+           3
+          ],
+          [
+           4,
+           49,
+           0,
+           3
+          ],
+          [
+           4,
+           50,
+           0,
+           3
+          ],
+          [
+           4,
+           51,
+           0,
+           3
+          ],
+          [
+           5,
+           48,
+           0,
+           3
+          ],
+          [
+           5,
+           49,
+           0,
+           3
+          ],
+          [
+           5,
+           50,
+           0,
+           3
+          ],
+          [
+           5,
+           51,
+           0,
+           3
+          ],
+          [
+           6,
+           48,
+           0,
+           3
+          ],
+          [
+           6,
+           49,
+           0,
+           3
+          ],
+          [
+           6,
+           50,
+           0,
+           3
+          ],
+          [
+           6,
+           51,
+           0,
+           3
+          ],
+          [
+           7,
+           48,
+           0,
+           3
+          ],
+          [
+           7,
+           49,
+           0,
+           3
+          ],
+          [
+           7,
+           50,
+           0,
+           3
+          ],
+          [
+           7,
+           51,
+           0,
+           3
+          ],
+          [
+           8,
+           48,
+           0,
+           3
+          ],
+          [
+           8,
+           49,
+           0,
+           3
+          ],
+          [
+           8,
+           50,
+           0,
+           3
+          ],
+          [
+           8,
+           51,
+           0,
+           3
+          ],
+          [
+           9,
+           48,
+           0,
+           3
+          ],
+          [
+           9,
+           49,
+           0,
+           3
+          ],
+          [
+           9,
+           50,
+           0,
+           3
+          ],
+          [
+           9,
+           51,
+           0,
+           3
+          ],
+          [
+           10,
+           48,
+           0,
+           3
+          ],
+          [
+           10,
+           49,
+           0,
+           3
+          ],
+          [
+           10,
+           50,
+           0,
+           3
+          ],
+          [
+           10,
+           51,
+           0,
+           3
+          ],
+          [
+           11,
+           48,
+           0,
+           3
+          ],
+          [
+           11,
+           49,
+           0,
+           3
+          ],
+          [
+           11,
+           50,
+           0,
+           3
+          ],
+          [
+           11,
+           51,
+           0,
+           3
+          ],
+          [
+           12,
+           48,
+           0,
+           3
+          ],
+          [
+           12,
+           49,
+           0,
+           3
+          ],
+          [
+           12,
+           50,
+           0,
+           3
+          ],
+          [
+           12,
+           51,
+           0,
+           3
+          ],
+          [
+           13,
+           48,
+           0,
+           3
+          ],
+          [
+           13,
+           49,
+           0,
+           3
+          ],
+          [
+           13,
+           50,
+           0,
+           3
+          ],
+          [
+           13,
+           51,
+           0,
+           3
+          ],
+          [
+           14,
+           48,
+           0,
+           3
+          ],
+          [
+           14,
+           49,
+           0,
+           3
+          ],
+          [
+           14,
+           50,
+           0,
+           3
+          ],
+          [
+           14,
+           51,
+           0,
+           3
+          ],
+          [
+           15,
+           48,
+           0,
+           3
+          ],
+          [
+           15,
+           49,
+           0,
+           3
+          ],
+          [
+           15,
+           50,
+           0,
+           3
+          ],
+          [
+           15,
+           51,
+           0,
+           3
+          ],
+          [
+           16,
+           48,
+           0,
+           3
+          ],
+          [
+           16,
+           49,
+           0,
+           3
+          ],
+          [
+           16,
+           50,
+           0,
+           3
+          ],
+          [
+           16,
+           51,
+           0,
+           3
+          ],
+          [
+           17,
+           48,
+           0,
+           3
+          ],
+          [
+           17,
+           49,
+           0,
+           3
+          ],
+          [
+           17,
+           50,
+           0,
+           3
+          ],
+          [
+           17,
+           51,
+           0,
+           3
+          ],
+          [
+           18,
+           48,
+           0,
+           3
+          ],
+          [
+           18,
+           49,
+           0,
+           3
+          ],
+          [
+           18,
+           50,
+           0,
+           3
+          ],
+          [
+           18,
+           51,
+           0,
+           3
+          ],
+          [
+           19,
+           48,
+           0,
+           3
+          ],
+          [
+           19,
+           49,
+           0,
+           3
+          ],
+          [
+           19,
+           50,
+           0,
+           3
+          ],
+          [
+           19,
+           51,
+           0,
+           3
+          ],
+          [
+           24,
+           12,
+           3,
+           0
+          ],
+          [
+           24,
+           13,
+           3,
+           0
+          ],
+          [
+           24,
+           14,
+           3,
+           0
+          ]
+         ],
+         "your_prediction_was_wrong_at": [
+          [
+           0,
+           63,
+           7,
+           4
+          ],
+          [
+           1,
+           48,
+           0,
+           3
+          ],
+          [
+           1,
+           49,
+           0,
+           3
+          ],
+          [
+           1,
+           50,
+           0,
+           3
+          ],
+          [
+           1,
+           51,
+           0,
+           3
+          ],
+          [
+           2,
+           48,
+           0,
+           3
+          ],
+          [
+           2,
+           49,
+           0,
+           3
+          ],
+          [
+           2,
+           50,
+           0,
+           3
+          ],
+          [
+           2,
+           51,
+           0,
+           3
+          ],
+          [
+           3,
+           48,
+           0,
+           3
+          ],
+          [
+           3,
+           49,
+           0,
+           3
+          ],
+          [
+           3,
+           50,
+           0,
+           3
+          ],
+          [
+           3,
+           51,
+           0,
+           3
+          ],
+          [
+           4,
+           48,
+           0,
+           3
+          ],
+          [
+           4,
+           49,
+           0,
+           3
+          ],
+          [
+           4,
+           50,
+           0,
+           3
+          ],
+          [
+           4,
+           51,
+           0,
+           3
+          ],
+          [
+           5,
+           48,
+           0,
+           3
+          ],
+          [
+           5,
+           49,
+           0,
+           3
+          ],
+          [
+           5,
+           50,
+           0,
+           3
+          ],
+          [
+           5,
+           51,
+           0,
+           3
+          ],
+          [
+           6,
+           48,
+           0,
+           3
+          ],
+          [
+           6,
+           49,
+           0,
+           3
+          ],
+          [
+           6,
+           50,
+           0,
+           3
+          ],
+          [
+           6,
+           51,
+           0,
+           3
+          ],
+          [
+           7,
+           48,
+           0,
+           3
+          ],
+          [
+           7,
+           49,
+           0,
+           3
+          ],
+          [
+           7,
+           50,
+           0,
+           3
+          ],
+          [
+           7,
+           51,
+           0,
+           3
+          ],
+          [
+           8,
+           48,
+           0,
+           3
+          ],
+          [
+           8,
+           49,
+           0,
+           3
+          ],
+          [
+           8,
+           50,
+           0,
+           3
+          ],
+          [
+           8,
+           51,
+           0,
+           3
+          ],
+          [
+           9,
+           48,
+           0,
+           3
+          ],
+          [
+           9,
+           49,
+           0,
+           3
+          ],
+          [
+           9,
+           50,
+           0,
+           3
+          ],
+          [
+           9,
+           51,
+           0,
+           3
+          ],
+          [
+           10,
+           48,
+           0,
+           3
+          ],
+          [
+           10,
+           49,
+           0,
+           3
+          ],
+          [
+           10,
+           50,
+           0,
+           3
+          ],
+          [
+           10,
+           51,
+           0,
+           3
+          ],
+          [
+           11,
+           48,
+           0,
+           3
+          ],
+          [
+           11,
+           49,
+           0,
+           3
+          ],
+          [
+           11,
+           50,
+           0,
+           3
+          ],
+          [
+           11,
+           51,
+           0,
+           3
+          ],
+          [
+           12,
+           48,
+           0,
+           3
+          ],
+          [
+           12,
+           49,
+           0,
+           3
+          ],
+          [
+           12,
+           50,
+           0,
+           3
+          ],
+          [
+           12,
+           51,
+           0,
+           3
+          ],
+          [
+           13,
+           48,
+           0,
+           3
+          ],
+          [
+           13,
+           49,
+           0,
+           3
+          ],
+          [
+           13,
+           50,
+           0,
+           3
+          ],
+          [
+           13,
+           51,
+           0,
+           3
+          ],
+          [
+           14,
+           48,
+           0,
+           3
+          ],
+          [
+           14,
+           49,
+           0,
+           3
+          ],
+          [
+           14,
+           50,
+           0,
+           3
+          ],
+          [
+           14,
+           51,
+           0,
+           3
+          ],
+          [
+           15,
+           48,
+           0,
+           3
+          ],
+          [
+           15,
+           49,
+           0,
+           3
+          ],
+          [
+           15,
+           50,
+           0,
+           3
+          ],
+          [
+           15,
+           51,
+           0,
+           3
+          ],
+          [
+           16,
+           48,
+           0,
+           3
+          ],
+          [
+           16,
+           49,
+           0,
+           3
+          ],
+          [
+           16,
+           50,
+           0,
+           3
+          ],
+          [
+           16,
+           51,
+           0,
+           3
+          ],
+          [
+           17,
+           48,
+           0,
+           3
+          ],
+          [
+           17,
+           49,
+           0,
+           3
+          ],
+          [
+           17,
+           50,
+           0,
+           3
+          ],
+          [
+           17,
+           51,
+           0,
+           3
+          ],
+          [
+           18,
+           48,
+           0,
+           3
+          ],
+          [
+           18,
+           49,
+           0,
+           3
+          ],
+          [
+           18,
+           50,
+           0,
+           3
+          ],
+          [
+           18,
+           51,
+           0,
+           3
+          ],
+          [
+           19,
+           48,
+           0,
+           3
+          ],
+          [
+           19,
+           49,
+           0,
+           3
+          ],
+          [
+           19,
+           50,
+           0,
+           3
+          ],
+          [
+           19,
+           51,
+           0,
+           3
+          ],
+          [
+           24,
+           12,
+           3,
+           0
+          ],
+          [
+           24,
+           13,
+           3,
+           0
+          ],
+          [
+           24,
+           14,
+           3,
+           0
+          ]
+         ]
+        }
+       ]
+      },
+      "skipped": "heldout_transition_verification_failed"
+     },
+     {
+      "round": 3,
+      "action": "refactor",
+      "proposer_ok": true,
+      "message": "local gguf (GPU server) wrote world_model.py",
+      "retention_signal_heldout_change_consistency": 0.262411,
+      "retention_signal_true_changed_cells": 141,
+      "retained_as_best_engine": false,
+      "selected_candidate_name": "loaded_world_model.py",
+      "goal_candidate_names": [
+       "loaded_world_model.py"
+      ],
+      "dynamics_candidate_names": [
+       "loaded_world_model.py"
+      ],
+      "prefix_accuracy": 0.0,
+      "heldout_accuracy": 0.0,
+      "heldout_threshold": 1.0,
+      "accepted_by_heldout_verifier": false,
+      "trust_energy": 2.54148,
+      "counterexample": {
+       "kind": "heldout_transition_verification_failed",
+       "selected_candidate_name": "loaded_world_model.py",
+       "heldout_accuracy": 0.0,
+       "heldout_threshold": 1.0,
+       "real_n": 1,
+       "real_n_correct": 0,
+       "real_accuracy": 0.0,
+       "real_mismatches": [
+        {
+         "i": 0,
+         "action": 6,
+         "data": {
+          "x": 1,
+          "y": 25
+         },
+         "true_change": [
+          [
+           0,
+           63,
+           7,
+           4
+          ],
+          [
+           1,
+           48,
+           0,
+           3
+          ],
+          [
+           1,
+           49,
+           0,
+           3
+          ],
+          [
+           1,
+           50,
+           0,
+           3
+          ],
+          [
+           1,
+           51,
+           0,
+           3
+          ],
+          [
+           2,
+           48,
+           0,
+           3
+          ],
+          [
+           2,
+           49,
+           0,
+           3
+          ],
+          [
+           2,
+           50,
+           0,
+           3
+          ],
+          [
+           2,
+           51,
+           0,
+           3
+          ],
+          [
+           3,
+           48,
+           0,
+           3
+          ],
+          [
+           3,
+           49,
+           0,
+           3
+          ],
+          [
+           3,
+           50,
+           0,
+           3
+          ],
+          [
+           3,
+           51,
+           0,
+           3
+          ],
+          [
+           4,
+           48,
+           0,
+           3
+          ],
+          [
+           4,
+           49,
+           0,
+           3
+          ],
+          [
+           4,
+           50,
+           0,
+           3
+          ],
+          [
+           4,
+           51,
+           0,
+           3
+          ],
+          [
+           5,
+           48,
+           0,
+           3
+          ],
+          [
+           5,
+           49,
+           0,
+           3
+          ],
+          [
+           5,
+           50,
+           0,
+           3
+          ],
+          [
+           5,
+           51,
+           0,
+           3
+          ],
+          [
+           6,
+           48,
+           0,
+           3
+          ],
+          [
+           6,
+           49,
+           0,
+           3
+          ],
+          [
+           6,
+           50,
+           0,
+           3
+          ],
+          [
+           6,
+           51,
+           0,
+           3
+          ],
+          [
+           7,
+           48,
+           0,
+           3
+          ],
+          [
+           7,
+           49,
+           0,
+           3
+          ],
+          [
+           7,
+           50,
+           0,
+           3
+          ],
+          [
+           7,
+           51,
+           0,
+           3
+          ],
+          [
+           8,
+           48,
+           0,
+           3
+          ],
+          [
+           8,
+           49,
+           0,
+           3
+          ],
+          [
+           8,
+           50,
+           0,
+           3
+          ],
+          [
+           8,
+           51,
+           0,
+           3
+          ],
+          [
+           9,
+           48,
+           0,
+           3
+          ],
+          [
+           9,
+           49,
+           0,
+           3
+          ],
+          [
+           9,
+           50,
+           0,
+           3
+          ],
+          [
+           9,
+           51,
+           0,
+           3
+          ],
+          [
+           10,
+           48,
+           0,
+           3
+          ],
+          [
+           10,
+           49,
+           0,
+           3
+          ],
+          [
+           10,
+           50,
+           0,
+           3
+          ],
+          [
+           10,
+           51,
+           0,
+           3
+          ],
+          [
+           11,
+           48,
+           0,
+           3
+          ],
+          [
+           11,
+           49,
+           0,
+           3
+          ],
+          [
+           11,
+           50,
+           0,
+           3
+          ],
+          [
+           11,
+           51,
+           0,
+           3
+          ],
+          [
+           12,
+           48,
+           0,
+           3
+          ],
+          [
+           12,
+           49,
+           0,
+           3
+          ],
+          [
+           12,
+           50,
+           0,
+           3
+          ],
+          [
+           12,
+           51,
+           0,
+           3
+          ],
+          [
+           13,
+           48,
+           0,
+           3
+          ],
+          [
+           13,
+           49,
+           0,
+           3
+          ],
+          [
+           13,
+           50,
+           0,
+           3
+          ],
+          [
+           13,
+           51,
+           0,
+           3
+          ],
+          [
+           14,
+           48,
+           0,
+           3
+          ],
+          [
+           14,
+           49,
+           0,
+           3
+          ],
+          [
+           14,
+           50,
+           0,
+           3
+          ],
+          [
+           14,
+           51,
+           0,
+           3
+          ],
+          [
+           15,
+           48,
+           0,
+           3
+          ],
+          [
+           15,
+           49,
+           0,
+           3
+          ],
+          [
+           15,
+           50,
+           0,
+           3
+          ],
+          [
+           15,
+           51,
+           0,
+           3
+          ],
+          [
+           16,
+           48,
+           0,
+           3
+          ],
+          [
+           16,
+           49,
+           0,
+           3
+          ],
+          [
+           16,
+           50,
+           0,
+           3
+          ],
+          [
+           16,
+           51,
+           0,
+           3
+          ],
+          [
+           17,
+           48,
+           0,
+           3
+          ],
+          [
+           17,
+           49,
+           0,
+           3
+          ],
+          [
+           17,
+           50,
+           0,
+           3
+          ],
+          [
+           17,
+           51,
+           0,
+           3
+          ],
+          [
+           18,
+           48,
+           0,
+           3
+          ],
+          [
+           18,
+           49,
+           0,
+           3
+          ],
+          [
+           18,
+           50,
+           0,
+           3
+          ],
+          [
+           18,
+           51,
+           0,
+           3
+          ],
+          [
+           19,
+           48,
+           0,
+           3
+          ],
+          [
+           19,
+           49,
+           0,
+           3
+          ],
+          [
+           19,
+           50,
+           0,
+           3
+          ],
+          [
+           19,
+           51,
+           0,
+           3
+          ],
+          [
+           24,
+           12,
+           3,
+           0
+          ],
+          [
+           24,
+           13,
+           3,
+           0
+          ],
+          [
+           24,
+           14,
+           3,
+           0
+          ]
+         ],
+         "your_prediction_was_wrong_at": [
+          [
+           10,
+           48,
+           0,
+           3
+          ],
+          [
+           10,
+           49,
+           0,
+           3
+          ],
+          [
+           10,
+           50,
+           0,
+           3
+          ],
+          [
+           10,
+           51,
+           0,
+           3
+          ],
+          [
+           11,
+           48,
+           0,
+           3
+          ],
+          [
+           11,
+           49,
+           0,
+           3
+          ],
+          [
+           11,
+           50,
+           0,
+           3
+          ],
+          [
+           11,
+           51,
+           0,
+           3
+          ],
+          [
+           12,
+           48,
+           0,
+           3
+          ],
+          [
+           12,
+           49,
+           0,
+           3
+          ],
+          [
+           12,
+           50,
+           0,
+           3
+          ],
+          [
+           12,
+           51,
+           0,
+           3
+          ],
+          [
+           13,
+           48,
+           0,
+           3
+          ],
+          [
+           13,
+           49,
+           0,
+           3
+          ],
+          [
+           13,
+           50,
+           0,
+           3
+          ],
+          [
+           13,
+           51,
+           0,
+           3
+          ],
+          [
+           14,
+           48,
+           0,
+           3
+          ],
+          [
+           14,
+           49,
+           0,
+           3
+          ],
+          [
+           14,
+           50,
+           0,
+           3
+          ],
+          [
+           14,
+           51,
+           0,
+           3
+          ],
+          [
+           15,
+           48,
+           0,
+           3
+          ],
+          [
+           15,
+           49,
+           0,
+           3
+          ],
+          [
+           15,
+           50,
+           0,
+           3
+          ],
+          [
+           15,
+           51,
+           0,
+           3
+          ],
+          [
+           16,
+           48,
+           0,
+           3
+          ],
+          [
+           16,
+           49,
+           0,
+           3
+          ],
+          [
+           16,
+           50,
+           0,
+           3
+          ],
+          [
+           16,
+           51,
+           0,
+           3
+          ],
+          [
+           17,
+           48,
+           0,
+           3
+          ],
+          [
+           17,
+           49,
+           0,
+           3
+          ],
+          [
+           17,
+           50,
+           0,
+           3
+          ],
+          [
+           17,
+           51,
+           0,
+           3
+          ],
+          [
+           18,
+           48,
+           0,
+           3
+          ],
+          [
+           18,
+           49,
+           0,
+           3
+          ],
+          [
+           18,
+           50,
+           0,
+           3
+          ],
+          [
+           18,
+           51,
+           0,
+           3
+          ],
+          [
+           19,
+           48,
+           0,
+           3
+          ],
+          [
+           19,
+           49,
+           0,
+           3
+          ],
+          [
+           19,
+           50,
+           0,
+           3
+          ],
+          [
+           19,
+           51,
+           0,
+           3
+          ],
+          [
+           24,
+           12,
+           3,
+           0
+          ],
+          [
+           24,
+           13,
+           3,
+           0
+          ],
+          [
+           24,
+           14,
+           3,
+           0
+          ],
+          [
+           24,
+           15,
+           3,
+           0
+          ],
+          [
+           25,
+           12,
+           3,
+           0
+          ],
+          [
+           25,
+           13,
+           3,
+           0
+          ],
+          [
+           25,
+           14,
+           3,
+           0
+          ],
+          [
+           25,
+           15,
+           3,
+           0
+          ],
+          [
+           26,
+           12,
+           3,
+           0
+          ],
+          [
+           26,
+           13,
+           3,
+           0
+          ],
+          [
+           26,
+           14,
+           3,
+           0
+          ],
+          [
+           26,
+           15,
+           3,
+           0
+          ],
+          [
+           27,
+           12,
+           3,
+           0
+          ],
+          [
+           27,
+           13,
+           3,
+           0
+          ],
+          [
+           27,
+           14,
+           3,
+           0
+          ],
+          [
+           27,
+           15,
+           3,
+           0
+          ],
+          [
+           28,
+           12,
+           3,
+           0
+          ],
+          [
+           28,
+           13,
+           3,
+           0
+          ],
+          [
+           28,
+           14,
+           3,
+           0
+          ],
+          [
+           28,
+           15,
+           3,
+           0
+          ],
+          [
+           29,
+           12,
+           3,
+           0
+          ],
+          [
+           29,
+           13,
+           3,
+           0
+          ],
+          [
+           29,
+           14,
+           3,
+           0
+          ],
+          [
+           29,
+           15,
+           3,
+           0
+          ],
+          [
+           30,
+           12,
+           3,
+           0
+          ],
+          [
+           30,
+           13,
+           3,
+           0
+          ],
+          [
+           30,
+           14,
+           3,
+           0
+          ],
+          [
+           30,
+           15,
+           3,
+           0
+          ],
+          [
+           31,
+           12,
+           3,
+           0
+          ],
+          [
+           31,
+           13,
+           3,
+           0
+          ],
+          [
+           31,
+           14,
+           3,
+           0
+          ],
+          [
+           31,
+           15,
+           3,
+           0
+          ],
+          [
+           32,
+           12,
+           3,
+           0
+          ],
+          [
+           32,
+           13,
+           3,
+           0
+          ],
+          [
+           32,
+           14,
+           3,
+           0
+          ],
+          [
+           32,
+           15,
+           3,
+           0
+          ],
+          [
+           33,
+           12,
+           3,
+           0
+          ],
+          [
+           33,
+           13,
+           3,
+           0
+          ],
+          [
+           33,
+           14,
+           3,
+           0
+          ],
+          [
+           33,
+           15,
+           3,
+           0
+          ]
+         ]
+        }
+       ]
+      },
+      "skipped": "heldout_transition_verification_failed"
+     }
+    ],
+    "engine_retention": {
+     "enabled": true,
+     "selection_signal": "heldout_change_consistency",
+     "best_round": 1,
+     "rounds_seen": 3,
+     "best_round_signal": 1.0,
+     "best_round_true_changed_cells": 141,
+     "signal_informative": true,
+     "restored": true,
+     "store_path": "/tmp/arc_action_provenance_census/e3_vc33_r2/vc33/world_model.py"
+    },
+    "counterexamples": [
+     {
+      "kind": "degenerate_goal_predicate",
+      "detail": "the reachable set was searched exhaustively (frontier empty, no node discarded at the depth cap) and the goal was never true, so this predicate is unreachable under this engine.",
+      "termination": "queue_exhausted",
+      "frontier_remaining": 0,
+      "depth_truncated_nodes": 0,
+      "reachable_grids_evaluated": 2,
+      "engine_calls": 39,
+      "max_nodes": 20000,
+      "max_depth": 80,
+      "budget_unit": "engine_calls_matching_plan_in_model"
+     },
+     {
+      "kind": "heldout_transition_verification_failed",
+      "selected_candidate_name": "loaded_world_model.py",
+      "heldout_accuracy": 0.0,
+      "heldout_threshold": 1.0,
+      "real_n": 1,
+      "real_n_correct": 0,
+      "real_accuracy": 0.0,
+      "real_mismatches": [
+       {
+        "i": 0,
+        "action": 6,
+        "data": {
+         "x": 1,
+         "y": 25
+        },
+        "true_change": [
+         [
+          0,
+          63,
+          7,
+          4
+         ],
+         [
+          1,
+          48,
+          0,
+          3
+         ],
+         [
+          1,
+          49,
+          0,
+          3
+         ],
+         [
+          1,
+          50,
+          0,
+          3
+         ],
+         [
+          1,
+          51,
+          0,
+          3
+         ],
+         [
+          2,
+          48,
+          0,
+          3
+         ],
+         [
+          2,
+          49,
+          0,
+          3
+         ],
+         [
+          2,
+          50,
+          0,
+          3
+         ],
+         [
+          2,
+          51,
+          0,
+          3
+         ],
+         [
+          3,
+          48,
+          0,
+          3
+         ],
+         [
+          3,
+          49,
+          0,
+          3
+         ],
+         [
+          3,
+          50,
+          0,
+          3
+         ],
+         [
+          3,
+          51,
+          0,
+          3
+         ],
+         [
+          4,
+          48,
+          0,
+          3
+         ],
+         [
+          4,
+          49,
+          0,
+          3
+         ],
+         [
+          4,
+          50,
+          0,
+          3
+         ],
+         [
+          4,
+          51,
+          0,
+          3
+         ],
+         [
+          5,
+          48,
+          0,
+          3
+         ],
+         [
+          5,
+          49,
+          0,
+          3
+         ],
+         [
+          5,
+          50,
+          0,
+          3
+         ],
+         [
+          5,
+          51,
+          0,
+          3
+         ],
+         [
+          6,
+          48,
+          0,
+          3
+         ],
+         [
+          6,
+          49,
+          0,
+          3
+         ],
+         [
+          6,
+          50,
+          0,
+          3
+         ],
+         [
+          6,
+          51,
+          0,
+          3
+         ],
+         [
+          7,
+          48,
+          0,
+          3
+         ],
+         [
+          7,
+          49,
+          0,
+          3
+         ],
+         [
+          7,
+          50,
+          0,
+          3
+         ],
+         [
+          7,
+          51,
+          0,
+          3
+         ],
+         [
+          8,
+          48,
+          0,
+          3
+         ],
+         [
+          8,
+          49,
+          0,
+          3
+         ],
+         [
+          8,
+          50,
+          0,
+          3
+         ],
+         [
+          8,
+          51,
+          0,
+          3
+         ],
+         [
+          9,
+          48,
+          0,
+          3
+         ],
+         [
+          9,
+          49,
+          0,
+          3
+         ],
+         [
+          9,
+          50,
+          0,
+          3
+         ],
+         [
+          9,
+          51,
+          0,
+          3
+         ],
+         [
+          10,
+          48,
+          0,
+          3
+         ],
+         [
+          10,
+          49,
+          0,
+          3
+         ],
+         [
+          10,
+          50,
+          0,
+          3
+         ],
+         [
+          10,
+          51,
+          0,
+          3
+         ],
+         [
+          11,
+          48,
+          0,
+          3
+         ],
+         [
+          11,
+          49,
+          0,
+          3
+         ],
+         [
+          11,
+          50,
+          0,
+          3
+         ],
+         [
+          11,
+          51,
+          0,
+          3
+         ],
+         [
+          12,
+          48,
+          0,
+          3
+         ],
+         [
+          12,
+          49,
+          0,
+          3
+         ],
+         [
+          12,
+          50,
+          0,
+          3
+         ],
+         [
+          12,
+          51,
+          0,
+          3
+         ],
+         [
+          13,
+          48,
+          0,
+          3
+         ],
+         [
+          13,
+          49,
+          0,
+          3
+         ],
+         [
+          13,
+          50,
+          0,
+          3
+         ],
+         [
+          13,
+          51,
+          0,
+          3
+         ],
+         [
+          14,
+          48,
+          0,
+          3
+         ],
+         [
+          14,
+          49,
+          0,
+          3
+         ],
+         [
+          14,
+          50,
+          0,
+          3
+         ],
+         [
+          14,
+          51,
+          0,
+          3
+         ],
+         [
+          15,
+          48,
+          0,
+          3
+         ],
+         [
+          15,
+          49,
+          0,
+          3
+         ],
+         [
+          15,
+          50,
+          0,
+          3
+         ],
+         [
+          15,
+          51,
+          0,
+          3
+         ],
+         [
+          16,
+          48,
+          0,
+          3
+         ],
+         [
+          16,
+          49,
+          0,
+          3
+         ],
+         [
+          16,
+          50,
+          0,
+          3
+         ],
+         [
+          16,
+          51,
+          0,
+          3
+         ],
+         [
+          17,
+          48,
+          0,
+          3
+         ],
+         [
+          17,
+          49,
+          0,
+          3
+         ],
+         [
+          17,
+          50,
+          0,
+          3
+         ],
+         [
+          17,
+          51,
+          0,
+          3
+         ],
+         [
+          18,
+          48,
+          0,
+          3
+         ],
+         [
+          18,
+          49,
+          0,
+          3
+         ],
+         [
+          18,
+          50,
+          0,
+          3
+         ],
+         [
+          18,
+          51,
+          0,
+          3
+         ],
+         [
+          19,
+          48,
+          0,
+          3
+         ],
+         [
+          19,
+          49,
+          0,
+          3
+         ],
+         [
+          19,
+          50,
+          0,
+          3
+         ],
+         [
+          19,
+          51,
+          0,
+          3
+         ],
+         [
+          24,
+          12,
+          3,
+          0
+         ],
+         [
+          24,
+          13,
+          3,
+          0
+         ],
+         [
+          24,
+          14,
+          3,
+          0
+         ]
+        ],
+        "your_prediction_was_wrong_at": [
+         [
+          0,
+          63,
+          7,
+          4
+         ],
+         [
+          1,
+          48,
+          0,
+          3
+         ],
+         [
+          1,
+          49,
+          0,
+          3
+         ],
+         [
+          1,
+          50,
+          0,
+          3
+         ],
+         [
+          1,
+          51,
+          0,
+          3
+         ],
+         [
+          2,
+          48,
+          0,
+          3
+         ],
+         [
+          2,
+          49,
+          0,
+          3
+         ],
+         [
+          2,
+          50,
+          0,
+          3
+         ],
+         [
+          2,
+          51,
+          0,
+          3
+         ],
+         [
+          3,
+          48,
+          0,
+          3
+         ],
+         [
+          3,
+          49,
+          0,
+          3
+         ],
+         [
+          3,
+          50,
+          0,
+          3
+         ],
+         [
+          3,
+          51,
+          0,
+          3
+         ],
+         [
+          4,
+          48,
+          0,
+          3
+         ],
+         [
+          4,
+          49,
+          0,
+          3
+         ],
+         [
+          4,
+          50,
+          0,
+          3
+         ],
+         [
+          4,
+          51,
+          0,
+          3
+         ],
+         [
+          5,
+          48,
+          0,
+          3
+         ],
+         [
+          5,
+          49,
+          0,
+          3
+         ],
+         [
+          5,
+          50,
+          0,
+          3
+         ],
+         [
+          5,
+          51,
+          0,
+          3
+         ],
+         [
+          6,
+          48,
+          0,
+          3
+         ],
+         [
+          6,
+          49,
+          0,
+          3
+         ],
+         [
+          6,
+          50,
+          0,
+          3
+         ],
+         [
+          6,
+          51,
+          0,
+          3
+         ],
+         [
+          7,
+          48,
+          0,
+          3
+         ],
+         [
+          7,
+          49,
+          0,
+          3
+         ],
+         [
+          7,
+          50,
+          0,
+          3
+         ],
+         [
+          7,
+          51,
+          0,
+          3
+         ],
+         [
+          8,
+          48,
+          0,
+          3
+         ],
+         [
+          8,
+          49,
+          0,
+          3
+         ],
+         [
+          8,
+          50,
+          0,
+          3
+         ],
+         [
+          8,
+          51,
+          0,
+          3
+         ],
+         [
+          9,
+          48,
+          0,
+          3
+         ],
+         [
+          9,
+          49,
+          0,
+          3
+         ],
+         [
+          9,
+          50,
+          0,
+          3
+         ],
+         [
+          9,
+          51,
+          0,
+          3
+         ],
+         [
+          10,
+          48,
+          0,
+          3
+         ],
+         [
+          10,
+          49,
+          0,
+          3
+         ],
+         [
+          10,
+          50,
+          0,
+          3
+         ],
+         [
+          10,
+          51,
+          0,
+          3
+         ],
+         [
+          11,
+          48,
+          0,
+          3
+         ],
+         [
+          11,
+          49,
+          0,
+          3
+         ],
+         [
+          11,
+          50,
+          0,
+          3
+         ],
+         [
+          11,
+          51,
+          0,
+          3
+         ],
+         [
+          12,
+          48,
+          0,
+          3
+         ],
+         [
+          12,
+          49,
+          0,
+          3
+         ],
+         [
+          12,
+          50,
+          0,
+          3
+         ],
+         [
+          12,
+          51,
+          0,
+          3
+         ],
+         [
+          13,
+          48,
+          0,
+          3
+         ],
+         [
+          13,
+          49,
+          0,
+          3
+         ],
+         [
+          13,
+          50,
+          0,
+          3
+         ],
+         [
+          13,
+          51,
+          0,
+          3
+         ],
+         [
+          14,
+          48,
+          0,
+          3
+         ],
+         [
+          14,
+          49,
+          0,
+          3
+         ],
+         [
+          14,
+          50,
+          0,
+          3
+         ],
+         [
+          14,
+          51,
+          0,
+          3
+         ],
+         [
+          15,
+          48,
+          0,
+          3
+         ],
+         [
+          15,
+          49,
+          0,
+          3
+         ],
+         [
+          15,
+          50,
+          0,
+          3
+         ],
+         [
+          15,
+          51,
+          0,
+          3
+         ],
+         [
+          16,
+          48,
+          0,
+          3
+         ],
+         [
+          16,
+          49,
+          0,
+          3
+         ],
+         [
+          16,
+          50,
+          0,
+          3
+         ],
+         [
+          16,
+          51,
+          0,
+          3
+         ],
+         [
+          17,
+          48,
+          0,
+          3
+         ],
+         [
+          17,
+          49,
+          0,
+          3
+         ],
+         [
+          17,
+          50,
+          0,
+          3
+         ],
+         [
+          17,
+          51,
+          0,
+          3
+         ],
+         [
+          18,
+          48,
+          0,
+          3
+         ],
+         [
+          18,
+          49,
+          0,
+          3
+         ],
+         [
+          18,
+          50,
+          0,
+          3
+         ],
+         [
+          18,
+          51,
+          0,
+          3
+         ],
+         [
+          19,
+          48,
+          0,
+          3
+         ],
+         [
+          19,
+          49,
+          0,
+          3
+         ],
+         [
+          19,
+          50,
+          0,
+          3
+         ],
+         [
+          19,
+          51,
+          0,
+          3
+         ],
+         [
+          24,
+          12,
+          3,
+          0
+         ],
+         [
+          24,
+          13,
+          3,
+          0
+         ],
+         [
+          24,
+          14,
+          3,
+          0
+         ]
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "heldout_transition_verification_failed",
+      "selected_candidate_name": "loaded_world_model.py",
+      "heldout_accuracy": 0.0,
+      "heldout_threshold": 1.0,
+      "real_n": 1,
+      "real_n_correct": 0,
+      "real_accuracy": 0.0,
+      "real_mismatches": [
+       {
+        "i": 0,
+        "action": 6,
+        "data": {
+         "x": 1,
+         "y": 25
+        },
+        "true_change": [
+         [
+          0,
+          63,
+          7,
+          4
+         ],
+         [
+          1,
+          48,
+          0,
+          3
+         ],
+         [
+          1,
+          49,
+          0,
+          3
+         ],
+         [
+          1,
+          50,
+          0,
+          3
+         ],
+         [
+          1,
+          51,
+          0,
+          3
+         ],
+         [
+          2,
+          48,
+          0,
+          3
+         ],
+         [
+          2,
+          49,
+          0,
+          3
+         ],
+         [
+          2,
+          50,
+          0,
+          3
+         ],
+         [
+          2,
+          51,
+          0,
+          3
+         ],
+         [
+          3,
+          48,
+          0,
+          3
+         ],
+         [
+          3,
+          49,
+          0,
+          3
+         ],
+         [
+          3,
+          50,
+          0,
+          3
+         ],
+         [
+          3,
+          51,
+          0,
+          3
+         ],
+         [
+          4,
+          48,
+          0,
+          3
+         ],
+         [
+          4,
+          49,
+          0,
+          3
+         ],
+         [
+          4,
+          50,
+          0,
+          3
+         ],
+         [
+          4,
+          51,
+          0,
+          3
+         ],
+         [
+          5,
+          48,
+          0,
+          3
+         ],
+         [
+          5,
+          49,
+          0,
+          3
+         ],
+         [
+          5,
+          50,
+          0,
+          3
+         ],
+         [
+          5,
+          51,
+          0,
+          3
+         ],
+         [
+          6,
+          48,
+          0,
+          3
+         ],
+         [
+          6,
+          49,
+          0,
+          3
+         ],
+         [
+          6,
+          50,
+          0,
+          3
+         ],
+         [
+          6,
+          51,
+          0,
+          3
+         ],
+         [
+          7,
+          48,
+          0,
+          3
+         ],
+         [
+          7,
+          49,
+          0,
+          3
+         ],
+         [
+          7,
+          50,
+          0,
+          3
+         ],
+         [
+          7,
+          51,
+          0,
+          3
+         ],
+         [
+          8,
+          48,
+          0,
+          3
+         ],
+         [
+          8,
+          49,
+          0,
+          3
+         ],
+         [
+          8,
+          50,
+          0,
+          3
+         ],
+         [
+          8,
+          51,
+          0,
+          3
+         ],
+         [
+          9,
+          48,
+          0,
+          3
+         ],
+         [
+          9,
+          49,
+          0,
+          3
+         ],
+         [
+          9,
+          50,
+          0,
+          3
+         ],
+         [
+          9,
+          51,
+          0,
+          3
+         ],
+         [
+          10,
+          48,
+          0,
+          3
+         ],
+         [
+          10,
+          49,
+          0,
+          3
+         ],
+         [
+          10,
+          50,
+          0,
+          3
+         ],
+         [
+          10,
+          51,
+          0,
+          3
+         ],
+         [
+          11,
+          48,
+          0,
+          3
+         ],
+         [
+          11,
+          49,
+          0,
+          3
+         ],
+         [
+          11,
+          50,
+          0,
+          3
+         ],
+         [
+          11,
+          51,
+          0,
+          3
+         ],
+         [
+          12,
+          48,
+          0,
+          3
+         ],
+         [
+          12,
+          49,
+          0,
+          3
+         ],
+         [
+          12,
+          50,
+          0,
+          3
+         ],
+         [
+          12,
+          51,
+          0,
+          3
+         ],
+         [
+          13,
+          48,
+          0,
+          3
+         ],
+         [
+          13,
+          49,
+          0,
+          3
+         ],
+         [
+          13,
+          50,
+          0,
+          3
+         ],
+         [
+          13,
+          51,
+          0,
+          3
+         ],
+         [
+          14,
+          48,
+          0,
+          3
+         ],
+         [
+          14,
+          49,
+          0,
+          3
+         ],
+         [
+          14,
+          50,
+          0,
+          3
+         ],
+         [
+          14,
+          51,
+          0,
+          3
+         ],
+         [
+          15,
+          48,
+          0,
+          3
+         ],
+         [
+          15,
+          49,
+          0,
+          3
+         ],
+         [
+          15,
+          50,
+          0,
+          3
+         ],
+         [
+          15,
+          51,
+          0,
+          3
+         ],
+         [
+          16,
+          48,
+          0,
+          3
+         ],
+         [
+          16,
+          49,
+          0,
+          3
+         ],
+         [
+          16,
+          50,
+          0,
+          3
+         ],
+         [
+          16,
+          51,
+          0,
+          3
+         ],
+         [
+          17,
+          48,
+          0,
+          3
+         ],
+         [
+          17,
+          49,
+          0,
+          3
+         ],
+         [
+          17,
+          50,
+          0,
+          3
+         ],
+         [
+          17,
+          51,
+          0,
+          3
+         ],
+         [
+          18,
+          48,
+          0,
+          3
+         ],
+         [
+          18,
+          49,
+          0,
+          3
+         ],
+         [
+          18,
+          50,
+          0,
+          3
+         ],
+         [
+          18,
+          51,
+          0,
+          3
+         ],
+         [
+          19,
+          48,
+          0,
+          3
+         ],
+         [
+          19,
+          49,
+          0,
+          3
+         ],
+         [
+          19,
+          50,
+          0,
+          3
+         ],
+         [
+          19,
+          51,
+          0,
+          3
+         ],
+         [
+          24,
+          12,
+          3,
+          0
+         ],
+         [
+          24,
+          13,
+          3,
+          0
+         ],
+         [
+          24,
+          14,
+          3,
+          0
+         ]
+        ],
+        "your_prediction_was_wrong_at": [
+         [
+          10,
+          48,
+          0,
+          3
+         ],
+         [
+          10,
+          49,
+          0,
+          3
+         ],
+         [
+          10,
+          50,
+          0,
+          3
+         ],
+         [
+          10,
+          51,
+          0,
+          3
+         ],
+         [
+          11,
+          48,
+          0,
+          3
+         ],
+         [
+          11,
+          49,
+          0,
+          3
+         ],
+         [
+          11,
+          50,
+          0,
+          3
+         ],
+         [
+          11,
+          51,
+          0,
+          3
+         ],
+         [
+          12,
+          48,
+          0,
+          3
+         ],
+         [
+          12,
+          49,
+          0,
+          3
+         ],
+         [
+          12,
+          50,
+          0,
+          3
+         ],
+         [
+          12,
+          51,
+          0,
+          3
+         ],
+         [
+          13,
+          48,
+          0,
+          3
+         ],
+         [
+          13,
+          49,
+          0,
+          3
+         ],
+         [
+          13,
+          50,
+          0,
+          3
+         ],
+         [
+          13,
+          51,
+          0,
+          3
+         ],
+         [
+          14,
+          48,
+          0,
+          3
+         ],
+         [
+          14,
+          49,
+          0,
+          3
+         ],
+         [
+          14,
+          50,
+          0,
+          3
+         ],
+         [
+          14,
+          51,
+          0,
+          3
+         ],
+         [
+          15,
+          48,
+          0,
+          3
+         ],
+         [
+          15,
+          49,
+          0,
+          3
+         ],
+         [
+          15,
+          50,
+          0,
+          3
+         ],
+         [
+          15,
+          51,
+          0,
+          3
+         ],
+         [
+          16,
+          48,
+          0,
+          3
+         ],
+         [
+          16,
+          49,
+          0,
+          3
+         ],
+         [
+          16,
+          50,
+          0,
+          3
+         ],
+         [
+          16,
+          51,
+          0,
+          3
+         ],
+         [
+          17,
+          48,
+          0,
+          3
+         ],
+         [
+          17,
+          49,
+          0,
+          3
+         ],
+         [
+          17,
+          50,
+          0,
+          3
+         ],
+         [
+          17,
+          51,
+          0,
+          3
+         ],
+         [
+          18,
+          48,
+          0,
+          3
+         ],
+         [
+          18,
+          49,
+          0,
+          3
+         ],
+         [
+          18,
+          50,
+          0,
+          3
+         ],
+         [
+          18,
+          51,
+          0,
+          3
+         ],
+         [
+          19,
+          48,
+          0,
+          3
+         ],
+         [
+          19,
+          49,
+          0,
+          3
+         ],
+         [
+          19,
+          50,
+          0,
+          3
+         ],
+         [
+          19,
+          51,
+          0,
+          3
+         ],
+         [
+          24,
+          12,
+          3,
+          0
+         ],
+         [
+          24,
+          13,
+          3,
+          0
+         ],
+         [
+          24,
+          14,
+          3,
+          0
+         ],
+         [
+          24,
+          15,
+          3,
+          0
+         ],
+         [
+          25,
+          12,
+          3,
+          0
+         ],
+         [
+          25,
+          13,
+          3,
+          0
+         ],
+         [
+          25,
+          14,
+          3,
+          0
+         ],
+         [
+          25,
+          15,
+          3,
+          0
+         ],
+         [
+          26,
+          12,
+          3,
+          0
+         ],
+         [
+          26,
+          13,
+          3,
+          0
+         ],
+         [
+          26,
+          14,
+          3,
+          0
+         ],
+         [
+          26,
+          15,
+          3,
+          0
+         ],
+         [
+          27,
+          12,
+          3,
+          0
+         ],
+         [
+          27,
+          13,
+          3,
+          0
+         ],
+         [
+          27,
+          14,
+          3,
+          0
+         ],
+         [
+          27,
+          15,
+          3,
+          0
+         ],
+         [
+          28,
+          12,
+          3,
+          0
+         ],
+         [
+          28,
+          13,
+          3,
+          0
+         ],
+         [
+          28,
+          14,
+          3,
+          0
+         ],
+         [
+          28,
+          15,
+          3,
+          0
+         ],
+         [
+          29,
+          12,
+          3,
+          0
+         ],
+         [
+          29,
+          13,
+          3,
+          0
+         ],
+         [
+          29,
+          14,
+          3,
+          0
+         ],
+         [
+          29,
+          15,
+          3,
+          0
+         ],
+         [
+          30,
+          12,
+          3,
+          0
+         ],
+         [
+          30,
+          13,
+          3,
+          0
+         ],
+         [
+          30,
+          14,
+          3,
+          0
+         ],
+         [
+          30,
+          15,
+          3,
+          0
+         ],
+         [
+          31,
+          12,
+          3,
+          0
+         ],
+         [
+          31,
+          13,
+          3,
+          0
+         ],
+         [
+          31,
+          14,
+          3,
+          0
+         ],
+         [
+          31,
+          15,
+          3,
+          0
+         ],
+         [
+          32,
+          12,
+          3,
+          0
+         ],
+         [
+          32,
+          13,
+          3,
+          0
+         ],
+         [
+          32,
+          14,
+          3,
+          0
+         ],
+         [
+          32,
+          15,
+          3,
+          0
+         ],
+         [
+          33,
+          12,
+          3,
+          0
+         ],
+         [
+          33,
+          13,
+          3,
+          0
+         ],
+         [
+          33,
+          14,
+          3,
+          0
+         ],
+         [
+          33,
+          15,
+          3,
+          0
+         ]
+        ]
+       }
+      ]
+     }
+    ],
+    "verifier_is_oracle": false,
+    "win_state_exemplar_injected": true,
+    "goal_predicate_satisfiable": false,
+    "goal_satisfiability": {
+     "satisfiable": false,
+     "reachable_grids_evaluated": 2,
+     "engine_calls": 39,
+     "engine_errors": 0,
+     "max_nodes": 20000,
+     "max_depth": 80,
+     "budget_unit": "engine_calls_matching_plan_in_model",
+     "termination": "queue_exhausted",
+     "frontier_remaining": 0,
+     "depth_truncated_nodes": 0,
+     "counterexample": {
+      "kind": "degenerate_goal_predicate",
+      "detail": "the reachable set was searched exhaustively (frontier empty, no node discarded at the depth cap) and the goal was never true, so this predicate is unreachable under this engine.",
+      "termination": "queue_exhausted",
+      "frontier_remaining": 0,
+      "depth_truncated_nodes": 0,
+      "reachable_grids_evaluated": 2,
+      "engine_calls": 39,
+      "max_nodes": 20000,
+      "max_depth": 80,
+      "budget_unit": "engine_calls_matching_plan_in_model"
+     }
+    },
+    "goal_expression": "",
+    "structural_goal_diagnostics": {},
+    "subgoal_search_used": false,
+    "subgoal_decomposition": [],
+    "per_subgoal_reachable": [],
+    "factored_planner_used": false,
+    "expert_trust_weights": []
+   }
+  ],
+  "hv_progress_measurable": true,
+  "hv_distinct_values_observed": 2,
+  "hv_exception_count": 0,
+  "hv_sentinel_frac": 0.0,
+  "hv_progress_per_level": {
+   "0": 1.0,
+   "1": 0.0
+  },
+  "hv_progress_best_level": 1.0,
+  "hv_progress_global_legacy": 0.0
+ },
+ "provenance": {
+  "schema": "carnot.arc.action_provenance.v1",
+  "summary": {
+   "game": "vc33",
+   "run_label": "vc33",
+   "actions_recorded": 18,
+   "new_information_expansions": 14,
+   "new_information_expansion_fraction": 0.777778,
+   "navigation_or_replay_actions": 3,
+   "navigation_or_replay_fraction": 0.166667,
+   "plan_derived_actions": 0,
+   "plan_derived_fraction": 0.0,
+   "plan_step_actions": 0,
+   "plan_from_current_actions": 0,
+   "reset_for_plan_replay_actions": 0,
+   "explorer_actions": 18,
+   "explorer_fraction": 1.0,
+   "by_top_branch": {
+    "explore.explorer": 17,
+    "induce.no_plan.explorer": 1
+   },
+   "by_explorer_branch": {
+    "bootstrap_reset": 1,
+    "depth_ride.pop_untested": 12,
+    "frontier.navigate": 2,
+    "pending_drain": 3
+   },
+   "by_serve_kind": {
+    "navigation": 3,
+    "probe": 2
+   },
+   "plan_epochs": 0,
+   "plans_installed": 0,
+   "plans_consumed_fully": 0,
+   "plans_abandoned": 0,
+   "unknown_top_branches": [],
+   "unknown_explorer_branches": [],
+   "recorder_errors": []
+  },
+  "rows": [
+   {
+    "i": 0,
+    "game": "vc33",
+    "action": "RESET",
+    "data": null,
+    "top_branch": "explore.explorer",
+    "explorer_branch": "bootstrap_reset",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": null,
+    "level_after": null,
+    "frame_changed_since_last_action": null,
+    "frames_seen": 0,
+    "transitions_n": 0,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 0,
+    "explorer_cur_depth": null,
+    "explorer_untested_at_cur": null,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 1,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 38,
+     "y": 29
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": null,
+    "frames_seen": 1,
+    "transitions_n": 0,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 1,
+    "explorer_cur_depth": 0,
+    "explorer_untested_at_cur": 9,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 2,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 50,
+     "y": 46
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 2,
+    "transitions_n": 1,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 1,
+    "explorer_cur_depth": 0,
+    "explorer_untested_at_cur": 8,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 3,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 25
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 3,
+    "transitions_n": 2,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 1,
+    "explorer_cur_depth": 0,
+    "explorer_untested_at_cur": 7,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 4,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 54,
+     "y": 46
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 4,
+    "transitions_n": 3,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 2,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 10,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 5,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 5,
+    "transitions_n": 4,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 2,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 9,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 6,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 6,
+    "transitions_n": 5,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 2,
+    "explorer_cur_depth": 0,
+    "explorer_untested_at_cur": 6,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 7,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 25
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 7,
+    "transitions_n": 6,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 3,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 10,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 8,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 25
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "frontier.navigate",
+    "explorer_serve_kind": "navigation",
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 8,
+    "transitions_n": 7,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 1,
+    "explorer_graph_nodes": 3,
+    "explorer_cur_depth": 0,
+    "explorer_untested_at_cur": 6,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 9,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 38,
+     "y": 29
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "pending_drain",
+    "explorer_serve_kind": "probe",
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 9,
+    "transitions_n": 8,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 3,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 8,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 10,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 25
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 10,
+    "transitions_n": 9,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 3,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 7,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 11,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 11,
+    "transitions_n": 10,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 4,
+    "explorer_cur_depth": 2,
+    "explorer_untested_at_cur": 10,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 12,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "frontier.navigate",
+    "explorer_serve_kind": "navigation",
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 12,
+    "transitions_n": 11,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 2,
+    "explorer_graph_nodes": 4,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 7,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 13,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "pending_drain",
+    "explorer_serve_kind": "navigation",
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 13,
+    "transitions_n": 12,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 1,
+    "explorer_graph_nodes": 4,
+    "explorer_cur_depth": 0,
+    "explorer_untested_at_cur": 6,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 14,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "pending_drain",
+    "explorer_serve_kind": "probe",
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 14,
+    "transitions_n": 13,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 4,
+    "explorer_cur_depth": 1,
+    "explorer_untested_at_cur": 9,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 15,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 61,
+     "y": 33
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": false,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 0,
+    "level_after": 0,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 15,
+    "transitions_n": 14,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 5,
+    "explorer_cur_depth": 2,
+    "explorer_untested_at_cur": 10,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 0,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 16,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 1,
+     "y": 25
+    },
+    "top_branch": "explore.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": true,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": true,
+    "induction_attempts_n": 0,
+    "induction_attempt_index": null,
+    "induction_ran_this_action": false,
+    "induction_reason": null,
+    "induction_skipped": null,
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 1,
+    "level_after": 1,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 16,
+    "transitions_n": 15,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 6,
+    "explorer_cur_depth": 3,
+    "explorer_untested_at_cur": 13,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 1,
+    "explorer_search_mode": "depth_first_ride"
+   },
+   {
+    "i": 17,
+    "game": "vc33",
+    "action": 6,
+    "data": {
+     "x": 1,
+     "y": 45
+    },
+    "top_branch": "induce.no_plan.explorer",
+    "explorer_branch": "depth_ride.pop_untested",
+    "explorer_serve_kind": null,
+    "phase_before": "explore",
+    "phase_after": "explore",
+    "plan_len": 0,
+    "plan_pi": 0,
+    "plan_remaining": 0,
+    "plan_present": false,
+    "plan_replaced_this_action": false,
+    "plan_epoch": 0,
+    "plan_installed_by_attempt": null,
+    "plan_abandoned_this_action": false,
+    "execute_plan_from_current": true,
+    "induction_attempts_n": 1,
+    "induction_attempt_index": 0,
+    "induction_ran_this_action": true,
+    "induction_reason": "level_up_reinduction",
+    "induction_skipped": "degenerate_goal_predicate",
+    "induction_planned": false,
+    "engine_source": null,
+    "trust_energy": null,
+    "heldout_accuracy": null,
+    "verify_accuracy": null,
+    "verify_cell_recall": null,
+    "binary_gate_pass": null,
+    "plan_termination_reason": null,
+    "trust_selection_present": false,
+    "trust_selection_trust_pass": null,
+    "level_before": 1,
+    "level_after": 1,
+    "frame_changed_since_last_action": true,
+    "frames_seen": 17,
+    "transitions_n": 16,
+    "explore_budget": 24,
+    "explorer_explored_out": false,
+    "explorer_pending_len": 0,
+    "explorer_graph_nodes": 7,
+    "explorer_cur_depth": 4,
+    "explorer_untested_at_cur": 14,
+    "explorer_max_depth": 45,
+    "explorer_best_level": 1,
+    "explorer_search_mode": "depth_first_ride"
+   }
+  ]
+ }
+}
