@@ -260,6 +260,163 @@
  },
  "git_head": "25a04ec32bb732b04ee339d89c311a0357079acc",
  "reproducibility_checksum": "31a7b117795ccf216fda67977a479636ac1e3c9e68731c748c24237022afbb7c",
- "honest_verdict": "complete_g50t_frontier_exhaustion_is_a_REAL_BUG_not_genuine_exhaustion__at_the_moment_explored_out_fired_all_56_nodes_had_zero_untested_rows_but_19_reachable_untested_state_action_pairs_reaching_7_never_observed_states_remained__cause_is_that_untested_rows_are_debited_from_the_INTENDED_target_node_while_the_probe_executes_wherever_navigation_actually_landed_so_13_of_56_nodes_were_declared_exhausted_having_NEVER_been_probed_and_only_162_of_280_rows_58pct_executed_where_debited__the_GLOBAL_TIER_BARRIER_REQ_ARC_WMTE_5836_is_NOT_implicated_it_never_activates_on_this_nav_only_game_and_the_discriminator_pruned_0_nodes__root_cause_is_a_non_Markov_graph_key_90_of_783_raw_state_action_keys_had_multiple_successors_under_proven_trajectory_determinism_which_writes_false_edges_and_fabricated_node_paths__the_COLLAPSE_is_g50t_only_3_of_75_defer_cells_0_of_150_control_cells_and_I_do_not_extrapolate_it_but_the_MIS_ATTRIBUTION_mechanism_is_roster_wide_median_miss_rate_10pct_q3_63pct_max_100pct_tn36_severe_in_8_of_25_games__the_minus_978_action_saving_was_a_regression_states_fell_142_to_56_and_hv_progress_fell_0.667_to_0.333",
- "reproducibility_checksum_note": "sha256 of scripts/arc_frontier_exhaustion_probe.py AFTER ruff-format. The pre-format value was ee3a1c7a4b2b6a12d9c785de2ab4d13b1291a4c54f29d9be24bf67517fb95374; recorded here because the artifact was written before the pre-commit formatter ran and an uncorrected checksum would not reproduce."
+ "honest_verdict": "complete_g50t_early_stop_is_a_REAL_PREMATURE_STOP_but_its_CAUSE_is_NOT_ESTABLISHED: at the moment `explored_out` fired, defer/g50t had 19 one-ply-reachable untested (state,action) pairs leading to 7 never-observed states, every one of which the control arm did observe; control, which ran its full budget, had 0. THAT EXISTENCE CLAIM SURVIVED ADVERSARIAL REVIEW AND I REPRODUCED IT INDEPENDENTLY. The stated CAUSE did not. Attributing each residual pair to its node's debit class gives {partially_probed 10, fully_probed 8, never_probed 1}: the never-probed class the mis-debiting story is about is the LEAST likely to hold residual work (7.7% vs 23.1% for fully-probed nodes), and 8 of 19 pairs sit on nodes where every row executed exactly where it was debited. Decisively, the CONTROL arm runs the same accounting defect at the same intensity (411/698 = 58.9% executed where debited, vs defer 162/280 = 57.9%) with MORE never-probed nodes (17 vs 13) and neither exhausts nor leaves any residual. So row mis-debiting is a real co-occurring defect, not the demonstrated cause. The undiagnosed question, now named rather than papered over, is why the defer graph stopped GROWING at 56 nodes while control reached 142. Root-cause proportionality is also corrected: the HUD mask collapses 596 observed frames into 56 nodes and the guard attributes 214 of 215 branchings to in-mask differences against 1 outside, so mask-induced aliasing DOMINATES the 90/783 raw hidden-state aliasing the original led with. Roster q3 is 0.6083, not 0.633. Effective evidence is one distinct run per (game, arm) -- control_b is byte-identical to control on 75/75 and all three seeds are byte-identical within every arm. The original honest_verdict is preserved verbatim in `honest_verdict_original_pre_adversarial_correction_20260802`.",
+ "reproducibility_checksum_note": "sha256 of scripts/arc_frontier_exhaustion_probe.py AFTER ruff-format. The pre-format value was ee3a1c7a4b2b6a12d9c785de2ab4d13b1291a4c54f29d9be24bf67517fb95374; recorded here because the artifact was written before the pre-commit formatter ran and an uncorrected checksum would not reproduce.",
+ "adversarial_review_corrections_20260802": {
+  "review_verdict": "holds = FALSE. The finding's EXISTENCE claim survives intact; its stated CAUSE does not.",
+  "how_i_verified_before_applying": "I wrote my own instrumentation from scratch (per-node debit accounting joined to per-node escape identity -- a join the shipped probe never computes) and re-ran both g50t arms. Every disputed number reproduced. The reviewer is right.",
+  "correction_1_ROOT_CAUSE_OVERCLAIMED_SPLIT_THE_VERDICT": {
+   "what_the_artifact_welded_together": "'19 reachable untested pairs remained' AND 'Cause: untested rows are debited from the INTENDED target node ... so 13 of 56 nodes were declared exhausted having NEVER been probed.'",
+   "the_join_the_shipped_probe_never_did": "The two halves are only one finding if the residual work LOCALISES to the mis-debited nodes. I attributed each residual pair to its node's debit class.",
+   "measured_by_me_defer_arm": {
+    "escape_PAIRS_by_node_class": {
+     "partially_probed": 10,
+     "fully_probed_in_place": 8,
+     "never_probed_in_place": 1
+    },
+    "escape_NODES_by_node_class": {
+     "partially_probed": 9,
+     "fully_probed_in_place": 6,
+     "never_probed_in_place": 1
+    },
+    "nodes_per_class": {
+     "fully_probed_in_place": 26,
+     "partially_probed": 17,
+     "never_probed_in_place": 13
+    },
+    "escape_RATE_per_class": {
+     "never_probed_in_place": 0.0769,
+     "fully_probed_in_place": 0.2308,
+     "partially_probed": 0.5294
+    }
+   },
+   "the_decisive_reading": "The never-probed class -- the one the mis-debiting story is about -- is the LEAST likely to hold residual work (7.7%), THREE TIMES less likely than a fully-probed node (23.1%). 8 of the 19 residual pairs sit on nodes where every row executed exactly where it was debited. Mis-debiting cannot explain those at all.",
+   "corrected_verdict": "A real premature stop with reachable work left. A co-occurring row-accounting defect is documented and is real, but is NOT shown to be its cause.",
+   "originals_preserved": "finding_4 and finding_5 are unchanged above; only their causal WELD is retracted."
+  },
+  "correction_2_THE_MECHANISM_CANNOT_BE_THE_SUFFICIENT_CAUSE": {
+   "measured_by_me_both_arms": {
+    "defer": {
+     "rows_debited": 280,
+     "executed_where_debited": 162,
+     "fraction": 0.5786,
+     "never_probed_nodes": 13,
+     "partial": 17,
+     "full": 26,
+     "states": 56,
+     "actions": 1022,
+     "explored_out": true,
+     "escape_pairs": 19
+    },
+    "control": {
+     "rows_debited": 698,
+     "executed_where_debited": 411,
+     "fraction": 0.5888,
+     "never_probed_nodes": 17,
+     "partial": 88,
+     "full": 36,
+     "states": 142,
+     "actions": 2000,
+     "explored_out": false,
+     "escape_pairs": 0
+    }
+   },
+   "why_this_is_decisive": "Control runs the SAME defect at the SAME intensity (58.9% vs 57.9% executed where debited) and has MORE never-probed nodes in absolute terms (17 vs 13) -- and it does not exhaust, and it has ZERO residual pairs. A mechanism present at equal strength in an arm that does not exhibit the outcome is not the outcome's sufficient cause.",
+   "the_artifacts_own_bridge_was_never_measured": "'The defer lever only changed the pop order enough that the drain completed inside the 2000-action budget' is asserted with no measurement anywhere in this run.",
+   "the_real_open_question_now_named": "Why did the defer arm's graph stop GROWING at 56 nodes while control's grew to 142? That is undiagnosed, and it -- not the row accounting -- is the proximate cause of the early stop. Scoped, deliberately not fixed here."
+  },
+  "correction_3_RELABEL_THE_ESCAPE_AUDIT": {
+   "measured_by_me": {
+    "escape_nodes": 16,
+    "escape_nodes_whose_path_replays_to_their_own_key": 5,
+    "all_defer_nodes_replaying_to_own_key": 25,
+    "of": 56,
+    "control": {
+     "replaying": 12,
+     "of": 142
+    }
+   },
+   "consequence": "For 11 of the 16 escape nodes, the audit expands one ply from wherever the fabricated path LANDS, not from the node whose rows were spent elsewhere.",
+   "corrected_label": "It is a valid EXISTENCE certificate -- 'replaying the agent's own recorded action sequences reaches states with unobserved successors' -- and an INVALID ATTRIBUTION to specific unprobed nodes. finding_5's count of 19 stands; its implied localisation does not."
+  },
+  "correction_4_THE_DENOMINATOR_IS_DOUBLED": {
+   "what_the_artifact_said": "control 0 of 75, control_b 0 of 75, defer 3 of 75",
+   "measured_by_me": "control and control_b have byte-identical trace_sha256 on 75 of 75 game/seed pairs. Within EVERY arm, all three seeds are byte-identical on 25 of 25 games.",
+   "effective_evidence": "ONE distinct run per (game, arm) across 25 games. Not 150 control cells, not n=3 seeds.",
+   "note": "The artifact's own seed_axis_note already said the seed axis is inert; the roster_scope verdict line did not, and now does."
+  },
+  "correction_5_Q3_TRANSCRIPTION_ERROR": {
+   "what_the_artifact_said": "q3 = 0.633",
+   "measured_by_me": 0.6083333333333333,
+   "method_check": "recomputed from the 25 shipped roster_nav_arrival files under all five numpy quantile methods (linear/lower/higher/midpoint/nearest) -- every one returns 0.6083",
+   "everything_else_in_that_distribution_reproduces": {
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.1003,
+    "max": 1.0,
+    "games_at_zero": 8,
+    "games_above_0.5": 8,
+    "worst_list": "identical"
+   }
+  },
+  "correction_6_ROOT_CAUSE_PROPORTIONALITY_IS_INVERTED": {
+   "what_the_artifact_said": "leads with '90 of 783 raw (state,action) keys' as 'the actual cause' and demotes masking to 'Masking makes it worse'",
+   "measured_by_me_on_a_fresh_run": {
+    "distinct_raw_state_action_keys": 783,
+    "raw_keys_with_multiple_successors": 90,
+    "raw_fraction": 0.115,
+    "distinct_raw_frames_observed": 596,
+    "graph_nodes": 56,
+    "collapse_ratio": 10.6
+   },
+   "the_guards_own_attribution": {
+    "branchings_differing_in_already_shipped_mask_region": 214,
+    "branchings_differing_outside_the_mask": 1,
+    "branchings_in_repair_added_region": 0,
+    "keys_with_multiple_successors": 15,
+    "unproven_masked_branchings": 178,
+    "acted_on_unproven_branchings": false,
+    "split_node_count": 0
+   },
+   "corrected_ordering": "Raw hidden-state aliasing is real and reproduces (90/783 = 11.5%), but it is the MINORITY contributor. The HUD mask collapses 596 distinct observed frames into 56 graph nodes, and the guard attributes 214 of 215 branchings to differences INSIDE the already-shipped mask region against 1 outside it. Mask-induced aliasing dominates; the root-cause prose should lead with it."
+  },
+  "correction_7_UNSTATED_PROVENANCE_CAVEAT": {
+   "verified_live": "Every cell configures itself via `_recommend_live_approach` -> `arc_strategy_router.route_for_game(game)`, which reads `mechanic_class` from ops/arc_solve_registry.yaml for the NAMED public game. For g50t this yields mechanic 'graph_explore' and explore_budget = 80 (I printed it from a live run).",
+   "is_this_a_comparison_bias": "No -- both arms take the identical route.",
+   "what_it_does_affect": "The roster-wide miss-rate figures were measured under registry-informed routing that a HIDDEN game would never receive. Since this finding's forward-looking consequence is about live-agent behaviour, state it as a hidden-game transfer caveat."
+  },
+  "correction_8_WHAT_SURVIVED_ATTACK_AND_MUST_NOT_BE_ERASED": {
+   "reproduced_by_me_independently": [
+    "defer: 1022 actions / 56 states / explored_out True / 0 untested rows remaining; control: 2000 / 142 / no exhaustion",
+    "defer 16 nodes with an unrecorded successor, 19 reachable untested (state,action) pairs, 7 distinct never-observed successor states; control 0 / 0 / 0",
+    "nav arrival defer 141 probes / 23 arrived / 118 missed (83.7%); control 309 / 23 / 286 (92.6%)",
+    "the -978 'action saving' is a REGRESSION on the same cell: states 142 -> 56 and hv_progress 0.6667 -> 0.3333",
+    "cells record `timed_out` but carry NO `explored_out` field -- the missing datum that made a collapse indistinguishable from a saving"
+   ],
+   "reviewer_attacks_I_did_NOT_independently_re_run": [
+    "re-scoring control's one-ply expansion with its known set truncated to defer-comparable size (119 states) -- reported by the reviewer as still 0 escapes; I verified control's 0 only with its FULL known set",
+    "whether all 7 defer escape targets are states the control arm observed"
+   ],
+   "one_I_did_re_run": "HUD-mask instability as an alternative explanation for the misses: I measured the mask first resolving at action index 1 of the run (the reviewer said index 2). Either way it settles essentially immediately, so a moving identity function is not what makes navigation miss.",
+   "the_recommended_guard_is_unaffected_by_the_causal_dispute": "Record `explored_out` per cell; report a cell ending explored_out=true with levels_gained=0 as a FRONTIER COLLAPSE and exclude it from action-efficiency means. This should ship regardless of which mechanism turns out to cause the stop."
+  }
+ },
+ "honest_verdict_corrected_20260802": "complete_g50t_early_stop_is_a_REAL_PREMATURE_STOP_but_its_CAUSE_is_NOT_ESTABLISHED: at the moment `explored_out` fired, defer/g50t had 19 one-ply-reachable untested (state,action) pairs leading to 7 never-observed states, every one of which the control arm did observe; control, which ran its full budget, had 0. THAT EXISTENCE CLAIM SURVIVED ADVERSARIAL REVIEW AND I REPRODUCED IT INDEPENDENTLY. The stated CAUSE did not. Attributing each residual pair to its node's debit class gives {partially_probed 10, fully_probed 8, never_probed 1}: the never-probed class the mis-debiting story is about is the LEAST likely to hold residual work (7.7% vs 23.1% for fully-probed nodes), and 8 of 19 pairs sit on nodes where every row executed exactly where it was debited. Decisively, the CONTROL arm runs the same accounting defect at the same intensity (411/698 = 58.9% executed where debited, vs defer 162/280 = 57.9%) with MORE never-probed nodes (17 vs 13) and neither exhausts nor leaves any residual. So row mis-debiting is a real co-occurring defect, not the demonstrated cause. The undiagnosed question, now named rather than papered over, is why the defer graph stopped GROWING at 56 nodes while control reached 142. Root-cause proportionality is also corrected: the HUD mask collapses 596 observed frames into 56 nodes and the guard attributes 214 of 215 branchings to in-mask differences against 1 outside, so mask-induced aliasing DOMINATES the 90/783 raw hidden-state aliasing the original led with. Roster q3 is 0.6083, not 0.633. Effective evidence is one distinct run per (game, arm) -- control_b is byte-identical to control on 75/75 and all three seeds are byte-identical within every arm. The original honest_verdict is preserved verbatim in `honest_verdict_original_pre_adversarial_correction_20260802`.",
+ "scope_what_this_contaminates_20260802": {
+  "decision": "SCOPED, NOT FIXED IN THIS RUN. A frontier-correctness fix changes what every ARC search does and deserves its own measured change with its own default-OFF gate, not a drive-by inside a review pass.",
+  "confirmed_contaminated": [
+   "results/arc_inert_label_defer_20260802 -- the defer arm's g50t cells (3 of 75, all three seeds). The -978-action 'saving' on that cell is a REGRESSION: states 142 -> 56, hv_progress 0.6667 -> 0.3333. Any action-efficiency mean over that arm that includes g50t is contaminated in the improving direction.",
+   "Any past or future ARC action-efficiency comparison that includes a cell which ended via explored_out with levels_gained = 0. Cells currently record `timed_out` but NOT `explored_out`, so such a cell is indistinguishable from a genuine saving in the artifact."
+  ],
+  "NOT_established_as_contaminated": [
+   "The rest of the roster's early-stop behaviour. No game other than g50t stopped early in either the source A/B (0 of 75 control, 0 of 75 control_b) or my roster sweep. I do not extrapolate the collapse.",
+   "Any level-count or solve claim. Nothing here banks or retracts a level; ops/arc_solve_registry.yaml is untouched.",
+   "The win-transition exposure measurement in the sibling artifact. Its cells all self-terminated below cap, but it claims no improvement -- an early stop cannot manufacture an effect where no effect is claimed. It IS a bound on what its availability rate describes, and is recorded there as correction 8b."
+  ],
+  "the_cheap_guard_to_ship_first": "Record `explored_out` in every ARC cell artifact, and report a cell ending explored_out=true with levels_gained=0 as FRONTIER COLLAPSE, excluded from action-efficiency means. This is a reporting change with no behavioural risk and it makes the contamination visible; it does not require settling the causal dispute.",
+  "the_real_investigation_when_it_is_scoped": "Why the defer graph stopped growing at 56 nodes while control reached 142 -- not the row accounting, which control shares at equal intensity."
+ },
+ "reproducibility_checksum_corrected_20260802": "c9ab997072ddded4354c417cd257decd063a150113455dc90e81972921342257",
+ "honest_verdict_original_pre_adversarial_correction_20260802": "complete_g50t_frontier_exhaustion_is_a_REAL_BUG_not_genuine_exhaustion__at_the_moment_explored_out_fired_all_56_nodes_had_zero_untested_rows_but_19_reachable_untested_state_action_pairs_reaching_7_never_observed_states_remained__cause_is_that_untested_rows_are_debited_from_the_INTENDED_target_node_while_the_probe_executes_wherever_navigation_actually_landed_so_13_of_56_nodes_were_declared_exhausted_having_NEVER_been_probed_and_only_162_of_280_rows_58pct_executed_where_debited__the_GLOBAL_TIER_BARRIER_REQ_ARC_WMTE_5836_is_NOT_implicated_it_never_activates_on_this_nav_only_game_and_the_discriminator_pruned_0_nodes__root_cause_is_a_non_Markov_graph_key_90_of_783_raw_state_action_keys_had_multiple_successors_under_proven_trajectory_determinism_which_writes_false_edges_and_fabricated_node_paths__the_COLLAPSE_is_g50t_only_3_of_75_defer_cells_0_of_150_control_cells_and_I_do_not_extrapolate_it_but_the_MIS_ATTRIBUTION_mechanism_is_roster_wide_median_miss_rate_10pct_q3_63pct_max_100pct_tn36_severe_in_8_of_25_games__the_minus_978_action_saving_was_a_regression_states_fell_142_to_56_and_hv_progress_fell_0.667_to_0.333",
+ "honest_verdict_supersession_note": "The text now in `honest_verdict` is the CORRECTED verdict, after an independent adversarial review whose every correction was re-verified against this run's own cells before being applied. The pre-correction verdict is preserved BYTE-FOR-BYTE in `honest_verdict_original_pre_adversarial_correction_20260802` (never-prune). It was moved out of `honest_verdict` rather than left beside it because scripts/summarize_artifact.py reads that field first, and a superseded claim sitting in the field the reading discipline steers by would make the correction decorative. See `adversarial_review_corrections_20260802` for the full working."
 }

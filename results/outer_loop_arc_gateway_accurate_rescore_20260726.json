@@ -3184,6 +3184,20 @@
     "acknowledged_on": "2026-08-02",
     "reason": "CASCADE, not a re-measurement. The upstream artifact's NUMBERS did not move: the only edit to it on 2026-08-02 was appending one `provenance.freshness_acknowledgements` entry recording that REQ-ARC-WMTE-6071's default-OFF change to python/carnot/agentic/arc_competition_agent.py is verified inert. Acknowledging a provenance-block append as inert downstream is the same judgement, one level up.",
     "evidence": "PROVEN BY DIFF. `git diff` on the upstream artifact for this date shows insertions only, entirely inside `provenance.freshness_acknowledgements`, and zero deletions and zero changed result keys. The underlying code inertness it records was itself proven by a 25-of-25 byte-identical action-trace differential against git HEAD -- see that entry's own `evidence` field and results/arc_inert_label_defer_20260802/arc_inert_label_defer.json."
+   },
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": "dc800f7f68c68ce5c0e92df5320bc92d42652f2eece0c31fef6918d82fe2c164",
+    "sha256_now": "357b9e2f15e83658a6dcf343c0421085d31f3fe47add23e28f554283f35995c9",
+    "reason": "The upstream artifact changed in its `provenance` block ONLY: REQ-ARC-WMTE-6083 appended one `freshness_acknowledgements` entry recording that the win-transition supply in arc_competition_agent.py is now behind a default-OFF env gate. Not one measured value, gate, count or verdict in the upstream artifact was touched, so nothing this artifact imports from it can have moved.",
+    "evidence": "PROVEN MECHANICALLY, not asserted: the upstream file was loaded at git HEAD and from disk, the `provenance` key popped from both, and the remaining objects compared for equality -- they are equal, so the ONLY difference is inside `provenance`, which this artifact does not consume. The upstream acknowledgement is itself evidenced by the live-path measurement in results/outer_loop_arc_win_transition_exposure_20260802.json: over 128 live induce calls the argument was None on all 98 that reached the gated call site, and `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, so passing None and omitting the keyword are the same computation."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": "73427fa2dea423ad74249c0b0f038b9cdf93420ddee1a0fec32cb6e7c6fdcc38",
+    "sha256_now": "f5a871cc9d0002bb67d75f3a29a2e178662a70f80af80ff55e08238d6aace864",
+    "reason": "The upstream artifact changed in its `provenance` block ONLY: REQ-ARC-WMTE-6083 appended one `freshness_acknowledgements` entry recording that the win-transition supply in arc_competition_agent.py is now behind a default-OFF env gate. Not one measured value, gate, count or verdict in the upstream artifact was touched, so nothing this artifact imports from it can have moved.",
+    "evidence": "PROVEN MECHANICALLY, not asserted: the upstream file was loaded at git HEAD and from disk, the `provenance` key popped from both, and the remaining objects compared for equality -- they are equal, so the ONLY difference is inside `provenance`, which this artifact does not consume. The upstream acknowledgement is itself evidenced by the live-path measurement in results/outer_loop_arc_win_transition_exposure_20260802.json: over 128 live induce calls the argument was None on all 98 that reached the gated call site, and `_transitions_block` does `win = win_transition; if win is None: win = <scan>`, so passing None and omitting the keyword are the same computation."
    }
   ]
  },
