@@ -1,0 +1,1160 @@
+{
+ "experiment": "outer_loop_arc_explorer_renavigation_decomposition",
+ "schema": "carnot.arc.explorer_action_class_decomposition.v1",
+ "run_date": "2026-08-02T17:07:18Z",
+ "milestone": "2026.08.outer_loop",
+ "question": "The 2026-08-01 tn36 action census found 177 of 240 actions (73.8%) were navigation or replay back to already-visited states. Decompose the non-expanding actions of a real, NON-solve-conditioned exploration run into named classes with shares, say for each what would have to change for those actions not to be spent, and price the largest avoidable class in ARC-AGI-3's own quadratic scoring units.",
+ "honest_verdict": "complete_the_tn36_73pct_renavigation_figure_does_not_generalize_roster_renavigation_is_11_7pct_and_the_largest_avoidable_class_is_inert_probes_at_19_1pct_not_renavigation",
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "inference_substrate_note": "E3AgentPolicy (the SCORED policy) steps the OFFLINE arcade (OperationMode.OFFLINE over the local environment_files/ tree). No scorecard is submitted, no online game is played, no API key is used. No LLM is constructed and no generator server is started: CARNOT_ARC_DISABLE_INDUCTION=1 short-circuits the induce tier before any proposer method is called, and CUDA_VISIBLE_DEVICES was empty in every child process. There is no model to name, so model_specs is absent by design for this substrate; random_seed and reproducibility_checksum are present as the substrate requires.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "This is an INSTRUMENT run. It banks no level, claims no solve, runs no reproduction gate and writes no row to ops/arc_solve_registry.yaml. The levels_reached_within_budget field records, as an incidental observation, that some games happened to advance a level inside the 240-action instrument budget; those are NOT banked solves and must not be cited as such.",
+ "verifier_is_oracle": {
+  "value": false,
+  "principle": "Nothing here consults a win oracle. The recorded quantity is which code branch emitted each action and whether the resulting frame/state was new -- facts about the agent's own search, not about whether an answer was right."
+ },
+ "random_seed": 20260802,
+ "duration_s": 418.997,
+ "preconditions_checked": [
+  {
+   "resource": "offline arcade environment_files present",
+   "available": true,
+   "evidence": "every cell loaded its game class from environment_files/<game>/"
+  },
+  {
+   "resource": "CARNOT_ARC_E3_DIR redirected away from tracked results/arc_e3",
+   "available": true,
+   "evidence": "arc_explorer_renavigation_probe.py refuses to start otherwise; `git status results/arc_e3` clean before and after the census"
+  },
+  {
+   "resource": "CARNOT_ARC_DISABLE_INDUCTION=1 (no LLM, no generator server)",
+   "available": true,
+   "evidence": "probe refuses to start otherwise"
+  },
+  {
+   "resource": "no GPU used",
+   "available": true,
+   "evidence": "CUDA_VISIBLE_DEVICES='' in every child process env"
+  }
+ ],
+ "config": {
+  "games": [
+   "ar25",
+   "bp35",
+   "cd82",
+   "cn04",
+   "dc22",
+   "ft09",
+   "g50t",
+   "ka59",
+   "lf52",
+   "lp85",
+   "ls20",
+   "m0r0",
+   "r11l",
+   "re86",
+   "s5i5",
+   "sb26",
+   "sc25",
+   "sk48",
+   "sp80",
+   "su15",
+   "tn36",
+   "tr87",
+   "tu93",
+   "vc33",
+   "wa30"
+  ],
+  "n_games": 25,
+  "actions_per_game": 240,
+  "arms": [
+   "shipped",
+   "tier_off"
+  ],
+  "policy": "E3AgentPolicy (scored) driven action-by-action against offline_arcade()",
+  "explore_budget": "resolved per game by _route_explore_budget, as the scored agent does",
+  "generator": "none (induction disabled)"
+ },
+ "corpus_is_not_solve_conditioned": {
+  "value": true,
+  "principle": "A window built through arc_actions_to_progress.build_progress_window requires the game to be ALREADY SOLVED to L1 through a registered GameAdapter and then shows a prefix of a banked WINNING route, so a re-navigation measurement built on one inherits its own answer. These traces come from a FRESH RESET with a bounded budget on the offline arcade: no adapter, no banked route, and 24 of the 25 games do not reach a level inside the budget."
+ },
+ "explore_budget_control": {
+  "control": "explore_budget_invariance_with_induction_disabled",
+  "game": "tn36",
+  "why": "The 2026-08-01 census pinned explore_budget=24 for every game while _route_explore_budget gives 80 for the 23 graph_explore-routed games, so 4 of its 5 games ran at a third of their scored budget. This control shows the caveat cannot apply to THIS measurement: with induction disabled, explore_budget only decides WHEN the policy passes through a no-op induce phase, and the action itself still comes from explorer.next_move -- so the trajectory is budget-invariant.",
+  "explore_budgets_tested": [
+   24,
+   80,
+   240
+  ],
+  "arms": {
+   "24": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 16,
+     "expansion.probe_revisited_known_state": 29,
+     "renavigation.reset_action": 27,
+     "renavigation.replay_prefix_shared_with_current_path": 167
+    },
+    "action_trace_sha256": "25a41a2f59f765766260a9e1dd4f61b4af733ccf71939f0bfb0766abec6731eb",
+    "wall_s": 3.003
+   },
+   "80": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 16,
+     "expansion.probe_revisited_known_state": 29,
+     "renavigation.reset_action": 27,
+     "renavigation.replay_prefix_shared_with_current_path": 167
+    },
+    "action_trace_sha256": "25a41a2f59f765766260a9e1dd4f61b4af733ccf71939f0bfb0766abec6731eb",
+    "wall_s": 3.118
+   },
+   "240": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 16,
+     "expansion.probe_revisited_known_state": 29,
+     "renavigation.reset_action": 27,
+     "renavigation.replay_prefix_shared_with_current_path": 167
+    },
+    "action_trace_sha256": "25a41a2f59f765766260a9e1dd4f61b4af733ccf71939f0bfb0766abec6731eb",
+    "wall_s": 3.065
+   }
+  },
+  "all_action_traces_byte_identical": true,
+  "duration_s": 9.19,
+  "note_on_the_census_runs": "Independently of this control, every census cell resolved its own explore_budget through _route_explore_budget exactly as make_carnot_agent does, so no cell was pinned to a wrong integer."
+ },
+ "arms": {
+  "shipped": {
+   "total_actions": 6000,
+   "classes": [
+    {
+     "kind": "expansion.probe_discovered_new_state",
+     "actions": 2064,
+     "share_of_budget": 0.344,
+     "avoidable": false,
+     "why": "Nothing. This IS the work: one action spent, one previously-unknown state added to the agent's graph. An exploration agent cannot discover a state without entering it."
+    },
+    {
+     "kind": "expansion.probe_revisited_known_state",
+     "actions": 2064,
+     "share_of_budget": 0.344,
+     "avoidable": false,
+     "why": "The action was UNTESTED at that state AND it moved the board, so spending it is genuine information -- it adds a transition edge the agent did not have -- even though the destination turned out to be a state already in the graph. Removing it needs a transition model accurate enough to PREDICT the destination before paying for the action, i.e. the induce->verify->plan path. That is the generation-side lever every other probe this session found inert, so counting these as avoidable would be assuming the thing that keeps failing."
+    },
+    {
+     "kind": "expansion.probe_was_inert_frame_unchanged",
+     "actions": 1148,
+     "share_of_budget": 0.191333,
+     "avoidable": true,
+     "why": "An inert-action PRIOR that predicts 'this action will not change a single pixel' before the action is spent. Unlike the class above, no world model is needed: the prediction is binary and about the agent's OWN action vocabulary, and the machinery already ships ON -- `inert_click_pruner` (SUBMITTED_INERT_CLICK_PRUNER_ENABLED), `frame_change_scorer` / `ActionEffectExpansionPrior`, `prune_arc_actions_by_prior_quantile`. These 1,148 actions are precisely what those priors did NOT catch. Named mechanism, existing code path, unmeasured headroom -- NOT a demonstrated saving."
+    },
+    {
+     "kind": "renavigation.forward_walk_no_reset",
+     "actions": 282,
+     "share_of_budget": 0.047,
+     "avoidable": true,
+     "why": "Frontier ordering for locality. These are already the CHEAP form of navigation (the agent's own `_exact_shortest_path` found a forward route, no RESET), and they average ~2 steps. Shortening them means choosing a nearer frontier target, which the measured locality counterfactual says is worth approximately nothing: the frontier already lands on the cheapest eligible node."
+    },
+    {
+     "kind": "renavigation.replay_prefix_shared_with_current_path",
+     "actions": 236,
+     "share_of_budget": 0.039333,
+     "avoidable": true,
+     "why": "Same departure decision as the RESET it follows. These steps re-walk a PREFIX of the path the agent was standing on -- ground it covered seconds earlier in the same episode. Given reset-only semantics there is no cheaper route to an ANCESTOR of your current state, so this is irreducible CONDITIONAL on the departure and fully avoidable if the departure does not happen."
+    },
+    {
+     "kind": "renavigation.reset_action",
+     "actions": 123,
+     "share_of_budget": 0.0205,
+     "avoidable": true,
+     "why": "Do not leave a node that still has untested work the agent is willing to spend on. Every RESET here is step 1 of a plan to return to a node the agent had ALREADY STOOD ON, and 51% of the navigation actions downstream of one followed a departure from a node whose remaining work the GLOBAL TIER BARRIER (REQ-ARC-WMTE-5836) was refusing. The environment offers no undo, so once the departure is decided RESET+replay is forced -- the avoidable decision is the departure, not the RESET."
+    },
+    {
+     "kind": "renavigation.replay_suffix_past_divergence",
+     "actions": 58,
+     "share_of_budget": 0.009667,
+     "avoidable": true,
+     "why": "Record enough forward edges that `_exact_shortest_path` / `_partial_forward_path` can walk there without a RESET, or order the frontier for locality. These steps cross ground the current path does NOT cover, so they buy real distance; only the ROUTE is wasteful, not the displacement."
+    },
+    {
+     "kind": "bootstrap.reset",
+     "actions": 25,
+     "share_of_budget": 0.004167,
+     "avoidable": false,
+     "why": "Nothing. One RESET per episode is how the agent obtains its first frame."
+    }
+   ],
+   "renavigation_actions_served": 699,
+   "renavigation_share": 0.1165,
+   "inert_probe_actions": 1148,
+   "inert_probe_share": 0.191333,
+   "new_state_actions": 2064,
+   "navigation_actions_planned_in_episodes": 709,
+   "navigation_actions_after_tier_deferred_departure": 362,
+   "probes_bought_by_navigation": 270,
+   "navigation_actions_per_probe": 2.626,
+   "tier_eligible_rows_available_at_targets": 1364,
+   "episodes_by_navigation_mechanism": {
+    "reset_replay_fallback": 123,
+    "exact_shortest_path": 139,
+    "partial_forward_walk": 8
+   },
+   "levels_reached_within_budget": {
+    "vc33": 2
+   },
+   "per_game_renavigation_share": {
+    "min": 0.004167,
+    "median": 0.029167,
+    "max": 0.808333,
+    "mean": 0.1165
+   },
+   "fan_out_at_target_counterfactual": {
+    "navigation_actions": 709,
+    "navigation_actions_if_every_eligible_row_taken_per_visit": 247,
+    "actions_saved_upper_bound": 462
+   }
+  },
+  "tier_off": {
+   "total_actions": 6000,
+   "classes": [
+    {
+     "kind": "expansion.probe_revisited_known_state",
+     "actions": 2578,
+     "share_of_budget": 0.429667,
+     "avoidable": false,
+     "why": "The action was UNTESTED at that state AND it moved the board, so spending it is genuine information -- it adds a transition edge the agent did not have -- even though the destination turned out to be a state already in the graph. Removing it needs a transition model accurate enough to PREDICT the destination before paying for the action, i.e. the induce->verify->plan path. That is the generation-side lever every other probe this session found inert, so counting these as avoidable would be assuming the thing that keeps failing."
+    },
+    {
+     "kind": "expansion.probe_discovered_new_state",
+     "actions": 1873,
+     "share_of_budget": 0.312167,
+     "avoidable": false,
+     "why": "Nothing. This IS the work: one action spent, one previously-unknown state added to the agent's graph. An exploration agent cannot discover a state without entering it."
+    },
+    {
+     "kind": "expansion.probe_was_inert_frame_unchanged",
+     "actions": 1179,
+     "share_of_budget": 0.1965,
+     "avoidable": true,
+     "why": "An inert-action PRIOR that predicts 'this action will not change a single pixel' before the action is spent. Unlike the class above, no world model is needed: the prediction is binary and about the agent's OWN action vocabulary, and the machinery already ships ON -- `inert_click_pruner` (SUBMITTED_INERT_CLICK_PRUNER_ENABLED), `frame_change_scorer` / `ActionEffectExpansionPrior`, `prune_arc_actions_by_prior_quantile`. These 1,148 actions are precisely what those priors did NOT catch. Named mechanism, existing code path, unmeasured headroom -- NOT a demonstrated saving."
+    },
+    {
+     "kind": "renavigation.forward_walk_no_reset",
+     "actions": 175,
+     "share_of_budget": 0.029167,
+     "avoidable": true,
+     "why": "Frontier ordering for locality. These are already the CHEAP form of navigation (the agent's own `_exact_shortest_path` found a forward route, no RESET), and they average ~2 steps. Shortening them means choosing a nearer frontier target, which the measured locality counterfactual says is worth approximately nothing: the frontier already lands on the cheapest eligible node."
+    },
+    {
+     "kind": "renavigation.reset_action",
+     "actions": 96,
+     "share_of_budget": 0.016,
+     "avoidable": true,
+     "why": "Do not leave a node that still has untested work the agent is willing to spend on. Every RESET here is step 1 of a plan to return to a node the agent had ALREADY STOOD ON, and 51% of the navigation actions downstream of one followed a departure from a node whose remaining work the GLOBAL TIER BARRIER (REQ-ARC-WMTE-5836) was refusing. The environment offers no undo, so once the departure is decided RESET+replay is forced -- the avoidable decision is the departure, not the RESET."
+    },
+    {
+     "kind": "renavigation.replay_prefix_shared_with_current_path",
+     "actions": 54,
+     "share_of_budget": 0.009,
+     "avoidable": true,
+     "why": "Same departure decision as the RESET it follows. These steps re-walk a PREFIX of the path the agent was standing on -- ground it covered seconds earlier in the same episode. Given reset-only semantics there is no cheaper route to an ANCESTOR of your current state, so this is irreducible CONDITIONAL on the departure and fully avoidable if the departure does not happen."
+    },
+    {
+     "kind": "bootstrap.reset",
+     "actions": 25,
+     "share_of_budget": 0.004167,
+     "avoidable": false,
+     "why": "Nothing. One RESET per episode is how the agent obtains its first frame."
+    },
+    {
+     "kind": "renavigation.replay_suffix_past_divergence",
+     "actions": 20,
+     "share_of_budget": 0.003333,
+     "avoidable": true,
+     "why": "Record enough forward edges that `_exact_shortest_path` / `_partial_forward_path` can walk there without a RESET, or order the frontier for locality. These steps cross ground the current path does NOT cover, so they buy real distance; only the ROUTE is wasteful, not the displacement."
+    }
+   ],
+   "renavigation_actions_served": 345,
+   "renavigation_share": 0.0575,
+   "inert_probe_actions": 1179,
+   "inert_probe_share": 0.1965,
+   "new_state_actions": 1873,
+   "navigation_actions_planned_in_episodes": 351,
+   "navigation_actions_after_tier_deferred_departure": 0,
+   "probes_bought_by_navigation": 169,
+   "navigation_actions_per_probe": 2.077,
+   "tier_eligible_rows_available_at_targets": 1295,
+   "episodes_by_navigation_mechanism": {
+    "reset_replay_fallback": 96,
+    "exact_shortest_path": 73
+   },
+   "levels_reached_within_budget": {
+    "lp85": 1,
+    "tn36": 1,
+    "vc33": 1
+   },
+   "per_game_renavigation_share": {
+    "min": 0.0,
+    "median": 0.016667,
+    "max": 0.4125,
+    "mean": 0.0575
+   },
+   "fan_out_at_target_counterfactual": {
+    "navigation_actions": 351,
+    "navigation_actions_if_every_eligible_row_taken_per_visit": 109,
+    "actions_saved_upper_bound": 242
+   }
+  }
+ },
+ "seed_replication": {
+  "second_seed": 777,
+  "byte_identical_class_counts": true,
+  "note": "The second seed is NOT an independent sample and must not be read as a replication. The shipped explorer's stochastic components carry their own fixed internal seeds (frontier_discipline_seed=20260724, _CLICK_PIXEL_FALLBACK_RNG), so a caller-supplied seed does not perturb the trajectory in this configuration -- the class counts came back byte-identical. The accounting is therefore ONE deterministic trajectory per game, not a sample mean, and carries no sampling error bar."
+ },
+ "per_game": {
+  "shipped": {
+   "ar25": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 42,
+     "expansion.probe_discovered_new_state": 190,
+     "renavigation.reset_action": 4,
+     "expansion.probe_revisited_known_state": 3
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 4,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "bp35": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 136,
+     "expansion.probe_revisited_known_state": 98,
+     "renavigation.reset_action": 5
+    },
+    "renavigation_actions": 5,
+    "navigation_episodes": 5,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "cd82": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 53,
+     "expansion.probe_was_inert_frame_unchanged": 63,
+     "expansion.probe_revisited_known_state": 112,
+     "renavigation.reset_action": 4,
+     "renavigation.forward_walk_no_reset": 4,
+     "renavigation.replay_prefix_shared_with_current_path": 1,
+     "renavigation.replay_suffix_past_divergence": 2
+    },
+    "renavigation_actions": 11,
+    "navigation_episodes": 7,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "cn04": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 186,
+     "expansion.probe_was_inert_frame_unchanged": 42,
+     "renavigation.reset_action": 4,
+     "expansion.probe_revisited_known_state": 7
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 4,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "dc22": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 125,
+     "expansion.probe_discovered_new_state": 52,
+     "expansion.probe_was_inert_frame_unchanged": 60,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "ft09": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 185,
+     "expansion.probe_discovered_new_state": 44,
+     "expansion.probe_revisited_known_state": 9,
+     "renavigation.reset_action": 1
+    },
+    "renavigation_actions": 1,
+    "navigation_episodes": 1,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "g50t": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 32,
+     "expansion.probe_discovered_new_state": 35,
+     "expansion.probe_revisited_known_state": 91,
+     "renavigation.forward_walk_no_reset": 78,
+     "renavigation.reset_action": 1,
+     "renavigation.replay_suffix_past_divergence": 2
+    },
+    "renavigation_actions": 81,
+    "navigation_episodes": 35,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "ka59": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 110,
+     "expansion.probe_revisited_known_state": 94,
+     "expansion.probe_was_inert_frame_unchanged": 33,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "lf52": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 201,
+     "expansion.probe_discovered_new_state": 6,
+     "renavigation.forward_walk_no_reset": 28,
+     "renavigation.reset_action": 2,
+     "renavigation.replay_prefix_shared_with_current_path": 2
+    },
+    "renavigation_actions": 32,
+    "navigation_episodes": 25,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "lp85": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 200,
+     "expansion.probe_discovered_new_state": 30,
+     "expansion.probe_revisited_known_state": 6,
+     "renavigation.reset_action": 2,
+     "renavigation.forward_walk_no_reset": 1
+    },
+    "renavigation_actions": 3,
+    "navigation_episodes": 3,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "ls20": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 215,
+     "renavigation.reset_action": 5,
+     "expansion.probe_revisited_known_state": 17,
+     "renavigation.replay_prefix_shared_with_current_path": 1,
+     "renavigation.replay_suffix_past_divergence": 1
+    },
+    "renavigation_actions": 7,
+    "navigation_episodes": 5,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "m0r0": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 63,
+     "expansion.probe_revisited_known_state": 86,
+     "expansion.probe_was_inert_frame_unchanged": 59,
+     "renavigation.reset_action": 2,
+     "renavigation.replay_suffix_past_divergence": 2,
+     "renavigation.forward_walk_no_reset": 27
+    },
+    "renavigation_actions": 31,
+    "navigation_episodes": 13,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "r11l": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 37,
+     "expansion.probe_revisited_known_state": 116,
+     "renavigation.reset_action": 21,
+     "renavigation.forward_walk_no_reset": 8,
+     "renavigation.replay_prefix_shared_with_current_path": 30,
+     "renavigation.replay_suffix_past_divergence": 27
+    },
+    "renavigation_actions": 86,
+    "navigation_episodes": 34,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "re86": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 120,
+     "expansion.probe_revisited_known_state": 113,
+     "expansion.probe_was_inert_frame_unchanged": 4,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "s5i5": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 50,
+     "expansion.probe_revisited_known_state": 152,
+     "renavigation.reset_action": 4,
+     "renavigation.forward_walk_no_reset": 24,
+     "expansion.probe_was_inert_frame_unchanged": 1,
+     "renavigation.replay_suffix_past_divergence": 5,
+     "renavigation.replay_prefix_shared_with_current_path": 3
+    },
+    "renavigation_actions": 36,
+    "navigation_episodes": 15,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "sb26": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 101,
+     "expansion.probe_was_inert_frame_unchanged": 91,
+     "expansion.probe_revisited_known_state": 45,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 24,
+    "explore_budget_provenance": "routed_as_scored:color_match_slot_sequence:uses_goal_distance_heuristic=False"
+   },
+   "sc25": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 143,
+     "expansion.probe_discovered_new_state": 93,
+     "renavigation.reset_action": 2,
+     "expansion.probe_revisited_known_state": 1
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "sk48": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 139,
+     "expansion.probe_discovered_new_state": 74,
+     "expansion.probe_revisited_known_state": 25,
+     "renavigation.reset_action": 1
+    },
+    "renavigation_actions": 1,
+    "navigation_episodes": 1,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "sp80": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 31,
+     "expansion.probe_revisited_known_state": 164,
+     "renavigation.reset_action": 7,
+     "renavigation.forward_walk_no_reset": 27,
+     "renavigation.replay_suffix_past_divergence": 4,
+     "renavigation.replay_prefix_shared_with_current_path": 5,
+     "expansion.probe_was_inert_frame_unchanged": 1
+    },
+    "renavigation_actions": 43,
+    "navigation_episodes": 22,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "su15": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 29,
+     "expansion.probe_revisited_known_state": 174,
+     "expansion.probe_discovered_new_state": 9,
+     "renavigation.reset_action": 7,
+     "renavigation.forward_walk_no_reset": 13,
+     "renavigation.replay_suffix_past_divergence": 5,
+     "renavigation.replay_prefix_shared_with_current_path": 2
+    },
+    "renavigation_actions": 27,
+    "navigation_episodes": 20,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "tn36": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 16,
+     "expansion.probe_revisited_known_state": 29,
+     "renavigation.reset_action": 27,
+     "renavigation.replay_prefix_shared_with_current_path": 167
+    },
+    "renavigation_actions": 194,
+    "navigation_episodes": 27,
+    "best_level": 0,
+    "explore_budget": 24,
+    "explore_budget_provenance": "routed_as_scored:program_editor:uses_goal_distance_heuristic=False"
+   },
+   "tr87": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 112,
+     "expansion.probe_revisited_known_state": 123,
+     "renavigation.forward_walk_no_reset": 1,
+     "renavigation.reset_action": 1,
+     "renavigation.replay_prefix_shared_with_current_path": 2
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "tu93": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 99,
+     "expansion.probe_discovered_new_state": 40,
+     "renavigation.reset_action": 5,
+     "renavigation.forward_walk_no_reset": 67,
+     "expansion.probe_was_inert_frame_unchanged": 1,
+     "renavigation.replay_suffix_past_divergence": 9,
+     "renavigation.replay_prefix_shared_with_current_path": 18
+    },
+    "renavigation_actions": 99,
+    "navigation_episodes": 24,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "vc33": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 121,
+     "expansion.probe_discovered_new_state": 109,
+     "renavigation.forward_walk_no_reset": 3,
+     "expansion.probe_was_inert_frame_unchanged": 2,
+     "renavigation.reset_action": 2,
+     "renavigation.replay_prefix_shared_with_current_path": 2
+    },
+    "renavigation_actions": 7,
+    "navigation_episodes": 4,
+    "best_level": 2,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "wa30": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 152,
+     "expansion.probe_revisited_known_state": 53,
+     "expansion.probe_was_inert_frame_unchanged": 21,
+     "renavigation.reset_action": 8,
+     "renavigation.forward_walk_no_reset": 1,
+     "renavigation.replay_prefix_shared_with_current_path": 3,
+     "renavigation.replay_suffix_past_divergence": 1
+    },
+    "renavigation_actions": 13,
+    "navigation_episodes": 9,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   }
+  },
+  "tier_off": {
+   "ar25": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 131,
+     "expansion.probe_was_inert_frame_unchanged": 105,
+     "renavigation.reset_action": 2,
+     "expansion.probe_revisited_known_state": 1
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "bp35": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 20,
+     "expansion.probe_revisited_known_state": 216,
+     "renavigation.reset_action": 3
+    },
+    "renavigation_actions": 3,
+    "navigation_episodes": 3,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "cd82": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 21,
+     "expansion.probe_was_inert_frame_unchanged": 71,
+     "expansion.probe_revisited_known_state": 143,
+     "renavigation.reset_action": 2,
+     "renavigation.replay_suffix_past_divergence": 2
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "cn04": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 115,
+     "expansion.probe_was_inert_frame_unchanged": 112,
+     "renavigation.reset_action": 3,
+     "expansion.probe_revisited_known_state": 9
+    },
+    "renavigation_actions": 3,
+    "navigation_episodes": 3,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "dc22": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 17,
+     "expansion.probe_was_inert_frame_unchanged": 99,
+     "expansion.probe_revisited_known_state": 121,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "ft09": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 197,
+     "expansion.probe_discovered_new_state": 18,
+     "expansion.probe_revisited_known_state": 21,
+     "renavigation.forward_walk_no_reset": 1,
+     "renavigation.reset_action": 1,
+     "renavigation.replay_prefix_shared_with_current_path": 1
+    },
+    "renavigation_actions": 3,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "g50t": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 32,
+     "expansion.probe_discovered_new_state": 35,
+     "expansion.probe_revisited_known_state": 91,
+     "renavigation.forward_walk_no_reset": 78,
+     "renavigation.reset_action": 1,
+     "renavigation.replay_suffix_past_divergence": 2
+    },
+    "renavigation_actions": 81,
+    "navigation_episodes": 35,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "ka59": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 46,
+     "expansion.probe_was_inert_frame_unchanged": 61,
+     "expansion.probe_revisited_known_state": 130,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "lf52": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 229,
+     "expansion.probe_discovered_new_state": 6,
+     "renavigation.reset_action": 3,
+     "renavigation.forward_walk_no_reset": 1
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 4,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "lp85": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 15,
+     "expansion.probe_discovered_new_state": 218,
+     "renavigation.reset_action": 5,
+     "expansion.probe_revisited_known_state": 1
+    },
+    "renavigation_actions": 5,
+    "navigation_episodes": 5,
+    "best_level": 1,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "ls20": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 215,
+     "renavigation.reset_action": 5,
+     "expansion.probe_revisited_known_state": 17,
+     "renavigation.replay_prefix_shared_with_current_path": 1,
+     "renavigation.replay_suffix_past_divergence": 1
+    },
+    "renavigation_actions": 7,
+    "navigation_episodes": 5,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "m0r0": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 49,
+     "expansion.probe_revisited_known_state": 98,
+     "expansion.probe_was_inert_frame_unchanged": 86,
+     "renavigation.reset_action": 2,
+     "renavigation.forward_walk_no_reset": 4
+    },
+    "renavigation_actions": 6,
+    "navigation_episodes": 5,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "r11l": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 75,
+     "expansion.probe_revisited_known_state": 161,
+     "renavigation.reset_action": 3
+    },
+    "renavigation_actions": 3,
+    "navigation_episodes": 3,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "re86": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 120,
+     "expansion.probe_revisited_known_state": 113,
+     "expansion.probe_was_inert_frame_unchanged": 4,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "s5i5": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 195,
+     "expansion.probe_discovered_new_state": 35,
+     "renavigation.reset_action": 4,
+     "renavigation.forward_walk_no_reset": 5
+    },
+    "renavigation_actions": 9,
+    "navigation_episodes": 8,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "sb26": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 115,
+     "expansion.probe_discovered_new_state": 71,
+     "expansion.probe_revisited_known_state": 52,
+     "renavigation.reset_action": 1
+    },
+    "renavigation_actions": 1,
+    "navigation_episodes": 1,
+    "best_level": 0,
+    "explore_budget": 24,
+    "explore_budget_provenance": "routed_as_scored:color_match_slot_sequence:uses_goal_distance_heuristic=False"
+   },
+   "sc25": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 13,
+     "expansion.probe_discovered_new_state": 221,
+     "renavigation.reset_action": 4,
+     "expansion.probe_revisited_known_state": 1
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 4,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "sk48": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 27,
+     "expansion.probe_was_inert_frame_unchanged": 212
+    },
+    "renavigation_actions": 0,
+    "navigation_episodes": 0,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "sp80": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 40,
+     "expansion.probe_revisited_known_state": 171,
+     "renavigation.reset_action": 7,
+     "renavigation.forward_walk_no_reset": 16,
+     "renavigation.replay_suffix_past_divergence": 2,
+     "renavigation.replay_prefix_shared_with_current_path": 2,
+     "expansion.probe_was_inert_frame_unchanged": 1
+    },
+    "renavigation_actions": 27,
+    "navigation_episodes": 15,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "su15": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_was_inert_frame_unchanged": 34,
+     "expansion.probe_revisited_known_state": 181,
+     "expansion.probe_discovered_new_state": 14,
+     "renavigation.reset_action": 6,
+     "renavigation.forward_walk_no_reset": 1,
+     "renavigation.replay_prefix_shared_with_current_path": 3
+    },
+    "renavigation_actions": 10,
+    "navigation_episodes": 7,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "tn36": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 43,
+     "expansion.probe_revisited_known_state": 194,
+     "renavigation.reset_action": 2
+    },
+    "renavigation_actions": 2,
+    "navigation_episodes": 2,
+    "best_level": 1,
+    "explore_budget": 24,
+    "explore_budget_provenance": "routed_as_scored:program_editor:uses_goal_distance_heuristic=False"
+   },
+   "tr87": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 112,
+     "expansion.probe_revisited_known_state": 123,
+     "renavigation.forward_walk_no_reset": 1,
+     "renavigation.reset_action": 1,
+     "renavigation.replay_prefix_shared_with_current_path": 2
+    },
+    "renavigation_actions": 4,
+    "navigation_episodes": 2,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "tu93": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 99,
+     "expansion.probe_discovered_new_state": 40,
+     "renavigation.reset_action": 5,
+     "renavigation.forward_walk_no_reset": 67,
+     "expansion.probe_was_inert_frame_unchanged": 1,
+     "renavigation.replay_suffix_past_divergence": 9,
+     "renavigation.replay_prefix_shared_with_current_path": 18
+    },
+    "renavigation_actions": 99,
+    "navigation_episodes": 24,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "vc33": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_revisited_known_state": 158,
+     "expansion.probe_discovered_new_state": 32,
+     "renavigation.reset_action": 22,
+     "renavigation.replay_prefix_shared_with_current_path": 24,
+     "renavigation.replay_suffix_past_divergence": 3
+    },
+    "renavigation_actions": 49,
+    "navigation_episodes": 22,
+    "best_level": 1,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   },
+   "wa30": {
+    "class_counts": {
+     "bootstrap.reset": 1,
+     "expansion.probe_discovered_new_state": 152,
+     "expansion.probe_revisited_known_state": 53,
+     "expansion.probe_was_inert_frame_unchanged": 21,
+     "renavigation.reset_action": 8,
+     "renavigation.forward_walk_no_reset": 1,
+     "renavigation.replay_prefix_shared_with_current_path": 3,
+     "renavigation.replay_suffix_past_divergence": 1
+    },
+    "renavigation_actions": 13,
+    "navigation_episodes": 9,
+    "best_level": 0,
+    "explore_budget": 80,
+    "explore_budget_provenance": "routed_as_scored:graph_explore:uses_goal_distance_heuristic=True"
+   }
+  }
+ },
+ "numerical_coincidence_note": {
+  "observation": "expansion.probe_discovered_new_state and expansion.probe_revisited_known_state both total 2064 on the shipped arm. This is a COINCIDENCE of the roster sum, not two views of one quantity.",
+  "evidence": "Per game the two diverge wildly and in both directions -- ar25 190 vs 3, ls20 215 vs 17, lf52 6 vs 201, sp80 31 vs 164 -- see the per_game block. They are also computed from different signals: 'discovered' from growth in the explorer's node graph across the next decision, 'revisited' from a raw frame hash that changed while the node did not.",
+  "why_flagged_here": "Two distinct metrics agreeing exactly is the TAUTOLOGY pattern adversarial_verify.py hunts, and a reader is entitled to suspect a bug. Recorded rather than left for someone to trip over."
+ },
+ "headline": {
+  "roster_actions": 6000,
+  "renavigation_share_roster": 0.1165,
+  "renavigation_share_tn36": 0.808333,
+  "largest_avoidable_class": "expansion.probe_was_inert_frame_unchanged",
+  "largest_avoidable_class_actions": 1148,
+  "largest_avoidable_class_share": 0.191333,
+  "avoidable_share_total": 0.307833,
+  "premise_correction": "The 73.8%-re-navigation figure that motivated this task is a tn36 property, not a roster property. tn36 is the maximum of 25 games at 80.8%; the MEDIAN game spends 2.9% of its actions on re-navigation and the roster mean is 11.7%. Any lever sized off the tn36 number is sized ~6x too large for the roster."
+ },
+ "theoretical_saving": {
+  "method": "Upper bound only. Each row assumes a class goes to ZERO with no other change to the trajectory, which is false in detail: removing an action changes what the agent sees next. Read these as the ceiling a mechanism could aim at, never as a prediction.",
+  "score_function": "min((baseline_actions / agent_actions)**2, 115)",
+  "largest_avoidable_class_to_zero": {
+   "class": "expansion.probe_was_inert_frame_unchanged",
+   "actions_before": 6000,
+   "actions_after": 4852,
+   "action_reduction": 0.191333,
+   "score_multiplier": 1.5292,
+   "worked_example_baseline_100_actions": {
+    "score_before": 0.1736,
+    "score_after": 0.2655
+   }
+  },
+  "all_renavigation_to_zero": {
+   "class": "renavigation.*",
+   "actions_before": 6000,
+   "actions_after": 5301,
+   "action_reduction": 0.1165,
+   "score_multiplier": 1.2811,
+   "worked_example_baseline_100_actions": {
+    "score_before": 0.1736,
+    "score_after": 0.2224
+   }
+  },
+  "both_to_zero": {
+   "class": "expansion.probe_was_inert_frame_unchanged + renavigation.*",
+   "actions_before": 6000,
+   "actions_after": 4153,
+   "action_reduction": 0.307833,
+   "score_multiplier": 2.0873,
+   "worked_example_baseline_100_actions": {
+    "score_before": 0.1736,
+    "score_after": 0.3624
+   }
+  },
+  "tn36_only_renavigation_to_zero": {
+   "note": "The single-game version of the premise, kept because it is what motivated the task and because it shows how badly a one-game figure extrapolates.",
+   "actions_before": 240,
+   "actions_after": 46,
+   "score_multiplier": 27.2212
+  }
+ },
+ "mechanism_probe_tier_barrier": {
+  "what": "arm `tier_off` is identical to `shipped` except CARNOT_ARC_FRONTIER_TIER_EXHAUSTION=0. It tests CAUSE: is the re-navigation forced by the environment's reset-only semantics, or produced by the global tier barrier's own departure rule?",
+  "answer": "Produced by the barrier, on the games where re-navigation is large. Roster re-navigation halves (699 -> 345 actions); on tn36 it collapses from 194 actions to 2, and 51% of the shipped arm's navigation followed a departure from a node that still held tier-deferred work.",
+  "why_this_is_not_a_recommendation": "Turning the barrier off is NOT free and is NOT proposed here. It also cuts new-state discovery roster-wide (2064 -> 1873 states, -9.3%), with large per-game losses (bp35 136 -> 20, ka59 110 -> 46, ar25 190 -> 131, cn04 186 -> 115). The barrier was shipped ON because REQ-ARC-WMTE-5836 measured +2..+4 games on click games; this probe prices the action cost of that decision, which had not been measured, and does not overturn it. The actionable reading is that the barrier's cost is concentrated in a DEPARTURE rule -- draining a node's deferred tiers before leaving, rather than paying RESET+replay to come back for them -- not that tiering itself is wrong."
+ },
+ "measured_nulls": [
+  {
+   "claim": "Frontier ordering is not choosing far targets when near ones exist.",
+   "evidence": "The locality counterfactual (cost of navigating to the CHEAPEST eligible open node instead of the chosen one, over the agent's own recorded forward edges) came out at ZERO actions above cheapest on tn36, the worst-affected game. Depth is the frontier's primary key and RESET-replay cost is 1+depth, so the shallowest open node IS the cheapest reachable one -- the two orderings coincide. 'Order the frontier for locality' is therefore not the lever."
+  },
+  {
+   "claim": "Forward-walk navigation is already the dominant navigation mechanism.",
+   "evidence": "139 of 270 shipped navigation episodes used `_exact_shortest_path` (a forward walk, no RESET) and 8 used `_partial_forward_path`; only 123 fell back to RESET+replay. The 2026-06-20 lp85 regression (7,792 actions vs bare BFS's 21) that motivated recording forward edges is fixed and stays fixed."
+  },
+  {
+   "claim": "Raising `frontier_batch_size` is NOT the fan-out amortization it looks like.",
+   "evidence": "The fan-out counterfactual says taking every tier-eligible row at each visited target instead of exactly one would cap navigation at 247 of 709 actions (saving 462). But `_serve` attributes only the FIRST batched probe to the target (`origin` is set on index 0); every later probe in the batch is attributed to `self.cur`, i.e. to wherever the previous probe left the agent. So the shipped knob queues B consecutive steps FROM the target, which is a depth-ride, not B alternatives AT the target. The 462-action ceiling is real but the existing flag does not reach it -- a fan-out mechanism would have to be written."
+  }
+ ],
+ "how_measured": {
+  "driver": "scripts/arc_explorer_renavigation_census.py",
+  "worker": "scripts/arc_explorer_renavigation_probe.py",
+  "report": "scripts/arc_explorer_renavigation_report.py",
+  "agent_source_modified": false,
+  "agent_source_modified_note": "Nothing under python/carnot/agentic/ was edited. Every quantity is read between decisions from attributes the explorer already maintains (cur, graph, adj, pending, the _nav_* counters, navigation_diagnostics()) and from the _prov_branch / _prov_serve_kind labels next_move already assigns unconditionally. The frontier snapshot deliberately does not call _frontier(), which mutates.",
+  "exemplar_rows_preserved": [
+   "tn36",
+   "tu93",
+   "r11l",
+   "ls20"
+  ],
+  "exemplar_rows_note": "Full per-action rows are preserved for four representative games (the outlier, a nav-only game, a tier-heavy click game, a cheap one). The other cells keep their class counts, episode records and summaries. The dropped rows are recoverable exactly: the runs are deterministic, ~5s per game, one command each."
+ },
+ "reproducibility_checksum": "sha256:179585b3eda6b49049c86d507f231b92231d48d5d743bdab4b6454c927e7c3af"
+}
