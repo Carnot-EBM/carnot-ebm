@@ -1,0 +1,25 @@
+# Lint config for this measurement's harness.
+#
+# `exclude` IS A DATA-INTEGRITY CONTROL, NOT A STYLE PREFERENCE, and the sibling
+# results/arc_inert_rejection_ab_20260801/ruff.toml records why in detail: on 2026-08-01 a
+# `ruff format` aimed at a DIRECTORY reformatted five LLM-emitted engine files mid-collection
+# and silently broke every recorded engine_sha256. This harness records engine hashes in
+# out/jobs.json for exactly the same auditability reason, and it READS engine text out of two
+# other runs' trees. So out/ is off-limits here too, and the standing rule applies: never run a
+# formatter at a directory that holds collected artifacts -- name the source files.
+exclude = ["out/"]
+
+extend = "../../pyproject.toml"
+
+[lint.per-file-ignores]
+# I001: every worker mutates os.environ at MODULE SCOPE before importing anything from carnot --
+# CUDA_VISIBLE_DEVICES="" and JAX_PLATFORMS=cpu so a CPU-only scoring pass can never contend for
+# a GPU another session on this shared machine owns, and CARNOT_ARC_E3_DIR redirected out of the
+# evidence tree BEFORE the import that binds it (arc_executable_world_model reads E3_DIR at
+# import time). Import sorting moves those imports above the mutations and silently defeats all
+# three protections, including the one that keeps results/arc_e3 read-only.
+# E402: same cause -- the imports must follow the environment setup.
+"score_worker.py" = ["I001", "E402"]
+"bestofn_worker.py" = ["I001", "E402"]
+"probe_window.py" = ["I001", "E402"]
+"run_bestofn.py" = ["I001", "E402"]
