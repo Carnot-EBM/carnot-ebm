@@ -10,9 +10,19 @@ standard: a rebuild that silently changes a published figure is a correction owe
 These artifacts carry MEASURED wall-clock timings that a rebuild would destroy, so
 inertness has to be established directly instead.
 
-THE THREE CHECKS, each of which can fail independently.
+THE FOUR CHECKS, each of which can fail independently.
 
-1. PRE-EXISTING FUNCTIONS ARE GUARDED. Diff the changed module against `HEAD`, and for
+0. THE SUBJECT IS STILL VISIBLE (added 2026-08-02, after this prover reported a vacuous
+   pass). The baseline is `git show <ref>:<target>`, defaulting to `HEAD`. That is right
+   only while the change is UNCOMMITTED. Once it is committed, `HEAD` contains it, the
+   diff is empty, and checks 1-3 pass by having nothing to examine -- which this script
+   rendered as `INERT WITH FLAG UNSET: True`, exit 0, while also overwriting
+   `inertness_proof.json` with an empty report and destroying the real evidence. A check
+   with no subject ABSTAINS; it must never be reported as a pass. Check 0 fails closed on
+   that condition, refuses to overwrite the proof, and names the pre-change commit to pass
+   as `--baseline`.
+
+1. PRE-EXISTING FUNCTIONS ARE GUARDED. Diff the changed module against the baseline, and for
    every pre-existing function whose body changed, assert that each newly-added
    EXECUTABLE statement is lexically inside an `if _goal_dedup_on():` block. A new
    statement outside such a guard would run on the shipped path.
@@ -54,14 +64,37 @@ TARGET = "python/carnot/agentic/arc_executable_world_model.py"
 GUARD = "_goal_dedup_on"
 
 
-def _head_source() -> str:
+def _head_source(ref: str = "HEAD") -> str:
     return subprocess.run(  # noqa: S603
-        ["git", "show", f"HEAD:{TARGET}"],
+        ["git", "show", f"{ref}:{TARGET}"],
         cwd=REPO,
         capture_output=True,
         text=True,
         check=True,
     ).stdout
+
+
+def _last_ref_without_guard(limit: int = 200) -> str | None:
+    """The newest commit whose `TARGET` does NOT yet define the guard.
+
+    Used only to TELL THE OPERATOR what to pass to `--baseline`; it is never selected
+    silently, because a prover that quietly picks its own baseline is a prover whose
+    verdict nobody can reproduce.
+    """
+    revs = subprocess.run(  # noqa: S603
+        ["git", "rev-list", f"-{limit}", "HEAD", "--", TARGET],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.split()
+    for rev in revs:
+        try:
+            if f"def {GUARD}(" not in _head_source(rev):
+                return rev
+        except subprocess.CalledProcessError:
+            continue
+    return None
 
 
 def _top_level_funcs(tree: ast.AST) -> dict[str, ast.AST]:
@@ -146,13 +179,22 @@ def _executable_statements(fn: ast.AST) -> list[ast.stmt]:
 
 
 def main() -> int:
+    # DEFAULT BASELINE IS `HEAD`, WHICH IS CORRECT ONLY BEFORE THE CHANGE IS COMMITTED.
+    # After the commit, `HEAD` already contains the change, every diff is empty, and this
+    # prover would report a vacuous pass -- see Check 0 near the end of this function.
+    baseline = "HEAD"
+    argv = sys.argv[1:]
+    if argv and argv[0] == "--baseline" and len(argv) > 1:
+        baseline = argv[1]
+
     now_src = (REPO / TARGET).read_text()
-    head_src = _head_source()
+    head_src = _head_source(baseline)
     now_tree, head_tree = ast.parse(now_src), ast.parse(head_src)
     now_fns, head_fns = _top_level_funcs(now_tree), _top_level_funcs(head_tree)
 
     report: dict[str, Any] = {
         "target": TARGET,
+        "baseline_ref": baseline,
         "sha256_was": hashlib.sha256(head_src.encode()).hexdigest(),
         "sha256_now": hashlib.sha256(now_src.encode()).hexdigest(),
         "guard": f"{GUARD}()",
@@ -284,10 +326,44 @@ def main() -> int:
                 f"flag value {value!r} resolved {flag_probe[repr(value)]}, expected {expected}"
             )
 
+    # --- Check 0 (added 2026-08-02): THE SUBJECT MUST STILL BE VISIBLE ------------------
+    # This ran vacuously and exited 0 on 2026-08-02, after the change it proves inert was
+    # committed. The baseline is `git show HEAD:<target>`, so once the change IS `HEAD` the
+    # diff is empty: zero changed functions, zero new functions, nothing to check -- and all
+    # three checks pass by having nothing to fail. It then OVERWROTE `inertness_proof.json`
+    # with an empty report, destroying the real evidence the committed artifact carried, and
+    # still printed `INERT WITH FLAG UNSET: True`.
+    #
+    # That is precisely the failure mode this repo calls SILENT_NON_FIRING, committed by a
+    # guard whose own docstring promises it "exits non-zero if any check fails ... rather than
+    # quietly restate a claim that has become false". A check with no subject does not fail;
+    # it abstains. Abstention had been rendered as a pass.
+    #
+    # The check is placed LAST in code but numbered 0 because it is a precondition on the
+    # other three: it needs `changed` and `new_funcs`, which are what reveal the subject.
+    # It fails CLOSED -- an unusable baseline is an error, never a pass.
+    if not changed and not new_funcs:
+        suggestion = _last_ref_without_guard()
+        failures.append(
+            f"VACUOUS: baseline {baseline!r} shows no change to {TARGET} at all -- 0 changed "
+            f"functions and 0 new functions, so nothing was proved. This is what happens once "
+            f"the change is committed and the baseline is HEAD. Re-run with an explicit "
+            f"pre-change baseline" + (f", e.g. `--baseline {suggestion}`." if suggestion else ".")
+        )
+        report["vacuous_no_subject_visible"] = True
+        report["suggested_baseline"] = suggestion
+
     report["failures"] = failures
     report["inert_with_flag_unset"] = not failures
-    (HERE / "inertness_proof.json").write_text(json.dumps(report, indent=2) + "\n")
 
+    # Do not overwrite a real proof with a vacuous one. The 2026-08-02 incident lost the
+    # committed evidence this way and it had to be restored from git.
+    if report.get("vacuous_no_subject_visible"):
+        print("REFUSING to overwrite inertness_proof.json with a vacuous report.")
+    else:
+        (HERE / "inertness_proof.json").write_text(json.dumps(report, indent=2) + "\n")
+
+    print(f"baseline ref                   : {baseline}")
     print(f"changed pre-existing functions : {changed}")
     print(f"new functions                  : {new_funcs}")
     print(f"flag unset -> {flag_probe['unset']}, flag '1' -> {flag_probe[chr(39) + '1' + chr(39)]}")

@@ -41,6 +41,30 @@ def _mcnemar_exact(b: int, c: int) -> float:
 
 
 def _fisher_exact_2x2(a: int, b: int, c: int, d: int) -> float:
+    """Two-sided Fisher exact: sum every table at most as probable as the observed one.
+
+    THE TOLERANCE MUST BE RELATIVE, NOT ABSOLUTE, and this function shipped with it absolute.
+
+    The original wrote `if v <= obs + 1e-12`. That epsilon exists to stop floating-point noise
+    from excluding a table that ties the observed one -- a legitimate need, since `prob` is a
+    ratio of enormous binomials and two mathematically equal tables can differ in the last bit.
+    But an ABSOLUTE 1e-12 only behaves like a tie-breaker while `obs` is comfortably larger than
+    it. On a table with perfect separation it is not.
+
+    The measurement in this directory is exactly that case. For 23/23 against 0/93,
+    `obs = 8.81e-25` -- thirteen orders of magnitude BELOW the epsilon -- so `obs + 1e-12` rounds
+    to 1e-12 and the loop sums every table with probability under 1e-12 rather than every table
+    at most as probable as the observed one. The reported p was 2.2989949241439297e-14 where the
+    true value is 8.813423028029883e-25.
+
+    The error direction is CONSERVATIVE: it can only ever ADD tables to the tail, so it reports a
+    LARGER p and understates significance. The cross-corpus table in this same run (p = 0.001195)
+    is unaffected, because its `obs` sits far above 1e-12 -- which is precisely why the bug was
+    invisible until a table with near-perfect separation came along.
+
+    A relative tolerance is scale-free and keeps the tie-breaking behaviour the epsilon was there
+    for in the first place.
+    """
     n = a + b + c + d
 
     def prob(x: int) -> float:
@@ -53,7 +77,7 @@ def _fisher_exact_2x2(a: int, b: int, c: int, d: int) -> float:
             v = prob(x)
         except ValueError:
             continue
-        if v <= obs + 1e-12:
+        if v <= obs * (1.0 + 1e-9):
             total += v
     return min(1.0, total)
 

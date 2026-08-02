@@ -63,7 +63,10 @@
       "concatenated_with_two_definitions": 23,
       "not_concatenated_n": 93,
       "not_concatenated_with_two_definitions": 0,
-      "fisher_exact_two_sided_p": 2.2989949241439297e-14
+      "fisher_exact_two_sided_p": 8.813423028029883e-25,
+      "fisher_exact_two_sided_p_SUPERSEDED_VALUE": 2.2989949241439297e-14,
+      "fisher_exact_two_sided_p_correction_note": "Corrected 2026-08-02. The reported 2.2989949241439297e-14 came from an absolute tie-breaking epsilon in `build_artifact._fisher_exact_2x2` (`v <= obs + 1e-12`). This table's observed probability is 8.81e-25, thirteen orders of magnitude below that epsilon, so the two-sided tail summed every table under 1e-12 instead of every table at most as probable as the observed one. Recomputed with a relative tolerance the value is 8.813423028029883e-25. The error direction was CONSERVATIVE -- it reported a larger p and understated the finding -- so the mechanism conclusion is unchanged and slightly strengthened. The cross-corpus p (0.001195) used the same helper and is UNAFFECTED, because its observed probability sits far above the epsilon; that is why the defect stayed invisible until a near-perfectly-separated table appeared.",
+      "independently_recounted_2026_08_02": "The 2x2 itself was re-derived from the corpus rather than taken from analysis.json: parsing all 116 world_model.py files and counting TOP-LEVEL `is_level_complete` definitions against the duplicated `import numpy as np` signature reproduces the contingency table exactly -- (signature, two definitions) = 23, (no signature, one definition) = 93, and both off-diagonal cells empty."
     },
     "split_induce_signature_agreement": "The duplicated-numpy-import signature of `_combine_world_model` identifies exactly the same 23 files as the two-definition test: 23/23 both ways, no false positives or negatives.",
     "binding_resolved_by_shipped_resolver": "Which definition runs is not re-derived here: it is read from the project's own `arc_engine_static_validation._find_function`, which returns the LAST top-level definition. It selected the goal-only (second) definition in 23 of 23 cells."
