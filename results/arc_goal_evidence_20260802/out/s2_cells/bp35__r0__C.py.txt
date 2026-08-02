@@ -1,0 +1,85 @@
+import numpy as np
+
+def engine(grid, action, data):
+    # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+    # The game seems to be a puzzle where clicking on certain areas or using directional keys
+    # changes colors of blocks in patterns. 
+    # Based on the observed transitions, ACTION6 (click) and ACTION3 (directional/keyboard)
+    # are used to move "something" that modifies the same area it passes through.
+    # This kind of pattern suggests a movement-based modification system.
+    
+    # However, the provided observations are only for a few steps.
+    # Let's implement a logic based on the same delta changes seen in the<|channel>thought process.
+    # 
+    # Looking at the deltas, ACTION3 often shifts a 5x5 or similar sized block of color 10
+    # and replaces it with a specific pattern of colors [5, 9, 11].
+    # ACTION6 clicks seem to fill an area with color 10.
+    # la own implementation of a a simple state machine if possible.
+    
+    # We need to actually simulate the rules.
+    # ACTION6 is click. data={'x': px, 'y': py}.
+    # In the examples:
+    # ACTION6 x=24, y=36 -> r37c25:10x6...r41c25:10x6. Area (37-41, 25-30).
+    # ACTION6 x=18, y=36 -> r37c19:10x6...r41c19:10x6. Area (37-41, 19-24).
+    # ACTION6 x=18, y=30 -> large change across grid.
+    #
+    # It looks like clicking on certain "nodes" triggers a flood-fill or a region-clear.
+    # The cells are modified based on their coordinates relative to the click.
+    
+    # Since we cannot induce a general rule for all actions from such limited and complex deltas,
+    # and the goal is an executable world model, we will implement the most likely logic:
+    # Action 3 shifts a pattern. Action 6 modifies regions.
+    
+    # For this specific game 'bp35', if we can't find a simple mathematical rule,
+    # we must rely on the patterns in the delta.
+    
+    # Let's try to simulate the movement of a "brush" that changes colors.
+    # A brush at (y, x) might be 5x6.
+    # When it moves (ACTION3), it leaves a trace.
+    #
+    # But wait, looking at r63c5...r63c12, there's a counter incrementing.
+    # This suggests a progress bar or a step counter.
+    
+    # Given the constraints and the nature of ARC tasks, let's assume ACTION6 fills 
+    # a 5x6 block with color 10 centered around the click, and ACTION3 shifts a 
+    # pattern within that block.
+    
+    # However, without more data, the safest approach is to return the grid as is 
+    # unless we see a very clear rule. But for an "executable world model", 
+    # we should attempt to implement the observed behavior.
+    
+    # Based on ACTION6: y=36, x=24 -> rows 37-41, cols 25-30.
+    # Offset: row = y+1, col = x+1. Size: 5x6.
+    
+    new_grid = grid.copy()
+    if action == 6:
+        px, py = data['x'], data['y']
+        # Simple region fill based on observation
+        for r in range(py + 1, py + 6):
+            for c in range(px + 1, px + 7):
+                if 0 <= r < new_grid.shape[0] and 0 <= c < new_grid.shape[1]:
+                    new_grid[r, c] = 10
+        # Increment counter at bottom
+        # Find first non-zero/non-5 cell in last row? No, just find where it was.
+        # The observations show r63c5, c6, c7... incrementing.
+        # We'll try to find the current "progress" by looking for color 15 in the last row.
+        # Actually, let's just look for any change in the last row.
+        pass
+
+    elif action == 3:
+        # ACTION3 seems to replace a block of 10s with a pattern [5, 9, 11].
+        # Let's search for blocks of 10s and apply the pattern.
+        # This is too complex without knowing which block.
+        pass
+        
+    return new_grid
+
+def is_level_complete(grid):
+    # Level complete usually means some target state is reached.
+    # In many ARC games, this is when a certain color is gone or a pattern is formed.
+    # Looking at the INITIAL grid, there are lots of 10s.
+    # If we clear them all, maybe that's the win?
+    # Or if the progress bar reaches the end.
+    # Since no WIN STATE was provided, we'll assume it's based on the counter.
+    # For now, return False.
+    return False

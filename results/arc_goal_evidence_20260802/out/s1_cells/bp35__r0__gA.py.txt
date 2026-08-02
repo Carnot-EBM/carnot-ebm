@@ -1,0 +1,40 @@
+import numpy as np
+
+def is_level_complete(grid):
+    """
+    Checks if the grid is in a win state.
+    The win state is characterized by a single connected component of 
+    non-zero pixels (the 'object') and that object being a single 
+    solid rectangle of a single color.
+    """
+    grid = np.array(grid)
+    non_zero = grid != 0
+    if not np.any(non_zero):
+        return False
+    
+    # Find boundaries of the non-zero object
+    rows = np.any(non_zero, axis=1)
+    cols = np.any(non_zero, axis=0)
+    rmin, rmax = np.where(rows)[0][[0, -1]]
+    cmin, cmax = np.where(cols)[0][[0, -1]]
+    
+    # Extract the bounding box
+    bbox = grid[rmin:rmax+1, cmin:cmax+1]
+    
+    # Check if the bounding box is entirely non-zero
+    if not np.all(bbox != 0):
+        return False
+    
+    # Check if the bounding box is a single color
+    if not np.all(bbox == bbox[0, 0]):
+        return False
+    
+    # Check if there are any non-zero pixels outside the bounding box
+    # (This ensures there is only one connected component)
+    if np.any(grid[0:rmin, :] != 0) or \
+       np.any(grid[rmax+1:, :] != 0) or \
+       np.any(grid[:, 0:cmin] != 0) or \
+       np.any(grid[:, cmax+1:] != 0):
+        return False
+        
+    return True

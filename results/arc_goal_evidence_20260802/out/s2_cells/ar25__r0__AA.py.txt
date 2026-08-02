@@ -1,0 +1,167 @@
+import numpy as np
+
+import numpy as np
+
+def engine(grid, action, data):
+    # grid is 64x64. Colors are [0, 4, 5, 9, 10, 11].
+    # Based on the observed transitions, ACTION2 and ACTION3 seem to be movement/transformation rules.
+    # The game state contains a central column of color 10 (width 3) and boundaries of color 11.
+    # Action 3 moves objects in some direction (likely left/right or specific shifts).
+    # Action 2 moves objects down.
+    # Action 6 is a click.
+    
+    new_grid = grid.copy()
+    
+    if action == 3: # Shift Right? Or Left?
+        # In the observations, ACTION3 changes cells in rows 15-23 and columns 6-57.
+        # It seems to actually shift existing patterns own a few pixels.
+        # Let's try to implement a simple horizontal shift for non-background (color 9).
+        shift = 3
+        for r in range(64):
+            row = new_grid[r]
+            mask = row != 9
+            # We only move things that aren't background color 9.
+            # Also we look at thes same pattern.
+            # For example, if it's not 9, it's something else.
+            #<|channel>thought
+            pass
+
+    if action == 2: # Move Down
+        # ACTION2 consistently shifts blocks of colors [0, 4, 5] down by 3 rows.
+        # The observed deltas show blocks moving from (15,3) -> (18,3), etc.
+        # And also some movement in the central column area or side areas.
+        # Specifically, it looks like objects are shifting downwards.
+        
+        # Find all "objects" (non-9 cells)
+        # Create a mask of where objects are.
+        # Shift this mask down.
+        # Background is 9.
+        
+        # To avoid overwriting, we iterate backwards.
+        # Objects are everything except color 9 and potentially boundaries (10, 11).
+        # Boundary colors are usually fixed.
+        # Fixed colors: 10 (central strip), 11 (right edge/bottom).
+        fixed_mask = (grid == 10) | (grid == 11)
+        
+        # We shift non-background, non-fixed cells.
+        # Let's identify the "movable" parts.
+        # In the observations, things move down by 3 units.
+        shift_amount = 3
+        
+        # Temporary grid to store new positions
+        temp_grid = np.full((64, 64), 9, dtype=int)
+        
+        # Copy fixed elements first
+        for r in range(64):
+            for c in range(64):
+                if fixed_mask[r, c]:
+                    temp_grid[r, c] = grid[r, c]
+        
+        # Move movable objects
+        for r in range(64 - 1, -1, -1):
+            for c in range(64):
+                val = grid[r, c]
+                if val != 9 and not fixed_mask[r, c]:
+                    new_r = r + shift_amount
+                    if new_r < 64:
+                        # If target is background or movable, we can place it.
+                        # If target is fixed, we stop (collision).
+                        if not fixed_mask[new_r, c]:
+                            temp_grid[new_r, c] = val
+                        else:
+                            temp_grid[r, c] = val # Stay put
+                    else:
+                        temp_grid[r, c] = val # Stay put
+                elif val == 9 and not fixed_mask[r, c]:
+                    # Fill gaps with background if they were moved from
+                    pass
+
+        # This logic is a bit complex for the observed deltas. Let's simplify.
+        # The observations show that ACTION2 moves blocks down by 3 rows.
+        # And also changes some cells on the right edge (color 5) which seems to be a counter/timer.
+        
+        # Correcting based on observation:
+        # Action 2: Move objects down by 3, increment "counter" at (row, 63) where row increases each time.
+        # We need to track the current 'counter' row.
+        # Looking at INITIAL GRID: r0-r2 have color 5 at col 63.
+        # After first ACTION2: r5c63 becomes 5.
+        # After second ACTION2: r6c63 becomes 5.
+        # This suggests a state variable. Since engine must be pure, we derive it from grid.
+        
+        # Find the last row in column 63 that has color 5.
+        last_five_row = -1
+        for r in range(64):
+            if grid[r, 63] == 5:
+                last_five_row = r
+        
+        new_grid = grid.copy()
+        # Increment counter
+        if last_five_row + 1 < 64:
+            new_grid[last_five_row + 1, 63] = 5
+        
+        # Shift movable blocks down by 3
+        movable_mask = (grid != 9) & ~(fixed_mask)
+        # To implement shift properly:
+        # 1. Clear old positions of movable objects
+        # 2. Place them at new positions
+        
+        # We'll use a simpler approach for the "blocks" seen in deltas.
+        # The blocks are usually 3x3 or similar shapes.
+        # Let's just move all non-9, non-fixed cells down by 3 if possible.
+        
+        # This is tricky to do purely without knowing exactly what 'objects' are.
+        # But based on the delta: ACTION2 moves things from row R to R+3.
+        
+        # Create a copy and clear movables
+        res = np.where(movable_mask, 9, grid)
+        for r in range(64):
+            for c in range(64):
+                if movable_mask[r, c]:
+                    nr = r + 3
+                    if nr < 64 and not fixed_mask[nr, c]:
+                        res[nr, c] = grid[r, c]
+                    else:
+                        res[r, c] = grid[r, c] # collision/boundary
+        new_grid = res
+
+    elif action == 3:
+        # Action 3 shifts objects horizontally.
+        # In observations, it seems to shift them left or right.
+        # Looking at first ACTION3: (15, 6) -> (15, 3)? No, that's second ACTION3.
+        # First ACTION3: changes occur around col 6, 15, 45, 54.
+        # Second ACTION3: changes occur around col 3, 12, 48, 57.
+        # This is a shift of -3 columns.
+        
+        fixed_mask = (grid == 10) | (grid == 11)
+        movable_mask = (grid != 9) & ~(fixed_mask)
+        
+        res = np.where(movable_mask, 9, grid)
+        for r in range(64):
+            for c in range(64):
+                if movable_mask[r, c]:
+                    nc = c - 3
+                    if nc >= 0 and not fixed_mask[r, nc]:
+                        res[r, nc] = grid[r, c]
+                    else:
+                        res[r, c] = grid[r, c]
+        new_grid = res
+
+    return new_grid
+
+def is_level_complete(grid):
+    # Win state usually involves objects reaching a target or clearing the board.
+    # No win state provided, but typically it's when certain colors are gone or positioned.
+    # For now, return False as we don't have a clear condition.
+    return False
+
+import numpy as np
+
+def is_level_complete(grid):
+    """
+    Checks if the grid is in a win state.
+    The win condition is that all cells are the same color.
+    """
+    grid = np.array(grid)
+    if grid.size == 0:
+        return False
+    return np.all(grid == grid[0, 0])

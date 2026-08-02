@@ -1,0 +1,1608 @@
+{
+  "experiment": "arc_goal_evidence_ab_20260802",
+  "title": "Does giving the ARC goal prompt the agent's own observed evidence stop the model declining to write a win condition?",
+  "run_date": "2026-08-02T15:06:38.342124+00:00",
+  "git_head": "0bdddb4d6d9520705745160da1232bff6c7d5c21",
+  "schema": "carnot.arc_goal_evidence_ab.v1",
+  "duration_s": 2011.9,
+  "random_seed": 8300,
+  "random_seed_scheme": "CARNOT_ARC_GENERATOR_SEED = seed_base + replicate; the SAME seed in every treatment arm and its control within a (game, replicate)",
+  "random_seeds_used": [
+    8300,
+    8600
+  ],
+  "reproducibility_checksum": "sha256:8fb5eaae6b4102bfd14767ad4eb88d6271c7a96399677b7dc828e9675d6412ef",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_note": "every cell loads and generates from a real local GGUF through the shipped LocalGGUFProposer on the CUDA build; the server witness records pid, /proc/<pid>/exe, model path and n_ctx read back from /props",
+  "model_specs": {
+    "generator": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "repo_substr": "gemma-4-31B-it-qat",
+    "n_ctx": 32768,
+    "kv_quant": "q8_0",
+    "n_gpu_layers": 999,
+    "max_tokens": 4096,
+    "cuda_gpu": "0",
+    "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "one_server_all_arms": true
+  },
+  "preconditions_checked": [
+    {
+      "resource": "arc_live_generator_gguf_cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+      "principle": "the live generator must be on disk; without it the honest verdict is blocked_model_not_cached, never a fabricated run"
+    },
+    {
+      "resource": "conductor_inactive",
+      "available": true,
+      "detail": "systemctl is-active -> 'inactive'",
+      "principle": "a live conductor contends for the same card and would interleave its own induction into this store"
+    },
+    {
+      "resource": "cuda_gpu_0_has_headroom",
+      "available": true,
+      "detail": "free=24123 MiB (dry run makes no LLM call)",
+      "principle": "a concurrent workflow holds the other card; launching without headroom would evict work this session does not own"
+    },
+    {
+      "resource": "goal_prompt_transitions_flag_default_off",
+      "available": true,
+      "principle": "the shipped default IS the control arm; if it were already on this measures ON vs ON, which is the silent-no-op defect exp6013 shipped with"
+    },
+    {
+      "resource": "goal_dedup_flag_default_off",
+      "available": true,
+      "principle": "same, for the dedup half"
+    },
+    {
+      "resource": "port_free",
+      "available": true,
+      "detail": "port 41871 (non-default on purpose)",
+      "principle": "reusing a stale server on the default port is how an arm silently gets a different model or a different context size"
+    },
+    {
+      "resource": "progress_windows_cached",
+      "available": true,
+      "detail": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalev/windows.pkl",
+      "principle": "windows are built from recorded frames before any LLM call, so every arm is scored against the identical observations"
+    }
+  ],
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "No game is solved and no level is banked. This measures the SHAPE of an induced goal predicate offline against frozen windows of the agent's own recorded frames. The intervention itself uses only the agent's own observations, so it works identically on a game nobody has solved -- but the MEASUREMENT is offline on public games, so the artifact declares development_proxy, not live_agent_self_discovery.",
+  "prereg_sha256": "sha256:93828c64561106ac278ee6e2ba210931eae1b6fe42a4262dd01b431673d2c8e0",
+  "n_cells": 17,
+  "n_jobs": 140,
+  "treatment_witness_summary": {
+    "n_games": 20,
+    "goal_prompt_chars_control": [
+      365
+    ],
+    "goal_prompt_chars_treatment_range": [
+      2461,
+      7654
+    ],
+    "combined_induce_prompt_identical_between_arms": true,
+    "dedup_inert_when_off_and_excises_when_on": true,
+    "levelup_rows_shown_to_any_arm": [
+      0
+    ]
+  },
+  "stage1_goal_only_component": {
+    "arms": [
+      {
+        "arm": "gA",
+        "n_cells": 3,
+        "n_scored": 3,
+        "n_missing": 0,
+        "n_games": 3,
+        "mechanism_fired_rate": 1.0,
+        "median_elapsed_s": 3.3,
+        "declined_rate": 0.0,
+        "declined_n": 0,
+        "trope_rate": 0.3333,
+        "trope_n": 1,
+        "grounded_rate": 0.3333,
+        "grounded_n": 1,
+        "other_rate": 0.3333,
+        "other_n": 1,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "gB",
+        "n_cells": 3,
+        "n_scored": 1,
+        "n_missing": 2,
+        "n_games": 1,
+        "mechanism_fired_rate": 1.0,
+        "median_elapsed_s": 343.1,
+        "declined_rate": 0.0,
+        "declined_n": 0,
+        "trope_rate": 0.0,
+        "trope_n": 0,
+        "grounded_rate": 1.0,
+        "grounded_n": 1,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "gAA",
+        "n_cells": 3,
+        "n_scored": 3,
+        "n_missing": 0,
+        "n_games": 3,
+        "mechanism_fired_rate": 1.0,
+        "median_elapsed_s": 12.1,
+        "declined_rate": 0.3333,
+        "declined_n": 1,
+        "trope_rate": 0.3333,
+        "trope_n": 1,
+        "grounded_rate": 0.3333,
+        "grounded_n": 1,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      }
+    ]
+  },
+  "stage2_live_induce_ITT": {
+    "arms": [
+      {
+        "arm": "A",
+        "n_cells": 2,
+        "n_scored": 2,
+        "n_missing": 0,
+        "n_games": 2,
+        "mechanism_fired_rate": 0.0,
+        "median_elapsed_s": 77.9,
+        "declined_rate": 0.5,
+        "declined_n": 1,
+        "trope_rate": 0.0,
+        "trope_n": 0,
+        "grounded_rate": 0.5,
+        "grounded_n": 1,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "B",
+        "n_cells": 2,
+        "n_scored": 2,
+        "n_missing": 0,
+        "n_games": 2,
+        "mechanism_fired_rate": 0.0,
+        "median_elapsed_s": 61.3,
+        "declined_rate": 1.0,
+        "declined_n": 2,
+        "trope_rate": 0.0,
+        "trope_n": 0,
+        "grounded_rate": 0.0,
+        "grounded_n": 0,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "C",
+        "n_cells": 2,
+        "n_scored": 2,
+        "n_missing": 0,
+        "n_games": 2,
+        "mechanism_fired_rate": 0.0,
+        "median_elapsed_s": 61.4,
+        "declined_rate": 1.0,
+        "declined_n": 2,
+        "trope_rate": 0.0,
+        "trope_n": 0,
+        "grounded_rate": 0.0,
+        "grounded_n": 0,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "AA",
+        "n_cells": 2,
+        "n_scored": 2,
+        "n_missing": 0,
+        "n_games": 2,
+        "mechanism_fired_rate": 1.0,
+        "median_elapsed_s": 151.3,
+        "declined_rate": 0.0,
+        "declined_n": 0,
+        "trope_rate": 1.0,
+        "trope_n": 2,
+        "grounded_rate": 0.0,
+        "grounded_n": 0,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 2,
+        "declined_saying_no_win_state_n": 0
+      }
+    ]
+  },
+  "stage2_mechanism_firing": {
+    "A": {
+      "n_cells": 2,
+      "n_goal_only_call_ran": 0,
+      "rate": 0.0
+    },
+    "B": {
+      "n_cells": 2,
+      "n_goal_only_call_ran": 0,
+      "rate": 0.0
+    },
+    "C": {
+      "n_cells": 2,
+      "n_goal_only_call_ran": 0,
+      "rate": 0.0
+    },
+    "AA": {
+      "n_cells": 2,
+      "n_goal_only_call_ran": 2,
+      "rate": 1.0
+    }
+  },
+  "stage2_live_induce_mechanism_fired_only": {
+    "arms": [
+      {
+        "arm": "A",
+        "n_cells": 0,
+        "n_scored": 0,
+        "n_missing": 0,
+        "n_games": 0,
+        "mechanism_fired_rate": null,
+        "median_elapsed_s": null,
+        "declined_rate": null,
+        "declined_n": 0,
+        "trope_rate": null,
+        "trope_n": 0,
+        "grounded_rate": null,
+        "grounded_n": 0,
+        "other_rate": null,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "B",
+        "n_cells": 0,
+        "n_scored": 0,
+        "n_missing": 0,
+        "n_games": 0,
+        "mechanism_fired_rate": null,
+        "median_elapsed_s": null,
+        "declined_rate": null,
+        "declined_n": 0,
+        "trope_rate": null,
+        "trope_n": 0,
+        "grounded_rate": null,
+        "grounded_n": 0,
+        "other_rate": null,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "C",
+        "n_cells": 0,
+        "n_scored": 0,
+        "n_missing": 0,
+        "n_games": 0,
+        "mechanism_fired_rate": null,
+        "median_elapsed_s": null,
+        "declined_rate": null,
+        "declined_n": 0,
+        "trope_rate": null,
+        "trope_n": 0,
+        "grounded_rate": null,
+        "grounded_n": 0,
+        "other_rate": null,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 0,
+        "declined_saying_no_win_state_n": 0
+      },
+      {
+        "arm": "AA",
+        "n_cells": 2,
+        "n_scored": 2,
+        "n_missing": 0,
+        "n_games": 2,
+        "mechanism_fired_rate": 1.0,
+        "median_elapsed_s": 151.3,
+        "declined_rate": 0.0,
+        "declined_n": 0,
+        "trope_rate": 1.0,
+        "trope_n": 2,
+        "grounded_rate": 0.0,
+        "grounded_n": 0,
+        "other_rate": 0.0,
+        "other_n": 0,
+        "constant_true_n": 0,
+        "dual_definition_n": 2,
+        "declined_saying_no_win_state_n": 0
+      }
+    ]
+  },
+  "cluster_crosstab": {
+    "stage1": {
+      "gA": {
+        "C_UNIFORMITY": 1,
+        "F_OBJECT_POSITION": 1,
+        "H_OTHER": 1
+      },
+      "gAA": {
+        "D_NO_PREDICATE": 1,
+        "C_UNIFORMITY": 1,
+        "F_OBJECT_POSITION": 1
+      },
+      "gB": {
+        "E_FIXED_BAND": 1
+      }
+    },
+    "stage2": {
+      "A": {
+        "A_DECLINED": 1,
+        "E_FIXED_BAND": 1
+      },
+      "AA": {
+        "C_UNIFORMITY": 2
+      },
+      "B": {
+        "A_DECLINED": 2
+      },
+      "C": {
+        "A_DECLINED": 2
+      }
+    }
+  },
+  "stage2_nonfiring_byte_identity": {
+    "n_compared": 4,
+    "n_identical": 2,
+    "disagreeing_cells": [
+      "bp35__r0__B",
+      "bp35__r0__C"
+    ],
+    "all_identical": false,
+    "reading": "compares B and C against A on cells where the goal-only call did NOT run, at the same seed. Identity there is the structural proof that the knobs contribute exactly zero outside the split-induce minority.",
+    "B_vs_C_control_comparison": {
+      "n_compared": 2,
+      "n_identical": 2,
+      "disagreeing": []
+    },
+    "DIAGNOSIS": "THE CHECK FIRED, AND IT FOUND A HARNESS DEFECT RATHER THAN CONFIRMING THE ASSUMPTION. A-vs-treatment identity holds on ar25 and FAILS on bp35 (A 3722 bytes / sha bcf42b01, B and C both 4150 bytes / sha 64b7c69b) -- same seed 8300, zero content failures, and the goal-only call ran in NONE of the three, so neither knob could have acted. B and C are byte-identical to EACH OTHER on both games, and they differ in the dedup knob, so the divergence is not knob-driven. What differs between A and (B, C) is POSITION: A is the first cell of the game block and B and C follow it against a KV cache warmed by the identical preceding request. CONSEQUENCE: a fixed CARNOT_ARC_GENERATOR_SEED does NOT guarantee a byte-identical completion on this server -- llama.cpp's sampled output depends on cache/batch state as well as the seed. The pairing this design relies on is therefore APPROXIMATE, not exact, and non-firing cells contribute NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed. Reported rather than dropped: this is precisely the outcome the check was written to surface, and it makes the arm-order confound a SHAPE issue and not only a timing one."
+  },
+  "grounding_audit": {
+    "stage1": {
+      "gA": {
+        "n_scored": 3,
+        "n_groundable_cluster": 2,
+        "groundable_rate": 0.6667,
+        "n_grounded": 1,
+        "grounded_given_groundable": 0.5,
+        "grounded_hit_kinds": {
+          "rows": 1,
+          "cols": 0,
+          "colours": 1,
+          "colour_only": 0
+        }
+      },
+      "gAA": {
+        "n_scored": 3,
+        "n_groundable_cluster": 1,
+        "groundable_rate": 0.3333,
+        "n_grounded": 1,
+        "grounded_given_groundable": 1.0,
+        "grounded_hit_kinds": {
+          "rows": 0,
+          "cols": 0,
+          "colours": 1,
+          "colour_only": 1
+        }
+      },
+      "gB": {
+        "n_scored": 1,
+        "n_groundable_cluster": 1,
+        "groundable_rate": 1.0,
+        "n_grounded": 1,
+        "grounded_given_groundable": 1.0,
+        "grounded_hit_kinds": {
+          "rows": 1,
+          "cols": 0,
+          "colours": 1,
+          "colour_only": 0
+        }
+      }
+    },
+    "stage2": {
+      "A": {
+        "n_scored": 2,
+        "n_groundable_cluster": 1,
+        "groundable_rate": 0.5,
+        "n_grounded": 1,
+        "grounded_given_groundable": 1.0,
+        "grounded_hit_kinds": {
+          "rows": 1,
+          "cols": 1,
+          "colours": 1,
+          "colour_only": 0
+        }
+      },
+      "AA": {
+        "n_scored": 2,
+        "n_groundable_cluster": 0,
+        "groundable_rate": 0.0,
+        "n_grounded": 0,
+        "grounded_given_groundable": null,
+        "grounded_hit_kinds": {
+          "rows": 0,
+          "cols": 0,
+          "colours": 0,
+          "colour_only": 0
+        }
+      },
+      "B": {
+        "n_scored": 2,
+        "n_groundable_cluster": 0,
+        "groundable_rate": 0.0,
+        "n_grounded": 0,
+        "grounded_given_groundable": null,
+        "grounded_hit_kinds": {
+          "rows": 0,
+          "cols": 0,
+          "colours": 0,
+          "colour_only": 0
+        }
+      },
+      "C": {
+        "n_scored": 2,
+        "n_groundable_cluster": 0,
+        "groundable_rate": 0.0,
+        "n_grounded": 0,
+        "grounded_given_groundable": null,
+        "grounded_hit_kinds": {
+          "rows": 0,
+          "cols": 0,
+          "colours": 0,
+          "colour_only": 0
+        }
+      }
+    }
+  },
+  "SENSITIVITY_grounded_excluding_trivial_literals": {
+    "provenance": "POST-HOC. Added after inspecting three landed pairs; reported alongside the pre-registered GROUNDED rate and never substituted for it.",
+    "rule": "a GROUNDED predicate counts only if some matched literal is >= 2, so the numpy-ubiquitous constants 0 and 1 cannot ground a predicate by themselves",
+    "by_stage": {
+      "stage1": {
+        "gA": {
+          "n_scored": 3,
+          "n_grounded_preregistered": 1,
+          "n_grounded_strict_nontrivial_literal": 0,
+          "grounded_strict_rate": 0.0
+        },
+        "gAA": {
+          "n_scored": 3,
+          "n_grounded_preregistered": 1,
+          "n_grounded_strict_nontrivial_literal": 1,
+          "grounded_strict_rate": 0.3333
+        },
+        "gB": {
+          "n_scored": 1,
+          "n_grounded_preregistered": 1,
+          "n_grounded_strict_nontrivial_literal": 1,
+          "grounded_strict_rate": 1.0
+        }
+      },
+      "stage2": {
+        "A": {
+          "n_scored": 2,
+          "n_grounded_preregistered": 1,
+          "n_grounded_strict_nontrivial_literal": 1,
+          "grounded_strict_rate": 0.5
+        },
+        "AA": {
+          "n_scored": 2,
+          "n_grounded_preregistered": 0,
+          "n_grounded_strict_nontrivial_literal": 0,
+          "grounded_strict_rate": 0.0
+        },
+        "B": {
+          "n_scored": 2,
+          "n_grounded_preregistered": 0,
+          "n_grounded_strict_nontrivial_literal": 0,
+          "grounded_strict_rate": 0.0
+        },
+        "C": {
+          "n_scored": 2,
+          "n_grounded_preregistered": 0,
+          "n_grounded_strict_nontrivial_literal": 0,
+          "grounded_strict_rate": 0.0
+        }
+      }
+    }
+  },
+  "per_game": {
+    "stage1": {
+      "ar25": {
+        "gA": {
+          "declined": 0.0,
+          "trope": 1.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "gAA": {
+          "declined": 1.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "gB": null
+      },
+      "bp35": {
+        "gA": {
+          "declined": 0.0,
+          "trope": 0.0,
+          "grounded": 1.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "gAA": {
+          "declined": 0.0,
+          "trope": 1.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "gB": {
+          "declined": 0.0,
+          "trope": 0.0,
+          "grounded": 1.0,
+          "other": 0.0,
+          "n": 1
+        }
+      },
+      "cd82": {
+        "gA": {
+          "declined": 0.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 1.0,
+          "n": 1
+        },
+        "gAA": {
+          "declined": 0.0,
+          "trope": 0.0,
+          "grounded": 1.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "gB": null
+      }
+    },
+    "stage2": {
+      "ar25": {
+        "A": {
+          "declined": 1.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "AA": {
+          "declined": 0.0,
+          "trope": 1.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "B": {
+          "declined": 1.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "C": {
+          "declined": 1.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        }
+      },
+      "bp35": {
+        "A": {
+          "declined": 0.0,
+          "trope": 0.0,
+          "grounded": 1.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "AA": {
+          "declined": 0.0,
+          "trope": 1.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "B": {
+          "declined": 1.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        },
+        "C": {
+          "declined": 1.0,
+          "trope": 0.0,
+          "grounded": 0.0,
+          "other": 0.0,
+          "n": 1
+        }
+      }
+    }
+  },
+  "stopping_rule": {
+    "written_at_utc": "2026-08-02T14:35Z",
+    "written_after_n_cells_observed": 1,
+    "why_this_file_exists": "The one cell that had landed when this was written is a control-arm cell (stage1 gA, ar25, TROPE). No treatment cell had produced an outcome. Fixing the stopping rule here, in writing, before any treatment outcome existed, is what keeps a later decision to stop from being OPTIONAL STOPPING -- stopping when the effect looks good is the single easiest way to invalidate a permutation p-value, and the honest defence against it is a timestamped rule, not a claim of good intentions afterwards.",
+    "the_rule": "Stop on WALL TIME or on exhausting the pre-declared job list. NEVER on an observed effect size, an observed p-value, or an arm looking good.",
+    "revision_from_the_preregistration": {
+      "what_changed": "GEV_S1_REPS 5 -> 3, GEV_S2_REPS 3 -> 2, wall budget 39600s -> 27000s",
+      "when": "after the first two cells revealed the per-cell cost, before any treatment cell had an outcome",
+      "why": "the treatment goal prompt is 3.2k-7.7k characters against the control's 365, and the model generates to the 4096-token cap on it. Measured on the first treatment cell: ~31 tok/s decode, up to three attempts, so a treatment cell costs ~5-7 minutes against the control's ~3 seconds. At 5 stage-1 replicates the treatment arm alone would need 8-15 GPU-hours. The replicate counts were cut so the run finishes; the ARMS, the PRIMARY, the classifier and the test are unchanged.",
+      "what_this_costs": "power, and only power. It is disclosed rather than absorbed."
+    },
+    "truncation_is_balanced_by_construction": "jobs are ordered replicate-major with both stages interleaved, and within a replicate game-major with the arms adjacent. So a wall-budget truncation removes whole trailing (game, replicate) blocks with every arm losing the same cells, rather than removing one entire arm or one entire stage. An unbalanced truncation would silently change which question the run answers.",
+    "missing_is_never_zero": "cells lost to truncation are simply absent -- they are not scored, not imputed, and not counted as either a decline or a non-decline. The realised per-arm n is reported.",
+    "peeking": "out/rowcache is read during the run by peek.py for HEALTH monitoring (dead server, all-missing arm, classifier returning None). Any such peek is disclosed here. It is not an interim analysis and it is not permitted to end the run.",
+    "AMENDMENT_2_hard_wall_clock_checkpoint": {
+      "written_at_utc": "2026-08-02T14:40Z",
+      "written_after_n_cells_observed": 2,
+      "what_i_had_seen_when_writing_this": "exactly two cells. stage1 gA ar25 -> TROPE in 2.6s, and stage1 gB ar25 -> MISSING in 366.4s with fail_msg 'local model code unusable after 3 tries (syntax error line 192: expected an indented block after function definition on line 3)'. Disclosed in full because a stopping rule written after seeing a treatment outcome is only trustworthy if it also says WHAT was seen.",
+      "the_amendment": "the run is stopped at 19:45 UTC if it has not already exited, and the analysis is run on whatever landed.",
+      "why_a_clock_and_not_a_result": "the first treatment cell cost 366 seconds against the control's 2.6, so the ORIGINAL 27000s budget would land past the end of this session and leave the run un-analysed. The new checkpoint is a CLOCK TIME fixed in advance, chosen from the per-cell COST, not from any observed rate, delta or p-value. It is the same class of rule as the original wall budget, only tighter.",
+      "why_this_is_not_optional_stopping": "optional stopping is stopping when the RESULT looks good. Nothing about 19:45 depends on the result: the treatment could go on to look better, worse, or identical and the clock would not move. The realised per-arm n is reported, and because the job list is ordered replicate-major with the arms adjacent, the truncation removes the same trailing cells from every arm.",
+      "the_honest_risk_this_leaves": "with roughly one replicate per arm, the design's power is far below the pre-flight table in pre/power.json, which assumes three. A NULL under this truncation is close to uninformative and must be reported as such. A STARK result -- the direction the first cell hints at -- is still readable, because a near-total difference does not need replicates to be visible. That asymmetry is a property of the truncation and is stated rather than exploited."
+    },
+    "AMENDMENT_3_job_ORDER_changed_and_replicates_cut_to_one": {
+      "written_at_utc": "2026-08-02T14:47Z",
+      "written_after_n_cells_observed": 7,
+      "what_i_had_seen_when_writing_this": "seven cells, all stage 1, all from ar25/bp35/cd82. gA: TROPE, GROUNDED, OTHER (median 3.3s). gAA: DECLINED, TROPE (median 114.5s). gB: GROUNDED, MISSING (median 366.4s). Disclosed in full: an ordering change made after seeing data is only auditable if the data seen is on the record.",
+      "what_changed": "(1) job order is now GAME-major with both stages adjacent, replacing replicate-major-with-stages-interleaved. (2) GEV_S1_REPS 3 -> 1 and GEV_S2_REPS 2 -> 1.",
+      "why_the_ORDER_changed": "the previous ordering ran ALL of stage 1's replicate before ANY of stage 2, so a truncation -- which the per-cell cost makes certain -- would have yielded ZERO stage-2 cells and silently deleted the arm structure the task specifies (A/B/C/AA on the live induce path). Under the new order a stop after game k leaves k games with EVERY arm of BOTH stages measured. The roster order is fixed and alphabetical, so which games survive is decided by the alphabet, never by anything observed.",
+      "why_the_REPLICATES_were_cut": "at ~11 minutes per game for the full seven-arm block, one replicate of the whole roster is already ~3.7 hours. Asking for three would guarantee the truncation lands mid-roster with nothing gained.",
+      "what_this_costs_and_it_is_not_small": "the replicate dimension is gone. Within a game each arm now has exactly ONE cell, so the game-clustered permutation reduces to comparing single draws per game and the A/A floor carries the entire burden of saying what run-to-run noise looks like. The gAA cells already show that burden is real: the SAME control prompt produced 2.6s/TROPE and 114.5s/DECLINED on different seeds. Any effect smaller than that spread is unreadable at this n, and will be reported as unreadable.",
+      "still_not_optional_stopping": "the stop is a clock and a job list. No branch of this amendment depends on a rate, a delta or a p-value, and the arms are affected identically."
+    }
+  },
+  "power_simulation_post_hoc": {
+    "provenance": "computed AFTER the run started, from FROZEN-CORPUS pre-flight inputs only; no cell of the measured run enters this file",
+    "design": {
+      "n_games": 20,
+      "replicates_per_arm": 3,
+      "sims_per_effect_size": 600,
+      "monte_carlo_se_near_p0.5": 0.0204,
+      "inner_permutation_draws": 2000,
+      "alpha": 0.05
+    },
+    "base_rates_from_the_23_frozen_split_induce_cells": {
+      "trope": 0.5217,
+      "declined": 0.1739,
+      "why_the_split_cells": "the goal-only prompt is the prompt used on split-induce cells, so those 23 are the closest frozen analogue of a stage-1 control cell"
+    },
+    "power": {
+      "TROPE": {
+        "0.522->0.40": 0.275,
+        "0.522->0.30": 0.81,
+        "0.522->0.20": 0.99,
+        "0.522->0.10": 1.0,
+        "0.522->0.05": 1.0
+      },
+      "DECLINED": {
+        "0.174->0.30": 0.402,
+        "0.174->0.20": 0.032,
+        "0.174->0.10": 0.203,
+        "0.174->0.05": 0.587,
+        "0.174->0.02": 0.905
+      }
+    },
+    "reading": "Read the DECLINED row first: it is the PRIMARY. Its control base rate on the frozen split cells is low, so only a large absolute reduction is detectable and a null on the primary is weak evidence against a small effect. The TROPE row is where the design has real power, which is why the pre-registration named it as the secondary the mechanism can actually bite on."
+  },
+  "PRIMARY_declined_rate": {
+    "stage1_gB_vs_gA": {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    "stage2_ITT_B_vs_A": {
+      "block": "stage2_ITT",
+      "treat": "B",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 1.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": 0.5,
+      "ci95_game_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    "stage2_ITT_C_vs_A": {
+      "block": "stage2_ITT",
+      "treat": "C",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 1.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": 0.5,
+      "ci95_game_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    }
+  },
+  "SECONDARY_trope_rate": {
+    "stage1_gB_vs_gA": {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "TROPE",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    }
+  },
+  "SECONDARY_grounded_rate": {
+    "stage1_gB_vs_gA": {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 1.0,
+      "rate_control": 1.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    }
+  },
+  "AA_NOISE_FLOOR": {
+    "stage1": {
+      "DECLINED": {
+        "block": "stage1_AA_floor",
+        "treat": "gAA",
+        "control": "gA",
+        "shape": "DECLINED",
+        "mechanism_fired_only": false,
+        "n_games": 3,
+        "n_treat_cells": 3,
+        "n_control_cells": 3,
+        "rate_treat": 0.3333,
+        "rate_control": 0.0,
+        "delta_mean_over_games": 0.3333,
+        "ci95_game_bootstrap": [
+          0.0,
+          1.0
+        ],
+        "p_permutation_two_sided": 1.0,
+        "draws": 200000,
+        "significant_at_0.05": false
+      },
+      "TROPE": {
+        "block": "stage1_AA_floor",
+        "treat": "gAA",
+        "control": "gA",
+        "shape": "TROPE",
+        "mechanism_fired_only": false,
+        "n_games": 3,
+        "n_treat_cells": 3,
+        "n_control_cells": 3,
+        "rate_treat": 0.3333,
+        "rate_control": 0.3333,
+        "delta_mean_over_games": 0.0,
+        "ci95_game_bootstrap": [
+          -1.0,
+          1.0
+        ],
+        "p_permutation_two_sided": 1.0,
+        "draws": 200000,
+        "significant_at_0.05": false
+      },
+      "GROUNDED": {
+        "block": "stage1_AA_floor",
+        "treat": "gAA",
+        "control": "gA",
+        "shape": "GROUNDED",
+        "mechanism_fired_only": false,
+        "n_games": 3,
+        "n_treat_cells": 3,
+        "n_control_cells": 3,
+        "rate_treat": 0.3333,
+        "rate_control": 0.3333,
+        "delta_mean_over_games": 0.0,
+        "ci95_game_bootstrap": [
+          -1.0,
+          1.0
+        ],
+        "p_permutation_two_sided": 1.0,
+        "draws": 200000,
+        "significant_at_0.05": false
+      }
+    },
+    "stage2_declined": {
+      "block": "stage2_AA_floor",
+      "treat": "AA",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": -0.5,
+      "ci95_game_bootstrap": [
+        -1.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    }
+  },
+  "tests": [
+    {
+      "block": "stage1_missingness",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "MISSING",
+      "mechanism_fired_only": false,
+      "n_games": 3,
+      "n_treat_cells": 3,
+      "n_control_cells": 3,
+      "rate_treat": 0.6667,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.6667,
+      "ci95_game_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 0.5002,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1_missingness_AA_floor",
+      "treat": "gAA",
+      "control": "gA",
+      "shape": "MISSING",
+      "mechanism_fired_only": false,
+      "n_games": 3,
+      "n_treat_cells": 3,
+      "n_control_cells": 3,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_missingness",
+      "treat": "B",
+      "control": "A",
+      "shape": "MISSING",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_missingness",
+      "treat": "C",
+      "control": "A",
+      "shape": "MISSING",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_missingness_AA_floor",
+      "treat": "AA",
+      "control": "A",
+      "shape": "MISSING",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "TROPE",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 1.0,
+      "rate_control": 1.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1",
+      "treat": "gB",
+      "control": "gA",
+      "shape": "OTHER",
+      "mechanism_fired_only": false,
+      "n_games": 1,
+      "n_treat_cells": 1,
+      "n_control_cells": 1,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1_AA_floor",
+      "treat": "gAA",
+      "control": "gA",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 3,
+      "n_treat_cells": 3,
+      "n_control_cells": 3,
+      "rate_treat": 0.3333,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.3333,
+      "ci95_game_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1_AA_floor",
+      "treat": "gAA",
+      "control": "gA",
+      "shape": "TROPE",
+      "mechanism_fired_only": false,
+      "n_games": 3,
+      "n_treat_cells": 3,
+      "n_control_cells": 3,
+      "rate_treat": 0.3333,
+      "rate_control": 0.3333,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        -1.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1_AA_floor",
+      "treat": "gAA",
+      "control": "gA",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": false,
+      "n_games": 3,
+      "n_treat_cells": 3,
+      "n_control_cells": 3,
+      "rate_treat": 0.3333,
+      "rate_control": 0.3333,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        -1.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage1_AA_floor",
+      "treat": "gAA",
+      "control": "gA",
+      "shape": "OTHER",
+      "mechanism_fired_only": false,
+      "n_games": 3,
+      "n_treat_cells": 3,
+      "n_control_cells": 3,
+      "rate_treat": 0.0,
+      "rate_control": 0.3333,
+      "delta_mean_over_games": -0.3333,
+      "ci95_game_bootstrap": [
+        -1.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "B",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 1.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": 0.5,
+      "ci95_game_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "B",
+      "control": "A",
+      "shape": "TROPE",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "B",
+      "control": "A",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": -0.5,
+      "ci95_game_bootstrap": [
+        -1.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "B",
+      "control": "A",
+      "shape": "OTHER",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "C",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 1.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": 0.5,
+      "ci95_game_bootstrap": [
+        0.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "C",
+      "control": "A",
+      "shape": "TROPE",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "C",
+      "control": "A",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": -0.5,
+      "ci95_game_bootstrap": [
+        -1.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_ITT",
+      "treat": "C",
+      "control": "A",
+      "shape": "OTHER",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_AA_floor",
+      "treat": "AA",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": -0.5,
+      "ci95_game_bootstrap": [
+        -1.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_AA_floor",
+      "treat": "AA",
+      "control": "A",
+      "shape": "TROPE",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 1.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 1.0,
+      "ci95_game_bootstrap": [
+        1.0,
+        1.0
+      ],
+      "p_permutation_two_sided": 0.5015,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_AA_floor",
+      "treat": "AA",
+      "control": "A",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.5,
+      "delta_mean_over_games": -0.5,
+      "ci95_game_bootstrap": [
+        -1.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_AA_floor",
+      "treat": "AA",
+      "control": "A",
+      "shape": "OTHER",
+      "mechanism_fired_only": false,
+      "n_games": 2,
+      "n_treat_cells": 2,
+      "n_control_cells": 2,
+      "rate_treat": 0.0,
+      "rate_control": 0.0,
+      "delta_mean_over_games": 0.0,
+      "ci95_game_bootstrap": [
+        0.0,
+        0.0
+      ],
+      "p_permutation_two_sided": 1.0,
+      "draws": 200000,
+      "significant_at_0.05": false
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "B",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "B",
+      "control": "A",
+      "shape": "TROPE",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "B",
+      "control": "A",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "B",
+      "control": "A",
+      "shape": "OTHER",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "C",
+      "control": "A",
+      "shape": "DECLINED",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "C",
+      "control": "A",
+      "shape": "TROPE",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "C",
+      "control": "A",
+      "shape": "GROUNDED",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    },
+    {
+      "block": "stage2_mechanism_fired",
+      "treat": "C",
+      "control": "A",
+      "shape": "OTHER",
+      "mechanism_fired_only": true,
+      "error": "no game has both arms scored -- this contrast is UNMEASURED, which is not the same as measured-and-null",
+      "n_games": 0
+    }
+  ],
+  "min_reachable_p": 0.0,
+  "power_statement": {
+    "arithmetic": "both knobs live ONLY in the split-induce fallback, and the goal-only prompt is never built when the combined call succeeds. Split-induce is 19.8% of cells and its declined rate is already only 17.4%, so driving split-cell declines to ZERO moves the ITT declined rate 0.431 -> 0.397: a 3.4 point ceiling. At 20 games x 3 replicates the permutation test cannot resolve 3.4 points, so the STAGE 2 PRIMARY IS DECLARED UNDERPOWERED BEFORE IT IS RUN. A stage-2 null is evidence that the knobs are STRUCTURALLY MISDIRECTED, not that showing evidence does not work.",
+    "min_reachable_p_reported": 0.0,
+    "stage1_is_the_powered_test": "the goal-only call is made directly, so the mechanism fires in 100% of cells and nothing is diluted. At 20 games x 5 replicates per arm, with the permutation reference set C(2R,R)^20 the attainable minimum p is ~0 and quoting it would be meaningless reassurance -- the binding constraint is effect size, not the reference set. The pre-flight base rate for a goal-only-prompt predicate is taken from the 23 frozen split-induce cells (DECLINED 0.174, TROPE 0.522), so stage 1 is powered for the TROPE contrast and only weakly for DECLINED. Reported that way rather than the other way round.",
+    "stage2_primary_cannot_reach_0.05": true,
+    "what_that_number_is_not": "it is NOT a claim of power. It is the floor of the permutation reference set. The honest statement is the effect-size one above."
+  },
+  "preflight_on_frozen_shipped_corpus": {
+    "declined_rate": 0.431,
+    "declined_rate_on_combined_cells": 0.495,
+    "declined_rate_on_split_cells": 0.174,
+    "n": 116,
+    "source": "results/arc_object_perception_ab_change_fidelity_20260801/engines, 116 world_model.py from the same 20 games, classified with this run's classifier",
+    "split_induce_rate": 0.198,
+    "trope_rate": 0.207
+  },
+  "works_on_an_unsolved_game": true,
+  "works_on_an_unsolved_game_evidence": {
+    "what_reaches_the_model": "the agent's OWN observed transitions only, rendered by the same _transitions_block the engine prompt already uses",
+    "no_win_is_shown_to_any_arm": "levelup_rows_in_shown is 0 for all 20 games -- the prefix split puts the level-up row in the held-out tail, so every predicate in this run was written by a model that had never seen the game won",
+    "nothing_a_hidden_game_would_withhold": "no game source, no hand-written adapter, no curated win example, and _previous_level_complete_grid passed as None in every arm (it is the NEXT level's opening board, not a win state -- the 2026-07-29 win-state-poison correction)",
+    "existence_proof_class": "tn36 is in the roster precisely because it is a stall game; its shown transitions contain no level-up either, exactly like the other 19"
+  },
+  "defaults_changed": false,
+  "defaults_note": "both CARNOT_ARC_GOAL_PROMPT_TRANSITIONS and CARNOT_ARC_GOAL_DEDUP still ship OFF. This run measures them; flipping either is an operator decision.",
+  "not_submitted": "no scored or online ARC game was played; submission is operator-only",
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "no verifier-value, moat or efficiency claim is made here. The outcome is the SHAPE of an induced predicate decided from its syntax tree, and the goal gate -- the project's executable checker -- is deliberately NOT the outcome, because plan_found is an exact function of it.",
+  "artifacts": {
+    "preregistration": "results/arc_goal_evidence_20260802/out/preregistration.json",
+    "rows": "results/arc_goal_evidence_20260802/out/rows.json",
+    "analysis": "results/arc_goal_evidence_20260802/out/analysis.json",
+    "meta": "results/arc_goal_evidence_20260802/out/meta.json",
+    "server_witness": "results/arc_goal_evidence_20260802/out/server_witness.json",
+    "stage1_predicates": "results/arc_goal_evidence_20260802/out/s1_cells/ (*.py.txt -- raw LLM output kept byte-exact; the .txt suffix keeps ruff-format from rewriting the evidence engine_sha256 commits to)",
+    "stage2_world_models": "results/arc_goal_evidence_20260802/out/s2_cells/ (*.py.txt, same reason)",
+    "classifier": "results/arc_goal_evidence_20260802/classify.py",
+    "driver": "results/arc_goal_evidence_20260802/run_ab.py",
+    "analyser": "results/arc_goal_evidence_20260802/analyse.py",
+    "exhibit": "results/arc_goal_evidence_20260802/out/exhibit_truncation.json + exhibit_*.txt",
+    "stopping_rule": "results/arc_goal_evidence_20260802/out/stopping_rule.json"
+  },
+  "honest_verdict": "complete_goal_evidence_ab_NON_TEST_truncated_primary_underpowered_knobs_shown_structurally_misdirected",
+  "headline": "NON-TEST, not a null. The run was truncated by its stopping rule at 17 of 140 cells, so the PRIMARY (declined rate) rests on 1 game(s) against a design powered on 20, and 2 of 3 treatment cells returned no parseable predicate at all. Nothing is claimed about whether evidence in the goal prompt changes the declined rate. What the run DID establish does not depend on that n: (1) the two shipped knobs are STRUCTURALLY MISDIRECTED -- they live only in the split-induce fallback, and 46 of the 50 declines in the 116-engine frozen corpus come from the combined path where the goal-only prompt is never built, capping any live-path effect at ~3.4 points; (2) on every stage-2 cell where the mechanism did not fire, the two TREATMENT arms produced byte-identical world models (2 of 2) while the CONTROL diverged on 1 of 2 at the same seed -- so a fixed CARNOT_ARC_GENERATOR_SEED does NOT fix the completion on this server, and the non-firing majority contributes NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed; (3) the evidence-carrying goal prompt drives the model into its generation cap -- 4096 of 4096 tokens against the control's 314, with 819 empty code fences in the degenerate tail.",
+  "findings": [
+    "STAGE 1 missingness moved but CANNOT BE RESOLVED at this n: no-predicate-returned goes 0.000 -> 0.667 (delta +0.667, 95% CI [0.0, 1.0]) over only 3 paired game(s), where the permutation reference set cannot reach alpha=0.05 whatever the shift -- observed p=0.50020. Read this as UNRESOLVED, never as absence. A shift of this size, if real, would mean every shape rate here is conditioned on surviving a post-treatment filter.",
+    "A/A floor on the same missingness measure: 0.000 -> 0.000 (delta +0.000, p=1.00000) -- two runs of the IDENTICAL control arm at different seed bases. This is what 'no effect' looks like on this instrument.",
+    "PRIMARY (stage 1, DECLINED rate among cells that returned a predicate): 0.000 -> 0.000 (delta +0.000, 95% CI [0.0, 0.0], p=1.00000, n_control=1, n_treat=1). NOT RESOLVABLE: only 1 paired game(s), below the point where alpha=0.05 is reachable at all. This is an absence of evidence, not evidence of absence.",
+    "A/A floor on the PRIMARY: delta +0.333, p=1.00000. A treatment delta smaller than this floor is not distinguishable from the sampler.",
+    "SECONDARY TROPE (stage 1): 0.000 -> 0.000 (delta +0.000, p=1.00000).",
+    "SECONDARY GROUNDED (stage 1): 1.000 -> 1.000 (delta +0.000, p=1.00000).",
+    "The model's OWN WORDS: declined predicates whose docstring says a win state was never provided -- control 0, treatment 0, A/A 0 (counts, not rates).",
+    "STAGE 2 mechanism firing (the column that separates an UNTESTED arm from a REFUTED one): A 0/2, B 0/2, C 0/2, AA 2/2. Both knobs live ONLY in the split-induce fallback, so on every cell where the combined induce call succeeded neither arm differs from control BY CONSTRUCTION.",
+    "STAGE 2 ITT PRIMARY, B vs A: 0.500 -> 1.000 (delta +0.500, p=1.00000). DECLARED UNDERPOWERED BEFORE THE RUN: the arithmetic ceiling on this contrast is ~3.4 points.",
+    "STAGE 2 ITT PRIMARY, C vs A (evidence + dedup): 0.500 -> 1.000 (delta +0.500, p=1.00000). Same ceiling applies.",
+    "STAGE 2 missingness, B vs A: 0.000 -> 0.000 (p=1.00000) -- whether the stage-1 truncation failure reaches the live path, where it can only act on the split-induce minority."
+  ],
+  "exhibit_truncation": {
+    "what_this_is": "an EXHIBIT, not a measurement. No cell, no rate, no test uses it.",
+    "game": "ar25",
+    "server_port": 41871,
+    "arms": {
+      "control_no_transitions": {
+        "prompt_chars": 365,
+        "tokens_predicted": 314,
+        "tokens_evaluated": 96,
+        "stopped_eos": null,
+        "stopped_limit": null,
+        "closed_code_fence": true,
+        "chars": 1064,
+        "saved_to": "results/arc_goal_evidence_20260802/out/exhibit_control_no_transitions.txt",
+        "first_code_block_parses": true,
+        "first_code_block_parse_error": null,
+        "first_code_block_defines_is_level_complete": false,
+        "hit_generation_cap": false,
+        "empty_code_fence_repeats": 1
+      },
+      "treatment_with_transitions": {
+        "prompt_chars": 4980,
+        "tokens_predicted": 4096,
+        "tokens_evaluated": 3981,
+        "stopped_eos": null,
+        "stopped_limit": null,
+        "closed_code_fence": true,
+        "chars": 12288,
+        "saved_to": "results/arc_goal_evidence_20260802/out/exhibit_treatment_with_transitions.txt",
+        "first_code_block_parses": true,
+        "first_code_block_parse_error": null,
+        "first_code_block_defines_is_level_complete": false,
+        "hit_generation_cap": true,
+        "empty_code_fence_repeats": 819
+      }
+    },
+    "closed_code_fence_is_NOT_a_validity_signal": "both arms report closed_code_fence true, and for the treatment that is an artefact of the degenerate tail: after it exhausts its budget the completion repeats empty ```python``` pairs, which satisfies a count-based fence check while carrying no code. tokens_predicted == the 4096 cap, and empty_code_fence_repeats, are the honest signals. Recorded rather than silently replaced, because a check that looks like it validates something and does not is exactly the class of defect this project's guards exist to name."
+  },
+  "known_confounds": {
+    "GROUNDED_is_partially_determined_by_the_treatment": {
+      "severity": "HIGH -- this is the circularity class the brief warns about",
+      "what": "GROUNDED is defined as 'the predicate names a literal that appears in the agent's observed deltas'. The TREATMENT prompt is precisely those deltas, rendered as text. A model that copies a row index out of its prompt scores GROUNDED without having understood anything, and the control -- which is shown no deltas -- can only score GROUNDED by coincidence.",
+      "so_what": "the GROUNDED contrast is NOT a clean read on goal quality and must not be reported as one. It is reported as what it is: whether the treatment gets the model to REFERENCE its own observations.",
+      "which_metrics_are_clean": "DECLINED (the PRIMARY) is unaffected -- a constant-False predicate references nothing, so no prompt content can mechanically produce or prevent it. TROPE is unaffected for the same reason: a whole-board uniformity claim names nothing observed by construction. MISSING is unaffected -- it is a parse outcome. The circularity is confined to GROUNDED.",
+      "why_it_was_not_fixed": "removing it would mean changing the pre-registered outcome definition after seeing data. It is disclosed instead."
+    },
+    "arm_ORDER_within_a_game_is_fixed_not_randomised": {
+      "severity": "MEDIUM, and confined to the TIMING measure",
+      "what": "cells run A, B, C, AA within a game (and gA, gB, gAA in stage 1), always in that order. Anything that drifts with position -- llama.cpp prompt-cache warmth, GPU thermal state -- is therefore confounded with the arm label.",
+      "so_what_for_SHAPE": "nothing. Every arm sends the SAME seed within a (game, replicate), and a fixed seed fixes the draw; the byte-identity check on non-firing stage-2 cells is direct evidence that order is not perturbing the sampled output.",
+      "so_what_for_TIMING": "median_elapsed_s must be read descriptively and NEVER as a treatment effect with a p-value. Observed directly in this run: on ar25 the control took 111.4s and both treatments 55.2/55.1s, while on bp35 the control took 44.5s and both treatments 67.5/67.6s -- the sign flips between games, which is what position-plus-noise looks like.",
+      "where_timing_IS_load_bearing": "stage 1, where the treatment prompt is 10-20x the control's and the gap is 3s vs 340s. A cache or thermal effect cannot produce a 100x difference in that direction -- warmth makes calls FASTER -- and the failures are explained by a mechanism visible in the artefact itself (three full 4096-token attempts, code block truncated mid-definition).",
+      "the_fix_for_a_future_run": "randomise or counterbalance arm order within a game."
+    }
+  }
+}

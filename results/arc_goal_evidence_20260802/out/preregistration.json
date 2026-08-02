@@ -1,0 +1,68 @@
+{
+  "MINIMUM_REACHABLE_P_AND_A_HONEST_POWER_STATEMENT": {
+    "arithmetic": "both knobs live ONLY in the split-induce fallback, and the goal-only prompt is never built when the combined call succeeds. Split-induce is 19.8% of cells and its declined rate is already only 17.4%, so driving split-cell declines to ZERO moves the ITT declined rate 0.431 -> 0.397: a 3.4 point ceiling. At 20 games x 3 replicates the permutation test cannot resolve 3.4 points, so the STAGE 2 PRIMARY IS DECLARED UNDERPOWERED BEFORE IT IS RUN. A stage-2 null is evidence that the knobs are STRUCTURALLY MISDIRECTED, not that showing evidence does not work.",
+    "min_reachable_p_reported": 0.0,
+    "stage1_is_the_powered_test": "the goal-only call is made directly, so the mechanism fires in 100% of cells and nothing is diluted. At 20 games x 5 replicates per arm, with the permutation reference set C(2R,R)^20 the attainable minimum p is ~0 and quoting it would be meaningless reassurance -- the binding constraint is effect size, not the reference set. The pre-flight base rate for a goal-only-prompt predicate is taken from the 23 frozen split-induce cells (DECLINED 0.174, TROPE 0.522), so stage 1 is powered for the TROPE contrast and only weakly for DECLINED. Reported that way rather than the other way round.",
+    "stage2_primary_cannot_reach_0.05": true,
+    "what_that_number_is_not": "it is NOT a claim of power. It is the floor of the permutation reference set. The honest statement is the effect-size one above."
+  },
+  "MISSING_IS_NEVER_ZERO": "a cell whose induce raised, whose server failed, whose completion was truncated, or which produced no parseable `is_level_complete` is EXCLUDED and COUNTED PER ARM. It is never scored as a decline and never scored 0.",
+  "PREFLIGHT_ON_THE_FROZEN_SHIPPED_CORPUS": {
+    "declined_rate": 0.431,
+    "declined_rate_on_combined_cells": 0.495,
+    "declined_rate_on_split_cells": 0.174,
+    "n": 116,
+    "source": "results/arc_object_perception_ab_change_fidelity_20260801/engines, 116 world_model.py from the same 20 games, classified with this run's classifier",
+    "split_induce_rate": 0.198,
+    "trope_rate": 0.207
+  },
+  "PRIMARY": {
+    "alpha": 0.05,
+    "clustering": "GAME. Replicates within a game are not independent trials; treating them as such inflated a sibling experiment's p from 0.125 to 0.049 on 2026-07-31.",
+    "definition": "the LAST top-level `is_level_complete` (the one Python binds) is a constant False, has no return at all, or raises NameError on a free variable -- decided from the syntax tree by classify.py, which reuses the 2026-08-01 anatomy clusters rather than re-deriving them",
+    "metric": "DECLINED rate",
+    "test": "stratified permutation, statistic = mean over GAMES of (rate_treat - rate_control), arm label permuted WITHIN each game, 200000 draws, two-sided",
+    "why_not_plan_found": "plan_found is an EXACT function of the goal gate's kind (0 mismatches in 138 engines), so scoring a GOAL intervention with it grades the gate using the gate",
+    "why_not_the_goal_gate_at_all": "same circularity one indirection out; shape needs no environment, no bounded search and no win, and is independent of the gate"
+  },
+  "SECONDARIES": {
+    "GROUNDED rate": "names a region, cell or object whose literal appears in the agent's own observed deltas",
+    "TROPE rate": "whole-board uniformity or colour elimination -- a generic ARC trope referencing nothing observed. PRE-FLIGHT SAYS THIS IS WHERE THE MECHANISM CAN ACTUALLY BITE: 52.2% of split-induce cells are tropes against 12.9% of combined.",
+    "gate_kind": "NOT MEASURED. Named here so its absence is a decision, not an omission: it is the thing being changed.",
+    "goal_only_call_ran": "did the mechanism fire in this cell at all"
+  },
+  "arms_stage1_goal_only_component": {
+    "gA": "shipped `_goal_only_prompt` with no transitions -- evidence-free",
+    "gAA": "gA at a different seed base -- the noise floor",
+    "gB": "the same builder with CARNOT_ARC_GOAL_PROMPT_TRANSITIONS=1 -- the agent's own transitions attached",
+    "why_no_gC": "dedup governs how two halves are COMBINED; a single goal-only call has nothing to combine, so an arm C here would be arm gB relabelled"
+  },
+  "arms_stage2_live_induce": {
+    "A": "both knobs unset -- the SHIPPED path, the control",
+    "AA": "identical to A at a different seed base -- the NOISE FLOOR",
+    "B": "CARNOT_ARC_GOAL_PROMPT_TRANSITIONS=1 (evidence in the goal prompt; shadowing still possible)",
+    "C": "CARNOT_ARC_GOAL_PROMPT_TRANSITIONS=1 and CARNOT_ARC_GOAL_DEDUP=1 (evidence + dedup)",
+    "not_nested": "with dedup on, the goal-only call is SKIPPED whenever the engine half already carries a usable predicate, so C is not B-plus-something on every cell. Whether the goal-only call RAN is recorded per cell for exactly this reason."
+  },
+  "defaults_unchanged": "both knobs still ship OFF; flipping either is an operator decision this run does not take",
+  "experiment": "arc_goal_evidence_ab",
+  "generator": {
+    "cuda_gpu": "0",
+    "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "one_server_all_arms": true,
+    "port": 41871,
+    "repo_substr": "gemma-4-31B-it-qat",
+    "seed_scheme": "CARNOT_ARC_GENERATOR_SEED = seed_base + replicate; the SAME seed in every treatment arm and its control within a (game, replicate)"
+  },
+  "line_not_crossed": {
+    "no_win_is_shown": "the prefix split puts the level-up row in the HELD-OUT tail, so levelup_rows_in_shown is 0 for every game; stall games with zero observed wins are in the roster on purpose",
+    "what_does_not": "game source, hand-written adapters, curated win examples, and _previous_level_complete_grid asserted as a win state (it is the NEXT level's opening board -- the win-state poison corrected 2026-07-29; passed as None here in every arm)",
+    "what_reaches_the_model": "the agent's own observed transitions only, rendered by the SAME _transitions_block the engine prompt already uses",
+    "works_on_an_unsolved_game": true
+  },
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+  "question": "Does giving the goal prompt the agent's OWN observed transitions (and stopping an evidence-grounded predicate being shadowed by an evidence-free one) stop the model DECLINING to write a win condition?",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "No game is solved and no level is banked. This measures the SHAPE of an induced goal predicate offline against frozen windows of the agent's own recorded frames. The intervention itself uses only the agent's own observations, so it works identically on a game nobody has solved -- but the MEASUREMENT is offline on public games, so the artifact declares development_proxy, not live_agent_self_discovery.",
+  "written_before_any_llm_call": true
+}

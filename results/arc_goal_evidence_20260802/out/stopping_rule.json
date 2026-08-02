@@ -1,0 +1,34 @@
+{
+  "written_at_utc": "2026-08-02T14:35Z",
+  "written_after_n_cells_observed": 1,
+  "why_this_file_exists": "The one cell that had landed when this was written is a control-arm cell (stage1 gA, ar25, TROPE). No treatment cell had produced an outcome. Fixing the stopping rule here, in writing, before any treatment outcome existed, is what keeps a later decision to stop from being OPTIONAL STOPPING -- stopping when the effect looks good is the single easiest way to invalidate a permutation p-value, and the honest defence against it is a timestamped rule, not a claim of good intentions afterwards.",
+  "the_rule": "Stop on WALL TIME or on exhausting the pre-declared job list. NEVER on an observed effect size, an observed p-value, or an arm looking good.",
+  "revision_from_the_preregistration": {
+    "what_changed": "GEV_S1_REPS 5 -> 3, GEV_S2_REPS 3 -> 2, wall budget 39600s -> 27000s",
+    "when": "after the first two cells revealed the per-cell cost, before any treatment cell had an outcome",
+    "why": "the treatment goal prompt is 3.2k-7.7k characters against the control's 365, and the model generates to the 4096-token cap on it. Measured on the first treatment cell: ~31 tok/s decode, up to three attempts, so a treatment cell costs ~5-7 minutes against the control's ~3 seconds. At 5 stage-1 replicates the treatment arm alone would need 8-15 GPU-hours. The replicate counts were cut so the run finishes; the ARMS, the PRIMARY, the classifier and the test are unchanged.",
+    "what_this_costs": "power, and only power. It is disclosed rather than absorbed."
+  },
+  "truncation_is_balanced_by_construction": "jobs are ordered replicate-major with both stages interleaved, and within a replicate game-major with the arms adjacent. So a wall-budget truncation removes whole trailing (game, replicate) blocks with every arm losing the same cells, rather than removing one entire arm or one entire stage. An unbalanced truncation would silently change which question the run answers.",
+  "missing_is_never_zero": "cells lost to truncation are simply absent -- they are not scored, not imputed, and not counted as either a decline or a non-decline. The realised per-arm n is reported.",
+  "peeking": "out/rowcache is read during the run by peek.py for HEALTH monitoring (dead server, all-missing arm, classifier returning None). Any such peek is disclosed here. It is not an interim analysis and it is not permitted to end the run.",
+  "AMENDMENT_2_hard_wall_clock_checkpoint": {
+    "written_at_utc": "2026-08-02T14:40Z",
+    "written_after_n_cells_observed": 2,
+    "what_i_had_seen_when_writing_this": "exactly two cells. stage1 gA ar25 -> TROPE in 2.6s, and stage1 gB ar25 -> MISSING in 366.4s with fail_msg 'local model code unusable after 3 tries (syntax error line 192: expected an indented block after function definition on line 3)'. Disclosed in full because a stopping rule written after seeing a treatment outcome is only trustworthy if it also says WHAT was seen.",
+    "the_amendment": "the run is stopped at 19:45 UTC if it has not already exited, and the analysis is run on whatever landed.",
+    "why_a_clock_and_not_a_result": "the first treatment cell cost 366 seconds against the control's 2.6, so the ORIGINAL 27000s budget would land past the end of this session and leave the run un-analysed. The new checkpoint is a CLOCK TIME fixed in advance, chosen from the per-cell COST, not from any observed rate, delta or p-value. It is the same class of rule as the original wall budget, only tighter.",
+    "why_this_is_not_optional_stopping": "optional stopping is stopping when the RESULT looks good. Nothing about 19:45 depends on the result: the treatment could go on to look better, worse, or identical and the clock would not move. The realised per-arm n is reported, and because the job list is ordered replicate-major with the arms adjacent, the truncation removes the same trailing cells from every arm.",
+    "the_honest_risk_this_leaves": "with roughly one replicate per arm, the design's power is far below the pre-flight table in pre/power.json, which assumes three. A NULL under this truncation is close to uninformative and must be reported as such. A STARK result -- the direction the first cell hints at -- is still readable, because a near-total difference does not need replicates to be visible. That asymmetry is a property of the truncation and is stated rather than exploited."
+  },
+  "AMENDMENT_3_job_ORDER_changed_and_replicates_cut_to_one": {
+    "written_at_utc": "2026-08-02T14:47Z",
+    "written_after_n_cells_observed": 7,
+    "what_i_had_seen_when_writing_this": "seven cells, all stage 1, all from ar25/bp35/cd82. gA: TROPE, GROUNDED, OTHER (median 3.3s). gAA: DECLINED, TROPE (median 114.5s). gB: GROUNDED, MISSING (median 366.4s). Disclosed in full: an ordering change made after seeing data is only auditable if the data seen is on the record.",
+    "what_changed": "(1) job order is now GAME-major with both stages adjacent, replacing replicate-major-with-stages-interleaved. (2) GEV_S1_REPS 3 -> 1 and GEV_S2_REPS 2 -> 1.",
+    "why_the_ORDER_changed": "the previous ordering ran ALL of stage 1's replicate before ANY of stage 2, so a truncation -- which the per-cell cost makes certain -- would have yielded ZERO stage-2 cells and silently deleted the arm structure the task specifies (A/B/C/AA on the live induce path). Under the new order a stop after game k leaves k games with EVERY arm of BOTH stages measured. The roster order is fixed and alphabetical, so which games survive is decided by the alphabet, never by anything observed.",
+    "why_the_REPLICATES_were_cut": "at ~11 minutes per game for the full seven-arm block, one replicate of the whole roster is already ~3.7 hours. Asking for three would guarantee the truncation lands mid-roster with nothing gained.",
+    "what_this_costs_and_it_is_not_small": "the replicate dimension is gone. Within a game each arm now has exactly ONE cell, so the game-clustered permutation reduces to comparing single draws per game and the A/A floor carries the entire burden of saying what run-to-run noise looks like. The gAA cells already show that burden is real: the SAME control prompt produced 2.6s/TROPE and 114.5s/DECLINED on different seeds. Any effect smaller than that spread is unreadable at this n, and will be reported as unreadable.",
+    "still_not_optional_stopping": "the stop is a clock and a job list. No branch of this amendment depends on a rate, a delta or a p-value, and the arms are affected identically."
+  }
+}

@@ -1,0 +1,13 @@
+import numpy as np
+
+def is_level_complete(grid):
+    """
+    Checks if the grid is in a win state.
+    The win state for bp35 is characterized by the grid containing
+    only one color (excluding background color 0).
+    """
+    grid = np.array(grid)
+    non_zero_colors = np.unique(grid[grid != 0])
+    
+    # Win state: only one distinct non-zero color exists in the grid.
+    return len(non_zero_colors) == 1

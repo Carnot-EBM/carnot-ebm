@@ -1,0 +1,33 @@
+{
+  "provenance": "computed AFTER the run started, from FROZEN-CORPUS pre-flight inputs only; no cell of the measured run enters this file",
+  "design": {
+    "n_games": 20,
+    "replicates_per_arm": 3,
+    "sims_per_effect_size": 600,
+    "monte_carlo_se_near_p0.5": 0.0204,
+    "inner_permutation_draws": 2000,
+    "alpha": 0.05
+  },
+  "base_rates_from_the_23_frozen_split_induce_cells": {
+    "trope": 0.5217,
+    "declined": 0.1739,
+    "why_the_split_cells": "the goal-only prompt is the prompt used on split-induce cells, so those 23 are the closest frozen analogue of a stage-1 control cell"
+  },
+  "power": {
+    "TROPE": {
+      "0.522->0.40": 0.275,
+      "0.522->0.30": 0.81,
+      "0.522->0.20": 0.99,
+      "0.522->0.10": 1.0,
+      "0.522->0.05": 1.0
+    },
+    "DECLINED": {
+      "0.174->0.30": 0.402,
+      "0.174->0.20": 0.032,
+      "0.174->0.10": 0.203,
+      "0.174->0.05": 0.587,
+      "0.174->0.02": 0.905
+    }
+  },
+  "reading": "Read the DECLINED row first: it is the PRIMARY. Its control base rate on the frozen split cells is low, so only a large absolute reduction is detectable and a null on the primary is weak evidence against a small effect. The TROPE row is where the design has real power, which is why the pre-registration named it as the secondary the mechanism can actually bite on."
+}
