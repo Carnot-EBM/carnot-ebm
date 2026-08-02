@@ -1,0 +1,265 @@
+{
+ "experiment": "arc_frontier_exhaustion_diagnosis",
+ "requirement": "REQ-ARC-WMTE-6082",
+ "schema": "carnot.arc_frontier_exhaustion_diagnosis.v1",
+ "run_date": "2026-08-02",
+ "question": "In results/arc_inert_label_defer_20260802 the game g50t stopped at 1022 of 2000 actions with timed_out=false -- the largest single 'action saving' in the run (-978), scored as a win. Is premature frontier exhaustion a BUG, or did g50t genuinely have nothing left?",
+ "answer_one_line": "BUG. g50t had reachable untested work; the frontier emptied because untested rows are debited from the node the search INTENDED to probe while the action executes wherever navigation actually landed, so nodes are marked exhausted having never been visited.",
+ "reproduction_is_exact": {
+  "control_cell": {
+   "actions_spent": 2000,
+   "states_discovered": 142,
+   "matches_ab_artifact": true
+  },
+  "defer_cell": {
+   "actions_spent": 1022,
+   "states_discovered": 56,
+   "matches_ab_artifact": true
+  },
+  "note": "The probe re-runs the SAME shipped E3AgentPolicy configuration the A/B worker drives and reproduces both cells exactly, so every number below is about the run that produced the observation, not a lookalike."
+ },
+ "finding_1_the_frontier_report_was_internally_correct": {
+  "at_the_moment_explored_out_fired": {
+   "n_nodes": 56,
+   "nodes_with_untested_rows": 0,
+   "untested_rows_remaining": 0,
+   "practically_reachable_untested_rows": 0
+  },
+  "interpretation": "_frontier() returned None because its eligible list was genuinely empty -- every node's untested list was []. The frontier did not mis-scan; it was handed an exhausted graph."
+ },
+ "finding_2_the_global_tier_barrier_is_NOT_implicated": {
+  "tier_barrier_active_at_exhaustion": false,
+  "active_tier": 0,
+  "tier_advances": 0,
+  "why": "REQ-ARC-WMTE-5836's barrier is gated by tier_click_vocab_only=True, which latches only once ACTION6 (click) is seen in a frame. g50t advertises action ids [1,2,3,4,5] and no click, so _tier_active() is False for the entire run and _node_has_open_tier degrades to the historical bool(node['untested']). The barrier refused nothing here.",
+  "explicitly_answers_the_task_question": "The census statistic that 51% of navigation followed a departure from a node whose remaining work the barrier was refusing does NOT explain g50t: on this game the barrier never activated."
+ },
+ "finding_3_the_online_discriminator_is_NOT_implicated": {
+  "discriminative_pruned_nodes_at_exhaustion": 0,
+  "discriminative_prune_threshold": 0.12,
+  "online_discriminator_trained": true,
+  "note": "Worth stating because this branch of _frontier() `continue`s with NO never-empty guard, unlike the hazard pruner's explicit one -- it COULD empty the frontier on another game. It did not do so here."
+ },
+ "finding_4_the_actual_mechanism_rows_are_debited_from_a_node_the_agent_never_reaches": {
+  "mechanism": "_frontier() picks target node th; _pop_frontier_batch(th) removes rows from th['untested'] IMMEDIATELY; navigation steps are queued; the probe executes only after the walk. _serve() carries origin=th, so if the walk does not land on th the action fires from a different state while th's row is already spent. th then reads as exhausted having never been probed.",
+  "navigation_arrival_g50t": {
+   "defer": {
+    "navigate_probes": 141,
+    "arrived_at_intended_node": 23,
+    "fired_from_a_different_state": 118,
+    "miss_rate": 0.837
+   },
+   "control": {
+    "navigate_probes": 309,
+    "arrived_at_intended_node": 23,
+    "fired_from_a_different_state": 286,
+    "miss_rate": 0.926
+   }
+  },
+  "worked_example_from_the_trace": "Node 1354dec6 (depth 6) had its untested list drained 4 -> 3 -> 2 -> 1 -> 0 across five consecutive probes while explorer.cur was 9b35ead8 the entire time. All five of its actions were spent at another state. The node was never probed and is now permanently exhausted. The same pattern repeats for a2da85be, f803e489, 3e9b07bd, d83e5c4e.",
+  "harm_at_the_moment_of_exhaustion_g50t_defer": {
+   "nodes_declared_exhausted": 56,
+   "never_probed_in_place_every_row_spent_elsewhere": 13,
+   "partially_probed_in_place": 17,
+   "genuinely_fully_probed_in_place": 26,
+   "rows_debited_from_exhausted_nodes": 280,
+   "rows_that_actually_executed_at_the_node_they_were_debited_from": 162,
+   "fraction_executed_where_debited": 0.579
+  },
+  "interpretation": "explored_out was declared with 30 of 56 nodes not actually (fully) explored. This is the bug: 'no untested rows left' is true, but it is true because the rows were spent somewhere else, not because the places were visited."
+ },
+ "finding_5_direct_count_g50t_did_NOT_have_nothing_left": {
+  "method": "Replay every node's OWN recorded path from a fresh reset in a separate offline env, then expand ONE PLY using only the action ids the frame itself advertises. Both the node set and the successors are hashed with the SAME final HUD mask, and the 'already known' set additionally contains the re-hashed raw grid of EVERY frame the run observed -- so a state seen transiently mid-walk counts as known. Strictly conservative.",
+  "defer_at_exhaustion": {
+   "nodes_replayed": 56,
+   "distinct_states_actually_observed_during_run": 57,
+   "nodes_with_an_unrecorded_successor": 16,
+   "reachable_untested_state_action_pairs": 19,
+   "distinct_never_observed_successor_states": 7
+  },
+  "control_for_comparison": {
+   "nodes_replayed": 142,
+   "distinct_states_actually_observed_during_run": 144,
+   "reachable_untested_state_action_pairs": 0,
+   "note": "The control arm, which ran the full 2000 actions and never declared exhaustion, had ZERO one-ply-reachable unobserved states left. The defer arm stopped at 1022 actions with 19."
+  },
+  "this_is_a_lower_bound": "One ply from already-recorded nodes only. The true remaining frontier is larger; 19 is the floor, not the estimate.",
+  "verdict": "g50t did NOT genuinely have nothing left."
+ },
+ "finding_6_root_cause_the_graph_key_is_not_a_markov_state": {
+  "why_navigation_misses": "Traced the first miss directly: from 7f02891f the search planned the 7-step route [4,4,4,5,2,2,4] over its own recorded forward edges, then got STUCK -- the last four steps were no-ops that all left it at 5ba93c9d -- and fired the probe with origin=1446e7c7. The route was built from adj edges that do not exist from the state the walk was actually in.",
+  "g50t_trajectory_determinism": "CONFIRMED deterministic: 6/6 random 8-action sequences replayed from reset produced byte-identical hash sequences twice. Non-determinism is ruled out as the explanation.",
+  "the_actual_cause": "The state abstraction is not a sufficient statistic. Measured on this run: 90 of 783 distinct (RAW unmasked frame hash, action) keys produced more than one distinct successor. Given proven trajectory determinism, that is proof of hidden state the grid does not expose. Masking makes it worse, and the SHIPPED collapse guard measures exactly this and declines to act: keys_with_multiple_successors=15, unproven_masked_branchings=178, acted_on_unproven_branchings=false, split_node_count=0, branchings_in_shipped_region_not_acted_on=37 (restricted_action_to_repair_added_region=true).",
+  "consequence_chain": "non-Markov key -> false forward edges -> navigation walk gets stuck -> probe fires from the wrong state -> (a) the target node's row is spent without the node being visited AND (b) the resulting node inherits a fabricated path (measured: 130 of 142 control node paths, and 31 of 56 defer node paths, do not replay to their own node key under a uniform final-mask identity) -> future navigation over those paths misses more often. Self-reinforcing."
+ },
+ "roster_scope_does_this_reach_other_games": {
+  "measured": "All 25 public games, shipped (control) arm, seed 20260802, budget 2000, nav-arrival instrumented.",
+  "early_stop_incidence_in_the_source_ab": {
+   "control_cells": {
+    "n": 75,
+    "early_stopped": 0
+   },
+   "control_b_cells": {
+    "n": 75,
+    "early_stopped": 0
+   },
+   "defer_cells": {
+    "n": 75,
+    "early_stopped": 3,
+    "games": [
+     "g50t"
+    ]
+   },
+   "statement": "The OBSERVED early stop is g50t-only, on 3 of 3 seeds, in the defer arm alone."
+  },
+  "but_the_underlying_mis_attribution_is_roster_wide": {
+   "miss_rate_distribution_across_25_games": {
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.1,
+    "q3": 0.633,
+    "max": 1.0
+   },
+   "games_with_miss_rate_zero": 8,
+   "games_with_miss_rate_above_0.5": 8,
+   "worst": [
+    [
+     "tn36",
+     1.0,
+     "322 navigate-probes, 0 arrivals, only 17 states discovered in 2000 actions"
+    ],
+    [
+     "g50t",
+     0.926
+    ],
+    [
+     "lp85",
+     0.864
+    ],
+    [
+     "sk48",
+     0.727
+    ],
+    [
+     "vc33",
+     0.692
+    ]
+   ],
+   "clean": [
+    "ar25",
+    "ft09",
+    "ka59",
+    "ls20",
+    "re86",
+    "sb26",
+    "tr87",
+    "wa30"
+   ]
+  },
+  "honest_scope_statement": "The frontier COLLAPSE is g50t-specific in this data and I do not extrapolate it. The mis-attribution MECHANISM that caused it is present in 17 of 25 games and severe (>50%) in 8, including tn36 at 100%. g50t is where a latent, roster-wide accounting defect happened to run the frontier all the way to empty inside the budget; it is not a g50t quirk."
+ },
+ "consequence_for_prior_measurements": {
+  "claim": "Any ARC action-efficiency comparison on an affected game can be contaminated: an arm can spend fewer actions because its frontier collapsed sooner, not because it searched better.",
+  "concrete_instance": "The -978 action 'saving' on g50t was scored as the run's largest win. It is a regression: states_discovered fell 142 -> 56 and the hand-verifier progress proxy fell 0.6667 -> 0.3333 on the same cell. Both directions were already recorded in the cell and both say the agent did LESS.",
+  "recommended_guard": "A cell that ends with explored_out=true and levels_gained=0 should be reported as a FRONTIER COLLAPSE, not as an action saving, and excluded from any action-efficiency mean. The existing artifact already carries timed_out but has no explored_out field -- that is the missing datum that made this indistinguishable."
+ },
+ "what_this_diagnosis_does_NOT_establish": [
+  "It does not show the defer lever CAUSES the mis-attribution -- control has a HIGHER miss rate on g50t (92.6% vs 83.7%). Defer only changed the pop order enough that the drain completed inside the budget.",
+  "It does not quantify how much of any historical ARC action-efficiency number is contaminated; it establishes the mechanism and its roster incidence, nothing more.",
+  "It measures one seed per game for the roster sweep (seed 20260802). The three A/B seeds are byte-identical on g50t, so the seed axis is inert here -- see seed_axis_note.",
+  "The one-ply expansion is a lower bound on remaining frontier, not a measure of it."
+ ],
+ "seed_axis_note": "All three A/B seeds (20260802/3/4) produce byte-identical g50t cells in every arm (same actions_spent, states_discovered, trace_len). Consistent with the known finding that frontier_discipline_seed is a hardcoded constructor default that random.seed/np.random.seed cannot reach and the sampler receives no seed. The seed axis is therefore NOT an independent replication axis for this result, and I do not treat the three seeds as n=3.",
+ "measurement_defect_found_and_discarded_in_this_run": {
+  "what": "A first version of the node audit re-hashed replayed frames with explorer._hash AFTER the run and reported '130 of 142 node paths do not replay to their own hash' as a defect.",
+  "why_it_was_wrong": "explorer._hash is not a fixed function of a frame: it masks with self.hud_mask, which on g50t starts UNRESOLVED (0 cells, source='unresolved') and is only inferred partway through the run (final: 64 cells, digest a8f81cebbd21b3c3). Comparing post-run hashes against keys written under a different mask manufactures mismatches.",
+  "how_it_was_fixed": "Re-key BOTH sides with the single final mask, and confirm the collapse guard is inert (split_node_count=0) so it cannot skew the comparison either. The 130/142 figure SURVIVED the corrected method (it is reported in finding_6 on the corrected basis, where node keys were independently confirmed canonical: 142/142 node keys appear among observed final-mask hashes, 0/142 among raw hashes).",
+  "recorded_because": "It is the same shape of error this whole diagnosis is about -- a number that looks like a defect and is an artifact of the instrument."
+ },
+ "games": [
+  "ar25",
+  "bp35",
+  "cd82",
+  "cn04",
+  "dc22",
+  "ft09",
+  "g50t",
+  "ka59",
+  "lf52",
+  "lp85",
+  "ls20",
+  "m0r0",
+  "r11l",
+  "re86",
+  "s5i5",
+  "sb26",
+  "sc25",
+  "sk48",
+  "sp80",
+  "su15",
+  "tn36",
+  "tr87",
+  "tu93",
+  "vc33",
+  "wa30"
+ ],
+ "random_seed": 20260802,
+ "random_seeds_used": [
+  20260802
+ ],
+ "duration_s": 2361.0,
+ "n_cells": 29,
+ "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+ "inference_substrate_note": "The live E3AgentPolicy cascade takes real actions against the offline arcade with CARNOT_ARC_DISABLE_INDUCTION=1 and CUDA_VISIBLE_DEVICES empty. No GGUF is loaded, no llama-server is started, no GPU is touched, no network is used, and no scored or online game is played. The probe only OBSERVES: it wraps _frontier, _serve, _candidates and _pop_untested to count, and changes no shipped default.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "Public-game offline DIAGNOSIS of a search-accounting defect. No level is claimed, none was reached (best_level 0 throughout), no registry entry is written, and no solver or adapter was built. Not a solve artifact.",
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "No verifier-value or moat claim is made. The measurement is of search bookkeeping, not of verifier discrimination.",
+ "read_game_source": false,
+ "used_env_source": true,
+ "used_env_source_note": "Runs the offline arcade over environment_files/ exactly as the shipped A/B worker does, and steps the live runtime game object. No game .py source is read or parsed.",
+ "offline_ground_truth_bfs": false,
+ "one_ply_expansion_from_recorded_node_paths": true,
+ "one_ply_expansion_note": "finding_5 replays paths the AGENT ITSELF recorded and takes exactly one action per node from the frame's own advertised action list. It is not a BFS, is not exhaustive, and produced no solve or calibration; it is an audit of whether the search's 'nothing left' claim was true.",
+ "exhaustive_bfs_calibration": false,
+ "hand_calibrated_per_game": false,
+ "preconditions_checked": [
+  {
+   "resource": "CARNOT_ARC_E3_DIR redirected away from tracked results/arc_e3 evidence",
+   "available": true
+  },
+  {
+   "resource": "CARNOT_ARC_DISABLE_INDUCTION=1",
+   "available": true
+  },
+  {
+   "resource": "CUDA_VISIBLE_DEVICES empty (CPU only, no GPU)",
+   "available": true
+  },
+  {
+   "resource": "offline arcade over environment_files/ (no network, no scorecard submission)",
+   "available": true
+  },
+  {
+   "resource": "no generator / proposer constructed (_NoGeneratorStandIn)",
+   "available": true
+  }
+ ],
+ "design_limits_stated_up_front": [
+  "No hypothesis test is run and no p-value is reported: this is a mechanism diagnosis with direct counts, not a comparison of arms. Reporting a p-value here would be false precision.",
+  "The roster sweep is one seed per game, shipped arm only. It establishes incidence of the mechanism, not its effect on any score.",
+  "Cells within a game are not independent; no cell-level pooling is done anywhere in this artifact."
+ ],
+ "artifacts": {
+  "probe_script": "scripts/arc_frontier_exhaustion_probe.py",
+  "probe_script_sha256": "31a7b117795ccf216fda67977a479636ac1e3c9e68731c748c24237022afbb7c",
+  "g50t_control_audited": "results/arc_frontier_exhaustion_20260802/g50t_control_audited.json",
+  "g50t_defer_audited": "results/arc_frontier_exhaustion_20260802/g50t_defer_audited.json",
+  "roster_nav_arrival": "results/arc_frontier_exhaustion_20260802/roster_nav_arrival/ (25 games)",
+  "source_observation": "results/arc_inert_label_defer_20260802/arc_inert_label_defer.json"
+ },
+ "git_head": "25a04ec32bb732b04ee339d89c311a0357079acc",
+ "reproducibility_checksum": "31a7b117795ccf216fda67977a479636ac1e3c9e68731c748c24237022afbb7c",
+ "honest_verdict": "complete_g50t_frontier_exhaustion_is_a_REAL_BUG_not_genuine_exhaustion__at_the_moment_explored_out_fired_all_56_nodes_had_zero_untested_rows_but_19_reachable_untested_state_action_pairs_reaching_7_never_observed_states_remained__cause_is_that_untested_rows_are_debited_from_the_INTENDED_target_node_while_the_probe_executes_wherever_navigation_actually_landed_so_13_of_56_nodes_were_declared_exhausted_having_NEVER_been_probed_and_only_162_of_280_rows_58pct_executed_where_debited__the_GLOBAL_TIER_BARRIER_REQ_ARC_WMTE_5836_is_NOT_implicated_it_never_activates_on_this_nav_only_game_and_the_discriminator_pruned_0_nodes__root_cause_is_a_non_Markov_graph_key_90_of_783_raw_state_action_keys_had_multiple_successors_under_proven_trajectory_determinism_which_writes_false_edges_and_fabricated_node_paths__the_COLLAPSE_is_g50t_only_3_of_75_defer_cells_0_of_150_control_cells_and_I_do_not_extrapolate_it_but_the_MIS_ATTRIBUTION_mechanism_is_roster_wide_median_miss_rate_10pct_q3_63pct_max_100pct_tn36_severe_in_8_of_25_games__the_minus_978_action_saving_was_a_regression_states_fell_142_to_56_and_hv_progress_fell_0.667_to_0.333",
+ "reproducibility_checksum_note": "sha256 of scripts/arc_frontier_exhaustion_probe.py AFTER ruff-format. The pre-format value was ee3a1c7a4b2b6a12d9c785de2ab4d13b1291a4c54f29d9be24bf67517fb95374; recorded here because the artifact was written before the pre-commit formatter ran and an uncorrected checksum would not reproduce."
+}
