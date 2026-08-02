@@ -1,0 +1,1590 @@
+{
+  "experiment": "arc_win_transition_exposure",
+  "schema": "carnot.arc_win_transition_exposure.v1",
+  "run_date": "2026-08-02T20:10:27Z",
+  "git_head": "26dc6fd5e315f1cc976ac04d77618358dcfbedfa",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_note": "The LIVE agent (E3AgentPolicy.next_move, built with the SUBMITTED_AGENT_CONFIG kwargs make_carnot_agent uses) takes real actions against the OFFLINE arcade over environment_files. No GGUF is loaded, no llama-server is spawned, no CUDA is touched, no scored/online game is played and nothing is submitted. The proposer is experiment_4605._NoOpProposer -- the project's own `llm_off` arm definition -- so the shipped `_induce_and_plan` body runs in full, INCLUDING the `self._proposer().induce(..., win_transition=self._win_transition)` call site under test; only the generator's answer is absent.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "NO SOLVE IS CLAIMED. No level is banked to the registry, `offline_reproduced` is deliberately absent rather than set False, and the per-game `levels` figures are trajectory context for the exposure denominator, not solve claims. These are offline dev-twin runs on PUBLIC games.",
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No verifier value, moat or efficiency claim is made. This artifact measures how often one code path is reached; it grades nothing.",
+  "the_change_under_test": {
+    "shipped": "2026-08-01",
+    "flagged": false,
+    "flag_discipline_breach": "The change ships UNFLAGGED: there is no default-OFF env gate on the live behaviour change at arc_competition_agent.py:6433. Recorded here as a standing -discipline breach, independent of whether the change turns out to help.",
+    "sites": [
+      "arc_competition_agent.py:4710 (`self._win_transition = None`)",
+      "arc_competition_agent.py:4946 (captured in _begin_level_goal_episode)",
+      "arc_competition_agent.py:6429-6433 (passed to the live induce call)",
+      "arc_executable_world_model.py:2533/2870/3044/6422 (`win_transition=` kwarg)"
+    ],
+    "sha256_arc_competition_agent": "36dc03639d7b068aa5dfaf5ec401b0d461460aebfaab0c370229e5a9fa4a4968",
+    "sha256_arc_executable_world_model": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
+    "why_exposure_is_the_first_question": "`_begin_level_goal_episode` is the SOLE writer of `_win_transition`, and it runs only after a level-up. With None, both proposers reproduce the historical scan of `trans` byte-for-byte. So every induce call made before the agent has banked a level is, by construction, unchanged by this change."
+  },
+  "no_hypothesis_test_is_run": "This is a descriptive rate with a game-clustered spread, not a comparison, so no p-value is computed and none should be quoted from it. The MIN REACHABLE p is undefined because there is no second arm. The decision this artifact supports is whether an effect measurement would be interpretable, not whether an effect exists.",
+  "preconditions_checked": [
+    {
+      "resource": "offline_arcade_environment_files",
+      "available": true
+    },
+    {
+      "resource": "live_agent_source",
+      "available": true
+    },
+    {
+      "resource": "world_model_source",
+      "available": true
+    },
+    {
+      "resource": "arc_solve_registry",
+      "available": true
+    },
+    {
+      "resource": "live_generator_corroboration_corpus",
+      "available": true
+    },
+    {
+      "resource": "no_gpu_used",
+      "available": true
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "arc_first_win_llm_on_eval_concurrency_20260727",
+      "fields_imported": [
+        "cells/*.json:liveness_witness.induction_attempts_n",
+        "cells/*.json:liveness_witness.induction_attempts_planned",
+        "cells/*.json:reached_level",
+        "arm_definitions.llm_off"
+      ],
+      "sha256": "bfbdd679b1fa1fec6a8c61a298577755a8dd1b233310ecef5c4fd03c2106d58a"
+    },
+    {
+      "experiment_id": "arc_goal_predicate_anatomy_20260801",
+      "fields_imported": [
+        "was_it_knowable.first_and_largest_fact",
+        "clusters_of_the_71_failing_goals.A_DECLINED"
+      ],
+      "sha256": "dedc44f45bb48e73170785da19fbc4e6a52cabd16c182839f1a43ebbee13e637"
+    }
+  ],
+  "method": {
+    "driver": "scripts/arc_leaderboard_eval.py:run_game (shipped; writes no files -- only its main() does, and main() is never called here)",
+    "policy": "E3AgentPolicy built with the exact SUBMITTED_AGENT_CONFIG kwargs make_carnot_agent uses",
+    "instrument": "E3AgentPolicy._induce_and_plan is wrapped for the duration of the run and records `self._win_transition is not None` BEFORE delegating. No shipped file is edited; no default is changed.",
+    "games": "the 25 public survey games, read from ops/arc_solve_registry.yaml",
+    "budgets": [
+      400,
+      2000
+    ],
+    "replicate_axis": "frontier_discipline_seed (the seed the agent actually consumes)",
+    "harness_paths": [
+      "results/arc_win_transition_exposure_20260802/worker.py",
+      "results/arc_win_transition_exposure_20260802/run.py",
+      "results/arc_win_transition_exposure_20260802/analyse.py",
+      "results/arc_win_transition_exposure_20260802/build_artifact.py",
+      "results/arc_win_transition_exposure_20260802/verify_kwarg.py"
+    ]
+  },
+  "headline": {
+    "label": "all budgets, all seeds",
+    "n_cells": 103,
+    "n_cells_ok": 103,
+    "n_coverage_gaps": 0,
+    "coverage_gaps": [],
+    "n_induce_calls_total": 128,
+    "n_with_win_available": 30,
+    "exposure_rate_pooled": 0.234375,
+    "exposure_rate_pooled_note": "cells are not independent -- several seeds/budgets of the same game share a trajectory, so the pooled rate is reported WITH the per-game spread, never alone",
+    "n_games_with_at_least_one_induce_call": 25,
+    "n_games_with_zero_induce_calls": 0,
+    "games_with_zero_induce_calls": [],
+    "per_game_exposure_rate": {
+      "ar25": 0.0,
+      "bp35": 0.0,
+      "cd82": 0.428571,
+      "cn04": 0.0,
+      "dc22": 0.2,
+      "ft09": 0.2,
+      "g50t": 0.0,
+      "ka59": 0.0,
+      "lf52": 0.2,
+      "lp85": 0.285714,
+      "ls20": 0.0,
+      "m0r0": 0.0,
+      "r11l": 0.2,
+      "re86": 0.0,
+      "s5i5": 0.2,
+      "sb26": 0.0,
+      "sc25": 0.0,
+      "sk48": 0.0,
+      "sp80": 0.5,
+      "su15": 0.2,
+      "tn36": 0.0,
+      "tr87": 0.0,
+      "tu93": 0.555556,
+      "vc33": 1.0,
+      "wa30": 0.0
+    },
+    "per_game_induce_calls": {
+      "ar25": 4,
+      "bp35": 4,
+      "cd82": 7,
+      "cn04": 4,
+      "dc22": 5,
+      "ft09": 5,
+      "g50t": 4,
+      "ka59": 4,
+      "lf52": 5,
+      "lp85": 7,
+      "ls20": 4,
+      "m0r0": 4,
+      "r11l": 5,
+      "re86": 4,
+      "s5i5": 5,
+      "sb26": 4,
+      "sc25": 4,
+      "sk48": 4,
+      "sp80": 8,
+      "su15": 5,
+      "tn36": 5,
+      "tr87": 4,
+      "tu93": 9,
+      "vc33": 10,
+      "wa30": 4
+    },
+    "per_game_win_available": {
+      "ar25": 0,
+      "bp35": 0,
+      "cd82": 3,
+      "cn04": 0,
+      "dc22": 1,
+      "ft09": 1,
+      "g50t": 0,
+      "ka59": 0,
+      "lf52": 1,
+      "lp85": 2,
+      "ls20": 0,
+      "m0r0": 0,
+      "r11l": 1,
+      "re86": 0,
+      "s5i5": 1,
+      "sb26": 0,
+      "sc25": 0,
+      "sk48": 0,
+      "sp80": 4,
+      "su15": 1,
+      "tn36": 0,
+      "tr87": 0,
+      "tu93": 5,
+      "vc33": 10,
+      "wa30": 0
+    },
+    "per_game_levels_banked": {
+      "ar25": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bp35": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "cd82": [
+        0,
+        0,
+        1,
+        2
+      ],
+      "cn04": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "dc22": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "ft09": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "g50t": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "ka59": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "lf52": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "lp85": [
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "ls20": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "m0r0": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "r11l": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "re86": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "s5i5": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "sb26": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sc25": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sk48": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sp80": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "su15": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tn36": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "tr87": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "tu93": [
+        1,
+        1,
+        1,
+        2
+      ],
+      "vc33": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "wa30": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "roster_max_game": "vc33",
+    "roster_max_rate": 1.0,
+    "roster_median_rate": 0.0,
+    "roster_median_game": "tr87",
+    "roster_n_games_at_zero_exposure": 14,
+    "roster_n_games_at_full_exposure": 1,
+    "cluster_mean_of_per_game_rates": 0.158794,
+    "induction_reason_census_all_calls": {
+      "level_up_reinduction": 5,
+      "stall": 123
+    },
+    "induction_reason_census_win_available_calls": {
+      "level_up_reinduction": 5,
+      "stall": 25
+    },
+    "routing_partition": {
+      "reached_changed_call_site": {
+        "no_win": 98
+      },
+      "routed_to_reinduction": {
+        "win_available": 30
+      }
+    },
+    "n_calls_that_reached_the_changed_call_site": 98,
+    "n_calls_with_win_available_that_reached_the_changed_call_site": 0,
+    "effective_exposure_rate": 0.0,
+    "effective_exposure_note": "n_with_win_available / n_induce_calls_total is the PROMPT-AVAILABILITY rate. effective_exposure_rate is the fraction of live induce calls at which the changed call site at arc_competition_agent.py:6429-6433 actually RECEIVED a non-None win transition. They differ because the routing branch above sends every level-banked induction down a path that drops the argument.",
+    "skip_reason_by_exposure_state": {
+      "win_available": {
+        "proposer_failed": 30
+      },
+      "no_win": {
+        "proposer_failed_or_missing_root": 98
+      }
+    },
+    "n_attempts_that_installed_a_plan": 0,
+    "structural_consistency_mismatches": [],
+    "n_structural_consistency_mismatches": 0
+  },
+  "what_a_live_ab_could_reach_at_this_exposure": {
+    "clustering": "GAME level -- cells within a game share a trajectory and are not independent",
+    "n_games_with_at_least_one_WIN_AVAILABLE_induce_call": 11,
+    "games_with_any_win_available_call": [
+      "cd82",
+      "dc22",
+      "ft09",
+      "lf52",
+      "lp85",
+      "r11l",
+      "s5i5",
+      "sp80",
+      "su15",
+      "tu93",
+      "vc33"
+    ],
+    "n_calls_at_which_the_CHANGED_CALL_SITE_received_a_win_transition": 0,
+    "max_discordant_pairs_available": 0,
+    "min_reachable_two_sided_p": 1.0,
+    "min_reachable_two_sided_p_note": "An exact paired (McNemar/sign) test's smallest reachable two-sided p is 2*0.5^n at n discordant pairs, and a cell where the changed argument was never delivered can never be discordant -- the two arms are the same program. At k=0 the smallest reachable p is 1.0: a live A/B of this change on this roster is UNFALSIFIABLE, not underpowered. Running more cells of an identity returns exactly 0 forever.",
+    "reachable_p_lt_0_05": false
+  },
+  "per_budget": {
+    "budget_400": {
+      "label": "budget=400",
+      "n_cells": 78,
+      "n_cells_ok": 78,
+      "n_coverage_gaps": 0,
+      "coverage_gaps": [],
+      "n_induce_calls_total": 90,
+      "n_with_win_available": 16,
+      "exposure_rate_pooled": 0.177778,
+      "exposure_rate_pooled_note": "cells are not independent -- several seeds/budgets of the same game share a trajectory, so the pooled rate is reported WITH the per-game spread, never alone",
+      "n_games_with_at_least_one_induce_call": 25,
+      "n_games_with_zero_induce_calls": 0,
+      "games_with_zero_induce_calls": [],
+      "per_game_exposure_rate": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.25,
+        "cn04": 0.0,
+        "dc22": 0.0,
+        "ft09": 0.0,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.0,
+        "lp85": 0.2,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.0,
+        "re86": 0.0,
+        "s5i5": 0.0,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.5,
+        "su15": 0.0,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.5,
+        "vc33": 1.0,
+        "wa30": 0.0
+      },
+      "per_game_induce_calls": {
+        "ar25": 3,
+        "bp35": 3,
+        "cd82": 4,
+        "cn04": 3,
+        "dc22": 3,
+        "ft09": 3,
+        "g50t": 3,
+        "ka59": 3,
+        "lf52": 3,
+        "lp85": 5,
+        "ls20": 3,
+        "m0r0": 3,
+        "r11l": 3,
+        "re86": 3,
+        "s5i5": 3,
+        "sb26": 3,
+        "sc25": 3,
+        "sk48": 3,
+        "sp80": 6,
+        "su15": 3,
+        "tn36": 4,
+        "tr87": 3,
+        "tu93": 6,
+        "vc33": 8,
+        "wa30": 3
+      },
+      "per_game_win_available": {
+        "ar25": 0,
+        "bp35": 0,
+        "cd82": 1,
+        "cn04": 0,
+        "dc22": 0,
+        "ft09": 0,
+        "g50t": 0,
+        "ka59": 0,
+        "lf52": 0,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 0,
+        "re86": 0,
+        "s5i5": 0,
+        "sb26": 0,
+        "sc25": 0,
+        "sk48": 0,
+        "sp80": 3,
+        "su15": 0,
+        "tn36": 0,
+        "tr87": 0,
+        "tu93": 3,
+        "vc33": 8,
+        "wa30": 0
+      },
+      "per_game_levels_banked": {
+        "ar25": [
+          0,
+          0,
+          0
+        ],
+        "bp35": [
+          0,
+          0,
+          0
+        ],
+        "cd82": [
+          0,
+          0,
+          1
+        ],
+        "cn04": [
+          0,
+          0,
+          0
+        ],
+        "dc22": [
+          0,
+          0,
+          0
+        ],
+        "ft09": [
+          0,
+          0,
+          0
+        ],
+        "g50t": [
+          0,
+          0,
+          0
+        ],
+        "ka59": [
+          0,
+          0,
+          0
+        ],
+        "lf52": [
+          0,
+          0,
+          0
+        ],
+        "lp85": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "ls20": [
+          0,
+          0,
+          0
+        ],
+        "m0r0": [
+          0,
+          0,
+          0
+        ],
+        "r11l": [
+          0,
+          0,
+          0
+        ],
+        "re86": [
+          0,
+          0,
+          0
+        ],
+        "s5i5": [
+          0,
+          0,
+          0
+        ],
+        "sb26": [
+          0,
+          0,
+          0
+        ],
+        "sc25": [
+          0,
+          0,
+          0
+        ],
+        "sk48": [
+          0,
+          0,
+          0
+        ],
+        "sp80": [
+          1,
+          1,
+          1
+        ],
+        "su15": [
+          0,
+          0,
+          0
+        ],
+        "tn36": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tr87": [
+          0,
+          0,
+          0
+        ],
+        "tu93": [
+          1,
+          1,
+          1
+        ],
+        "vc33": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "wa30": [
+          0,
+          0,
+          0
+        ]
+      },
+      "roster_max_game": "vc33",
+      "roster_max_rate": 1.0,
+      "roster_median_rate": 0.0,
+      "roster_median_game": "s5i5",
+      "roster_n_games_at_zero_exposure": 20,
+      "roster_n_games_at_full_exposure": 1,
+      "cluster_mean_of_per_game_rates": 0.098,
+      "induction_reason_census_all_calls": {
+        "level_up_reinduction": 4,
+        "stall": 86
+      },
+      "induction_reason_census_win_available_calls": {
+        "level_up_reinduction": 4,
+        "stall": 12
+      },
+      "routing_partition": {
+        "reached_changed_call_site": {
+          "no_win": 74
+        },
+        "routed_to_reinduction": {
+          "win_available": 16
+        }
+      },
+      "n_calls_that_reached_the_changed_call_site": 74,
+      "n_calls_with_win_available_that_reached_the_changed_call_site": 0,
+      "effective_exposure_rate": 0.0,
+      "effective_exposure_note": "n_with_win_available / n_induce_calls_total is the PROMPT-AVAILABILITY rate. effective_exposure_rate is the fraction of live induce calls at which the changed call site at arc_competition_agent.py:6429-6433 actually RECEIVED a non-None win transition. They differ because the routing branch above sends every level-banked induction down a path that drops the argument.",
+      "skip_reason_by_exposure_state": {
+        "win_available": {
+          "proposer_failed": 16
+        },
+        "no_win": {
+          "proposer_failed_or_missing_root": 74
+        }
+      },
+      "n_attempts_that_installed_a_plan": 0,
+      "structural_consistency_mismatches": [],
+      "n_structural_consistency_mismatches": 0
+    },
+    "budget_2000": {
+      "label": "budget=2000",
+      "n_cells": 25,
+      "n_cells_ok": 25,
+      "n_coverage_gaps": 0,
+      "coverage_gaps": [],
+      "n_induce_calls_total": 38,
+      "n_with_win_available": 14,
+      "exposure_rate_pooled": 0.368421,
+      "exposure_rate_pooled_note": "cells are not independent -- several seeds/budgets of the same game share a trajectory, so the pooled rate is reported WITH the per-game spread, never alone",
+      "n_games_with_at_least_one_induce_call": 25,
+      "n_games_with_zero_induce_calls": 0,
+      "games_with_zero_induce_calls": [],
+      "per_game_exposure_rate": {
+        "ar25": 0.0,
+        "bp35": 0.0,
+        "cd82": 0.666667,
+        "cn04": 0.0,
+        "dc22": 0.5,
+        "ft09": 0.5,
+        "g50t": 0.0,
+        "ka59": 0.0,
+        "lf52": 0.5,
+        "lp85": 0.5,
+        "ls20": 0.0,
+        "m0r0": 0.0,
+        "r11l": 0.5,
+        "re86": 0.0,
+        "s5i5": 0.5,
+        "sb26": 0.0,
+        "sc25": 0.0,
+        "sk48": 0.0,
+        "sp80": 0.5,
+        "su15": 0.5,
+        "tn36": 0.0,
+        "tr87": 0.0,
+        "tu93": 0.666667,
+        "vc33": 1.0,
+        "wa30": 0.0
+      },
+      "per_game_induce_calls": {
+        "ar25": 1,
+        "bp35": 1,
+        "cd82": 3,
+        "cn04": 1,
+        "dc22": 2,
+        "ft09": 2,
+        "g50t": 1,
+        "ka59": 1,
+        "lf52": 2,
+        "lp85": 2,
+        "ls20": 1,
+        "m0r0": 1,
+        "r11l": 2,
+        "re86": 1,
+        "s5i5": 2,
+        "sb26": 1,
+        "sc25": 1,
+        "sk48": 1,
+        "sp80": 2,
+        "su15": 2,
+        "tn36": 1,
+        "tr87": 1,
+        "tu93": 3,
+        "vc33": 2,
+        "wa30": 1
+      },
+      "per_game_win_available": {
+        "ar25": 0,
+        "bp35": 0,
+        "cd82": 2,
+        "cn04": 0,
+        "dc22": 1,
+        "ft09": 1,
+        "g50t": 0,
+        "ka59": 0,
+        "lf52": 1,
+        "lp85": 1,
+        "ls20": 0,
+        "m0r0": 0,
+        "r11l": 1,
+        "re86": 0,
+        "s5i5": 1,
+        "sb26": 0,
+        "sc25": 0,
+        "sk48": 0,
+        "sp80": 1,
+        "su15": 1,
+        "tn36": 0,
+        "tr87": 0,
+        "tu93": 2,
+        "vc33": 2,
+        "wa30": 0
+      },
+      "per_game_levels_banked": {
+        "ar25": [
+          0
+        ],
+        "bp35": [
+          0
+        ],
+        "cd82": [
+          2
+        ],
+        "cn04": [
+          0
+        ],
+        "dc22": [
+          1
+        ],
+        "ft09": [
+          1
+        ],
+        "g50t": [
+          0
+        ],
+        "ka59": [
+          0
+        ],
+        "lf52": [
+          1
+        ],
+        "lp85": [
+          1
+        ],
+        "ls20": [
+          0
+        ],
+        "m0r0": [
+          0
+        ],
+        "r11l": [
+          1
+        ],
+        "re86": [
+          0
+        ],
+        "s5i5": [
+          1
+        ],
+        "sb26": [
+          0
+        ],
+        "sc25": [
+          0
+        ],
+        "sk48": [
+          0
+        ],
+        "sp80": [
+          1
+        ],
+        "su15": [
+          1
+        ],
+        "tn36": [
+          0
+        ],
+        "tr87": [
+          0
+        ],
+        "tu93": [
+          2
+        ],
+        "vc33": [
+          2
+        ],
+        "wa30": [
+          0
+        ]
+      },
+      "roster_max_game": "vc33",
+      "roster_max_rate": 1.0,
+      "roster_median_rate": 0.0,
+      "roster_median_game": "tr87",
+      "roster_n_games_at_zero_exposure": 14,
+      "roster_n_games_at_full_exposure": 1,
+      "cluster_mean_of_per_game_rates": 0.253333,
+      "induction_reason_census_all_calls": {
+        "level_up_reinduction": 1,
+        "stall": 37
+      },
+      "induction_reason_census_win_available_calls": {
+        "level_up_reinduction": 1,
+        "stall": 13
+      },
+      "routing_partition": {
+        "reached_changed_call_site": {
+          "no_win": 24
+        },
+        "routed_to_reinduction": {
+          "win_available": 14
+        }
+      },
+      "n_calls_that_reached_the_changed_call_site": 24,
+      "n_calls_with_win_available_that_reached_the_changed_call_site": 0,
+      "effective_exposure_rate": 0.0,
+      "effective_exposure_note": "n_with_win_available / n_induce_calls_total is the PROMPT-AVAILABILITY rate. effective_exposure_rate is the fraction of live induce calls at which the changed call site at arc_competition_agent.py:6429-6433 actually RECEIVED a non-None win transition. They differ because the routing branch above sends every level-banked induction down a path that drops the argument.",
+      "skip_reason_by_exposure_state": {
+        "win_available": {
+          "proposer_failed": 14
+        },
+        "no_win": {
+          "proposer_failed_or_missing_root": 24
+        }
+      },
+      "n_attempts_that_installed_a_plan": 0,
+      "structural_consistency_mismatches": [],
+      "n_structural_consistency_mismatches": 0
+    }
+  },
+  "fd_seed_replicates": {
+    "n_game_budget_cells_with_multiple_fd_seeds": 25,
+    "n_that_varied": 2,
+    "detail": {
+      "ar25__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "bp35__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "cd82__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            1,
+            2,
+            1
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": true
+      },
+      "cn04__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "dc22__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "ft09__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "g50t__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "ka59__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "lf52__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "lp85__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            1,
+            2,
+            1
+          ]
+        },
+        "varied": true
+      },
+      "ls20__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "m0r0__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "r11l__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "re86__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "s5i5__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "sb26__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "sc25__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "sk48__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "sp80__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            1,
+            2,
+            1
+          ],
+          "20260725": [
+            1,
+            2,
+            1
+          ],
+          "20260726": [
+            1,
+            2,
+            1
+          ]
+        },
+        "varied": false
+      },
+      "su15__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "tn36__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "tr87__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "tu93__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            1,
+            2,
+            1
+          ],
+          "20260725": [
+            1,
+            2,
+            1
+          ],
+          "20260726": [
+            1,
+            2,
+            1
+          ]
+        },
+        "varied": false
+      },
+      "vc33__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            2,
+            2,
+            2
+          ],
+          "20260725": [
+            2,
+            2,
+            2
+          ],
+          "20260726": [
+            2,
+            2,
+            2
+          ]
+        },
+        "varied": false
+      },
+      "wa30__b400": {
+        "per_fd_seed": {
+          "20260724": [
+            0,
+            1,
+            0
+          ],
+          "20260725": [
+            0,
+            1,
+            0
+          ],
+          "20260726": [
+            0,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      }
+    },
+    "interpretation": "`frontier_discipline_seed` is the seed the agent actually consumes (arc_competition_agent.py:1310). Variation here is a REAL trajectory noise floor; the argv-seed A/A below is not."
+  },
+  "argv_seed_aa": {
+    "result": {
+      "lp85__b400__fd20260724": {
+        "per_argv_seed": {
+          "20260802": [
+            0,
+            394,
+            1,
+            0
+          ],
+          "20260803": [
+            0,
+            394,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "tn36__b400__fd20260724": {
+        "per_argv_seed": {
+          "20260802": [
+            0,
+            346,
+            1,
+            0
+          ],
+          "20260803": [
+            0,
+            346,
+            1,
+            0
+          ]
+        },
+        "varied": false
+      },
+      "vc33__b400__fd20260724": {
+        "per_argv_seed": {
+          "20260802": [
+            2,
+            387,
+            2,
+            2
+          ],
+          "20260803": [
+            2,
+            387,
+            2,
+            2
+          ]
+        },
+        "varied": false
+      }
+    },
+    "interpretation": "A zero here is NOT a noise floor. Every RNG the live explorer uses is constructed as `random.Random(<constructor default>)` -- arc_competition_agent.py:1310 (frontier_discipline_seed=20260724) and :1397 (Random(20260621)) -- so a global `random.seed()`/`np.random.seed()` in the worker cannot reach them. An identical outcome across argv seeds is the EXPECTED consequence of that, and it means the seed axis was not exercised at all. The reachable knob is the `frontier_discipline_seed` constructor argument; see fd_seed_replicates."
+  },
+  "corroboration_on_a_real_generator_corpus": {
+    "source": "results/first_win_llm_on_20260727/cells (224 cells, REAL gemma-4-31B generator)",
+    "sha256_of_cells": "4f77548210e4e08150fd2b4e71f248feddf7abba8083b5a61653fd3739e0bfdd",
+    "budget_actions": 200,
+    "corpus": "25 public games x colour-permuted held-out variants, CARNOT_ARC_GATE_DEEPEN=1",
+    "n_induce_calls_total": 240,
+    "n_with_win_available_upper_bound": 25,
+    "n_with_win_available_lower_bound": 16,
+    "exposure_rate_upper_bound": 0.104167,
+    "exposure_rate_lower_bound": 0.066667,
+    "why_a_bound_not_a_number": "That corpus recorded induction_attempts_n per cell, not per-attempt ordering against the level-up. Cells with n=2 and one level-up are almost certainly stall-then-reinduction (lower bound counts the second call); the 9 cells with n=1 and one level-up are ambiguous and only the upper bound counts them.",
+    "per_game_upper_bound_exposure": {
+      "ar25": 0.0,
+      "bp35": 0.0,
+      "cd82": 0.0,
+      "cn04": 0.0,
+      "dc22": 0.0,
+      "ft09": 0.0,
+      "g50t": 0.0,
+      "ka59": 0.0,
+      "lf52": 0.0,
+      "lp85": 0.157895,
+      "ls20": 0.0,
+      "m0r0": 0.0,
+      "r11l": 0.0,
+      "re86": 0.0,
+      "s5i5": 0.0,
+      "sb26": 0.0,
+      "sc25": 0.0,
+      "sk48": 0.0,
+      "sp80": 0.272727,
+      "su15": 0.0,
+      "tn36": 0.0,
+      "tr87": 0.0,
+      "tu93": 0.0,
+      "vc33": 0.695652,
+      "wa30": 0.0
+    },
+    "roster_max_game": "vc33",
+    "roster_max_rate": 0.695652,
+    "roster_median_rate": 0.0,
+    "n_games_at_exactly_zero": 22,
+    "second_gate": {
+      "n_attempts_that_installed_a_plan": 0,
+      "n_attempts": 240,
+      "reading": "ZERO of 240 live induce attempts installed a plan, with a real generator answering. The prompt-level exposure measured here is therefore an UPPER BOUND on behavioural exposure: even at an exposed call, the induced engine was rejected by a post-generation trust gate before any plan existed."
+    }
+  },
+  "direct_kwarg_verification": {
+    "available": true,
+    "games": [
+      {
+        "game": "cd82",
+        "budget": 2000,
+        "levels": 2
+      },
+      {
+        "game": "lp85",
+        "budget": 2000,
+        "levels": 1
+      },
+      {
+        "game": "sp80",
+        "budget": 400,
+        "levels": 1
+      },
+      {
+        "game": "tu93",
+        "budget": 2000,
+        "levels": 2
+      },
+      {
+        "game": "vc33",
+        "budget": 400,
+        "levels": 2
+      }
+    ],
+    "n_proposer_induce_calls": 16,
+    "n_with_win_transition_kwarg_not_none": 0,
+    "call_sites_observed": {
+      "arc_competition_agent.py:6429 _induce_and_plan": 4,
+      "arc_llm_reinduction.py:212 _call_induce": 8,
+      "arc_llm_reinduction.py:218 _call_induce": 4
+    },
+    "reading": "Every proposer induce call that came from `arc_llm_reinduction._call_induce` carried NO `win_transition` keyword at all -- it is not in kwargs_keys. The only calls carrying the keyword came from `arc_competition_agent._induce_and_plan` (:6429), and on those the value was None, because that path is reached only before a level has been banked."
+  },
+  "the_routing_defect": {
+    "what": "The changed call site is UNREACHABLE at every induce call where a win transition exists. `_induce_and_plan` takes the `execute_bounded_llm_reinduction` branch whenever `attempt['reason'] == 'level_up_reinduction' OR next_level_episode` (arc_competition_agent.py:6138), and RETURNS at :6245. `next_level_episode` is `_previous_level_complete_grid is not None AND _current_goal_level > _start_level + 1` -- which is set by `_begin_level_goal_episode`, the SAME function and the SAME instant that sets `_win_transition`. So the routing predicate and the availability predicate are, in practice, the same predicate.",
+    "where_the_argument_is_dropped": "arc_llm_reinduction.py:203-220 `_call_induce` forwards only `previous_level_complete_grid`; it has no `win_transition` parameter, so the keyword is absent from that call entirely.",
+    "measured_partition": {
+      "reached_changed_call_site": {
+        "no_win": 98
+      },
+      "routed_to_reinduction": {
+        "win_available": 30
+      }
+    },
+    "off_diagonal_cells": 0,
+    "why_the_partition_is_credible": "The two paths write DIFFERENT skip strings -- `proposer_failed` at arc_llm_reinduction.py:1507 and `proposer_failed_or_missing_root` at arc_competition_agent.py:6436, the line immediately after the changed call -- and the observed partition has ZERO off-diagonal cells across 128 calls. It is corroborated independently at the receiving end by `direct_kwarg_verification`."
+  },
+  "what_this_measurement_cannot_say": [
+    "It cannot say what the change DOES. Exposure is a precondition for an effect, not an effect.",
+    "It cannot speak to the hidden set. These are public games the project has fully solved (183/183 in ops/arc_solve_registry.yaml) and whose mechanics are recorded there; a hidden game is OOD by construction and could bank levels at a different rate in either direction.",
+    "It cannot measure the SECOND gate. Under the NoOp proposer every attempt skips at `proposer_failed`, so this harness sees prompt-level exposure only. The real-generator corpus supplies that number: 0 of 240 live induce attempts installed a plan.",
+    "It is a PROXY for the LLM-on trajectory. The justification is measured, not assumed -- the cited corpus found every LLM-on arm BIT-IDENTICAL to its llm_off control on first_win, actions, reached_level and actions_to_first_levelup across 74/74 matched cells, because no plan was ever installed. If a future change makes the trust gate pass, that equivalence breaks and this proxy must be re-derived."
+  ],
+  "methodology_note": "EXACT 0.0 AND EXACT 1.0 ARE EXPECTED HERE AND ARE NOT THE FABRICATION SIGNATURE. Every rate in this artifact is a COUNT RATIO over a small integer denominator, not a classifier score. A game whose live agent never banks a level makes exactly one induce call and has exactly zero win-transition-available calls, so its exposure is exactly 0/1 = 0.0 as a matter of counting; a game that levels up before it ever stalls makes all of its induce calls after the level-up and is exactly 1.0 for the same reason. `n_attempts_that_installed_a_plan == 0` is likewise a real measured count, corroborated independently at 0/240 on a real-generator corpus. No metric here is an accuracy, an AUROC or a TPR, and none is being claimed as one.",
+  "false_negative_risk_checked": "This artifact reports an EXPOSURE rate, not a null effect, so the false-negative trap does not apply in its usual form. The adjacent trap that DOES apply is the inverse: reading a low exposure as 'the change does not work'. It does not say that. It says an effect measurement run at this exposure would be measuring mostly cells in which the change is inert, and would therefore be uninterpretable.",
+  "random_seed": 20260802,
+  "random_seed_note": "The worker seeds `random`/`numpy` with this value, and that seeding is INERT: the explorer's RNGs are `random.Random(<constructor default>)` and cannot be reached from a global seed. The seed that matters is frontier_discipline_seed, reported separately. This field is recorded for reproducibility of the worker process, not as evidence the trajectory was randomised.",
+  "duration_s": 23071.832,
+  "rows_path": "results/arc_win_transition_exposure_20260802/rows.json",
+  "analysis_path": "results/arc_win_transition_exposure_20260802/analysis.json",
+  "duration_s_provenance": "sum of per-cell worker wall time across all cells; the sweep ran 11 cells concurrently so the wall SPAN is shorter than this total",
+  "headline_summary": {
+    "the_question": "At what fraction of LIVE goal-predicate induce calls is `self._win_transition` actually non-None -- i.e. how often is the 2026-08-01 change even reached?",
+    "answer_prompt_availability": {
+      "n_induce_calls_total": 128,
+      "n_with_win_available": 30,
+      "rate_pooled": 0.234375,
+      "rate_game_clustered_mean": 0.158794,
+      "roster_median_rate": 0.0,
+      "roster_max_game": "vc33",
+      "roster_max_rate": 1.0,
+      "n_games_at_exactly_zero": 14,
+      "at_the_SHIPPED_action_cap_400": {
+        "rate_pooled": 0.177778,
+        "rate_game_clustered_mean": 0.098,
+        "roster_median_rate": 0.0,
+        "n_games_at_exactly_zero": 20,
+        "note": "400 is the SHIPPED per-game action cap on the scored path (`make_carnot_agent`'s CarnotAgent.MAX_ACTIONS = 400). The 2000 arm is a 5x-headroom sensitivity check, not a configuration that ships."
+      }
+    },
+    "answer_effective_exposure": {
+      "n_calls_where_the_changed_call_site_received_a_win_transition": 0,
+      "rate": 0.0,
+      "why": "Every one of the 30 calls at which a win transition existed was routed into `execute_bounded_llm_reinduction`, which does not forward the argument, and that branch returns before reaching the changed call. The partition is exact: 98/98 no-win calls reached the changed site, 30/30 win-available calls did not, zero off-diagonal."
+    },
+    "the_one_number_to_read": "0 of 128. The change is not low-exposure; on the live path as shipped it is structurally INERT, for a reason unrelated to how often the agent banks levels."
+  },
+  "honest_verdict": "complete_win_transition_change_is_structurally_inert_on_the_live_path: a win transition was AVAILABLE at 30 of 128 live induce calls (23.4% pooled; game-clustered mean 15.7%; roster MEDIAN 0.0 with vc33 the maximum at 1.0 and 14 of 25 games at exactly zero) -- but it reached the changed call site at arc_competition_agent.py:6429-6433 at 0 of 128 calls, at both budgets, because `_induce_and_plan` routes every level-banked induction into `execute_bounded_llm_reinduction` (whose `_call_induce` has no `win_transition` parameter) and returns at :6245 before the changed line. The routing predicate `next_level_episode` and the availability predicate are set by the same function at the same instant, so the two are the same predicate in practice. Verified twice: an exact skip-string partition with zero off-diagonal cells across 128 calls, and a direct instrument on the proposer's own `induce` across the five level-banking games, where the keyword was absent on all 12 reinduction-path calls and None on all 4 that carried it. DO NOT run a live effect A/B: at 0 discordant pairs its smallest reachable two-sided p is 1.0, so it would be unfalsifiable, not underpowered.",
+  "recommendation": {
+    "do_not": "Do not spend GPU hours on a live end-to-end A/B of this change. Both arms are the same program on every cell measured; the comparison is an identity.",
+    "do_first": "Decide whether the change is meant to apply to the level-up reinduction path. If yes, that is a code fix (thread `win_transition` through `execute_bounded_llm_reinduction` -> `_call_induce`), behind a default-OFF env flag, and exposure must be RE-MEASURED with this same harness afterwards before any effect measurement.",
+    "then": "Measure the effect as a COMPONENT test, not end-to-end: call the shipped `induce_prompt` / proposer `generate` directly on windows that contain a real level-up, with and without `win_transition`, so the mechanism fires in 100% of cells by construction. That is the pattern results/arc_goal_evidence_20260802 Stage 1 already established for exactly this reason.",
+    "and_note_the_second_gate": "Even a fixed and exposed prompt is downstream-gated: 0 of 240 live induce attempts on the real-generator corpus installed a plan, every one rejected by a post-generation trust gate. A prompt improvement cannot move an end-to-end metric while that gate is closed.",
+    "and_the_third_gate": "`_goal_only_prompt` -- the FOCUSED win-condition prompt used by the split-induce fallback, and the one whose output the anatomy pass found to be evidence-free -- does not receive `win_transition` either (arc_executable_world_model.py:6498). The argument reaches the combined prompt and the split path's ENGINE half only.",
+    "flag_discipline": "The change ships with no default-OFF env gate. Whatever is decided above, the gate is owed under the standing discipline."
+  },
+  "reproducibility_checksum": "2734d2cb826e5ad3410ddcb4c8481b859b7a8df7633039df6d2b5420d8e17d0e",
+  "build_s": 0.018
+}

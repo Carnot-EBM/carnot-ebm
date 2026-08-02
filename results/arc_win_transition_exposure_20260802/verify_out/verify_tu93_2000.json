@@ -1,0 +1,96 @@
+{
+  "game": "tu93",
+  "budget": 2000,
+  "levels": 2,
+  "actions": 1910,
+  "n_proposer_induce_calls": 4,
+  "n_with_win_transition_kwarg_not_none": 0,
+  "proposer_induce_calls": [
+    {
+      "call_index": 0,
+      "win_transition_kwarg_present": false,
+      "win_transition_is_not_none": false,
+      "previous_level_complete_grid_is_not_none": false,
+      "kwargs_keys": [],
+      "caller_file": "arc_llm_reinduction.py",
+      "caller_lineno": 218,
+      "caller_func": "_call_induce"
+    },
+    {
+      "call_index": 1,
+      "win_transition_kwarg_present": true,
+      "win_transition_is_not_none": false,
+      "previous_level_complete_grid_is_not_none": false,
+      "kwargs_keys": [
+        "win_transition"
+      ],
+      "caller_file": "arc_competition_agent.py",
+      "caller_lineno": 6429,
+      "caller_func": "_induce_and_plan"
+    },
+    {
+      "call_index": 2,
+      "win_transition_kwarg_present": false,
+      "win_transition_is_not_none": false,
+      "previous_level_complete_grid_is_not_none": true,
+      "kwargs_keys": [
+        "previous_level_complete_grid"
+      ],
+      "caller_file": "arc_llm_reinduction.py",
+      "caller_lineno": 212,
+      "caller_func": "_call_induce"
+    },
+    {
+      "call_index": 3,
+      "win_transition_kwarg_present": false,
+      "win_transition_is_not_none": false,
+      "previous_level_complete_grid_is_not_none": true,
+      "kwargs_keys": [
+        "previous_level_complete_grid"
+      ],
+      "caller_file": "arc_llm_reinduction.py",
+      "caller_lineno": 212,
+      "caller_func": "_call_induce"
+    }
+  ],
+  "agent_level_induction_events": [
+    {
+      "trigger": "level_up",
+      "completed_level": 1,
+      "next_goal_level": 2,
+      "transition_start": 333,
+      "dsl_transition_start": 333,
+      "frames_seen": 342,
+      "win_state_exemplar_captured": true
+    },
+    {
+      "trigger": "level_up",
+      "completed_level": 2,
+      "next_goal_level": 3,
+      "transition_start": 1536,
+      "dsl_transition_start": 1536,
+      "frames_seen": 1616,
+      "win_state_exemplar_captured": true
+    }
+  ],
+  "agent_induction_attempts": [
+    {
+      "reason": "stall",
+      "skipped": "proposer_failed_or_missing_root",
+      "planned": false,
+      "goal_level": 1
+    },
+    {
+      "reason": "level_up_reinduction",
+      "skipped": "proposer_failed",
+      "planned": false,
+      "goal_level": 2
+    },
+    {
+      "reason": "level_up_reinduction",
+      "skipped": "proposer_failed",
+      "planned": false,
+      "goal_level": 3
+    }
+  ]
+}
