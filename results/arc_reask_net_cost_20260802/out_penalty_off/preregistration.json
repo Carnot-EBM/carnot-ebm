@@ -1,0 +1,71 @@
+{
+  "MIN_REACHABLE_P": {
+    "if_all_games_discordant_and_unanimous": 1.907349e-06,
+    "min_discordant_games_for_p_le_0.05": 6,
+    "n_games": 20,
+    "stated_before_results": "With 20 games the design can reach p = 1.9e-6. It reaches p <= 0.05 only if AT LEAST 6 games are discordant and unanimous (2 * 0.5^6 = 0.03125). Fewer than 6 discordant games makes p <= 0.05 UNREACHABLE regardless of how large the effect looks.",
+    "test": "two-sided exact sign test"
+  },
+  "PRIMARY": {
+    "cell_score": "+1 if induce succeeded AND the emitted engine has zero mechanical defects; 0 if induce succeeded but the engine is defective; -1 if induce HARD-FAILED (content failure). A server failure or a driver exception is a MISSING OBSERVATION, excluded, never a zero.",
+    "metric": "net = usable - hard_failures",
+    "test": "two-sided exact sign test on the per-game paired difference in net",
+    "unit_of_analysis": "GAME. Replicates within a game are pseudo-replicates, not independent trials -- treating them as independent inflated a p from 0.125 to 0.049 in a sibling run on 2026-08-01 and had to be corrected.",
+    "why_not_usable_alone": "scoring on usable alone is the metric that hid this defect for a week: the gate's headline 13/36 -> 22/36 counted usable engines and never counted the cells where induction hard-failed instead."
+  },
+  "REGIME": {
+    "is_the_shipped_stack": false,
+    "note": "the shipped stack has `_INDUCE_REPEAT_PENALTY = 1.1`. A run with repeat_penalty_requested='1.0' restores the pre-2026-07-31 payload byte-for-byte and is a COUNTERFACTUAL condition, NOT the shipped agent -- it exists because the shipped-stack run found the gate fires zero times, leaving its cost-when-it-fires unobservable. Identical in every arm of a given run, so it defines the regime rather than confounding an arm contrast.",
+    "repeat_penalty_requested": "1.0"
+  },
+  "SECONDARY": [
+    "usable count per arm (the gate's own historical metric, reported so a reader can see which component moved)",
+    "hard_failure count per arm (the component the historical metric omitted)",
+    "engine_defect_reasks_delta (armedness: the gate must FIRE in B and C, never in A/AA)"
+  ],
+  "arms": {
+    "a_off": "CARNOT_ARC_INDUCE_DEFECT_REASKS=0 -- gate off",
+    "aa": "same env as a_off at a different seed base -- the noise floor",
+    "b_shipped": "nothing set -- the shipped state, unmodified",
+    "c_owns": "CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS=1 -- a defect re-ask GRANTS an attempt instead of consuming one"
+  },
+  "contrasts": [
+    "b_vs_a",
+    "c_vs_a",
+    "c_vs_b",
+    "aa_vs_a (noise floor)"
+  ],
+  "flags_remain_default_off": true,
+  "missing_is_never_zero": "a cell whose server failed or whose driver raised is EXCLUDED and counted in the missingness table. It is never scored 0 and never scored -1.",
+  "n_replicates": 1,
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+  "pairing": "a_off, b_shipped and c_owns share a seed base, so within a (game, replicate) all three send the identical prompt at the identical seed. Attempt 0 is the same draw in all three; any divergence is the gate firing rather than the sampler.",
+  "question": "Is the SHIPPED engine-defect re-ask gate net-positive once the hard failures it causes are counted against the usable engines it buys?",
+  "roster": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "wa30"
+  ],
+  "seed_bases": {
+    "aa": 8200,
+    "paired_arms": 9100
+  },
+  "solve_provenance": "development_proxy"
+}

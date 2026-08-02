@@ -1,0 +1,458 @@
+{
+ "MECHANISM_and_exposure": {
+  "why": "the marginal primary is diluted by every cell where the gate never fired -- in those cells b_shipped IS a_off's code path. The damage mechanism (a re-ask spends the attempt that would have been the accept) can ONLY operate where the gate fired, so exposure is as load-bearing as per-firing cost.",
+  "by_arm": {
+   "a_off": {
+    "n_cells": 3,
+    "n_cells_where_gate_fired": 0,
+    "exposure_rate": 0.0,
+    "given_fired_hard_failures": 0,
+    "given_fired_usable": 0,
+    "given_fired_n_measurable": 0,
+    "given_NOT_fired_hard_failures": 0
+   },
+   "b_shipped": {
+    "n_cells": 3,
+    "n_cells_where_gate_fired": 0,
+    "exposure_rate": 0.0,
+    "given_fired_hard_failures": 0,
+    "given_fired_usable": 0,
+    "given_fired_n_measurable": 0,
+    "given_NOT_fired_hard_failures": 2
+   },
+   "c_owns": {
+    "n_cells": 3,
+    "n_cells_where_gate_fired": 0,
+    "exposure_rate": 0.0,
+    "given_fired_hard_failures": 0,
+    "given_fired_usable": 0,
+    "given_fired_n_measurable": 0,
+    "given_NOT_fired_hard_failures": 2
+   },
+   "aa": {
+    "n_cells": 0,
+    "n_cells_where_gate_fired": 0,
+    "exposure_rate": null,
+    "given_fired_hard_failures": 0,
+    "given_fired_usable": 0,
+    "given_fired_n_measurable": 0,
+    "given_NOT_fired_hard_failures": 0
+   }
+  },
+  "paired_cells_where_b_shipped_gate_fired": []
+ },
+ "PRIMARY": {
+  "metric": "net = usable - hard_failures, summed within a game then paired across arms",
+  "b_shipped_vs_a_off": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 0,
+   "games_favouring_first": 2,
+   "mean_first": 1.0,
+   "mean_second": -0.3333,
+   "observed_effect": -1.3333,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 1,
+     "b_shipped": -1
+    },
+    "bp35": {
+     "a_off": 1,
+     "b_shipped": -1
+    },
+    "cd82": {
+     "a_off": 1,
+     "b_shipped": 1
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "c_owns_vs_a_off": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 0,
+   "games_favouring_first": 2,
+   "mean_first": 1.0,
+   "mean_second": -0.3333,
+   "observed_effect": -1.3333,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 1,
+     "c_owns": -1
+    },
+    "bp35": {
+     "a_off": 1,
+     "c_owns": -1
+    },
+    "cd82": {
+     "a_off": 1,
+     "c_owns": 1
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "c_owns_vs_b_shipped": {
+   "n_games_paired": 3,
+   "n_discordant_games": 0,
+   "games_favouring_second": 0,
+   "games_favouring_first": 0,
+   "mean_first": -0.3333,
+   "mean_second": -0.3333,
+   "observed_effect": 0.0,
+   "p": 1.0,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "per_game": {
+    "ar25": {
+     "b_shipped": -1,
+     "c_owns": -1
+    },
+    "bp35": {
+     "b_shipped": -1,
+     "c_owns": -1
+    },
+    "cd82": {
+     "b_shipped": 1,
+     "c_owns": 1
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "AA_noise_floor_aa_vs_a_off": {
+   "n_games_paired": 0,
+   "n_discordant_games": 0,
+   "games_favouring_second": 0,
+   "games_favouring_first": 0,
+   "mean_first": null,
+   "mean_second": null,
+   "observed_effect": null,
+   "p": 1.0,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "per_game": {},
+   "games_dropped_unpaired": [
+    "ar25",
+    "bp35",
+    "cd82"
+   ]
+  }
+ },
+ "ROBUSTNESS_to_request_position": {
+  "why": "cells run in the fixed order a_off, b_shipped, c_owns, aa, so a_off is ALWAYS request position 1 for a given game and pays a cold prompt cache while the others run warm. That changes which sample is drawn (see pairing_internal_validity) though not the distribution it comes from. `aa` is a gate-OFF arm at request position 4, so it BRACKETS b_shipped's position 2 from the other side: if b_vs_a and b_vs_aa point the same way, the primary is not an artefact of request order.",
+  "b_shipped_vs_a_off_position_1_control": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 0,
+   "games_favouring_first": 2,
+   "mean_first": 1.0,
+   "mean_second": -0.3333,
+   "observed_effect": -1.3333,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 1,
+     "b_shipped": -1
+    },
+    "bp35": {
+     "a_off": 1,
+     "b_shipped": -1
+    },
+    "cd82": {
+     "a_off": 1,
+     "b_shipped": 1
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "b_shipped_vs_aa_position_4_control": {
+   "n_games_paired": 0,
+   "n_discordant_games": 0,
+   "games_favouring_second": 0,
+   "games_favouring_first": 0,
+   "mean_first": null,
+   "mean_second": null,
+   "observed_effect": null,
+   "p": 1.0,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "per_game": {},
+   "games_dropped_unpaired": [
+    "ar25",
+    "bp35",
+    "cd82"
+   ]
+  },
+  "c_owns_vs_aa_position_4_control": {
+   "n_games_paired": 0,
+   "n_discordant_games": 0,
+   "games_favouring_second": 0,
+   "games_favouring_first": 0,
+   "mean_first": null,
+   "mean_second": null,
+   "observed_effect": null,
+   "p": 1.0,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "per_game": {},
+   "games_dropped_unpaired": [
+    "ar25",
+    "bp35",
+    "cd82"
+   ]
+  }
+ },
+ "SECONDARY_usable_only": {
+  "note": "the gate's OWN historical metric. Reported so a reader can see which component moved -- NOT the primary, because scoring on usable alone is exactly what hid this defect.",
+  "b_shipped_vs_a_off": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 0,
+   "games_favouring_first": 2,
+   "mean_first": 1.0,
+   "mean_second": 0.3333,
+   "observed_effect": -0.6667,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 1,
+     "b_shipped": 0
+    },
+    "bp35": {
+     "a_off": 1,
+     "b_shipped": 0
+    },
+    "cd82": {
+     "a_off": 1,
+     "b_shipped": 1
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "c_owns_vs_a_off": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 0,
+   "games_favouring_first": 2,
+   "mean_first": 1.0,
+   "mean_second": 0.3333,
+   "observed_effect": -0.6667,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 1,
+     "c_owns": 0
+    },
+    "bp35": {
+     "a_off": 1,
+     "c_owns": 0
+    },
+    "cd82": {
+     "a_off": 1,
+     "c_owns": 1
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "AA_noise_floor": {
+   "n_games_paired": 0,
+   "n_discordant_games": 0,
+   "games_favouring_second": 0,
+   "games_favouring_first": 0,
+   "mean_first": null,
+   "mean_second": null,
+   "observed_effect": null,
+   "p": 1.0,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "per_game": {},
+   "games_dropped_unpaired": [
+    "ar25",
+    "bp35",
+    "cd82"
+   ]
+  }
+ },
+ "SECONDARY_hard_failures_only": {
+  "note": "the component the historical metric omitted. Here MORE is WORSE, so a positive observed_effect favours the FIRST arm, not the second.",
+  "b_shipped_vs_a_off": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 2,
+   "games_favouring_first": 0,
+   "mean_first": 0.0,
+   "mean_second": 0.6667,
+   "observed_effect": 0.6667,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 0,
+     "b_shipped": 1
+    },
+    "bp35": {
+     "a_off": 0,
+     "b_shipped": 1
+    },
+    "cd82": {
+     "a_off": 0,
+     "b_shipped": 0
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "c_owns_vs_a_off": {
+   "n_games_paired": 3,
+   "n_discordant_games": 2,
+   "games_favouring_second": 2,
+   "games_favouring_first": 0,
+   "mean_first": 0.0,
+   "mean_second": 0.6667,
+   "observed_effect": 0.6667,
+   "p": 0.5,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 0,
+     "c_owns": 1
+    },
+    "bp35": {
+     "a_off": 0,
+     "c_owns": 1
+    },
+    "cd82": {
+     "a_off": 0,
+     "c_owns": 0
+    }
+   },
+   "games_dropped_unpaired": []
+  },
+  "AA_noise_floor": {
+   "n_games_paired": 0,
+   "n_discordant_games": 0,
+   "games_favouring_second": 0,
+   "games_favouring_first": 0,
+   "mean_first": null,
+   "mean_second": null,
+   "observed_effect": null,
+   "p": 1.0,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "per_game": {},
+   "games_dropped_unpaired": [
+    "ar25",
+    "bp35",
+    "cd82"
+   ]
+  }
+ },
+ "components_by_arm": {
+  "a_off": {
+   "n_measurable": 3,
+   "usable": 3,
+   "succeeded_but_defective": 0,
+   "hard_failures": 0,
+   "net": 3,
+   "usable_rate": 1.0,
+   "hard_failure_rate": 0.0
+  },
+  "b_shipped": {
+   "n_measurable": 3,
+   "usable": 1,
+   "succeeded_but_defective": 0,
+   "hard_failures": 2,
+   "net": -1,
+   "usable_rate": 0.3333,
+   "hard_failure_rate": 0.6667
+  },
+  "c_owns": {
+   "n_measurable": 3,
+   "usable": 1,
+   "succeeded_but_defective": 0,
+   "hard_failures": 2,
+   "net": -1,
+   "usable_rate": 0.3333,
+   "hard_failure_rate": 0.6667
+  },
+  "aa": {
+   "n_measurable": 0,
+   "usable": 0,
+   "succeeded_but_defective": 0,
+   "hard_failures": 0,
+   "net": 0,
+   "usable_rate": null,
+   "hard_failure_rate": null
+  }
+ },
+ "missingness": {
+  "a_off": {
+   "n_cells": 3,
+   "n_measurable": 3,
+   "n_missing": 0,
+   "missing_by_reason": {}
+  },
+  "b_shipped": {
+   "n_cells": 3,
+   "n_measurable": 3,
+   "n_missing": 0,
+   "missing_by_reason": {}
+  },
+  "c_owns": {
+   "n_cells": 3,
+   "n_measurable": 3,
+   "n_missing": 0,
+   "missing_by_reason": {}
+  },
+  "aa": {
+   "n_cells": 0,
+   "n_measurable": 0,
+   "n_missing": 0,
+   "missing_by_reason": {}
+  }
+ },
+ "missing_is_never_zero": "a cell whose server failed, whose driver raised, or whose usability scorer timed out is EXCLUDED and counted above. It is never scored 0 or -1. A CONTENT failure is different: the server answered and the answers were unusable, which is a real -1 and is the cost this experiment exists to count.",
+ "armedness": {
+  "engine_defect_reasks_total_by_arm": {
+   "a_off": 0,
+   "b_shipped": 0,
+   "c_owns": 0,
+   "aa": 0
+  },
+  "cells_where_gate_fired_by_arm": {
+   "a_off": 0,
+   "b_shipped": 0,
+   "c_owns": 0,
+   "aa": 0
+  },
+  "treatment_fired": false,
+  "control_stayed_inert": true,
+  "goal_gate_stayed_inert": true,
+  "arm_flags_consistent_everywhere": true,
+  "configuration_verdict": "CONFIGURED",
+  "exposure_verdict": "ZERO_EXPOSURE",
+  "verdict": "CONFIGURED_BUT_ZERO_EXPOSURE",
+  "reading": "CONFIGURED_BUT_ZERO_EXPOSURE is a FINDING, not a broken run: the arms provably differed and the detector provably bites, so the gate had every opportunity to act and never found a defect to act on. What it does mean is that the per-firing COST of the gate is unobservable here -- you cannot measure the price of an event that did not occur -- so the primary contrast bounds the gate's TOTAL cost (at zero exposure, zero) without estimating its cost per firing."
+ },
+ "pairing_internal_validity": {
+  "a_off_vs_b_shipped": {
+   "n_cells_where_no_gate_fired": 1,
+   "byte_identical_engine": 1,
+   "diverged": 0,
+   "identical_rate": 1.0
+  },
+  "a_off_vs_c_owns": {
+   "n_cells_where_no_gate_fired": 1,
+   "byte_identical_engine": 1,
+   "diverged": 0,
+   "identical_rate": 1.0
+  },
+  "b_shipped_vs_c_owns": {
+   "n_cells_where_no_gate_fired": 1,
+   "byte_identical_engine": 1,
+   "diverged": 0,
+   "identical_rate": 1.0
+  },
+  "reading": "these arms send the identical prompt at the identical seed, so where no gate fired they SHOULD be byte-identical. Read b_shipped_vs_c_owns FIRST: those two are adjacent request positions on the same code path, so if THEY match while a_off (request position 1, cold prompt cache) diverges, the seed is working and the divergence is request-order / prompt-cache state. That degrades the nominal pairing to independent draws -- it does NOT bias either arm, because cache state changes which sample you get and not the distribution it is drawn from -- and it makes the A/A floor, rather than the nominal pairing, the operative yardstick for effect size. Which is exactly why an A/A arm is mandatory on this path."
+ },
+ "clustering": "GAME. Replicates within a game are replicates of ONE PROMPT. Treating them as independent trials inflated a sibling run's p from 0.125 to 0.049 on 2026-08-01 and had to be corrected."
+}

@@ -1,0 +1,1677 @@
+{
+ "COMBINED_exposure": {
+  "reading": "the shipped engine-defect re-ask gate did not fire ONCE across every measured induce call, spanning both the shipped stack and the pre-penalty regime its own headline was measured in.",
+  "total_engine_defect_reasks_fired": 0,
+  "total_induce_calls_measured": 169
+ },
+ "HEADLINE": {
+  "AA_noise_floor": {
+   "n_discordant_games": 5,
+   "observed_effect_net_per_game": -0.15,
+   "p": 1.0,
+   "why_mandatory": "the generator sends no seed to the sampler by default and `sampling_seed` records a MEASURED 40% run-to-run divergence without one. An A/A arm that moves as much as a treatment arm means the treatment contrast is not interpretable, and this project's A/A controls have failed more than once."
+  },
+  "aa_net": 35,
+  "b_shipped_vs_a_off_primary": {
+   "min_reachable_p_at_this_n_discordant": 0.25,
+   "n_discordant_games": 3,
+   "observed_effect_net_per_game": 0.0,
+   "p": 1.0
+  },
+  "c_owns_vs_a_off": {
+   "n_discordant_games": 3,
+   "observed_effect_net_per_game": 0.0,
+   "p": 1.0
+  },
+  "c_owns_vs_b_shipped_does_the_fix_remove_the_trade": {
+   "fix_improves_on_shipped": false,
+   "n_discordant_games": 0,
+   "observed_effect_net_per_game": 0.0,
+   "p": 1.0,
+   "verdict": "UNTESTED_no_trade_occurred",
+   "why_untested": "CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS only alters the loop when a defect re-ask fires. It fired zero times, so arm C is arm B. This run provides NO evidence for or against the fix, and it must not be cited as validating it."
+  },
+  "net_by_arm": {
+   "a_off": 38,
+   "aa": 35,
+   "b_shipped": 38,
+   "c_owns": 38
+  },
+  "shipped_gate_is_net_positive": false,
+  "shipped_gate_net_direction": "net_neutral_exactly_equal"
+ },
+ "MECHANISM_and_exposure": {
+  "by_arm": {
+   "a_off": {
+    "exposure_rate": 0.0,
+    "given_NOT_fired_hard_failures": 0,
+    "given_fired_hard_failures": 0,
+    "given_fired_n_measurable": 0,
+    "given_fired_usable": 0,
+    "n_cells": 40,
+    "n_cells_where_gate_fired": 0
+   },
+   "aa": {
+    "exposure_rate": 0.0,
+    "given_NOT_fired_hard_failures": 2,
+    "given_fired_hard_failures": 0,
+    "given_fired_n_measurable": 0,
+    "given_fired_usable": 0,
+    "n_cells": 40,
+    "n_cells_where_gate_fired": 0
+   },
+   "b_shipped": {
+    "exposure_rate": 0.0,
+    "given_NOT_fired_hard_failures": 1,
+    "given_fired_hard_failures": 0,
+    "given_fired_n_measurable": 0,
+    "given_fired_usable": 0,
+    "n_cells": 40,
+    "n_cells_where_gate_fired": 0
+   },
+   "c_owns": {
+    "exposure_rate": 0.0,
+    "given_NOT_fired_hard_failures": 1,
+    "given_fired_hard_failures": 0,
+    "given_fired_n_measurable": 0,
+    "given_fired_usable": 0,
+    "n_cells": 40,
+    "n_cells_where_gate_fired": 0
+   }
+  },
+  "paired_cells_where_b_shipped_gate_fired": [],
+  "why": "the marginal primary is diluted by every cell where the gate never fired -- in those cells b_shipped IS a_off's code path. The damage mechanism (a re-ask spends the attempt that would have been the accept) can ONLY operate where the gate fired, so exposure is as load-bearing as per-firing cost."
+ },
+ "SUPPLEMENTARY_counterfactual_repeat_penalty_off": {
+  "FINDING_1_regime_is_far_more_failure_prone": {
+   "hard_failures_per_measurable_cell": {
+    "a_off": 0.0,
+    "b_shipped": 0.6667,
+    "c_owns": 0.6667
+   },
+   "shipped_stack_comparison": "1 hard failure in 160 cells on the shipped stack versus 4 in 9 here. The repeat penalty is doing the work its own source note claims (11 of 13 paired wins), and that is what collapsed the gate's exposure."
+  },
+  "FINDING_2_the_gate_STILL_never_fired": {
+   "engine_defect_reasks_total": 0,
+   "why_this_matters": "even in the fragile pre-penalty regime the gate did not fire, because the dominant failure there is a CONTENT failure -- no reply containing a parseable `def engine` and `def is_level_complete` -- and the defect gate runs only AFTER the code parses and defines everything required. The gate is structurally unreachable on the failure mode that actually dominates this regime."
+  },
+  "NOT_THE_SHIPPED_STACK": true,
+  "arm_contrasts_are_UNINTERPRETABLE_here": {
+   "the_trap": "the raw numbers look damning for the gate -- net 3 (gate off) against -1 (gate on). Read the exposure column before that number: engine_defect_reasks_delta is 0 in EVERY arm, so the gate never acted and cannot be the cause of the difference.",
+   "what_it_actually_is": "request-position sampling variance (a_off is always request position 1 and pays a cold prompt cache; see pairing_internal_validity), amplified by a regime sitting on the failure boundary.",
+   "why_it_cannot_be_resolved_here": "this condition has NO A/A arm -- it was dropped to buy wall-clock -- so there is no noise floor to compare the arm difference against, and n = 3 games cannot reach p <= 0.05 in any case (2 * 0.5^3 = 0.25). These arm numbers are reported for completeness and must NOT be read as a treatment effect."
+  },
+  "components_by_arm": {
+   "a_off": {
+    "hard_failure_rate": 0.0,
+    "hard_failures": 0,
+    "n_measurable": 3,
+    "net": 3,
+    "succeeded_but_defective": 0,
+    "usable": 3,
+    "usable_rate": 1.0
+   },
+   "aa": {
+    "hard_failure_rate": null,
+    "hard_failures": 0,
+    "n_measurable": 0,
+    "net": 0,
+    "succeeded_but_defective": 0,
+    "usable": 0,
+    "usable_rate": null
+   },
+   "b_shipped": {
+    "hard_failure_rate": 0.6667,
+    "hard_failures": 2,
+    "n_measurable": 3,
+    "net": -1,
+    "succeeded_but_defective": 0,
+    "usable": 1,
+    "usable_rate": 0.3333
+   },
+   "c_owns": {
+    "hard_failure_rate": 0.6667,
+    "hard_failures": 2,
+    "n_measurable": 3,
+    "net": -1,
+    "succeeded_but_defective": 0,
+    "usable": 1,
+    "usable_rate": 0.3333
+   }
+  },
+  "games": [
+   "ar25",
+   "bp35",
+   "cd82"
+  ],
+  "n_cells": 9,
+  "n_complete_games": 3,
+  "prereg_sha256": "sha256:f8b4bb22ba887f32f724abd00cf5e45d4ed50cf459e6f05d02e4962b0e3bf568",
+  "stopped_early": "yes -- this regime runs ~10x slower per cell (cells hit the 300 s x 3-attempt ceiling), so it was cut at 3 complete games rather than left running unattended holding a 20 GB server.",
+  "what": "the SAME three arms with CARNOT_ARC_INDUCE_REPEAT_PENALTY=1.0, which restores the pre-2026-07-31 payload byte-for-byte. This is the regime the gate's 13/36 -> 22/36 headline was measured in, and it exists because the shipped-stack run found ZERO exposure, leaving the gate's cost-when-it-fires unobservable."
+ },
+ "armedness": {
+  "arm_flags_consistent_everywhere": true,
+  "cells_where_gate_fired_by_arm": {
+   "a_off": 0,
+   "aa": 0,
+   "b_shipped": 0,
+   "c_owns": 0
+  },
+  "configuration_verdict": "CONFIGURED",
+  "control_stayed_inert": true,
+  "engine_defect_reasks_total_by_arm": {
+   "a_off": 0,
+   "aa": 0,
+   "b_shipped": 0,
+   "c_owns": 0
+  },
+  "exposure_verdict": "ZERO_EXPOSURE",
+  "goal_gate_stayed_inert": true,
+  "reading": "CONFIGURED_BUT_ZERO_EXPOSURE is a FINDING, not a broken run: the arms provably differed and the detector provably bites, so the gate had every opportunity to act and never found a defect to act on. What it does mean is that the per-firing COST of the gate is unobservable here -- you cannot measure the price of an event that did not occur -- so the primary contrast bounds the gate's TOTAL cost (at zero exposure, zero) without estimating its cost per firing.",
+  "treatment_fired": false,
+  "verdict": "CONFIGURED_BUT_ZERO_EXPOSURE"
+ },
+ "clustering": "GAME. Replicates within a game are replicates of ONE PROMPT. Treating them as independent trials inflated a sibling run's p from 0.125 to 0.049 on 2026-08-01 and had to be corrected.",
+ "components_by_arm": {
+  "a_off": {
+   "hard_failure_rate": 0.0,
+   "hard_failures": 0,
+   "n_measurable": 40,
+   "net": 38,
+   "succeeded_but_defective": 2,
+   "usable": 38,
+   "usable_rate": 0.95
+  },
+  "aa": {
+   "hard_failure_rate": 0.05,
+   "hard_failures": 2,
+   "n_measurable": 40,
+   "net": 35,
+   "succeeded_but_defective": 1,
+   "usable": 37,
+   "usable_rate": 0.925
+  },
+  "b_shipped": {
+   "hard_failure_rate": 0.025,
+   "hard_failures": 1,
+   "n_measurable": 40,
+   "net": 38,
+   "succeeded_but_defective": 0,
+   "usable": 39,
+   "usable_rate": 0.975
+  },
+  "c_owns": {
+   "hard_failure_rate": 0.025,
+   "hard_failures": 1,
+   "n_measurable": 40,
+   "net": 38,
+   "succeeded_but_defective": 0,
+   "usable": 39,
+   "usable_rate": 0.975
+  }
+ },
+ "components_note": "`usable` is `validate_engine_code(...) == []` -- the SAME definition the shipped gate uses to decide whether to re-ask, so this column is directly comparable to the 13/36 -> 22/36 being audited. `usable` is NOT `good`: a clean engine can still be entirely wrong about the game.",
+ "config_deviation_declared": {
+  "n_ctx": 32768,
+  "shipped_n_ctx": 81920,
+  "why": "the shipped pool size exists for CONCURRENCY; this harness is strictly sequential. Identical in every arm, so it cannot confound the contrast."
+ },
+ "duration_s": 10833.8,
+ "duration_s_note": "end-to-end wall clock of the harness, which launches one llama-server and runs every cell sequentially through it.",
+ "experiment": "outer_loop_arc_reask_net_cost_20260802",
+ "exposure_is_the_load_bearing_number": "the damage mechanism -- a re-ask spends the attempt that would have been the accept -- can ONLY operate in a cell where the gate FIRED. So how OFTEN the gate fires bounds its total cost regardless of the per-firing cost, and it is the structural difference between this gate and the goal gate that attrited 17 of 21 cells: that one fires on ~76% of cells because ~89% of induced goals are constant over the observed frames, while this one can only fire on a mechanically defective ENGINE.",
+ "flags_remain_default_off": true,
+ "honest_verdict": "complete_reask_net_cost_shipped_engine_gate_is_INERT_zero_exposure_in_160_cells_net_unchanged_flag_unchanged",
+ "inference_substrate": "live_llm_inference",
+ "isolation": {
+  "per_cell_engine_store": true,
+  "results_arc_e3_unchanged": true,
+  "why": "`_guard_engine_write` is scoped to PYTEST ONLY, so a measurement driver is exactly the caller nothing protects -- one rewrote results/arc_e3/<game>/world_model.py, tracked read-only EVIDENCE, within 90 seconds. A shared store is ALSO a cross-arm confound: arm A's engine gets read by arm B."
+ },
+ "missing_is_never_zero": "a cell whose server failed, whose driver raised, or whose usability scorer timed out is EXCLUDED and counted above. It is never scored 0 or -1. A CONTENT failure is different: the server answered and the answers were unusable, which is a real -1 and is the cost this experiment exists to count.",
+ "missingness": {
+  "a_off": {
+   "missing_by_reason": {},
+   "n_cells": 40,
+   "n_measurable": 40,
+   "n_missing": 0
+  },
+  "aa": {
+   "missing_by_reason": {},
+   "n_cells": 40,
+   "n_measurable": 40,
+   "n_missing": 0
+  },
+  "b_shipped": {
+   "missing_by_reason": {},
+   "n_cells": 40,
+   "n_measurable": 40,
+   "n_missing": 0
+  },
+  "c_owns": {
+   "missing_by_reason": {},
+   "n_cells": 40,
+   "n_measurable": 40,
+   "n_missing": 0
+  }
+ },
+ "model_specs": {
+  "cuda_gpu": "0",
+  "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "is_cuda_build": true,
+  "kv_quant": "q8_0",
+  "max_tokens": 4096,
+  "model_from_props": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+  "mtp": false,
+  "n_ctx_declared": 32768,
+  "n_ctx_from_props": 32768,
+  "n_gpu_layers": 999,
+  "pid": 2505108,
+  "port_actual": 41931,
+  "port_requested": 41931,
+  "reuse_refusals": [],
+  "timeout": 300,
+  "tries": 3
+ },
+ "n_cells": 160,
+ "no_shipped_default_was_changed": "this run measures whether a default SHOULD change. Flipping it is a separate, operator-visible decision and was not made here.",
+ "not_submitted": "no scored or online ARC game was played; submission is operator-only",
+ "pairing_internal_validity": {
+  "a_off_vs_b_shipped": {
+   "byte_identical_engine": 8,
+   "diverged": 31,
+   "identical_rate": 0.2051,
+   "n_cells_where_no_gate_fired": 39
+  },
+  "a_off_vs_c_owns": {
+   "byte_identical_engine": 8,
+   "diverged": 31,
+   "identical_rate": 0.2051,
+   "n_cells_where_no_gate_fired": 39
+  },
+  "b_shipped_vs_c_owns": {
+   "byte_identical_engine": 30,
+   "diverged": 9,
+   "identical_rate": 0.7692,
+   "n_cells_where_no_gate_fired": 39
+  },
+  "reading": "these arms send the identical prompt at the identical seed, so where no gate fired they SHOULD be byte-identical. Read b_shipped_vs_c_owns FIRST: those two are adjacent request positions on the same code path, so if THEY match while a_off (request position 1, cold prompt cache) diverges, the seed is working and the divergence is request-order / prompt-cache state. That degrades the nominal pairing to independent draws -- it does NOT bias either arm, because cache state changes which sample you get and not the distribution it is drawn from -- and it makes the A/A floor, rather than the nominal pairing, the operative yardstick for effect size. Which is exactly why an A/A arm is mandatory on this path."
+ },
+ "preconditions_checked": [
+  {
+   "available": true,
+   "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+   "principle": "the live generator must be on disk; without it the honest verdict is blocked_model_not_cached, never a fabricated run",
+   "resource": "gemma-4-31B-it-qat gguf cached"
+  },
+  {
+   "available": true,
+   "detail": "systemctl is-active -> 'inactive'",
+   "principle": "a live conductor would contend for the same GPU and interleave its own induction into this store",
+   "resource": "conductor_inactive"
+  },
+  {
+   "available": true,
+   "detail": "free=24123 MiB",
+   "principle": "a concurrent workflow holds the other card; launching without headroom would evict work this session does not own",
+   "resource": "cuda_gpu_0_has_headroom"
+  },
+  {
+   "available": true,
+   "detail": "_induce_defect_reasks() -> 1",
+   "principle": "arm B is defined as THE SHIPPED STATE; if the shipped default were already 0 this would measure OFF vs OFF and report a null as a finding",
+   "resource": "shipped_defect_reasks_is_1"
+  },
+  {
+   "available": true,
+   "principle": "the fix must be default-off or arm B is silently arm C",
+   "resource": "owns_attempts_default_off"
+  },
+  {
+   "available": true,
+   "principle": "a live goal gate would fire inside every arm and confound a measurement of the ENGINE gate with a second, different intervention",
+   "resource": "goal_defect_flag_default_off"
+  },
+  {
+   "available": true,
+   "detail": "port 41931",
+   "principle": "reusing a stale server on the default port is how an arm silently gets a different model or context size",
+   "resource": "port_free"
+  },
+  {
+   "available": true,
+   "detail": "20 pkl in /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows",
+   "principle": "the corpus must be the sibling run's corpus, not a re-derivation that could silently differ",
+   "resource": "cached_windows_present"
+  }
+ ],
+ "preregistration": {
+  "MIN_REACHABLE_P": {
+   "if_all_games_discordant_and_unanimous": 1.907349e-06,
+   "min_discordant_games_for_p_le_0.05": 6,
+   "n_games": 20,
+   "stated_before_results": "With 20 games the design can reach p = 1.9e-6. It reaches p <= 0.05 only if AT LEAST 6 games are discordant and unanimous (2 * 0.5^6 = 0.03125). Fewer than 6 discordant games makes p <= 0.05 UNREACHABLE regardless of how large the effect looks.",
+   "test": "two-sided exact sign test"
+  },
+  "path": "results/arc_reask_net_cost_20260802/out/preregistration.json",
+  "sha256": "sha256:ad85841c0e8b8465a8a46fff5bd4307d9288d63036f3ea40031b7ccef95de86d",
+  "written_before_the_first_llm_call": true
+ },
+ "primary_analysis": {
+  "AA_noise_floor_aa_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 3,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.75,
+   "min_reachable_p_at_this_n_discordant": 0.0625,
+   "n_discordant_games": 5,
+   "n_games_paired": 20,
+   "observed_effect": -0.15,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "aa": 0
+    },
+    "bp35": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "aa": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "aa": 1
+    },
+    "lf52": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "aa": 0
+    },
+    "wa30": {
+     "a_off": 1,
+     "aa": 2
+    }
+   }
+  },
+  "b_shipped_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 1,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.9,
+   "min_reachable_p_at_this_n_discordant": 0.25,
+   "n_discordant_games": 3,
+   "n_games_paired": 20,
+   "observed_effect": 0.0,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "bp35": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "b_shipped": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "lf52": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "b_shipped": 0
+    },
+    "wa30": {
+     "a_off": 1,
+     "b_shipped": 2
+    }
+   }
+  },
+  "c_owns_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 1,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.9,
+   "min_reachable_p_at_this_n_discordant": 0.25,
+   "n_discordant_games": 3,
+   "n_games_paired": 20,
+   "observed_effect": 0.0,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "bp35": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "c_owns": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "lf52": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "c_owns": 0
+    },
+    "wa30": {
+     "a_off": 1,
+     "c_owns": 2
+    }
+   }
+  },
+  "c_owns_vs_b_shipped": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 0,
+   "games_favouring_second": 0,
+   "mean_first": 1.9,
+   "mean_second": 1.9,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "n_discordant_games": 0,
+   "n_games_paired": 20,
+   "observed_effect": 0.0,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "bp35": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "cd82": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "cn04": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "g50t": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "ka59": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "lf52": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "lp85": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "ls20": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "m0r0": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "re86": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "s5i5": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "sb26": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "sc25": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "sk48": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "su15": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "tn36": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "tr87": {
+     "b_shipped": 2,
+     "c_owns": 2
+    },
+    "tu93": {
+     "b_shipped": 0,
+     "c_owns": 0
+    },
+    "wa30": {
+     "b_shipped": 2,
+     "c_owns": 2
+    }
+   }
+  },
+  "metric": "net = usable - hard_failures, summed within a game then paired across arms"
+ },
+ "provenance": {
+  "code": [
+   {
+    "path": "results/arc_reask_net_cost_20260802/analyse.py",
+    "sha256": "5381a52e0a17dd5e35dec543e40d3c3d0c9f7937b1ab410345c1ff9c6e2fc4f7"
+   },
+   {
+    "path": "results/arc_reask_net_cost_20260802/build_artifact.py",
+    "sha256": "3141d941d310229161be3bfd908024018c24a5c7eab455cca8ed364e05417d93"
+   },
+   {
+    "path": "results/arc_reask_net_cost_20260802/run_ab.py",
+    "sha256": "a2836c65138330dfa38980c6a3a8cadd4b0c0acd0a98eb897953d2961d29d27f"
+   },
+   {
+    "path": "results/arc_reask_net_cost_20260802/usable_worker.py",
+    "sha256": "fac3d9a0a72015ef724c016b3ed9bd8af888c794b1dcca3077863e364a2874ac"
+   }
+  ],
+  "data": [
+   {
+    "path": "results/arc_reask_net_cost_20260802/out/rows.json",
+    "sha256": "eff775e97701eca7c290e9f5ec5f58e39c810e6fdb74be4dc25de4bd20138bb4"
+   },
+   {
+    "path": "results/arc_reask_net_cost_20260802/out/scored.json",
+    "sha256": "8e9b5cc7f61dff2b9c3f20b1ca95b6ae270fe30b0068a1ae1d46a3969b1d6828"
+   },
+   {
+    "path": "results/arc_reask_net_cost_20260802/out/analysis.json",
+    "sha256": "411e774a41b5d65553afc94703bb21299f3a51a33ef6fc8f77a3df77092e3673"
+   },
+   {
+    "path": "results/arc_reask_net_cost_20260802/out/meta.json",
+    "sha256": "a1c48bba79055aca01b97328d6fa7112471cd9d1c10d2dfeebb45badcba17bcb"
+   }
+  ]
+ },
+ "random_seed": 8100,
+ "random_seeds_used": [
+  8100,
+  8101,
+  8200,
+  8201
+ ],
+ "reproducibility_checksum": "8cb733e0d38ef48b549ca7ab9896e5cd669abe5dc1e31052a6226d9b1d2fb3e5",
+ "robustness_to_request_position": {
+  "b_shipped_vs_a_off_position_1_control": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 1,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.9,
+   "min_reachable_p_at_this_n_discordant": 0.25,
+   "n_discordant_games": 3,
+   "n_games_paired": 20,
+   "observed_effect": 0.0,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "bp35": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "b_shipped": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "lf52": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "b_shipped": 0
+    },
+    "wa30": {
+     "a_off": 1,
+     "b_shipped": 2
+    }
+   }
+  },
+  "b_shipped_vs_aa_position_4_control": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 0,
+   "games_favouring_second": 2,
+   "mean_first": 1.75,
+   "mean_second": 1.9,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "n_discordant_games": 2,
+   "n_games_paired": 20,
+   "observed_effect": 0.15,
+   "p": 0.5,
+   "per_game": {
+    "ar25": {
+     "aa": 0,
+     "b_shipped": 2
+    },
+    "bp35": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "cd82": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "cn04": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "g50t": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "ka59": {
+     "aa": 1,
+     "b_shipped": 2
+    },
+    "lf52": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "lp85": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "ls20": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "m0r0": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "re86": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "s5i5": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "sb26": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "sc25": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "sk48": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "su15": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "tn36": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "tr87": {
+     "aa": 2,
+     "b_shipped": 2
+    },
+    "tu93": {
+     "aa": 0,
+     "b_shipped": 0
+    },
+    "wa30": {
+     "aa": 2,
+     "b_shipped": 2
+    }
+   }
+  },
+  "c_owns_vs_aa_position_4_control": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 0,
+   "games_favouring_second": 2,
+   "mean_first": 1.75,
+   "mean_second": 1.9,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "n_discordant_games": 2,
+   "n_games_paired": 20,
+   "observed_effect": 0.15,
+   "p": 0.5,
+   "per_game": {
+    "ar25": {
+     "aa": 0,
+     "c_owns": 2
+    },
+    "bp35": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "cd82": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "cn04": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "g50t": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "ka59": {
+     "aa": 1,
+     "c_owns": 2
+    },
+    "lf52": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "lp85": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "ls20": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "m0r0": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "re86": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "s5i5": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "sb26": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "sc25": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "sk48": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "su15": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "tn36": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "tr87": {
+     "aa": 2,
+     "c_owns": 2
+    },
+    "tu93": {
+     "aa": 0,
+     "c_owns": 0
+    },
+    "wa30": {
+     "aa": 2,
+     "c_owns": 2
+    }
+   }
+  },
+  "why": "cells run in the fixed order a_off, b_shipped, c_owns, aa, so a_off is ALWAYS request position 1 for a given game and pays a cold prompt cache while the others run warm. That changes which sample is drawn (see pairing_internal_validity) though not the distribution it comes from. `aa` is a gate-OFF arm at request position 4, so it BRACKETS b_shipped's position 2 from the other side: if b_vs_a and b_vs_aa point the same way, the primary is not an artefact of request order."
+ },
+ "run_date": "2026-08-02T11:36:15Z",
+ "scorer_asymmetry_declared": "`stop_type` is not available post-hoc (induce makes several calls and only the last one's is retained), so the usability scorer passes None and the `truncated_before_required_symbols` check cannot fire. Applied IDENTICALLY to every arm, so it cannot confound the contrast -- it can only make every arm's `usable` count generous in the same direction.",
+ "scorer_cross_validation": {
+  "argument": "the live gate uses a STRICTER definition than the scorer -- it passes a real `stop_type`, so it additionally catches `truncated_before_required_symbols`, which the scorer cannot fire (see scorer_asymmetry_declared). The live gate fired in ZERO treatment cells, and the scorer independently found almost no defects. Two instruments of different strictness agreeing on 'the engines are clean' is a mutual validation; had the scorer said clean while the gate fired often, the scorer would be the suspect.",
+  "claim": "the post-hoc usability scorer is not blind to the defects the live gate looks for."
+ },
+ "secondary_hard_failures_only": {
+  "AA_noise_floor": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 0,
+   "games_favouring_second": 2,
+   "mean_first": 0.0,
+   "mean_second": 0.1,
+   "min_reachable_p_at_this_n_discordant": 0.5,
+   "n_discordant_games": 2,
+   "n_games_paired": 20,
+   "observed_effect": 0.1,
+   "p": 0.5,
+   "per_game": {
+    "ar25": {
+     "a_off": 0,
+     "aa": 1
+    },
+    "bp35": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "cd82": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "cn04": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "g50t": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "ka59": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "lf52": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "lp85": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "ls20": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "m0r0": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "re86": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "s5i5": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "sb26": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "sc25": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "sk48": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "su15": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "tn36": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "tr87": {
+     "a_off": 0,
+     "aa": 0
+    },
+    "tu93": {
+     "a_off": 0,
+     "aa": 1
+    },
+    "wa30": {
+     "a_off": 0,
+     "aa": 0
+    }
+   }
+  },
+  "b_shipped_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 0,
+   "games_favouring_second": 1,
+   "mean_first": 0.0,
+   "mean_second": 0.05,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "n_discordant_games": 1,
+   "n_games_paired": 20,
+   "observed_effect": 0.05,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "bp35": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "cd82": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "cn04": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "g50t": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "ka59": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "lf52": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "lp85": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "ls20": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "m0r0": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "re86": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "s5i5": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "sb26": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "sc25": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "sk48": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "su15": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "tn36": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "tr87": {
+     "a_off": 0,
+     "b_shipped": 0
+    },
+    "tu93": {
+     "a_off": 0,
+     "b_shipped": 1
+    },
+    "wa30": {
+     "a_off": 0,
+     "b_shipped": 0
+    }
+   }
+  },
+  "c_owns_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 0,
+   "games_favouring_second": 1,
+   "mean_first": 0.0,
+   "mean_second": 0.05,
+   "min_reachable_p_at_this_n_discordant": 1.0,
+   "n_discordant_games": 1,
+   "n_games_paired": 20,
+   "observed_effect": 0.05,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "bp35": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "cd82": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "cn04": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "g50t": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "ka59": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "lf52": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "lp85": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "ls20": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "m0r0": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "re86": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "s5i5": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "sb26": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "sc25": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "sk48": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "su15": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "tn36": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "tr87": {
+     "a_off": 0,
+     "c_owns": 0
+    },
+    "tu93": {
+     "a_off": 0,
+     "c_owns": 1
+    },
+    "wa30": {
+     "a_off": 0,
+     "c_owns": 0
+    }
+   }
+  },
+  "note": "the component the historical metric omitted. Here MORE is WORSE, so a positive observed_effect favours the FIRST arm, not the second."
+ },
+ "secondary_usable_only": {
+  "AA_noise_floor": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 3,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.85,
+   "min_reachable_p_at_this_n_discordant": 0.0625,
+   "n_discordant_games": 5,
+   "n_games_paired": 20,
+   "observed_effect": -0.05,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "aa": 1
+    },
+    "bp35": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "aa": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "aa": 1
+    },
+    "lf52": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "aa": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "aa": 1
+    },
+    "wa30": {
+     "a_off": 1,
+     "aa": 2
+    }
+   }
+  },
+  "b_shipped_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 1,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.95,
+   "min_reachable_p_at_this_n_discordant": 0.25,
+   "n_discordant_games": 3,
+   "n_games_paired": 20,
+   "observed_effect": 0.05,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "bp35": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "b_shipped": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "lf52": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "b_shipped": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "b_shipped": 1
+    },
+    "wa30": {
+     "a_off": 1,
+     "b_shipped": 2
+    }
+   }
+  },
+  "c_owns_vs_a_off": {
+   "games_dropped_unpaired": [],
+   "games_favouring_first": 1,
+   "games_favouring_second": 2,
+   "mean_first": 1.9,
+   "mean_second": 1.95,
+   "min_reachable_p_at_this_n_discordant": 0.25,
+   "n_discordant_games": 3,
+   "n_games_paired": 20,
+   "observed_effect": 0.05,
+   "p": 1.0,
+   "per_game": {
+    "ar25": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "bp35": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "cd82": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "cn04": {
+     "a_off": 1,
+     "c_owns": 2
+    },
+    "g50t": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "ka59": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "lf52": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "lp85": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "ls20": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "m0r0": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "re86": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "s5i5": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "sb26": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "sc25": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "sk48": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "su15": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "tn36": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "tr87": {
+     "a_off": 2,
+     "c_owns": 2
+    },
+    "tu93": {
+     "a_off": 2,
+     "c_owns": 1
+    },
+    "wa30": {
+     "a_off": 1,
+     "c_owns": 2
+    }
+   }
+  },
+  "note": "the gate's OWN historical metric. Reported so a reader can see which component moved -- NOT the primary, because scoring on usable alone is exactly what hid this defect."
+ },
+ "shared_machine_note": "a concurrent workflow held the OTHER RTX 3090 (pid 2390253, a 20 GB gemma-4-31B) for this entire session. This run never evicted, killed, reused or contended with it: it launched its own server on the free card on a NON-DEFAULT port.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "no game is solved and no level is banked. This measures the yield of the induce path offline against frozen public-game windows.",
+ "state": "MEASURED",
+ "statistical_design_stated_before_results": {
+  "min_discordant_games_for_p_le_0.05": 6,
+  "min_reachable_p": 1.907349e-06,
+  "test": "two-sided exact sign test on per-game paired differences",
+  "unit_of_analysis": "GAME",
+  "why_stated_up_front": "a design that cannot reach 0.05 should say so before the numbers arrive, not after. Replicates within a game are replicates of ONE PROMPT; treating them as independent trials inflated a sibling run's p from 0.125 to 0.049 on 2026-08-01 and had to be corrected."
+ },
+ "substrate_witness_taken_before_the_run": {
+  "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+  "is_cuda_build": true,
+  "why": "setting CUDA_VISIBLE_DEVICES together with CARNOT_ARC_GENERATOR_CUDA_GPU renumbers the cards and the generator SILENTLY falls back to the AMD iGPU HIP build while the artifact still says 3090. This harness never sets CUDA_VISIBLE_DEVICES, reads the real binary out of /proc BEFORE the first measured call, and REFUSES a non-CUDA build outright rather than recording it as a caveat."
+ },
+ "target_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+ "the_latent_defect_is_still_real": "this run does NOT clear `generate()`. The structural defect is exactly as described: `attempt < tries - 1` prevents only the LAST attempt from continuing out of the loop, and an EARLIER re-ask can still spend the attempt that would have been the accept. The goal-variant A/B demonstrated that converting accepts into hard failures on 17 of 21 cells. What this run shows is that the ENGINE gate's EXPOSURE to that defect is currently zero, not that the defect was fixed. Exposure is a property of the model, the prompt and the repeat penalty -- all of which change -- so the defect is dormant, not absent. That is the case FOR keeping the OWNS_ATTEMPTS fix available even though this run could not exercise it.",
+ "title": "What the shipped engine-defect re-ask gate actually costs: usable engines MINUS the hard induction failures the re-ask causes, over three arms on the live induce path",
+ "what_was_measured": {
+  "arms": {
+   "a_off": "CARNOT_ARC_INDUCE_DEFECT_REASKS=0 -- gate off",
+   "aa": "same env as a_off at a different seed base -- the noise floor",
+   "b_shipped": "nothing set -- the shipped state, unmodified",
+   "c_owns": "CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS=1 -- a defect re-ask GRANTS an attempt instead of consuming one"
+  },
+  "primary": "usable MINUS hard failures. Scoring on usable alone is EXACTLY the metric that hid this for a week; both components are reported separately below so a reader can see which one moved.",
+  "the_defect": "`generate()` claimed a defect re-ask 'NEVER FAILS WHERE THE OLD PATH SUCCEEDED'. That is false. `attempt < tries - 1` stops the LAST attempt from continuing out of the loop; it does NOT stop an EARLIER re-ask from spending the attempt that would have BEEN the accept. The 2026-08-01 goal-variant A/B measured the consequence: induction hard-failed on 17 of 21 treatment cells against 1 of 22 control and 0 of 21 A/A.",
+  "why_this_run": "the identical structure is in the SHIPPED engine gate and it is LIVE -- `_induce_defect_reasks()` returns 1 by default and `_defect_check_on` arms on every engine induce call. Its headline 13/36 -> 22/36 counted USABLE ENGINES and never counted hard failures, so the shipped agent may be running a net-negative gate and nobody had measured it."
+ }
+}

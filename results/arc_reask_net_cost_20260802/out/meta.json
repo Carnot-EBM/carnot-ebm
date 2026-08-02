@@ -1,0 +1,616 @@
+{
+  "prereg_sha256": "sha256:ad85841c0e8b8465a8a46fff5bd4307d9288d63036f3ea40031b7ccef95de86d",
+  "preconditions_checked": [
+    {
+      "resource": "gemma-4-31B-it-qat gguf cached",
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+      "principle": "the live generator must be on disk; without it the honest verdict is blocked_model_not_cached, never a fabricated run"
+    },
+    {
+      "resource": "conductor_inactive",
+      "available": true,
+      "detail": "systemctl is-active -> 'inactive'",
+      "principle": "a live conductor would contend for the same GPU and interleave its own induction into this store"
+    },
+    {
+      "resource": "cuda_gpu_0_has_headroom",
+      "available": true,
+      "detail": "free=24123 MiB",
+      "principle": "a concurrent workflow holds the other card; launching without headroom would evict work this session does not own"
+    },
+    {
+      "resource": "shipped_defect_reasks_is_1",
+      "available": true,
+      "detail": "_induce_defect_reasks() -> 1",
+      "principle": "arm B is defined as THE SHIPPED STATE; if the shipped default were already 0 this would measure OFF vs OFF and report a null as a finding"
+    },
+    {
+      "resource": "owns_attempts_default_off",
+      "available": true,
+      "principle": "the fix must be default-off or arm B is silently arm C"
+    },
+    {
+      "resource": "goal_defect_flag_default_off",
+      "available": true,
+      "principle": "a live goal gate would fire inside every arm and confound a measurement of the ENGINE gate with a second, different intervention"
+    },
+    {
+      "resource": "port_free",
+      "available": true,
+      "detail": "port 41931",
+      "principle": "reusing a stale server on the default port is how an arm silently gets a different model or context size"
+    },
+    {
+      "resource": "cached_windows_present",
+      "available": true,
+      "detail": "20 pkl in /tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows",
+      "principle": "the corpus must be the sibling run's corpus, not a re-derivation that could silently differ"
+    }
+  ],
+  "server_witness": {
+    "pid": 2505108,
+    "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "port_requested": 41931,
+    "port_actual": 41931,
+    "cuda_gpu": "0",
+    "reuse_refusals": [],
+    "n_ctx_declared": 32768,
+    "n_ctx_from_props": 32768,
+    "model_from_props": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "is_cuda_build": true,
+    "mtp": false,
+    "kv_quant": "q8_0",
+    "n_gpu_layers": 999,
+    "max_tokens": 4096,
+    "tries": 3,
+    "timeout": 300
+  },
+  "split_meta": {
+    "ar25": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/ar25.pkl",
+      "window_pkl_sha256": "cd1c424694c95ba8984c905d3f8ef3349fc872c0594e6bef728d77a0c0b8b233"
+    },
+    "bp35": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/bp35.pkl",
+      "window_pkl_sha256": "12b7848596ca7960ba773ddb186e3bca3666596f8bf1c37bb1aa17da90904a59"
+    },
+    "cd82": {
+      "n_shown": 3,
+      "n_heldout": 2,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/cd82.pkl",
+      "window_pkl_sha256": "9002785f8635bf210d1c6706e42e670f12685ef21ee4f8e8f5b0bfa47af8d755"
+    },
+    "cn04": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/cn04.pkl",
+      "window_pkl_sha256": "10a5822c16e58ae14b0cd400ca6d294b6fc576a07c9b05b0309e3dd36edf67e8"
+    },
+    "g50t": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/g50t.pkl",
+      "window_pkl_sha256": "37c3aa0c4cbfdd8e8f7f04a3b8185a60002d826b5e3a643584db404cd4c9e734"
+    },
+    "ka59": {
+      "n_shown": 7,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/ka59.pkl",
+      "window_pkl_sha256": "5355ca70cf87520d1a8f12f185a37bb8002ce9fd78aefe7dffb8b09a5ae18090"
+    },
+    "lf52": {
+      "n_shown": 5,
+      "n_heldout": 3,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/lf52.pkl",
+      "window_pkl_sha256": "bcab37a9722d00c84149687b36e2dbbb951e72f9984469945099b33a8d2ae500"
+    },
+    "lp85": {
+      "n_shown": 3,
+      "n_heldout": 2,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/lp85.pkl",
+      "window_pkl_sha256": "e8de022a9942e81ce005fa8ea6166b7252026e00e2664e381c95dc0cab1a6897"
+    },
+    "ls20": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/ls20.pkl",
+      "window_pkl_sha256": "0eb5cabf803444f4c87470f8165238d248c7ba9b35253d47b845387a0d22cc1f"
+    },
+    "m0r0": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/m0r0.pkl",
+      "window_pkl_sha256": "ff7d12153e58781df95c5e06dd5c79ec815cfc5016a5ddaeccb213e1878486ef"
+    },
+    "re86": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/re86.pkl",
+      "window_pkl_sha256": "64c18efe84df5d5cc0c816b69993b067dc30a4c7915512cb4ce7a76f3f01185a"
+    },
+    "s5i5": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/s5i5.pkl",
+      "window_pkl_sha256": "30bb8230698c60d0897753448a940c154593dc0d005181a3f27caefc66f20ec7"
+    },
+    "sb26": {
+      "n_shown": 6,
+      "n_heldout": 3,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/sb26.pkl",
+      "window_pkl_sha256": "2254f08445314cbb1d2598f29ee12939074574c8b57d6245fe66aa03c87cad7a"
+    },
+    "sc25": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/sc25.pkl",
+      "window_pkl_sha256": "06b6207b813bfb2ba4e0d82df6da310965cfb426185ef37f4ac503be8220ce12"
+    },
+    "sk48": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/sk48.pkl",
+      "window_pkl_sha256": "ddbe6afb9566d6abcf9e27c1c73a2b45dd6cc7eeba460ec558e52ce882c57391"
+    },
+    "su15": {
+      "n_shown": 5,
+      "n_heldout": 2,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/su15.pkl",
+      "window_pkl_sha256": "f64afe4678f85d35b5d76fa4e9d482c9f361c719f1e09b92901ee68a2288d560"
+    },
+    "tn36": {
+      "n_shown": 5,
+      "n_heldout": 2,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/tn36.pkl",
+      "window_pkl_sha256": "f41bc7e548935d14cc0374831a45a79fa38d1c2948527de73c1850db48961e50"
+    },
+    "tr87": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/tr87.pkl",
+      "window_pkl_sha256": "fd9de183f83d4e84c86043f80b0f542978024d05441714e0503a3c50009334b7"
+    },
+    "tu93": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/tu93.pkl",
+      "window_pkl_sha256": "eb0e85e49a1ff22583e8edb66c3b1615cc85901f140cfd445395966d39d3e979"
+    },
+    "wa30": {
+      "n_shown": 8,
+      "n_heldout": 4,
+      "cell": 1,
+      "window_pkl": "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/goalab/windows/wa30.pkl",
+      "window_pkl_sha256": "45f281d3735f89ceccbe74bdb85bb67ad6a2cdbf28576a0d12ea98c9e864a668"
+    }
+  },
+  "treatment_witness": [
+    {
+      "game": "ar25",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "bp35",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "cd82",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "cn04",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "g50t",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "ka59",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "lf52",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "lp85",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "ls20",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "m0r0",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "re86",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "s5i5",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "sb26",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "sc25",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "sk48",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "su15",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "tn36",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "tr87",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "tu93",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    },
+    {
+      "game": "wa30",
+      "prompt_identical_across_arms": true,
+      "reask_budget_by_arm": {
+        "a_off": 0,
+        "b_shipped": 1,
+        "c_owns": 1
+      },
+      "owns_attempts_by_arm": {
+        "a_off": false,
+        "b_shipped": false,
+        "c_owns": true
+      },
+      "detector_bites_on_known_defect": true,
+      "detector_kinds": [
+        "engine_returned_none",
+        "missing_return"
+      ],
+      "goal_gate_inert": true
+    }
+  ],
+  "n_cells": 160,
+  "n_jobs": 160,
+  "duration_s": 10833.8
+}
