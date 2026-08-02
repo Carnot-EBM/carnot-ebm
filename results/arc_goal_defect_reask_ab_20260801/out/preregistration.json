@@ -1,0 +1,76 @@
+{
+  "AMENDMENT_2_primary_swapped_before_any_llm_call": {
+    "cost_of_the_swap": "power. The control base rate falls 0.104 -> 0.061, so at 3 replicates power is ~0.63 for 0.061 -> 0.20 and ~0.87 for 0.061 -> 0.30 (pre/power_O6.json). A cleaner construct measured with less power is the right trade against a better-powered construct that the treatment mechanically implies.",
+    "honest_residual": "O6 is still not INDEPENDENT of the treatment, only undetermined by it. A predicate that discriminates on observed frames is more likely to fire at pre_win than one that does not. The claim is that the treatment does not mechanically force the outcome, NOT that the two are unrelated.",
+    "what_changed": "the PRIMARY was goal_discriminates_heldout (O4) and is now O6_pre_win_and_not_open. O4 is demoted to a secondary and still reported.",
+    "when": "after pre/circularity_gap.json and the determinacy cross-tab, before the first LLM call, before any outcome in this run existed",
+    "why": "O4 FAILED THE TEST THIS EXPERIMENT SETS ITSELF. The brief was to choose an outcome that is not the thing being changed, and O4 turned out to be exactly that: measured over the 115 frozen engines, EVERY predicate the accept check would KEEP scores O4-positive -- 6 of 6, FN=0. The gate's accept decision therefore DETERMINES the outcome in the keep direction, which is the same circularity as scoring against plan_found, one indirection out. O3 has the identical defect (FN=0). The disjoint-frames argument was not enough: the frame sets agree 94.8% of the time (pre/circularity_gap.json), so 'disjoint' bought a 5.2% gap and not independence.",
+    "why_O6_instead": "the gate's accept decision does NOT determine it -- 2 of the 6 predicates the gate would keep still FAIL O6 -- and unlike O2 it carries no constant-True contamination (0 of 7 O6-positives are constant-True, against 1 of 9 for O2). Constant-True matters specifically here because the gate REJECTS constant-True, so an outcome a `return True` predicate can satisfy would be pushed DOWN by the treatment for a reason that has nothing to do with goal quality. O6 is also the sharper claim: it asks whether the predicate recognises the real near-win state and does not merely fire everywhere."
+  },
+  "AMENDMENT_before_any_llm_call": {
+    "WHAT THIS CHANGES ABOUT WHAT MAY BE CLAIMED": "at a 94.8% firing rate the treatment is NOT a selective filter -- it is very close to UNCONDITIONAL RESAMPLING. With a budget of 2 re-asks inside `tries=3`, on ~95% of cells the treatment simply takes the THIRD sample instead of the first, under a modified prompt. So a positive result here must be read as 'resampling the goal under a nudge helps', NEVER as 'the selectivity of the check helps'. The project already measured the engine-side analogue of this and found the defect TEXT bought nothing (p = 1.000 over 5 discordant pairs) -- the second ASK was the whole effect.",
+    "measured": "the accept check would reject 109 of 115 frozen engines -- a 94.8% firing rate. goal_constant accounts for 109, goal_missing_return 3, goal_raises 1. With the flag off it fires on 0 of 115, so the default-off guarantee holds on real corpus code and not merely on a fixture.",
+    "selectivity_cross_tab": "of the 12 frozen engines whose goal DID discriminate on held-out frames, the gate would reject 6 and keep 6; of the 103 that did not, it rejects 103 and keeps 0. Recall on non-discriminating goals is perfect, precision is not: the gate discards half the good ones. The cost is bounded -- a re-ask can only replace a sample, never fail where the shipped path succeeded -- but it is a real cost and is reported rather than buried.",
+    "when": "after pre/detector_coverage.json, before the first LLM call, before any outcome in this run existed",
+    "why_a_compute_matched_arm_was_NOT_added": "a 100%-firing arm would differ from the 94.8% treatment on ~5% of cells, so it could not separate selectivity from resampling with any power at this n. The honest move is to state the confound in the claim rather than to buy a fourth arm that cannot resolve it."
+  },
+  "ARMEDNESS_GATE": {
+    "rule": "if n_goal_defect_reasks is 0 across the whole `on` arm, the treatment never fired and the run is reported as a NON-TEST, not as a null",
+    "why": "exp6013 shipped a HUD-mask factor that was a silent no-op on 162 arms and was read as 'both mask settings measured'"
+  },
+  "GUARDRAIL": {
+    "metric": "held-out change_fidelity / accuracy of the ENGINE",
+    "why": "on the combined call one answer carries both functions, so a goal-triggered re-ask regenerates the ENGINE too. If the goal improves while the engine degrades, the intervention is not free and must not be reported as if it were."
+  },
+  "MISSING_IS_NEVER_ZERO": "a cell whose induce raised, whose server failed, whose response was truncated, or whose goal scorer timed out is excluded and COUNTED PER ARM. It is never scored 0.",
+  "PRIMARY": {
+    "alpha": 0.05,
+    "clustering": "GAME. Replicates within a game are not independent trials -- treating them as such inflated a sibling experiment's p from 0.125 to 0.049 on 2026-07-31 and had to be corrected.",
+    "control_base_rate_measured": 0.0609,
+    "definition": "the induced is_level_complete returns True on the frame IMMEDIATELY BEFORE the real level-up -- the last within-level state, the one the winning action was taken from -- AND False on the level's opening board. The level-up is the LAST transition of the window in 20/20 games and always lands in the HELD-OUT tail, so the induce prompt never contained this frame.",
+    "metric": "O6_pre_win_and_not_open",
+    "test": "stratified permutation: statistic = mean over GAMES of (rate_on - rate_off); the arm label is permuted WITHIN each game; 200000 draws; two-sided",
+    "why_not_plan_found": "plan_found is an EXACT function of the goal gate's kind (0 mismatches in 138 engines), so scoring a goal intervention against it grades the goal gate with the goal gate",
+    "why_not_the_gate_at_all": "this is evaluated on REAL OBSERVED FRAMES, never on states forward-simulated by an induced engine inside _goal_satisfiability_check's bounded search"
+  },
+  "SECONDARIES_reported_not_primary": {
+    "O1_fires_post_win": "the frame REQ-ARC-WMTE-5714's _levelup_positive_recall scores. pre/boundary_anatomy.json measured it as a wholesale board replacement (median 25.8x an ordinary step) -- the NEXT level's opening board. Reported with that caveat. Control base rate 0.026.",
+    "O2_fires_pre_win": "O6 without the not-at-open clause (base 0.078). The delta between O2 and O6 is exactly the constant-True slice.",
+    "O4_discriminates_heldout": "the DEMOTED former primary (base 0.104). Reported in full, with the FN=0 determinacy defect attached, so the swap is auditable rather than a metric quietly disappearing.",
+    "O7b_all_false_observed": "the raw failure mode: the predicate is False on every frame the agent ever saw. 88.7% of control predicates. Descriptive, and NOT a candidate primary -- it is the treatment's own probe restated.",
+    "goal_gate_kind_and_plan_found": "SECONDARY ONLY, and explicitly the thing that was changed. Never the primary."
+  },
+  "arms": {
+    "aa_control": "identical to control_off, different seed base -- the noise floor",
+    "control_off": "both knobs unset (the shipped path)",
+    "treatment_on": "CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK=1 and CARNOT_ARC_GOAL_PROMPT_TRANSITIONS=1"
+  },
+  "experiment": "arc_goal_defect_reask_heldout_ab",
+  "flags_remain_default_off": true,
+  "generator": {
+    "cuda_gpu": "1",
+    "gguf": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+    "one_server_both_arms": true,
+    "port": 41823,
+    "repo_substr": "gemma-4-31B-it-qat",
+    "sampler_seeded": true,
+    "seed_scheme": "CARNOT_ARC_GENERATOR_SEED = SEED_BASE + replicate, the SAME seed in control and treatment of a (game, replicate) pair, so attempt 0 is the identical draw and the arms diverge only where the gate fires."
+  },
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+  "power": {
+    "PRIMARY_O6_unpaired_power_at_3_reps": {
+      "p_trt_0.15": 0.403,
+      "p_trt_0.20": 0.63,
+      "p_trt_0.25": 0.76,
+      "p_trt_0.30": 0.87,
+      "p_trt_0.40": 0.98
+    },
+    "min_reachable_p_statement": "the permutation reference set is C(2R,R)^20 within-game assignments, so the ATTAINABLE minimum p is ~0 and quoting it would be meaningless reassurance. The binding constraint is effect size. On the PRIMARY at 3 replicates this design has ~87% power for a 5x effect (0.061 -> 0.30), ~63% for a 3x effect (0.061 -> 0.20), and ~40% for a 2.5x effect (0.061 -> 0.15). SO A NULL IS WEAK EVIDENCE AGAINST A SMALL OR MODERATE EFFECT and will be reported as such, not as 'no effect'. The seeded pairing (both arms share attempt 0, so a cell where the gate never fires contributes an exactly zero difference) should beat these unpaired numbers, but that gain is NOT assumed here and is not credited in advance.",
+    "source": "pre/power_O6.json for the PRIMARY (control base 0.0609); pre/power.json retained for the demoted O4 (base 0.1043). Both simulated before any GPU time, with game-level heterogeneity drawn from a Beta so that 'most games flat, a few carry it' -- the shape the pre-flight actually shows -- rather than a homogeneous Bernoulli, which would be optimistic."
+  },
+  "question": "Does rejecting a MECHANICALLY DEFECTIVE induced `is_level_complete` and re-asking -- plus carrying the agent's own observed transitions into the goal-only prompt -- produce goal predicates that discriminate on frames the prompt never saw?",
+  "requirement": "REQ-ARC-WMTE-6030 / REQ-ARC-WMTE-6031",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "No game is solved or level-banked here. This measures the quality of an induced goal predicate offline against a frozen window. The intervention itself uses ONLY the agent's own observations -- constancy of a predicate over frames already seen, and those same frames rendered into the prompt -- so it carries no fact about any game from outside and works identically on a game nobody has solved. But this measurement is offline, on public games, so the artifact declares development_proxy rather than live_agent_self_discovery.",
+  "written_before_any_llm_call": true
+}

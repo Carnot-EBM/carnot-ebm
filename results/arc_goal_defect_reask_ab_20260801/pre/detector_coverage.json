@@ -1,0 +1,23 @@
+{
+ "what_this_is": "OBSERVATIONAL detector coverage over 115 frozen engines. It measures what the accept check would REJECT, not whether the re-ask then helps.",
+ "n_scored": 115,
+ "n_would_be_rejected": 109,
+ "rejection_rate": 0.9478,
+ "defect_kinds": {
+  "goal_constant": 109,
+  "goal_missing_return": 3,
+  "goal_raises": 1
+ },
+ "inert_when_flag_off": 0,
+ "cross_tab_vs_primary_outcome": {
+  "rejected_and_non_discriminating_TP": 103,
+  "rejected_but_discriminating_FP": 6,
+  "kept_and_non_discriminating_FN": 0,
+  "kept_and_discriminating_TN": 6,
+  "reading": "FP is the cost that matters: a predicate the gate throws away even though it DID discriminate on held-out frames. Each FP is one wasted sample, bounded, and the re-ask can only replace it -- but a large FP count would mean the gate is not selective, it is just re-rolling everything."
+ },
+ "vs_the_syntactic_estimate": {
+  "taxonomy_estimate": "37 of 71 (52%), from A_DECLINED (34) + D_NO_PREDICATE (3)",
+  "why_this_can_differ": "goal_constant is a RUNTIME probe over observed frames, so a whole-board trope (C_UNIFORMITY) or a colour-elimination predicate (B_COLOUR_ELIMINATION) is caught too -- constant for a different reason, but just as uninformative to the search."
+ }
+}
