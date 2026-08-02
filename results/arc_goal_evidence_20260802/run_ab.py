@@ -47,9 +47,30 @@ transitions, rendered by the SAME `_transitions_block` the engine prompt already
 source, no adapter, no curated win example, no `_previous_level_complete_grid` asserted as a win
 state (it is the NEXT level's opening board -- the win-state poison corrected 2026-07-29; this
 harness passes None for it in both arms).  The transitions shown are the PREFIX split, which
-excludes the level-up row, so no arm is shown a win.  Everything here is exactly as available on
-a game nobody has ever solved -- which is why stall games with zero observed wins are in the
-roster on purpose.
+excludes the level-up row, so no arm is shown a win.
+
+CORRECTED 2026-08-02 (post-review, same day).  The paragraph above used to end "...Everything
+here is exactly as available on a game nobody has ever solved -- which is why stall games with
+zero observed wins are in the roster on purpose."  BOTH HALVES OF THAT ARE WRONG and the
+retraction is kept here rather than quietly deleted:
+
+  * There are no stall games in the roster.  All 20 are `full_game_clear: true` in
+    ops/arc_solve_registry.yaml, and every window is built by `build_progress_window` ->
+    `exp5717.build_window` -> `arc_loop_solve.solve_adaptered(game, 1)`, which returns None
+    unless the game solves to L1 offline through a registered GameAdapter.  The window builder
+    logged `levelups=1` for all 20 and `split_meta` records `levelup_rows_in_heldout: 1` for
+    all 20.  The TRUE claim is the narrower one: `levelup_rows_in_shown == 0`, i.e. no ARM was
+    shown a win.
+  * Prompt CONTENT is clean, but transition SELECTION is solve-conditioned: the window is the
+    last k actions of a BANKED WINNING ROUTE cut at the L0->L1 boundary.  On a hidden game the
+    live `trans` at a `_split_induce` call is a stall-triggered exploration buffer instead --
+    the same FIELD from a different DISTRIBUTION.  So this harness cannot support
+    `works_on_an_unsolved_game`, and the artifact now reports it False.
+
+The string this file EMITS into out/preregistration.json is deliberately left byte-identical so
+`prereg_sha256` still verifies -- a pre-registration rewritten after seeing data is not a
+pre-registration.  The correction lives in the artifact's
+POST_REVIEW_CORRIGENDUM_2026_08_02 and in the comment beside the emit site below.
 
 NOT SUBMITTED: no scored or online ARC game is played.  Submission is operator-only.
 """
@@ -466,6 +487,15 @@ def main() -> int:  # noqa: C901, PLR0912, PLR0915
             "_previous_level_complete_grid asserted as a win state (it is the NEXT level's "
             "opening board -- the win-state poison corrected 2026-07-29; passed as None here in "
             "every arm)",
+            # RETRACTED 2026-08-02, and the bytes are NOT changed. The next two entries are
+            # false as written (there are no stall games in the roster -- all 20 are
+            # `full_game_clear: true`, and every window required `solve_adaptered(game, 1)`),
+            # but out/preregistration.json is a frozen pre-registration that `prereg_sha256`
+            # commits to, so the emit is left byte-identical and the correction is recorded in
+            # the artifact's POST_REVIEW_CORRIGENDUM_2026_08_02 instead. The verified claim is
+            # `levelup_rows_in_shown == 0`: no ARM was shown a win. If this harness is ever
+            # re-run, FIX THESE TWO STRINGS FIRST -- the freeze protects the record of what was
+            # pre-registered, not the sentence itself.
             "no_win_is_shown": "the prefix split puts the level-up row in the HELD-OUT tail, so "
             "levelup_rows_in_shown is 0 for every game; stall games with zero observed wins are "
             "in the roster on purpose",

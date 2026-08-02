@@ -1,8 +1,8 @@
 {
   "experiment": "arc_goal_evidence_ab_20260802",
   "title": "Does giving the ARC goal prompt the agent's own observed evidence stop the model declining to write a win condition?",
-  "run_date": "2026-08-02T15:06:38.342124+00:00",
-  "git_head": "0bdddb4d6d9520705745160da1232bff6c7d5c21",
+  "run_date": "2026-08-02T15:36:51.069165+00:00",
+  "git_head": "9d8f5559926d17952ce8569043f3dcd42664db82",
   "schema": "carnot.arc_goal_evidence_ab.v1",
   "duration_s": 2011.9,
   "random_seed": 8300,
@@ -537,6 +537,266 @@
         }
       }
     }
+  },
+  "GROUNDED_placebo_discriminance": {
+    "what_this_is": "a DISCRIMINANCE (placebo) test of the GROUNDED label, run AFTER the A/B on the A/B's own captured cells. Post-hoc and labelled as such.",
+    "verdict": "GROUNDED IS A SYNTAX LABEL, NOT AN EVIDENCE LABEL. It must not be quoted as an evidence-use rate. DECLINED (the PRIMARY) and TROPE are NOT affected: a constant-False predicate references nothing and a whole-board claim names nothing observed, so no prompt content can manufacture either.",
+    "accepting_set": {
+      "literal_space": 64,
+      "per_game_accepting_set_size": {
+        "ar25": 56,
+        "bp35": 62,
+        "cd82": 42,
+        "cn04": 43,
+        "g50t": 53,
+        "ka59": 33,
+        "lf52": 33,
+        "lp85": 45,
+        "ls20": 50,
+        "m0r0": 52,
+        "re86": 50,
+        "s5i5": 37,
+        "sb26": 41,
+        "sc25": 34,
+        "sk48": 50,
+        "su15": 39,
+        "tn36": 21,
+        "tr87": 38,
+        "tu93": 28,
+        "wa30": 37
+      },
+      "mean_fraction_of_literal_space": 0.6594,
+      "min_fraction": 0.3281,
+      "max_fraction": 0.9688,
+      "min_game": "tn36",
+      "max_game": "bp35",
+      "literal_0_grounds_on_n_games": 17,
+      "n_games": 20,
+      "reading": "a predicate's literals are intersected against this set. At a mean 66% of the literal space, naming ANY small integer is close to a coin flip in the grounded direction before the model has understood anything."
+    },
+    "placebo": {
+      "what": "each captured predicate re-scored against every OTHER game's observed transitions. A label that carries evidence about THIS game's deltas should mostly break; one that survives is reporting syntax.",
+      "n_cells": 15,
+      "n_comparisons": 285,
+      "label_preserved_under_a_foreign_games_transitions": 0.9193,
+      "grounded_cells": [
+        {
+          "cell": "bp35__r0__gA.py.txt",
+          "home_game": "bp35",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 17,
+          "n_foreign_scoring_GROUNDED": 17
+        },
+        {
+          "cell": "bp35__r0__gB.py.txt",
+          "home_game": "bp35",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 18,
+          "n_foreign_scoring_GROUNDED": 18
+        },
+        {
+          "cell": "cd82__r0__gAA.py.txt",
+          "home_game": "cd82",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 19
+        },
+        {
+          "cell": "bp35__r0__A.py.txt",
+          "home_game": "bp35",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 17,
+          "n_foreign_scoring_GROUNDED": 17
+        }
+      ],
+      "per_cell": [
+        {
+          "cell": "ar25__r0__gA.py.txt",
+          "home_game": "ar25",
+          "native_shape": "TROPE",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "ar25__r0__gAA.py.txt",
+          "home_game": "ar25",
+          "native_shape": "DECLINED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "bp35__r0__gA.py.txt",
+          "home_game": "bp35",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 17,
+          "n_foreign_scoring_GROUNDED": 17
+        },
+        {
+          "cell": "bp35__r0__gAA.py.txt",
+          "home_game": "bp35",
+          "native_shape": "TROPE",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "bp35__r0__gB.py.txt",
+          "home_game": "bp35",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 18,
+          "n_foreign_scoring_GROUNDED": 18
+        },
+        {
+          "cell": "cd82__r0__gA.py.txt",
+          "home_game": "cd82",
+          "native_shape": "OTHER",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 1,
+          "n_foreign_scoring_GROUNDED": 18
+        },
+        {
+          "cell": "cd82__r0__gAA.py.txt",
+          "home_game": "cd82",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 19
+        },
+        {
+          "cell": "ar25__r0__A.py.txt",
+          "home_game": "ar25",
+          "native_shape": "DECLINED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "ar25__r0__AA.py.txt",
+          "home_game": "ar25",
+          "native_shape": "TROPE",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "ar25__r0__B.py.txt",
+          "home_game": "ar25",
+          "native_shape": "DECLINED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "ar25__r0__C.py.txt",
+          "home_game": "ar25",
+          "native_shape": "DECLINED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "bp35__r0__A.py.txt",
+          "home_game": "bp35",
+          "native_shape": "GROUNDED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 17,
+          "n_foreign_scoring_GROUNDED": 17
+        },
+        {
+          "cell": "bp35__r0__AA.py.txt",
+          "home_game": "bp35",
+          "native_shape": "TROPE",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "bp35__r0__B.py.txt",
+          "home_game": "bp35",
+          "native_shape": "DECLINED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        },
+        {
+          "cell": "bp35__r0__C.py.txt",
+          "home_game": "bp35",
+          "native_shape": "DECLINED",
+          "n_foreign_games": 19,
+          "n_foreign_preserving_the_label": 19,
+          "n_foreign_scoring_GROUNDED": 0
+        }
+      ]
+    },
+    "behaviour_preserving_mutations": {
+      "short_circuit_on_DECLINED": {
+        "mutation": "`return False` -> `return False and grid[0, 0] == 4`",
+        "why_it_is_behaviour_preserving": "Python short-circuits `False and X`, so the function returns False for every input exactly as before. No induced code is executed to establish this; it is a language guarantee.",
+        "cells": [
+          {
+            "cell": "ar25__r0__A.py.txt",
+            "was": "DECLINED",
+            "now": "GROUNDED"
+          },
+          {
+            "cell": "ar25__r0__B.py.txt",
+            "was": "DECLINED",
+            "now": "GROUNDED"
+          },
+          {
+            "cell": "ar25__r0__C.py.txt",
+            "was": "DECLINED",
+            "now": "GROUNDED"
+          },
+          {
+            "cell": "bp35__r0__B.py.txt",
+            "was": "DECLINED",
+            "now": "GROUNDED"
+          },
+          {
+            "cell": "bp35__r0__C.py.txt",
+            "was": "DECLINED",
+            "now": "GROUNDED"
+          }
+        ],
+        "consequence": "the reported S2-B / S2-C result (declined 1.0, grounded 0.0) inverts to (declined 0.0, grounded 1.0) under a rewrite that changes nothing the predicate does."
+      },
+      "paraphrase_on_TROPE": {
+        "mutation": "alpha-rename a local, or swap the operands of an equality",
+        "why_it_is_behaviour_preserving": "renaming a local and commuting `==` are both semantics-preserving; TROPE is a 5-substring match over `ast.unparse`, so the paraphrase escapes into H_OTHER and the grounding check then promotes it.",
+        "cells": [
+          {
+            "cell": "ar25__r0__gA.py.txt",
+            "was": "TROPE",
+            "swap_equality_operands": "GROUNDED"
+          },
+          {
+            "cell": "bp35__r0__gAA.py.txt",
+            "was": "TROPE",
+            "alpha_rename_local": "GROUNDED"
+          },
+          {
+            "cell": "ar25__r0__AA.py.txt",
+            "was": "TROPE",
+            "swap_equality_operands": "GROUNDED"
+          },
+          {
+            "cell": "bp35__r0__AA.py.txt",
+            "was": "TROPE",
+            "alpha_rename_local": "GROUNDED"
+          }
+        ]
+      }
+    },
+    "no_induced_code_executed": true
   },
   "per_game": {
     "stage1": {
@@ -1493,6 +1753,139 @@
     }
   ],
   "min_reachable_p": 0.0,
+  "min_reachable_p_at_achieved_n": {
+    "why": "the DESIGN's floor (min_reachable_p, ~0 at 20 games) says nothing about what this truncated run could reach. This does. Any contrast whose entry here exceeds 0.05 was UNRESOLVABLE BY CONSTRUCTION, before the model wrote a single token.",
+    "formula": "2 / 2**n_games -- one treatment and one control cell per game gives two arrangements per game, and the extremal statistic is matched by two of them",
+    "by_contrast": {
+      "stage1_missingness::MISSING::gB_vs_gA": {
+        "n_games": 3,
+        "exact_min_two_sided_p": 0.25,
+        "observed_p": 0.5002
+      },
+      "stage1_missingness_AA_floor::MISSING::gAA_vs_gA": {
+        "n_games": 3,
+        "exact_min_two_sided_p": 0.25,
+        "observed_p": 1.0
+      },
+      "stage2_missingness::MISSING::B_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_missingness::MISSING::C_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_missingness_AA_floor::MISSING::AA_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage1::DECLINED::gB_vs_gA": {
+        "n_games": 1,
+        "exact_min_two_sided_p": 1.0,
+        "observed_p": 1.0
+      },
+      "stage1::TROPE::gB_vs_gA": {
+        "n_games": 1,
+        "exact_min_two_sided_p": 1.0,
+        "observed_p": 1.0
+      },
+      "stage1::GROUNDED::gB_vs_gA": {
+        "n_games": 1,
+        "exact_min_two_sided_p": 1.0,
+        "observed_p": 1.0
+      },
+      "stage1::OTHER::gB_vs_gA": {
+        "n_games": 1,
+        "exact_min_two_sided_p": 1.0,
+        "observed_p": 1.0
+      },
+      "stage1_AA_floor::DECLINED::gAA_vs_gA": {
+        "n_games": 3,
+        "exact_min_two_sided_p": 0.25,
+        "observed_p": 1.0
+      },
+      "stage1_AA_floor::TROPE::gAA_vs_gA": {
+        "n_games": 3,
+        "exact_min_two_sided_p": 0.25,
+        "observed_p": 1.0
+      },
+      "stage1_AA_floor::GROUNDED::gAA_vs_gA": {
+        "n_games": 3,
+        "exact_min_two_sided_p": 0.25,
+        "observed_p": 1.0
+      },
+      "stage1_AA_floor::OTHER::gAA_vs_gA": {
+        "n_games": 3,
+        "exact_min_two_sided_p": 0.25,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::DECLINED::B_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::TROPE::B_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::GROUNDED::B_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::OTHER::B_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::DECLINED::C_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::TROPE::C_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::GROUNDED::C_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_ITT::OTHER::C_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_AA_floor::DECLINED::AA_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_AA_floor::TROPE::AA_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 0.5015
+      },
+      "stage2_AA_floor::GROUNDED::AA_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      },
+      "stage2_AA_floor::OTHER::AA_vs_A": {
+        "n_games": 2,
+        "exact_min_two_sided_p": 0.5,
+        "observed_p": 1.0
+      }
+    },
+    "smallest_attainable_p_anywhere_in_this_run": 0.25,
+    "reading": "the smallest p ANY contrast in this run could have returned is 0.25, on the three-game stage-1 blocks. The PRIMARY landed one paired game, where the only attainable p is 1.0. NON-TEST is therefore a structural fact about the achieved n, not a reading of the observed p-values."
+  },
   "power_statement": {
     "arithmetic": "both knobs live ONLY in the split-induce fallback, and the goal-only prompt is never built when the combined call succeeds. Split-induce is 19.8% of cells and its declined rate is already only 17.4%, so driving split-cell declines to ZERO moves the ITT declined rate 0.431 -> 0.397: a 3.4 point ceiling. At 20 games x 3 replicates the permutation test cannot resolve 3.4 points, so the STAGE 2 PRIMARY IS DECLARED UNDERPOWERED BEFORE IT IS RUN. A stage-2 null is evidence that the knobs are STRUCTURALLY MISDIRECTED, not that showing evidence does not work.",
     "min_reachable_p_reported": 0.0,
@@ -1507,14 +1900,16 @@
     "n": 116,
     "source": "results/arc_object_perception_ab_change_fidelity_20260801/engines, 116 world_model.py from the same 20 games, classified with this run's classifier",
     "split_induce_rate": 0.198,
-    "trope_rate": 0.207
+    "trope_rate": 0.207,
+    "PARTITION_IS_A_ONE_DIRECTIONAL_PROXY": "split-induce is inferred as `n_defs >= 2` (two top-level is_level_complete definitions -- the shadowing signature). Verified to hold on all 116 frozen cells BY CONSTRUCTION, which is the problem: it is the definition used, not an independent measurement. `_split_induce` writes only ONE definition whenever the engine half supplied no is_level_complete, so such a cell has n_defs == 1 and is counted as COMBINED. The error therefore runs one way -- split cells hide in the combined bucket, never the reverse -- and because split cells decline far less (0.174 vs 0.495), the true split share is at least 19.8%. THE 3.4-POINT FIGURE IS A LOWER BOUND ON THE KNOBS' REACH, NOT A CEILING. The sign of the conclusion (declines concentrate where the knobs are not) is unaffected; the exact number is not a hard ceiling and should not be quoted as one. To settle it, persist `_write_world_model`'s split-induce note per cell -- today it is returned to the caller and never written down. This run's own 8 stage-2 cells agree with the direct `goal_only_call_ran` witness 8/8, which is consistent but far too small to validate the proxy over a 116-cell corpus."
   },
-  "works_on_an_unsolved_game": true,
+  "works_on_an_unsolved_game": false,
   "works_on_an_unsolved_game_evidence": {
-    "what_reaches_the_model": "the agent's OWN observed transitions only, rendered by the same _transitions_block the engine prompt already uses",
-    "no_win_is_shown_to_any_arm": "levelup_rows_in_shown is 0 for all 20 games -- the prefix split puts the level-up row in the held-out tail, so every predicate in this run was written by a model that had never seen the game won",
-    "nothing_a_hidden_game_would_withhold": "no game source, no hand-written adapter, no curated win example, and _previous_level_complete_grid passed as None in every arm (it is the NEXT level's opening board, not a win state -- the 2026-07-29 win-state-poison correction)",
-    "existence_proof_class": "tn36 is in the roster precisely because it is a stall game; its shown transitions contain no level-up either, exactly like the other 19"
+    "status": "MECHANISM ARGUMENT ONLY -- NOT MEASURED. Corrected 2026-08-02 after adversarial review; the field was TRUE and the supporting existence proof was false. No unsolved game appears anywhere in this run.",
+    "what_reaches_the_model": "the agent's OWN observed transitions only, rendered by the same _transitions_block the engine prompt already uses. The FIELD is as available on a hidden game as on a solved one; the DISTRIBUTION is not -- see known_confounds.transition_SELECTION_is_solve_conditioned.",
+    "no_win_is_shown_to_any_arm": "levelup_rows_in_shown is 0 for all 20 games -- the prefix split puts the level-up row in the held-out tail, so every predicate in this run was written by a model that had never seen the game won. This is the verified claim. It is NOT the same as 'the roster contains games with no win': meta.json's own split_meta records levelup_rows_in_heldout == 1 for all 20.",
+    "nothing_a_hidden_game_would_withhold": "no game source, no hand-written adapter, no curated win example, and _previous_level_complete_grid passed as None in every arm (it is the NEXT level's opening board, not a win state -- the 2026-07-29 win-state-poison correction). True of the PROMPT CONTENT. Not true of how the transitions were SELECTED.",
+    "what_would_actually_settle_it": "run the same contrast on a game with NO registered GameAdapter and no banked route, driving _split_induce from a stall-triggered exploration buffer. That is a different harness -- build_progress_window returns None for such a game by construction -- and it is the experiment this run did not run."
   },
   "defaults_changed": false,
   "defaults_note": "both CARNOT_ARC_GOAL_PROMPT_TRANSITIONS and CARNOT_ARC_GOAL_DEDUP still ship OFF. This run measures them; flipping either is an operator decision.",
@@ -1533,23 +1928,9 @@
     "driver": "results/arc_goal_evidence_20260802/run_ab.py",
     "analyser": "results/arc_goal_evidence_20260802/analyse.py",
     "exhibit": "results/arc_goal_evidence_20260802/out/exhibit_truncation.json + exhibit_*.txt",
-    "stopping_rule": "results/arc_goal_evidence_20260802/out/stopping_rule.json"
+    "stopping_rule": "results/arc_goal_evidence_20260802/out/stopping_rule.json",
+    "grounded_placebo": "results/arc_goal_evidence_20260802/out/grounded_placebo.json (built by placebo.py)"
   },
-  "honest_verdict": "complete_goal_evidence_ab_NON_TEST_truncated_primary_underpowered_knobs_shown_structurally_misdirected",
-  "headline": "NON-TEST, not a null. The run was truncated by its stopping rule at 17 of 140 cells, so the PRIMARY (declined rate) rests on 1 game(s) against a design powered on 20, and 2 of 3 treatment cells returned no parseable predicate at all. Nothing is claimed about whether evidence in the goal prompt changes the declined rate. What the run DID establish does not depend on that n: (1) the two shipped knobs are STRUCTURALLY MISDIRECTED -- they live only in the split-induce fallback, and 46 of the 50 declines in the 116-engine frozen corpus come from the combined path where the goal-only prompt is never built, capping any live-path effect at ~3.4 points; (2) on every stage-2 cell where the mechanism did not fire, the two TREATMENT arms produced byte-identical world models (2 of 2) while the CONTROL diverged on 1 of 2 at the same seed -- so a fixed CARNOT_ARC_GENERATOR_SEED does NOT fix the completion on this server, and the non-firing majority contributes NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed; (3) the evidence-carrying goal prompt drives the model into its generation cap -- 4096 of 4096 tokens against the control's 314, with 819 empty code fences in the degenerate tail.",
-  "findings": [
-    "STAGE 1 missingness moved but CANNOT BE RESOLVED at this n: no-predicate-returned goes 0.000 -> 0.667 (delta +0.667, 95% CI [0.0, 1.0]) over only 3 paired game(s), where the permutation reference set cannot reach alpha=0.05 whatever the shift -- observed p=0.50020. Read this as UNRESOLVED, never as absence. A shift of this size, if real, would mean every shape rate here is conditioned on surviving a post-treatment filter.",
-    "A/A floor on the same missingness measure: 0.000 -> 0.000 (delta +0.000, p=1.00000) -- two runs of the IDENTICAL control arm at different seed bases. This is what 'no effect' looks like on this instrument.",
-    "PRIMARY (stage 1, DECLINED rate among cells that returned a predicate): 0.000 -> 0.000 (delta +0.000, 95% CI [0.0, 0.0], p=1.00000, n_control=1, n_treat=1). NOT RESOLVABLE: only 1 paired game(s), below the point where alpha=0.05 is reachable at all. This is an absence of evidence, not evidence of absence.",
-    "A/A floor on the PRIMARY: delta +0.333, p=1.00000. A treatment delta smaller than this floor is not distinguishable from the sampler.",
-    "SECONDARY TROPE (stage 1): 0.000 -> 0.000 (delta +0.000, p=1.00000).",
-    "SECONDARY GROUNDED (stage 1): 1.000 -> 1.000 (delta +0.000, p=1.00000).",
-    "The model's OWN WORDS: declined predicates whose docstring says a win state was never provided -- control 0, treatment 0, A/A 0 (counts, not rates).",
-    "STAGE 2 mechanism firing (the column that separates an UNTESTED arm from a REFUTED one): A 0/2, B 0/2, C 0/2, AA 2/2. Both knobs live ONLY in the split-induce fallback, so on every cell where the combined induce call succeeded neither arm differs from control BY CONSTRUCTION.",
-    "STAGE 2 ITT PRIMARY, B vs A: 0.500 -> 1.000 (delta +0.500, p=1.00000). DECLARED UNDERPOWERED BEFORE THE RUN: the arithmetic ceiling on this contrast is ~3.4 points.",
-    "STAGE 2 ITT PRIMARY, C vs A (evidence + dedup): 0.500 -> 1.000 (delta +0.500, p=1.00000). Same ceiling applies.",
-    "STAGE 2 missingness, B vs A: 0.000 -> 0.000 (p=1.00000) -- whether the stage-1 truncation failure reaches the live path, where it can only act on the split-induce minority."
-  ],
   "exhibit_truncation": {
     "what_this_is": "an EXHIBIT, not a measurement. No cell, no rate, no test uses it.",
     "game": "ar25",
@@ -1594,15 +1975,77 @@
       "what": "GROUNDED is defined as 'the predicate names a literal that appears in the agent's observed deltas'. The TREATMENT prompt is precisely those deltas, rendered as text. A model that copies a row index out of its prompt scores GROUNDED without having understood anything, and the control -- which is shown no deltas -- can only score GROUNDED by coincidence.",
       "so_what": "the GROUNDED contrast is NOT a clean read on goal quality and must not be reported as one. It is reported as what it is: whether the treatment gets the model to REFERENCE its own observations.",
       "which_metrics_are_clean": "DECLINED (the PRIMARY) is unaffected -- a constant-False predicate references nothing, so no prompt content can mechanically produce or prevent it. TROPE is unaffected for the same reason: a whole-board uniformity claim names nothing observed by construction. MISSING is unaffected -- it is a parse outcome. The circularity is confined to GROUNDED.",
-      "why_it_was_not_fixed": "removing it would mean changing the pre-registered outcome definition after seeing data. It is disclosed instead."
+      "why_it_was_not_fixed": "removing it would mean changing the pre-registered outcome definition after seeing data. It is disclosed instead.",
+      "UPGRADED_2026_08_02": "this disclosure was NECESSARY BUT NOT SUFFICIENT. It still assumed the label at least measures the agent's own transitions. The placebo test in GROUNDED_placebo_discriminance shows it does not: re-scored against a DIFFERENT game's transitions the label survives on 92% of comparisons, and every GROUNDED cell in the run stays GROUNDED under at least 17 of 19 foreign games. GROUNDED is a SYNTAX label. The 'which_metrics_are_clean' sentence above still stands and was re-checked, not assumed."
     },
     "arm_ORDER_within_a_game_is_fixed_not_randomised": {
-      "severity": "MEDIUM, and confined to the TIMING measure",
+      "severity": "MEDIUM, and it reaches SHAPE as well as TIMING -- see so_what_for_SHAPE",
       "what": "cells run A, B, C, AA within a game (and gA, gB, gAA in stage 1), always in that order. Anything that drifts with position -- llama.cpp prompt-cache warmth, GPU thermal state -- is therefore confounded with the arm label.",
-      "so_what_for_SHAPE": "nothing. Every arm sends the SAME seed within a (game, replicate), and a fixed seed fixes the draw; the byte-identity check on non-firing stage-2 cells is direct evidence that order is not perturbing the sampled output.",
+      "so_what_for_SHAPE": "NOT nothing, contrary to what this entry said until 2026-08-02. Every arm sends the same seed within a (game, replicate), but the byte-identity check FOUND A DIVERGENCE rather than confirming the assumption: on bp35 the control wrote 3722 bytes and both treatments 4150, at seed 8300, with the goal-only call firing in NONE of the three so neither knob could act. A fixed CARNOT_ARC_GENERATOR_SEED does not fix the completion on this server. The pairing is APPROXIMATE and arm order is a confound on shape, not only on timing.",
       "so_what_for_TIMING": "median_elapsed_s must be read descriptively and NEVER as a treatment effect with a p-value. Observed directly in this run: on ar25 the control took 111.4s and both treatments 55.2/55.1s, while on bp35 the control took 44.5s and both treatments 67.5/67.6s -- the sign flips between games, which is what position-plus-noise looks like.",
       "where_timing_IS_load_bearing": "stage 1, where the treatment prompt is 10-20x the control's and the gap is 3s vs 340s. A cache or thermal effect cannot produce a 100x difference in that direction -- warmth makes calls FASTER -- and the failures are explained by a mechanism visible in the artefact itself (three full 4096-token attempts, code block truncated mid-definition).",
-      "the_fix_for_a_future_run": "randomise or counterbalance arm order within a game."
+      "the_fix_for_a_future_run": "randomise or counterbalance arm order within a game.",
+      "evidence": "THE CHECK FIRED, AND IT FOUND A HARNESS DEFECT RATHER THAN CONFIRMING THE ASSUMPTION. A-vs-treatment identity holds on ar25 and FAILS on bp35 (A 3722 bytes / sha bcf42b01, B and C both 4150 bytes / sha 64b7c69b) -- same seed 8300, zero content failures, and the goal-only call ran in NONE of the three, so neither knob could have acted. B and C are byte-identical to EACH OTHER on both games, and they differ in the dedup knob, so the divergence is not knob-driven. What differs between A and (B, C) is POSITION: A is the first cell of the game block and B and C follow it against a KV cache warmed by the identical preceding request. CONSEQUENCE: a fixed CARNOT_ARC_GENERATOR_SEED does NOT guarantee a byte-identical completion on this server -- llama.cpp's sampled output depends on cache/batch state as well as the seed. The pairing this design relies on is therefore APPROXIMATE, not exact, and non-firing cells contribute NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed. Reported rather than dropped: this is precisely the outcome the check was written to surface, and it makes the arm-order confound a SHAPE issue and not only a timing one."
+    },
+    "transition_SELECTION_is_solve_conditioned": {
+      "severity": "HIGH for the hidden-game reach claim; NIL for the within-run contrast",
+      "added": "2026-08-02, post-review. Not disclosed in the original artifact at all.",
+      "what": "the prompt CONTENT is clean -- only the agent's own observations reach the model. How those observations were SELECTED is not. Every window comes from build_progress_window -> exp5717.build_window -> arc_loop_solve.solve_adaptered(game, 1), i.e. the last k actions of a BANKED WINNING ROUTE, cut at the L0->L1 boundary. On a hidden game the live `trans` at a _split_induce call is whatever the stall-triggered exploration buffer happens to hold -- a strictly weaker sample from a different distribution.",
+      "so_what": "it does not bias the A/B: every arm within a game sees the identical window. It does invalidate any extrapolation from these rates to a hidden game, which is why works_on_an_unsolved_game is now False.",
+      "how_to_remove_it": "drive the contrast from a live exploration buffer rather than a banked route -- the harness would have to change, since build_progress_window returns None for a game it cannot solve to L1 offline."
     }
-  }
+  },
+  "POST_REVIEW_CORRIGENDUM_2026_08_02": {
+    "provenance": "adversarial review of the committed artifact, 2026-08-02, same day. Every finding below was re-verified against the run's own data before being applied; the verification commands are named so a reader can repeat them. Nothing in out/preregistration.json, out/rows.json or out/analysis.json was touched, so reproducibility_checksum is unchanged and still binds the design, the cells and the scoring exactly as they were.",
+    "1_works_on_an_unsolved_game_was_FALSE": {
+      "was": "works_on_an_unsolved_game: true",
+      "now": "false, restated as a mechanism argument",
+      "verified_how": "all 20 roster games are full_game_clear: true in ops/arc_solve_registry.yaml (levels_reproduced 6-10), and every window required solve_adaptered(game, 1) to reach L1 -- build_progress_window's own docstring says it returns None otherwise. Not one unsolved game was measured."
+    },
+    "2_the_roster_has_no_zero_win_games": {
+      "was": "'stall games with zero observed wins are in the roster on purpose', asserted in run_ab.py, out/preregistration.json and the research note",
+      "now": "false as written. meta.json's split_meta records levelup_rows_in_heldout == 1 for all 20 games; the window builder logged levelups=1 for all 20. The verified claim is the narrower one: levelup_rows_in_shown == 0, i.e. no ARM was shown a win.",
+      "prereg_left_frozen": "out/preregistration.json still contains the false sentence and was deliberately NOT edited -- a pre-registration that is rewritten after seeing data is not a pre-registration. prereg_sha256 still verifies. run_ab.py carries an in-place correction comment beside the string it emits, and emits the same bytes."
+    },
+    "3_the_tn36_existence_proof_was_false": {
+      "was": "works_on_an_unsolved_game_evidence.existence_proof_class -- 'tn36 is in the roster precisely because it is a stall game'",
+      "now": "deleted. tn36 is full_game_clear: true with levels_reproduced: 7, and its registry entry cites four explicit outer-loop source reads (tn36.py:2153, :2171, :2269, :2500). It also contributed ZERO cells to this run -- rows.json holds only ar25, bp35 and cd82 -- so it was a roster entry, never a measurement."
+    },
+    "4_the_split_vs_combined_partition_is_a_one_directional_proxy": {
+      "detail": "see preflight_on_frozen_shipped_corpus.PARTITION_IS_A_ONE_DIRECTIONAL_PROXY. The 3.4-point figure is a LOWER BOUND on the knobs' reach, not a ceiling. The direction of the finding is unchanged."
+    },
+    "5_GROUNDED_does_not_discriminate": {
+      "detail": "see GROUNDED_placebo_discriminance. Two behaviour-preserving rewrites were run against REAL captured cells: `return False` -> `return False and grid[0, 0] == 4` flips all five real DECLINED cells to GROUNDED, exactly inverting the reported S2-B/S2-C grounded result from a model that got strictly no better; an alpha-rename or an operand swap flips TROPE cells to GROUNDED. The PRIMARY and TROPE contrasts are NOT affected."
+    },
+    "6_the_artifact_was_not_the_output_of_its_own_builder": {
+      "was": "exhibit_truncation and known_confounds appeared in the committed artifact and in no code path; artifacts{} carried annotations build_artifact.py did not emit. Rebuilding produced 47 leaf differences.",
+      "now": "both blocks are constructed in build_artifact.py, so a rebuild reproduces the file. Found while applying finding 1, not reported by the review.",
+      "why_it_matters": "this is precisely the class artifact_freshness_lint.py exists for. That lint did not fire because this artifact is not in ops/analyzer_artifact_index.json -- a coverage limit the lint's own docstring names out loud, demonstrated here on a live artifact one day later."
+    },
+    "7_min_reachable_p_was_the_designs_floor_not_the_runs": {
+      "detail": "see min_reachable_p_at_achieved_n. The smallest p ANY contrast in this truncated run could have returned is 0.25; on the PRIMARY, which landed one paired game, it is 1.0. Reported alongside the design-time 0.0 rather than replacing it."
+    },
+    "what_survived_review_unchanged": [
+      "the PRIMARY (DECLINED) and TROPE contrasts and their A/A floors",
+      "the structural-misdirection finding: 46 of 50 declines in the frozen corpus sit on the combined path where the goal-only prompt is never built",
+      "the truncation exhibit: 4096/4096 tokens against the control's 314, 819 empty code fences, 3s -> 343s per call",
+      "solve_provenance: development_proxy -- correctly declared, no level banked, adversarial_verify flags nothing",
+      "defaults unchanged: both knobs still ship OFF"
+    ]
+  },
+  "honest_verdict": "complete_goal_evidence_ab_NON_TEST_truncated_primary_underpowered_knobs_shown_structurally_misdirected",
+  "headline": "NON-TEST, not a null. The run was truncated by its stopping rule at 17 of 140 cells, so the PRIMARY (declined rate) rests on 1 game(s) against a design powered on 20, and 2 of 3 treatment cells returned no parseable predicate at all. Nothing is claimed about whether evidence in the goal prompt changes the declined rate. What the run DID establish does not depend on that n: (1) the two shipped knobs are STRUCTURALLY MISDIRECTED -- they live only in the split-induce fallback, and 46 of the 50 declines in the 116-engine frozen corpus come from the combined path where the goal-only prompt is never built, capping any live-path effect at ~3.4 points; (2) on every stage-2 cell where the mechanism did not fire, the two TREATMENT arms produced byte-identical world models (2 of 2) while the CONTROL diverged on 1 of 2 at the same seed -- so a fixed CARNOT_ARC_GENERATOR_SEED does NOT fix the completion on this server, and the non-firing majority contributes NUISANCE VARIATION rather than the exact zero the pre-run reasoning assumed; (3) the evidence-carrying goal prompt drives the model into its generation cap -- 4096 of 4096 tokens against the control's 314, with 819 empty code fences in the degenerate tail.",
+  "findings": [
+    "STAGE 1 missingness moved but CANNOT BE RESOLVED at this n: no-predicate-returned goes 0.000 -> 0.667 (delta +0.667, 95% CI [0.0, 1.0]) over only 3 paired game(s), where the permutation reference set cannot reach alpha=0.05 whatever the shift -- observed p=0.50020. Read this as UNRESOLVED, never as absence. A shift of this size, if real, would mean every shape rate here is conditioned on surviving a post-treatment filter.",
+    "A/A floor on the same missingness measure: 0.000 -> 0.000 (delta +0.000, p=1.00000) -- two runs of the IDENTICAL control arm at different seed bases. This is what 'no effect' looks like on this instrument.",
+    "PRIMARY (stage 1, DECLINED rate among cells that returned a predicate): 0.000 -> 0.000 (delta +0.000, 95% CI [0.0, 0.0], p=1.00000, n_control=1, n_treat=1). NOT RESOLVABLE: only 1 paired game(s), below the point where alpha=0.05 is reachable at all. This is an absence of evidence, not evidence of absence.",
+    "A/A floor on the PRIMARY: delta +0.333, p=1.00000. A treatment delta smaller than this floor is not distinguishable from the sampler.",
+    "SECONDARY TROPE (stage 1): 0.000 -> 0.000 (delta +0.000, p=1.00000).",
+    "SECONDARY GROUNDED (stage 1): 1.000 -> 1.000 (delta +0.000, p=1.00000).",
+    "The model's OWN WORDS: declined predicates whose docstring says a win state was never provided -- control 0, treatment 0, A/A 0 (counts, not rates).",
+    "STAGE 2 mechanism firing (the column that separates an UNTESTED arm from a REFUTED one): A 0/2, B 0/2, C 0/2, AA 2/2. Both knobs live ONLY in the split-induce fallback, so on every cell where the combined induce call succeeded neither arm differs from control BY CONSTRUCTION.",
+    "STAGE 2 ITT PRIMARY, B vs A: 0.500 -> 1.000 (delta +0.500, p=1.00000). DECLARED UNDERPOWERED BEFORE THE RUN: the arithmetic ceiling on this contrast is ~3.4 points.",
+    "STAGE 2 ITT PRIMARY, C vs A (evidence + dedup): 0.500 -> 1.000 (delta +0.500, p=1.00000). Same ceiling applies.",
+    "STAGE 2 missingness, B vs A: 0.000 -> 0.000 (p=1.00000) -- whether the stage-1 truncation failure reaches the live path, where it can only act on the split-induce minority."
+  ]
 }

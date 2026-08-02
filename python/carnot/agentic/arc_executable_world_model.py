@@ -3784,7 +3784,18 @@ def _goal_prompt_transitions_on() -> bool:
 
     The transitions are the agent's OWN observations, so showing them crosses no line: it is
     help USING what the agent has already seen for itself, not a fact about the game supplied
-    from outside. It is exactly as available on a hidden game as on a solved one.
+    from outside.
+
+    NARROWED 2026-08-02. This paragraph used to end "It is exactly as available on a hidden game
+    as on a solved one." That is true of the FIELD and untested for the DISTRIBUTION, and the
+    difference matters. The 2026-08-02 A/B that measured this flag scored it against windows from
+    `build_progress_window`, i.e. the last k actions of a BANKED WINNING ROUTE cut at the L0->L1
+    boundary -- a game that cannot be solved to L1 offline produces no window at all. On a hidden
+    game the `trans` reaching this prompt is whatever the stall-triggered exploration buffer
+    holds, which is a strictly weaker sample from a different distribution. The sentence had been
+    read as an empirical result and had propagated into an artifact as
+    `works_on_an_unsolved_game: true`; that claim was retracted. Whether the flag helps on
+    exploration-buffer transitions is OPEN and needs an adapter-free harness to answer.
     """
     raw = os.environ.get("CARNOT_ARC_GOAL_PROMPT_TRANSITIONS")
     return bool(raw) and raw.strip() == "1"
