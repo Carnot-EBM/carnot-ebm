@@ -146,7 +146,7 @@ def run_cell(
     seed: int,
     budget: int,
     max_inductions: int,
-    explore_budget: int,
+    explore_budget,
     wall_s: float,
     timeout: float,
     cuda_gpu: str,
@@ -602,7 +602,21 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=20260801)
     ap.add_argument("--budget", type=int, default=400, help="live scored MAX_ACTIONS is 400")
     ap.add_argument("--max-inductions", type=int, default=4)
-    ap.add_argument("--explore-budget", type=int, default=24)
+    ap.add_argument(
+        "--explore-budget",
+        default="routed",
+        help=(
+            "'routed' (DEFAULT) lets each cell resolve this game's explore_budget exactly as "
+            "the SCORED agent does; an integer pins one value across every game. Pinning is "
+            "what the 2026-08-01 census did (24), and because `make_carnot_agent` passes no "
+            "explore_budget and `_route_explore_budget` returns 24 for program_editor and 80 "
+            "for graph_explore, that ran 4 of 5 games at a third of their scored budget. The "
+            "budget is the induce stall threshold and, via `_active_transitions()`, the size "
+            "of the induction prompt's evidence -- so pinning it changes what the pipeline is "
+            "measured on, not just when it fires. Pass an integer only when holding the "
+            "budget fixed across games IS the design, and say so in the artifact."
+        ),
+    )
     ap.add_argument("--wall-s", type=float, default=1200.0)
     ap.add_argument("--timeout", type=float, default=1800.0)
     ap.add_argument("--cuda-gpu", default="1", help="outer loop owns GPU 1; never GPU 0")
@@ -782,7 +796,11 @@ def _write(args, raw_cells, analysed, agg, headline, card_waits, t0, games) -> i
             "replicates_per_game": args.replicates,
             "budget_actions": args.budget,
             "max_inductions": args.max_inductions,
-            "explore_budget": args.explore_budget,
+            # What was REQUESTED, which under the default is the string "routed" rather than
+            # a number. The number each cell actually ran is resolved per-game in the worker
+            # and recorded there as `explore_budget` + `explore_budget_provenance`; that is
+            # the authoritative value, because with routing there is no single one.
+            "explore_budget_requested": args.explore_budget,
             "wall_s_cap": args.wall_s,
             "policy": "E3AgentPolicy via arc_actions_to_progress.run_bounded_progress",
             "policy_game_id": "the real game id (NOT the anonymized held-out condition)",
