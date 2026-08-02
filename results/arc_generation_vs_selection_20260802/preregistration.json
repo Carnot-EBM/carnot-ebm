@@ -1,0 +1,52 @@
+{
+  "experiment": "arc_induced_engine_generation_vs_selection_heldout_census",
+  "written_before_any_scoring_run": true,
+  "question": "Are the induced world-model engines the live gate rejects NEAR-MISSES (a SELECTION problem fixable by calibration) or GARBAGE (a GENERATION wall)? Decided by scoring saved engine SOURCE on transitions it was never fitted to, against the ACTUAL shipped gate quantities and their ACTUAL thresholds.",
+  "this_is_a_census_not_an_ab": {
+    "no_treatment": "There is no arm, no pairing and no intervention. This measures the DISTRIBUTION of held-out score over an already-collected engine population.",
+    "no_p_value_will_be_reported": "A significance test needs a comparison; there is none here. Any p-value printed would be decoration.",
+    "the_inferential_statement_that_IS_pre-stated": "rule of three. If 0 of N engines clear a threshold, the one-sided 95% upper bound on the population clear-rate is 1 - 0.05**(1/N). At the expected N~290 that bound is ~1.0%. This is the ONLY interval claim that will be made from a zero.",
+    "clustering": "GAME. Engines within a game share a window, a level and a layout and are NOT independent. Every headline count is therefore also reported as NUMBER OF DISTINCT GAMES with >=1 clearing engine. No roster claim will be made from one game -- the 2026-08-01 metric-validity artifact already found tn36 to be the single driver of its own association, so tn36 is named IN ADVANCE as the game most likely to carry a pooled number on its own."
+  },
+  "splits_and_why_each_is_clean": {
+    "A_gate_faithful_tail": {
+      "definition": "wmte._split_prefix_heldout(build_progress_window(game)[0]) -> (shown, held). Score on `held`.",
+      "clean_because": "the induction prompt is e3.induce_prompt(game, shown, cell) and contains ONLY `shown`. The objperc harness leak-checked this directly (no held-out transition line appears in the prompt, none textually identical to a shown one) and recorded the check in leak_check_indep.json.",
+      "this_is_the_split_the_LIVE_GATE_USES": true,
+      "weakness_stated_up_front": "n is 1-4 gradable-changing rows. A per-engine score carried by 1-3 transitions is coarse, and on a tail that is all no-ops an identity engine scores 1.0. Every metric is therefore ALSO reported restricted to CHANGING rows."
+    },
+    "B_rest_of_trajectory": {
+      "definition": "full winning trajectory MINUS the shown rows, matched by (grid, action, next_grid) sha256.",
+      "clean_because": "same never-shown property as A; matched by content hash, not by index.",
+      "weakness": "probed sizes: only 2-10 rows. A modest improvement on A, not a large-n split."
+    },
+    "C_fresh_120": {
+      "definition": "collect_transitions(game, n=120, seed=20260802) -- an INDEPENDENT exploration rollout collected after the engines were written.",
+      "clean_because": "collected after the fact from a separate rollout; no engine could have seen it.",
+      "ASYMMETRY_STATED_BEFORE_RESULTS": "this split is EVIDENCE IN ONE DIRECTION ONLY. It samples exploration states, not the winning-trajectory region the engine was induced on, so a LOW score here is ambiguous between 'the model is wrong' and 'these are states from a different part of the game'. A HIGH score here is unambiguous. C may therefore CONFIRM engine quality and may NOT be used on its own to refute it."
+    }
+  },
+  "gates_scored_at_their_ACTUAL_shipped_thresholds": [
+    {"name": "plain_exact", "quantity": "WorldModelVerifier.accuracy (full-grid exact)", "threshold": 0.5, "branch": "the 14 non-HIDDEN_STATE games, default CARNOT_ARC_TRUST_METRIC=exact"},
+    {"name": "plain_cell_recall", "quantity": "WorldModelVerifier.cell_recall", "threshold": 0.5, "branch": "same branch under CARNOT_ARC_TRUST_METRIC=cell_recall (already-shipped default-OFF flag)"},
+    {"name": "hidden_state_trust_pass", "quantity": "score_change_weighted_consistency.consistency AND correct_changed_cells>=1", "threshold": 0.5, "branch": "the 11 HIDDEN_STATE_GAME_IDS. NOTE: consistency is POOLED over changed CELLS; it is NOT VerifyResult.cell_recall, which is a MEAN over transitions. No prior artifact computed this quantity on saved engine source -- it is the main gap this census fills."},
+    {"name": "change_gate", "quantity": "change_gate_decision -> change_fidelity AND nondegeneracy", "threshold": 0.5, "branch": "default-OFF on both branches; decided none of the 136 live attempts"},
+    {"name": "refinement_loop_min_heldout_accuracy", "quantity": "WorldModelVerifier.accuracy", "threshold": 1.0, "branch": "hardcoded at arc_competition_agent.py:6225 and :6362"}
+  ],
+  "de_inflation_rule_fixed_in_advance": "exact accuracy is INFLATED by no-op rows (an identity engine is 'correct' whenever the grid does not change). The 2026-06-21 arc_e3_induced_model_quality artifact already recorded this. So `change_accuracy` (exact match restricted to grid-CHANGING rows) is reported beside every `accuracy`, and precision = correct_changed_cells/(correct_changed_cells+spurious_changed_cells) is reported beside every recall-style number. A high recall with low precision is an engine that SCRIBBLES, not one that predicts.",
+  "controls": {
+    "oracle_positive_instrument_check": "an engine that returns the recorded next_grid for the exact row being scored. MUST score 1.0 on every metric. If it does not, the harness is broken and no null may be reported.",
+    "identity_negative_control": "`return grid`. Establishes what a degenerate engine scores on each metric, on each split, per game.",
+    "cited_not_rerun": "the hand-written correct dc22 engine (experiment_6011) and the structural InducedNavWorldModel fit are already measured in results/experiment_6012_hidden_state_trust_gate_hole.json and the 2026-08-02 gate-anatomy artifact; they are CITED, not re-derived."
+  },
+  "missing_vs_zero": "an engine that fails to import, raises, or exceeds its per-engine wall timeout is recorded with that STATUS and EXCLUDED from every distribution. It is never scored 0. A game whose window cannot be rebuilt inside the driver timeout is DROPPED with its reason recorded.",
+  "corpora": [
+    {"id": "objperc", "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines", "n_expected": 116, "provenance": "frozen, complete run, generator gemma-4-31B-it-qat"},
+    {"id": "inert", "path": "results/arc_inert_rejection_ab_20260801/out/engines", "n_expected": 151, "provenance": "ANOTHER WRITER'S IN-FLIGHT, UNTRACKED run. Read-only. Every engine's sha256 is recorded so this census is auditable even if those files change or disappear. Results are reported per-corpus as well as pooled so nothing rests on it alone."},
+    {"id": "e3store", "path": "results/arc_e3", "n_expected": 26, "provenance": "the LIVE store's surviving last-write-wins engines -- the highest-external-validity sample of what the live path actually produced. EVIDENCE: read, never written. Split A/B are UNDEFINED for these (their induction window is not recorded), so they are scored on split C only and reported as exploratory."}
+  ],
+  "what_would_make_the_answer_SELECTION": "a material fraction of engines, spread over MORE THAN ONE game, that are both high-recall AND high-precision on a split they were never fitted to -- i.e. genuinely informative models the exact gate scores ~0 and discards.",
+  "what_would_make_the_answer_GENERATION": "held-out change_accuracy and precision-weighted fidelity near zero across the roster, with any apparent high scores traceable to no-op inflation, to a single game, or to n=1-3 tails.",
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only.",
+  "no_default_is_flipped": "this reads engine source and scores it. It changes no shipped default and writes nothing under results/arc_e3, results/arc_logo_snapshot or results/arc_e3_origin_fixtures."
+}
