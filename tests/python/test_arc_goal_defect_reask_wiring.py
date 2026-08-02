@@ -148,6 +148,46 @@ def test_budget_is_exhausted_then_the_candidate_is_accepted(monkeypatch, propose
     assert proposer.n_goal_defect_reasks == 2
 
 
+def test_content_failures_CANNIBALISE_the_defect_gate(monkeypatch, proposer):
+    """A STRUCTURAL BLIND SPOT, found in the live A/B's first four cells and pinned here.
+
+    `attempt < tries - 1` guards both defect gates, and exists so that a `continue` on the last
+    attempt cannot fall out of the loop and convert an accept into a hard failure. The side
+    effect was not noticed when it was written: every attempt the model spends on a CONTENT
+    failure (no code block, missing `def`, a syntax error) consumes one of the attempts the
+    defect gate needs, and an answer accepted on the FINAL attempt is never checked at all.
+
+    So the gate is quietest exactly where it is most needed. A game the model finds hard burns
+    its attempts on malformed output and then lands its one parseable answer on the attempt
+    where no gate is armed. Observed live on ar25: the treatment arm accepted a textbook
+    `return False` -- "Based on the provided data, no win state was given ... maybe just return
+    False" -- with `goal_defect_reasks == 0` AND `engine_defect_reasks == 0`, which is what
+    pointed at a cause shared by both gates rather than a bug in the new one.
+
+    THIS IS NOT A REGRESSION INTRODUCED BY THE GOAL GATE. The shipped ENGINE gate carries the
+    identical guard and therefore the identical blind spot, so its measured 13/36 -> 22/36
+    benefit was obtained WITH this suppression already present. The honest fix is to give the
+    defect gates attempts that content failures cannot consume, which is a behaviour change to
+    shipped code and belongs after the measurement it would otherwise invalidate.
+    """
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK", "1")
+    accept = f"```python\n{GOOD_ENGINE}{BAD_GOAL}```"
+
+    # Accepted on attempt 0: the gate has attempts left and spends its whole budget.
+    _ok, _c, fake = _drive(monkeypatch, proposer, [accept])
+    assert proposer.n_goal_defect_reasks == 2
+    assert len(fake.prompts) == 3
+
+    # Two content failures first: the SAME defective answer is now accepted UNCHECKED.
+    proposer.n_goal_defect_reasks = 0
+    proposer.n_induce_defect_reasks = 0
+    ok, code, fake = _drive(monkeypatch, proposer, ["no code here", "still no code here", accept])
+    assert ok, "the shipped path still accepts -- the guard's purpose"
+    assert "return False" in code, "and what it accepts is the constant goal"
+    assert proposer.n_goal_defect_reasks == 0, "the goal gate never got to look"
+    assert proposer.n_induce_defect_reasks == 0, "nor did the shipped engine gate"
+
+
 def test_goal_reask_does_not_spend_the_engine_budget(monkeypatch, proposer):
     """THE CONFOUND GUARD, end to end. If the two shared a counter, the treatment arm's ENGINES
     would silently lose their re-ask and the measured arm difference would be part goal-check
