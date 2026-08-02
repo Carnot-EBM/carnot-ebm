@@ -1576,7 +1576,7 @@
     },
     "the_one_number_to_read": "0 of 128. The change is not low-exposure; on the live path as shipped it is structurally INERT, for a reason unrelated to how often the agent banks levels."
   },
-  "honest_verdict": "complete_win_transition_change_is_structurally_inert_on_the_live_path: a win transition was AVAILABLE at 30 of 128 live induce calls (23.4% pooled; game-clustered mean 15.7%; roster MEDIAN 0.0 with vc33 the maximum at 1.0 and 14 of 25 games at exactly zero) -- but it reached the changed call site at arc_competition_agent.py:6429-6433 at 0 of 128 calls, at both budgets, because `_induce_and_plan` routes every level-banked induction into `execute_bounded_llm_reinduction` (whose `_call_induce` has no `win_transition` parameter) and returns at :6245 before the changed line. The routing predicate `next_level_episode` and the availability predicate are set by the same function at the same instant, so the two are the same predicate in practice. Verified twice: an exact skip-string partition with zero off-diagonal cells across 128 calls, and a direct instrument on the proposer's own `induce` across the five level-banking games, where the keyword was absent on all 12 reinduction-path calls and None on all 4 that carried it. DO NOT run a live effect A/B: at 0 discordant pairs its smallest reachable two-sided p is 1.0, so it would be unfalsifiable, not underpowered.",
+  "honest_verdict": "complete_win_transition_supply_UNMEASURED_and_now_GATED_DEFAULT_OFF: a win transition was AVAILABLE at 28 of 124 de-duplicated live induce calls (22.6% pooled; 14.3% in the single shipped configuration; game-clustered mean 15.9%; roster median 0.0) and DELIVERED to the changed call site at 0 of 124. The change's effect on behaviour is therefore UNMEASURED, not null, and unmeasurable as shipped: 0 delivered calls means 0 discordant pairs, so the smallest reachable two-sided p from an exact paired test is 1.0. It is now behind CARNOT_ARC_SUPPLY_WIN_TRANSITION, default OFF, with a test asserting both directions and an end-to-end live-path check that OFF omits the keyword the ungated code would have passed. CORRECTED AFTER ADVERSARIAL REVIEW (all 9 corrections independently re-verified): the delivery zero is EMPIRICAL, not structural -- `next_level_episode` additionally requires `_previous_level_complete_grid is not None`, and breaking only that extraction on vc33/400 moves delivery 0 -> 1 with the trajectory unchanged; the original 128/30 headline double-counted 3 bit-identical A/A control cells; the clustered mean is 15.9% not 15.7%; the availability rate was measured with solve-registry-derived routing in the loop and is an UPPER bound on a hidden game's. The original honest_verdict is preserved verbatim in `honest_verdict_original_pre_adversarial_correction_20260802`.",
   "recommendation": {
     "do_not": "Do not spend GPU hours on a live end-to-end A/B of this change. Both arms are the same program on every cell measured; the comparison is an identity.",
     "do_first": "Decide whether the change is meant to apply to the level-up reinduction path. If yes, that is a code fix (thread `win_transition` through `execute_bounded_llm_reinduction` -> `_call_induce`), behind a default-OFF env flag, and exposure must be RE-MEASURED with this same harness afterwards before any effect measurement.",
@@ -1586,5 +1586,234 @@
     "flag_discipline": "The change ships with no default-OFF env gate. Whatever is decided above, the gate is owed under the standing discipline."
   },
   "reproducibility_checksum": "2734d2cb826e5ad3410ddcb4c8481b859b7a8df7633039df6d2b5420d8e17d0e",
-  "build_s": 0.018
+  "build_s": 0.018,
+  "adversarial_review_corrections_20260802": {
+    "process": "An independent adversarial review returned holds=true with 9 required corrections. EVERY ONE WAS RE-VERIFIED AGAINST THE RUN'S OWN CELLS BEFORE BEING APPLIED -- a reviewer in this same session had already been wrong once. All 9 survived. Nothing below deletes a prior number; each correction sits beside the figure it corrects.",
+    "what_the_reviewer_reproduced_and_i_re_reproduced_independently": {
+      "pooled_exposure": "30/128 = 0.234375 -- recomputed from rows.json without the harness's analyse.py. MATCHES.",
+      "budget_400": "90 calls/78 cells, pooled 0.1778, clustered 0.0980, median 0.0, max vc33 1.0, 20/25 zero, non-zero set {vc33 1.00, sp80 0.50, tu93 0.50, cd82 0.25, lp85 0.20}. MATCHES exactly.",
+      "budget_2000": "38 calls/25 cells, pooled 0.3684, clustered 0.2533, median 0.0, 14/25 zero, all eleven non-zero games including the eight tied at 0.50. MATCHES exactly.",
+      "delivery_cross_tab": "(win=False,'proposer_failed_or_missing_root','stall') n=98; (win=True,'proposer_failed','level_up_reinduction') n=30; ZERO off-diagonal over 128 calls. Structural discriminator (n_level_induction_events_before>0) 0 mismatches/128. MATCHES.",
+      "fd_seed_flips": "exactly 2 of 25 games flip level count -- cd82 {0,1,0}, lp85 {0,0,1}. MATCHES including direction.",
+      "no_cell_hit_its_cap": "budget 400 actions min 346 / max 398 (78/78 below cap); budget 2000 min 1676 / max 1986 (25/25). 0 harness errors."
+    },
+    "correction_1_MECHANISM_CLAIM_OVERSTATED": {
+      "severity": "strongest -- this is the one that changes what the finding MEANS",
+      "what_the_artifact_said": "the routing predicate `next_level_episode` and the availability predicate are the same predicate in practice; 'the argument exists exactly when the code path that would carry it is not taken'",
+      "why_that_is_wrong": "They are two different predicates. `next_level_episode` (arc_competition_agent.py:6132-6137) ALSO requires `_previous_level_complete_grid is not None`, which is set from a guarded grid extraction that can fail or receive completed_grid=None (:4959-4965). `_win_transition = self.transitions[-1]` (:4946) is set unconditionally on the same call.",
+      "executable_counterexample_I_RAN_MYSELF": {
+        "injection": "wrap `_begin_level_goal_episode` and null `_previous_level_complete_grid` immediately after it returns -- i.e. exactly the :4959-4965 failure branch, nothing else touched",
+        "game_budget": "vc33 / 400 (the corpus's maximum-exposure cell)",
+        "shipped_arm": {
+          "proposer_induce_calls": 2,
+          "delivered": 0,
+          "callers": [
+            "arc_llm_reinduction.py:212",
+            "arc_llm_reinduction.py:212"
+          ],
+          "attempt_reasons": [
+            "level_up_reinduction",
+            "level_up_reinduction"
+          ],
+          "levels": 2,
+          "actions": 387
+        },
+        "broken_exemplar_arm": {
+          "proposer_induce_calls": 3,
+          "delivered": 1,
+          "delivering_caller": "arc_competition_agent.py:6429",
+          "attempt_reasons": [
+            "level_up_reinduction",
+            "stall"
+          ],
+          "levels": 2,
+          "actions": 387
+        },
+        "note": "The reviewer reached the same result by making `to_logical` raise inside `_observe_level_boundary`. Two different injection points, same conclusion, so the result is not an artifact of either injection."
+      },
+      "corrected_statement": "Delivery was 0 on 128 calls BECAUSE `win_state_exemplar_captured` was true on 30 of 30 level-induction events in this corpus. The zero is EMPIRICAL and CONTINGENT, not a structural identity. The 0/128 measurement itself is unaffected and was reproduced by two independent routes.",
+      "consequence_for_the_decision": "It STRENGTHENS the flag-gate recommendation rather than weakening it: the delivery rate now depends on an exemplar-capture success rate that nobody has measured on a HIDDEN game, so the shipped default's behaviour there is even less predictable than a structural zero would imply."
+    },
+    "correction_2_HEADLINE_DOUBLE_COUNTS_ITS_OWN_AA_CONTROL": {
+      "what_the_artifact_said": "exposure_rate 0.234375, n_induce_calls_total 128, n_with_win_available 30",
+      "verified": "The 3 argv-seed probe cells (vc33/lp85/tn36 at budget 400, argv seed 20260803) are field-for-field identical to their argv=20260802 twins on EVERY key except elapsed_s -- I diffed them directly. They contribute 4 calls and 2 win-available rows to the headline.",
+      "de_duplicated_headline": {
+        "n_induce_calls_total": 124,
+        "n_with_win_available": 28,
+        "exposure_rate": 0.22580645161290322
+      },
+      "original_headline_retained": {
+        "n_induce_calls_total": 128,
+        "n_with_win_available": 30,
+        "exposure_rate": 0.234375
+      },
+      "which_to_cite": "Cite 124/28 = 22.6%. The 128/30 figure is not wrong arithmetic, but its denominator includes an A/A control designed to produce identical rows, which inflates precisely the games that were probed.",
+      "delivery_is_0_either_way": true
+    },
+    "correction_3_CLUSTERED_MEAN_TRANSCRIPTION_ERROR": {
+      "what_the_artifact_said": "pooled game-clustered mean 15.7%",
+      "measured": 0.1587936507936508,
+      "corrected": "15.9%",
+      "note": "The harness's own analysis.json records cluster_mean_of_per_game_rates = 0.158794; I recomputed 0.1587936507936508 from rows.json. The two per-budget clustered means (9.8%, 25.3%) are exact, so this is an isolated transcription slip in the top-level figure and in the honest_verdict string."
+    },
+    "correction_4_UNDISCLOSED_SOLVE_REGISTRY_PROVENANCE": {
+      "verified_live": "E3AgentPolicy calls arc_strategy_router.route_for_game(self.short) at arc_competition_agent.py:4577 and :4762. route_for_game('tn36') returns mechanic 'program_editor' WITH the registry's recorded solver string; route_for_game('g50t') returns 'graph_explore'. All 25 games in this corpus are named entries in ops/arc_solve_registry.yaml.",
+      "is_this_a_comparison_bias": "No -- delivery is 0 on both sides and there is no A/B here.",
+      "what_it_does_affect": "The level-up CADENCE, and therefore the availability rate, was measured with solve-derived routing in the loop. A hidden game receives no such routing.",
+      "direction": "Read the measured availability (17.8% at the shipped cap, 14.3% at the single shipped configuration) as an UPPER bound on a hidden game's, not an estimate of it."
+    },
+    "correction_5_THE_SHIPPED_CONFIGURATION_NUMBER_WAS_NOT_GIVEN": {
+      "what_the_artifact_said": "AT THE SHIPPED 400-ACTION CAP: pooled 17.8% (90 calls / 78 cells)",
+      "why_that_is_not_the_shipped_number": "It pools 3 frontier_discipline_seeds plus the argv probes. The single configuration that actually ships is fd=20260724, default argv seed, budget 400.",
+      "shipped_configuration_measured": {
+        "cells": 25,
+        "n_induce_calls": 28,
+        "n_with_win_available": 4,
+        "pooled": 0.14285714285714285,
+        "clustered_mean": 0.08,
+        "median": 0.0,
+        "games_at_exactly_zero": 22,
+        "non_zero_games": {
+          "vc33": 1.0,
+          "sp80": 0.5,
+          "tu93": 0.5
+        }
+      },
+      "original_retained": "the 17.8% replicate-pooled figure stays as the replicate-pooled figure"
+    },
+    "correction_6_BYTE_EQUIVALENT_IS_INACCURATE": {
+      "claim_in_verify_kwarg_py": "'Byte-equivalent to experiment_4605._NoOpProposer'",
+      "verified": "_NoOpProposer defines exactly two members: `induce` and `world_model_candidates`. RecordingNoOpProposer adds `include_playbook_exemplars = False` and a `refactor` method.",
+      "is_it_harmful": "No. My own counterexample probe used a proposer with NEITHER attribute and reproduced the shipped vc33 cell exactly (levels 2, actions 387, 2 induce calls, 0 delivered).",
+      "corrected_wording": "'functionally equivalent for `induce`, plus two attributes the shipped NoOp does not define'"
+    },
+    "correction_7_EVERY_ENGINE_REJECTED_BY_A_TRUST_GATE_IS_TOO_STRONG": {
+      "what_the_artifact_said": "on the real-generator corpus, 0 of 240 live induce attempts installed a plan at all -- every induced engine was rejected by a post-generation trust gate",
+      "measured_by_me_split_by_arm": {
+        "llm_on_arms": {
+          "induce_attempts": 136,
+          "planned": 0,
+          "skip_reasons": {
+            "world_model_accuracy_below_threshold": 63,
+            "hidden_state_trust_below_threshold": 43,
+            "proposer_failed": 13,
+            "no_reachable_plan_after_refinement": 10,
+            "proposer_failed_or_missing_root": 6,
+            "degenerate_goal_predicate": 1
+          }
+        },
+        "llm_off_arm": {
+          "induce_attempts": 104,
+          "skip_reasons": {
+            "proposer_failed_or_missing_root": 97,
+            "proposer_failed": 7
+          }
+        }
+      },
+      "two_corrections_at_once": [
+        "'240 attempts' pools the llm_off control, which is not live generation. The real-generator number is 136 attempts, 0 planned.",
+        "Not every one was a trust-gate rejection: 106 of 136 were (63 accuracy + 43 hidden-state), but 19 were generation-side and 11 were downstream (10 no_reachable_plan_after_refinement, 1 degenerate_goal_predicate). Say 'essentially all', and cite the breakdown -- it is stronger evidence than the bare planned=0 count, because it shows engines were GENERATED and then rejected."
+      ],
+      "gate_a_conclusion_unchanged": "planned == 0 on every llm_on arm individually, so a prompt improvement still has no channel to a behavioural metric while that gate is closed."
+    },
+    "correction_8_TWO_PROXY_LIMITS_THE_ARTIFACT_DID_NOT_NAME": {
+      "a_active_probe_path_unreachable_under_the_NoOp_proxy": {
+        "structural": "Under a NoOp proposer `_induce_and_plan` returns at :6436 (`not ok`) and never reaches the active-probe controller, which is the only other way to set `_pending_induction_reason = 'active_probe_observed'` and reset `self.induced = False` (:5283).",
+        "measured": "pending_induction_reason over all 128 calls: {'stall': 123, 'level_up_reinduction': 5}. 'active_probe_observed' fired ZERO times.",
+        "consequence": "Under a real generator that path is reachable. It would still be routed away while exemplar capture succeeds, but this harness cannot demonstrate that."
+      },
+      "b_every_run_self_terminated": {
+        "measured": "budget 400: 78/78 cells below cap (max 398). budget 2000: 25/25 below cap (max 1986).",
+        "why_it_matters": "This tree has a known early-stop defect (commit 26dc6fd5e3, the g50t frontier diagnosis). No improvement is claimed anywhere here, so this is NOT an explored-less win -- but the availability rate is measured on runs that stopped on their own, and that bounds what it describes."
+      }
+    },
+    "correction_9_THE_PROXYS_REAL_DEFENCE_WAS_MISSING": {
+      "gap": "The artifact justified the NoOp proxy with trajectory bit-identity on first_win/actions/reached_level/actions_to_first_levelup -- none of which is the INDUCE-CALL COUNT, which is what this finding's denominator actually is.",
+      "measured_by_me": {
+        "matched_llm_on_cells": 124,
+        "trajectory_bit_identical": 124,
+        "induction_attempts_n_identical": 124,
+        "diffs": 0
+      },
+      "note": "The artifact reported 74/74 matched cells; the true matched set is 124/124, so the original claim was conservative. The load-bearing new fact is that the induce-call COUNT is generator-invariant on the corpus that justifies the proxy."
+    }
+  },
+  "headline_corrected_after_adversarial_review": {
+    "de_duplicated_pooled_exposure": {
+      "n_induce_calls_total": 124,
+      "n_with_win_available": 28,
+      "exposure_rate": 0.22580645161290322
+    },
+    "shipped_single_configuration": {
+      "n_induce_calls": 28,
+      "n_with_win_available": 4,
+      "exposure_rate": 0.14285714285714285
+    },
+    "pooled_game_clustered_mean": 0.1587936507936508,
+    "delivered_to_the_changed_call_site": 0,
+    "delivery_rate": 0.0,
+    "the_number_that_decides": "0 delivered. Unchanged by every correction above.",
+    "original_headline_preserved_above": "exposure_rate 0.234375 over 128 calls / 30 available -- see correction_2 for why its denominator is inflated"
+  },
+  "resolution_flag_gate_20260802": {
+    "decision": "FLAG-GATE TO OFF -- implemented, tested and committed in this run",
+    "env_var": "CARNOT_ARC_SUPPLY_WIN_TRANSITION",
+    "default": "0 (off)",
+    "code": "python/carnot/agentic/arc_competition_agent.py -- `_supply_win_transition_enabled()` + `_SUPPLY_WIN_TRANSITION_DEFAULT`, consumed at the `_induce_and_plan` call site",
+    "test": "tests/python/test_arc_win_transition_supply_gate_2026_08_02.py (18 assertions, both directions)",
+    "why_off": "The effect is UNMEASURED, not measured-null. With 0 of 128 calls delivered a live A/B has 0 discordant pairs, so the smallest reachable two-sided p from an exact paired test is 1.0 -- unfalsifiable rather than underpowered. Being unmeasured is sufficient on its own under the standing default-OFF discipline; no p was reachable to weigh against it.",
+    "OFF_reproduces_the_pre_change_call_exactly": "the keyword is OMITTED, not passed as None. Verified end-to-end on the live path.",
+    "end_to_end_verification_both_directions": {
+      "flag_unset_shipped_vc33": {
+        "calls": 2,
+        "delivered": 0,
+        "win_transition_kwarg_present": [
+          false,
+          false
+        ],
+        "levels": 2,
+        "actions": 387
+      },
+      "flag_unset_exemplar_broken_vc33": {
+        "calls": 3,
+        "delivered": 0,
+        "win_transition_kwarg_present": [
+          false,
+          false,
+          false
+        ],
+        "levels": 2,
+        "actions": 387
+      },
+      "flag_1_exemplar_broken_vc33": {
+        "calls": 3,
+        "delivered": 1,
+        "win_transition_kwarg_present": [
+          false,
+          false,
+          true
+        ],
+        "levels": 2,
+        "actions": 387
+      },
+      "flag_0_explicit_exemplar_broken_vc33": {
+        "calls": 3,
+        "delivered": 0,
+        "win_transition_kwarg_present": [
+          false,
+          false,
+          false
+        ],
+        "levels": 2,
+        "actions": 387
+      },
+      "reading": "OFF suppresses the delivery that the ungated code WOULD have made in the exemplar-broken case -- so the gate is doing real work, not decorating an already-zero path. Trajectory identical (levels 2 / actions 387) in all six runs, so the gate is inert on behaviour, as a default-OFF gate must be."
+    },
+    "what_turning_it_ON_would_buy_today": "Almost nothing. With the flag ON, the SHIPPED vc33 arm still delivers 0 -- the routing sends every available call to `execute_bounded_llm_reinduction`, whose `_call_induce` has no `win_transition` parameter. Turning the flag on without a routing fix arms a call site the live agent reaches only when exemplar capture has already failed.",
+    "the_flag_discipline_breach_is_now_closed": "`the_change_under_test.flagged` was false at run time and is preserved as the historical record; as of this commit the supply is gated default-OFF."
+  },
+  "honest_verdict_corrected_20260802": "complete_win_transition_supply_UNMEASURED_and_now_GATED_DEFAULT_OFF: a win transition was AVAILABLE at 28 of 124 de-duplicated live induce calls (22.6% pooled; 14.3% in the single shipped configuration; game-clustered mean 15.9%; roster median 0.0) and DELIVERED to the changed call site at 0 of 124. The change's effect on behaviour is therefore UNMEASURED, not null, and unmeasurable as shipped: 0 delivered calls means 0 discordant pairs, so the smallest reachable two-sided p from an exact paired test is 1.0. It is now behind CARNOT_ARC_SUPPLY_WIN_TRANSITION, default OFF, with a test asserting both directions and an end-to-end live-path check that OFF omits the keyword the ungated code would have passed. CORRECTED AFTER ADVERSARIAL REVIEW (all 9 corrections independently re-verified): the delivery zero is EMPIRICAL, not structural -- `next_level_episode` additionally requires `_previous_level_complete_grid is not None`, and breaking only that extraction on vc33/400 moves delivery 0 -> 1 with the trajectory unchanged; the original 128/30 headline double-counted 3 bit-identical A/A control cells; the clustered mean is 15.9% not 15.7%; the availability rate was measured with solve-registry-derived routing in the loop and is an UPPER bound on a hidden game's. The original honest_verdict is preserved verbatim in `honest_verdict_original_pre_adversarial_correction_20260802`.",
+  "reproducibility_checksum_corrected_20260802": "036c3f1c3d210beccad9f746fe4cb2fbf67b2f7176fa200c6c4884775922f688",
+  "honest_verdict_original_pre_adversarial_correction_20260802": "complete_win_transition_change_is_structurally_inert_on_the_live_path: a win transition was AVAILABLE at 30 of 128 live induce calls (23.4% pooled; game-clustered mean 15.7%; roster MEDIAN 0.0 with vc33 the maximum at 1.0 and 14 of 25 games at exactly zero) -- but it reached the changed call site at arc_competition_agent.py:6429-6433 at 0 of 128 calls, at both budgets, because `_induce_and_plan` routes every level-banked induction into `execute_bounded_llm_reinduction` (whose `_call_induce` has no `win_transition` parameter) and returns at :6245 before the changed line. The routing predicate `next_level_episode` and the availability predicate are set by the same function at the same instant, so the two are the same predicate in practice. Verified twice: an exact skip-string partition with zero off-diagonal cells across 128 calls, and a direct instrument on the proposer's own `induce` across the five level-banking games, where the keyword was absent on all 12 reinduction-path calls and None on all 4 that carried it. DO NOT run a live effect A/B: at 0 discordant pairs its smallest reachable two-sided p is 1.0, so it would be unfalsifiable, not underpowered.",
+  "honest_verdict_supersession_note": "The text now in `honest_verdict` is the CORRECTED verdict, after an independent adversarial review whose every correction was re-verified against this run's own cells before being applied. The pre-correction verdict is preserved BYTE-FOR-BYTE in `honest_verdict_original_pre_adversarial_correction_20260802` (never-prune). It was moved out of `honest_verdict` rather than left beside it because scripts/summarize_artifact.py reads that field first, and a superseded claim sitting in the field the reading discipline steers by would make the correction decorative. See `adversarial_review_corrections_20260802` for the full working."
 }

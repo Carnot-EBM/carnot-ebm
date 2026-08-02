@@ -856,6 +856,55 @@ def _run_local_adaptation_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_RUN_LOCAL_ADAPTATION") == "1"
 
 
+# DEFAULT OFF. Changing this constant changes what the SCORED agent sends its generator, so it is
+# a deliberate operator act, not a tuning knob.
+_SUPPLY_WIN_TRANSITION_DEFAULT = "0"
+
+
+def _supply_win_transition_enabled() -> bool:
+    """Does `_induce_and_plan` hand the proposer the agent's own level-up transition?
+
+    WHAT THE ARGUMENT IS FOR. `_active_transitions()` starts one past the level-up row on purpose
+    -- the completing action re-lays out the whole playfield, so leaving it in the dynamics window
+    teaches the proposer that one action can change 86% of the board. The consequence is that the
+    agent's single self-produced example of WINNING is structurally absent from the prompt, and
+    `_transitions_block`'s WIN TRANSITION block was measured firing ZERO times on the live path.
+    Supplying the row separately is the fix for that.
+
+    WHY IT IS GATED, AND WHY OFF IS THE DEFAULT. The supply shipped live and unflagged on
+    2026-08-01. A subsequent exposure measurement over 128 live induce calls found it DELIVERED to
+    this call site 0 times -- every call with a win transition available took the
+    `execute_bounded_llm_reinduction` branch, whose `_call_induce` has no `win_transition`
+    parameter at all. Its effect on behaviour is therefore UNMEASURED, which is a different fact
+    from measured-and-null, and with 0 delivered calls the smallest reachable two-sided p from an
+    exact paired test is 1.0 -- unfalsifiable, not underpowered. An unmeasured change is not
+    allowed to be a shipped default here; that is the standing discipline this one broke.
+
+    WHY THE ZERO IS EMPIRICAL, NOT STRUCTURAL. It is tempting to say the argument exists exactly
+    when the carrying path is not taken, because `_begin_level_goal_episode` writes
+    `_win_transition` and `_previous_level_complete_grid` in the same breath. That is false as a
+    statement about the code, and was corrected after an executable counterexample: the routing
+    predicate `next_level_episode` ALSO requires `_previous_level_complete_grid is not None`, set
+    from a guarded grid extraction that can fail, while `_win_transition` is set unconditionally.
+    Force only that extraction to fail on vc33/400 and delivery goes 0 -> 1 at this call site with
+    the trajectory unchanged (levels=2, actions=387 either way). So delivery was 0 BECAUSE
+    `win_state_exemplar_captured` held on 30 of 30 level-induction events in that corpus -- a
+    contingent fact about a 25-game public roster, not a theorem.
+
+    Turning this ON without first fixing the routing therefore buys almost nothing: it arms a call
+    site the live agent reaches only when exemplar capture has already failed.
+
+    `CARNOT_ARC_SUPPLY_WIN_TRANSITION=1` enables it. See
+    results/outer_loop_arc_win_transition_exposure_20260802.json.
+    """
+    import os
+
+    raw = os.environ.get("CARNOT_ARC_SUPPLY_WIN_TRANSITION")
+    if raw is None:
+        raw = _SUPPLY_WIN_TRANSITION_DEFAULT
+    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+
 def _run_local_confidence_bonus(mechanic_class: str, approach: str) -> float:
     """A small, bounded confidence bonus from OTHER games' in-run evidence for this exact
     (mechanic_class, approach) pair -- 0.0 (no effect) unless this run has already accumulated
@@ -6426,11 +6475,30 @@ class E3AgentPolicy:
             # block fire at all on the live path -- measured across every rebuilt live prompt, it
             # had fired ZERO times. `None` before the first level-up, which is the honest state:
             # the agent has not yet produced a positive example of winning.
+            #
+            # GATED DEFAULT-OFF 2026-08-02 (REQ-ARC-WMTE-6083). The supply shipped LIVE and
+            # UNFLAGGED, which is the one thing every other change in this series was gated
+            # against. It is now behind `CARNOT_ARC_SUPPLY_WIN_TRANSITION=1`, and the reason is
+            # measured rather than procedural: across 128 live induce calls the argument was
+            # DELIVERED to this call site 0 times, so its effect on behaviour is UNMEASURED --
+            # not null, unmeasured. A shipped default whose effect nobody has observed is not a
+            # default anyone can defend, and with 0 delivered calls an A/B here has 0 discordant
+            # pairs, i.e. a smallest reachable two-sided p of 1.0. See
+            # results/outer_loop_arc_win_transition_exposure_20260802.json.
+            #
+            # OFF omits the keyword ENTIRELY rather than passing None. Both are behaviourally
+            # identical for the shipped proposer (`induce`'s parameter defaults to None and
+            # `_transitions_block` falls back to its scan when it is None), but omitting is what
+            # the pre-change call actually did, and "reproduces the old behaviour" should mean
+            # the old CALL, not a call that happens to compute the same thing.
+            _induce_kwargs: dict[str, Any] = {}
+            if _supply_win_transition_enabled():
+                _induce_kwargs["win_transition"] = self._win_transition
             ok, _ = self._proposer().induce(
                 self.short,
                 active_transitions,
                 self.cell,
-                win_transition=self._win_transition,
+                **_induce_kwargs,
             )
             if not ok or self.root_grid is None:
                 attempt["skipped"] = "proposer_failed_or_missing_root"
