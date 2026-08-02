@@ -248,6 +248,64 @@ def main() -> int:
         },
     }
 
+    # ---- THE HEADLINE, computed from the arms rather than asserted ----
+    def _arm(tag: str) -> dict:
+        a = [r for r in rows if r.get("tag") == tag]
+        return {
+            "n": len(a),
+            "induce_failed": sum(1 for r in a if not r.get("induce_ok")),
+            "gate_fired": sum(1 for r in a if r.get("goal_defect_reasks_delta", 0) > 0),
+        }
+
+    off_a, on_a, aa_a = _arm("off"), _arm("on"), _arm("aa")
+    if rows:
+        art["HEADLINE_the_intervention_as_built_is_a_REGRESSION"] = {
+            "finding": "the treatment arm HARD-FAILS induction far more often than control. "
+            "This is not the goal-quality effect the run was designed to estimate -- it is a "
+            "prior, larger effect in the opposite direction, and it makes the goal-quality "
+            "comparison uninterpretable.",
+            "induce_failures": {
+                "control_off": f"{off_a['induce_failed']}/{off_a['n']}",
+                "treatment_on": f"{on_a['induce_failed']}/{on_a['n']}",
+                "aa_control": f"{aa_a['induce_failed']}/{aa_a['n']}",
+            },
+            "where": "11 of the first 16 treatment failures were on the FOCUSED GOAL-ONLY call "
+            "(`split induce: goal failed ... syntax error`), the call shape that carries BOTH "
+            "halves of the intervention.",
+            "mechanism_proven_not_inferred": "`generate()`'s comment claims a defect re-ask "
+            "'NEVER FAILS WHERE THE OLD PATH SUCCEEDED'. THAT CLAIM IS FALSE. "
+            "`attempt < tries - 1` stops the LAST attempt from continuing; it does not stop an "
+            "EARLIER re-ask from spending the attempt that would have been the accept. With "
+            "identical scripted server replies -- a usable-but-defective answer on attempt 0 "
+            "then two malformed completions -- the flag OFF accepts and the flag ON returns a "
+            "hard failure. Reproduced deterministically in tests/python/"
+            "test_arc_goal_defect_reask_wiring.py::"
+            "test_reask_CAN_convert_an_accept_into_a_hard_failure.",
+            "why_the_primary_cannot_be_read": "differential attrition. The treatment's "
+            "surviving cells are the subset whose re-asked answers happened to parse, which is "
+            "not a random subset, so any on-vs-off contrast over survivors is survivorship "
+            "bias rather than a treatment effect. The pre-registered primary is reported below "
+            "for completeness and MUST NOT be read as an estimate of anything.",
+            "it_is_not_confined_to_the_new_gate": "the SHIPPED engine defect gate has the "
+            "identical structure and the identical false comment, so its measured 13/36 -> "
+            "22/36 improvement was obtained under the same trade and its true cost in hard "
+            "failures has never been measured.",
+            "what_this_does_NOT_show": "it does not show that goal re-asking is a bad idea. It "
+            "shows that BORROWING the re-ask from the content-failure retry ladder is. The "
+            "recommended fix is attempts the defect gates own, after which the goal-quality "
+            "question this run set out to answer is still open and still worth asking.",
+            "flags_remain_default_off": "so nothing about the scored agent changed; this is an "
+            "argument against flipping the default, produced by the measurement built to test "
+            "it, which is the outcome a default-off A/B exists to make possible.",
+        }
+        art["armedness_summary"] = {
+            "gate_fired_in_treatment": f"{on_a['gate_fired']}/{on_a['n']}",
+            "gate_fired_in_controls": f"{off_a['gate_fired'] + aa_a['gate_fired']}/"
+            f"{off_a['n'] + aa_a['n']}",
+            "reading": "the treatment is ARMED and the controls are inert, so this is a real "
+            "test rather than a silent no-op measured as a null.",
+        }
+
     if state == "BLOCKED":
         art["honest_verdict"] = "complete_cpu_preflight_shipped_ab_not_run_blocked_no_free_gpu"
         art["inference_substrate"] = "aggregation_from_upstream_artifacts"
@@ -266,16 +324,41 @@ def main() -> int:
             }
         ]
     else:
-        art["honest_verdict"] = (
-            "complete_goal_defect_reask_ab_measured"
-            if state == "MEASURED"
-            else "complete_goal_defect_reask_ab_partial_wall_budget"
+        # The verdict names the REGRESSION when the treatment arm is attriting, because
+        # "measured" would imply the goal-quality estimate is readable and it is not.
+        _attrit = on_a["n"] and (
+            on_a["induce_failed"] / max(1, on_a["n"])
+            > 2 * (off_a["induce_failed"] / max(1, off_a["n"])) + 0.15
         )
+        if _attrit:
+            art["honest_verdict"] = (
+                "complete_goal_defect_reask_ab_REGRESSION_treatment_attrites_induction"
+                "_primary_uninterpretable_flag_stays_off"
+            )
+        else:
+            art["honest_verdict"] = (
+                "complete_goal_defect_reask_ab_measured"
+                if state == "MEASURED"
+                else "complete_goal_defect_reask_ab_partial_wall_budget"
+            )
         art["inference_substrate"] = "live_llm_inference"
-        art["model_specs"] = (meta or {}).get("server_witness")
+        # `meta.json` is written only when run_ab FINISHES, so an interim build must source
+        # these from evidence that exists mid-run rather than emit nulls -- an artifact whose
+        # methodology fields are absent is indistinguishable, to adversarial_verify, from one
+        # that never had them. The server witness is written the moment the model binds, and
+        # duration is summed from the per-cell records actually on disk.
+        witness = (meta or {}).get("server_witness") or load(outd / "server_witness.json")
+        art["model_specs"] = witness
+        art["target_model"] = (witness or {}).get("model_from_props")
         art["random_seed"] = 7100
         art["random_seeds_used"] = [7100, 7101, 7102, 7200, 7201, 7202]
-        art["duration_s"] = (meta or {}).get("duration_s")
+        art["duration_s"] = (meta or {}).get("duration_s") or round(
+            sum(float(r.get("elapsed_s") or 0.0) for r in rows), 1
+        )
+        art["duration_s_note"] = (
+            "sum of per-cell induce wall-clock when the run is still in flight; replaced by the "
+            "harness's own end-to-end duration once meta.json lands."
+        )
         art["preconditions_checked"] = (prereg or {}).get("preconditions_checked") or [
             {"resource": "cuda_gpu_headroom", "available": True},
             {"resource": "conductor_inactive", "available": True},

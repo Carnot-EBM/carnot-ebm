@@ -188,6 +188,46 @@ def test_content_failures_CANNIBALISE_the_defect_gate(monkeypatch, proposer):
     assert proposer.n_induce_defect_reasks == 0, "nor did the shipped engine gate"
 
 
+def test_reask_CAN_convert_an_accept_into_a_hard_failure(monkeypatch, proposer):
+    """THE CLAIM IN THE SHIPPED COMMENT IS FALSE, and this is what falsified it.
+
+    `generate()` says a defect re-ask "NEVER FAILS WHERE THE OLD PATH SUCCEEDED", on the
+    reasoning that `attempt < tries - 1` keeps the last attempt from `continue`-ing out of the
+    loop. That guard is real but insufficient: it does not stop an EARLIER re-ask from spending
+    the attempt that would have BEEN the accept. If the later attempts then produce malformed
+    output, the loop ends in a hard failure that the shipped path never had.
+
+    Measured live before it was reproduced here: the treatment arm hard-failed induction on 16
+    of 20 cells against 1 of 20 in control, 11 of those on the focused goal-only call. The
+    survivors are therefore a BIASED subset and no goal-quality comparison can be read off them.
+
+    This is NOT specific to the goal gate. The shipped ENGINE gate has the identical structure
+    and the identical false comment, so its measured 13/36 -> 22/36 was obtained under the same
+    trade. The fix is to give the defect gates attempts of their own rather than borrowing from
+    the content-failure retry ladder.
+    """
+    accept_but_defective = f"```python\n{GOOD_ENGINE}{BAD_GOAL}```"
+    malformed = "def is_level_complete(grid):"  # a def with no body: never parses
+    replies = [accept_but_defective, malformed, malformed]
+
+    monkeypatch.delenv("CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK", raising=False)
+    ok_off, code_off, fake_off = _drive(monkeypatch, proposer, replies)
+    assert ok_off is True, "the shipped path accepts the usable-but-defective attempt 0"
+    assert "return False" in code_off
+    assert len(fake_off.prompts) == 1
+
+    proposer.n_goal_defect_reasks = 0
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK", "1")
+    ok_on, _msg, fake_on = _drive(monkeypatch, proposer, replies)
+    assert ok_on is False, (
+        "THE REGRESSION: identical server replies, and the gate turns an accept into a hard "
+        "failure. If this ever starts passing as True, the retry ladder was decoupled and the "
+        "comment in generate() should be corrected back."
+    )
+    assert len(fake_on.prompts) == 3
+    assert proposer.n_goal_defect_reasks >= 1
+
+
 def test_goal_reask_does_not_spend_the_engine_budget(monkeypatch, proposer):
     """THE CONFOUND GUARD, end to end. If the two shared a counter, the treatment arm's ENGINES
     would silently lose their re-ask and the measured arm difference would be part goal-check
