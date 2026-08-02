@@ -34,6 +34,45 @@ sys.path.insert(
 )
 
 
+def _resolve_explore_budget(game: str, raw) -> tuple[int, str]:
+    """Resolve `--explore-budget` to the integer the SCORED agent would use for THIS game.
+
+    **The bug this closes.** `make_carnot_agent` -- the competition entrypoint -- does not
+    pass `explore_budget`. `E3AgentPolicy.__init__` therefore falls through to
+    `_route_explore_budget(self.strategy_route)`, which is 24
+    (`SUBMITTED_ROUTED_EXPLORE_BUDGET`) only when the routed strategy has
+    `uses_goal_distance_heuristic is False`, and 80 (`SUBMITTED_GRAPH_EXPLORE_BUDGET`)
+    otherwise. A census that pins one integer for every game is therefore NOT running the
+    scored configuration on any game whose route disagrees with that integer -- and
+    `explore_budget` is not cosmetic: it is the stall threshold
+    (`len(self.transitions) >= self.explore_budget`) that decides when the induce path fires
+    AND, through `_active_transitions()`, how much of the agent's own evidence the induction
+    prompt is built from. The 2026-08-01 census pinned 24 and so ran ft09/lp85/tr87/vc33 at
+    a third of their scored budget; "the induced world model was not accurate enough" and
+    "the induced world model saw a third of the evidence" are different findings, and that
+    run cannot separate them.
+
+    Returns `(budget, provenance)` so the cell records HOW the number was chosen, not just
+    what it was. Fails LOUD, not soft: a router that cannot be resolved raises rather than
+    quietly falling back to a hardcoded default, because a silent fallback would reproduce
+    exactly the failure this function exists to prevent.
+    """
+    if isinstance(raw, str) and raw.strip().lower() == "routed":
+        import carnot.agentic.arc_strategy_router as arc_strategy_router
+        from carnot.agentic.arc_competition_agent import (
+            _recommend_live_approach,
+            _route_explore_budget,
+        )
+
+        rec = _recommend_live_approach(game)
+        strategy = dict(rec.get("strategy") or arc_strategy_router.route_for_game(game))
+        return int(_route_explore_budget(strategy)), (
+            f"routed_as_scored:{strategy.get('name')}:"
+            f"uses_goal_distance_heuristic={strategy.get('uses_goal_distance_heuristic')}"
+        )
+    return int(raw), "pinned_by_caller"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--game", required=True)
@@ -41,7 +80,22 @@ def main() -> int:
     ap.add_argument("--budget", type=int, default=120)
     ap.add_argument("--max-inductions", type=int, default=3)
     ap.add_argument("--wall-s", type=float, default=900.0)
-    ap.add_argument("--explore-budget", type=int, default=24)
+    ap.add_argument(
+        "--explore-budget",
+        default="routed",
+        help=(
+            "'routed' (DEFAULT) resolves this game's explore_budget exactly as the SCORED "
+            "agent does; an integer pins it. See `_resolve_explore_budget`: the scored "
+            "entrypoint `make_carnot_agent` passes no explore_budget, so E3AgentPolicy falls "
+            "through to `_route_explore_budget`, which returns 24 for a program_editor-routed "
+            "game and 80 for a graph_explore-routed one. Pinning a single integer across a "
+            "multi-game census therefore runs 4 of 5 public games at a THIRD of the budget "
+            "the scored agent would give them -- which is what the 2026-08-01 census did, and "
+            "why every per-game verdict in that artifact carries an explore_budget_scope "
+            "caveat. Pin an integer only when the point IS to hold the budget fixed across "
+            "games, and say so in the artifact."
+        ),
+    )
     ap.add_argument("--out", required=True)
     ap.add_argument(
         "--generator",
@@ -157,6 +211,10 @@ def main() -> int:
 
         proposer = _NoGeneratorStandIn()
 
+    explore_budget, explore_budget_provenance = _resolve_explore_budget(
+        args.game, args.explore_budget
+    )
+
     result = atp.run_bounded_progress(
         args.game,
         "frozen",
@@ -165,7 +223,7 @@ def main() -> int:
         budget=args.budget,
         max_inductions=args.max_inductions,
         wall_s=args.wall_s,
-        explore_budget=args.explore_budget,
+        explore_budget=explore_budget,
     )
 
     out = {
@@ -178,7 +236,12 @@ def main() -> int:
         "induction_disabled_env": os.environ.get("CARNOT_ARC_DISABLE_INDUCTION"),
         "budget": args.budget,
         "max_inductions": args.max_inductions,
-        "explore_budget": args.explore_budget,
+        "explore_budget": explore_budget,
+        # HOW the budget was chosen, not just what it was. A cell that records only the
+        # integer cannot answer "was this the scored configuration for this game?", which is
+        # precisely the question the 2026-08-01 census could not answer from its own cells.
+        "explore_budget_provenance": explore_budget_provenance,
+        "explore_budget_requested": args.explore_budget,
         "wall_s_measured": round(time.time() - t0, 3),
         # THE byte-identity instrument: the ordered action trace in the canonical
         # `_action_label` encoding. Two arms are identical iff these lists are equal.

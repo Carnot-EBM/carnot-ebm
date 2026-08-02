@@ -1,9 +1,11 @@
 {
  "experiment": "outer_loop_arc_live_action_provenance_census",
  "schema": "carnot.arc.action_provenance_census.v1",
- "run_date": "2026-08-02T00:48:59Z",
+ "run_date": "2026-08-02T01:18:45Z",
  "milestone": "2026.08.outer_loop",
  "git_head": "93c54aa2eb3aafcff54e6454dd1a964cf2e95e5d",
+ "git_head_note": "the commit the CENSUS EPISODES ran under. Passed explicitly via --census-git-head when the report is re-derived later, so a rebuilt analysis cannot re-date the measurement to its own commit. See report_built_at_git_head for the analysis-side commit.",
+ "report_built_at_git_head": "585c8e0411d0d1ca3b63c3b7a82553f50a191917",
  "honest_verdict": "complete_induce_plan_pipeline_chose_a_small_minority_of_actions_in_failed_episodes_explorer_navigation_and_replay_spends_the_budget",
  "duration_s": 20113.674,
  "duration_s_note": "wall time of the census driver: every episode loads the 31B GGUF and runs real autoregressive induction inside the agent's cascade. Per-cell wall times are on each episode record.",
@@ -17,7 +19,7 @@
   "value": false,
   "principle": "No win oracle is consulted. The recorded quantity is WHICH CODE BRANCH emitted each action -- a fact about the agent, not about whether the action was correct. The level counter is read off the environment frame as an observation; it is the environment's own gate, not a heuristic invented here."
  },
- "live_path_entrypoint": "python/carnot/agentic/arc_competition_agent.py :: E3AgentPolicy.next_move -- entrypoint 1, the SCORED agent's own per-action cascade, reached through arc_actions_to_progress.run_bounded_progress (the same driver scripts/arc_holdout_generalization_probe.py uses). Not a bespoke solver.",
+ "live_path_entrypoint": "python/carnot/agentic/arc_competition_agent.py :: E3AgentPolicy.next_move -- entrypoint 1, the SCORED agent's own per-action cascade, reached through arc_actions_to_progress.run_bounded_progress (the same driver scripts/arc_holdout_generalization_probe.py uses). Not a bespoke solver. THE CLASS IS THE SCORED ONE; THE CONFIGURATION IS NOT, ON 4 OF 5 GAMES. Every knob `make_carnot_agent` pins (target_levels, value_weight, search_mode, lazy_value_top_k, frontier_batch_size, navigation_cost_tiebreak, similarity_retrieval) is left at the E3AgentPolicy default, which IS the matching SUBMITTED_* constant -- but `explore_budget` is NOT pinned by `make_carnot_agent`, is resolved per-game by `_route_explore_budget`, and was pinned to 24 here for every game. That is the scored value for tn36 (program_editor) and a third of the scored value (80, graph_explore) for ft09, lp85, tr87 and vc33. See config.scored_explore_budget_by_game and each per-game entry's explore_budget_scope.",
  "config": {
   "games": [
    "ft09",
@@ -32,7 +34,35 @@
   "budget_note": "the live scored MAX_ACTIONS is 400, so this is the real cap",
   "max_inductions": 4,
   "explore_budget": 24,
-  "explore_budget_note": "24 = SUBMITTED_ROUTED_EXPLORE_BUDGET, a real shipped value; it sets how many transitions the agent collects before it stalls and induces",
+  "explore_budget_note": "24 was pinned for EVERY game in this census. It sets how many transitions the agent collects before it stalls and induces (`len(self.transitions) >= self.explore_budget`), and through `_active_transitions()` it also sets how much evidence the induction prompt is built from. IT IS NOT THE SCORED VALUE ON EVERY GAME. `make_carnot_agent` passes no explore_budget, so the scored policy resolves it per-game via `_route_explore_budget`: SUBMITTED_ROUTED_EXPLORE_BUDGET (24) when the routed strategy has uses_goal_distance_heuristic=False, SUBMITTED_GRAPH_EXPLORE_BUDGET (80) otherwise. Resolved live on this machine, that is 24 for tn36 alone and 80 for the other four. The earlier wording of this field ('24 = SUBMITTED_ROUTED_EXPLORE_BUDGET, a real shipped value') was true in the abstract and misleading per game; it is corrected here rather than quietly dropped. Read scored_explore_budget_by_game below and, for what it does and does not confound, each per-game entry's explore_budget_scope.",
+  "scored_explore_budget_by_game": {
+   "ft09": {
+    "scored_explore_budget": 80,
+    "routed_strategy_name": "graph_explore",
+    "uses_goal_distance_heuristic": true
+   },
+   "lp85": {
+    "scored_explore_budget": 80,
+    "routed_strategy_name": "graph_explore",
+    "uses_goal_distance_heuristic": true
+   },
+   "tn36": {
+    "scored_explore_budget": 24,
+    "routed_strategy_name": "program_editor",
+    "uses_goal_distance_heuristic": false
+   },
+   "tr87": {
+    "scored_explore_budget": 80,
+    "routed_strategy_name": "graph_explore",
+    "uses_goal_distance_heuristic": true
+   },
+   "vc33": {
+    "scored_explore_budget": 80,
+    "routed_strategy_name": "graph_explore",
+    "uses_goal_distance_heuristic": true
+   }
+  },
+  "explore_budget_direction_of_effect": "ON THE HEADLINE, CONSERVATIVE. Stalling at 24 instead of 80 makes the induce path fire EARLIER and leaves MORE of the 400-action budget available for plan execution, so the reported plan-derived share is if anything an OVER-estimate of what the scored configuration would produce. The run's own data agrees: the one game measured at its correct budget (tn36, 24) has by far the highest plan-derived share at 15.4%, while the four measured at a third of theirs are all at or below 1.3%. ON THE PER-GAME 'where_it_is_lost' DIAGNOSIS, NOT CONSERVATIVE -- see explore_budget_scope.",
   "wall_s_cap": 1500.0,
   "policy": "E3AgentPolicy via arc_actions_to_progress.run_bounded_progress",
   "policy_game_id": "the REAL game id -- NOT the anonymized held-out condition, so the agent keeps all its registry knowledge; this is the friendlier setting for the pipeline, not the harder one",
@@ -351,7 +381,20 @@
     "level_up_events": [],
     "induction_skip_reasons": [
      "world_model_accuracy_below_threshold"
-    ]
+    ],
+    "explore_budget_scope": {
+     "scored_explore_budget": 80,
+     "measured_explore_budget": 24,
+     "matches_scored_config": false,
+     "verdict_scope": "SCOPED TO explore_budget=24 -- NOT the scored configuration. `make_carnot_agent` routes ft09 to graph_explore -> explore_budget=80. This game induced on a `stall`, and the stall threshold IS the budget, so the induction fired on ~25 self-collected transitions where the scored agent would have supplied up to ~81. `_active_transitions()` is the induce prompt's input, so any verdict here of the form 'the induced world model was not accurate enough' cannot be separated from 'the induced world model was built from a fraction of the evidence the scored agent would have given it'. One re-run at explore_budget=80 would separate them.",
+     "routed_strategy_name": "graph_explore",
+     "measured_explore_budgets_seen_in_cells": [
+      24
+     ],
+     "induction_triggers_observed": [
+      "stall"
+     ]
+    }
    },
    {
     "game": "lp85",
@@ -467,7 +510,21 @@
     "induction_skip_reasons": [
      "degenerate_goal_predicate",
      "no_reachable_plan_after_refinement"
-    ]
+    ],
+    "explore_budget_scope": {
+     "scored_explore_budget": 80,
+     "measured_explore_budget": 24,
+     "matches_scored_config": false,
+     "verdict_scope": "SCOPED TO explore_budget=24 -- NOT the scored configuration. `make_carnot_agent` routes lp85 to graph_explore -> explore_budget=80. This game induced on a `stall`, and the stall threshold IS the budget, so the induction fired on ~25 self-collected transitions where the scored agent would have supplied up to ~81. `_active_transitions()` is the induce prompt's input, so any verdict here of the form 'the induced world model was not accurate enough' cannot be separated from 'the induced world model was built from a fraction of the evidence the scored agent would have given it'. One re-run at explore_budget=80 would separate them.",
+     "routed_strategy_name": "graph_explore",
+     "measured_explore_budgets_seen_in_cells": [
+      24
+     ],
+     "induction_triggers_observed": [
+      "level_up_reinduction",
+      "stall"
+     ]
+    }
    },
    {
     "game": "tn36",
@@ -565,7 +622,20 @@
      "bootstrap_reset": 2
     },
     "level_up_events": [],
-    "induction_skip_reasons": []
+    "induction_skip_reasons": [],
+    "explore_budget_scope": {
+     "scored_explore_budget": 24,
+     "measured_explore_budget": 24,
+     "matches_scored_config": true,
+     "verdict_scope": "MEASURED AT THE SCORED BUDGET. `make_carnot_agent` routes tn36 to program_editor -> explore_budget=24, which is what this census ran, so this game's where_it_is_lost verdict needs no budget qualification.",
+     "routed_strategy_name": "program_editor",
+     "measured_explore_budgets_seen_in_cells": [
+      24
+     ],
+     "induction_triggers_observed": [
+      "stall"
+     ]
+    }
    },
    {
     "game": "tr87",
@@ -661,7 +731,20 @@
     "level_up_events": [],
     "induction_skip_reasons": [
      "world_model_accuracy_below_threshold"
-    ]
+    ],
+    "explore_budget_scope": {
+     "scored_explore_budget": 80,
+     "measured_explore_budget": 24,
+     "matches_scored_config": false,
+     "verdict_scope": "SCOPED TO explore_budget=24 -- NOT the scored configuration. `make_carnot_agent` routes tr87 to graph_explore -> explore_budget=80. This game induced on a `stall`, and the stall threshold IS the budget, so the induction fired on ~25 self-collected transitions where the scored agent would have supplied up to ~81. `_active_transitions()` is the induce prompt's input, so any verdict here of the form 'the induced world model was not accurate enough' cannot be separated from 'the induced world model was built from a fraction of the evidence the scored agent would have given it'. One re-run at explore_budget=80 would separate them.",
+     "routed_strategy_name": "graph_explore",
+     "measured_explore_budgets_seen_in_cells": [
+      24
+     ],
+     "induction_triggers_observed": [
+      "stall"
+     ]
+    }
    },
    {
     "game": "vc33",
@@ -809,7 +892,20 @@
     "induction_skip_reasons": [
      "degenerate_goal_predicate",
      "proposer_failed"
-    ]
+    ],
+    "explore_budget_scope": {
+     "scored_explore_budget": 80,
+     "measured_explore_budget": 24,
+     "matches_scored_config": false,
+     "verdict_scope": "PARTIALLY SCOPED. `make_carnot_agent` routes vc33 to graph_explore -> explore_budget=80 and this census ran 24, BUT every induction observed for this game was a `level_up_reinduction`, which `_should_enter_induction` prioritises over the stall and which fires on a level-up rather than on the budget. So the induce-evidence channel is NOT confounded by the budget mismatch. What remains unmeasured is the rest of the episode: a stall arriving at ~81 transitions instead of ~25 would have changed the run after the point where the budget first bound.",
+     "routed_strategy_name": "graph_explore",
+     "measured_explore_budgets_seen_in_cells": [
+      24
+     ],
+     "induction_triggers_observed": [
+      "level_up_reinduction"
+     ]
+    }
    }
   ]
  },
@@ -1995,7 +2091,9 @@
   "max_inductions caps the number of stall->induce cycles per episode. That is a cost bound, and it BOUNDS ABOVE how many plan-derived actions an episode could possibly contain -- so a low plan-derived share is partly a design choice, not purely a finding. hit_induction_cap is recorded per episode; read it before reading the share.",
   "The action budget is a cap, not a target: an episode that explores out early spends fewer actions. budget_consumed_fraction is on every episode record.",
   "This measures WHERE ACTIONS COME FROM. It does not, and cannot, show that raising the plan-derived share would raise the banked-level count. It says which stage the budget reaches, not what would happen if it reached a different one.",
-  "The instrument's per-row induction fields (trust_energy, heldout_accuracy) read the attempt dict AS IT WAS at the moment of the action, and the induce path mutates that dict afterwards. Engine-trust verdicts in this artifact are therefore taken from result_row.induction_events (the FINAL state), and only the action accounting is taken from the rows."
+  "The instrument's per-row induction fields (trust_energy, heldout_accuracy) read the attempt dict AS IT WAS at the moment of the action, and the induce path mutates that dict afterwards. Engine-trust verdicts in this artifact are therefore taken from result_row.induction_events (the FINAL state), and only the action accounting is taken from the rows.",
+  "EXPLORE_BUDGET WAS PINNED TO 24 AND IS NOT THE SCORED VALUE ON 4 OF THE 5 GAMES. `make_carnot_agent` passes no explore_budget; `_route_explore_budget` resolves tn36 to 24 (program_editor) and ft09/lp85/tr87/vc33 to 80 (graph_explore). Direction, split honestly: the HEADLINE plan-derived share is made LARGER by this, not smaller -- an earlier stall means the pipeline fires sooner and has more of the 400 actions left to spend -- so the headline survives the mismatch as an upper bound. The PER-GAME 'where_it_is_lost' diagnosis does NOT survive it unqualified: the stall threshold is the budget, and `_active_transitions()` is the induce prompt's input, so on the stall-triggered games a verdict of 'the induced model was not accurate enough' was measured on an engine induced from ~25 transitions where the scored agent would have supplied ~81. Each per-game entry now carries explore_budget_scope saying which of the three cases it is in. The cheap fix is one re-run of tr87 or ft09 at explore_budget=80.",
+  "INDUCTION TRIGGER MATTERS WHEN READING THAT CAVEAT. `_should_enter_induction` prioritises `level_up_reinduction` over `stall`, and the reinduction path runs on the POST-BOUNDARY active-transition slice (transition_count is 1 in every observed reinduction event here) rather than on the explore budget. So vc33, whose observed inductions are all reinductions, is not confounded through the induce-evidence channel even though its budget was mis-set; the stall-triggered games are. induction_triggers_observed is recorded per game."
  ],
  "known_lint_scope_gap": "This artifact declares inference_substrate=live_llm_inference, and scripts/arc_artifact_lint.py would emit LIVE_LLM_NOT_ALLOWLISTED for it if pointed at it directly -- but the pre-commit hook's file pattern is '^results/.*experiment_[^/]*(arc|solve|config_rule|world_model)[^/]*\\.json$', which this path does not match, so the hook never sees it. Stated out loud rather than quietly benefited from: the artifact is an INSTRUMENT record, not an ARC solve/scoring artifact, so being outside that lint's scope is arguably correct -- but a guard whose pattern is narrower than its concept is this project's own named bug class, and the honest move is to name the gap in the artifact the gap lets through. The prior single-game live artifact (results/outer_loop_arc_action_provenance_tn36_live_20260801.json) sits in the same gap. scripts/adversarial_verify.py DOES scan this file and returns it 0-flagged.",
  "preconditions_checked": [
@@ -2028,6 +2126,7 @@
   "report_builder": "scripts/arc_action_provenance_census_report.py",
   "instrument_flag": "CARNOT_ARC_ACTION_PROVENANCE=1 (default OFF; shipped agent unchanged)"
  },
+ "supersedes_artifact_raw": "artifact_raw.json in this directory is the CENSUS DRIVER's own in-flight output. It was computed by the long-running driver process, which had loaded analyse_cell BEFORE the pre-registered wall-truncation rule and the level-up ordering fields were added, so its missing-observation classification DISAGREES with this file's. THIS FILE (artifact.json) IS AUTHORITATIVE: it is regenerated from cells/ by scripts/arc_action_provenance_census_report.py and anyone can re-derive it. artifact_raw is kept rather than deleted because it carries the driver-side record nothing else has (total wall time, the per-cell GPU handoff waits), and because deleting a disagreeing record is how a project loses the evidence that it changed its mind.",
  "model_specs": {
   "generator_repo_substr": "gemma-4-31B-it-qat",
   "model_named_by_the_runs_own_induction_events": [
@@ -2060,6 +2159,5 @@
   }
  },
  "target_model": "gemma-4-31B-it-qat",
- "reproducibility_checksum": "sha256:e7f65caff563b6970771ce73fe2c31852802c37216e3c970b7eaea2bec0feab4",
- "supersedes_artifact_raw": "artifact_raw.json in this directory is the CENSUS DRIVER's own in-flight output. It was computed by the long-running driver process, which had loaded analyse_cell BEFORE the pre-registered wall-truncation rule and the level-up ordering fields were added, so its missing-observation classification DISAGREES with this file's. THIS FILE (artifact.json) IS AUTHORITATIVE: it is regenerated from cells/ by scripts/arc_action_provenance_census_report.py and anyone can re-derive it. artifact_raw is kept rather than deleted because it carries the driver-side record nothing else has (total wall time, the per-cell GPU handoff waits), and because deleting a disagreeing record is how a project loses the evidence that it changed its mind."
+ "reproducibility_checksum": "sha256:e7f65caff563b6970771ce73fe2c31852802c37216e3c970b7eaea2bec0feab4"
 }

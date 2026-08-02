@@ -173,6 +173,145 @@ def _git_head() -> str:
         return ""
 
 
+def _scored_explore_budget(game: str) -> dict:
+    """What `explore_budget` the SCORED agent would resolve FOR THIS GAME, resolved live.
+
+    **Why this exists.** `make_carnot_agent` -- the competition entrypoint -- does NOT pass
+    `explore_budget`, so `E3AgentPolicy.__init__` falls through to
+    `_route_explore_budget(self.strategy_route)`, which returns
+    `SUBMITTED_ROUTED_EXPLORE_BUDGET` (24) only when the routed strategy has
+    `uses_goal_distance_heuristic is False`, and `SUBMITTED_GRAPH_EXPLORE_BUDGET` (80)
+    otherwise. The census pinned 24 for every game. That is the scored value for a
+    `program_editor`-routed game and a THIRD of the scored value for a
+    `graph_explore`-routed one, and `explore_budget` is not a cosmetic knob: it is the
+    stall threshold (`len(self.transitions) >= self.explore_budget`) that decides both WHEN
+    the induce path fires and, through `_active_transitions()`, HOW MUCH evidence the
+    induction prompt is built from. An artifact that reports the pinned number and calls it
+    "a real shipped value" without saying which games it is shipped FOR would be true in
+    the abstract and misleading per game.
+
+    Resolved live rather than hardcoded so it cannot silently go stale when the router
+    changes. Fails soft: a game whose route cannot be resolved reports `None` and says so,
+    because a guessed budget is worse than an admitted gap.
+    """
+    try:
+        import carnot.agentic.arc_strategy_router as arc_strategy_router
+        from carnot.agentic.arc_competition_agent import (
+            _recommend_live_approach,
+            _route_explore_budget,
+        )
+
+        rec = _recommend_live_approach(game)
+        strategy = dict(rec.get("strategy") or arc_strategy_router.route_for_game(game))
+        return {
+            "scored_explore_budget": int(_route_explore_budget(strategy)),
+            "routed_strategy_name": str(strategy.get("name") or ""),
+            "uses_goal_distance_heuristic": strategy.get("uses_goal_distance_heuristic"),
+        }
+    except Exception as exc:  # pragma: no cover - defensive; reported, never guessed
+        return {
+            "scored_explore_budget": None,
+            "routed_strategy_name": f"unresolved:{type(exc).__name__}",
+            "uses_goal_distance_heuristic": None,
+        }
+
+
+def _explore_budget_caveat(*, game: str, measured: int, scored: dict, triggers: list[str]) -> dict:
+    """Scope THIS GAME's `where_it_is_lost` verdict to the budget it was measured at.
+
+    Three distinct cases, and they are genuinely different -- collapsing them into one
+    blanket "confounded" would over-retract two of the five games:
+
+      * measured == scored -- the episode ran the configuration the scored agent would have
+        run. The verdict stands unqualified.
+      * measured != scored AND the game induced on a `stall` -- the stall threshold IS the
+        measured budget, so the induction fired earlier and on less of its own evidence than
+        the scored agent would have supplied. `_active_transitions()` is what the induce
+        prompt is built from, so a verdict of the form "the induced model was not accurate
+        enough" is a verdict about a model induced from a fraction of the scored evidence.
+        That is a real confound and is named as one.
+      * measured != scored AND every induction was a `level_up_reinduction` -- that trigger
+        takes priority over the stall in `_should_enter_induction` and fires on a level-up,
+        not on the budget, and it runs on the post-boundary active-transition slice. The
+        induce-evidence channel is therefore NOT confounded, though the LATER course of the
+        episode still is: a stall that would have arrived at 81 transitions instead of 25 is
+        a different episode after the point where the budget would have bound.
+    """
+    sb = scored.get("scored_explore_budget")
+    if sb is None:
+        return {
+            "scored_explore_budget": None,
+            "measured_explore_budget": measured,
+            "matches_scored_config": None,
+            "verdict_scope": (
+                "UNRESOLVED -- this game's routed strategy could not be resolved, so whether "
+                "the measured budget matches the scored one is unknown. Read the verdict as "
+                "measured at explore_budget=%d and nothing more." % measured
+            ),
+        }
+    if int(sb) == int(measured):
+        return {
+            "scored_explore_budget": int(sb),
+            "measured_explore_budget": measured,
+            "matches_scored_config": True,
+            "verdict_scope": (
+                "MEASURED AT THE SCORED BUDGET. `make_carnot_agent` routes %s to %s -> "
+                "explore_budget=%d, which is what this census ran, so this game's "
+                "where_it_is_lost verdict needs no budget qualification."
+                % (game, scored.get("routed_strategy_name"), int(sb))
+            ),
+        }
+    if "stall" in triggers:
+        return {
+            "scored_explore_budget": int(sb),
+            "measured_explore_budget": measured,
+            "matches_scored_config": False,
+            "verdict_scope": (
+                "SCOPED TO explore_budget=%d -- NOT the scored configuration. "
+                "`make_carnot_agent` routes %s to %s -> explore_budget=%d. This game induced "
+                "on a `stall`, and the stall threshold IS the budget, so the induction fired "
+                "on ~%d self-collected transitions where the scored agent would have supplied "
+                "up to ~%d. `_active_transitions()` is the induce prompt's input, so any "
+                "verdict here of the form 'the induced world model was not accurate enough' "
+                "cannot be separated from 'the induced world model was built from a fraction "
+                "of the evidence the scored agent would have given it'. One re-run at "
+                "explore_budget=%d would separate them."
+                % (
+                    measured,
+                    game,
+                    scored.get("routed_strategy_name"),
+                    int(sb),
+                    measured + 1,
+                    int(sb) + 1,
+                    int(sb),
+                )
+            ),
+        }
+    return {
+        "scored_explore_budget": int(sb),
+        "measured_explore_budget": measured,
+        "matches_scored_config": False,
+        "verdict_scope": (
+            "PARTIALLY SCOPED. `make_carnot_agent` routes %s to %s -> explore_budget=%d and "
+            "this census ran %d, BUT every induction observed for this game was a "
+            "`level_up_reinduction`, which `_should_enter_induction` prioritises over the "
+            "stall and which fires on a level-up rather than on the budget. So the "
+            "induce-evidence channel is NOT confounded by the budget mismatch. What remains "
+            "unmeasured is the rest of the episode: a stall arriving at ~%d transitions "
+            "instead of ~%d would have changed the run after the point where the budget "
+            "first bound."
+            % (
+                game,
+                scored.get("routed_strategy_name"),
+                int(sb),
+                measured,
+                int(sb) + 1,
+                measured + 1,
+            )
+        ),
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument(
@@ -197,6 +336,16 @@ def main() -> int:
     ap.add_argument("--replicates", type=int, default=3)
     ap.add_argument("--explore-budget", type=int, default=24)
     ap.add_argument("--wall-s", type=float, default=1500.0)
+    ap.add_argument(
+        "--census-git-head",
+        default="",
+        help=(
+            "commit the CENSUS EPISODES ran under. Pass it when re-deriving this report at a "
+            "later commit, so the rebuild cannot re-date the measurement to its own HEAD. "
+            "Defaults to the current HEAD, which is only correct when report and census are "
+            "built at the same commit."
+        ),
+    )
     args = ap.parse_args()
 
     paths = sorted(glob.glob(os.path.join(args.cells, "*.json")))
@@ -244,6 +393,39 @@ def main() -> int:
         c["_missing"] = bool(a.get("missing_observation"))
     agg = aggregate(analysed, args.budget)
     observed = [a for a in analysed if not a.get("missing_observation")]
+
+    # BUDGET SCOPE, per game. Attached to each per-game entry rather than stated once at the
+    # top, because the answer DIFFERS BY GAME: the census pinned explore_budget=24 for all
+    # five, which is the scored value for the `program_editor`-routed game and a third of the
+    # scored value for the four `graph_explore`-routed ones. A single global caveat would
+    # either over-retract the game that was measured correctly or under-retract the four that
+    # were not. Resolved live from the router; see `_scored_explore_budget`.
+    measured_budget_by_game: dict[str, set] = {}
+    for c in cells:
+        if c.get("explore_budget") is not None:
+            measured_budget_by_game.setdefault(str(c.get("game")), set()).add(
+                int(c["explore_budget"])
+            )
+    triggers_by_game: dict[str, set] = {}
+    for a in observed:
+        for ev in a.get("induction_events") or []:
+            if ev.get("reason"):
+                triggers_by_game.setdefault(str(a.get("game")), set()).add(str(ev["reason"]))
+    for entry in agg["per_game"]:
+        g = str(entry["game"])
+        seen_budgets = sorted(measured_budget_by_game.get(g, {args.explore_budget}))
+        scored = _scored_explore_budget(g)
+        entry["explore_budget_scope"] = {
+            **_explore_budget_caveat(
+                game=g,
+                measured=int(seen_budgets[0]),
+                scored=scored,
+                triggers=sorted(triggers_by_game.get(g, set())),
+            ),
+            "routed_strategy_name": scored.get("routed_strategy_name"),
+            "measured_explore_budgets_seen_in_cells": seen_budgets,
+            "induction_triggers_observed": sorted(triggers_by_game.get(g, set())),
+        }
     missing = [a for a in analysed if a.get("missing_observation")]
     failed = [a for a in observed if not (a.get("levels_banked") or 0)]
     banked = [a for a in observed if (a.get("levels_banked") or 0)]
@@ -400,7 +582,21 @@ def main() -> int:
         "schema": "carnot.arc.action_provenance_census.v1",
         "run_date": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "milestone": "2026.08.outer_loop",
-        "git_head": _git_head(),
+        # TWO COMMITS, NOT ONE, AND THEY ARE NOT INTERCHANGEABLE. The measurement ran under
+        # one code state; this analysis is re-runnable and so may be rebuilt under a later
+        # one. Stamping `_git_head()` into `git_head` on every rebuild would silently
+        # RE-DATE the measurement to whatever commit happened to be checked out when someone
+        # last re-derived the report -- an artifact asserting its live GPU episodes ran on
+        # code that did not exist when they ran. `--census-git-head` pins the measurement's
+        # commit; the report's own commit is recorded separately and never overwrites it.
+        "git_head": args.census_git_head or _git_head(),
+        "git_head_note": (
+            "the commit the CENSUS EPISODES ran under. Passed explicitly via "
+            "--census-git-head when the report is re-derived later, so a rebuilt analysis "
+            "cannot re-date the measurement to its own commit. See "
+            "report_built_at_git_head for the analysis-side commit."
+        ),
+        "report_built_at_git_head": _git_head(),
         "honest_verdict": verdict,
         "duration_s": args.duration_s,
         "duration_s_note": (
@@ -445,7 +641,17 @@ def main() -> int:
             "python/carnot/agentic/arc_competition_agent.py :: E3AgentPolicy.next_move -- "
             "entrypoint 1, the SCORED agent's own per-action cascade, reached through "
             "arc_actions_to_progress.run_bounded_progress (the same driver "
-            "scripts/arc_holdout_generalization_probe.py uses). Not a bespoke solver."
+            "scripts/arc_holdout_generalization_probe.py uses). Not a bespoke solver. "
+            "THE CLASS IS THE SCORED ONE; THE CONFIGURATION IS NOT, ON 4 OF 5 GAMES. Every "
+            "knob `make_carnot_agent` pins (target_levels, value_weight, search_mode, "
+            "lazy_value_top_k, frontier_batch_size, navigation_cost_tiebreak, "
+            "similarity_retrieval) is left at the E3AgentPolicy default, which IS the "
+            "matching SUBMITTED_* constant -- but `explore_budget` is NOT pinned by "
+            "`make_carnot_agent`, is resolved per-game by `_route_explore_budget`, and was "
+            "pinned to 24 here for every game. That is the scored value for tn36 "
+            "(program_editor) and a third of the scored value (80, graph_explore) for ft09, "
+            "lp85, tr87 and vc33. See config.scored_explore_budget_by_game and each per-game "
+            "entry's explore_budget_scope."
         ),
         "config": {
             "games": sorted({str(a.get("game")) for a in analysed}),
@@ -465,8 +671,35 @@ def main() -> int:
             "max_inductions": args.max_inductions,
             "explore_budget": args.explore_budget,
             "explore_budget_note": (
-                "24 = SUBMITTED_ROUTED_EXPLORE_BUDGET, a real shipped value; it sets how many "
-                "transitions the agent collects before it stalls and induces"
+                "%d was pinned for EVERY game in this census. It sets how many transitions "
+                "the agent collects before it stalls and induces "
+                "(`len(self.transitions) >= self.explore_budget`), and through "
+                "`_active_transitions()` it also sets how much evidence the induction prompt "
+                "is built from. IT IS NOT THE SCORED VALUE ON EVERY GAME. "
+                "`make_carnot_agent` passes no explore_budget, so the scored policy resolves "
+                "it per-game via `_route_explore_budget`: SUBMITTED_ROUTED_EXPLORE_BUDGET "
+                "(24) when the routed strategy has uses_goal_distance_heuristic=False, "
+                "SUBMITTED_GRAPH_EXPLORE_BUDGET (80) otherwise. Resolved live on this "
+                "machine, that is 24 for tn36 alone and 80 for the other four. The earlier "
+                "wording of this field ('24 = SUBMITTED_ROUTED_EXPLORE_BUDGET, a real "
+                "shipped value') was true in the abstract and misleading per game; it is "
+                "corrected here rather than quietly dropped. Read "
+                "scored_explore_budget_by_game below and, for what it does and does not "
+                "confound, each per-game entry's explore_budget_scope."
+            )
+            % args.explore_budget,
+            "scored_explore_budget_by_game": {
+                g: _scored_explore_budget(g) for g in sorted({str(a.get("game")) for a in analysed})
+            },
+            "explore_budget_direction_of_effect": (
+                "ON THE HEADLINE, CONSERVATIVE. Stalling at 24 instead of 80 makes the "
+                "induce path fire EARLIER and leaves MORE of the 400-action budget available "
+                "for plan execution, so the reported plan-derived share is if anything an "
+                "OVER-estimate of what the scored configuration would produce. The run's own "
+                "data agrees: the one game measured at its correct budget (tn36, 24) has by "
+                "far the highest plan-derived share at 15.4%, while the four measured at a "
+                "third of theirs are all at or below 1.3%. ON THE PER-GAME "
+                "'where_it_is_lost' DIAGNOSIS, NOT CONSERVATIVE -- see explore_budget_scope."
             ),
             "wall_s_cap": args.wall_s,
             "policy": "E3AgentPolicy via arc_actions_to_progress.run_bounded_progress",
@@ -579,6 +812,27 @@ def main() -> int:
             "mutates that dict afterwards. Engine-trust verdicts in this artifact are "
             "therefore taken from result_row.induction_events (the FINAL state), and only "
             "the action accounting is taken from the rows.",
+            "EXPLORE_BUDGET WAS PINNED TO 24 AND IS NOT THE SCORED VALUE ON 4 OF THE 5 "
+            "GAMES. `make_carnot_agent` passes no explore_budget; `_route_explore_budget` "
+            "resolves tn36 to 24 (program_editor) and ft09/lp85/tr87/vc33 to 80 "
+            "(graph_explore). Direction, split honestly: the HEADLINE plan-derived share is "
+            "made LARGER by this, not smaller -- an earlier stall means the pipeline fires "
+            "sooner and has more of the 400 actions left to spend -- so the headline "
+            "survives the mismatch as an upper bound. The PER-GAME 'where_it_is_lost' "
+            "diagnosis does NOT survive it unqualified: the stall threshold is the budget, "
+            "and `_active_transitions()` is the induce prompt's input, so on the "
+            "stall-triggered games a verdict of 'the induced model was not accurate enough' "
+            "was measured on an engine induced from ~25 transitions where the scored agent "
+            "would have supplied ~81. Each per-game entry now carries explore_budget_scope "
+            "saying which of the three cases it is in. The cheap fix is one re-run of tr87 "
+            "or ft09 at explore_budget=80.",
+            "INDUCTION TRIGGER MATTERS WHEN READING THAT CAVEAT. `_should_enter_induction` "
+            "prioritises `level_up_reinduction` over `stall`, and the reinduction path runs "
+            "on the POST-BOUNDARY active-transition slice (transition_count is 1 in every "
+            "observed reinduction event here) rather than on the explore budget. So vc33, "
+            "whose observed inductions are all reinductions, is not confounded through the "
+            "induce-evidence channel even though its budget was mis-set; the stall-triggered "
+            "games are. induction_triggers_observed is recorded per game.",
         ],
         "known_lint_scope_gap": (
             "This artifact declares inference_substrate=live_llm_inference, and "
@@ -604,6 +858,25 @@ def main() -> int:
             "report_builder": "scripts/arc_action_provenance_census_report.py",
             "instrument_flag": "CARNOT_ARC_ACTION_PROVENANCE=1 (default OFF; shipped agent unchanged)",
         },
+        # EMITTED BY THE BUILDER, NOT HAND-ADDED TO THE OUTPUT. This field was originally
+        # typed straight into artifact.json after the build, so the very first re-derivation
+        # of the report silently DELETED it -- a never-prune violation executed by a script,
+        # caught only by diffing the regenerated artifact against the committed one. Any
+        # statement that belongs in the artifact belongs in the generator of the artifact;
+        # otherwise "re-runnable analysis" and "the record is preserved" are in direct
+        # conflict and the rebuild wins by default.
+        "supersedes_artifact_raw": (
+            "artifact_raw.json in this directory is the CENSUS DRIVER's own in-flight "
+            "output. It was computed by the long-running driver process, which had loaded "
+            "analyse_cell BEFORE the pre-registered wall-truncation rule and the level-up "
+            "ordering fields were added, so its missing-observation classification DISAGREES "
+            "with this file's. THIS FILE (artifact.json) IS AUTHORITATIVE: it is regenerated "
+            "from cells/ by scripts/arc_action_provenance_census_report.py and anyone can "
+            "re-derive it. artifact_raw is kept rather than deleted because it carries the "
+            "driver-side record nothing else has (total wall time, the per-cell GPU handoff "
+            "waits), and because deleting a disagreeing record is how a project loses the "
+            "evidence that it changed its mind."
+        ),
     }
 
     # PRECONDITIONS, read back off the evidence rather than restated as intentions.
