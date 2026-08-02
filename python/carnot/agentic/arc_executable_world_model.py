@@ -3790,6 +3790,147 @@ def _goal_prompt_transitions_on() -> bool:
     return bool(raw) and raw.strip() == "1"
 
 
+def _goal_dedup_on() -> bool:
+    """Should the split-induce path guarantee EXACTLY ONE `is_level_complete`? DEFAULT OFF
+    (env `CARNOT_ARC_GOAL_DEDUP=1`).
+
+    THE DEFECT. On the split-induce fallback, `_combine_world_model` concatenates the
+    engine-only completion and the goal-only completion. The engine-only prompt is
+    `induce_prompt(...)` and carries the observed transitions; the goal-only prompt is
+    `_goal_only_prompt(...)` and by default carries none. The model frequently writes an
+    `is_level_complete` in the ENGINE-only response as well (the base prompt describes the
+    whole interface), so the concatenation ships TWO top-level definitions and Python binds
+    the second -- the evidence-free one. Measured 2026-08-02 over the frozen corpus at
+    `results/arc_goal_predicate_shadowing_20260802/`: 23 of 116 concatenated world models
+    carry two definitions, against 0 of 40 raw single-call completions, so the duplication
+    is produced by the concatenation and not by the model redefining the function.
+
+    WHAT THE MEASUREMENT DID **NOT** SHOW, recorded here because the docstring on
+    `_goal_prompt_transitions_on` above asserts the motivating half of this story and it is
+    only PARTLY right. Grading both definitions of all 23 cells through the shipped goal gate
+    (`arc_llm_reinduction._goal_satisfiability_check`, same engine, same root grid, one
+    killable subprocess each) does NOT show the shadowed definition is systematically better:
+    2 shadowed arms were satisfiable against 1 bound arm, and in 20 of 23 cells BOTH were
+    unsatisfiable, so the gate cannot separate them at all. Verified stable against the root
+    grid used -- on the 3 games with a recorded planner root, that root is byte-identical to
+    the arcade opening board and 0 of 10 arm verdicts changed. So this flag must NOT be sold
+    as recovering a good predicate; on the gate's own criterion the expected gain is +1 cell
+    in 23, which is noise.
+
+    WHAT IT DID SHOW, and the only reason this ships at all: a ONE-SIDED VALIDITY defect.
+    4 of 23 BOUND definitions are not usable predicates in the first place -- two return
+    `None` (the body falls through), one raises `NameError` on a variable the model never
+    bound, and one does not terminate inside 120s -- against 0 of 23 shadowed definitions.
+    Binding the second definition is therefore strictly worse on validity while being a coin
+    flip on quality. The failure modes also differ sharply: every one of the 11 unconditional
+    `return False` predicates sits in the ENGINE half, and every one of the 8 whole-board
+    "one colour" tropes sits in the GOAL-ONLY half.
+
+    WHY IT SHIPS OFF. It changes what the scored agent writes to `world_model.py`, and its
+    evidence is observational -- a frozen corpus graded after the fact, not an A/B on the live
+    path. Default OFF keeps the control arm of any future measurement the SHIPPED path rather
+    than a re-rendering of it, exactly as `_goal_defect_check_on` and
+    `_goal_prompt_transitions_on` do. Flipping the default is an operator decision.
+
+    A malformed value falls back to OFF: a typo'd env var must not change how the scored agent
+    behaves.
+    """
+    raw = os.environ.get("CARNOT_ARC_GOAL_DEDUP")
+    return bool(raw) and raw.strip() == "1"
+
+
+def _goal_predicate_is_constant_false(code: str) -> bool:
+    """Does the LAST top-level `is_level_complete` in `code` do nothing but `return False`?
+
+    A declined predicate is not a bug -- given a prompt that says nothing about the win
+    condition, `return False` is arguably the honest answer, and 11 of the 23 engine halves in
+    the frozen corpus say so in their own comments. But it carries no information, so it must
+    NOT out-rank a goal-only completion: `_split_induce` treats "the engine half already
+    answered" as false when the answer is this one, and still spends the focused goal call.
+
+    Docstrings and bare constant expressions are ignored so a commented-out or documented
+    decline still counts as one. Unparseable input is NOT constant-false -- an unparseable
+    half is a different defect and is caught by the static validator, not here.
+    """
+    import ast as _ast
+
+    try:
+        tree = _ast.parse(code)
+    except SyntaxError:
+        return False
+    fns = [
+        n for n in tree.body if isinstance(n, _ast.FunctionDef) and n.name == "is_level_complete"
+    ]
+    if not fns:
+        return False
+    body = [
+        s
+        for s in fns[-1].body
+        if not (isinstance(s, _ast.Expr) and isinstance(s.value, _ast.Constant))
+    ]
+    return (
+        len(body) == 1
+        and isinstance(body[0], _ast.Return)
+        and isinstance(body[0].value, _ast.Constant)
+        and body[0].value.value is False
+    )
+
+
+def _engine_half_goal_usable(engine_code: str) -> bool:
+    """Did the ENGINE-only completion already supply a goal predicate worth keeping?
+
+    Three conditions, all necessary. It must be PRESENT; it must be free of the shipped
+    static validator's defects for that function name (`missing_return` is the one that
+    matters -- a predicate whose body falls through returns `None`, and `None` is not an
+    answer); and it must not be the constant-false decline, which carries no information.
+
+    Deliberately reuses `arc_engine_static_validation.missing_return_defects` rather than
+    re-deriving the check, so this cannot drift away from the validator the project already
+    ships for exactly this question.
+    """
+    import ast as _ast
+
+    try:
+        tree = _ast.parse(engine_code)
+    except SyntaxError:
+        return False
+    if not any(
+        isinstance(n, _ast.FunctionDef) and n.name == "is_level_complete" for n in tree.body
+    ):
+        return False
+    if _goal_predicate_is_constant_false(engine_code):
+        return False
+    from carnot.agentic import arc_engine_static_validation as _sv
+
+    return not _sv.missing_return_defects(engine_code, "is_level_complete")
+
+
+def _strip_top_level_goal_defs(code: str) -> str:
+    """Remove every top-level `def is_level_complete` from `code`, preserving all else.
+
+    Line-range excision on the original text, NOT `ast.unparse`: the engine half carries the
+    model's own comments and helper functions, and a round-trip through `unparse` would
+    silently rewrite all of it. A definition nested inside another function is left alone --
+    `exec` never binds it at module level, so it is not a competing definition.
+    """
+    import ast as _ast
+
+    try:
+        tree = _ast.parse(code)
+    except SyntaxError:
+        return code
+    drop: set[int] = set()
+    for node in tree.body:
+        if isinstance(node, _ast.FunctionDef) and node.name == "is_level_complete":
+            start = min([node.lineno] + [d.lineno for d in node.decorator_list])
+            for ln in range(start, (node.end_lineno or node.lineno) + 1):
+                drop.add(ln)
+    if not drop:
+        return code
+    kept = [l for n, l in enumerate(code.splitlines(), start=1) if n not in drop]
+    return "\n".join(kept).rstrip() + "\n"
+
+
 def _reject_inert_engines() -> bool:
     """Should a CLEAN-BUT-INERT induced engine be rejected and re-asked? DEFAULT OFF.
 
@@ -6231,8 +6372,25 @@ class LocalGGUFProposer:
     def _combine_world_model(self, engine_code: str, goal_code: str) -> str:
         """Concatenate a focused engine block and a focused is_level_complete block into one world
         model. Both pieces already parse individually (generate validates each); duplicate imports
-        are valid Python, but we verify the concatenation parses and fall back to a raw join."""
+        are valid Python, but we verify the concatenation parses and fall back to a raw join.
+
+        UNDER `_goal_dedup_on()` (DEFAULT OFF) the engine half's own top-level
+        `is_level_complete` is excised before the join, so the result defines the function
+        EXACTLY ONCE. This is the belt to `_split_induce`'s braces: that path normally avoids
+        calling the goal generator at all when the engine half already answered usefully, but
+        when it does call it -- because the engine half declined, or was structurally defective
+        -- the two halves would still both define the function and the reader would be back to
+        inferring which one runs. Making it impossible here means no caller of this function can
+        produce a shadowed file, whatever it passes in.
+
+        See `_goal_dedup_on` for what the frozen-corpus measurement did and did NOT establish;
+        in particular this is justified by a validity asymmetry, not by the shadowed predicate
+        being better.
+        """
         import ast
+
+        if _goal_dedup_on():
+            engine_code = _strip_top_level_goal_defs(engine_code)
 
         combined = (
             "import numpy as np\n\n" + engine_code.strip() + "\n\n" + goal_code.strip() + "\n"
@@ -6291,6 +6449,40 @@ class LocalGGUFProposer:
         )
         if not ok_e:
             return False, f"split induce: engine failed: {str(eng)[:150]}"
+        # THE ENGINE HALF MAY ALREADY HAVE ANSWERED. `required=("engine",)` means the engine is
+        # the only thing this call had to produce, but the base prompt describes the whole
+        # interface, so the model routinely writes an `is_level_complete` here too -- and this
+        # one saw the transitions and the opening grid, which the goal-only prompt does not.
+        # Generating a second definition and appending it after this one used to be
+        # unconditional, and Python binds the last, so the evidence-carrying predicate was
+        # overwritten by construction on every such cell.
+        #
+        # Skipping the goal call when the engine half already supplied a STRUCTURALLY VALID,
+        # NON-DECLINED predicate makes the shadowing impossible rather than unlikely, and costs
+        # one fewer generation call. When the engine half declined (`return False`) or is
+        # defective, the goal call still runs -- there is genuinely nothing to preserve, and
+        # `_combine_world_model` then excises the dud so the file still defines the function
+        # once.
+        #
+        # DEFAULT OFF. Read `_goal_dedup_on` before flipping it: the measurement behind this
+        # establishes a validity asymmetry (4 of 23 bound definitions are not usable predicates
+        # at all, against 0 of 23 shadowed), NOT that the preserved predicate scores better on
+        # the goal gate -- there it is 2 against 1 across 23 cells, which is noise.
+        if _goal_dedup_on() and _engine_half_goal_usable(eng):
+            # The `import numpy as np` prefix is NOT decoration: `_combine_world_model` prepends
+            # it on every split-induce write, so skipping the join must not quietly drop that
+            # guarantee. A completion that uses `np` without importing it at top level would
+            # load fine through the old path and raise `NameError` through this one. Measured
+            # over the 40 raw completions in `results/arc_induce_bestofn_20260731`, 0 lack the
+            # import -- so this is belt-and-braces, not a live failure. It is here anyway
+            # because "the corpus happens not to exercise it" is a reason to keep an invariant
+            # cheaply, not a reason to drop it. A duplicate import is valid Python and is
+            # exactly what the shipped path already produces.
+            return self._write_world_model(
+                game,
+                "import numpy as np\n\n" + eng.strip() + "\n",
+                note="split induce: engine half supplied is_level_complete (dedup)",
+            )
         ok_g, goal = self.generate(
             self._goal_only_prompt(game, previous_level_complete_grid, trans),
             ("is_level_complete",),

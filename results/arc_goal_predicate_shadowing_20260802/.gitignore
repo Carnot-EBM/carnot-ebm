@@ -1,0 +1,10 @@
+# The 20 captured root grids (~724K of binary pickles) are NOT committed.
+#
+# They are deterministically regenerable with `capture_roots.py`, whose only input is the
+# `environment_files/` checkout that IS committed, and `roots_manifest.json` -- which IS
+# committed -- records the shape, palette and sha256 of every one. So a reader can rebuild
+# them and verify byte-for-byte that they got the same grids this measurement used.
+#
+# Pickles are also the wrong committed format on their own terms: they are opaque to diff
+# and review, and they execute on load.
+roots/
