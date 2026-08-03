@@ -824,5 +824,6 @@
  "evidence_unchanged": true,
  "duration_s": 217.569,
  "reproducibility_checksum": "5d14a7922e95664d042242475e4e016ac33b73f7f9edbdb0e29d146d108dac1e",
- "honest_verdict": "complete_both_instrument_defects_reproduced"
+ "honest_verdict": "complete_both_instrument_defects_reproduced",
+  "n_correct_cases_shown_in_prompt_provenance": "STRUCTURAL CONSTANT, NOT A MEASUREMENT. Every `n_correct_cases_shown_in_prompt: 0` and the aggregate `n_correct_cases_shown_anywhere: 0` in this artifact are hardcoded literals in scripts/experiments/outer_loop_arc_refine_instrument_repro_20260803.py (lines 156, 288), not counted from a rendered prompt. The value is TRUE by construction -- refactor_prompt renders only _bounded_mismatches, so no correct/acceptance case can appear -- but a hardcoded constant sitting among genuinely measured fields is the shape that later gets cited as a measurement. Recorded 2026-08-03 on adversarial review; the original fields are left in place per never-prune. The measured counterpart in this artifact IS real: the engine-line delivery counts were computed by rendering the live prompt."
 }

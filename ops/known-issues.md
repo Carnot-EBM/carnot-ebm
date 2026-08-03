@@ -4,6 +4,113 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-08-03 (RULING — ARC induction line is CLOSED; and the determination record was destroyed a THIRD time, by a guard-exempt path)
+
+**Two things, both decided. Read the ruling first; it is the allocation decision. Read the
+second half if you own the conductor — it is a live, recurring, self-concealing record loss.**
+
+#### 1. RULING on the pre-committed ARC stopping rule: the induction line is CLOSED
+
+The operator pre-committed on 2026-08-03: *if the ARC shot is null, the induction line closes and
+ARC drops to its one-slot floor.* Ruling, in the order the facts actually sit:
+
+- **The shot was NOT null. It was BLOCKED, and that distinction is not a technicality.** The live
+  A/B (`results/experiment_6091_refine_engine_visible_ab.json`) attempted 2 cells and vouched **0**:
+  every `llama-server` on the host was killed within seconds to minutes (lifetimes 369s / 17s / 10s
+  / 53s off the servers' own logs, plus a standalone control at 22s), with no OOM or abort record
+  and 34.75 tok/s decode right up to the kill. There is no cell to report a number from. Recording
+  that as a null would be precisely the fabrication the per-cell substrate witness was built to
+  prevent, and it is not recorded as one.
+- **The line closes anyway, and not on the blocked shot.** It closes on the INDEPENDENT measured
+  negative already recorded in the entry below: **0 of 296 clean engine-units with `n_changing>=3`
+  reach held-out `change_accuracy >= 0.5`, and 0 exceed 0.0**, over 14 games and both branches,
+  hostile-reproduced cell-for-cell including the leakage attack that would have invalidated it.
+  That is a real number, independently re-executed, and it is what the allocation drop already
+  cites. Corrections C4 (scoped to the LOCAL SINGLE-SHOT GGUF INDUCER) and C2 (rule-of-three bound
+  3/14 = 0.214, not 3/20) travel with it — do not quote it bare.
+- **An instrument defect WAS found, and it does not reopen the axis.** The refactor prompt never
+  contained the engine (**0 of 454 substantive engine source lines reached the prompt, on 13 of 13
+  games**; the only matches were the prompt quoting its own output template). So "REFACTOR … while
+  keeping the cases it already gets right" was unachievable by construction, and **exp5766's CEGIS
+  null did not falsify refinement — it falsified the instrument.** This is recorded, fixed behind a
+  default-OFF flag, and tested. It is deliberately NOT grounds for a re-run: the pre-commitment
+  anticipated this exact escape hatch, and the axis's prior evidence base being void is a reason
+  the axis cannot be *defended*, not a reason to spend another slot on it.
+
+**Binding consequences for the planner.** ARC sits at exactly its ONE-slot floor, filled from
+CLAUDE.md "ARC-AGI-3 Generalization-Testing Floor" (held-out / LOGO live-path measurement, kit
+primitive hardening, cross-game gotcha mining). **Do NOT propose a follow-up on the refinement /
+single-shot-GGUF-induction axis** — not a fresh prompt phrasing, not a budget or repetition-control
+variation, and not a re-run of the engine-visible A/B, however tempting the fixed instrument makes
+it. Phase D holds the majority. The fixed `CARNOT_ARC_REFACTOR_SHOW_ENGINE` capability stays in the
+tree, tested and default-OFF, for whoever later has a healthy host and an operator decision to
+spend a slot on it — it is banked, not queued.
+
+**One design property to know before anyone ever reconsiders**: in the A/B as built, all 11
+gradeable games carry exactly ONE gradeable acceptance row each, so the primary metric is a single
+Bernoulli draw per game and the quoted min-reachable p=0.00098 requires 11 of 11 concordant. A
+merely-good effect (8 of 11) lands at p=0.23. The design pre-registers continuous secondaries
+(`change_fidelity`, `cell_recall`) for exactly this reason. Any future reconsideration must settle
+which metric carries the decision BEFORE the shot, not after.
+
+**Still open, deliberately**: the sender that reaped every `llama-server` is **unidentified**. Ruled
+out by measurement (not assumption): host OOM (94 GB free), the 2-hour orphan janitor, the CUDA
+guard, llama.cpp slot arithmetic (a real bug, found and fixed — without `--parallel 1` a 4-slot
+unified KV cache gives one slot n_ctx/4), a name-matching reaper (binary copied to a private path),
+process-group delivery (`setsid` on parent AND child), and an inherited `SIG_IGN` (llama.cpp
+reinstalls its own handler). This will recur on the next live generator run of ANY track, including
+Phase D. Do not let the BLOCKED artifact stand in for a diagnosis.
+
+#### 2. The fabrication-gate determination record was destroyed a THIRD time — the guard works and cannot see the commit
+
+**This is the more serious of the two findings, and it is not an ARC issue.**
+
+On 2026-07-27 seven artifacts lost their `flagged_adversarial` quarantine stamps. On 2026-08-03
+conductor commit `4b7c813d28` dropped 34 determination keys and they were restored by `fe489db847`.
+**Today, conductor commits `2fd717c9d5` and `e5ba484dfa` dropped them again** — 24 keys across four
+artifacts (exp1938, exp2085, exp4162, exp4170): `flagged_adversarial`, `corrigendum_pending`,
+`corrigendum_note`, `flagged_adversarial_restoration_note`, `flagged_adversarial_restored_fields`,
+`restored_2026_08_03_note`. Restored again today, additive-only (key-diff: dropped=0, changed=0).
+
+**Why it keeps happening, measured rather than assumed.**
+`scripts/determination_preservation_lint.py` is NOT silently non-firing — the 2026-07-29 widening
+works. Run against both offending commits' parents it **exits 1** and names every dropped field
+(17 and 9 violation lines respectively). The guard is correct, wired to pre-commit, and blind:
+
+> `scripts/research_conductor.py:1565-1566` — `git add -A` on one line, `git commit --no-verify` on
+> the next.
+
+So the ONLY commit path that does this damage is the one path that never runs the hook. The
+function's docstring asserts *"verification coverage is preserved at the right boundaries"* — that
+claim is **false for this guard class**, because the boundary that matters (a pytest child rewriting
+`results/**`, then `git add -A`) is inside the exempt path. It is the machine executing exactly what
+CLAUDE.md's Test-Run Record Integrity Discipline rule 1 forbids humans and agents from doing.
+
+**Not changed here, on purpose.** The `--no-verify` was an operator directive (2026-05-03) written
+against a real, documented data-loss mode: pre-commit's `staged_files_only` stashes unstaged work
+and silently loses it when the restore patch fails. Trading a recurring quarantine-lift for a
+recurring stash-loss is not a call to make unilaterally at 1am inside another task. **Operator
+decision required.** The narrow options, cheapest first: (a) run
+`determination_preservation_lint.py` as an explicit pre-flight *inside* `git_commit_and_push` before
+`git add -A`, refusing or auto-restoring rather than relying on the hook — no stash, so the original
+directive is untouched; (b) `git add` explicit paths instead of `-A`; (c) restore determinations
+post-hoc on a timer. Option (a) is the smallest change that closes the class.
+
+**Why this outranks a normal never-prune violation**: every consumer of the fabrication gate keys
+off the FIELD BEING PRESENT, so a dropped stamp does not merely lose history — it silently re-admits
+a quarantined artifact to headline, capstone, and paper-v6 aggregation. Note also that in today's
+event the conductor changed **no measurement value at all** in the four files; the diff was pure
+determination loss, so fail-forward bought nothing here.
+
+**A related, systemic defect, filed not fixed.** The freshness lint's own printed remedy ("rebuild
+with: …") **destroys never-prune records**. The analyser scripts build `art["provenance"] = {…}`
+wholesale without ever reading the artifact they overwrite, so a rebuild silently drops
+`provenance.freshness_acknowledgements`. Reproduced on two independent analysers. Current exposure:
+**170 acknowledgement blocks across 13 of the 16 artifacts** in `ops/analyzer_artifact_index.json`.
+It is self-concealing — the rebuild also resets `provenance.code[*].sha256` to current, so the lint
+turns GREEN at the same moment the audit trail is erased. Fix belongs with the analysers' owner
+(read-merge-preserve the existing provenance block); until then, prefer acknowledgement over rebuild.
+
 ### 2026-08-03 (MANDATORY-NEXT-MILESTONE, outer-loop allocation correction): ARC drops to its FLOOR of one slot; PHASE D retakes the majority — and the first Phase D experiment is NOT any of the three constructions the program's own prose still names
 
 **Read this before drafting the next roadmap. It changes the allocation AND it corrects a stale
@@ -82,7 +189,44 @@ self-consistency on MMLU-Pro, at a sample size that can actually detect the publ
 - **Domain where SC is NOT saturated.** MMLU-Pro is the only corpus in this program with real,
   statistically-significant, oracle-distinct headroom: 5-shot `oracle_at_k=0.500` vs
   `sc_vote=0.125`, headroom 0.375, CI95 [0.225, 0.525] excluding 0
-  (`results/experiment_mmlu_pro_fewshot_headroom_check.json`). MuSR is retired (SC near-ceiling);
+  (`results/experiment_mmlu_pro_fewshot_headroom_check.json`).
+
+  > **CORRECTION 2026-08-03 (adversarial review; the numbers above are all correct, the
+  > INFERENCE from them is not — read this before treating MMLU-Pro as a headroom domain).**
+  > The 0.375 headroom is **combinatorial, not selectable signal.** Re-measured directly from
+  > `results/experiment_mmlu_pro_fewshot_candidate_pool.jsonl` (240 rows, 40 questions x K=6):
+  > per-candidate accuracy is **30/240 = 0.125** on a **10-way** MCQ (gold letters span A–J, so
+  > the chance floor is 0.10). Under pure independent chance-level sampling, oracle@6 =
+  > 1-(1-0.125)^6 = **0.551** — and the **observed oracle@6 is 0.500, BELOW that prediction.**
+  > Recomputed from the raw rows, `sc_vote` = 5/40 = 0.125 exactly and oracle = 20/40 = 0.500
+  > exactly, so the artifact's own numbers reproduce; it is their interpretation that fails.
+  > Further, 0.125 is **not statistically distinguishable from the 0.10 chance floor** (z=1.17,
+  > SE=0.0214, n=240). There is no evidence here of a competent generator whose correct answer
+  > merely needs selecting — which is the premise a selection verifier requires.
+  >
+  > The headroom artifact's own `generator_quality_verdict` says so and must travel with the
+  > number: *"sc_vote is still close to the random-chance floor even with 5-shot CoT — the
+  > generator-weakness confound from the zero-shot run is NOT resolved by prompting alone; **a
+  > stronger/larger model would be the next lever, not more prompt engineering.**"* The bullet
+  > below forbids exactly that lever on evidence-backed grounds (exp5813: 2/144 exact labels,
+  > 134 truncations, `answer_channel_ready_score=0.0` on the 31B/35B families) — that block is
+  > real, but it means the source artifact's own stated remedy is being **discarded with no
+  > substitute**, and the planner must see that trade rather than read the block as merely
+  > dodging a scope-match trap.
+  >
+  > **Consequences, binding on the Phase D-H1 task spec:** (1) the identically-wrong-consensus
+  > stratum is not merely the "cheap first" path, it is the **only** arm immune to this confound
+  > — treat it as primary, not as a bonus slice; (2) the required-n arithmetic below rescales a
+  > CI computed on this same chance-level pool toward TrajSelector's +4.61 pp, which is measured
+  > on *competent* samplers at Best-of-32 — so n>=866 could buy a precise estimate of zero, and
+  > that null would be as unfalsifiable as exp5163's, the exact failure this proposal exists to
+  > avoid; (3) therefore **add a generator-competence PRECONDITION** alongside the per-layer
+  > access one: pooled per-candidate accuracy materially above the 0.10 chance floor, or
+  > observed oracle@k materially above the 1-(1-p)^k independence prediction, else emit
+  > `blocked_generator_at_chance_floor` and stop. Without it the oracle-peeking positive control
+  > is the only thing standing between this experiment and another unfalsifiable null.
+
+  MuSR is retired (SC near-ceiling);
   FoVer is retired twice over (its headroom was a construction artifact, and a cheap
   text-statistical baseline already matches a semantic model there because incorrect steps run
   ~5x longer); ConstraintBench candidates are solver-backed, not real LLM samples.
@@ -141,6 +285,14 @@ self-consistency on MMLU-Pro, at a sample size that can actually detect the publ
   exactly chance on both), measuring representational DRIFT, not candidate SELECTION. exp5178 is the
   second prior and is unfalsifiable as run (n=6, McNemar p=0.5, wrong corpus, final-token-only
   access). Name both, state what differs, set `retire_if_same_verdict: true`.
+
+  > **CORRECTION 2026-08-03 (adversarial review): state exp5178's point estimate wherever it is
+  > cited — it runs AGAINST this proposal and was omitted.** Its top-level `honest_verdict` ends
+  > `...hidden0.000_sc0.333_delta-0.333`: the closest prior attempt at this exact mechanism scored
+  > **0.000 vs tuned SC 0.333**. "Unfalsifiable as run" remains a fair reading at n=6 (a delta that
+  > large on 6 questions is 2 questions), and it is why the prior does not retire the lane — but
+  > the direction of the omitted number is adverse, and a `prior_failures:` block that cites
+  > exp5178 without it is not an honest accounting of the prior.
 
 #### 4. Why this is NOT the retired ARC-energy direction
 

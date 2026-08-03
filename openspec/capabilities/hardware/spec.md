@@ -293,6 +293,71 @@ with `complete_static_mapping:`.
 
 ---
 
+### REQ-HW-5967
+
+**Title:** Exp5967 delayed-commit memory fixture MUST emit backend-neutral fixed-width trace receipts without hardware execution claims
+
+**Description:**
+Experiment 5967 SHALL emit a fixed-width backend-neutral operation trace for
+the delayed-commit memory lifecycle derived from ready Exp5920, Exp5924, and
+Exp5926 receipts. The trace SHALL encode read snapshot, propose, validate,
+commit, quarantine, supersede, rollback, crash replay, rejection, and control
+operations with finite operation ids, state versions, event indices, capacity
+bounds, payload hashes, validator receipt hashes, return codes, and resulting
+state hashes suitable for CPU, GPU, FPGA, or future TSU mapping.
+
+The trace is portability evidence only. Exp5967 MUST NOT claim board
+execution, speedup, power, energy, thermalization, convergence, TSU execution,
+Kona execution, or production readiness. Python/Rust/PyO3 parity receipts MAY
+prove operation/state/status/error equality for the trace, but physical
+execution requires a separate authenticated route and is out of scope.
+
+Required artifact fields:
+
+- `fixed_width_operation_trace_path_and_hash`
+- `python_rust_pyo3_trace_parity`
+- `inference_substrate`
+- `honest_verdict`
+
+Required field principles:
+
+- `fixed_width_operation_trace_path_and_hash`: principle "Portability evidence is the immutable ABI trace, not a board claim."
+- `python_rust_pyo3_trace_parity`: principle "Every operation, version, return value, and final hash agrees exactly."
+- `inference_substrate`: principle "Use deterministic transactional replay with no LLM and no board execution."
+- `honest_verdict`: principle "Use a terminal delayed-commit fixture prefix without performance or hardware-execution claims."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5967_delayed_commit_memory_fixture --date 20260803`
+  writes `results/experiment_5967_delayed_commit_memory_fixture.json` and a
+  hashed fixed-width operation trace.
+- The trace covers delayed production writes and the matched same-event
+  write-through control with identical capacity, retrieval policy, event
+  order, and compute accounting.
+- Python/Rust/PyO3 trace parity receipts match exactly for operation names,
+  versions, return values, state hashes, final hashes, and error codes.
+- The artifact states no hardware execution or performance claim and uses
+  `inference_substrate="deterministic_delayed_commit_transactional_replay_no_llm"`.
+
+**Implementation status:** Planned (Exp 5967)
+
+---
+
+### SCENARIO-HW-5967
+
+**Scenario:** Exp5967 writes a portable delayed-commit trace without board claims.
+
+**Given:** Exp5920, Exp5924, and Exp5926 are ready and no authenticated
+hardware route is being exercised,
+**When:** Exp5967 writes its delayed-commit fixed-width operation trace,
+**Then:** the trace hash is recorded, Python/Rust/PyO3 trace parity is exact,
+the same-event write-through arm is labelled as a control, and no board
+execution, speedup, power, energy, thermalization, convergence, TSU, Kona, or
+production-readiness claim is made.
+
+**Implementation status:** Planned (Exp 5967)
+
+---
+
 ### REQ-HW-5861
 
 **Title:** Exp5861 attached-board state receipts MUST distinguish no-change, blocked, and authenticated state-operation execution

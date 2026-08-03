@@ -26003,6 +26003,144 @@ match exactly.
 |---|---|---|---|
 | REQ-LEARN-5926 | Implemented (`python/carnot/adaptive_state_abi_v2.py`, `results/experiment_5926_adaptive_state_abi_v2_parity.json`) | Implemented (`crates/carnot-core/src/adaptive_state.rs`, `crates/carnot-python/src/adaptive_state.rs`) | Implemented (`tests/python/test_experiment_5926_adaptive_state_abi_v2_parity.py`, Rust unit tests) |
 
+## REQ-LEARN-5967: Delayed-Commit Memory Fixture With Frozen Read Snapshots
+
+The self-learning tier SHALL provide Exp5967, a deterministic no-LLM delayed
+commit memory fixture at
+`python/carnot/experiment_5967_delayed_commit_memory_fixture.py` that consumes
+only ready Exp5920, Exp5924, and Exp5926 receipts and writes
+`results/experiment_5967_delayed_commit_memory_fixture.json` plus the
+fixed-width operation trace
+`results/experiment_5967_delayed_commit_memory_fixture.trace.jsonl`. Exp5967
+SHALL NOT depend on Exp5912, Exp5913, Exp5923, or Exp5936 outputs and SHALL
+NOT mutate `scripts/research_conductor.py`.
+
+Exp5967 SHALL define `read_snapshot(version)`, `propose(base_version,event)`,
+`validate(proposal,future_window)`, `commit(proposal)`, `quarantine`,
+`supersede`, and `rollback` as distinct versioned operations. A proposal SHALL
+read only its immutable base version; later events, concurrent proposals, and
+same-event writes SHALL NOT mutate that frozen read snapshot. Label reveal and
+exact validation SHALL occur only after proposal sealing, and same-event
+success SHALL NOT promote an update before the delayed commit boundary.
+
+The production policy SHALL use delayed writes: validated proposals become
+readable only after commit. The experiment SHALL also emit a matched
+same-event write-through control with identical state capacity, retrieval
+policy, chronological event order, and compute accounting; the control's write
+is visible immediately by design and SHALL be labelled as the coupled control,
+not as the production policy.
+
+Rejected and quarantined updates SHALL have zero lookup, later-proposal,
+snapshot, active-state, replay-context, or protected-prefix propagation.
+Ambiguous, stale-base, interrupted, duplicate, reordered, corrupted, or
+tampered transitions SHALL fail closed without partial mutation. Supersede,
+rollback, crash replay, and bounded active/quarantine/rejected state SHALL be
+deterministic and replayable. Model weights SHALL remain immutable; all
+learning occurs in external versioned state.
+
+The Python reference, Rust ABI path, and PyO3 binding path SHALL replay the
+same fixed-width backend-neutral operation trace and SHALL agree exactly on
+operation names, versions, return values, state hashes, final hashes, and error
+codes. The trace is portability evidence for CPU, GPU, FPGA, or future TSU
+mapping and SHALL NOT claim hardware execution.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`upstream_replay_hashes_and_readiness`,
+`delayed_commit_state_machine_and_schema`,
+`frozen_snapshot_and_base_version_receipts`,
+`proposal_label_reveal_validation_and_commit_timing`,
+`matched_write_through_control_contract`,
+`quarantine_supersede_rollback_and_bounded_state_receipts`,
+`rejected_update_non_propagation_count`,
+`crash_conflict_permutation_and_tamper_matrix`,
+`python_rust_pyo3_trace_parity`,
+`fixed_width_operation_trace_path_and_hash`,
+`immutable_model_weights_receipt`, `protected_files_unchanged`,
+`delayed_commit_fixture_ready_score`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.
+- `preconditions_checked`: The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.
+- `upstream_replay_hashes_and_readiness`: The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.
+- `delayed_commit_state_machine_and_schema`: Proposal, validation, and commit are distinct versioned operations.
+- `frozen_snapshot_and_base_version_receipts`: Every proposal reads one immutable pre-event version.
+- `proposal_label_reveal_validation_and_commit_timing`: Labels appear only after proposal sealing and same-event utility cannot promote.
+- `matched_write_through_control_contract`: The coupled arm differs only in write visibility timing.
+- `quarantine_supersede_rollback_and_bounded_state_receipts`: Lifecycle and capacity transitions are explicit, reversible, and replayable.
+- `rejected_update_non_propagation_count`: Must be bare zero.
+- `crash_conflict_permutation_and_tamper_matrix`: Ambiguous, stale, interrupted, reordered, or corrupted transitions fail closed.
+- `python_rust_pyo3_trace_parity`: Every operation, version, return value, and final hash agrees exactly.
+- `fixed_width_operation_trace_path_and_hash`: Portability evidence is the immutable ABI trace, not a board claim.
+- `immutable_model_weights_receipt`: All learning occurs in external versioned state.
+- `protected_files_unchanged`: Emit bare true only for unchanged protected files.
+- `delayed_commit_fixture_ready_score`: Emit bare 1.0 only for exact lifecycle/parity success and unchanged protected files.
+- `duration_s`: Use measured deterministic transactional replay with no LLM.
+- `inference_substrate`: Use measured deterministic transactional replay with no LLM.
+- `field_provenance`: Use measured deterministic transactional replay with no LLM.
+- `test_commands`: Use measured deterministic transactional replay with no LLM.
+- `test_exit_codes`: Use measured deterministic transactional replay with no LLM.
+- `reproducibility_checksum`: Use measured deterministic transactional replay with no LLM.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+`delayed_commit_fixture_ready_score` SHALL be the bare scalar `1.0` only when
+Exp5920, Exp5924, and Exp5926 readiness replay passes; delayed commit lifecycle
+checks pass; frozen base versions are immutable; exact validation occurs after
+proposal sealing; the write-through control is matched and labelled; rejected
+updates have bare zero propagation; stale, duplicate, crash, reordered,
+permuted, and tampered transitions fail closed; Python/Rust/PyO3 trace parity
+is exact; fixed-width trace bytes are written and hashed; model weights are
+unchanged; protected files are unchanged; and task-owned commands exit zero.
+Otherwise it SHALL be the bare scalar `0.0`.
+
+The artifact `inference_substrate` SHALL be
+`deterministic_delayed_commit_transactional_replay_no_llm`.
+
+### SCENARIO-LEARN-5967-FROZEN-SNAPSHOT: Later Writes Cannot Mutate Base Reads
+
+**Given** a proposal is sealed against base version `N`
+**When** later events commit active memory changes before the proposal commits
+**Then** `read_snapshot(N)` returns the original immutable base contents
+**And** the proposal's lookup evidence remains unchanged.
+
+### SCENARIO-LEARN-5967-DELAYED-COMMIT: Validation Precedes Read Visibility
+
+**Given** a production delayed-commit proposal has been sealed and validated
+**When** same-event lookup runs before commit
+**Then** the new write is not visible
+**And** the write becomes visible only after the distinct `commit` operation.
+
+### SCENARIO-LEARN-5967-CONTROL: Write-Through Arm Is Matched And Labelled
+
+**Given** the delayed policy and write-through control replay the same events,
+capacity, retrieval policy, order, and compute accounting
+**When** the control writes during the same event
+**Then** immediate visibility is recorded only under the coupled control label.
+
+### SCENARIO-LEARN-5967-FAIL-CLOSED: Unsafe Lifecycle Transitions Do Not Propagate
+
+**Given** stale bases, concurrent proposals, duplicate events, crash prefixes,
+ledger tamper, rollback, supersede, and capacity pressure cases
+**When** each case is replayed
+**Then** ambiguous, interrupted, reordered, or corrupted transitions reject or
+recover without partial mutation and rejected updates have bare zero
+propagation.
+
+### SCENARIO-LEARN-5967-PARITY: Backend Trace Receipts Match Exactly
+
+**Given** the fixed-width delayed-commit trace
+**When** Python, Rust ABI, and PyO3 paths replay it
+**Then** every operation name, version, return value, state hash, final hash,
+and error code matches exactly without claiming hardware execution.
+
+## Implementation Status (Exp 5967)
+
+| Requirement | Python | Rust/PyO3 | Tests |
+|---|---|---|---|
+| REQ-LEARN-5967 | Planned (`python/carnot/experiment_5967_delayed_commit_memory_fixture.py`) | Planned (ABI v2 trace replay receipts) | Planned (`tests/python/test_experiment_5967_delayed_commit_memory_fixture.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded

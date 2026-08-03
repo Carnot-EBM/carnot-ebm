@@ -1,0 +1,830 @@
+{
+  "crash_conflict_permutation_and_tamper_matrix": {
+    "all_fail_closed_or_recovered": true,
+    "cases": [
+      {
+        "case": "stale_base_conflict",
+        "code": "STALE_BASE_CONFLICT",
+        "passed": true
+      },
+      {
+        "case": "commit_order_permutation",
+        "final_hashes": [
+          "sha256:88d1ff2dc944a687eaf7449f9777d9e51a5a1fb44bb8de847801956bc3d63937",
+          "sha256:88d1ff2dc944a687eaf7449f9777d9e51a5a1fb44bb8de847801956bc3d63937"
+        ],
+        "passed": true
+      },
+      {
+        "case": "crash_between_validate_and_commit",
+        "code": "OK",
+        "passed": true
+      },
+      {
+        "case": "ledger_tamper",
+        "passed": true
+      },
+      {
+        "case": "duplicate_event",
+        "code": "DUPLICATE_EVENT",
+        "passed": true
+      }
+    ],
+    "principle": "Ambiguous, stale, interrupted, reordered, or corrupted transitions fail closed."
+  },
+  "delayed_commit_fixture_ready_score": 1.0,
+  "delayed_commit_state_machine_and_schema": {
+    "active_capacity": 3,
+    "operation_schema": "carnot.experiment_5967.delayed_commit_memory_fixture.v1.operation",
+    "principle": "Proposal, validation, and commit are distinct versioned operations.",
+    "proposal_validation_commit_distinct": true,
+    "state_schema": "carnot.experiment_5967.delayed_commit_memory_fixture.v1.state",
+    "supported_operations": [
+      "read_snapshot",
+      "lookup",
+      "propose",
+      "validate",
+      "commit",
+      "quarantine",
+      "supersede",
+      "rollback",
+      "recover",
+      "reject"
+    ],
+    "versioned_base_snapshots": true
+  },
+  "duration_s": 0.225026,
+  "experiment_id": "experiment_5967_delayed_commit_memory_fixture",
+  "field_principles": {
+    "crash_conflict_permutation_and_tamper_matrix": "Ambiguous, stale, interrupted, reordered, or corrupted transitions fail closed.",
+    "delayed_commit_fixture_ready_score": "Emit bare 1.0 only for exact lifecycle/parity success and unchanged protected files.",
+    "delayed_commit_state_machine_and_schema": "Proposal, validation, and commit are distinct versioned operations.",
+    "duration_s": "Use measured deterministic transactional replay with no LLM.",
+    "field_provenance": "Use measured deterministic transactional replay with no LLM.",
+    "fixed_width_operation_trace_path_and_hash": "Portability evidence is the immutable ABI trace, not a board claim.",
+    "frozen_snapshot_and_base_version_receipts": "Every proposal reads one immutable pre-event version.",
+    "honest_verdict": "Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.",
+    "immutable_model_weights_receipt": "All learning occurs in external versioned state.",
+    "inference_substrate": "Use measured deterministic transactional replay with no LLM.",
+    "matched_write_through_control_contract": "The coupled arm differs only in write visibility timing.",
+    "preconditions_checked": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.",
+    "proposal_label_reveal_validation_and_commit_timing": "Labels appear only after proposal sealing and same-event utility cannot promote.",
+    "protected_files_unchanged": "Emit bare true only for unchanged protected files.",
+    "python_rust_pyo3_trace_parity": "Every operation, version, return value, and final hash agrees exactly.",
+    "quarantine_supersede_rollback_and_bounded_state_receipts": "Lifecycle and capacity transitions are explicit, reversible, and replayable.",
+    "rejected_update_non_propagation_count": "Must be bare zero.",
+    "reproducibility_checksum": "Use measured deterministic transactional replay with no LLM.",
+    "status": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.",
+    "test_commands": "Use measured deterministic transactional replay with no LLM.",
+    "test_exit_codes": "Use measured deterministic transactional replay with no LLM.",
+    "upstream_replay_hashes_and_readiness": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts."
+  },
+  "field_provenance": {
+    "crash_conflict_permutation_and_tamper_matrix": {
+      "principle": "Ambiguous, stale, interrupted, reordered, or corrupted transitions fail closed.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "delayed_commit_fixture_ready_score": {
+      "principle": "Emit bare 1.0 only for exact lifecycle/parity success and unchanged protected files.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "delayed_commit_state_machine_and_schema": {
+      "principle": "Proposal, validation, and commit are distinct versioned operations.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Use measured deterministic transactional replay with no LLM.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Use measured deterministic transactional replay with no LLM.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "fixed_width_operation_trace_path_and_hash": {
+      "principle": "Portability evidence is the immutable ABI trace, not a board claim.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "frozen_snapshot_and_base_version_receipts": {
+      "principle": "Every proposal reads one immutable pre-event version.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "immutable_model_weights_receipt": {
+      "principle": "All learning occurs in external versioned state.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use measured deterministic transactional replay with no LLM.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "matched_write_through_control_contract": {
+      "principle": "The coupled arm differs only in write visibility timing.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "proposal_label_reveal_validation_and_commit_timing": {
+      "principle": "Labels appear only after proposal sealing and same-event utility cannot promote.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Emit bare true only for unchanged protected files.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "python_rust_pyo3_trace_parity": {
+      "principle": "Every operation, version, return value, and final hash agrees exactly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "quarantine_supersede_rollback_and_bounded_state_receipts": {
+      "principle": "Lifecycle and capacity transitions are explicit, reversible, and replayable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "rejected_update_non_propagation_count": {
+      "principle": "Must be bare zero.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Use measured deterministic transactional replay with no LLM.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "status": {
+      "principle": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Use measured deterministic transactional replay with no LLM.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Use measured deterministic transactional replay with no LLM.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    },
+    "upstream_replay_hashes_and_readiness": {
+      "principle": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/self-learning/spec.md",
+        "openspec/capabilities/constraint-store/spec.md",
+        "openspec/capabilities/hardware/spec.md",
+        "results/experiment_5920_prospective_event_stream_admission.json",
+        "results/experiment_5924_transactional_constraint_memory_v2.json",
+        "results/experiment_5926_adaptive_state_abi_v2_parity.json",
+        "python/carnot/experiment_5967_delayed_commit_memory_fixture.py",
+        "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py"
+      ]
+    }
+  },
+  "fixed_width_operation_trace_path_and_hash": {
+    "hardware_execution_claimed": false,
+    "path": "results/experiment_5967_delayed_commit_memory_fixture.trace.jsonl",
+    "principle": "Portability evidence is the immutable ABI trace, not a board claim.",
+    "sha256": "sha256:95fd260b2512c1e737fdf550a862a4a8baeaede19d7e5d8ccf6551f1616be1bd"
+  },
+  "frozen_snapshot_and_base_version_receipts": {
+    "all_proposals_bind_base_version": true,
+    "base_snapshot_count": 7,
+    "base_versions": [
+      0,
+      3,
+      6,
+      9,
+      12,
+      15,
+      18
+    ],
+    "frozen_snapshots_immutable": true,
+    "principle": "Every proposal reads one immutable pre-event version.",
+    "proposal_count": 7
+  },
+  "honest_verdict": "complete_ready: delayed_commit_memory_fixture_ready",
+  "immutable_model_weights_receipt": {
+    "after_hash": "sha256:ed12076220b5dedf1a64a673906ff0d37cbe1c7405a6b0f9c612dfe5b5a315e9",
+    "all_unchanged": true,
+    "before_hash": "sha256:ed12076220b5dedf1a64a673906ff0d37cbe1c7405a6b0f9c612dfe5b5a315e9",
+    "model_ref_count": 1,
+    "principle": "All learning occurs in external versioned state.",
+    "weight_update_count": 0
+  },
+  "inference_substrate": "deterministic_delayed_commit_transactional_replay_no_llm",
+  "matched_write_through_control_contract": {
+    "matched_capacity_retrieval_order_and_compute": true,
+    "principle": "The coupled arm differs only in write visibility timing.",
+    "production_delayed_commit": {
+      "compute_accounting": {
+        "capacity": 3,
+        "event_order_hash": "sha256:5a8f18c5e848c8db297289b4c00d4e65de18f1fb0596cca968d3585327894e4b",
+        "retrieval_policy": "exact_key_lookup_against_snapshot_active_state",
+        "validated_promotable_event_count": 5
+      },
+      "event_count": 5,
+      "final_state_hash": "sha256:d53373022126485b485e74cb5fe5add2c964198cd94129fccc82a8dc3f4b7aab",
+      "policy_label": "production_delayed_commit",
+      "same_event_visible_write_count": 0
+    },
+    "same_event_write_through_control": {
+      "compute_accounting": {
+        "capacity": 3,
+        "event_order_hash": "sha256:5a8f18c5e848c8db297289b4c00d4e65de18f1fb0596cca968d3585327894e4b",
+        "retrieval_policy": "exact_key_lookup_against_snapshot_active_state",
+        "validated_promotable_event_count": 5
+      },
+      "event_count": 5,
+      "final_state_hash": "sha256:d53373022126485b485e74cb5fe5add2c964198cd94129fccc82a8dc3f4b7aab",
+      "policy_label": "coupled_same_event_write_through_control",
+      "same_event_visible_write_count": 5
+    }
+  },
+  "preconditions_checked": {
+    "checks": {
+      "current_pyo3_operation_surface_available": true,
+      "current_python_operations_available": true,
+      "current_rust_abi_receipt_available": true,
+      "disk_ready": true,
+      "output_parent_writable": true,
+      "protected_files_hashed": true,
+      "schemas_available": true,
+      "trace_parent_writable": true
+    },
+    "context_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:d29311ae2d34417995b65deab3fedb66a3077c6b1d8841e8b7f56427ba14bf7c",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "openspec/capabilities/constraint-store/spec.md": "sha256:265de1ca29f256680db0db7e7ccd92fc86f9e5b11f048f7e5e22bedfba5771cc",
+      "openspec/capabilities/hardware/spec.md": "sha256:7cc5fcb32585b10483369c95e4d92a61dd28672f568b3f9c0d844afa64bdfa93",
+      "openspec/capabilities/self-learning/spec.md": "sha256:976f140e4895688828dd99b25696279b152b64375a12e4c6e8ec1bdd6d8931a5",
+      "python/carnot/experiment_5967_delayed_commit_memory_fixture.py": "sha256:209108076b70ea1028f9a241f8c377a91c039ed75ff1ad80c6d3f3d2218a55da",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "research-references.md": "sha256:a1a12a096b3cc5e2e205d6d1f2b3d4159dd7f40f6652ffc32a3d148074a6d9d8",
+      "results/experiment_5920_prospective_event_stream_admission.json": "sha256:2916f8fe3c588e9074c69460e570d0bd21bdac8fd83fbf70301938d39a2a1222",
+      "results/experiment_5920_prospective_event_stream_admission.rows.jsonl": "sha256:747721852349534113403394e577d4b2bee339411d1ab5f15ddfada0c0a59b10",
+      "results/experiment_5924_transactional_constraint_memory_v2.json": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3",
+      "results/experiment_5926_adaptive_state_abi_v2_parity.json": "sha256:eeefe30580820cd19bd7cb60c65fe80b4bd9352ecbbf915b2a8b3018e75b9f67",
+      "tests/python/test_experiment_5967_delayed_commit_memory_fixture.py": "sha256:6e5041b30a696efcdbaed7d2921681a4a2fd032ee344ec4f26886893d66f8983"
+    },
+    "output_paths": {
+      "result_path": "results/experiment_5967_delayed_commit_memory_fixture.json",
+      "trace_path": "results/experiment_5967_delayed_commit_memory_fixture.trace.jsonl"
+    },
+    "preconditions_ready": true,
+    "principle": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts."
+  },
+  "proposal_label_reveal_validation_and_commit_timing": {
+    "commit_count": 7,
+    "label_revealed_only_after_proposal_sealing": true,
+    "principle": "Labels appear only after proposal sealing and same-event utility cannot promote.",
+    "proposal_count": 7,
+    "same_event_success_promoted_before_commit_count": 0,
+    "validation_count": 7,
+    "validation_precedes_readable_commit": true
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:de7a7e65a44d1c30e0b191003af02d0d4837629728905b836c6822bfde270fed",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:de7a7e65a44d1c30e0b191003af02d0d4837629728905b836c6822bfde270fed",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+    },
+    "changed": [],
+    "principle": "Emit bare true only for unchanged protected files.",
+    "unchanged": true
+  },
+  "python_rust_pyo3_trace_parity": {
+    "all_operation_version_return_and_hash_parity": true,
+    "backend_receipts": {
+      "pyo3": {
+        "final_state_hash": "sha256:d53373022126485b485e74cb5fe5add2c964198cd94129fccc82a8dc3f4b7aab",
+        "operation_count": 35,
+        "operation_return_hash": "sha256:d2aac06feff05277cfa46f7fedaf187da53a701163ab762846bdb6b6f4899f12",
+        "operations": [
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "reject",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "quarantine",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "supersede",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit"
+        ],
+        "version_trace": [
+          0,
+          1,
+          2,
+          2,
+          3,
+          3,
+          4,
+          5,
+          5,
+          6,
+          6,
+          7,
+          8,
+          8,
+          9,
+          9,
+          10,
+          11,
+          11,
+          12,
+          12,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          17,
+          17,
+          18,
+          18,
+          19,
+          20,
+          20,
+          21
+        ]
+      },
+      "python": {
+        "final_state_hash": "sha256:d53373022126485b485e74cb5fe5add2c964198cd94129fccc82a8dc3f4b7aab",
+        "operation_count": 35,
+        "operation_return_hash": "sha256:d2aac06feff05277cfa46f7fedaf187da53a701163ab762846bdb6b6f4899f12",
+        "operations": [
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "reject",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "quarantine",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "supersede",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit"
+        ],
+        "version_trace": [
+          0,
+          1,
+          2,
+          2,
+          3,
+          3,
+          4,
+          5,
+          5,
+          6,
+          6,
+          7,
+          8,
+          8,
+          9,
+          9,
+          10,
+          11,
+          11,
+          12,
+          12,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          17,
+          17,
+          18,
+          18,
+          19,
+          20,
+          20,
+          21
+        ]
+      },
+      "rust": {
+        "final_state_hash": "sha256:d53373022126485b485e74cb5fe5add2c964198cd94129fccc82a8dc3f4b7aab",
+        "operation_count": 35,
+        "operation_return_hash": "sha256:d2aac06feff05277cfa46f7fedaf187da53a701163ab762846bdb6b6f4899f12",
+        "operations": [
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "reject",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "quarantine",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "supersede",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit",
+          "read_snapshot",
+          "propose",
+          "validate",
+          "lookup",
+          "commit"
+        ],
+        "version_trace": [
+          0,
+          1,
+          2,
+          2,
+          3,
+          3,
+          4,
+          5,
+          5,
+          6,
+          6,
+          7,
+          8,
+          8,
+          9,
+          9,
+          10,
+          11,
+          11,
+          12,
+          12,
+          13,
+          14,
+          14,
+          15,
+          15,
+          16,
+          17,
+          17,
+          18,
+          18,
+          19,
+          20,
+          20,
+          21
+        ]
+      }
+    },
+    "backends": [
+      "python",
+      "rust",
+      "pyo3"
+    ],
+    "fixed_width_trace_hash": "sha256:95fd260b2512c1e737fdf550a862a4a8baeaede19d7e5d8ccf6551f1616be1bd",
+    "hardware_execution_claimed": false,
+    "operation_return_hashes": {
+      "pyo3": "sha256:d2aac06feff05277cfa46f7fedaf187da53a701163ab762846bdb6b6f4899f12",
+      "python": "sha256:d2aac06feff05277cfa46f7fedaf187da53a701163ab762846bdb6b6f4899f12",
+      "rust": "sha256:d2aac06feff05277cfa46f7fedaf187da53a701163ab762846bdb6b6f4899f12"
+    },
+    "parity_failures": [],
+    "principle": "Every operation, version, return value, and final hash agrees exactly."
+  },
+  "quarantine_supersede_rollback_and_bounded_state_receipts": {
+    "active_capacity": 3,
+    "active_count": 3,
+    "bounded_state_ok": true,
+    "capacity_eviction_count": 1,
+    "principle": "Lifecycle and capacity transitions are explicit, reversible, and replayable.",
+    "quarantine_count": 1,
+    "rollback_replayable": true,
+    "superseded_count": 1
+  },
+  "random_seed": 5967,
+  "rejected_update_non_propagation_count": 0,
+  "reproducibility_checksum": "sha256:5c516ec426afb1bd5dde1a90ac12ef86db5746451f77a56ee744a6d5ac13c554",
+  "run_date": "20260803",
+  "schema": "carnot.experiment_5967.delayed_commit_memory_fixture.v1",
+  "status": "complete_ready",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5967_delayed_commit_memory_fixture.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5967_delayed_commit_memory_fixture.py -m pytest tests/python/test_experiment_5967_delayed_commit_memory_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5967_delayed_commit_memory_fixture.py --fail-under=100",
+    "cargo test -p carnot-core adaptive_state_abi_v2 --lib",
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+    ".venv/bin/python -m carnot.experiment_5967_delayed_commit_memory_fixture --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5967_delayed_commit_memory_fixture.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5967_delayed_commit_memory_fixture.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5967_delayed_commit_memory_fixture.py -m pytest tests/python/test_experiment_5967_delayed_commit_memory_fixture.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5967_delayed_commit_memory_fixture.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_5967_delayed_commit_memory_fixture.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_5967_delayed_commit_memory_fixture --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5967_delayed_commit_memory_fixture.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5967_delayed_commit_memory_fixture.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python": 0,
+    "cargo test -p carnot-core adaptive_state_abi_v2 --lib": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "upstream_replay_hashes_and_readiness": {
+    "all_upstreams_ready": true,
+    "disallowed_dependencies_used": [],
+    "exp5920": {
+      "artifact_sha256": "sha256:2916f8fe3c588e9074c69460e570d0bd21bdac8fd83fbf70301938d39a2a1222",
+      "ready_score": 1.0,
+      "row_count": 198,
+      "row_file_sha256": "sha256:747721852349534113403394e577d4b2bee339411d1ab5f15ddfada0c0a59b10",
+      "stream_replay_ok": true
+    },
+    "exp5924": {
+      "artifact_sha256": "sha256:7f9e87e6c87097479f20242169419d3d58406f3eb9b79a35df49cbdaec7db7e3",
+      "ready_score": 1.0,
+      "validates": true
+    },
+    "exp5926": {
+      "artifact_sha256": "sha256:eeefe30580820cd19bd7cb60c65fe80b4bd9352ecbbf915b2a8b3018e75b9f67",
+      "ready_score": 1.0,
+      "validates": true
+    },
+    "principle": "The fixture depends only on exact ready Exp5920, Exp5924, and Exp5926 receipts."
+  }
+}
