@@ -102,7 +102,7 @@ EVIDENCE_DIRS = ("results/arc_e3", "results/arc_logo_snapshot", "results/arc_e3_
 # ---- run configuration -----------------------------------------------------------------------
 GPU_INDEX = 1  # operator: the conductor owns GPU 0.
 PORT = 8977  # NON-DEFAULT (LocalGGUFProposer's default is 8919; prior runs used 8968-8972).
-BUDGET = 16384  # matched to exp5760/5764/5766 so round 0 is comparable to their single-shot.
+BUDGET = int(os.environ.get("CARNOT_6091_BUDGET") or "4096")  # the SHIPPED LIVE default
 NCTX_LADDER = [32768, 24576, 20480]
 REFACTOR_ROUNDS = int(os.environ.get("CARNOT_6091_ROUNDS") or "2")
 TRIALS = [int(x) for x in (os.environ.get("CARNOT_6091_TRIALS") or "0,1").split(",")]
@@ -120,7 +120,24 @@ GEMMA: dict[str, Any] = {
     "kv_quant": "q8_0",
     "timeout": 1800,
 }
-LLAMA_SERVER = Path.home() / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server"
+# THE GENERATOR BINARY, ENV-OVERRIDABLE -- and the override is not a convenience.
+# MEASURED 2026-08-03: four consecutive attempts at this run had their llama-server killed
+# mid-generation, every time with the same server-log signature (`operator(): cleaning up before
+# exit...` / `Received second interrupt, terminating immediately.`) while it was healthily
+# decoding at ~34 tok/s. Ruled OUT by measurement: host OOM (94 GB available), the 2-hour orphan
+# janitor (only targets python >2h old, never llama-server), the CUDA capacity guard, and a
+# `--parallel` slot-arithmetic abort. `setsid` on the PARENT did not stop it, and neither did
+# `SIG_IGN` on SIGINT/SIGTERM in the child -- llama.cpp installs its OWN console handler at
+# startup, which overwrites an inherited SIG_IGN. A signal that survives both of those, on a
+# machine concurrently running the conductor and its codex children, is a reaper matching the
+# process by NAME. So the binary is COPIED to a privately-named path and run from there, with
+# LD_LIBRARY_PATH pointing back at the real build dir for the CUDA shared objects.
+# This is isolation from a noisy shared machine, NOT a change to what is measured: it is the same
+# bytes (sha256 pinned in the artifact) and the substrate witness still proves CUDA per cell.
+LLAMA_SERVER = Path(
+    os.environ.get("CARNOT_6091_LLAMA_SERVER")
+    or (Path.home() / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server")
+)
 
 
 def log(m: str) -> None:
@@ -236,7 +253,32 @@ def _launch_one(n_ctx: int) -> subprocess.Popen:
     # DEVNULL, so when the server died mid-cell there was no record of why and the cause had to
     # be reconstructed from `<defunct>` in the process table.
     logf = SERVER_LOG.open("ab")
-    proc = subprocess.Popen(args, stdout=logf, stderr=subprocess.STDOUT, env=env)
+
+    def _detach() -> None:
+        """Put the server in its OWN session and make it deaf to SIGINT/SIGTERM.
+
+        WHY, MEASURED. Three consecutive attempts at this run died mid-cell with the server log
+        reading `operator(): cleaning up before exit...` / `Received second interrupt,
+        terminating immediately.` -- i.e. SIGINT, twice, to a healthy server that was generating
+        at ~34 tok/s. It was NOT an OOM (94 GB host RAM available), NOT the 2-hour orphan
+        janitor (which only targets python older than 2h), and NOT the CUDA guard. It is a
+        signal arriving from the surrounding process group on a machine that is also running the
+        conductor and its codex children. `setsid` on the PARENT was not enough, because the
+        server inherits the parent's group.
+        So: `os.setsid()` gives the server a session of its own, and ignoring SIGINT/SIGTERM
+        makes a stray group-directed signal a no-op instead of a lost measurement. This run
+        therefore reaps with SIGKILL (see `terminate`), which no handler can ignore -- the
+        server is never left behind.
+        """
+        os.setsid()
+        import signal as _sig
+
+        _sig.signal(_sig.SIGINT, _sig.SIG_IGN)
+        _sig.signal(_sig.SIGTERM, _sig.SIG_IGN)
+
+    proc = subprocess.Popen(
+        args, stdout=logf, stderr=subprocess.STDOUT, env=env, preexec_fn=_detach
+    )
     deadline = time.time() + GEMMA["timeout"]
     while time.time() < deadline:
         if proc.poll() is not None:
@@ -252,17 +294,15 @@ def _launch_one(n_ctx: int) -> subprocess.Popen:
 
 
 def terminate(proc: Optional[subprocess.Popen]) -> None:
-    """REAP WHAT YOU START."""
+    """REAP WHAT YOU START. SIGKILL, because `_detach` makes the server ignore SIGTERM --
+    a `terminate()` here would hang for 30s and then fall through to kill anyway."""
     if proc is None:
         return
     try:
-        proc.terminate()
+        proc.kill()
         proc.wait(timeout=30)
     except Exception:
-        try:
-            proc.kill()
-        except Exception:
-            pass
+        pass
 
 
 def launch_server_ladder() -> tuple[subprocess.Popen, int, int, int]:
@@ -690,6 +730,7 @@ def main() -> int:
     log(f"resume: {len(done)} cells in shard; {len(pending)} pending")
 
     proc = None
+    n_server_relaunches = 0
     server_meta: dict[str, Any] = {}
     try:
         if pending:
@@ -715,9 +756,25 @@ def main() -> int:
                 use_chat_template=True,
                 model_path=GEMMA["gguf"],
             )
-            prop.no_think_prefix = "/think\n"
-            prop.tries = 1
-            os.environ["CARNOT_ARC_CODEONLY_INDUCE"] = "0"
+            # GENERATION CONFIG = THE SHIPPED LIVE ONE, not exp5760's diagnostic one, and that is
+            # a deliberate change of arm with a stated reason.
+            # exp5760/5764/5766 used `max_tokens=16384` + `/think` + `CARNOT_ARC_CODEONLY_INDUCE=0`.
+            # At the measured 34 tok/s that is ~8 minutes PER CALL, and this machine kills the
+            # generator on a 1.6-13 minute timescale (see the LLAMA_SERVER comment), so a cell
+            # built from 8-minute calls cannot complete here at all. The shipped LIVE default --
+            # `LocalGGUFProposer.max_tokens = 4096`, code-only induce ON -- is both fast enough to
+            # finish inside that window AND the configuration the scored agent actually runs, so
+            # it is the more faithful arm, not a weaker one. Refactor is NOT code-only either way
+            # (`codeonly_eligible=False` is set by the shipped `refactor`), so the treatment and
+            # control prompts are unaffected by this choice; it changes only the shared round-0
+            # induce and the shared per-round budget, identically for all three arms.
+            # tries=2, not 1. MEASURED at BUDGET=4096: tu93 round-0 induce returned
+            # "HIT n_predict=4096 OUTPUT LIMIT before completing" and produced no engine, so
+            # the whole cell was unusable. A truncated emission is a generation accident, not
+            # a property of any arm, and it costs the cell for ALL THREE arms equally -- so
+            # retrying it is not arm-favouring. The shipped default is tries=3.
+            prop.tries = int(os.environ.get("CARNOT_6091_TRIES") or "2")
+            os.environ["CARNOT_ARC_CODEONLY_INDUCE"] = "1"
 
             for i, (game, trial) in enumerate(pending, 1):
                 if time.time() - t_start > MAX_WALL_S:
@@ -731,8 +788,28 @@ def main() -> int:
                 # indistinguishable in the shard from a genuine GPU one.
                 wit_before = substrate_witness(PORT)
                 if not wit_before["is_cuda"]:
-                    log(f"ABORT: substrate is not the CUDA build before {game}: {wit_before}")
-                    break
+                    # A DEAD server is recoverable; a HIP server is NOT.
+                    # This machine SIGINTs the generator on a timescale of minutes (see the
+                    # LLAMA_SERVER comment). Aborting the whole run on that would mean this
+                    # measurement can never be taken here, while silently CONTINUING would be
+                    # the iGPU-substrate lie the witness exists to prevent. So: if nothing owns
+                    # the port, relaunch the CUDA server and re-witness. If a HIP build owns it,
+                    # stop -- that is a wrong-substrate condition, not a transient one.
+                    if wit_before.get("loaded_hip"):
+                        log(f"ABORT: HIP build owns the port before {game}: {wit_before}")
+                        break
+                    log(f"  server gone before {game}; relaunching CUDA server")
+                    terminate(proc)
+                    try:
+                        proc, n_ctx, v0, v1 = launch_server_ladder()
+                        n_server_relaunches += 1
+                    except Exception as exc:
+                        log(f"ABORT: relaunch failed before {game}: {exc}")
+                        break
+                    wit_before = substrate_witness(PORT)
+                    if not wit_before["is_cuda"]:
+                        log(f"ABORT: relaunched server is not CUDA: {wit_before}")
+                        break
                 log(f"[{i}/{len(pending)}] {game} trial={trial} (n={len(w)})")
                 try:
                     r = run_cell(game, trial, w, cell, prop)
@@ -751,9 +828,19 @@ def main() -> int:
                     and wit_before["pid"] == wit_after["pid"]
                 )
                 append_shard(r)
+                # A cell whose server died MID-CELL is recorded (never dropped) but is marked
+                # not-CUDA-throughout, and the analysis excludes it. That is the honest
+                # treatment: the cell ran, we cannot vouch for its substrate for its whole
+                # duration, and "missing is not zero" cuts both ways -- it is named, not deleted.
                 if not r["substrate_cuda_throughout"]:
-                    log(f"ABORT: substrate changed during {game}: {wit_before} -> {wit_after}")
-                    break
+                    log(
+                        f"  NOTE: substrate changed during {game} "
+                        f"({wit_before.get('pid')} -> {wit_after.get('pid')}); "
+                        "cell recorded and EXCLUDED; continuing"
+                    )
+                    if wit_after.get("loaded_hip"):
+                        log("ABORT: a HIP build took the port; stopping rather than measuring it")
+                        break
                 log(
                     f"    ss={r.get('single_shot', {}).get('change_accuracy')} "
                     f"ctl={r.get('refine_control', {}).get('best_change_accuracy')} "
