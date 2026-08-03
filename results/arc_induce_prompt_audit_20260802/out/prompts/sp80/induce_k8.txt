@@ -1,0 +1,106 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'sp80'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 1, 4, 6, 9, 11, 12, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/sp80/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:14x64
+r1:12x36,4x4,12x24
+r2:12x36,4x4,12x24
+r3:12x36,4x4,12x24
+r4:12x36,6x4,12x24
+r5:12x36,6x4,12x24
+r6:12x36,6x4,12x24
+r7:12x36,6x4,12x24
+r8:12x64
+r9:12x64
+r10:12x64
+r11:12x64
+r12:12x64
+r13:12x64
+r14:12x64
+r15:12x64
+r16:12x12,9x20,12x32
+r17:12x12,9x20,12x32
+r18:12x12,9x20,12x32
+r19:12x12,9x20,12x32
+r20:12x64
+r21:12x64
+r22:12x64
+r23:12x64
+r24:12x64
+r25:12x64
+r26:12x64
+r27:12x64
+r28:12x64
+r29:12x64
+r30:12x64
+r31:12x64
+r32:12x64
+r33:12x64
+r34:12x64
+r35:12x64
+r36:12x64
+r37:12x64
+r38:12x64
+r39:12x64
+r40:12x64
+r41:12x64
+r42:12x64
+r43:12x64
+r44:12x64
+r45:12x64
+r46:12x64
+r47:12x64
+r48:12x64
+r49:12x64
+r50:12x64
+r51:12x64
+r52:12x16,11x4,12x4,11x4,12x12,11x4,12x4,11x4,12x12
+r53:12x16,11x4,12x4,11x4,12x12,11x4,12x4,11x4,12x12
+r54:12x16,11x4,12x4,11x4,12x12,11x4,12x4,11x4,12x12
+r55:12x16,11x4,12x4,11x4,12x12,11x4,12x4,11x4,12x12
+r56:12x16,11x12,12x12,11x12,12x12
+r57:12x16,11x12,12x12,11x12,12x12
+r58:12x16,11x12,12x12,11x12,12x12
+r59:12x16,11x12,12x12,11x12,12x12
+r60:1x64
+r61:1x64
+r62:1x64
+r63:1x64
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c62:0x2 r16c12:12x4 r16c32:9x4 r17c12:12x4 r17c32:9x4 r18c12:12x4 r18c32:9x4 r19c12:12x4 r19c32:9x4
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c60:0x2 r16c16:12x4 r16c36:9x4 r17c16:12x4 r17c36:9x4 r18c16:12x4 r18c36:9x4 r19c16:12x4 r19c36:9x4
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c58:0x2 r16c20:12x4 r16c40:9x4 r17c20:12x4 r17c40:9x4 r18c20:12x4 r18c40:9x4 r19c20:12x4 r19c40:9x4

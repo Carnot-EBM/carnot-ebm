@@ -1,0 +1,114 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 're86'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 1, 4, 5, 9, 11, 15]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/re86/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x64
+r1:5x64
+r2:5x14,4x3,5x47
+r3:5x14,4x1,11x1,4x1,5x47
+r4:5x14,4x3,5x47
+r5:5x64
+r6:5x64
+r7:5x64
+r8:5x5,4x3,5x15,4x3,5x38
+r9:5x5,4x1,11x1,4x1,5x15,4x1,11x1,4x1,5x38
+r10:5x5,4x3,5x15,4x3,5x38
+r11:5x39,9x1,5x24
+r12:5x39,9x1,5x24
+r13:5x39,9x1,5x24
+r14:5x39,9x1,5x24
+r15:5x39,9x1,5x7,4x3,5x14
+r16:5x14,4x3,5x4,11x1,5x17,9x1,5x7,4x1,9x1,4x1,5x14
+r17:5x14,4x1,11x1,4x1,5x4,11x1,5x17,9x1,5x7,4x3,5x14
+r18:5x14,4x3,5x4,11x1,5x17,9x1,5x24
+r19:5x21,11x1,5x17,9x1,5x24
+r20:5x21,11x1,5x17,9x1,5x24
+r21:5x21,11x1,5x17,9x1,5x24
+r22:5x21,11x1,5x17,9x1,5x24
+r23:5x21,11x1,5x17,9x1,4x2,5x10,4x3,5x9
+r24:5x21,11x1,5x4,9x13,0x1,9x14,4x1,5x9
+r25:5x21,11x1,5x17,9x1,4x2,5x10,4x3,5x9
+r26:5x21,11x1,5x17,9x1,5x24
+r27:5x10,11x23,5x6,9x1,5x24
+r28:5x21,11x1,5x17,9x1,5x24
+r29:5x21,11x1,5x17,9x1,5x24
+r30:5x21,11x1,5x17,9x1,5x24
+r31:5x21,11x1,5x17,9x1,5x24
+r32:5x21,11x1,5x17,9x1,5x24
+r33:5x21,11x1,5x17,9x1,5x24
+r34:5x21,11x1,5x17,9x1,5x7,4x3,5x14
+r35:5x21,11x1,5x17,9x1,5x7,4x1,9x1,4x1,5x14
+r36:5x21,11x1,5x17,9x1,5x7,4x3,5x14
+r37:5x21,11x1,5x17,9x1,5x24
+r38:5x21,11x1,5x42
+r39:5x64
+r40:5x64
+r41:5x64
+r42:5x64
+r43:5x64
+r44:5x64
+r45:5x64
+r46:5x64
+r47:5x64
+r48:5x64
+r49:5x64
+r50:5x64
+r51:5x64
+r52:5x64
+r53:5x64
+r54:5x64
+r55:5x64
+r56:5x64
+r57:5x64
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:15x59,1x5
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r11c39:5x1 r11c42:9x1 r12c39:5x1 r12c42:9x1 r13c39:5x1 r13c42:9x1 r14c39:5x1 r14c42:9x1 r15c39:5x1 r15c42:9x1 r16c39:5x1 r16c42:9x1 r17c39:5x1 r17c42:9x1 r18c39:5x1 r18c42:9x1 r19c39:5x1 r19c42:9x1 r20c39:5x1 r20c42:9x1 r21c39:5x1 r21c42:9x1 r22c39:5x1 r22c42:9x1 r23c39:4x1 r23c42:9x1 r24c26:5x3 r24c39:9x1 r24c42:0x1 r24c54:9x2 r25c39:4x1 r25c42:9x1 r26c39:5x1 r26c42:9x1 r27c39:5x1 r27c42:9x1 r28c39:5x1 r28c42:9x1 r29c39:5x1 r29c42:9x1 r30c39:5x1 r30c42:9x1 r31c39:5x1 r31c42:9x1 r32c39:5x1 r32c42:9x1 r33c39:5x1 r33c42:9x1 r34c39:5x1 r34c42:9x1 r35c39:5x1 r35c42:9x1 r36c39:5x1 r36c42:9x1 r37c39:5x1 r37c42:9x1 r63c58:1x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r11c42:5x1 r11c45:9x1 r12c42:5x1 r12c45:9x1 r13c42:5x1 r13c45:9x1 r14c42:5x1 r14c45:9x1 r15c42:5x1 r15c45:9x1 r16c42:5x1 r16c45:9x1 r17c42:5x1 r17c45:9x1 r18c42:5x1 r18c45:9x1 r19c42:5x1 r19c45:9x1 r20c42:5x1 r20c45:9x1 r21c42:5x1 r21c45:9x1 r22c42:5x1 r22c45:9x1 r23c42:5x1 r23c45:9x1 r24c29:5x3 r24c42:9x1 r24c45:0x1 r24c56:9x3 r25c42:5x1 r25c45:9x1 r26c42:5x1 r26c45:9x1 r27c42:5x1 r27c45:9x1 r28c42:5x1 r28c45:9x1 r29c42:5x1 r29c45:9x1 r30c42:5x1 r30c45:9x1 r31c42:5x1 r31c45:9x1 r32c42:5x1 r32c45:9x1 r33c42:5x1 r33c45:9x1 r34c42:5x1 r34c45:9x1 r35c42:5x1 r35c45:9x1 r36c42:5x1 r36c45:9x1 r37c42:5x1 r37c45:9x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r11c45:5x1 r11c48:9x1 r12c45:5x1 r12c48:9x1 r13c45:5x1 r13c48:9x1 r14c45:5x1 r14c48:9x1 r15c45:5x1 r15c48:9x1 r16c45:5x1 r17c45:5x1 r17c48:9x1 r18c45:5x1 r18c48:9x1 r19c45:5x1 r19c48:9x1 r20c45:5x1 r20c48:9x1 r21c45:5x1 r21c48:9x1 r22c45:5x1 r22c48:9x1 r23c45:5x1 r23c48:9x1 r24c32:5x3 r24c45:9x1 r24c48:0x1 r24c59:9x3 r25c45:5x1 r25c48:9x1 r26c45:5x1 r26c48:9x1 r27c45:5x1 r27c48:9x1 r28c45:5x1 r28c48:9x1 r29c45:5x1 r29c48:9x1 r30c45:5x1 r30c48:9x1 r31c45:5x1 r31c48:9x1 r32c45:5x1 r32c48:9x1 r33c45:5x1 r33c48:9x1 r34c45:5x1 r34c48:9x1 r35c45:5x1 r36c45:5x1 r36c48:9x1 r37c45:5x1 r37c48:9x1 r63c57:1x1
+--- ACTION5 (level 0->0): changed cells (FULL, run-length) = r24c48:9x1 r27c21:0x1 r63c56:1x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r13c21:11x1 r14c21:11x1 r15c21:11x1 r24c10:11x11,0x1,11x11 r27c10:5x11,11x1,5x11 r36c21:5x1 r37c21:5x1 r38c21:5x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r10c21:11x1 r11c21:11x1 r12c21:11x1 r21c10:11x11,0x1,11x11 r24c10:5x11,11x1,5x11 r33c21:5x1 r34c21:5x1 r35c21:5x1 r63c55:1x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r7c21:11x1 r8c21:11x1 r9c21:11x1 r18c10:11x11,0x1,11x11 r21c10:5x11,11x1,5x11 r30c21:5x1 r31c21:5x1 r32c21:5x1 r63c54:1x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r4c21:11x1 r5c21:11x1 r6c21:11x1 r15c10:11x11,0x1,11x11 r18c10:5x4,4x3,5x4,11x1,5x11 r27c21:5x1 r28c21:5x1 r29c21:5x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r1c21:11x1 r2c21:11x1 r3c21:11x1 r12c10:11x11,0x1,11x11 r15c10:5x11,11x1,5x11 r24c21:5x1 r25c21:5x1 r26c21:5x1 r63c53:1x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c21:11x1 r9c10:11x11,0x1,11x2 r9c25:11x8 r12c10:5x11,11x1,5x11 r21c21:5x1 r22c21:5x1 r23c21:5x1 r63c52:1x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r0c18:11x1 r0c21:5x1 r1c18:11x1 r1c21:5x1 r2c18:11x1 r2c21:5x1 r3c18:11x1 r3c21:5x1 r4c18:11x1 r4c21:5x1 r5c18:11x1 r5c21:5x1 r6c18:11x1 r6c21:5x1 r7c18:11x1 r7c21:5x1 r8c18:11x1 r8c21:5x1 r9c7:11x3 r9c18:0x1 r9c21:11x1 r9c30:5x3 r10c18:11x1 r10c21:5x1 r11c18:11x1 r11c21:5x1 r12c18:11x1 r12c21:5x1 r13c18:11x1 r13c21:5x1 r14c18:11x1 r14c21:5x1 r15c18:11x1 r15c21:5x1 r16c18:11x1 r16c21:5x1 r17c18:11x1 r17c21:5x1 r18c18:11x1 r18c21:5x1 r19c18:11x1 r19c21:5x1 r20c18:11x1 r20c21:5x1

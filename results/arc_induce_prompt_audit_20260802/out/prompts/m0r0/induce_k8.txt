@@ -1,0 +1,109 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'm0r0'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 5, 10, 11, 12]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/m0r0/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x63,0x1
+r1:11x32,12x32
+r2:11x32,12x32
+r3:11x32,12x32
+r4:11x32,12x32
+r5:11x32,12x32
+r6:11x32,12x32
+r7:11x32,12x32
+r8:11x32,12x32
+r9:11x19,5x30,12x15
+r10:11x19,5x30,12x15
+r11:11x19,5x30,12x15
+r12:11x19,5x30,12x15
+r13:11x19,5x30,12x15
+r14:11x14,5x15,11x3,12x2,5x20,12x10
+r15:11x14,5x15,11x3,12x2,5x20,12x10
+r16:11x14,5x15,11x3,12x2,5x20,12x10
+r17:11x14,5x15,11x3,12x2,5x20,12x10
+r18:11x14,5x15,11x3,12x2,5x20,12x10
+r19:11x9,5x15,11x8,12x7,5x15,12x10
+r20:11x9,5x15,11x8,12x7,5x15,12x10
+r21:11x9,5x15,11x8,12x7,5x15,12x10
+r22:11x9,5x15,11x8,12x7,5x15,12x10
+r23:11x9,5x15,11x8,12x7,5x15,12x10
+r24:11x9,5x10,11x13,12x12,5x10,12x10
+r25:11x9,5x10,11x13,12x12,5x10,12x10
+r26:11x9,5x10,11x13,12x12,5x10,12x10
+r27:11x9,5x10,11x13,12x12,5x10,12x10
+r28:11x9,5x10,11x13,12x12,5x10,12x10
+r29:11x14,5x5,11x13,12x17,5x5,12x10
+r30:11x14,5x5,11x13,12x17,5x5,12x10
+r31:11x14,5x5,11x13,12x17,5x5,12x10
+r32:11x14,5x5,11x13,12x17,5x5,12x10
+r33:11x14,5x5,11x13,12x17,5x5,12x10
+r34:11x14,5x5,11x13,12x17,5x5,12x10
+r35:11x14,5x5,11x13,12x17,5x5,12x10
+r36:11x14,5x5,11x13,12x17,5x5,12x10
+r37:11x14,5x5,11x13,12x17,5x5,12x10
+r38:11x14,5x5,11x13,12x17,5x5,12x10
+r39:11x9,5x5,10x5,5x5,11x8,12x12,5x10,12x10
+r40:11x9,5x5,10x5,5x5,11x8,12x12,5x10,12x10
+r41:11x9,5x5,10x5,5x5,11x8,12x12,5x10,12x10
+r42:11x9,5x5,10x5,5x5,11x8,12x12,5x10,12x10
+r43:11x9,5x5,10x5,5x5,11x8,12x12,5x10,12x10
+r44:11x9,5x20,11x3,12x2,5x10,10x5,5x5,12x10
+r45:11x9,5x20,11x3,12x2,5x10,10x5,5x5,12x10
+r46:11x9,5x20,11x3,12x2,5x10,10x5,5x5,12x10
+r47:11x9,5x20,11x3,12x2,5x10,10x5,5x5,12x10
+r48:11x9,5x20,11x3,12x2,5x10,10x5,5x5,12x10
+r49:11x9,5x20,11x3,12x2,5x20,12x10
+r50:11x9,5x20,11x3,12x2,5x20,12x10
+r51:11x9,5x20,11x3,12x2,5x20,12x10
+r52:11x9,5x20,11x3,12x2,5x20,12x10
+r53:11x9,5x20,11x3,12x2,5x20,12x10
+r54:11x9,5x20,11x3,12x2,5x15,12x15
+r55:11x9,5x20,11x3,12x2,5x15,12x15
+r56:11x9,5x20,11x3,12x2,5x15,12x15
+r57:11x9,5x20,11x3,12x2,5x15,12x15
+r58:11x9,5x20,11x3,12x2,5x15,12x15
+r59:11x32,12x32
+r60:11x32,12x32
+r61:11x32,12x32
+r62:11x32,12x32
+r63:0x1,5x63
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c62:0x1 r34c14:10x5 r35c14:10x5 r36c14:10x5 r37c14:10x5 r38c14:10x5 r39c14:5x5 r39c44:10x5 r40c14:5x5 r40c44:10x5 r41c14:5x5 r41c44:10x5 r42c14:5x5 r42c44:10x5 r43c14:5x5 r43c44:10x5 r44c44:5x5 r45c44:5x5 r46c44:5x5 r47c44:5x5 r48c44:5x5 r63c1:0x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r39c44:5x5,10x5 r40c44:5x5,10x5 r41c44:5x5,10x5 r42c44:5x5,10x5 r43c44:5x5,10x5
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c61:0x1 r29c14:10x5 r30c14:10x5 r31c14:10x5 r32c14:10x5 r33c14:10x5 r34c14:5x5 r34c49:10x5 r35c14:5x5 r35c49:10x5 r36c14:5x5 r36c49:10x5 r37c14:5x5 r37c49:10x5 r38c14:5x5 r38c49:10x5 r39c49:5x5 r40c49:5x5 r41c49:5x5 r42c49:5x5 r43c49:5x5 r63c2:0x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r24c14:10x5 r25c14:10x5 r26c14:10x5 r27c14:10x5 r28c14:10x5 r29c14:5x5 r29c49:10x5 r30c14:5x5 r30c49:10x5 r31c14:5x5 r31c49:10x5 r32c14:5x5 r32c49:10x5 r33c14:5x5 r33c49:10x5 r34c49:5x5 r35c49:5x5 r36c49:5x5 r37c49:5x5 r38c49:5x5
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r19c14:10x5 r20c14:10x5 r21c14:10x5 r22c14:10x5 r23c14:10x5 r24c14:5x5 r24c49:10x5 r25c14:5x5 r25c49:10x5 r26c14:5x5 r26c49:10x5 r27c14:5x5 r27c49:10x5 r28c14:5x5 r28c49:10x5 r29c49:5x5 r30c49:5x5 r31c49:5x5 r32c49:5x5 r33c49:5x5
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c60:0x1 r14c14:10x5 r15c14:10x5 r16c14:10x5 r17c14:10x5 r18c14:10x5 r19c14:5x5 r19c49:10x5 r20c14:5x5 r20c49:10x5 r21c14:5x5 r21c49:10x5 r22c14:5x5 r22c49:10x5 r23c14:5x5 r23c49:10x5 r24c49:5x5 r25c49:5x5 r26c49:5x5 r27c49:5x5 r28c49:5x5 r63c3:0x1
