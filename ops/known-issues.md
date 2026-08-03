@@ -4,6 +4,171 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### 2026-08-03 (MANDATORY-NEXT-MILESTONE, outer-loop allocation correction): ARC drops to its FLOOR of one slot; PHASE D retakes the majority — and the first Phase D experiment is NOT any of the three constructions the program's own prose still names
+
+**Read this before drafting the next roadmap. It changes the allocation AND it corrects a stale
+task list that a planner reading the 2026-06-30 Phase D entry (further below) would otherwise
+execute straight into a mechanical activation refusal.**
+
+#### 1. The allocation, in plain terms
+
+- **Phase D holds the MAJORITY.** This is not new policy — CLAUDE.md's "ARC-AGI-3 Submission
+  Sprint Forcing Function" RETIRED banner already says the planner's majority shifts to Phase D
+  (the off-ARC distributional-energy verifier moat), and CLAUDE.md's ARC floor rules say the ARC
+  reservation is "a FLOOR, not a majority claim". Recent practice inverted it: sessions have run
+  almost entirely ARC. Restore the stated allocation.
+- **ARC drops to exactly its floor: ONE slot per milestone**, filled from the three task classes
+  in CLAUDE.md "ARC-AGI-3 Generalization-Testing Floor" (held-out / leave-one-game-out live-path
+  measurement; `arc_solver_kit.py` primitive hardening; cross-game gotcha mining). The floor is
+  not retired and must not be skipped — it is just no longer the majority.
+- **Reserved slots are unchanged**: 2 infra, 1-per-attached-board hardware continuity,
+  SOTA-ingestion. The "majority" is of what remains after those and the ARC floor.
+
+#### 2. Why ARC drops now: the induction wall is capability-limited on direct measurement
+
+`results/outer_loop_arc_induced_engine_taxonomy_20260802.json`, independently re-executed by a
+hostile reproduction (`results/outer_loop_arc_taxonomy_hostile_reproduction_20260803.json`,
+verdict "HOLDS, WITH FOUR CORRECTIONS"):
+
+> **0 of 296 clean engine-units with `n_changing>=3` reach held-out `change_accuracy >= 0.5`, and
+> 0 exceed 0.0** — over 14 games and both branches. Reproduced cell-for-cell by an independent
+> harness, including the leakage attack that would have invalidated it (zero held-out start grids,
+> zero (state,action) pairs and zero full transitions recur across all 24 game windows).
+
+Two corrections from that reproduction must travel with the number — do not quote it bare:
+
+- **Scope it (correction C4).** The wall is a property of **the LOCAL SINGLE-SHOT GGUF INDUCER**,
+  not of induction in general. Engines of unknown provenance reach `change_fidelity` 0.98–1.00 on
+  these same windows, which is an existence proof that the induced-engine *language* can express
+  these dynamics. Those engines are contaminated and are NOT evidence of generalisation — but they
+  do bound the "the representation cannot express it" explanation.
+- **The rule-of-three bound is 3/14 = 0.214**, not 3/20 = 0.150 (correction C2): zero was observed
+  only in the clean `n_changing>=3` population, which spans 14 games; in the 20-game population
+  successes WERE observed (ar25, sc25 at 1.0; ka59, re86 at 0.667). Two populations, not one.
+
+**Consequence for the planner: prompt work on that tier is FINISHED.** Do not propose another
+prompt/budget/repetition-control variation of the local single-shot GGUF inducer. The measurement
+above is a capability statement about that inducer, and it is now independently reproduced. An ARC
+slot spent on a fresh prompt phrasing is churn under north-star §1.
+
+#### 3. The first Phase D experiment — and why it is NOT LoRA-EBM, uPRM, or EBRM
+
+The 2026-06-30 Phase D entry below lists three tasks: train the `arXiv:2605.18871` LoRA-EBM
+holistic scorer, replicate uPRM (`arXiv:2605.10158`), and EBRM (`arXiv:2504.13134`). **All three
+are RETIRED and would be HARD-REFUSED at activation.** `ops/exclusion_manifest.yaml`
+`phase_d_external_text_scorer_retired_exp5163_v474` (retired milestone 2026.07.474) retires the
+whole external-TEXT/logprob scorer class across 27 experiment ids, with
+`operator_reopen_required: true` and four `blocked_patterns`. Verified mechanically, not by eye:
+a draft task carrying uPRM/LoRA-EBM wording draws `[BLOCKED_PATTERN_MATCHED]` from
+`scripts/exclusion_manifest_lint.py`; the same task with hidden-state wording does not.
+
+**What IS open** is named by the manifest entry's own `reason` field and again by
+`ops/verifier_gaps.md`'s 2026-07-02 retirement note: *"hidden-state/internal-representation
+verifiers ... are outside this retired scope"*, specifically TrajSelector-style hidden-state
+scoring and VerifySteer-style steering, "because they score the generator's own internal
+representations rather than reranking generated text or logprobs". A second, independent manifest
+entry (`exp5813_..._gguf_generated_answer_transport`) lists **"final-token/final-layer embedding
+verifier"** under `preserved_open_surfaces`. Two independent retirements both preserve this lane.
+
+**THE FIRST PHASE D EXPERIMENT (Phase D-H1): a TrajSelector-class hidden-state verifier vs TUNED
+self-consistency on MMLU-Pro, at a sample size that can actually detect the published effect.**
+
+- **Published baseline to replicate.** TrajSelector (`arXiv:2510.16449`): a lightweight probe reads
+  the sampler LLM's OWN hidden states; **+4.61% over majority voting** at Best-of-32 and
+  +4.31–12.21% over text-based PRMs, at lower inference cost than a generative judge. Fallback if
+  per-layer access cannot be stood up: VerifySteer (`arXiv:2605.20745`), "competitive with
+  self-consistency at 4–7x less inference compute" — which targets north-star §5's *already-relaxed*
+  win condition (efficiency-parity, no accuracy edge required).
+- **Domain where SC is NOT saturated.** MMLU-Pro is the only corpus in this program with real,
+  statistically-significant, oracle-distinct headroom: 5-shot `oracle_at_k=0.500` vs
+  `sc_vote=0.125`, headroom 0.375, CI95 [0.225, 0.525] excluding 0
+  (`results/experiment_mmlu_pro_fewshot_headroom_check.json`). MuSR is retired (SC near-ceiling);
+  FoVer is retired twice over (its headroom was a construction artifact, and a cheap
+  text-statistical baseline already matches a semantic model there because incorrect steps run
+  ~5x longer); ConstraintBench candidates are solver-backed, not real LLM samples.
+- **Cheapest path to a decisive result — and the reason this is the first experiment rather than
+  the fourth.** The prior negative is UNFALSIFIABLE, not a refutation.
+  `results/experiment_5163_mmlu_pro_verifier_rescale_v473.json` is the artifact the manifest cites
+  as `retired_by_artifact`. Its own fields: `n_questions: 40`, `pool_reused: true`,
+  **`candidate_generation_performed: false`**, **`still_underpowered: true`**. It is named
+  "rescale" and **it did not rescale** — the n=40 → few-hundred scale-up that this file's
+  2026-07-01 entry recommended was never performed. Its CI95 is [-0.125, 0.175], implying
+  SE 0.0765, so at alpha=.05/power=.80 its **minimum detectable effect is 21.4 pp** — it could
+  only ever have detected an effect ~4.6x larger than TrajSelector's published 4.61 pp. It is also
+  `flagged_adversarial: true` and carries `corrigendum_note: "Excluded from headline / capstone
+  aggregation."` (the TAUTOLOGY flag looks like a benign duplicate-name false positive —
+  `fewshot_oracle_at_k` and `oracle_at_k_ceiling` are the same quantity under two names — so the
+  material defect is the POWER, not fabrication).
+- **Required n, shown as arithmetic so it can be checked:** to detect +4.61 pp at 80% power,
+  n >= 866; +6.9 pp, n >= 387; a generous 10 pp, n >= 184. Pre-register the target and the K,
+  and note that TrajSelector's number is at Best-of-32 while these pools are K=6.
+- **The cheap decisive stratum — run this first.** Pre-register the **identically-wrong-consensus
+  slice**, where the top candidates agree on the same WRONG answer. There majority vote is not
+  merely unsaturated, it is **structurally at zero by construction** — so a win on that slice is
+  immune to the standing generator-weakness confound (`sc_vote=0.125` sits just above the 10-way
+  chance floor of 0.10). `results/experiment_5178_hidden_state_verifier_pilot_v474.json` already
+  names this mechanism and measured it at **n_cases = 1, detection_rate 1.0** — a vacuous control.
+  Pre-register `n_cases >= 30` (CLAUDE.md's CLT floor; the arithmetic says >=24 suffices at p=0.25).
+- **Generator stays gemma-4-12B-it-GGUF. Do NOT add a stronger SOTA-GGUF generator arm.** This is a
+  trap: the obvious fix for the generator-weakness confound is to regenerate with the 31B/35B SOTA
+  models, and that scope-matches `exp5813_..._gguf_generated_answer_transport`'s blocked pattern
+  *"same-mechanism MMLU-Pro GGUF answer transport retry"* — exp5813 got
+  `answer_channel_ready_score=0.0`, 2/144 exact labels, 138 parser failures on exactly those three
+  families. The 12B model transports fine here (238/240 parseable in the existing 5-shot pool) and
+  CLAUDE.md approves it for exactly this case (many LLM calls, wall-clock-bound). Handle the
+  confound with the consensus stratum above and headroom-normalized reporting, not a bigger model.
+- **The substrate blocker is the real precondition.** exp5178 records
+  `llama_cpp_hidden_state_limitation: "final-token embedding vectors available; full per-layer
+  hidden states and steering hooks not exposed"`, and its own `design_path_taken` says it therefore
+  trained a centroid probe on final-token vectors "rather than a 0.6B end-to-end verifier". **The
+  TrajSelector construction was never actually built.** PRECONDITIONS must establish per-layer
+  access (HF transformers `output_hidden_states=True` against the BASE repo, not the `-GGUF` repo,
+  per CLAUDE.md's GGUF tokenizer rule) or emit `blocked_no_per_layer_hidden_state_access` and stop.
+- **Mandatory controls** (each one is a lesson already paid for): tuned-SC, not a k=1 strawman (the
+  `.461` D3 degeneracy lesson); a cheap non-learned text-statistical baseline (the FoVer length
+  confound); a **shuffled-label ablation** that must NOT reproduce the delta (the cross-domain FoVer
+  collapse, where `fover.cross_domain_delta` and `label_ablation.cross_domain_delta` were
+  identically +0.231); and an **oracle-peeking positive control** proving a non-zero was reachable
+  at this n before any null is reported (FALSE_NEGATIVE_RISK).
+- **Falsifiable gate.** Selection accuracy beats tuned SC with paired McNemar CI95 excluding 0, AND
+  the shuffled-label control does not reproduce it, AND the cheap baseline does not match it.
+  `retire_if_same_verdict: true`. `verifier_is_oracle: false`. `track: phase-d`.
+- **`prior_failures:` is REQUIRED and sufficient — do NOT write an `operator_override`.** The lint
+  matches `exp899-drift-hidden-state-probe` on scope. That prior is honestly addressable, not a
+  doomed rerun: exp899 compressed the hidden state to THREE hand-engineered features
+  (`drift_signature_shape: [3]`) on Qwen3.5-0.8B at train_n=50/eval_n=10, and its probe collapsed to
+  all-zero coefficients (`linear_probe_coef: [[0.0,0.0,0.0]]`, `probe_auc: 0.5`, `ood_auc: 0.5` —
+  exactly chance on both), measuring representational DRIFT, not candidate SELECTION. exp5178 is the
+  second prior and is unfalsifiable as run (n=6, McNemar p=0.5, wrong corpus, final-token-only
+  access). Name both, state what differs, set `retire_if_same_verdict: true`.
+
+#### 4. Why this is NOT the retired ARC-energy direction
+
+The ARC-energy S0 program is CONCLUDED (the 2026-06-26 entry below): oracle-distinct **structural
+energy ON ARC** adds no live ARC value, and S4 / ARC-energy stages must not be re-proposed. Phase
+D-H1 touches no ARC game, no ARC environment, no `arc_solver_kit`, no `ops/arc_solve_registry.yaml`
+and no ARC candidate pool. Its corpus is TIGER-Lab/MMLU-Pro, a text multiple-choice reasoning
+benchmark; it is OFF-ARC, which is the defining property of Phase D. It is equally not the retired
+Phase D external-text-scorer class, because it scores the generator's INTERNAL representations
+rather than its generated text or logprobs — the exact distinction the manifest's own `reason`
+field and `ops/verifier_gaps.md` both draw. Say this explicitly in the task prompt; the linter
+should be able to see it and so should a reviewer.
+
+#### 5. Two governance observations for the operator (recorded, NOT acted on)
+
+- **A 27-experiment program was retired on a flagged, self-declared-underpowered artifact.**
+  `phase_d_external_text_scorer_retired_exp5163_v474` names exp5163 as `retired_by_artifact`, yet
+  exp5163 carries `flagged_adversarial: true` and its own note says it is "Excluded from headline /
+  capstone aggregation." CLAUDE.md's fabrication gate says headline-aggregation tasks must skip
+  flagged artifacts; a retirement decision is arguably that kind of aggregation. Not unflagged, not
+  re-opened, not edited here — `operator_reopen_required: true` means this is the operator's call.
+- **A `prior_failures:` block clears `BLOCKED_PATTERN_MATCHED`, including on an
+  `operator_reopen_required: true` retirement.** Measured while checking this proposal: a draft task
+  containing retired uPRM/LoRA-EBM wording lints CLEAN once any valid `prior_failures:` block is
+  attached — even one about entirely unrelated priors. That is documented override semantics, not a
+  bug, but it means the strongest retirement flag in the manifest is bypassable without an
+  `operator_override`. Worth a decision; deliberately not changed here.
+
 ### 2026-07-31 — wa30 claims 9 reproduced levels with NO recorded reproduction path
 
 Found while extending the QAT-vs-Q4_K_M inducer corpus. `ops/arc_solve_registry.yaml`
