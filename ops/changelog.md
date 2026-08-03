@@ -16453,3 +16453,4 @@ the probe's own shell command line rather than the server — its log shows it e
 truncating the commands that followed them. Same root cause, twice, in one session.
 
 **Banked ARC levels remain 3/3. Nothing was submitted; no scored or online game was played.**
+- 2026-08-03: Gated on Exp5963 ready: all-three-model GGUF context/atom compatibility corpus (⚠️ Blocked) — honest_verdict=blocked: insufficient_free_vram; results/experiment_5964_sota_atom_compatibility_corpus.json
