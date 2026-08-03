@@ -21146,3 +21146,97 @@ session, and is recorded rather than quietly fixed.)
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6071 | `python/carnot/agentic/arc_inert_label_memory.py` — `label_key`, `InertLabelMemory` (`observe`, `is_deferrable_key`/`is_deferrable_row`, `set_counts_for_test`, `stats`), `coerce_inert_label_memory`. `python/carnot/agentic/arc_competition_agent.py` — `SUBMITTED_INERT_LABEL_DEFER_ENABLED = False` (+ `_MODE`, `_MIN_OBSERVATIONS`), a top-level import so `scripts/arc_orphan_solver_lint.py` sees the module in the live closure, an `inert_label_memory` kwarg on BOTH `StepwiseExplorer` and `E3AgentPolicy` resolved through the `_fd_gate` ladder, five fire-counters, `inert_label_defer_diagnostics()`, the observe hook in `_ingest` keyed on `unmasked_before`/`unmasked_now`, and the pop hook: `_inert_label_keep_indices` + `_select_untested_index` (the draw rule extracted so the filtered and unfiltered paths cannot drift) called from `_pop_untested_inner`. Drivers: `scripts/arc_inert_label_defer_worker.py` (one cell, one killable subprocess, refuses if `E3_DIR` is the tracked evidence store or induction is not disabled), `scripts/arc_inert_label_defer_ab.py` (3 arms x 25 games x 3 seeds, per-arm scratch engine store), `scripts/arc_inert_label_defer_report.py`. | `tests/python/test_arc_inert_label_memory.py` — 17 tests. **Mutation-proven, 6/6 killed, sources restored byte-identically (sha256 verified):** reverting the pop hook to the pre-6071 rule kills 2; deleting the level-up SACRED veto kills 1; deleting the frame-change veto kills 1; deleting the all-deferrable fail-open kills 1; turning the defer into a DROP kills 1; raising the default evidence floor kills 6. The level-up-veto test was ADDED after the first mutation round found the veto decorative. RESULT: `results/arc_inert_label_defer_20260802/arc_inert_label_defer.json`, adversarial-verify clean, 0 missing observations, A/A 75/75 identical. The lever cuts its own target class **9,208 -> 4,239 actions (-54.0%), 13 games better / 1 worse, p = 0.0018**, and takes the games banking a level inside the LIVE 400-action budget from **3 to 6** (ft09 x59.5, lp85 x9.0, su15 x2.5 on the first level's score). But EVERY pre-registered progress axis is NULL — levels 14 -> 13 at budget 2000 (cd82 loses one at BOTH evidence floors), hand-verifier progress flat, states p = 0.79 — and NAVIGATION IS SIGNIFICANTLY WORSE (12,146 -> 13,903, 12 games worse, p = 0.013): the saved probes buy a deeper graph whose RESET-replay navigation costs 1 + depth. Recommendation: DO NOT flip the default; the next measurement is a LIVE-BUDGET (400-action) A/B where the primary axis is reachable, plus an investigation of cd82. |
+
+## REQ-ARC-WMTE-6091: The Refactor Prompt SHALL Be Able To SHOW The Engine It Is Refactoring, And Acceptance SHALL Be Gradeable Before It Is Scored
+
+The system SHALL make the counterexample-guided refinement hypothesis TESTABLE, by (a) delivering
+the current engine's source into the refactor prompt behind a default-OFF flag, and (b) grading
+acceptance only on blocks a PERFECT engine could actually score.
+
+### SCENARIO-ARC-WMTE-6091-1: The shipped refactor prompt SHALL be shown to contain no engine
+GIVEN each of the 13 offline induction windows on the exp5760/5766 roster and that game's
+committed evidence engine
+WHEN `refactor_prompt(game, WorldModelVerifier(window).score(engine))` is RENDERED
+THEN **0 of 454** substantive engine source lines appear anywhere in the prompt string, on
+**13 of 13** games. The only source lines that match are this module's own REQUIRED OUTPUT
+STRUCTURE boilerplate (`def engine(grid, action, data):`, `def is_level_complete(grid):`, `...`),
+which is the prompt quoting its own template and is EXCLUDED from the substantive denominator so
+that a template echo cannot manufacture a non-zero result.
+THEREFORE the shipped instruction -- "REFACTOR toward simpler, more general rules (replace
+special cases with shared rules) while keeping the cases it already gets right" -- is
+unachievable by construction: the model can see neither the code nor one case it gets right.
+Every shipped refinement round was a BLIND RE-INDUCTION from at most five failing deltas
+(`_bounded_mismatches`), i.e. LESS evidence than round 0 had.
+Artifact: `results/outer_loop_arc_refine_instrument_repro_20260803.json`.
+
+### SCENARIO-ARC-WMTE-6091-2: The fix SHALL be default-OFF and byte-identical when off
+GIVEN `CARNOT_ARC_REFACTOR_SHOW_ENGINE` unset or `"0"`
+WHEN `refactor_prompt` renders
+THEN the output is BYTE-IDENTICAL to the pre-6091 prompt, defect included, and passing an
+explicit `engine_source=` changes nothing -- the FLAG selects the arm, not the argument.
+GIVEN `CARNOT_ARC_REFACTOR_SHOW_ENGINE=1`
+THEN the engine's own source is delivered into the rendered text, the mismatch block survives
+(the engine is ADDED, nothing is displaced), a missing engine degrades to exactly the OFF prompt
+rather than raising inside a live round or emitting an empty fence that reads as "the engine is
+empty", and an oversize engine is truncated with the omitted character count ANNOUNCED in the
+prompt rather than silently censored.
+
+### SCENARIO-ARC-WMTE-6091-3: 4 of 13 acceptance blocks SHALL be shown UNFALSIFIABLE
+GIVEN an ORACLE engine that returns the recorded `next_grid` for the exact (grid, action) asked
+WHEN it is scored on each game's held-out block under the SHIPPED two-way `_split_prefix_heldout`
+THEN it scores `change_accuracy` 0.0 on **sp80, r11l, vc33, ft09** -- 4 of 13 games, **12 of 39
+cells (30.8%)** -- because the entire tail is the level-up row `WorldModelVerifier.score`
+correctly refuses to grade. A PERFECT engine is REJECTED, and the 0.0 is byte-indistinguishable
+from "the engine got everything wrong".
+WHEN the already-shipped `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1` grow loop is turned ON
+THEN sp80 and ft09 become decidable (oracle reaches 1.0) and **r11l and vc33 remain structurally
+undecidable** (n=3 windows: the `min_refinable=2` floor leaves one acceptance row, which is the
+level-up). They LEAVE THE DENOMINATOR EXPLICITLY -- named in the artifact with their reason,
+never silently dropped.
+The oracle control is itself checked for VACUITY: it must reach 1.0 somewhere, or it proves
+nothing about the gate. It does.
+
+### SCENARIO-ARC-WMTE-6091-4: The measurement SHALL be paired at the SAMPLE, not merely the game
+GIVEN one induce call per (game, trial) cell
+WHEN both refinement arms are run
+THEN both FORK from that SAME round-0 engine source, restored to disk before each arm, so the
+treatment-vs-control contrast carries ZERO round-0 sampling noise and the arms differ in exactly
+one thing: whether `CARNOT_ARC_REFACTOR_SHOW_ENGINE` is 1 or 0.
+The round LOOP is reimplemented (the shipped `execute_bounded_llm_reinduction` cannot fork two
+arms off one induce) but every STEP is the shipped function -- `proposer.induce`,
+`WorldModelVerifier.score`, `_counterexample_result`, `proposer.refactor`, `refactor_prompt`,
+`split_refinement_acceptance`, `_proposal_prefix`. That divergence is disclosed, not hidden.
+
+### SCENARIO-ARC-WMTE-6091-5: Purity SHALL be verified per cell, on rendered text
+GIVEN the acceptance block must never shape refinement
+WHEN each cell runs
+THEN every rendered prompt (induce and both arms' refactor prompts) is SEARCHED for each
+gradeable acceptance row's own delta encoding, in both the induce form (`_rle_delta_compact`)
+and the refactor form (the `_delta` tuple list) -- DELIVERY, not availability -- and the count is
+recorded on every cell INCLUDING when it is zero.
+
+### SCENARIO-ARC-WMTE-6091-6: The design's limits SHALL be stated before the result
+GIVEN game-clustered two-sided exact sign tests over gradeable games only
+THEN min reachable p = `2 * 0.5**k` at k discordant games; with 11 gradeable games the smallest
+p this design can express is **0.00098**, and that number is reported ALONGSIDE the observed p so
+"p = 1.0" can be told from "no p below X was ever reachable".
+GIVEN that under the acceptance split every gradeable block holds EXACTLY ONE changing row
+THEN the primary metric `change_accuracy` is BINARY per cell -- one bit of resolution per game --
+and `change_fidelity` (continuous, symmetric cell-level union fidelity) is PRE-REGISTERED as a
+secondary on the same rows, because a null on a metric that could not move is not evidence.
+GIVEN the IDENTITY control on the acceptance block
+THEN `n_noop` is 0 on every gradeable block, so identity scores 0.0 BY CONSTRUCTION there. That
+control is VACUOUS and is reported as vacuous rather than as evidence; it is therefore ALSO run
+on the full window, where no-op rows exist and the score can move.
+GIVEN that changed-cell counts on the gradeable acceptance rows run 11..293
+THEN NO acceptance row is a 1-cell row, so no score here is a progress counter wearing a
+dynamics label.
+GIVEN this is an OFFLINE induction-quality measurement
+THEN even a positive result would NOT by itself move the live score: the trust gate stands
+between engine accuracy and any scored action.
+
+## Implementation Status (REQ-ARC-WMTE-6091)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6091 | `python/carnot/agentic/arc_executable_world_model.py` — `refactor_show_engine_enabled()` (env `CARNOT_ARC_REFACTOR_SHOW_ENGINE`, default OFF via `_REFACTOR_SHOW_ENGINE_DEFAULT`), `_current_engine_source()` (bounded at `_REFACTOR_ENGINE_SOURCE_MAX_CHARS`, truncation announced and counted, unreadable engine degrades to the OFF prompt), `_REFACTOR_ENGINE_BLOCK_HEADER`, and a new `engine_source=` keyword on `refactor_prompt` whose splice sits between the instruction and the MISMATCHES block. Drivers: `scripts/experiments/outer_loop_arc_refine_instrument_repro_20260803.py` (reproduces BOTH defects by calling shipped code over the 13 real windows; `results/arc_e3` checksummed before/after and verified unchanged), `scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py` (the 3-arm A/B; refuses to run unless `CARNOT_ARC_E3_DIR` is redirected off the tracked evidence store, and reads the IMPORT-time value so the check cannot be a no-op set from inside), `scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py` (pre-registered analysis + the stopping-rule verdict), `scripts/experiments/outer_loop_arc_refine_blocked_artifact_20260803.py` (the honest outcome artifact, every number parsed from an existing file). | `tests/python/test_arc_refactor_show_engine_20260803.py` — 7 tests. **Mutation-proven:** deleting the `{engine_block}` splice from the prompt f-string turns 3 of 7 red (`test_on_arm_delivers_engine_source_into_the_rendered_prompt`, `..._reads_the_engine_off_disk_...`, `test_oversize_engine_is_truncated_and_says_so`); source restored and re-verified green. The OFF arm is asserted byte-identical to the shipped prompt, including with an explicit `engine_source=` passed — the FLAG selects the arm, not the argument. RESULT: **the two instrument defects are FIXED and PROVEN; the live A/B produced NO number.** `results/experiment_6091_refine_engine_visible_ab.json` (adversarial-verify clean) records 2 attempted cells, **0** with `substrate_cuda_throughout`. Every llama-server started on this host was killed within seconds to minutes — lifetimes **369 s / 17 s / 10 s / 53 s** read off the servers' own logs, plus a no-harness standalone control that died at **22 s** — with 0 OOM/abort records and a peak decode of 34.75 tok/s (i.e. genuinely working GPU inference right up to the kill). Ruled out by measurement: host OOM (94 GB free), the 2-hour orphan janitor, the CUDA capacity guard, llama.cpp slot arithmetic (fixed independently with `--parallel 1`), a name-matching reaper (binary copied to a private path), process-group delivery (`setsid` on parent AND `os.setsid()` in the child), and an inherited `SIG_IGN` (llama.cpp reinstalls its own console handler). Stopping the conductor to free the machine was deliberately NOT attempted. **This is NOT a null result** — a null needs cells whose substrate is vouched for, and reporting one would be the fabrication the per-cell substrate witness exists to prevent. |

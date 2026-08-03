@@ -16394,3 +16394,62 @@ fixed in place.
 - 2026-08-03: Dated evidence refresh after the V528 planner marker (✅ Complete) — honest_verdict=complete_null: no accepted post-V528 source deltas; references unchanged; results/experiment_5962_v528_source_delta_ingestion.json
 - 2026-08-03: Hardness-controlled exact context/atom compatibility fixture (✅ Complete) — honest_verdict=complete_ready: sealed exact atom-pair fixture is balanced, leak-free, and replayable; results/experiment_5963_exact_atom_pair_fixture.json
 - 2026-08-03: Gated on Exp5963 ready: all-three-model GGUF context/atom compatibility corpus (⚠️ Blocked) — honest_verdict=blocked: insufficient_free_vram,mandated_model_unavailable; results/experiment_5964_sota_atom_compatibility_corpus.json
+
+### 2026-08-03 — The refinement hypothesis was never tested, because the prompt never contained the engine (REQ-ARC-WMTE-6091)
+
+**What was wrong.** `refactor_prompt(game, vr)` takes a game id and a `VerifyResult`. Neither
+carries the engine. Measured across the 13 offline induction windows by rendering the real
+prompt against each game's committed evidence engine: **0 of 454 substantive engine source lines
+reach the prompt string, on 13 of 13 games.** The only matches are this codebase's own REQUIRED
+OUTPUT STRUCTURE boilerplate — the prompt quoting its own template. So the shipped instruction,
+"REFACTOR toward simpler, more general rules … while keeping the cases it already gets right,"
+is unachievable by construction: the model can see neither the code nor a single case it gets
+right, only ≤5 failing deltas.
+
+That reclassifies every "refinement" round this project has run. It was not refinement. It was a
+blind RE-INDUCTION with LESS evidence than round 0 had. Which in turn means the standing CEGIS
+null — exp5766, 0 of 39 cells with `delta_heldout > 0`, carrying a `retire_if_same_verdict` —
+**did not falsify refinement. It falsified the instrument.**
+
+**Second defect, in the grader.** Under the shipped two-way split a PERFECT ORACLE engine scores
+`change_accuracy` 0.0 on sp80, r11l, vc33 and ft09 — 4 of 13 games, **12 of 39 cells (30.8%)** —
+because the whole held-out tail is the level-up row `WorldModelVerifier.score` correctly refuses
+to grade. An unfalsifiable gate reported as a failure. Turning ON the already-shipped
+`CARNOT_ARC_CEGIS_ACCEPT_SPLIT` recovers sp80 and ft09; r11l and vc33 (n=3 windows) stay
+structurally undecidable and leave the denominator **explicitly named**, not silently dropped.
+
+**What shipped.** `CARNOT_ARC_REFACTOR_SHOW_ENGINE` (default OFF, so every prior measurement
+stays reproducible byte-for-byte) splices the current engine's source into the refactor prompt.
+Both-directions test, plus a mutation proof: deleting the splice turns 3 tests red.
+
+**The measurement, and the operator's pre-committed stopping rule.** Three arms — single-shot
+induce (the baseline that matters: refinement must beat NOT refining), shipped blind refinement,
+and refinement with the engine visible — paired at the SAMPLE, both refinement arms forked from
+one shared round-0 engine so the treatment contrast carries zero round-0 sampling noise.
+gemma-4-31B-it on GPU 1 (GPU 0 left to the conductor), engine store redirected off the tracked
+evidence tree, acceptance purity verified per cell on rendered text.
+
+**OUTCOME, STATED AGAINST THE STOPPING RULE.** The two instrument defects are FIXED and PROVEN.
+The live A/B produced **no number**: 2 cells attempted, **0** with a generator substrate that
+could be vouched for end to end. Every llama-server started on this host was killed within
+seconds to minutes — lifetimes 369 s / 17 s / 10 s / 53 s read off the servers' own logs, plus a
+no-harness standalone control that died at 22 s, with zero OOM/abort records and a peak decode of
+34.75 tok/s (real GPU work right up to the kill). Ruled out by measurement, not assumption: host
+OOM (94 GB free), the 2-hour orphan janitor, the CUDA capacity guard, llama.cpp slot arithmetic
+(a real bug, fixed with `--parallel 1`), a name-matching reaper (binary copied to a private
+path), process-group delivery (`setsid` on the parent AND `os.setsid()` in the child), and an
+inherited `SIG_IGN` (llama.cpp reinstalls its own console handler). Stopping the conductor to
+free the machine was deliberately not attempted — it is the operator's loop.
+
+**This is NOT reported as a null.** A null requires cells whose substrate is vouched for; there
+are none. Calling it a null would be exactly the fabrication the per-cell substrate witness was
+built to make impossible. So the stopping rule is **not yet answered**, and that is stated
+plainly rather than dressed as a result.
+
+**Two self-inflicted errors recorded rather than quietly fixed.** (1) A standalone-server control
+was first read as "SURVIVED 541 s"; the liveness probe was `pgrep -f "port 8981"`, which matched
+the probe's own shell command line rather than the server — its log shows it exiting at 22 s.
+(2) Four `pkill -f` calls killed their own shell (exit 144) for the same self-matching reason,
+truncating the commands that followed them. Same root cause, twice, in one session.
+
+**Banked ARC levels remain 3/3. Nothing was submitted; no scored or online game was played.**
