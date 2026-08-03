@@ -465,5 +465,54 @@
     "why": "Inside execute_bounded_llm_reinduction the order is fixed per round: proposer writes -> load_engine reads -> select_trusted_world_model scores -> heldout_accuracy gate. The gate therefore always scores the bytes the proposer wrote microseconds earlier, in the same round. Retention's rollback write happens strictly AFTER the loop, when no further scoring occurs in that call.",
     "the_ONE_divergence_that_does_exist_is_already_documented": "On a PLANNED return the store holds the retained round while the returned engine is the planning round's (REQ-ARC-WMTE-6035 honest limit 2, ft09-shaped all-no-op held-out split). That is a store-vs-return divergence, not a stale gate verdict, and engine_retention['best_round'] exists precisely to make it visible.",
     "residual": "A stale-read hazard IS real for OFFLINE harnesses, where a FAILED induce leaves the prior run's engine on disk for load_engine to re-read and mis-attribute -- arc_actions_to_progress.py:873/924/1060 already deletes the file to defend against it. In the live agent a failed induce returns early WITHOUT reading (arc_competition_agent.py:6501-6505), so the same hazard does not reach the scored path."
+  },
+  "CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW": {
+    "status": "adversarial review returned holds=true. The headline enum (yes_still_live/split), blocks_planning_independently=false, and the 'not an alternative explanation for 0-of-136' conclusion all stand. ONE positive observation is RETRACTED, and the retraction cuts in the finding's own direction: the cross-call overwrite is even MORE empirically inert than reported.",
+    "never_prune": "the original 1-of-7 figure is left in place in REAL_CORPUS_EXPOSURE.",
+    "R1_retract_the_1_of_7_regressive_write_claim": {
+      "superseded": "'Among the 7 cells eligible, ONE shows a later stored engine below the running peak (ret1__vc33__s1, 1.0 -> 0.931818).'",
+      "defect": "the artifact correctly excluded cells whose engine_retention field is ABSENT (missing is not zero), then treated best_round_signal = 0.0 as a measured peak on three cells whose sibling field best_round_true_changed_cells is 0 -- i.e. a signal that could not discriminate. That is a missing value wearing a numeric zero, and the artifact ships the field that says so.",
+      "independently_recounted_this_session": {
+        "eligible_ge2_events_and_ge2_recorded_signals": 7,
+        "of_which_baseline_is_INFORMATIVE": 4,
+        "uninformative_baselines_excluded": [
+          "ret0__tu93__s1 (0.0 over 0 true-changed cells)",
+          "ret1__tu93__s1 (0.0 over 0)",
+          "lp85_r2 (0.0 over 0)"
+        ],
+        "corrected_denominator_is_ONE_GAME": "all 4 informative cells are vc33",
+        "directions": "1 down (ret1__vc33__s1 1.0 -> 0.9318), 1 UP (ret0__vc33__s1 0.0567 -> 1.0, same game and seed, control arm), 2 flat (vc33_r0, vc33_r1 both 1.0 -> 1.0)",
+        "like_for_like_destructive_writes_demonstrated": 0,
+        "sign_test_support": "2 discordant pairs -> smallest reachable two-sided p = 0.5. The design could not have detected this effect even if it were real."
+      },
+      "denominator_reconciliation": "this session first counted 58 cells / 66 events / 4 eligible because induction_events lives at TWO key paths: /result/induction_events (58 cells) and /result_row/induction_events (14). With both, 72 cells / 83 events / 11 exposed / 7 eligible -- the artifact's figures reproduce EXACTLY."
+    },
+    "R2_best_round_signal_is_NOT_comparable_across_induction_events": {
+      "finding": "it is heldout_change_consistency over whatever transitions existed at that moment. The denominators move: the single apparent regression compares 1.0 over 141 true-changed cells against 0.931818 over 44.",
+      "consequence": "any future cross-call quality claim must score BOTH engines on the SAME transition set. This is also why a quality-conditioned write needs the TRANSITION SET persisted beside the engine, not just the scalar signal."
+    },
+    "R3_spec_contradiction_recorded": {
+      "REQ-ARC-WMTE-6035 defect (i)": "'it left round N's source on disk, so the next load_engine() -- next stall, next level, next episode -- started from the last refactor however bad it was.'",
+      "this_artifact_measured": "that consumer does not exist in E3AgentPolicy: all four e3.load_engine sites are write-preceded, and 11 instrumented reads showed 0 read-before-write. Half the REQ's stated rationale is therefore not live.",
+      "action": "belongs in a spec corrigendum; recorded here rather than left implicit."
+    },
+    "R4_single_shot_heldout_purity_caveat": {
+      "clean": "the REINDUCTION path -- _proposal_prefix and _split_prefix_heldout use identical arithmetic on the identical tail slice, disjoint by construction.",
+      "NOT_clean": "the SINGLE-SHOT path -- induce() is passed the full active_transitions (:6497) and select_trusted_world_model/WorldModelVerifier then score the SAME rows (:6573/:6666). Independently confirmed by this session; it is the same defect recorded as C5 in the induce-gate anatomy's corrigendum.",
+      "does_not_affect": "Q4's 'the gate scores bytes written microseconds earlier' is unchanged."
+    },
+    "R5_framing_softened": {
+      "_guard_engine_write": "'scoped to PYTEST_CURRENT_TEST only' is correct but reads as an oversight. The guard's docstring states the scoping is DELIBERATE ('the LIVE agent legitimately writes induced engines into this exact directory -- that is what the store is FOR'). Correct framing: deliberately scoped to tests, and therefore by design does not cover the experiment-run vector.",
+      "per_cell_store_precondition": "the 15.3% exposure figure is a WITHIN-cell count and is only the right denominator because every pooled corpus isolates the store per cell. If cells of one game shared a store it would be 25.0%. They do not, but the precondition must be written down."
+    },
+    "R6_missing_prior_art": "exp5722 (2026-07-18), arc_actions_to_progress.py:_attribution_ok plus the delete-before-induce unlink in run_seeded_progress, is an EARLIER independent discovery of the same cross-call store hazard and a shipped partial mitigation. Reported by the review; not independently re-verified by this session.",
+    "what_did_NOT_change": [
+      "cross-call overwrite is structurally live and uncovered by any REQ.",
+      "within-call retention IS delivered (verified by reading store bytes back).",
+      "blocks_planning_independently = NO: 4 load_engine sites, all write-preceded, 11 reads, 0 read-before-write.",
+      "the p=4.9e-5 is an OFFLINE counterfactual, not a live A/B; the live A/B had 0 discordant pairs and a smallest reachable p of 1.0.",
+      "ka59/ar25 damage remains unrepaired in tracked evidence, on a longer cross-RUN timescale that this within-episode census does NOT bound.",
+      "a store-semantics fix alone would be INERT on behaviour by construction."
+    ]
   }
 }
