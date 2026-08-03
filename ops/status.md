@@ -8275,3 +8275,42 @@ The goal-gate file's own 5-mutant proof re-ran 5/5 after this session's edits.
   proposed revert, declined it, and fixed documentation and one missing knob.
 - **Induce→plan remains CLOSED at a production-payable budget for ka59.** Nothing here changed the
   137,347-call requirement; the new gate knob does not move it.
+
+
+## 2026-08-03 — ARC refinement instrument fixed; the live A/B is BLOCKED on this host (REQ-ARC-WMTE-6091)
+
+### What's working (added)
+
+- **The refactor prompt can now show the engine it is refactoring.**
+  `CARNOT_ARC_REFACTOR_SHOW_ENGINE=1` splices the current `world_model.py` into the refactor
+  prompt. Default OFF, so every prior measurement stays reproducible byte for byte. 7 tests,
+  both directions, mutation-proven (deleting the splice turns 3 red).
+- **The measurement instrument is now falsifiable.** With
+  `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1`, 11 of 13 roster games have an acceptance block a PERFECT
+  ORACLE engine scores 1.0 on. r11l and vc33 remain structurally undecidable (n=3 windows) and
+  are excluded BY NAME.
+- **Per-cell substrate proof.** `substrate_witness()` reads the exe path and loaded shared
+  objects of whatever PID owns the generator port, before and after every cell. A HIP build on
+  the AMD iGPU and a CUDA build on a 3090 both answer /health 200 and both generate correct
+  text; only this check can tell them apart.
+
+### Known constraints (added)
+
+- **No llama-server survives on this host while the conductor is running.** Measured lifetimes
+  369 s / 17 s / 10 s / 53 s (run) and 22 s (no-harness standalone control), all with the same
+  SIGINT signature in the server's own log, zero OOM/abort records, and 34.75 tok/s decode right
+  up to the kill. Not OOM, not the orphan janitor, not the CUDA guard, not slot arithmetic, not
+  a name-matching reaper, not process-group signal delivery, not an inherited SIG_IGN. **The
+  sender is still unidentified.** Any future live-generator work on this box needs this solved
+  first, or it will silently produce zero usable cells.
+- **A real llama.cpp bug was found and fixed on the way:** without `--parallel 1`, llama-server
+  runs 4 slots on a unified KV cache, so one slot gets n_ctx/4 and a 16384-token budget aborts
+  the server at n_ctx=32768.
+
+### Not done, stated plainly
+
+- **The stopping rule is NOT answered.** 2 cells attempted, 0 with a vouched-for substrate. This
+  is reported as BLOCKED, not as a null — a null needs cells, and claiming one would be the
+  fabrication the substrate witness exists to prevent.
+- **Banked ARC levels UNCHANGED at 3/3.** Nothing solved, nothing submitted, no scored or
+  offline game played, no shipped default flipped.
