@@ -817,7 +817,7 @@ tasks:
 
   - id: exp5973-v528-capstone-reconciliation
     milestone: "2026.07.528"
-    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition task (capstone-vN) - false-positive scope-match vs exp5716/exp5728/exp5768/exp5862/exp5903, all of which are prior-MILESTONE capstones and none of which is a failed rerun of this scope: exp5728/5862/5903 carry complete: verdicts, and exp5716/5768 carry template-placeholder text in honest_verdict ('terminal summary starting with complete: or blocked:.') that the reconciler classifies as untrustworthy. A capstone reconciles ITS OWN milestone; .528 reconciles .528 results that no prior capstone could have addressed, so it is structurally incapable of being a doomed rerun."
+    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition task (capstone-vN) - false-positive scope-match vs exp5716/exp5728/exp5768/exp5862/exp5903, all prior-MILESTONE capstones. A capstone reconciles ITS OWN milestone: .528 reconciles .528 results no prior capstone could have addressed, so it is structurally incapable of being a doomed rerun - exactly why CLAUDE.md names capstone-vN as class 1. CORRECTION 2026-08-03: an earlier version of this override ALSO claimed exp5716/5768 carried template-placeholder text in honest_verdict. That was FALSE - a grep matched a field description and the wrong file. All five priors carry real verdicts and three are genuinely blocked:, so the linter match is CORRECT, not spurious. The class-1 ground is independently sufficient and is the only one relied on."
     title: "Branch-independent .528 capstone and exact reconciliation"
     priority: critical
     track: infrastructure
