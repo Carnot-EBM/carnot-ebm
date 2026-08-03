@@ -435,3 +435,115 @@ and memory accounting; and no registry update or public solve claim occurs.
 **Then** `solve_provenance` is `live_agent_self_discovery`, the level outcome is
 telemetry only, `ops/arc_solve_registry.yaml` is hash-unchanged, no public
 target is selected, and no headline/resubmission/registry-credit claim is made.
+
+### REQ-ARC-CPTB-5970: Strip-Swap HUD Convention Sentinel
+
+Experiment 5970 SHALL provide deterministic row-strip and column-strip swap
+perturbations for the convention-perturbation transfer battery. Each transform
+SHALL exchange an edge-adjacent strip of width `t` with the immediately interior
+strip of width `t`, for top, bottom, left, or right placement, with
+`t >= EDGE_BAR_EDGE_TOLERANCE`. The transform SHALL reject non-integer widths,
+degenerate widths, invalid dimensions, invalid axis/edge combinations,
+overlapping slices, and any permutation that loses or duplicates cells. Applying
+the same transform twice SHALL be the inverse, and every transform SHALL preserve
+the grid multiset exactly.
+
+Exp5970 SHALL declare deterministic condition metadata for the strip direction,
+width, edge placement, condition id, and declared target predicate without
+changing existing CPTB roll or salience semantics. The metadata SHALL record the
+HUD edge-adjacency predicate targeted by each condition, the frontier predicate
+dose, moved HUD mask pixels, detector mask changes, grid-difference
+localization, and byte-identity of playfield pixels outside the swapped bands.
+
+Exp5970 SHALL run static sentinels for representative top, bottom, left, right,
+no-HUD, and frontier-only masks. The static matrix SHALL prove that the intended
+HUD predicate changes for the targeted edge, non-target sentinels remain
+preserved outside the swapped bands, and collateral dose is quantified rather
+than assumed inert.
+
+Exp5970 SHALL run a bounded adapter-free, no-LLM live-path sentinel through
+`make_carnot_agent` and `E3AgentPolicy` on the known HUD-moving anchors and
+matched control games. The agent SHALL receive transformed observations through
+the normal choose-action path. Game source, `GameAdapter` routes, offline BFS,
+prior-game trajectories, hidden state, and solve registry updates SHALL remain
+disabled or unused. Readiness requires at least one strip condition to violate
+the HUD convention while retaining non-empty valid live action/progress support.
+If that support is absent, the artifact SHALL emit an honest null or retirement
+and SHALL NOT authorize Exp5971.
+
+Exp5970 SHALL write
+`results/experiment_5970_arc_strip_swap_sentinel.json` and SHALL NOT modify
+`ops/arc_solve_registry.yaml`, shipped policy flags, or
+`scripts/research_conductor.py`. All incidental level outcomes SHALL be
+telemetry only and SHALL NOT be reported as a public solve, solve credit, or
+registry update.
+
+Experiment 5970 SHALL write bare top-level fields `status`,
+`preconditions_checked`, `registry_precheck_and_hash`,
+`transform_schema_parameters_and_hash`,
+`row_column_inverse_and_multiset_receipts`,
+`static_target_and_non_target_dose_matrix`,
+`detector_mask_and_predicate_change_matrix`,
+`collateral_playfield_change_bounds`,
+`live_agent_path_and_disabled_escape_hatches`,
+`sentinel_game_arm_seed_and_budget_manifest`,
+`anchor_support_and_behavioral_validity`,
+`shipped_flag_and_registry_immutability`, `no_solve_credit_receipt`,
+`protected_files_unchanged`, `strip_swap_sentinel_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field provenance principles SHALL include:
+
+- `preconditions_checked`: principle "the transform and live path must be authentic and bounded before measurement."
+- `registry_precheck_and_hash`: principle "all public levels are already cleared; this task does not target or register a solve."
+- `transform_schema_parameters_and_hash`: principle "strip direction, width, placement, and condition IDs are deterministic and versioned."
+- `row_column_inverse_and_multiset_receipts`: principle "transforms are lossless permutations with exact round trips."
+- `static_target_and_non_target_dose_matrix`: principle "the intended HUD convention is violated and unrelated levers are quantified, not assumed inert."
+- `detector_mask_and_predicate_change_matrix`: principle "report exact pixel/mask/predicate changes for every sentinel."
+- `collateral_playfield_change_bounds`: principle "content outside the swapped bands remains byte-identical."
+- `live_agent_path_and_disabled_escape_hatches`: principle "use make_carnot_agent/E3AgentPolicy with source, BFS, adapters, priors, and hidden state disabled."
+- `sentinel_game_arm_seed_and_budget_manifest`: principle "games, arms, seeds, conditions, and budgets are sealed before outcomes."
+- `anchor_support_and_behavioral_validity`: principle "readiness requires convention violation with non-empty valid live support."
+- `shipped_flag_and_registry_immutability`: principle "both remain byte-identical."
+- `no_solve_credit_receipt`: principle "any incidental level outcome is not a new result or registry mutation."
+- `protected_files_unchanged`: principle "emit readiness only for immutable protected state."
+- `strip_swap_sentinel_ready_score`: principle "emit bare 1.0 only for authentic targeted dose, viable support, and immutable protected state."
+- `duration_s`: principle "record measured adapter-free ARC runtime."
+- `inference_substrate`: principle "use offline_arcade_live_agent_runtime_self_discovery_no_llm."
+- `verifier_is_oracle`: principle "false for the HUD convention hypothesis."
+- `missing_verifier_gaps`: principle "list limited anchor support and public-game generalization gaps."
+- `honest_verdict`: principle "use complete_ready:, complete_null:, retired:, or blocked:."
+
+### SCENARIO-ARC-CPTB-5970-LOSSLESS-STRIP-SWAPS
+
+**Given** valid top, bottom, left, and right strip-swap parameters with
+`t >= EDGE_BAR_EDGE_TOLERANCE`
+**When** each transform is applied to a grid and then applied again as its
+inverse
+**Then** the original grid is restored exactly, the cell multiset is unchanged,
+outside-band playfield pixels are byte-identical, and invalid parameters are
+rejected before a transform is produced.
+
+### SCENARIO-ARC-CPTB-5970-STATIC-DOSE-MATRIX
+
+**Given** representative top, bottom, left, right, no-HUD, and frontier-only
+sentinels
+**When** Exp5970 applies every strip-swap condition
+**Then** the matching HUD edge predicate changes, moved HUD mask pixels are
+reported, non-target predicates and outside-band playfield pixels are preserved
+or quantified, detector-mask deltas are reported, and the static matrix carries
+bounded collateral dose for every sentinel.
+
+### SCENARIO-ARC-CPTB-5970-BOUNDED-LIVE-PATH
+
+**Given** the known HUD-moving anchors, matched controls, sealed seed and action
+budget, unchanged registry and shipped flags, and no source/BFS/adapter/prior-
+game/hidden-state route
+**When** transformed observations are passed through `make_carnot_agent` and
+`E3AgentPolicy`
+**Then** at least one strip condition violates the HUD convention while
+retaining non-empty valid action/progress support, or the artifact emits an
+honest null/retirement; the registry and shipped flags remain unchanged and no
+solve credit is claimed.
