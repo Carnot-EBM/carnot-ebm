@@ -1,0 +1,44 @@
+# Lint config for this measurement's harness.
+#
+# ---------------------------------------------------------------------------
+# `exclude` IS A DATA-INTEGRITY CONTROL, NOT A STYLE PREFERENCE. READ THIS.
+# ---------------------------------------------------------------------------
+# `out/engines/` holds LLM-EMITTED code, verbatim, as the AS-RUN record of what the generator
+# produced. `run_ab.py` records each file's sha256 at the moment it was emitted and `score.py`
+# grades exactly those bytes, so reformatting one silently replaces the measured object with a
+# prettified impostor while every downstream number keeps reporting itself as a measurement of
+# the model's output.
+#
+# This is not hypothetical. On 2026-08-01 a `ruff format` aimed at the DIRECTORY rather than at
+# named source files reformatted all five engines the sibling `arc_inert_rejection_ab_20260801`
+# harness had collected, mid-collection; every recorded `engine_sha256` stopped matching its
+# file and nothing warned. That harness's ruff.toml documents the incident in full and this file
+# copies its control deliberately.
+#
+# The same near-miss recurred here on 2026-08-03 and was caught: the pre-commit `ruff` hook tried
+# to "fix" `out/engines/ar25__r0__base.py`, whose duplicated `import numpy as np` is a genuine
+# property of what gemma-4-31B emitted (`_combine_world_model` prepends an import to a completion
+# that already had one) and is therefore DATA. The formatting pass that preceded it had used a
+# non-recursive `*.py` glob and so never reached `out/`, which was verified rather than assumed:
+# all 225 engines were re-hashed against the `engine_sha256` recorded in `out/cells/*.json` at
+# emission time and matched exactly, 0 mismatches.
+#
+# Two rules follow, and the second matters more than the first:
+#   1. This exclude keeps `out/` off-limits to every ruff invocation that reads this config.
+#   2. NEVER run a formatter at a directory that contains collected artifacts. Name the source
+#      files. A config can only defend the paths someone thought to list.
+exclude = ["out/", "e3_store/"]
+
+extend = "../../pyproject.toml"
+
+[lint.per-file-ignores]
+# I001: these modules mutate `os.environ` at module scope BEFORE importing anything from
+# `carnot` -- `CARNOT_ARC_E3_DIR` redirected out of the evidence tree so `results/arc_e3` can
+# never be written, and (in the scoring path) `CUDA_VISIBLE_DEVICES=""` so a CPU-only pass that
+# executes untrusted generated code can never grab a card another session on this shared machine
+# owns. E3_DIR in particular is read at IMPORT time. Import sorting hoists those imports above
+# the mutations and silently defeats all of it. Same reasoning, same wording, as
+# results/arc_inert_rejection_ab_20260801/ruff.toml.
+"score_worker.py" = ["I001"]
+"run_ab.py" = ["I001"]
+"prep.py" = ["I001"]

@@ -1,0 +1,105 @@
+{
+  "MISSING_VS_ZERO": {
+    "missing": "server failure, HTTP error, harness exception, or a scoring worker timeout. EXCLUDED and counted -- never coerced to 0.",
+    "zero": "a complete response whose engine loads and scores 0. A real failure, scores 0."
+  },
+  "POWER_STATED_UP_FRONT": {
+    "CAN_THE_PRIMARY_REACH_0.05": "Only if at least 6 games move. Given the record, the likeliest outcome is a floored primary and whatever signal exists appearing on cell_recall / change_fidelity. Said before any result.",
+    "HONEST_EXPECTATION": "The record is 0 of 296 clean units at change_accuracy > 0.0000 across 14 games and both branches. If that floor holds in every arm the primary is ALL TIES, no test is possible, and the honest report is 'unmeasurable at this floor' -- NOT 'no difference'. That is why an instrument-reachability probe runs BEFORE the arms (see REACHABILITY_PROBE) and why the continuous secondaries are pre-registered alongside.",
+    "min_reachable_two_sided_p_all_20_games_discordant": 1.907349e-06,
+    "min_reachable_two_sided_p_plain_branch_ex_tn36": 0.00390625,
+    "n_discordant_needed_for_p_below_0.05": 6,
+    "n_discordant_needed_for_p_below_bonferroni_0.0167": 8
+  },
+  "PRIMARY": {
+    "alpha": 0.05,
+    "clustering": "GAME. Replicates within a game are averaged into ONE per-game mean before pairing. 20 games x 3 replicates is 20 units, not 60.",
+    "definition_correction": "change_accuracy = n_changes_correct / n_changing where n_changes_correct counts WHOLE-GRID EXACT matches on changing rows. It is NOT a cell fraction; cell_recall and change_fidelity are the cell measures and are secondaries.",
+    "metric": "held-out change_accuracy on the PRODUCTION TAIL split (_split_prefix_heldout, the same split the record's 0-of-296 null was measured on), per game, averaged over replicates",
+    "target_from_the_brief": ">= 0.5 on any game but tn36, on more than a handful of rows",
+    "test": "exact two-sided paired sign test over GAMES, each arm vs base, ties dropped"
+  },
+  "PRIMARY_SCOPE_BRANCH": {
+    "n": 9,
+    "plain_branch_games_excluding_tn36": [
+      "ls20",
+      "s5i5",
+      "tu93",
+      "tr87",
+      "bp35",
+      "sb26",
+      "lf52",
+      "su15",
+      "lp85"
+    ],
+    "why": "HIDDEN_STATE_GAME_IDS is a hardcoded 11-game PUBLIC tuple, so a hidden Kaggle game always takes the PLAIN branch. Hidden-state games are run and reported as their own stratum, never pooled into a hidden-branch claim."
+  },
+  "REACHABILITY_PROBE": "Before the arms run, a HAND-WRITTEN lookup oracle -- not an induced engine and not a claim about anything -- is scored on both held-out sets. If it does not reach change_accuracy 1.0 the metric is arithmetically pinned and every 'zero' in this run would be forced rather than measured. This is the check a prior arm skipped, whose '0 plans' was later found to be unfalsifiable because a hardcoded 0.5 threshold sat above an achievable maximum of 0.0476.",
+  "SECONDARIES": [
+    "held-out cell_recall (the quantity the brief's prose describes)",
+    "held-out change_fidelity (union-scored: a spurious write costs what a miss costs)",
+    "n engines above 0.0 on change_accuracy at all -- pre-registered as the channel that may matter more than the mean when the record sits at exactly zero",
+    "identity rate (engine returns its input on every probed action) -- the antiid arm's own mechanism witness",
+    "induce_ok rate -- removing the code-only directive may reintroduce the truncation failure it was shipped to fix; that would be a real cost of the think arm",
+    "generated tokens, wall seconds, completion calls"
+  ],
+  "SECOND_HELD_OUT_SET": {
+    "direction_of_the_bar": "STRICTLY HARDER, not easier: >= 0.5 here means exactly predicting more than half of ~150 whole 64x64 grids.",
+    "distribution_caveat": "fresh rows come from random exploration from reset, the window from a banked winning route. That is a distribution shift and is stated as one -- though it is arguably the more live-faithful of the two, since the live agent induces on its stall-triggered exploration buffer and must then predict its own continued exploration.",
+    "name": "fresh",
+    "what": "collect_transitions exploration of the OFFLINE sim from reset at a fixed seed, deduped against the shown prefix by BOTH a content digest and a rendered-prompt-line membership test",
+    "why": "the production tail leaves ~3 gradable changing rows per game, on which change_accuracy can only take the values {0, 1/3, 2/3, 1}. The brief asks for 'more than a handful of rows'; the fresh set supplies 120-220 per game."
+  },
+  "STOPPING_RULE": "every roster game x 4 arms x N replicates, or the wall budget. Analysis runs ONCE after collection stops. No peeking-and-extending. Only (game, replicate) pairs where BOTH the arm and base ran enter a contrast.",
+  "arms": {
+    "antiid": "shipped prompt + explicit anti-identity clause",
+    "base": "the shipped prompt, unchanged",
+    "delta": "shipped prompt + delta-shaped output instruction",
+    "think": "CARNOT_ARC_CODEONLY_INDUCE=0 -- _L2_CODEONLY_DIRECTIVE removed"
+  },
+  "control": "base",
+  "experiment": "arc_generation_ablation_heldout_engine_accuracy",
+  "flag_remains_default_off": true,
+  "held_equal_across_arms": [
+    "window",
+    "split",
+    "server",
+    "seed",
+    "max_tokens",
+    "tries",
+    "temperature schedule",
+    "roster"
+  ],
+  "max_tokens_all_arms": 8192,
+  "multiplicity": "One primary metric x 3 arm-vs-base contrasts. A p below 0.05 on one contrast reads against a Bonferroni threshold of 0.05/3 = 0.0167. The secondaries are exploratory and read against 0.05/6 = 0.00833.",
+  "n_replicates": 3,
+  "no_behavioural_claim": "no action, plan, level or episode is measured or moved",
+  "not_submitted": "no scored or online ARC game is played; submission is operator-only",
+  "question": "Does any of three prompt interventions -- removing the code-only directive, forbidding an identity engine, or reshaping the output contract to the delta language the prompt already teaches -- raise HELD-OUT engine accuracy?",
+  "roster": [
+    "ls20",
+    "s5i5",
+    "tu93",
+    "cn04",
+    "m0r0",
+    "sk48",
+    "ar25",
+    "tr87",
+    "g50t",
+    "re86",
+    "bp35",
+    "sb26",
+    "lf52",
+    "su15",
+    "lp85",
+    "cd82",
+    "wa30",
+    "sc25",
+    "tn36",
+    "ka59"
+  ],
+  "roster_provenance": "reused UNCHANGED from the 2026-08-01 corpora, so it cannot have been chosen after seeing which games favour an arm",
+  "seed_base": 20802,
+  "tries_all_arms": 3,
+  "written_before_any_llm_call": true
+}
