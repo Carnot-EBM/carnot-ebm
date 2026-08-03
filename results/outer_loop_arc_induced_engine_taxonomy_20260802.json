@@ -1,0 +1,1851 @@
+{
+ "schema": "carnot.arc_induced_engine_taxonomy.v1",
+ "experiment": "outer_loop_arc_induced_engine_taxonomy",
+ "title": "How many induced world-model engines are IDENTITY, and what do the rest get wrong?",
+ "run_date": "2026-08-02T21:27:34Z",
+ "duration_s": 1487.0,
+ "duration_s_note": "Wall time from the first corpus scan to artifact assembly. Four passes: recover 855 engine files plus 286 git-history blobs; an AST pass over 901 distinct sources; a dynamic pass of 892 (engine, game) units, each in its own killable subprocess, executing frozen LLM-written engine code against real transitions; and a distance-to-exact pass over the 293 gradable clean units. No LLM was invoked, no GPU was touched, no generator ran.",
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "inference_substrate_note": "No model is loaded and no token is generated. The pass executes PRE-EXISTING frozen engine source against transitions, and scores it with the project's own shipped `arc_executable_world_model.WorldModelVerifier`. The one piece of live compute is `arc_actions_to_progress.build_progress_window`, which runs the OFFLINE arcade solver on CPU to rebuild each game's induction window -- the same call the corpora under test used, which is what makes the split reproducible rather than re-invented. GGUF names appearing in this artifact identify the generator that WROTE a corpus; none was invoked here.",
+ "model_specs": {
+  "invoked": false,
+  "generator_of_the_2026_08_01_corpora": "unsloth/gemma-4-31B-it-GGUF (objperc A/B) and gemma-4-31B-it-qat-UD-Q4_K_XL.gguf (inert-rejection A/B) -- the current live ARC generator per the 2026-07-28 operator directive",
+  "generator_of_the_2026_07_28_corpus": "unsloth/Qwen3.5-9B-MTP-GGUF -- RETIRED as the ARC generator 2026-07-28. Reported separately, never pooled with the 31B corpora.",
+  "author_of_the_results_arc_e3_store_engines": "NOT the local GGUF inducer. The June 2026 conductor PHASE-A/B tasks put a codex (gpt-5.5) agent in the proposer seat with collect_transitions / WorldModelVerifier / load_engine as TOOLS, writing results/arc_e3/<game>/world_model.py directly. See `held_out_purity` below -- this is why those engines cannot carry a held-out claim.",
+  "scorer": "python/carnot/agentic/arc_executable_world_model.py::WorldModelVerifier.score"
+ },
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "NO solve is claimed. No level was reproduced, no plan was installed, no episode ran, and `offline_reproduced` is deliberately absent rather than false-y. This is an offline census of engine source that already existed on disk. `development_proxy` is declared because the transitions come from the offline dev twin, not from a live scored episode.",
+ "offline_reproduced": false,
+ "solve_claimed": false,
+ "not_submitted": true,
+ "no_shipped_default_changed": true,
+ "no_shipped_default_changed_note": "Nothing under python/ or scripts/ was edited. All nine default-OFF env flags remain unset and unflipped. The one place a shipped flag is discussed -- the HUD mask -- was only reasoned about; `CARNOT_ARC_WM_HUD_MASK` was never set, and the exclusion counterfactual below was computed by masking cells in THIS analysis, not by turning the flag on anywhere.",
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "No moat, efficiency or verifier-value claim is made. The 'verifier' here is the project's own dynamics scorer used as a measuring instrument on frozen code.",
+ "random_seed": 20260802,
+ "random_seed_note": "Used ONLY by the analysis: the game-clustered bootstrap (5000 resamples). The classification itself is deterministic -- it re-executes frozen code against a deterministically rebuilt window.",
+ "reproducibility_checksum": "81746c7aad56f26aa9be8b8c590d9d91",
+ "reproducibility_checksum_note": "md5 over the sha256 of each of this directory's harness scripts, then over the sorted list of all 901 distinct engine-source sha256s. It moves if the harness changes or if the engine corpus changes -- which is the point.",
+ "git_rev": "c3e2a09846dd",
+ "question": "Of every induced world-model engine recoverable on this machine: how many are IDENTITY (return the input unchanged on every branch we can reach), how many are structurally broken, and what specifically do the rest get wrong? And is the ceiling of everything ever induced an identity function, or something else?",
+ "headline": "THE PREMISE IS WRONG, AND THE REAL SHAPE IS MORE ACTIONABLE. Identity is a large minority, not the rule: 240 of 864 induced (engine, game) units are identity on every probe -- 27.8% overall (95% game-clustered CI 0.212-0.343), and only 11.6% (0.064-0.173) on the two corpora written by the CURRENT 31B generator against a provably clean split. 65% mutate the grid and are simply wrong; 7.2% are structurally broken. Identity concentrates by game (per-game share 0.0 on tn36 and 0.026 on bp35 up to 0.582 on lp85, median 0.254), so it is a property of the GAME as much as of the generator. The ceiling is NOT an identity function: the best clean-split non-tn36 engine (ls20, 31B object-perception ON arm) writes 50 of 52 changed cells correctly on every one of its three held-out changing transitions and misses exactly TWO -- an advancing step counter at rows 61-62 -- so its change_accuracy is 0.0000 while its union fidelity is 0.9615. But that near-miss is rare: over 293 clean units with at least 3 changing held-out rows, the median engine is 102 cells wrong, and only 4 units on 2 games land within 2 cells. Zero of those 296 clean units reach change_accuracy >= 0.5; zero reach it at all above 0.0. The strongest single fact recovered here is a corpus nobody had scored as such: the 2026-07-28 'positive control' is the SAME local inducer with EVERY transition in the prompt, and with the answers in its context it still writes max change_accuracy 0.0000 and is identity a third of the time.",
+ "honest_verdict": "complete_engine_taxonomy_identity_is_a_28pct_minority_not_the_rule_11.6pct_on_the_current_31B_generator_with_a_clean_split_65pct_mutate_and_are_wrong_7.2pct_structurally_broken_ceiling_is_not_identity_best_clean_non_tn36_engine_misses_exactly_two_counter_cells_of_52_at_union_fidelity_0.9615_but_median_clean_engine_is_102_cells_wrong_and_0_of_296_clean_units_reach_change_accuracy_0.5_or_even_exceed_0.0_engines_ARE_recoverable_901_distinct_sources_vs_203_previously_enumerated",
+ "prior_art_built_on": {
+  "results/outer_loop_arc_generation_taxonomy_20260801.json": "classified 412 best-of-N / A/B CANDIDATES into 9 defect classes using the shipped `validate_engine_code` + `engine_changes_anything`, and put inertness at 12.1% on the 31B-after-3-tries corpus (95% game-clustered CI 0.057-0.191). THIS PASS AGREES AND EXTENDS: my clean-split identity share for the same generator is 11.6% (0.064-0.173), overlapping intervals. Extensions: (a) I classify ENGINE SOURCE on disk rather than completions, so I cover 890 distinct sources across 10 corpus families and 24 games, not one corpus family; (b) my identity probe adds an action-and-payload sweep (actions 0-10 x up to 5 recorded data payloads) on top of the observed transitions, so 'never changes' is a claim about a wider input set than the transitions the engine was shown; (c) I separate the falls-off-the-end-returns-None subclass, which np.asarray(None) swallows silently; (d) it stopped at 'inert vs live' and did not ask what the LIVE ones get wrong -- that is this artifact's second half.",
+  "results/outer_loop_arc_generation_vs_selection_20260802.json": "the generation-wall verdict this pass is downstream of. It scored 352 engines / 884 (engine, split) rows across 4 corpora and established: tn36 is an existence proof (6 of 8 best-of-N candidates at change_accuracy 1.0 and precision 1.0 on BOTH a 17-row proven held-out split AND 120 fresh rows), and the best non-tn36 engine reaches 0.2833. I do NOT re-derive either number and I do not contradict them. What I add is the corpus: it scored 352 engines, I recover 890 distinct sources -- the difference being 240 engines from the retired-generator 2026-07-28 A/B, 108 from the 2026-07-27 four-arm run, 28 leakage-maximal control engines, and 286 distinct blobs from the git history of the tracked stores, none of which had been scored.",
+  "results/outer_loop_arc_induce_gate_anatomy_20260802.json": {
+   "claim_tested": "its PART_C recorded `recoverable: false` for the 136 live rejected attempts and enumerated what IS on disk as 25 live-store files + 27 origin fixtures + 151 inert-A/B engines, with ~309 distinct git blobs noted as recoverable but un-attributable.",
+   "verdict_on_that_claim": "CORRECT AS SCOPED, AND ITS ENUMERATION IS INCOMPLETE. `recoverable: false` was about THOSE 136 specific attempts, whose per-cell schema persists no source; I reproduce that -- I could not recover them either. But the surrounding 'what_IS_on_disk' list names ~203 files and misses five more families totalling another ~500: arc_object_perception_ab_20260728/e3 (240), arc_object_perception_ab_change_fidelity_20260801/engines (116), arc_wm_four_arm_20260727/e3_store (108), the 28-engine leakage control, and arc_logo_snapshot (6). It also put the git history at 309 distinct blobs; I recover 286 distinct blobs over 498 (path, commit) versions, which is the same claim at a slightly different count and confirms the mechanism."
+  }
+ },
+ "corpus_recovered": {
+  "engine_files_on_disk": 855,
+  "of_which_an_exact_flat_mirror": 151,
+  "distinct_on_disk_sources": 649,
+  "distinct_git_history_blobs": 286,
+  "distinct_sources_total": 901,
+  "engine_game_units_classified": 892,
+  "games": 24,
+  "note": "`results/arc_inert_rejection_ab_20260801/out/engines/` is a byte-identical flat mirror of that run's `e3_store/` tree (verified: identical sha256 SETS, 135 each), so it contributes no independent observations and is counted once -- failure mode 10. Nine of the 901 sources could not be paired with a rebuildable window (the synthetic `g` test-leak stub, the hand-written `positive_control_4557`, and dc22, whose window builder returns None), so 892 units were classified.",
+  "families": {
+   "ab0728_qwen9B": "240 files / 238 distinct -- 2026-07-28 object-perception A/B, RETIRED Qwen3.5-9B generator",
+   "inert0801_31B": "151 files / 135 distinct -- 2026-08-01 inert-rejection A/B, gemma-4-31B-it-qat",
+   "abcf0801_31B": "116 files / 115 distinct -- 2026-08-01 change-fidelity A/B, gemma-4-31B-it",
+   "fourarm0727": "108 files / 102 distinct -- 2026-07-27 four-arm live run",
+   "git_history": "498 (path, commit) versions / 286 distinct blobs of the tracked stores",
+   "ab0728_poscontrol": "28 files -- the LEAKAGE-MAXIMAL control, see below",
+   "live_store_arc_e3": "27 files -- the working-tree live store, one per game",
+   "origin_fixtures": "27 files -- frozen never-written copies of the origin-incident engines",
+   "logo_snapshot": "6 files",
+   "seedproto": "1 file"
+  },
+  "evidence_stores_were_read_never_written": [
+   "results/arc_e3",
+   "results/arc_logo_snapshot",
+   "results/arc_e3_origin_fixtures"
+  ],
+  "third_party_in_flight_work_read_never_written": [
+   "results/arc_inert_rejection_ab_20260801 -- another writer's untracked run"
+  ]
+ },
+ "engines_recoverable": true,
+ "engines_recoverable_note": "Emphatically yes, and 4.4x wider than the previous enumeration: 901 distinct engine sources are on disk or in git RIGHT NOW, all of them re-scoreable offline on CPU in about two minutes of wall time for the whole corpus. The next phase does not need to regenerate anything to study what the generator writes. The one thing that is NOT recoverable is per-attempt ATTRIBUTION for the 136 live rejected inductions, because their cell schema persists scalars only -- that part of the prior finding stands.",
+ "held_out_purity": {
+  "why_this_section_is_first": "If a scoring transition was visible during induction, accuracy inflates and every conclusion flips. This is the primary risk in the whole run, so the split is stated per corpus family rather than assumed globally, and the families whose provenance I cannot prove are never pooled with the ones I can.",
+  "the_split": "`arc_actions_to_progress.build_progress_window(game)` rebuilds each game's window deterministically from the offline arcade; `arc_world_model_trust_energy._split_prefix_heldout` (the project's own canonical prefix/tail split, heldout_fraction=1/3) then takes rows[:-n] as shown and rows[-n:] as held out. For a 12-row window that is 8/4, which is EXACTLY the split `split_meta` records for both 2026-08-01 A/B corpora.",
+  "clean_exact_same_split": {
+   "n_units": 250,
+   "families": [
+    "abcf0801_31B",
+    "inert0801_31B"
+   ],
+   "why_clean": "these engines were induced on rows[:-4] of this identical window, and their own harness recorded a textual purity witness per game -- `no_heldout_line_in_off` / `no_heldout_line_in_on` assert that no held-out transition line appears in either arm's prompt, and `all_shown_lines_in_off` asserts the shown ones do. My held-out set IS their held-out set.",
+   "instrument_check_this_is_the_strongest_evidence": "I re-scored the abcf0801 corpus from source with my own harness and compared against the scores that corpus recorded at run time: 232 of 232 matchable cells reproduce EXACTLY -- max |delta change_accuracy| = 0.0000 and max |delta change_fidelity| = 0.0000. 8 recorded cells had no engine sha to match. Same window, same split, same verifier, same numbers."
+  },
+  "clean_strict_superset": {
+   "n_units": 238,
+   "families": [
+    "ab0728_qwen9B"
+   ],
+   "why_clean": "that run used a 6/6 split, so its engines saw rows[:6] only. My held-out rows[-4:] is a strict subset of what they never saw, which makes this a stricter held-out test than their own, not a looser one."
+  },
+  "provenance_unknown_EXCLUDED_from_every_clean_claim": {
+   "n_units": 376,
+   "families": [
+    "live_store_arc_e3",
+    "origin_fixtures",
+    "logo_snapshot",
+    "fourarm0727",
+    "seedproto",
+    "git_history"
+   ],
+   "why_excluded_and_what_I_found_when_I_checked": "I traced every one of the 14 units that scored change_accuracy >= 0.5 anywhere in the corpus. Twelve of them are `results/arc_e3/*` blobs, and the commits that introduced them are June-2026 conductor PHASE-A/B tasks whose prompts say, verbatim, 'the codex agent IS the proposer (uses collect_transitions / WorldModelVerifier / load_engine / plan_and_execute as tools; WRITES results/arc_e3/<game>/world_model.py)'. `collect_transitions(game, n=120)` explores the offline sim freely, so the whole window -- including my held-out tail -- was available to that agent, which was iterating against the verifier until accuracy rose. The fit signature confirms it: ar25 395b5d9bee22 and sc25 091d7eb90d0f score change_accuracy 1.0000 and change_fidelity 1.0000 on the SHOWN half and the HELD-OUT half alike, and ar25's source opens with `INITIAL_SELECTED_TOP = 15` / `INITIAL_SELECTED_LEFT = 18` -- per-game constants read off that game's initial state. These are verifier-in-the-loop fitted models written by a frontier coding agent, not products of the live local-GGUF inducer, and they are NOT evidence about the generation wall in either direction."
+  },
+  "leakage_maximal_control": {
+   "n_units": 28,
+   "family": "ab0728_poscontrol",
+   "what_it_actually_is": "NOT a hand-written control, which is what its directory name suggests. Its own `positive_control.json` says: 'every transition shown in the prompt (k raised past the window size), graded on the indices the production k=8 prompt withholds'. It is the SAME local GGUF inducer with the answers in its context. It is therefore contaminated BY DESIGN and is reported only as a ceiling, never pooled with the induced units."
+  },
+  "residual_risk_stated": "The clean claims rest on the two 2026-08-01 A/B harnesses' own recorded purity witnesses plus my exact reproduction of their scores. I did not re-run their induction, so I inherit their prompt-construction correctness. Contamination could only INFLATE a score, and the clean-subset result is a ZERO, so contamination cannot manufacture the null reported here -- it could only be hiding a positive, and there is none to hide."
+ },
+ "preregistered_bound_stated_before_results": {
+  "claim_under_test": "at least one induced engine, on a game other than tn36, reaches held-out change_accuracy >= 0.5 on more than a handful of rows (n_changing >= 3).",
+  "clustering": "GAME level. Engines inside a game share a generator, a prompt family and a window, so they are not independent draws. An engine-level rule of three over ~900 units would read 0.003 and would be roughly an order of magnitude overstated.",
+  "if_zero_observed": "rule of three at the game level. 20 games have a measurable held-out set, giving an upper bound of 3/20 = 0.150 on the per-game probability. Restricted to the 14 games that carry a CLEAN unit with n_changing >= 3, the bound is 3/14 = 0.214.",
+  "no_p_value_by_design": "this is a census of every engine that exists, not a randomised comparison. There is no treatment and no null hypothesis to reject; the reportable quantity is a bound.",
+  "a_clean_null_is_a_success": true
+ },
+ "PART_A_how_many_are_identity": {
+  "operational_definition": "an engine is IDENTITY if, over the whole probe battery, it never once produced an output that differs from its input. The battery is: every recorded transition of the game's window at its true (action, data); PLUS a sweep of actions 0-10 against the first six recorded grids, each paired with up to five distinct data payloads observed anywhere in that window and with None. Between 140 and ~400 calls per engine depending on window size.",
+  "why_dynamic_is_the_authority": "a static AST pass cannot see mutation delegated to a helper function, and cannot tell a live mutation branch from a dead one. Both errors were measured, not assumed -- see `static_vs_dynamic` below.",
+  "identity_is_reported_as_two_subclasses": "`never_changes_on_any_probe` (the ft09 shape: `return grid` on every branch) and `falls_off_end_returns_None`, where a branch computes and never returns. Python returns None, the caller's np.asarray(None) makes a 0-d array, and the verifier scores it as a shape mismatch -- silently. Both decline to model, so both count as identity, but they are separated because they need different fixes."
+ },
+ "PART_B_what_the_rest_get_wrong": {
+  "framing": "`change_accuracy` is exact-FULL-GRID match on state-changing transitions, so one wrong cell in 4096 scores identically to writing nothing at all. A 0.0000 therefore does not distinguish 'declines to model' from 'models the game and misses a counter'. Two complementary readings are reported: a mutually-exclusive error taxonomy over the cell-level channels, and an assumption-free distance-to-exact.",
+  "the_two_cells": "The best clean-split non-tn36 engine is ls20 sha 395ed21ff4d5 -- the gemma-4-31B object-perception ON arm, `engines/ls20__r0__on/ls20/world_model.py`. On each of its three held-out changing transitions, reality changes 52 cells, the engine writes 50 of them correctly, and it is wrong on exactly 2. Those 2 cells are at (r61,c21)+(r62,c21) on one row and (r61,c22)+(r62,c22) on the next: a two-row-tall marker advancing one column per action, colour 11 -> 3. It is a step counter. The engine has the game's mechanics and does not have the counter, and exact-grid match zeroes it for that.",
+  "but_the_near_miss_is_rare": "Over 293 clean units with at least 3 changing held-out rows, only 4 (on ls20 and tu93) are within 2 wrong cells on ALL their rows, and only 15 (4 games) within 10. The median unit is 102 cells wrong and the third quartile is 280. Reporting the ls20 near-miss as the state of the corpus would be exactly the one-game error this artifact is supposed to avoid.",
+  "an_exclusion_that_would_rescue_it_could_not_be_constructed": "Two shown-half-only cell-exclusion counterfactuals were tried, both defined without touching a held-out label. (1) Cells that change on EVERY changing shown transition: rescues 0 of 293 -- and the reason is instructive, an ADVANCING counter touches a different cell each tick so the intersection is empty, which is precisely ls20's shape, so this analysis is uninformative rather than negative. (2) Row bands touched by every changing shown transition: 113 units have a derivable band and 23 (bp35, sc25) would clear 0.5 with the band excluded -- but bp35's band is rows 37-41 plus 63, i.e. the MIDDLE of the grid, which is content and not a status strip, so excluding it removes real mechanics. Both are reported as exploratory and NEITHER is used to adjust any headline number. No defensible exclusion rescues any engine to change_accuracy >= 0.5."
+ },
+ "PART_C_the_best_engine_in_the_record": {
+  "the_question_the_brief_asked": "'If the ceiling of everything ever induced is an identity function, that is a different problem from a ceiling of 0.3.' It is neither.",
+  "highest_measured_here_and_why_it_does_not_count": "Fourteen units reach change_accuracy >= 0.5. Twelve are provenance-unknown `results/arc_e3` blobs written by a codex agent with the verifier and the whole window as tools (see `held_out_purity`); ar25 395b5d9bee22, ar25 f8d71fe67d34, ar25 28e850c0d802, ar25 d62743743757, sc25 091d7eb90d0f, sc25 39a0ca8678a9 at 1.0000, ka59 66af38673434 / ec4c777b8f41 and re86 ebdc7ee66a47 / 2095bae5e044 / 5347052ee228 / a489249c27bc at 0.6667. The remaining two are tn36 at n_changing = 1, a single transition, whose 95% interval is [0.025, 1.0] and which is the game the target explicitly excludes.",
+  "the_records_true_best_is_prior_art_and_is_cited_not_re_derived": "results/outer_loop_arc_generation_vs_selection_20260802.json establishes that 6 of 8 best-of-N candidates for tn36 score change_accuracy 1.0000 at precision 1.0000 on BOTH a 17-row proven held-out split AND 120 independently collected rows, and that the best NON-tn36 engine anywhere reaches 0.2833. Those are the ceiling numbers of record and this pass does not move them.",
+  "the_best_engine_whose_SOURCE_answers_the_brief_s_question": {
+   "game": "ls20",
+   "sha256_prefix": "395ed21ff4d5",
+   "path": "results/arc_object_perception_ab_change_fidelity_20260801/engines/ls20__r0__on/ls20/world_model.py",
+   "generator": "unsloth/gemma-4-31B-it-GGUF, object-perception ON arm, replicate 0",
+   "purity": "clean_exact_same_split",
+   "heldout_change_accuracy": 0.0,
+   "heldout_change_fidelity": 0.961538,
+   "heldout_cell_recall": 0.961538,
+   "n_changing": 3,
+   "wrong_cells_per_transition": [
+    2,
+    2,
+    2
+   ],
+   "true_changed_cells_per_transition": 52,
+   "reading": "This is the shape of the ceiling on a clean split. It is not an identity function and it is not a 0.3-fidelity sketch: it is a near-complete dynamics model missing one HUD-class mechanic. Whether that is representative is answered directly above -- it is not, it is 1 of 293."
+  }
+ },
+ "branch_scoping": {
+  "why": "`HIDDEN_STATE_GAME_IDS` is a hardcoded 11-game PUBLIC tuple, so a hidden Kaggle game ALWAYS takes the PLAIN branch. Every number in this artifact is measured on PUBLIC games, and the two branches are reported separately so nothing is carried onto the branch it was not measured on.",
+  "hidden_state_branch": {
+   "n_units": 378,
+   "n_games": 10,
+   "identity": 119,
+   "identity_fraction": 0.3148,
+   "clean_units_n_changing_ge_3": 175,
+   "n_at_change_accuracy_ge_0_5": 0,
+   "max_change_accuracy": 0.0,
+   "max_change_fidelity": 0.916023
+  },
+  "plain_branch": {
+   "n_units": 486,
+   "n_games": 14,
+   "identity": 121,
+   "identity_fraction": 0.249,
+   "clean_units_n_changing_ge_3": 121,
+   "n_at_change_accuracy_ge_0_5": 0,
+   "max_change_accuracy": 0.0,
+   "max_change_fidelity": 0.961538
+  },
+  "note": "the two branches do not differ in the thing that matters: zero clean units clear 0.5 on either, and zero exceed 0.0. The identity share is nominally higher on the hidden-state games (0.315 vs 0.249) but this is confounded with game roster and no test is offered."
+ },
+ "measurements": {
+  "n_engine_game_units_total": 892,
+  "n_induced_units": 864,
+  "n_leakage_maximal_control_units": 28,
+  "n_distinct_sources": 890,
+  "n_games": 24,
+  "verdict_counts_induced": {
+   "structurally_broken": 62,
+   "partial": 562,
+   "identity": 230,
+   "identity_by_none_return": 10
+  },
+  "subclass_counts_induced": {
+   "raises_on_observed_transition": 55,
+   "changes_on_observed_transitions": 543,
+   "never_changes_on_any_probe": 227,
+   "module_exec_raised": 2,
+   "changes_only_off_trace": 19,
+   "falls_off_end_returns_None": 10,
+   "never_changes_but_reshapes": 3,
+   "no_engine_symbol": 5
+  },
+  "identity_fraction_induced": {
+   "n_identity": 240,
+   "n_determinate": 864,
+   "fraction": 0.2778,
+   "ci95_game_clustered": [
+    0.212,
+    0.3429
+   ]
+  },
+  "identity_fraction__clean_exact_same_split": {
+   "n_identity": 29,
+   "n": 250,
+   "fraction": 0.116,
+   "ci95_game_clustered": [
+    0.064,
+    0.1734
+   ]
+  },
+  "identity_fraction__clean_strict_superset": {
+   "n_identity": 75,
+   "n": 238,
+   "fraction": 0.3151,
+   "ci95_game_clustered": [
+    0.2008,
+    0.4346
+   ]
+  },
+  "identity_fraction__provenance_unknown": {
+   "n_identity": 136,
+   "n": 376,
+   "fraction": 0.3617,
+   "ci95_game_clustered": [
+    0.2604,
+    0.4568
+   ]
+  },
+  "per_game_identity_fraction_spread": {
+   "n": 24,
+   "min": 0.0,
+   "q1": 0.1562,
+   "median": 0.25355,
+   "q3": 0.3636,
+   "max": 0.5818
+  },
+  "per_game_induced": {
+   "ar25": {
+    "n": 42,
+    "identity": 4,
+    "partial": 33,
+    "broken": 5,
+    "identity_fraction": 0.0952
+   },
+   "bp35": {
+    "n": 39,
+    "identity": 1,
+    "partial": 37,
+    "broken": 1,
+    "identity_fraction": 0.0256
+   },
+   "cd82": {
+    "n": 66,
+    "identity": 27,
+    "partial": 31,
+    "broken": 8,
+    "identity_fraction": 0.4091
+   },
+   "cn04": {
+    "n": 41,
+    "identity": 10,
+    "partial": 28,
+    "broken": 3,
+    "identity_fraction": 0.2439
+   },
+   "ft09": {
+    "n": 27,
+    "identity": 5,
+    "partial": 22,
+    "broken": 0,
+    "identity_fraction": 0.1852
+   },
+   "g50t": {
+    "n": 36,
+    "identity": 18,
+    "partial": 17,
+    "broken": 1,
+    "identity_fraction": 0.5
+   },
+   "ka59": {
+    "n": 25,
+    "identity": 3,
+    "partial": 21,
+    "broken": 1,
+    "identity_fraction": 0.12
+   },
+   "lf52": {
+    "n": 34,
+    "identity": 2,
+    "partial": 31,
+    "broken": 1,
+    "identity_fraction": 0.0588
+   },
+   "lp85": {
+    "n": 55,
+    "identity": 32,
+    "partial": 17,
+    "broken": 6,
+    "identity_fraction": 0.5818
+   },
+   "ls20": {
+    "n": 37,
+    "identity": 6,
+    "partial": 28,
+    "broken": 3,
+    "identity_fraction": 0.1622
+   },
+   "m0r0": {
+    "n": 38,
+    "identity": 16,
+    "partial": 20,
+    "broken": 2,
+    "identity_fraction": 0.4211
+   },
+   "r11l": {
+    "n": 34,
+    "identity": 8,
+    "partial": 26,
+    "broken": 0,
+    "identity_fraction": 0.2353
+   },
+   "re86": {
+    "n": 37,
+    "identity": 12,
+    "partial": 20,
+    "broken": 5,
+    "identity_fraction": 0.3243
+   },
+   "s5i5": {
+    "n": 33,
+    "identity": 10,
+    "partial": 23,
+    "broken": 0,
+    "identity_fraction": 0.303
+   },
+   "sb26": {
+    "n": 35,
+    "identity": 9,
+    "partial": 23,
+    "broken": 3,
+    "identity_fraction": 0.2571
+   },
+   "sc25": {
+    "n": 28,
+    "identity": 7,
+    "partial": 20,
+    "broken": 1,
+    "identity_fraction": 0.25
+   },
+   "sk48": {
+    "n": 43,
+    "identity": 14,
+    "partial": 24,
+    "broken": 5,
+    "identity_fraction": 0.3256
+   },
+   "sp80": {
+    "n": 26,
+    "identity": 14,
+    "partial": 11,
+    "broken": 1,
+    "identity_fraction": 0.5385
+   },
+   "su15": {
+    "n": 32,
+    "identity": 5,
+    "partial": 25,
+    "broken": 2,
+    "identity_fraction": 0.1562
+   },
+   "tn36": {
+    "n": 23,
+    "identity": 0,
+    "partial": 21,
+    "broken": 2,
+    "identity_fraction": 0.0
+   },
+   "tr87": {
+    "n": 35,
+    "identity": 5,
+    "partial": 28,
+    "broken": 2,
+    "identity_fraction": 0.1429
+   },
+   "tu93": {
+    "n": 54,
+    "identity": 17,
+    "partial": 29,
+    "broken": 8,
+    "identity_fraction": 0.3148
+   },
+   "vc33": {
+    "n": 22,
+    "identity": 7,
+    "partial": 13,
+    "broken": 2,
+    "identity_fraction": 0.3182
+   },
+   "wa30": {
+    "n": 22,
+    "identity": 8,
+    "partial": 14,
+    "broken": 0,
+    "identity_fraction": 0.3636
+   }
+  },
+  "by_family": {
+   "ab0728_poscontrol": {
+    "n": 28,
+    "identity": 9,
+    "partial": 14,
+    "broken": 5,
+    "identity_fraction": 0.3214
+   },
+   "ab0728_qwen9B": {
+    "n": 238,
+    "identity": 75,
+    "partial": 144,
+    "broken": 19,
+    "identity_fraction": 0.3151
+   },
+   "abcf0801_31B": {
+    "n": 115,
+    "identity": 15,
+    "partial": 98,
+    "broken": 2,
+    "identity_fraction": 0.1304
+   },
+   "fourarm0727": {
+    "n": 96,
+    "identity": 31,
+    "partial": 57,
+    "broken": 8,
+    "identity_fraction": 0.3229
+   },
+   "git_history": {
+    "n": 281,
+    "identity": 106,
+    "partial": 144,
+    "broken": 31,
+    "identity_fraction": 0.3772
+   },
+   "inert0801_31B": {
+    "n": 135,
+    "identity": 14,
+    "partial": 119,
+    "broken": 2,
+    "identity_fraction": 0.1037
+   },
+   "inert0801_out": {
+    "n": 135,
+    "identity": 14,
+    "partial": 119,
+    "broken": 2,
+    "identity_fraction": 0.1037
+   },
+   "live_store_arc_e3": {
+    "n": 24,
+    "identity": 7,
+    "partial": 13,
+    "broken": 4,
+    "identity_fraction": 0.2917
+   },
+   "logo_snapshot": {
+    "n": 6,
+    "identity": 0,
+    "partial": 6,
+    "broken": 0,
+    "identity_fraction": 0.0
+   },
+   "origin_fixtures": {
+    "n": 24,
+    "identity": 7,
+    "partial": 13,
+    "broken": 4,
+    "identity_fraction": 0.2917
+   },
+   "seedproto": {
+    "n": 1,
+    "identity": 0,
+    "partial": 1,
+    "broken": 0,
+    "identity_fraction": 0.0
+   }
+  },
+  "partial_error_taxonomy": {
+   "writes_only_wrong_cells": 182,
+   "writes_but_never_on_a_changing_heldout_row": 81,
+   "more_spurious_than_correct": 79,
+   "close__>=half_recall_and_spurious<=correct": 56,
+   "overwrites_the_grid__spurious_>10x_correct": 54,
+   "under_predicts__recovers_<half_the_changed_cells": 38
+  },
+  "partial_error_taxonomy_precedence": "each partial engine gets exactly ONE class, tested in the order listed in the source: no-correct-and-no-spurious, then no-correct, then spurious>10x correct, then spurious>correct, then recall<0.5, else close. Shares therefore sum to n_measurable.",
+  "partial_heldout": {
+   "n_measurable": 490,
+   "change_accuracy": {
+    "n": 490,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 0.0,
+    "max": 1.0
+   },
+   "change_fidelity": {
+    "n": 490,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 0.093202,
+    "max": 1.0
+   },
+   "cell_recall": {
+    "n": 490,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 0.221543,
+    "max": 1.0
+   },
+   "correct_changed_cells": {
+    "n": 490,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 24.0,
+    "max": 325.0
+   },
+   "spurious_changed_cells": {
+    "n": 490,
+    "min": 0.0,
+    "q1": 1.0,
+    "median": 12.5,
+    "q3": 128.0,
+    "max": 12091.0
+   }
+  },
+  "leakage_maximal_ceiling": {
+   "what": "the SAME local-GGUF inducer with every transition shown in the prompt (arc_object_perception_ab_20260728/e3_positive_control). Its score is an upper bound on what this generator can write when it is not being asked to generalise at all -- the answers are in its context.",
+   "n_units": 27,
+   "change_accuracy": {
+    "n": 27,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 0.0,
+    "max": 0.0
+   },
+   "change_fidelity": {
+    "n": 27,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 0.0,
+    "max": 0.074688
+   },
+   "cell_recall": {
+    "n": 27,
+    "min": 0.0,
+    "q1": 0.0,
+    "median": 0.0,
+    "q3": 0.0,
+    "max": 0.483622
+   },
+   "identity_fraction": 0.3333
+  },
+  "static_vs_dynamic": {
+   "static_identity=False|dynamic_identity=False": 617,
+   "static_identity=False|dynamic_identity=True": 163,
+   "static_identity=True|dynamic_identity=True": 77,
+   "static_identity=True|dynamic_identity=False": 7
+  },
+  "heldout_change_accuracy_all_induced": {
+   "n": 730,
+   "min": 0.0,
+   "q1": 0.0,
+   "median": 0.0,
+   "q3": 0.0,
+   "max": 1.0
+  },
+  "heldout_change_fidelity_all_induced": {
+   "n": 730,
+   "min": 0.0,
+   "q1": 0.0,
+   "median": 0.0,
+   "q3": 0.019634,
+   "max": 1.0
+  },
+  "target_change_accuracy_ge_0_5": {
+   "any_row_count": 14,
+   "hits": [
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "395b5d9bee22",
+     "families": [
+      "git_history",
+      "logo_snapshot"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "sc25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "091d7eb90d0f",
+     "families": [
+      "git_history",
+      "logo_snapshot"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "tn36",
+     "n_changing": 1,
+     "change_accuracy": 1.0,
+     "sha": "fb21917649f4",
+     "families": [
+      "abcf0801_31B"
+     ],
+     "purity": "clean_exact_same_split"
+    },
+    {
+     "game": "tn36",
+     "n_changing": 1,
+     "change_accuracy": 1.0,
+     "sha": "a5415a2f3f89",
+     "families": [
+      "inert0801_31B",
+      "inert0801_out"
+     ],
+     "purity": "clean_exact_same_split"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "f8d71fe67d34",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "28e850c0d802",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "d62743743757",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "ka59",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "66af38673434",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "ka59",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "ec4c777b8f41",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "ebdc7ee66a47",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "2095bae5e044",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "5347052ee228",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "a489249c27bc",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    },
+    {
+     "game": "sc25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "39a0ca8678a9",
+     "families": [
+      "git_history"
+     ],
+     "purity": "provenance_unknown"
+    }
+   ],
+   "with_n_changing_ge_3": [
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "395b5d9bee22"
+    },
+    {
+     "game": "sc25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "091d7eb90d0f"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "f8d71fe67d34"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "28e850c0d802"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "d62743743757"
+    },
+    {
+     "game": "ka59",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "66af38673434"
+    },
+    {
+     "game": "ka59",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "ec4c777b8f41"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "ebdc7ee66a47"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "2095bae5e044"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "5347052ee228"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "a489249c27bc"
+    },
+    {
+     "game": "sc25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "39a0ca8678a9"
+    }
+   ],
+   "excluding_tn36_and_requiring_n_changing_ge_3": [
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "395b5d9bee22"
+    },
+    {
+     "game": "sc25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "091d7eb90d0f"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "f8d71fe67d34"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "28e850c0d802"
+    },
+    {
+     "game": "ar25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "d62743743757"
+    },
+    {
+     "game": "ka59",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "66af38673434"
+    },
+    {
+     "game": "ka59",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "ec4c777b8f41"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "ebdc7ee66a47"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "2095bae5e044"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "5347052ee228"
+    },
+    {
+     "game": "re86",
+     "n_changing": 3,
+     "change_accuracy": 0.666667,
+     "sha": "a489249c27bc"
+    },
+    {
+     "game": "sc25",
+     "n_changing": 3,
+     "change_accuracy": 1.0,
+     "sha": "39a0ca8678a9"
+    }
+   ]
+  },
+  "measurable_games": [
+   "ar25",
+   "bp35",
+   "cd82",
+   "cn04",
+   "g50t",
+   "ka59",
+   "lf52",
+   "lp85",
+   "ls20",
+   "m0r0",
+   "re86",
+   "s5i5",
+   "sb26",
+   "sc25",
+   "sk48",
+   "su15",
+   "tn36",
+   "tr87",
+   "tu93",
+   "wa30"
+  ],
+  "games_with_no_measurable_heldout": [
+   "ft09",
+   "r11l",
+   "sp80",
+   "vc33"
+  ],
+  "rule_of_three_game_clustered": {
+   "n_games_with_measurable_heldout": 20,
+   "upper_bound_on_per_game_probability_if_zero_observed": 0.15,
+   "why_game_level": "engines inside a game share generator, prompt and window, so an engine-level rule of three would treat ~900 correlated draws as independent and understate the bound by an order of magnitude."
+  },
+  "top_by_change_accuracy": [
+   {
+    "game": "ar25",
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "395b5d9bee22",
+    "families": [
+     "git_history",
+     "logo_snapshot"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "sc25",
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "091d7eb90d0f",
+    "families": [
+     "git_history",
+     "logo_snapshot"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "ar25",
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "f8d71fe67d34",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "ar25",
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "28e850c0d802",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "ar25",
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "d62743743757",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "sc25",
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "39a0ca8678a9",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "tn36",
+    "change_accuracy": 1.0,
+    "n_changing": 1,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "fb21917649f4",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "purity": "clean_exact_same_split",
+    "verdict": "partial"
+   },
+   {
+    "game": "tn36",
+    "change_accuracy": 1.0,
+    "n_changing": 1,
+    "change_fidelity": 1.0,
+    "cell_recall": 1.0,
+    "sha": "a5415a2f3f89",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "purity": "clean_exact_same_split",
+    "verdict": "partial"
+   },
+   {
+    "game": "ka59",
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "change_fidelity": 0.982456,
+    "cell_recall": 0.982456,
+    "sha": "66af38673434",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "ka59",
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "change_fidelity": 0.982456,
+    "cell_recall": 1.0,
+    "sha": "ec4c777b8f41",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "re86",
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "change_fidelity": 0.993197,
+    "cell_recall": 1.0,
+    "sha": "ebdc7ee66a47",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   },
+   {
+    "game": "re86",
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "change_fidelity": 0.993197,
+    "cell_recall": 1.0,
+    "sha": "2095bae5e044",
+    "families": [
+     "git_history"
+    ],
+    "purity": "provenance_unknown",
+    "verdict": "partial"
+   }
+  ],
+  "top_by_change_fidelity": [
+   {
+    "game": "ar25",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "395b5d9bee22",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "sc25",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "091d7eb90d0f",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "ar25",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "f8d71fe67d34",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "ar25",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "28e850c0d802",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "ar25",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "d62743743757",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "sc25",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "39a0ca8678a9",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "tn36",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 1,
+    "cell_recall": 1.0,
+    "sha": "fb21917649f4",
+    "purity": "clean_exact_same_split"
+   },
+   {
+    "game": "tn36",
+    "change_fidelity": 1.0,
+    "change_accuracy": 1.0,
+    "n_changing": 1,
+    "cell_recall": 1.0,
+    "sha": "a5415a2f3f89",
+    "purity": "clean_exact_same_split"
+   },
+   {
+    "game": "re86",
+    "change_fidelity": 0.993197,
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "ebdc7ee66a47",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "re86",
+    "change_fidelity": 0.993197,
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "2095bae5e044",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "re86",
+    "change_fidelity": 0.993197,
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "5347052ee228",
+    "purity": "provenance_unknown"
+   },
+   {
+    "game": "re86",
+    "change_fidelity": 0.993197,
+    "change_accuracy": 0.666667,
+    "n_changing": 3,
+    "cell_recall": 1.0,
+    "sha": "a489249c27bc",
+    "purity": "provenance_unknown"
+   }
+  ],
+  "distance_to_exact": {
+   "n_clean_units_n_changing_ge_3": 293,
+   "max_wrong_cells_over_all_its_changing_heldout_rows": {
+    "min": 2,
+    "q1": 29,
+    "median": 102,
+    "q3": 280,
+    "max": 4032
+   },
+   "cumulative_within_threshold": {
+    "0": {
+     "n": 0,
+     "of": 293,
+     "share": 0.0,
+     "games": []
+    },
+    "1": {
+     "n": 0,
+     "of": 293,
+     "share": 0.0,
+     "games": []
+    },
+    "2": {
+     "n": 4,
+     "of": 293,
+     "share": 0.0137,
+     "games": [
+      "ls20",
+      "tu93"
+     ]
+    },
+    "5": {
+     "n": 8,
+     "of": 293,
+     "share": 0.0273,
+     "games": [
+      "ls20",
+      "tu93"
+     ]
+    },
+    "10": {
+     "n": 15,
+     "of": 293,
+     "share": 0.0512,
+     "games": [
+      "ls20",
+      "s5i5",
+      "sc25",
+      "tu93"
+     ]
+    },
+    "50": {
+     "n": 106,
+     "of": 293,
+     "share": 0.3618,
+     "games": [
+      "ar25",
+      "g50t",
+      "ka59",
+      "ls20",
+      "re86",
+      "s5i5",
+      "sc25",
+      "tr87",
+      "tu93"
+     ]
+    },
+    "200": {
+     "n": 188,
+     "of": 293,
+     "share": 0.6416,
+     "games": [
+      "ar25",
+      "g50t",
+      "ka59",
+      "ls20",
+      "m0r0",
+      "re86",
+      "s5i5",
+      "sc25",
+      "tr87",
+      "tu93",
+      "wa30"
+     ]
+    }
+   }
+  },
+  "nearest_miss_detail": [
+   {
+    "game": "ls20",
+    "sha": "395ed21ff4d5",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     2,
+     2,
+     2
+    ],
+    "max_wrong_cells": 2,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.961538,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     2,
+     2,
+     2
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": null,
+    "wrong_cells_excluding_band": null,
+    "change_accuracy_excluding_band": null
+   },
+   {
+    "game": "s5i5",
+    "sha": "e904e32d96ba",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     10,
+     10,
+     10
+    ],
+    "max_wrong_cells": 10,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.090909,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     10,
+     10,
+     10
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     10,
+     10,
+     10
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "sc25",
+    "sha": "444e0bbb6b3f",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     4,
+     8,
+     8
+    ],
+    "max_wrong_cells": 8,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.555556,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     4,
+     8,
+     8
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 2,
+    "wrong_cells_excluding_band": [
+     0,
+     4,
+     2
+    ],
+    "change_accuracy_excluding_band": 0.333333
+   },
+   {
+    "game": "sc25",
+    "sha": "40a8efba5b87",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     6,
+     6,
+     6
+    ],
+    "max_wrong_cells": 6,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.607143,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     6,
+     6,
+     6
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 2,
+    "wrong_cells_excluding_band": [
+     2,
+     2,
+     1
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "sc25",
+    "sha": "174941b70440",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     8,
+     4,
+     4
+    ],
+    "max_wrong_cells": 8,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.666667,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     8,
+     4,
+     4
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 2,
+    "wrong_cells_excluding_band": [
+     4,
+     0,
+     0
+    ],
+    "change_accuracy_excluding_band": 0.666667
+   },
+   {
+    "game": "sc25",
+    "sha": "f29574cb2560",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     6,
+     6,
+     6
+    ],
+    "max_wrong_cells": 6,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.607143,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     6,
+     6,
+     6
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 2,
+    "wrong_cells_excluding_band": [
+     2,
+     2,
+     1
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "tu93",
+    "sha": "1045adc6063b",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     1,
+     1,
+     2
+    ],
+    "max_wrong_cells": 2,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.931579,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     1,
+     1,
+     2
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     1,
+     1,
+     1
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "tu93",
+    "sha": "61e3f8fca113",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     1,
+     1,
+     2
+    ],
+    "max_wrong_cells": 2,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.931579,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     1,
+     1,
+     2
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     1,
+     1,
+     1
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "tu93",
+    "sha": "f8b8ccbe66e4",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "abcf0801_31B"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     2,
+     2,
+     3
+    ],
+    "max_wrong_cells": 3,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.879825,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     2,
+     2,
+     3
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     2,
+     2,
+     2
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "ls20",
+    "sha": "e7b33f323e8b",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     2,
+     2,
+     2
+    ],
+    "max_wrong_cells": 2,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.961538,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     2,
+     2,
+     2
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": null,
+    "wrong_cells_excluding_band": null,
+    "change_accuracy_excluding_band": null
+   },
+   {
+    "game": "sc25",
+    "sha": "5ac9ac400c12",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     8,
+     4,
+     4
+    ],
+    "max_wrong_cells": 8,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.666667,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     8,
+     4,
+     4
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 2,
+    "wrong_cells_excluding_band": [
+     4,
+     0,
+     0
+    ],
+    "change_accuracy_excluding_band": 0.666667
+   },
+   {
+    "game": "sc25",
+    "sha": "375797b73a5f",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     4,
+     8,
+     8
+    ],
+    "max_wrong_cells": 8,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.555556,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     4,
+     8,
+     8
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 2,
+    "wrong_cells_excluding_band": [
+     0,
+     4,
+     2
+    ],
+    "change_accuracy_excluding_band": 0.333333
+   },
+   {
+    "game": "tu93",
+    "sha": "1201ef7bfe98",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     2,
+     2,
+     3
+    ],
+    "max_wrong_cells": 3,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.879825,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     2,
+     2,
+     3
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     1,
+     1,
+     1
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "tu93",
+    "sha": "cb0ec97637c7",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     2,
+     2,
+     3
+    ],
+    "max_wrong_cells": 3,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.879825,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     2,
+     2,
+     3
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     1,
+     1,
+     1
+    ],
+    "change_accuracy_excluding_band": 0.0
+   },
+   {
+    "game": "tu93",
+    "sha": "02e19b15c94f",
+    "purity": "clean_exact_same_split",
+    "families": [
+     "inert0801_31B",
+     "inert0801_out"
+    ],
+    "n_changing_graded": 3,
+    "wrong_cells_per_transition": [
+     3,
+     3,
+     4
+    ],
+    "max_wrong_cells": 4,
+    "change_accuracy": 0.0,
+    "change_fidelity": 0.82807,
+    "n_ticking_cells": 0,
+    "wrong_cells_excluding_ticking": [
+     3,
+     3,
+     4
+    ],
+    "change_accuracy_excluding_ticking": 0.0,
+    "n_always_touched_band_rows": 1,
+    "wrong_cells_excluding_band": [
+     3,
+     3,
+     3
+    ],
+    "change_accuracy_excluding_band": 0.0
+   }
+  ]
+ },
+ "limitations": [
+  "IDENTITY IS AN EMPIRICAL CLAIM ABOUT A BATTERY, NOT A PROOF. An engine classified identity might change something on an input outside actions 0-10 x the payloads recorded in its own window. The AST pass is the complementary proof-shaped check and the two disagree on 170 of 864 units; where they disagree the dynamic verdict is used.",
+  "THE STATIC PASS HAS A MEASURED BLIND SPOT. It walks only the body of `engine`, so mutation delegated to a helper (`_tick(out)`, `_push_block(out, ...)`) is invisible; 7 units are statically identity and dynamically partial for exactly that reason. In the other direction 163 units contain a mutating statement on a branch no probe reaches. Both counts are reported rather than reconciled.",
+  "THE WINDOW IS SMALL. build_progress_window returns 3-12 rows per game, so a held-out tail carries 1-4 rows and at most 3 gradable changing ones. That is why n_changing >= 3 is required for the target claim and why 4 games (ft09, r11l, sp80, vc33) are reported as MISSING rather than 0 -- their single held-out row is a level-up row the verifier excludes, so change_accuracy is undefined, not zero.",
+  "A LARGER SPLIT EXISTS AND IS NOT USED HERE. The generation-vs-selection pass scored a 17-row proven split and 120 fresh rows for some games. This pass deliberately uses the production 8/4 split because that is the one the corpora under test were induced against and the only one whose purity I can prove per family.",
+  "dc22 HAS ENGINES AND NO WINDOW. build_progress_window returns None for it, so its 5 sources are recovered and statically classified but never dynamically classified or scored. Missing, not zero.",
+  "GENERATOR AND CORPUS MOVE TOGETHER ACROSS FAMILIES. The 2026-07-28 corpus used the retired Qwen3.5-9B and a 6/6 split; the 2026-08-01 corpora used gemma-4-31B and 8/4. Their identity shares (0.315 vs 0.116) differ, but generator, sampler, split and prompt arm all differ at once, so the difference is stated and not attributed.",
+  "NO BEHAVIOURAL CLAIM IS MADE. Nothing here moved an action, a plan or a level. Engine accuracy is a necessary condition for planning, not a sufficient one, and this artifact reports only the offline quantity."
+ ],
+ "what_this_does_and_does_not_change": {
+  "does_not_change": "the generation-wall conclusion. Zero of 296 clean units reach change_accuracy >= 0.5 and zero even exceed 0.0, on 14 games, on both branches. The leakage-maximal control is the sharpest version: with every answer in the prompt this generator still writes max change_accuracy 0.0000.",
+  "does_change": "the DIAGNOSIS of what to fix. 'The model declines to model' describes 27.8% of the corpus and only 11.6% of what the current generator writes against a clean split. The other 65% write something, and their errors are not uniform: 182 of 490 gradable partial units write only wrong cells, 81 never touch a changing held-out row at all, 54 overwrite the grid with more than ten spurious cells per correct one, and 56 are already at or above half recall with spurious <= correct. Those are four different bugs with four different fixes, and only the first is a 'declines to model' problem.",
+  "the_cheapest_next_measurement": "the 15 clean units within 10 wrong cells, listed verbatim in `measurements.nearest_miss_detail`, are the only place in the corpus where a SINGLE named mechanic separates an engine from exact. Reading those 15 diffs names 15 concrete missing mechanics at zero generation cost. ls20's is already named here: an advancing two-row step counter."
+ },
+ "missing_verifier_gaps": [
+  {
+   "gap": "GAP-ARC-ENGINE-NONE-RETURN-SILENT",
+   "failure_mode": "10 of 864 induced units fall off the end of a branch and return None. np.asarray(None) yields a 0-d array, the verifier records a shape mismatch, and nothing distinguishes it from a wrong prediction. The shipped `validate_engine_code` has a `missing_return` check, but it is an AST check and these reach disk anyway.",
+   "missing_discriminator": "a runtime assertion at the load boundary that an engine's return is a 2-D array of the input's shape, raising a named defect instead of degrading into a silent shape mismatch.",
+   "priority": "low -- 1.2% of the corpus, but it is free to detect"
+  },
+  {
+   "gap": "GAP-ARC-ENGINE-HUD-CLASS-MECHANIC",
+   "failure_mode": "an engine can model a game's mechanics essentially completely and still score change_accuracy 0.0000 because it does not model a status counter. Measured: ls20 395ed21ff4d5 at 50 of 52 changed cells correct on every held-out row, missing only an advancing two-row marker.",
+   "missing_discriminator": "a verifier channel that separates CONTENT cells from STATUS cells without a hand-drawn mask. Both shown-half-only exclusions tried here failed: an intersection-over-ticks cannot see an ADVANCING counter, and an always-touched-row band is not verifiably a status strip (bp35's band is in the middle of the grid). The shipped `CARNOT_ARC_WM_HUD_MASK` path derives its mask from a live frame, which an offline census does not have.",
+   "priority": "medium -- it changes the READING of a 0.0000 for the near-miss units, but it is 4 of 293, so it cannot be the main lever"
+  }
+ ],
+ "acceptance_gates": [
+  {
+   "gate": "every recoverable engine source is enumerated and hashed",
+   "principle": "a census that misses a corpus family understates the ceiling",
+   "met": true,
+   "evidence": "901 distinct sources over 10 families + git history"
+  },
+  {
+   "gate": "identity is determined by EXECUTION, not by pattern-matching the source",
+   "principle": "a syntactic identity check cannot see a dead mutation branch, and 163 units are exactly that case",
+   "met": true,
+   "evidence": "892 units executed in killable subprocesses; 0 timeouts"
+  },
+  {
+   "gate": "the instrument reproduces a recorded score it did not compute",
+   "principle": "an instrument that disagrees with the record is measuring something else",
+   "met": true,
+   "evidence": "232 of 232 matchable abcf0801 cells reproduce to 0.0000 delta on both change_accuracy and change_fidelity"
+  },
+  {
+   "gate": "held-out purity stated per family with the contaminated families excluded",
+   "principle": "failure mode 1 -- a visible scoring transition flips every conclusion",
+   "met": true,
+   "evidence": "488 clean units vs 376 excluded; the 12 high scorers traced to a codex agent holding the verifier"
+  },
+  {
+   "gate": "every proportion carries a GAME-clustered interval and every bound is a game-level rule of three",
+   "principle": "failure mode 8 -- engine-level clustering overstates by ~an order of magnitude",
+   "met": true,
+   "evidence": "3/20 = 0.150 stated; identity CI 0.212-0.343"
+  },
+  {
+   "gate": "games whose held-out set cannot be graded are reported MISSING, not 0",
+   "principle": "failure mode 6",
+   "met": true,
+   "evidence": "ft09, r11l, sp80, vc33 listed in games_with_no_measurable_heldout; dc22 has no window"
+  },
+  {
+   "gate": "no behavioural claim is made from an offline measurement",
+   "principle": "failure mode 4 -- necessary is not sufficient",
+   "met": true,
+   "evidence": "no action, plan or level is claimed anywhere"
+  }
+ ],
+ "acceptance_gate_passed": true,
+ "preconditions_checked": [
+  {
+   "resource": "engine_corpora_present_on_disk",
+   "available": true,
+   "detail": "855 world_model.py files across 10 families",
+   "principle": "if no engine source is recoverable the next phase is generation, not analysis -- this is the question `engines_recoverable` answers"
+  },
+  {
+   "resource": "offline_arcade_windows_buildable",
+   "available": true,
+   "detail": "24 of 25 games; dc22 returns None",
+   "principle": "without the same window the corpora were induced against, any split I invent is not the split they were held out on"
+  },
+  {
+   "resource": "shipped_WorldModelVerifier_importable",
+   "available": true,
+   "principle": "scoring with the project's own scorer is what lets a recorded score be reproduced rather than approximated"
+  },
+  {
+   "resource": "no_gpu_and_no_generator_required",
+   "available": true,
+   "principle": "the task is CPU-only by construction; a GGUF load here would be a substrate claim this artifact does not make"
+  },
+  {
+   "resource": "evidence_stores_read_only",
+   "available": true,
+   "detail": "arc_e3, arc_logo_snapshot, arc_e3_origin_fixtures opened read-only; git history read via git show into a scratchpad",
+   "principle": "Test-Run Record Integrity -- these are evidence, never write targets"
+  }
+ ]
+}
