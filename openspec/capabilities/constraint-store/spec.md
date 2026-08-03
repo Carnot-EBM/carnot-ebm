@@ -303,3 +303,41 @@ Then Python, Rust, and PyO3 produce identical canonical bytes, state hashes,
 status values, and error codes; rejected updates have zero propagation;
 released cores reject use-after-release and double release; and stale,
 replayed, corrupt, or tampered operations fail closed.
+
+### REQ-STORE-5967 — Delayed-commit memory fixture receipt store
+
+Carnot SHALL store Exp5967 delayed-commit memory evidence as a versioned
+operation receipt store derived only from ready Exp5920, Exp5924, and Exp5926
+receipts. The store-level artifact SHALL preserve upstream replay hashes and
+readiness, delayed-commit state-machine schema, frozen base-version snapshot
+receipts, proposal sealing receipts, label-reveal timing receipts,
+post-event exact-validation receipts, delayed commit receipts, matched
+write-through control receipts, quarantine, supersede, rollback, crash replay,
+bounded-state, rejected-update non-propagation, Python/Rust/PyO3 trace parity,
+fixed-width operation trace hash, immutable model-weight hash, protected-file
+hash, task-command receipts, and reproducibility checksum.
+
+Stored delayed-commit receipts SHALL distinguish immutable read snapshots from
+pending proposals, sealed proposals from exact validation, exact validation
+from readable commit, production delayed writes from same-event write-through
+control writes, quarantined or rejected proposals from active state,
+superseded entries from capacity evictions, rollback targets from crash replay
+checkpoints, and backend-neutral trace portability from hardware execution.
+Replaying the stored trace SHALL reproduce final state hashes exactly; tamper,
+stale-base, duplicate-event, interrupted, reordered, corrupted, or
+write-through-as-production transitions SHALL reject without partial mutation.
+
+### SCENARIO-STORE-5967 — Delayed-commit receipt hashes replay
+
+Given Exp5967 has consumed ready Exp5920, Exp5924, and Exp5926 receipts,
+
+When its delayed-commit ledger, frozen snapshots, proposal receipts,
+validation receipts, commit receipts, write-through control trace,
+quarantine/supersede/rollback receipts, crash replay checkpoints, bounded
+state receipts, fixed-width trace, and backend parity receipts are replayed,
+
+Then every base-version hash, proposal hash, validation receipt hash,
+commit-result hash, rollback hash, crash-replay hash, final state hash,
+fixed-width trace hash, and Python/Rust/PyO3 return value reproduces exactly;
+rejected updates have bare zero propagation; and stale, duplicate, tampered,
+or corrupted transitions fail closed.

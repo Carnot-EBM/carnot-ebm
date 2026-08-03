@@ -153,7 +153,17 @@ def defect1_for_game(game: str, window: list) -> Optional[dict[str, Any]]:
         "n_mismatches_shown": min(5, len(vr.mismatches)),
         "n_mismatches_available": len(vr.mismatches),
         # The prompt asks the model to keep "the cases it already gets right". How many are shown?
+        #
+        # STRUCTURAL CONSTANT, NOT A MEASUREMENT (flagged on adversarial review 2026-08-03).
+        # This 0 is a hardcoded literal, unlike every other field in this dict, which is counted
+        # from the rendered prompt. It is TRUE by construction -- refactor_prompt renders only
+        # `_bounded_mismatches`, so no correct/acceptance case can reach the prompt -- but a
+        # hardcoded constant sitting among measured fields is exactly the shape that later gets
+        # cited as a measurement by someone reading the artifact rather than this source. The
+        # value is kept (never-prune) and its provenance is now stated in the artifact itself
+        # under `n_correct_cases_shown_in_prompt_provenance`, so the artifact is self-describing.
         "n_correct_cases_shown_in_prompt": 0,  # structural: refactor_prompt renders mismatches only
+        "n_correct_cases_shown_in_prompt_is_structural_constant": True,
         "vr_n": int(vr.n),
         "vr_n_correct": int(vr.n_correct),
     }
