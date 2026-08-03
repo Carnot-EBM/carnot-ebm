@@ -1238,3 +1238,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
     Worth keeping the escalation rather than deleting it, because the flag was RIGHT and the lesson
     generalises: declaring the substrate of your INPUTS rather than of your own run is an easy and
     silent overclaim, and the duration floor is what catches it.
+
+## experiment_5964_sota_atom_compatibility_corpus.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_5964_sota_atom_compatibility_corpus.json

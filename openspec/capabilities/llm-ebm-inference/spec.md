@@ -2314,6 +2314,131 @@ breakdown, and no SOTA or hardware claim
 quarantine language that blocks future energy-descent headline claims from the
 tiny diagnostic.
 
+### REQ-INFER-SOTA-5964: Exp 5964 SOTA Atom Compatibility Corpus
+
+The system SHALL provide Exp 5964 as an output-free final-token representation
+corpus over the sealed Exp 5963 exact context/candidate-atom pair fixture.  The
+run SHALL first replay
+`results/experiment_5963_exact_atom_pair_fixture.json` and SHALL block before
+full extraction unless its exact path, SHA-256 hash, and
+`pair_fixture_ready_score == 1.0` are recorded.
+
+Exp 5964 SHALL resolve exactly the three mandated GGUF identities
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`.  It SHALL record exact cached GGUF file
+hashes, embedded GGUF tokenizer receipts, llama.cpp version, CUDA backend
+evidence, `n_gpu_layers`, per-device free VRAM, RAM, disk, thermal state,
+atomic output paths, and cleanup receipts.  If any mandated family, embedded
+tokenizer, CUDA offload, memory, disk, or output prerequisite is unavailable,
+the terminal artifact SHALL emit `status="blocked"` and an `honest_verdict`
+starting with `blocked:`.  It SHALL NOT substitute legacy models, CPU headline
+rows, `AutoTokenizer`, generated text, logits, or intermediate-layer claims.
+
+For each model separately, Exp 5964 SHALL use the same public
+`llama_cpp.Llama(embedding=True, pooling_type=LAST)` family as Exp 5852 and
+SHALL serialize prompts without labels.  It SHALL extract context-alone,
+atom-alone, context-then-atom, context-then-claim-flip-atom, atom-then-context
+order-control, and duplicate-determinism control representations.  Raw vectors
+SHALL be stored only in per-model immutable JSONL row corpora with prefix
+chains.  Each vector row SHALL hash-link to the Exp 5963 pair row, context row,
+source split, prompt serialization, and model file hash.  Cross-family feature
+construction SHALL keep model identity as a stratum rather than a label feature;
+raw dimensions SHALL NOT be concatenated or compared across families before
+within-model train-fold centering and normalization.
+
+Before any label-dependent trained score is permitted, Exp 5964 SHALL audit
+finite values, nonzero within-model variance, duplicate determinism,
+prompt-order sensitivity, claim-flip directional headroom, per-family
+disaggregation, norm-only, length-only, candidate-frequency, label-permutation,
+pair-permutation, and raw-model-identity controls.  Corpus readiness is not a
+classifier-accuracy claim.  The terminal
+`atom_compatibility_corpus_ready_score` SHALL be bare `1.0` only when every
+family passes deterministic extraction and at least two families show
+preregistered claim-flip or pair-order sensitivity beyond the permutation and
+duplicate controls.  Otherwise a fully extracted but non-degenerate-control
+failure SHALL retire the compatibility surface with an `honest_verdict`
+starting with `retired:`.
+
+The terminal artifact SHALL be
+`results/experiment_5964_sota_atom_compatibility_corpus.json` and SHALL expose
+`status`, `preconditions_checked`, `gate_replay_receipt`, `model_specs`,
+`model_file_hashes`, `embedded_tokenizer_and_llama_cpp_receipts`,
+`cuda_offload_vram_thermal_and_cleanup_receipts`,
+`prompt_serialization_and_pair_order_contract`,
+`per_model_row_paths_hashes_counts_and_prefix_chains`,
+`raw_vs_standardized_feature_separation`,
+`finite_variance_duplicate_and_order_controls`,
+`claim_flip_and_per_family_headroom_controls`,
+`norm_length_frequency_label_pair_permutation_and_model_identity_controls`,
+`split_and_label_secrecy_receipts`, `atom_compatibility_corpus_ready_score`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Artifact field principles SHALL be recorded as:
+- `status`: Missing model, CUDA, tokenizer, memory, disk, time, or output prerequisites block before full extraction.
+- `preconditions_checked`: The preflight records every required local prerequisite and refuses legacy or CPU headline substitution.
+- `gate_replay_receipt`: Exp 5963 exact path/hash/value must satisfy `pair_fixture_ready_score == 1.0`.
+- `model_specs`: All three mandated public GGUF identities and exact local files are auditable.
+- `model_file_hashes`: Exact cached GGUF file hashes bind every row to local bytes.
+- `embedded_tokenizer_and_llama_cpp_receipts`: The GGUF runtime and embedded tokenizer are the only model-loading path.
+- `cuda_offload_vram_thermal_and_cleanup_receipts`: Headline rows require genuine CUDA offload, measured resources, and clean teardown.
+- `prompt_serialization_and_pair_order_contract`: Every vector maps to one sealed pair and preregistered ordering.
+- `per_model_row_paths_hashes_counts_and_prefix_chains`: Each family corpus is immutable, complete, and hash-linked to Exp 5963.
+- `raw_vs_standardized_feature_separation`: Train-fold statistics standardize within model; raw dimensions never create a cross-family shortcut.
+- `finite_variance_duplicate_and_order_controls`: Representations must be finite, non-degenerate, deterministic for duplicates, and honestly sensitive to ordering.
+- `claim_flip_and_per_family_headroom_controls`: Readiness requires directional semantic headroom in disaggregated families, not a pooled artifact.
+- `norm_length_frequency_label_pair_permutation_and_model_identity_controls`: Every shortcut remains an explicit measured negative control.
+- `split_and_label_secrecy_receipts`: Labels and test-fold statistics cannot affect extraction, normalization, or prompts.
+- `atom_compatibility_corpus_ready_score`: Emit bare `1.0` only for all-family integrity plus preregistered non-degenerate semantic headroom; the same disqualification retires the surface.
+- `protected_files_unchanged`: Active roadmap, conductor, exclusions, history, and unrelated changes remain unchanged.
+- `duration_s`: Measured wall time for `live_llm_embedding_extraction`.
+- `inference_substrate`: Use measured `live_llm_embedding_extraction`.
+- `verifier_is_oracle`: False for representation features because exact labels remain external.
+- `missing_verifier_gaps`: Known limitations stay explicit.
+- `field_provenance`: Every field traces to task prompt, spec, module, rows, model, and runtime receipts.
+- `test_commands`: Verification commands cover unit, coverage, gate, model, tokenizer, CUDA smoke, row-chain, shortcut, adversarial, spec, E2E, protected-file, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent partial extraction or unchecked rows from becoming readiness.
+- `reproducibility_checksum`: Stable checksum binds row corpora, receipts, controls, and verdict while excluding wall-clock duration.
+- `honest_verdict`: Use `complete_ready:`, `retired:`, or `blocked:`.
+
+### SCENARIO-INFER-SOTA-5964-BLOCKED: Missing Runtime Blocks Before Extraction
+
+**Given** Exp 5963 replays with `pair_fixture_ready_score == 1.0`
+**And** at least one mandated GGUF, embedded tokenizer, or CUDA-offload
+precondition is unavailable
+**When** Exp 5964 runs
+**Then** it writes the terminal artifact with `status="blocked"`
+**And** it records the Exp 5963 gate path/hash/value
+**And** no backend extraction is attempted
+**And** the artifact does not claim CPU, legacy-model, generated-output, or
+intermediate-layer evidence.
+
+### SCENARIO-INFER-SOTA-5964-CORPUS: All Families Produce Immutable Rows
+
+**Given** Exp 5963 is ready, all three mandated GGUF files resolve, embedded
+tokenizers load, and CUDA offload is available
+**When** Exp 5964 extracts output-free LAST-pooled embeddings
+**Then** every model has an immutable per-model row corpus containing the
+preregistered context, atom, context-atom, claim-flip, order-control, and
+duplicate-control rows
+**And** row hashes, prompt hashes, token counts, context hashes, pair hashes,
+source splits, model file hashes, and prefix chains verify exactly.
+
+### SCENARIO-INFER-SOTA-5964-CONTROLS: Shortcuts And Headroom Are Audited
+
+**Given** per-model raw row corpora have been extracted
+**When** Exp 5964 audits the representation surface
+**Then** within-model train-fold statistics are the only standardization source
+**And** finite, variance, duplicate, order, claim-flip, norm-only, length-only,
+candidate-frequency, label-permutation, pair-permutation, and
+raw-model-identity controls are recorded
+**And** readiness is granted only for all-family integrity plus at least two
+families with preregistered semantic headroom beyond permutation and duplicate
+controls.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -2350,6 +2475,7 @@ tiny diagnostic.
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
 | REQ-INFER-5301 | Implemented (`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) | Implemented (`tests/python/test_experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) |
 | REQ-INFER-5317 | Implemented (`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py`) | Implemented (`tests/python/test_experiment_5317_ebt_telemetry_audit_reemit_v485.py`) |
+| REQ-INFER-SOTA-5964 | Planned (`python/carnot/experiment_5964_sota_atom_compatibility_corpus.py`) | Planned (`tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
