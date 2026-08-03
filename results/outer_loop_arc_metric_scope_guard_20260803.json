@@ -1,0 +1,169 @@
+{
+  "experiment": "outer_loop_arc_metric_scope_guard_20260803",
+  "req": "REQ-ARC-WMTE-6090",
+  "title": "Round-0 regression fix: make an incommensurable metric subtraction unrepresentable",
+  "run_date": "2026-08-03",
+  "schema": "carnot.outer_loop_fix.v1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "solve_provenance": "development_proxy",
+  "random_seed": 6090,
+  "reproducibility_checksum": "sha256:aba47a3125639b6b43c3afc05a9c224b548cd9d823dc8b2bed76d3d75b5c5e82",
+  "duration_s": 3821.0,
+  "verifier_is_oracle": false,
+  "read_game_source": false,
+  "used_env_source": false,
+  "submitted_to_leaderboard": false,
+  "honest_verdict": "complete_metric_scope_guard_shipped_default_off_corrigendum_appended_7_of_7_mutations_red",
+
+  "question": "exp5766's CEGIS round 0 scored 6.33x below its own matched single-shot control (exp5764). Is the induction mechanism regressed, and what is the fix?",
+
+  "answer": "The mechanism is not regressed and the 6.33x is not a mechanism measurement. exp5764 prompts on the WHOLE window and grades on the WHOLE window (in-sample fit); exp5766 round 0 prompts on the first two thirds and grades on the disjoint last third (out-of-sample). Both record the value under the field name heldout_accuracy, and exp5766 subtracted one from the other. Scored like-for-like the arms are not distinguishable. The fix is a guard at the subtraction plus an append-only corrigendum voiding the comparison; the underlying per-cell data is real and is retained.",
+
+  "independent_verification_performed": {
+    "note": "The confirmation was not taken on report. Every load-bearing claim below was re-derived in this session before any code was written.",
+    "pooled_values_reproduced_from_shards": {
+      "method": "parsed both JSONL shards as JSON, read top-level keys and rounds[].* -- no grep",
+      "exp5764_pooled_heldout": 0.378487,
+      "exp5766_round0_pooled_heldout": 0.059829,
+      "ratio": 6.3261,
+      "paired_sign_test_p": 0.0386,
+      "games_nonzero": "12/13 vs 2/13"
+    },
+    "missing_is_not_zero": {
+      "finding": "counting exp5764's one errored cell (vc33 trial 0, load_engine: FileNotFoundError, heldout_accuracy null) as 0.0 yields pooled 0.352846, not 0.378487",
+      "resolution": "excluded with its reason recorded; this is what makes the reproduction exact"
+    },
+    "artifact_comparison_block_reconstructed_bit_for_bit": {
+      "per_game_cells_matched": 13,
+      "of": 13,
+      "pooled_delta_matched": -0.318658
+    },
+    "source_level_checks": {
+      "exp5764_prompt_rows": "exp5726.run_reason_cell_budget:333 _induce_no_fence(prop, game, list(window), cell) -- whole window",
+      "exp5764_graded_rows": "exp5726.run_reason_cell_budget:355 WorldModelVerifier(list(window)).score(engine) -- whole window",
+      "exp5766_prompt_rows": "run_cegis_cell source does NOT contain 'proposal_transitions', so execute_bounded_llm_reinduction falls back to _proposal_prefix -- first two thirds",
+      "exp5766_graded_rows": "select_trusted_world_model:595 _split_prefix_heldout then :669 _score_accuracy(heldout, ...) -- last third",
+      "the_two_cuts_are_at_the_same_index": "verified by execution for n in {3,4,5,9,12,25}; prefix + tail == rows, prefix disjoint from tail"
+    }
+  },
+
+  "correction_to_the_confirmation": {
+    "what_i_changed": "The confirmation proposed keying the guard on the metric's ROW SET (whole_window / disjoint_tail / prompt_overlapping_prefix) and refusing when the tags differ. Implemented literally, that guard refuses the CORRECT like-for-like comparison it itself identified -- exp5764's whole_window (0.378487) against exp5766's prompt_overlapping_prefix (0.319444) -- because those are two different row sets.",
+    "the_fix": "The guard keys on the RELATION each score stands in to its prompt evidence (in_sample / out_of_sample). whole_window and prompt_overlapping_prefix are both in_sample, so their comparison is permitted; disjoint_tail is out_of_sample, so subtracting it from either is refused.",
+    "why_it_matters": "A guard that blocks the right answer along with the wrong one teaches people to switch it off. This is pinned by test_on_permits_the_correct_like_for_like_comparison and proven non-decorative by mutation 3.",
+    "second_minor_correction": "The confirmation reports the like-for-like split as '6 wins / 5 losses / 2 ties'. Recomputed, 6 games favour exp5766's prefix and 5 favour exp5764 with 2 ties -- the same numbers, listed treatment-first. Not a discrepancy; noted so a future reader does not chase one."
+  },
+
+  "changes_shipped": {
+    "new_module": "python/carnot/agentic/arc_metric_scope.py",
+    "new_test": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
+    "env_flag": "CARNOT_ARC_METRIC_SCOPE_GUARD",
+    "default": "OFF",
+    "off_behaviour": "compare_scoped returns exactly treatment - baseline for every known scope pair, including incommensurable ones -- the shipped arithmetic with the bug intact, so exp5766 stays re-derivable",
+    "on_behaviour": "raises MetricScopeMismatch naming both scopes and both relations, on a relation mismatch only",
+    "corrigenda_appended": [
+      "results/experiment_5766_gemma31b_cegis_refinement_ab.json :: corrigendum_2026_08_03_cross_experiment_comparison_voided",
+      "results/experiment_5764_gemma31b_singleshot_induction_ab.json :: corrigendum_2026_08_03_heldout_accuracy_is_an_in_sample_fit_score"
+    ],
+    "append_only_proof": "byte-prefix identity + deep-equality of every pre-existing key against git HEAD + key-count delta of exactly +1 per file; 0 keys removed, 0 existing values changed, the voided -0.318658 and its CI RETAINED verbatim (never-prune)"
+  },
+
+  "tests": {
+    "suite": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
+    "count": 44,
+    "result": "44 passed",
+    "checksum": "sha256:23bd7436daa5ecaacf519f710d9e48e38dc21aed0d56b213fc84042f352f7418",
+    "the_regression_test_is_the_real_incident": "the per-game and pooled values are re-derived from the two committed shards on every run and checked against the recorded artifact block -- not a synthetic fixture",
+    "both_directions": {
+      "off": "test_off_reproduces_the_shipped_comparison_bit_for_bit -- all 13 per-game deltas and the pooled -0.318658 reproduce exactly through compare_scoped",
+      "on": "test_on_refuses_the_exact_invalid_comparison -- same rebuild, guard armed, raises MetricScopeMismatch(disjoint_tail/out_of_sample vs whole_window/in_sample)"
+    },
+    "trajectory_invariance_off": "TestOffIsAStrictPassthrough -- all 9 ordered scope pairs x 24 value pairs return exactly treatment - baseline and never raise; os.environ unchanged across a call; enabled=False overrides a set env"
+  },
+
+  "mutation_proof": {
+    "protocol": "each pattern deleted or inverted one at a time, suite re-run, file restored and sha256 byte-identity verified",
+    "files_mutated": "only the two new files added by this change -- the concurrently-running conductor imports neither",
+    "results": [
+      {"pattern": "the relation-mismatch refusal itself", "outcome": "RED", "test": "test_on_refuses_the_exact_invalid_comparison"},
+      {"pattern": "the OFF passthrough (refusal made unconditional)", "outcome": "RED", "test": "test_off_reproduces_the_shipped_comparison_bit_for_bit"},
+      {"pattern": "relation keying (prefix re-keyed to its row set)", "outcome": "RED", "test": "test_on_permits_the_correct_like_for_like_comparison"},
+      {"pattern": "unknown-scope validation in relation_of", "outcome": "RED", "test": "test_an_unknown_scope_name_is_refused_in_both_directions"},
+      {"pattern": "the default-OFF constant", "outcome": "RED", "test": "test_flag_defaults_off"},
+      {"pattern": "scope_for refusing an unregistered field", "outcome": "RED", "test": "test_an_unregistered_field_refuses_rather_than_defaulting"},
+      {"pattern": "missing-is-not-zero (errored cell counted as 0.0)", "outcome": "RED", "test": "test_the_errored_cell_is_excluded_not_zeroed"}
+    ],
+    "n_red": 7,
+    "n_total": 7,
+    "partition_assertion_proved_separately": {
+      "why": "it asserts a property of two LIVE modules the conductor is importing right now, so they were not edited on disk",
+      "method": "both functions swapped in memory, assertion body re-run",
+      "mutations_caught": 4,
+      "of": 4,
+      "cases": ["_proposal_prefix returns the whole window", "_split_prefix_heldout returns the first third as the tail", "the two cut at different indices", "the tail is empty"]
+    }
+  },
+
+  "honest_limits": {
+    "availability_is_not_delivery": "The guard has ZERO shipped call sites. The only site that made this mistake is a completed experiment, and re-running it is not on the table. This is a library plus a scope registry for future comparators -- it is NOT currently firing on any live path, and no claim is made that it is.",
+    "residual_effect_not_zero": "The like-for-like gap is 1.18-1.29x. It is NOT claimed to be nil -- only that this data cannot distinguish the arms. It is smaller than the harness's own documented cell-level nondeterminism (sampling_seed returns None absent CARNOT_ARC_GENERATOR_SEED; fresh sampler seed per call at temperature 0.2), and its sign is what the one-third evidence handicap predicts.",
+    "not_fixed_here_and_owned_elsewhere": [
+      "unfalsifiable zeros: 4 of 13 games have a held-out tail whose only row is the level-up row, which WorldModelVerifier.score excludes, so n_correct / max(1, n) returns 0.0 for every possible engine. Fixing it changes what min_heldout_accuracy admits on the LIVE trust gate -- out of scope for a round-0 metric fix.",
+      "gate band not expressible: tails carry 0-3 gradeable rows so delta_heldout moves in steps of 1/n while the pre-registration is written in units of 0.15 and 0.05. Needs an operator design decision (enlarge the window, or restate the gate in units of 1/n).",
+      "the refactor write-path collapse and the refinement purity leak are owned by other work and were not touched."
+    ],
+    "retirement_not_acted_on": "exp5766's retire_if_same_verdict is conditioned on HONEST-NEGATIVE and the run landed partial_inconclusive, so its stated precondition was never met. This is RECORDED in the corrigendum, not acted on: the retirement also rests on two defects owned elsewhere, and the conductor's consumption path for that field was not traced here.",
+    "offline_is_not_behavioural": "Nothing here measures plans, actions or levels. It concerns how two recorded scalars may be compared."
+  },
+
+  "preconditions_checked": [
+    {"resource": "results/exp5764_gemma31b_singleshot_shard.jsonl", "available": true},
+    {"resource": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl", "available": true},
+    {"resource": "results/experiment_5766_gemma31b_cegis_refinement_ab.json", "available": true},
+    {"resource": "carnot venv python", "available": true}
+  ],
+
+  "field_principles": {
+    "inference_substrate": "aggregation_from_upstream_artifacts -- this change loads no model and runs no game; it re-derives numbers from two committed shards and ships a library plus tests. Declaring live inference would invite a duration floor calibrated for GPU work this never did.",
+    "honest_verdict": "terminal-prefixed so the conductor's reconciler classifies it as terminal rather than retrying a completed fix.",
+    "reproducibility_checksum": "sha256 of the shipped module, so a third party can tell whether the code they are reading is the code these mutation results describe.",
+    "solve_provenance": "development_proxy -- no live agent, no hidden game, no solve claimed."
+  },
+
+  "concurrency_incidents_observed_and_handled": {
+    "note": "Three other writers were active in this tree throughout (carnot-conductor.service plus at least two agent workflows). Recorded because each of these is the exact class of damage the Test-Run Record Integrity Discipline exists to catch, and two of them nearly landed.",
+    "1_foreign_git_add_A_swallowed_the_index": {
+      "what": "After staging exactly 5 explicit paths, a re-check of git diff --cached showed 64 files / 4878 insertions / 197 deletions staged -- another writer had run git add -A between the stage and the commit.",
+      "would_have_published": "two other agents' in-flight test files (863 and 886 lines), ~40 test-suite-rewritten results artifacts, and the determination-field losses on experiment_4162 / experiment_4170 / experiment_696 that determination_preservation_lint was flagging",
+      "action": "git reset (index only, working tree untouched so no other writer lost work), then re-added the same 5 explicit paths and re-verified the volume",
+      "detected_by": "the mandated git diff --cached --stat volume check, not by any hook"
+    },
+    "2_record_damage_found_and_REPAIRED": {
+      "file": "results/experiment_3408_kona_global_opt.json",
+      "what": "a test run (pytest tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py) silently rewrote MEASURED values in a historical artifact: time_to_solution 35.060176849365234 -> 26.657497882843018 and autoregressive_time_to_solution 525.9026527404785 -> 399.86246824264526",
+      "classification": "genuine record damage, not authored work -- no key was added or removed, only measured floats changed, which is the canonical signature of an experiment module's main() running under test collection",
+      "action": "restored from git per the discipline (restore, do not re-derive); the mutation marker then retired itself",
+      "not_mine": "this was another agent's test run; it is repaired and recorded here rather than left for a later git add -A to publish"
+    },
+    "3_two_mutation_markers_retired_as_proven_false_positives": {
+      "why_not_reverted": "the mutation gate's file list is a superset -- it diffs a shared working tree and cannot attribute a write. Every path in both markers was printed [NOT this run], i.e. the guard did NOT observe the arming run writing it.",
+      "marker_49689a5f": {
+        "named": 6,
+        "proof": "every one of the six paths is absent from git HEAD -- they are new agent-authored source files (mine plus another agent's), so there is no prior record for a test to have damaged",
+        "verified_by": "git cat-file -e HEAD:<path> returned non-zero for all six"
+      },
+      "marker_589a5022_mine": {
+        "named": ["ops/conductor-heartbeat.json", "ops/conductor-state.json"],
+        "proof": "these are the live conductor's own state files (carnot-conductor.service is active), and the test that armed the marker contains ZERO write calls -- it opens three JSON files read-only and asserts on them",
+        "verified_by": "grep for write_text/write_bytes/open(...,'w')/json.dump/shutil/os.remove/mkdir in the test returned 0 matches"
+      },
+      "action": "both deleted deliberately and explained in the commit message, which is the escape the tool itself documents; the marker naming real damage was NOT deleted -- it was resolved by repairing the file"
+    }
+  },
+
+  "evidence_trees_untouched": {
+    "results/arc_e3": "read-only, not written",
+    "results/arc_logo_snapshot": "read-only, not written",
+    "results/arc_e3_origin_fixtures": "read-only, not written"
+  }
+}

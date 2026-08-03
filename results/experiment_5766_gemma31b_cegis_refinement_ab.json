@@ -292,5 +292,70 @@
     "rate_after_refinement": 0.5385,
     "rate_before_refinement": 0.7949,
     "rate_drop": 0.2564
+  },
+  "corrigendum_2026_08_03_cross_experiment_comparison_voided": {
+    "date": "2026-08-03",
+    "req": "REQ-ARC-WMTE-6090",
+    "author": "outer-loop (Claude), operator-directed round-0 regression fix",
+    "status": "the numbers below are NOT deleted (never-prune); they are marked NOT INTERPRETABLE as a treatment effect",
+    "what_is_voided": [
+      "comparison_to_gemma31b_singleshot_baseline.pooled_delta_cegis_best_minus_singleshot (-0.318658)",
+      "comparison_to_gemma31b_singleshot_baseline.pooled_delta_bootstrap_95ci (excludes_0: true)",
+      "comparison_to_gemma31b_singleshot_baseline.per_game[*].cegis_best_minus_singleshot",
+      "comparison_to_gemma31b_singleshot_baseline.n_games_cegis_beats_singleshot / n_games_cegis_below_singleshot",
+      "the '-0.318658' clause inside recommendation and honest_verdict"
+    ],
+    "why": "The subtraction mixes two quantities that share a field name and nothing else. Both are called heldout_accuracy; they are computed by different functions over different row sets standing in DIFFERENT RELATIONS to the evidence the model was shown, so their difference measures the split rather than the treatment.",
+    "the_two_operands": {
+      "baseline_exp5764": {
+        "prompt_rows": "the WHOLE progress window -- exp5726.run_reason_cell_budget, reused VERBATIM, calls _induce_no_fence(prop, game, list(window), cell)",
+        "graded_rows": "the WHOLE progress window -- WorldModelVerifier(list(window)).score(engine).accuracy",
+        "relation": "in_sample (prompt set == grading set); a FIT score, not a held-out score, whatever the field is named",
+        "pooled_value": 0.378487
+      },
+      "treatment_exp5766_round0": {
+        "prompt_rows": "the FIRST TWO THIRDS -- run_cegis_cell never passes proposal_transitions, so execute_bounded_llm_reinduction falls back to _proposal_prefix(transitions) (REQ-ARC-WMTE-4557, deliberate)",
+        "graded_rows": "the LAST THIRD -- select_trusted_world_model -> _split_prefix_heldout -> _score_accuracy(heldout, ...)",
+        "relation": "out_of_sample (prompt set and grading set are disjoint by construction)",
+        "pooled_value": 0.059829
+      }
+    },
+    "reproduction_2026_08_03": {
+      "method": "every per-game cell and the pooled value re-derived from the two committed shards by parsing JSON top-level keys; the errored exp5764 cell (vc33 trial 0, load_engine: FileNotFoundError, heldout_accuracy null) is EXCLUDED, not counted as zero",
+      "as_reported_whole_window_vs_disjoint_tail": {
+        "baseline": 0.378487,
+        "treatment": 0.059829,
+        "ratio": 6.3261,
+        "games_nonzero": "12/13 vs 2/13",
+        "paired_sign_test_p": 0.0386
+      },
+      "like_for_like_both_in_sample": {
+        "baseline_exp5764_whole_window": 0.378487,
+        "treatment_exp5766_round0_prefix_accuracy": 0.319444,
+        "ratio": 1.1848,
+        "paired_sign_test": "6 games favour exp5766's prefix, 5 favour exp5764, 2 ties",
+        "paired_sign_test_p": 1.0
+      },
+      "all_13_per_game_cells_and_the_pooled_-0.318658_reproduce_exactly": true
+    },
+    "what_is_NOT_voided": {
+      "delta_heldout": "exp5766's PRIMARY within-loop metric is internally consistent -- both of its terms are the same disjoint-tail score from the same split -- so the mismatch corrupts this cross-experiment block, NOT delta_heldout. See however the resolution limit below.",
+      "the_shard_data": "every recorded per-cell number is real and re-derivable; only the subtraction is invalid"
+    },
+    "correct_comparator_going_forward": "prefix_accuracy is recorded beside heldout_accuracy on EVERY exp5766 round record, from the same engine, and _proposal_prefix and _split_prefix_heldout cut at the same index -- so prefix_accuracy grades exactly the pool the prompt was drawn from and is the commensurable counterpart to exp5764's whole-window score. It was on disk the whole time and was never read.",
+    "residual_effect_not_claimed_to_be_zero": "The like-for-like gap is 1.18-1.29x, NOT asserted to be nil. It is smaller than this harness's own documented cell-level nondeterminism (LocalGGUFProposer.sampling_seed returns None absent CARNOT_ARC_GENERATOR_SEED, so llama-server draws a fresh sampler seed per call at temperature 0.2), its sign is what the one-third evidence handicap predicts, and 13 games cannot resolve an effect that size in either direction.",
+    "two_further_defects_recorded_here_but_NOT_fixed_by_this_change": {
+      "unfalsifiable_zeros": "On 4 of 13 games (sp80, r11l, vc33, ft09) the held-out tail's only row IS the level-up row, which WorldModelVerifier.score excludes; n_correct / max(1, n) then returns 0.0 for EVERY possible engine. Those cells are not measurements. Owned separately -- the fix changes what min_heldout_accuracy admits on the LIVE trust gate and is out of scope for this change.",
+      "gate_band_not_expressible_by_the_metric": "Held-out tails carry 0-3 gradeable rows, so a per-cell delta_heldout moves in steps of 1/n (0.333 at best) while the pre-registration's branches are written in units of 0.15 and 0.05. No engine change can move a 3-row tail by 0.05. Any 'refinement adds nothing' reading of this harness is substantially a statement about metric resolution. Needs an operator design decision (enlarge the window, or restate the gate in units of 1/n)."
+    },
+    "consequence_for_the_retirement_clause": "preregistration.retire_if_same_verdict reads 'on HONEST-NEGATIVE, do NOT re-propose more induction-refinement variants'. This run landed gate_branch 'partial_inconclusive', not honest_negative, so the clause's own stated precondition was never met -- and the pooled cross-baseline number its recommendation leans on is voided above. RECORDED, NOT ACTED ON: the retirement also rests on two defects owned by other work (the refactor write-path collapse and the refinement purity leak), and the conductor's consumption path for this field has not been traced here. Nothing about the retirement is deleted or reinterpreted by this corrigendum.",
+    "mechanical_guard_shipped": {
+      "module": "python/carnot/agentic/arc_metric_scope.py",
+      "env_flag": "CARNOT_ARC_METRIC_SCOPE_GUARD",
+      "default": "OFF -- compare_scoped reproduces this exact subtraction, bug included, so this artifact stays re-derivable",
+      "when_on": "refuses to subtract scores standing in different relations to their prompt evidence; permits the valid like-for-like comparison",
+      "test": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
+      "honest_limit": "zero shipped call sites today -- the only site that made this mistake is a completed experiment. This is a library plus a scope registry for future comparators, NOT a guard that is currently firing on a live path."
+    }
   }
 }
