@@ -1,0 +1,179 @@
+{
+ "schema": "carnot.arc_taxonomy_hostile_reproduction.v1",
+ "experiment": "outer_loop_arc_taxonomy_hostile_reproduction",
+ "title": "Hostile independent reproduction of the induced-engine identity census (results/outer_loop_arc_induced_engine_taxonomy_20260802.json)",
+ "run_date": "2026-08-03T05:50:57Z",
+ "duration_s": 2410.0,
+ "duration_s_note": "Wall time from the first read of the artifact under review to the writing of this file. Four independently-written harnesses under scratchpad/refute_taxonomy/ plus recomputation of every reported aggregate from the reviewed run's own per-unit rows. No model was loaded and no token generated.",
+
+ "inference_substrate": "verifier_ensemble_against_cached_candidates",
+ "inference_substrate_note": "Every number here comes from executing PRE-EXISTING frozen engine source (LLM-written on 2026-06/07/08) against transitions rebuilt from the offline arcade, scored with the project's own WorldModelVerifier. No GGUF is loaded, no GPU touched, no generation performed. The GGUF strings that appear in the reviewed corpus name the generator that WROTE those engines weeks ago; they are not a live-inference claim by this run.",
+
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "NO solve is claimed. No level was reproduced, no plan installed, no episode run, nothing submitted, no scored/online game played. This is an offline audit of an offline census. `offline_reproduced` is deliberately false.",
+ "offline_reproduced": false,
+ "solve_claimed": false,
+ "not_submitted": true,
+ "no_shipped_default_changed": true,
+ "no_shipped_default_changed_note": "Nothing under python/ or scripts/ was edited. All nine default-OFF env flags remain unset. Evidence stores (results/arc_e3, results/arc_logo_snapshot, results/arc_e3_origin_fixtures) were READ ONLY -- the only reads were of blob content already extracted into a scratchpad by the reviewed run, plus one read of results/arc_e3/ft09/world_model.py.",
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "No moat, efficiency or verifier-value claim is made. WorldModelVerifier is used here purely as the measuring instrument whose determinism is itself under test.",
+
+ "random_seed": 20260802,
+ "random_seed_note": "Used ONLY to re-run the reviewed run's game-clustered bootstrap with an independently-written implementation, so that a match tests the estimator rather than the RNG stream. Everything else in this audit is deterministic: engine execution, window rebuilding and the leakage sweep involve no randomness.",
+ "reproducibility_checksum": "99c4cf0045f052d79543cd38ee3bc66a",
+ "reproducibility_checksum_note": "md5 over the sha256 of each of this audit's four harness scripts (champion.py c4423e30d7c1db12f-prefix, fresh_window.py, nearest_dup.py, window_determinism.py) in sorted order.",
+ "git_rev": "1e1393121126",
+
+ "question": "Is the 2026-08-02 induced-engine taxonomy wrong? Attacked in the brief's order: held-out purity first, then baseline fairness, offline-sold-as-behavioural, identity classification tightness, silent censoring, missing-vs-zero, statistical reach, one-game extrapolation, and cited prior negatives.",
+
+ "verdict": "HOLDS, WITH FOUR CORRECTIONS -- one of them material to a sentence the operator would have read as fact",
+ "headline": "Every load-bearing number reproduced under independent re-execution, including the attack that would have invalidated everything. Held-out purity is not merely adequate, it is clean at a STRICTER standard than the finding claimed: zero held-out start grids, zero (state, action) pairs and zero full transitions recur in the shown prefix across ALL 24 game windows. The window builder is deterministic across the six-day gap -- 239 of 240 cells of the 2026-07-28 corpus reproduce EXACTLY when its pre-level-up-exclusion scoring maths is replayed against a window I rebuilt from scratch -- so the 238 `clean_strict_superset` engines really were graded on the trajectory they were induced from. The null reproduces: 0 of 296 clean units with n_changing>=3 reach change_accuracy >= 0.5 and 0 exceed 0.0, over 14 games and both branches. The named champion reproduces cell-for-cell, mechanism included. BUT the finding's rebuttal sentence about the LIVE store is wrong and contradicts its own artifact's shipped field: the live results/arc_e3 store is 7 of 24 identity (29.2%) and 4 of 24 structurally broken, NOT '1 of 27 ... 24 of 27 mutate'. And the headline rule-of-three bound of 3/20 = 0.150 is computed on a 20-game denominator in which successes WERE observed; the defensible bound on the population where zero was observed is 3/14 = 0.214.",
+
+ "what_I_reproduced_myself": {
+  "held_out_purity__PRIMARY_RISK": {
+   "attack": "Could any scoring transition have been visible during induction, exactly or as a near-duplicate (same state + same action)?",
+   "method": "Independent sweep (scratchpad/refute_taxonomy/nearest_dup.py) over every one of the 24 cached windows: for each gradable changing held-out row, hash the start grid, the (start-grid, action) pair and the full (start, action, next) triple and test membership in the shown prefix.",
+   "result": "ZERO leakage on all three tests, all 24 games, 50 gradable changing held-out rows total. heldout_startgrid_seen_in_shown 0, heldout_state_action_seen_in_shown 0, heldout_full_transition_seen_in_shown 0.",
+   "verdict": "CLEAN, and cleaner than claimed -- the finding rested on the two A/B harnesses' own recorded witnesses; this is an independent sweep over the whole roster including the games neither A/B checked."
+  },
+  "window_determinism__THE_ATTACK_THAT_WOULD_HAVE_INVALIDATED_EVERYTHING": {
+   "attack": "The `clean_strict_superset` family (238 units, half the clean corpus) was induced on 2026-07-28 but scored against a window rebuilt on 2026-08-02. `build_progress_window` demonstrably CHANGED behaviour in that period -- the 2026-07-28 preregistration excludes ka59/sc25/tn36/wa30/dc22 because the builder RAISED on them, and four of those five build fine now. If the window drifted, the 2026-07-28 engines were graded on a trajectory they never saw and their zeros are instrument artefacts, not evidence.",
+   "method": "scratchpad/refute_taxonomy/window_determinism.py. The 2026-07-28 corpus recorded a `production_tail` block scored with `_split_prefix_heldout` BEFORE the 2026-07-29 level-up-row exclusion landed, so a straight re-score cannot match. I re-implemented the PRE-exclusion scoring maths verbatim and ran it against windows I rebuilt from scratch via `build_progress_window`, comparing eight counters per cell (n, n_changing, n_changes_correct, change_accuracy, change_fidelity, cell_recall, correct_changed_cells, spurious_changed_cells).",
+   "result": "EXACT MATCH 239, MISMATCH 0, SKIPPED 1 (of 240 cells).",
+   "verdict": "REFUTED. The builder is deterministic across the gap for every game in that roster; the 2026-07-28 engines are graded on their own transitions. The 2026-07-28 exclusions were a builder BUG later fixed, not a trajectory change."
+  },
+  "instrument_check_independently_redone": {
+   "claim_under_test": "'232 of 232 matchable recorded held-out scores reproduce to 0.0000 delta'",
+   "result": "Confirmed and decoded: 116 abcf0801 rows x 2 metrics = 232. I matched by engine_sha256 against the corpus's own recorded rows.json: 116 matched, 8 unmatched (no engine sha), max |delta change_accuracy| = 0, max |delta change_fidelity| = 0.0, max |delta n_changing| = 0."
+  },
+  "the_null": {
+   "claim": "0 of 296 clean units with n_changing>=3 reach change_accuracy >= 0.5, and 0 even exceed 0.0000, across 14 games and both branches.",
+   "result": "REPRODUCED EXACTLY from the reviewed run's per-unit rows. clean = 488; clean with n_changing>=3 = 296; max change_accuracy = 0; count >0 = 0; count >=0.5 = 0; distinct games = 14 (ar25 bp35 cn04 g50t ka59 ls20 m0r0 re86 s5i5 sc25 sk48 tr87 tu93 wa30). Branch split reproduces: hidden-state 175 units / 9 games (max change_fidelity 0.916023), plain 121 units / 5 games (max change_fidelity 0.961538). Only two clean units anywhere exceed 0.0 and both are tn36 at n_changing=1, which the >=3 filter correctly excludes."
+  },
+  "identity_census": {
+   "result": "REPRODUCED EXACTLY. 892 units, 864 induced after holding out the 28 leakage-maximal control units. identity 230 + identity_by_none_return 10 = 240/864 = 0.2778. Subclass counts all match. Per-family: clean_exact_same_split 29/250 = 0.1160, clean_strict_superset 75/238 = 0.3151, provenance_unknown 136/376 = 0.3617.",
+   "bootstrap_reimplemented": "I rewrote the game-clustered bootstrap from scratch (resample GAMES with replacement, pool their units). All four CIs land on the reported values: all-induced (0.212, 0.343) vs reported 0.212-0.343; clean_exact (0.064, 0.173) vs 0.064-0.173; clean_superset (0.201, 0.435) vs 0.201-0.435; provenance_unknown (0.260, 0.457) vs 0.260-0.457."
+  },
+  "identity_classification_boundary_sensitivity": {
+   "attack": "Is 'identity' defined tightly enough? 19 units are classed PARTIAL under subclass `changes_only_off_trace` -- they never mutate on a single REAL observed transition and only move under synthetic probes. On the real distribution they behave as identity, so classing them partial DEFLATES the identity share.",
+   "result": "The objection is valid in principle and immaterial in magnitude. Reclassifying all 19 as identity moves the overall figure 0.2778 -> 0.2998 and the headline clean figure 0.1160 -> 0.1200. The opposite objection (10 `falls_off_end_returns_None` units are broken, not identity) pushes the other way by a similar amount. Neither reverses 'minority, not the rule'.",
+   "verdict": "ROBUST at the boundary."
+  },
+  "the_named_champion": {
+   "claim": "ls20 sha 395ed21ff4d5: on each of 3 held-out changing transitions reality changes 52 cells, the engine writes 50 correctly and is wrong on exactly 2 -- (r61,c21)+(r62,c21), then c22, then c23, colour 11 to 3, a two-row marker advancing one column per action.",
+   "result": "REPRODUCED CELL-FOR-CELL against a freshly built window. sha256 confirmed 395ed21ff4d5...cfe60e. Verifier: n 3, n_changing 3, change_accuracy 0.0, change_fidelity 0.961538, cell_recall 0.961538, correct_changed 150, spurious 0, invented 0, one level-up row excluded. Row 0 action=4: true_changed 52, engine_wrote 50, wrong 2, at (r61,c21) and (r62,c21), true 11->3, engine left 11. Row 1 action=1: same at c22. Row 2 action=1: same at c23.",
+   "something_the_finding_MISSED_that_strengthens_it": "The same engine also scores change_accuracy 0.0000 on the SHOWN half (change_fidelity 0.937086). It is not overfit to its prompt -- it misses the identical mechanic on data it was GIVEN. That is materially stronger evidence for 'one named mechanic away' than the held-out number alone, and the finding does not state it."
+  },
+  "provenance_exclusion_of_the_12_high_scorers": {
+   "attack": "Excluding every non-tn36 unit that scores >=0.5 is exactly the shape of a convenient exclusion. Is it justified, or is the null manufactured by dropping its own counterexamples?",
+   "method": "I traced all 12 shas through the git corpus to tracked path and commit, then read the commit subjects and the roadmap task prompts, then inspected two engine sources, then compared each engine's SHOWN-half score against its HELD-OUT score.",
+   "result": "JUSTIFIED, on four independent lines. (1) Path: all 12 resolve to results/arc_e3/<game>/world_model.py or its results/arc_logo_snapshot mirror -- none is local-inducer output. (2) Commits: all are June-2026 [conductor] PHASE A/B/C/D tasks (a7488e97a150, a830443de411, ef3ceafcb05e, 4dc5b0f396c2, cb59a8023ce3, 8d5607b9f286, 341f776c903e, c820430098c4, eb5768df9fe3, 4c83949a28d0, 67b94e2a7c19, 650d47228c97). (3) The roadmap prompts say verbatim 'The codex agent IS the proposer', 'collect_transitions(game)', and 'REFINE results/arc_e3/<game>/world_model.py ~4-8 rounds until accuracy >= ~0.95 or the round budget' -- an iterative fit against the verifier with unrestricted access to the window. (4) Fit signature in the source: ar25 395b5d9bee22 opens with INITIAL_SELECTED_TOP = 15 / INITIAL_SELECTED_LEFT = 18; ka59 66af38673434 hardcodes STEP=3, PUSH_STEPS=5, BACKGROUND=1, TARGET=4, WALL=15, STEP_COUNTER_TOTAL=100. (5) A signature the finding did not report: on ka59 and re86 the HELD-OUT score EXCEEDS the shown score (held 0.6667 vs shown 0.5000-0.7143), which is the wrong direction for a generalising model and the right direction for one fitted with the tail available.",
+   "verdict": "The exclusion survives. It is not a convenient drop."
+  },
+  "missing_vs_zero": {
+   "result": "CLEAN. The per-unit rows contain no `undetermined_timeout` and no `unreadable` verdict -- the 45s subprocess bound was never hit, so no unit was dropped or coerced. The all-induced change_accuracy distribution reports n=730, which is exactly the count of induced units with heldout_measurable true; the 134 non-measurable units are EXCLUDED, not written in as zeros. Same for the partial channel: n_measurable 490 of 562 partials."
+  },
+  "offline_vs_behavioural": {
+   "result": "CLEAN. The reviewed artifact states plainly that nothing moved an action, a plan or a level, sets offline_reproduced false and solve_claimed false, and its `what_this_does_and_does_not_change` explicitly says the diagnosis changes and the wall does not. No offline number is dressed as behavioural anywhere in it. This audit makes no behavioural claim either."
+  },
+  "cited_prior_art": {
+   "claim": "'the record's true best is prior art I cite and did not re-derive: tn36 best-of-N, 6 of 8 candidates at held-out change_accuracy 1.0000 on both a 17-row proven split and 120 fresh rows'",
+   "result": "The cited artifact results/outer_loop_arc_generation_vs_selection_20260802.json does say exactly that in its shipped headline, and it is correctly labelled as cited rather than re-derived. Not independently re-executed by me -- flagged as inherited, not verified."
+  },
+  "arithmetic_spot_checks_that_reproduced": "per-game identity table all 24 games; per-family table all 11 families; distance-to-exact min 2 / q1 29 / median 102 / q3 280 / max 4032 and the within-{0,1,2,5,10,50,200} cumulative buckets 0/0/4/8/15/106/188; the two exclusion counterfactuals (ticking rescues 0, band lifts 23 = bp35 19 + sc25 4); the leakage-maximal control ceiling (27 measurable, max change_accuracy 0.0, max cell_recall 0.483622); corpus recovery 855 on-disk files / 649 distinct + 498 (path,commit) git versions / 286 distinct blobs = 901 distinct union; ft09's live engine confirmed as 12 bare `return grid` statements with is_level_complete returning False."
+ },
+
+ "corrections_required": [
+  {
+   "id": "C1",
+   "severity": "MATERIAL -- would have reached the operator as fact",
+   "where": "the finding as reported (honest_verdict prose). NOT present in the shipped artifact, whose headline is correct.",
+   "wrong": "'ft09 IS exactly that shape ... but it is 1 of 27 in the live store and 24 of 27 mutate.'",
+   "right": "The live results/arc_e3 store contributes 24 classified units, not 27 (three of the 27 files are for games with no rebuildable window). Of those 24: 7 identity (29.2%), 13 partial/mutating (54.2%), 4 structurally broken (16.7%). So 11 of 24 -- 46% -- produce no usable dynamics, and only 13 of 24 mutate.",
+   "why_it_matters": "This is the sentence doing the rhetorical work against the brief's premise, and the live store is precisely the corpus that premise was about ('surviving on-disk engines'). The claimed identity rate is understated roughly 8x (1/27 = 3.7% vs 7/24 = 29.2%), and the live store's identity rate is ~2.5x the clean-corpus figure the finding leads with. It also contradicts the artifact's OWN shipped field measurements.by_family.live_store_arc_e3 = {n: 24, identity: 7, partial: 13, broken: 4, identity_fraction: 0.2917}.",
+   "does_it_reverse_the_finding": "No. 'Every surviving engine is `return grid` on every branch' remains false -- 13 of 24 do mutate. But the margin is far narrower than reported and must be restated."
+  },
+  {
+   "id": "C2",
+   "severity": "STATISTICAL REACH OVERSTATED",
+   "where": "both the finding and the shipped artifact (preregistered_bound_stated_before_results.if_zero_observed, measurements.rule_of_three_game_clustered).",
+   "wrong": "'20 games have a measurable held-out set, giving an upper bound of 3/20 = 0.150 on the per-game probability.'",
+   "right": "Lead with 3/14 = 0.214. Rule of three requires that zero successes were observed in the n clusters counted. Zero was observed only in the CLEAN n_changing>=3 population, which spans 14 games. In the 20-game 'measurable held-out' population successes WERE observed (ar25, sc25 at 1.0; ka59, re86 at 0.667) -- so 20 and 'zero observed' come from two different populations and cannot be combined. The artifact does report 3/14 parenthetically; it must be the headline number.",
+   "does_it_reverse_the_finding": "No -- 0.214 is still a bound consistent with the null. It is a ~30% understatement of the bound, i.e. an overstatement of reach."
+  },
+  {
+   "id": "C3",
+   "severity": "SILENT CENSORING -- small, disclosable, pro-finding direction",
+   "where": "shipped artifact, measurements.distance_to_exact.",
+   "wrong": "Reports 'n_clean_units_n_changing_ge_3: 293' and every cumulative bucket 'of 293', in a headline sentence adjacent to 'Zero of those 296 clean units'. The 3-unit gap is never explained.",
+   "right": "The population is 296. Three units are dropped by `distance.py`'s `bad = True; break` on a shape mismatch: cn04 e9ef870c82cd (falls_off_end_returns_None) and tr87 e907bc925815 + 2f4df82db640 (never_changes_but_reshapes). State the drop, name the three, and state the direction -- they are the WORST units in the population, so excluding them makes the distance-to-exact distribution look better than it is.",
+   "does_it_reverse_the_finding": "No. All three score change_accuracy 0.0, so the null over 296 is unaffected, and 3/296 = 1.0% cannot move the median materially."
+  },
+  {
+   "id": "C4",
+   "severity": "SCOPING -- an exclusion argued one step too far",
+   "where": "held_out_purity.provenance_unknown_EXCLUDED_from_every_clean_claim.",
+   "wrong": "'these ... are NOT evidence about the generation wall in either direction.'",
+   "right": "They are not evidence of GENERALISATION -- that part is right and I confirmed it four ways. But they are an existence proof that a program in this same induced-engine language can express ar25 / sc25 / ka59 / re86 dynamics at change_fidelity 0.98-1.00 on these exact windows. That bounds the 'the representation cannot express it' explanation and is therefore informative. Scope the wall to what was actually measured: the LOCAL single-shot GGUF inducer. A frontier coding agent with tool access and 4-8 refinement rounds is not walled on these games; it is contaminated, which is a different statement."
+  },
+  {
+   "id": "C5",
+   "severity": "COSMETIC -- inconsistent conventions, no claim affected",
+   "items": [
+    "per_game_identity_fraction_spread uses the next-higher order statistic for q1/q3 (0.1562 / 0.3636) but linear interpolation for the median (0.25355); numpy-linear on the artifact's own per-game table gives q1 0.1529 and q3 0.3351. Pick one convention.",
+    "spurious_changed_cells q3 is reported 128; recomputation gives 127.0.",
+    "the leakage-maximal control's identity fraction appears as 0.3333 (9/27 measurable) in leakage_maximal_ceiling and 0.3214 (9/28 units) in by_family.",
+    "'distinct sources' appears as 901 (corpus_recovered) and 890 (measurements.n_distinct_sources) under two keys without reconciliation."
+   ]
+  }
+ ],
+
+ "attacks_that_FAILED_to_break_it": [
+  "Held-out purity, exact and near-duplicate: zero leakage on all three tests over all 24 windows.",
+  "Window drift between induction and scoring: 239/240 exact reproduction against a from-scratch rebuild.",
+  "Instrument re-invention: 116/116 abcf cells reproduce to 0.0000 on both metrics.",
+  "Identity defined too loosely or too tightly: the boundary moves the headline by <= 2.2 points either way.",
+  "Missing coerced to zero: no timeouts, no undetermined units, non-measurables excluded not zeroed.",
+  "Convenient exclusion of counterexamples: the 12 excluded high-scorers are corroborated as verifier-refined codex artefacts on four independent lines, plus a held-out>shown fit signature the finding did not use.",
+  "Offline gain sold as behavioural: no behavioural claim is made anywhere.",
+  "One-game extrapolation: the per-game table is complete for all 24 games and the reported median (0.25355) is the true median, not a mean (mean is 0.26385)."
+ ],
+
+ "preregistered_statistical_reach": {
+  "stated_before_results": "This is a reproduction audit, not a randomised comparison. There is no treatment, no null hypothesis and therefore NO p-value by design; a reproduction either matches or it does not. The one inferential quantity I re-derive is the reviewed run's own game-clustered rule-of-three bound, and my pre-stated position was that its correct denominator is the number of GAME clusters in which zero was actually observed.",
+  "min_reachable_bound_at_game_clustering": "3/14 = 0.214, from the 14 games carrying at least one clean unit with n_changing>=3. NOT 3/20.",
+  "why_game_level": "Engines within a game share a generator, a prompt family and a window, so ~900 engine-level units are nowhere near independent draws; an engine-level rule of three would be overstated by roughly the average units-per-game factor.",
+  "a_clean_null_is_a_success": true
+ },
+
+ "limitations": [
+  "I did not re-run any induction. Like the reviewed run, I inherit the two 2026-08-01 A/B harnesses' prompt-construction correctness; my leakage sweep tests the SPLIT, not the prompt renderer.",
+  "The 2026-07-28 determinism test covers the 20 games in that corpus's roster. Four games the reviewed run scores (tn36, sc25, wa30, ka59) were EXCLUDED from that corpus by a builder bug, so for those four I have the abcf instrument check but not the six-day determinism replay.",
+  "The cited tn36 best-of-N prior art (6 of 8 at 1.0) is reported as inherited. I confirmed the cited artifact says it; I did not re-execute those candidates.",
+  "`n_changing` is engine-dependent in the shipped verifier: an engine that raises on a held-out row has that row removed from BOTH the numerator and the denominator of change_accuracy, so raising on hard rows inflates the metric. This is a real instrument defect I found while auditing, but it cannot manufacture the null -- it can only inflate -- and the clean maximum is 0.0.",
+  "This audit is offline. It says nothing about whether any engine, corrected or not, would move an action, a plan or a level on the live path.",
+  "I checked the 12 excluded high-scorers' provenance exhaustively; I did not re-audit the provenance of the other 364 provenance-unknown units, which score at or below the clean population anyway."
+ ],
+
+ "preconditions_checked": [
+  {"resource": "reviewed artifact readable", "available": true},
+  {"resource": "reviewed run's per-unit harness outputs (rows.json, distance.json, corpus.json, gitcorpus.json, windows/)", "available": true},
+  {"resource": "offline arcade / build_progress_window", "available": true},
+  {"resource": "carnot.agentic.arc_executable_world_model + arc_world_model_trust_energy importable via .venv", "available": true},
+  {"resource": "2026-07-28 and 2026-08-01 A/B corpora on disk with recorded scores", "available": true},
+  {"resource": "GPU / GGUF", "available": false, "note": "deliberately not required and never touched -- this substrate loads no model"}
+ ],
+
+ "acceptance_gates": [
+  {"gate": "every headline number of the reviewed finding recomputed from its own per-unit rows", "principle": "an aggregate that does not follow from its own rows is arithmetic, not evidence", "passed": true},
+  {"gate": "held-out purity tested independently at the near-duplicate standard, not inherited", "principle": "contamination inflates and would flip prompt-limited vs capability-limited; it is the primary risk and cannot be taken on trust", "passed": true},
+  {"gate": "window determinism between induction date and scoring date proven, not assumed", "principle": "a baseline scored on the wrong trajectory proves nothing, and this builder demonstrably changed behaviour in the window between the two dates", "passed": true},
+  {"gate": "the named best engine re-executed and its miss dissected cell-by-cell", "principle": "a champion nobody re-ran is a claim, not a measurement", "passed": true},
+  {"gate": "reported denominators compared against the design population", "principle": "silent censoring is invisible in a ratio", "passed": true},
+  {"gate": "statistical reach recomputed at game clustering from the actual cluster count", "principle": "a bound computed on a denominator where successes were observed is not a bound", "passed": true}
+ ],
+ "acceptance_gate_passed": true,
+
+ "honest_verdict": "complete_hostile_reproduction_the_taxonomy_HOLDS_every_load_bearing_number_reproduced_independently_including_zero_near_duplicate_leakage_on_all_24_windows_and_239_of_240_exact_window_determinism_against_a_from_scratch_rebuild_the_null_0_of_296_clean_units_at_change_accuracy_0.5_and_0_above_0.0_over_14_games_reproduces_exactly_as_do_identity_240_of_864_and_11.6pct_clean_and_all_four_game_clustered_CIs_and_the_ls20_champion_cell_for_cell_BUT_four_corrections_required_C1_material_the_live_arc_e3_store_is_7_of_24_identity_29.2pct_and_4_of_24_broken_NOT_1_of_27_with_24_of_27_mutating_which_contradicts_the_artifacts_own_shipped_by_family_field_C2_the_rule_of_three_bound_is_3_of_14_equals_0.214_not_3_of_20_equals_0.150_because_successes_were_observed_in_the_20_game_population_C3_distance_to_exact_silently_drops_3_of_296_units_in_the_pro_finding_direction_C4_the_excluded_codex_engines_ARE_informative_as_an_expressiveness_existence_proof_so_the_wall_must_be_scoped_to_the_local_single_shot_GGUF_inducer"
+}
