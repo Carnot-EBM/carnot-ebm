@@ -1,0 +1,2577 @@
+{
+  "schema": "carnot.arc_contaminated_engine_loop_reconstruction.v1",
+  "experiment": "outer_loop_arc_contaminated_engine_loop_reconstruction",
+  "title": "What the contaminated codex agents actually did: reconstructing the propose/score/revise loop behind the twelve 0.98-1.00 engines, and whether the tail exposure is separable from it",
+  "run_date": "2026-08-03T08:34:25Z",
+  "duration_s": 601.0,
+  "duration_s_note": "Wall time from the first read of results/arc_e3 to artifact assembly. Three passes: recover 48 engine blobs from git history across four games; re-execute every one against a deterministically rebuilt window, shown and held-out separately; two hunk-level ablations of the single edit that moved ar25's held-out score. No model loaded, no token generated, CPU only.",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_note": "Executes PRE-EXISTING frozen engine source (LLM/agent-written 2026-06 and 2026-07) against transitions rebuilt from the offline arcade, scored with the project's own shipped arc_executable_world_model.WorldModelVerifier. No GGUF is loaded, no GPU touched. GGUF strings in the cited June artifacts name the agent that wrote those engines weeks ago; they are not a live-inference claim by this run.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "NO solve is claimed. No level reproduced, no plan installed, no episode run, nothing submitted, no scored/online game played. offline_reproduced is deliberately false.",
+  "offline_reproduced": false,
+  "solve_claimed": false,
+  "not_submitted": true,
+  "no_shipped_default_changed": true,
+  "no_shipped_default_changed_note": "Nothing under python/ or scripts/ was edited. All nine default-OFF env flags remain unset. results/arc_e3 was READ ONLY -- every engine scored here was extracted from git history or read from the working tree, and no byte was written back. The ablated engine variants exist only in the session scratchpad.",
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No moat, efficiency or verifier-value claim. WorldModelVerifier is used purely as a measuring instrument on frozen code.",
+  "read_game_source": false,
+  "used_env_source": true,
+  "used_env_source_note": "The offline arcade under environment_files/ is stepped to rebuild each game's window. That is the standard PUBLIC-games development path and is permitted; no hidden-game source was read and no source-exposure probe was built.",
+  "random_seed": 20260803,
+  "random_seed_note": "Recorded for form. Nothing in this run is stochastic: engine execution, window rebuilding and the ablations are all deterministic, and no bootstrap was computed (see preregistered_bound_stated_before_results for why).",
+  "reproducibility_checksum": "f881b6d7ce0c6a161eef1589032fa7db",
+  "reproducibility_checksum_note": "md5 over the sorted sha256 of this run's four scratchpad harness scripts.",
+  "git_rev": "f7a26753b215",
+  "question": "The twelve engines at held-out fidelity 0.98-1.00 are disqualified as generalisation evidence because collect_transitions(game, n=120) exposed the held-out tail to a codex agent. What was the agent's actual propose/score/revise loop, what feedback granularity did it get, and is the tail exposure separable from the refinement loop -- i.e. could a legitimate shown-set-only version of the loop have produced the same engines?",
+  "headline": "THE LOOP IS REAL, THE FEEDBACK IS CELL-LEVEL, AND THE CONTAMINATION IS NOT SEPARABLE ON THE TWO GAMES THAT CARRY THE HEADLINE NUMBER. The 'twelve engines' are 12 git blobs but only 4 distinct behaviours: re86's four are byte-different and behaviourally IDENTICAL (all four score shown 0.5000 / held 0.6667 / fidelity 0.9832-0.9891, same three per-row wrong-cell counts), so its loop bought nothing. sc25 arrived at 1.0000/1.0000 in its FIRST commit -- there is no loop to reconstruct. ar25 is the decisive case: its predecessor 2f25b01b0faa ALREADY scored shown change_accuracy 1.0000 with 8 of 8 changing rows EXACT, so the shown half carried ZERO residual gradient; the very next commit d62743743757 jumps held-out 0.3333 -> 1.0000. A loop restricted to the shown half would have had nothing to fix and would never have made that edit. Hunk-level ablation localises the jump precisely: removing the hardcoded L1 target rectangle ((45<=y<=47 & 51<=x<=59) | (48<=y<=53 & 51<=x<=53)) drops held-out back to 0.3333 while shown stays 1.0000 with 8/8 exact; removing the other hunk drops it to 0.6667; removing both reproduces the predecessor exactly. Only ka59 has an isolable loop -- its predecessor still had 4 of 7 shown changing rows wrong, and shown rose 0.4286 -> 0.5714 -> 0.7143 with held-out tracking it 0.3333 -> 0.6667. One game out of four. Meanwhile the SHIPPED loop that implements exactly this mechanism has already been tested twice at 13 games x 3 trials and returned pooled delta_heldout -0.0128 (Qwen9B/TC27B, exp5760) and -0.0598 (gemma-4-31B, exp5766), positive on 0 of 13 games both times, with a healthy 0.89-0.99 refactor emission rate -- and that loop is ITSELF tail-contaminated (its counterexample is scored over the full window). So iterative cell-level feedback has been given the contamination advantage with a local generator and still delivered nothing.",
+  "honest_verdict": "complete_reconstruction_the_twelve_engines_are_four_distinct_behaviours_re86_loop_bought_zero_sc25_had_no_loop_ar25_jump_is_provably_tail_driven_shown_was_saturated_at_8_of_8_exact_and_ablation_localises_it_to_a_hardcoded_coordinate_rectangle_only_ka59_is_isolable_and_the_shipped_loop_implementing_this_mechanism_already_returned_0_of_13_games_positive_twice_including_on_the_current_31B_generator_while_itself_tail_contaminated_lead_is_much_weaker_than_it_looked",
+  "preregistered_bound_stated_before_results": {
+    "claim_under_test": "At least one of the four games carrying the twelve engines shows an improvement across the refinement loop that a SHOWN-SET-ONLY loop could have produced -- operationalised as: the version immediately preceding the first high-fidelity engine still had at least one shown changing row wrong (a non-empty shown-set gradient for the loop to consume).",
+    "clustering": "GAME level. Engine versions inside a game are successive edits of one file by one agent against one window; they are not independent draws. n = 4 games.",
+    "no_p_value_by_design": "This is a reconstruction of every engine that exists in the record for these four games, not a randomised comparison. There is no treatment assignment and no null to reject. MIN REACHABLE p AT GAME CLUSTERING IS THEREFORE UNDEFINED, and with n=4 games a rule of three would read 3/4 = 0.75, which cannot support any conclusion. The statistical weight on the hypothesis itself is carried entirely by the PRIOR pre-registered tests exp5760 and exp5766 (13 games each, paired sign-test p = 0.5, bootstrap 95% CI [-0.032, 0.0] and [-0.145, 0.0]), which are cited here, not re-derived.",
+    "a_clean_null_is_a_success": true
+  },
+  "held_out_purity": {
+    "why_this_section_is_first": "A refinement loop is the most dangerous possible design for held-out purity, and the twelve engines were disqualified for exactly this. THIS run induces nothing, so it cannot itself leak -- but the split it grades on has to be the same one the disqualification was made against, or the reconstruction is measuring a different thing.",
+    "the_split": "arc_actions_to_progress.build_progress_window(game) rebuilds each game's level-up-straddling window deterministically from the offline arcade (the project's own shipped builder, via experiment_5717.build_window). Shown = window[:-4], held-out = window[-4:] -- the same rows[:-4] split results/outer_loop_arc_induced_engine_taxonomy_20260802.json states the 2026-08-01 A/B corpora were induced on, so the numbers here are directly comparable to the 0.98-1.00 figures being reconstructed.",
+    "this_run_cannot_leak": "No induction, no generation, no fitting. Every engine scored was written weeks ago and is read either from a git blob or from the working tree; the four ablated variants are mechanical text substitutions on a frozen blob, defined by naming a hunk in a diff, never by consulting a held-out label.",
+    "the_contamination_being_reconstructed": "collect_transitions(game, n=120..160) explores the offline sim freely and returns the whole window, so the June codex agent saw every row that this run holds out. That is not disputed and is not re-litigated here; it is the premise.",
+    "residual_risk_stated": "The reconstruction infers the agent's loop from committed engine versions plus the conductor task prompts that commissioned them. No agent session transcript survives on this machine (searched: logs/, results/*.log, and every June-dated log file). So the WITHIN-round detail -- how many times the agent ran the verifier between commits, what it printed, whether it wrote its own probes -- is not directly observable and is reported as inference, labelled as such. What IS directly observed is the sequence of engine versions, their exact scores, and the task prompt each was written under."
+  },
+  "PART_A_what_the_loop_actually_was": {
+    "the_task_prompts_verbatim_shape": "Six conductor tasks between 2026-06-17 and 2026-06-28 commissioned this work, all carrying the same clause: 'The codex agent IS the proposer (uses collect_transitions / WorldModelVerifier / load_engine / plan_and_execute as tools; WRITES results/arc_e3/<game>/world_model.py; NO nested CodexProposer)'. The phases are named in the commit subjects: PHASE B1/B2 (ar25 L1, ka59 L1), PHASE C (sc25 L1), PHASE A2/A4 (deeper levels), PHASE A3 (re86 self-play). Each names the PRIOR attempt's residual gap explicitly -- e.g. 'ar25 L2 is blocked on the named ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap' -- and instructs the agent to close that specific gap.",
+    "the_loop_was_ACROSS_milestones_not_inside_a_script": "THE SINGLE MOST IMPORTANT STRUCTURAL FACT, and it is easy to get wrong. The committed experiment modules (python/carnot/experiment_4327/4339/4350...) contain NO refinement loop. exp4339 loads the engine the agent had ALREADY hand-written, scores it once, plans, executes, and writes the artifact -- its verifier_accuracy_per_round is a ONE-element list [0.8875]. The iteration happened in the agent's own shell session, editing results/arc_e3/<game>/world_model.py directly, and the only durable trace is the sequence of committed file versions. Its own declared substrate says so: 'codex_direct_model_edit_offline_env_no_nested_proposer'.",
+    "how_many_iterations_measured_not_inferred": {
+      "method": "distinct committed blobs of results/arc_e3/<game>/world_model.py in the June window",
+      "ar25": "6 versions over 44 hours (2026-06-17 01:17 -> 06-18 21:04), monotonically growing 4099 -> 4139 -> 4618 -> 6292 -> 7129 -> 8607 bytes. Four of the six are among the twelve.",
+      "ka59": "6 versions over 34 hours (06-17 07:12 -> 06-18 17:41), 3752 -> 9356 bytes. Two are among the twelve.",
+      "sc25": "2 versions 42 hours apart (06-17 14:06, 06-19 04:24), 9976 -> 10811 bytes. BOTH are among the twelve, and the FIRST one already scores 1.0000/1.0000.",
+      "re86": "4 versions inside 52 MINUTES on 06-28 (19:59, 20:24, 20:42, 20:51), 7271 -> 8646 bytes. All four are among the twelve and all four are behaviourally identical.",
+      "reading": "One conductor task = one refinement round. The agent got roughly 2-6 rounds per game, each round a fresh agent session re-reading the file, the prior artifact's named residual gap, and the verifier."
+    },
+    "what_the_agent_did_between_rounds_observed_from_diffs": {
+      "ar25_round_2_to_3": "Added `patch = np.where((patch == color) | (patch == 0), patch, 9)` -- stop carrying cells belonging to other layers along when a component patch moves -- AND a hardcoded rectangle restoring original target cells inside (45..47, 51..59) | (48..53, 51..53).",
+      "ar25_round_3_to_4": "Added INITIAL_SELECTED_TOP = 15 / INITIAL_SELECTED_LEFT = 18 -- per-game constants read off that game's initial state -- plus a connected-component `_largest_box` helper and a `_visible_undo_action` rule inferring what ACTION7 undoes by comparing the current selection box against those two constants.",
+      "ar25_round_4_to_5": "Added `_undo_stack_restore(data, shape)` reading an `undo_stack` key out of the action payload, AND a `transition_fixture()` function that builds a synthetic 12x12 grid, runs the engine forward and back, and self-reports `passed`. That is the agent writing its own unit test into the engine file -- the Agent2World 'adaptive testing' the task prompt asked for.",
+      "reading": "The edits are a mix of genuine mechanic induction (layer-aware patch movement, an undo-stack model, a self-test) and per-level coordinate memorisation. Both kinds appear in the same rounds."
+    },
+    "feedback_granularity_THE_CRUX": {
+      "answer": "CELL-LEVEL, for BOTH reality and the engine's own error. Not a score.",
+      "evidence": "WorldModelVerifier.score builds each mismatch as {'i', 'action', 'data', 'true_change': _delta(g0, g1), 'your_prediction_was_wrong_at': _delta(pred, g1)} where _delta returns (row, col, from_colour, to_colour) tuples. refactor_prompt renders them as JSON under the heading 'failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid)'. A real ka59 prompt built this session from the frozen 09f15b739dc8 engine is 3,211 characters and shows, per failing transition, the exact cells reality changed and the exact cells the engine got wrong.",
+      "and_the_agent_had_MORE_than_that": "The shipped prompt is what a one-shot proposer receives. The codex agent had the verifier as a TOOL in a shell, so it could re-run it after every edit, print whole grids, and write its own probes -- and demonstrably did (the transition_fixture it added to ar25). That is the widest feedback channel in the record.",
+      "the_cap_that_bites": "_bounded_mismatches caps at 5 mismatches and _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH caps each cell list at 8, with an honest _omitted_count. On ar25 the held-out rows change 108-109 cells each, so the shipped refactor prompt shows 8 of 109 = 7.3% of the change and reports 101 omitted. On re86 (48-53 changed cells) it shows ~16%. On ka59 (3-19 cells) it shows 42-100%. The one game whose loop IS isolable is also the one whose feedback was not badly truncated -- worth noting, and NOT established as causal here."
+    },
+    "a_second_contamination_the_brief_did_not_name": "exp4339's driver hardcodes L1_SOLUTION_LABELS = ['3']*5 + ['2']*10 and 'plans' by replaying it. The reproduced-L1 claim for ar25 therefore rests on a solution the agent wrote into the harness, not one the model produced. This does not affect the engine-fidelity numbers reconstructed here, but it does mean the ar25 solve is not evidence about planning either."
+  },
+  "PART_B_is_the_contamination_isolable": {
+    "the_test": "A refinement loop is legitimate iff it can run on the shown half alone. The necessary condition is a NON-EMPTY SHOWN-SET GRADIENT: at the moment the loop made its improving edit, at least one shown changing row must still have been wrong. If shown is already saturated, the loop had nothing to see, and any subsequent held-out gain is by construction attributable to held-out exposure.",
+    "per_game_verdict": {
+      "ar25": {
+        "shown_gradient_at_the_improving_edit": 0,
+        "detail": "Predecessor 2f25b01b0faa: shown change_accuracy 1.0000, 8 of 8 changing rows EXACT, change_fidelity 1.0000. Held-out 0.3333 / 0.8651. The next commit d62743743757 goes to held-out 1.0000 / 1.0000 while shown stays 1.0000.",
+        "isolable": false,
+        "reading": "NOT ISOLABLE. Nothing on the shown half distinguishes these two engines."
+      },
+      "sc25": {
+        "shown_gradient_at_the_improving_edit": null,
+        "detail": "There is no improving edit. The first committed version 091d7eb90d0f is already shown 1.0000 / held 1.0000 with all three held-out rows exact. The second (39a0ca8678a9) is identical on every measured quantity.",
+        "isolable": false,
+        "reading": "NO LOOP TO ISOLATE. sc25 is a one-shot product of an agent holding the whole window. It is evidence about expressiveness, not about refinement."
+      },
+      "ka59": {
+        "shown_gradient_at_the_improving_edit": 4,
+        "detail": "Predecessor 09f15b739dc8: shown change_accuracy 0.4286 (3 of 7 exact, so 4 rows still wrong), held 0.3333. Then ec4c777b8f41 shown 0.5714 / held 0.6667, then 66af38673434 shown 0.7143 / held 0.6667. Shown and held-out rise TOGETHER.",
+        "isolable": true,
+        "reading": "ISOLABLE. A shown-set-only loop had four wrong rows to work on, and the improvement it made generalised to the tail. This is the one clean instance in the record."
+      },
+      "re86": {
+        "shown_gradient_at_the_improving_edit": 4,
+        "detail": "All four versions score shown 0.5000 (4 of 8 exact) and held 0.6667, with per-row wrong-cell counts identical across all four (53c:0w exact, 50c:0w exact, 48c:1w). Only change_fidelity moves at all, 0.9891 -> 0.9832, i.e. slightly WORSE.",
+        "isolable": true,
+        "reading": "ISOLABLE AND EMPTY. There was gradient available and the loop consumed none of it. Four rounds, zero behavioural change. re86 contributes 4 of the 'twelve engines' and 1 distinct behaviour."
+      }
+    },
+    "the_ablation_that_localises_ar25s_jump": {
+      "why": "The 2f25b01b0faa -> d62743743757 diff has exactly two hunks. Removing each in turn says which one bought the held-out jump. Removal, not generalisation -- an earlier pass of this same ablation WIDENED the hardcoded rectangle to the whole grid instead of deleting it, which left the score at 1.0000 and would have wrongly read as 'the constants are inert'. That arm is kept below as B4 so the error is on the record rather than quietly corrected.",
+      "arms": {
+        "B0_verbatim": {
+          "shown": 1.0,
+          "held": 1.0,
+          "held_fidelity": 1.0
+        },
+        "B1_remove_hardcoded_L1_target_rectangle": {
+          "shown": 1.0,
+          "held": 0.3333,
+          "held_fidelity": 0.898
+        },
+        "B2_remove_layer_masking_on_patch_move": {
+          "shown": 1.0,
+          "held": 0.6667,
+          "held_fidelity": 0.9524
+        },
+        "B3_remove_both": {
+          "shown": 1.0,
+          "held": 0.3333,
+          "held_fidelity": 0.8651
+        },
+        "B4_widen_rectangle_to_whole_grid_NOT_an_ablation": {
+          "shown": 1.0,
+          "held": 1.0,
+          "held_fidelity": 1.0
+        }
+      },
+      "consistency_check": "B3 (both hunks removed) reproduces the predecessor 2f25b01b0faa EXACTLY -- held 0.3333, fidelity 0.8651, same per-row wrong-cell counts [0, 19, 37]. The ablation is faithful.",
+      "reading_stated_carefully": "Both hunks are load-bearing and the HARDCODED one carries more of the jump. But B4 matters for honesty in the other direction: widening the rectangle to the whole grid ALSO scores 1.0000, so the RULE the hunk encodes is not itself memorisation -- it generalises. What cannot be rescued is the DECISION TO ADD IT: with shown already at 8 of 8 exact, only the held-out rows could have told the agent that rule was missing. The rule is fine; the evidence for it is worthless."
+    },
+    "identity_control": "The identity engine scores change_accuracy 0.0000 and change_fidelity 0.0000 on both halves of all four games (ar25 8 shown / 3 held changing rows, ka59 7/3, sc25 8/3, re86 8/3). So on THESE four games beating identity is not the bar it is elsewhere in the corpus -- but it is reported because 'must beat identity, not zero' is a standing requirement and here the two happen to coincide.",
+    "stratification_by_changed_cells": "Every held-out changing row is reported with its true changed-cell count and the engine's wrong-cell count, so no score can hide behind a degenerate one-cell stratum. Counts per row: ar25 [109, 108, 108]; ka59 [19, 3, 18]; sc25 [8, 12, 12]; re86 [53, 50, 48]. None of the twelve engines' scores rests on single-cell rows. ka59's 3-cell row is solved by every version including the pre-loop one, so it carries no discriminating weight.",
+    "missing_is_not_zero": "Engines that fail to load, raise, or return a wrong-shaped grid are reported as load_error / ERR per row and are NOT scored as 0.0000. Affected: ar25 92c4e493bbc0, 1b38917ab82a, d9bc795e30dc and sc25 60430c9556c1 -- all July working-tree versions, none among the twelve.",
+    "an_incidental_finding_worth_the_operators_attention": "The twelve high-fidelity engines survive ONLY in git history. Every one of these four games' CURRENT working-tree engine scores change_accuracy 0.0000 or fails to run: ar25 d9bc795e30dc raises, ka59 f6f1da91e6d4 is identity (654 bytes), sc25 8ea3abe38895 scores 0.0000, re86 862a18cbdd65 scores 0.0000. This is the engine-store overwrite regression, observed here on four more games."
+  },
+  "PART_C_what_a_legitimate_version_would_be": {
+    "what_the_loop_sees": "The shown prefix ONLY -- window[:-4] under the project's canonical split. The held-out tail must not be materialised in the process that runs the loop: build the window, slice it, and pass ONLY the prefix into the induction/refinement call, with the tail rebuilt in a SEPARATE process for scoring after the loop has terminated and the engine source is frozen to a hash.",
+    "what_it_scores_on": "Shown-prefix change_fidelity and change_accuracy from WorldModelVerifier, computed over the prefix alone. Round-to-round retention must rank on the SHOWN score. This is a real change: the shipped loop's _retention_signal reads heldout_change_consistency, and its refactor counterexample is built by WorldModelVerifier(list(transitions)) over the FULL window.",
+    "what_it_is_told": "The existing refactor_prompt is already the right shape -- BEFORE / PREDICTED / OBSERVED cell deltas. Two fixes it needs: (1) raise or remove _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8, which shows only 7.3% of an ar25-sized change; the induce path already solved this with _rle_delta, a lossless run-length encoding at ~1/4 the tokens, and the refactor path should use it too. (2) Give the model the engine's CURRENT SOURCE alongside the mismatches; the shipped refactor prompt names the file path and assumes the proposer can read it, which is true for an agent with tools and false for a one-shot local completion.",
+    "what_enforces_the_tail_never_being_touched": "Three layers, because a purity claim about a loop cannot rest on the loop's own assertion. (1) STRUCTURAL: the loop function's signature takes only prefix rows; it never receives an object from which the tail is reachable. (2) MECHANICAL: an AST/static scan of every emitted engine for integer literals >= 10 matching a HELD-OUT changed-cell row or column index -- exp5760's memorization_detector already implements exactly this and should be reused, not rewritten. (3) WITNESS: record, per round, the sha256 of the prefix row set actually passed, and assert at scoring time that the tail sha256 appears in no round's record -- the textual no_heldout_line_in_* witness the 2026-08-01 A/B harnesses already emit.",
+    "the_pre_registration_it_needs": "Primary metric: held-out change_fidelity of the FINAL engine, minus that of the ROUND-1 engine, paired by game, clustered at the game level. It must be pre-registered against exp5760/exp5766's identical 13-game roster so the result is directly comparable rather than a new roster with a new sampling story. A positive-control arm is mandatory: at least one game where round-1 leaves shown-set gradient AND the oracle ceiling exceeds round-1, or the null is uninformative.",
+    "the_honest_prior_it_must_beat": "0 of 13 games, twice. Any design that does not differ from exp5760/5766 in a way its author can name IN ADVANCE is a doomed rerun under the Failed-Experiment Rerun Discipline."
+  },
+  "PART_D_the_counterweight_and_a_second_worse_one": {
+    "the_counterweight_the_brief_raised": "The leakage-maximal control -- every transition, answers included, one prompt -- scored max change_accuracy 0.0000. Why would iterative feedback succeed where full evidence failed?",
+    "the_mechanism_that_could_have_distinguished_them": "Full evidence in the prompt is a SUPERVISED-LEARNING signal: it tells the model what the answer is and asks it to write a program consistent with all of it, in one shot, with no way to know which parts of its program are wrong. Cell-level feedback on its own output is a CREDIT-ASSIGNMENT signal: it points at the specific cells THIS program got wrong, which localises the defect to a branch. That is a real information-theoretic difference and it is why CEGIS beats one-shot synthesis in program synthesis generally. So the mechanism exists and can be articulated -- the hypothesis was not vacuous.",
+    "but_it_has_been_tested_and_it_returned_zero": {
+      "exp5760": "13 games x 3 trials, Qwen3.5-9B-MTP + ThinkingCap-Qwen3.6-27B, through the SHIPPED execute_bounded_llm_reinduction at min_heldout_accuracy=1.0 so the refactor rounds actually fire. Pooled mean delta_heldout -0.0128, bootstrap 95% CI [-0.0321, 0.0], positive on 0 of 13 games, wins 0 losses 2, paired sign-test p = 0.5. Refactor emission rate 0.8925 across 93 attempted rounds -- the loop was NOT silently inert.",
+      "exp5766": "SAME 13-game roster, gemma-4-31B-it -- the CURRENT live generator. Pooled mean delta_heldout -0.0598, CI [-0.1453, 0.0], positive on 0 of 13 games, emission rate 0.9872, and the refined result is -0.3187 WORSE than the exp5764 single-shot baseline on the secondary metric.",
+      "both_landed_partial_inconclusive_and_why_that_is_not_a_reprieve": "Neither cleared its own honest-negative gate, but only because that gate demanded 'memorization unchanged' and memorization DROPPED substantially (0.5714 -> 0.2653 in exp5760, a 0.2564 drop in exp5766). Read plainly: refinement made the engines markedly LESS memorising and NOT ONE BIT more accurate on held-out. The gate label understates how clean the null is."
+    },
+    "and_the_shipped_loop_had_the_contamination_advantage_too": "THE SHARPEST POINT IN THIS ARTIFACT. exp5760/5766 pass transitions=list(window) -- the FULL window. select_trusted_world_model splits internally for scoring, but the refactor counterexample is built by WorldModelVerifier(list(transitions)).score(...) over ALL rows including the tail, and _retention_signal ranks rounds on heldout_change_consistency. So the shipped loop is contaminated in precisely the way the codex agents were, was given cell-level feedback that included held-out rows, fired healthily on 83-97% of rounds, and STILL improved held-out fidelity on zero of thirteen games with two different model families. The proposed legitimate version would have STRICTLY LESS information than that.",
+    "what_is_left_of_the_lead_stated_without_inflation": "One game (ka59), two rounds, shown 0.4286 -> 0.7143 and held 0.3333 -> 0.6667, produced by a frontier coding agent with shell tools -- a model class that is not available offline and is therefore not the deliverable. Against that: 0 of 13 twice with local models, including the current generator, with the contamination advantage. The honest reading is that the twelve engines are evidence about EXPRESSIVENESS (a program in this language does reach 0.98-1.00 -- sc25 proves that in one shot) and about AGENT CAPABILITY, and are NOT evidence that a refinement loop is the missing ingredient for a local generator.",
+    "the_one_untested_difference_worth_naming": "Rounds. exp5760/5766 cap at MAX_REFINEMENT_ROUNDS = 3; the codex agent got 2-6 committed rounds per game and an unknown number of within-session verifier calls between them. Depth is the one axis on which the shipped test does not dominate the reconstruction. It is also the axis exp5766's own retire_if_same_verdict pre-registration explicitly closes: 'do NOT re-propose more induction-refinement variants; the 2x2 then reads architecture wall independent of model capacity AND refinement depth'. Re-opening it needs an operator override, not a planner's discretion."
+  },
+  "limitations": [
+    "No agent session transcript survives, so within-round behaviour is inferred from committed diffs and the commissioning task prompts, not observed. Labelled as inference throughout.",
+    "Four games, 48 engine versions. No p-value is reportable at game clustering (see preregistered_bound_stated_before_results); the statistical claim rests on cited prior work.",
+    "The window is rebuilt today from the offline arcade. If environment_files/ has changed since June 2026 the transitions differ from what the agent saw. Not directly verifiable; mitigated by the fact that B3 (both hunks removed) reproduces the predecessor's score exactly, which would be a coincidence under a changed window.",
+    "change_accuracy is exact-full-grid match on changing rows, so it cannot distinguish 'one cell wrong' from 'wrote nothing'. change_fidelity and per-row wrong-cell counts are reported alongside it everywhere for exactly this reason.",
+    "This is offline engine fidelity. It is NOT a claim about plans, actions, levels or live behaviour; the trust gate still stands between the two.",
+    "The ka59 'isolable' verdict establishes only that a shown-set-only loop COULD have made that improvement, not that it WOULD have. The actual agent saw the tail there too."
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "offline_env_environment_files",
+      "available": true
+    },
+    {
+      "resource": "arc_executable_world_model_import",
+      "available": true
+    },
+    {
+      "resource": "arc_actions_to_progress_build_progress_window",
+      "available": true
+    },
+    {
+      "resource": "git_history_of_results_arc_e3",
+      "available": true
+    },
+    {
+      "resource": "june_2026_agent_session_transcripts",
+      "available": false
+    },
+    {
+      "resource": "gpu_or_gguf",
+      "available": false,
+      "note": "not required; CPU-only by design"
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "every engine version in the four games is re-executed and reported, errors included",
+      "principle": "no silent censoring -- an engine that raises must appear with its reason, not as a zero",
+      "passed": true
+    },
+    {
+      "gate": "identity control run on both halves of all four games",
+      "principle": "any claimed improvement must beat identity, not zero",
+      "passed": true
+    },
+    {
+      "gate": "every held-out row reported with its true-changed-cell count",
+      "principle": "a high score on a one-cell stratum is not a win",
+      "passed": true
+    },
+    {
+      "gate": "the ablation reproduces the predecessor's score when both hunks are removed",
+      "principle": "an ablation that does not close the loop is not an ablation",
+      "passed": true
+    },
+    {
+      "gate": "the shipped mechanism's prior negative is located and characterised before any new proposal",
+      "principle": "a mechanism may already exist and be inert; and a prior negative may be unfalsifiable",
+      "passed": true
+    }
+  ],
+  "acceptance_gate_passed": true,
+  "trajectories_measured": {
+    "ar25": {
+      "window_len": 12,
+      "shown_len": 8,
+      "heldout_len": 4,
+      "cell": 1,
+      "identity_control_shown": {
+        "n": 8,
+        "n_changing": 8,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "identity_control_heldout": {
+        "n": 3,
+        "n_changing": 3,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "versions_oldest_first": [
+        {
+          "stamp_mmdd_hhmm_local": "0617-0117",
+          "sha256_prefix": "15d9bde1303e",
+          "bytes": 4099,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.3333,
+          "heldout_change_fidelity": 0.8651,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 19,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 37,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0617-0656",
+          "sha256_prefix": "2f25b01b0faa",
+          "bytes": 4139,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.3333,
+          "heldout_change_fidelity": 0.8651,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 19,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 37,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0617-1236",
+          "sha256_prefix": "d62743743757",
+          "bytes": 4618,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 1.0,
+          "heldout_change_fidelity": 1.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0617-2315",
+          "sha256_prefix": "395b5d9bee22",
+          "bytes": 6292,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 1.0,
+          "heldout_change_fidelity": 1.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0618-1741",
+          "sha256_prefix": "28e850c0d802",
+          "bytes": 7129,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 1.0,
+          "heldout_change_fidelity": 1.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0618-2104",
+          "sha256_prefix": "f8d71fe67d34",
+          "bytes": 8607,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 1.0,
+          "heldout_change_fidelity": 1.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0717-1235",
+          "sha256_prefix": "b403434fa918",
+          "bytes": 3247,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.1331,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.1375,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 101,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 100,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 100,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0719-1908",
+          "sha256_prefix": "b4f48b79c524",
+          "bytes": 1316,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 3700,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 3708,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 3717,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0721-0750",
+          "sha256_prefix": "dabc4df050f3",
+          "bytes": 1552,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 132,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 131,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 131,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0726-0404",
+          "sha256_prefix": "3ac8ac0e1cd8",
+          "bytes": 2357,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0008,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0008,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 3795,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 3795,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 3799,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0726-0405",
+          "sha256_prefix": "92c4e493bbc0",
+          "bytes": 3199,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 0,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 0,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "IndexError('invalid index to scalar variable.')"
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "IndexError('invalid index to scalar variable.')"
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "IndexError('invalid index to scalar variable.')"
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0726-0444",
+          "sha256_prefix": "1b38917ab82a",
+          "bytes": 2198,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 2,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 0,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "IndexError('index 64 is out of bounds for axis 1 with size 64')"
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "IndexError('index 64 is out of bounds for axis 1 with size 64')"
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "IndexError('index 64 is out of bounds for axis 1 with size 64')"
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-0935",
+          "sha256_prefix": "229a96bc17ec",
+          "bytes": 356,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": 109,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 108,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": 108,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-1321",
+          "sha256_prefix": "d9bc795e30dc",
+          "bytes": 4185,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 0,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 0,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 109,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "TypeError('must assign iterable to extended slice')"
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "TypeError('must assign iterable to extended slice')"
+            },
+            {
+              "true_changed_cells": 108,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "TypeError('must assign iterable to extended slice')"
+            }
+          ]
+        }
+      ]
+    },
+    "ka59": {
+      "window_len": 11,
+      "shown_len": 7,
+      "heldout_len": 4,
+      "cell": 1,
+      "identity_control_shown": {
+        "n": 7,
+        "n_changing": 7,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "identity_control_heldout": {
+        "n": 3,
+        "n_changing": 3,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "versions_oldest_first": [
+        {
+          "stamp_mmdd_hhmm_local": "0617-0712",
+          "sha256_prefix": "0da67a03910f",
+          "bytes": 3752,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.4286,
+          "shown_change_fidelity": 0.8581,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.3333,
+          "heldout_change_fidelity": 0.9123,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 3,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 2,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0617-1259",
+          "sha256_prefix": "09f15b739dc8",
+          "bytes": 6601,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.4286,
+          "shown_change_fidelity": 0.9549,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.3333,
+          "heldout_change_fidelity": 0.7544,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 5,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 9,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0617-1752",
+          "sha256_prefix": "ec4c777b8f41",
+          "bytes": 7002,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 0.5714,
+          "shown_change_fidelity": 0.9774,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.6667,
+          "heldout_change_fidelity": 0.9825,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 1,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0617-2315",
+          "sha256_prefix": "66af38673434",
+          "bytes": 7424,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 0.7143,
+          "shown_change_fidelity": 0.986,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.6667,
+          "heldout_change_fidelity": 0.9825,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 1,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0618-0257",
+          "sha256_prefix": "e20305436149",
+          "bytes": 7342,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.6828,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.5419,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 5,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 3,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 2,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0618-1741",
+          "sha256_prefix": "1296a767e602",
+          "bytes": 9356,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.7444,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.5419,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 5,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 3,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 2,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0719-1908",
+          "sha256_prefix": "64b89b0a9276",
+          "bytes": 3506,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 43,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 129,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 18,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-0935",
+          "sha256_prefix": "eb5698590c9c",
+          "bytes": 1774,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0037,
+          "shown_n_changing": 6,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.1128,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 1761,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 2,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 1820,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-1321",
+          "sha256_prefix": "f6f1da91e6d4",
+          "bytes": 654,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 7,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 19,
+              "wrong_cells": 19,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 3,
+              "wrong_cells": 3,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 18,
+              "wrong_cells": 18,
+              "exact": false,
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    "sc25": {
+      "window_len": 12,
+      "shown_len": 8,
+      "heldout_len": 4,
+      "cell": 1,
+      "identity_control_shown": {
+        "n": 8,
+        "n_changing": 8,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "identity_control_heldout": {
+        "n": 3,
+        "n_changing": 3,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "versions_oldest_first": [
+        {
+          "stamp_mmdd_hhmm_local": "0617-1406",
+          "sha256_prefix": "091d7eb90d0f",
+          "bytes": 9976,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 1.0,
+          "heldout_change_fidelity": 1.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0619-0424",
+          "sha256_prefix": "39a0ca8678a9",
+          "bytes": 10811,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 1.0,
+          "shown_change_fidelity": 1.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 1.0,
+          "heldout_change_fidelity": 1.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0624-0226",
+          "sha256_prefix": "fbd706606706",
+          "bytes": 2079,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 8,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0625-1137",
+          "sha256_prefix": "a77adec381fe",
+          "bytes": 432,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 8,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0717-1235",
+          "sha256_prefix": "ce9d058ee60a",
+          "bytes": 1006,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 8,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0719-1908",
+          "sha256_prefix": "031fc23d5fe9",
+          "bytes": 674,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 40,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 44,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0724-0137",
+          "sha256_prefix": "7a32160ab9c1",
+          "bytes": 665,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 8,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0724-1645",
+          "sha256_prefix": "f4145732b51d",
+          "bytes": 358,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 8,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0724-1718",
+          "sha256_prefix": "9d18553118f1",
+          "bytes": 4326,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 8,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 12,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0726-0444",
+          "sha256_prefix": "673e89c50afd",
+          "bytes": 2425,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 3564,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 3566,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 3566,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-0935",
+          "sha256_prefix": "60430c9556c1",
+          "bytes": 3456,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 0,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 0,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "NameError(\"name 'c' is not defined\")"
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "NameError(\"name 'c' is not defined\")"
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": null,
+              "exact": false,
+              "error": "NameError(\"name 'c' is not defined\")"
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-1321",
+          "sha256_prefix": "8ea3abe38895",
+          "bytes": 1534,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 8,
+              "wrong_cells": 40,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 44,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 12,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    "re86": {
+      "window_len": 12,
+      "shown_len": 8,
+      "heldout_len": 4,
+      "cell": 1,
+      "identity_control_shown": {
+        "n": 8,
+        "n_changing": 8,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "identity_control_heldout": {
+        "n": 3,
+        "n_changing": 3,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "cell_recall": 0.0,
+        "accuracy": 0.0,
+        "n_noop": 0,
+        "noop_hallucinated": 0
+      },
+      "versions_oldest_first": [
+        {
+          "stamp_mmdd_hhmm_local": "0628-1959",
+          "sha256_prefix": "a489249c27bc",
+          "bytes": 7271,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 0.5,
+          "shown_change_fidelity": 0.9891,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.6667,
+          "heldout_change_fidelity": 0.9932,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 1,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0628-2024",
+          "sha256_prefix": "5347052ee228",
+          "bytes": 7861,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 0.5,
+          "shown_change_fidelity": 0.9832,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.6667,
+          "heldout_change_fidelity": 0.9932,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 1,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0628-2042",
+          "sha256_prefix": "2095bae5e044",
+          "bytes": 8173,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 0.5,
+          "shown_change_fidelity": 0.9832,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.6667,
+          "heldout_change_fidelity": 0.9932,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 1,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0628-2051",
+          "sha256_prefix": "ebdc7ee66a47",
+          "bytes": 8646,
+          "is_one_of_the_twelve": true,
+          "shown_change_accuracy": 0.5,
+          "shown_change_fidelity": 0.9832,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.6667,
+          "heldout_change_fidelity": 0.9932,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 0,
+              "exact": true,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 1,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0628-2106",
+          "sha256_prefix": "064c81fdb5e7",
+          "bytes": 1726,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0912,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.112,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 222,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 217,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 152,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0628-2152",
+          "sha256_prefix": "e15095b9835f",
+          "bytes": 3975,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0042,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 135,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 132,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 111,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0719-1908",
+          "sha256_prefix": "083e991e460a",
+          "bytes": 274,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 53,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0721-0750",
+          "sha256_prefix": "a04d06bb4f94",
+          "bytes": 1618,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0739,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 53,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0726-0404",
+          "sha256_prefix": "201b464f2997",
+          "bytes": 3010,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 53,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0726-0444",
+          "sha256_prefix": "083e991e460a",
+          "bytes": 274,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 53,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-0935",
+          "sha256_prefix": "a2a8f5781d1e",
+          "bytes": 1495,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 53,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        },
+        {
+          "stamp_mmdd_hhmm_local": "0727-1321",
+          "sha256_prefix": "862a18cbdd65",
+          "bytes": 2442,
+          "is_one_of_the_twelve": false,
+          "shown_change_accuracy": 0.0,
+          "shown_change_fidelity": 0.0,
+          "shown_n_changing": 8,
+          "heldout_change_accuracy": 0.0,
+          "heldout_change_fidelity": 0.0,
+          "heldout_n_changing": 3,
+          "heldout_per_row_true_changed_cells_and_wrong_cells": [
+            {
+              "true_changed_cells": 53,
+              "wrong_cells": 53,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 50,
+              "wrong_cells": 50,
+              "exact": false,
+              "error": null
+            },
+            {
+              "true_changed_cells": 48,
+              "wrong_cells": 48,
+              "exact": false,
+              "error": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ablation_hunk_level_ar25": {
+    "arms": {
+      "B0_d627_verbatim": {
+        "shown": {
+          "n_changing": 8,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held": {
+          "n_changing": 3,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ],
+        "shown_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ]
+      },
+      "B1_remove_H2_hardcoded_target_box": {
+        "shown": {
+          "n_changing": 8,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held": {
+          "n_changing": 3,
+          "change_accuracy": 0.3333,
+          "change_fidelity": 0.898
+        },
+        "held_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 19,
+            "exact": false
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 20,
+            "exact": false
+          }
+        ],
+        "shown_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ]
+      },
+      "B2_remove_H1_layer_masking": {
+        "shown": {
+          "n_changing": 8,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held": {
+          "n_changing": 3,
+          "change_accuracy": 0.6667,
+          "change_fidelity": 0.9524
+        },
+        "held_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 18,
+            "exact": false
+          }
+        ],
+        "shown_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ]
+      },
+      "B3_remove_both": {
+        "shown": {
+          "n_changing": 8,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held": {
+          "n_changing": 3,
+          "change_accuracy": 0.3333,
+          "change_fidelity": 0.8651
+        },
+        "held_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 19,
+            "exact": false
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 37,
+            "exact": false
+          }
+        ],
+        "shown_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ]
+      },
+      "B4_H2_widened_to_whole_grid": {
+        "shown": {
+          "n_changing": 8,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held": {
+          "n_changing": 3,
+          "change_accuracy": 1.0,
+          "change_fidelity": 1.0
+        },
+        "held_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 108,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ],
+        "shown_rows": [
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          },
+          {
+            "n_changed": 109,
+            "wrong_cells": 0,
+            "exact": true
+          }
+        ]
+      }
+    }
+  },
+  "ablation_first_pass_kept_for_the_record": {
+    "why_kept": "This pass widened the hardcoded rectangle to the whole grid instead of deleting it and concluded the constants were inert. That conclusion was WRONG and the hunk-level pass overturns it. Kept per never-prune so the error is auditable rather than invisible.",
+    "data": {
+      "game": "ar25",
+      "window_len": 12,
+      "shown": 8,
+      "held": 4,
+      "cell": 1,
+      "arms": {
+        "A0_verbatim_395b5d9bee22": {
+          "shown": {
+            "n_changing": 8,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held": {
+            "n_changing": 3,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ],
+          "shown_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ]
+        },
+        "A1_l1_target_box_neutralised": {
+          "shown": {
+            "n_changing": 8,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held": {
+            "n_changing": 3,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ],
+          "shown_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ]
+        },
+        "A2_initial_anchor_neutralised": {
+          "shown": {
+            "n_changing": 8,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held": {
+            "n_changing": 3,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ],
+          "shown_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ]
+        },
+        "A3_both_neutralised": {
+          "shown": {
+            "n_changing": 8,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held": {
+            "n_changing": 3,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ],
+          "shown_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ]
+        },
+        "PRE12_2f25b01b0faa_verbatim": {
+          "shown": {
+            "n_changing": 8,
+            "change_accuracy": 1.0,
+            "change_fidelity": 1.0,
+            "cell_recall": 1.0
+          },
+          "held": {
+            "n_changing": 3,
+            "change_accuracy": 0.3333,
+            "change_fidelity": 0.8651,
+            "cell_recall": 1.0
+          },
+          "held_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 19,
+              "exact": false
+            },
+            {
+              "n_changed": 108,
+              "wrong_cells": 37,
+              "exact": false
+            }
+          ],
+          "shown_rows": [
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            },
+            {
+              "n_changed": 109,
+              "wrong_cells": 0,
+              "exact": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "prior_art_this_rests_on": {
+    "results/outer_loop_arc_induced_engine_taxonomy_20260802.json": "identified the twelve >= 0.5 units, named the collect_transitions(n=120) contamination, and supplied the rows[:-4] split reused here",
+    "results/outer_loop_arc_taxonomy_hostile_reproduction_20260803.json": "independently reproduced that taxonomy including zero near-duplicate leakage on all 24 windows",
+    "results/experiment_5760_cegis_refinement_induction_ab.json": "the pre-registered 13-game CEGIS refinement test on Qwen9B + ThinkingCap27B",
+    "results/experiment_5766_gemma31b_cegis_refinement_ab.json": "the same test on the current gemma-4-31B generator",
+    "results/experiment_4327/4339/4350_*.json": "the June conductor artifacts whose world_model_sha256 fields tie the twelve engines to named tasks"
+  }
+}
