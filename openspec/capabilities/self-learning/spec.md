@@ -26293,6 +26293,177 @@ starts with `complete_ready:` only when those gates pass.
 |---|---|---|
 | REQ-LEARN-5968 | Planned (`python/carnot/experiment_5968_delayed_commit_csl_prospective.py`, `results/experiment_5968_delayed_commit_csl_prospective.json`) | Planned (`tests/python/test_experiment_5968_delayed_commit_csl_prospective.py`) |
 
+## REQ-LEARN-5969: Delayed-Commit CSL Poison Drift And ABI Audit
+
+The self-learning tier SHALL provide Exp5969, a deterministic no-LLM attacked
+replay at `python/carnot/experiment_5969_csl_poison_drift_abi_audit.py` that
+consumes only the exact Exp5968 artifact whose
+`prospective_csl_ready_score == 1.0`, the selected delayed-commit policy state,
+the clean state/ledger/ABI hashes recorded by Exp5968, and the protected-prefix
+corpus used by Exp5967 and Exp5968. It SHALL write
+`results/experiment_5969_csl_poison_drift_abi_audit.json`, SHALL NOT mutate
+`scripts/research_conductor.py`, and SHALL use
+`inference_substrate="deterministic_csl_poison_drift_abi_audit_no_llm"`.
+
+Before any attacked arm runs, Exp5969 SHALL replay the Exp5968 gate by exact
+path, hash, status, and ready scalar; verify Exp5967, Exp5924, Exp5926, state,
+ledger, ABI v2, protected-prefix, attack-seed, resource, output-path, and
+protected-file receipts; and freeze an attack manifest before observing attacked
+outcomes. The frozen manifest SHALL include isolated and consecutive bounded
+label flips, mutually inconsistent updates, semantic-neighbor poisoning,
+abrupt and gradual family drift, protected-prefix stale replay, repeated
+duplicate evidence, adversarial capacity fill, crash at each transaction phase,
+hash-chain tamper, and rollback after late failure.
+
+Exp5969 SHALL run the selected delayed-commit policy and the matched
+write-through control under identical starting state, chronological events,
+attack indices, attack rates, capacities, verifier budgets, seeds, and resource
+bounds. It SHALL also run a fixed-memory negative control and an unpoisoned
+positive control. The delayed-commit production arm SHALL reject or quarantine
+unsafe, conflicting, stale, duplicate, tampered, and protected-prefix replayed
+updates before they become readable. The write-through control SHALL be
+reported honestly when its immediate visibility causes admitted or propagated
+poison.
+
+Exp5969 SHALL measure poison admission, downstream propagation, detection
+latency, quarantine precision and recall, rollback exactness, clean utility,
+post-attack recovery, abrupt and gradual drift recovery, protected-prefix
+retention, state growth and eviction, ledger continuity, and final
+future-window utility. Promotion readiness SHALL require selected delayed
+commit to have bare `unsafe_accept_count == 0`, bare
+`poison_propagation_count == 0`, exact crash/restart and rollback recovery,
+hash-chain tamper rejection, protected-prefix retention no worse than the
+preregistered floor, cross-language Python/Rust/PyO3 attacked-trace parity,
+clean-utility retention, and zero failed required command exit codes.
+
+Every attacked trace SHALL be replayed through Python, Rust, and PyO3 ABI v2
+operation surfaces. Unsupported operations, schema mismatch, status/error
+mismatch, version mismatch, state-hash mismatch, rejection-reason mismatch, or
+final-energy mismatch SHALL fail closed and force
+`rollback_and_recovery_ready_score == 0.0`. Exp5969 SHALL report only
+fixed-width portability mapping for hardware; it SHALL NOT claim attached-board,
+TSU, speed, power, energy, thermalization, or production execution.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`gate_replay_receipt`, `selected_policy_state_ledger_and_abi_hashes`,
+`preregistered_attack_manifest_and_seeds`,
+`delayed_commit_write_through_fixed_and_clean_arm_matching`,
+`poison_admission_propagation_detection_and_quarantine_metrics`,
+`abrupt_gradual_drift_and_recovery_metrics`,
+`conflict_duplicate_stale_capacity_and_eviction_metrics`,
+`crash_restart_tamper_and_rollback_matrix`,
+`protected_prefix_and_clean_utility_retention`,
+`python_rust_pyo3_attacked_trace_parity`, `unsafe_accept_count`,
+`poison_propagation_count`, `rollback_and_recovery_ready_score`,
+`hardware_abi_mapping_receipt`, `retirement_decision`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: Attacks run only against the exact prospectively qualified state and policy.
+- `preconditions_checked`: Attacks run only against the exact prospectively qualified state and policy.
+- `gate_replay_receipt`: Exp5968 exact path, hash, and value must satisfy `prospective_csl_ready_score == 1.0`.
+- `selected_policy_state_ledger_and_abi_hashes`: One immutable clean starting point defines every attacked arm.
+- `preregistered_attack_manifest_and_seeds`: Attack types, rates, timing, and seeds are sealed before outcomes.
+- `delayed_commit_write_through_fixed_and_clean_arm_matching`: Arms differ only in declared memory policy under identical attack budgets.
+- `poison_admission_propagation_detection_and_quarantine_metrics`: Expose both initial safety and downstream contamination.
+- `abrupt_gradual_drift_and_recovery_metrics`: Adaptation and recovery remain distinct from forgetting.
+- `conflict_duplicate_stale_capacity_and_eviction_metrics`: Lifecycle edge cases and bounded-state behavior are explicit.
+- `crash_restart_tamper_and_rollback_matrix`: Interrupted or corrupted transactions fail closed and restore exact state.
+- `protected_prefix_and_clean_utility_retention`: Safety cannot be purchased by forgetting useful verified state.
+- `python_rust_pyo3_attacked_trace_parity`: All operations, versions, reasons, and final hashes agree exactly.
+- `unsafe_accept_count`: Both selected-policy unsafe accepts and poison propagation must be bare zero.
+- `poison_propagation_count`: Both selected-policy unsafe accepts and poison propagation must be bare zero.
+- `rollback_and_recovery_ready_score`: Emit bare 1.0 only when rollback, restart, parity, retention, and safety gates pass.
+- `hardware_abi_mapping_receipt`: Report fixed-width portability only; no attached-board or TSU execution/speed claim.
+- `retirement_decision`: A repeated safety failure retires promotion readiness without laundering Exp5968.
+- `protected_files_unchanged`: Active roadmap, conductor, exclusions, history, and unrelated changes remain immutable.
+- `duration_s`: Use measured deterministic attacked state replay with no LLM.
+- `inference_substrate`: Use measured deterministic attacked state replay with no LLM.
+- `verifier_is_oracle`: Exact fixture labels detect attacks; the adaptive policy is distinct and uncovered real-world threats are listed.
+- `missing_verifier_gaps`: Exact fixture labels detect attacks; the adaptive policy is distinct and uncovered real-world threats are listed.
+- `field_provenance`: Use measured deterministic attacked state replay with no LLM.
+- `test_commands`: Use measured deterministic attacked state replay with no LLM.
+- `test_exit_codes`: Use measured deterministic attacked state replay with no LLM.
+- `reproducibility_checksum`: Use measured deterministic attacked state replay with no LLM.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+`rollback_and_recovery_ready_score` SHALL be the bare scalar `1.0` only when
+Exp5968 gate replay passes exactly, the clean selected-policy state/ledger/ABI
+hashes match, attacks were preregistered before execution, attacked arms are
+matched except for declared memory policy, selected delayed commit has zero
+unsafe accepts and zero poison propagation, bounded poison, conflict, drift,
+retention, quarantine, capacity, crash/restart, tamper, and rollback cases all
+pass, protected-prefix retention and clean utility meet the preregistered
+floors, Python/Rust/PyO3 attacked-trace parity is exact, no hardware execution
+is claimed, protected files are unchanged, and every required command exit code
+is zero. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5969-GATE: Exact Exp5968 Gate Replay
+
+**Given** Exp5968 reports prospective CSL readiness,
+**When** Exp5969 checks preconditions,
+**Then** Exp5968 path, hash, status, and ready scalar are verified before any
+attack runs, and the selected state, ledger, ABI v2, protected-prefix corpus,
+seeds, resources, and protected files are hashed.
+
+### SCENARIO-LEARN-5969-ATTACKS: Attack Manifest Is Frozen Before Outcomes
+
+**Given** the exact clean selected policy state,
+**When** Exp5969 seals its attack manifest,
+**Then** bounded poison, contradiction, semantic-neighbor poison, abrupt drift,
+gradual drift, protected stale replay, duplicate evidence, capacity fill,
+crash phases, ledger tamper, and rollback-after-failure cases have fixed rates,
+indices, seeds, and expected fail-closed reasons before execution.
+
+### SCENARIO-LEARN-5969-MATCHED-ARMS: Delayed And Write-Through Attacks Are Matched
+
+**Given** delayed commit, write-through, fixed-memory, and clean-positive arms,
+**When** each arm runs the attacked stream,
+**Then** capacities, verifier budgets, seeds, attack indices, chronological
+events, and starting hashes match, and only memory policy differs.
+
+### SCENARIO-LEARN-5969-SAFETY: Poison Conflicts And Replays Do Not Propagate
+
+**Given** bounded poison bursts, inconsistent updates, duplicate evidence,
+semantic-neighbor poison, and protected-prefix stale replay,
+**When** the selected delayed-commit policy validates proposals,
+**Then** unsafe accepts and poison propagation are bare zero, quarantine
+precision and recall are measured, and write-through contamination is reported
+as a control rather than promotion evidence.
+
+### SCENARIO-LEARN-5969-DRIFT-RETENTION: Drift Recovery Does Not Forget Protected State
+
+**Given** abrupt and gradual family drift plus a protected retention floor,
+**When** delayed commit recovers after attack windows,
+**Then** recovery utility, final future-window utility, state growth, eviction,
+protected-prefix retention, and clean-utility retention are recorded separately.
+
+### SCENARIO-LEARN-5969-RECOVERY: Crash Restart Tamper And Rollback Fail Closed
+
+**Given** crash-at-phase, restart, hash-chain tamper, and late-failure rollback
+cases,
+**When** each attacked transaction trace is replayed,
+**Then** interrupted or corrupted transactions reject or recover without partial
+mutation, ledger continuity is preserved, and rollback restores exact hashes.
+
+### SCENARIO-LEARN-5969-PARITY: Python Rust PyO3 Attacked Traces Match
+
+**Given** the attacked ABI v2 operation trace,
+**When** Python, Rust, and PyO3 execute it,
+**Then** operation names, versions, statuses, rejection reasons, state hashes,
+final energies, schema ids, and final hashes match exactly, and unsupported
+operations fail closed.
+
+## Implementation Status (Exp 5969)
+
+| Requirement | Python | Rust/PyO3 | Tests |
+|---|---|---|---|
+| REQ-LEARN-5969 | Planned (`python/carnot/experiment_5969_csl_poison_drift_abi_audit.py`, `results/experiment_5969_csl_poison_drift_abi_audit.json`) | Planned (ABI v2 attacked trace parity receipts) | Planned (`tests/python/test_experiment_5969_csl_poison_drift_abi_audit.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
