@@ -16391,3 +16391,4 @@ here — the same reasoning applied on 2026-07-31 when a "triples the rate" subj
 fixed in place.
 
 **Banked ARC levels remain 3/3.**
+- 2026-08-03: Dated evidence refresh after the V528 planner marker (✅ Complete) — honest_verdict=complete_null: no accepted post-V528 source deltas; references unchanged; results/experiment_5962_v528_source_delta_ingestion.json
