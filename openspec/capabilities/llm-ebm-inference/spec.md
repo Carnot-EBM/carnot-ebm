@@ -2329,7 +2329,10 @@ Exp 5964 SHALL resolve exactly the three mandated GGUF identities
 `unsloth/gemma-4-26B-A4B-it-GGUF`.  It SHALL record exact cached GGUF file
 hashes, embedded GGUF tokenizer receipts, llama.cpp version, CUDA backend
 evidence, `n_gpu_layers`, per-device free VRAM, RAM, disk, thermal state,
-atomic output paths, and cleanup receipts.  If any mandated family, embedded
+atomic output paths, and cleanup receipts.  A resolved GGUF path SHALL be a
+primary model file; multimodal projector files such as `mmproj*.gguf` or other
+non-model sidecars SHALL be recorded as unavailable rather than as complete
+model-file provenance.  If any mandated family, embedded
 tokenizer, CUDA offload, memory, disk, or output prerequisite is unavailable,
 the terminal artifact SHALL emit `status="blocked"` and an `honest_verdict`
 starting with `blocked:`.  It SHALL NOT substitute legacy models, CPU headline
@@ -2475,7 +2478,7 @@ controls.
 | REQ-INFER-SOTA-025 | Implemented (`python/carnot/reporting/llama_cpp_cuda_rebuild_clean_subprocess_3207.py`) | Implemented (`tests/python/test_experiment_3207_llama_cpp_cuda_rebuild_clean_subprocess.py`) |
 | REQ-INFER-5301 | Implemented (`python/carnot/experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) | Implemented (`tests/python/test_experiment_5301_ebt_spectral_step_control_diagnostic_v484.py`) |
 | REQ-INFER-5317 | Implemented (`python/carnot/experiment_5317_ebt_telemetry_audit_reemit_v485.py`) | Implemented (`tests/python/test_experiment_5317_ebt_telemetry_audit_reemit_v485.py`) |
-| REQ-INFER-SOTA-5964 | Planned (`python/carnot/experiment_5964_sota_atom_compatibility_corpus.py`) | Planned (`tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py`) |
+| REQ-INFER-SOTA-5964 | Implemented (`python/carnot/experiment_5964_sota_atom_compatibility_corpus.py`) | Implemented (`tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py`) |
 | REQ-INFER-SOTA-026 | Implemented (`python/carnot/reporting/hermetic_cuda_runtime_repair_ledger_3220.py`) | Implemented (`tests/python/test_experiment_3220_hermetic_cuda_runtime_repair_ledger.py`) |
 | REQ-INFER-SOTA-027 | Planned (`python/carnot/experiment_5097_clean_sota_endpoint_logprob_cache.py`, `results/experiment_5097_clean_sota_endpoint_logprob_cache_v468.json`) | Planned (`tests/python/test_experiment_5097_clean_sota_endpoint_logprob_cache.py`) |
 | REQ-INFER-SOTA-028 | Implemented (`python/carnot/experiment_5119_sota_endpoint_rootcause.py`, `scripts/experiment_5119_sota_endpoint_rootcause_v469.py`, `results/experiment_5119_sota_endpoint_rootcause_v469.json`) | Implemented (`tests/python/test_experiment_5119_sota_endpoint_rootcause.py`) |
