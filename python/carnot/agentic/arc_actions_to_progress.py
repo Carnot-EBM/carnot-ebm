@@ -259,6 +259,28 @@ class ProgressResult:
     wall_s: float
     timed_out: bool
     hit_induction_cap: bool
+    # WHY THIS EXISTS (2026-08-02): a cell that stops early because the EXPLORER ran out of
+    # frontier is not the same event as a cell that stopped because it ran out of wall clock
+    # (`timed_out`) or induction budget (`hit_induction_cap`) -- and until this field existed it
+    # was recorded as neither, i.e. as an ordinary completion. That is the exact ambiguity that
+    # made a 978-action DROP read as the largest efficiency win of a session when it was one
+    # game's frontier collapsing (states 142 -> 56, progress 0.667 -> 0.333). A metric that
+    # improves because the agent DID LESS WORK is a regression wearing a win's clothes, and
+    # without this flag the two are indistinguishable in the recorded row.
+    #
+    # `E3AgentPolicy` already tracks the condition (`self.explorer.explored_out`, set in
+    # `_frontier`'s advance); the agent's own in-code comment calls driving `next_move` to
+    # `explored_out = True` an "END THE RUN EARLY -- a mechanical null indistinguishable from a
+    # behavioural one". This field is the recording half that was missing, so the distinction
+    # survives into the artifact instead of having to be re-derived (or, as happened, not).
+    #
+    # REPORTING ONLY: read after the action loop has already finished, never consulted by it,
+    # so no trajectory, action count or termination condition changes. Defaults False so any
+    # existing caller that constructs a ProgressResult without it keeps working, and so a run
+    # whose policy crashed before an explorer existed reports False rather than inventing True.
+    # NOTE it is NOT mutually exclusive with the other two flags: a cell can time out on the
+    # same step it exhausts its frontier, and both are then recorded.
+    explored_out: bool = False
     error: Optional[str] = None
     induction_events: list[dict[str, Any]] = field(default_factory=list)
     # Ordered action trace of the run, in the canonical `_json_action_label` encoding
@@ -777,6 +799,16 @@ def run_bounded_progress(
 
     events = list(getattr(pol, "induction_attempts", []) or []) if pol is not None else []
     ind = _summarize_inductions(events)
+    # Read AFTER the loop has finished (see ProgressResult.explored_out): purely a record of
+    # how the run ended, never an input to it. Double `getattr` because a policy that crashed
+    # during construction has no `.explorer` at all, and a missing explorer must report False
+    # rather than raise -- "missing" and "did not explore out" are the same fact here only
+    # because the run cannot have exhausted a frontier it never built.
+    explored_out = (
+        bool(getattr(getattr(pol, "explorer", None), "explored_out", False))
+        if pol is not None
+        else False
+    )
     levels_gained = max(0, (reached or 0) - (start or 0))
     # ---- hand-verifier measurability (2026-07-29) -------------------------------------------
     # A verifier that returned ONE value across TWO OR MORE DIFFERENT frames cannot move
@@ -824,6 +856,7 @@ def run_bounded_progress(
         wall_s=round(time.time() - t0, 1),
         timed_out=timed_out,
         hit_induction_cap=hit_cap,
+        explored_out=explored_out,
         error=err,
         induction_events=events,
         action_trace=trace,

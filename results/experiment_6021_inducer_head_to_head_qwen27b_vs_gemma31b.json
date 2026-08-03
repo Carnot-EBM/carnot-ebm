@@ -2,7 +2,7 @@
   "acceptance_gate_both_arms_complete": true,
   "acceptance_gate_coverage_separation": true,
   "acceptance_gate_criterion_fixed_before_unblinding": true,
-  "aggregation_wall_s": 218.822,
+  "aggregation_wall_s": 213.619,
   "arm_meta": {
     "gemma31b": {
       "arm": "gemma31b",
@@ -198,20 +198,20 @@
           "gemma31b": false,
           "qwen27b": false
         },
-        "dirty_vs_head": true,
-        "mtime_utc": "2026-08-01T03:20:08Z",
+        "dirty_vs_head": false,
+        "mtime_utc": "2026-08-02T15:33:50Z",
         "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+        "sha256": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380"
       },
       {
         "arm_import_is_provably_this_sha256": {
           "gemma31b": false,
           "qwen27b": false
         },
-        "dirty_vs_head": false,
-        "mtime_utc": "2026-07-30T04:06:31Z",
+        "dirty_vs_head": true,
+        "mtime_utc": "2026-08-02T23:47:29Z",
         "path": "python/carnot/agentic/arc_actions_to_progress.py",
-        "sha256": "d2d813a9bcaadcec9b2e902ef6e555c401b5c7330930f71f818d1bfb8a931f0d"
+        "sha256": "c1e374d1daae54064c9c1f6b3e7ec758d5ba3c6c27a6b8cf08ee91259f424ecf"
       },
       {
         "arm_import_is_provably_this_sha256": {
@@ -284,8 +284,8 @@
         "sha256": "80a46d6cee89d824a5ac24a9394a4e4c165a6dabab80a69472c6d1fc8384b833"
       }
     ],
-    "diff_stat_vs_head_for_declared_deps": ".../carnot/agentic/arc_executable_world_model.py   | 141 ++++++++++++++++++++-\n 1 file changed, 136 insertions(+), 5 deletions(-)",
-    "git_head": "204bf713b16a9aa8c4bc7f1061abefde67735785",
+    "diff_stat_vs_head_for_declared_deps": "python/carnot/agentic/arc_actions_to_progress.py | 33 ++++++++++++++++++++++++\n 1 file changed, 33 insertions(+)",
+    "git_head": "79e476dc6e181d6c1034e50f1f2f0ad677d59959",
     "git_head_describes_tree_only_for_clean_files": true,
     "inertness_checked_at_runtime_not_only_by_reading": {
       "check": "Constructed WorldModelVerifier(list(window)) exactly as run_reason_cell_budget does, with hud_mask_swallow_clean wrapped in a counting spy.",
@@ -724,6 +724,33 @@
     "what_it_is": "gemma-4-31B-it vs ITSELF: exp5764's arm against this run's gemma arm. Same model, Q4_K_M, 13-game corpus, run_reason_cell_budget mechanism, 16384 budget, 3 trials. Different session, different llama-server process, UNSEEDED sampling -- so the spread here is the measurement's own reproducibility, not a model difference."
   },
   "offline_ground_truth_bfs": false,
+  "original_timings_superseded_by_rebuild": {
+    "current_values_are_unchanged_by_this_block": true,
+    "n_timing_fields_restored": 1,
+    "original_provenance_pins": {
+      "code_provenance.dependencies_at_build_time[0].mtime_utc": "2026-07-29T23:54:44Z",
+      "code_provenance.dependencies_at_build_time[0].sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
+      "code_provenance.dependencies_at_build_time[1].dirty_vs_head": true,
+      "code_provenance.dependencies_at_build_time[1].mtime_utc": "2026-07-29T23:40:51Z",
+      "code_provenance.dependencies_at_build_time[1].sha256": "1f9c406c960d0484d0b09979c2e1df17be0b230bf4948a96466ffb2e8dc015c0",
+      "code_provenance.diff_stat_vs_head_for_declared_deps": "python/carnot/agentic/arc_actions_to_progress.py   | 124 ++++++-\n .../carnot/agentic/arc_executable_world_model.py   | 372 +++++++++++++++++++--\n 2 files changed, 472 insertions(+), 24 deletions(-)",
+      "code_provenance.git_head": "aa8a38e315947e47bb20e8b07f77b2c39a82346f",
+      "provenance.code[0].sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
+      "provenance.code[1].sha256": "1f9c406c960d0484d0b09979c2e1df17be0b230bf4948a96466ffb2e8dc015c0"
+    },
+    "original_timings": {
+      "aggregation_wall_s": 211.476
+    },
+    "superseded_at_commit": "0da7f75ad",
+    "the_preferred_path_next_time": "the same commit that caused this added VERIFIED-INERT acknowledgements to the artifact-freshness lint, which pin a new upstream hash plus a reason WITHOUT rerunning. When the only drift is timing, acknowledge rather than rebuild.",
+    "verification": {
+      "all_differences_are_timing_or_provenance": true,
+      "fields_differing_between_pre_rebuild_and_now": 10,
+      "fields_dropped_by_the_rebuild": 0,
+      "substantive_differences": 0
+    },
+    "why_this_block_exists": "the values below were MEASURED on the original run and were overwritten in place when this artifact was rebuilt in 0da7f75ad to re-pin its code provenance. The rebuild changed nothing substantive -- verified here by asserting that every differing field is a timing or a provenance hash -- but a wall-clock number is not reproducible, so overwriting it destroys the record of what the first run actually cost. Restored per the standing never-prune rule."
+  },
   "per_game_detail_side_by_side": {
     "ar25": {
       "gemma31b": {
@@ -1256,11 +1283,11 @@
     "code": [
       {
         "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+        "sha256": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380"
       },
       {
         "path": "python/carnot/agentic/arc_actions_to_progress.py",
-        "sha256": "d2d813a9bcaadcec9b2e902ef6e555c401b5c7330930f71f818d1bfb8a931f0d"
+        "sha256": "c1e374d1daae54064c9c1f6b3e7ec758d5ba3c6c27a6b8cf08ee91259f424ecf"
       },
       {
         "path": "python/carnot/experiment_5726_thinkingcap_16k_dualgpu_reason_ab.py",
@@ -1291,6 +1318,76 @@
         "sha256": "80a46d6cee89d824a5ac24a9394a4e4c165a6dabab80a69472c6d1fc8384b833"
       }
     ],
+    "freshness_acknowledgements": [
+      {
+        "acknowledged_on": "2026-07-31",
+        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+      },
+      {
+        "acknowledged_on": "2026-07-31",
+        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
+        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+      },
+      {
+        "acknowledged_utc": "2026-08-01T16:55:00Z",
+        "evidence": "PROVED BY CONSTRUCTION, not argued: this artifact was REBUILT from the code now on disk into a scratch path (the committed file was never written) and diffed against the committed version. Every substantive value is identical. The only differences are wall-clock timing fields, code_provenance metadata (mtime/sha/git_head/diff_stat, which necessarily move), and hand-added rebuild_note_* keys from a prior rebuild that a fresh run does not re-emit. All four artifacts carrying a rebuild command were rebuilt this way and all four came back with zero moved measurements. Also asserted by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine, which pins that with the flag unset _engine_defects returns [] for an engine the flag-on path rejects.",
+        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
+        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+      },
+      {
+        "acknowledged_on": "2026-08-01",
+        "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
+        "sha256_now": "20a3aeb7c26d6b8705c33976ff78967923bf20c555d5891cb79cab8dbb6e00a7",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+      },
+      {
+        "acknowledged_on": "2026-08-01",
+        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
+        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379"
+      },
+      {
+        "acknowledged_on": "2026-08-02",
+        "evidence": "PROVEN INERT BY AST IDENTITY, which is stronger than a rebuild-and-diff because it rules the change out at the language level rather than observing that one run did not move. `ast.dump(ast.parse(src))` of this module at HEAD and in the working tree are IDENTICAL (sha256 of the dump 06cba8b110cc97ffc7ca456a9575721b5adc1747d8de5e5638dc583d0b6dbd4e); comments do not survive parsing, so no behaviour reachable from any artifact's script can differ. Verified mechanically in the same step that wrote this entry: the writer asserts AST equality and asserts that the diff contains zero non-comment additions, and refuses to write otherwise.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "The 2026-08-02 change to this module is COMMENT-ONLY: 46 added lines, 0 deleted, and 0 added lines that are not a comment. It corrects two stale interim counts in a comment block (\"16 of 20\" -> the final \"17 of 21 / 1 of 22\") and scopes an over-broad disclosure above `_GOAL_PLAIN_REASK_BLOCK`, which claimed all three of its bullets were bootstrap-free when the third is a public-corpus prior about the shape of ARC win conditions. No executable statement, signature, constant or default was added, removed or altered.",
+        "sha256_now": "e579e667d5b777511c7d01046035726d2ca3878cf94c1855d5741179102407b9",
+        "sha256_was": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d"
+      },
+      {
+        "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
+        "acknowledged_date": "2026-08-02",
+        "evidence": "Established mechanically, not by reading the diff: `results/arc_goal_predicate_shadowing_20260802/prove_inertness.py` diffs the module against HEAD at AST level and reports `inert_with_flag_unset: true` (`inertness_proof.json`) via three independent checks -- (1) no new executable statement in either changed function lies outside a `_goal_dedup_on()` guard; (2) a least-fixed-point over the call graph shows all four new helpers unreachable with the flag off, modelling `and` short-circuit explicitly; (3) the flag is False when unset and resolves exactly as `value.strip() == '1'`, matching every sibling flag in the module. Corroborated by `tests/python/test_arc_goal_predicate_shadowing.py::test_dedup_off_leaves_the_combined_output_byte_identical`, which pins the flag-off output byte-for-byte, and by 128 passing tests across the induce/world-model/goal suites. `git diff` on the module is 182 insertions / 1 deletion, the single deletion being a replaced docstring line.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "Adds an OPT-IN goal-predicate dedup to the split-induce path (env CARNOT_ARC_GOAL_DEDUP, DEFAULT OFF). Two pre-existing functions changed -- `LocalGGUFProposer._combine_world_model` and `LocalGGUFProposer.induce` -- and in both every added executable statement is inside an `if _goal_dedup_on():` body or behind `_goal_dedup_on() and ...` short-circuit. Four new module-level helpers are added and are unreachable with the flag unset. With the variable unset the emitted world model is byte-identical to the shipped path, so nothing this artifact measured can move.",
+        "sha256_now": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
+        "sha256_was": "e579e667d5b777511c7d01046035726d2ca3878cf94c1855d5741179102407b9",
+        "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
+      },
+      {
+        "acknowledged_on": "2026-08-02",
+        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
+        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file.",
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
+        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
+        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa"
+      }
+    ],
     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
     "rows_sources": [
       {
@@ -1310,77 +1407,7 @@
         "sha256": "e51fec6a88846c281cc5b79715c4a12b0ca567764c08830b42cede4de9297d60"
       }
     ],
-    "what_this_block_does_and_does_not_certify": "artifact_freshness_lint compares these sha256s against the files on disk, so a later edit to any of them marks this artifact STALE. That is a statement about the AGGREGATION and about the gemma arm, both of which ran against the bytes recorded here. It is NOT a statement about the qwen arm: see code_provenance -- arc_executable_world_model.py was rewritten mid-run, the qwen arm imported the earlier bytes, and those bytes were never snapshotted. A 'fresh' verdict from the lint must not be read as 'both arms ran identical code'. They did not.",
-    "freshness_acknowledgements": [
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
-        "sha256_now": "bf0f95db31b4255001435938ba8144f7492443d0a56a2f5145a5a00a96ec71a7",
-        "acknowledged_on": "2026-07-31",
-        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
-        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
-        "sha256_now": "94fd91a4aeb471fee1ca731408d8110936f0e7bbf3f1cb0733a37f7045df22f6",
-        "acknowledged_on": "2026-07-31",
-        "reason": "The 2026-08-01 change wires `_induce_transitions_k()` into `induce_prompt` and flips its default from 8 to all-transitions, plus adds `_select_transitions_for_prompt`. Every touched symbol is on the INDUCE PROMPT path. This artifact's script references none of `induce_prompt`, `_transitions_block`, or `_induce_transitions_k` (grep: 0 occurrences), and its only e3 symbols are change_gate_decision / collect_transitions / load_engine / logical_hud_mask / WorldModelVerifier / E3_DIR / SUBMITTED_* flags -- none of which changed.",
-        "evidence": "PROVEN BY REBUILD. Ran this artifact's own recorded rebuild_command against the changed source and compared to the published file LEAF BY LEAF (1326 leaves). Substantive movement: ZERO. Every differing key belongs to a provenance bookkeeping block that the rebuild DELETES -- `original_timings_superseded_by_rebuild` (8 keys) plus `rebuild_note_20260731_layer_split` and `rebuild_note_20260731_qat` (6 each, added by a concurrent session), 20 in total. Those blocks record their own verdict as `substantive_values_changed: 0` and their own `known_defect_in_this_script` is that the rebuild rewrites/drops them. So the rebuild was treated as EVIDENCE and discarded; the published artifact was restored and verified byte-identical to HEAD."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
-        "sha256_now": "8ec72291d626f5fc2bce6f7354030f639e39be2aa84a48ba972948537ae60984",
-        "acknowledged_utc": "2026-08-01T16:55:00Z",
-        "reason": "The 2026-08-01 inert-engine-rejection change to arc_executable_world_model.py is INERT with respect to every number in this artifact: it adds the module-level function _reject_inert_engines(), which returns False unless CARNOT_ARC_INDUCE_REJECT_INERT == '1', and one block inside LocalGGUFProposer._engine_defects guarded by it. The env var is unset in every path that produced this artifact, so _engine_defects executes exactly the statements it executed before. Nothing else in the module was touched.",
-        "evidence": "PROVED BY CONSTRUCTION, not argued: this artifact was REBUILT from the code now on disk into a scratch path (the committed file was never written) and diffed against the committed version. Every substantive value is identical. The only differences are wall-clock timing fields, code_provenance metadata (mtime/sha/git_head/diff_stat, which necessarily move), and hand-added rebuild_note_* keys from a prior rebuild that a fresh run does not re-emit. All four artifacts carrying a rebuild command were rebuilt this way and all four came back with zero moved measurements. Also asserted by tests/python/test_arc_inert_engine_rejection_2026_08_01.py::TestTheFlag::test_default_off_reports_no_defect_for_an_inert_engine, which pins that with the flag unset _engine_defects returns [] for an engine the flag-on path rejects.",
-        "note": "APPENDED, never replacing an earlier entry, so the acknowledgement history stays auditable (never-prune). Pinned to THIS exact hash: the next edit to the module lapses it and the lint correctly goes stale again, which is the property that keeps this from becoming a standing exemption for the file. No recorded number in this artifact was changed."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
-        "sha256_now": "20a3aeb7c26d6b8705c33976ff78967923bf20c555d5891cb79cab8dbb6e00a7",
-        "acknowledged_on": "2026-08-01",
-        "reason": "The 2026-08-01 win-transition fix adds an OPTIONAL parameter `win_transition=None` to `_transitions_block` / `induce_prompt` / both proposers' `induce`, plus a `_win_transition` field on E3AgentPolicy and one call site passing it. With the parameter absent, `_transitions_block` performs its historical scan of `trans` unchanged, so behaviour can differ ONLY on the live agent's induce call after a level-up. No other code path is reachable from the change.",
-        "evidence": "ARGUED FROM A BYTE-IDENTITY PROOF, NOT FROM A COMPLETED REBUILD -- disclosed rather than implied. A rebuild differential over the six rebuildable artifacts was launched and only the first (experiment_6011) had completed when this was written; that one showed ZERO substantive movement with all 20 differences being provenance bookkeeping a rebuild deletes. For THIS artifact the evidence is instead direct: `induce_prompt` output is BYTE-IDENTICAL to the renderer recovered from git on all six captured games, so any caller that does not supply the new optional parameter produces the same prompt it did before. Supplying it requires a live level-up, which this artifact's producing code path does not perform. Weaker than a completed rebuild and labelled so."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
-        "sha256_now": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
-        "acknowledged_on": "2026-08-01",
-        "reason": "The 2026-08-01 attempt-budget fix adds a DEFAULT-OFF flag, CARNOT_ARC_INDUCE_DEFECT_OWNS_ATTEMPTS. With it unset -- the shipped state -- a defect re-ask consumes an attempt exactly as before and the induce loop is behaviourally identical to the path this artifact was produced under. Only with the flag SET does a defect re-ask grant an extra attempt instead of consuming a content attempt.",
-        "evidence": "PROVEN BY TEST, in the direction that matters for this artifact. tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py asserts BOTH directions: with the flag OFF the prior behaviour reproduces exactly -- including the bug, so a content-failure sequence still yields zero defect re-asks -- and only with it ON does the gate fire. The OFF assertion is the load-bearing one here: it is what makes the shipped default a true no-op rather than an approximation of one. A clean answer is additionally asserted to cost exactly one call in BOTH modes. No rebuild differential was run for this change and none is claimed."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "a04fc14cf08eb6a98d6e0d9239706f17c9d11b6bfb5a0e350937616c8ab9952d",
-        "sha256_now": "e579e667d5b777511c7d01046035726d2ca3878cf94c1855d5741179102407b9",
-        "acknowledged_on": "2026-08-02",
-        "reason": "The 2026-08-02 change to this module is COMMENT-ONLY: 46 added lines, 0 deleted, and 0 added lines that are not a comment. It corrects two stale interim counts in a comment block (\"16 of 20\" -> the final \"17 of 21 / 1 of 22\") and scopes an over-broad disclosure above `_GOAL_PLAIN_REASK_BLOCK`, which claimed all three of its bullets were bootstrap-free when the third is a public-corpus prior about the shape of ARC win conditions. No executable statement, signature, constant or default was added, removed or altered.",
-        "evidence": "PROVEN INERT BY AST IDENTITY, which is stronger than a rebuild-and-diff because it rules the change out at the language level rather than observing that one run did not move. `ast.dump(ast.parse(src))` of this module at HEAD and in the working tree are IDENTICAL (sha256 of the dump 06cba8b110cc97ffc7ca456a9575721b5adc1747d8de5e5638dc583d0b6dbd4e); comments do not survive parsing, so no behaviour reachable from any artifact's script can differ. Verified mechanically in the same step that wrote this entry: the writer asserts AST equality and asserts that the diff contains zero non-comment additions, and refuses to write otherwise."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "e579e667d5b777511c7d01046035726d2ca3878cf94c1855d5741179102407b9",
-        "sha256_now": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
-        "reason": "Adds an OPT-IN goal-predicate dedup to the split-induce path (env CARNOT_ARC_GOAL_DEDUP, DEFAULT OFF). Two pre-existing functions changed -- `LocalGGUFProposer._combine_world_model` and `LocalGGUFProposer.induce` -- and in both every added executable statement is inside an `if _goal_dedup_on():` body or behind `_goal_dedup_on() and ...` short-circuit. Four new module-level helpers are added and are unreachable with the flag unset. With the variable unset the emitted world model is byte-identical to the shipped path, so nothing this artifact measured can move.",
-        "evidence": "Established mechanically, not by reading the diff: `results/arc_goal_predicate_shadowing_20260802/prove_inertness.py` diffs the module against HEAD at AST level and reports `inert_with_flag_unset: true` (`inertness_proof.json`) via three independent checks -- (1) no new executable statement in either changed function lies outside a `_goal_dedup_on()` guard; (2) a least-fixed-point over the call graph shows all four new helpers unreachable with the flag off, modelling `and` short-circuit explicitly; (3) the flag is False when unset and resolves exactly as `value.strip() == '1'`, matching every sibling flag in the module. Corroborated by `tests/python/test_arc_goal_predicate_shadowing.py::test_dedup_off_leaves_the_combined_output_byte_identical`, which pins the flag-off output byte-for-byte, and by 128 passing tests across the induce/world-model/goal suites. `git diff` on the module is 182 insertions / 1 deletion, the single deletion being a replaced docstring line.",
-        "acknowledged_at_commit": "3bee74d85e3fe61e82d74aef1fe0e1dc36c9d4de",
-        "acknowledged_date": "2026-08-02",
-        "why_not_rebuilt": "These artifacts record MEASURED wall-clock timings and live-server witnesses that a rebuild would overwrite with today's numbers; a previous commit did exactly that to four artifacts and 132 timing values had to be restored from git history. Inertness here is established directly and mechanically (see evidence), and the proof script exits non-zero if the change ever stops being inert, so a rebuild would trade recorded facts for a formality. The lint's `rebuild_command` remains recorded for anyone wanting rebuild-strength proof."
-      },
-      {
-        "path": "python/carnot/agentic/arc_executable_world_model.py",
-        "sha256_was": "3f5b46c94a50d0330db28f5732a14fb69e2c02d249c795bdfe2559996f3a79fa",
-        "sha256_now": "0d3f3650248cd8e52bfce8b0656d6f5aed9e278d1e8c1022edc28703ae9d4380",
-        "acknowledged_on": "2026-08-02",
-        "reason": "DOCSTRING-ONLY. The single change to arc_executable_world_model.py in this commit is inside `_goal_prompt_transitions_on.__doc__`: the sentence \"It is exactly as available on a hidden game as on a solved one\" is narrowed, because it was true of the FIELD and untested for the DISTRIBUTION and had propagated into an artifact as a measured result. `git diff --numstat` is 12 insertions / 1 deletion and the deleted line is the tail of that same docstring sentence. The function body (`raw = os.environ.get(...)`; `return bool(raw) and raw.strip() == \"1\"`) is untouched, and no other definition in the module is touched at all.",
-        "evidence": "MECHANICAL, not an argument. Both versions were parsed and EVERY docstring stripped from the AST (Module / FunctionDef / AsyncFunctionDef / ClassDef leading string expressions), then `ast.dump` compared: the docstring-stripped ASTs are IDENTICAL (sha bb71fe38bdc9dd71 on both). A change that cannot alter the stripped AST cannot alter any value any artifact records, short of a caller reading `__doc__` at runtime -- and nothing in this repo reads that attribute. Reproduce: `git show HEAD:python/carnot/agentic/arc_executable_world_model.py` vs the working copy, strip docstrings, compare `ast.dump`.",
-        "note": "Pinned to THIS exact hash, so the next edit to the module lapses this acknowledgement and the lint correctly goes stale again. It is not a standing exemption for the file."
-      }
-    ]
+    "what_this_block_does_and_does_not_certify": "artifact_freshness_lint compares these sha256s against the files on disk, so a later edit to any of them marks this artifact STALE. That is a statement about the AGGREGATION and about the gemma arm, both of which ran against the bytes recorded here. It is NOT a statement about the qwen arm: see code_provenance -- arc_executable_world_model.py was rewritten mid-run, the qwen arm imported the earlier bytes, and those bytes were never snapshotted. A 'fresh' verdict from the lint must not be read as 'both arms ran identical code'. They did not."
   },
   "question": "WHICH INDUCER? base Qwen3.6-27B vs gemma-4-31B-it on world-model induction quality, matched on quantisation (both Q4_K_M, verified from GGUF general.file_type==15), corpus (exp5764's 13 games), mechanism (exp5726.run_reason_cell_budget at budget 16384), repeats (3/game), n_ctx (32768), and card (GPU 1, sequential, one server at a time). Decides which model the ARC induction path should use.",
   "qwen_zero_reason_split": {
@@ -1544,6 +1571,31 @@
     "raw_completions_were_not_retained": "The shards keep only max_raw_completion_len, and `grep '<think'` returns 0 hits in either arm's 780 KB run log. Nothing in the original run's retained evidence can confirm or refute what the flag witnessed -- that gap is real and is not closed retroactively.",
     "reading": "Both models DO produce a real reasoning trace under the shared '/think' prefix -- the server returned non-empty reasoning_content for both ({'qwen27b': 'harness_wrapper', 'gemma31b': 'harness_wrapper'}). So the substance of the fairness argument survives: the prefix is not inert on gemma, and Qwen's overruns are not an artifact of only one model being made to reason. The WORDING is corrected: the tags the detector matched are harness-synthesised, so 'gemma emits reasoning tags' was wrong about the mechanism even where the conclusion holds. n=1 cell per arm on one game, run after the arms -- this establishes what the flag witnesses, it does not re-measure the arms.",
     "tags_can_be_harness_inserted": "LocalGGUFProposer._chat_complete_request wraps any server-split reasoning_content in LITERAL <think></think> before the detector sees it, so True can mean 'the server split out reasoning' rather than 'the model emitted a tag'."
+  },
+  "rebuild_note_20260731": "Rebuilt 2026-07-31 to clear artifact_freshness_lint after the live generator pin moved to QAT. EXACTLY ONE numeric field changed: aggregation_wall_s 213.187 -> 216.672, which is the aggregation run's own wall clock, not a measured result. Every headline number is unchanged and honest_verdict is byte-identical. The rebuild DROPPED the pre-existing `original_timings_superseded_by_rebuild` block, which records an EARLIER rebuild's audit trail; it has been restored by hand here. A rebuild that quietly deletes a prior correction record is the never-prune failure this project keeps finding executed by machine -- noted rather than silently accepted.",
+  "rebuild_note_20260731_layer_split": {
+    "keys_restored_after_wholesale_rewrite": [
+      "original_timings_superseded_by_rebuild",
+      "rebuild_note_20260731"
+    ],
+    "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired.",
+    "substantive_value_names": [
+      "code_provenance.dependencies_at_build_time[0].mtime_utc",
+      "code_provenance.diff_stat_vs_head_for_declared_deps",
+      "code_provenance.git_head"
+    ],
+    "substantive_values_changed": 3,
+    "values_changed_total": 6,
+    "why_rebuilt": "artifact_freshness_lint flagged this STALE because python/carnot/agentic/arc_executable_world_model.py drifted when multi-GPU layer split was wired into the live generator (CARNOT_ARC_GENERATOR_CUDA_GPU gained a comma-list form). Rebuilt rather than acknowledged: the lint prefers a rebuild wherever one is possible, since it proves inertness by construction."
+  },
+  "rebuild_note_20260802": {
+    "record_integrity_defect_found_by_this_rebuild": {
+      "action_taken": "all of them were RESTORED into this rebuild by hand (never-prune). No prior number or note was lost.",
+      "what": "the builder REGENERATES the artifact from scratch, so it silently DROPS any block a previous session hand-added after a prior rebuild. This run would have deleted 4 historical blocks: original_timings_superseded_by_rebuild, rebuild_note_20260731, rebuild_note_20260731_layer_split, provenance.freshness_acknowledgements.",
+      "why_it_matters": "this is the same class as the 2026-07-29 test-suite incident -- a green, mandated, apparently-routine run rewriting the research record. The freshness lint is right to force the rebuild; the BUILDER should carry forward pre-existing narrative keys rather than requiring the operator to notice. Filed as a defect, not fixed here (fixing a builder while using it to clear a gate on unrelated work is how the two get confused)."
+    },
+    "which_numbers_moved": "NONE. A full leaf-diff of the rebuild against the committed version gave 15 differing leaves and not one is a scientific quantity: aggregation_wall_s 218.822 -> 213.619 (harness wall-clock), and 14 provenance leaves (sha256, mtime, git_head, dirty_vs_head, diff_stat). honest_verdict and acceptance_gate_passed are byte-identical, and every coverage/mean/p figure is unchanged -- as expected, because this builder only AGGREGATES already-collected cells and the changed field cannot alter a cell recorded before it existed.",
+    "why_rebuilt": "artifact_freshness_lint REFUSED a commit because this artifact declares python/carnot/agentic/arc_actions_to_progress.py as a dependency and that file changed (a new REPORTING-ONLY field, ProgressResult.explored_out)."
   },
   "reproducibility_checksum": "sha256:9b05fb5975dd761704eaf3b42fc39b533164553a07a9904f213c4860c4c9cfd5",
   "requirements": [
@@ -2022,48 +2074,5 @@
     "tr87": 12,
     "tu93": 12,
     "vc33": 3
-  },
-  "original_timings_superseded_by_rebuild": {
-    "why_this_block_exists": "the values below were MEASURED on the original run and were overwritten in place when this artifact was rebuilt in 0da7f75ad to re-pin its code provenance. The rebuild changed nothing substantive -- verified here by asserting that every differing field is a timing or a provenance hash -- but a wall-clock number is not reproducible, so overwriting it destroys the record of what the first run actually cost. Restored per the standing never-prune rule.",
-    "superseded_at_commit": "0da7f75ad",
-    "n_timing_fields_restored": 1,
-    "original_timings": {
-      "aggregation_wall_s": 211.476
-    },
-    "original_provenance_pins": {
-      "code_provenance.dependencies_at_build_time[0].mtime_utc": "2026-07-29T23:54:44Z",
-      "code_provenance.dependencies_at_build_time[0].sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
-      "code_provenance.dependencies_at_build_time[1].dirty_vs_head": true,
-      "code_provenance.dependencies_at_build_time[1].mtime_utc": "2026-07-29T23:40:51Z",
-      "code_provenance.dependencies_at_build_time[1].sha256": "1f9c406c960d0484d0b09979c2e1df17be0b230bf4948a96466ffb2e8dc015c0",
-      "code_provenance.diff_stat_vs_head_for_declared_deps": "python/carnot/agentic/arc_actions_to_progress.py   | 124 ++++++-\n .../carnot/agentic/arc_executable_world_model.py   | 372 +++++++++++++++++++--\n 2 files changed, 472 insertions(+), 24 deletions(-)",
-      "code_provenance.git_head": "aa8a38e315947e47bb20e8b07f77b2c39a82346f",
-      "provenance.code[0].sha256": "3f7da9b896723beabc385bdc9d591f6b24e5ac59134b1a0bca520d27f8ce81d8",
-      "provenance.code[1].sha256": "1f9c406c960d0484d0b09979c2e1df17be0b230bf4948a96466ffb2e8dc015c0"
-    },
-    "current_values_are_unchanged_by_this_block": true,
-    "the_preferred_path_next_time": "the same commit that caused this added VERIFIED-INERT acknowledgements to the artifact-freshness lint, which pin a new upstream hash plus a reason WITHOUT rerunning. When the only drift is timing, acknowledge rather than rebuild.",
-    "verification": {
-      "fields_differing_between_pre_rebuild_and_now": 10,
-      "all_differences_are_timing_or_provenance": true,
-      "substantive_differences": 0,
-      "fields_dropped_by_the_rebuild": 0
-    }
-  },
-  "rebuild_note_20260731": "Rebuilt 2026-07-31 to clear artifact_freshness_lint after the live generator pin moved to QAT. EXACTLY ONE numeric field changed: aggregation_wall_s 213.187 -> 216.672, which is the aggregation run's own wall clock, not a measured result. Every headline number is unchanged and honest_verdict is byte-identical. The rebuild DROPPED the pre-existing `original_timings_superseded_by_rebuild` block, which records an EARLIER rebuild's audit trail; it has been restored by hand here. A rebuild that quietly deletes a prior correction record is the never-prune failure this project keeps finding executed by machine -- noted rather than silently accepted.",
-  "rebuild_note_20260731_layer_split": {
-    "why_rebuilt": "artifact_freshness_lint flagged this STALE because python/carnot/agentic/arc_executable_world_model.py drifted when multi-GPU layer split was wired into the live generator (CARNOT_ARC_GENERATOR_CUDA_GPU gained a comma-list form). Rebuilt rather than acknowledged: the lint prefers a rebuild wherever one is possible, since it proves inertness by construction.",
-    "substantive_values_changed": 3,
-    "substantive_value_names": [
-      "code_provenance.dependencies_at_build_time[0].mtime_utc",
-      "code_provenance.diff_stat_vs_head_for_declared_deps",
-      "code_provenance.git_head"
-    ],
-    "values_changed_total": 6,
-    "keys_restored_after_wholesale_rewrite": [
-      "original_timings_superseded_by_rebuild",
-      "rebuild_note_20260731"
-    ],
-    "known_defect_in_this_script": "The rebuild REWRITES the artifact wholesale rather than merging, so it drops hand-added blocks. Restored here: ['original_timings_superseded_by_rebuild', 'rebuild_note_20260731']. Same never-prune-by-machine class as the 2026-07-29 test-suite incident; recorded, not silently repaired."
   }
 }

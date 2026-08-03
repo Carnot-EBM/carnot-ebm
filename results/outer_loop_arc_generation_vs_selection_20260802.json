@@ -2954,5 +2954,72 @@
    "available": false,
    "note": "deliberately NOT required: no engine was regenerated, so no GGUF, no CUDA, and no llama-server was started. Nothing to reap."
   }
- ]
+ ],
+ "CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW": {
+  "status": "adversarial review returned holds=true. The verdict GENERATION, NOT SELECTION stands on three independent legs, of which only one is affected. TWO corrections are load-bearing: the rule-of-three was computed at the WRONG CLUSTERING LEVEL, and the stateless-ceiling control does NOT rule out distribution shift.",
+  "never_prune": "every original bound and count is left exactly where it was.",
+  "G1_rule_of_three_computed_at_the_wrong_level": {
+   "defect": "the pre-registration declares clustering unit = GAME ('engines within a game share a window, a level and a layout and are NOT independent') and then pre-states an ENGINE-level rule of three. Those are inconsistent; the engine-level bound is only valid under an independence the run itself denies.",
+   "superseded_and_corrected": [
+    {
+     "where": "A_tail hidden-state trust, 0 clearing",
+     "engine_level_reported": 0.01191,
+     "n_engines": 250,
+     "game_clustered_correct": 0.13911,
+     "n_games": 20
+    },
+    {
+     "where": "LIVE hidden-state branch, 0 clearing",
+     "engine_level_reported": 0.1273,
+     "n_records": 22,
+     "game_clustered_correct": 0.2384,
+     "n_games": 11
+    },
+    {
+     "where": "LIVE plain branch, 0 clearing",
+     "engine_level_reported": 0.1015,
+     "n_records": 28,
+     "game_clustered_correct": 0.19264,
+     "n_games": 14
+    }
+   ],
+   "magnitude": "up to ~12x overstated (1.19% -> 13.9%).",
+   "verified": "recomputed this session from 1 - 0.05**(1/n); all three clustered bounds reproduce the review's figures exactly.",
+   "conclusion_survives": "yes -- all three clustered bounds still exclude a rate that would explain a 0-of-136 live outcome as sampling luck.",
+   "what_was_done_RIGHT": "the per-game COUNT discipline was followed everywhere (every gate table cell reports 'N engines / M games'). Only the interval was mis-levelled."
+  },
+  "G2_withdraw_the_distribution_shift_exclusion": {
+   "withdrawn": "'a MEASURED stateless ceiling of 1.0 rules out distribution shift as the excuse' (decision point #1).",
+   "why": "the oracle is a modal (grid, action) -> next_grid lookup built FROM the split it is graded on. The harness source says so itself: 'oracle is built per-split: it must see the rows it is graded on, which is exactly why it is an INSTRUMENT CHECK and not a result' (score_worker.py:142). The CODE was honest; the WRITE-UP promoted an instrument check to a result.",
+   "what_the_ceiling_DOES_establish": "the split is stateless-CONSISTENT -- no (grid, action) key maps to two successors -- so hidden-state non-determinism is ruled out. At 111 distinct keys in 120 rows a lookup table scoring 1.0 exists near-tautologically.",
+   "what_it_does_NOT_establish": "that a GENERALISING stateless rule exists over that distribution. The review measured ZERO shared state-action keys between C_fresh120 and the induction window on 5 games, i.e. the fresh split is entirely OUT-OF-WINDOW -- which IS distribution shift.",
+   "restated_claim": "the 0-of-15 collapse is CONFOUNDED with out-of-window shift; split C's PRE-REGISTERED ambiguity therefore STANDS rather than having been resolved.",
+   "why_the_verdict_still_holds": "A_tail is adjacent-row, in-window and provably held out (0/250 trust, 19 of 20 games at exactly 0.0 change_accuracy), and the LIVE set is 0/22 and 0/28 with 16/22 failing nondegeneracy at any threshold. Neither is exposed to offline distribution shift. And tn36 is a POSITIVE result ON the shifted split, which shift makes stronger, not weaker.",
+   "downgraded_phrasing": "'the strongest selection case was tested and KILLED' -> 'tested and NOT RESCUED, on a split that is out-of-window'."
+  },
+  "G3_denominator_and_labelling_corrections": {
+   "parse_failures": "'7 of 48 best-of-N candidates are not valid Python' inverts the run's own missing-is-not-zero rule. Only 40 candidates were ever LOADED -- ft09's 8 were dropped on a 2700s budget and never parse-tested. Honest figure: 7 of 40 TESTED (17.5%), with 8 UNTESTED. Confirmed against corpora_scored.statuses (unloadable:SyntaxError 2 + unloadable:IndentationError 5 = 7).",
+   "corpora_count": "'250 distinct saved engine bodies (4 corpora)' is wrong on the corpora count: the 250 A_tail rows are exactly TWO corpora (inert 135 + objperc 115). bestofn and e3store contribute ZERO rows to the primary split.",
+   "mixed_units": "corpora_scored mixes units in one dict: objperc 116 / inert 151 / e3store 27 are ENUMERATED engines, bestofn 58 is SCORED ROWS. Distinct engines actually scored: 115 / 135 / 25 / 33.",
+   "cell_ids_are_not_unique_keys": "both objperc and inert use <game>__r<n>__<arm>, so e.g. TWO different engines are called 'ls20__r0__on'. The mis-specification exemplar must be qualified by corpus to be reproducible. The sha256-keyed dedup was correct; only the reported identifiers are ambiguous."
+  },
+  "G4_missingness_is_systematic": {
+   "finding": "all 52 live margins come from exactly TWO arms (llm_on_fix_cellrecall 26 + llm_on_fix_diag 26). The missing 84 are the other four arms.",
+   "consequence": "the live bounds describe those two arms, not the 136. Direction is FAVOURABLE: 42 of the 84 come from arms the gate-anatomy artifact already labelled generator-broken.",
+   "verified": "recounted this session -- 28 plain records are 14 from each of the two arms; 22 hidden-state records likewise."
+  },
+  "G5_A_tail_is_the_split_RULE_not_the_live_corpus": {
+   "correction": "'A_tail is the split the live gate itself scores' conflates rule with corpus. select_trusted_world_model applies _split_prefix_heldout to _active_transitions() (stalled LIVE rows); A_tail applies the same RULE to a curated level-up-straddling window from a WINNING trajectory produced by a hand-registered GameAdapter. Correct phrasing: 'the same split rule the live gate uses, applied to a different and EASIER corpus.'",
+   "purity_is_true_but_fragile": "under the shipped default k=None a caller that passes the FULL window to induce_prompt leaks 100% of the held-out tail into the prompt. This run is clean only because BOTH scored corpora pre-split. exp6018 -- cited as the prior art being reproduced -- does pass the full window. Any future scoring of an exp6018-shaped corpus against this split is CONTAMINATED."
+  },
+  "G6_tn36_causal_framing_softened": "'tn36 proves it is about the GAMES, not the method' is an n=1 causal claim. The identical data supports 'the method succeeds only where the dynamics fall inside the narrow class this generator can express' -- a statement about the METHOD. Operational consequence unchanged; the headline should report the fact (1 game of 23 clears; 19 of 20 at exactly 0.0) without asserting the direction.",
+  "what_did_NOT_change": [
+   "0 of 250 A_tail engines clear the hidden-state trust gate; max 0.4843.",
+   "LIVE: 0 of 28 plain and 0 of 22 hidden-state clear; 16 of 22 at correct_changed_cells 0.",
+   "0 of 15 high-recall high-precision engines survive re-scoring on fresh rows.",
+   "tn36 is a genuine existence proof: 6 of 8 candidates at change_accuracy 1.0000, precision 1.0000, on BOTH the proven 17-row split and 120 fresh rows, 6 distinct sha256.",
+   "the exact-match gate IS mis-specified (cell_recall 0.9615 at precision 1.0 scores identically to `return grid`), and relaxing it is still not the lever.",
+   "35 fresh-split engines clear the hidden-state quantity by SCRIBBLING (consistency 1.0 at precision 0.1017), so the threshold must not simply be lowered."
+  ]
+ }
 }

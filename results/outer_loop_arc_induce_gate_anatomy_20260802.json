@@ -1181,5 +1181,75 @@
  "honest_verdict": "complete_gate_is_binding_and_reached_but_rejections_are_not_near_misses",
  "measurement_wall_s": 200.326,
  "duration_s": 200.326,
- "reproducibility_checksum": "c7714a2ab4df265b3794d19ca09ca5c4b726fc6b1b0b0f2a12a7e97b1594671a"
+ "reproducibility_checksum": "c7714a2ab4df265b3794d19ca09ca5c4b726fc6b1b0b0f2a12a7e97b1594671a",
+ "CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW": {
+  "status": "adversarial review returned holds=false; SEVEN corrections applied. The headline (gate is binding; 136 attempts, 0 planned; rejections are not near-misses ON THE SHIPPED METRIC) SURVIVES. The inference that a threshold relaxation is therefore not the lever DOES NOT survive on the cell-recall axis.",
+  "never_prune": "Every superseded number is left in place in the sections below. Each entry here names the field it corrects and why.",
+  "C1_the_6_to_7x_gap_was_wrong_by_~5x": {
+   "superseded_prose": "PART_B.FINDING_...why_this_bounds_a_threshold_relaxation said 'plain-branch cell_recall max 0.0476 over 14 recorded margins', a claimed ~6-7x gap vs the structural fit's ~0.31.",
+   "correct_value": 0.2474,
+   "correct_n": 28,
+   "where": "tu93, arm llm_on_fix_diag, llm_on_row_valid=True",
+   "why_the_old_number_was_wrong": "0.0476 is the max WITHIN ONE ARM (llm_on_fix_cellrecall, n=14). That restriction is indefensible: arc_competition_agent.py:6671 states verbatim 'Both metrics are recorded on the attempt for diagnosis regardless of which one gates', so all 28 plain-branch records are the denominator.",
+   "self_contradiction_note": "The artifact's OWN field PART_A.gate_margins.plain_branch.verify_cell_recall.max already said 0.2474. Only the prose said 0.0476. The data shipped correct and the sentence did not.",
+   "like_for_like_on_tu93": {
+    "live_llm_engine": 0.2474,
+    "structural_nav_fit_in_sample": [
+     0.2752,
+     0.353,
+     0.311
+    ],
+    "ratio": "1.1-1.3x, not 6-7x"
+   },
+   "independently_recounted": "yes -- 28 records re-extracted from results/first_win_llm_on_20260727/cells by this session, max 0.2474 confirmed."
+  },
+  "C2_withdraw_the_threshold_relaxation_inference_on_the_cell_recall_axis": {
+   "withdrawn": "'So a threshold relaxation is not the lever', insofar as it rests on cell_recall.",
+   "why": "a cell_recall threshold near 0.19-0.20 would admit THREE live plain-branch engines: tu93 0.2474, ls20 0.2208, sb26 0.1985 (all llm_on_fix_diag, all valid rows).",
+   "what_SURVIVES_unchanged": [
+    "On the EXACT metric a relaxation cannot admit the structural fit: its exact score is 0.0000, not 0.4. Nothing between 0.0 and 0.5 separates it from `return grid`.",
+    "On the HIDDEN-STATE branch no relaxation short of 0.178 admits any of the 22 live records, AND 16 of 22 sit at correct_changed_cells == 0, failing the nondegeneracy conjunct at ANY threshold. Independently recounted: Counter({0:16, 12:2, 213:1, 1:1, 672:1, 17:1})."
+   ]
+  },
+  "C3_the_delivery_proof_did_not_cover_the_branch_a_HIDDEN_game_uses": {
+   "finding": "HIDDEN_STATE_GAME_IDS (arc_world_model_trust_energy.py:26) is a HARDCODED 11-entry PUBLIC-game tuple. A hidden Kaggle game id is not in it, so a hidden game ALWAYS takes the PLAIN branch.",
+   "consequence_for_PART_B": "all 14 probe rows re-read: every gate_passed=True row is dc22, a HIDDEN-STATE row. All 6 plain-branch (tu93) rows were rejected. So as published, the plain-branch post-gate channel was never observed open.",
+   "repair_run_by_this_session": {
+    "method": "inject a lookup-oracle engine (memorises the agent's OWN collected transitions, replays them exactly) on tu93 = plain branch; instrument the CALLEE plan_in_model and read the full caller chain off inspect.stack().",
+    "result_unreachable_goal": "verify_accuracy 1.0 -> plain gate PASSED -> post-gate call site REACHED, chain '_call_plan_in_model:5268 <- _induce_and_plan:6781'. Planner returned empty, as designed for an unreachable goal. The plain-branch post-gate channel IS open.",
+    "result_reachable_goal": "plan INSTALLED (len 3) on all 3 seeds, but from a DIFFERENT site: '_call_plan_in_model:5268 <- _wrapped:5272 <- execute_bounded_llm_reinduction:1888 <- _induce_and_plan:6352'.",
+    "identity_control": "verify_accuracy 0.0, rejected, post-gate site never reached, on all 3 seeds.",
+    "NEW_MECHANISM_NEITHER_THE_ARTIFACT_NOR_THE_REVIEW_STATED": "when the reinduction loop finds a plan, it installs it and STAGE 4 NEVER RUNS -- verify_accuracy is None on those attempts. That is MISSING, not zero, and it is a second and cleaner mechanism for the stale-label finding in PART_A than the one recorded there. STAGE 4 is reached only when the loop fails to plan.",
+    "honesty_bound": "the injected engine is an ORACLE by construction. This proves the CHANNEL is open on the plain branch; it does NOT size the pass region and is not a claim any generator can produce such an engine."
+   }
+  },
+  "C4_the_census_is_PUBLIC_games_only_report_both_denominators": {
+   "hidden_state_decided": "43 of 136 (34 of 88 valid rows) were decided by a branch that cannot fire on a hidden game.",
+   "hidden_game_relevant_subset": "the PLAIN branch alone: 63 of 136, or 43 of 88 valid rows.",
+   "verified": "branch partition cross-tabulated 25/25 games with zero violations; all 22 hidden-state margin records are HIDDEN_STATE_GAME_IDS games, all 28 plain records are not."
+  },
+  "C5_the_plain_gate_is_scored_IN_SAMPLE": {
+   "finding": "on the single-shot path induce() is given active_transitions (arc_competition_agent.py:6497) and WorldModelVerifier is then constructed on the SAME active_transitions (:6666). The engine is graded on the rows it was induced from.",
+   "contradicts": "WorldModelVerifier's own class docstring: 'a proposed model only earns trust by predicting transitions it was NOT hand-fit to'.",
+   "direction": "makes every live plain-branch number an UPPER BOUND, which STRENGTHENS the generation-wall reading rather than weakening it."
+  },
+  "C6_two_factual_imprecisions": {
+   "a_the_44th_hidden_state_attempt": "labelled 'proposer_failed_or_missing_root', not 'proposer_failed'. Verified: cn04's non-gate skip is the former.",
+   "b_the_plain_gate_is_NOT_over_ALL_transitions": "WorldModelVerifier.score explicitly EXCLUDES level-up rows ('if t.level_after > t.level_before: continue', arc_executable_world_model.py:1640). Immaterial pre-first-win, but 'ALL' is wrong.",
+   "c_found_by_this_session_not_by_the_review": "PART_A's 'all 30 non-gate skips live in the three long tails' is off by two: 28 of 30 do (lp85 12, vc33 12, sp80 4), but cn04 contributes 1 and ft09 contributes 1, and neither is a tail game."
+  },
+  "C7_heldout_purity_of_the_structural_fit": {
+   "claim": "reviewer fit InducedNavWorldModel on transitions[:60] and scored the disjoint [60:], getting cell_recall 0.1688/0.3935/0.2683 (exact still 0.0) vs in-sample 0.2752/0.3530/0.3110 -- i.e. genuine generalisation, not memorisation.",
+   "status": "REVIEWER-MEASURED, NOT independently re-run by this session. Recorded as such rather than adopted as if reproduced."
+  },
+  "what_did_NOT_change": [
+   "136 attempts, 0 planned -- recounted from raw cells, exact.",
+   "census 43/63/13/6/10/1 and the 88-valid-row subset 43/34/3/8 -- exact.",
+   "per-game distribution min 4 / q1 4 / median 4 / q3 4 / max 18, tails lp85 14 sp80 16 vc33 18.",
+   "7 of the 10 no_reachable_plan entries are vc33 alone.",
+   "the branch partition is HIDDEN_STATE_GAME_IDS, verified 25 of 25.",
+   "hidden-state margins: n=22, median 0.0000, q3 0.0275, max 0.17806, 0 at or above 0.5.",
+   "the mislabel mechanism: attempt['skipped'] is never rewritten after the plain gate (last write at :6713), so a gate-clearing attempt keeps the stall loop's stale label."
+  ]
+ }
 }

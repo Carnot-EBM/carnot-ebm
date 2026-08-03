@@ -307,3 +307,106 @@ def test_frozen_gemma_pin_arm_differs_from_frozen_only_in_think_prefix():
     assert a["no_think_prefix"] == "/no_think\n"
     for k in ("codeonly", "max_tokens", "tries", "retrieval", "static"):
         assert a[k] == b[k], k
+
+
+# --- explored_out: frontier exhaustion must be recorded, not silently read as a saving ---
+# Origin (2026-08-02): a 978-action DROP was read as the largest efficiency win of a session
+# when it was one game's frontier COLLAPSING (states 142 -> 56, progress 0.667 -> 0.333). The
+# cell row recorded `timed_out` and `hit_induction_cap` but had no field for "the explorer ran
+# out of frontier", so an early stop for that reason was indistinguishable from an ordinary
+# completion that simply used fewer actions. These cover BOTH directions plus the invariance
+# that matters: turning the condition on must not change the trajectory.
+
+
+class _FakeExplorer:
+    def __init__(self, explored_out):
+        self.explored_out = explored_out
+
+
+class _FakePolicy:
+    """Minimal stand-in for E3AgentPolicy: ends the run immediately via is_done, so the
+    recorded trajectory is fully determined and any difference between the two cells is
+    attributable to the explored_out flag alone."""
+
+    def __init__(self, explored_out, *a, **k):
+        self.explorer = _FakeExplorer(explored_out)
+        self.induction_attempts: list = []
+        self.phase = None
+        self.transitions: list = []
+
+    def is_done(self, frames, latest):
+        return True
+
+    def next_move(self, frames, latest):  # pragma: no cover - is_done ends the loop first
+        raise AssertionError("loop should have stopped at is_done")
+
+
+def _run_with_explored_out(monkeypatch, explored_out):
+    from carnot.agentic import arc_competition_agent as agent
+    from carnot.agentic import arc_solver_kit as kit
+
+    monkeypatch.setattr(agent, "E3AgentPolicy", lambda *a, **k: _FakePolicy(explored_out, *a, **k))
+    monkeypatch.setattr(agent, "_level_of", lambda latest: 0)
+
+    class _Env:
+        def reset(self, *a, **k):
+            return None
+
+    class _Arc:
+        def open_scorecard(self):
+            return "sc"
+
+        def make(self, *a, **k):
+            return _Env()
+
+    monkeypatch.setattr(kit, "offline_arcade", lambda *a, **k: _Arc())
+    return atp.run_bounded_progress(
+        "tu93", "frozen", proposer=SimpleNamespace(), seed=0, budget=2, wall_s=30.0
+    )
+
+
+def test_explored_out_is_recorded_true_when_the_explorer_exhausted(monkeypatch):
+    r = _run_with_explored_out(monkeypatch, True)
+    assert r.explored_out is True
+    assert r.to_row()["explored_out"] is True
+
+
+def test_explored_out_is_recorded_false_when_the_explorer_did_not(monkeypatch):
+    r = _run_with_explored_out(monkeypatch, False)
+    assert r.explored_out is False
+    assert r.to_row()["explored_out"] is False
+
+
+def test_explored_out_is_distinct_from_timed_out_and_induction_cap(monkeypatch):
+    """The whole point: an explored-out cell must not be reported as an ordinary completion.
+    Both other termination flags stay False, so the three causes stay separable."""
+    r = _run_with_explored_out(monkeypatch, True)
+    assert r.explored_out is True
+    assert r.timed_out is False
+    assert r.hit_induction_cap is False
+
+
+def test_explored_out_does_not_change_the_trajectory(monkeypatch):
+    """REPORTING-ONLY guard: the flag is read after the action loop, never by it. Every
+    behavioural field must be identical between the two cells."""
+    on = _run_with_explored_out(monkeypatch, True)
+    off = _run_with_explored_out(monkeypatch, False)
+    for f in (
+        "total_actions",
+        "action_trace",
+        "noop_frac",
+        "revisit_frac",
+        "levels_gained",
+        "reached_level",
+        "solved",
+        "timed_out",
+        "hit_induction_cap",
+        "n_inductions",
+    ):
+        assert getattr(on, f) == getattr(off, f), f
+
+
+def test_explored_out_defaults_false_for_callers_that_omit_it():
+    """`_mk` above constructs ProgressResult without the field; a non-defaulted field would
+    have broken every existing caller silently at import time."""
+    assert _mk("g", 0, "frozen", 0.0).explored_out is False
