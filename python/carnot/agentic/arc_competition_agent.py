@@ -106,6 +106,12 @@ from carnot.agentic.arc_world_model_trust_energy import (
     WorldModelCandidate,
     select_trusted_world_model,
 )
+from carnot.agentic.arc_world_model_trust_energy import (
+    cegis_accept_split_enabled as _cegis_accept_split_enabled,
+)
+from carnot.agentic.arc_world_model_trust_energy import (
+    split_refinement_acceptance as _split_refinement_acceptance,
+)
 
 REPO = Path(__file__).resolve().parents[3]
 
@@ -6494,9 +6500,23 @@ class E3AgentPolicy:
             _induce_kwargs: dict[str, Any] = {}
             if _supply_win_transition_enabled():
                 _induce_kwargs["win_transition"] = self._win_transition
+            # REQ-ARC-WMTE-6090 (default OFF): THIS is the induce-prompt half of the CEGIS
+            # purity leak, and it is on the DEFAULT branch -- the `execute_bounded_llm_reinduction`
+            # branch above runs only for a level-up reinduction, everything else lands here.
+            # `active_transitions` goes to the proposer WITH the observed next state of every row,
+            # and then `select_trusted_world_model(active_transitions, ...)` a few dozen lines
+            # below grades acceptance on the tail of that SAME list. So the rows that decide
+            # whether the induced engine is trusted were shown to the model, with answers, in the
+            # prompt that produced it. Withholding the reserved acceptance block is the only thing
+            # that makes the gate downstream mean anything; the split is computed by the same
+            # function `select_trusted_world_model` uses, so the two cannot disagree about which
+            # rows are reserved.
+            _induce_rows = active_transitions
+            if _cegis_accept_split_enabled():
+                _induce_rows = _split_refinement_acceptance(active_transitions).refinable
             ok, _ = self._proposer().induce(
                 self.short,
-                active_transitions,
+                _induce_rows,
                 self.cell,
                 **_induce_kwargs,
             )

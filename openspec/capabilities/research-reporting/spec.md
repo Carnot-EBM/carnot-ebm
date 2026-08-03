@@ -47508,3 +47508,332 @@ not labeled as live LLM inference.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5919 | Implemented (`python/carnot/experiment_5919_v526_source_delta_ingestion.py`, `results/experiment_5919_v526_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_5919_v526_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5961: V528 Transition Archives Only Activated V527 Identities
+
+The Exp5961 transition workflow SHALL archive milestone `2026.07.527` into
+`2026.07.528` by selecting exactly the six conductor-activated `.527`
+identities Exp5932 through Exp5937 and their declared deliverable paths:
+`results/experiment_5932_transition_v527.json`,
+`results/experiment_5933_aggregation_substrate_qa_repair.json`,
+`results/experiment_5934_v527_source_delta_ingestion.json`,
+`results/experiment_5935_non_pruning_atomic_constraint_support.json`,
+`results/experiment_5936_sota_atomic_support_union_ab.json`, and
+`results/experiment_5937_excluded_pool_coverage_audit.json`. Evidence SHALL be
+resolved only by `(milestone, task_id, declared_deliverable)`. Numeric-prefix
+substitution, same-number aliases, title inference, source-file inference,
+completion-history `result` strings, or downstream gate inference SHALL NOT
+count as terminal evidence.
+
+The workflow SHALL preserve the six terminal classes independently and without
+outcome laundering: Exp5932 SHALL remain complete, Exp5933 SHALL remain
+complete-partial, Exp5934 SHALL remain complete-null, Exp5935 SHALL remain
+complete-ready, Exp5936 SHALL remain retired, and Exp5937 SHALL remain
+gate-blocked. Exp5937's missing result artifact SHALL NOT be converted into an
+execution failure when the conductor log records a preemptive gate block.
+
+The workflow SHALL distinguish the older unactivated V527 design reservations
+Exp5938 through Exp5943 from activated `.527` results. Those identities SHALL
+be recorded as planned-but-unactivated reservations and SHALL NOT be fabricated
+as completed, missing, failed, skipped, or gate-blocked `.527` tasks.
+
+The workflow SHALL parse the active roadmap, optionally parse
+`research-roadmap-next.yaml` when present, parse `research-complete.yaml`,
+parse `ops/exclusion_manifest.yaml`, read `ops/conductor-log.md` and
+`ops/known-issues.md`, inventory root-level clutter by exact filename, hash
+protected files, and hash every present declared `.527` deliverable before
+emitting the artifact. It SHALL run or ingest fresh adversarial verifier
+receipts for every present exact declared deliverable. It SHALL reuse the
+Exp5933 aggregation substrate classifier by requiring aggregation artifacts to
+be clean under `scripts/adversarial_verify.py` while preserving genuine
+warnings and failures on non-aggregation artifacts.
+
+The workflow SHALL disclose inherited global test, spec-coverage, and
+root-clutter debt by exact node or file identity and SHALL gate only on deltas:
+`global_suite_failure_delta <= 0`, `global_spec_gap_delta <= 0`, and
+`root_clutter_delta <= 0`. A false global-zero gate SHALL NOT be used.
+
+The workflow SHALL append the exact `.527` milestone block to
+`research-complete.yaml` at most once only when an exact `.527` milestone block
+is absent. Existing duplicate completion history SHALL be measured by canonical
+task signature and SHALL NOT be amplified. The bare
+`duplicate_history_amplification_count` SHALL be `0` for a valid transition
+artifact.
+
+The workflow SHALL scan active and staging roadmaps, completion history,
+proposals, exclusions, results, Python modules, tests, known allocations, and
+outer-loop artifacts for bare Exp5961 through Exp5973 references. Only the
+active `.528` roadmap allocation, the vNEXT proposal allocation, Exp5961-owned
+implementation, tests, spec, and result paths, and exact outer-loop IDs
+Exp5950 and Exp5960 SHALL be allowed. `next_range_collision_count` SHALL be a
+bare integer; it SHALL equal `0` for a completed transition and any unowned
+bare Exp5961 through Exp5973 reference SHALL produce a terminal `blocked:`
+artifact rather than a fabricated collision-free claim.
+Transient `ops/.test_suite_mutation_runs/` guard logs SHALL NOT count as
+allocation-surface collisions because they are validation byproducts, not
+roadmap, completion, proposal, exclusion, result, Python, test, known-allocation,
+or outer-loop artifact surfaces.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`unactivated_reservation_receipt`, `exact_terminal_classification`,
+`adversarial_verifier_receipts`, `inherited_debt_baselines_and_deltas`,
+`research_complete_append_count`, `duplicate_history_amplification_count`,
+`next_task_range`, `next_range_collision_count`,
+`outer_loop_id_separation_receipt`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. `inference_substrate` SHALL
+be `aggregation_from_upstream_artifacts`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "report the actual transition state and every checked prerequisite."
+- `preconditions_checked`: principle "report the actual transition state and every checked prerequisite."
+- `milestone_transition`: principle "only the six conductor-activated identities and their exact paths define `.527`."
+- `activated_task_and_deliverable_matrix`: principle "only the six conductor-activated identities and their exact paths define `.527`."
+- `unactivated_reservation_receipt`: principle "planned but unactivated Exp5938-Exp5943 are reservations, never fabricated outcomes."
+- `exact_terminal_classification`: principle "preserve each terminal class independently using fresh exact-path verification."
+- `adversarial_verifier_receipts`: principle "preserve each terminal class independently using fresh exact-path verification."
+- `inherited_debt_baselines_and_deltas`: principle "inherited global debt may not be hidden or amplified and is not required to be zero."
+- `research_complete_append_count`: principle "append at most once and require zero duplicate amplification."
+- `duplicate_history_amplification_count`: principle "append at most once and require zero duplicate amplification."
+- `next_task_range`: principle "only bare zero collisions authorize Exp5961-Exp5973."
+- `next_range_collision_count`: principle "only bare zero collisions authorize Exp5961-Exp5973."
+- `outer_loop_id_separation_receipt`: principle "Exp5950/5960 and their code/results are out of scope and immutable."
+- `docs_reconciled`: principle "update only transition-owned internal ledgers and preserve protected/unrelated state."
+- `protected_files_unchanged`: principle "update only transition-owned internal ledgers and preserve protected/unrelated state."
+- `duration_s`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `inference_substrate`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `test_commands`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `test_exit_codes`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `reproducibility_checksum`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `honest_verdict`: principle "use a `complete:` or `blocked:` prefix."
+
+#### SCENARIO-REPORT-5961-ACTIVATED-MATRIX: V527 Archive Uses Six Declared Deliverables Only
+
+**Given** the active `.528` roadmap names Exp5961 as the transition task
+**And** the conductor log records `.527` activation with six queued tasks
+**When** the Exp5961 transition builds its archive matrix
+**Then** it records exactly Exp5932 through Exp5937, uses each exact declared
+deliverable path, records Exp5937 as an absent conductor gate block, and does
+not use numeric-prefix aliases, completion-history `result` strings, or
+unactivated reservation IDs as evidence.
+
+#### SCENARIO-REPORT-5961-TERMINAL-CLASSES: V527 Terminal Outcomes Stay Disjoint
+
+**Given** `.527` contains complete, complete-partial, complete-null,
+complete-ready, retired, and conductor gate-blocked outcomes
+**When** Exp5961 classifies terminal outcomes
+**Then** each activated task has exactly one terminal class: Exp5932 complete,
+Exp5933 complete-partial, Exp5934 complete-null, Exp5935 complete-ready,
+Exp5936 retired, and Exp5937 gate-blocked.
+
+#### SCENARIO-REPORT-5961-RESERVATIONS-AND-HISTORY: Unactivated IDs And Duplicate History Do Not Become Results
+
+**Given** older V527 design material mentions Exp5938 through Exp5943
+**And** completion history may already contain exact `.527` blocks, including
+duplicates
+**When** Exp5961 runs
+**Then** it records Exp5938 through Exp5943 only as unactivated reservations,
+appends no `.527` block when any exact `.527` block is already present,
+reports `research_complete_append_count` as a bare `0`, and reports
+`duplicate_history_amplification_count` as bare `0`.
+
+#### SCENARIO-REPORT-5961-DEBT-AND-VERIFIER: Aggregation QA Is Fresh And Debt Is Delta-Gated
+
+**Given** present declared `.527` deliverables are freshly checked by
+`scripts/adversarial_verify.py`
+**And** inherited global suite, spec-coverage, or root-clutter debt may already
+exist
+**When** Exp5961 evaluates readiness
+**Then** aggregation artifacts must have clean fresh verifier receipts, genuine
+warnings are preserved, task-owned gate failures block, inherited debt is
+disclosed by exact node/file identity, and only positive debt deltas block.
+
+#### SCENARIO-REPORT-5961-RANGE-COLLISION: Bare Exp5961-Exp5973 Collisions Block
+
+**Given** the active `.528` roadmap and vNEXT proposal allocate Exp5961 through
+Exp5973
+**When** Exp5961 scans repository paths and content for bare Exp5961 through
+Exp5973 references
+**Then** only allowed allocation and Exp5961-owned references are permitted,
+Exp5950 and Exp5960 remain immutable out-of-scope outer-loop IDs, and any
+unowned bare Exp5961 through Exp5973 reference sets a nonzero bare
+`next_range_collision_count` and emits a `blocked:` artifact.
+
+#### SCENARIO-REPORT-5961-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp5961 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, field provenance entry,
+precondition receipt, exact activated identity, reservation receipt,
+adversarial-verifier receipt, debt-delta receipt, history receipt,
+range-collision receipt, outer-loop separation receipt, protected-file hash,
+test command, exit code, checksum, and terminal verdict prefix is present; the
+inference substrate is `aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-5961)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5961 | Planned (`python/carnot/experiment_5961_transition_v528.py`, `results/experiment_5961_transition_v528.json`) | Planned (`tests/python/test_experiment_5961_transition_v528.py`) |
+
+### REQ-REPORT-5962: V528 Post-Marker Source Delta Ingestion Preserves The Sealed Planning Boundary
+
+The Exp5962 workflow SHALL run a bounded source refresh after the exact
+`V528-PLANNER-REFRESH-20260726-END` marker in `research-references.md` and
+SHALL write `results/experiment_5962_v528_source_delta_ingestion.json`. It
+SHALL hash the exact V528 marker block, active and staging roadmaps when
+present, `research-references.md`, `ops/exclusion_manifest.yaml`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, the output path
+when present, the prior Exp5934 source artifact, and protected files before
+classification. It SHALL record UTC search start/end, source cutoffs, endpoint
+failures, and rate limits. If the marker is absent, no primary, official, or
+reliable secondary route is reachable, or the active `.528` task identity
+cannot be read, the workflow SHALL emit `blocked:` and SHALL leave activated
+task identities, gates, exclusions, conductor code, historical findings, and
+protected files unchanged.
+
+The workflow SHALL search only primary evidence published or materially changed
+after the exact V528 marker receipt through arXiv, OpenReview, Hugging Face
+Papers, direct Semantic Scholar citation trails for EBT `2507.02092` and
+ARM-EBM `2512.15605`, GitHub Trending and targeted repositories, Extropic
+writing/hardware pages, and Logical Intelligence Kona/Aleph pages. arXiv,
+OpenReview forum pages, official project pages, Extropic, and Logical
+Intelligence SHALL be primary or official only when directly reachable.
+Hugging Face Papers, GitHub discovery metadata, Semantic Scholar routes, search
+pages, and local sweep helpers SHALL remain secondary or tooling until a
+primary reproducible source is opened. The topical coverage SHALL include EBM
+verification/reasoning, neural CSP, Ising/p-bit hardware,
+hallucination/internal representations, KANs, constrained/energy-guided
+generation, continual learning, and ARC-relevant online discovery.
+
+Every finding SHALL be classified separately as accepted, rejected, abstained,
+false-positive, known-false-negative, cutoff-confounded, endpoint-failed,
+duplicate, or retired-scope. Accepted findings SHALL be newer primary-source
+evidence or materially changed official evidence, SHALL be non-duplicate by
+identifier, title, authors, mechanism, and existing heading, and SHALL require
+a new mechanism or materially changed evidence relevant to already allocated
+`.528` roadmap work. The workflow SHALL reject duplicate or renamed retired
+generated-IR, schema-reprompt, finite-ID, external-text/logprob scorer,
+final-embedding MMLU, KAN mutation, public ARC solve, or unchanged board-probe
+mechanisms. Uncertainty, rate limits, cutoff confounds, and access failures
+SHALL remain explicit receipts rather than ordinary rejections.
+
+When no accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` unchanged and set
+`references_append_receipt.appended=false`. When accepted findings exist, it
+MAY append exactly one dated post-V528 subheading beneath the sealed marker,
+listing only actionable method-to-task mappings and preserving all prior
+blocks without rewrite. Source aggregation SHALL declare
+`inference_substrate="aggregation_from_external_primary_sources"` and SHALL NOT
+be relabeled as experimental LLM inference, local model inference, hardware
+execution, TSU execution, Kona execution, or a scientific rerun.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`search_window_and_marker_receipt`,
+`source_queries_and_endpoint_receipts`,
+`primary_secondary_and_official_source_counts`,
+`accepted_rejected_abstained_findings`,
+`false_positive_false_negative_cutoff_and_rate_limit_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`,
+`openreview_huggingface_github_extropic_and_kona_receipts`,
+`duplicate_and_retired_scope_filter`, `references_append_receipt`,
+`task_identity_gate_and_exclusion_immutability`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required top-level field SHALL have a non-empty provenance entry and a
+principle. The `honest_verdict` SHALL start with `complete_delta:`,
+`complete_null:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Only a hash-anchored post-marker window is eligible."
+- `preconditions_checked`: principle "Only a hash-anchored post-marker window is eligible."
+- `search_window_and_marker_receipt`: principle "Only a hash-anchored post-marker window is eligible."
+- `source_queries_and_endpoint_receipts`: principle "Every query and source class remains dated and auditable."
+- `primary_secondary_and_official_source_counts`: principle "Every query and source class remains dated and auditable."
+- `accepted_rejected_abstained_findings`: principle "Acceptance requires a new mechanism or materially changed evidence relevant to the roadmap."
+- `false_positive_false_negative_cutoff_and_rate_limit_receipts`: principle "Uncertainty and access failure cannot be silently converted into rejection."
+- `semantic_scholar_ebt_and_arm_ebm_receipts`: principle "Discovery indexes are context until a primary reproducible source is opened."
+- `openreview_huggingface_github_extropic_and_kona_receipts`: principle "Discovery indexes are context until a primary reproducible source is opened."
+- `duplicate_and_retired_scope_filter`: principle "No duplicate or renamed retired mechanism enters the ledger."
+- `references_append_receipt`: principle "Source aggregation may append references but cannot rewrite the activated milestone."
+- `task_identity_gate_and_exclusion_immutability`: principle "Source aggregation may append references but cannot rewrite the activated milestone."
+- `protected_files_unchanged`: principle "Active roadmap, conductor, exclusions, historical results, and unrelated changes remain byte-identical."
+- `duration_s`: principle "Use measured `aggregation_from_external_primary_sources`."
+- `inference_substrate`: principle "Use measured `aggregation_from_external_primary_sources`."
+- `field_provenance`: principle "Use measured `aggregation_from_external_primary_sources`."
+- `test_commands`: principle "Use measured `aggregation_from_external_primary_sources`."
+- `test_exit_codes`: principle "Use measured `aggregation_from_external_primary_sources`."
+- `reproducibility_checksum`: principle "Use measured `aggregation_from_external_primary_sources`."
+- `honest_verdict`: principle "Use `complete_delta:`, `complete_null:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5962-ZERO-FINDING: Complete Null Leaves References Unchanged
+
+**Given** the V528 planner marker is present, the active `.528` roadmap is
+readable, and at least one primary, official, or reliable secondary source
+route is reachable
+**And** every surfaced post-marker item is duplicate, rejected, abstained,
+false-positive, known-false-negative, cutoff-confounded, endpoint-failed, or
+retired-scope
+**When** Exp5962 runs
+**Then** it writes `results/experiment_5962_v528_source_delta_ingestion.json`,
+records zero accepted findings, keeps
+`references_append_receipt.appended=false`, preserves task identities, gates,
+exclusions, protected files, and historical findings, and emits a
+`complete_null:` verdict.
+
+#### SCENARIO-REPORT-5962-ACCEPT-BOUNDED-DELTA: Accepted Sources Stay Inside V528 Tasks
+
+**Given** a post-marker source is newer primary-source evidence or materially
+changed official evidence, is non-duplicate by identifier, title, authors,
+mechanism, and existing heading, and provides a new mechanism or materially
+changed source hook relevant to an already allocated `.528` task
+**When** it is accepted
+**Then** the artifact and optional reference append record source id, title,
+URL, source date, receipt id, target experiment, bounded source hook,
+authority boundary, method-to-task mapping, and provenance while preserving
+task IDs, gates, exclusions, hardware requirements, and headline claims.
+
+#### SCENARIO-REPORT-5962-SOURCE-UNCERTAINTY: Cutoffs And Endpoint Failures Stay Visible
+
+**Given** a source route exposes a recent candidate whose primary publication
+date, exact marker ordering, citation-verifier outcome, rate limit, or API
+access is uncertain
+**When** the candidate is classified
+**Then** the artifact records abstained, false-positive,
+known-false-negative, cutoff-confounded, endpoint-failed, and rate-limit
+receipts separately and does not convert uncertainty into rejection.
+
+#### SCENARIO-REPORT-5962-DUPLICATE-AND-RETIRED-SCOPE: Closed Work Stays Closed
+
+**Given** a source duplicates existing V528 reference headings or only renames
+generated-IR, schema-reprompt, finite-ID, external-text/logprob scorer,
+final-embedding MMLU, KAN mutation, public ARC solve, or unchanged board-probe
+mechanisms
+**When** the candidate is classified
+**Then** it is rejected as duplicate or retired-scope, the matching rule is
+recorded, and no reference append, roadmap mutation, gate rewrite, exclusion
+rewrite, hardware claim, Kona claim, or historical-finding rewrite is made.
+
+#### SCENARIO-REPORT-5962-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp5962 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, source receipt,
+Semantic Scholar citation receipt, official/discovery grouping, endpoint
+failure, rate limit, finding class, protected-file hash, test command, exit
+code, checksum, and terminal verdict prefix is present; the inference
+substrate is `aggregation_from_external_primary_sources`; and external source
+aggregation is not labeled as experimental LLM inference.
+
+## Implementation Status (REQ-REPORT-5962)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5962 | Implemented (`python/carnot/experiment_5962_v528_source_delta_ingestion.py`, `results/experiment_5962_v528_source_delta_ingestion.json`) | Verified (`tests/python/test_experiment_5962_v528_source_delta_ingestion.py`) |

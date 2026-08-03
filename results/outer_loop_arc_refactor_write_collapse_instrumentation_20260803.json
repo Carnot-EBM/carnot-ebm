@@ -1,0 +1,229 @@
+{
+  "changed_files": {
+    "python/carnot/agentic/arc_executable_world_model.py": "WorldModelVerifier.score gains four accumulators INSIDE the existing per-transition loop (zero extra engine calls) and VerifyResult gains seven defaulted fields: n_engine_called, n_engine_raised, engine_raise_kinds, n_output_equals_input, identity_rate, functionally_identity, identity_measurable.",
+    "python/carnot/agentic/arc_llm_reinduction.py": "execute_bounded_llm_reinduction records the above on the round row, read off the `real_verify` scoring pass the loop ALREADY runs; plus a per-round engine_source_sha256 fingerprint via the new _engine_source_fingerprint helper.",
+    "python/carnot/experiment_5760_cegis_refinement_induction_ab.py": "_summarize_cell's slim_rounds WHITELIST widened. Without this the new fields never reach a shard and the instrumentation is a no-op."
+  },
+  "commit_status": {
+    "blocked_by": [
+      "artifact-freshness-lint -- REFUSES the commit",
+      "arc-llm-on-liveness-lint -- 55 FAIL"
+    ],
+    "blockers_are_pre_existing_at_HEAD": true,
+    "evidence_that_they_are_not_mine": "Both hooks were run against a PRISTINE HEAD worktree with zero changes. arc_llm_on_liveness_lint reports the SAME 55 FAIL there as with my change staged, all in results/llm_on_contention_rows_20260726/** and outer_loop_scored_path_lever_ab_llm_on_20260726.json -- July-26/27 data this change never touches. artifact_freshness_lint REFUSES on pristine HEAD too, via results/outer_loop_arc_early_stop_grace_sweep_20260726.json and results/outer_loop_arc_reset_charge_attribution_20260726.json, whose recorded dependency sha for arc_competition_agent.py (d3401dfd35ed) matches NEITHER HEAD (8406b89ab202) NOR the working tree -- i.e. they were stale before this session began.",
+    "staged_paths": [
+      "python/carnot/agentic/arc_executable_world_model.py",
+      "python/carnot/agentic/arc_llm_reinduction.py",
+      "python/carnot/experiment_5760_cegis_refinement_induction_ab.py",
+      "results/outer_loop_arc_refactor_write_collapse_instrumentation_20260803.json",
+      "tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py"
+    ],
+    "state": "STAGED_NOT_COMMITTED",
+    "what_this_change_additionally_stales": [
+      "results/experiment_6011_world_model_change_gate_four_arm.json",
+      "results/experiment_6012_hidden_state_trust_gate_hole.json",
+      "results/experiment_6013_hidden_state_change_gate_closure.json",
+      "results/experiment_6021_inducer_head_to_head_qwen27b_vs_gemma31b.json",
+      "results/outer_loop_arc_first_win_llm_on_eval_concurrency_20260727.json",
+      "results/outer_loop_arc_generator_concurrency_fix_20260727.json",
+      "results/outer_loop_arc_llm_on_wallclock_envelope_20260726.json"
+    ],
+    "why_not_acknowledged_as_verified_inert": "The lint offers `freshness_acknowledgements` for drift that provably cannot move an artifact's numbers, and this change would qualify -- it is additive-only with an executed zero-delta proof. It was NOT used because it would not unblock: those same artifacts are ALSO stale via arc_world_model_trust_energy.py / arc_competition_agent.py, which this session does not own, and acknowledging another agent's drift as verified-inert without verifying it is precisely the 'launder a silent hash bump' abuse the lint's own docstring names. Recorded rather than done.",
+    "why_not_bypassed": "`git commit --no-verify` is forbidden, and a red gate is an operator decision, not an agent one. The work is staged and reproducible; the two red gates predate it."
+  },
+  "contradicts_confirmation": {
+    "identity_is_not_the_dominant_residue": "Agreeing with the confirmation's OWN correction against the brief: degenerate-identity is 3 of 10 residues, not the dominant class. The instrumentation therefore does not report identity alone -- n_engine_raised, engine_raise_kinds and identity_measurable exist so that 'raised on every row' and 'answered nothing' are distinguishable from 'returned its input', and a dedicated control test proves a genuinely-wrong-but-live engine is NOT flagged identity even though it scores accuracy 0.0 exactly like a degenerate one does.",
+    "instrumentation_site": "The confirmation proposed computing the fields in the `row.update` block. That site is reached BEFORE the loop's remaining engine consumers (`real_verify` on the reject path, `_goal_satisfiability_check` and planning on the accept path), so an instrumentation pass placed there would have had to invoke the engine again ahead of them -- which is precisely the statefulness hazard the confirmation itself flagged as 'THE ONE REAL RISK'. Its own mitigation ('run strictly AFTER every scoring call in the round') is not achievable at a single site: the round body has TEN `rounds.append(row)` exits. Reading the fields off the scoring pass the loop already runs achieves the same record with zero extra engine calls and makes the invariance structural.",
+    "one_field_beyond_the_recommendation": "engine_source_sha256 was not in the confirmation's list. It is added because the confirmation named its ABSENCE as a limitation of its own evidence -- 'per-round emitted sources are never persisted, so the on-disk file cannot be tied to a specific round or cell'. `_read_engine_source` was previously called ONLY on the retention path (`if is_best`), i.e. never on the rounds that collapse. One already-exception-safe file read converts cell-level provenance into round-level.",
+    "p2_line_counts_differ_immaterially": "The confirmation reported 1 of 12 substantive source lines reaching the refactor prompt; re-running the probe against the 1380-byte blob actually on disk at the CEGIS commit, with a >12-char filter, gives 2 of 28. Both hits are boilerplate from _REFACTOR_STRUCTURE_REMINDER_BEFORE ('def engine(grid, action, data):' and 'def is_level_complete(grid):'), whole-source-verbatim is False, and `refactor_prompt` contains no file read at all. The conclusion is unchanged and stronger: zero real source lines reach the prompt."
+  },
+  "deletion_proof": {
+    "detail": {
+      "A_identity_accumulator_deleted": "RED (4 failed)",
+      "B_uncapped_raise_count_deleted": "RED (3 failed)",
+      "C_raise_kinds_accumulation_deleted": "RED (2 failed)",
+      "D_non_vacuity_guard_dropped_from_functionally_identity": "RED (2 failed)",
+      "E_raised_rows_put_back_into_identity_denominator": "RED (1 failed)",
+      "F_identity_measurable_deleted": "RED (3 failed)",
+      "G_engine_grid_copy_removed_corpus_mutation_guard": "RED (1 failed)",
+      "H_row_engine_functionally_identity_deleted": "RED (2 failed)",
+      "I_row_engine_rows_scored_deleted": "RED (2 failed)",
+      "J_engine_source_sha256_deleted_from_row_update": "RED (2 failed)",
+      "K_fingerprint_returns_empty_hash_instead_of_None": "RED (1 failed)",
+      "L_instrumentation_moved_onto_last_counterexample_would_change_the_refactor_PROMPT": "RED (1 failed)",
+      "M_slim_rounds_whitelist_entry_deleted": "RED (2 failed)",
+      "N_slim_rounds_defaults_unmeasured_round_to_fabricated_zero": "RED (1 failed)",
+      "O_identity_measured_syntactically_source_scan_instead_of_behaviourally": "RED (4 failed)"
+    },
+    "method": "Each new pattern was deleted or subverted in a real file, the suite re-run, and the file restored with sha256 verified. A pattern whose deletion leaves the suite green is decorative.",
+    "mutations_applied": 15,
+    "mutations_caught": 15
+  },
+  "diffstat_additive_only": {
+    "lines_added": 279,
+    "lines_removed": 1,
+    "principle": "0 removed is the mechanical witness that this is additive. A non-zero removal count would mean shipped behaviour was edited, not instrumented."
+  },
+  "duration_s": 4.76,
+  "experiment": "outer_loop_arc_refactor_write_collapse_instrumentation_20260803",
+  "field_principles": {
+    "duration_s": "Real wall clock of the committed test suite. Short is CORRECT and the substrate declaration says why: no LLM is loaded, no GGUF, no CUDA. The work is arithmetic over committed shards plus a few hundred engine calls on 6x6 grids. Claiming live_llm_inference here would be false and would invite a 60s floor this run has no honest way to reach.",
+    "honest_verdict": "Terminal-prefixed so the conductor's reconciler classifies it as terminal rather than substring-matching a nuance word into a false partial.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates: the real WorldModelVerifier is scored against cached/synthetic transitions; no model is loaded.",
+    "needs_flag": "False because no control flow changed. Proven, not asserted: 0 lines removed, identical engine-call counts, identical store bytes, identical retention decision, and 0 changed values on every pre-existing round key."
+  },
+  "flag_name": null,
+  "honest_verdict": "complete_write_collapse_instrumentation_shipped_additive_only_0_lines_removed_204_engine_calls_both_directions_0_changed_values_on_every_preexisting_round_key_15of15_mutations_caught_22of22_tests_pass_repair_of_refactor_prompt_deliberately_NOT_attempted",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "limitations": [
+    "THIS IS NOT THE REPAIR. The diagnosed cause is that refactor_prompt(game, vr) never contains the engine it instructs the model to preserve and shows at most 5 FAILING cases and nothing that passed. That prompt is UNCHANGED here. This phase only makes the collapse legible in the record.",
+    "COVERAGE HOLE, STATED RATHER THAN PAPERED OVER: the engine-behaviour fields are recorded on the REJECT path, where the loop already computes a full scoring pass for free. An ACCEPTED round carries no such record and the fields are ABSENT -- which must be read as NOT MEASURED, never as zero. This covers 100% of the rounds in both shipped shards (every one of the 288 rounds either failed the proposer or was rejected at the held-out gate; not a single round ever cleared it), and a test asserts that fact so a future harness change that starts accepting rounds turns the suite red rather than silently under-covering.",
+    "DENOMINATOR MISMATCH, DISCLOSED IN THE DATA: `real_verify` scores the FULL corpus while `prefix_accuracy` is the prefix split only, so the identity fraction and the accuracy it explains are not computed over the same rows. `engine_behaviour_corpus` records this on every row. Re-scoring the prefix to match would mean invoking the engine again purely for a record, which is the one thing this instrumentation must not do. Note the full-corpus scoring here is ALSO defect (C)'s purity leak, which another agent owns and which this change deliberately does not touch.",
+    "OFFLINE IS NOT BEHAVIOURAL. Engine accuracy and engine identity are not plans, actions or levels. The trust gate still stands between them, and nothing here moves a level count.",
+    "NOT YET OBSERVED ON A LIVE RUN. Every measurement here is from the committed shards and from scripted-proposer tests. The instrumentation has not been exercised by a real LLM CEGIS run, because defect (B) means round 0 is 6.33x below its own matched control -- until that reproduces exp5764 within noise, nothing measured on this harness is interpretable, including anything these new fields would report."
+  ],
+  "needs_flag": false,
+  "offline_reproduced": false,
+  "question": "DEFECT (A) INSTRUMENTATION. The CEGIS refactor step collapses world-model engines the induce step had already fit. `prefix_accuracy` proves THAT it collapses; nothing in the record said WHAT the emitted engine became, and that difference decides the repair. This phase adds the missing record. It is NOT the repair: no prompt, no acceptance decision and no default was changed.",
+  "random_seed": 5766,
+  "read_game_source": false,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:978a379548209d6238afaeb135be687fd557006df82ea29f96b59ccc03ad7082",
+  "requirements": [
+    "REQ-ARC-WMTE-6042",
+    "REQ-ARC-WMTE-5760",
+    "REQ-ARC-WMTE-5766"
+  ],
+  "run_date": "2026-08-03T15:11:03Z",
+  "sample_size": {
+    "games": 13,
+    "note": "Clustered at the GAME level. The asymmetry holds independently in BOTH shards (9/49 vs 2/83, and 19/39 vs 2/77), i.e. across two different generators, and the 15 collapsed cells span 6 games -- not one game and not one generator.",
+    "shard_cells": 117,
+    "shard_rounds": 288
+  },
+  "schema": "carnot.outer_loop.arc_refactor_write_collapse_instrumentation.v1",
+  "solve_provenance": "development_proxy",
+  "submitted_to_leaderboard": false,
+  "tests": {
+    "file": "tests/python/test_arc_refactor_write_collapse_instrumentation_20260803.py",
+    "n_tests": 22,
+    "parts": {
+      "part_1_exact_reproduction": "Re-derives the diagnosis from the real shipped shards: 28/88 induce (ceiling 1.0) vs 4/160 refactor (ceiling 0.125, and 0.125 is exactly 1/8), Fisher OR 18.2 p=1.0294417830164442e-10, 15 of 83 cells falling from a perfect 1.0 to 0.0 across 6 games, 30 of 30 post-perfect refactor rounds at 0.0, 117/117 snapshot accounting (rules out an import failure), and 40 null prefix_accuracy rows excluded with their reason rather than read as zeros.",
+      "part_2_residue_classification": "Behavioural, never syntactic, proven in BOTH directions: an engine whose source says `return grid` and is NOT identity, and an engine that IS identity without the literal ever appearing.",
+      "part_3_trajectory_invariance": "Zero extra engine calls; corpus not mutated; round rows gain ONLY the new keys; the instrumentation reads the loop's existing scoring pass; the counterexample handed to refactor_prompt is untouched.",
+      "part_4_shard_whitelist": "The new fields survive _summarize_cell, and an UNMEASURED round arrives as None rather than a fabricated zero."
+    },
+    "result": "22 passed in 3.63s"
+  },
+  "trajectory_invariance": {
+    "engine_calls_identical": true,
+    "engine_calls_instrumented": 204,
+    "engine_calls_pre_change": 204,
+    "method": "Ran ONE identical 3-round reinduction scenario against the instrumented code and against the pre-change code recovered from git HEAD, with the ENGINE ITSELF instrumented as the callee to count every invocation the whole loop makes.",
+    "only_result_field_difference": "engine_retention.store_path -- an artefact of deliberately using two separate tmp store directories so the two arms could not contaminate each other. Every substantive retention field (best_round, best_round_signal, best_round_true_changed_cells, enabled, restored, rounds_seen, selection_signal, signal_informative) is identical.",
+    "proposer_writes_identical": true,
+    "retention_decision_identical_except_tmp_store_path": true,
+    "round_keys_added_per_round": [
+      [
+        "engine_behaviour_corpus",
+        "engine_functionally_identity",
+        "engine_identity_frac",
+        "engine_identity_measurable",
+        "engine_output_equals_input_rows",
+        "engine_raise_kinds",
+        "engine_raise_rows",
+        "engine_rows_scored",
+        "engine_source_sha256"
+      ],
+      [
+        "engine_behaviour_corpus",
+        "engine_functionally_identity",
+        "engine_identity_frac",
+        "engine_identity_measurable",
+        "engine_output_equals_input_rows",
+        "engine_raise_kinds",
+        "engine_raise_rows",
+        "engine_rows_scored",
+        "engine_source_sha256"
+      ],
+      [
+        "engine_behaviour_corpus",
+        "engine_functionally_identity",
+        "engine_identity_frac",
+        "engine_identity_measurable",
+        "engine_output_equals_input_rows",
+        "engine_raise_kinds",
+        "engine_raise_rows",
+        "engine_rows_scored",
+        "engine_source_sha256"
+      ]
+    ],
+    "round_keys_removed_per_round": [
+      [],
+      [],
+      []
+    ],
+    "round_values_changed_per_round": [
+      {},
+      {},
+      {}
+    ],
+    "store_bytes_identical": true
+  },
+  "used_env_source": false,
+  "verifier_is_oracle": false,
+  "why_no_flag": "Pure instrumentation: it only ADDS recorded fields and changes no control flow. The project's rule requires a default-OFF flag for BEHAVIOUR changes; for pure instrumentation it requires proof that no trajectory changes, which is supplied below by an executed both-directions comparison rather than asserted.",
+  "why_zero_extra_engine_calls_was_a_design_constraint": "An engine may hold module-level state, so an instrumentation pass that invoked it even once more could change what a LATER consumer in the same round observes -- the counterexample handed to refactor, or the goal-satisfiability search. Riding the existing scoring loop makes the invariance STRUCTURAL rather than merely tested. The obvious implementation (a second pass over the transitions) would have doubled the count; mutation A' in the deletion proof confirms the suite catches exactly that.",
+  "corrigendum_2026_08_03_denominator_label_was_false_under_the_sibling_flag": {
+    "date": "2026-08-03",
+    "authorization": "adversarial review of this deliverable (verdict: holds=false, 3 BLOCKING). Independently flagged by the REQ-ARC-WMTE-6090 author in the same session. Reproduced by execution before acting.",
+    "nothing_deleted": "limitations[2] and limitations[4] are preserved verbatim and unedited. This key records that two of their sentences are now known to be false, and why. Per never-prune the original wording stays so the error is auditable rather than tidied away.",
+    "correction_1_the_denominator_label": {
+      "what_the_artifact_said": "limitations[2], verbatim: '`real_verify` scores the FULL corpus while `prefix_accuracy` is the prefix split only ... `engine_behaviour_corpus` records this on every row.'",
+      "why_it_was_false": "`real_verify` scores `refinement_corpus`, not `list(transitions)`. REQ-ARC-WMTE-6090 landed in the SAME function during the same session and made that corpus conditional: under CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1 it is the full corpus MINUS the reserved acceptance block. The label was a hardcoded string literal and did not move with it.",
+      "measured_not_argued": {
+        "probe": "drove the real execute_bounded_llm_reinduction with WorldModelVerifier.__init__ instrumented as CALLEE and the caller read off inspect.stack()",
+        "corpus_rows_given_to_the_loop": 12,
+        "flag_off": {
+          "engine_rows_scored": 12,
+          "engine_behaviour_corpus": "full_transitions",
+          "label_true": true
+        },
+        "flag_on": {
+          "engine_rows_scored": 10,
+          "engine_behaviour_corpus": "full_transitions",
+          "label_true": false,
+          "note": "two rows silently withheld, nothing raised, record said otherwise"
+        }
+      },
+      "severity": "This artifact's stated purpose is denominator honesty. The one field whose entire job is to say WHICH ROWS a number was computed over had stopped naming them. It is also the project's own named bug class -- a pattern list (here, a one-element literal) narrower than the concept it claims to express.",
+      "fixed_by": "the label is now DERIVED: 'full_transitions' when no acceptance split is active, 'refinable_minus_acceptance' otherwise. OFF is byte-identical to every artifact written before REQ-ARC-WMTE-6090, so prior records stay comparable.",
+      "proven_under_test": "test_the_corpus_label_names_the_rows_actually_scored_under_the_sibling_split. Mutation-proved in two directions: restoring the hardcoded literal turns it RED on the label; neutering the split so the corpus is not actually narrowed turns it RED on the strict row-count inequality, so the control cannot be vacuous. The sibling OFF-direction test pins 'full_transitions', so the pair fails in opposite directions and neither can be satisfied by a constant.",
+      "second_defect_found_with_it": "test_round_rows_gain_only_the_new_keys asserted EXACT set equality on the round-row key set and went red (1 failed / 21 passed) under the sibling flag, because REQ-ARC-WMTE-6090 legitimately adds four keys to the same row. Equality asserted 'nobody else may ever record anything here', which was never this test's business. Now containment in both directions, with the sibling REQ's keys named explicitly rather than waved through with a wildcard."
+    },
+    "correction_2_the_defect_B_premise_is_superseded": {
+      "what_the_artifact_said": "limitations[4], verbatim: 'defect (B) means round 0 is 6.33x below its own matched control -- until that reproduces exp5764 within noise...'",
+      "why_it_is_superseded": "The 6.33x reproduces exactly but is an INCOMMENSURABLE SUBTRACTION, not a mechanism regression. exp5764's heldout_accuracy scores the WHOLE window (a set overlapping its own prompt evidence); exp5766's round-0 heldout_accuracy scores the last third, DISJOINT from its prompt by construction. Compared on the rows each model was shown, the arms are statistically indistinguishable.",
+      "reproduced_independently_here": {
+        "exp5764_pooled_whole_window": 0.378487,
+        "exp5766_round0_pooled_disjoint_tail": 0.059829,
+        "ratio_as_reported": 6.3261,
+        "paired_sign_test_p_as_reported": 0.0386,
+        "exp5766_round0_pooled_prefix_rows_shown": 0.319444,
+        "ratio_like_for_like": 1.1848,
+        "paired_sign_test_p_like_for_like": 1.0,
+        "wins_losses_ties_like_for_like": "6 favouring exp5766 / 5 favouring exp5764 / 2 ties"
+      },
+      "consequence_for_this_artifact": "The stated blocker on exercising this instrumentation with a real LLM run is weaker than limitations[4] claims. It is NOT lifted -- see the residual caveats recorded in the round-0 corrigendum on experiment_5766 -- but 'the baseline arm is 6.33x low' is withdrawn as a description of the harness."
+    },
+    "correction_3_prose_overstatement_in_the_delivery_report": {
+      "claim": "The delivery report stated 'every one of the 288 rounds in both shards took the reject path'.",
+      "measured": {
+        "total_rounds": 288,
+        "heldout_transition_verification_failed": 248,
+        "proposer_failed": 40
+      },
+      "correction": "40 of 288 rounds exited at proposer_failed, BEFORE any engine existed, so they could not reach the instrumented reject path. The artifact's own wording was already correct ('either failed the proposer or was rejected at the held-out gate'); only the report overstated. No code change. Recorded so the coverage figure is not repeated wrongly downstream."
+    }
+  }
+}

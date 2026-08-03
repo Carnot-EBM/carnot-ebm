@@ -382,6 +382,13 @@ def _summarize_cell(
     mem_before = memorization_scan(sources[0] if sources else "", coord_set)
     mem_after = memorization_scan(sources[-1] if sources else "", coord_set)
 
+    # THIS COMPREHENSION IS A WHITELIST, AND THAT IS A FAILURE MODE, NOT A DETAIL.
+    # Any key the reinduction loop records that is not named here is DROPPED before it reaches
+    # the shard, silently and with no error. That is half of why the refactor write-collapse
+    # survived two full experiments unexamined: `prefix_accuracy` happened to be listed (and was
+    # then read by nothing), while any engine-behaviour field the loop might have recorded would
+    # never have arrived at all. When a new diagnostic is added upstream, widening this list is
+    # not optional bookkeeping -- it is the difference between instrumentation and a no-op.
     slim_rounds = [
         {
             "round": r.get("round"),
@@ -391,6 +398,21 @@ def _summarize_cell(
             "prefix_accuracy": r.get("prefix_accuracy"),
             "plan_reaches_goal": r.get("plan_reaches_goal"),
             "skipped": r.get("skipped"),
+            # ---- REQ-ARC-WMTE-6042 write-collapse instrumentation ----
+            # `.get` yields None for a round that carries no engine-behaviour record (an
+            # ACCEPTED round takes a path with no free scoring pass, so none is computed there).
+            # None means NOT MEASURED and must never be read as zero rows / not-identity.
+            "engine_behaviour_corpus": r.get("engine_behaviour_corpus"),
+            "engine_rows_scored": r.get("engine_rows_scored"),
+            "engine_raise_rows": r.get("engine_raise_rows"),
+            "engine_raise_kinds": r.get("engine_raise_kinds"),
+            "engine_output_equals_input_rows": r.get("engine_output_equals_input_rows"),
+            "engine_identity_frac": r.get("engine_identity_frac"),
+            "engine_functionally_identity": r.get("engine_functionally_identity"),
+            "engine_identity_measurable": r.get("engine_identity_measurable"),
+            # Round-level engine provenance: lets a residue be tied to a ROUND, which the
+            # cell-level `n_engine_snapshots` count cannot do.
+            "engine_source_sha256": r.get("engine_source_sha256"),
         }
         for r in rounds
     ]
