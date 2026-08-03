@@ -324,6 +324,20 @@ class TrustSelection:
     # state, and it is the one combination a mask-arm harness must refuse to accept.
     hud_mask_enabled: bool = False
     hud_mask_supplied: bool = False
+    # ---- REQ-ARC-WMTE-6090: THE DECIDABILITY WITNESS --------------------------------
+    # `heldout_accuracy` is a float and cannot say "I could not tell". `n_correct /
+    # max(1, n)` returns 0.0 for an acceptance block with nothing gradeable in it, which
+    # every downstream aggregation reads as "the engine failed" -- measured today on
+    # sp80/r11l/vc33/ft09, where a MEMORISING PERFECT engine is rejected at 0.0. These
+    # three fields are the "MISSING IS NOT ZERO" record: a caller can distinguish a
+    # engine that was graded and lost from one that was never gradeable at all.
+    # `acceptance_split_enabled` is deliberately separate from `acceptance_decidable` so
+    # an artifact can tell "the flag was off" from "the flag was on and the corpus was
+    # too short" -- the exp6013 silent-no-op lesson, applied to this flag.
+    acceptance_split_enabled: bool = False
+    acceptance_decidable: bool = True
+    acceptance_reason: str = "legacy_prefix_heldout_split"
+    n_acceptance_gradeable: int = -1
 
     @property
     def hud_mask_silently_dropped(self) -> bool:
@@ -376,6 +390,165 @@ def _split_prefix_heldout(
     n_heldout = max(1, int(round(len(rows) * float(heldout_fraction))))
     n_heldout = min(n_heldout, len(rows) - 1)
     return rows[:-n_heldout], rows[-n_heldout:]
+
+
+# ---------------------------------------------------------------------------------------
+# REQ-ARC-WMTE-6090: THE CEGIS ACCEPTANCE/REFINEMENT PURITY SPLIT (default OFF).
+# ---------------------------------------------------------------------------------------
+
+_CEGIS_ACCEPT_SPLIT_DEFAULT = "0"
+
+
+def cegis_accept_split_enabled() -> bool:
+    """Is acceptance graded on rows that NOTHING in the loop is allowed to learn from?
+
+    THE DEFECT (measured 2026-08-03, results/outer_loop_arc_cegis_purity_leak_20260803.json).
+    Acceptance is scored on the held-out tail returned by `_split_prefix_heldout`, and the
+    refinement feedback in `execute_bounded_llm_reinduction` is built from
+    `WorldModelVerifier(list(transitions))` -- the FULL corpus, that same tail included, WITH
+    the observed answer (`true_change`) attached to every mismatch. So the rows that decide
+    whether an engine is trusted are also the rows the LLM is handed to fix it with.
+
+    HOW BADLY, EXACTLY. Mismatches are collected in index order and only the first five are
+    rendered (`_bounded_mismatches`), so prefix mismatches crowd the render budget first. An
+    engine that is BAD on the prefix leaks nothing; an engine that is GOOD on the prefix leaks
+    the tail. The law is exact, not statistical -- reproduced on 325 configurations at n=6..30
+    with zero counterexamples:
+
+        n_leaked = max(0, min(5 - n_prefix_mismatches, n_heldout_mismatches))
+
+    and on the 13 real offline windows (n=3..12) in the prefix-perfect regime the leak is
+    TOTAL: every gradeable acceptance row's answer is delivered, on 9 of 13 games. The render
+    cap only bounds the leak when the gradeable tail exceeds five rows, which never happens at
+    the real window sizes.
+
+    WHY THE OBVIOUS FIX IS THE WRONG ONE. `execute_bounded_llm_reinduction`'s own comment
+    defends full-corpus scoring -- "which is what CEGIS refinement needs" -- and it is right.
+    Measured: with a prefix-perfect engine, refinement restricted to the prefix produces ZERO
+    counterexamples on 13 of 13 real windows, while the full corpus produces 1-3 on nine of
+    them. Restricting refinement to the prefix would not trade a leak for a weaker signal, it
+    would trade a leak for NO signal, in precisely the round where refinement is the only route
+    to acceptance. The defect is narrower than the comment suggests: nothing about
+    counterexample-guided synthesis requires the GRADER and the TEACHER to share rows.
+
+    SO THE FIX IS A THIRD BLOCK, not a smaller refinement corpus. The corpus is cut into
+    `refinable` (everything the loop may teach from -- the induce prompt's rows AND the rows
+    that supply counterexamples) and `acceptance` (never in any prompt, never a counterexample,
+    grades the final engine). CEGIS keeps every counterexample it had except the reserved ones;
+    acceptance becomes unreachable from any prompt.
+
+    `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1` enables it. Default OFF, because the existing
+    measurements -- including exp5766's `retire_if_same_verdict` -- were taken against the
+    leaking split, and an interpretable A/B needs the old arm to still be reproducible byte for
+    byte, leak included.
+    """
+
+    import os
+
+    raw = os.environ.get("CARNOT_ARC_CEGIS_ACCEPT_SPLIT")
+    if raw is None:
+        raw = _CEGIS_ACCEPT_SPLIT_DEFAULT
+    return str(raw).strip().lower() in {"1", "true", "yes", "on"}
+
+
+@dataclass(frozen=True)
+class AcceptanceSplit:
+    """A disjoint (refinable, acceptance) partition, plus whether the gate can decide at all.
+
+    `decidable` is the "MISSING IS NOT ZERO" half of this REQ and is load-bearing on its own.
+    `WorldModelVerifier.score` correctly refuses to grade a level-up row and correctly drops it
+    from the denominator, then returns `n_correct / max(1, n)` -- so a block whose every row is
+    a level-up scores 0.0, which is byte-indistinguishable from "the engine got everything
+    wrong". The induction window is cut to END at the level-up transition, so that row is
+    ALWAYS last and therefore always lands in the tail. Measured on the 13 real windows: on
+    sp80, r11l, vc33 and ft09 the entire held-out tail IS that single row, and a MEMORISING,
+    PERFECT engine is REJECTED with heldout_accuracy 0.0. That is an unfalsifiable gate
+    reported as a failure, and 4 of 13 games sit under it.
+    """
+
+    refinable: list[Transition]
+    acceptance: list[Transition]
+    decidable: bool
+    n_acceptance_gradeable: int
+    reason: str
+
+
+def _n_gradeable(rows: Sequence[Any]) -> int:
+    """Rows `WorldModelVerifier.score` will actually GRADE.
+
+    Mirrors that method's own exclusion (`if t.level_after > t.level_before: continue`) rather
+    than restating it, because a split sized in RAW rows reproduces the unfalsifiable-gate bug
+    inside the new block: the terminal level-up row would eat one of the one-to-three slots an
+    acceptance block gets at these window sizes.
+    """
+
+    return sum(
+        1
+        for t in rows
+        if not (int(getattr(t, "level_after", 0)) > int(getattr(t, "level_before", 0)))
+    )
+
+
+def split_refinement_acceptance(
+    transitions: Sequence[Any],
+    *,
+    acceptance_fraction: float = 1.0 / 6.0,
+    min_acceptance_gradeable: int = 1,
+    min_refinable: int = 2,
+) -> AcceptanceSplit:
+    """Cut the corpus into rows the loop may LEARN from and rows that GRADE it. Disjoint.
+
+    SIZING, and why it is half the shipped held-out fraction rather than a third of the corpus.
+    `_split_prefix_heldout` already reserves the last 1/3; taking `acceptance` as half of that
+    leaves the shipped induce prefix (`_proposal_prefix`, also 1/3) untouched and divides only
+    rows that were never in the induce prompt to begin with. An equal three-way split would
+    instead move the prompt boundary, which is a second behaviour change riding on this one.
+
+    THE GROW LOOP is companion to `_n_gradeable`: start at the fraction, then extend the block
+    backwards until it holds `min_acceptance_gradeable` GRADEABLE rows. Measured effect on the
+    13 real offline windows -- 11 become decidable (up from 9 today, because the four
+    all-level-up tails now reach back far enough to include a real row), and the two n=3 games
+    (r11l, vc33) are reported UNDECIDABLE rather than silently scoring a perfect engine 0.0.
+
+    `min_refinable` is the floor that stops the grow loop from eating the corpus. Where both
+    floors cannot be met the split is returned UNDECIDABLE and still disjoint: purity is
+    preserved even when the gate cannot decide, which is the safe direction -- an undecidable
+    gate rejects, and the caller records WHY instead of publishing a 0.0.
+    """
+
+    rows = list(transitions)
+    n_rows = len(rows)
+    max_acceptance = n_rows - int(min_refinable)
+    if max_acceptance < 1:
+        # Nothing can be reserved without starving induction. Return an EMPTY acceptance block
+        # rather than `_split_prefix_heldout`'s degenerate `(rows, rows)`: aliasing the two
+        # halves is the very overlap this REQ exists to remove, and reproducing it here under
+        # the flag would make the ON arm violate its own contract on the shortest corpora.
+        return AcceptanceSplit(rows, [], False, 0, "corpus_too_short_for_disjoint_split")
+    n_acceptance = max(1, int(round(n_rows * float(acceptance_fraction))))
+    n_acceptance = min(n_acceptance, max_acceptance)
+    while n_acceptance <= max_acceptance and _n_gradeable(rows[n_rows - n_acceptance :]) < int(
+        min_acceptance_gradeable
+    ):
+        n_acceptance += 1
+    if n_acceptance > max_acceptance:
+        n_acceptance = max_acceptance
+        acceptance = rows[n_rows - n_acceptance :]
+        return AcceptanceSplit(
+            rows[: n_rows - n_acceptance],
+            acceptance,
+            False,
+            _n_gradeable(acceptance),
+            "no_gradeable_acceptance_row_within_refinable_floor",
+        )
+    acceptance = rows[n_rows - n_acceptance :]
+    return AcceptanceSplit(
+        rows[: n_rows - n_acceptance],
+        acceptance,
+        True,
+        _n_gradeable(acceptance),
+        "ok",
+    )
 
 
 def resolve_hud_mask_enabled(explicit: Optional[bool] = None) -> bool:
@@ -592,7 +765,20 @@ def select_trusted_world_model(
     # (a mask was supplied and the flag then discarded it) rather than only the outcome.
     supplied_mask = hud_mask
     hud_mask = _effective_mask(hud_mask, mask_on)
-    prefix, heldout = _split_prefix_heldout(transitions)
+    # REQ-ARC-WMTE-6090: the acceptance block is chosen HERE, for the same reason REQ-6013
+    # gives immediately below for the change gate -- this function owns the split, and a caller
+    # that pre-split and passed a tail in would have it split AGAIN. Under the flag `heldout`
+    # becomes the never-taught-from ACCEPTANCE block, so every comparator that already reads
+    # `heldout` (both accuracies' held-out half, the off-path energy verifier, the change gate,
+    # `trust_pass`) moves onto it together. That is the whole point of the REQ-6013 invariant:
+    # there is exactly one place to change, so the halves cannot drift apart.
+    acceptance_split = (
+        split_refinement_acceptance(transitions) if cegis_accept_split_enabled() else None
+    )
+    if acceptance_split is None:
+        prefix, heldout = _split_prefix_heldout(transitions)
+    else:
+        prefix, heldout = acceptance_split.refinable, acceptance_split.acceptance
     # REQ-ARC-WMTE-6015: judge the mask ONCE, on the WHOLE corpus, and hand the verdict to
     # every sub-corpus verifier. Judging per-slice would refuse an honest mask on any
     # held-out tail that happens to contain no genuine state change -- see
@@ -765,6 +951,16 @@ def select_trusted_world_model(
         verifier_is_oracle=not bool(hidden_state),
         hud_mask_enabled=bool(mask_on),
         hud_mask_supplied=bool(supplied_mask is not None),
+        acceptance_split_enabled=acceptance_split is not None,
+        acceptance_decidable=(True if acceptance_split is None else acceptance_split.decidable),
+        acceptance_reason=(
+            "legacy_prefix_heldout_split" if acceptance_split is None else acceptance_split.reason
+        ),
+        # -1, not 0, on the OFF path: the legacy split does not compute this, and writing 0
+        # would assert "nothing was gradeable", which is a claim and usually a false one.
+        n_acceptance_gradeable=(
+            -1 if acceptance_split is None else acceptance_split.n_acceptance_gradeable
+        ),
     )
 
 

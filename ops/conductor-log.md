@@ -15268,3 +15268,6 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-03 13:33 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-03 13:35 UTC | Activation REFUSED: milestone 2026.07.528 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-08-03 13:37 UTC | Milestone 2026.07.528 activated | OK | 13 tasks queued |
+| 2026-08-03 15:01 UTC | Exact terminal-boundary handoff from .527 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  = mod._advers |
+| 2026-08-03 16:25 UTC | Exact terminal-boundary handoff from .527 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: / "transient") |
+| 2026-08-03 17:50 UTC | Exact terminal-boundary handoff from .527 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:     ".venv/bin |

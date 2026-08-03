@@ -357,5 +357,159 @@
       "test": "tests/python/test_arc_metric_scope_guard_2026_08_03.py",
       "honest_limit": "zero shipped call sites today -- the only site that made this mistake is a completed experiment. This is a library plus a scope registry for future comparators, NOT a guard that is currently firing on a live path."
     }
+  },
+  "corrigendum_2026_08_03_retirement_clause_never_fired": {
+    "date": "2026-08-03",
+    "authorization": "2026-08-03 operator directive: 'fix the exp5766 retire_if_same_verdict retirement resting on a broken instrument'. Re-examination only -- the experiment was NOT re-run and no shipped default was flipped.",
+    "what_was_re_examined": "Whether this artifact's preregistration.retire_if_same_verdict clause is in force, and whether the measurement it would rest on supports it.",
+    "the_clause_verbatim": "on HONEST-NEGATIVE, do NOT re-propose more induction-refinement variants; the 2x2 then reads 'architecture wall independent of model capacity AND refinement depth' -- pivot the architecture (reactive-with-filter / executable-world-model construction).",
+    "finding_1_the_clause_never_fired": {
+      "statement": "The clause is CONDITIONAL on HONEST-NEGATIVE. This run recorded gate_branch 'partial_inconclusive'. The antecedent is false, so the clause never fired and must not be cited as an active retirement.",
+      "gate_honest_negative_verbatim": "delta<=0.05 pooled AND memorization unchanged AND emission healthy (CEILING / architecture wall)",
+      "conjunct_evaluation": {
+        "1_delta_le_0.05_pooled": {
+          "value": -0.059829,
+          "satisfied": true,
+          "source": "delta_heldout_by_game.pooled_mean_delta_heldout"
+        },
+        "2_memorization_unchanged": {
+          "rate_before": 0.7949,
+          "rate_after": 0.5385,
+          "rate_drop": 0.2564,
+          "satisfied": false,
+          "note": "Memorization did not stay unchanged; it fell by 0.2564 absolute -- above even the gate_positive threshold of 0.2. This is the conjunct that denied HONEST-NEGATIVE.",
+          "source": "window_memorization_rate_before_after"
+        },
+        "3_emission_healthy": {
+          "value": 0.9872,
+          "threshold": 0.6,
+          "satisfied": true,
+          "source": "refactor_emission_rate"
+        }
+      },
+      "conclusion": "gate_honest_negative = False. Consistent with the recorded gate_branch 'partial_inconclusive'. No retirement was ever triggered by this artifact."
+    },
+    "finding_2_how_the_field_is_actually_enforced": {
+      "statement": "preregistration.retire_if_same_verdict is read by NO code in this repository. It is a written contract addressed to the planner, not a mechanical block. Verified by repo-wide grep: every other occurrence is either prose in unrelated experiment scripts, a docstring, or roadmap_schema.py:53, which declares retire_if_same_verdict as a field of a ROADMAP TASK's prior_failures[] entry -- a different object from this artifact's preregistration.",
+      "what_actually_blocks_a_rerun": "scripts/failure_ledger.py:FailureLedger.is_doomed_rerun, called from scripts/research_conductor.py:4828. The ledger is built by walking results/experiment_*.json and creating an entry for every artifact whose honest_verdict does NOT map to '(check) Complete'. Scope comes from the FILENAME slug, not from any retirement clause.",
+      "this_artifacts_ledger_entry": {
+        "experiment_id": "exp5766-gemma31b-cegis-refinement-ab",
+        "status_label": "(warn) Research Finding",
+        "scope": "gemma31b-cegis-refinement-ab",
+        "note": "The entry exists because the verdict is a Research Finding, NOT because of the retirement clause. It would exist identically if the clause had never been written."
+      },
+      "the_block_is_independently_held_by_other_entries": {
+        "note": "Executed against the live ledger with a representative re-proposed task id/title: the scope match returns THREE priors, of which this artifact is one. Removing or lifting this artifact alone would NOT unblock induction-refinement work.",
+        "co_blocking_priors": [
+          "exp4872-cegis-world-model-refinement [(x) Failed]",
+          "exp5760-cegis-refinement-induction-ab [(warn) Research Finding]"
+        ]
+      },
+      "documented_clearing_mechanisms": "Either (a) a prior_failures[] block carrying the four keys experiment_id + verdict + addressed_by + retire_if_same_verdict (failure_ledger.py:452 checks PRESENCE/non-emptiness only -- the VALUE is never inspected, so even False clears it), or (b) an operator_override string of >=10 chars, honoured at research_conductor.py:4840-4847. Both were executed against the live ledger and confirmed to clear the block.",
+      "not_recorded_elsewhere": "This retirement is absent from ops/exclusion_manifest.yaml (no cegis or induction-refinement entry, and no exp5766 retired id) and absent from ops/known-issues.md. There is no planner-facing directive carrying it."
+    },
+    "finding_3_the_measurement_is_defective_independently_of_the_clause": {
+      "statement": "Even had the antecedent been met, the primary metric could not have supported a retirement. The experiment contains ZERO cells in which an engine that fit its own evidence was carried intact into a refinement round and then graded. Every such engine was destroyed by the refactor write path before the gate could measure whether feedback helps.",
+      "evidence_from_this_artifacts_own_shard": {
+        "shard": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl",
+        "cells": 39,
+        "induce_rounds_with_prefix_accuracy_gt_0": 19,
+        "cells_where_refactor_lowered_the_prefix_fit_to_0.0": "19 of 19",
+        "cells_at_perfect_prefix_1.0_collapsing_to_0.0": 8,
+        "the_8_perfect_collapses": [
+          "ft09 t0",
+          "ft09 t1",
+          "ft09 t2",
+          "lp85 t0",
+          "r11l t2",
+          "sb26 t2",
+          "sp80 t0",
+          "sp80 t2"
+        ],
+        "note_on_19_of_19": "Not one engine that fit what it was shown survived a refactor round; 8 of them went from a PERFECT prefix fit of 1.0 to 0.0. prefix_accuracy was recorded on every round record of this artifact and was never read by the analysis that produced the verdict.",
+        "cells_fitting_their_evidence_but_scored_0_by_the_gate": 13
+      },
+      "composition_of_the_13_cell_primary_metric": {
+        "cells_that_are_zero_minus_zero": 11,
+        "cells_with_a_nonzero_round_0": 2,
+        "cells_where_refinement_improved_anything": 0,
+        "note": "The 11 zero-minus-zero cells cannot distinguish 'refinement does not help' from 'there was nothing to refine'. The 2 informative cells (sb26 -0.444444, tu93 -0.333333) both had a working round 0 that collapsed to exactly 0.0 -- i.e. they measure the write-path defect, not the hypothesis."
+      },
+      "structurally_unfalsifiable_games": {
+        "n_games": 4,
+        "games": [
+          "ft09",
+          "r11l",
+          "sp80",
+          "vc33"
+        ],
+        "mechanism": "WorldModelVerifier.score (python/carnot/agentic/arc_executable_world_model.py:1780-1785) excludes level-up rows and returns n_correct / max(1, n). The induction window is cut to END at the level-up transition, so that row is always last and always lands in the held-out tail. Where the tail is one row, n == 0 and the metric returns 0.0 for EVERY engine, including a perfect oracle.",
+        "in_repo_corroboration": "The project already diagnosed and fixed this exact failure in the SIBLING function score_goal_predicate_consistency (same file, ~lines 2298-2317), whose comment reads: 'NOTHING GRADEABLE MUST NOT READ AS MAXIMALLY INCONSISTENT ... the veto would fire HARDEST exactly when it has no evidence'. That fix returns 1.0 for an all-excluded window and exposes n == 0 as the discriminator. WorldModelVerifier.score never received it. The project's own reasoning, in its own code, condemns the metric this gate used.",
+        "oracle_control_non_vacuous": "Checked in results/experiment_5766_round0_regression_reproduction.json: the oracle reaches 1.0 on full windows, so its 0.0 on these four tails is informative, not a broken probe."
+      },
+      "metric_resolution": "Held-out tails carry 0-3 gradeable rows, so a per-cell delta moves only in steps of 1/n (0.333 at best), while the pre-registered gate is written in units of 0.15 and 0.05. No engine change can move a 3-row tail by 0.05. A pooled delta near zero is substantially a statement about metric resolution."
+    },
+    "disposition": {
+      "verdict": "NEVER_FIRED_AND_MUST_NOT_BE_CITED_AS_A_RETIREMENT",
+      "reasoning": "There is nothing to lift: the clause's own precondition was never met, so no retirement was ever created by this artifact. Recording that plainly is the correction. Separately, and independently of the antecedent, the measurement the clause would have rested on is defective in three named ways, so a FUTURE run of this harness that did reach HONEST-NEGATIVE would also not be interpretable until the refactor write path, the acceptance/refinement split, and the ungradeable-tail metric are fixed.",
+      "what_is_NOT_claimed": "This does not make the hypothesis true. Refinement improved 0 of 39 cells, and two independent priors (exp4872 Failed, exp5760 Research Finding) point the same way. A broken instrument is not evidence FOR the thing it failed to measure. The honest state is UNMEASURED, not positive.",
+      "nothing_deleted": "preregistration.retire_if_same_verdict is preserved verbatim and unedited, as is corrigendum_2026_08_03_cross_experiment_comparison_voided and every other pre-existing field. This key is additive."
+    },
+    "guidance_for_a_future_planner_or_operator": {
+      "the_ledger_block_still_applies_and_is_correct": "Any re-proposed induction-refinement task WILL be scope-matched and blocked, by exp4872 and exp5760 as well as this artifact. That block is appropriate and should be cleared through the documented mechanism, not bypassed.",
+      "ready_to_use_prior_failures_entry": {
+        "experiment_id": "exp5766-gemma31b-cegis-refinement-ab",
+        "verdict": "partial_inconclusive",
+        "addressed_by": "The prior run did not test the hypothesis: the refactor write path overwrote each engine wholesale from a prompt containing neither the engine nor its passing cases, collapsing 19 of 19 fitted engines to prefix 0.0; acceptance was graded on rows that also fed refinement; and 4 of 13 games had a structurally ungradeable held-out tail scoring 0.0 for any engine including a perfect oracle. A rerun is warranted only once those three are fixed AND a positive control shows a nonzero delta is reachable.",
+        "retire_if_same_verdict": true
+      },
+      "an_open_adjacent_lever_that_is_NOT_retired": "ops/exclusion_manifest.yaml retires RAISING THE TOKEN BUDGET as an induction-quality remedy (id outer_loop_arc_induce_budget_phase1_20260731, operator_reopen_required). That same entry explicitly states 'WHAT IS NOT RETIRED: the SAMPLER' -- repeat_penalty 1.1 took the shipped arm from 0/3 to 3/3 non-degenerate engines at cell recall 0.9474 in under half the budget. Degenerate engines that never change the grid are a decode-level repetition problem. Any rerun should carry that sampler change; a budget raise is retired."
+    }
+  },
+  "corrigendum_2026_08_03_the_gate_denial_was_itself_a_defect_A_artifact": {
+    "date": "2026-08-03",
+    "authorization": "adversarial review of the retirement corrigendum (verdict: holds=false). Cross-tabulation re-measured independently from this artifact's own shard before acting.",
+    "nothing_deleted": "corrigendum_2026_08_03_retirement_clause_never_fired is preserved verbatim and unedited, as is preregistration.retire_if_same_verdict and every pre-existing field. This key ADDS the causal disclosure that corrigendum was missing.",
+    "what_the_prior_corrigendum_got_right": "The clause never fired. gate_branch is 'partial_inconclusive', not honest_negative, so retire_if_same_verdict's own stated precondition ('on HONEST-NEGATIVE') was never met. That stands, unchanged.",
+    "what_it_omitted_and_the_omission_leans_one_way": {
+      "statement": "The prior corrigendum presented the falsity of the HONEST-NEGATIVE antecedent as a free-standing fact. It is not free-standing. The gate is a three-way conjunction and the SOLE denying conjunct is substantially an artifact of defect (A) -- the refactor write-path collapse -- pointing TOWARD retiring, not away from it.",
+      "the_mechanism": "is_memorizing is defined in this artifact as '>=3 coordinate-range int literals in the engine() source'. A collapsed engine (the residue shape: every branch `return grid`) contains no such literals. So a write-path collapse MECHANICALLY flips memorizing -> not-memorizing. The two findings are not independent: defect (A) is the cause of finding_1's denying conjunct.",
+      "measured_cross_tabulation": {
+        "source": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl, fields mem_before_is_memorizing / mem_after_is_memorizing, read as TOP-LEVEL keys",
+        "mem_before_true": "31/39 = 0.7949",
+        "mem_after_true": "21/39 = 0.5385",
+        "recorded_drop": 0.2564,
+        "n_true_to_false_flips": 14,
+        "n_collapse_cells_induce_gt_0_all_refactor_0": 19,
+        "n_flips_that_are_also_collapse_cells": 8,
+        "the_eight_cells": [
+          "ft09 t0",
+          "ft09 t1",
+          "ft09 t2",
+          "g50t t2",
+          "sb26 t0",
+          "sb26 t1",
+          "sb26 t2",
+          "tu93 t0"
+        ],
+        "counterfactual_reversing_only_those_eight": {
+          "mem_after": "29/39 = 0.7436",
+          "drop": 0.0513,
+          "reading": "plausibly 'unchanged' -- i.e. on a corrected instrument HONEST-NEGATIVE would plausibly have FIRED and the retirement clause would have been LIVE."
+        },
+        "a_first_pass_error_recorded_rather_than_hidden": "The first extraction read mem_before / mem_after, which are DICTS and therefore always truthy, and reported 39/39 with zero flips. The boolean lives at mem_before_is_memorizing / mem_after_is_memorizing. Caught and corrected before any conclusion was drawn; recorded because taking the wrong key off a correctly-parsed JSON is exactly the failure this review cycle exists to catch."
+      }
+    },
+    "corrected_disposition": {
+      "verdict_token_qualified": "NEVER_FIRED_AS_RECORDED_BUT_THE_ANTECEDENT_WAS_DECIDED_BY_THE_DEFECT",
+      "why_the_qualification_matters": "The unqualified token 'NEVER_FIRED_AND_MUST_NOT_BE_CITED_AS_A_RETIREMENT' is accurate about the RECORD but is citable by a future planner as 'the retirement was never justified'. The evidence does not support that reading: the only conjunct that denied the gate is defect-produced, and correcting it moves the gate TOWARD firing.",
+      "what_is_NOT_claimed_extended": "Two directions, both stated. (1) This does not make the hypothesis true: refinement improved 0 of 39 cells, wins=0, positive_game_frac=0.0, and two scope-independent priors (exp4872 Failed, exp5760 Research Finding) point the same way. A broken instrument is not evidence FOR the thing it failed to measure. (2) Symmetrically, this correction does NOT weaken the case for the retirement's INTENT -- the defects explain why the CEGIS arm produced nothing, which is what the clause concluded.",
+      "no_action_taken": "ops/exclusion_manifest.yaml is untouched. No roadmap is edited. The FailureLedger block is left standing, and it is held INDEPENDENTLY by exp4872 and exp5760, so lifting exp5766 alone would unblock nothing. Any change here is an operator decision."
+    },
+    "fourth_defect_recorded_window_memorization_is_confounded": {
+      "statement": "window_memorization_rate_before_after is not a clean measure of memorization change under any refactor that can emit degenerate engines. The AST-literal definition of is_memorizing cannot distinguish 'stopped memorizing' from 'stopped computing'.",
+      "consequence": "Any rerun must re-derive this metric on NON-DEGENERATE engines only, or gate it on the engine being non-degenerate. The engine_functionally_identity / engine_identity_measurable fields shipped for defect (A) are exactly the discriminator this needs, and did not exist when this run was scored.",
+      "joins": "the three defects already recorded (refactor write-path collapse; acceptance/refinement purity leak; ungradeable-tail metric), as a fourth."
+    }
   }
 }

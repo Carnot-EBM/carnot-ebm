@@ -1506,6 +1506,47 @@ class VerifyResult:
     # corpus) or "computed_on_this_corpus" (about this verifier's slice only).
     hud_mask_swallow_source: str = "computed_on_this_corpus"
 
+    # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION -------------------
+    # WHY THESE EXIST. The CEGIS induction-refinement harness records `prefix_accuracy` -- fit
+    # on the rows the model was SHOWN, with answers -- and across the two shipped CEGIS shards
+    # it collapses between the induce round and the refactor rounds: 28/88 induce rounds reach
+    # >0 with a ceiling of 1.0, against 4/160 refactor rounds with a ceiling of 0.125 (Fisher
+    # OR 18.2, p=1.03e-10), and 15 of 83 cells fall from a PERFECT 1.0 to 0.0. `accuracy` and
+    # `cell_recall` say the resulting engine is bad; they cannot say WHAT it became, and the
+    # difference decides the fix. An engine that predicts a plausible-but-wrong change is a
+    # modelling error; an engine that returns its input unchanged, or raises on every row, is a
+    # DEGENERATE artefact of the write path and needs a different repair entirely. Nothing in
+    # `VerifyResult` distinguished those two before this block.
+    #
+    # ALL FOUR ARE RECORDED, NONE IS GATED ON. They change no acceptance decision anywhere --
+    # deliberately, and for the reason `invented_changed_cells` states above: a threshold fitted
+    # to engines built to be caught tells you nothing about where a realistically imperfect
+    # engine sits.
+    #
+    # Rows the engine was invoked on -- i.e. after level-up exclusion, so it matches `n`. The
+    # denominator every field below is honest about.
+    n_engine_called: int = 0
+    # Rows where the engine RAISED. Uncapped, unlike the `error` entries in `mismatches`, which
+    # stop at `max_mismatch`: a 40-row total wipeout and an 8-row one are indistinguishable
+    # there, and they are very different engines.
+    n_engine_raised: int = 0
+    # Exception TYPE NAME -> count. Names the failure without carrying unbounded repr text.
+    engine_raise_kinds: dict = field(default_factory=dict)
+    # Answered rows where the graded output equals the graded INPUT -- the behavioural identity
+    # measurement. Never inferred from source text; see the loop for why syntax lies both ways.
+    n_output_equals_input: int = 0
+    # n_output_equals_input / (n_engine_called - n_engine_raised). 0.0 when nothing was
+    # answered -- which is ALSO the "wrote something on every row" value, so read it beside
+    # `identity_measurable`, never alone.
+    identity_rate: float = 0.0
+    # True only when the engine ANSWERED at least one row and returned its input on every row
+    # it answered. The non-vacuity half is the point: an engine that raises everywhere answers
+    # nothing, and "identity" is not the honest description of that.
+    functionally_identity: bool = False
+    # Separates "not identity" from "could not be measured", exactly as `noop_channel_measurable`
+    # does for the no-op channel. False whenever every row raised or the corpus was empty.
+    identity_measurable: bool = False
+
 
 class WorldModelVerifier:
     """Checks that an induced engine(grid, action, data) -> grid reproduces the real
@@ -1604,6 +1645,18 @@ class WorldModelVerifier:
         invented_changed_cells = 0
         n_noop = 0
         n_noop_hallucinated = 0
+        # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION (pure record, no control flow) ----
+        # These three accumulators ride the EXISTING per-transition loop and add ZERO engine
+        # calls: `pred`, `g0` and `pred_g` are already computed for the correctness comparison
+        # below, so this is arithmetic on values that exist either way. That is deliberate and
+        # load-bearing, not an optimisation -- an engine may hold module-level state, so an
+        # instrumentation pass that invoked the engine even one extra time could change what a
+        # LATER consumer in the same round observes. Riding the existing loop makes trajectory
+        # invariance STRUCTURAL rather than merely tested.
+        n_engine_called = 0
+        n_engine_raised = 0
+        engine_raise_kinds: dict[str, int] = {}
+        n_output_equals_input = 0
         # REQ-ARC-WMTE-6010: resolve the mask's status from the TRANSITIONS ALONE, before the
         # engine runs. Deriving it inside the loop (the first version of this code) made the
         # status depend on ENGINE behaviour: an engine that raised on every transition, or an
@@ -1640,9 +1693,18 @@ class WorldModelVerifier:
             if t.level_after > t.level_before:
                 n_levelup_excluded += 1
                 continue
+            n_engine_called += 1
             try:
                 pred = np.asarray(engine(t.grid.copy(), t.action, t.data))
             except Exception as e:  # a crashing engine fails the transition
+                # REQ-ARC-WMTE-6042: COUNT the raise, do not only sample it. `mism` is capped at
+                # `max_mismatch` (default 8), so reading the raise count off the mismatch list
+                # silently censors every raise past the cap -- an engine that raises on all 40
+                # rows is indistinguishable there from one that raises on 8. The count and the
+                # exception KINDS are recorded separately and uncapped.
+                n_engine_raised += 1
+                kind = type(e).__name__
+                engine_raise_kinds[kind] = engine_raise_kinds.get(kind, 0) + 1
                 if len(mism) < max_mismatch:
                     mism.append({"i": i, "action": t.action, "error": repr(e)[:160]})
                 continue
@@ -1651,6 +1713,14 @@ class WorldModelVerifier:
             g0 = self._graded(t.grid)
             g1 = self._graded(t.next_grid)
             pred_g = self._graded(pred) if pred.shape == np.asarray(t.next_grid).shape else pred
+            # REQ-ARC-WMTE-6042: did the engine RETURN ITS INPUT? Measured BEHAVIOURALLY, on the
+            # graded grids, never by pattern-matching the source for `return grid`. Both syntactic
+            # failure modes are real and were observed on the CEGIS residue corpus: an engine that
+            # never writes the literal `return grid` and is nonetheless identity on every row it
+            # answers, and an engine that writes it a dozen times and is NOT identity on the
+            # corpus it was induced from. Only executing it settles the question.
+            if pred_g.shape == g0.shape and np.array_equal(pred_g, g0):
+                n_output_equals_input += 1
             # graded changed-cell recall (granularity-matched gate); only state-changing transitions count
             changed = not np.array_equal(g0, g1)
             if changed:
@@ -1736,6 +1806,31 @@ class WorldModelVerifier:
             ),
             hud_mask_swallow=dict(self.hud_mask_swallow),
             hud_mask_swallow_source=str(self.hud_mask_swallow_source),
+            # ---- REQ-ARC-WMTE-6042 write-collapse instrumentation ----
+            n_engine_called=n_engine_called,
+            n_engine_raised=n_engine_raised,
+            engine_raise_kinds=dict(engine_raise_kinds),
+            n_output_equals_input=n_output_equals_input,
+            # DENOMINATOR IS ANSWERED ROWS, NOT ALL ROWS. A row the engine raised on produced no
+            # output, so it is evidence of neither identity nor non-identity; putting it in the
+            # denominator would dilute an identity engine that also crashes, and putting it in the
+            # numerator would invent an answer it never gave. `n_engine_raised` is reported beside
+            # this so the excluded rows are never silent.
+            identity_rate=(
+                float(n_output_equals_input / (n_engine_called - n_engine_raised))
+                if (n_engine_called - n_engine_raised) > 0
+                else 0.0
+            ),
+            # NON-VACUITY IS PART OF THE PREDICATE. With zero answered rows the equality
+            # `n_output_equals_input == answered` is trivially true, so without the `> 0` guard an
+            # engine that raised on EVERY row -- or an empty corpus -- would be reported as
+            # "functionally identity", which is a claim the data cannot support. Missing is not
+            # zero, and unmeasurable is not clean.
+            functionally_identity=bool(
+                (n_engine_called - n_engine_raised) > 0
+                and n_output_equals_input == (n_engine_called - n_engine_raised)
+            ),
+            identity_measurable=bool((n_engine_called - n_engine_raised) > 0),
         )
 
     def offpath_structural_energy(

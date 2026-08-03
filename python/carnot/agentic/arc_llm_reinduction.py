@@ -26,7 +26,9 @@ from carnot.agentic.arc_executable_world_model import (
 )
 from carnot.agentic.arc_world_model_trust_energy import (
     WorldModelCandidate,
+    cegis_accept_split_enabled,
     select_trusted_world_model,
+    split_refinement_acceptance,
 )
 
 
@@ -1336,6 +1338,30 @@ def _read_engine_source(game: str) -> str | None:
         return None
 
 
+def _engine_source_fingerprint(game: str) -> dict[str, Any] | None:
+    """REQ-ARC-WMTE-6042: content fingerprint of the engine file as it stands THIS round.
+
+    Returns ``None`` -- never a zero-length/empty-hash placeholder -- when there is no file to
+    fingerprint, so an absent store reads as MISSING rather than as "an empty engine". Delegates
+    to `_read_engine_source`, which already swallows OSError and a missing path, so this cannot
+    raise into the round body and change control flow.
+
+    The hash is truncated to 16 hex characters on purpose: this is an equality/inequality witness
+    between consecutive rounds of one game, not a security digest, and a shard carrying one per
+    round should not pay 64 characters for it.
+    """
+
+    source = _read_engine_source(game)
+    if source is None:
+        return None
+    import hashlib
+
+    return {
+        "sha256_16": hashlib.sha256(source.encode("utf-8", "replace")).hexdigest()[:16],
+        "chars": len(source),
+    }
+
+
 def _retain_engine_source_on_disk(
     game: str,
     source: str | None,
@@ -1439,6 +1465,37 @@ def execute_bounded_llm_reinduction(
         if proposal_transitions is not None
         else _proposal_prefix(list(transitions))
     )
+    # REQ-ARC-WMTE-6090 (default OFF): the rows refinement may draw counterexamples from.
+    # OFF is the shipped `list(transitions)` -- the FULL corpus, acceptance tail included, which
+    # is the leak. ON withholds the reserved acceptance block and nothing else.
+    _acceptance_split = (
+        split_refinement_acceptance(list(transitions)) if cegis_accept_split_enabled() else None
+    )
+    refinement_corpus = (
+        list(transitions) if _acceptance_split is None else list(_acceptance_split.refinable)
+    )
+    if _acceptance_split is not None:
+        # THE INDUCE PROMPT, and a correction worth stating because it was written wrong first.
+        # The first draft of this block asserted no clamp was needed, on the grounds that
+        # `_proposal_prefix` cuts at 1/3 while the acceptance block is the last ~1/6, so the
+        # induce rows are always a subset of the refinable rows. That is true for 38 of the 39
+        # corpus sizes checked (n=2..40) and FALSE at n=4-with-a-terminal-level-up, where the
+        # gradeable grow loop extends acceptance to 2 rows while `_proposal_prefix` still shows 3
+        # -- so row 2 would be both in the induce prompt and in the acceptance block. n=4 with a
+        # terminal level-up is not a corner case: it is the measured shape of sp80 and ft09, 2 of
+        # the 13 real offline windows. Found by measuring the relation instead of asserting it.
+        #
+        # An IDENTITY filter, not a length clamp. A length clamp was written first and then
+        # DELETED, because a mutation test replacing it with a no-op left the whole suite green:
+        # the identity filter already removes every reserved row, so the clamp was decorative,
+        # and a pattern whose deletion changes nothing is dead code pretending to be a guard.
+        # Identity is sound here because `split_refinement_acceptance` slices the SAME row
+        # objects. It fails SAFE for a caller-supplied `proposal_transitions` (which need not be
+        # a prefix of anything, and which no caller passes today): an unrecognised object is
+        # kept, so a caller that hands in COPIES of reserved rows defeats this -- stated rather
+        # than papered over, because the length clamp did not cover that case either.
+        _reserved = {id(row) for row in _acceptance_split.acceptance}
+        induction_evidence = [row for row in induction_evidence if id(row) not in _reserved]
     rounds: list[dict[str, Any]] = []
     counterexamples: list[dict[str, Any]] = []
     last_counterexample: dict[str, Any] = {"kind": "initial_induction"}
@@ -1534,6 +1591,22 @@ def execute_bounded_llm_reinduction(
                     row["structural_goal_error"] = structural_goal_candidate["error"]
             heldout_accuracy = float(selection.selected_score.heldout_accuracy)
             accepted = heldout_accuracy >= verifier_threshold
+            # REQ-ARC-WMTE-6090 (ON path only): an UNDECIDABLE gate must not admit. This is not
+            # theoretical -- `min_heldout_accuracy` defaults to 0.0 in this signature, and
+            # `0.0 >= 0.0` is True, so a caller taking the default would have an acceptance
+            # block with nothing gradeable in it ACCEPT every engine it was handed. The live
+            # agent passes 1.0 and is therefore safe today by coincidence of its threshold, not
+            # by construction. Recorded rather than silent: `heldout_accuracy` is a float and
+            # cannot say "I could not tell", which is the whole reason 0.0 keeps being read as
+            # failure. The record fields are added ONLY under the flag, so a flag-OFF artifact
+            # stays byte-comparable with every measurement taken before this REQ.
+            if selection.acceptance_split_enabled:
+                row["acceptance_split_decidable"] = bool(selection.acceptance_decidable)
+                row["acceptance_split_reason"] = str(selection.acceptance_reason)
+                row["acceptance_split_gradeable_rows"] = int(selection.n_acceptance_gradeable)
+                row["refinement_corpus_rows"] = len(refinement_corpus)
+                if not selection.acceptance_decidable:
+                    accepted = False
             names = [candidate.name for candidate in candidates]
             # REQ-ARC-WMTE-6035: this is the ONE place a round is compared against the best
             # round so far. `not retention_on` reproduces the pre-REQ unconditional
@@ -1564,6 +1637,17 @@ def execute_bounded_llm_reinduction(
                     "goal_candidate_names": list(names),
                     "dynamics_candidate_names": list(names),
                     "prefix_accuracy": round(float(selection.selected_score.prefix_accuracy), 6),
+                    # ---- REQ-ARC-WMTE-6042 ROUND-LEVEL ENGINE PROVENANCE (record only) -------
+                    # The engine STORE is a single mutable path per game, so until now a residue
+                    # found on disk could be attributed to a CELL at best, never to a round -- the
+                    # per-round emitted source was never persisted, and `_read_engine_source` was
+                    # called ONLY on the retention path (`if is_best`), i.e. never on the very
+                    # rounds that collapse. Two 13-game runs writing the same path concurrently
+                    # made even the cell-level attribution unsafe. A fingerprint costs one
+                    # already-exception-safe file read (`None` on a missing file or OSError, no
+                    # engine call, no control flow) and makes "round N overwrote round N-1's file
+                    # with different bytes" a fact in the record instead of an inference.
+                    "engine_source_sha256": _engine_source_fingerprint(game),
                     "heldout_accuracy": round(heldout_accuracy, 6),
                     "heldout_threshold": round(verifier_threshold, 6),
                     "accepted_by_heldout_verifier": bool(accepted),
@@ -1582,7 +1666,18 @@ def execute_bounded_llm_reinduction(
                 # HUD-collapsed comparison the gate used. Feeding the LLM mismatches that are
                 # only HUD-counter deltas is worse than useless -- it teaches the proposer to
                 # model the step counter instead of the mechanic.
-                real_verify = WorldModelVerifier(list(transitions), hud_mask=hud_mask).score(
+                # REQ-ARC-WMTE-6090 (default OFF): the paragraph above is right that CEGIS wants
+                # every counterexample, and WRONG that the full corpus is the way to supply them.
+                # `select_trusted_world_model` grades acceptance on the LAST THIRD of this same
+                # list, so every mismatch drawn from that tail hands the proposer the observed
+                # answer (`true_change`) to a row that will then decide whether the result is
+                # trusted. Measured: on 9 of the 13 real offline windows, a prefix-perfect engine
+                # leaks EVERY gradeable acceptance row. `refinement_corpus` is the full corpus
+                # MINUS the reserved acceptance block -- so the counterexample budget is kept
+                # (prefix AND the refine tail still supply mismatches; only the graders are
+                # withheld) rather than cut to the prefix, which was measured to yield ZERO
+                # counterexamples on 13 of 13 windows in exactly this regime.
+                real_verify = WorldModelVerifier(refinement_corpus, hud_mask=hud_mask).score(
                     selected.engine
                 )
                 last_counterexample = {
@@ -1598,6 +1693,52 @@ def execute_bounded_llm_reinduction(
                 counterexamples.append(last_counterexample)
                 row["counterexample"] = dict(last_counterexample)
                 row["skipped"] = "heldout_transition_verification_failed"
+                # ---- REQ-ARC-WMTE-6042 WRITE-COLLAPSE INSTRUMENTATION (record only) ----------
+                # WHAT DID THE EMITTED ENGINE BECOME? `prefix_accuracy` says the refactor rounds
+                # fit almost nothing (4/160 above zero, ceiling 0.125, against 28/88 and a ceiling
+                # of 1.0 for induce), but a bare accuracy cannot say whether the engine models the
+                # wrong mechanic or is a degenerate artefact that answers nothing at all. These
+                # fields are read off `real_verify`, which is ALREADY computed two statements
+                # above for the counterexample evidence -- so they cost no additional engine call
+                # and cannot perturb a stateful engine.
+                #
+                # THEY ARE ADDED TO `row`, NEVER TO `last_counterexample`. That is not stylistic:
+                # `last_counterexample` is handed to `_counterexample_result` and from there into
+                # `refactor_prompt`, so a field added there would change the PROMPT, hence the
+                # completion, hence the trajectory. `row` is recorded and read by nothing.
+                #
+                # DENOMINATOR, STATED HONESTLY: `real_verify` scores `refinement_corpus`, whereas
+                # `prefix_accuracy` above is the prefix split only. The two are therefore not the
+                # same rows, and `engine_behaviour_corpus` says which rows rather than leaving a
+                # reader to assume. Re-scoring the prefix here to match would mean invoking the
+                # engine again purely for a record, which is the one thing this instrumentation
+                # must not do.
+                #
+                # THE LABEL IS DERIVED, NOT A LITERAL, AND THAT IS THE WHOLE POINT. It shipped as
+                # a hardcoded "full_transitions" because when this block was written
+                # `refinement_corpus` WAS `list(transitions)` unconditionally. REQ-ARC-WMTE-6090
+                # then landed in this same function and made the corpus conditional: with
+                # `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1` it is the full corpus MINUS the reserved
+                # acceptance block. The literal did not move, so the field named a denominator
+                # that was no longer its own -- measured on a 12-row corpus as
+                # `engine_rows_scored: 10` sitting beside `engine_behaviour_corpus:
+                # "full_transitions"`, silently, with nothing raising. A field whose entire job is
+                # to say WHICH ROWS must be computed from the rows, or it is decoration that
+                # decays into a false claim the moment anything upstream moves. OFF still reads
+                # exactly "full_transitions", so every artifact written before REQ-ARC-WMTE-6090
+                # stays comparable.
+                row["engine_behaviour_corpus"] = (
+                    "full_transitions"
+                    if _acceptance_split is None
+                    else "refinable_minus_acceptance"
+                )
+                row["engine_rows_scored"] = int(real_verify.n_engine_called)
+                row["engine_raise_rows"] = int(real_verify.n_engine_raised)
+                row["engine_raise_kinds"] = dict(real_verify.engine_raise_kinds)
+                row["engine_output_equals_input_rows"] = int(real_verify.n_output_equals_input)
+                row["engine_identity_frac"] = round(float(real_verify.identity_rate), 6)
+                row["engine_functionally_identity"] = bool(real_verify.functionally_identity)
+                row["engine_identity_measurable"] = bool(real_verify.identity_measurable)
                 rounds.append(row)
                 continue
             goal_check = _goal_satisfiability_check(
