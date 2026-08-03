@@ -20516,3 +20516,128 @@ as secondary cost baselines, and structural validity or atom recall cannot set
 model/case/family/split/arm/view details, visible prompt/proposal hashes, sealed
 support, exact completion, post-seal omitted/spurious labels, GPU receipt, and
 prefix checksums, and any row tampering breaks replay.
+
+### REQ-VERIFY-5963: Sealed Exact Atom Pair Fixture
+
+The repository SHALL provide Exp5963 at
+`python/carnot/experiment_5963_exact_atom_pair_fixture.py` and write
+`results/experiment_5963_exact_atom_pair_fixture.json`,
+`results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl`, and
+`results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl`. Exp5963 SHALL be
+a sealed deterministic fixture only: it SHALL perform no LLM inference, no
+tokenizer probing, no complete-answer enumeration, and no candidate creation
+from hidden exact reference atoms.
+
+Before emitting rows, Exp5963 SHALL hash and replay the immutable Exp5868,
+Exp5879, Exp5908, Exp5935, and Exp5936 artifacts, the Exp5868/Exp5908/Exp5935
+row streams, exact Python/Z3 ConstraintIR authorities, the generic atom schema,
+OpenSpec files, exclusions, output paths, split manifests, protected files, and
+disk/RAM/atomic JSON/JSONL output probes. Readiness requires exact replay of
+all immutable fixture and verifier inputs; a missing, blocked, hash-mismatched,
+or tampered required input SHALL fail closed before row qualification.
+
+Candidate atoms SHALL be enumerated only from public entities, finite domains,
+types, predicate signatures, operation signatures, and bounded composition
+depth. Hidden exact reference atoms MAY label a context/candidate pair only
+after candidate enumeration and semantic split sealing; they SHALL NOT create
+candidates, enter model-visible context text, enter candidate strings, or guide
+candidate order. The fixture SHALL construct at least 300 base context cases,
+with balanced compatible and incompatible pairs at the base-semantic-instance
+replication unit for five-seed group evaluation.
+
+Pair rows SHALL include compatible positives and near-semantic hard negatives
+covering omitted-required, spurious-compatible, negated relation, swapped
+argument, boundary comparator, type-confusable, cardinality, composition, and
+contradiction classes. Train, calibration, and test splits SHALL be frozen by
+base semantic instance for five deterministic seeds, and SHALL keep
+paraphrases, entity permutations, proof-preserving relabels, and sibling pairs
+inside the same group. Family-held and proof-preserving-relabel-held split
+manifests SHALL be present. Meaning-preserving paraphrases and entity
+permutations SHALL retain labels with deterministic inverse receipts; claim
+flips SHALL invert labels only when exact semantics requires the inversion.
+
+Exp5963 SHALL define norm-only, token/character length-only, lexical-overlap,
+candidate-frequency, label/pair permutation, raw-model-identity,
+duplicated-context, and exact-string lookup controls for Exp5964/Exp5965. The
+controls SHALL be manifest-only because no model features exist in Exp5963, and
+the manifest SHALL state how later promotion must defeat each shortcut. Every
+pair label SHALL replay through Python and Z3 with agreement. The builder SHALL
+reject unreachable true atoms, hidden-answer enumeration, split leakage,
+non-invertible transforms, candidate-order dependence, row-chain tamper, or
+protected-file drift.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_upstream_hashes`, `atom_schema_and_enumeration_contract`,
+`model_visible_vs_hidden_label_separation`,
+`base_case_pair_and_class_counts`,
+`hardness_density_width_and_family_strata`, `negative_type_manifest`,
+`semantic_group_splits`,
+`relabel_paraphrase_claim_flip_and_inverse_receipts`,
+`shortcut_control_manifest`, `python_z3_label_parity`,
+`unreachable_truth_and_leakage_counts`,
+`row_paths_hashes_and_prefix_chain`, `replay_and_tamper_matrix`,
+`protected_files_unchanged`, `pair_fixture_ready_score`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`, `preconditions_checked`, and `immutable_upstream_hashes`: readiness requires exact replay of all immutable fixture and verifier inputs.
+- `atom_schema_and_enumeration_contract`: candidates derive generically from public schemas and bounded visible symbols, never hidden answers.
+- `model_visible_vs_hidden_label_separation`: exact references label only after candidate generation and split sealing.
+- `base_case_pair_and_class_counts` and `hardness_density_width_and_family_strata`: report adequate balanced support at the semantic-instance replication unit.
+- `negative_type_manifest`: hard negatives are semantically plausible and cover preregistered error modes.
+- `semantic_group_splits`: no paraphrase, relabel, or sibling pair crosses group boundaries.
+- `relabel_paraphrase_claim_flip_and_inverse_receipts`: transforms have exact expected label behavior and deterministic inverses.
+- `shortcut_control_manifest`: later promotion must defeat norm, length, lexical, frequency, permutation, lookup, and model-identity shortcuts.
+- `python_z3_label_parity`: cross-backend exact agreement is the only label authority.
+- `unreachable_truth_and_leakage_counts`: unreachable true atoms and hidden-answer leakage must be bare zero.
+- `row_paths_hashes_and_prefix_chain` and `replay_and_tamper_matrix`: rows are immutable, ordered, hash-chained, fresh-process replayable, and fail closed on tamper.
+- `protected_files_unchanged` and `pair_fixture_ready_score`: emit bare `1.0` only when every deterministic integrity gate passes and protected files are unchanged.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: use measured `aggregation_from_upstream_artifacts` plus deterministic exact fixture construction.
+- `verifier_is_oracle` and `missing_verifier_gaps`: true only for sealed synthetic exact semantics; list unresolved natural-language ambiguity.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-5963-ENUMERATION: Candidates Are Public And Label-Blind
+
+**Given** Exp5963 has loaded public atom schemas and sealed source rows
+**When** it enumerates candidate atoms for 300 or more base contexts
+**Then** candidates derive only from visible entities, domains, types,
+predicate signatures, operation signatures, and bounded composition depth, and
+hidden exact references are opened only after candidate generation and split
+sealing to label compatible/incompatible pairs.
+
+### SCENARIO-VERIFY-5963-NEGATIVES: Hard Negatives Cover Plausible Error Modes
+
+**Given** the sealed base contexts and candidate atoms
+**When** Exp5963 builds pair rows
+**Then** compatible and incompatible labels are balanced, five-seed evaluation
+groups remain balanced, and omitted-required, spurious-compatible, negated
+relation, swapped argument, boundary comparator, type-confusable, cardinality,
+composition, and contradiction negatives all have nonzero counts.
+
+### SCENARIO-VERIFY-5963-SPLITS-AND-TRANSFORMS: Groups And Inverses Preserve Semantics
+
+**Given** paraphrase, entity-permutation, proof-preserving relabel, held-family,
+and claim-flip controls
+**When** Exp5963 freezes split manifests
+**Then** no sibling pair crosses train/calibration/test boundaries, relabel and
+paraphrase transforms retain labels, deterministic inverses restore the source
+semantic hashes, and claim flips invert labels only for exact complementary
+candidate atoms.
+
+### SCENARIO-VERIFY-5963-REPLAY: Exact Labels, Rows, And Tamper Fail Closed
+
+**Given** Exp5963 has written context and pair JSONL row files
+**When** rows are replayed in a fresh process or tampered with
+**Then** Python and Z3 labels agree on every pair, unreachable true atom and
+hidden-answer leakage counts are zero, row prefix chains replay, tamper is
+rejected, candidate-order permutations leave labels unchanged, and
+`pair_fixture_ready_score` is bare `1.0` only for a complete ready artifact.
+
+## Implementation Status (REQ-VERIFY-5963)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-5963 | Planned (`python/carnot/experiment_5963_exact_atom_pair_fixture.py`, `results/experiment_5963_exact_atom_pair_fixture.json`) | Planned (`tests/python/test_experiment_5963_exact_atom_pair_fixture.py`) |
