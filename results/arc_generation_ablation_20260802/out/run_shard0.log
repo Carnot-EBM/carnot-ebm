@@ -1,0 +1,150 @@
+shard 0/2 gpu 0 port 42900: 10 games ['ls20', 'tu93', 'm0r0', 'ar25', 'g50t', 'bp35', 'lf52', 'lp85', 'wa30', 'tn36']
+ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48247 MiB):
+  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB
+  Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB
+preconditions OK
+treatment witness OK on 40 (game, arm) prompts
+pre-registration sha256:64d459045d2aec5b0494135a363a1a7f161c7f20b345801977ce4b812acaa4b9
+  min reachable two-sided p (20 games) = 1.907e-06; p<0.05 needs >=6 discordant
+launching gemma-4-31B-it-qat port 42900 gpu 0 n_ctx 32768 ...
+[carnot.arc.generator] using the CUDA build pinned to gpu0 (ffn_cpu_layers=0, n_ctx=32768, mtp=False).
+server: {"pid": 2917780, "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "port_requested": 42900, "port_actual": 42900, "cuda_gpu": "0", "n_ctx_declared": 32768, "n_ctx_from_props": 32768, "model_from_props": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf", "is_cuda_build": true, "max_tokens": 8192, "tries": 3, "mtp": false, "kv_quant": "q8_0", "n_gpu_layers": 999}
+
+120 cells queued on shard 0
+
+[0:1/120] ls20 r0 base   ok=True calls=1 tok=2490 stop=word dir_ok=True 79.0s
+shard 0/2 gpu 0 port 42900: 10 games ['ls20', 'tu93', 'm0r0', 'ar25', 'g50t', 'bp35', 'lf52', 'lp85', 'wa30', 'tn36']
+ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48247 MiB):
+  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB
+  Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24123 MiB
+preconditions OK
+treatment witness OK on 40 (game, arm) prompts
+pre-registration sha256:64d459045d2aec5b0494135a363a1a7f161c7f20b345801977ce4b812acaa4b9
+  min reachable two-sided p (20 games) = 1.907e-06; p<0.05 needs >=6 discordant
+launching gemma-4-31B-it-qat port 42900 gpu 0 n_ctx 32768 ...
+[carnot.arc.generator] using the CUDA build pinned to gpu0 (ffn_cpu_layers=0, n_ctx=32768, mtp=False).
+server: {"pid": 2918378, "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server", "port_requested": 42900, "port_actual": 42900, "cuda_gpu": "0", "n_ctx_declared": 32768, "n_ctx_from_props": 32768, "model_from_props": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf", "is_cuda_build": true, "max_tokens": 8192, "tries": 3, "mtp": false, "kv_quant": "q8_0", "n_gpu_layers": 999}
+
+120 cells queued on shard 0
+
+[0:2/120] ls20 r0 think  ok=True calls=1 tok=1121 stop=eos dir_ok=True 37.31s
+[0:3/120] ls20 r0 antiid ok=True calls=1 tok=2599 stop=word dir_ok=True 97.34s
+[0:4/120] ls20 r0 delta  ok=False calls=2 tok=5 stop=word dir_ok=True 131.34s
+[0:5/120] tu93 r0 think  ok=True calls=1 tok=1102 stop=eos dir_ok=True 36.86s
+[0:6/120] tu93 r0 antiid ok=False calls=2 tok=264 stop=word dir_ok=True 124.7s
+[0:7/120] tu93 r0 delta  ok=True calls=1 tok=2531 stop=word dir_ok=True 76.27s
+[0:8/120] tu93 r0 base   ok=True calls=1 tok=1510 stop=word dir_ok=True 44.03s
+[0:9/120] m0r0 r0 antiid ok=True calls=1 tok=1755 stop=word dir_ok=True 169.3s
+[0:10/120] m0r0 r0 delta  ok=True calls=3 tok=178 stop=word dir_ok=True 93.43s
+[0:11/120] m0r0 r0 base   ok=True calls=1 tok=1807 stop=word dir_ok=True 61.69s
+[0:12/120] m0r0 r0 think  ok=True calls=1 tok=1145 stop=eos dir_ok=True 40.16s
+[0:13/120] ar25 r0 delta  ok=True calls=1 tok=1225 stop=word dir_ok=True 60.12s
+[0:14/120] ar25 r0 base   ok=True calls=3 tok=131 stop=word dir_ok=True 164.63s
+[0:15/120] ar25 r0 think  ok=True calls=1 tok=911 stop=eos dir_ok=True 32.67s
+[0:16/120] ar25 r0 antiid ok=False calls=2 tok=5 stop=word dir_ok=True 101.06s
+[0:17/120] g50t r0 base   ok=True calls=1 tok=1132 stop=word dir_ok=True 39.86s
+[0:18/120] g50t r0 think  ok=True calls=1 tok=707 stop=eos dir_ok=True 26.54s
+[0:19/120] g50t r0 antiid ok=True calls=3 tok=141 stop=word dir_ok=True 408.47s
+[0:20/120] g50t r0 delta  ok=True calls=1 tok=1126 stop=word dir_ok=True 35.36s
+[0:21/120] bp35 r0 think  ok=True calls=1 tok=1213 stop=eos dir_ok=True 45.83s
+[0:22/120] bp35 r0 antiid ok=False calls=2 tok=658 stop=word dir_ok=True 191.59s
+[0:23/120] bp35 r0 delta  ok=True calls=1 tok=967 stop=word dir_ok=True 31.68s
+[0:24/120] bp35 r0 base   ok=True calls=1 tok=1130 stop=word dir_ok=True 36.26s
+[0:25/120] lf52 r0 antiid ok=True calls=3 tok=78 stop=word dir_ok=True 150.16s
+[0:26/120] lf52 r0 delta  ok=True calls=1 tok=1493 stop=word dir_ok=True 104.87s
+[0:27/120] lf52 r0 base   ok=True calls=1 tok=1212 stop=word dir_ok=True 46.42s
+[0:28/120] lf52 r0 think  ok=True calls=1 tok=1201 stop=eos dir_ok=True 42.31s
+[0:29/120] lp85 r0 delta  ok=True calls=1 tok=311 stop=word dir_ok=True 16.1s
+[0:30/120] lp85 r0 base   ok=True calls=1 tok=1904 stop=word dir_ok=True 70.74s
+[0:31/120] lp85 r0 think  ok=True calls=1 tok=1343 stop=eos dir_ok=True 47.36s
+[0:32/120] lp85 r0 antiid ok=True calls=1 tok=1240 stop=word dir_ok=True 40.16s
+[0:33/120] wa30 r0 base   ok=True calls=1 tok=522 stop=word dir_ok=True 68.81s
+[0:34/120] wa30 r0 think  ok=True calls=1 tok=1193 stop=eos dir_ok=True 38.09s
+[0:35/120] wa30 r0 antiid ok=False calls=2 tok=5 stop=word dir_ok=True 147.44s
+[0:36/120] wa30 r0 delta  ok=True calls=3 tok=91 stop=word dir_ok=True 287.5s
+[0:37/120] tn36 r0 think  ok=True calls=1 tok=868 stop=eos dir_ok=True 30.1s
+[0:38/120] tn36 r0 antiid ok=True calls=1 tok=1383 stop=word dir_ok=True 80.32s
+[0:39/120] tn36 r0 delta  ok=True calls=1 tok=1528 stop=word dir_ok=True 139.24s
+[0:40/120] tn36 r0 base   ok=True calls=1 tok=2731 stop=word dir_ok=True 84.32s
+[0:41/120] ls20 r1 think  ok=True calls=1 tok=1226 stop=eos dir_ok=True 85.27s
+[0:42/120] ls20 r1 antiid ok=True calls=1 tok=1468 stop=word dir_ok=True 124.14s
+[0:43/120] ls20 r1 delta  ok=True calls=1 tok=1436 stop=word dir_ok=True 54.48s
+[0:44/120] ls20 r1 base   ok=True calls=1 tok=3786 stop=word dir_ok=True 116.4s
+[0:45/120] tu93 r1 antiid ok=True calls=1 tok=2217 stop=word dir_ok=True 130.19s
+[0:46/120] tu93 r1 delta  ok=True calls=1 tok=2324 stop=word dir_ok=True 88.61s
+[0:47/120] tu93 r1 base   ok=True calls=1 tok=1447 stop=word dir_ok=True 104.78s
+[0:48/120] tu93 r1 think  ok=True calls=1 tok=1184 stop=eos dir_ok=True 39.6s
+[0:49/120] m0r0 r1 delta  ok=True calls=1 tok=1524 stop=word dir_ok=True 571.4s
+[0:50/120] m0r0 r1 base   ok=True calls=1 tok=519 stop=word dir_ok=True 53.24s
+[0:51/120] m0r0 r1 think  ok=True calls=1 tok=1514 stop=eos dir_ok=True 52.31s
+[0:52/120] m0r0 r1 antiid ok=True calls=3 tok=151 stop=word dir_ok=True 221.95s
+[0:53/120] ar25 r1 base   ok=True calls=1 tok=1430 stop=word dir_ok=True 101.1s
+[0:54/120] ar25 r1 think  ok=True calls=1 tok=3288 stop=eos dir_ok=True 109.14s
+[0:55/120] ar25 r1 antiid ok=True calls=3 tok=169 stop=word dir_ok=True 125.74s
+[0:56/120] ar25 r1 delta  ok=True calls=1 tok=637 stop=word dir_ok=True 20.76s
+[0:57/120] g50t r1 think  ok=True calls=1 tok=770 stop=eos dir_ok=True 28.63s
+[0:58/120] g50t r1 antiid ok=True calls=1 tok=1307 stop=word dir_ok=True 53.02s
+[0:59/120] g50t r1 delta  ok=True calls=1 tok=1056 stop=word dir_ok=True 52.72s
+[0:60/120] g50t r1 base   ok=True calls=1 tok=701 stop=word dir_ok=True 29.22s
+[0:61/120] bp35 r1 antiid ok=True calls=1 tok=1460 stop=word dir_ok=True 54.85s
+[0:62/120] bp35 r1 delta  ok=True calls=1 tok=796 stop=word dir_ok=True 46.45s
+[0:63/120] bp35 r1 base   ok=True calls=1 tok=1292 stop=word dir_ok=True 42.46s
+[0:64/120] bp35 r1 think  ok=True calls=1 tok=1022 stop=eos dir_ok=True 40.34s
+[0:65/120] lf52 r1 delta  ok=True calls=1 tok=1918 stop=word dir_ok=True 65.49s
+[0:66/120] lf52 r1 base   ok=True calls=1 tok=1724 stop=word dir_ok=True 54.84s
+[0:67/120] lf52 r1 think  ok=True calls=1 tok=885 stop=eos dir_ok=True 32.59s
+[0:68/120] lf52 r1 antiid ok=False calls=2 tok=938 stop=word dir_ok=True 138.03s
+[0:69/120] lp85 r1 base   ok=True calls=1 tok=3236 stop=word dir_ok=True 114.3s
+[0:70/120] lp85 r1 think  ok=True calls=1 tok=1712 stop=eos dir_ok=True 59.06s
+[0:71/120] lp85 r1 antiid ok=False calls=2 tok=701 stop=word dir_ok=True 155.17s
+[0:72/120] lp85 r1 delta  ok=True calls=1 tok=2700 stop=word dir_ok=True 99.46s
+[0:73/120] wa30 r1 think  ok=True calls=1 tok=4196 stop=eos dir_ok=True 133.56s
+[0:74/120] wa30 r1 antiid ok=True calls=1 tok=2316 stop=word dir_ok=True 72.97s
+[0:75/120] wa30 r1 delta  ok=False calls=2 tok=1817 stop=word dir_ok=True 90.62s
+[0:76/120] wa30 r1 base   ok=True calls=1 tok=774 stop=word dir_ok=True 22.78s
+[0:77/120] tn36 r1 antiid ok=True calls=3 tok=98 stop=word dir_ok=True 189.62s
+[0:78/120] tn36 r1 delta  ok=True calls=1 tok=1458 stop=word dir_ok=True 43.71s
+[0:79/120] tn36 r1 base   ok=True calls=3 tok=327 stop=word dir_ok=True 140.55s
+[0:80/120] tn36 r1 think  ok=True calls=1 tok=887 stop=eos dir_ok=True 31.19s
+[0:81/120] ls20 r2 antiid ok=True calls=1 tok=1797 stop=word dir_ok=True 125.6s
+[0:82/120] ls20 r2 delta  ok=True calls=1 tok=2066 stop=word dir_ok=True 79.01s
+[0:83/120] ls20 r2 base   ok=True calls=1 tok=1926 stop=word dir_ok=True 59.76s
+[0:84/120] ls20 r2 think  ok=True calls=1 tok=1184 stop=eos dir_ok=True 42.45s
+[0:85/120] tu93 r2 delta  ok=True calls=1 tok=2107 stop=word dir_ok=True 586.02s
+[0:86/120] tu93 r2 base   ok=True calls=1 tok=2314 stop=word dir_ok=True 69.03s
+[0:87/120] tu93 r2 think  ok=True calls=1 tok=996 stop=eos dir_ok=True 70.35s
+[0:88/120] tu93 r2 antiid ok=True calls=1 tok=1619 stop=word dir_ok=True 177.94s
+[0:89/120] m0r0 r2 base   ok=True calls=1 tok=1190 stop=word dir_ok=True 93.01s
+[0:90/120] m0r0 r2 think  ok=True calls=1 tok=1552 stop=eos dir_ok=True 53.73s
+[0:91/120] m0r0 r2 antiid ok=True calls=1 tok=2135 stop=word dir_ok=True 117.82s
+[0:92/120] m0r0 r2 delta  ok=True calls=1 tok=725 stop=word dir_ok=True 45.99s
+[0:93/120] ar25 r2 think  ok=True calls=1 tok=1535 stop=eos dir_ok=True 53.16s
+[0:94/120] ar25 r2 antiid ok=True calls=1 tok=1763 stop=word dir_ok=True 71.3s
+[0:95/120] ar25 r2 delta  ok=True calls=1 tok=2307 stop=word dir_ok=True 114.05s
+[0:96/120] ar25 r2 base   ok=True calls=3 tok=167 stop=word dir_ok=True 407.64s
+[0:97/120] g50t r2 antiid ok=True calls=1 tok=1330 stop=word dir_ok=True 45.87s
+[0:98/120] g50t r2 delta  ok=False calls=2 tok=241 stop=word dir_ok=True 309.32s
+[0:99/120] g50t r2 base   ok=True calls=1 tok=1413 stop=word dir_ok=True 41.95s
+[0:100/120] g50t r2 think  ok=True calls=1 tok=715 stop=eos dir_ok=True 27.29s
+[0:101/120] bp35 r2 delta  ok=True calls=1 tok=1225 stop=word dir_ok=True 47.78s
+[0:102/120] bp35 r2 base   ok=True calls=3 tok=181 stop=word dir_ok=True 86.8s
+[0:103/120] bp35 r2 think  ok=True calls=1 tok=1105 stop=eos dir_ok=True 42.25s
+[0:104/120] bp35 r2 antiid ok=True calls=1 tok=1388 stop=word dir_ok=True 47.27s
+[0:105/120] lf52 r2 base   ok=True calls=1 tok=1212 stop=word dir_ok=True 86.3s
+[0:106/120] lf52 r2 think  ok=True calls=1 tok=2163 stop=eos dir_ok=True 71.47s
+[0:107/120] lf52 r2 antiid ok=True calls=3 tok=8192 stop=limit dir_ok=True 346.84s
+[0:108/120] lf52 r2 delta  ok=True calls=1 tok=1176 stop=word dir_ok=True 39.78s
+[0:109/120] lp85 r2 think  ok=True calls=1 tok=1949 stop=eos dir_ok=True 65.4s
+[0:110/120] lp85 r2 antiid ok=True calls=1 tok=1127 stop=word dir_ok=True 40.58s
+[0:111/120] lp85 r2 delta  ok=False calls=2 tok=5 stop=word dir_ok=True 121.69s
+[0:112/120] lp85 r2 base   ok=True calls=1 tok=1858 stop=word dir_ok=True 68.22s
+[0:113/120] wa30 r2 antiid ok=True calls=1 tok=1229 stop=word dir_ok=True 93.41s
+[0:114/120] wa30 r2 delta  ok=True calls=1 tok=898 stop=word dir_ok=True 27.03s
+[0:115/120] wa30 r2 base   ok=True calls=1 tok=1214 stop=word dir_ok=True 35.73s
+[0:116/120] wa30 r2 think  ok=True calls=1 tok=1683 stop=eos dir_ok=True 52.07s
+[0:117/120] tn36 r2 delta  ok=True calls=1 tok=1055 stop=word dir_ok=True 36.24s
+[0:118/120] tn36 r2 base   ok=True calls=1 tok=1178 stop=word dir_ok=True 35.73s
+[0:119/120] tn36 r2 think  ok=True calls=1 tok=929 stop=eos dir_ok=True 32.0s
+[0:120/120] tn36 r2 antiid ok=True calls=1 tok=702 stop=word dir_ok=True 23.11s
+
+shard 0 done: 120 cells in 11277.5s

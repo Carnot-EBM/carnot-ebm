@@ -1,0 +1,18 @@
+# Regenerable or scratch, deliberately not committed. Everything that constitutes EVIDENCE --
+# the emitted engines, the per-cell run records, the per-engine scores, the analysis, the
+# reachability probe, the pre-registration and the server witnesses -- IS committed.
+#
+# windows.pkl (71 MB) is the pickled induction windows plus the fresh held-out sets. It is
+# DETERMINISTICALLY REGENERABLE: `python prep.py` rebuilds it from the offline sim at the fixed
+# seed recorded in out/prep_meta.json (fresh_seed 20260802, fresh_n 220). out/prep_meta.json --
+# which IS committed -- carries every split size, every leak-check count and the sha256 of each
+# game's induce prompt, so the split this run actually used is auditable without the pickle.
+windows.pkl
+
+# Per-cell scratch engine stores. Redundant: every emitted engine is committed under out/engines/.
+e3_store/
+__pycache__/
+
+# Library chatter from the offline sim (788 KB of "Found latest version of <game>" lines).
+# The prep RESULTS are in out/prep_meta.json.
+out/prep.log
