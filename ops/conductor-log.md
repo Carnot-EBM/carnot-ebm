@@ -15277,3 +15277,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-03 21:04 UTC | Gated on Exp5963 ready: all-three-model GGUF conte | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ing mid-suite. |
 | 2026-08-03 21:49 UTC | Gated on Exp5963 ready: all-three-model GGUF conte | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_5964_sota_at |
 | 2026-08-03 21:51 UTC | Gated on Exp5964 ready: portable exact-atom compat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5964-sota-atom-compatibility-corpus) |
+| 2026-08-03 21:51 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |
+| 2026-08-03 21:53 UTC | Gated on Exp5964 ready: portable exact-atom compat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5964-sota-atom-compatibility-corpus) |
