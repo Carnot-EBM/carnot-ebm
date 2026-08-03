@@ -16455,3 +16455,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
 **Banked ARC levels remain 3/3. Nothing was submitted; no scored or online game was played.**
 - 2026-08-03: Gated on Exp5963 ready: all-three-model GGUF context/atom compatibility corpus (⚠️ Blocked) — honest_verdict=blocked: insufficient_free_vram; results/experiment_5964_sota_atom_compatibility_corpus.json
 - 2026-08-03: Delayed-commit transactional memory fixture over ABI v2 (✅ Complete) — honest_verdict=complete_ready: delayed_commit_memory_fixture_ready; results/experiment_5967_delayed_commit_memory_fixture.json
+- 2026-08-03: Gated on Exp5967 ready: prospective delayed-commit continuous self-learning A/B (✅ Complete) — honest_verdict=complete_ready: delayed_commit_prospective_csl_ready_write_through_control_wins; results/experiment_5968_delayed_commit_csl_prospective.json
