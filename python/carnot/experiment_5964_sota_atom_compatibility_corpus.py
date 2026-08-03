@@ -307,6 +307,73 @@ def model_row_relative_path(hf_id: str) -> Path:
     return Path("results") / f"{ROW_BASENAME}.{model_family(hf_id)}.rows.jsonl"
 
 
+def _is_primary_model_gguf_path(path: str | Path) -> bool:
+    """Return true for a model GGUF, not a projector or sidecar GGUF."""
+
+    name = Path(path).name.lower()
+    return name.endswith(".gguf") and not name.startswith("mmproj") and "mmproj" not in name
+
+
+def _pick_primary_gguf(ggufs: Sequence[Path], preferred_quant: str) -> str:
+    candidates = [path for path in ggufs if _is_primary_model_gguf_path(path)]
+    preference_order = [
+        f"UD-{preferred_quant}",
+        preferred_quant,
+        "UD-Q4_K_M",
+        "Q4_K_M",
+        "UD-Q5_K_M",
+        "Q5_K_M",
+        "UD-Q8_XL",
+        "Q8_0",
+    ]
+    for token in preference_order:
+        matches = [path for path in candidates if token.lower() in path.name.lower()]
+        if matches:
+            return str(max(matches, key=lambda path: path.stat().st_mtime))
+    return str(max(candidates, key=lambda path: path.stat().st_mtime)) if candidates else ""
+
+
+def _resolve_cached_primary_gguf(
+    hf_id: str,
+    preferred_quant: str = "Q4_K_M",
+    cache_root: str | Path | None = None,
+) -> str:
+    """Resolve a cached primary model GGUF while ignoring newer projector snapshots."""
+
+    resolved = resolve_cached_gguf(
+        hf_id,
+        preferred_quant,
+        cache_root=str(cache_root) if cache_root is not None else None,
+    )
+    if resolved and _is_primary_model_gguf_path(resolved):
+        return resolved
+
+    root = Path(cache_root) if cache_root is not None else Path.home() / ".cache" / "huggingface" / "hub"
+    model_dir = root / f"models--{hf_id.replace('/', '--')}"
+    ggufs: list[Path] = []
+    snapshots_dir = model_dir / "snapshots"
+    if snapshots_dir.is_dir():
+        ggufs.extend(
+            path
+            for path in snapshots_dir.rglob("*.gguf")
+            if ".no_exist" not in {part.lower() for part in path.parts}
+        )
+
+    models_root = REPO_ROOT / "models"
+    if models_root.is_dir():
+        basename = hf_id.split("/", 1)[-1]
+        stripped = basename[:-5] if basename.endswith("-GGUF") else basename
+        for candidate in (
+            models_root / stripped,
+            models_root / basename,
+            models_root / stripped.lower(),
+            models_root / basename.lower(),
+        ):
+            if candidate.is_dir():
+                ggufs.extend(candidate.glob("*.gguf"))
+    return _pick_primary_gguf(ggufs, preferred_quant)
+
+
 def normalize_model_specs(model_specs: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
     """Normalize specs with the Exp5852 mandated order and embedded-tokenizer rule."""
 
@@ -319,6 +386,7 @@ def normalize_model_specs(model_specs: Sequence[Mapping[str, Any]]) -> list[Json
         model_path = str(source.get("model_path") or source.get("cache_path") or "")
         path = Path(model_path).expanduser() if model_path else Path()
         present = bool(model_path and path.is_file())
+        primary_model_file = bool(present and _is_primary_model_gguf_path(path))
         provided = source.get("tokenizer_receipt")
         if isinstance(provided, Mapping):
             tokenizer = dict(provided)
@@ -354,6 +422,7 @@ def normalize_model_specs(model_specs: Sequence[Mapping[str, Any]]) -> list[Json
                 "local_path_hash": sha256_text(str(path.resolve())) if model_path else "",
                 "model_sha256": model_sha,
                 "local_model_present": present,
+                "primary_model_file": primary_model_file,
                 "headline_eligible": source.get("headline_eligible") is not False,
                 "active_params_b": source.get("active_params_b", registry_row.get("active_params_b")),
                 "total_params_b": source.get("total_params_b", registry_row.get("total_params_b")),
@@ -389,7 +458,7 @@ def resolve_all_model_specs() -> list[JsonDict]:  # pragma: no cover - host cach
                 "family": model_family(hf_id),
                 "role": registry_row.get("role", ""),
                 "gpu": index % 2,
-                "model_path": resolve_cached_gguf(hf_id, quant) or "",
+                "model_path": _resolve_cached_primary_gguf(hf_id, quant),
                 "quantization": quant,
                 "headline_eligible": True,
                 "active_params_b": registry_row.get("active_params_b"),
@@ -801,6 +870,7 @@ def _model_file_hashes(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict:
             "model_path": str(spec["model_path"]),
             "model_sha256": str(spec["model_sha256"]),
             "local_model_present": spec.get("local_model_present") is True,
+            "primary_model_file": spec.get("primary_model_file") is True,
             "local_path_hash": str(spec["local_path_hash"]),
             "quantization": str(spec["quantization"]),
         }
@@ -810,7 +880,9 @@ def _model_file_hashes(model_specs: Sequence[Mapping[str, Any]]) -> JsonDict:
         "schema": SCHEMA + ".model_file_hashes",
         "records": records,
         "all_mandated_files_present": all(
-            record["local_model_present"] and str(record["model_sha256"]).startswith("sha256:")
+            record["local_model_present"]
+            and record["primary_model_file"]
+            and str(record["model_sha256"]).startswith("sha256:")
             for record in records.values()
         ),
         "receipt_hash": sha256_json(records),
@@ -1478,6 +1550,7 @@ def _precondition_blockers(
         if (
             spec.get("local_model_present") is not True
             or not str(spec.get("model_path", "")).endswith(".gguf")
+            or spec.get("primary_model_file") is not True
             or model_path_name.startswith("mmproj")
             or not str(spec.get("model_sha256", "")).startswith("sha256:")
             or spec.get("headline_eligible") is not True

@@ -553,8 +553,92 @@ def test_scenario_infer_sota_5964_defensive_helper_branches(
     assert all(
         spec["tokenizer_receipt"]["loadable"] for spec in mod.normalize_model_specs(specs)
     )
+    assert all(spec["primary_model_file"] for spec in mod.normalize_model_specs(specs))
     missing_specs = mod.normalize_model_specs([{"hf_id": mod.MANDATED_MODEL_HF_IDS[0]}])
     assert missing_specs[0]["tokenizer_receipt"]["source"] == "missing_model_path"
+
+    cache_root = tmp_path / "hf-cache"
+    model_cache = (
+        cache_root
+        / f"models--{mod.MANDATED_MODEL_HF_IDS[1].replace('/', '--')}"
+        / "snapshots"
+    )
+    primary_snapshot = model_cache / "old-primary"
+    sidecar_snapshot = model_cache / "new-sidecar"
+    primary_snapshot.mkdir(parents=True)
+    sidecar_snapshot.mkdir(parents=True)
+    primary = primary_snapshot / "gemma-4-31B-it-Q4_K_M.gguf"
+    sidecar = sidecar_snapshot / "mmproj-F16.gguf"
+    primary.write_bytes(b"GGUF-primary")
+    sidecar.write_bytes(b"GGUF-sidecar")
+    primary_mtime = 100
+    sidecar_mtime = 200
+    primary.touch()
+    sidecar.touch()
+    import os
+
+    os.utime(primary, (primary_mtime, primary_mtime))
+    os.utime(sidecar, (sidecar_mtime, sidecar_mtime))
+    assert (
+        mod._resolve_cached_primary_gguf(
+            mod.MANDATED_MODEL_HF_IDS[1],
+            "Q4_K_M",
+            cache_root=cache_root,
+        )
+        == str(primary)
+    )
+    unmatched = tmp_path / "custom-primary.gguf"
+    unmatched.write_bytes(b"GGUF-custom")
+    assert mod._pick_primary_gguf([unmatched], "NO_MATCH") == str(unmatched)
+    monkeypatch.setattr(
+        mod,
+        "resolve_cached_gguf",
+        lambda hf_id, preferred_quant, cache_root=None: str(primary),
+    )
+    assert (
+        mod._resolve_cached_primary_gguf(
+            mod.MANDATED_MODEL_HF_IDS[1],
+            "Q4_K_M",
+            cache_root=cache_root,
+        )
+        == str(primary)
+    )
+    project_root = tmp_path / "project"
+    project_model_dir = project_root / "models" / "gemma-4-31B-it"
+    project_model_dir.mkdir(parents=True)
+    project_model = project_model_dir / "project-primary.gguf"
+    project_model.write_bytes(b"GGUF-project")
+    monkeypatch.setattr(mod, "resolve_cached_gguf", lambda *args, **kwargs: None)
+    monkeypatch.setattr(mod, "REPO_ROOT", project_root)
+    assert (
+        mod._resolve_cached_primary_gguf(
+            mod.MANDATED_MODEL_HF_IDS[1],
+            "Q4_K_M",
+            cache_root=tmp_path / "empty-cache",
+        )
+        == str(project_model)
+    )
+    sidecar_specs = mod.normalize_model_specs(
+        [
+            {
+                "hf_id": mod.MANDATED_MODEL_HF_IDS[0],
+                "model_path": str(specs[0]["model_path"]),
+                "tokenizer_receipt": {"loadable": True},
+            },
+            {
+                "hf_id": mod.MANDATED_MODEL_HF_IDS[1],
+                "model_path": str(sidecar),
+                "tokenizer_receipt": {"loadable": True},
+            },
+            {
+                "hf_id": mod.MANDATED_MODEL_HF_IDS[2],
+                "model_path": str(specs[2]["model_path"]),
+                "tokenizer_receipt": {"loadable": True},
+            },
+        ]
+    )
+    assert sidecar_specs[1]["primary_model_file"] is False
+    assert mod._model_file_hashes(sidecar_specs)["all_mandated_files_present"] is False
 
     missing_gate = mod.gate_replay_receipt(
         fixture_artifact_path=tmp_path / "no-artifact.json",
