@@ -15282,3 +15282,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-03 21:53 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |
 | 2026-08-03 21:55 UTC | Gated on Exp5964 ready: portable exact-atom compat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5964-sota-atom-compatibility-corpus) |
 | 2026-08-03 21:55 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |
+| 2026-08-03 22:13 UTC | Delayed-commit transactional memory fixture over A | OK | 87 passed, 1 warning in 8.45s |
