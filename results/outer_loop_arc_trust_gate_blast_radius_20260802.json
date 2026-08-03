@@ -192,5 +192,57 @@
   "acceptance_gate_frontier_effect_significant_note": "Deliberately FALSE and reported as such: achieved sign-test p=0.18 against a pre-registered min reachable p of 1.22e-4. A clearly-stated null.",
   "verifier_is_oracle": false,
   "verifier_is_oracle_note": "No verifier-value or moat claim is made by this artifact. It measures the COST of a gate decision, not the discriminating value of any verifier.",
-  "flagged_adversarial": false
+  "flagged_adversarial": false,
+  "CORRIGENDUM_2026_08_02_POST_ADVERSARIAL_REVIEW": {
+    "status": "APPEND-ONLY. No prior number altered or deleted (never-prune). Two corrections WEAKEN a claim; one STRENGTHENS a claim by recovering censored cells.",
+    "what_SURVIVED_the_review_unchanged": {
+      "FINDING_0_voidness": "STANDS, re-verified at the arm's OWN run-time commit 7761619 (not merely HEAD): line 5876 there is a bare `if _gate_value < 0.5:` with no change-gate branch, which at HEAD did not yet exist. The lp85 observation is decisive and reproduces: verify_accuracy 0.92 / cell_recall 0.0 -- under the shipped default 0.92>=0.5 PASSES, under the 'fix' 0.0<0.5 FAILS. The arm was a TIGHTENING for that row, not a relaxation.",
+      "FINDING_3_no_downstream_check": "STANDS and is STRENGTHENED -- see C2.",
+      "FINDING_4_no_false_edges_no_mis_debiting": "STANDS. Both are structural facts about which call sites exist.",
+      "dead_game_execution": "STANDS. Recomputed from dead80.json: 6 of 14 games hit GAME_OVER mid-plan; dead steps = 80 - first_game_over_at_step = [16, 20, 30, 48, 50, 64] for lf52, r11l, sp80, ft09, tu93, bp35; median 39; max 64 = 20.0% of the 400-action scored budget."
+    },
+    "C1_THE_UPSIDE_CLAIM_IS_WITHDRAWN_it_was_STRUCTURALLY_PINNED_TO_ZERO": {
+      "defect": "admitting_bad_engines_costs concluded 'What it buys: nothing ... 0/10 gained a level ... relaxation is pure cost with no measured upside', and guard_needed reason (4) repeated it. But injection_method states the engine 'generalises not at all (unseen state/action -> a fixed roll)' and FINDING_1 states its win predicate 'was pinned BY CONSTRUCTION to a state it reaches in PLAN_K steps'. An engine that cannot predict any unseen state, planning toward a constructed non-win target, CANNOT gain a level.",
+      "why_this_is_the_SAME_error_this_artifact_was_written_to_correct": "levels_gained_by_admitted_arm: 0 was arithmetically forced before the run, exactly as the hardcoded 0.5 literal forced the cellrecall arm's 0 admissions. Records that could ever have gained a level: ZERO. Applying this artifact's own voidness test to itself, the upside measurement is VOID.",
+      "the_existing_caveat_did_NOT_cover_it": "FINDING_1's necessary_is_not_sufficient_note correctly flags the PLAN RATE as an upper bound. It says nothing about the level-gain outcome being pinned. The caveat that existed does not discharge the claim that was made.",
+      "corrected_statement": "COST measured; UPSIDE NOT MEASURABLE by this design. The reject arm also gained 0 levels, so the comparison is symmetric but uninformative in both arms. Nothing here shows relaxation buys nothing -- it shows this experiment could not have detected it if it did.",
+      "what_still_supports_no_ship": "Not this. The independent evidence is (a) the live admit rate at t=0.20 is 2/28 engines over 2/14 games, and (b) 0 of the 15 strongest offline engines survive on 120 fresh rows (outer_loop_arc_generation_vs_selection_20260802.json PAIRED_generalisation_of_the_strongest_engines)."
+    },
+    "C2_36_of_36_WAS_A_CENSORED_DENOMINATOR_THE_TRUE_FIGURE_IS_42_of_42": {
+      "defect": "FINDING_2.measured_structurally reports 'cells: 36' and '36 / 36' beside 'design: 14 plain games x plan lengths {5, 25, 60}' -- which is 42. structural.json holds 42 entries, 6 carrying only a TypeError and no data. The words error/excluded/42 appear nowhere in the artifact. The drop was NON-RANDOM: 0/14 at len 5, 1/14 at len 25, 5/14 at len 60 -- concentrated at the length nearest the headline 80-step configuration.",
+      "the_6_censored_cells": ["bp35@25", "bp35@60", "ft09@60", "r11l@60", "sp80@60", "tu93@60"],
+      "root_cause": "Not a policy failure. structural_probe.py's own driver loop does getattr(GameAction, f\"ACTION{int(kind)}\"); AFTER the plan is exhausted the EXPLORER returns a None-kind move and int(None) raises. The crash is in the harness, strictly downstream of the measurement.",
+      "RECOVERED_this_session": "All 6 re-run with the driver crash caught and policy state read at crash time. Every one consumed its FULL plan (pi_final == plan_len), zero early abandonment, pi_at_crash == plan_len in every case -- the crash is provably after exhaustion.",
+      "corrected_figure": "42 of 42 cells consumed every plan step; 0 of 42 showed ANY early abandonment.",
+      "also_correct_the_per_length_n": "The reported actions_spent_by_plan_length row for len 60 ('min 61 median 61 max 61') was computed over 9 games, not 14. With the 5 recovered len-60 cells the count is 14.",
+      "recovered_censored_cells": [
+      {"game": "bp35", "plan_len": 25, "plan_steps_from_execute_branch": 25, "plan_fully_consumed": true, "pi_final": 25, "phase_final": "explore", "actions_spent": 25, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 25, "kind_repr": "None", "pi_at_crash": 25, "phase_at_crash": "explore", "plan_len": 25, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
+      {"game": "bp35", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
+      {"game": "ft09", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
+      {"game": "r11l", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
+      {"game": "sp80", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true},
+      {"game": "tu93", "plan_len": 60, "plan_steps_from_execute_branch": 60, "plan_fully_consumed": true, "pi_final": 60, "phase_final": "explore", "actions_spent": 60, "left_execute_early": null, "crash_after_exhaustion": {"at_action_index": 60, "kind_repr": "None", "pi_at_crash": 60, "phase_at_crash": "explore", "plan_len": 60, "exc": "TypeError(\"int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\")"}, "level_before": 0, "level_after": 0, "explored_out": true}
+      ]
+    },
+    "C3_min_reachable_p_CORRECTED_from_1.22e-4_to_3.91e-3": {
+      "defect": "FINDING_4's VERDICT asserts 'achieved p = 0.18 against a min reachable p of 1.22e-4 ... unproven in magnitude at n=14 games'. The test never ran at n=14. Pre-registering 2*0.5**14 on 14 games was legitimate, but the pre-registered below-threshold exclusion rule then correctly dropped 4 games (lf52, r11l, tn36, vc33), leaving paired.json['admitted'] with 10 rows; the graph-node sign test drops one further tie, leaving 9 effective pairs.",
+      "prereg_value_PRESERVED_never_prune": 0.0001220703125,
+      "realized_min_reachable_p_graph_nodes": 0.00390625,
+      "realized_min_reachable_p_untested_rows": 0.001953125,
+      "overstatement": "32x (graph nodes) / 16x (untested rows).",
+      "why_this_matters_most_for_a_NULL": "For a clearly-stated null the min reachable p IS the entire claim to having been able to detect the effect. Overstating reach by 32x overstates how informative the null is. The null itself is unchanged: 7 down / 2 up / 1 tie, two-sided p = 0.1797, and explored_out 0/10 in BOTH arms so this is an ordinary exploration shortfall, not a frontier collapse.",
+      "verdict_restated": "Directionally negative, NOT significant, and the bar it failed to clear is 3.91e-3 rather than 1.22e-4. Still a null; still do not cite the frontier cost as established."
+    },
+    "C4_the_bp35_provenance_sentence_cites_a_cell_that_does_not_exist": {
+      "defect": "FINDING_3.demonstrated reads 'bp35, plan_len 25: GameState.GAME_OVER at step 15; the executor fired the remaining 10 steps'. No committed raw file contains that cell: structural.json's bp35@25 is one of the 6 errored cells and holds no data, and blast14.json's bp35 rows record actions_after_game_over: 0.",
+      "the_reproducible_cell": "dead80.json bp35: plan_len 80, plan_steps_executed 80, first_game_over_at_step 16, steps_executed_into_dead_game 64, pct_of_scored_budget_400 = 20.0.",
+      "substance_survives": "Yes. 6 of 14 games fired 16-64 further actions after GAME_OVER; the executor checks no invariant, not even liveness. Only the cited example was wrong; the claim is now sourced to dead80.json."
+    },
+    "C5_the_injected_admit_rate_is_SCOPED": {
+      "defect": "guard_needed reason (4) states 'relaxation admitted 10 of 14 games' with no injection qualifier, and admitting_bad_engines_costs repeats it.",
+      "correction": "10/14 is a property of an engine HAND-CALIBRATED to land in a chosen 0.19-0.28 band (f=0.30, tuned on tu93). It is not the rate at which real induced engines clear 0.20 -- that rate, from the live record, is 2 of 28 engines over 2 of 14 games.",
+      "does_the_guard_argument_survive": "YES, on reasons (1)-(3), which are structural and were measured on the real policy against real frames: the trust gate is the only defence, one admission costs up to 80 unchecked actions, and the executor will not stop even for GAME_OVER. Reason (4) is marked injection-derived and is no longer load-bearing."
+    },
+    "what_did_NOT_change": "FINDING_0 (voidness); FINDING_3's core answer (execution is blind, cost = len(plan)); FINDING_4's no-false-edges and no-mis-debiting results; the dead-game measurements; the sign-test p-values; guard_needed: YES."
+  }
 }
