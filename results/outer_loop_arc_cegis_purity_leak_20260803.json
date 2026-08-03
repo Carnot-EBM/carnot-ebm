@@ -1,0 +1,1213 @@
+{
+ "experiment": "outer_loop_arc_cegis_purity_leak_20260803",
+ "experiment_id": "outer_loop_arc_cegis_purity_leak_20260803",
+ "title": "REPRODUCE-ONLY: CEGIS refinement feedback leaks the held-out acceptance rows (defect C)",
+ "run_date": "2026-08-03T14:10:00.744159+00:00",
+ "git_head": "f6a39bc910adabad056d4c006d34aacbe9dd5e8b",
+ "phase": "reproduce_only_no_code_change",
+ "schema": "carnot.outer_loop_arc_measurement_diagnostic",
+ "inference_substrate": {
+  "value": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "principle": "The dominant compute is offline-arcade env stepping (13 roster games solved to L1 through their adapters by build_progress_window) plus pure-Python WorldModelVerifier scoring. NO LLM is loaded, no GGUF, no CUDA. Declaring the substrate explicitly is what stops the duration floor being applied from the wrong tier -- see CLAUDE.md Inference-Substrate Declaration Discipline."
+ },
+ "solve_provenance": {
+  "value": "development_proxy",
+  "principle": "No level, solve or reproduced_levels is claimed by this artifact at all. The offline dev twin was used purely as a source of REAL transition windows to measure an instrument against; declaring the weaker provenance is the honest label even when no solve claim is made."
+ },
+ "verifier_is_oracle": {
+  "value": false,
+  "principle": "No verifier-value, moat or efficiency claim is made here. This artifact measures a MEASUREMENT defect in a gate, not a verifier's discriminative power."
+ },
+ "random_seed": {
+  "value": 20260803,
+  "principle": "Every engine and corpus in this reproduction is constructed deterministically (memorised transition tables, index-ordered subsets); there is no sampling. The seed is recorded so a third party can confirm determinism rather than assume it."
+ },
+ "reproducibility_checksum": {
+  "value": "0e8ce023d24bdaea1bd283d673f77d0771a4ba4ceba13ea67c369afa96589a03",
+  "principle": "SHA256 over the reproduction script plus the three shipped modules whose behaviour is being measured. If any of them changes, the numbers below must be re-derived rather than re-cited."
+ },
+ "duration_s": 443.93,
+ "preconditions_checked": [
+  {
+   "resource": "offline arcade + 13 roster GameAdapters",
+   "available": true,
+   "evidence": "build_progress_window returned a window for 13/13 roster games"
+  },
+  {
+   "resource": "no LLM required",
+   "available": true,
+   "evidence": "no llama_cpp / transformers / CUDA import on any path in this reproduction"
+  }
+ ],
+ "question": "Are the rows that GRADE acceptance (heldout_accuracy, last third, threshold 1.0) disjoint from the rows that SHAPE refinement (the mismatches rendered into refactor_prompt)?",
+ "answer": "No. They overlap, deterministically, and the overlap is DELIVERED into the prompt string.",
+ "mechanism_traced_in_shipped_code": {
+  "acceptance": "arc_llm_reinduction.py:1535-1536 reads select_trusted_world_model(...).selected_score.heldout_accuracy and compares it to verifier_threshold (min_heldout_accuracy=1.0 at both live call sites, arc_competition_agent.py:6225 and :6362). select_trusted_world_model splits at arc_world_model_trust_energy.py:595 via _split_prefix_heldout -> last max(1, round(n/3)) rows.",
+  "refinement": "arc_llm_reinduction.py:1585 builds WorldModelVerifier(list(transitions), hud_mask=hud_mask).score(selected.engine) -- the FULL corpus, prefix AND held-out -- with the shipped default max_mismatch=8, mismatches appended in index order, each carrying true_change=_delta(g0,g1), i.e. the OBSERVED next state.",
+  "delivery": "line 1596 real_mismatches -> line 1496 proposer.refactor(game, _counterexample_result(ce)) -> refactor_prompt (arc_executable_world_model.py:3001) -> _bounded_mismatches(vr.mismatches, limit=5) -> the first FIVE mismatches, verbatim, in the prompt text."
+ },
+ "exact_leak_law": {
+  "formula": "n_heldout_answers_delivered = max(0, min(5 - n_prefix_mismatches, n_heldout_mismatches))",
+  "why": "mismatches are collected in INDEX order and prefix rows have lower indices than held-out rows, so prefix mismatches occupy the 5 render slots first. Prefix mismatches are exactly what an engine that is GOOD on the prefix does not have.",
+  "validated_on_configurations": 270,
+  "exact_matches": 270,
+  "counterexamples": 0
+ },
+ "delivery_check": {
+  "principle": "Availability is not delivery. Every leak count below is obtained by PARSING the mismatch block back out of the rendered prompt STRING and mapping each true_change tuple to its row by that row's own unique changed cell -- never by trusting the mismatch's own `i` label.",
+  "configurations_where_delivered_equals_available": 270,
+  "configurations_total": 270
+ },
+ "A_real_window_shapes_measured": {
+  "note": "build_progress_window (WINDOW_K=12) on the exp5760/5764/5766 roster. These are the shapes the null was actually measured at -- they are NOT n=25.",
+  "per_game": {
+   "tu93": {
+    "n": 12,
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3
+   },
+   "tr87": {
+    "n": 12,
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3
+   },
+   "sp80": {
+    "n": 4,
+    "n_prefix": 3,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0
+   },
+   "sb26": {
+    "n": 9,
+    "n_prefix": 6,
+    "n_heldout": 3,
+    "gradeable_heldout_rows": 2
+   },
+   "re86": {
+    "n": 12,
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3
+   },
+   "g50t": {
+    "n": 12,
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3
+   },
+   "r11l": {
+    "n": 3,
+    "n_prefix": 2,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0
+   },
+   "cd82": {
+    "n": 5,
+    "n_prefix": 3,
+    "n_heldout": 2,
+    "gradeable_heldout_rows": 1
+   },
+   "ar25": {
+    "n": 12,
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3
+   },
+   "lp85": {
+    "n": 5,
+    "n_prefix": 3,
+    "n_heldout": 2,
+    "gradeable_heldout_rows": 1
+   },
+   "sk48": {
+    "n": 12,
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3
+   },
+   "vc33": {
+    "n": 3,
+    "n_prefix": 2,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0
+   },
+   "ft09": {
+    "n": 4,
+    "n_prefix": 3,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0
+   }
+  },
+  "n_range": [
+   3,
+   12
+  ]
+ },
+ "B_leak_on_real_windows_prefix_perfect_arm": {
+  "note": "engine reproduces every prefix row exactly and no held-out row -- the regime the leak is claimed to be worst in.",
+  "per_game": [
+   {
+    "game": "tu93",
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3,
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_rendered_from_heldout": 3,
+    "heldout_answers_delivered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "tr87",
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3,
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_rendered_from_heldout": 3,
+    "heldout_answers_delivered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "sp80",
+    "n_prefix": 3,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0,
+    "n_mismatch_full": 0,
+    "rendered_idx": [],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": [],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": false
+   },
+   {
+    "game": "sb26",
+    "n_prefix": 6,
+    "n_heldout": 3,
+    "gradeable_heldout_rows": 2,
+    "n_mismatch_full": 2,
+    "rendered_idx": [
+     6,
+     7
+    ],
+    "n_rendered_from_heldout": 2,
+    "heldout_answers_delivered_idx": [
+     6,
+     7
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "re86",
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3,
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_rendered_from_heldout": 3,
+    "heldout_answers_delivered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "g50t",
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3,
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_rendered_from_heldout": 3,
+    "heldout_answers_delivered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "r11l",
+    "n_prefix": 2,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0,
+    "n_mismatch_full": 0,
+    "rendered_idx": [],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": [],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": false
+   },
+   {
+    "game": "cd82",
+    "n_prefix": 3,
+    "n_heldout": 2,
+    "gradeable_heldout_rows": 1,
+    "n_mismatch_full": 1,
+    "rendered_idx": [
+     3
+    ],
+    "n_rendered_from_heldout": 1,
+    "heldout_answers_delivered_idx": [
+     3
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "ar25",
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3,
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_rendered_from_heldout": 3,
+    "heldout_answers_delivered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "lp85",
+    "n_prefix": 3,
+    "n_heldout": 2,
+    "gradeable_heldout_rows": 1,
+    "n_mismatch_full": 1,
+    "rendered_idx": [
+     3
+    ],
+    "n_rendered_from_heldout": 1,
+    "heldout_answers_delivered_idx": [
+     3
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "sk48",
+    "n_prefix": 8,
+    "n_heldout": 4,
+    "gradeable_heldout_rows": 3,
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_rendered_from_heldout": 3,
+    "heldout_answers_delivered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": true
+   },
+   {
+    "game": "vc33",
+    "n_prefix": 2,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0,
+    "n_mismatch_full": 0,
+    "rendered_idx": [],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": [],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": false
+   },
+   {
+    "game": "ft09",
+    "n_prefix": 3,
+    "n_heldout": 1,
+    "gradeable_heldout_rows": 0,
+    "n_mismatch_full": 0,
+    "rendered_idx": [],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": [],
+    "n_mismatch_prefix_only": 0,
+    "prefix_only_starved": false
+   }
+  ],
+  "games_leaking": 9,
+  "games_total": 13,
+  "games_where_leak_is_TOTAL": 9,
+  "games_with_zero_gradeable_heldout": 4
+ },
+ "C_leak_on_real_windows_floor_engine_arm": {
+  "note": "engine wrong on every row -- the regime exp5766's treated arm actually occupied. Leak still fires on SHORT corpora, where the 3-row prefix cannot fill the 5 render slots.",
+  "per_game": [
+   {
+    "game": "tu93",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "tr87",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "sp80",
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     0,
+     1,
+     2
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "sb26",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "re86",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "g50t",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "r11l",
+    "n_mismatch_full": 2,
+    "rendered_idx": [
+     0,
+     1
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "cd82",
+    "n_mismatch_full": 4,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "n_rendered_from_heldout": 1,
+    "heldout_answers_delivered_idx": [
+     3
+    ]
+   },
+   {
+    "game": "ar25",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "lp85",
+    "n_mismatch_full": 4,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "n_rendered_from_heldout": 1,
+    "heldout_answers_delivered_idx": [
+     3
+    ]
+   },
+   {
+    "game": "sk48",
+    "n_mismatch_full": 8,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "vc33",
+    "n_mismatch_full": 2,
+    "rendered_idx": [
+     0,
+     1
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   },
+   {
+    "game": "ft09",
+    "n_mismatch_full": 3,
+    "rendered_idx": [
+     0,
+     1,
+     2
+    ],
+    "n_rendered_from_heldout": 0,
+    "heldout_answers_delivered_idx": []
+   }
+  ],
+  "games_leaking": 2
+ },
+ "D_synthetic_sweep_at_the_live_agent_shape_n25": {
+  "note": "n=25 is the live-agent corpus shape tabulated in the shipped _induce_transitions_k docstring for six captured games. prefix 17 / held-out 8 computed by calling _split_prefix_heldout, not by arithmetic.",
+  "rows": [
+   {
+    "n_prefix_correct": 0,
+    "prefix_accuracy": 0.0,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 1,
+    "prefix_accuracy": 0.058824,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 2,
+    "prefix_accuracy": 0.117647,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 3,
+    "prefix_accuracy": 0.176471,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 4,
+    "prefix_accuracy": 0.235294,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 5,
+    "prefix_accuracy": 0.294118,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 6,
+    "prefix_accuracy": 0.352941,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 7,
+    "prefix_accuracy": 0.411765,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 8,
+    "prefix_accuracy": 0.470588,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     8,
+     9,
+     10,
+     11,
+     12
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 9,
+    "prefix_accuracy": 0.529412,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     9,
+     10,
+     11,
+     12,
+     13
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 10,
+    "prefix_accuracy": 0.588235,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 7
+   },
+   {
+    "n_prefix_correct": 11,
+    "prefix_accuracy": 0.647059,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 6
+   },
+   {
+    "n_prefix_correct": 12,
+    "prefix_accuracy": 0.705882,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     12,
+     13,
+     14,
+     15,
+     16
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 5
+   },
+   {
+    "n_prefix_correct": 13,
+    "prefix_accuracy": 0.764706,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     13,
+     14,
+     15,
+     16,
+     17
+    ],
+    "n_heldout_answers_delivered": 1,
+    "n_mismatches_prefix_only": 4
+   },
+   {
+    "n_prefix_correct": 14,
+    "prefix_accuracy": 0.823529,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     14,
+     15,
+     16,
+     17,
+     18
+    ],
+    "n_heldout_answers_delivered": 2,
+    "n_mismatches_prefix_only": 3
+   },
+   {
+    "n_prefix_correct": 15,
+    "prefix_accuracy": 0.882353,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     15,
+     16,
+     17,
+     18,
+     19
+    ],
+    "n_heldout_answers_delivered": 3,
+    "n_mismatches_prefix_only": 2
+   },
+   {
+    "n_prefix_correct": 16,
+    "prefix_accuracy": 0.941176,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     16,
+     17,
+     18,
+     19,
+     20
+    ],
+    "n_heldout_answers_delivered": 4,
+    "n_mismatches_prefix_only": 1
+   },
+   {
+    "n_prefix_correct": 17,
+    "prefix_accuracy": 1.0,
+    "heldout_accuracy": 0.0,
+    "rendered_idx": [
+     17,
+     18,
+     19,
+     20,
+     21
+    ],
+    "n_heldout_answers_delivered": 5,
+    "n_mismatches_prefix_only": 0
+   }
+  ]
+ },
+ "E_synthetic_sweep_at_the_offline_harness_shape_n12": {
+  "rows": [
+   {
+    "n_prefix_correct": 0,
+    "prefix_accuracy": 0.0,
+    "rendered_idx": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 8
+   },
+   {
+    "n_prefix_correct": 1,
+    "prefix_accuracy": 0.125,
+    "rendered_idx": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 7
+   },
+   {
+    "n_prefix_correct": 2,
+    "prefix_accuracy": 0.25,
+    "rendered_idx": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 6
+   },
+   {
+    "n_prefix_correct": 3,
+    "prefix_accuracy": 0.375,
+    "rendered_idx": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "n_heldout_answers_delivered": 0,
+    "n_mismatches_prefix_only": 5
+   },
+   {
+    "n_prefix_correct": 4,
+    "prefix_accuracy": 0.5,
+    "rendered_idx": [
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "n_heldout_answers_delivered": 1,
+    "n_mismatches_prefix_only": 4
+   },
+   {
+    "n_prefix_correct": 5,
+    "prefix_accuracy": 0.625,
+    "rendered_idx": [
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "n_heldout_answers_delivered": 2,
+    "n_mismatches_prefix_only": 3
+   },
+   {
+    "n_prefix_correct": 6,
+    "prefix_accuracy": 0.75,
+    "rendered_idx": [
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "n_heldout_answers_delivered": 3,
+    "n_mismatches_prefix_only": 2
+   },
+   {
+    "n_prefix_correct": 7,
+    "prefix_accuracy": 0.875,
+    "rendered_idx": [
+     7,
+     8,
+     9,
+     10
+    ],
+    "n_heldout_answers_delivered": 3,
+    "n_mismatches_prefix_only": 1
+   },
+   {
+    "n_prefix_correct": 8,
+    "prefix_accuracy": 1.0,
+    "rendered_idx": [
+     8,
+     9,
+     10
+    ],
+    "n_heldout_answers_delivered": 3,
+    "n_mismatches_prefix_only": 0
+   }
+  ]
+ },
+ "G_adjacent_defect_induce_prompt_channel": {
+  "finding": "The induce prompt itself shows the held-out tail. At today's shipped default (_induce_transitions_k() -> None = ALL, since 2026-08-01) every changed transition is rendered with its delta; on the n=25 synthetic that is 8/8 held-out rows. Under the legacy cap the picture is corpus-dependent: the cap is changed[:k-2], so on the synthetic (25 changed rows) it renders rows 0-5 and leaks 0/8.",
+  "measured": [
+   {
+    "CARNOT_ARC_INDUCE_TRANSITIONS_K": "<unset:default>",
+    "prompt_chars": 5035,
+    "n_prefix": 17,
+    "n_heldout": 8,
+    "shown_prefix_idx": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16
+    ],
+    "shown_heldout_idx": [
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24
+    ],
+    "n_shown_heldout": 8,
+    "heldout_shown_fraction": 1.0
+   },
+   {
+    "CARNOT_ARC_INDUCE_TRANSITIONS_K": "8",
+    "prompt_chars": 3687,
+    "n_prefix": 17,
+    "n_heldout": 8,
+    "shown_prefix_idx": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "shown_heldout_idx": [],
+    "n_shown_heldout": 0,
+    "heldout_shown_fraction": 0.0
+   }
+  ],
+  "consequence": "Fixing only the refinement-feedback channel does NOT restore purity on the current default: the acceptance rows were already shown, with answers, in round 1."
+ },
+ "H_derived_incidence_on_the_real_exp5766_run": {
+  "derivation_disclosure": "DERIVED, not directly measured: the exp5766 shard trims counterexamples, so per-round mismatch lists are unavailable. Computed by applying the exact leak law (validated 270/270 above) to each round's RECORDED prefix_accuracy and heldout_accuracy together with that game's DIRECTLY MEASURED window shape. Treat as an estimate with a known formula, not as a re-measurement.",
+  "rounds_with_both_accuracies_recorded": 116,
+  "rounds_on_a_structurally_undecidable_game": 35,
+  "rounds_where_at_least_one_heldout_answer_was_delivered": 24,
+  "leaking_rounds_per_game": {
+   "tu93": 3,
+   "sb26": 3,
+   "cd82": 9,
+   "lp85": 9
+  },
+  "rounds_neither_undecidable_nor_leaked": 57,
+  "fraction_of_rounds_uncompromised": 0.4914
+ },
+ "I_design_cost_measured": {
+  "design_i_prefix_only_refinement": {
+   "cost": "starved of counterexamples in exactly the regime the leak occurs",
+   "real_windows_prefix_perfect_arm_starved": 9,
+   "real_windows_prefix_perfect_arm_leaking": 9,
+   "n25_counterexamples_discarded_by_prefix_only": [
+    {
+     "n_prefix_correct": 12,
+     "full": 8,
+     "prefix_only": 5,
+     "discarded": 3
+    },
+    {
+     "n_prefix_correct": 13,
+     "full": 8,
+     "prefix_only": 4,
+     "discarded": 4
+    },
+    {
+     "n_prefix_correct": 14,
+     "full": 8,
+     "prefix_only": 3,
+     "discarded": 5
+    },
+    {
+     "n_prefix_correct": 15,
+     "full": 8,
+     "prefix_only": 2,
+     "discarded": 6
+    },
+    {
+     "n_prefix_correct": 16,
+     "full": 8,
+     "prefix_only": 1,
+     "discarded": 7
+    },
+    {
+     "n_prefix_correct": 17,
+     "full": 7,
+     "prefix_only": 0,
+     "discarded": 7
+    }
+   ]
+  },
+  "design_ii_third_never_touched_split": {
+   "cost": "the acceptance set shrinks to a handful of gradeable rows at the real corpus sizes",
+   "sizes": [
+    {
+     "n": 12,
+     "shipped_two_way": {
+      "prefix": 8,
+      "heldout": 4
+     },
+     "halve_the_tail": {
+      "prefix": 8,
+      "refine_tail": 2,
+      "accept_tail": 2,
+      "gradeable_accept_rows_after_levelup_exclusion": 1,
+      "accept_accuracy_granularity": 1.0
+     },
+     "equal_thirds": {
+      "a": 4,
+      "b": 4,
+      "c": 4
+     }
+    },
+    {
+     "n": 25,
+     "shipped_two_way": {
+      "prefix": 17,
+      "heldout": 8
+     },
+     "halve_the_tail": {
+      "prefix": 17,
+      "refine_tail": 4,
+      "accept_tail": 4,
+      "gradeable_accept_rows_after_levelup_exclusion": 3,
+      "accept_accuracy_granularity": 0.3333
+     },
+     "equal_thirds": {
+      "a": 8,
+      "b": 8,
+      "c": 9
+     }
+    },
+    {
+     "n": 30,
+     "shipped_two_way": {
+      "prefix": 20,
+      "heldout": 10
+     },
+     "halve_the_tail": {
+      "prefix": 20,
+      "refine_tail": 5,
+      "accept_tail": 5,
+      "gradeable_accept_rows_after_levelup_exclusion": 4,
+      "accept_accuracy_granularity": 0.25
+     },
+     "equal_thirds": {
+      "a": 10,
+      "b": 10,
+      "c": 10
+     }
+    }
+   ],
+   "real_window_implication": "at the measured n<=12 windows, halving the tail leaves 1-2 raw accept rows of which 0-1 are gradeable; on the four n<=4 games a three-way split is arithmetically impossible"
+  }
+ },
+ "recommendation": "design (ii) -- a third, never-touched acceptance split -- but ONLY together with three non-optional companions; design (i) is rejected on measured grounds. See recommendation_detail.",
+ "recommendation_detail": {
+  "chosen": "(ii) third never-touched acceptance split",
+  "why_not_i": "prefix-only refinement was starved (ZERO counterexamples) on 9 of 9 real roster windows in the prefix-perfect arm -- the same 9 windows where the leak fires. It replaces a leaky loop with an inert one and would produce a second uninterpretable null. CEGIS with no counterexample is not CEGIS, and the in-code comment defending full-corpus scoring is right about that much.",
+  "why_ii": "it preserves every counterexample the refinement loop wants (prefix + refine-tail) while making the acceptance rows unreachable by any prompt. The cost is gate PRECISION, which is a knob (grow the window), not a structural loss.",
+  "companion_1_gradeable_not_raw": "the acceptance split must be counted in GRADEABLE rows -- level-up rows excluded -- or defect F reproduces inside the new split and worsens it.",
+  "companion_2_induce_prompt": "the acceptance rows must also be withheld from _transitions_block / induce_prompt. Without this the fix is decorative on the current ALL-transitions default: the model already saw the acceptance rows with answers in round 1 (measured 8/8).",
+  "companion_3_undecidable_not_zero": "when the corpus cannot supply a minimum number of gradeable acceptance rows, report the gate as UNDECIDABLE rather than 0.0. Today 4 of 13 roster games silently return 0.0 and reject a perfect engine.",
+  "fallback_for_tiny_corpora": "at n<=5 a three-way split is impossible; there, prefix-only refinement is the only purity-preserving option and is NOT starved for a genuinely bad engine (measured: r11l 2 prefix mismatches, vc33 2, sp80 3, ft09 3 in the floor arm).",
+  "flag": "CARNOT_ARC_CEGIS_ACCEPT_SPLIT, default OFF; OFF must reproduce the shipped trajectory byte-for-byte including the leak, ON enables the split. This IS a behaviour change (it moves which rows grade acceptance), so instrumentation-only exemption does not apply."
+ },
+ "what_this_artifact_does_NOT_claim": [
+  "That an LLM exploits the leak. Proving exploitation needs a live generator A/B; only the measurement defect is proven here.",
+  "That the leak caused the reported null. It did not: exp5766's refactor rounds sat on the floor (2 of 77 rounds above prefix_accuracy 0, max 0.125), so the prefix-perfect regime was largely unreached. The leak is a LATENT defect that bites once defect (A) is fixed -- plus a live one on the short corpora (cd82, lp85), where it fires even for a floor engine.",
+  "Any level, solve or reproduced_levels claim.",
+  "That n=25 is the offline harness shape. It is not: the measured harness windows are n=3..12."
+ ],
+ "methodology_note": "heldout_accuracy values of exactly 1.0 and 0.0 appear throughout and are BY CONSTRUCTION, not capability claims: the engines are memorising lookup tables built to be exactly right or exactly wrong on chosen rows, which is the only way to isolate the index-ordering mechanism. The one substantive 0.0 is defect F, where a PERFECT engine scores 0.0 -- that is the finding, not an artefact.",
+ "n_samples_justification": "270 synthetic configurations (3 corpus shapes x 3 prefix-correctness patterns x every prefix-correct count x 2 held-out settings) plus 13 real roster windows x 3 engine arms = 39 real measurements. The claim is DETERMINISTIC (an exact index-ordering law), so the sample size is there to falsify the law across shapes, not to estimate a rate; the law held on 270/270.",
+ "honest_verdict": "complete_defect_c_reproduced_and_larger_than_described_recommend_third_split_with_three_companions",
+ "acceptance_gate_reproduce_leak_by_execution": true,
+ "acceptance_gate_leak_worst_when_prefix_good": true,
+ "acceptance_gate_designs_weighed_with_measured_costs": true,
+ "F_adjacent_defect_unfalsifiable_acceptance_threshold": {
+  "finding": "On 4 of the 13 roster games the entire held-out tail is the single level-up transition, which WorldModelVerifier.score EXCLUDES from grading. n becomes 0, accuracy is n_correct/max(1,n)=0.0, and the gate rejects a PERFECT engine.",
+  "verified_by": "constructing a memorising engine that reproduces every observed transition exactly and reading select_trusted_world_model's own heldout_accuracy",
+  "per_game": {
+   "tu93": {
+    "n": 12,
+    "gradeable_heldout_rows": 3,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "tr87": {
+    "n": 12,
+    "gradeable_heldout_rows": 3,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "sp80": {
+    "n": 4,
+    "gradeable_heldout_rows": 0,
+    "perfect_engine_heldout_accuracy": 0.0,
+    "perfect_engine_accepted_at_live_threshold": false
+   },
+   "sb26": {
+    "n": 9,
+    "gradeable_heldout_rows": 2,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "re86": {
+    "n": 12,
+    "gradeable_heldout_rows": 3,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "g50t": {
+    "n": 12,
+    "gradeable_heldout_rows": 3,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "r11l": {
+    "n": 3,
+    "gradeable_heldout_rows": 0,
+    "perfect_engine_heldout_accuracy": 0.0,
+    "perfect_engine_accepted_at_live_threshold": false
+   },
+   "cd82": {
+    "n": 5,
+    "gradeable_heldout_rows": 1,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "ar25": {
+    "n": 12,
+    "gradeable_heldout_rows": 3,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "lp85": {
+    "n": 5,
+    "gradeable_heldout_rows": 1,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "sk48": {
+    "n": 12,
+    "gradeable_heldout_rows": 3,
+    "perfect_engine_heldout_accuracy": 1.0,
+    "perfect_engine_accepted_at_live_threshold": true
+   },
+   "vc33": {
+    "n": 3,
+    "gradeable_heldout_rows": 0,
+    "perfect_engine_heldout_accuracy": 0.0,
+    "perfect_engine_accepted_at_live_threshold": false
+   },
+   "ft09": {
+    "n": 4,
+    "gradeable_heldout_rows": 0,
+    "perfect_engine_heldout_accuracy": 0.0,
+    "perfect_engine_accepted_at_live_threshold": false
+   }
+  },
+  "games_where_perfect_engine_is_rejected": [
+   "sp80",
+   "r11l",
+   "vc33",
+   "ft09"
+  ],
+  "principle": "missing is not zero -- an ungradeable acceptance set must report undecidable, not 0.0"
+ }
+}
