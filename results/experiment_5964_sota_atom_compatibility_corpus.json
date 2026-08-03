@@ -1,0 +1,1040 @@
+{
+  "atom_compatibility_corpus_ready_score": 0.0,
+  "claim_flip_and_per_family_headroom_controls": {
+    "at_least_two_families_pass": false,
+    "families": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "claim_flip_pair_count": 0,
+        "direction_positive_rate": 0.0,
+        "mean_claim_flip_distance": 0.0,
+        "mean_pair_permutation_distance": 0.0,
+        "passed": false,
+        "permutation_control_measured": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "claim_flip_pair_count": 0,
+        "direction_positive_rate": 0.0,
+        "mean_claim_flip_distance": 0.0,
+        "mean_pair_permutation_distance": 0.0,
+        "passed": false,
+        "permutation_control_measured": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "claim_flip_pair_count": 0,
+        "direction_positive_rate": 0.0,
+        "mean_claim_flip_distance": 0.0,
+        "mean_pair_permutation_distance": 0.0,
+        "passed": false,
+        "permutation_control_measured": false
+      }
+    },
+    "families_passing": [],
+    "families_passing_count": 0,
+    "pooled_artifact_used": false,
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.claim_flip_headroom_controls"
+  },
+  "cuda_offload_vram_thermal_and_cleanup_receipts": {
+    "all_cleaned_up": false,
+    "all_models_cuda_offloaded": false,
+    "all_models_loaded": false,
+    "all_models_output_free": false,
+    "cleanup_receipts_by_model": {},
+    "cuda": {
+      "available": true,
+      "backend": "CUDA",
+      "genuine_offload_required": true
+    },
+    "gpu": {
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 51
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 3699,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 20425,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 70
+        }
+      ],
+      "gpu_count": 2,
+      "ok": true
+    },
+    "loader_receipts_by_model": {},
+    "n_gpu_layers": -1,
+    "receipt_hash": "sha256:f162036ce7cc1f8062870b3580bb913786914fdaf414a4174d73700284ce2665",
+    "resources": {
+      "disk": {
+        "available_mb": 1136833,
+        "ok": true,
+        "required_mb": 10240
+      },
+      "memory": {
+        "available_mb": 104286,
+        "ok": true,
+        "required_mb": 16384
+      }
+    },
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.cuda_offload_vram_thermal_cleanup"
+  },
+  "duration_s": 58.812788,
+  "embedded_tokenizer_and_llama_cpp_receipts": {
+    "all_embedded_tokenizers_loadable": false,
+    "auto_tokenizer_used": false,
+    "gguf_embedded_tokenizers_only": true,
+    "llama_cpp": {
+      "available": true,
+      "cuda_backend_available": true,
+      "embedding_pooling_api_required": "LLAMA_POOLING_TYPE_LAST",
+      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+      "version": "0.3.33"
+    },
+    "receipt_hash": "sha256:25fb3c64ec2c3ce8794c3901233e65bc8053c0f6680a940ea58ff0338008efcf",
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.embedded_tokenizer_and_llama_cpp_receipts",
+    "tokenizer_records": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:c1caaf7ac29b8b02ae0ef76e5f771c7086e3f80a3c7f16763b4c2eb6395a41f5",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:926720bb6763aa8e8f3a6dffaec7006f6a6a72c74f60b6bb6db3cc78273af995",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "detail": "llama.cpp GGUF tokenizer load failed: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf",
+        "loadable": false,
+        "receipt_hash": "sha256:886456b48b1c6c46bcc4f0b74985ae5a29c3e5b45f8755bb383ebbb6d0bb27f7",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      }
+    }
+  },
+  "experiment_id": "experiment_5964_sota_atom_compatibility_corpus",
+  "field_provenance": {
+    "atom_compatibility_corpus_ready_score": {
+      "principle": "Emit bare `1.0` only for all-family integrity plus preregistered non-degenerate semantic headroom; the same disqualification retires the surface.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "claim_flip_and_per_family_headroom_controls": {
+      "principle": "Readiness requires directional semantic headroom in disaggregated families, not a pooled artifact.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "cuda_offload_vram_thermal_and_cleanup_receipts": {
+      "principle": "Headline rows require genuine CUDA offload, measured resources, and clean teardown.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured wall time for `live_llm_embedding_extraction`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "embedded_tokenizer_and_llama_cpp_receipts": {
+      "principle": "The GGUF runtime and embedded tokenizer are the only model-loading path.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to task prompt, spec, module, rows, model, and runtime receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "finite_variance_duplicate_and_order_controls": {
+      "principle": "Representations must be finite, non-degenerate, deterministic for duplicates, and honestly sensitive to ordering.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "gate_replay_receipt": {
+      "principle": "Exp 5963 exact path/hash/value must satisfy `pair_fixture_ready_score == 1.0`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `retired:`, or `blocked:`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use measured `live_llm_embedding_extraction`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Known limitations stay explicit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "model_file_hashes": {
+      "principle": "Exact cached GGUF file hashes bind every row to local bytes.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "model_specs": {
+      "principle": "All three mandated public GGUF identities and exact local files are auditable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "norm_length_frequency_label_pair_permutation_and_model_identity_controls": {
+      "principle": "Every shortcut remains an explicit measured negative control.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "per_model_row_paths_hashes_counts_and_prefix_chains": {
+      "principle": "Each family corpus is immutable, complete, and hash-linked to Exp 5963.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "The preflight records every required local prerequisite and refuses legacy or CPU headline substitution.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "prompt_serialization_and_pair_order_contract": {
+      "principle": "Every vector maps to one sealed pair and preregistered ordering.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Active roadmap, conductor, exclusions, history, and unrelated changes remain unchanged.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "raw_vs_standardized_feature_separation": {
+      "principle": "Train-fold statistics standardize within model; raw dimensions never create a cross-family shortcut.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Stable checksum binds row corpora, receipts, controls, and verdict while excluding wall-clock duration.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "split_and_label_secrecy_receipts": {
+      "principle": "Labels and test-fold statistics cannot affect extraction, normalization, or prompts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "status": {
+      "principle": "Missing model, CUDA, tokenizer, memory, disk, time, or output prerequisites block before full extraction.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "test_commands": {
+      "principle": "Verification commands cover unit, coverage, gate, model, tokenizer, CUDA smoke, row-chain, shortcut, adversarial, spec, E2E, protected-file, and root-clutter checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent partial extraction or unchecked rows from becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False for representation features because exact labels remain external.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/llm-ebm-inference/spec.md",
+        "python/carnot/experiment_5964_sota_atom_compatibility_corpus.py",
+        "tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "python/carnot/experiment_5852_three_family_paired_embeddings.py",
+        "python/carnot/inference/sota_models.py"
+      ]
+    }
+  },
+  "finite_variance_duplicate_and_order_controls": {
+    "all_families_pass": false,
+    "families": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "finite": true,
+        "max_duplicate_distance": null,
+        "mean_order_control_distance": 0.0,
+        "nonzero_variance": false,
+        "order_control_pair_count": 0,
+        "passed": false
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "finite": true,
+        "max_duplicate_distance": null,
+        "mean_order_control_distance": 0.0,
+        "nonzero_variance": false,
+        "order_control_pair_count": 0,
+        "passed": false
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "finite": true,
+        "max_duplicate_distance": null,
+        "mean_order_control_distance": 0.0,
+        "nonzero_variance": false,
+        "order_control_pair_count": 0,
+        "passed": false
+      }
+    },
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.finite_variance_duplicate_order_controls"
+  },
+  "gate_replay_receipt": {
+    "artifact_error": "",
+    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5963_exact_atom_pair_fixture.json",
+    "artifact_row_receipt": {
+      "context_rows": {
+        "final_prefix_checksum": "sha256:57c050c6825df52eb182bc79e590d6856ecdf78b08d5709c14c1962660b81a55",
+        "path": "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "prefix_chain_ok": true,
+        "row_count": 300,
+        "sha256": "sha256:4848992045517819b7627110b428cbde93bd96cba69ca81925a50419c439fd97"
+      },
+      "declared_row_files": [
+        "results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+        "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl"
+      ],
+      "pair_rows": {
+        "final_prefix_checksum": "sha256:8cf38e684799dd39c9dab38722ec8bec6585781b2ff1be7c1608ea6dd37d163e",
+        "path": "results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+        "prefix_chain_ok": true,
+        "row_count": 600,
+        "sha256": "sha256:f8050df845092924870b2b80308f10e6197dd0f26bc087d28e15750a25e527a0"
+      },
+      "prefix_chain_version": "previous_row_hash_chain_v1"
+    },
+    "artifact_sha256": "sha256:7b61bebee5c843cb0f08bbcfa1ad9924d7a27fa84e1e66cb5c56cf6c489545f7",
+    "artifact_status": "complete_ready",
+    "context_replay": {
+      "final_prefix_checksum": "sha256:57c050c6825df52eb182bc79e590d6856ecdf78b08d5709c14c1962660b81a55",
+      "ok": true,
+      "reason": "ok",
+      "row_count": 300,
+      "rows_hash": "sha256:1d0b2ce2e1c4d3845c096e8f9b8dc794d76fd682a7d64fc0758e0e012f0d20fd"
+    },
+    "context_rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5963_exact_atom_pair_fixture.contexts.jsonl",
+    "context_rows_sha256": "sha256:4848992045517819b7627110b428cbde93bd96cba69ca81925a50419c439fd97",
+    "pair_fixture_ready_score": 1.0,
+    "pair_replay": {
+      "final_prefix_checksum": "sha256:8cf38e684799dd39c9dab38722ec8bec6585781b2ff1be7c1608ea6dd37d163e",
+      "ok": true,
+      "reason": "ok",
+      "row_count": 600,
+      "rows_hash": "sha256:098e2580e49dd200f5d19ef6e89cb9e50ee746a4f939daabcc1fd56c9490e4ad"
+    },
+    "pair_rows_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5963_exact_atom_pair_fixture.pairs.jsonl",
+    "pair_rows_sha256": "sha256:f8050df845092924870b2b80308f10e6197dd0f26bc087d28e15750a25e527a0",
+    "ready": true,
+    "receipt_hash": "sha256:8691654a8c14a41d3e1e2b2f86dcbd5179f358b01fbae4a8d9edf05e319dbc32",
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.gate_replay_receipt"
+  },
+  "honest_verdict": "blocked: insufficient_free_vram,mandated_model_unavailable",
+  "inference_substrate": "live_llm_embedding_extraction",
+  "missing_verifier_gaps": [
+    "Representation headroom is not a trained classifier accuracy claim.",
+    "Exact labels remain external Exp5963 oracle data and are used only after extraction.",
+    "Public GGUF runtimes do not expose intermediate hidden layers here."
+  ],
+  "model_file_hashes": {
+    "all_mandated_files_present": true,
+    "receipt_hash": "sha256:589a51b4759be7514595dc9c1e8a543bc402d288eaeaeb8873d9e94d2ec516db",
+    "records": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "local_model_present": true,
+        "local_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "quantization": "Q4_K_M"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "local_model_present": true,
+        "local_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "quantization": "Q4_K_M"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "local_model_present": true,
+        "local_path_hash": "sha256:93d2de1a889a37733c338e9b5ba85f193486210d247c0ad88f54abdf6928dba3",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf",
+        "model_sha256": "sha256:6edcca228213c28d3567a35d22f849eea52d8360875093851959adf5d2f270eb",
+        "quantization": "Q4_K_M"
+      }
+    },
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.model_file_hashes"
+  },
+  "model_specs": [
+    {
+      "active_params_b": 3.0,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "context_length": 512,
+      "family": "qwen3.6-35b-a3b",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "llama_cpp_loader": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+      "local_model_present": true,
+      "local_path_hash": "sha256:6f682e0d9878ebd3211620f00fb8a28d4d2aa124d238a3fbfe038220455a504c",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:c1caaf7ac29b8b02ae0ef76e5f771c7086e3f80a3c7f16763b4c2eb6395a41f5",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 31.0,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf",
+      "context_length": 512,
+      "family": "gemma-4-31b-it",
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "llama_cpp_loader": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+      "local_model_present": true,
+      "local_path_hash": "sha256:93d2de1a889a37733c338e9b5ba85f193486210d247c0ad88f54abdf6928dba3",
+      "min_vram_gb": 24,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf",
+      "model_sha256": "sha256:6edcca228213c28d3567a35d22f849eea52d8360875093851959adf5d2f270eb",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "tokenizer_receipt": {
+        "detail": "llama.cpp GGUF tokenizer load failed: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/c1ac76e99d5513b141e8adde7288b85c3f9c32ec/mmproj-F16.gguf",
+        "loadable": false,
+        "receipt_hash": "sha256:886456b48b1c6c46bcc4f0b74985ae5a29c3e5b45f8755bb383ebbb6d0bb27f7",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "total_params_b": 31.0
+    },
+    {
+      "active_params_b": 4.0,
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "context_length": 512,
+      "family": "gemma-4-26b-a4b-it",
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "llama_cpp_loader": "carnot.pipeline.gemma4_quantized_loader.Gemma4QuantizedLoader",
+      "local_model_present": true,
+      "local_path_hash": "sha256:3f7cc310b05e1efc7816fca37c1e612177b3ff237d6a2ea648af336062a3cbe9",
+      "min_vram_gb": 16,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "tokenizer_receipt": {
+        "detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "loadable": true,
+        "receipt_hash": "sha256:926720bb6763aa8e8f3a6dffaec7006f6a6a72c74f60b6bb6db3cc78273af995",
+        "source": "embedded_gguf_llama_cpp_vocab_only"
+      },
+      "total_params_b": 26.0
+    }
+  ],
+  "norm_length_frequency_label_pair_permutation_and_model_identity_controls": {
+    "all_controls_measured": false,
+    "candidate_frequency": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.5,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.5,
+      "unsloth/gemma-4-31B-it-GGUF": 0.5
+    },
+    "families": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "candidate_frequency_auc": 0.5,
+        "controls_measured": false,
+        "label_permutation_norm_auc": 0.5,
+        "length_only_auc": 0.5,
+        "norm_only_auc": 0.5,
+        "pair_permutation_norm_auc": 0.5,
+        "row_count": 0
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "candidate_frequency_auc": 0.5,
+        "controls_measured": false,
+        "label_permutation_norm_auc": 0.5,
+        "length_only_auc": 0.5,
+        "norm_only_auc": 0.5,
+        "pair_permutation_norm_auc": 0.5,
+        "row_count": 0
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "candidate_frequency_auc": 0.5,
+        "controls_measured": false,
+        "label_permutation_norm_auc": 0.5,
+        "length_only_auc": 0.5,
+        "norm_only_auc": 0.5,
+        "pair_permutation_norm_auc": 0.5,
+        "row_count": 0
+      }
+    },
+    "label_permutation": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.5,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.5,
+      "unsloth/gemma-4-31B-it-GGUF": 0.5
+    },
+    "length_only": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.5,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.5,
+      "unsloth/gemma-4-31B-it-GGUF": 0.5
+    },
+    "norm_only": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.5,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.5,
+      "unsloth/gemma-4-31B-it-GGUF": 0.5
+    },
+    "pair_permutation": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.5,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.5,
+      "unsloth/gemma-4-31B-it-GGUF": 0.5
+    },
+    "raw_model_identity": {
+      "label_counts_by_model": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": {},
+        "unsloth/gemma-4-26B-A4B-it-GGUF": {},
+        "unsloth/gemma-4-31B-it-GGUF": {}
+      },
+      "model_identity_feature_exported": false,
+      "model_identity_preserved_as_stratum": true,
+      "same_label_distribution_across_models": true
+    },
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.shortcut_controls",
+    "used_for_readiness": false
+  },
+  "per_model_row_paths_hashes_counts_and_prefix_chains": {
+    "all_models_have_rows": false,
+    "all_prefix_chains_ok": true,
+    "all_row_counts_match": true,
+    "expected_rows_per_model": 0,
+    "models": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5964_sota_atom_compatibility_corpus.qwen3.6-35b-a3b.rows.jsonl",
+        "atomic_write": true,
+        "exp5963_pair_row_hash_root": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_prefix_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "path": "results/experiment_5964_sota_atom_compatibility_corpus.qwen3.6-35b-a3b.rows.jsonl",
+        "prefix_chain_ok": true,
+        "receipt_hash": "sha256:b88853daae64eeda44b38986e7023eb979c8b22455474e42cf50d65a0e5fdbb6",
+        "representation_counts": {},
+        "row_count": 0,
+        "row_hash_root": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "row_hashes": {},
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5964_sota_atom_compatibility_corpus.gemma-4-26b-a4b-it.rows.jsonl",
+        "atomic_write": true,
+        "exp5963_pair_row_hash_root": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_prefix_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "path": "results/experiment_5964_sota_atom_compatibility_corpus.gemma-4-26b-a4b-it.rows.jsonl",
+        "prefix_chain_ok": true,
+        "receipt_hash": "sha256:07de776dab2b2a57739385a1137be7570b7ccf7f086f1c1b5f4afa5f93aa93b1",
+        "representation_counts": {},
+        "row_count": 0,
+        "row_hash_root": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "row_hashes": {},
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "absolute_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5964_sota_atom_compatibility_corpus.gemma-4-31b-it.rows.jsonl",
+        "atomic_write": true,
+        "exp5963_pair_row_hash_root": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "final_prefix_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "path": "results/experiment_5964_sota_atom_compatibility_corpus.gemma-4-31b-it.rows.jsonl",
+        "prefix_chain_ok": true,
+        "receipt_hash": "sha256:ed2ede759d503f4272dd8e4ef4e23aa27c04c48d0bc85361bb9bebb11391625e",
+        "representation_counts": {},
+        "row_count": 0,
+        "row_hash_root": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "row_hashes": {},
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "receipt_hash": "sha256:a5dcef5705cae97d03699a0bbd372e17cdf7cf19e8712e1841e065ed2eb73412",
+    "row_counts_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0,
+      "unsloth/gemma-4-31B-it-GGUF": 0
+    },
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.per_model_row_paths"
+  },
+  "preconditions_checked": {
+    "blocked_reasons": [
+      "insufficient_free_vram",
+      "mandated_model_unavailable"
+    ],
+    "cuda": {
+      "available": true,
+      "backend": "CUDA",
+      "genuine_offload_required": true
+    },
+    "gpu": {
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 23859,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 266,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 51
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 3699,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 20425,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 70
+        }
+      ],
+      "gpu_count": 2,
+      "ok": true
+    },
+    "legacy_tiny_models_policy": {
+      "cannot_satisfy_readiness": true,
+      "legacy_smoke_model_ids": [
+        "Qwen/Qwen3.5-0.8B",
+        "google/gemma-4-E4B-it"
+      ],
+      "smoke_only": true
+    },
+    "llama_cpp": {
+      "available": true,
+      "cuda_backend_available": true,
+      "embedding_pooling_api_required": "LLAMA_POOLING_TYPE_LAST",
+      "system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+      "version": "0.3.33"
+    },
+    "output_paths": {
+      "atomic_suffix": ".tmp",
+      "ok": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5964_sota_atom_compatibility_corpus.json",
+      "result_writable": true,
+      "row_dir": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "row_dir_writable": true
+    },
+    "preconditions_ready": false,
+    "python": {
+      "available": true,
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "version": "3.12.13"
+    },
+    "resources": {
+      "disk": {
+        "available_mb": 1136833,
+        "ok": true,
+        "required_mb": 10240
+      },
+      "memory": {
+        "available_mb": 104286,
+        "ok": true,
+        "required_mb": 16384
+      }
+    },
+    "run_date": "20260803",
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.preconditions",
+    "time_budget": {
+      "available_s": null,
+      "estimated_required_s": null,
+      "ok": true
+    }
+  },
+  "prompt_serialization_and_pair_order_contract": {
+    "contract_hash": "sha256:910d7668c89c420cfd419fb7c444a18e0bb311fcf11ce7bec68810dc8313ce8d",
+    "duplicate_representation_kind": "context_then_atom_duplicate",
+    "generated_text_enabled": false,
+    "intermediate_layers_claimed": false,
+    "label_fields_forbidden_in_prompt": [
+      "label",
+      "label_bool",
+      "python_label_bool",
+      "z3_label_bool",
+      "post_seal_reference_set_hash"
+    ],
+    "labels_in_prompt": false,
+    "output_logits_enabled": false,
+    "pair_count": 600,
+    "pair_order": "exp5963_sequence_index_major_then_representation_kind",
+    "prompt_fields": [
+      "schema",
+      "representation",
+      "pair_order",
+      "pair_sequence",
+      "context_id",
+      "context",
+      "candidate_atom"
+    ],
+    "prompt_template_version": "exp5964_output_free_atom_compat_v1",
+    "representation_kinds": [
+      "context_alone",
+      "atom_alone",
+      "context_then_atom",
+      "context_then_claim_flip_atom",
+      "atom_then_context"
+    ],
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.prompt_serialization_contract"
+  },
+  "protected_files_unchanged": {
+    "git_status_command": [
+      "git",
+      "status",
+      "--short",
+      "--",
+      "scripts/research_conductor.py",
+      "ops/exclusion_manifest.yaml",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md",
+      "research-references.md"
+    ],
+    "git_status_returncode": 0,
+    "git_status_stdout": "",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/exclusion_manifest.yaml",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md",
+      "research-references.md"
+    ],
+    "records": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:e1369b5a2ea9ab7237ea962d987eb8774db0371c0ab91063eb65a5da54aaf45f"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:d0e4d1f1067cde5179bc9412fbbb40025238ccf8bf1372fbdc74c854c68b9bde"
+      },
+      "research-references.md": {
+        "exists": true,
+        "sha256": "sha256:a1a12a096b3cc5e2e205d6d1f2b3d4159dd7f40f6652ffc32a3d148074a6d9d8"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+      }
+    },
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.protected_files_unchanged",
+    "unchanged": true
+  },
+  "random_seed": 5852,
+  "raw_vs_standardized_feature_separation": {
+    "cross_family_raw_concatenation": false,
+    "model_identity_feature": false,
+    "raw_vectors_stored_only_in_per_model_files": true,
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.raw_vs_standardized_feature_separation",
+    "standardization_scope": "within_model",
+    "stats_by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "dimension": 0,
+        "mean_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "representation_scope": "all_preregistered_representations_within_model",
+        "std_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "train_row_count": 0,
+        "uses_only_source_split_train": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "dimension": 0,
+        "mean_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "representation_scope": "all_preregistered_representations_within_model",
+        "std_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "train_row_count": 0,
+        "uses_only_source_split_train": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "dimension": 0,
+        "mean_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "representation_scope": "all_preregistered_representations_within_model",
+        "std_sha256": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "train_row_count": 0,
+        "uses_only_source_split_train": true
+      }
+    },
+    "stats_receipt_hash": "sha256:5a4e196454fdd1f64cfcab4f6bc2f249c1a9a5b1225f72113e56054e4e7a7d6f",
+    "test_fold_statistics_used": false,
+    "train_fold_only": true
+  },
+  "reproducibility_checksum": "sha256:d0e3e7fb1f692761581ecc3348274d41469b5c8e421219d8cf2f4eea968c16aa",
+  "run_date": "20260803",
+  "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1",
+  "source_row_counts": {
+    "context_rows": 300,
+    "pair_rows": 600
+  },
+  "split_and_label_secrecy_receipts": {
+    "external_label_counts_from_exp5963": {
+      "compatible": 300,
+      "incompatible": 300
+    },
+    "label_fields_joined_only_after_extraction_for_controls": true,
+    "label_fields_stored_in_vector_rows": false,
+    "labels_in_prompts": false,
+    "prompt_hash_root": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "schema": "carnot.experiment_5964.sota_atom_compatibility_corpus.v1.split_and_label_secrecy",
+    "source_split_counts_in_vector_rows": {},
+    "standardization_train_split_only": true,
+    "test_fold_statistics_used_for_standardization": false,
+    "trained_score_used": false
+  },
+  "status": "blocked",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5964_sota_atom_compatibility_corpus.py -m pytest tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5964_sota_atom_compatibility_corpus.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5964_sota_atom_compatibility_corpus.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/exclusion_manifest.yaml ops/changelog.md ops/status.md _bmad/traceability.md research-references.md",
+    ".venv/bin/ruff check python/carnot/experiment_5964_sota_atom_compatibility_corpus.py tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5964_sota_atom_compatibility_corpus.py -m pytest tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5964_sota_atom_compatibility_corpus.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5964_sota_atom_compatibility_corpus.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_5964_sota_atom_compatibility_corpus.py tests/python/test_experiment_5964_sota_atom_compatibility_corpus.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/exclusion_manifest.yaml ops/changelog.md ops/status.md _bmad/traceability.md research-references.md": 0
+  },
+  "verifier_is_oracle": false
+}

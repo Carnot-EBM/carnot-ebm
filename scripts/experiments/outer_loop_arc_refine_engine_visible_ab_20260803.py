@@ -144,6 +144,18 @@ def _gpu_mem_used_mib(index: int) -> Optional[int]:
 
 
 def _server_args(n_ctx: int) -> list[str]:
+    # `--parallel 1` IS LOAD-BEARING, and its absence killed the first attempt at this run.
+    # llama-server with no explicit `--parallel` sets n_parallel=4 with a UNIFIED KV cache, so one
+    # slot only gets n_ctx/4. At n_ctx=32768 that is 8192 tokens against a 16384-token budget plus
+    # a ~6k-token prompt, and the server does not degrade gracefully -- it aborts
+    # (`GGML_ASSERT(logits != nullptr)`, the failure `_default_induce_n_ctx`'s docstring
+    # describes). OBSERVED 2026-08-03: the CUDA server on port 8977 went <defunct> mid-cell, the
+    # proposer's `_ensure_server` relaunched on the SAME port, the CUDA guard refused GPU 1
+    # (it sizes against `CARNOT_ARC_INDUCE_N_CTX`, which defaulted to 81920 -> 25388 MiB required
+    # on a 24576 MiB card), and it fell back to the AMD iGPU HIP build at ~2 tok/s. The run was
+    # DISCARDED, not repaired: the substrate had changed mid-measurement.
+    # This run is strictly sequential -- one generation at a time -- so one slot is correct and
+    # gives the whole pool to the single request.
     return [
         str(LLAMA_SERVER),
         "-m",
@@ -152,6 +164,8 @@ def _server_args(n_ctx: int) -> list[str]:
         "999",
         "-c",
         str(n_ctx),
+        "--parallel",
+        "1",
         "--port",
         str(PORT),
         "--host",
@@ -165,11 +179,64 @@ def _server_args(n_ctx: int) -> list[str]:
     ]
 
 
+SERVER_LOG = Path(os.environ.get("CARNOT_6091_SERVER_LOG") or "/tmp/exp6091_llama_server.log")
+
+
+def serving_pid_on_port(port: int) -> Optional[int]:
+    """The PID actually holding the listening socket. This is the CALLEE side: 'my server is
+    healthy' is a claim about a port, not about which binary answers on it."""
+    try:
+        out = subprocess.run(["ss", "-ltnp"], capture_output=True, text=True, timeout=20).stdout
+    except Exception:
+        return None
+    for line in out.splitlines():
+        if f":{port} " in line and "pid=" in line:
+            try:
+                return int(line.split("pid=")[1].split(",")[0])
+            except (IndexError, ValueError):
+                return None
+    return None
+
+
+def substrate_witness(port: int) -> dict[str, Any]:
+    """PROVE the generator substrate from the serving process, never from our own intent.
+
+    Reads the exe path and the loaded shared objects of whatever PID owns the port. A HIP build
+    on the AMD iGPU and a CUDA build on an RTX 3090 both answer /health with 200 and both
+    generate correct text; the ONLY difference visible from the client is throughput. So the
+    check has to look at the process."""
+    pid = serving_pid_on_port(port)
+    if pid is None:
+        return {"pid": None, "is_cuda": False, "reason": "no process owns the port"}
+    try:
+        exe = os.readlink(f"/proc/{pid}/exe")
+    except OSError:
+        exe = ""
+    try:
+        maps = Path(f"/proc/{pid}/maps").read_text()
+    except OSError:
+        maps = ""
+    has_cuda = "libggml-cuda" in maps or "libcudart" in maps
+    has_hip = "libggml-hip" in maps or "libamdhip" in maps or "librocblas" in maps
+    return {
+        "pid": pid,
+        "exe": exe,
+        "loaded_cuda": has_cuda,
+        "loaded_hip": has_hip,
+        "is_cuda": bool(has_cuda and not has_hip),
+        "reason": "ok" if (has_cuda and not has_hip) else "NOT the CUDA build",
+    }
+
+
 def _launch_one(n_ctx: int) -> subprocess.Popen:
     args = _server_args(n_ctx)
     env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(GPU_INDEX))
     log(f"  launch n_ctx={n_ctx} CUDA_VISIBLE_DEVICES={GPU_INDEX} port={PORT}")
-    proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env)
+    # Server stdout/stderr go to a FILE, not DEVNULL. The first attempt at this run sent them to
+    # DEVNULL, so when the server died mid-cell there was no record of why and the cause had to
+    # be reconstructed from `<defunct>` in the process table.
+    logf = SERVER_LOG.open("ab")
+    proc = subprocess.Popen(args, stdout=logf, stderr=subprocess.STDOUT, env=env)
     deadline = time.time() + GEMMA["timeout"]
     while time.time() < deadline:
         if proc.poll() is not None:
@@ -429,9 +496,7 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
                 rendered = refactor_prompt(game, vr_obj)
                 prompts_seen.append(rendered)
                 rr["prompt_chars"] = len(rendered)
-                rr["prompt_contains_engine"] = bool(
-                    "THE CURRENT ENGINE YOU ARE FIXING" in rendered
-                )
+                rr["prompt_contains_engine"] = bool("THE CURRENT ENGINE YOU ARE FIXING" in rendered)
                 rr["n_mismatches_available"] = len(rv.mismatches)
                 t_r = time.time()
                 ok, msg = prop.refactor(game, vr_obj)
@@ -457,9 +522,7 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
             else:
                 os.environ["CARNOT_ARC_REFACTOR_SHOW_ENGINE"] = prev_flag
 
-        scored = [
-            x["acceptance"] for x in arm_rows if isinstance(x.get("acceptance"), dict)
-        ]
+        scored = [x["acceptance"] for x in arm_rows if isinstance(x.get("acceptance"), dict)]
         best_ca = max(
             [s["change_accuracy"] for s in scored if s.get("change_accuracy") is not None],
             default=None,
@@ -623,9 +686,7 @@ def main() -> int:
     assert cegis_accept_split_enabled(), "acceptance split did not turn on"
 
     done = load_shard()
-    pending = [
-        (g, t) for t in TRIALS for g in ROSTER if g in windows and (g, t) not in done
-    ]
+    pending = [(g, t) for t in TRIALS for g in ROSTER if g in windows and (g, t) not in done]
     log(f"resume: {len(done)} cells in shard; {len(pending)} pending")
 
     proc = None
@@ -663,6 +724,15 @@ def main() -> int:
                     log(f"WALL BUDGET reached; stopping with {len(pending) - i + 1} cells unrun")
                     break
                 w, cell = windows[game]
+                # SUBSTRATE ASSERTION, BEFORE the cell and again AFTER it. A cell is only
+                # admissible if the CUDA build owned the port for its whole duration. If the
+                # proposer silently relaunched onto the iGPU HIP build (the failure that
+                # discarded the first attempt), STOP -- do not write a cell that would be
+                # indistinguishable in the shard from a genuine GPU one.
+                wit_before = substrate_witness(PORT)
+                if not wit_before["is_cuda"]:
+                    log(f"ABORT: substrate is not the CUDA build before {game}: {wit_before}")
+                    break
                 log(f"[{i}/{len(pending)}] {game} trial={trial} (n={len(w)})")
                 try:
                     r = run_cell(game, trial, w, cell, prop)
@@ -672,7 +742,18 @@ def main() -> int:
                         "trial": trial,
                         "error": f"{type(exc).__name__}: {exc}"[:300],
                     }
+                wit_after = substrate_witness(PORT)
+                r["substrate_witness_before"] = wit_before
+                r["substrate_witness_after"] = wit_after
+                r["substrate_cuda_throughout"] = bool(
+                    wit_before["is_cuda"]
+                    and wit_after["is_cuda"]
+                    and wit_before["pid"] == wit_after["pid"]
+                )
                 append_shard(r)
+                if not r["substrate_cuda_throughout"]:
+                    log(f"ABORT: substrate changed during {game}: {wit_before} -> {wit_after}")
+                    break
                 log(
                     f"    ss={r.get('single_shot', {}).get('change_accuracy')} "
                     f"ctl={r.get('refine_control', {}).get('best_change_accuracy')} "
