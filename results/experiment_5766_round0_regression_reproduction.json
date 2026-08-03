@@ -1,0 +1,731 @@
+{
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp5764",
+      "fields_imported": [
+        "game",
+        "trial",
+        "heldout_accuracy"
+      ],
+      "path": "results/exp5764_gemma31b_singleshot_shard.jsonl",
+      "sha256": "36f1ac2c2b562e16bd64a1bf0094a6066a83f41189ba1d1acc1f029c0bc7df33"
+    },
+    {
+      "experiment_id": "exp5766",
+      "fields_imported": [
+        "game",
+        "trial",
+        "rounds[round==1 & action=='induce'].heldout_accuracy",
+        "rounds[round==1 & action=='induce'].prefix_accuracy"
+      ],
+      "path": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl",
+      "sha256": "731d7185cc9a0b5f46ad8dc88140fdb084105b1eb36949ed4bd4a727cf742973"
+    }
+  ],
+  "confounder_verification": {
+    "budget_5726_5764_5766": [
+      16384,
+      16384,
+      16384
+    ],
+    "budget_equal": true,
+    "build_progress_window_call_in_5764": true,
+    "build_progress_window_call_in_5766": true,
+    "build_progress_window_module": "carnot.agentic.arc_actions_to_progress",
+    "build_progress_window_qualname": "build_progress_window",
+    "evidence_asymmetry": {
+      "consequence": "exp5766's round 0 is fit on a THIRD LESS EVIDENCE than exp5764's single shot, and is then graded on rows DISJOINT from its prompt. exp5764 is graded on a set that OVERLAPS its prompt. Neither experiment is wrong internally, but subtracting one from the other is not a mechanism comparison.",
+      "exp5764_evidence": "list(window) -- the WHOLE window",
+      "exp5766_round0_evidence": "_proposal_prefix(transitions) -- the FIRST 2/3 of the window (REQ-ARC-WMTE-4557: keep a held-out suffix out of the proposer prompt)",
+      "measured": [
+        {
+          "exp5764_rows_shown_to_llm": 3,
+          "exp5766_rows_shown_to_llm": 2,
+          "graded_heldout_rows": 1,
+          "graded_prefix_rows": 2,
+          "prefix_accuracy_grades_exactly_the_shown_rows": true,
+          "window_rows": 3
+        },
+        {
+          "exp5764_rows_shown_to_llm": 4,
+          "exp5766_rows_shown_to_llm": 3,
+          "graded_heldout_rows": 1,
+          "graded_prefix_rows": 3,
+          "prefix_accuracy_grades_exactly_the_shown_rows": true,
+          "window_rows": 4
+        },
+        {
+          "exp5764_rows_shown_to_llm": 5,
+          "exp5766_rows_shown_to_llm": 3,
+          "graded_heldout_rows": 2,
+          "graded_prefix_rows": 3,
+          "prefix_accuracy_grades_exactly_the_shown_rows": true,
+          "window_rows": 5
+        },
+        {
+          "exp5764_rows_shown_to_llm": 9,
+          "exp5766_rows_shown_to_llm": 6,
+          "graded_heldout_rows": 3,
+          "graded_prefix_rows": 6,
+          "prefix_accuracy_grades_exactly_the_shown_rows": true,
+          "window_rows": 9
+        },
+        {
+          "exp5764_rows_shown_to_llm": 12,
+          "exp5766_rows_shown_to_llm": 8,
+          "graded_heldout_rows": 4,
+          "graded_prefix_rows": 8,
+          "prefix_accuracy_grades_exactly_the_shown_rows": true,
+          "window_rows": 12
+        },
+        {
+          "exp5764_rows_shown_to_llm": 25,
+          "exp5766_rows_shown_to_llm": 17,
+          "graded_heldout_rows": 8,
+          "graded_prefix_rows": 17,
+          "prefix_accuracy_grades_exactly_the_shown_rows": true,
+          "window_rows": 25
+        }
+      ],
+      "prompt_transition_cap_is_symmetric": "`induce_prompt` also caps rendered transitions at k=_induce_transitions_k(). BOTH arms pass that same resolver, so the cap cannot be the asymmetry. It does mean exp5764's grading set is not 100% in-sample on the LARGER windows -- it is entirely in-sample only where the whole window fits under the cap. The overlap-vs-disjoint direction holds on every game either way, which is why this reproduction reports the comparison as overlapping-vs-disjoint rather than as a clean in-sample/out-of-sample dichotomy.",
+      "run_cegis_cell_passes_proposal_transitions": false
+    },
+    "gemma_gguf_identical": true,
+    "gemma_model_config_differences": {
+      "port": [
+        8971,
+        8972
+      ],
+      "role": [
+        "different-family DENSE 31B; single-shot induction-capacity probe on GPU 1",
+        "different-family DENSE 31B; CEGIS-refinement induction probe on GPU 1 (the missing model x mechanism 2x2 cell: does refinement compound gemma's single-shot edge?)"
+      ]
+    },
+    "note": "Both scripts call the SAME `atp.build_progress_window` function object and both import ROSTER/TRIALS from exp5760 rather than hand-copying them, so roster, trial count, token budget, GGUF file, KV quant and deployed n_ctx are all verified equal here rather than inherited from the prior write-ups. The only recorded model-config differences are the llama-server PORT and a human-readable ROLE string.",
+    "roster": [
+      "tu93",
+      "tr87",
+      "sp80",
+      "sb26",
+      "re86",
+      "g50t",
+      "r11l",
+      "cd82",
+      "ar25",
+      "lp85",
+      "sk48",
+      "vc33",
+      "ft09"
+    ],
+    "roster_5760_eq_5764": true,
+    "roster_5760_eq_5766": true,
+    "server_n_ctx_5764": [
+      32768
+    ],
+    "server_n_ctx_5766": [
+      32768
+    ],
+    "trials": [
+      0,
+      1,
+      2
+    ],
+    "trials_equal": true
+  },
+  "defect_reproduced": "yes_but_not_a_mechanism_regression",
+  "duration_s": 390.04,
+  "evidence_integrity": {
+    "after": {
+      "dirs": [
+        "results/arc_e3",
+        "results/arc_logo_snapshot",
+        "results/arc_e3_origin_fixtures"
+      ],
+      "n_files": 148,
+      "sha256": "2b29278aad5f4baf5ea14a32ad9f2972c571e3e0a1078c05050491004e09ed83"
+    },
+    "before": {
+      "dirs": [
+        "results/arc_e3",
+        "results/arc_logo_snapshot",
+        "results/arc_e3_origin_fixtures"
+      ],
+      "n_files": 148,
+      "sha256": "2b29278aad5f4baf5ea14a32ad9f2972c571e3e0a1078c05050491004e09ed83"
+    },
+    "note": "results/arc_e3 and sibling fixture trees are EVIDENCE: read, never written.",
+    "unchanged": true
+  },
+  "experiment": "experiment_5766_round0_regression_reproduction",
+  "field_principles": {
+    "cited_upstream_artifacts": "sha256 of each upstream shard, so a third party can confirm these numbers came from the shards actually on disk rather than being re-synthesised.",
+    "duration_s": "real wall-clock, dominated by replaying 13 games through the offline arcade to rebuild the induction windows.",
+    "honest_verdict": "terminal-prefixed, numbers-first; states BOTH the reproduced ratio and what it collapses to, so a reader cannot take the headline without the correction.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- no LLM is loaded; engines are scored against pre-existing recorded transitions replayed from the offline arcade. Part of the run is also aggregation over upstream shards, so the STRICTER of the two applicable duration floors is declared deliberately.",
+    "matched_metric_comparison": "the load-bearing quantity -- what exp5766's OWN engines would have scored under exp5764's metric, reconstructed from fields exp5766 already recorded.",
+    "model_specs": "records the generator whose OUTPUT is analysed, with invoked=false. This run loads no model; declaring the upstream model keeps provenance traceable without implying an inference claim that was not made.",
+    "primary_metric_resolution": "separates 'refinement did not help' from 'the metric could not have shown it', which is the difference between a null and an unfalsifiable measurement.",
+    "random_seed": "recorded for discipline; this measurement is deterministic (no LLM call), so the seed does not change any number reported here.",
+    "reproducibility_checksum": "content hash over this script, both upstream shards, and the full result payload.",
+    "residual_and_what_is_NOT_claimed": "names the limits of the finding explicitly so a reader cannot over-read it.",
+    "solve_provenance": "development_proxy -- an offline diagnostic on PUBLIC games. No level is claimed and offline_reproduced is null, not false, because no reproduction gate was run (missing is not zero).",
+    "verifier_is_oracle": "False -- no verifier-value, moat or efficiency claim is made. The oracle engine appears ONLY as a falsifiability ceiling, never as a verifier.",
+    "window_composition_and_falsifiability": "proves a non-zero was REACHABLE before any zero is cited; a zero a perfect oracle also scores is not evidence about an engine.",
+    "within_arm_stratification_of_exp5764": "corroboration only, with its confound stated in the block itself; window length is not randomly assigned."
+  },
+  "git_head": "7212d1af0c9537742d9326a0cf6b657cd845d91b",
+  "honest_verdict": "complete_round0_regression_reproduced_ratio_6.3261_and_attributed_to_in_sample_vs_out_of_sample_metric_mismatch_collapses_to_1.1848_on_rows_the_model_was_shown_signtest_p_0.038574_to_1.0_unfalsifiable_heldout_games_4of13_N13",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "matched_metric_comparison": {
+    "exp5764_pooled": 0.378487,
+    "exp5766_reconstructed_nonzero_games": 10,
+    "exp5766_round0_reconstructed_under_exp5764_metric": 0.293901,
+    "method": "accuracy = n_correct / n_gradeable, and prefix+heldout PARTITION the gradeable rows, so exp5766's whole-window accuracy is the gradeable-row-weighted mean of its OWN recorded prefix_accuracy and heldout_accuracy. Row counts come from the measured window composition below, not from an assumed 2:1 split.",
+    "paired_sign_test": {
+      "losses": 6,
+      "mean_diff": -0.084587,
+      "n_discordant": 12,
+      "ties": 1,
+      "two_sided_p": 1.0,
+      "wins": 6
+    },
+    "per_game_reconstructed": {
+      "ar25": 0.0,
+      "cd82": 0.0,
+      "ft09": 1.0,
+      "g50t": 0.151515,
+      "lp85": 0.25,
+      "r11l": 0.333333,
+      "re86": 0.030303,
+      "sb26": 0.611111,
+      "sk48": 0.060606,
+      "sp80": 0.777778,
+      "tr87": 0.030303,
+      "tu93": 0.575758,
+      "vc33": 0.0
+    },
+    "ratio_under_common_metric": 1.2878
+  },
+  "matched_on_rows_the_model_was_shown": {
+    "exp5764_nonzero_games": 12,
+    "exp5764_whole_window_pooled": 0.378487,
+    "exp5766_round0_prefix_nonzero_games": 10,
+    "exp5766_round0_prefix_pooled": 0.319444,
+    "method": "The cleanest like-for-like. Each arm is scored on the row set that OVERLAPS its own prompt evidence: exp5764 on the whole window, exp5766 round 0 on `prefix_accuracy` (`_proposal_prefix` and `_split_prefix_heldout` cut at the same index, so the graded prefix IS exactly the pool the prompt was drawn from). Both are then overlapping-set fit numbers on the same footing. Note this comparison still HANDICAPS exp5766, which had a third less evidence to fit -- so it is a conservative test of 'is exp5766's round 0 broken'.",
+    "paired_sign_test": {
+      "losses": 5,
+      "mean_diff": -0.059043,
+      "n_discordant": 11,
+      "ties": 2,
+      "two_sided_p": 1.0,
+      "wins": 6
+    },
+    "ratio": 1.1848
+  },
+  "methodology_note": "Reproduction only; no upstream code is changed by this script. Numbers are parsed from the two upstream JSONL shards as top-level JSON keys. Windows are rebuilt with the SAME atp.build_progress_window function object all three experiments call, and verified byte-identical evidence trees before and after. The reconstruction uses exp5766's own per-round prefix_accuracy and heldout_accuracy weighted by MEASURED gradeable-row counts. The oracle ceiling is a control, and is itself checked for vacuity.",
+  "model_specs": [
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "invoked": false,
+      "name": "gemma-4-31B-it",
+      "quant": "Q4_K_M",
+      "role": "the generator that produced BOTH upstream shards analysed here. No model is loaded or called by this reproduction; engines are re-scored offline."
+    }
+  ],
+  "offline_reproduced": null,
+  "primary_metric_resolution": {
+    "finding": "The held-out tails carry 0-3 gradeable rows, so a per-cell delta can only take values in multiples of 1/n for n in {1,2,3} -- 0.333 at best. The pre-registered gate is written in units of 0.15 and 0.05, which the per-cell metric CANNOT express: there is no engine change that moves a 3-row tail by 0.05. So a pooled delta near zero is substantially a statement about metric RESOLUTION, not about whether refinement helped. On the games with an EMPTY tail the delta is 0 minus 0 by construction and no engine could produce anything else.",
+    "gate_thresholds_from_exp5766_preregistration": {
+      "honest_negative": 0.05,
+      "positive": 0.15
+    },
+    "n_games_structurally_pinned_at_zero": 4,
+    "per_game": {
+      "ar25": {
+        "finest_resolvable_step": 0.3333,
+        "heldout_gradeable_rows": 3,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "cd82": {
+        "finest_resolvable_step": 1.0,
+        "heldout_gradeable_rows": 1,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "ft09": {
+        "finest_resolvable_step": null,
+        "heldout_gradeable_rows": 0,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": true
+      },
+      "g50t": {
+        "finest_resolvable_step": 0.3333,
+        "heldout_gradeable_rows": 3,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "lp85": {
+        "finest_resolvable_step": 1.0,
+        "heldout_gradeable_rows": 1,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "r11l": {
+        "finest_resolvable_step": null,
+        "heldout_gradeable_rows": 0,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": true
+      },
+      "re86": {
+        "finest_resolvable_step": 0.3333,
+        "heldout_gradeable_rows": 3,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "sb26": {
+        "finest_resolvable_step": 0.5,
+        "heldout_gradeable_rows": 2,
+        "mean_delta_heldout": -0.444444,
+        "structurally_pinned_at_zero": false
+      },
+      "sk48": {
+        "finest_resolvable_step": 0.3333,
+        "heldout_gradeable_rows": 3,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "sp80": {
+        "finest_resolvable_step": null,
+        "heldout_gradeable_rows": 0,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": true
+      },
+      "tr87": {
+        "finest_resolvable_step": 0.3333,
+        "heldout_gradeable_rows": 3,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": false
+      },
+      "tu93": {
+        "finest_resolvable_step": 0.3333,
+        "heldout_gradeable_rows": 3,
+        "mean_delta_heldout": -0.333333,
+        "structurally_pinned_at_zero": false
+      },
+      "vc33": {
+        "finest_resolvable_step": null,
+        "heldout_gradeable_rows": 0,
+        "mean_delta_heldout": 0.0,
+        "structurally_pinned_at_zero": true
+      }
+    },
+    "question": "exp5766's PRIMARY metric (delta_heldout = best refined - round 0) is internally consistent -- both terms are the same tail-only accuracy, so the metric mismatch above does NOT corrupt it. But what can it actually resolve?"
+  },
+  "prompt_comparison": {
+    "base_prompt_byte_identical": true,
+    "base_prompt_len": 9293,
+    "difference_chars": 10,
+    "full_prompt_byte_identical": false,
+    "full_prompt_len_5764": 9365,
+    "full_prompt_len_5766": 9375,
+    "game": "tu93",
+    "include_playbook_exemplars_default": false,
+    "induce_transitions_k": null,
+    "note": "The two induce paths build the SAME base prompt from the SAME transitions and the SAME k. exp5766's standard `LocalGGUFProposer.induce` appends a 10-character pre-opened ```python fence that exp5764's `_induce_no_fence` deliberately omits. That fence suppresses a /think reasoning trace on hybrid-think Qwen models -- but gemma-4-it has no hybrid-think mode (exp5764's own artifact discloses that the '/think' prefix is a Qwen-ism gemma treats as literal text), so this is the SECONDARY candidate, not the primary one. Its size is reported so a reader can judge it directly rather than take a claim on trust.",
+    "only_difference_is_trailing_fence_opener": true
+  },
+  "question": "exp5766's CEGIS round 0 is single-shot induction and should reproduce the matched single-shot control exp5764, but pools 6.33x lower. Is that a real mechanism regression, and if so what differs?",
+  "random_seed": 5766,
+  "read_game_source": false,
+  "reported_gap": {
+    "exp5764_nonzero_games": 12,
+    "exp5764_pooled_heldout_accuracy": 0.378487,
+    "exp5766_round0_nonzero_games": 2,
+    "exp5766_round0_pooled_heldout_accuracy": 0.059829,
+    "note": "Reproduced from the two upstream JSONL shards; matches the reported 6.33x.",
+    "paired_sign_test": {
+      "losses": 10,
+      "mean_diff": -0.318658,
+      "n_discordant": 12,
+      "ties": 1,
+      "two_sided_p": 0.038574,
+      "wins": 2
+    },
+    "per_game_exp5764": {
+      "ar25": 0.0,
+      "cd82": 0.466667,
+      "ft09": 0.833333,
+      "g50t": 0.083333,
+      "lp85": 0.333333,
+      "r11l": 0.444433,
+      "re86": 0.027767,
+      "sb26": 0.148133,
+      "sk48": 0.3889,
+      "sp80": 0.75,
+      "tr87": 0.2222,
+      "tu93": 0.222233,
+      "vc33": 1.0
+    },
+    "per_game_exp5766_round0": {
+      "ar25": 0.0,
+      "cd82": 0.0,
+      "ft09": 0.0,
+      "g50t": 0.0,
+      "lp85": 0.0,
+      "r11l": 0.0,
+      "re86": 0.0,
+      "sb26": 0.444444,
+      "sk48": 0.0,
+      "sp80": 0.0,
+      "tr87": 0.0,
+      "tu93": 0.333333,
+      "vc33": 0.0
+    },
+    "ratio": 6.3261
+  },
+  "reproducibility_checksum": "sha256:a7e9a55d11d3a188b71054155e12c51fa2118041a98dac7accc17b1ee2494850",
+  "requirements": [
+    "REQ-ARC-WMTE-5766-REPRO"
+  ],
+  "residual_and_what_is_NOT_claimed": {
+    "evidence_handicap": "exp5766's round 0 is fit on the first 2/3 of the window; exp5764's single shot is fit on all of it. Any residual therefore has a benign explanation that does not require a mechanism defect, and the residual's SIGN is the direction that handicap predicts.",
+    "harness_nondeterminism_floor": "LocalGGUFProposer.sampling_seed returns None unless CARNOT_ARC_GENERATOR_SEED is set (it was not), so llama-server draws a fresh sampler seed per call at temperature 0.2. That resolver's own docstring records a MEASURED ~40% cell-level divergence under byte-identical code, and states the floor 'is at least as large as any treatment effect yet measured on this path'.",
+    "not_claimed": [
+      "NOT claimed that exp5766's round-0 induction is equal to exp5764's -- only that the two are not distinguishable by this data under a common metric.",
+      "NOT claimed that the residual is zero. It is unresolved and smaller than the harness's own documented nondeterminism floor.",
+      "NOT claimed that the 10-character fence-opener prompt difference has no effect; it is a real divergence whose magnitude this data cannot separate from sampling noise.",
+      "NOT a statement about defects (A), (C) or (D), which are separate work.",
+      "NOT a behavioural claim: engine accuracy is not plans, actions or levels."
+    ],
+    "residual_paired_sign_test": {
+      "losses": 6,
+      "mean_diff": -0.084587,
+      "n_discordant": 12,
+      "ties": 1,
+      "two_sided_p": 1.0,
+      "wins": 6
+    },
+    "residual_ratio_under_common_metric": 1.2878
+  },
+  "root_cause_metric_definition_mismatch": {
+    "both_quantities_were_recorded_only_one_was_read": true,
+    "exp5764_metric": "run_reason_cell_budget -> WorldModelVerifier(list(window)).score(engine).accuracy -- exact-match accuracy over the WHOLE induction window.",
+    "exp5766_metric": "run_cegis_cell -> execute_bounded_llm_reinduction -> select_trusted_world_model -> _score_accuracy(heldout, engine) where (prefix, heldout) = _split_prefix_heldout(transitions, heldout_fraction=1/3) -- exact-match accuracy over the LAST THIRD of the window only.",
+    "exp5766_round0_prefix_nonzero_games": 10,
+    "exp5766_round0_prefix_pooled_accuracy": 0.319444,
+    "per_game_exp5766_round0_prefix": {
+      "ar25": 0.0,
+      "cd82": 0.0,
+      "ft09": 1.0,
+      "g50t": 0.208333,
+      "lp85": 0.333333,
+      "r11l": 0.333333,
+      "re86": 0.041667,
+      "sb26": 0.666667,
+      "sk48": 0.083333,
+      "sp80": 0.777778,
+      "tr87": 0.041667,
+      "tu93": 0.666667,
+      "vc33": 0.0
+    },
+    "same_field_name_different_quantity": true
+  },
+  "sample_size": {
+    "games": 13,
+    "note": "13 games x 3 trials per arm. Trials are replicates on the SAME seeded window, not independent degrees of freedom, so every test here is paired at the GAME level. At 13 games the sign test cannot resolve a small effect -- that is why the residual is reported as unresolved rather than as a null.",
+    "paired_unit": "game (accuracy averaged over trials, paired by game across arms)",
+    "roster": [
+      "tu93",
+      "tr87",
+      "sp80",
+      "sb26",
+      "re86",
+      "g50t",
+      "r11l",
+      "cd82",
+      "ar25",
+      "lp85",
+      "sk48",
+      "vc33",
+      "ft09"
+    ],
+    "roster_n": 13,
+    "trials_per_game": 3
+  },
+  "schema": "carnot.exp5766_repro.round0_regression_reproduction.v1",
+  "solve_provenance": "development_proxy",
+  "submitted_to_leaderboard": false,
+  "used_env_source": true,
+  "verifier_is_oracle": false,
+  "window_composition_and_falsifiability": {
+    "control_is_vacuous": false,
+    "n_games_measured": 13,
+    "n_games_with_unfalsifiable_heldout_zero": 4,
+    "note": "WorldModelVerifier.score excludes level-up rows and returns n_correct / max(1, n). Where a held-out tail is ENTIRELY level-up rows, n == 0, n_correct == 0, and the metric returns 0.0 for EVERY engine -- including the perfect oracle scored here. Those zeros are unfalsifiable, not measurements. The oracle control is checked for vacuity: it reaches 1.0 on real windows, so a 0.0 from it is informative rather than an artefact of a broken probe.",
+    "oracle_max_full_window_accuracy": 1.0,
+    "per_game": {
+      "ar25": {
+        "gradeable_full": 11,
+        "gradeable_heldout": 3,
+        "gradeable_prefix": 8,
+        "heldout_rows": 4,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 8,
+        "window_rows": 12
+      },
+      "cd82": {
+        "gradeable_full": 4,
+        "gradeable_heldout": 1,
+        "gradeable_prefix": 3,
+        "heldout_rows": 2,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 3,
+        "window_rows": 5
+      },
+      "ft09": {
+        "gradeable_full": 3,
+        "gradeable_heldout": 0,
+        "gradeable_prefix": 3,
+        "heldout_rows": 1,
+        "heldout_zero_unfalsifiable": true,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 0.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 3,
+        "window_rows": 4
+      },
+      "g50t": {
+        "gradeable_full": 11,
+        "gradeable_heldout": 3,
+        "gradeable_prefix": 8,
+        "heldout_rows": 4,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 8,
+        "window_rows": 12
+      },
+      "lp85": {
+        "gradeable_full": 4,
+        "gradeable_heldout": 1,
+        "gradeable_prefix": 3,
+        "heldout_rows": 2,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 3,
+        "window_rows": 5
+      },
+      "r11l": {
+        "gradeable_full": 2,
+        "gradeable_heldout": 0,
+        "gradeable_prefix": 2,
+        "heldout_rows": 1,
+        "heldout_zero_unfalsifiable": true,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 0.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 2,
+        "window_rows": 3
+      },
+      "re86": {
+        "gradeable_full": 11,
+        "gradeable_heldout": 3,
+        "gradeable_prefix": 8,
+        "heldout_rows": 4,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 8,
+        "window_rows": 12
+      },
+      "sb26": {
+        "gradeable_full": 8,
+        "gradeable_heldout": 2,
+        "gradeable_prefix": 6,
+        "heldout_rows": 3,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 6,
+        "window_rows": 9
+      },
+      "sk48": {
+        "gradeable_full": 11,
+        "gradeable_heldout": 3,
+        "gradeable_prefix": 8,
+        "heldout_rows": 4,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 8,
+        "window_rows": 12
+      },
+      "sp80": {
+        "gradeable_full": 3,
+        "gradeable_heldout": 0,
+        "gradeable_prefix": 3,
+        "heldout_rows": 1,
+        "heldout_zero_unfalsifiable": true,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 0.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 3,
+        "window_rows": 4
+      },
+      "tr87": {
+        "gradeable_full": 11,
+        "gradeable_heldout": 3,
+        "gradeable_prefix": 8,
+        "heldout_rows": 4,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 8,
+        "window_rows": 12
+      },
+      "tu93": {
+        "gradeable_full": 11,
+        "gradeable_heldout": 3,
+        "gradeable_prefix": 8,
+        "heldout_rows": 4,
+        "heldout_zero_unfalsifiable": false,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 1.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 8,
+        "window_rows": 12
+      },
+      "vc33": {
+        "gradeable_full": 2,
+        "gradeable_heldout": 0,
+        "gradeable_prefix": 2,
+        "heldout_rows": 1,
+        "heldout_zero_unfalsifiable": true,
+        "levelup_rows_excluded_full": 1,
+        "levelup_rows_excluded_heldout": 1,
+        "oracle_full_window_acc": 1.0,
+        "oracle_heldout_tail_acc": 0.0,
+        "oracle_prefix_acc": 1.0,
+        "prefix_rows": 2,
+        "window_rows": 3
+      }
+    }
+  },
+  "within_arm_stratification_of_exp5764": {
+    "CONFOUND_STATED_PLAINLY": "Window length is NOT randomly assigned -- short-window games may simply be easier games, and this test cannot separate the two. It is CORROBORATION that exp5764's field behaves like a fit measure, not proof. The load-bearing evidence remains the matched-metric comparison, which needs no such assumption.",
+    "cap_source": "resolver returns None today (= all); 8 assumed, the pre-2026-08-01 default in force when the upstream runs executed on 2026-07-21",
+    "exact_two_sided_permutation_p": 0.001748,
+    "mean_where_whole_window_fits_under_cap": 0.637961,
+    "mean_where_window_exceeds_cap": 0.156081,
+    "n_games_exceeds": 7,
+    "n_games_fits": 6,
+    "per_game": {
+      "ar25": {
+        "exp5764_score": 0.0,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 12
+      },
+      "cd82": {
+        "exp5764_score": 0.466667,
+        "whole_window_fits_under_prompt_cap": true,
+        "window_rows": 5
+      },
+      "ft09": {
+        "exp5764_score": 0.833333,
+        "whole_window_fits_under_prompt_cap": true,
+        "window_rows": 4
+      },
+      "g50t": {
+        "exp5764_score": 0.083333,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 12
+      },
+      "lp85": {
+        "exp5764_score": 0.333333,
+        "whole_window_fits_under_prompt_cap": true,
+        "window_rows": 5
+      },
+      "r11l": {
+        "exp5764_score": 0.444433,
+        "whole_window_fits_under_prompt_cap": true,
+        "window_rows": 3
+      },
+      "re86": {
+        "exp5764_score": 0.027767,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 12
+      },
+      "sb26": {
+        "exp5764_score": 0.148133,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 9
+      },
+      "sk48": {
+        "exp5764_score": 0.3889,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 12
+      },
+      "sp80": {
+        "exp5764_score": 0.75,
+        "whole_window_fits_under_prompt_cap": true,
+        "window_rows": 4
+      },
+      "tr87": {
+        "exp5764_score": 0.2222,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 12
+      },
+      "tu93": {
+        "exp5764_score": 0.222233,
+        "whole_window_fits_under_prompt_cap": false,
+        "window_rows": 12
+      },
+      "vc33": {
+        "exp5764_score": 1.0,
+        "whole_window_fits_under_prompt_cap": true,
+        "window_rows": 3
+      }
+    },
+    "prompt_transition_cap_used": 8,
+    "question": "Does exp5764's own number depend on how much of its graded set was in its prompt? A generalization measure should not care much; a fit measure should.",
+    "ratio": 4.0874
+  }
+}
