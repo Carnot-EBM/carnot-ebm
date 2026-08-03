@@ -20869,6 +20869,148 @@ caught it. (`is_level_complete_none` is deliberately excluded: it returns before
 | REQ-ARC-WMTE-6047-E | `python/carnot/agentic/arc_executable_world_model.py` — new `_termination_reason(nodes, max_nodes, depth_truncated_nodes)` helper (budget, then depth, then exhaustion), a `depth_truncated_nodes` counter incremented at BOTH `if len(path) >= max_depth: continue` sites, and all four diagnostics-writing exits updated. `plan_in_model`'s docstring gains a DEPTH AXIS section naming the tn36 artifact that proves the mislabel was live. | `tests/python/test_arc_plan_in_model_depth_capped_2026_07_31.py` — 9 tests, **6/6 real mutations killed** with a deliberate inert control correctly SURVIVING (so the kill rate is falsifiable), sources restored byte-identically, baseline green before and after (`results/arc_plan_in_model_depth_20260731/mutation_check.json`). Two mutations exist specifically because the module has TWO copies of the same loop: `M1_revert_blind_bfs_to_two_way` and `M2_revert_best_first_to_two_way` — a single-loop fix would have survived one of them, and the best-first loop is the one the live path takes whenever a goal energy was induced. Inertness: `results/arc_plan_in_model_depth_20260731/inertness_differential.json` (600 differential cases vs git HEAD, 0 return-value differences). Origin cell: `results/arc_plan_in_model_depth_20260731/tn36_plan_termination.json` (the committed tn36 fixture, both hashes re-asserted against the 2026-07-30 audit's record, now `depth_capped` at 40 and still the identical 61-action plan at 80). |
 
 
+## REQ-ARC-WMTE-6070: Every Action The SCORED Agent Emits SHALL Be Attributable To The Branch That Chose It
+
+The project can report how many levels the live agent banks and how good its induced world
+models score, but it cannot report WHERE ITS ACTIONS COME FROM. By 2026-08-01 three
+independent lines had each concluded, by inference, that the induce -> verify -> plan
+pipeline is not on the causal path to banking a level:
+
+* deleting the LLM induction tier entirely left the agent's action sequence BYTE-IDENTICAL
+  on 5 of 6 games;
+* 0 of 22 `stall` inductions ever cleared the goal gate while 4 of 6 `level_up_reinduction`
+  events did, so `plan_found` correlates with banking because banking TRIGGERS a
+  trivially-passing re-induction, not because planning causes banking;
+* tn36 holds an induced engine with held-out accuracy 1.0, `trust_energy` -3.219856 and
+  25/25 changing transitions correct, and banked 0 levels over 346 actions.
+
+All three are inferences from aggregates. The measurement that would settle the question is
+at the level of the ACTION, and it did not exist. If almost no action is plan-derived, the
+mediation null stops being an inference and becomes an accounting fact that names the stage
+to attack; if many ARE plan-derived and the plans are simply wrong, that is a different and
+equally actionable answer. Either way the accounting has to exist first.
+
+The SCORED agent is `arc_competition_agent.make_carnot_agent` -> `CarnotAgent.choose_action`
+-> `E3AgentPolicy.next_move`. That last call is the single choke point every emitted action
+passes through, so it is where the instrument belongs. `scripts/arc_loop_solve.py` is the
+OFFLINE DEVELOPMENT TWIN and instrumenting it would answer a different question (CLAUDE.md,
+ARC Live-Path Reachability Discipline).
+
+The dominating constraint is that an instrument which perturbs the run answers a question
+about the instrument. The requirement is therefore as much about inertness as about
+recording.
+
+### SCENARIO-ARC-WMTE-6070-1: The instrument is OFF unless explicitly armed
+GIVEN an environment in which `CARNOT_ARC_ACTION_PROVENANCE` is unset, empty, `"0"`, or any
+value other than `"1"`
+WHEN an `E3AgentPolicy` is constructed
+THEN `action_provenance()` returns None, no recorder object is allocated, and `next_move`
+delegates straight to the routing implementation without entering the recording path.
+Strict equality against `"1"` rather than truthiness is load-bearing: `"0"` is a truthy
+Python string, so a truthiness test would arm the instrument on the exact value an operator
+would type to disable it.
+
+### SCENARIO-ARC-WMTE-6070-2: Arming the instrument changes NOTHING the agent does
+GIVEN the same game, seed and configuration
+WHEN one episode is run with the flag unset and another with it set to `"1"`
+THEN the two action sequences are equal element-for-element.
+The determinism of the agent under that configuration MUST be established in the same
+measurement (a third, repeated, unarmed run) and asserted FIRST — otherwise an equal pair
+could be luck and an unequal pair could be ordinary run-to-run noise misattributed to the
+instrument. Where the agent is NOT deterministic, the honest output is the measured noise
+floor, not an inertness claim.
+
+### SCENARIO-ARC-WMTE-6070-3: Every recorded action carries a branch from a CLOSED vocabulary
+GIVEN an armed episode
+THEN every row's `top_branch` is a member of `arc_action_provenance.TOP_BRANCHES`, every
+explorer-derived row's `explorer_branch` is a member of `EXPLORER_BRANCHES`, and the summary
+reports `unknown_top_branches == []`. An unrecognised label means the agent grew a decision
+path the accounting silently mis-bucketed, which must fail loudly rather than land in an
+"other" bin.
+
+### SCENARIO-ARC-WMTE-6070-4: No exit of the routing function is unlabelled
+GIVEN the source of `E3AgentPolicy._next_move_routed`
+THEN every `return` statement is immediately preceded by a `self._prov_top = <constant>`
+assignment, and the number of return sites equals the size of `TOP_BRANCHES`.
+Counting labels alone is NOT sufficient and this scenario exists because of that: a
+developer adding a SEVENTH exit passes any count-based or vocabulary-coverage check while
+actions start flowing through an unlabelled path and get attributed to whatever label the
+previous action happened to leave behind.
+
+### SCENARIO-ARC-WMTE-6070-5: The two label layers do not bleed across actions
+GIVEN an armed episode containing both explorer-derived and non-explorer-derived actions
+THEN a non-explorer row carries `explorer_branch is None` and `explorer_serve_kind is None`,
+and a `explorer_serve_kind` appears only on the two explorer branches that actually call
+`_serve`. A stale explorer label on a plan-step row would inflate the explorer's share of
+the accounting, which is the single number this requirement exists to produce.
+
+### SCENARIO-ARC-WMTE-6070-6: The buckets partition the actions
+GIVEN an armed episode's summary
+THEN `plan_derived_actions + explorer_actions + reset_for_plan_replay_actions ==
+actions_recorded`. Without this, a "0% of actions are plan-derived" headline could be hiding
+actions in an unnamed remainder. `reset_for_plan_replay_actions` is counted SEPARATELY from
+`plan_derived_actions` rather than folded in, because a RESET emitted so a plan can be
+replayed from root is an action spent BECAUSE of a plan without being an action the plan
+chose, and conflating the two flatters the pipeline.
+
+### SCENARIO-ARC-WMTE-6070-7: A failing instrument costs rows, never actions
+GIVEN a recorder whose capture methods raise on every call
+WHEN an episode runs
+THEN every action is still emitted, the run completes normally, and the failures appear in
+the recorder's own `errors` list. A crashed measurement is a lost row; a crashed agent is a
+zeroed game, and `swarm.py` runs every game in ONE process, so an exception escaping the
+instrument could take down a whole eval.
+
+### SCENARIO-ARC-WMTE-6070-8: A degraded generator cannot be reported as the live one
+GIVEN a live-generator measurement arm that requested a specific CUDA card
+WHEN `_generator_server_and_env` falls back to the AMD iGPU HIP build because that card is
+not visible or has no headroom
+THEN the arm REFUSES and records the resolved server binary, rather than producing a slow
+but working run whose artifact would claim a 3090. This is not hypothetical: the first
+attempt at this measurement ran a 31B model on the iGPU for ten minutes because setting
+`CUDA_VISIBLE_DEVICES=1` alongside `CARNOT_ARC_GENERATOR_CUDA_GPU=1` renumbered the cards so
+that physical card 1 was no longer AT index 1.
+
+### SCENARIO-ARC-WMTE-6070-9: A measurement run SHALL NOT write the tracked engine store
+GIVEN a live-generator arm, whose induction writes `<E3_DIR>/<game>/world_model.py`
+WHEN `E3_DIR` resolves to `results/arc_e3` -- TRACKED, READ-ONLY evidence
+THEN the arm REFUSES to run, and the driver sets `CARNOT_ARC_E3_DIR` to a PER-ARM scratch
+directory in the child's environment before the interpreter starts (the redirect is
+resolved at module import, so setting it any later does nothing).
+Two independent reasons, and the first is an incident rather than a hypothesis:
+* the first live attempt at this measurement REWROTE `results/arc_e3/tn36/world_model.py`
+  (40 insertions, 14 deletions) within 90 seconds of starting. Nothing caught it except
+  `git status` -- `_guard_engine_write` is deliberately scoped to pytest, because the LIVE
+  agent writing to that store is exactly what the store is FOR, which leaves a measurement
+  driver as precisely the caller no guard covers. The file was restored from git;
+* PER-ARM rather than one shared scratch directory, because with a shared store arm A's
+  induced engine is on disk when arm B starts and B's `load_engine` can read it. The A/B
+  comparison would then be between two different situations while being reported as one
+  situation with and without an instrument.
+
+### SCENARIO-ARC-WMTE-6070-10: With a LIVE generator the agent is NOT deterministic, and the verdict says so
+GIVEN the same game, seed and configuration, with the frozen live-submission generator
+(gemma-4-31B-it-qat, CUDA build, GPU 1) in the loop
+WHEN two UNARMED arms are run back to back
+THEN their action traces DIVERGE -- measured on tn36 at seed 20260801, first divergence at
+action index 50 of 240 (`results/outer_loop_arc_action_provenance_tn36_live_20260801.json`).
+THEREFORE the armed-vs-unarmed divergence in that same run (first divergence at index 48) is
+INSIDE the measured noise floor and is NOT evidence about the instrument, and the probe emits
+`complete_agent_is_nondeterministic_at_fixed_seed_inertness_reported_against_measured_noise_floor_not_asserted`
+with `instrument_inert: false` rather than a claim it cannot support.
+This is the scenario that stops the obvious mistake: a two-arm design would have compared
+armed against unarmed, seen a divergence at action 48, and concluded the instrument perturbs
+the agent. The third arm is what makes that conclusion unavailable. The inertness evidence
+that DOES hold is (a) the LLM-off configuration, where all three arms are byte-identical over
+240 actions, and (b) the structural argument: 0 removed lines, every added line inside a
+chooser is a comment or a constant assignment.
+
+## Implementation Status (REQ-ARC-WMTE-6070)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6070 | `python/carnot/agentic/arc_action_provenance.py` — `provenance_enabled()` (strict `== "1"`), `ActionProvenanceRecorder` (rows, `note_plan_object` identity-based plan-epoch accounting, `summary()`, `flush()`), the three closed vocabularies `TOP_BRANCHES`/`EXPLORER_BRANCHES`/`SERVE_KINDS`, and `maybe_make_recorder()` as the single construction point. `python/carnot/agentic/arc_competition_agent.py` — `E3AgentPolicy.next_move` becomes a passthrough wrapper (`is None` test, then delegate) over the verbatim pre-existing routing body, renamed `_next_move_routed`; `_next_move_recorded` / `_provenance_pre_state` / `_provenance_post_state` build the row; `action_provenance()` is the public accessor; `CarnotAgent.cleanup` flushes inside the existing once-only guard so the 2-3 cleanup calls from two threads cannot rewrite a game's rows. Branch labels are bare constant-string assignments at 6 `_next_move_routed` return sites, 9 `StepwiseExplorer.next_move` return sites and 3 `_serve` item kinds — unconditional rather than flag-guarded precisely because an unconditional constant assignment is trivially provable inert. Drivers: `scripts/arc_action_provenance_worker.py` (one arm, one killable subprocess, since induction executes LLM-authored engine code; refuses outright if `E3_DIR` resolves to the tracked evidence store, and, on a live arm, if `_generator_server_and_env` fell back to the AMD iGPU HIP build) and `scripts/arc_action_provenance_probe.py` (the A/B/A' design, with a PER-ARM `CARNOT_ARC_E3_DIR` scratch store). | `tests/python/test_arc_action_provenance.py` — 16 tests. **Mutation-proven, 3/3 killed, source restored byte-identically (sha256 verified):** deleting the `execute.plan_step` label kills 2 tests; adding a NEW unlabelled `return` to `_next_move_routed` kills `::test_no_return_site_in_the_two_choosers_is_unlabelled` (naming the exact relative line); making the recorder re-enter the routing call once kills `::test_flag_unset_leaves_action_sequence_identical` (naming the exact divergence index). Three tests reach the PLAN branches at runtime by installing a plan on the policy directly -- `execute.plan_step` twice, plan-exhaustion falling back to `exhausted.explorer`, and the accounting's `plan_derived_fraction` actually moving off zero when plan steps occur (a summary pinned at 0% no matter what would be indistinguishable from the finding this instrument exists to establish, which is the measurement-floor mode `hv_progress` was bitten by). Two further tests pin SCENARIO-9 on the driver sources, because the alternative -- running a live induction to observe the evidence write -- would need a 31B GGUF and would BE the thing being prevented. Arcade-level inertness on the REAL scored policy is carried by the probe artifact rather than the unit suite: `results/outer_loop_arc_action_provenance_tn36_none_20260801.json` reports `agent_deterministic_at_fixed_seed: true` and `instrument_inert: true` over 240 actions of the real `E3AgentPolicy` on the offline arcade, all three arms hashing to the same trace SHA256. That configuration reaches 2 of 6 top branches; the artifact states which 4 it does not, rather than leaving the reader to assume full coverage. THE LIVE-GENERATOR RUN (`results/outer_loop_arc_action_provenance_tn36_live_20260801.json`, gemma-4-31B-it-qat on GPU 1, per-arm engine store, generator substrate witnessed as the CUDA build in all three arms) reaches 4 of the 6 branches and produces the accounting this requirement exists for: on tn36, a game the agent FAILS, **17 of 240 actions (7.1%) were plan-derived** and 222 (92.5%) came from the explorer, with ONE plan induced, installed and consumed IN FULL (0 abandoned) off an engine whose held-out accuracy was 1.0 -- and 0 levels banked. Orthogonally, only **44 of 240 actions (18.3%) expanded anything new**; 177 (73.8%) were navigation or replay back to states already visited. So the mediation null is NOT "planning never happens": planning happened, found a plan, and executed it to completion on 7% of the budget without reaching a level. |
+
 ## REQ-ARC-WMTE-6071: The Explorer SHALL Be Able To Defer An Action It Has Already Watched Do Nothing
 
 The 2026-08-02 roster action census (`results/arc_explorer_renavigation_20260802/`) decomposed

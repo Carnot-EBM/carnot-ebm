@@ -87,3 +87,17 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-01 13:12 UTC -- NEW
+
+- Kaggle’s public competition leaderboard has a new high score: YUTO KOJIMA leads with **1.86%**, from an August 1 submission. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+- ARC Prize’s separate verified-model leaderboard recorded **Claude Opus 5 (High) at 30.16%** on July 24, a new ARC-AGI-3 high score; it completed five Public Demo environments no previously tested model had beaten. [ARC Prize result](https://arcprize.org/results/anthropic-claude-opus-5)
+- ARC Prize published a verified **Grok 4.5** evaluation on July 16: its best ARC-AGI-3 result was **0.32% at Medium reasoning effort**. [ARC Prize result](https://arcprize.org/results/xai-grok-4-5)
+
+## 2026-08-02 13:14 UTC -- NEW
+
+- Kaggle’s competition host published an analysis of 500 failed submissions: roughly one-third had no traceable notebook error, nearly 20% omitted required GPU configuration, and remaining failures included missing datasets/dependencies, CUDA OOM, incorrect API endpoints, and writes to read-only `/kaggle/input`. The host also clarified that organizers cannot access notebooks before participants open-source them. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
+## 2026-08-03 13:17 UTC -- check failed
+
+CHECK_TIMED_OUT
+

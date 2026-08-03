@@ -70,3 +70,13 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **DhanaLakshmiMalla** (`dhanalakshmimalla`) is **#5 at 1.60**. No submission-linked public code or writeup was found; **exploit/general-purpose classification: unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/dhanalakshmimalla/code)
 
+## 2026-08-01 13:41 UTC -- NEW
+
+- **New top-five entrant:** **FOYSAL** (`foysalemonshanto`) is **#5 at 1.61**. The current August 1 submission is not publicly linked to code, so its **exploit/general-purpose classification is unknown**. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/foysalemonshanto/code)
+
+- **Newly discovered artifact, not current-score attribution:** FOYSAL’s older public notebook—an approximately **0.41-scoring light fork** of Ashvin Singh’s agent—imports each game’s `.py` class, probes mutable scalar fields for hidden state, searches unscored game copies with BFS, then replays the solution. **Classification: (a) EXPLOIT/SOURCE-READING.** Its novel general-purpose component first replays the preceding level’s solution, then matches objects by color/area, estimates their mean centroid displacement, and translates all `ACTION6` coordinates accordingly. **Classification: (b) GENERAL-PURPOSE technique**, although this implementation verifies it through the source-reading path. [FOYSAL notebook](https://www.kaggle.com/code/foysalemonshanto/ash-s-arc-agi-3-agent-d83ab9), [upstream notebook](https://www.kaggle.com/code/ashvinsingh/ash-s-arc-agi-3-agent)
+
+  **POSSIBLE CARNOT LEVER:** verifier-gated object-relative trajectory transfer—re-anchor a previously successful level trace to matched objects before invoking expensive LLM world-model induction.
+
+## 2026-08-02 13:37 UTC -- checked, nothing new
+
