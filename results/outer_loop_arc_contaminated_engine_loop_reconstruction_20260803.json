@@ -2573,5 +2573,59 @@
     "results/experiment_5760_cegis_refinement_induction_ab.json": "the pre-registered 13-game CEGIS refinement test on Qwen9B + ThinkingCap27B",
     "results/experiment_5766_gemma31b_cegis_refinement_ab.json": "the same test on the current gemma-4-31B generator",
     "results/experiment_4327/4339/4350_*.json": "the June conductor artifacts whose world_model_sha256 fields tie the twelve engines to named tasks"
+  },
+  "CORRECTION_20260803_adversarial_review_applied": {
+    "status": "REVIEW HOLDS on its central claims, which I re-derived from the shards myself. Nothing below deletes a prior number; every original figure stands unedited above.",
+    "CORRECTION_1_the_13_game_prereg_tests_RETRACTED_as_evidence_about_refinement": {
+      "retracted": "'the statistical weight is carried entirely by the cited 13-game prereg tests' (exp5760 pooled -0.0128, exp5766 pooled -0.0598, 'positive on 0 of 13 games, twice').",
+      "why": "The treatment arm was FLOORED. Across both experiments there are 160 post-refinement held-out observations (83 in exp5760, 77 in exp5766) and the distinct value set is exactly {0.0}. Not one refactor round in either experiment ever produced a nonzero held-out score. Since delta_heldout = best_refined - round0 and best_refined is pinned at the floor, delta was arithmetically incapable of being positive on any row. 'Positive on 0 of 13, twice' restates the floor; it does not measure iterative feedback.",
+      "denominator_note": "The review stated 243 post-refinement observations (127 + 116). That does NOT reproduce: I get 83 + 77 = 160 non-None refactor_heldouts, against 288 total round records and 171 refactor records of which 160 emitted code. The correct denominator is 160. The reviewer's substantive conclusion is unaffected -- 0 of 160 and 0 of 243 are both zero -- but the number is corrected for the record.",
+      "failure_mode_3_correction": "This artifact's own checklist claimed the prior negative was falsifiable because 'two games moved -0.0833'. That shows only that round0 was occasionally nonzero and was then clobbered. It does NOT establish that an UPWARD move was reachable, which is what failure mode 3 demands. Independently confirmed on the shipped-loop side: in 10 of 13 games (90 of 117 cells) NO round, induce or refactor, ever left 0.0."
+    },
+    "CORRECTION_2_the_minus_0_3187_figure_RETRACTED": {
+      "retracted": "'-0.3187 WORSE than single-shot' cited as evidence that refinement is harmful.",
+      "proof": "experiment_5766_gemma31b_cegis_refinement_ab.py:455-467 defines _cell_best_achieved = max(round0, *refactor_heldouts). Because every refactor_heldout is 0.0 and round0 >= 0, best_achieved is IDENTICALLY round0. Therefore -0.318658 = round0_pooled(exp5766, 0.059829) - singleshot_pooled(exp5764, 0.378487): a comparison between TWO SINGLE-SHOT measurements. It contains zero refinement signal and must not be cited as one."
+    },
+    "CORRECTION_3_the_sharpest_point_RETRACTED": {
+      "retracted": "'THE SHARPEST POINT: the shipped loop had the CONTAMINATION ADVANTAGE TOO ... iterative cell-level feedback was given the same tail exposure the codex agents had ... and improved held-out on ZERO of thirteen games.'",
+      "what_survives": "The PREMISE is correct and I verified it: arc_llm_reinduction.py:1585 scores the counterexample with WorldModelVerifier(list(transitions)) over the FULL window, tail included, and _retention_signal ranks on heldout_change_consistency. The leak is real.",
+      "what_does_not": "The CONCLUSION does not follow. Tail exposure cannot be shown to have failed to help when the arm it was given to never produced a single non-floor value in 160 rounds."
+    },
+    "CORRECTION_4_NEW_the_CEGIS_harness_round_0_is_broken": {
+      "status": "The most consequential fact in this correction set, and it changes the recommendation.",
+      "finding": "exp5766's CEGIS round 0 IS single-shot induction. Same 13-game roster, same generator (gemma-4-31B), same trials_per_game=3, and the SAME window builder -- atp.build_progress_window(game), verified as the identical call in experiment_5760 (line 528), experiment_5764 (line 365) and experiment_5766 (line 368), so this is NOT a corpus-construction difference. The matched standalone single-shot run exp5764 reaches heldout > 0 on 12 of 13 games, game-clustered mean 0.378487. exp5766's round 0 reaches heldout > 0 on 2 of 13 games, game-clustered mean 0.059829. A 6.33x divergence.",
+      "per_game_5764_vs_5766_round0": "vc33 1.0 vs 0.0; ft09 0.8333 vs 0.0; sp80 0.75 vs 0.0; cd82 0.4667 vs 0.0; r11l 0.4444 vs 0.0; sk48 0.3889 vs 0.0; lp85 0.3333 vs 0.0; tr87 0.2222 vs 0.0; sb26 0.1481 vs 0.4444; tu93 0.2222 vs 0.3333; g50t 0.0833 vs 0.0; re86 0.0278 vs 0.0; ar25 0.0 vs 0.0.",
+      "consequence": "Whatever degrades the refactor rounds ALSO degrades round 0 inside the same harness. The defect is not specific to refinement, and no arm measured on this harness is interpretable until round 0 reproduces exp5764 within noise.",
+      "never_flagged": "exp5766's own module docstring (line 18) cites exp5764's 0.378487 / 12-of-13 as its baseline. The 6.33x gap against its own round 0 was present in the artifact and was never noticed."
+    },
+    "CORRECTION_5_ka59_characterization_CORRECTED": {
+      "original": "'ka59: shown 0.4286 -> 0.5714 -> 0.7143 with held-out tracking 0.3333 -> 0.6667. ISOLABLE -- the one clean instance.'",
+      "correction": "Accurate through version 4 of 6, then omits the terminal collapse. The full held-out change_accuracy trajectory across ka59's 6 loop-era versions is 0.3333, 0.3333, 0.6667, 0.6667, 0.0, 0.0 -- with change_fidelity 0.9123, 0.7544, 0.9825, 0.9825, 0.5419, 0.5419. The quoted figure is PEAK-ROUND, not terminal, and not this artifact's own pre-registered metric.",
+      "under_this_artifacts_own_preregistered_metric": "final minus round-1 held-out change_fidelity: ar25 +0.1349, ka59 -0.3704, sc25 0.0000, re86 0.0000. Pooled -0.0589, positive on 1 of 4 -- and the sole positive is ar25, which PART_B of this artifact independently proves is not isolable. Corrected reading: ZERO clean surviving instances under the metric this artifact prescribes for its own successor."
+    },
+    "CORRECTION_6_heldout_denominator_DISCLOSED": {
+      "fact": "All four games have heldout_len 4 with one no-op row excluded, so heldout n_changing = 3. Held-out change_accuracy therefore admits only {0, 0.3333, 0.6667, 1.0}.",
+      "consequence": "ka59's headline 0.3333 -> 0.6667 is ONE ROW out of THREE. ar25's 0.3333 -> 1.0000 is two rows out of three. Every accuracy figure in PART_B must be read with that denominator attached."
+    },
+    "CORRECTION_7_identity_control_is_VACUOUS_as_constructed": {
+      "fact": "identity_control_shown and identity_control_heldout both report n_noop = 0 in all four games, because the single non-changing row per split is excluded from the graded denominator -- i.e. the exact row an identity engine would score 1.0 on.",
+      "consequence": "Identity scores 0.0000 by construction on every split. The control discriminates nothing and should not have been listed as a passed control (failure mode 7 is NOT satisfied by it). A real identity control must grade over a split that contains at least one no-op row."
+    },
+    "CORRECTION_8_the_binding_prior_WITHDRAWN": {
+      "withdrawn": "'THE PRIOR IT MUST BEAT: 0 of 13 games, twice' and the derived instruction that any successor not naming an advance difference from exp5760/5766 is a doomed rerun.",
+      "reason": "Those runs established no prior about refinement (CORRECTION_1). exp5766's retire_if_same_verdict language ('do NOT re-propose more induction-refinement variants') now rests on a run whose refined arm never left the floor and whose round 0 diverges 6.33x from its own cited baseline. That retirement should be RE-EXAMINED rather than cited as binding, and re-opening it is a correction of a defective measurement, not planner discretion overriding a legitimate retirement."
+    },
+    "CORRECTION_9_the_recommendation_CHANGES": {
+      "original": "'My recommendation: do not build the loop.'",
+      "revised": "Do not build a NEW loop -- but the reason has changed, and so has what follows. The original reason was 'the question is answered, refinement does not help.' The correct reason is 'the question is UNANSWERED because the instrument is broken.' Ordering: (1) instrument the refactor write path -- log per round whether engine() raises, on how many rows, and whether the emitted program is functionally identity; (2) fix the CEGIS round-0 regression in CORRECTION_4; (3) fix purity (build the counterexample from WorldModelVerifier(prefix), not the full window); (4) only then is the feedback question measurable. Building a fresh loop on top of an unfixed write path would reproduce the same uninformative floor."
+    },
+    "CORRECTION_10_NEW_the_destruction_signature_is_in_THIS_artifacts_own_git_trajectories": {
+      "status": "Not raised by the reviewer; found while verifying it, and it is this artifact's strongest surviving contribution.",
+      "finding": "All four reconstructed games PEAK and then COLLAPSE to 0.0 held-out and never recover. ar25 0.3333/0.3333/1.0/1.0/1.0/1.0 then 0.0 for 8 consecutive later versions; ka59 peaks 0.6667 then 0.0 for 5; sc25 is 1.0/1.0 then 0.0 for 10; re86 0.6667 x4 then 0.0 for 8.",
+      "the_mechanism_is_visible_in_the_per_row_records": "The collapsed versions are of exactly two kinds. (a) RAISERS -- ar25 records IndexError('invalid index to scalar variable.'), IndexError('index 64 is out of bounds for axis 1 with size 64'), TypeError('must assign iterable to extended slice'); sc25 records NameError(\"name 'c' is not defined\"). (b) IDENTITY -- versions where wrong_cells EQUALS true_changed_cells exactly on every graded row (re86 53/53, 50/50, 48/48; ka59's terminal 654-byte engine 19/19, 3/3, 18/18), which is the arithmetic signature of an engine that changed nothing.",
+      "convergence": "This is the SAME degenerate-identity-or-crash collapse independently found (i) in the exp5760/5766 shards, where the refactor arm's prefix_accuracy caps at 0.125 against induce reaching 1.0 and 15 cells collapse from a PERFECT prefix 1.0 to 0.0, and (ii) in arc_llm_reinduction.py:1100-1190's own replay, which recorded per-round heldout 0.65 -> 0.15 -> 0.075. Three independent corpora, one signature.",
+      "corroborated_on_disk": "results/arc_e3/ft09/world_model.py is 775 bytes in which engine() has eight conditional branches and every one of them, plus both fallthroughs, is `return grid`, with no assignment to grid anywhere -- a structural identity function that loads cleanly and never raises. A functional probe of all 27 on-disk engines (40 random grids each, read-only) classified 3 as pure identity, 4 as identity-or-raising, 1 as always-raising. That probe uses random rather than real grids and is CORROBORATING ONLY, not decisive; ft09 is decisive by inspection, not by the probe."
+    },
+    "REVISED_ANSWER": "The lead is NOT closed, and this artifact's 'do not build the loop' recommendation was right for the wrong reason. Whether cell-level feedback on the model's own output clears the induction wall remains UNTESTED: every measurement of it to date ran through a write path that reliably converts a working engine into an identity stub or a crasher, inside a harness whose own baseline arm scores 6.33x below its matched control."
   }
 }
