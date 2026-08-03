@@ -3093,10 +3093,98 @@ top-level functions -- no classes, no `self`, no invented state, no renamed para
 """
 
 
-def refactor_prompt(game: str, vr: VerifyResult) -> str:
+# REQ-ARC-WMTE-6091: DEFAULT OFF. Unset/"0" -> the rendered prompt is BYTE-IDENTICAL to the
+# shipped one, including the defect below.
+_REFACTOR_SHOW_ENGINE_DEFAULT = "0"
+# Bound on the engine source spliced into the prompt. The 13 roster engines run 413..15,396 bytes
+# (measured, not assumed), so this clips nothing today; it exists so a pathological engine cannot
+# silently evict the mismatch block from the context pool. Truncation is ANNOUNCED in the prompt
+# and counted in the return of `_current_engine_source`, never silent.
+_REFACTOR_ENGINE_SOURCE_MAX_CHARS = 24000
+
+
+def refactor_show_engine_enabled() -> bool:
+    """Is the engine being refactored actually SHOWN to the model? (REQ-ARC-WMTE-6091)
+
+    THE DEFECT, MEASURED (results/outer_loop_arc_refine_instrument_repro_20260803.json).
+    `refactor_prompt` takes a game id and a `VerifyResult`. Neither carries the engine. So the
+    rendered prompt tells the model to "REFACTOR toward simpler, more general rules (replace
+    special cases with shared rules) while keeping the cases it already gets right" -- about
+    code it cannot see, and about passing cases it is never shown. Across the 13 roster games,
+    ZERO of the engines' substantive source lines reach the prompt string; the only lines that
+    match are this module's own REQUIRED OUTPUT STRUCTURE boilerplate (`import numpy as np`,
+    `def engine(grid, action, data):`), which is the prompt quoting its own template, not the
+    engine.
+
+    WHAT THAT MAKES THE SHIPPED "REFINEMENT" ROUND. Not refinement. A blind RE-INDUCTION from a
+    handful of failing deltas, with LESS evidence than round 0 had -- round 0 at least sees the
+    induce prompt's transition block, while a refactor round sees at most five mismatches
+    (`_bounded_mismatches`). That is a coherent explanation for the shipped CEGIS result
+    (exp5766: 0 of 39 cells with delta_heldout > 0, and prefix_accuracy COLLAPSING from a 1.0
+    ceiling at induce to a 0.125 ceiling at refactor -- REQ-ARC-WMTE-6042's write-collapse
+    instrumentation): a round that is told to preserve what it cannot see does not preserve it.
+
+    SO THE PRIOR CEGIS NULL DOES NOT FALSIFY REFINEMENT. It falsifies the instrument. Turning
+    this ON is what makes the refinement hypothesis testable for the first time.
+
+    DEFAULT OFF, because every existing measurement -- exp5760, exp5766, and exp5766's
+    `retire_if_same_verdict` -- was taken against the blind prompt, and an interpretable A/B
+    needs the old arm reproducible byte for byte. `CARNOT_ARC_REFACTOR_SHOW_ENGINE=1` enables it.
+    """
+
+    return _flag_env("CARNOT_ARC_REFACTOR_SHOW_ENGINE", _REFACTOR_SHOW_ENGINE_DEFAULT == "1")
+
+
+def _current_engine_source(game: str, *, max_chars: int = _REFACTOR_ENGINE_SOURCE_MAX_CHARS):
+    """The engine `refactor` is being asked to fix, read off disk. Returns (text, truncated_chars).
+
+    READ-ONLY, and deliberately failure-tolerant: an unreadable/absent engine yields "" so the
+    ON arm degrades to exactly the OFF prompt rather than raising inside a live refinement round.
+    The caller records which happened; it is never inferred from the prompt's length.
+    """
+
+    try:
+        src = (E3_DIR / game / "world_model.py").read_text()
+    except OSError:
+        return "", 0
+    if len(src) <= int(max_chars):
+        return src, 0
+    return src[: int(max_chars)], len(src) - int(max_chars)
+
+
+_REFACTOR_ENGINE_BLOCK_HEADER = """
+THE CURRENT ENGINE YOU ARE FIXING (results/arc_e3/{game}/world_model.py) -- this is the code
+that produced the predictions below. Keep every rule of it that is already correct; change only
+what the mismatches show to be wrong:
+
+```python
+{source}
+```{truncation_note}
+"""
+
+
+def refactor_prompt(game: str, vr: VerifyResult, *, engine_source: Optional[str] = None) -> str:
     import os
 
     mism = json.dumps(_bounded_mismatches(vr.mismatches), indent=1)
+    engine_block = ""
+    if refactor_show_engine_enabled():
+        # An explicit `engine_source` (a caller that already holds the text) wins over the disk
+        # read, so a caller driving a redirected store does not depend on E3_DIR resolution.
+        if engine_source is None:
+            src, dropped = _current_engine_source(game)
+        else:
+            src, dropped = str(engine_source), 0
+        if src.strip():
+            engine_block = _REFACTOR_ENGINE_BLOCK_HEADER.format(
+                game=game,
+                source=src.rstrip(),
+                truncation_note=(
+                    f"\n(NOTE: {dropped} further characters of this file were omitted for length.)"
+                    if dropped
+                    else ""
+                ),
+            )
     before = ""
     after = ""
     # Graduated to default-on (REQ-ARC-FCP-5699-35): REQ-31/32 validated this reminder fixes a
@@ -3112,7 +3200,7 @@ failing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engin
 reproduces these too, and REFACTOR toward simpler, more general rules (replace special
 cases with shared rules) while keeping the cases it already gets right. Edit only that
 file.
-{before}
+{engine_block}{before}
 MISMATCHES:
 {mism}
 {after}"""
