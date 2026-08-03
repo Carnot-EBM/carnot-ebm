@@ -1,0 +1,493 @@
+{
+  "experiment": 6060,
+  "experiment_id": "arc_shipped_refinement_loop_characterization_20260803",
+  "title": "Characterization of the SHIPPED bounded LLM re-induction loop (execute_bounded_llm_reinduction)",
+  "run_date": "2026-08-03",
+  "schema": "carnot.arc_refinement_loop_characterization.v1",
+  "inference_substrate": {
+    "value": "aggregation_from_upstream_artifacts",
+    "principle": "The headline numbers are re-derived from two pre-existing upstream shards; the code-path probes execute the REAL shipped function with a SCRIPTED proposer on CPU -- no GGUF load, no CUDA, no generator call, no network. Declaring live_llm_inference would be false: nothing was generated."
+  },
+  "solve_provenance": {
+    "value": "development_proxy",
+    "principle": "No solve, level, or plan is claimed by this artifact. The field is declared for discipline compliance and is vacuous here: offline_reproduced is absent and no level count is asserted."
+  },
+  "verifier_is_oracle": {
+    "value": false,
+    "principle": "No verifier-value or moat claim is made. This is a characterization of a loop's behaviour, not a claim that any verifier adds value."
+  },
+  "random_seed": 6060,
+  "reproducibility_checksum": "9386c900d0bd2e789c605346851bf3da",
+  "cited_upstream_artifacts": [
+    {
+      "path": "results/exp5760_cegis_refinement_induction_shard.jsonl",
+      "sha256_16": "6d460e8e21360933",
+      "fields_imported": [
+        "rounds",
+        "refinement_rounds_used",
+        "delta_heldout",
+        "refactor_emission_rate",
+        "generator",
+        "game"
+      ]
+    },
+    {
+      "path": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl",
+      "sha256_16": "731d7185cc9a0b5f",
+      "fields_imported": [
+        "rounds",
+        "refinement_rounds_used",
+        "delta_heldout",
+        "refactor_emission_rate",
+        "generator",
+        "game"
+      ]
+    }
+  ],
+  "q1_prior_art": {
+    "found": true,
+    "artifacts": [
+      {
+        "path": "results/exp5760_cegis_refinement_induction_shard.jsonl",
+        "what": "CEGIS refinement A/B, qwen9b + thinkingcap27, 78 cells, 13 games, min_heldout_accuracy=1.0 so refactor rounds actually fire; records per-round heldout_accuracy and a delta_heldout field."
+      },
+      {
+        "path": "results/exp5766_gemma31b_cegis_refinement_shard.jsonl",
+        "what": "same design on gemma-4-31B (the CURRENT live generator pin), 39 cells, 13 games."
+      },
+      {
+        "path": "python/carnot/experiment_5766_gemma31b_cegis_refinement_ab.py",
+        "what": "the harness; docstring states min_heldout_accuracy=1.0 is set 'so the dynamics-refactor rounds actually FIRE'."
+      },
+      {
+        "path": "python/carnot/agentic/arc_llm_reinduction.py:1100-1190",
+        "what": "an in-code measurement block: replaying the real historical write sequence found refinement is NOT monotone and 'frequently makes the model WORSE'; 3 of 15 regressive writes happened under the STRONG codex/gpt-5.5 proposer."
+      }
+    ],
+    "conclusion": "This loop HAS been measured before. The present artifact re-derives those numbers independently and adds the purity and signal-class analysis that the prior work did not perform."
+  },
+  "q2_rounds_actually_run": {
+    "record_wide_refinement_rounds_used": {
+      "0": 16,
+      "1": 38,
+      "2": 58,
+      "3": 96,
+      "total_occurrences": 208,
+      "n_files": 94
+    },
+    "cegis_shard_distribution": {
+      "1": 29,
+      "2": 5,
+      "3": 83
+    },
+    "per_generator": {
+      "gemma31b": {
+        "n_cells": 39,
+        "rounds_used_distribution": {
+          "3": 39
+        },
+        "round_to_round_transitions": 77,
+        "improved": 0,
+        "regressed": 6,
+        "tied": 71,
+        "refactor_emission_rate": {
+          "1.0": 38,
+          "0.5": 1
+        }
+      },
+      "qwen9b": {
+        "n_cells": 39,
+        "rounds_used_distribution": {
+          "1": 27,
+          "2": 4,
+          "3": 8
+        },
+        "round_to_round_transitions": 11,
+        "improved": 0,
+        "regressed": 0,
+        "tied": 11,
+        "refactor_emission_rate": {
+          "None": 27,
+          "1.0": 3,
+          "0.0": 4,
+          "0.5": 5
+        }
+      },
+      "thinkingcap27": {
+        "n_cells": 39,
+        "rounds_used_distribution": {
+          "1": 2,
+          "2": 1,
+          "3": 36
+        },
+        "round_to_round_transitions": 72,
+        "improved": 0,
+        "regressed": 2,
+        "tied": 70,
+        "refactor_emission_rate": {
+          "1.0": 36,
+          "0.0": 1,
+          "None": 2
+        }
+      }
+    },
+    "verdict": "NOT inert. K<=3 is real, not nominal: 96 of 208 recorded invocations used all 3 rounds and 58 used 2. On the current live generator (gemma-4-31B) 39 of 39 cells ran the full 3 rounds with a 1.0 refactor emission rate. The qwen9b arm is the exception -- 27 of 39 cells stopped at round 1 via proposer_failed, i.e. an emission failure, not an early exit on success.",
+    "failure_mode_2_check": "The shipped mechanism IS exercised. It fails on QUALITY, not on reachability."
+  },
+  "q3_what_the_model_is_told_between_rounds": {
+    "signal_class": "(c) the SPECIFIC failing cells, with expected vs predicted",
+    "evidence": {
+      "call_chain": "execute_bounded_llm_reinduction -> proposer.refactor(game, _counterexample_result(last_counterexample)) -> refactor_prompt(game, vr)",
+      "mismatch_record_shape": {
+        "i": "transition index",
+        "action": "int",
+        "data": "dict|None",
+        "true_change": "[[row, col, before, after], ...] -- the OBSERVED delta",
+        "your_prediction_was_wrong_at": "[[row, col, before, after], ...] -- the PREDICTED delta"
+      },
+      "rendered_prompt_verified": true,
+      "n_mismatches_rendered": 5,
+      "cap_chain": "WorldModelVerifier.score(max_mismatch=8) collects in index order; _bounded_mismatches(limit=5) renders the first 5 into the prompt"
+    },
+    "verdict": "The shipped loop ALREADY implements the hypothesis-under-test's signal class (c). It is not (a) 'asked again' and not (b) 'a scalar'. The prompt names the failing transition, the true delta, and the model's own wrong delta, and asks it to fix engine() and refactor toward simpler general rules. THE GAP IS NOT THE SIGNAL CLASS."
+  },
+  "q4_purity": {
+    "finding": "THE SHIPPED LOOP LEAKS THE HELD-OUT SPLIT INTO REFINEMENT, WITH THE ANSWERS.",
+    "mechanism": "select_trusted_world_model splits internally via _split_prefix_heldout (last 1/3 held out) and accepts/rejects on heldout_accuracy over that tail. The counterexample handed to refactor() is built by WorldModelVerifier(list(transitions)) -- THE FULL CORPUS, tail included. Any tail row the engine gets wrong is therefore eligible to be rendered into the refactor prompt together with its true_change (the correct answer).",
+    "splits_coincide": {
+      "checked_n_range": "2..60",
+      "identical": true,
+      "note": "_proposal_prefix (what the proposer is INDUCED on) and _split_prefix_heldout (what the verifier SCORES on) return the same prefix for every n. Round 1 is therefore clean by construction. Rounds 2..K are not.",
+      "live_shape_n25": {
+        "proposer_sees": 17,
+        "held_out": 8
+      }
+    },
+    "executed_proof_worst_case": {
+      "fixture": "engine fits every prefix row, fails every held-out row (the shape an induced-on-prefix engine naturally takes)",
+      "vr_n": 12,
+      "vr_n_correct": 8,
+      "mismatch_indices_rendered_into_prompt": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "heldout_indices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "pct_of_rendered_feedback_that_is_heldout": 100.0,
+      "true_answers_of_heldout_rows_shown_to_model": true
+    },
+    "conditional_sweep_at_live_shape": {
+      "corpus_shape": {
+        "n": 25,
+        "n_prefix": 17,
+        "n_heldout": 8,
+        "heldout_indices": [
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ]
+      },
+      "sweep": [
+        {
+          "n_prefix_rows_failing": 0,
+          "n_rendered": 5,
+          "rendered_idx": [
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "heldout_leaked": [
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "n_heldout_leaked": 5
+        },
+        {
+          "n_prefix_rows_failing": 1,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            17,
+            18,
+            19,
+            20
+          ],
+          "heldout_leaked": [
+            17,
+            18,
+            19,
+            20
+          ],
+          "n_heldout_leaked": 4
+        },
+        {
+          "n_prefix_rows_failing": 2,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            17,
+            18,
+            19
+          ],
+          "heldout_leaked": [
+            17,
+            18,
+            19
+          ],
+          "n_heldout_leaked": 3
+        },
+        {
+          "n_prefix_rows_failing": 3,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            2,
+            17,
+            18
+          ],
+          "heldout_leaked": [
+            17,
+            18
+          ],
+          "n_heldout_leaked": 2
+        },
+        {
+          "n_prefix_rows_failing": 4,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            2,
+            3,
+            17
+          ],
+          "heldout_leaked": [
+            17
+          ],
+          "n_heldout_leaked": 1
+        },
+        {
+          "n_prefix_rows_failing": 5,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "heldout_leaked": [],
+          "n_heldout_leaked": 0
+        },
+        {
+          "n_prefix_rows_failing": 6,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "heldout_leaked": [],
+          "n_heldout_leaked": 0
+        },
+        {
+          "n_prefix_rows_failing": 7,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "heldout_leaked": [],
+          "n_heldout_leaked": 0
+        },
+        {
+          "n_prefix_rows_failing": 8,
+          "n_rendered": 5,
+          "rendered_idx": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "heldout_leaked": [],
+          "n_heldout_leaked": 0
+        }
+      ],
+      "summary": {
+        "n_configs": 9,
+        "n_configs_leaking_heldout_into_refactor_prompt": 5,
+        "leaks_when_prefix_failures_below": 5,
+        "interpretation": "held-out rows reach the model exactly when the engine is GOOD on the prefix it was induced on -- the regime that matters for producing a high-fidelity engine"
+      }
+    },
+    "when_it_leaks": "Held-out rows reach the model exactly when FEWER THAN 5 prefix rows fail -- because mismatches are collected in index order and only the first 5 are rendered. When the engine is BAD on the prefix, the prefix crowds the tail out of the prompt. So the leak is worst precisely when the engine is GOOD on the part it was induced on, which is the regime that matters for producing a high-fidelity engine. 5 of 9 swept configurations leak.",
+    "is_any_recorded_number_inflated_by_this": {
+      "answer": "No measured victim -- but only because refinement never helped at all.",
+      "evidence": "0 of 160 round-to-round transitions improved, so no round >= 2 number exceeds its round-1 predecessor anywhere in the record. The contamination is structural and real; it has produced no inflation because the loop produced no gain to inflate.",
+      "forward_warning": "ANY future gain measured on this scaffolding is presumptively contaminated. A refinement loop that starts working would be reading the answers to the rows that grade it. Fix the purity BEFORE trusting a positive result, not after."
+    },
+    "failure_mode_1_status": "CONFIRMED PRESENT in the shipped loop."
+  },
+  "q5_did_it_ever_improve_an_engine": {
+    "answer": "Never, in the entire record.",
+    "cell_level": {
+      "round_to_round_transitions": 160,
+      "strictly_improved": 0,
+      "regressed": 8,
+      "tied": 152,
+      "rule_of_three_95pct_upper_bound_on_improvement_rate": 0.0187
+    },
+    "game_clustered_primary_unit": {
+      "n_games": 13,
+      "games_improved": 0,
+      "games_hurt": 3,
+      "games_tied": 10,
+      "per_game": [
+        {
+          "game": "ar25",
+          "n_cells": 5,
+          "mean_delta_best_later_minus_round1": -0.05
+        },
+        {
+          "game": "cd82",
+          "n_cells": 7,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "ft09",
+          "n_cells": 7,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "g50t",
+          "n_cells": 6,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "lp85",
+          "n_cells": 7,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "r11l",
+          "n_cells": 8,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "re86",
+          "n_cells": 7,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "sb26",
+          "n_cells": 6,
+          "mean_delta_best_later_minus_round1": -0.277778
+        },
+        {
+          "game": "sk48",
+          "n_cells": 5,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "sp80",
+          "n_cells": 7,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "tr87",
+          "n_cells": 6,
+          "mean_delta_best_later_minus_round1": 0.0
+        },
+        {
+          "game": "tu93",
+          "n_cells": 6,
+          "mean_delta_best_later_minus_round1": -0.166667
+        },
+        {
+          "game": "vc33",
+          "n_cells": 6,
+          "mean_delta_best_later_minus_round1": 0.0
+        }
+      ],
+      "sign_test_two_sided_p": 0.25,
+      "MIN_REACHABLE_p_at_this_clustering": 0.000244
+    },
+    "rounds_ever_accepted_by_the_heldout_gate": 0,
+    "cells_that_planned": 0,
+    "honest_statistical_scope": "PRE-REGISTERED BOUND, stated before the numbers: with 13 games the minimum reachable two-sided sign-test p is 0.000244, and that requires all 13 to move the same way. Only 3 games moved (all in the HURT direction), giving p = 0.25. THEREFORE: this artifact does NOT claim refinement significantly hurts. It claims the NULL -- zero improvement -- which is what was observed, at every unit: 0 of 13 games, 0 of 83 cells, 0 of 160 round-to-round transitions.",
+    "failure_mode_3_check": {
+      "was_a_nonzero_reachable": true,
+      "evidence": "heldout_accuracy took the distinct values 0.0, 0.25, 0.333, 0.5, 0.667 across the record and moved DOWNWARD 8 times, so upward movement was expressible by the metric. The zero is earned, not a pinned instrument.",
+      "caveat_stated_plainly": "The ACCEPT gate is min_heldout_accuracy=1.0 and the maximum heldout_accuracy ever observed was 0.667. So 'rounds accepted = 0' is partly a threshold artifact and must NOT be read as a separate finding. The improvement measure (round N+1 > round N) is threshold-independent, and that is the 0/160."
+    }
+  },
+  "q6_codeonly_directive_on_refinement_rounds": {
+    "does_L2_CODEONLY_DIRECTIVE_prefix_refactor": false,
+    "evidence": {
+      "LocalGGUFProposer.refactor": "calls _gen_to_file(..., codeonly_eligible=False) with an explicit in-code comment: 'NOT codeonly_eligible: refactor asks the model to reason about BEFORE/PREDICTED/OBSERVED mismatches; the code-only \"skip all reasoning\" directive would degrade exactly that.'",
+      "executed_check": "rendered round-2 prompt contains neither '/no_think' nor 'Skip all reasoning'; does not start with _L2_CODEONLY_DIRECTIVE."
+    },
+    "residual_historical_risk": {
+      "branch": "_gen_to_file's `elif self.no_think_prefix:` still fires for refactor when codeonly is off",
+      "current_live_pin": "ARC_LIVE_GENERATOR_NO_THINK_PREFIX = '' (gemma-4-31B; /no_think is a Qwen3 control token and inert here) -- so the CURRENT live stack prepends nothing to refactor.",
+      "historical": "Under the retired Qwen3.5-9B pin no_think_prefix was '/no_think\\n', which WOULD have prefixed refactor via that elif. The qwen9b arm of exp5760 is the affected record; it is also the arm whose refactor emission failed on 27 of 39 cells."
+    },
+    "verdict": "The concern does NOT apply to the current live stack. The loop is permitted to reason about its failing cells. This removes 'the model was told not to think' as an explanation for the 0/160.",
+    "scope_note": "Structural check only. No prompt variant was proposed, written, or run."
+  },
+  "what_this_closes": "The hypothesis under test was that feedback on the model's OWN OUTPUT is a categorically different signal from more evidence in the prompt. The shipped loop ALREADY delivers that signal, in its strongest form (class (c): the failing cells with expected vs predicted), to a model that is NOT told to skip reasoning, for a full 3 rounds, with a 1.0 emission rate, on the current live generator. It improved an engine 0 times in 160 round-to-round transitions across 13 games. Combined with the leakage-maximal control already on record, BOTH arms of the prompt-side hypothesis are now measured at zero: more evidence does not help, and cell-level feedback on its own output does not help either.",
+  "what_this_does_NOT_establish": [
+    "It does NOT show a refinement loop CANNOT work -- it shows THIS one does not, with a measured 95% upper bound of 1.87% on the per-round improvement rate.",
+    "It does NOT measure plans, actions, or levels. Every number here is offline engine accuracy. The trust gate still stands between an engine gain and any behavioural claim.",
+    "It does NOT establish that refinement significantly HURTS (game-clustered p = 0.25).",
+    "The 'rounds accepted = 0' figure is confounded by the min_heldout_accuracy=1.0 gate and is not independent evidence."
+  ],
+  "recommended_next_step_if_anyone_builds_on_this": "Fix the purity defect FIRST: build the refactor counterexample from the PREFIX only (WorldModelVerifier(prefix)) rather than the full corpus, so the tail that grades the engine is never shown to the model that writes it. This is a small, local change at arc_llm_reinduction.py's real_verify construction. Without it, no positive refinement result on this scaffolding can be trusted. NOT DONE HERE -- this artifact only characterizes; it flips no shipped default.",
+  "acceptance_gate_prior_art_found": true,
+  "acceptance_gate_rounds_distribution_measured": true,
+  "acceptance_gate_signal_class_determined": true,
+  "acceptance_gate_purity_checked": true,
+  "acceptance_gate_improvement_denominator_reported": true,
+  "acceptance_gate_passed": true,
+  "preconditions_checked": [
+    {
+      "resource": "cpu_only_no_gguf_no_gpu",
+      "available": true
+    },
+    {
+      "resource": "upstream_cegis_shards",
+      "available": true
+    },
+    {
+      "resource": "no_write_to_results_arc_e3",
+      "available": true
+    }
+  ],
+  "methodology_note": "CPU only. No GGUF weights loaded, no CUDA, no generator call, no network. The two code-path probes drive the REAL execute_bounded_llm_reinduction with a scripted proposer and redirect e3.E3_DIR to a TemporaryDirectory, so results/arc_e3 -- which is EVIDENCE -- is read-only throughout and was not written. The improvement statistics are re-derived from two pre-existing upstream shards, not newly generated.",
+  "honest_verdict": "complete_shipped_refinement_loop_characterized_signal_class_c_already_delivered_improved_0_of_160_transitions_and_leaks_heldout_tail_into_refinement",
+  "duration_s": 0.6329
+}
