@@ -1,0 +1,615 @@
+{
+  "corpus_reconstruction_validation": {
+    "build_progress_window_diff_method": "ast.get_source_segment on the function at b6bde56788 vs HEAD -- IDENTICAL",
+    "build_progress_window_source_identical_between_run_commit_and_head": true,
+    "n_non_representable_values": 0,
+    "note": "Two independent checks that the transitions re-derived today are the ones the runs actually used.",
+    "per_game_prefix_denominator_today": {
+      "ar25": 8,
+      "cd82": 3,
+      "ft09": 3,
+      "g50t": 8,
+      "lp85": 3,
+      "r11l": 2,
+      "re86": 8,
+      "sb26": 6,
+      "sk48": 8,
+      "vc33": 2
+    },
+    "recorded_prefix_accuracy_values_representable_with_todays_prefix_denominator": true
+  },
+  "defect_reproduced": "yes_with_one_correction",
+  "duration_s": 8.56,
+  "experiment": "outer_loop_arc_refactor_collapse_reproduction_20260803",
+  "field_principles": {
+    "duration_s": "real wall clock of the three probes. Short is CORRECT here: this is arithmetic over committed shards plus fewer than 100 engine calls, not inference.",
+    "honest_verdict": "terminal-prefixed and numbers-first, and it carries the CORRECTION as prominently as the confirmation -- a reproduction that only echoed the brief would be worth nothing.",
+    "inference_substrate": "verifier_ensemble_against_cached_candidates -- candidate engines scored against pre-recorded offline transitions. NO LLM is loaded and none is claimed; the 60s live-inference floor does not apply and claiming it would be false.",
+    "random_seed": "no sampling occurs -- every probe is deterministic. The value is the experiment id of the run under audit, recorded so the field is not empty.",
+    "reproducibility_checksum": "content hash over both shards, the four live modules read, the harness, this probe, the extracted residue blobs, and the run commit id.",
+    "solve_provenance": "development_proxy -- offline PUBLIC-game measurement. No level was solved, nothing was submitted, no hidden-game source was read."
+  },
+  "headline_numbers": {
+    "cells_perfect_to_all_zero_over_cells_with_emitted_refactor": [
+      15,
+      83
+    ],
+    "fisher_odds_ratio": 18.2,
+    "fisher_p": 1.0294417830164442e-10,
+    "induce_prefix_ceiling": 1.0,
+    "induce_rounds_prefix_gt_0": [
+      28,
+      88
+    ],
+    "max_failing_cases_shown_to_refactor": 5,
+    "refactor_prefix_ceiling": 0.125,
+    "refactor_prompt_only_hit_is_boilerplate": "def engine(grid, action, data): -- from the REQUIRED OUTPUT STRUCTURE reminder, not from the file",
+    "refactor_prompt_substantive_source_lines_present": [
+      1,
+      12
+    ],
+    "refactor_rounds_prefix_gt_0": [
+      4,
+      160
+    ],
+    "residue_engines_functionally_identity": [
+      2,
+      10
+    ],
+    "residue_engines_with_zero_exact_transitions": [
+      10,
+      10
+    ]
+  },
+  "honest_verdict": "complete_defect_a_reproduced_exactly_induce_28of88_ceiling_1.0_vs_refactor_4of160_ceiling_0.125_fisherOR_18.2_p_1.03e-10_and_15of83_cells_fall_1.0_to_0.0_mechanism_is_refactor_prompt_never_contains_the_engine_it_is_told_to_preserve_0_of_12_substantive_source_lines_present_BUT_the_cited_ft09_775B_identity_exemplar_is_MISATTRIBUTED_it_is_the_frozen_REQ_ARC_WMTE_6016_origin_fixture_dated_2026_07_27_not_the_run_residue_and_degenerate_identity_is_3_of_10_residues_not_dominant",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "limitations": [
+    "MISSING IS NOT ZERO: 40 of 288 round records carry a null prefix_accuracy (29 induce, 11 refactor, all proposer_failed). They are excluded from both denominators and reported with their reason, never folded in as zeros.",
+    "The residue population is 10 of 13 roster games. tu93 / tr87 / sp80 had NO world_model.py at the run commit and are absent -- not counted as anything.",
+    "Residue provenance is CELL-LEVEL, not ROUND-LEVEL. The store holds one file per game; per-round emitted sources are never persisted (run_cegis_cell keeps only sources[0] and sources[-1], and even those only as a memorization scan). 83 of 117 cells END on a scored refactor round, so the residue is overwhelmingly a refactor product, but which cell's refactor cannot be established.",
+    "CONCURRENT-WRITE CONFOUND, unresolved: exp5760 (GPU 0) and exp5766 (GPU 1) ran at the same time over the SAME 13 games and both write results/arc_e3/<game>/world_model.py. Whose write survived is unknown. This does NOT explain the asymmetry -- induce and refactor have the same write-then-load window and would be hit equally -- but it does mean a residue cannot be assigned to a specific experiment.",
+    "The identity control is informative but weak alone: every graded row in these windows changes state, so identity scores 0.0 by construction. Residue == identity in score therefore only says both are 0. The behavioural output-equals-input measurement, not the score equality, is what supports the identity classification.",
+    "exact_accuracy_full_corpus here is computed unmasked and WITHOUT the level-up-row exclusion that WorldModelVerifier applies; the prefix/heldout numbers come from the real select_trusted_world_model and do apply it. Both are reported.",
+    "This artifact makes NO behavioural claim. Engine accuracy is not plans, actions or levels; the trust gate still stands between them."
+  ],
+  "offline_reproduced": false,
+  "p1_prefix_accuracy_asymmetry": {
+    "fisher_odds_ratio": 18.2,
+    "fisher_p": 1.0294417830164442e-10,
+    "induce_ceiling": 1.0,
+    "induce_gt0_over_n": [
+      28,
+      88
+    ],
+    "induce_value_histogram": {
+      "0.0": 60,
+      "0.125": 2,
+      "0.25": 2,
+      "0.333333": 1,
+      "0.375": 1,
+      "0.5": 5,
+      "0.75": 2,
+      "1.0": 15
+    },
+    "n_cells_induce_perfect": 15,
+    "n_cells_perfect_to_all_zero": 15,
+    "n_cells_with_emitted_refactor": 83,
+    "n_round_records": 288,
+    "n_scored": 248,
+    "n_unscored_missing_not_zero": 40,
+    "per_arm": {
+      "gemma31b_cegis": {
+        "induce_gt0": 19,
+        "induce_n": 39,
+        "refactor_gt0": 2,
+        "refactor_n": 77
+      },
+      "qwen9b_cegis": {
+        "induce_gt0": 0,
+        "induce_n": 12,
+        "refactor_gt0": 0,
+        "refactor_n": 11
+      },
+      "thinkingcap27_cegis": {
+        "induce_gt0": 9,
+        "induce_n": 37,
+        "refactor_gt0": 2,
+        "refactor_n": 72
+      }
+    },
+    "per_game": {
+      "ar25": {
+        "cells": 5,
+        "induce_gt0": 1,
+        "refactor_gt0": 0
+      },
+      "cd82": {
+        "cells": 7,
+        "induce_gt0": 0,
+        "refactor_gt0": 0
+      },
+      "ft09": {
+        "cells": 7,
+        "induce_gt0": 6,
+        "refactor_gt0": 0
+      },
+      "g50t": {
+        "cells": 6,
+        "induce_gt0": 2,
+        "refactor_gt0": 0
+      },
+      "lp85": {
+        "cells": 7,
+        "induce_gt0": 1,
+        "refactor_gt0": 0
+      },
+      "r11l": {
+        "cells": 8,
+        "induce_gt0": 1,
+        "refactor_gt0": 0
+      },
+      "re86": {
+        "cells": 7,
+        "induce_gt0": 1,
+        "refactor_gt0": 4
+      },
+      "sb26": {
+        "cells": 6,
+        "induce_gt0": 4,
+        "refactor_gt0": 0
+      },
+      "sk48": {
+        "cells": 5,
+        "induce_gt0": 1,
+        "refactor_gt0": 0
+      },
+      "sp80": {
+        "cells": 7,
+        "induce_gt0": 6,
+        "refactor_gt0": 0
+      },
+      "tr87": {
+        "cells": 6,
+        "induce_gt0": 1,
+        "refactor_gt0": 0
+      },
+      "tu93": {
+        "cells": 6,
+        "induce_gt0": 3,
+        "refactor_gt0": 0
+      },
+      "vc33": {
+        "cells": 6,
+        "induce_gt0": 1,
+        "refactor_gt0": 0
+      }
+    },
+    "per_shard": {
+      "exp5760_cegis_refinement_induction_shard.jsonl": {
+        "induce_gt0": 9,
+        "induce_max": 1.0,
+        "induce_n": 49,
+        "refactor_gt0": 2,
+        "refactor_max": 0.125,
+        "refactor_n": 83
+      },
+      "exp5766_gemma31b_cegis_refinement_shard.jsonl": {
+        "induce_gt0": 19,
+        "induce_max": 1.0,
+        "induce_n": 39,
+        "refactor_gt0": 2,
+        "refactor_max": 0.125,
+        "refactor_n": 77
+      }
+    },
+    "perfect_to_zero_games": {
+      "ar25": 1,
+      "ft09": 6,
+      "lp85": 1,
+      "r11l": 1,
+      "sb26": 1,
+      "sp80": 5
+    },
+    "refactor_ceiling": 0.125,
+    "refactor_gt0_over_n": [
+      4,
+      160
+    ],
+    "refactor_value_histogram": {
+      "0.0": 156,
+      "0.125": 4
+    },
+    "unscored_reasons": {
+      "induce|skipped=proposer_failed|proposer_ok=False": 29,
+      "refactor|skipped=proposer_failed|proposer_ok=False": 11
+    }
+  },
+  "p2_refactor_prompt_never_shows_the_engine": {
+    "induce_prompt_is_a_different_function": true,
+    "n_distinctive_current_source_lines_probed": 12,
+    "n_distinctive_lines_found_in_prompt": 1,
+    "refactor_prompt_chars": 1324,
+    "refactor_prompt_contains_current_source_verbatim": false,
+    "refactor_prompt_contains_def_engine": true,
+    "refactor_prompt_head": "The executable world model at results/arc_e3/ft09/world_model.py reproduces\nonly 3/9 (33%) of the observed transitions. Below are\nfailing cases (BEFORE / your PREDICTED / the true OBSERVED next grid). Fix engine() so it\nreproduces these too, and REFACTOR toward simpler, more general rules (replace special\ncases with shared rules) while keeping the cases it already gets right. Edit only that\nfile.\n\nREQUIRED OUTPUT STRUCTURE -- do not deviate from this: your fixed code must define EXACTLY two\nTOP-LEVEL functions, in the SAME format as the file you are correcting:\n\n    def engine(grid, action, data):\n        ...\n    def is_level_complete(grid):\n        ...\n\nDo NOT wrap them in a class. Do NOT u",
+    "refactor_prompt_says_keep_what_it_gets_right": true,
+    "refactor_prompt_shows_only_failing_cases": true
+  },
+  "p3_residue_execution": {
+    "games_functionally_identity": [
+      "g50t",
+      "vc33"
+    ],
+    "games_near_identity": [
+      "sb26"
+    ],
+    "games_scoring_exactly_as_identity_control": [
+      "ar25",
+      "cd82",
+      "ft09",
+      "g50t",
+      "lp85",
+      "r11l",
+      "re86",
+      "sb26",
+      "sk48",
+      "vc33"
+    ],
+    "games_with_raising_rows": {
+      "sb26": 1
+    },
+    "n_errored": 0,
+    "n_functionally_identity": 2,
+    "n_games_with_residue": 10,
+    "n_near_identity_ge_0.9": 1,
+    "n_scored": 10,
+    "n_scoring_exactly_as_identity_control": 10,
+    "n_with_raising_rows": 1,
+    "provenance": "git blob at b6bde56788 (the commit that landed the exp5760/5766 artifacts + shards) -- NOT the current working tree, which was overwritten by later runs on 2026-07-26/27 and 2026-08-01",
+    "rows": [
+      {
+        "bytes": 1552,
+        "changed_cell_counts": [
+          109,
+          109,
+          109,
+          109,
+          109,
+          109,
+          109,
+          109,
+          109,
+          108,
+          108,
+          690
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.0,
+        "functionally_identity": false,
+        "game": "ar25",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 12,
+        "n_rows_output_equals_input": 0,
+        "n_rows_truly_changing": 12,
+        "n_transitions": 12,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 4,
+        "split_prefix_n": 8
+      },
+      {
+        "bytes": 2816,
+        "changed_cell_counts": [
+          201,
+          200,
+          201,
+          201,
+          406
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.4,
+        "functionally_identity": false,
+        "game": "cd82",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 5,
+        "n_rows_output_equals_input": 2,
+        "n_rows_truly_changing": 5,
+        "n_transitions": 5,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 2,
+        "split_prefix_n": 3
+      },
+      {
+        "bytes": 1380,
+        "changed_cell_counts": [
+          38,
+          38,
+          38,
+          3558
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.0,
+        "functionally_identity": false,
+        "game": "ft09",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 4,
+        "n_rows_output_equals_input": 0,
+        "n_rows_truly_changing": 4,
+        "n_transitions": 4,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 1,
+        "split_prefix_n": 3
+      },
+      {
+        "bytes": 2168,
+        "changed_cell_counts": [
+          73,
+          96,
+          97,
+          153,
+          49,
+          48,
+          49,
+          48,
+          49,
+          48,
+          49,
+          1167
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 1.0,
+        "functionally_identity": true,
+        "game": "g50t",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 12,
+        "n_rows_output_equals_input": 12,
+        "n_rows_truly_changing": 12,
+        "n_transitions": 12,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 4,
+        "split_prefix_n": 8
+      },
+      {
+        "bytes": 1861,
+        "changed_cell_counts": [
+          293,
+          293,
+          293,
+          293,
+          1505
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.0,
+        "functionally_identity": false,
+        "game": "lp85",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 5,
+        "n_rows_output_equals_input": 0,
+        "n_rows_truly_changing": 5,
+        "n_transitions": 5,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 2,
+        "split_prefix_n": 3
+      },
+      {
+        "bytes": 1396,
+        "changed_cell_counts": [
+          116,
+          25,
+          1412
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.0,
+        "functionally_identity": false,
+        "game": "r11l",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 3,
+        "n_rows_output_equals_input": 0,
+        "n_rows_truly_changing": 3,
+        "n_transitions": 3,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 1,
+        "split_prefix_n": 2
+      },
+      {
+        "bytes": 1618,
+        "changed_cell_counts": [
+          60,
+          60,
+          59,
+          3,
+          52,
+          53,
+          53,
+          52,
+          53,
+          50,
+          48,
+          362
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.5833,
+        "functionally_identity": false,
+        "game": "re86",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 12,
+        "n_rows_output_equals_input": 7,
+        "n_rows_truly_changing": 12,
+        "n_transitions": 12,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 4,
+        "split_prefix_n": 8
+      },
+      {
+        "bytes": 1830,
+        "changed_cell_counts": [
+          20,
+          53,
+          20,
+          53,
+          20,
+          53,
+          20,
+          53,
+          752
+        ],
+        "engine_raise_kinds": {
+          "AttributeError": 1
+        },
+        "engine_raises_n_rows": 1,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 1.0,
+        "functionally_identity": false,
+        "game": "sb26",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 8,
+        "n_rows_output_equals_input": 8,
+        "n_rows_truly_changing": 9,
+        "n_transitions": 9,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 3,
+        "split_prefix_n": 6
+      },
+      {
+        "bytes": 2145,
+        "changed_cell_counts": [
+          96,
+          13,
+          12,
+          12,
+          9,
+          36,
+          184,
+          185,
+          8,
+          52,
+          201,
+          1168
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 0.3333,
+        "functionally_identity": false,
+        "game": "sk48",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 12,
+        "n_rows_output_equals_input": 4,
+        "n_rows_truly_changing": 12,
+        "n_transitions": 12,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 4,
+        "split_prefix_n": 8
+      },
+      {
+        "bytes": 1209,
+        "changed_cell_counts": [
+          265,
+          266,
+          2743
+        ],
+        "engine_raise_kinds": {},
+        "engine_raises_n_rows": 0,
+        "exact_accuracy_full_corpus": 0.0,
+        "functional_identity_frac": 1.0,
+        "functionally_identity": true,
+        "game": "vc33",
+        "identity_control_heldout_accuracy": 0.0,
+        "identity_control_prefix_accuracy": 0.0,
+        "n_rows_1_changed_cell": 0,
+        "n_rows_engine_returned": 3,
+        "n_rows_output_equals_input": 3,
+        "n_rows_truly_changing": 3,
+        "n_transitions": 3,
+        "residue_heldout_accuracy": 0.0,
+        "residue_prefix_accuracy": 0.0,
+        "split_heldout_n": 1,
+        "split_prefix_n": 2
+      }
+    ]
+  },
+  "proposed_instrumentation_not_applied_in_this_phase": {
+    "identity_test_must_be_behavioural_not_syntactic": "run the engine on the real grids and compare output to input. This probe found an engine that is identity WITHOUT saying `return grid` (sb26 returns its input on all 8 rows it does not raise on) and engines that say `return grid` in most branches yet are not functionally identity on this corpus.",
+    "status": "PROPOSED ONLY -- this phase reproduces, it does not fix. No shipped file was edited.",
+    "trajectory_invariance_argument": {
+      "control_flow": "add-only; no branch, threshold, selection or return value reads the new fields",
+      "engine_statefulness": "THE ONE REAL RISK. An engine holding module-level state could behave differently because it was called N extra times. Mitigation: run the instrumentation pass strictly AFTER every scoring call in the round, so it cannot affect that round's scores; and load_engine re-imports the module fresh on every call (arc_executable_world_model._load_engine_from builds a new module_from_spec each time), so state cannot leak into the next round.",
+      "grid_mutation": "WorldModelVerifier.score already calls engine(t.grid.copy(), ...); the instrumentation must do the same, so no recorded Transition is mutated",
+      "required_proof": "a both-directions test: drive execute_bounded_llm_reinduction with a stub proposer, once with the instrumentation and once without, and assert every pre-existing round key and every LlmReinductionResult field is identical; then DELETE one new field and confirm the suite goes red."
+    },
+    "where_the_fields_go": [
+      "python/carnot/agentic/arc_llm_reinduction.py :: execute_bounded_llm_reinduction -- the per-round `row` dict, in the same `row.update({...})` block that already writes `prefix_accuracy` / `heldout_accuracy`. New keys: engine_rows_scored, engine_raise_rows, engine_raise_kinds, engine_output_equals_input_rows, engine_identity_frac, engine_functionally_identity.",
+      "python/carnot/experiment_5760_cegis_refinement_induction_ab.py :: _summarize_cell -- `slim_rounds` is a 7-key WHITELIST and will silently DROP any new round key. It must be widened or the instrumentation never reaches a shard. That whitelist is itself part of why this defect was invisible."
+    ]
+  },
+  "question": "DEFECT (A) REPRODUCTION ONLY -- no code was changed. Does the CEGIS refactor step collapse world-model engines that the induce step had already fit to the rows it was SHOWN, as measured by the prefix_accuracy field both prior artifacts recorded and neither read? And what is the MECHANISM?",
+  "random_seed": 5766,
+  "read_game_source": false,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:78232b710fa6d82d28623ea89221528f8ce3ac29a800fc3a7841cbb1cacc73ac",
+  "requirements": [
+    "REQ-ARC-WMTE-5760",
+    "REQ-ARC-WMTE-5766"
+  ],
+  "run_date": "2026-08-03T14:04:20Z",
+  "sample_size": {
+    "arms": 3,
+    "cells": 117,
+    "games": 13,
+    "note": "Clustered at the GAME level: the collapse appears in 12 of 13 games and in both shards and both non-degenerate arms independently, so it is not one run, one generator or one game. re86 is the single game where more cells have a nonzero refactor round (4) than a nonzero induce round (1) -- reported, not hidden.",
+    "residue_engines_executed": 10,
+    "round_records": 288,
+    "scored_round_records": 248,
+    "shards": 2
+  },
+  "schema": "carnot.outer_loop.arc_refactor_collapse_reproduction.v1",
+  "solve_provenance": "development_proxy",
+  "submitted_to_leaderboard": false,
+  "used_env_source": true,
+  "verdict_summary": {
+    "asymmetry_reproduced_exactly": true,
+    "brief_claim_corrected": "the cited residue exemplar results/arc_e3/ft09/world_model.py (775 bytes, all `return grid`) is byte-identical (blob 98c498c695954e4d065d73625f2d49a5f7c422ef) to the FROZEN origin fixture results/arc_e3_origin_fixtures/ft09/world_model.py, added 2026-07-27 for REQ-ARC-WMTE-6016 -- a DIFFERENT documented incident. The blob on disk at the commit that landed the CEGIS artifacts was a different 1380-byte file that is NOT identity. Degenerate-identity collapse is a MINORITY residue (3 of 10), not the dominant one.",
+    "mechanism_established": "refactor regenerates world_model.py wholesale from a prompt that contains 0 of 12 substantive lines of the engine it instructs the model to preserve; the model sees at most 5 FAILING transitions and nothing that passed"
+  },
+  "verifier_is_oracle": false
+}
