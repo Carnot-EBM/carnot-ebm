@@ -489,5 +489,67 @@
   ],
   "methodology_note": "CPU only. No GGUF weights loaded, no CUDA, no generator call, no network. The two code-path probes drive the REAL execute_bounded_llm_reinduction with a scripted proposer and redirect e3.E3_DIR to a TemporaryDirectory, so results/arc_e3 -- which is EVIDENCE -- is read-only throughout and was not written. The improvement statistics are re-derived from two pre-existing upstream shards, not newly generated.",
   "honest_verdict": "complete_shipped_refinement_loop_characterized_signal_class_c_already_delivered_improved_0_of_160_transitions_and_leaks_heldout_tail_into_refinement",
-  "duration_s": 0.6329
+  "duration_s": 0.6329,
+  "CORRECTION_20260803_adversarial_review_applied": {
+    "status": "REVIEW HOLDS. The counts in this artifact all reproduce exactly; the DIAGNOSIS does not. Nothing below deletes a prior number -- every original figure stands unedited above and is re-affirmed as reproduced.",
+    "what_i_re_reproduced_independently": {
+      "round_to_round_heldout_transitions": "160 (0 improved / 8 regressed / 152 tied) -- CONFIRMED, unchanged.",
+      "denominator_reconciliation": "288 total round records; 171 refactor records; 160 refactor records that emitted code; 160 non-None refactor_heldouts. The 160 in this artifact is correct. NOTE FOR THE RECORD: the codex-mechanics reviewer's competing figure of 243 post-refinement observations does NOT reproduce at any natural denominator and is not adopted; their substantive conclusion is unaffected, since 0 of 160 and 0 of 243 are both zero."
+    },
+    "CORRECTION_1_why_it_fails_RETRACTED": {
+      "retracted_claim": "why_it_fails = 'OUTPUT QUALITY: given the failing cells with expected-vs-predicted ... the model does not produce a better program.'",
+      "reason": "Not established, and now positively contradicted. A crashing or degenerate engine and a merely-worse engine are INDISTINGUISHABLE in this data. WorldModelVerifier.score records a raising engine as {i, action, error} with NO true_change and `continue`s (arc_executable_world_model.py:1642-1647), so a totally broken engine scores 0.0, not None. refactor_emission_rate=1.0 counts code written and module imported -- not code that computes anything.",
+      "the_censoring_that_makes_it_unresolvable_from_the_shard": "experiment_5760_cegis_refinement_induction_ab.py:385-396 (`slim_rounds`) retains only 7 keys and DROPS `counterexample` from every round record. The crash-vs-wrong discriminator was computed at run time and discarded before it reached disk. Stratification by number of changed cells is unavailable for the same reason.",
+      "what_the_mechanism_actually_appears_to_be": "DEGENERATE-IDENTITY COLLAPSE, not bad reasoning. Three converging lines: (1) the refactor arm's prefix_accuracy caps at 0.125 while induce reaches 1.0 (below); (2) n_engine_snapshots == n_emitted_rounds in 117 of 117 cells, so every refactored module IMPORTED and load_engine SUCCEEDED -- this is not an import failure, the engine object was obtained and ran; (3) the surviving on-disk residue in results/arc_e3 contains structural identity stubs -- results/arc_e3/ft09/world_model.py is 775 bytes in which engine() has eight conditional branches and EVERY one of them, plus both fallthroughs, is `return grid`, with no assignment to grid anywhere. It loads cleanly, never raises, and predicts nothing. ft09 is one of the games whose induce round scored a PERFECT prefix 1.0 and whose every refactor round scored 0.0."
+    },
+    "CORRECTION_2_prefix_accuracy_channel_ADDED": {
+      "why_it_was_missing": "This artifact reported only heldout_accuracy. The identical round records also carry prefix_accuracy -- the engine's fit on the rows it was SHOWN and being corrected against -- and that channel was never reported. It is the channel that distinguishes 'inert' from 'destructive'.",
+      "induce_prefix_gt_0": "28 of 88 (31.8%); distinct values [0.0, 0.125, 0.25, 0.333, 0.375, 0.5, 0.75, 1.0]",
+      "refactor_prefix_gt_0": "4 of 160 (2.5%); distinct values [0.0, 0.125] -- the refactor arm NEVER exceeds 0.125",
+      "fisher_exact": "OR = 18.2, p = 1.029e-10",
+      "round_level_prefix_transitions": "4 improved / 32 regressed / 124 tied (n=160)",
+      "collapse_from_perfect": "15 of 83 cells had round-1 prefix EXACTLY 1.0 and 0.0 at every subsequent refactor round, despite the refactor prompt explicitly instructing the model to keep the cases it already gets right. 28 of 83 collapsed from prefix>0 to 0.0. Games: ft09 (x6), sp80 (x5), ar25, sb26, r11l, lp85.",
+      "reading": "The refactor step does not fail to improve the engine. It destroys the engine's fit on the very rows it was handed with the correct answers."
+    },
+    "CORRECTION_3_significance_claim_WITHDRAWN_as_stated": {
+      "withdrawn": "'this artifact does NOT claim refinement significantly hurts (p=0.25 game-clustered)'",
+      "reason": "That p was computed on the one channel that was floored. Game-clustered on the PREFIX channel the same corpus gives HURT 11 / helped 1 / tied 1.",
+      "honesty_flag": "The prefix-channel analysis is POST-HOC, not pre-registered. It is grounds to RE-OPEN and re-measure, NOT a finished claim of harm. The original p=0.25 is not deleted; it is re-scoped to the heldout channel only."
+    },
+    "CORRECTION_4_failure_mode_3_check_CORRECTED": {
+      "original_check": "'heldout took the values 0.0/0.25/0.333/0.5/0.667 and moved DOWNWARD 8 times, so upward movement was expressible -- the zero is earned, not a pinned instrument.'",
+      "correction": "True for 3 games, false for 10. In cd82, ft09, g50t, lp85, r11l, re86, sk48, sp80, tr87, vc33 -- 10 of 13 games, 90 of 117 cells -- NO round, induce or refactor, EVER left heldout 0.0. Only ar25, sb26 and tu93 ever moved, and those are exactly the 3 games this artifact lists as hurt.",
+      "consequence_for_the_preregistered_bound": "The stated MIN REACHABLE two-sided sign-test p of 0.000244 assumed 13 MOVABLE games. At most 3 could move; the min reachable p on 3 games is 0.25 -- which is precisely the p reported. The game-clustered test had ZERO POWER BY CONSTRUCTION. The 10 'tied' games must be read as NO-SIGNAL, not as evidence of no-improvement (failure mode 8: missing is not zero)."
+    },
+    "CORRECTION_5_positive_control_ADDED": {
+      "finding": "refactor rounds reach heldout > 0 at 0 of 160, against an induce base rate of 8 of 88 (0.0909).",
+      "p_under_the_induce_rate": "P(0 of 160 | 0.0909) = 2.38e-07",
+      "reading": "This is what makes the null non-vacuous, and it points at DESTRUCTION rather than at inert non-improvement: refactored engines are reliably WORSE than freshly induced ones from the same model in the same harness."
+    },
+    "CORRECTION_6_prior_art_citation_CORRECTED": {
+      "what_this_artifact_said": "cited arc_llm_reinduction.py:1100-1190 as independent corroboration that refinement does not work.",
+      "what_the_block_actually_concludes": "verbatim at line 1114: 'Three of the 15 regressive writes happened under the STRONG codex/gpt-5.5 proposer, so this is a store defect, not a proposer defect.' Its point is that last-write-wins DISCARDED good rounds, and REQ-ARC-WMTE-6035 shipped retain-best as the fix (default ON, 2026-07-29, commit 111f5d3314), moving mean change_fidelity 0.0042 -> 0.3979 and the change-gate 0 of 12 -> 5 of 12.",
+      "what_survives_and_is_now_LOAD_BEARING_IN_THE_OTHER_DIRECTION": "The same block reports a scripted replay of real recorded ka59 induction blobs producing per-round heldout accuracies 0.65 -> 0.15 -> 0.075, and records that ka59 peaked at change_fidelity 1.0000 and is 0.0000 on disk, ar25 peaked at 0.8157 and is 0.0000. That is a THIRD independent instance of the monotone-destruction signature in CORRECTION_1 and CORRECTION_2 -- it corroborates DESTRUCTION, not inertness."
+    },
+    "CORRECTION_7_code_drift_DISCLOSED": {
+      "fact": "Both shards were last written 2026-07-21 (commit b6bde56788). They therefore PREDATE best-engine retention (2026-07-29, 111f5d3314) and the induce->plan horizon / plannability change (2026-07-31, 14752454c9), while this artifact asserts it characterizes 'the SHIPPED loop'.",
+      "does_it_change_0_of_160": "No. The per-round metric and the control flow are unaffected while no round is ever accepted by the 1.0 gate, so the round-to-round trajectory stands. But retention DOES change what the loop OUTPUTS: post-2026-07-29 the loop keeps round 0 when refactor degrades it, so refinement is now neutral-by-construction rather than harmful-by-construction. That is a mitigation of the store half, NOT a fix to the refactor step producing worse programs."
+    },
+    "CORRECTION_8_slim_rounds_censoring_DISCLOSED": "experiment_5760_cegis_refinement_induction_ab.py:385-396 discards `counterexample`, and with it every per-round mismatch record including the `error` field that distinguishes a crashing engine from a wrong one, and the changed-cell counts needed for stratification (failure mode 6). Several of these corrections cannot be closed from the existing shards for this reason. Any successor MUST persist the crash flag and the changed-cell histogram per round.",
+    "CORRECTION_9_leak_frequency_SCOPED": "The held-out leak into the refactor prompt is REAL and was proven by execution (a prefix-perfect / tail-failing fixture renders 100% held-out mismatches, each carrying its true_change). I did NOT independently reproduce the reviewer's realized-frequency estimate of 62 of 83 cells and do not adopt that number. What is established: the leak path exists, is deliberate per the in-code comment, and is worst precisely when the engine is GOOD on the prefix. It produced no measurable inflation here only because refinement never improved anything.",
+    "CORRECTION_10_closing_claim_WITHDRAWN": {
+      "withdrawn": "'it closes the last lead' and 'the induction tier needs a different generator class, not a better loop and not another prompt.'",
+      "reason": "Neither is supported while a degenerate-collapse mode with an unexcluded mechanical cause sits inside the loop's own write path, and while the harness's own baseline arm is broken (see CORRECTION_11). This run did not test whether cell-level feedback helps; it tested a write path that reliably produces engines worse than the ones it was given.",
+      "revised_next_step_ordering": "1. Instrument the refactor write: log per round whether engine() raises, on how many rows, and whether the emitted program is functionally identity. 2. Fix the CEGIS round-0 regression (CORRECTION_11) -- until round 0 reproduces the matched single-shot baseline, no arm built on this harness is interpretable. 3. Fix purity (build the counterexample from WorldModelVerifier(prefix), not the full window). 4. Only then re-measure feedback."
+    },
+    "CORRECTION_11_NEW_the_harness_baseline_arm_is_broken": {
+      "status": "NOT RAISED BY EITHER REVIEWER IN THIS FORM; found while verifying them. This is the most consequential single fact in the correction set.",
+      "finding": "exp5766's CEGIS round 0 IS single-shot induction. On the SAME 13-game roster, the SAME generator (gemma-4-31B), the SAME trials_per_game=3 and the SAME window builder (atp.build_progress_window, verified identical call in all three scripts), the matched standalone single-shot run exp5764 reaches heldout > 0 on 12 of 13 games, game-clustered mean 0.378487. exp5766's round 0 reaches heldout > 0 on 2 of 13 games, game-clustered mean 0.059829.",
+      "per_game": "5764 vs 5766-round0: vc33 1.0 vs 0.0; ft09 0.8333 vs 0.0; sp80 0.75 vs 0.0; cd82 0.4667 vs 0.0; r11l 0.4444 vs 0.0; sk48 0.3889 vs 0.0; lp85 0.3333 vs 0.0; tr87 0.2222 vs 0.0; sb26 0.1481 vs 0.4444; tu93 0.2222 vs 0.3333; g50t 0.0833 vs 0.0; re86 0.0278 vs 0.0; ar25 0.0 vs 0.0.",
+      "ratio": "6.33x divergence between two measurements that should be the same operation.",
+      "consequence": "Whatever is degrading the refactor rounds is ALSO degrading round 0 inside the same harness. The defect is not specific to refinement. Until CEGIS round 0 reproduces exp5764 within noise, NO arm measured on this harness -- including this artifact's 0 of 160 -- can be read as a statement about refinement.",
+      "note": "exp5766's own module docstring (line 18) cites exp5764's 0.378487 / 12-of-13 as its baseline. The 6.33x gap against its own round 0 was in the artifact all along and was never flagged."
+    },
+    "REVISED_ANSWER_TO_THE_HYPOTHESIS": "NOT DETERMINABLE from this run. The hypothesis -- that cell-level feedback on the model's own output is a categorically different signal from more evidence in the prompt -- was NOT tested, because the treatment arm never produced a working program (prefix <= 0.125 in 160 of 160 rounds, vs induce reaching 1.0) and the harness's own control arm is 6.33x below its matched baseline. The prior 'clean null' reading is withdrawn. This is a BROKEN INSTRUMENT, not a measured zero."
+  }
 }
