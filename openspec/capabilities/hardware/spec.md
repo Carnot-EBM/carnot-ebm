@@ -358,6 +358,70 @@ production-readiness claim is made.
 
 ---
 
+### REQ-HW-5969
+
+**Title:** Exp5969 attacked CSL ABI audit MUST report fixed-width portability without board or TSU execution claims
+
+**Description:**
+Experiment 5969 SHALL map the delayed-commit CSL attacked transaction trace to
+the fixed-width ABI v2 operation vocabulary qualified by Exp5926 and Exp5967.
+The mapping SHALL cover bounded poison, contradiction, drift, protected-prefix
+replay, duplicate, capacity, crash/restart, ledger-tamper, and rollback attack
+families with finite operation ids, state versions, event indices, payload
+hashes, validator receipt hashes, return codes, rejection reasons, and resulting
+state hashes.
+
+The receipt is portability evidence only. Exp5969 MUST NOT claim attached-board
+execution, TSU execution, speedup, power, energy, thermalization, convergence,
+Kona execution, or production readiness. Python/Rust/PyO3 parity receipts MAY
+prove operation/state/status/error equality for the attacked trace, but
+physical execution requires a separate authenticated route and is out of scope.
+
+Required artifact fields:
+
+- `hardware_abi_mapping_receipt`
+- `python_rust_pyo3_attacked_trace_parity`
+- `inference_substrate`
+- `honest_verdict`
+
+Required field principles:
+
+- `hardware_abi_mapping_receipt`: principle "Report fixed-width portability only; no attached-board or TSU execution/speed claim."
+- `python_rust_pyo3_attacked_trace_parity`: principle "All operations, versions, reasons, and final hashes agree exactly."
+- `inference_substrate`: principle "Use measured deterministic attacked state replay with no LLM."
+- `honest_verdict`: principle "Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_5969_csl_poison_drift_abi_audit --date 20260803`
+  writes `results/experiment_5969_csl_poison_drift_abi_audit.json`.
+- The artifact maps every attacked trace operation to a bounded fixed-width ABI
+  v2 request/response receipt.
+- Python/Rust/PyO3 attacked trace parity receipts match exactly for operation
+  names, versions, statuses, rejection reasons, state hashes, final hashes, and
+  final energies.
+- The artifact states no hardware execution or performance claim and uses
+  `inference_substrate="deterministic_csl_poison_drift_abi_audit_no_llm"`.
+
+**Implementation status:** Planned (Exp 5969)
+
+---
+
+### SCENARIO-HW-5969
+
+**Scenario:** Exp5969 writes a portable attacked CSL ABI receipt without board claims.
+
+**Given:** Exp5968 is prospectively ready and no authenticated hardware route
+is being exercised,
+**When:** Exp5969 writes the attacked CSL ABI mapping receipt,
+**Then:** Python/Rust/PyO3 attacked-trace parity is exact, fixed-width fields
+are recorded, unsupported operations fail closed, and no board execution,
+speedup, power, energy, thermalization, convergence, TSU, Kona, or production
+readiness claim is made.
+
+**Implementation status:** Planned (Exp 5969)
+
+---
+
 ### REQ-HW-5861
 
 **Title:** Exp5861 attached-board state receipts MUST distinguish no-change, blocked, and authenticated state-operation execution
