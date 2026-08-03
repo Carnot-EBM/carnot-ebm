@@ -505,5 +505,53 @@
   "python/carnot/agentic/arc_engine_static_validation.py:engine_changes_anything"
  ],
  "git_head": "c3e2a09846ddd7e2ab402c9f4748f0dc5712b6b5",
- "honest_verdict": "complete_induce_prompt_audit_not_truncated_54pct_of_budget_but_MISDIRECTED_codeonly_directive_forbids_the_required_reasoning_on_24of24_and_median_2of7_actions_observed_and_goal_prompt_is_96_tokens_evidence_free_on_24of24_NO_behavioural_claim"
+ "honest_verdict": "complete_induce_prompt_audit_not_truncated_54pct_of_budget_but_MISDIRECTED_codeonly_directive_forbids_the_required_reasoning_on_24of24_and_median_2of7_actions_observed_and_goal_prompt_is_96_tokens_evidence_free_on_24of24_NO_behavioural_claim",
+ "corrigendum_20260803_adversarial_review": {
+  "date": "2026-08-03",
+  "origin": "Hostile adversarial review of this artifact, verdict HOLDS=FALSE on the token-budget half. The reviewer's SCOPING claim was independently verified at source and by direct re-render, and is UPHELD. The reviewer's specific extrapolated number was NOT reproduced and is corrected in turn -- see the measured table below. Prior numbers preserved (never-prune).",
+  "MATERIAL_the_token_budget_verdict_is_SCOPED_TO_A_12_ROW_DEV_WINDOW": {
+   "what_this_artifact_claimed": "prompt_truncates: false; tokens_used_vs_budget: 'NOT CLOSE TO BINDING'; worst case 54.1% of the 16,384-token budget; 0 of 24 games over budget.",
+   "the_defect": "Every window came from arc_actions_to_progress.build_progress_window -> experiment_5717_playbook_exemplars_stall_induction_ab.build_window, where WINDOW_K = 12 is a HARDCODED DEVELOPMENT CONSTANT (python/carnot/experiment_5717_playbook_exemplars_stall_induction_ab.py:60). Every audit row obeys it: n_live_trans max 11, median 11. The LIVE agent does not use that window.",
+   "verified_at_source_not_at_the_call_site": "E3AgentPolicy._active_transitions() (arc_competition_agent.py:4923) returns list(self.transitions[self._episode_transition_start:]) -- UNCAPPED -- and arc_competition_agent.py:6497 passes it to LocalGGUFProposer.induce UNSLICED. Since 2026-08-01 the shipped _induce_transitions_k() default is None (= ALL transitions), so the prompt is LINEAR in buffer size.",
+   "the_live_buffer_size_measured_from_the_agents_own_logs": "transition_count mined from live-run artifacts (arc_engine_retention_20260729, outer_loop_arc_action_provenance_tn36_live_20260801): 31 records, bimodal {1: 6, 25: 25}, MEDIAN 25. Never 11.",
+   "what_I_measured_rather_than_extrapolated": "Re-rendered the SHIPPED induce_prompt at n=25 on real transitions for all 20 games in the ablation corpus and tokenized the full as-sent payload through the LIVE generator's own vocabulary (gemma-4-31B-it-qat-UD-Q4_K_XL.gguf, llama_cpp vocab_only -- never AutoTokenizer on a GGUF repo id). CPU only, no weights, no server, no generation.",
+   "measured_at_live_buffer_size_n_25": {
+    "sparse_25_exploration_like_fresh_transitions": {
+     "n_games": 20,
+     "min": 2368,
+     "median": 4717.5,
+     "max": 11114,
+     "n_over_16384": 0
+    },
+    "dense_25_the_25_densest_transitions_available_pessimistic_bound": {
+     "n_games": 20,
+     "min": 5098,
+     "median": 12419.5,
+     "max": 27426,
+     "n_over_16384": 3,
+     "over": [
+      "bp35 24888 = 151.9%",
+      "lp85 27426 = 167.4%",
+      "cn04 16823 = 102.7%"
+     ]
+    }
+   },
+   "the_corrected_verdict": "TRUNCATION IS REACHABLE ON THE LIVE PATH AND WAS NEVER MEASURED THERE. 'prompt_truncates: false' holds on the 12-row dev window and on a sparse 25-row exploration buffer; it does NOT hold as a general claim. 'NOT CLOSE TO BINDING' is WITHDRAWN. The honest state is: distribution-dependent, unmeasured on the live buffer.",
+   "correction_to_the_reviewer_in_turn": "The reviewer extrapolated bp35 to ~21,500 tokens (131%) using a linear 903-tokens/transition marginal. That method is unsound -- the transition block is RLE-delta-encoded, so marginal cost scales with CHANGED CELLS, not with transition count. Direct render gives bp35 dense-25 = 24,888 (higher than their estimate) but sparse-25 = 5,736 (far lower). The direction was right; the number was not, in both directions at once.",
+   "the_projects_own_constant_agrees_and_was_never_reconciled": "arc_executable_world_model.py:3484 ships _INDUCE_WORST_CASE_PROMPT_TOKENS = 15767, documented as a REAL induce_prompt for a 64x64 grid measured through the model's own tokenizer, with a 2026-07-28 gemma re-measure of 17,930 tokens -- i.e. OVER the 16,384 per-slot ceiling. This artifact reported a max of 8,866 and concluded 'nothing truncates' without reconciling against a constant in a file it lists under code_read.",
+   "the_char_backstop_does_not_protect_the_token_ceiling": "_INDUCE_TRANSITION_CHAR_BUDGET = 40,000 chars was cited as evidence nothing overflows. Measured chars/token on the shipped prompt is a median 1.58 (min 1.29), not the ~4 its own comment assumes, so 40,000 chars is ~25,300 tokens -- the backstop would admit a prompt 1.5x over the ceiling. It is not reassurance and should not have been cited as such."
+  },
+  "DOWNGRADE_median_2_of_7_actions_from_headline_to_caveated_body_observation": {
+   "as_shipped": "'STARVED OF ACTION COVERAGE (median 2 of 7 declared actions ever observed)' appears in the headline and in the honest_verdict string.",
+   "the_defect": "It is measured on a BANKED NEAR-OPTIMAL SOLUTION ROUTE. build_progress_window's own docstring calls it 'the level-up window, full winning trajectory'. A solution path carries the MINIMUM action variety by construction -- which is why 11 of 24 games show exactly one action.",
+   "what_the_live_agent_actually_inducts_on": "StepwiseExplorer's stall-triggered exploration buffer, whose stated job is to expand UNTESTED salient actions depth-first -- i.e. it MAXIMISES action variety, over ~25 transitions rather than 11.",
+   "status": "The artifact body already caveated action counts as distribution-dependent; the headline and honest_verdict did not. Identity-invitation route 3 rests entirely on this number and must carry the same caveat.",
+   "what_survives_unchanged": "The four TEMPLATE findings are distribution-INDEPENDENT and were re-verified in source by the reviewer: the code-only directive is default-ON and forbids the inference the task requires; the output contract is full-grid with no delta-answer option while all evidence is delta-encoded; nothing in any prompt forbids identity; the goal prompt is ~96 tokens and carries no grid and no transition on 24 of 24 games."
+  },
+  "minor": {
+   "as_sent_payload_is_3_tokens_low": "the harness's sent_all omits the trailing '\\n```python\\n' that generate() appends after induce()'s own primer (the shipped payload carries two fences). Verified +3 on 8 of 8 games re-rendered. Immaterial numerically, but the fidelity gate covered only the BARE induce_prompt (19/19 shas), so sent_all was never sha-gated -- stated explicitly.",
+   "quantile_convention": "two q3 values use a lower-index convention (as_sent q3 5014 vs the 18th-of-24 order statistic 5057; identity cell-wise q3 0.995117 vs 0.995361). Immaterial; convention should have been stated."
+  },
+  "what_did_NOT_change": "The three-way diagnosis's OTHER two branches. 'Misdirected' is unaffected -- it is a template property. 'Asked the impossible' is unaffected. Only the 'starved' branch moves, and it moves from REFUTED to UNMEASURED-ON-THE-LIVE-PATH, which is a weaker claim than either the original artifact or the reviewer stated."
+ }
 }

@@ -1847,5 +1847,55 @@
    "detail": "arc_e3, arc_logo_snapshot, arc_e3_origin_fixtures opened read-only; git history read via git show into a scratchpad",
    "principle": "Test-Run Record Integrity -- these are evidence, never write targets"
   }
- ]
+ ],
+ "corrigendum_20260803_adversarial_review": {
+  "date": "2026-08-03",
+  "origin": "Hostile adversarial review of this artifact (results/outer_loop_arc_taxonomy_hostile_reproduction_20260803.json, commit 2e5089a794), verdict HOLDS with corrections. Each correction below was INDEPENDENTLY re-verified against this artifact's own cells before being applied; nothing is taken on the reviewer's word. Prior numbers are PRESERVED -- every correction is stated BESIDE the number it corrects, never in place of it (never-prune).",
+  "C1_live_store_identity_rate_MISREPORTED_IN_THE_REPORT_NOT_IN_THIS_ARTIFACT": {
+   "what_the_prose_report_said": "'ft09 IS exactly that shape ... but it is 1 of 27 in the live store and 24 of 27 mutate.'",
+   "what_this_artifact_always_said": "measurements.by_family.live_store_arc_e3 = {n: 24, identity: 7, partial: 13, broken: 4, identity_fraction: 0.2917}",
+   "verification": "Re-read the shipped cell and grepped this file for the strings '24 of 27' / '1 of 27': ZERO occurrences. The error is in the outer-loop PROSE SUMMARY only; this artifact's measurement was correct throughout and is unchanged.",
+   "the_correct_statement": "In the live results/arc_e3 store -- the corpus the brief's premise actually names -- identity is 7/24 = 29.2%, NOT 3.7%. 13 of 24 mutate and 4 are structurally broken, so 11 of 24 (46%) produce no usable dynamics at all.",
+   "why_it_matters": "The live store's identity rate (29.2%) is 2.5x the clean-corpus headline (11.6%), so the prose inverted the relationship. The brief's premise ('every surviving engine is `return grid` on every branch') is still REFUTED -- 13 of 24 mutate -- but by a far narrower margin than the prose reported."
+  },
+  "C2_rule_of_three_denominator_LEAD_WITH_3_OVER_14": {
+   "what_was_led_with": "measurements.rule_of_three_game_clustered.upper_bound_on_per_game_probability_if_zero_observed = 0.15 (3/20), and preregistered_bound_stated_before_results.if_zero_observed leads with the same 3/20.",
+   "correction": "The headline bound is 3/14 = 0.214, not 3/20 = 0.150. Both numbers are preserved; only which one leads changes.",
+   "verification": "Rule of three requires ZERO successes across the n clusters counted. Re-read measurements.target_change_accuracy_ge_0_5.hits: successes WERE observed in the 20-game measurable population -- ar25 and sc25 at 1.0, ka59 and re86 at 0.667. Zero was observed ONLY in the clean n_changing>=3 population, which spans 14 games. So 20 and 'zero observed' describe two different populations and cannot be combined.",
+   "note": "preregistered_bound_stated_before_results.if_zero_observed already carried 3/14 = 0.214 as its second sentence, so the correct number was stated before results; it was simply not the one led with."
+  },
+  "C3_distance_to_exact_population_is_296_not_293": {
+   "as_shipped": "measurements.distance_to_exact.n_clean_units_n_changing_ge_3 = 293, with every bucket reported 'of 293', adjacent to a null stated over 296.",
+   "correction": "The population is 296. Three units are dropped by the distance harness's shape-mismatch break and were never declared.",
+   "the_three": [
+    "cn04 e9ef870c82cd (falls_off_end_returns_None)",
+    "tr87 e907bc925815 (never_changes_but_reshapes)",
+    "tr87 2f4df82db640 (never_changes_but_reshapes)"
+   ],
+   "direction_of_the_censoring": "AGAINST the artifact's own caution: these are the WORST units in the population, so excluding them makes the distance-to-exact distribution look BETTER than it is. Stated explicitly rather than quietly re-run.",
+   "effect_on_the_null": "NONE. All three score change_accuracy 0.0, so the 0-of-296 null is unaffected in both numerator and denominator."
+  },
+  "C4_scope_the_provenance_unknown_exclusion_more_carefully": {
+   "as_shipped": "the 376 provenance-unknown units are 'NOT evidence about the generation wall in either direction'.",
+   "correction": "One step too far. They are correctly NOT evidence of generalisation (four independent lines establish tail-visibility). But they ARE an existence proof that a program IN THIS SAME induced-engine language expresses ar25/sc25/ka59/re86 dynamics at change_fidelity 0.98-1.00 on these exact windows -- which BOUNDS the 'the representation cannot express it' explanation.",
+   "the_wall_should_therefore_be_scoped_to": "the LOCAL SINGLE-SHOT GGUF inducer. A frontier coding agent holding collect_transitions + WorldModelVerifier as tools across 4-8 refinement rounds is CONTAMINATED on these games, which is a different statement from WALLED."
+  },
+  "C5_ADDITIVE_the_ls20_champion_also_scores_zero_on_the_SHOWN_half": {
+   "finding": "ls20 sha 395ed21ff4d5 scores change_accuracy 0.0000 on the SHOWN half too (change_fidelity 0.937086), not only on held-out.",
+   "why_it_strengthens_the_diagnosis": "It is NOT overfit to its prompt -- it misses the identical advancing-counter mechanic on data it was GIVEN. That is stronger support for 'separated from exact by a single named mechanic' than the held-out number alone.",
+   "provenance": "Reported by the hostile reviewer, who re-executed the engine against a fresh window and confirmed the sha256. Recorded here as reviewer-verified; NOT independently re-derived in this corrigendum pass."
+  },
+  "C6_cosmetic_convention_inconsistencies_no_claim_affected": {
+   "quantiles": "per_game_identity_fraction_spread uses the next-higher order statistic for q1/q3 (0.1562/0.3636) but linear interpolation for the median (0.25355). numpy-linear on this artifact's own per-game table gives q1 0.1529 / q3 0.3351. Both preserved; convention should have been stated.",
+   "spurious_changed_cells_q3": "reported 128; recomputation gives 127.0.",
+   "leakage_control_identity_fraction": "appears as 0.3333 (9/27 measurable) in leakage_maximal_ceiling and 0.3214 (9/28 units) in by_family -- two different denominators, both correct for their own scope, neither reconciled.",
+   "distinct_sources": "appears as 901 (corpus_recovered.distinct_sources_total) and 890 (measurements.n_distinct_sources) under two keys without reconciliation."
+  },
+  "C7_instrument_defect_LOGGED_AS_A_GAP_not_a_correction_to_this_null": {
+   "defect": "WorldModelVerifier makes n_changing ENGINE-DEPENDENT: an engine that RAISES on a held-out row has that row removed from BOTH the numerator and denominator of change_accuracy. So raising on hard rows INFLATES the metric, and can also push a unit below an n_changing>=3 filter.",
+   "why_it_cannot_manufacture_this_null": "It can only inflate, and the clean maximum here is 0.0.",
+   "action": "logged to ops/verifier_gaps.md 2026-08-03 so it is caught before any FUTURE arm reports a non-zero change_accuracy."
+  },
+  "what_did_NOT_change": "The null, which is the main result. 0 of 296 clean units with n_changing>=3 reach change_accuracy >= 0.5, and 0 exceed 0.0000, across 14 games and both branches. The hostile reviewer independently reproduced the identity census (240/864 = 0.2778, all eight subclass counts, all four game-clustered CIs), the held-out purity witnesses (0 collisions on three independent tests), and the six-day window-determinism replay (239/240 cells exact, 0 mismatches) -- the single attack that could have invalidated the whole corpus."
+ }
 }

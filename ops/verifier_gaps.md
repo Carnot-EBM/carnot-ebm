@@ -4669,3 +4669,36 @@ as a claim about freshly-induced engines specifically; the threshold and inducer
 measured on fresh live inductions and are unaffected.
 
 **status: open.** See `docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md`.
+
+---
+
+## GAP: `change_accuracy`'s denominator is ENGINE-DEPENDENT — a raising engine scores higher
+
+**Filed 2026-08-03** (outer-loop; found while adversarially reviewing
+`results/outer_loop_arc_induced_engine_taxonomy_20260802.json`, and independently re-derived
+before filing). Logged per CLAUDE.md "Missing-Verifier Gap Logging".
+
+**The defect.** `WorldModelVerifier.score` computes
+`change_accuracy = n_changes_correct / n_changing`, and a held-out row on which the engine
+RAISES is dropped from BOTH the numerator and the denominator. So an engine that fails loudly on
+the rows it cannot model is scored only on the rows it survives — raising on hard rows INFLATES
+the metric. The same mechanism can push a unit below an `n_changing >= 3` filter and silently
+remove it from a population, which is a second, quieter way for the number to move.
+
+**Why it is being recorded rather than fixed right now.** It can only ever inflate, and the clean
+maximum in the corpus that surfaced it is `0.0` — so it cannot manufacture the 0-of-296 null, and
+no current headline rests on it. It becomes load-bearing the moment ANY future arm reports a
+non-zero `change_accuracy`, which is exactly when nobody will be looking for it.
+
+**The missing discriminator.** A scorer that distinguishes *"the engine modelled this row and got
+it wrong"* from *"the engine declined to answer"*. Those are different capabilities and the
+current metric conflates them by deletion. Candidate design: report `n_raised` alongside
+`n_changing` and expose a second denominator (`change_accuracy_over_all_changing_rows`, counting
+a raise as a miss) so the two readings can be compared; a large gap between them is itself the
+signal that an engine is buying its score by abstaining.
+
+**Priority: MEDIUM now, HIGH the moment a non-zero `change_accuracy` is claimed.** Cheap to
+implement (one extra counter, one extra field), and it is a precondition for trusting the first
+positive result this metric ever produces.
+
+**status: open.**

@@ -33231,5 +33231,76 @@
     ],
     "a_null_is_a_complete_answer": "If no variant moved held-out change_accuracy, that is strong evidence the wall is model capability rather than prompt -- which is exactly what the operator needs in order to decide whether this axis stays alive. It is reported plainly as such, and is only interpretable as a null BECAUSE the reachability probe shows a non-zero was attainable on the same rows with the same scorer."
   },
-  "reproducibility_checksum": "sha256:2b1b8431a0e82a6e8e894305a713b51a6a23bbc9b33131558cb5d098bf3565d0"
+  "reproducibility_checksum": "sha256:2b1b8431a0e82a6e8e894305a713b51a6a23bbc9b33131558cb5d098bf3565d0",
+  "corrigendum_20260803_adversarial_review": {
+    "date": "2026-08-03",
+    "origin": "Hostile adversarial review, verdict HOLDS=FALSE on the CONCLUSION and HOLDS on the MEASUREMENT. Every correction below was independently re-derived from this run's own out/windows.pkl and out/scored/*.json before being applied. Prior numbers preserved beside their corrections (never-prune).",
+    "RETRACTED_the_metric_shape_reinterpretation": {
+      "what_was_concluded": "'The binding constraint is the metric's all-or-nothing shape' and 'The record's 0 of 296 should be read as a statement about a metric with that property, not as a measured generalization wall.'",
+      "status": "RETRACTED. Both supporting legs fail. The NULL is unaffected and stands as the whole result.",
+      "leg_1_refuted_by_a_control_that_was_never_run": {
+        "the_claim": "'engines are near-miss machines, not identity machines: 39-46 of ~55 engines per arm have at least one held-out row within 2 cells of exact.'",
+        "why_it_was_unfalsifiable_as_stated": "IDENTITY was never run through distance_to_exact -- the identity probe records change_accuracy only, which is 0.0 for identity by construction on a changing row. So no floor existed for the near-miss statistic.",
+        "the_control_computed_analytically": "identity's wrong-cell count on a changing row IS that row's true changed-cell count, so the control needs no engine execution.",
+        "measured": {
+          "identity_has_a_fresh_row_within_2_cells_of_exact_in": "17 of 20 games (85.0%); within 10 cells in 19 of 20",
+          "engines_within_2_cells_per_arm": {
+            "base": "44/59",
+            "think": "46/60",
+            "antiid": "39/53",
+            "delta": "45/53"
+          },
+          "head_to_head_best_row_engine_vs_identity": "better 17 / tie 179 / WORSE 29 -- identity is tied-or-better on 208 of 225 engines",
+          "head_to_head_median_row": "better 30 / tie 113 / WORSE 82",
+          "median_of_median_wrong_cells": "engines 25, identity 17"
+        },
+        "conclusion": "On its own statistic a `return grid` stub is the BETTER near-miss machine. The sentence is FALSE as written and is withdrawn. The statistic is a min-over-rows artifact: on the tail (~2.5 gradable rows/engine vs ~167 on fresh) it collapses to 3-5 engines per arm, and identity to 0 of 20 games."
+      },
+      "leg_2_refuted_by_the_split_the_reinterpretation_was_about": {
+        "the_claim": "a pure HUD-counter model passes, so change_accuracy is clearable without modelling anything.",
+        "why_it_cannot_reframe_the_record": "TRUE OF FRESH, FALSE OF TAIL -- and the record's 0-of-296 null sits on TAIL.",
+        "measured_true_changed_cells_per_gradable_changing_row": {
+          "TAIL": {
+            "n": 70,
+            "min": 3,
+            "q1": 20,
+            "median": 55.0,
+            "q3": 381,
+            "max": 3988,
+            "rows_changing_le_1_cell": 0,
+            "rows_changing_le_2_cells": 0
+          },
+          "FRESH": {
+            "n": 3346,
+            "min": 1,
+            "q1": 1,
+            "median": 12.0,
+            "q3": 52,
+            "max": 1495,
+            "rows_changing_le_1_cell": "1094 (32.7%)",
+            "rows_changing_le_2_cells": "1414 (42.3%)"
+          }
+        },
+        "conclusion": "ZERO of 70 gradable changing tail rows change 2 cells or fewer, and not one changes exactly 1. An exact match on the tail requires reproducing a median-55-cell change. The gameable trivial stratum is a property of THIS HARNESS'S OWN fresh exploration set, not of the record's split. bp35's hollow 0.566 was on fresh. The finding is real and useful about this harness; it is not a property of the record's null."
+      }
+    },
+    "numeric_corrections": {
+      "budget_lift_number_did_not_trace": "The report said 'max 2731 < shipped 4096'. The string 2731 appears NOWHERE in this artifact. The field is budget_lift_was_inert_for_base.base_generated_tokens_max = 3786.0. Conclusion (inert) UNAFFECTED; the number was untraceable and is corrected.",
+      "training_exactness_cell_count": "The report said '8 cells show non-zero training exactness'. The artifact says TRAINING_block_exact_matches_NOT_a_target_hit.n_cells_with_any_exact_training_match = 31. Verified: 31 cells have any exact training match; 8 is the count at EXACTLY 1.0, all of them tn36. Both numbers stand for their own scope; the report conflated them.",
+      "tn36_training_1.0_arm_count": "The report said 'three separate arms'. Verified from the artifact's own cells: FOUR -- base, think, antiid, delta.",
+      "TARGET_n_hits_double_counts": "TARGET.n_hits = 5 counts only THREE distinct measurements. sb26__r1__antiid and sb26__r2__think each appear twice, once under block 'tail' and once under 'tail_substantive' -- the SAME 2 rows, because sb26's tail contains 0 trivial rows. The verdict string's '5 unstratified hits' is inflated by 2.",
+      "contradictory_shipped_boolean": "TARGET_on_SUBSTANTIVE_transitions_only.target_reached_on_substantive_rows = true sits beside a headline of TARGET NOT REACHED, reconciled only by also reading min_rows_for_a_real_hit = 10 and TARGET_AS_THE_BRIEF_STATES_IT_reached = false. Any downstream consumer grepping a *_reached boolean gets the OPPOSITE of the finding. Flagged; the field is left in place (never-prune) with this note as its reading instruction."
+    },
+    "statistical_corrections": {
+      "min_reachable_p_for_the_stratum_promoted_to_primary": "The pre-registered floor 0.00390625 is for the 9 plain-branch ex-tn36 games. The SUBSTANTIVE fresh contrast -- which this report called 'the honest primary' -- runs on SEVEN games: verified that lf52 and sb26 have zero substantive fresh rows. Its floor is 2*2^-7 = 0.015625, not 0.00390625. The stratification was added POST HOC after seeing the bp35 result (correctly disclosed at the time), but it cut the cluster count and the floor was not restated.",
+      "bonferroni_discordant_count_off_by_one": "min_reachable_p.n_discordant_needed_for_p_below_bonferroni_0.0167 = 8. SEVEN suffices: 2*2^-7 = 0.015625 < 0.0166667. Conservative error, but wrong.",
+      "the_antiid_cell_recall_result_is_unchanged_and_still_exploratory": "+0.152 CI [0.063, 0.243], 6+/0-, p = 0.03125 -- exactly the MINIMUM reachable p at 6 discordant, does not clear Bonferroni, and weakens to +0.122 / 4+/1- / p = 0.375 on substantive rows only. Unchanged: exploratory, worth one confirmatory run, not established."
+    },
+    "REPLACEMENT_cheapest_next_measurement": {
+      "what_was_recommended": "re-score the 225-engine corpus on distance-to-exact and read the 39-46 engines already within 2 cells.",
+      "why_it_is_withdrawn": "that mines the 1-cell HUD stratum, which identity clears MORE often (17/20 games vs 39-46 of ~55 engines). It would rediscover the counter.",
+      "the_replacement": "run it on the SUBSTANTIVE stratum with the IDENTITY FLOOR scored alongside, exactly as this run already does for change_accuracy. Any distance statistic reported without its identity floor is uninterpretable."
+    },
+    "what_did_NOT_change": "The measurement, which is the result. 0 engines reach change_accuracy >= 0.5 on substantive held-out rows with more than a handful of rows; max across 190 engines is 0.0915; the primary is floored at 8-of-9 ties. Held-out purity is clean and the reviewer's independent THIRD witness (state+action only, ignoring next_grid -- the brief's own near-duplicate definition, which this run's witness-1 digest does NOT test) returned 0 collisions on all 3346 fresh and all 50 scored tail rows across all 20 games. prompt_truncated is False on all 240 cells, so this null is uncontaminated by the truncation issue recorded in the sibling prompt-audit corrigendum."
+  }
 }
