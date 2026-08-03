@@ -307,5 +307,16 @@
   "submitted_to_leaderboard": false,
   "trials_per_game": 3,
   "used_env_source": true,
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "corrigendum_2026_08_03_heldout_accuracy_is_an_in_sample_fit_score": {
+    "date": "2026-08-03",
+    "req": "REQ-ARC-WMTE-6090",
+    "author": "outer-loop (Claude), operator-directed round-0 regression fix",
+    "status": "no number in this artifact is retracted; this records what the field MEANS so it is not subtracted from something incommensurable again",
+    "finding": "This experiment's heldout_accuracy is NOT a held-out quantity. It reuses exp5726.run_reason_cell_budget VERBATIM, which prompts on the WHOLE progress window via _induce_no_fence(prop, game, list(window), cell) and then grades on the WHOLE progress window via WorldModelVerifier(list(window)).score(engine).accuracy. Prompt set and grading set are the same rows, so it is an IN-SAMPLE FIT score.",
+    "why_it_matters": "experiment_5766_gemma31b_cegis_refinement_ab.json subtracted this field's pooled value (0.378487) from exp5766's disjoint-tail score (0.059829) and reported -0.318658 with a CI excluding 0, as though it were a treatment effect. See that artifact's corrigendum_2026_08_03_cross_experiment_comparison_voided.",
+    "commensurable_counterparts": "Compare this field only with another in-sample fit score -- for example exp5766's per-round prefix_accuracy, which grades exactly the rows _proposal_prefix put in its prompt. Do NOT compare it with any score computed by select_trusted_world_model's _split_prefix_heldout tail.",
+    "recorded_scope_tag": "whole_window (in_sample) -- registered in python/carnot/agentic/arc_metric_scope.py:HELDOUT_METRIC_SCOPES",
+    "errored_cell_note": "vc33 trial 0 recorded heldout_accuracy null with error 'load_engine: FileNotFoundError'. It must be EXCLUDED from vc33's mean, not counted as 0.0: excluding it gives vc33 1.0 and a pooled 0.378487, zeroing it gives 0.666667 and a pooled 0.352846. Missing is not zero."
+  }
 }
