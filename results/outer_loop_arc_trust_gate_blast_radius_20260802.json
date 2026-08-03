@@ -1,0 +1,196 @@
+{
+  "experiment": "outer_loop_arc_trust_gate_blast_radius_20260802",
+  "experiment_id": "outer_loop_arc_trust_gate_blast_radius_20260802",
+  "title": "What does ADMITTING a weak world-model engine cost? Blast radius of a cell_recall trust-gate relaxation to ~0.2",
+  "run_date": "2026-08-02",
+  "milestone": "outer-loop",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_note": "CPU only. The real E3AgentPolicy cascade steps the offline arcade over environment_files. No GGUF load, no CUDA, no LLM: the induced engine is INJECTED (see injection_method) precisely so the measurement isolates the gate/plan/execute path from generator quality. random_seed and reproducibility_checksum are still supplied per the substrate's requirements.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_note": "No level was claimed or banked by this work: levels_gained is 0 in every admitted cell, which is itself the finding. The offline dev twin is used as a measurement instrument for the SHIPPED live-path code (E3AgentPolicy._induce_and_plan / _next_move_routed / _next_plan_move), not to solve anything.",
+  "random_seed": 20260802,
+  "reproducibility_checksum": "0029796302a461d6d4d12e9df826698f1a73e2f9a901dd9e59f3a01109378340",
+  "reproducibility_checksum_basis": "sha256 over the concatenation, in this order, of results/arc_trust_gate_blast_radius_20260802/{structural.json, blast14.json, dead80.json, blast_ab.py, structural_probe.py, deadgame_probe.py} AS COMMITTED. Note the three .py files were ruff-formatted (import ordering; one unused loop variable renamed to _step) AFTER the runs and BEFORE commit; neither change alters execution, and the checksum is deliberately taken over the committed bytes so it verifies what a reader can actually re-run.",
+  "duration_s": 2419.0,
+  "honest_verdict": "complete_admitting_a_weak_engine_costs_up_to_80_unchecked_actions_20pct_of_the_scored_budget_because_the_trust_gate_is_the_only_defence_and_the_prior_cellrecall_null_is_void",
+
+  "model_specs": "none_invoked",
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "outer_loop_arc_induce_gate_anatomy_20260802",
+      "path": "results/outer_loop_arc_induce_gate_anatomy_20260802.json",
+      "fields_read": [
+        "so_a_threshold_relaxation_is_not_the_lever",
+        "why_the_old_number_was_wrong",
+        "PART_A_recount_of_the_real_generator_corpus.per_arm.llm_on_fix_cellrecall"
+      ],
+      "relationship": "This artifact CORRECTS a load-bearing leg of that one -- see correction_to_a_standing_conclusion."
+    },
+    {
+      "experiment_id": "first_win_llm_on_20260727",
+      "path": "results/first_win_llm_on_20260727/cells/llm_on_fix_cellrecall__*.json",
+      "fields_read": ["liveness_witness.induction_attempt_gate_diagnostics", "game"],
+      "relationship": "Re-read to establish that the llm_on_fix_cellrecall arm could not have admitted anything."
+    }
+  ],
+
+  "preconditions_checked": [
+    {"resource": "offline arcade environment_files", "available": true},
+    {"resource": "CPU-only execution (no GGUF, no CUDA)", "available": true},
+    {"resource": "results/arc_e3 evidence left unwritten", "available": true,
+     "principle": "results/arc_e3 is EVIDENCE: read, never write. The stub proposer's induce() writes nothing, so no evidence file was touched by either arm."}
+  ],
+
+  "question": "Would a cell_recall trust gate near 0.2 admit engines, and do admitted engines produce PLANS -- and if so, what does admitting a weak engine COST?",
+
+  "pre_registered_before_results": {
+    "unit_of_analysis": "game (clustered), NOT engine and NOT cell",
+    "n_games": 14,
+    "min_reachable_two_sided_p": 0.000122,
+    "min_reachable_p_derivation": "paired sign test, 14 plain-branch games, 2 * 0.5^14",
+    "exclusion_rule_declared_in_advance": "a cell whose TRUE cell_recall falls below the 0.19 emulated threshold is NOT evidence about the relaxation and is EXCLUDED, never counted as a zero (failure mode: missing is not zero)",
+    "principle": "Stating the reachable p before results is what makes a null a result rather than an absence. The frontier-effect null below is reported AS a null against this bar."
+  },
+
+  "FINDING_0_the_prior_cellrecall_null_is_VOID": {
+    "headline": "The `llm_on_fix_cellrecall` arm is UNFALSIFIABLE, not negative. Nothing it ran could have been admitted.",
+    "principle": "A prior negative must be shown to have been REACHABLE before it can be cited. This one was not.",
+    "evidence": {
+      "the_threshold_is_a_hardcoded_literal": "python/carnot/agentic/arc_competition_agent.py:6712 -- `elif _gate_value < 0.5:`. CARNOT_ARC_TRUST_METRIC switches WHICH quantity is compared (`_gate_value = vr.cell_recall if _metric == 'cell_recall' else vr.accuracy`, line 6674) but NOT what it is compared against. There is no threshold env knob anywhere on this path.",
+      "max_achievable_in_that_arm": 0.0476,
+      "max_achievable_anywhere_plain_branch": 0.2474,
+      "threshold_actually_applied": 0.5,
+      "records_that_could_ever_have_passed": 0,
+      "plain_branch_cell_recall_values_in_arm": [0.0476, 0.0181, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+      "second_independent_reason_it_is_void": "11 of the arm's 25 cells are HIDDEN_STATE_GAME_IDS games (ar25, cd82, cn04, dc22, g50t, ka59, m0r0, re86, sc25, sk48, wa30), whose branch ignores CARNOT_ARC_TRUST_METRIC entirely. Only 14 cells ever carried trust_metric='cell_recall'. Confirmed: the 14 games recording trust_metric='cell_recall' are exactly the 14 non-hidden games.",
+      "arm_skip_breakdown": {"world_model_accuracy_below_threshold": 14, "hidden_state_trust_below_threshold": 11, "no_reachable_plan_after_refinement": 1},
+      "the_fix_arm_was_STRICTLY_WORSE_on_at_least_one_game": "lp85 recorded verify_accuracy=0.92 and verify_cell_recall=0.0 in that arm. Under the SHIPPED default metric ('exact') 0.92 >= 0.5 PASSES; switching to cell_recall turned an admissible record into a rejected one. The metric switch is not monotone in admissions."
+    },
+    "correction_to_a_standing_conclusion": {
+      "what_was_claimed": "results/outer_loop_arc_induce_gate_anatomy_20260802.json line 1177: '...the cell_recall metric that WOULD separate it already shipped as a flag and already ran as an arm (llm_on_fix_cellrecall): still 0 plans installed...' -- used as a leg of `so_a_threshold_relaxation_is_not_the_lever`.",
+      "why_it_does_not_hold": "That arm's 0 plans was structurally guaranteed by the 0.5 literal, not earned by the relaxation hypothesis. It is evidence about the threshold being unreachable, not about relaxation being useless.",
+      "what_survives": "The SAME artifact already self-corrected the denominator at line 1193 (0.0476 is within-arm; the corpus-wide plain-branch max is 0.2474). That correction stands and is not disturbed here. What is retracted is only the inference from '0 plans in the cellrecall arm' to 'a threshold relaxation is not the lever'.",
+      "status": "THE OPERATOR HAS ALREADY BEEN GIVEN THE UNCORRECTED CONCLUSION. This entry is the correction."
+    }
+  },
+
+  "FINDING_1_would_a_0.2_gate_admit_and_do_admitted_engines_PLAN": {
+    "headline": "Yes to both -- but planning buys nothing.",
+    "n_plain_branch_games_tested": 14,
+    "games_with_true_cell_recall_at_or_above_0.19": 10,
+    "games_below_threshold_EXCLUDED_not_zeroed": ["lf52 (0.1485)", "r11l (0.0799)", "tn36 (0.0)", "vc33 (no deciding reading -- injection raised; MISSING, not zero)"],
+    "admitted_engines_that_produced_a_plan": "10 / 10",
+    "admitted_engines_whose_plan_fully_executed": "10 / 10",
+    "levels_gained_by_admitted_arm": 0,
+    "levels_gained_by_reject_arm": 0,
+    "total_real_actions_spent_executing_admitted_plans": 120,
+    "necessary_is_not_sufficient_note": "Here admission DID yield a plan in 10/10, but only because the injected engine's win predicate was pinned BY CONSTRUCTION to a state it reaches in PLAN_K steps. That makes this an UPPER BOUND on the plan rate and therefore a worst case on cost -- it is NOT evidence that real admitted engines plan at 100%. The separately-measured session finding that a gate-clearing engine still planned nothing is not contradicted."
+  },
+
+  "FINDING_2_what_the_agent_DOES_with_an_installed_plan": {
+    "question": "Does it execute blindly, or re-verify per step? Does a wrong plan cost 1 action or many?",
+    "answer": "It executes BLINDLY. A wrong plan costs len(plan) actions, not 1.",
+    "execution_path": "E3AgentPolicy._next_move_routed (arc_competition_agent.py:5937-5941) -> `if self.phase == 'execute' and self.pi < len(self.plan): mv = self._next_plan_move()`. `_next_plan_move` (line 5276) pops `self.plan[self.pi]`, increments `self.pi`, and returns the move. It performs NO comparison against the observed frame.",
+    "measured_structurally": {
+      "cells": 36,
+      "design": "14 plain games x plan lengths {5, 25, 60}; a deliberately-wrong plan installed directly, then the real policy driven against the real offline env",
+      "cells_in_which_every_plan_step_was_consumed": "36 / 36",
+      "cells_with_ANY_early_abandonment": 0,
+      "actions_spent_by_plan_length": {"5": "min 6 median 6 max 6", "25": "min 26 median 26 max 26", "60": "min 61 median 61 max 61"},
+      "interpretation": "Cost is exactly plan_len (+1, the action on which exhaustion is discovered). Perfectly linear, unanimous across all 14 games. The policy left the execute phase ONLY on exhaustion (pi == len(plan)), never on divergence."
+    },
+    "instrumented_the_callee_not_the_call_site": "`_next_plan_move` was wrapped and the caller read off the stack via traceback.extract_stack. Every one of the consumed steps was attributed to `_next_move_routed`. This is delivery evidence, not availability evidence."
+  },
+
+  "FINDING_3_is_there_ANY_downstream_check": {
+    "answer": "NO. The trust gate is the only defence. Two docstrings claim otherwise and are wrong.",
+    "principle": "Reading the call site would have told you a divergence check exists. Instrumenting the callee shows it does not. This is exactly the availability-is-not-delivery failure, applied to a SAFETY claim.",
+    "the_two_false_claims": [
+      "arc_competition_agent.py:4490 -- E3AgentPolicy's own class docstring: '-> EXECUTE (replay the plan; on divergence, back to EXPLORE)'. Its own _next_move_routed has no such branch.",
+      "arc_executable_world_model.py:6729 -- plan_in_model's docstring: '...then executes it in the real env, halting if reality diverges from the model.' No caller implements the halt."
+    ],
+    "the_code_that_states_the_truth": "arc_competition_agent.py:5637-5641 -- 'PLAN ABANDONMENT, observationally defined... This is NOT a claim that reality diverged from the model's prediction -- nothing here asks the engine what it predicted -- it is the weaker, checkable statement that the plan stopped being followed before it ran out.'",
+    "it_does_not_even_check_the_game_is_ALIVE": {
+      "headline": "The executor fires plan steps into a game that has already ended.",
+      "demonstrated": "bp35, plan_len 25: GameState.GAME_OVER at step 15; the executor fired the remaining 10 steps, all in GAME_OVER, and the phase never changed.",
+      "at_the_shipped_cap": "results/arc_trust_gate_blast_radius_20260802/dead80.json -- plan_len 80 (plan_max_depth_default()), 14 games: all 14 executed all 80 steps; 6 of 14 reached GAME_OVER mid-plan and kept executing.",
+      "steps_fired_into_a_dead_game_among_the_6_that_died": {"min": 16, "q1": 19.0, "median": 39.0, "q3": 53.5, "max": 64},
+      "as_pct_of_the_400_action_scored_budget": "4.0% to 16.0% of one game's ENTIRE scored budget spent acting on a corpse"
+    }
+  },
+
+  "FINDING_4_second_order_effects_on_the_explorer": {
+    "does_it_write_false_edges": "NO. Transitions recorded during execute (arc_competition_agent.py:5819) are REAL observed (grid, action, next_grid) tuples. They are true evidence regardless of how the action was chosen.",
+    "does_it_trigger_the_mis_debiting_path": "NO. `_drop_queued_action_from_current_frontier` and `_serve` are members of StepwiseExplorer (class spans lines 1065-4281). The execute branch never calls `explorer.next_move` -- the only call sites are 5885 (explore), 5936 (induce-no-plan) and 5945 (exhausted fallthrough). During plan execution the explorer is fully bypassed, so it cannot mis-debit.",
+    "does_it_consume_frontier_rows": "NO, not directly -- and that is itself the cost. The frontier is not DEBITED during execute; it simply does not GROW. Actions spent on a bad plan buy zero exploration capital.",
+    "measured_frontier_effect_paired_by_game": {
+      "graph_nodes_delta_admit_minus_reject": [-7, 0, -4, -12, -8, -1, 2, -3, -6, 5],
+      "graph_nodes_down_up_tie": "7 down, 2 up, 1 tie",
+      "graph_nodes_sign_test_two_sided_p": 0.1797,
+      "untested_rows_delta_admit_minus_reject": [-321, 14, -138, -36, -189, -10, 37, -69, -12, 13],
+      "untested_down_up": "7 down, 3 up",
+      "untested_sign_test_two_sided_p": 0.3438,
+      "untested_distribution": {"min": -321, "q1": -150.8, "median": -24.0, "q3": 13.2, "max": 37},
+      "VERDICT": "A CLEARLY-STATED NULL. Directionally negative (the admitted arm ends with a smaller graph and fewer untested rows in 7 of 10 games) but NOT significant at the pre-registered bar: achieved p = 0.18 against a min reachable p of 1.22e-4. The frontier cost is real in direction and unproven in magnitude at n=14 games. Do not cite it as established."
+    },
+    "explored_out_check_failure_mode_7": {
+      "reject_arm": "0 / 10",
+      "admit_arm": "0 / 10",
+      "interpretation": "No frontier collapse in either arm. The reduced node counts are an ordinary shortfall in exploration done, NOT a collapse -- the newly-shipped ProgressResult.explored_out distinction is what licenses that statement rather than leaving it ambiguous."
+    }
+  },
+
+  "FINDING_5_the_nondegeneracy_conjunct_is_NOT_on_the_cell_recall_path": {
+    "claim_tested": "The brief asked whether the cell_recall path also carries `correct_changed_cells >= 1`, which 16 of 22 records fail at ANY threshold.",
+    "answer": "It does NOT, under the shipped default -- because the two are mutually exclusive branches, not conjuncts.",
+    "structure": "arc_competition_agent.py:6708-6714 -- `if _change_gate['gate_enabled']: <change-gate decides> elif _gate_value < 0.5: <threshold decides>`. An `elif`, not an `and`.",
+    "shipped_default": "world_model_change_gate_enabled() is False (SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED). So the change gate does NOT decide, and correct_changed_cells is recorded but inert.",
+    "consequence_both_ways": "With the change gate OFF (today), lowering the cell_recall threshold IS unobstructed by the nondegeneracy conjunct -- the admit ceiling is what the margin distribution suggests, and this experiment admitted 10 of 14 games. With the change gate ON, cell_recall is bypassed ENTIRELY and the threshold knob would do nothing at all. Anyone proposing to relax the threshold must state which of these two regimes they are in."
+  },
+
+  "injection_method": {
+    "principle": "The measurement must not fabricate the quantity it reports, and must not write evidence.",
+    "engine": "A PARTIAL-MEMORISATION model -- the realistic shape of a weak induced world model. It memorises the agent's OWN observed transitions but reproduces only fraction f of each transition's changed cells (the rest keep their OLD, wrong value), and generalises not at all (unseen state/action -> a fixed roll). cell_recall is by construction ~= f. f=0.30 was calibrated on tu93 to land the TRUE reading at ~0.26 -- inside the realistic band bounded below by the observed live max (0.2474) and above by the correct-by-construction structural fit (~0.28).",
+    "achieved_true_cell_recall_by_game": {"bp35": 0.2404, "ft09": 0.2895, "lf52": 0.1485, "lp85": 0.3003, "ls20": 0.4923, "r11l": 0.0799, "s5i5": 0.1915, "sb26": 0.2702, "sp80": 0.4041, "su15": 0.4649, "tn36": 0.0, "tr87": 0.291, "tu93": 0.2642, "vc33": null},
+    "threshold_emulation": "Because the threshold is a hardcoded literal with no knob, the admit arm subclasses WorldModelVerifier and reports cell_recall * (0.5/0.19) -- a monotone rescaling whose ONLY effect is to move the decision boundary to 0.19. Every value RECORDED is the TRUE unscaled reading, captured before scaling. Restored in a finally.",
+    "censoring_disclosed": "For ls20, sp80 and su15 the scaled value clipped at 1.0, so the admit arm's inverted reading censors at 0.38. The uncensored value is taken from the reject arm (same engine, same seed): 0.4923, 0.4041, 0.4649 respectively.",
+    "no_shipped_default_flipped": true,
+    "no_evidence_written": "The stub proposer's induce() writes nothing; e3.load_engine is patched in-process to return the injected engine. results/arc_e3, results/arc_logo_snapshot and results/arc_e3_origin_fixtures were read-only throughout.",
+    "internal_validity_check": "The 4 games whose TRUE reading fell below 0.19 (lf52, r11l, tn36, vc33) did NOT plan even in the admit arm -- the emulation admits exactly what it should and nothing else."
+  },
+
+  "scope_and_limits": {
+    "branch_scoped": "EVERY result here is PLAIN-BRANCH ONLY (14 games). HIDDEN_STATE_GAME_IDS is a hardcoded 11-game PUBLIC tuple, so a hidden Kaggle game ALWAYS takes the plain branch -- which means the plain branch is the one that matters for the scored deliverable, and these results DO transfer to it. Results from the hidden-state branch are not measured here and must not be read across.",
+    "plan_rate_is_an_upper_bound": "The injected win predicate was constructed to be reachable, so 10/10 planning is a ceiling, not a live expectation.",
+    "cost_is_a_worst_case": "PLAN_K=12 in the A/B and 80 (the shipped cap) in the dead-game probe. Real plans may be shorter; the 80-step figure bounds the damage, it does not predict it.",
+    "no_bit_identical_double_counting": "Each (game, arm) cell is one run; the 3 plan-length variants in the structural probe are distinct configurations, not repeats. Games are the clustering unit throughout.",
+    "not_measured": "Whether a real (non-injected) LLM-induced engine at ~0.2 cell_recall would plan at all. That is the live question this cost measurement makes worth asking -- and the void arm above means it has never been answered."
+  },
+
+  "guard_needed": {
+    "verdict": "YES -- a threshold relaxation would require a downstream plan-quality check to be safe. The blast radius is NOT inherently small.",
+    "why": [
+      "The gate is the ONLY defence: measured, no divergence check exists anywhere between admission and the environment (36/36 cells executed every step, 0 early abandonment).",
+      "The cost per admission is up to 80 unchecked real actions = 20% of one game's entire 400-action scored budget.",
+      "The executor does not check even the weakest possible invariant -- that the game is still alive. 6 of 14 games kept firing plan steps after GAME_OVER, up to 64 of 80 steps (16% of the scored budget) spent on a corpse.",
+      "In this experiment relaxation admitted 10 of 14 games and every one of them produced a plan that executed fully and gained 0 levels: 120 real actions for zero progress."
+    ],
+    "cheapest_sufficient_guard": "A per-step divergence check in the execute branch -- compare the observed frame against the engine's own prediction for the step just taken and drop back to explore on mismatch. This is the check BOTH docstrings already claim exists, so implementing it closes a documentation/implementation gap rather than adding a new concept. A strictly cheaper partial guard (abandon the plan on GAME_OVER) would alone have recovered 16-64 actions in 6 of 14 games.",
+    "what_would_make_the_blast_radius_small": "Nothing currently in the code. The radius is bounded only by plan_max_depth_default() = 80.",
+    "note_on_sequencing": "The relaxation should NOT be evaluated on the strength of the prior null, which is void (FINDING_0). It should be re-run -- behind a default-OFF flag with a both-directions test, per the standing discipline -- and only WITH a plan-quality check downstream, given the measured radius."
+  },
+
+  "artifacts": {
+    "structural_probe": "results/arc_trust_gate_blast_radius_20260802/structural_probe.py + structural.json (36 cells)",
+    "paired_ab": "results/arc_trust_gate_blast_radius_20260802/blast_ab.py + blast14.json (28 cells) + paired.json",
+    "dead_game_probe": "results/arc_trust_gate_blast_radius_20260802/deadgame_probe.py + dead80.json (14 cells)"
+  },
+
+  "acceptance_gate_blast_radius_characterised": true,
+  "acceptance_gate_prior_null_reachability_established": true,
+  "acceptance_gate_frontier_effect_significant": false,
+  "acceptance_gate_frontier_effect_significant_note": "Deliberately FALSE and reported as such: achieved sign-test p=0.18 against a pre-registered min reachable p of 1.22e-4. A clearly-stated null.",
+  "verifier_is_oracle": false,
+  "verifier_is_oracle_note": "No verifier-value or moat claim is made by this artifact. It measures the COST of a gate decision, not the discriminating value of any verifier.",
+  "flagged_adversarial": false
+}
