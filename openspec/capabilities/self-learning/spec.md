@@ -26141,6 +26141,158 @@ and error code matches exactly without claiming hardware execution.
 |---|---|---|---|
 | REQ-LEARN-5967 | Planned (`python/carnot/experiment_5967_delayed_commit_memory_fixture.py`) | Planned (ABI v2 trace replay receipts) | Planned (`tests/python/test_experiment_5967_delayed_commit_memory_fixture.py`) |
 
+## REQ-LEARN-5968: Delayed-Commit Prospective CSL Gate Replay
+
+The self-learning tier SHALL provide Exp5968, a deterministic no-LLM replay at
+`python/carnot/experiment_5968_delayed_commit_csl_prospective.py` that consumes
+the exact chronological Exp5920 row stream, ready Exp5924 transactional memory
+state, ready Exp5926 ABI v2 receipt, and ready Exp5967 delayed-commit fixture.
+It SHALL write
+`results/experiment_5968_delayed_commit_csl_prospective.json` and SHALL NOT
+mutate `scripts/research_conductor.py`. Its `inference_substrate` SHALL be
+`deterministic_delayed_commit_csl_prospective_no_llm`.
+
+Before any run starts, Exp5968 SHALL verify the Exp5967 gate path, hash, and
+`delayed_commit_fixture_ready_score == 1.0`; replay the Exp5920 row count,
+chronology, split seal, and prefix chain; hash the Exp5924 initial state and
+Exp5926 ABI receipt; freeze five deterministic seeds; verify capacity and
+compute budgets, disk/RAM, protected files, and output paths; and avoid loading
+an LLM or mutating model weights.
+
+Exp5968 SHALL freeze five arms before scoring: delayed commit, same-event
+write-through, fixed validated memory, shuffled retrieval with identical state
+volume, and no memory. Every arm SHALL receive the same chronological event
+order, retrieval count, state capacity, verifier-call accounting, seed set, and
+compute-accounting receipt so that write timing and memory policy are the only
+declared treatments.
+
+At event `t`, each arm SHALL score its exact-label-vector prediction before
+the event label is revealed. A proposal SHALL be sealed from the pre-event
+snapshot, then the exact label may be revealed for lifecycle bookkeeping. The
+delayed-commit arm SHALL promote external constraint memory only after exact
+utility is observed on disjoint future semantic-neighborhood events outside
+the producing case and protected prefix. Same-event replay, hidden test labels,
+model-authored confidence, shuffled retrieval, no-op updates, random admission,
+or capacity-only state growth SHALL NOT supply credited utility.
+
+Exp5968 SHALL measure prequential exact utility, error and violation rate,
+unsafe accepts, time-to-threshold, online-learning-curve area, promotion,
+rejection, quarantine, state growth, retrieval hit utility, protected-prefix
+retention, and final held-future performance. It SHALL also run label
+permutation, event-order shuffle, retrieval shuffle, same-event-only utility,
+no-op update, capacity, and random-admission controls. Delayed commit SHALL
+promote only if it beats no memory and fixed memory with paired CI95 lower
+bound greater than zero on prospective utility or online AUC, does not regress
+protected-prefix retention, has bare `unsafe_accept_count == 0`, and shows no
+same-event credit. The write-through control SHALL be reported honestly even
+if it wins.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`gate_replay_receipt`, `immutable_stream_state_abi_hashes`,
+`five_arm_capacity_compute_and_event_matching`,
+`five_seed_chronological_split_and_replication_unit`,
+`pre_event_prediction_and_post_seal_label_timing`,
+`semantic_neighborhood_future_validation_contract`,
+`per_arm_prequential_learning_curve_and_final_metrics`,
+`time_to_threshold_and_online_auc_metrics`,
+`promotion_rejection_quarantine_state_growth_and_retrieval_metrics`,
+`protected_prefix_retention`,
+`label_order_retrieval_same_event_noop_capacity_and_random_controls`,
+`paired_deltas_intervals_and_power`, `unsafe_accept_count`,
+`immutable_model_weights_receipt`, `prospective_csl_ready_score`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: The run begins only after exact gate, stream, state, ABI, seed, and resource replay.
+- `preconditions_checked`: The run begins only after exact gate, stream, state, ABI, seed, and resource replay.
+- `gate_replay_receipt`: Exp5967 exact path, hash, and value must satisfy `delayed_commit_fixture_ready_score == 1.0`.
+- `immutable_stream_state_abi_hashes`: One chronological stream and one initial state/ABI define all arms.
+- `five_arm_capacity_compute_and_event_matching`: Write timing and memory policy are the intended treatment; budgets are otherwise matched.
+- `five_seed_chronological_split_and_replication_unit`: Seeds and base semantic events define uncertainty without sibling leakage.
+- `pre_event_prediction_and_post_seal_label_timing`: No current label can influence its own prediction or proposal.
+- `semantic_neighborhood_future_validation_contract`: Promotion requires exact utility on disjoint future neighbors and protected history.
+- `per_arm_prequential_learning_curve_and_final_metrics`: Measure both learning speed and terminal utility.
+- `time_to_threshold_and_online_auc_metrics`: Measure both learning speed and terminal utility.
+- `promotion_rejection_quarantine_state_growth_and_retrieval_metrics`: Expose lifecycle, capacity, and retrieval mechanisms rather than only accuracy.
+- `protected_prefix_retention`: No credited improvement may forget the protected prefix.
+- `label_order_retrieval_same_event_noop_capacity_and_random_controls`: Shortcut and state-volume explanations remain explicit.
+- `paired_deltas_intervals_and_power`: Promotion uses paired semantic-event intervals and reports underpower honestly.
+- `unsafe_accept_count`: Must be bare zero.
+- `immutable_model_weights_receipt`: FR11 learning is external state only.
+- `prospective_csl_ready_score`: Emit bare 1.0 only when prospective promotion, retention, and safety gates all pass.
+- `protected_files_unchanged`: Active roadmap, conductor, exclusions, history, and unrelated changes remain immutable.
+- `duration_s`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `inference_substrate`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `verifier_is_oracle`: Exact labels are oracle only for sealed fixtures; the adaptive policy is distinct and gaps are listed.
+- `missing_verifier_gaps`: Exact labels are oracle only for sealed fixtures; the adaptive policy is distinct and gaps are listed.
+- `field_provenance`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `test_commands`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `test_exit_codes`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `reproducibility_checksum`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `honest_verdict`: Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
+
+`prospective_csl_ready_score` SHALL be the bare scalar `1.0` only when the
+Exp5967 gate replay passes exactly, Exp5920/5924/5926 replay hashes match, all
+five arms are capacity/compute/event matched, pre-event predictions happen
+before label reveal, delayed promotions use only disjoint future semantic
+neighbors outside the protected prefix, delayed commit beats no memory and
+fixed memory with paired lower CI95 greater than zero on prospective utility or
+online AUC, protected-prefix retention does not regress, unsafe accepts are
+bare zero, same-event credit is zero, model weights are immutable, protected
+files are unchanged, and every required test exit code is zero. Otherwise it
+SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-5968-GATE: Exact Upstream Gate Replay
+
+**Given** Exp5967, Exp5920, Exp5924, and Exp5926 artifacts are present
+**When** Exp5968 checks preconditions
+**Then** Exp5967 path, hash, and ready scalar are verified before the run starts
+**And** the Exp5920 stream, Exp5924 state receipt, Exp5926 ABI, seeds, budgets,
+resources, and protected files are hashed.
+
+### SCENARIO-LEARN-5968-CHRONOLOGY: Prediction Precedes Label Reveal
+
+**Given** a chronological Exp5920 event at index `t`
+**When** each arm scores the event
+**Then** the prediction is made from the pre-event snapshot before the exact
+label is revealed
+**And** delayed-commit promotion uses only future semantic-neighborhood utility.
+
+### SCENARIO-LEARN-5968-ARMS: Five Arms Are Matched
+
+**Given** delayed commit, write-through, fixed memory, shuffled retrieval, and
+no-memory arms
+**When** Exp5968 replays the stream across five seeds
+**Then** event order, retrieval count, state capacity, verifier calls, and
+compute accounting match across arms.
+
+### SCENARIO-LEARN-5968-CONTROLS: Shortcut Controls Cannot Supply Credit
+
+**Given** label permutation, event-order shuffle, retrieval shuffle,
+same-event-only utility, no-op update, capacity, and random-admission controls
+**When** delayed-commit utility is credited
+**Then** same-event credit is zero, state-volume controls do not explain the
+lift, and chronology-breaking controls remain uncredited.
+
+### SCENARIO-LEARN-5968-PROMOTION: Delayed Commit Beats Fixed And No Memory
+
+**Given** paired semantic-event utility over five deterministic seeds
+**When** the promotion gate is evaluated
+**Then** delayed commit has paired lower CI95 greater than zero over no memory
+or fixed memory on prospective utility or online AUC, protected-prefix
+retention does not regress, unsafe accepts are zero, and the terminal verdict
+starts with `complete_ready:` only when those gates pass.
+
+## Implementation Status (Exp 5968)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-5968 | Planned (`python/carnot/experiment_5968_delayed_commit_csl_prospective.py`, `results/experiment_5968_delayed_commit_csl_prospective.json`) | Planned (`tests/python/test_experiment_5968_delayed_commit_csl_prospective.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
