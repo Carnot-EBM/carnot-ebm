@@ -1,0 +1,109 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'sk48'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 1, 2, 3, 4, 5, 6, 8, 9, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/sk48/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x64
+r1:5x64
+r2:5x64
+r3:5x64
+r4:5x64
+r5:5x64
+r6:5x64
+r7:5x64
+r8:5x64
+r9:5x64
+r10:5x64
+r11:5x64
+r12:5x17,4x30,5x17
+r13:5x17,4x30,5x17
+r14:5x13,2x2,5x2,4x30,5x17
+r15:5x13,2x2,5x2,4x30,5x17
+r16:5x13,3x2,5x2,4x30,5x17
+r17:5x13,3x2,5x2,4x30,5x17
+r18:5x13,3x2,5x2,4x30,5x17
+r19:5x13,3x2,5x2,4x25,8x4,4x1,5x17
+r20:5x13,2x2,5x2,4x25,8x4,4x1,5x17
+r21:5x13,2x2,5x2,4x25,8x4,4x1,5x17
+r22:5x13,3x2,5x2,4x25,8x4,4x1,5x17
+r23:5x13,3x2,5x2,4x30,5x17
+r24:5x11,6x6,4x30,5x17
+r25:5x11,6x1,0x4,6x1,4x25,9x4,4x1,5x17
+r26:5x11,6x1,0x1,6x2,0x1,1x1,2x1,1x2,2x1,1x2,4x19,9x4,4x1,5x17
+r27:5x11,6x1,0x1,6x2,0x1,2x1,1x2,2x1,1x2,2x1,4x19,9x4,4x1,5x17
+r28:5x11,6x1,0x4,6x1,4x25,9x4,4x1,5x17
+r29:5x11,6x6,4x30,5x17
+r30:5x13,3x2,5x2,4x30,5x17
+r31:5x13,3x2,5x2,4x25,14x4,4x1,5x17
+r32:5x13,2x2,5x2,4x25,14x4,4x1,5x17
+r33:5x13,2x2,5x2,4x25,14x4,4x1,5x17
+r34:5x13,3x2,5x2,4x25,14x4,4x1,5x17
+r35:5x13,3x2,5x2,4x30,5x17
+r36:5x13,3x2,5x2,4x30,5x17
+r37:5x13,3x2,5x2,4x30,5x17
+r38:5x13,2x2,5x2,4x30,5x17
+r39:5x13,2x2,5x2,4x30,5x17
+r40:5x17,4x30,5x17
+r41:5x17,4x30,5x17
+r42:5x64
+r43:5x64
+r44:5x64
+r45:5x64
+r46:5x64
+r47:5x64
+r48:5x64
+r49:5x64
+r50:5x64
+r51:5x64
+r52:5x64
+r53:2x64
+r54:4x64
+r55:4x64
+r56:4x20,6x6,4x38
+r57:4x20,6x1,0x4,6x1,4x1,8x4,4x2,14x4,4x2,9x4,4x21
+r58:4x20,6x1,0x1,6x2,0x1,1x1,2x1,8x4,1x1,2x1,14x4,1x1,2x1,9x4,1x1,4x20
+r59:4x20,6x1,0x1,6x2,0x1,2x1,1x1,8x4,2x1,1x1,14x4,2x1,1x1,9x4,2x1,4x20
+r60:4x20,6x1,0x4,6x1,4x1,8x4,4x2,14x4,4x2,9x4,4x21
+r61:4x20,6x6,4x38
+r62:4x64
+r63:4x64
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r18c11:6x6 r19c11:6x1,0x4,6x1 r20c11:6x1,0x1,6x2,0x1,1x1,2x1,1x2,2x1,1x2 r21c11:6x1,0x1,6x2,0x1,2x1,1x2,2x1,1x2,2x1 r22c11:6x1,0x4,6x1 r23c11:6x6 r24c11:5x2,3x2,5x2 r25c11:5x2,3x2,5x2 r26c11:5x2,2x2,5x2,4x6 r27c11:5x2,2x2,5x2,4x6 r28c11:5x2,3x2,5x2 r29c11:5x2,3x2,5x2
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r20c23:2x1,1x2,2x1,1x2 r21c23:1x2,2x1,1x2,2x1 r53c63:3x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r20c29:2x1,1x2,2x1,1x2 r21c29:1x2,2x1,1x2,2x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r20c35:2x1,1x2,2x1,1x2 r21c35:1x2,2x1,1x2,2x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r20c41:2x1 r20c46:1x1 r21c41:1x1 r21c46:2x1 r53c62:3x1 r58c28:0x2 r59c28:0x2
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r19c36:8x4 r19c42:4x4 r20c36:8x4 r20c41:4x6 r21c36:8x4 r21c41:4x6 r22c36:8x4 r22c42:4x4

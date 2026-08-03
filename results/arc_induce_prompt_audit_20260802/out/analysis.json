@@ -1,0 +1,1170 @@
+{
+ "n_games_attempted": 25,
+ "n_ok": 24,
+ "coverage_gaps": [
+  {
+   "game": "dc22",
+   "status": "no_window",
+   "reason": null
+  }
+ ],
+ "prompt_budget_tokens": 16384,
+ "budget_derivation": "n_ctx 81920 / 4 slots (kv_unified) - max_tokens 4096",
+ "tokens": {
+  "live_all": {
+   "min": 2047,
+   "q1": 3073,
+   "median": 3717.0,
+   "q3": 4879,
+   "max": 8731,
+   "n": 24
+  },
+  "live_k8": {
+   "min": 2047,
+   "q1": 2835,
+   "median": 3334.0,
+   "q3": 4037,
+   "max": 5847,
+   "n": 24
+  },
+  "as_sent_all": {
+   "min": 2182,
+   "q1": 3208,
+   "median": 3852.0,
+   "q3": 5014,
+   "max": 8866,
+   "n": 24
+  },
+  "window_all": {
+   "min": 3999,
+   "q1": 6251,
+   "median": 7698.5,
+   "q3": 10588,
+   "max": 13992,
+   "n": 24
+  },
+  "goal_shipped": {
+   "min": 96,
+   "q1": 96,
+   "median": 96.0,
+   "q3": 96,
+   "max": 97,
+   "n": 24
+  },
+  "goal_with_transitions": {
+   "min": 1514,
+   "q1": 2541,
+   "median": 3187.0,
+   "q3": 4348,
+   "max": 8194,
+   "n": 24
+  }
+ },
+ "budget_headroom": {
+  "max_as_sent_tokens": 8866,
+  "max_pct_of_budget": 54.1,
+  "n_games_over_budget": 0,
+  "n_games_over_half_budget": 1
+ },
+ "truncation": {
+  "n_games_where_k8_would_change_the_prompt": 16,
+  "games_where_k8_would_change_the_prompt": [
+   "ar25",
+   "bp35",
+   "cn04",
+   "g50t",
+   "ka59",
+   "lf52",
+   "ls20",
+   "m0r0",
+   "re86",
+   "s5i5",
+   "sb26",
+   "sc25",
+   "sk48",
+   "tr87",
+   "tu93",
+   "wa30"
+  ],
+  "n_changed_dropped_by_k8": {
+   "min": 0,
+   "q1": 0,
+   "median": 5.0,
+   "q3": 5,
+   "max": 5,
+   "n": 24
+  },
+  "n_games_char_budget_bound": 0,
+  "action_coverage_lost_by_k8": 10
+ },
+ "transitions": {
+  "n_live_trans": {
+   "min": 2,
+   "q1": 6,
+   "median": 11.0,
+   "q3": 11,
+   "max": 11,
+   "n": 24
+  },
+  "n_changed": {
+   "min": 2,
+   "q1": 6,
+   "median": 11.0,
+   "q3": 11,
+   "max": 11,
+   "n": 24
+  },
+  "n_noop": {
+   "min": 0,
+   "q1": 0,
+   "median": 0.0,
+   "q3": 0,
+   "max": 0,
+   "n": 24
+  },
+  "n_shown_all": {
+   "min": 2,
+   "q1": 6,
+   "median": 11.0,
+   "q3": 11,
+   "max": 11,
+   "n": 24
+  },
+  "n_distinct_actions_live": {
+   "min": 1,
+   "q1": 1,
+   "median": 2.0,
+   "q3": 3,
+   "max": 5,
+   "n": 24
+  }
+ },
+ "action_space": {
+  "n_observed_actions": {
+   "min": 1,
+   "q1": 1,
+   "median": 2.0,
+   "q3": 3,
+   "max": 5,
+   "n": 24
+  },
+  "coverage_fraction": {
+   "min": 0.1429,
+   "q1": 0.1429,
+   "median": 0.2857,
+   "q3": 0.4286,
+   "max": 0.7143,
+   "n": 24
+  },
+  "n_games_single_action_only": 11,
+  "games_single_action_only": [
+   "ft09",
+   "lf52",
+   "lp85",
+   "r11l",
+   "s5i5",
+   "sb26",
+   "sc25",
+   "sp80",
+   "su15",
+   "tn36",
+   "vc33"
+  ],
+  "n_games_observing_all_7": 0
+ },
+ "change_sparsity": {
+  "changed_cell_fraction_median": {
+   "min": 0.000977,
+   "q1": 0.004883,
+   "median": 0.010376,
+   "q3": 0.024414,
+   "max": 0.071533,
+   "n": 24
+  },
+  "changed_cell_fraction_max": {
+   "min": 0.000977,
+   "q1": 0.00708,
+   "median": 0.014404,
+   "q3": 0.037354,
+   "max": 0.337646,
+   "n": 24
+  },
+  "identity_cellwise_accuracy_median": {
+   "min": 0.928467,
+   "q1": 0.975586,
+   "median": 0.9896240000000001,
+   "q3": 0.995117,
+   "max": 0.999023,
+   "n": 24
+  },
+  "cells_total": {
+   "min": 4096,
+   "q1": 4096,
+   "median": 4096.0,
+   "q3": 4096,
+   "max": 4096,
+   "n": 24
+  }
+ },
+ "asks": {
+  "engine_returns_full_grid": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "evidence_is_delta_encoded": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "mentions_delta_output_format": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "says_prefer_simple_general": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  }
+ },
+ "identity_surface": {
+  "says_all_other_cells_unchanged": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "noop_rendered_as_no_change": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "codeonly_directive_present": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "codeonly_forbids_grid_analysis": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "no_think_prefix": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "forbids_identity": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "mentions_word_identity": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  }
+ },
+ "n_no_change_examples": {
+  "min": 0,
+  "q1": 0,
+  "median": 0.0,
+  "q3": 0,
+  "max": 0,
+  "n": 24
+ },
+ "first_rendered_transition_is_noop": {
+  "n_true": 0,
+  "n": 24,
+  "games_true": []
+ },
+ "blocks": {
+  "win_transition_block": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "opening_board_block": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "object_structure_block": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "initial_grid_block": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "playbook_exemplars": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  }
+ },
+ "goal_prompt": {
+  "shipped_is_evidence_free": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "shipped_carries_transitions": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "shipped_carries_any_grid": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  },
+  "flag_on_carries_transitions": {
+   "n_true": 24,
+   "n": 24,
+   "games_true": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+   ]
+  },
+  "receives_win_transition": {
+   "n_true": 0,
+   "n": 24,
+   "games_true": []
+  }
+ },
+ "per_game": [
+  {
+   "game": "ar25",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 5205,
+   "tok_as_sent": 5340,
+   "pct_budget": 32.6,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 2,
+   "observed_actions": [
+    2,
+    3
+   ],
+   "changed_cell_frac_median": 0.026611
+  },
+  {
+   "game": "bp35",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 8731,
+   "tok_as_sent": 8866,
+   "pct_budget": 54.1,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 3,
+   "observed_actions": [
+    3,
+    4,
+    6
+   ],
+   "changed_cell_frac_median": 0.011475
+  },
+  {
+   "game": "cd82",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 4,
+   "n_changed": 4,
+   "n_noop": 0,
+   "n_shown_all": 4,
+   "n_shown_k8": 4,
+   "tok_live_all": 3420,
+   "tok_as_sent": 3555,
+   "pct_budget": 21.7,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 3,
+   "observed_actions": [
+    2,
+    3,
+    4
+   ],
+   "changed_cell_frac_median": 0.049072
+  },
+  {
+   "game": "cn04",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 7810,
+   "tok_as_sent": 7945,
+   "pct_budget": 48.5,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 3,
+   "observed_actions": [
+    3,
+    4,
+    6
+   ],
+   "changed_cell_frac_median": 0.048584
+  },
+  {
+   "game": "ft09",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 3,
+   "n_changed": 3,
+   "n_noop": 0,
+   "n_shown_all": 3,
+   "n_shown_k8": 3,
+   "tok_live_all": 3798,
+   "tok_as_sent": 3933,
+   "pct_budget": 24.0,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.009277
+  },
+  {
+   "game": "g50t",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 4603,
+   "tok_as_sent": 4738,
+   "pct_budget": 28.9,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 97,
+   "n_observed_actions": 2,
+   "observed_actions": [
+    2,
+    4
+   ],
+   "changed_cell_frac_median": 0.011963
+  },
+  {
+   "game": "ka59",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 10,
+   "n_changed": 10,
+   "n_noop": 0,
+   "n_shown_all": 10,
+   "n_shown_k8": 6,
+   "tok_live_all": 2801,
+   "tok_as_sent": 2936,
+   "pct_budget": 17.9,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 5,
+   "observed_actions": [
+    1,
+    2,
+    3,
+    4,
+    6
+   ],
+   "changed_cell_frac_median": 0.004639
+  },
+  {
+   "game": "lf52",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 7,
+   "n_changed": 7,
+   "n_noop": 0,
+   "n_shown_all": 7,
+   "n_shown_k8": 6,
+   "tok_live_all": 4922,
+   "tok_as_sent": 5057,
+   "pct_budget": 30.9,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.00708
+  },
+  {
+   "game": "lp85",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 4,
+   "n_changed": 4,
+   "n_noop": 0,
+   "n_shown_all": 4,
+   "n_shown_k8": 4,
+   "tok_live_all": 5847,
+   "tok_as_sent": 5982,
+   "pct_budget": 36.5,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    0
+   ],
+   "changed_cell_frac_median": 0.071533
+  },
+  {
+   "game": "ls20",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 3873,
+   "tok_as_sent": 4008,
+   "pct_budget": 24.5,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 3,
+   "observed_actions": [
+    1,
+    3,
+    4
+   ],
+   "changed_cell_frac_median": 0.012695
+  },
+  {
+   "game": "m0r0",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 4853,
+   "tok_as_sent": 4988,
+   "pct_budget": 30.4,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 97,
+   "n_observed_actions": 3,
+   "observed_actions": [
+    1,
+    3,
+    4
+   ],
+   "changed_cell_frac_median": 0.024414
+  },
+  {
+   "game": "r11l",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 2,
+   "n_changed": 2,
+   "n_noop": 0,
+   "n_shown_all": 2,
+   "n_shown_k8": 2,
+   "tok_live_all": 3166,
+   "tok_as_sent": 3301,
+   "pct_budget": 20.1,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 97,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.02832
+  },
+  {
+   "game": "re86",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 5018,
+   "tok_as_sent": 5153,
+   "pct_budget": 31.5,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 4,
+   "observed_actions": [
+    1,
+    3,
+    4,
+    5
+   ],
+   "changed_cell_frac_median": 0.012939
+  },
+  {
+   "game": "s5i5",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 3072,
+   "tok_as_sent": 3207,
+   "pct_budget": 19.6,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 97,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.002686
+  },
+  {
+   "game": "sb26",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 8,
+   "n_changed": 8,
+   "n_noop": 0,
+   "n_shown_all": 8,
+   "n_shown_k8": 6,
+   "tok_live_all": 3339,
+   "tok_as_sent": 3474,
+   "pct_budget": 21.2,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.012939
+  },
+  {
+   "game": "sc25",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 3073,
+   "tok_as_sent": 3208,
+   "pct_budget": 19.6,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    3
+   ],
+   "changed_cell_frac_median": 0.00293
+  },
+  {
+   "game": "sk48",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 4338,
+   "tok_as_sent": 4473,
+   "pct_budget": 27.3,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 4,
+   "observed_actions": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "changed_cell_frac_median": 0.008789
+  },
+  {
+   "game": "sp80",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 3,
+   "n_changed": 3,
+   "n_noop": 0,
+   "n_shown_all": 3,
+   "n_shown_k8": 3,
+   "tok_live_all": 2047,
+   "tok_as_sent": 2182,
+   "pct_budget": 13.3,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    4
+   ],
+   "changed_cell_frac_median": 0.008301
+  },
+  {
+   "game": "su15",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 6,
+   "n_changed": 6,
+   "n_noop": 0,
+   "n_shown_all": 6,
+   "n_shown_k8": 6,
+   "tok_live_all": 2308,
+   "tok_as_sent": 2443,
+   "pct_budget": 14.9,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.004883
+  },
+  {
+   "game": "tn36",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 6,
+   "n_changed": 6,
+   "n_noop": 0,
+   "n_shown_all": 6,
+   "n_shown_k8": 6,
+   "tok_live_all": 3636,
+   "tok_as_sent": 3771,
+   "pct_budget": 23.0,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.000977
+  },
+  {
+   "game": "tr87",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 4879,
+   "tok_as_sent": 5014,
+   "pct_budget": 30.6,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 3,
+   "observed_actions": [
+    1,
+    2,
+    4
+   ],
+   "changed_cell_frac_median": 0.003662
+  },
+  {
+   "game": "tu93",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 3475,
+   "tok_as_sent": 3610,
+   "pct_budget": 22.0,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 4,
+   "observed_actions": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "changed_cell_frac_median": 0.004639
+  },
+  {
+   "game": "vc33",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 2,
+   "n_changed": 2,
+   "n_noop": 0,
+   "n_shown_all": 2,
+   "n_shown_k8": 2,
+   "tok_live_all": 3059,
+   "tok_as_sent": 3194,
+   "pct_budget": 19.5,
+   "k8_changes_prompt": false,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 1,
+   "observed_actions": [
+    6
+   ],
+   "changed_cell_frac_median": 0.064941
+  },
+  {
+   "game": "wa30",
+   "grid": [
+    64,
+    64
+   ],
+   "n_live": 11,
+   "n_changed": 11,
+   "n_noop": 0,
+   "n_shown_all": 11,
+   "n_shown_k8": 6,
+   "tok_live_all": 2691,
+   "tok_as_sent": 2826,
+   "pct_budget": 17.2,
+   "k8_changes_prompt": true,
+   "n_no_change_examples": 0,
+   "tok_goal_shipped": 96,
+   "n_observed_actions": 5,
+   "observed_actions": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "changed_cell_frac_median": 0.007812
+  }
+ ]
+}

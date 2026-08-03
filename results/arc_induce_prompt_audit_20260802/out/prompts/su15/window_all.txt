@@ -1,0 +1,178 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'su15'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 3, 4, 5, 9, 15]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/su15/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:4x64
+r1:4x64
+r2:4x64
+r3:4x64
+r4:4x30,15x3,4x31
+r5:4x30,15x3,4x31
+r6:4x30,15x3,4x31
+r7:4x64
+r8:4x64
+r9:4x64
+r10:5x64
+r11:5x46,9x5,5x13
+r12:5x45,9x7,5x12
+r13:5x44,9x9,5x11
+r14:5x44,9x3,3x3,9x3,5x11
+r15:5x44,9x3,3x3,9x3,5x11
+r16:5x44,9x3,3x3,9x3,5x11
+r17:5x44,9x2,3x1,9x6,5x11
+r18:5x45,9x7,5x12
+r19:5x44,3x1,5x1,9x5,5x13
+r20:5x64
+r21:5x42,3x1,5x21
+r22:5x64
+r23:5x40,3x1,5x23
+r24:5x64
+r25:5x38,3x1,5x25
+r26:5x64
+r27:5x36,3x1,5x27
+r28:5x64
+r29:5x34,3x1,5x29
+r30:5x64
+r31:5x32,3x1,5x31
+r32:5x64
+r33:5x30,3x1,5x33
+r34:5x64
+r35:5x28,3x1,5x35
+r36:5x64
+r37:5x26,3x1,5x37
+r38:5x64
+r39:5x24,3x1,5x39
+r40:5x64
+r41:5x22,3x1,5x41
+r42:5x64
+r43:5x20,3x1,5x43
+r44:5x64
+r45:5x18,3x1,5x45
+r46:5x64
+r47:5x16,3x1,5x47
+r48:5x64
+r49:5x14,3x1,5x49
+r50:5x64
+r51:5x12,3x1,5x51
+r52:5x10,0x1,5x53
+r53:5x9,0x3,5x52
+r54:5x10,0x1,5x53
+r55:5x8,3x1,5x55
+r56:5x64
+r57:5x6,3x1,5x57
+r58:5x3,15x3,5x58
+r59:5x3,15x3,5x58
+r60:5x3,15x3,5x58
+r61:5x64
+r62:5x64
+r63:0x64
+--- ACTION6 data={'x': 10, 'y': 53} (level 0->0): changed cells (FULL, run-length) = r52c9:15x3 r53c9:15x3 r54c9:15x3 r58c3:5x3 r59c3:5x3 r60c3:5x3 r63c62:5x2
+--- ACTION6 data={'x': 16, 'y': 47} (level 0->0): changed cells (FULL, run-length) = r46c15:15x3 r47c15:15x3 r48c15:15x3 r52c9:5x3 r53c9:5x1,3x1,5x1 r54c9:5x3 r63c60:5x2
+--- ACTION6 data={'x': 22, 'y': 41} (level 0->0): changed cells (FULL, run-length) = r40c21:15x3 r41c21:15x3 r42c21:15x3 r46c15:5x3 r47c15:5x1,3x1,5x1 r48c15:5x3 r63c58:5x2
+--- ACTION6 data={'x': 28, 'y': 35} (level 0->0): changed cells (FULL, run-length) = r34c27:15x3 r35c27:15x3 r36c27:15x3 r40c21:5x3 r41c21:5x1,3x1,5x1 r42c21:5x3 r63c56:5x2
+--- ACTION6 data={'x': 34, 'y': 29} (level 0->0): changed cells (FULL, run-length) = r28c33:15x3 r29c33:15x3 r30c33:15x3 r34c27:5x3 r35c27:5x1,3x1,5x1 r36c27:5x3 r63c54:5x2
+--- ACTION6 data={'x': 40, 'y': 23} (level 0->0): changed cells (FULL, run-length) = r22c39:15x3 r23c39:15x3 r24c39:15x3 r28c33:5x3 r29c33:5x1,3x1,5x1 r30c33:5x3 r63c52:5x2
+--- ACTION6 data={'x': 46, 'y': 17} (level 0->1): changed cells (FULL, run-length) = r0c0:5x16 r1c0:5x1,10x2,5x2,6x2,5x2,15x2,5x2,11x2,5x1 r2c0:5x1,10x2,5x2,6x2,5x2,15x2,5x2,11x2,5x1 r3c0:5x16 r3c30:11x4 r4c30:11x4 r5c30:11x4 r6c30:11x4 r11c46:5x5 r12c45:5x7 r13c44:5x9 r14c44:5x9 r15c44:5x9 r16c44:5x9 r17c44:5x9 r18c45:5x7 r19c44:5x1 r19c46:5x5 r21c42:5x1 r22c39:5x3 r23c31:9x5 r23c39:5x3 r24c30:9x7 r24c39:5x3 r25c29:9x9,5x1 r26c29:9x9 r27c29:9x9 r28c29:9x9 r29c29:9x9 r30c30:9x7 r31c31:9x5 r33c30:5x1 r35c28:5x1 r37c18:10x1 r37c26:5x1 r37c41:10x1 r39c24:5x1 r40c37:10x1 r41c16:10x1 r41c22:5x1 r43c20:5x1 r45c18:5x1 r47c16:5x1 r49c14:5x1 r51c12:5x1 r53c10:5x1 r54c49:10x1 r55c8:5x1 r55c14:10x1 r56c47:10x1 r57c6:5x1 r57c16:10x1 r63c52:0x12
+WIN TRANSITION (this is how the level was completed): applying ACTION6 data={'x': 46, 'y': 17} to the grid below completed the level (level 0->1).
+CONSTRAINT: is_level_complete(engine(GRID_BELOW, 6, data)) must return True.
+Do NOT assume the rendered next frame is the win state -- the completing action also re-lays out the board for the next level, so the completed configuration of THIS level is never drawn. Reason about what the winning move accomplishes, not about how the following screen looks.
+GRID BEFORE THE COMPLETING ACTION (run-length encoded):
+r0:4x64
+r1:4x64
+r2:4x64
+r3:4x64
+r4:4x30,15x3,4x31
+r5:4x30,15x3,4x31
+r6:4x30,15x3,4x31
+r7:4x64
+r8:4x64
+r9:4x64
+r10:5x64
+r11:5x46,9x5,5x13
+r12:5x45,9x7,5x12
+r13:5x44,9x9,5x11
+r14:5x44,9x3,3x3,9x3,5x11
+r15:5x44,9x3,3x3,9x3,5x11
+r16:5x44,9x3,3x3,9x3,5x11
+r17:5x44,9x2,3x1,9x6,5x11
+r18:5x45,9x7,5x12
+r19:5x44,3x1,5x1,9x5,5x13
+r20:5x64
+r21:5x42,3x1,5x21
+r22:5x39,15x3,5x22
+r23:5x39,15x3,5x22
+r24:5x39,15x3,5x22
+r25:5x38,3x1,5x25
+r26:5x64
+r27:5x36,3x1,5x27
+r28:5x64
+r29:5x34,3x1,5x29
+r30:5x64
+r31:5x32,3x1,5x31
+r32:5x64
+r33:5x30,3x1,5x33
+r34:5x64
+r35:5x28,3x1,5x35
+r36:5x64
+r37:5x26,3x1,5x37
+r38:5x64
+r39:5x24,3x1,5x39
+r40:5x64
+r41:5x22,3x1,5x41
+r42:5x64
+r43:5x20,3x1,5x43
+r44:5x64
+r45:5x18,3x1,5x45
+r46:5x64
+r47:5x16,3x1,5x47
+r48:5x64
+r49:5x14,3x1,5x49
+r50:5x64
+r51:5x12,3x1,5x51
+r52:5x64
+r53:5x10,3x1,5x53
+r54:5x64
+r55:5x8,3x1,5x55
+r56:5x64
+r57:5x6,3x1,5x57
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:0x52,5x12

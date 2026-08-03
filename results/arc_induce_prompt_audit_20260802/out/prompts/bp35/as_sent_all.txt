@@ -1,0 +1,126 @@
+/no_think
+CRITICAL OUTPUT RULES -- obey EXACTLY:
+1. Output ONLY one ```python code block. NOTHING before it. NOTHING after it.
+2. Do NOT analyze the grids. Do NOT describe or reason about the win state. Do NOT write
+   step-by-step analysis, explanation, or commentary -- not even as comments.
+3. Your response MUST begin with the characters ```python and end with ```.
+4. Induce SIMPLE, GENERAL rules and write the requested function(s) directly. Skip all reasoning.
+
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'bp35'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 3, 5, 7, 9, 10, 11, 14, 15]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/bp35/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x64
+r1:5x2,3x1,5x5,3x1,5x4,10x41,5x2,3x1,5x5,3x1,5x1
+r2:5x13,10x41,5x10
+r3:5x13,10x41,5x10
+r4:5x1,3x1,5x5,3x1,5x5,10x41,5x1,3x1,5x5,3x1,5x2
+r5:5x4,3x1,5x5,3x1,5x2,10x41,5x4,3x1,5x5
+r6:5x13,10x41,5x10
+r7:5x2,3x1,5x5,3x1,5x4,10x41,5x2,3x1,5x5,3x1,5x1
+r8:5x13,10x41,5x10
+r9:5x13,10x41,5x10
+r10:5x1,3x1,5x5,3x1,5x5,10x41,5x1,3x1,5x5,3x1,5x2
+r11:5x4,3x1,5x5,3x1,5x2,10x41,5x4,3x1,5x5
+r12:5x13,10x11,5x19,10x11,5x10
+r13:5x2,3x1,5x5,3x1,5x4,10x11,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x11,5x2,3x1,5x5,3x1,5x1
+r14:5x13,10x11,5x1,14x5,5x1,14x5,5x1,14x5,5x1,10x11,5x10
+r15:5x13,10x11,5x1,14x5,5x1,14x5,5x1,14x5,5x1,10x11,5x10
+r16:5x1,3x1,5x5,3x1,5x5,10x11,5x1,14x5,5x1,14x5,5x1,14x5,5x1,10x11,5x1,3x1,5x5,3x1,5x2
+r17:5x4,3x1,5x5,3x1,5x2,10x11,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x11,5x4,3x1,5x5
+r18:5x13,10x11,5x19,10x11,5x10
+r19:5x2,3x1,5x5,3x1,5x4,10x41,5x2,3x1,5x5,3x1,5x1
+r20:5x13,10x41,5x10
+r21:5x13,10x41,5x10
+r22:5x1,3x1,5x5,3x1,5x5,10x41,5x1,3x1,5x5,3x1,5x2
+r23:5x4,3x1,5x5,3x1,5x2,10x41,5x4,3x1,5x5
+r24:5x13,10x41,5x10
+r25:5x2,3x1,5x5,3x1,5x4,10x41,5x2,3x1,5x5,3x1,5x1
+r26:5x13,10x41,5x10
+r27:5x13,10x41,5x10
+r28:5x1,3x1,5x5,3x1,5x5,10x41,5x1,3x1,5x5,3x1,5x2
+r29:5x4,3x1,5x5,3x1,5x2,10x41,5x4,3x1,5x5
+r30:5x64
+r31:5x2,3x1,5x5,3x1,5x4,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x2,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x1
+r32:5x13,14x5,5x1,14x5,5x1,14x5,5x34
+r33:5x13,14x5,5x1,14x5,5x1,14x5,5x34
+r34:5x1,3x1,5x5,3x1,5x5,14x5,5x1,14x5,5x1,14x5,5x1,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x2
+r35:5x4,3x1,5x5,3x1,5x2,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x4,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5
+r36:5x64
+r37:5x2,3x1,5x5,3x1,5x4,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x12,5x2,9x1,5x2,10x6,5x2,3x1,5x5,3x1,5x1
+r38:5x13,14x5,5x1,14x5,5x1,14x5,5x1,10x12,5x1,9x2,11x1,5x1,10x6,5x10
+r39:5x13,14x5,5x1,14x5,5x1,14x5,5x1,10x12,5x1,9x2,11x1,5x1,10x6,5x10
+r40:5x1,3x1,5x5,3x1,5x5,14x5,5x1,14x5,5x1,14x5,5x1,10x12,5x2,9x1,5x2,10x6,5x1,3x1,5x5,3x1,5x2
+r41:5x4,3x1,5x5,3x1,5x2,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x13,5x3,10x7,5x4,3x1,5x5
+r42:5x31,10x23,5x10
+r43:5x2,3x1,5x5,3x1,5x4,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x23,5x2,3x1,5x5,3x1,5x1
+r44:5x13,14x5,5x1,14x5,5x1,14x5,5x1,10x23,5x10
+r45:5x13,14x5,5x1,14x5,5x1,14x5,5x1,10x23,5x10
+r46:5x1,3x1,5x5,3x1,5x5,14x5,5x1,14x5,5x1,14x5,5x1,10x23,5x1,3x1,5x5,3x1,5x2
+r47:5x4,3x1,5x5,3x1,5x2,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x23,5x4,3x1,5x5
+r48:5x31,10x23,5x10
+r49:5x2,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x4,10x23,5x2,3x1,5x5,3x1,5x1
+r50:5x31,10x23,5x10
+r51:5x31,10x23,5x10
+r52:5x1,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,10x23,5x1,3x1,5x5,3x1,5x2
+r53:5x4,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x2,10x23,5x4,3x1,5x5
+r54:5x43,10x5,5x16
+r55:5x2,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x4,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x5,5x1,3x1,14x3,3x1,5x2,3x1,5x5,3x1,5x1
+r56:5x31,14x5,5x1,14x5,5x1,10x5,5x1,14x5,5x10
+r57:5x31,14x5,5x1,14x5,5x1,10x5,5x1,14x5,5x10
+r58:5x1,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,14x5,5x1,14x5,5x1,10x5,5x1,14x5,5x1,3x1,5x5,3x1,5x2
+r59:5x4,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x2,3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1,10x5,5x1,3x1,14x3,3x1,5x4,3x1,5x5
+r60:5x43,10x5,5x16
+r61:5x2,3x1,5x5,3x1,5x4,10x41,5x2,3x1,5x5,3x1,5x1
+r62:5x13,10x41,5x10
+r63:15x5,0x59
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r37c37:5x2,9x1,5x2 r37c43:10x5 r38c37:5x1,11x1,9x2,5x1 r38c43:10x5 r39c37:5x1,11x1,9x2,5x1 r39c43:10x5 r40c37:5x2,9x1,5x2 r40c43:10x5 r41c38:5x3 r41c44:10x3 r63c5:15x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r37c31:5x2,9x1,5x2 r37c37:10x5 r38c31:5x1,11x1,9x2,5x1 r38c37:10x5 r39c31:5x1,11x1,9x2,5x1 r39c37:10x5 r40c31:5x2,9x1,5x2 r40c37:10x5 r41c32:5x3 r41c38:10x3 r63c6:15x1
+--- ACTION6 data={'x': 24, 'y': 36} (level 0->0): changed cells (FULL, run-length) = r37c25:10x6 r38c25:10x6 r39c25:10x6 r40c25:10x6 r41c25:10x6 r63c7:15x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r37c25:5x2,9x1,5x2 r37c31:10x5 r38c25:5x1,11x1,9x2,5x1 r38c31:10x5 r39c25:5x1,11x1,9x2,5x1 r39c31:10x5 r40c25:5x2,9x1,5x2 r40c31:10x5 r41c26:5x3 r41c32:10x3 r63c8:15x1
+--- ACTION6 data={'x': 18, 'y': 36} (level 0->0): changed cells (FULL, run-length) = r37c19:10x6 r38c19:10x6 r39c19:10x6 r40c19:10x6 r41c19:10x6 r63c9:15x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r37c19:5x2,9x1,5x2 r37c25:10x5 r38c19:5x1,11x1,9x2,5x1 r38c25:10x5 r39c19:5x1,11x1,9x2,5x1 r39c25:10x5 r40c19:5x2,9x1,5x2 r40c25:10x5 r41c20:5x3 r41c26:10x3 r63c10:15x1
+--- ACTION6 data={'x': 18, 'y': 30} (level 0->0): changed cells (FULL, run-length) = r1c13:5x1,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x3 r2c13:5x41 r3c13:5x41 r4c13:3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x4 r5c13:5x3,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x1 r6c13:5x41 r7c13:5x1,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x3 r8c13:5x41 r9c13:5x41 r10c13:3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x4 r11c13:5x3,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x1 r12c13:5x11 r12c43:5x11 r13c13:5x1,3x1,5x5,3x1,5x3 r13c25:5x1,3x1,5x3 r13c31:5x1,3x1,5x3 r13c37:5x1,3x1,5x3 r13c43:5x1,3x1,5x5,3x1,5x3 r14c13:5x11 r14c25:5x5 r14c31:5x5 r14c37:5x5 r14c43:5x11 r15c13:5x11 r15c25:5x5 r15c31:5x5 r15c37:5x5 r15c43:5x11 r16c13:3x1,5x5,3x1,5x4 r16c25:3x1,5x4 r16c31:3x1,5x4 r16c37:3x1,5x4 r16c43:3x1,5x5,3x1,5x4 r17c13:5x3,3x1,5x5,3x1,5x1 r17c25:5x3,3x1,5x1 r17c31:5x3,3x1,5x1 r17c37:5x3,3x1,5x1 r17c43:5x3,3x1,5x5,3x1,5x1 r18c13:5x11 r18c43:5x11 r19c19:5x2,7x1,5x2 r20c19:5x1,7x3,5x1 r21c19:5x2,7x1,5x2 r22c20:5x3 r31c13:5x1,3x1,5x3 r31c19:5x1,3x1,5x3 r31c25:5x1,3x1,5x3 r31c31:3x1,14x3,3x1 r31c37:3x1,14x3,3x1 r31c43:3x1,14x3,3x1 r32c13:5x5 r32c19:5x5 r32c25:5x5 r32c31:14x5 r32c37:14x5 r32c43:14x5 r33c13:5x5 r33c19:5x5 r33c25:5x5 r33c31:14x5 r33c37:14x5 r33c43:14x5 r34c13:3x1,5x4 r34c19:3x1,5x4 r34c25:3x1,5x4 r34c31:14x5 r34c37:14x5 r34c43:14x5 r35c13:5x3,3x1,5x1 r35c19:5x3,3x1,5x1 r35c25:5x3,3x1,5x1 r35c31:3x1,14x3,3x1 r35c37:3x1,14x3,3x1 r35c43:3x1,14x3,3x1 r37c13:10x6 r38c13:10x6 r39c13:10x6 r40c13:10x6 r41c13:10x6 r42c13:10x18 r43c13:10x18 r44c13:10x18 r45c13:10x18 r46c13:10x18 r47c13:10x18 r48c13:10x11 r48c31:5x12 r49c13:10x11 r49c25:3x1,14x3,3x1 r49c31:3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1 r50c13:10x11 r50c25:14x5 r50c31:14x5,5x1,14x5,5x1 r51c13:10x11 r51c25:14x5 r51c31:14x5,5x1,14x5,5x1 r52c13:10x11 r52c25:14x5 r52c31:14x5,5x1,14x5,5x1 r53c13:10x11 r53c25:3x1,14x3,3x1 r53c31:3x1,14x3,3x1,5x1,3x1,14x3,3x1,5x1 r54c13:10x11 r54c48:10x6 r55c13:10x30 r55c48:10x6 r56c13:10x30 r56c48:10x6 r57c13:10x30 r57c48:10x6 r58c13:10x30 r58c48:10x6 r59c13:10x30 r59c48:10x6 r60c13:10x30 r60c48:10x6 r63c11:15x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r37c19:10x5 r37c25:5x2,9x1,5x2 r38c19:10x5 r38c25:5x1,9x2,11x1,5x1 r39c19:10x5 r39c25:5x1,9x2,11x1,5x1 r40c19:10x5 r40c25:5x2,9x1,5x2 r41c20:10x3 r41c26:5x3 r63c12:15x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r37c25:10x5 r37c31:5x2,9x1,5x2 r38c25:10x5 r38c31:5x1,9x2,11x1,5x1 r39c25:10x5 r39c31:5x1,9x2,11x1,5x1 r40c25:10x5 r40c31:5x2,9x1,5x2 r41c26:10x3 r41c32:5x3 r63c13:15x1
+--- ACTION6 data={'x': 30, 'y': 30} (level 0->0): changed cells (FULL, run-length) = r19c13:5x1,3x1,5x4 r19c20:3x1,5x1 r19c24:5x2,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x3 r20c13:5x6 r20c20:5x3 r20c24:5x30 r21c13:5x6 r21c21:5x1 r21c24:5x30 r22c13:3x1,5x5,3x1 r22c23:5x2,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x4 r23c13:5x3,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x1 r24c13:5x41 r25c13:5x1,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x3 r26c13:5x41 r27c13:5x41 r28c13:3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x4 r29c13:5x3,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x5,3x1,5x1 r31c31:5x1,3x1,5x3 r31c37:5x1,3x1,5x3 r31c43:5x1,3x1,5x3 r32c31:5x5 r32c37:5x5 r32c43:5x5 r33c31:5x5 r33c37:5x5 r33c43:5x5 r34c31:3x1,5x4 r34c37:3x1,5x4 r34c43:3x1,5x4 r35c31:5x3,3x1,5x1 r35c37:5x3,3x1,5x1 r35c43:5x3,3x1,5x1 r37c19:5x2,7x1,5x2 r38c19:5x1,7x3,5x1 r39c19:5x2,7x1,5x2 r40c20:5x3 r48c13:5x11 r48c31:10x5 r48c43:5x11 r49c13:5x1,3x1,5x5,3x1,5x3 r49c25:5x1,3x1,5x3 r49c31:10x5 r49c43:3x1,14x3,3x1,5x2,3x1,5x3 r50c13:5x11 r50c25:5x5 r50c31:10x5 r50c43:14x5,5x6 r51c13:5x11 r51c25:5x5 r51c31:10x5 r51c43:14x5,5x6 r52c13:3x1,5x5,3x1,5x4 r52c25:3x1,5x4 r52c31:10x5 r52c43:14x5,5x1,3x1,5x4 r53c13:5x3,3x1,5x5,3x1,5x1 r53c25:5x3,3x1,5x1 r53c31:10x5 r53c43:3x1,14x3,3x1,5x4,3x1,5x1 r54c13:5x11 r54c31:10x5 r54c43:5x11 r63c14:15x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r37c25:5x2,9x1,5x2 r37c31:10x5 r38c25:5x1,11x1,9x2,5x1 r38c31:10x5 r39c25:5x1,11x1,9x2,5x1 r39c31:10x5 r40c25:5x2,9x1,5x2 r40c31:10x5 r41c26:5x3 r41c32:10x3 r63c15:15x1
+
+
+Return ONLY one ```python code block with engine + is_level_complete.
+```python
