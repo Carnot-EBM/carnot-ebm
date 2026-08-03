@@ -1,7 +1,7 @@
 {
  "experiment": "outer_loop_arc_goal_defect_reask_ab_20260801",
  "title": "Rejecting a mechanically defective induced goal predicate, and carrying the agent's own observations into the goal prompt",
- "run_date": "2026-08-02T04:16:03Z",
+ "run_date": "2026-08-02T07:29:55Z",
  "state": "MEASURED",
  "what_was_built": {
   "CARNOT_ARC_INDUCE_GOAL_DEFECT_CHECK": "reject an emitted `is_level_complete` that has no return, raises, or is CONSTANT over the frames the agent already observed, and re-ask. DEFAULT OFF. Own re-ask budget, not shared with the engine's.",
@@ -122,219 +122,633 @@
  "ab_result": {
   "missingness": {
    "off": {
-    "n_cells": 20,
-    "n_measurable": 19,
-    "n_induce_failed": 1,
+    "n_cells": 60,
+    "n_measurable": 56,
+    "n_induce_failed": 4,
     "n_server_failure": 0,
-    "n_content_failure": 4,
+    "n_content_failure": 15,
     "n_goal_unscorable": 0,
     "goal_scorer_status": {
-     "ok": 19,
-     "no_engine_file": 1
+     "no_engine_file": 4,
+     "ok": 56
     }
    },
    "on": {
-    "n_cells": 20,
-    "n_measurable": 4,
-    "n_induce_failed": 16,
+    "n_cells": 60,
+    "n_measurable": 15,
+    "n_induce_failed": 45,
     "n_server_failure": 0,
-    "n_content_failure": 17,
+    "n_content_failure": 48,
     "n_goal_unscorable": 0,
     "goal_scorer_status": {
-     "ok": 4,
-     "no_engine_file": 16
+     "no_engine_file": 45,
+     "ok": 15
     }
    },
    "aa": {
-    "n_cells": 20,
-    "n_measurable": 20,
+    "n_cells": 60,
+    "n_measurable": 60,
     "n_induce_failed": 0,
     "n_server_failure": 0,
-    "n_content_failure": 0,
+    "n_content_failure": 6,
     "n_goal_unscorable": 0,
     "goal_scorer_status": {
-     "ok": 20
+     "ok": 60
     }
    }
   },
   "missing_is_never_zero": "a cell whose induce raised, whose server failed, or whose goal scorer timed out is EXCLUDED and counted above. It is never scored 0.",
   "armedness": {
-   "goal_defect_reasks_in_treatment": 16,
+   "goal_defect_reasks_in_treatment": 48,
    "goal_defect_reasks_in_control_arms": 0,
    "treatment_fired": true,
    "control_stayed_inert": true,
-   "cells_where_gate_fired": 16,
+   "cells_where_gate_fired": 44,
    "verdict": "ARMED"
   },
   "PRIMARY": {
    "metric": "O6_pre_win_and_not_open",
    "on_vs_off": {
-    "n_games": 4,
-    "rate_a": 0.0,
-    "rate_b": 0.0,
-    "observed_effect": 0.0,
-    "p": 1.0,
-    "n_discordant_games": 0,
-    "games_favouring_b": 0,
-    "games_favouring_a": 0
+    "n_games": 13,
+    "rate_a": 0.0769,
+    "rate_b": 0.3077,
+    "observed_effect": 0.2308,
+    "p": 0.04109,
+    "n_discordant_games": 7,
+    "games_favouring_b": 5,
+    "games_favouring_a": 2
    },
    "AA_noise_floor_aa_vs_off": {
-    "n_games": 19,
-    "rate_a": 0.0,
-    "rate_b": 0.1579,
-    "observed_effect": 0.1579,
-    "p": 0.25089,
-    "n_discordant_games": 3,
-    "games_favouring_b": 3,
-    "games_favouring_a": 0
+    "n_games": 20,
+    "rate_a": 0.0667,
+    "rate_b": 0.15,
+    "observed_effect": 0.0833,
+    "p": 0.22268,
+    "n_discordant_games": 8,
+    "games_favouring_b": 6,
+    "games_favouring_a": 2
    }
   },
   "SECONDARIES": {
    "O4_discriminates_heldout": {
     "on_vs_off": {
-     "n_games": 4,
-     "rate_a": 0.0,
-     "rate_b": 0.0,
-     "observed_effect": 0.0,
-     "p": 1.0,
-     "n_discordant_games": 0,
-     "games_favouring_b": 0,
-     "games_favouring_a": 0
+     "n_games": 13,
+     "rate_a": 0.1026,
+     "rate_b": 0.3462,
+     "observed_effect": 0.2436,
+     "p": 0.0407,
+     "n_discordant_games": 7,
+     "games_favouring_b": 5,
+     "games_favouring_a": 2
     },
     "AA": {
-     "n_games": 19,
-     "rate_a": 0.0526,
-     "rate_b": 0.1579,
-     "observed_effect": 0.1053,
-     "p": 0.62662,
-     "n_discordant_games": 4,
-     "games_favouring_b": 3,
-     "games_favouring_a": 1
+     "n_games": 20,
+     "rate_a": 0.1167,
+     "rate_b": 0.1667,
+     "observed_effect": 0.05,
+     "p": 0.55618,
+     "n_discordant_games": 9,
+     "games_favouring_b": 6,
+     "games_favouring_a": 3
     }
    },
    "O2_fires_pre_win": {
     "on_vs_off": {
-     "n_games": 4,
-     "rate_a": 0.0,
-     "rate_b": 0.0,
-     "observed_effect": 0.0,
-     "p": 1.0,
-     "n_discordant_games": 0,
-     "games_favouring_b": 0,
-     "games_favouring_a": 0
+     "n_games": 13,
+     "rate_a": 0.1282,
+     "rate_b": 0.3846,
+     "observed_effect": 0.2564,
+     "p": 0.05634,
+     "n_discordant_games": 9,
+     "games_favouring_b": 6,
+     "games_favouring_a": 3
     },
     "AA": {
-     "n_games": 19,
-     "rate_a": 0.0,
-     "rate_b": 0.2632,
-     "observed_effect": 0.2632,
-     "p": 0.06305,
-     "n_discordant_games": 5,
-     "games_favouring_b": 5,
-     "games_favouring_a": 0
+     "n_games": 20,
+     "rate_a": 0.1,
+     "rate_b": 0.1833,
+     "observed_effect": 0.0833,
+     "p": 0.24181,
+     "n_discordant_games": 10,
+     "games_favouring_b": 7,
+     "games_favouring_a": 3
     }
    },
    "O1_fires_post_win": {
     "on_vs_off": {
-     "n_games": 4,
-     "rate_a": 0.0,
-     "rate_b": 0.0,
-     "observed_effect": 0.0,
-     "p": 1.0,
-     "n_discordant_games": 0,
-     "games_favouring_b": 0,
-     "games_favouring_a": 0
+     "n_games": 13,
+     "rate_a": 0.0769,
+     "rate_b": 0.1154,
+     "observed_effect": 0.0385,
+     "p": 0.81296,
+     "n_discordant_games": 3,
+     "games_favouring_b": 2,
+     "games_favouring_a": 1
     },
     "AA": {
-     "n_games": 19,
-     "rate_a": 0.0,
-     "rate_b": 0.1053,
-     "observed_effect": 0.1053,
-     "p": 0.49965,
-     "n_discordant_games": 2,
+     "n_games": 20,
+     "rate_a": 0.05,
+     "rate_b": 0.0333,
+     "observed_effect": -0.0167,
+     "p": 0.80044,
+     "n_discordant_games": 5,
      "games_favouring_b": 2,
-     "games_favouring_a": 0
+     "games_favouring_a": 3
     }
    },
    "O3_fires_heldout": {
     "on_vs_off": {
-     "n_games": 4,
-     "rate_a": 0.0,
-     "rate_b": 0.0,
-     "observed_effect": 0.0,
-     "p": 1.0,
-     "n_discordant_games": 0,
-     "games_favouring_b": 0,
-     "games_favouring_a": 0
+     "n_games": 13,
+     "rate_a": 0.1538,
+     "rate_b": 0.4231,
+     "observed_effect": 0.2692,
+     "p": 0.05734,
+     "n_discordant_games": 9,
+     "games_favouring_b": 6,
+     "games_favouring_a": 3
     },
     "AA": {
-     "n_games": 19,
-     "rate_a": 0.0526,
-     "rate_b": 0.2632,
-     "observed_effect": 0.2105,
-     "p": 0.21936,
-     "n_discordant_games": 6,
-     "games_favouring_b": 5,
-     "games_favouring_a": 1
+     "n_games": 20,
+     "rate_a": 0.15,
+     "rate_b": 0.2,
+     "observed_effect": 0.05,
+     "p": 0.52982,
+     "n_discordant_games": 11,
+     "games_favouring_b": 7,
+     "games_favouring_a": 4
     }
    },
    "O7b_all_false_observed": {
     "on_vs_off": {
-     "n_games": 4,
-     "rate_a": 1.0,
-     "rate_b": 1.0,
-     "observed_effect": 0.0,
-     "p": 1.0,
-     "n_discordant_games": 0,
-     "games_favouring_b": 0,
-     "games_favouring_a": 0
+     "n_games": 13,
+     "rate_a": 0.8462,
+     "rate_b": 0.5769,
+     "observed_effect": -0.2692,
+     "p": 0.05734,
+     "n_discordant_games": 9,
+     "games_favouring_b": 3,
+     "games_favouring_a": 6
     },
     "AA": {
-     "n_games": 19,
-     "rate_a": 0.9474,
-     "rate_b": 0.7368,
-     "observed_effect": -0.2105,
-     "p": 0.21936,
-     "n_discordant_games": 6,
-     "games_favouring_b": 1,
-     "games_favouring_a": 5
+     "n_games": 20,
+     "rate_a": 0.85,
+     "rate_b": 0.8,
+     "observed_effect": -0.05,
+     "p": 0.52982,
+     "n_discordant_games": 11,
+     "games_favouring_b": 4,
+     "games_favouring_a": 7
     }
    }
   },
   "GUARDRAIL_engine": {
    "change_fidelity": {
-    "n_games": 4,
-    "off": 0.0533,
-    "on": 0.1296,
-    "delta": 0.0763,
-    "games_engine_worse_under_treatment": 1,
-    "games_engine_better_under_treatment": 2
+    "n_games": 13,
+    "off": 0.0987,
+    "on": 0.2645,
+    "delta": 0.1658,
+    "games_engine_worse_under_treatment": 3,
+    "games_engine_better_under_treatment": 8
    },
    "cell_recall": {
-    "n_games": 4,
-    "off": 0.0637,
-    "on": 0.178,
-    "delta": 0.1142,
-    "games_engine_worse_under_treatment": 1,
-    "games_engine_better_under_treatment": 2
+    "n_games": 13,
+    "off": 0.1596,
+    "on": 0.3229,
+    "delta": 0.1633,
+    "games_engine_worse_under_treatment": 4,
+    "games_engine_better_under_treatment": 7
    },
    "accuracy": {
-    "n_games": 4,
+    "n_games": 13,
     "off": 0.0,
-    "on": 0.0,
-    "delta": 0.0,
+    "on": 0.0769,
+    "delta": 0.0769,
     "games_engine_worse_under_treatment": 0,
-    "games_engine_better_under_treatment": 0
+    "games_engine_better_under_treatment": 1
    }
   },
   "pairing_witness": {
-   "on_identical_to_off": 1,
-   "on_differs_from_off": 3,
+   "on_identical_to_off": 3,
+   "on_differs_from_off": 11,
    "reading": "control and treatment send the IDENTICAL seed and combined prompt, so a pair is identical exactly where the gate did not fire. `on_differs_from_off` should closely track cells_where_gate_fired; a large excess would mean the sampler is not actually deterministic and the pairing claim is weaker than stated."
   }
  },
- "n_cells": 64,
- "meta": null,
+ "n_cells": 180,
+ "meta": {
+  "prereg_sha256": "sha256:806fe31db0ce48ef89d00d1c32790ef338fec48421d8568e7870cc048598268b",
+  "server_witness": {
+   "pid": 2390253,
+   "exe_from_proc": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+   "port_requested": 41823,
+   "port_actual": 41823,
+   "cuda_gpu": "1",
+   "reuse_refusals": [],
+   "n_ctx_declared": 32768,
+   "n_ctx_from_props": 32768,
+   "model_from_props": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+   "is_cuda_build": true,
+   "mtp": false,
+   "kv_quant": "q8_0",
+   "n_gpu_layers": 999,
+   "max_tokens": 4096
+  },
+  "split_meta": {
+   "ar25": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "bp35": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "cd82": {
+    "n_transitions": 5,
+    "n_shown": 3,
+    "n_heldout": 2,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "cn04": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "g50t": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "ka59": {
+    "n_transitions": 11,
+    "n_shown": 7,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "lf52": {
+    "n_transitions": 8,
+    "n_shown": 5,
+    "n_heldout": 3,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "lp85": {
+    "n_transitions": 5,
+    "n_shown": 3,
+    "n_heldout": 2,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "ls20": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "m0r0": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "re86": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "s5i5": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "sb26": {
+    "n_transitions": 9,
+    "n_shown": 6,
+    "n_heldout": 3,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "sc25": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "sk48": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "su15": {
+    "n_transitions": 7,
+    "n_shown": 5,
+    "n_heldout": 2,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "tn36": {
+    "n_transitions": 7,
+    "n_shown": 5,
+    "n_heldout": 2,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "tr87": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "tu93": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   },
+   "wa30": {
+    "n_transitions": 12,
+    "n_shown": 8,
+    "n_heldout": 4,
+    "heldout_levelup_rows": 1,
+    "cell": 1
+   }
+  },
+  "treatment_witness": [
+   {
+    "game": "ar25",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "44b6837d2893708ecdfbd25f3e8c4b4838f219a7dc83a505e20e07700c582c7b",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4980,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "bp35",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "a4bc413ba79ef6794b8929e843cccbbd983104e3d602c7542c529571ee9dd421",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 7654,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "cd82",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "4f670a97ac77955130f419312c7bb3703a0d148f5a5aff225dd595a75ff96453",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3248,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "cn04",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "6f322bc29800e1ca7763c0e3cb24f1a51c209a5c6ddf9446e881db14b48bb74c",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 6631,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "g50t",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "c5771b9941250dcf324a1d61e188cbf62dd646fe5a474b388c61c2e91f620fd1",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4621,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "ka59",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "b04ba442abb952ead6348aeaddbb2b83a8429fd31bf52b16032e86b2262c4170",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 2838,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "lf52",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "65ad1f4ee3e7381af09c0f9cfbdc4016164352122c1ef7e5b4f02650daa81a6b",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4807,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "lp85",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "c081d2c8803d01cd043d21057643aef53bcc0fc4dd6bc3a1b5ee8ce4276ff442",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 5348,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "ls20",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "4ec5b2fffd2094965d0609b5c776cd12f062632225a22c2b435856d0b4c22dba",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3852,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "m0r0",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "72138005226bce4c0156126c0ba4964dde15a1a711cd6e6b0c3571ae3c6403b7",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4759,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "re86",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "67801d0a4339ae96cf33b0ca253665ecf8d0cd923c9cc79d5d3c1a29ea2cd3fe",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4813,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "s5i5",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "5079dfd5f1080bc0bb04cc0113a9bde93f5c9e8b8d0466a7050680bf93b1bbfd",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3198,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "sb26",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "ccac6519055aa99f96838cfed605f868e38ddf4bb7eb044f9c25232714e9744c",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3370,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "sc25",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "078ee046d9310e8e0a797f9da9f3680020da08ff81ecbf1added29758e229fb5",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3184,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "sk48",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "94bb0603de7eaa27b8f561ee37e2c7bd8984069ac0c93868c0d6df4d891c19e8",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4024,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "su15",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "f2fdd301babb77cc94c3050535687ba1c5effb361a6e90aca501b0b500b54462",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 2461,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "tn36",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "ea6017d2d28fb5459a479525a0fa39da6d01f2f94ceff5a24816685a65337d08",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3807,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "tr87",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "fcda8f9e91a126790d2a48d0fbeb2258ad5d6fa38c8063a207147f7339c69310",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 4903,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "tu93",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "7844f6c5a8faacaafee67f47f90adb15b75a377b786f15e480f66e4fcefbc47e",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 3549,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   },
+   {
+    "game": "wa30",
+    "combined_prompt_identical": true,
+    "combined_prompt_sha256": "51af4f9ca5117157ba82b487e6806957929fdf45a29cb8a2e2800d54304b3703",
+    "goal_prompt_chars_off": 365,
+    "goal_prompt_chars_on": 2621,
+    "goal_prompt_differs": true,
+    "goal_prompt_grows": true,
+    "detector_inert_when_off": true,
+    "detector_bites_when_on": true
+   }
+  ],
+  "n_cells": 180,
+  "n_jobs": 180,
+  "duration_s": 24068.9,
+  "liveness_witness": {
+   "llm": {
+    "calls": 300,
+    "responses": 182,
+    "errors": 0,
+    "content_failures": 118,
+    "induce_defect_reasks": 14,
+    "goal_defect_reasks": 48
+   },
+   "generator_healthy_after": true,
+   "generator_server_failure_diagnostics": [],
+   "generator_port": 41823,
+   "generator_n_ctx": 32768,
+   "generator_n_ctx_declared": 32768,
+   "generator_n_ctx_source": "server_props_observed",
+   "generator_total_slots_observed": 4,
+   "generator_reuse_n_ctx_check": "match",
+   "generator_reuse_refusals": [],
+   "generator_model_declared": "gemma-4-31B-it-qat",
+   "generator_model_observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf",
+   "generator_reuse_model_check": "match",
+   "generator_max_tokens": 4096,
+   "generator_mtp_requested": false,
+   "generator_mtp_draft_path": "",
+   "generator_mtp_engaged": null,
+   "generator_mtp_evidence": "",
+   "generator_ffn_cpu_layers": 0,
+   "generator_ffn_cpu_layers_refit_note": ""
+  }
+ },
  "solve_provenance": "development_proxy",
  "solve_provenance_note": "No game is solved and no level is banked. This measures the quality of an induced goal predicate offline against frozen windows from PUBLIC games. The intervention itself reads only the agent's own observations, so it carries no fact about any game from outside and would work on a hidden game -- but this MEASUREMENT is offline on public games, so the honest declaration is development_proxy, not live_agent_self_discovery.",
  "flags_remain_default_off": true,
@@ -393,9 +807,9 @@
  "HEADLINE_the_intervention_as_built_is_a_REGRESSION": {
   "finding": "the treatment arm HARD-FAILS induction far more often than control. This is not the goal-quality effect the run was designed to estimate -- it is a prior, larger effect in the opposite direction, and it makes the goal-quality comparison uninterpretable.",
   "induce_failures": {
-   "control_off": "1/22",
-   "treatment_on": "17/21",
-   "aa_control": "0/21"
+   "control_off": "4/60",
+   "treatment_on": "45/60",
+   "aa_control": "0/60"
   },
   "where": "11 of the first 16 treatment failures were on the FOCUSED GOAL-ONLY call (`split induce: goal failed ... syntax error`), the call shape that carries BOTH halves of the intervention.",
   "mechanism_proven_not_inferred": "`generate()`'s comment claims a defect re-ask 'NEVER FAILS WHERE THE OLD PATH SUCCEEDED'. THAT CLAIM IS FALSE. `attempt < tries - 1` stops the LAST attempt from continuing; it does not stop an EARLIER re-ask from spending the attempt that would have been the accept. With identical scripted server replies -- a usable-but-defective answer on attempt 0 then two malformed completions -- the flag OFF accepts and the flag ON returns a hard failure. Reproduced deterministically in tests/python/test_arc_goal_defect_reask_wiring.py::test_reask_CAN_convert_an_accept_into_a_hard_failure.",
@@ -405,8 +819,8 @@
   "flags_remain_default_off": "so nothing about the scored agent changed; this is an argument against flipping the default, produced by the measurement built to test it, which is the outcome a default-off A/B exists to make possible."
  },
  "armedness_summary": {
-  "gate_fired_in_treatment": "17/21",
-  "gate_fired_in_controls": "0/43",
+  "gate_fired_in_treatment": "44/60",
+  "gate_fired_in_controls": "0/120",
   "reading": "the treatment is ARMED and the controls are inert, so this is a real test rather than a silent no-op measured as a null."
  },
  "honest_verdict": "complete_goal_defect_reask_ab_REGRESSION_treatment_attrites_induction_primary_uninterpretable_flag_stays_off",
@@ -437,7 +851,7 @@
   7201,
   7202
  ],
- "duration_s": 8753.2,
+ "duration_s": 24068.9,
  "duration_s_note": "sum of per-cell induce wall-clock when the run is still in flight; replaced by the harness's own end-to-end duration once meta.json lands.",
  "preconditions_checked": [
   {
@@ -453,7 +867,7 @@
    "available": true
   }
  ],
- "reproducibility_checksum": "b59637300d04e0356ec282180ab0842abe28f2fc1433af8397534c8aca861517",
+ "reproducibility_checksum": "2c7cf937de06159a685387349d14fbf7fffcc888f7782a38f0b72f3db4475b7e",
  "provenance": {
   "code": [
    {

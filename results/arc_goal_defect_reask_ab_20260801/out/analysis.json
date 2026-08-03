@@ -1,0 +1,214 @@
+{
+ "missingness": {
+  "off": {
+   "n_cells": 60,
+   "n_measurable": 56,
+   "n_induce_failed": 4,
+   "n_server_failure": 0,
+   "n_content_failure": 15,
+   "n_goal_unscorable": 0,
+   "goal_scorer_status": {
+    "no_engine_file": 4,
+    "ok": 56
+   }
+  },
+  "on": {
+   "n_cells": 60,
+   "n_measurable": 15,
+   "n_induce_failed": 45,
+   "n_server_failure": 0,
+   "n_content_failure": 48,
+   "n_goal_unscorable": 0,
+   "goal_scorer_status": {
+    "no_engine_file": 45,
+    "ok": 15
+   }
+  },
+  "aa": {
+   "n_cells": 60,
+   "n_measurable": 60,
+   "n_induce_failed": 0,
+   "n_server_failure": 0,
+   "n_content_failure": 6,
+   "n_goal_unscorable": 0,
+   "goal_scorer_status": {
+    "ok": 60
+   }
+  }
+ },
+ "missing_is_never_zero": "a cell whose induce raised, whose server failed, or whose goal scorer timed out is EXCLUDED and counted above. It is never scored 0.",
+ "armedness": {
+  "goal_defect_reasks_in_treatment": 48,
+  "goal_defect_reasks_in_control_arms": 0,
+  "treatment_fired": true,
+  "control_stayed_inert": true,
+  "cells_where_gate_fired": 44,
+  "verdict": "ARMED"
+ },
+ "PRIMARY": {
+  "metric": "O6_pre_win_and_not_open",
+  "on_vs_off": {
+   "n_games": 13,
+   "rate_a": 0.0769,
+   "rate_b": 0.3077,
+   "observed_effect": 0.2308,
+   "p": 0.04109,
+   "n_discordant_games": 7,
+   "games_favouring_b": 5,
+   "games_favouring_a": 2
+  },
+  "AA_noise_floor_aa_vs_off": {
+   "n_games": 20,
+   "rate_a": 0.0667,
+   "rate_b": 0.15,
+   "observed_effect": 0.0833,
+   "p": 0.22268,
+   "n_discordant_games": 8,
+   "games_favouring_b": 6,
+   "games_favouring_a": 2
+  }
+ },
+ "SECONDARIES": {
+  "O4_discriminates_heldout": {
+   "on_vs_off": {
+    "n_games": 13,
+    "rate_a": 0.1026,
+    "rate_b": 0.3462,
+    "observed_effect": 0.2436,
+    "p": 0.0407,
+    "n_discordant_games": 7,
+    "games_favouring_b": 5,
+    "games_favouring_a": 2
+   },
+   "AA": {
+    "n_games": 20,
+    "rate_a": 0.1167,
+    "rate_b": 0.1667,
+    "observed_effect": 0.05,
+    "p": 0.55618,
+    "n_discordant_games": 9,
+    "games_favouring_b": 6,
+    "games_favouring_a": 3
+   }
+  },
+  "O2_fires_pre_win": {
+   "on_vs_off": {
+    "n_games": 13,
+    "rate_a": 0.1282,
+    "rate_b": 0.3846,
+    "observed_effect": 0.2564,
+    "p": 0.05634,
+    "n_discordant_games": 9,
+    "games_favouring_b": 6,
+    "games_favouring_a": 3
+   },
+   "AA": {
+    "n_games": 20,
+    "rate_a": 0.1,
+    "rate_b": 0.1833,
+    "observed_effect": 0.0833,
+    "p": 0.24181,
+    "n_discordant_games": 10,
+    "games_favouring_b": 7,
+    "games_favouring_a": 3
+   }
+  },
+  "O1_fires_post_win": {
+   "on_vs_off": {
+    "n_games": 13,
+    "rate_a": 0.0769,
+    "rate_b": 0.1154,
+    "observed_effect": 0.0385,
+    "p": 0.81296,
+    "n_discordant_games": 3,
+    "games_favouring_b": 2,
+    "games_favouring_a": 1
+   },
+   "AA": {
+    "n_games": 20,
+    "rate_a": 0.05,
+    "rate_b": 0.0333,
+    "observed_effect": -0.0167,
+    "p": 0.80044,
+    "n_discordant_games": 5,
+    "games_favouring_b": 2,
+    "games_favouring_a": 3
+   }
+  },
+  "O3_fires_heldout": {
+   "on_vs_off": {
+    "n_games": 13,
+    "rate_a": 0.1538,
+    "rate_b": 0.4231,
+    "observed_effect": 0.2692,
+    "p": 0.05734,
+    "n_discordant_games": 9,
+    "games_favouring_b": 6,
+    "games_favouring_a": 3
+   },
+   "AA": {
+    "n_games": 20,
+    "rate_a": 0.15,
+    "rate_b": 0.2,
+    "observed_effect": 0.05,
+    "p": 0.52982,
+    "n_discordant_games": 11,
+    "games_favouring_b": 7,
+    "games_favouring_a": 4
+   }
+  },
+  "O7b_all_false_observed": {
+   "on_vs_off": {
+    "n_games": 13,
+    "rate_a": 0.8462,
+    "rate_b": 0.5769,
+    "observed_effect": -0.2692,
+    "p": 0.05734,
+    "n_discordant_games": 9,
+    "games_favouring_b": 3,
+    "games_favouring_a": 6
+   },
+   "AA": {
+    "n_games": 20,
+    "rate_a": 0.85,
+    "rate_b": 0.8,
+    "observed_effect": -0.05,
+    "p": 0.52982,
+    "n_discordant_games": 11,
+    "games_favouring_b": 4,
+    "games_favouring_a": 7
+   }
+  }
+ },
+ "GUARDRAIL_engine": {
+  "change_fidelity": {
+   "n_games": 13,
+   "off": 0.0987,
+   "on": 0.2645,
+   "delta": 0.1658,
+   "games_engine_worse_under_treatment": 3,
+   "games_engine_better_under_treatment": 8
+  },
+  "cell_recall": {
+   "n_games": 13,
+   "off": 0.1596,
+   "on": 0.3229,
+   "delta": 0.1633,
+   "games_engine_worse_under_treatment": 4,
+   "games_engine_better_under_treatment": 7
+  },
+  "accuracy": {
+   "n_games": 13,
+   "off": 0.0,
+   "on": 0.0769,
+   "delta": 0.0769,
+   "games_engine_worse_under_treatment": 0,
+   "games_engine_better_under_treatment": 1
+  }
+ },
+ "pairing_witness": {
+  "on_identical_to_off": 3,
+  "on_differs_from_off": 11,
+  "reading": "control and treatment send the IDENTICAL seed and combined prompt, so a pair is identical exactly where the gate did not fire. `on_differs_from_off` should closely track cells_where_gate_fired; a large excess would mean the sampler is not actually deterministic and the pairing claim is weaker than stated."
+ }
+}
