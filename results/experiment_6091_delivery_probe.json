@@ -1,0 +1,92 @@
+{
+ "experiment": "experiment_6091_delivery_probe",
+ "spec": "REQ-ARC-WMTE-6091",
+ "run_date": "2026-08-03T23:40:35Z",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "solve_provenance": "development_proxy",
+ "verifier_is_oracle": false,
+ "random_seed": 6091,
+ "methodology_note": "NO LLM IS INVOKED and no GPU is used; the sub-second duration is therefore correct and expected, not a truncated run. `LocalGGUFProposer.generate` -- the deepest callee before the HTTP transport -- is wrapped, so the assertion is on the exact prompt string the generator receives, and the caller chain is read off the interpreter stack to prove it arrived via the shipped `refactor` -> `_gen_to_file` path rather than via a convenience render. Transport is not in doubt; prompt CONTENT is. `model_specs` is deliberately absent: there is no model to name, and naming one would be the vestigial-marker pattern the Inference-Substrate Declaration Discipline exists to stop.",
+ "engine_store_redirected_to": "/tmp/exp6091_delivery_probe_g972pzwb",
+ "signature_line": "        out[marker_row, 0] = 7  # exp6091-delivery-probe-signature",
+ "arms": {
+  "flag_off": {
+   "flag": "0",
+   "neutralised_source_resolver": false,
+   "refactor_returned_ok": true,
+   "refactor_message": "local gguf (GPU server) wrote world_model.py",
+   "generator_was_called": true,
+   "caller_chain_at_generator": [
+    "arc_executable_world_model.py::_gen_to_file:6469",
+    "arc_executable_world_model.py::refactor:6702",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::run_arm:137",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::main:172",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::<module>:259"
+   ],
+   "codeonly_eligible": false,
+   "prompt_chars": 1515,
+   "prompt_sha256": "47889061d6051a55359499b95d13820f54507e061de1071b148490a0df6ff758",
+   "engine_signature_line_delivered": false,
+   "engine_block_header_delivered": false,
+   "mismatch_block_present": true,
+   "n_engine_source_lines_delivered": 2
+  },
+  "flag_on": {
+   "flag": "1",
+   "neutralised_source_resolver": false,
+   "refactor_returned_ok": true,
+   "refactor_message": "local gguf (GPU server) wrote world_model.py",
+   "generator_was_called": true,
+   "caller_chain_at_generator": [
+    "arc_executable_world_model.py::_gen_to_file:6469",
+    "arc_executable_world_model.py::refactor:6702",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::run_arm:137",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::main:173",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::<module>:259"
+   ],
+   "codeonly_eligible": false,
+   "prompt_chars": 2066,
+   "prompt_sha256": "741c2c702df572f8658bf3d0043f48918473acfa2c018e37b7698a83974c4b32",
+   "engine_signature_line_delivered": true,
+   "engine_block_header_delivered": true,
+   "mismatch_block_present": true,
+   "n_engine_source_lines_delivered": 9
+  },
+  "flag_on_mutation_resolver_neutralised": {
+   "flag": "1",
+   "neutralised_source_resolver": true,
+   "refactor_returned_ok": true,
+   "refactor_message": "local gguf (GPU server) wrote world_model.py",
+   "generator_was_called": true,
+   "caller_chain_at_generator": [
+    "arc_executable_world_model.py::_gen_to_file:6469",
+    "arc_executable_world_model.py::refactor:6702",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::run_arm:137",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::main:174",
+    "outer_loop_arc_6091_delivery_probe_20260803.py::<module>:259"
+   ],
+   "codeonly_eligible": false,
+   "prompt_chars": 1515,
+   "prompt_sha256": "47889061d6051a55359499b95d13820f54507e061de1071b148490a0df6ff758",
+   "engine_signature_line_delivered": false,
+   "engine_block_header_delivered": false,
+   "mismatch_block_present": true,
+   "n_engine_source_lines_delivered": 2
+  }
+ },
+ "checks": {
+  "generator_reached_on_live_path_all_arms": true,
+  "caller_chain_goes_through_shipped_refactor": true,
+  "ON_delivers_engine_signature_to_generator": true,
+  "OFF_does_not_deliver_engine": true,
+  "OFF_reproduces_the_shipped_defect": true,
+  "mismatch_block_survives_the_splice": true,
+  "ON_and_OFF_are_different_prompts": true,
+  "mutation_kills_delivery": true,
+  "mutation_collapses_to_off_bytes": true
+ },
+ "delivery_proven": true,
+ "duration_s": 0.426,
+ "honest_verdict": "complete_engine_source_delivered_to_generator_on_live_path",
+ "reproducibility_checksum": "e2616dbad9bf1ae1dcfa33fba432d7e767e10fe0f92e785317c6094c863b363f"
+}

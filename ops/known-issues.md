@@ -111,6 +111,251 @@ It is self-concealing — the rebuild also resets `provenance.code[*].sha256` to
 turns GREEN at the same moment the audit trail is erased. Fix belongs with the analysers' owner
 (read-merge-preserve the existing provenance block); until then, prefer acknowledgement over rebuild.
 
+### 2026-08-03 (outer-loop, MEASURED — the Phase D domain search FAILS: no corpus in this repo passes all three criteria, and the two failure modes are disjoint)
+
+**Answering the question the entry below leaves open.** That entry correctly refuses the three
+retired constructions and names MMLU-Pro's chance-floor defect. It then still needs a domain. This
+entry reports the search, run over every candidate-pool-shaped corpus in `results/`:
+`scripts/experiments/exp_phase_d_domain_headroom_survey.py` ->
+`results/phase_d_domain_headroom_survey.json` (adversarial_verify: 0 flags; substrate
+`aggregation_from_upstream_artifacts` — cached corpora only, no LLM invoked, no GPU used; checksum
+stable across two consecutive reruns by construction, `duration_s` excluded from the digest).
+
+**Result: 0 of 7 candidate pools pass. Nothing in the repo is a viable Phase D domain today.**
+
+| corpus | n_q | K | chance floor | cand acc | z vs floor | SC | oracle@K | 1-(1-p)^K | verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| MMLU-Pro 5-shot | 40 | 6 | 0.10 (10-way) | 0.1250 | +1.29 | 0.1250 | 0.5000 | 0.5512 | C1 FAIL — combinatorial |
+| MMLU-Pro 0-shot | 40 | 6 | 0.10 (10-way) | 0.0833 | -0.86 | 0.0750 | 0.3000 | 0.4067 | C1 FAIL — combinatorial |
+| MuSR murder_mysteries | 200 | 5-8 | **0.50 (BINARY)** | 0.5311 | +2.43 | 0.5600 | 0.9300 | 0.9773 | C1 FAIL — combinatorial |
+| structured reasoning exp5125 | 96 | 4 | 0.0510 (enumerated) | 0.2188 | +14.95 | 0.2083 | 0.8750 | 0.6275 | **CONSTRUCTION ARTIFACT** |
+| structured reasoning exp5136 | 120 | 4 | 0.0425 (enumerated) | 0.2188 | +19.15 | 0.2167 | 0.8750 | 0.6275 | **CONSTRUCTION ARTIFACT** |
+| SOTA constraint stream exp5786 | 360 | 3 (2 live) | 0.25 (4-way) | 0.5593 | **+23.47** | 0.75 (artifact) | 0.9389 | 0.9144 | C2 FAIL — saturated |
+| SOTA answer-channel canary exp5799 | 24 | 5 | 0.25 (4-way) | 0.1750 | -1.90 | 0.7500 | 0.8333 | 0.6178 | C1 FAIL — 77.5% unparseable |
+
+exp5799 is the one row whose oracle EXCEEDS its independence prediction while still failing C1. That
+is not a point in its favour: its per-candidate accuracy is *below* the floor (z=-1.90) and the
+independence model does not apply, because the candidates are not exchangeable draws — one model
+carries the corpus (`gemma-4-31B` 24/24 parseable) while the others are near-dead (`Qwen3.6-35B`
+0/48, `gemma-4-26B` 3/48). n=24 in any case.
+
+ConstraintBench (`results/experiment_5044_second_corpus_candidate_cache.jsonl`) is excluded before
+measurement, confirming the entry below: all 500 candidates carry
+`generator_kind: deterministic_solver_backed_variant` and `generation_model: None`. There is no LLM
+generator, so criterion 1 is not even defined.
+
+**Chance floors were ENUMERATED, not asserted** — the refuted proposal turned on an asserted floor.
+For the open-ended structured families the floor is the fraction of the answer space that is
+correct, computed by brute force per instance (graph colouring over `n_colors^n_nodes`;
+knights/knaves over `2^n_people`; travel-budget and OR-allocation over the feasible-optimal set;
+code-property over `2^domain_n`). All 216 instances resolved; zero unresolved.
+
+**THE STRUCTURAL FINDING — the two failure modes are disjoint, and that is the whole diagnosis.**
+
+- **Group A — generator at the floor, so the headroom is combinatorial** (MMLU-Pro both pools, MuSR,
+  exp5799). Every one of them FAILS the independence check: observed oracle@K is at or BELOW
+  `1-(1-p)^K`. Their apparent headroom is what you get free by drawing K near-random samples.
+- **Group B — generator competent, so the task is too easy** (exp5786). The only corpus that clears
+  criterion 1 decisively, and it dies on criterion 2.
+- **Group C — the headroom was manufactured by the pool builder** (exp5125, exp5136).
+
+There is no corpus in the middle band. That band — a competent-but-unsaturated generator, genuine
+multi-sample K, low chance floor — is what Phase D needs and what the repo does not contain.
+
+**MuSR's retirement reason is REFINED, not overturned** (retirement stands). The recorded reason is
+"SC near-ceiling". Measured, SC is 0.5600 — nowhere near a ceiling. The real defect is that MuSR is
+**BINARY**, so the floor is a coin flip and per-candidate accuracy 0.5311 sits 3.1 pp above it; with
+K=5-8 draws, oracle@K 0.93 is *below* the 0.977 that independent coin-flipping predicts. Same
+combinatorial defect as MMLU-Pro, different surface. Worth recording because "SC near-ceiling" would
+wrongly suggest a harder corpus fixes it; it does not — a non-binary corpus with a real generator does.
+MuSR is also the ONLY genuine multi-sample single-model pool in the repo (gemma-4-12B-it, 163 of 200
+questions carry both answers, i.e. real temperature diversity).
+
+**NEW — exp5125 / exp5136 are templated fixtures, and their artifacts overstate what they are.**
+Both declare `inference_substrate: local_sota_gguf_generation_with_receipts_and_exact_validators`.
+The rows do not support that reading. Structural tells, all mechanical:
+(1) the correct candidate appears **only ever at index 0 or 1 — never index 2 or 3**, in both pools;
+(2) correctness patterns collapse to exactly three, in the ratio **14:7:3** — identically in both
+pools (56:28:12 and 70:35:15);
+(3) per-index model counts are balanced **to the unit** (48/48 and 40/40/40), which sampling does
+not do;
+(4) `raw_response` carries one constant `"claims": ["exact-checkable candidate"]` string across all
+864 candidates, and every parse failure is at index 3.
+Inspecting a row shows the slots directly: index 0 plausible-wrong, index 1 trivially wrong
+(`[0,0,0,0]`), index 2 out-of-range (`[3,3,3,3]` where colours are 0..2), index 3 unparseable. This
+is the same class as the `task_index % 4` signature retracted from
+`results/headroom_survey_cross_domain.json` on 2026-07-01 — **a third instance, not previously
+caught.** Their +0.66 gap is not evidence of headroom. Treat `model_hf_id` on these rows as
+decorative. Not retired here — that is an operator call — but they must not seed a Phase D domain.
+
+**NEW — exp5786 is real, is the closest thing the repo has to a viable domain, and still fails.**
+It is genuine generation (real `raw_response_text`, real truncations, per-model variation). It is
+the ONLY corpus clearing criterion 1 decisively (z=+23.47). Two things kill it:
+- **A dead arm.** `Qwen3.6-35B-A3B` produced **0 of 360** parseable answers (358 `finish_reason:
+  length`) — accuracy 0.0000. This independently corroborates exp5813's
+  `answer_channel_ready_score=0.0` on that family. The headline `SC=0.75` is therefore a degenerate
+  3-way vote containing a corpse, and it is NOT the honest baseline.
+- **Against the honest baseline there is almost nothing to win.** Best single model
+  (`gemma-4-26B-A4B-it`) = **0.9278**; oracle over the two live arms = **0.9389**. Total selectable
+  gain = **+0.0111, i.e. 4 instances out of 360.** Per family: `finite_domain_scheduling` gain
+  **0.0000** (26B scores a saturated **1.0000**), `logic_grid` gain **0.0000**,
+  `typed_finite_choice` gain +0.0333 (4 instances). Note also K=1 sample per MODEL, so genuine
+  self-consistency is not measurable from this corpus at all.
+
+**MECHANICAL CHECK — two of the three constructions the task brief names would be HARD-REFUSED, and
+this was verified, not assumed.** Probe roadmaps through `scripts/exclusion_manifest_lint.py`:
+uPRM -> `[SCOPE_MATCHED_PRIOR_FAILURE]` HARD; LoRA-EBM -> `[BLOCKED_PATTERN_MATCHED]` +
+`[SCOPE_MATCHED_PRIOR_FAILURE]` HARD; EBRM -> `[BLOCKED_PATTERN_MATCHED]` HARD. A hidden-state
+TrajSelector task draws only `[SCOPE_MATCHED_PRIOR_FAILURE]` against `exp899-drift-hidden-state-probe`,
+which a `prior_failures:` block satisfies — i.e. that lane is open, as the manifest's own `reason`
+field says. A pure corpus-construction task lints **CLEAN**. This confirms the entry below and adds
+the exact violation classes.
+
+**WHAT WOULD BE NEEDED — the honest answer, since no domain passes.** Not another verifier
+experiment. A **difficulty-calibrated candidate pool that does not yet exist**, and it is cheap:
+
+- **Generator**: `gemma-4-26B-A4B-it-GGUF`, the one model measured competent AND reliable here
+  (0.9278 accuracy, 360/360 parseable). Do NOT reach for 31B/35B — measured dead on this channel.
+- **Instances**: harder draws from the exp5785/exp5786 fixture families, calibrated so per-candidate
+  accuracy lands in **0.4-0.7**. Above ~0.9 there is nothing to select (exp5786); at the floor the
+  headroom is combinatorial (Group A). The band is the deliverable.
+- **K >= 8 genuine temperature samples from ONE model**, so self-consistency is actually measurable
+  — a thing NO corpus in this repo currently permits except MuSR.
+- **Acceptance gate, falsifiable and pre-registered**: per-candidate accuracy in [0.4, 0.7] with
+  z > 3 above the enumerated floor; observed oracle@K **strictly above** `1-(1-p)^K`; and
+  `oracle@K - SC >= 0.10` with a cluster-bootstrap CI excluding 0. **If the pool cannot be
+  calibrated into that band, report `blocked_no_headroom_band_reachable` and STOP** — do not
+  proceed to a verifier experiment on an uncalibrated pool. That failure is itself the finding, and
+  it is the cheap one to discover.
+- **Power, stated before any verifier runs**: at n=360 instances the minimum detectable effect at
+  alpha=.05/power=.80 is ~10 pp. TrajSelector's published +4.61 pp needs **n >= 866**. Pre-register
+  n and K, or the null will be as unfalsifiable as exp5163's.
+
+**This is NOT the concluded ARC-energy S0 direction.** S0 was oracle-distinct structural energy
+scored ON ARC, retired 2026-06-26 because it added no live ARC value. This is off-ARC constraint
+reasoning, no ARC env, no ARC solve claim, and it produces a CORPUS rather than an ARC selector.
+It is also not the retired Phase D external-text scorer class: the deliverable here is a calibrated
+candidate pool plus its headroom measurement, with no scorer trained — which is why the probe lints
+clean while all three named constructions do not.
+
+**Read this before spending the Phase D majority.** The next Phase D slot should build and calibrate
+the pool, and should be allowed to fail closed. Standing a verifier experiment on any corpus in the
+table above reproduces one of the three documented failure modes by construction.
+
+
+> **CORRECTIONS 2026-08-03 (second adversarial review, verified independently before applying;
+> APPEND-ONLY — every number above is left standing, nothing here deletes a prior figure).**
+> The headline survives re-measurement: `passes_all_three` is False on all 7 rows, and I
+> reproduced the survey byte-for-byte (`reproducibility_checksum`
+> `sha256:e48ca7f2447cd8559e102f8375bafd4637fbd79b110cebd61cc96b67d0299853`, `duration_s` the sole
+> differing key). Nine corrections, in decreasing order of what they cost the next milestone.
+>
+> **C-1. THE PRE-REGISTERED GATE ABOVE IS NEAR-UNREACHABLE BY ITS OWN ARITHMETIC — fix it before
+> a planner reads it.** The gate demands `observed oracle@K strictly above 1-(1-p)^K` with
+> `p in [0.4, 0.7]`, `K >= 8`, `n = 360`. Enumerated at K=8, n=360:
+>
+> | p | bar `1-(1-p)^8` | max all-wrong questions permitted | required oracle |
+> |---|---|---|---|
+> | 0.40 | 0.983204 | 6 / 360 (1.67%) | >= 0.983333 |
+> | 0.45 | 0.991627 | 3 / 360 (0.83%) | >= 0.991667 |
+> | 0.50 | 0.996094 | 1 / 360 (0.28%) | >= 0.997222 |
+> | >= 0.5217 | >= 0.997261 | **0** | **360/360 exactly** |
+>
+> So for any `p > 0.5217` — **60% of the prescribed band** — the gate requires a PERFECT oracle,
+> which `adversarial_verify.IMPLAUSIBLE_PERFECT` exists to flag. In the feasible remainder it
+> permits at most 6 all-wrong questions of 360, against the **7.0% (14/200)** all-wrong rate of
+> MuSR, the only genuine multi-sample pool in this repo: a demanded 4.2x-25x improvement that
+> nothing above justifies. `blocked_no_headroom_band_reachable` is therefore not a risk to be
+> discovered — it is the near-certain outcome, decided by arithmetic before any data is drawn,
+> which is the unfalsifiable-null failure this entry cites exp5163 for. **Corrected gate:** drop
+> the independence conjunct from the ACCEPTANCE gate and keep it as a REPORTED diagnostic, or
+> replace it with the chance-level form the survey's own docstring describes
+> (`1-(1-floor)^K` = 0.8999 at floor 0.25, K=8 — reachable). Whichever is chosen, state the
+> all-wrong rate the pool must beat, as a number, before building it.
+>
+> **C-2. Criterion 1 does not compute what its docstring says, and the conjunct cannot be passed
+> by improving the generator.** The docstring says the check is against "what independent
+> CHANCE-LEVEL sampling predicts"; the code
+> (`scripts/experiments/exp_phase_d_domain_headroom_survey.py:evaluate`) computes
+> `1-(1-p)**k_min` with the OBSERVED `p`. Because the bar rises with `p`, a better generator
+> raises its own bar. Demonstrated, not asserted: re-scoring exp5799 under this survey's OWN
+> exp5786 treatment (exclude non-generations) moves its generator z from **-1.8974 to +6.3333**
+> and its independence bar from **0.6178 to 0.9995** in lockstep — C1 stays False. Empirically the
+> conjunct tracks ARM DEGENERACY, not generator quality: all 4 rows clearing it contain a
+> structurally always-wrong arm (2 constructed pools, a 0/360-parseable arm, a 77.5%-truncation
+> canary), while BOTH genuine multi-sample pools fail it. Report "generator above chance" and
+> "errors better than independent" as two separate fields under honest names; do not conjoin them
+> under a name that reads as generator quality.
+>
+> **C-3. exp5799 is NOT "a generator at the floor" — missing was coerced to zero.** 93/120
+> candidates are `finish_reason=length` at hard token caps written into the mode ids themselves
+> (`reasoning_disabled_final_sentinel_128`, `embedded_template_final_sentinel_192`). It is a
+> DESIGNED token-budget canary. Measured: accuracy over all rows 21/120 = **0.1750**; excluding
+> non-generations **21/27 = 0.7778**. Grouping exactly as the survey does (`fixture_row_id`, 24
+> groups): live-answer counts are twenty-one 1s and three 2s, **K_effective = 1.125**, and a
+> verifier has ANY choice on **3 of 24** fixtures. The honest rejection is "K_effective 1.125,
+> 2 selectable instances, n=24", which prescribes a larger token budget; "generator at the floor"
+> wrongly prescribes a stronger model.
+>
+> **C-4. The generator prescription's reliability claim is budget-conditional and is stated
+> unconditionally.** `gemma-4-26B-A4B-it` is 360/360 parseable in exp5786 — and **3/48 = 6.25%**
+> parseable in exp5799 under the 128/192-token caps. Specify the token budget the calibration run
+> will use, or it inherits exp5799's truncation failure.
+>
+> **C-5. Every z above is unclustered.** Candidates are nested in questions (K=5-8 for MuSR, 6 for
+> MMLU-Pro). MuSR: unclustered z=2.4327 over 1525 candidates; question-level one-sample t against
+> 0.5 gives **t=1.3587, df=199, two-sided p=0.1758**. The artifact field
+> `generator_above_chance: true` for MuSR is therefore withdrawn as not cluster-robust. **No
+> verdict changes** — MuSR still fails C1 three independent ways (0.930 < 0.9773 observed-p form;
+> 0.930 < 0.96875 chance-level form; and now the clustered test).
+>
+> **C-6. The "Group A" narrative contradicts the artifact it summarizes, on 2 of its 3 members.**
+> exp5799 carries `oracle_exceeds_independence: true` — it does not fail the independence check.
+> MuSR carries `generator_above_chance: true` — its generator is not at the floor per the field.
+> The grouping prose is corrected here; the fields stand.
+>
+> **C-7. "Two new construction artifacts, not previously caught" is half wrong, and the cited
+> tells are the weak ones.** exp5125 was ALREADY caught: `flagged_adversarial: true` with a
+> CRITICAL `DURATION_TOO_SHORT` corrigendum (`duration_s=0.01706` against
+> `inference_substrate: local_sota_gguf_generation_with_exact_validators`). **exp5136 is the
+> genuinely uncaught and materially more serious one** (`flagged_adversarial: false`,
+> `duration_s=143.4`, full `model_specs`) — lead with it. And "per-index model counts balance to
+> the unit" is near-vacuous: the builder round-robins `model_specs[(global_index +
+> candidate_index) % len(model_specs)]`, so per-index balance is a tautology of the design.
+> builder round-robins `model_specs[(global_index * CANDIDATES_PER_ITEM + candidate_index) %
+> len(model_specs)]` (`experiment_5136_receipt_structured_pool_v2_v471.py:530`), so per-index
+> balance is a tautology of the design; worse, that `spec` is used ONLY to stamp the receipt —
+> the candidate string comes from `_candidate_raw(...)` on the line below it, and no model is
+> called.
+> **The decisive evidence is in source.** `_candidate_raw` is **byte-identical** between
+> `python/carnot/experiment_5125_structured_reasoning_pool_v470.py` and
+> `python/carnot/experiment_5136_receipt_structured_pool_v2_v471.py`
+> (1050 chars, `sha256 aa15d8ee60300a8f...`), keyed on `global_index % 17` / `% 16` and on the
+> deterministic index predicates `_baseline_is_correct` / `_has_oracle_candidate`; candidate
+> indices 2 and 3 are wrong BY CONSTRUCTION; and NEITHER module imports any LLM, torch,
+> transformers, or HTTP substrate. This is not "the same class as" the retracted `task_index % 4`
+> signature — it IS that signature, sitting in the repo under two `inference_substrate:
+> local_sota_gguf_generation_*` declarations.
+>
+> **C-8. Correct the exp5786 SC mechanism (this strengthens the C2 FAIL, do not drop it).**
+> `SC=0.75` is not "a 3-way vote containing a corpse": it is exactly the accuracy of the first
+> parseable candidate in file order, and `gemma-4-31B` is first in **all 360** fixtures (measured:
+> first-parseable accuracy 270/360 = 0.7500, identical to 31B's own accuracy). 80 fixtures are
+> all-distinct-label and were decided purely by `_sc_and_oracle`'s first-seen tie-break; with only
+> 2 live arms plurality can never break a disagreement. Annotate the field as order-determined.
+> Checked and NOT true elsewhere: MMLU-Pro has 1/40 such fixtures, MuSR 0/200 — this is
+> exp5786-specific.
+>
+> **C-9. The TrajSelector power figure needs a formula, not a citation — the citation already
+> exists.** A reviewer objected that "TrajSelector appears nowhere in the repo except the two
+> lines this report wrote"; that is **REFUTED** — it appears 7 times in this file at HEAD, with
+> `arXiv:2510.16449` and the "+4.61% over majority voting at Best-of-32" figure, plus in
+> `_bmad/architecture.md` and `ops/changelog.md`. What does NOT reproduce is `n >= 866`: under
+> standard forms for delta=0.0461 at alpha=.05/power=.80 I get ~924 (one-sample vs 0.5),
+> 370-1478 (McNemar, depending on discordance rate), and 3468-3684 (two independent proportions).
+> Supply the formula and its assumed discordance/baseline, or replace the number with the range —
+> a power claim is the one place an unsourced figure is most load-bearing. Note also that
+> TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
 ### 2026-08-03 (MANDATORY-NEXT-MILESTONE, outer-loop allocation correction): ARC drops to its FLOOR of one slot; PHASE D retakes the majority — and the first Phase D experiment is NOT any of the three constructions the program's own prose still names
 
 **Read this before drafting the next roadmap. It changes the allocation AND it corrects a stale

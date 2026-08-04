@@ -1,0 +1,320 @@
+{
+  "checksum_covers": "all fields except duration_s and reproducibility_checksum itself",
+  "domains": [
+    {
+      "chance_floor": 0.1,
+      "chance_floor_note": "10-way MCQ; gold letters span A-J",
+      "construction_artifact": false,
+      "criterion_1_generator_above_chance": false,
+      "criterion_2_sc_not_saturated": true,
+      "criterion_3_oracle_distinct": true,
+      "generator_above_chance": false,
+      "headroom_gap_oracle_minus_sc": 0.375,
+      "independence_prediction": 0.551205,
+      "k_max": 6,
+      "k_min": 6,
+      "label": "mmlu_pro_5shot",
+      "n_candidates": 240,
+      "n_questions": 40,
+      "notes": "the REFUTED proposal; re-measured as the control",
+      "oracle_at_k": 0.5,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": false,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.125,
+      "sc_accuracy": 0.125,
+      "z_vs_chance": 1.291
+    },
+    {
+      "chance_floor": 0.1,
+      "chance_floor_note": "10-way MCQ; gold letters span A-J",
+      "construction_artifact": false,
+      "criterion_1_generator_above_chance": false,
+      "criterion_2_sc_not_saturated": true,
+      "criterion_3_oracle_distinct": true,
+      "generator_above_chance": false,
+      "headroom_gap_oracle_minus_sc": 0.225,
+      "independence_prediction": 0.406708,
+      "k_max": 6,
+      "k_min": 6,
+      "label": "mmlu_pro_zeroshot",
+      "n_candidates": 240,
+      "n_questions": 40,
+      "notes": "zero-shot sibling pool",
+      "oracle_at_k": 0.3,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": false,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.083333,
+      "sc_accuracy": 0.075,
+      "z_vs_chance": -0.8607
+    },
+    {
+      "chance_floor": 0.5,
+      "chance_floor_note": "BINARY choice ([2] options); floor is a coin flip",
+      "construction_artifact": false,
+      "criterion_1_generator_above_chance": false,
+      "criterion_2_sc_not_saturated": true,
+      "criterion_3_oracle_distinct": true,
+      "generator_above_chance": true,
+      "headroom_gap_oracle_minus_sc": 0.37,
+      "independence_prediction": 0.977344,
+      "k_max": 8,
+      "k_min": 5,
+      "label": "musr_murder_mysteries",
+      "n_candidates": 1525,
+      "n_questions": 200,
+      "notes": "the only genuine multi-sample single-model pool in the repo",
+      "oracle_at_k": 0.93,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": false,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.531148,
+      "questions_with_both_answers_present": 163,
+      "sc_accuracy": 0.56,
+      "scoring_model": [
+        "gemma-4-12B-it-GGUF"
+      ],
+      "z_vs_chance": 2.4327
+    },
+    {
+      "chance_floor": 0.050986019181616514,
+      "chance_floor_note": "ENUMERATED answer space per instance, mean over 96 tasks",
+      "construction_artifact": true,
+      "criterion_1_generator_above_chance": true,
+      "criterion_2_sc_not_saturated": false,
+      "criterion_3_oracle_distinct": true,
+      "families": {
+        "code_property": 24,
+        "graph_coloring": 24,
+        "knights_knaves": 24,
+        "travel_budget": 24
+      },
+      "generator_above_chance": true,
+      "headroom_gap_oracle_minus_sc": 0.666667,
+      "independence_prediction": 0.627471,
+      "k_max": 4,
+      "k_min": 4,
+      "label": "structured_reasoning_exp5125",
+      "n_candidates": 384,
+      "n_questions": 96,
+      "notes": "executable validator exists, so a LEARNED verifier is oracle-distinct",
+      "oracle_at_k": 0.875,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": true,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.21875,
+      "sc_accuracy": 0.208333,
+      "structural_tells": {
+        "construction_artifact_suspected": true,
+        "correct_candidate_index_distribution": {
+          "0": 28,
+          "1": 56
+        },
+        "distinct_correctness_patterns": {
+          "(False, False, False, False)": 12,
+          "(False, True, False, False)": 56,
+          "(True, False, False, False)": 28
+        },
+        "indices_never_correct": [
+          2,
+          3
+        ],
+        "per_index_model_counts_perfectly_balanced": true
+      },
+      "z_vs_chance": 14.9452
+    },
+    {
+      "chance_floor": 0.04247338639593569,
+      "chance_floor_note": "ENUMERATED answer space per instance, mean over 120 tasks",
+      "construction_artifact": true,
+      "criterion_1_generator_above_chance": true,
+      "criterion_2_sc_not_saturated": false,
+      "criterion_3_oracle_distinct": true,
+      "families": {
+        "code_property": 24,
+        "graph_coloring": 24,
+        "knights_knaves": 24,
+        "or_allocation": 24,
+        "travel_budget": 24
+      },
+      "generator_above_chance": true,
+      "headroom_gap_oracle_minus_sc": 0.658333,
+      "independence_prediction": 0.627471,
+      "k_max": 4,
+      "k_min": 4,
+      "label": "structured_reasoning_exp5136",
+      "n_candidates": 480,
+      "n_questions": 120,
+      "notes": "executable validator exists, so a LEARNED verifier is oracle-distinct",
+      "oracle_at_k": 0.875,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": true,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.21875,
+      "sc_accuracy": 0.216667,
+      "structural_tells": {
+        "construction_artifact_suspected": true,
+        "correct_candidate_index_distribution": {
+          "0": 35,
+          "1": 70
+        },
+        "distinct_correctness_patterns": {
+          "(False, False, False, False)": 15,
+          "(False, True, False, False)": 70,
+          "(True, False, False, False)": 35
+        },
+        "indices_never_correct": [
+          2,
+          3
+        ],
+        "per_index_model_counts_perfectly_balanced": true
+      },
+      "z_vs_chance": 19.1506
+    },
+    {
+      "best_single_model": "gemma-4-26B-A4B-it-GGUF",
+      "best_single_model_accuracy": 0.927778,
+      "chance_floor": 0.25,
+      "chance_floor_note": "4-way A/B/C/D exact label",
+      "construction_artifact": false,
+      "criterion_1_generator_above_chance": true,
+      "criterion_2_sc_not_saturated": false,
+      "criterion_3_oracle_distinct": true,
+      "dead_arms": [
+        "Qwen3.6-35B-A3B-GGUF"
+      ],
+      "generator_above_chance": true,
+      "headroom_gap_oracle_minus_sc": 0.188889,
+      "independence_prediction": 0.914385,
+      "is_multi_sample": false,
+      "k_max": 3,
+      "k_min": 3,
+      "label": "sota_constraint_stream_exp5786",
+      "multi_sample_note": "K=1 sample per MODEL, so genuine self-consistency is NOT measurable from this corpus; the reported sc_accuracy is a 3-way ensemble vote containing a dead arm and is NOT the honest baseline -- selectable_gain_over_best_single_model is.",
+      "n_candidates": 1080,
+      "n_questions": 360,
+      "notes": "REAL generations (raw text, truncations, per-model variation)",
+      "oracle_at_k": 0.938889,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": true,
+      "oracle_over_live_arms": 0.938889,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.559259,
+      "per_family": {
+        "finite_domain_scheduling": {
+          "gain_over_best_single": 0.0,
+          "n": 120,
+          "oracle": 1.0,
+          "per_model_accuracy": {
+            "gemma-4-26B-A4B-it-GGUF": 1.0,
+            "gemma-4-31B-it-GGUF": 0.875
+          }
+        },
+        "logic_grid": {
+          "gain_over_best_single": 0.0,
+          "n": 120,
+          "oracle": 0.883333,
+          "per_model_accuracy": {
+            "gemma-4-26B-A4B-it-GGUF": 0.883333,
+            "gemma-4-31B-it-GGUF": 0.875
+          }
+        },
+        "typed_finite_choice": {
+          "gain_over_best_single": 0.033333,
+          "n": 120,
+          "oracle": 0.933333,
+          "per_model_accuracy": {
+            "gemma-4-26B-A4B-it-GGUF": 0.9,
+            "gemma-4-31B-it-GGUF": 0.5
+          }
+        }
+      },
+      "per_model": {
+        "Qwen3.6-35B-A3B-GGUF": {
+          "accuracy": 0.0,
+          "finish_reason": {
+            "length": 358,
+            "stop": 2
+          },
+          "n": 360,
+          "parse_rate": 0.0,
+          "parseable": 0
+        },
+        "gemma-4-26B-A4B-it-GGUF": {
+          "accuracy": 0.927778,
+          "finish_reason": {
+            "stop": 360
+          },
+          "n": 360,
+          "parse_rate": 1.0,
+          "parseable": 360
+        },
+        "gemma-4-31B-it-GGUF": {
+          "accuracy": 0.75,
+          "finish_reason": {
+            "stop": 360
+          },
+          "n": 360,
+          "parse_rate": 1.0,
+          "parseable": 360
+        }
+      },
+      "sc_accuracy": 0.75,
+      "selectable_gain_instances": 4,
+      "selectable_gain_over_best_single_model": 0.011111,
+      "z_vs_chance": 23.4711
+    },
+    {
+      "chance_floor": 0.25,
+      "chance_floor_note": "4-way A/B/C/D exact label",
+      "construction_artifact": false,
+      "criterion_1_generator_above_chance": false,
+      "criterion_2_sc_not_saturated": true,
+      "criterion_3_oracle_distinct": true,
+      "generator_above_chance": false,
+      "headroom_gap_oracle_minus_sc": 0.083333,
+      "independence_prediction": 0.617818,
+      "k_max": 5,
+      "k_min": 5,
+      "label": "sota_answer_channel_canary_exp5799",
+      "n_candidates": 120,
+      "n_questions": 24,
+      "notes": "answer-channel canary",
+      "oracle_at_k": 0.833333,
+      "oracle_distinct": true,
+      "oracle_exceeds_independence": true,
+      "passes_all_three": false,
+      "per_candidate_accuracy": 0.175,
+      "sc_accuracy": 0.75,
+      "unparseable_fraction": 0.775,
+      "z_vs_chance": -1.8974
+    }
+  ],
+  "domains_passing_all_three": [],
+  "duration_s": 0.254543,
+  "experiment": "phase_d_domain_headroom_survey",
+  "experiment_id": "phase_d_domain_headroom_survey",
+  "honest_verdict": "complete_no_repo_corpus_passes_all_three_criteria_two_disjoint_failure_modes",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_domains_measured": 7,
+  "non_candidate_corpora": {
+    "constraintbench_exp5044": {
+      "disqualified_reason": "candidates are deterministic solver-backed variants with generation_model=None; there is no LLM generator, so criterion 1 is not even defined",
+      "generation_models": {
+        "None": 500
+      },
+      "generator_kinds": {
+        "deterministic_solver_backed_variant": 500
+      },
+      "n_rows": 100,
+      "passes_criteria": false
+    }
+  },
+  "random_seed": 20260803,
+  "reproducibility_checksum": "sha256:e48ca7f2447cd8559e102f8375bafd4637fbd79b110cebd61cc96b67d0299853",
+  "schema": "carnot.phase_d_domain_headroom_survey.v1",
+  "solve_provenance": "development_proxy",
+  "title": "Phase D domain survey: is there a headroom-present, oracle-distinct corpus in this repo?",
+  "verifier_is_oracle": false
+}
