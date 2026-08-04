@@ -15302,3 +15302,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-04 16:57 UTC | Checkpointed all-family exact-atom representation  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: 
 No output thi |
 | 2026-08-04 17:13 UTC | Checkpointed all-family exact-atom representation  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6102_sota_at |
+| 2026-08-04 17:32 UTC | Sealed low-chance Phase-D model-difficulty ladder | OK | 86 passed, 1 warning in 32.68s |
