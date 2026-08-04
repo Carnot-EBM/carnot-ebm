@@ -16466,3 +16466,4 @@ truncating the commands that followed them. Same root cause, twice, in one sessi
 - 2026-08-04: Dated evidence refresh after the V529 planner marker (✅ Complete) — honest_verdict=complete_null: no accepted post-V529 source deltas; references unchanged; results/experiment_6101_v529_source_delta_ingestion.json
 - 2026-08-04: Checkpointed all-family exact-atom representation corpus VRAM recovery (⚠️ Blocked) — honest_verdict=blocked: insufficient_free_vram; results/experiment_6102_sota_atom_corpus_vram_recovery.json
 - 2026-08-04: Checkpointed all-family exact-atom representation corpus VRAM recovery (⚠️ Blocked) — honest_verdict=blocked: insufficient_free_vram; results/experiment_6102_sota_atom_corpus_vram_recovery.json
+- 2026-08-04: Sealed low-chance Phase-D model-difficulty ladder (✅ Complete) — honest_verdict=complete_ready: phase_d_difficulty_ladder_fixture_sealed_no_llm; results/experiment_6103_phase_d_difficulty_ladder_fixture.json
