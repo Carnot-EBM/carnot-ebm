@@ -433,6 +433,75 @@ def acceptance_leak_probe(acceptance_rows: list, prompts: list[str]) -> dict[str
 
 
 # ==============================================================================================
+# CALLEE-SIDE DELIVERY WITNESS (added 2026-08-03, before the measurement was taken)
+# ==============================================================================================
+# WHY THE HARNESS'S OWN `prompt_contains_engine` IS NOT SUFFICIENT EVIDENCE. `run_cell` renders
+# `refactor_prompt(...)` itself to record that flag, and then calls `prop.refactor(...)`, which
+# renders the prompt AGAIN. Two independent renders: the recorded flag describes the harness's
+# copy, not the bytes the generator received. That is the availability-vs-delivery substitution
+# this whole experiment exists to correct, so it must not be repeated in the instrument that
+# measures it -- and this session separately watched a shipped fix reach its call site 0 of 128
+# times while every surrounding indicator stayed green.
+#
+# So `generate` -- the deepest callee before the HTTP transport -- is wrapped once, and every
+# refactor round asserts delivery against THE PROMPT THAT WENT TO THE MODEL. The wrapper only
+# observes; it forwards to the real method unchanged.
+_LAST_GEN: dict[str, Any] = {}
+
+
+def install_generate_witness(prop: Any) -> None:
+    """Observe `generate` WITHOUT changing what it is called with.
+
+    The passthrough is `*args, **kwargs` DELIBERATELY, and this is not defensive style. A first
+    version of this wrapper spelled out `(prompt, required, tries, codeonly_eligible)` -- which
+    is the signature `refactor` happens to use -- and would therefore have SILENTLY DROPPED
+    `validate=` and `engine_transitions=`, both of which the shipped `induce` passes. That is the
+    instrument altering the very round-0 induction the two refinement arms fork from: not a
+    measurement bug at the edges, a corrupted shared baseline. Caught before the run generated
+    anything, and recorded here so the shape is not reintroduced. An observer must be transparent.
+    """
+    real = prop.generate
+
+    def witnessed(prompt, *args, **kwargs):
+        _LAST_GEN.clear()
+        _LAST_GEN["prompt"] = prompt
+        _LAST_GEN["chars"] = len(prompt)
+        _LAST_GEN["codeonly_eligible"] = bool(kwargs.get("codeonly_eligible", False))
+        return real(prompt, *args, **kwargs)
+
+    prop.generate = witnessed
+
+
+def delivery_witness(engine_source: str) -> dict[str, Any]:
+    """Did THIS engine's own source reach the prompt the generator was handed?
+
+    Counts only SUBSTANTIVE lines -- non-blank, longer than 8 characters after stripping -- so
+    the template boilerplate the shipped prompt already contains (`import numpy as np`,
+    `def engine(grid, action, data):`) cannot masquerade as delivery. That distinction is not
+    theoretical: the pre-flight probe measured exactly 2 such boilerplate matches with the flag
+    OFF versus 9 real source lines with it ON.
+    """
+    prompt = _LAST_GEN.get("prompt")
+    if prompt is None:
+        return {"generator_called": False}
+    tmpl = ("import numpy as np", "def engine(grid, action, data):", "def is_level_complete(grid):")
+    subst = [
+        ln
+        for ln in engine_source.splitlines()
+        if ln.strip() and len(ln.strip()) > 8 and ln.strip() not in tmpl
+    ]
+    delivered = [ln for ln in subst if ln in prompt]
+    return {
+        "generator_called": True,
+        "prompt_chars_at_generator": _LAST_GEN.get("chars"),
+        "engine_header_at_generator": "THE CURRENT ENGINE YOU ARE FIXING" in prompt,
+        "n_substantive_engine_lines": len(subst),
+        "n_substantive_engine_lines_delivered": len(delivered),
+        "engine_delivered": bool(subst) and len(delivered) >= max(1, len(subst) // 2),
+    }
+
+
+# ==============================================================================================
 # the cell
 # ==============================================================================================
 def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[str, Any]:
@@ -538,10 +607,19 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
                 rr["prompt_chars"] = len(rendered)
                 rr["prompt_contains_engine"] = bool("THE CURRENT ENGINE YOU ARE FIXING" in rendered)
                 rr["n_mismatches_available"] = len(rv.mismatches)
+                # The engine ON DISK at this instant is what `refactor_prompt` will read, so it
+                # is the exact text whose delivery the witness must check.
+                try:
+                    src_now = wm_path.read_text()
+                except OSError:
+                    src_now = ""
+                _LAST_GEN.clear()
                 t_r = time.time()
                 ok, msg = prop.refactor(game, vr_obj)
                 rr["refactor_ok"] = bool(ok)
                 rr["wall_s"] = round(time.time() - t_r, 1)
+                # DELIVERY, read at the callee -- not from the harness's own render above.
+                rr["delivery_witness"] = delivery_witness(src_now)
                 if msg:
                     rr["message"] = str(msg)[:200]
                 try:
@@ -579,6 +657,14 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
             "n_rounds_run": len(arm_rows),
             "n_engine_loaded": sum(1 for x in arm_rows if x.get("engine_loaded")),
             "n_prompts_with_engine": sum(1 for x in arm_rows if x.get("prompt_contains_engine")),
+            # The callee-side count. If this disagrees with `n_prompts_with_engine` above, the
+            # harness's render and the model's prompt diverged and the cell is not trustworthy.
+            "n_generator_prompts_with_engine": sum(
+                1 for x in arm_rows if (x.get("delivery_witness") or {}).get("engine_delivered")
+            ),
+            "n_generator_calls_witnessed": sum(
+                1 for x in arm_rows if (x.get("delivery_witness") or {}).get("generator_called")
+            ),
             "best_change_accuracy": best_ca,
             "best_change_fidelity": best_cf,
             "best_cell_recall": best_cr,
@@ -775,6 +861,9 @@ def main() -> int:
             # retrying it is not arm-favouring. The shipped default is tries=3.
             prop.tries = int(os.environ.get("CARNOT_6091_TRIES") or "2")
             os.environ["CARNOT_ARC_CODEONLY_INDUCE"] = "1"
+            # Observe the deepest callee before transport, so every refactor round can prove the
+            # engine reached the MODEL's prompt rather than the harness's copy of it.
+            install_generate_witness(prop)
 
             for i, (game, trial) in enumerate(pending, 1):
                 if time.time() - t_start > MAX_WALL_S:
