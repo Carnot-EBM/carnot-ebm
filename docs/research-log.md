@@ -6039,3 +6039,9 @@ The critical path for milestone .250:
 - theme: gated multi-model atomic-support evaluation concentrated the compute-bound operational tail
 - key result: honest operational limitation -- runtime ordering is known, but causal phase timing, task-correlated GPU efficiency, and evidence of concurrent multi-model runner selection are unavailable
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.07.528
+- exp_range: exp5963-exp5970 (gate-reference ID bounds only; the complete milestone range is not available)
+- theme: flagship feasibility concentrated compute runtime under coarse elapsed-time reconstruction
+- key result: the runtime ledger isolates one long compute path, while the available monitoring neither shows task-conditioned GPU idle nor resolves concurrent model scheduling
+- acceptance: no data available this milestone
