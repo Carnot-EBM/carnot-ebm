@@ -1,0 +1,24 @@
+{
+  "experiment": 6118,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-04",
+  "started_at": "2026-08-04T21:24:51.026122+00:00",
+  "finished_at": "2026-08-04T21:24:51.026122+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated matching-base per-layer hidden-state surface qualification",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_headroom_ready_score (upstream artifact not found for task id 'exp6117-phase-d-headroom-audit')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6117-phase-d-headroom-audit",
+      "artifact_field": "phase_d_headroom_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp6117-phase-d-headroom-audit'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
