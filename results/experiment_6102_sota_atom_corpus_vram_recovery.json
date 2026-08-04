@@ -1,6 +1,6 @@
 {
   "all_family_corpus_ready_score": 0.0,
-  "duration_s": 52.653721,
+  "duration_s": 94.852748,
   "experiment_id": "experiment_6102_sota_atom_corpus_vram_recovery",
   "field_provenance": {
     "all_family_corpus_ready_score": {
@@ -372,21 +372,21 @@
   "immutable_fixture_and_partial_shard_hashes": {
     "current_exp6102_row_shards_before_resume": {
       "unsloth/Qwen3.6-35B-A3B-GGUF": {
-        "exists": false,
+        "exists": true,
         "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6102_sota_atom_corpus_vram_recovery.qwen3.6-35b-a3b.rows.jsonl",
-        "sha256": "",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "size_bytes": 0
       },
       "unsloth/gemma-4-26B-A4B-it-GGUF": {
-        "exists": false,
+        "exists": true,
         "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6102_sota_atom_corpus_vram_recovery.gemma-4-26b-a4b-it.rows.jsonl",
-        "sha256": "",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "size_bytes": 0
       },
       "unsloth/gemma-4-31B-it-GGUF": {
-        "exists": false,
+        "exists": true,
         "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6102_sota_atom_corpus_vram_recovery.gemma-4-31b-it.rows.jsonl",
-        "sha256": "",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         "size_bytes": 0
       }
     },
@@ -441,7 +441,7 @@
     },
     "prior_exp5964_rows_logically_quarantined": true,
     "prior_exp5964_rows_mixed_into_exp6102": false,
-    "receipt_hash": "sha256:257ad037e2f970e68907a8be50695de89df1c52642bf73beaa52136a57e5098d",
+    "receipt_hash": "sha256:d6ebcf13d77c47d2862d6849eb96b0868545048bc73c50510df862657f213fa7",
     "schema": "carnot.experiment_6102.sota_atom_corpus_vram_recovery.v1.immutable_fixture_and_partial_shard_hashes"
   },
   "inference_substrate": "live_local_sota_gguf_cuda_representation_extraction",
@@ -703,11 +703,11 @@
       "devices": [
         {
           "index": 0,
-          "memory_free_mb": 23519,
+          "memory_free_mb": 23258,
           "memory_total_mb": 24576,
-          "memory_used_mb": 605,
+          "memory_used_mb": 866,
           "name": "NVIDIA GeForce RTX 3090",
-          "temperature_c": 51
+          "temperature_c": 53
         },
         {
           "index": 1,
@@ -715,7 +715,7 @@
           "memory_total_mb": 24576,
           "memory_used_mb": 266,
           "name": "NVIDIA GeForce RTX 3090",
-          "temperature_c": 52
+          "temperature_c": 46
         }
       ],
       "gpu_count": 2,
@@ -752,19 +752,19 @@
     },
     "resources": {
       "disk": {
-        "available_mb": 1137225,
+        "available_mb": 1137820,
         "ok": true,
         "required_mb": 10240
       },
       "memory": {
-        "available_mb": 102188,
+        "available_mb": 86934,
         "ok": true,
         "required_mb": 16384
       },
       "swap": {
-        "free_mb": 136476,
+        "free_mb": 123331,
         "total_mb": 147455,
-        "used_mb": 10979
+        "used_mb": 24124
       }
     },
     "run_date": "20260804",
@@ -776,7 +776,7 @@
             "nvcc",
             "--version"
           ],
-          "duration_s": 0.019185,
+          "duration_s": 0.018013,
           "ok": true,
           "returncode": 0,
           "stderr": "",
@@ -784,15 +784,15 @@
         },
         "nvidia_smi": {
           "returncode": 0,
-          "stdout_sha256": "sha256:a6eceb3fee2ead0343b8f0b94cb166be45fd98a2ad98fd69c9ffb0b80642752d"
+          "stdout_sha256": "sha256:fa926209271b689cbdde86017b84bbe7d8546530d6b2bba96685f0d91064c310"
         },
         "python": "3.12.13"
       },
       "task_owned_pid_leases": {
         "child_pids": [],
-        "current_pid": 3887323,
+        "current_pid": 3941547,
         "lease_scope": "task_owned_processes_only",
-        "parent_pid": 3881343
+        "parent_pid": 3941546
       }
     },
     "schema": "carnot.experiment_6102.sota_atom_corpus_vram_recovery.v1.preconditions",
@@ -832,7 +832,7 @@
       },
       "ops/changelog.md": {
         "exists": true,
-        "sha256": "sha256:b02719de085dbc8e0406c972b01682640c444908fd78e83492a847b61932cb0d"
+        "sha256": "sha256:18514c9b6921a1b89b4b8bea7069966f768dcef7432cd2de174a9ffc71a28bdd"
       },
       "ops/exclusion_manifest.yaml": {
         "exists": true,
@@ -969,13 +969,13 @@
     },
     "test_fold_statistics_used": false
   },
-  "reproducibility_checksum": "sha256:b8af08fd77ea2700a22e1a8994b11bb355cfaa94cb62d2d4d9da587fa32c71d2",
+  "reproducibility_checksum": "sha256:65c7156616d4d3a630282b3f0f548182fd16eac70b4f7af81306754e232728db",
   "resume_accept_reject_matrix": {
     "accepted_count": 0,
     "families": {
       "unsloth/Qwen3.6-35B-A3B-GGUF": {
         "decision": "missing",
-        "reason": "missing_row_shard",
+        "reason": "empty_or_missing_row_shard",
         "receipt": {},
         "required_equalities": [
           "fixture_hash",
@@ -991,7 +991,7 @@
       },
       "unsloth/gemma-4-26B-A4B-it-GGUF": {
         "decision": "missing",
-        "reason": "missing_row_shard",
+        "reason": "empty_or_missing_row_shard",
         "receipt": {},
         "required_equalities": [
           "fixture_hash",
@@ -1007,7 +1007,7 @@
       },
       "unsloth/gemma-4-31B-it-GGUF": {
         "decision": "missing",
-        "reason": "missing_row_shard",
+        "reason": "empty_or_missing_row_shard",
         "receipt": {},
         "required_equalities": [
           "fixture_hash",
@@ -1123,11 +1123,11 @@
       "devices": [
         {
           "index": 0,
-          "memory_free_mb": 23519,
+          "memory_free_mb": 23258,
           "memory_total_mb": 24576,
-          "memory_used_mb": 605,
+          "memory_used_mb": 866,
           "name": "NVIDIA GeForce RTX 3090",
-          "temperature_c": 51
+          "temperature_c": 53
         },
         {
           "index": 1,
@@ -1135,7 +1135,7 @@
           "memory_total_mb": 24576,
           "memory_used_mb": 266,
           "name": "NVIDIA GeForce RTX 3090",
-          "temperature_c": 52
+          "temperature_c": 46
         }
       ],
       "gpu_count": 2,
@@ -1164,19 +1164,19 @@
     },
     "resources": {
       "disk": {
-        "available_mb": 1137225,
+        "available_mb": 1137820,
         "ok": true,
         "required_mb": 10240
       },
       "memory": {
-        "available_mb": 102188,
+        "available_mb": 86934,
         "ok": true,
         "required_mb": 16384
       },
       "swap": {
-        "free_mb": 136476,
+        "free_mb": 123331,
         "total_mb": 147455,
-        "used_mb": 10979
+        "used_mb": 24124
       }
     },
     "runtime": {
@@ -1187,7 +1187,7 @@
             "nvcc",
             "--version"
           ],
-          "duration_s": 0.019185,
+          "duration_s": 0.018013,
           "ok": true,
           "returncode": 0,
           "stderr": "",
@@ -1195,15 +1195,15 @@
         },
         "nvidia_smi": {
           "returncode": 0,
-          "stdout_sha256": "sha256:a6eceb3fee2ead0343b8f0b94cb166be45fd98a2ad98fd69c9ffb0b80642752d"
+          "stdout_sha256": "sha256:fa926209271b689cbdde86017b84bbe7d8546530d6b2bba96685f0d91064c310"
         },
         "python": "3.12.13"
       },
       "task_owned_pid_leases": {
         "child_pids": [],
-        "current_pid": 3887323,
+        "current_pid": 3941547,
         "lease_scope": "task_owned_processes_only",
-        "parent_pid": 3881343
+        "parent_pid": 3941546
       }
     },
     "schema": "carnot.experiment_6102.sota_atom_corpus_vram_recovery.v1.runtime_cuda_vram_thermal_and_pid_lease_receipts",
