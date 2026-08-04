@@ -587,6 +587,26 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
     row["induce_wall_s"] = round(time.time() - t_ind, 1)
     if induce_msg:
         row["induce_message"] = str(induce_msg)[:200]
+    # PERSIST WHAT THE MODEL ACTUALLY WROTE WHEN A CELL FAILS (added 2026-08-04).
+    #
+    # The 2026-08-03 run lost all 26 cells to `[HIT n_predict=4096 OUTPUT LIMIT before
+    # completing]` and recorded only that string, so the failure was UNDIAGNOSABLE after the
+    # fact -- the generation itself was discarded. Two very different faults produce that exact
+    # message once the shared-pool case is excluded (which `_limit_diagnostic` already does, via
+    # a different message):
+    #   * the engine genuinely needs more room than the budget allows  -> raise max_tokens;
+    #   * the model fell into a REPETITION LOOP and emitted the same line until the budget was
+    #     exhausted -> raising max_tokens only buys a longer loop.
+    # Both exhaust the budget, so `generated_tokens` alone cannot separate them. The TAIL of the
+    # completion can, at a glance. The proposer already records both on itself; nothing here was
+    # measured, only kept.
+    row["generated_tokens"] = getattr(prop, "last_generated_tokens", None)
+    row["stop_type"] = getattr(prop, "last_stop_type", None)
+    row["prompt_truncated"] = getattr(prop, "last_prompt_truncated", None)
+    if not induce_ok:
+        raw = str(getattr(prop, "last_raw_completion", "") or "")
+        row["raw_completion_chars"] = len(raw)
+        row["raw_completion_tail"] = raw[-1200:]
 
     engine0 = None
     source0 = ""
