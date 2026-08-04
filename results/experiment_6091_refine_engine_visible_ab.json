@@ -1,133 +1,82 @@
 {
  "experiment": "experiment_6091_refine_engine_visible_ab",
  "spec": "REQ-ARC-WMTE-6091",
- "run_date": "2026-08-03T21:35:47Z",
- "inference_substrate": "aggregation_from_upstream_artifacts",
- "solve_provenance": "development_proxy",
- "verifier_is_oracle": false,
- "random_seed": 6091,
- "instrument_defects_fixed": {
-  "D1_refactor_prompt_lacked_engine": {
-   "reproduced": true,
-   "games_measured": 13,
-   "total_substantive_engine_lines": 454,
-   "lines_delivered_to_prompt": 0,
-   "delivered_fraction": 0.0,
-   "fix": "CARNOT_ARC_REFACTOR_SHOW_ENGINE (default OFF) splices the current engine source into refactor_prompt",
-   "tests": "tests/python/test_arc_refactor_show_engine_20260803.py (7 tests, both directions; OFF byte-identical to shipped)",
-   "mutation_proven": true,
-   "mutation_evidence": "deleting the `{engine_block}` splice from the prompt f-string turns 3 of 7 tests red; source restored and re-verified green"
-  },
-  "D2_ungradeable_acceptance_cells": {
-   "reproduced": true,
-   "undecidable_under_shipped_split": [
-    "sp80",
-    "r11l",
-    "vc33",
-    "ft09"
-   ],
-   "n_cells_ungradeable_of_39": 12,
-   "fraction_ungradeable": 0.3077,
-   "fix": "CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1 (already shipped, default OFF) -- its grow loop recovers sp80 and ft09",
-   "still_undecidable_and_excluded_explicitly": [
-    "r11l",
-    "vc33"
-   ],
-   "oracle_control_non_vacuous": true
-  }
- },
- "live_ab_blocked": {
-  "summary": "Every llama-server started on this host during the session was SIGINT-killed. Zero cells were produced whose generator substrate could be vouched for end to end.",
-  "n_cells_attempted": 2,
-  "n_cells_substrate_cuda_throughout": 0,
-  "cells": [
-   {
-    "game": "tu93",
-    "trial": 0,
-    "wall_s": 445.5,
-    "induce_ok": false,
-    "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')",
-    "substrate_cuda_throughout": false
-   },
-   {
-    "game": "tr87",
-    "trial": 0,
-    "wall_s": 102.4,
-    "induce_ok": false,
-    "induce_message": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')",
-    "substrate_cuda_throughout": false
-   }
-  ],
-  "server_log_evidence": {
-   "present": true,
-   "n_clean_exit_records": 4,
-   "n_second_interrupt_records": 1,
-   "server_lifetimes_s": [
-    369,
-    17,
-    10,
-    53
-   ],
-   "n_oom_or_abort_records": 0,
-   "peak_decode_tok_s": 34.75
-  },
-  "standalone_control": {
-   "what": "a llama-server launched from a plain shell with NO harness attached, to separate an environmental reaper from a harness-induced kill",
-   "evidence": {
-    "present": true,
-    "n_clean_exit_records": 1,
-    "n_second_interrupt_records": 0,
-    "server_lifetimes_s": [
-     22
-    ],
-    "n_oom_or_abort_records": 0,
-    "peak_decode_tok_s": 0.0
-   },
-   "verdict": "it died too, so the kill is NOT harness-specific",
-   "correction_recorded": "an earlier reading of this control claimed it SURVIVED 541s. That was wrong: the liveness probe was `pgrep -f \"port 8981\"`, which matched the probe's OWN shell command line rather than the server. The server's own log shows it began exiting ~22s in. Recorded rather than quietly fixed -- it is the same self-matching-pattern error that made four `pkill -f` calls in this session kill their own shell (exit 144)."
-  },
-  "ruled_out_by_measurement": [
-   "host OOM -- free -g showed 94 GB available at the time of a kill",
-   "the 2-hour orphan janitor (~/.carnot/orphan-cleanup.sh) -- it targets python processes older than 2h and never matches llama-server",
-   "the CUDA capacity guard -- the server was already healthy and serving",
-   "llama.cpp slot arithmetic -- fixed independently with --parallel 1, and the kills continued after that fix",
-   "a name-matching reaper -- the binary was copied to a privately-named path (/tmp/carnot6091bin/cgen6091) and the kills continued",
-   "process-group signal delivery -- setsid on the parent AND os.setsid() in the server child both failed to stop it",
-   "an inheritable SIG_IGN -- llama.cpp installs its own console handler at startup, which overwrites it"
-  ],
-  "not_attempted_deliberately": "stopping the conductor. It is the operator's autonomous loop; killing it to free the machine is destructive and out of scope for this task.",
-  "what_this_is_NOT": "This is NOT a null result. A null would require cells whose substrate is vouched for. Reporting one here would be fabrication -- which is precisely what the per-cell substrate witness was built to make impossible."
- },
- "cited_upstream_artifacts": [
-  {
-   "experiment_id": "outer_loop_arc_refine_instrument_repro_20260803",
-   "path": "results/outer_loop_arc_refine_instrument_repro_20260803.json",
-   "sha256": "affa65a0c7bcc07c5bc2f6157638cb53e95b9a141197db67423a9ed3a32c52d9"
-  }
- ],
+ "run_date": "2026-08-04T04:50:40Z",
  "preconditions_checked": [
   {
    "resource": "gguf_cached::gemma-4-31B-it",
-   "available": true
+   "available": true,
+   "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-qat-GGUF/snapshots/43cc1aeb31adf47ec06a854507ce552cd9862e6f/gemma-4-31B-it-qat-UD-Q4_K_XL.gguf"
+  },
+  {
+   "resource": "llama_server_binary",
+   "available": true,
+   "detail": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
   },
   {
    "resource": "llama_cpp_gpu_offload",
-   "available": true
-  },
-  {
-   "resource": "llama_server_links_cuda",
-   "available": true
+   "available": true,
+   "detail": "llama_supports_gpu_offload()"
   },
   {
    "resource": "gpu1_idle",
-   "available": true
+   "available": true,
+   "detail": "used=4 MiB (< 2000)"
   },
   {
-   "resource": "generator_server_survives_a_cell",
-   "available": false
+   "resource": "llama_server_links_cuda",
+   "available": true,
+   "detail": "ldd"
   }
  ],
- "honest_verdict": "complete_instrument_defects_fixed_and_proven_live_ab_blocked_generator_reaped",
- "duration_s": 0.000993,
- "reproducibility_checksum": "d0cc8502d466a9de7fa7a287b68d8baa643e20fb40d961e42c17d4f0045a10ef"
+ "server": {
+  "n_ctx": 32768,
+  "port": 8977,
+  "gpu_index": 1,
+  "vram_before_mib": 4,
+  "vram_after_mib": 19158,
+  "vram_jump_mib": 19154
+ },
+ "config": {
+  "roster": [
+   "tu93",
+   "tr87",
+   "sp80",
+   "sb26",
+   "re86",
+   "g50t",
+   "r11l",
+   "cd82",
+   "ar25",
+   "lp85",
+   "sk48",
+   "vc33",
+   "ft09"
+  ],
+  "trials": [
+   0,
+   1
+  ],
+  "refactor_rounds": 2,
+  "budget_max_tokens": 4096,
+  "cegis_accept_split": "1",
+  "refactor_show_engine_treatment": "1",
+  "refactor_show_engine_control": "0"
+ },
+ "shard": "results/exp6091_refine_engine_visible_shard.jsonl",
+ "evidence_checksum_before": {
+  "results/arc_e3": "03ce66e564c4550e4eccdecc14f5b17eba2d0687e66d73e1366728cbb3e115ff",
+  "results/arc_logo_snapshot": "751a8c26f1b6c34db3228c057249dea363460039b22f8822ec52cb629d73382b",
+  "results/arc_e3_origin_fixtures": "8c376fe86c334a389b13aef956b7b8c15f0e94c8a3b7db8bd59ec1d7d6ca13f5"
+ },
+ "evidence_checksum_after": {
+  "results/arc_e3": "03ce66e564c4550e4eccdecc14f5b17eba2d0687e66d73e1366728cbb3e115ff",
+  "results/arc_logo_snapshot": "751a8c26f1b6c34db3228c057249dea363460039b22f8822ec52cb629d73382b",
+  "results/arc_e3_origin_fixtures": "8c376fe86c334a389b13aef956b7b8c15f0e94c8a3b7db8bd59ec1d7d6ca13f5"
+ },
+ "evidence_unchanged": true,
+ "duration_s": 9511.73,
+ "honest_verdict": "complete_shard_written_see_analysis",
+ "note": "Analysis + the stopping-rule verdict are produced by the sibling analyse script.",
+ "reproducibility_checksum": "0b95e4e4061b15cb483070aaabf967391000331187a22dd3bc80ee2a52ffc3d1"
 }

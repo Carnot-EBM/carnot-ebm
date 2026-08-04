@@ -547,3 +547,121 @@ game/hidden-state route
 retaining non-empty valid action/progress support, or the artifact emits an
 honest null/retirement; the registry and shipped flags remain unchanged and no
 solve credit is claimed.
+
+### REQ-ARC-CPTB-5971: Strip-Swap Battery Gate Replay and Game-Unit Inference
+
+Experiment 5971 SHALL replay the exact Exp5970 strip-swap sentinel gate before
+running the full battery. The replay SHALL verify the exact Exp5970 artifact
+path, artifact hash, `strip_swap_sentinel_ready_score == 1.0`, transform schema
+hash, condition definitions, 25-public-game manifest, four preregistered CPTB
+arms, five preregistered seeds, action and wall-time budgets, SDK/cache/resource
+availability, registry hash, shipped policy flags, and disabled source, BFS,
+adapter, registry-trajectory, hidden-prior, and per-game-calibration routes.
+If any precondition fails, Exp5971 SHALL emit a terminal
+`blocked_precondition:` artifact before full execution.
+
+Exp5971 SHALL freeze the game x arm x seed x condition matrix before outcomes.
+The matrix SHALL cover all 25 public games, the four arms `CTRL`, `FRONT`,
+`HUDO`, and `SHIP`, five seeds, and original plus strip-swap observation
+conditions. Every executed cell SHALL be driven through
+`make_carnot_agent` and `E3AgentPolicy` with fresh policy, environment, and
+cell-local state. GameAdapter, game source reads, offline BFS, per-game
+calibration/model lookup, registry trajectory replay, hidden priors, and
+denominator repair SHALL be forbidden. Missing, errored, generator-invalid, and
+completed cells SHALL remain explicit terminal states.
+
+Exp5971 SHALL record per-cell actions, observations, progress, levels, elapsed
+time, errors, generator validity, transform dose, HUD/frontier masks, policy
+decisions, and cell health. The artifact SHALL also expose per-game,
+per-seed, per-arm outcomes so no aggregate can hide game or seed reversals.
+
+Exp5971 SHALL analyze the shipped, HUD-removed, frontier-removed, and combined
+control arms under original and strip conditions as preregistered. Inference
+SHALL use the game as the replication unit. The artifact SHALL report per-game
+paired deltas, exact one-sided sign tests, game jackknife intervals, seed
+stability, and support p-floors. Seeds SHALL NOT be counted as new game
+support.
+
+Convention-dependence SHALL be interpretable only when the transform changes
+the HUD predicate, the original anchor is won by at least one matched arm, the
+transformed anchor retains valid support, and enough games discriminate the
+arms. If any pass region is empty, destroyed, one/two-game-only, or otherwise
+underpowered, Exp5971 SHALL refuse a forced positive or flag recommendation and
+SHALL emit `complete_null:` or `complete_underpowered:` with the exact empty or
+underpowered region. Exp5971 SHALL NOT recommend a shipped flag change, claim
+hidden-game transfer, credit a public solve, or mutate
+`ops/arc_solve_registry.yaml`.
+
+Experiment 5971 SHALL write
+`results/experiment_5971_arc_strip_swap_battery.json` with bare top-level
+fields `status`, `preconditions_checked`, `gate_replay_receipt`,
+`registry_precheck_and_hash`,
+`transform_condition_arm_game_seed_and_budget_seal`,
+`expected_completed_missing_errored_and_generator_invalid_cells`,
+`live_agent_path_and_disabled_escape_hatches`,
+`per_cell_actions_progress_levels_time_and_health`,
+`per_game_per_seed_per_arm_outcomes`,
+`static_and_behavioral_transform_dose`,
+`anchor_survival_and_discriminating_game_support`,
+`game_unit_sign_jackknife_intervals_and_p_floors`,
+`convention_dependence_decision`,
+`overall_hud_value_not_identified_receipt`,
+`shipped_flag_and_registry_immutability`, `no_solve_credit_receipt`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field provenance principles SHALL include:
+
+- `preconditions_checked`: principle "full execution starts only after the authentic sentinel gate and complete matrix/resources are verified."
+- `gate_replay_receipt`: principle "Exp5970 exact path/hash/value must satisfy `strip_swap_sentinel_ready_score == 1.0`."
+- `registry_precheck_and_hash`: principle "this is generalization measurement over already-cleared games, not a solve task."
+- `transform_condition_arm_game_seed_and_budget_seal`: principle "the entire factorial design is immutable before outcomes."
+- `expected_completed_missing_errored_and_generator_invalid_cells`: principle "every planned cell has one honest terminal state."
+- `live_agent_path_and_disabled_escape_hatches`: principle "only the reachable adapter-free live mechanism receives credit."
+- `per_cell_actions_progress_levels_time_and_health`: principle "accuracy, efficiency, and execution validity remain jointly visible."
+- `per_game_per_seed_per_arm_outcomes`: principle "no aggregate can hide game/seed direction reversals."
+- `static_and_behavioral_transform_dose`: principle "intended convention dose and actual policy effect are both measured."
+- `anchor_survival_and_discriminating_game_support`: principle "no verdict is allowed from a destroyed or empty pass region."
+- `game_unit_sign_jackknife_intervals_and_p_floors`: principle "games are the replication unit and exact attainable significance is explicit."
+- `convention_dependence_decision`: principle "state supported dependence, invariance, underpower, or uninterpretable null without forced inference."
+- `overall_hud_value_not_identified_receipt`: principle "this battery cannot establish overall lever value from inadequate game support."
+- `shipped_flag_and_registry_immutability`: principle "both remain byte-identical."
+- `no_solve_credit_receipt`: principle "incidental levels are measurements only and never registry credit."
+- `protected_files_unchanged`: principle "active roadmap, conductor, exclusions, history, and unrelated changes remain immutable."
+- `duration_s`: principle "use measured `offline_arcade_live_agent_runtime_self_discovery_no_llm`."
+- `inference_substrate`: principle "use measured `offline_arcade_live_agent_runtime_self_discovery_no_llm`."
+- `verifier_is_oracle`: principle "false; public-game convention evidence does not prove hidden transfer."
+- `missing_verifier_gaps`: principle "public-game convention evidence does not prove hidden transfer."
+- `field_provenance`: principle "artifact fields carry principle annotations tied to the preregistered safeguards."
+- `test_commands`: principle "record focused, coverage, full-suite, spec, E2E, adversarial, protected-file, and clutter checks."
+- `test_exit_codes`: principle "record the actual exit code for each verification command."
+- `reproducibility_checksum`: principle "hash measured rows and immutable precondition receipts, excluding wall-clock duration."
+- `honest_verdict`: principle "use `complete_positive:`, `complete_null:`, `complete_underpowered:`, or `blocked:`."
+
+### SCENARIO-ARC-CPTB-5971-GATE-REPLAY-MATRIX-SEAL
+
+**Given** Exp5970's ready artifact, the current registry, shipped flags, CPTB
+arm definitions, all 25 public games, and the five seeds
+**When** Exp5971 prepares execution
+**Then** it verifies the exact Exp5970 path/hash/value and freezes the full
+original-plus-strip matrix before any outcome row is read or written.
+
+### SCENARIO-ARC-CPTB-5971-LIVE-PATH-CELL-HEALTH
+
+**Given** a sealed cell for any game, arm, seed, and condition
+**When** the cell is executed
+**Then** the action loop goes through `make_carnot_agent` and `E3AgentPolicy`,
+records actions/progress/levels/time/HUD/frontier health, disables source,
+BFS, adapters, per-game priors, and hidden routes, and records one terminal
+state without fabricating replacement rows.
+
+### SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL
+
+**Given** complete or partially complete original and strip rows
+**When** Exp5971 analyzes convention transfer
+**Then** the game is the replication unit, exact sign-test p-floors and
+jackknife support are reported, anchor-destroyed or one/two-game-only regions
+force `complete_null:` or `complete_underpowered:`, and no flag flip, hidden
+transfer, public solve credit, or registry mutation is claimed.
