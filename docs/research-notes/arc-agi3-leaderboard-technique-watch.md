@@ -82,3 +82,9 @@ CHECK_TIMED_OUT
 
 ## 2026-08-03 13:41 UTC -- checked, nothing new
 
+## 2026-08-04 13:41 UTC -- NEW
+
+- **New top-five entrant:** **Andy liu** (`codinggodandyliu`, with `ichuqinggaove`) is **#2 at 1.69**. No ARC-AGI-3 code or writeup is publicly attached. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Andy’s notebooks](https://www.kaggle.com/codinggodandyliu/code), [teammate’s notebooks](https://www.kaggle.com/ichuqinggaove/code)
+
+- **New top-five entrant:** **GeniusYY** (`alexyy`) is **#3 at 1.64**. Their public notebooks are unrelated to ARC-AGI-3, and no solution writeup is attached. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/alexyy/code)
+

@@ -15296,3 +15296,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-04 10:57 UTC | Milestone 2026.08.529 activated | OK | 4 tasks queued |
 | 2026-08-04 12:20 UTC | Exact terminal-boundary handoff from .528 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ._receipt_flag |
 | 2026-08-04 13:00 UTC | Exact terminal-boundary handoff from .528 into .52 | OK | 86 passed, 1 warning in 6.74s |
+| 2026-08-04 14:23 UTC | Dated evidence refresh after the V529 planner mark | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ethod_to_task_ |
