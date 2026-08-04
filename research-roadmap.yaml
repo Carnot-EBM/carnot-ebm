@@ -1,27 +1,27 @@
-milestone: "2026.08.529"
-milestone_title: "Calibrated Phase-D Candidate Headroom, Internal-State Verification, and Reduced-Order Continuous Learning"
+milestone: "2026.08.530"
+milestone_title: "Authentic Phase-D Headroom, Reachable Internal-State Verification, and Outcome-Committed Self-Learning"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-  - id: exp6100-transition-v529
-    milestone: "2026.08.529"
-    title: "Exact terminal-boundary handoff from .528 into .529"
+  - id: exp6112-transition-v530
+    milestone: "2026.08.530"
+    title: "Exact terminal-boundary handoff from .529 into .530"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_6100_transition_v529.json
+    deliverable: results/experiment_6112_transition_v530.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 30
     estimated_wall_time_min: 120
     requires_gpu: false
-    operator_override: "2026-05-29 operator directive (standing): routine milestone transition — false-positive scope-match versus prior archive/activate tasks; this classifies the actually activated .528 identities and opens a collision-free .529 range."
+    operator_override: "2026-05-29 standing operator directive: routine exact-path milestone transitions recur by design; this transition classifies only the four actually activated .529 identities and allocates a fresh collision-free range."
     prior_failures:
       - experiment_id: exp5961-transition-v528
         verdict: "blocked: three conductor wall-clock attempts exhausted before the declared transition artifact was written"
-        addressed_by: "This handoff uses the existing exact-path transition helpers, treats the absent Exp5961 artifact as a first-class missing terminal class, lowers scope to twelve collision-checked IDs, and requires an artifact before any optional documentation reconciliation."
+        addressed_by: "The exact-path transition helper has since shipped in Exp6100; this attempt narrows to four activated identities, treats proposal-only IDs as unactivated, and requires an atomic artifact before optional reconciliation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Milestone 2026.07.528 is terminal with exactly thirteen activated identities, Exp5961-Exp5973. Exp5961 exhausted three conductor wall-clock attempts and its declared artifact is absent; Exp5962 was source-null; Exp5963, Exp5967-Exp5970 were ready; Exp5964 was blocked on free VRAM; Exp5965 and Exp5966 were conductor-gate-blocked; Exp5971 was complete-null; Exp5972 established only a wall-clock feasibility envelope; and Exp5973 reconciled the milestone with blocks. The next CalVer milestone is 2026.08.529 and reserves Exp6100-Exp6111. Today is {date}.
+      Milestone 2026.08.529 is terminal with exactly four conductor-activated identities, Exp6100-Exp6103. Exp6100 completed the exact transition; Exp6101 was source-null; Exp6102 blocked on insufficient free VRAM with `retirement_triggered=true`; Exp6103 sealed a ready 600-calibration/360-held Phase-D ladder. Exp6104-Exp6111 appeared only in a proposal and were never activated, so they are neither completed experiments nor missing declared artifacts. The next CalVer milestone is 2026.08.530 and reserves Exp6112-Exp6123. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -32,61 +32,55 @@ tasks:
       - {project_root}/ops/conductor-log.md
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_5962_v528_source_delta_ingestion.json
-      - {project_root}/results/experiment_5963_exact_atom_pair_fixture.json
-      - {project_root}/results/experiment_5964_sota_atom_compatibility_corpus.json
-      - {project_root}/results/experiment_5967_delayed_commit_event_fixture.json
-      - {project_root}/results/experiment_5968_delayed_commit_csl_prospective.json
-      - {project_root}/results/experiment_5969_csl_poison_drift_abi_audit.json
-      - {project_root}/results/experiment_5973_v528_capstone_reconciliation.json
+      - {project_root}/results/experiment_6100_transition_v529.json
+      - {project_root}/results/experiment_6101_v529_source_delta_ingestion.json
+      - {project_root}/results/experiment_6102_sota_atom_corpus_vram_recovery.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
       - {project_root}/scripts/evidence_index_collision_preflight.py
       - {project_root}/scripts/adversarial_verify.py
       - {project_root}/scripts/in_process_doc_reconcile.py
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Archive exactly the thirteen conductor-activated `.528` identities by declared `(task_id, deliverable)`; preserve Exp5961 as a missing declared artifact and Exp5965/5966 as conductor gate blocks; append `.528` to research-complete.yaml at most once if its exact block is absent; prove Exp6100-Exp6111 collision-free; and write results/experiment_6100_transition_v529.json before any optional reconciliation.
+      Archive exactly the four conductor-activated `.529` identities by declared `(task_id, deliverable)`; preserve Exp6102's block and retirement signal; classify proposal-only Exp6104-Exp6111 as unactivated rather than missing; append `.529` to research-complete.yaml at most once if absent; prove Exp6112-Exp6123 collision-free; and write results/experiment_6112_transition_v530.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: parse the active roadmap, activation plan line, all thirteen declared deliverables, completion history, exclusion manifest, root-clutter inventory, protected-file hashes, and current worktree. Freshly adversarial-verify every present declared artifact. Do not infer Exp5961/5965/5966 results from similarly numbered files.
-      1. Ensure the research-reporting spec contains REQ-* activated-identity, exact-terminal-class, missing-artifact, conductor-gate-block, duplicate-history, debt-non-amplification, and collision requirements; add focused failing tests before changing helpers.
-      2. Resolve evidence only by exact milestone, task ID, and declared path. Preserve missing, complete-null, complete-ready, blocked-precondition, conductor-gate-blocked, feasible-only, and complete-with-blocks independently. Never convert a missing artifact into success or a gate block into an executed experiment.
-      3. Write the required transition artifact atomically before optional docs. Append `.528` to research-complete.yaml only if absent, require one canonical block, and do not mutate any historical result JSON.
-      4. Scan active/staged roadmaps, completion history, proposals, exclusions, results, modules, tests, and known allocations for Exp6100-Exp6111. Require zero collisions outside this staged plan.
-      5. Measure inherited test/spec/root debt by exact node or file identity and require task-owned deltas `<= 0`; do not impose a false global-zero requirement.
-      6. Reconcile only transition-owned requirements, traceability, status, changelog, and conductor log. Preserve research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, exclusions, historical artifacts, and unrelated worktree edits.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, activated_task_and_deliverable_matrix, exact_terminal_classification, missing_artifact_receipt, conductor_gate_block_receipts, adversarial_verifier_receipts, inherited_debt_baselines_and_deltas, research_complete_append_count, duplicate_history_amplification_count, next_task_range, next_range_collision_count, docs_reconciled, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         status/preconditions_checked principle: state the actual transition and every prerequisite checked.
-         activated_task_and_deliverable_matrix/exact_terminal_classification principle: only the thirteen activated identities and declared paths define `.528`.
-         missing_artifact_receipt/conductor_gate_block_receipts principle: absence and preemptive skips remain distinct terminal evidence classes.
-         adversarial_verifier_receipts/inherited_debt_baselines_and_deltas principle: verify present evidence freshly without laundering unrelated debt.
+      0. PRECONDITIONS: parse the active roadmap, activation-plan line, four declared deliverables, completion history, conductor log, exclusion manifest, root-clutter inventory, protected-file hashes, and dirty worktree. Freshly adversarial-verify each declared artifact and do not resolve by numeric-prefix aliases.
+      1. Ensure the research-reporting spec contains REQ-* activated-identity, exact-path, unactivated-proposal, terminal-class, retirement-preservation, duplicate-history, debt-non-amplification, and collision requirements; add focused failing tests first.
+      2. Resolve `.529` evidence only by exact milestone, task ID, and declared deliverable. Keep complete, complete-null, blocked-retired, and complete-ready independent. Record Exp6104-Exp6111 only as proposal-only unactivated IDs.
+      3. Write the transition artifact atomically. Append `.529` once only if its canonical completion block is absent; never mutate a historical result JSON or rewrite `.528`.
+      4. Scan active/staged roadmaps, completion history, proposals, exclusions, results, code, tests, and known allocations for Exp6112-Exp6123. Require zero collisions outside this staged plan.
+      5. Measure inherited unit/spec/root debt by exact node or path and require task-owned deltas `<= 0`; do not demand false global zero.
+      6. Reconcile only transition-owned internal ledgers. Preserve research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, exclusions, unrelated dirty files, and historical artifacts.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_transition, activated_task_and_deliverable_matrix, exact_terminal_classification, proposal_only_unactivated_id_receipt, retirement_signal_preserved, adversarial_verifier_receipts, inherited_debt_baselines_and_deltas, research_complete_append_count, duplicate_history_amplification_count, next_task_range, next_range_collision_count, docs_reconciled, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         activated_task_and_deliverable_matrix/exact_terminal_classification principle: only four activated task identities and their declared paths define `.529`.
+         proposal_only_unactivated_id_receipt principle: a proposal is not an activated experiment and is never reported as completed or missing.
+         retirement_signal_preserved principle: Exp6102 remains blocked and retired; transition cannot reopen it.
+         adversarial_verifier_receipts/inherited_debt_baselines_and_deltas principle: present evidence is freshly checked without laundering unrelated debt.
          research_complete_append_count/duplicate_history_amplification_count principle: append at most once and amplify no history.
-         next_task_range/next_range_collision_count principle: bare zero collisions authorize Exp6100-Exp6111.
-         docs_reconciled/protected_files_unchanged principle: update only owned internal ledgers.
-         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured exact aggregation with `aggregation_from_upstream_artifacts`.
-         honest_verdict principle: use a `complete:` or `blocked:` prefix.
-      8. Run focused unit/spec coverage, YAML parse, duplicate-history, exact-path, adversarial-verifier, exclusion-manifest, collision, debt-delta, protected-file, applicable E2E, and no-new-root-clutter checks.
+         next_task_range/next_range_collision_count principle: bare zero collisions authorize Exp6112-Exp6123.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: report measured `aggregation_from_upstream_artifacts` provenance.
+         honest_verdict principle: use a terminal `complete:` or `blocked:` prefix.
+      8. Run focused unit/spec coverage, YAML parse, exact-path, unactivated-ID, duplicate-history, retirement, adversarial-verifier, exclusion, collision, protected-file, applicable E2E, and no-new-root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6101-v529-source-delta-ingestion
-    milestone: "2026.08.529"
-    title: "Dated evidence refresh after the V529 planner marker"
+  - id: exp6113-v530-source-delta-ingestion
+    milestone: "2026.08.530"
+    title: "Dated evidence refresh after the V530 planner marker"
     priority: high
     track: infrastructure
-    deliverable: results/experiment_6101_v529_source_delta_ingestion.json
-    agent_type: codex
-    model: gpt-5.5
+    deliverable: results/experiment_6113_v530_source_delta_ingestion.json
     max_turns: 30
     estimated_wall_time_min: 90
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp5962-v528-source-delta-ingestion
-        verdict: "complete_null: no accepted post-V528 source deltas; references unchanged"
-        addressed_by: "This bounded search starts after the disjoint V529 marker and targets calibrated candidate headroom, matching-base internal states, reduced-order utility memory, changed attached-board routes, and live cross-game primitive evidence."
+      - experiment_id: exp6101-v529-source-delta-ingestion
+        verdict: "complete_null: no accepted post-V529 source deltas; references unchanged"
+        addressed_by: "This search begins after the disjoint V530 marker and targets material changes to the newly staged candidate-pool, per-layer access, outcome-committed memory, ARC reachability, and changed hardware routes."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      The planning sweep is sealed at `V529-PLANNER-REFRESH-20260804-END` in research-references.md. It records Distributional EBMs, Solver-Hard, RoMeRL, representation adequacy, Hidden-Align extraction controls, guarded shortcut/tempering/KAN/hardware findings, and dated ecosystem receipts. This task accepts only primary evidence published or materially changed after that exact marker. Zero accepted findings is a valid complete-null result. Today is {date}.
+      The planning sweep is sealed at `V530-PLANNER-REFRESH-20260804-END` in research-references.md. It newly records Explorative Modeling, feasibility-preserving constrained optimization, the Memoir read-only-while-thinking result, updated hidden-state access context, and dated ecosystem receipts. Only primary evidence published or materially changed after that exact marker is eligible. Zero accepted findings is a valid complete-null result. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -99,110 +93,450 @@ tasks:
       - {project_root}/research-roadmap-next.yaml
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_5962_v528_source_delta_ingestion.json
+      - {project_root}/results/experiment_6101_v529_source_delta_ingestion.json
       - {project_root}/scripts/sweep_clusters.py
       - {project_root}/scripts/sweep_semscholar.py
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Search the hash-bounded post-V529 window through arXiv, OpenReview, Hugging Face Papers, direct Semantic Scholar citation trails for EBT and ARM-EBM, GitHub, Extropic, and Logical Intelligence; classify every receipt; append only actionable non-duplicate deltas to research-references.md; and write results/experiment_6101_v529_source_delta_ingestion.json without changing milestone identities, gates, exclusions, or prior findings.
+      Search the hash-bounded post-V530 window through arXiv, OpenReview, Hugging Face Papers, direct Semantic Scholar citation trails for EBT and ARM-EBM, GitHub, Extropic, and Logical Intelligence; classify every receipt; append only actionable non-duplicate deltas to research-references.md; and write results/experiment_6113_v530_source_delta_ingestion.json without changing task identities, gates, exclusions, or prior findings.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash the exact V529 end marker, references, active/staged roadmaps, exclusions, sweep code, output path, and protected files. Record UTC search start/end, source cutoffs, endpoint failures, HTTP/rate limits, and current-date uncertainty.
+      0. PRECONDITIONS: hash the exact V530 marker, references, active/staged roadmaps, exclusions, sweep code, output path, and protected files. Record UTC search start/end, endpoint failures, rate limits, source cutoffs, and same-day ordering uncertainty.
       1. Ensure REQ-* source-window, primary-source, provenance, duplicate/retired-scope rejection, append-only bibliography, and task-immutability requirements exist with focused failing tests.
-      2. Search post-marker work on EBM verification/reasoning, neural CSP, Ising/p-bit hardware, hallucination/internal representations, KANs, constrained or energy-guided generation, continual learning, and ARC-relevant online discovery. Open primary arXiv/OpenReview/official project pages before acceptance.
-      3. Recheck Semantic Scholar citations for EBT `2507.02092` and ARM-EBM `2512.15605`; OpenReview; Hugging Face Papers; GitHub Trending and targeted repositories; Extropic writing/hardware; and Logical Intelligence Kona. Date counts and negative receipts; do not turn HTTP 429 into a citation claim.
-      4. Deduplicate by identifier, title, authors, mechanism, and existing heading. Reject renamed finite-ID transport, generated-IR/schema reprompt, external-text/logprob scoring, KAN mutation, retired ARC induction/exploration, or unchanged hardware-probe scopes.
-      5. Report accepted, rejected, abstained, false-positive, known-false-negative, cutoff-confounded, and endpoint-failed findings separately. Append accepted findings after the marker without rewriting sealed blocks.
-      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, search_window_and_marker_receipt, source_queries_and_endpoint_receipts, primary_secondary_and_official_source_counts, accepted_rejected_abstained_findings, false_positive_false_negative_cutoff_and_rate_limit_receipts, semantic_scholar_ebt_and_arm_ebm_receipts, openreview_huggingface_github_extropic_and_kona_receipts, duplicate_and_retired_scope_filter, references_append_receipt, task_identity_gate_and_exclusion_immutability, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+      2. Search post-marker work on EBM verification/reasoning, neural CSP, Ising/p-bit hardware, hallucination/internal representations, KANs, constrained generation, continual learning, and ARC online discovery. Open primary papers or official project pages before acceptance.
+      3. Recheck Semantic Scholar citations for EBT `2507.02092` and ARM-EBM `2512.15605`, OpenReview, Hugging Face Papers, GitHub Trending and targeted repos, Extropic writing/hardware, and Kona. Date negative and failed receipts; never turn HTTP failure into evidence.
+      4. Deduplicate by identifier, title, author, mechanism, and heading. Reject renamed all-family VRAM recovery, finite-ID transport, generated-IR/schema reprompt, external-text/logprob scoring, retired KAN mutation, retired ARC induction, or unchanged board probes.
+      5. Report accepted, rejected, duplicate, retired-scope, abstained, false-positive, known-false-negative, cutoff-confounded, and endpoint-failed findings separately. Append after the marker only; do not rewrite sealed blocks.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, search_window_and_marker_receipt, source_queries_and_endpoint_receipts, primary_secondary_and_official_source_counts, accepted_rejected_duplicate_retired_and_abstained_findings, false_positive_false_negative_cutoff_and_rate_limit_receipts, semantic_scholar_ebt_and_arm_ebm_receipts, openreview_huggingface_github_extropic_and_kona_receipts, duplicate_and_retired_scope_filter, references_append_receipt, task_identity_gate_and_exclusion_immutability, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
          search_window_and_marker_receipt principle: only a hash-anchored post-marker window is eligible.
-         source_queries_and_endpoint_receipts/primary_secondary_and_official_source_counts principle: every source class remains dated and auditable.
-         accepted_rejected_abstained_findings principle: acceptance requires a new mechanism or materially changed evidence relevant to Carnot.
-         false_positive_false_negative_cutoff_and_rate_limit_receipts principle: uncertainty or access failure is never silently converted into rejection.
-         semantic_scholar_ebt_and_arm_ebm_receipts/openreview_huggingface_github_extropic_and_kona_receipts principle: discovery indexes are context until a primary source is opened.
+         source_queries_and_endpoint_receipts principle: source coverage, access failures, and dates remain auditable.
+         accepted_rejected_duplicate_retired_and_abstained_findings principle: every candidate receives one explicit disposition.
+         semantic_scholar_ebt_and_arm_ebm_receipts/openreview_huggingface_github_extropic_and_kona_receipts principle: discovery indexes are secondary until a primary source is opened.
          duplicate_and_retired_scope_filter principle: no duplicate or renamed retired mechanism enters the ledger.
-         references_append_receipt/task_identity_gate_and_exclusion_immutability principle: evidence aggregation may append references but cannot rewrite the activated plan.
-         protected_files_unchanged principle: active roadmap, conductor, exclusions, historical artifacts, and unrelated changes remain byte-identical.
+         references_append_receipt/task_identity_gate_and_exclusion_immutability principle: source aggregation may append references but cannot rewrite the staged plan.
          duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `aggregation_from_external_primary_sources`.
          honest_verdict principle: use `complete_delta:`, `complete_null:`, or `blocked:`.
-      7. Run focused unit/spec coverage, marker/hash, date-window, deduplication, source-classification, rate-limit/cutoff, roadmap/exclusion immutability, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      7. Run focused unit/spec coverage, marker/hash, date-window, deduplication, source classification, rate-limit/cutoff, roadmap/exclusion immutability, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6102-sota-atom-corpus-vram-recovery
-    milestone: "2026.08.529"
-    title: "Checkpointed all-family exact-atom representation corpus VRAM recovery"
+  - id: exp6114-phase-d-gpu-ladder-canary
+    milestone: "2026.08.530"
+    title: "Phase-D task-scoped GPU engagement and sealed-ladder canary"
     priority: critical
-    track: constraint-acquisition
-    deliverable: results/experiment_6102_sota_atom_corpus_vram_recovery.json
+    track: phase-d
+    deliverable: results/experiment_6114_phase_d_gpu_ladder_canary.json
     model: opus
     max_turns: 100
-    estimated_wall_time_min: 480
+    estimated_wall_time_min: 180
     requires_gpu: true
     prior_failures:
-      - experiment_id: exp5964-sota-atom-compatibility-corpus
+      - experiment_id: exp6102-sota-atom-corpus-vram-recovery
         verdict: "blocked: insufficient_free_vram"
-        addressed_by: "The fixture and partial rows are preserved, but this attempt changes execution to one-family-at-a-time leases, pre/post phase checkpoints, task-owned PID eviction only, verified CUDA release, resume hashes, and bounded early stop before any ranker training."
+        addressed_by: "This is not another representation corpus: it uses only the one .529-measured-fit 26B GGUF, performs bounded natural generation, adds task-correlated engagement/release telemetry, and never resumes all-family embedding shards."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp5963 sealed a ready exact context/atom fixture with 300 base contexts and 600 exact pairs. Exp5964 reached the live representation surface but blocked on insufficient free VRAM and left partial per-model row files; Exp5965/5966 therefore never ran. The scientific hypothesis is unresolved. This is the one changed recovery attempt; the same VRAM verdict retires this deliverable shape. MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`, using cached quantizations resolved by `cached_sota_pair()`/repository helpers. Today is {date}.
+      Exp6102 retired the all-family representation-recovery shape. Its capacity receipt nevertheless measured `unsloth/gemma-4-26B-A4B-it-GGUF` as fitting one RTX 3090 at 17,186 MiB, while the 35B and 31B families did not meet their declared 24,576 MiB requirement. Exp6103 sealed the exact Phase-D ladder with readiness 1.0. The `.529` retro showed no task-correlated GPU engagement on the compute task. This experiment proves the narrower generation route before a costly pool run; it must not resume representation extraction. MODEL_SPECS: `unsloth/gemma-4-26B-A4B-it-GGUF` using the cached Q4_K_M file and GGUF-embedded tokenizer. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_6102_sota_atom_corpus_vram_recovery.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/scripts/model_cache_helpers.py
+      - {project_root}/scripts/llama_cpp_server_manager.py
+      - {project_root}/scripts/experiments/experiment_6102_sota_atom_corpus_vram_recovery.py
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Verify Exp6103's sealed ladder, resolve and hash the measured-fit Gemma-4-26B-A4B GGUF, acquire a task-owned single-GPU lease, run bounded natural-text generation on calibration rows, prove task-correlated CUDA engagement and complete release, and write results/experiment_6114_phase_d_gpu_ladder_canary.json without extracting representations or touching Exp6102 shards.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash Exp6102/Exp6103 artifacts and row manifests; resolve the exact GGUF, quantization, embedded tokenizer, prompt template, CUDA build, disk/RAM/swap, both GPUs' free/used VRAM and thermals, task-owned PID lease, model-server ownership, time budget, output path, root clutter, and protected files. Never kill an unrelated process.
+      1. Ensure REQ-* ladder-readiness, measured-fit-model, task-owned lease, real-generation, GPU-engagement, lifecycle telemetry, release, and retired-scope non-recurrence requirements exist; add focused failing tests first.
+      2. Refuse any ladder whose readiness, row hash, split hash, Python/Z3 parity, or chance-floor receipt differs from Exp6103. Sample calibration rows only.
+      3. Load exactly the cached measured-fit 26B MoE on one selected GPU with genuine CUDA offload. Use the embedded GGUF tokenizer; do not call AutoTokenizer on the GGUF repository.
+      4. Generate natural reasoning and a final answer for at least 12 calibration questions across all three families with fixed seeds and `max_new_tokens >= 512`. No JSON grammar, finite-ID transport, deterministic answer builder, CPU headline fallback, or sleep substitute.
+      5. Poll task-correlated model/server/PID/GPU timestamps through load, decode, and teardown. Require positive GPU memory engagement attributable to the task, generated tokens, measured decode time, server exit, CUDA synchronization, task-owned PID exit, and VRAM release toward the pre-load baseline.
+      6. Do not read, resume, append, or rewrite any Exp5964/Exp6102 representation row shard. A repeated capacity/engagement failure retires this canary shape; do not substitute a tiny model.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, immutable_ladder_artifact_row_and_split_hashes, ladder_readiness_and_python_z3_receipt, model_specs_and_exact_file_hashes, quantization_and_embedded_tokenizer_receipt, task_owned_gpu_server_and_pid_lease, pre_load_decode_and_post_release_vram_thermal_timeline, generated_calibration_canary_rows_and_hashes, prompt_decode_seed_and_token_receipts, gpu_engagement_attribution, server_exit_cuda_sync_pid_exit_and_vram_release_receipts, retired_representation_scope_untouched, phase_d_compute_and_ladder_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         immutable_ladder_artifact_row_and_split_hashes/ladder_readiness_and_python_z3_receipt principle: only the sealed exact fixture can feed the canary.
+         model_specs_and_exact_file_hashes/quantization_and_embedded_tokenizer_receipt principle: every generated row traces to the mandated measured-fit GGUF and its embedded tokenizer.
+         task_owned_gpu_server_and_pid_lease/pre_load_decode_and_post_release_vram_thermal_timeline principle: resource ownership and lifecycle are measured, not inferred.
+         generated_calibration_canary_rows_and_hashes/prompt_decode_seed_and_token_receipts principle: real natural generation is preserved raw and reproducible.
+         gpu_engagement_attribution/server_exit_cuda_sync_pid_exit_and_vram_release_receipts principle: readiness requires attributable compute and cleanup.
+         retired_representation_scope_untouched principle: this canary cannot reopen or resume the retired all-family representation corpus.
+         phase_d_compute_and_ladder_ready_score/retirement_triggered principle: readiness is exactly 1 only if ladder, generation, engagement, and release gates all pass; the same block retires the shape.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: report measured `live_local_sota_gguf_cuda_generation`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact Python/Z3 labels remain oracle; generation telemetry is not correctness evidence.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+      8. Run focused unit/spec coverage, ladder/hash/parity, model/embedded-tokenizer, real-generation, task-ownership, engagement, release, retired-scope, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6115-phase-d-calibration-pool
+    milestone: "2026.08.530"
+    title: "Gated calibration-only authentic Phase-D candidate pool"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6115_phase_d_calibration_pool.json
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5786-sota-constraint-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "Exp6103 now supplies a sealed low-chance three-family ladder; this pilot uses natural reasoning rather than generated IR, fixed K>=8, calibration-only policy selection, exact answer extraction, method-validity labels, and no held-test access."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6114-phase-d-gpu-ladder-canary
+        artifact_field: phase_d_compute_and_ladder_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Exp6114 must prove that the sealed ladder and the measured-fit SOTA GGUF can execute with attributable CUDA engagement and release. This task uses only Exp6103's calibration split to select a difficulty stratum and fixed decode policy. It is not a headline evaluation and may not inspect the 360 held labels. Explorative Modeling motivates measuring effective exploration rather than assuming K independent draws. Solver-Hard requires model accuracy and solver conflicts to remain separate. MODEL_SPECS: `unsloth/gemma-4-26B-A4B-it-GGUF`, exact cached Q4_K_M file and embedded tokenizer. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
       - {project_root}/research-program.md
       - {project_root}/research-references.md
+      - {project_root}/ops/known-issues.md
       - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/results/experiment_5963_exact_atom_pair_fixture.json
-      - {project_root}/results/experiment_5964_sota_atom_compatibility_corpus.json
-      - {project_root}/results/experiment_5964_sota_atom_compatibility_corpus.rows.jsonl
-      - {project_root}/python/carnot/experiment_5964_sota_atom_compatibility_corpus.py
+      - {project_root}/results/experiment_5786_sota_constraint_stream.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl
+      - {project_root}/results/experiment_6114_phase_d_gpu_ladder_canary.json
       - {project_root}/scripts/experiment_template.py
       - {project_root}/scripts/model_cache_helpers.py
-      - {project_root}/scripts/llama_cpp_server_manager.py
+      - {project_root}/python/carnot/constraint_ir_replay.py
       - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
       - {project_root}/ops/e2e-test-plan.md
 
       TASK:
-      Resume the sealed Exp5964 exact context/atom rows and acquire raw representation-compatibility features for all three mandated GGUF families under checkpointed sequential model loading; independently replay labels and shortcut controls; write the declared all-family row shards and results/experiment_6102_sota_atom_corpus_vram_recovery.json; and do not train a ranker.
+      On at least 90 sealed calibration questions spanning all three families and preregistered difficulty strata, collect at least eight independent natural reasoning samples per question from the mandated 26B GGUF; measure exact correctness, method validity, parseability, effective K, answer clusters, and all-wrong rate; choose one fixed stratum/decode policy without held access; and write results/experiment_6115_phase_d_calibration_pool.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: before model loading, hash the Exp5963 fixture and Exp5964 partial shards, resolve exact cached GGUF files and quantizations, record embedded tokenizer metadata, disk/RAM/swap, per-GPU free/used VRAM, thermals, CUDA/runtime build, task-owned PID leases, estimated per-family memory, timeout budget, output paths, and protected files. If the first family cannot fit after task-owned cleanup, write a complete blocked artifact and stop. Never kill or evict an unrelated process.
-      1. Ensure REQ-* sequential-lease, checkpoint/resume, raw-feature, all-family coverage, tokenizer provenance, label replay, shortcut-control, and same-verdict retirement requirements exist; add focused failing and interruption-resume tests first.
-      2. Reuse only rows whose fixture hash, model file hash, quantization, tokenizer metadata, prompt hash, feature schema, and prefix-chain checksum match. Quarantine any partial or stale shard rather than silently mixing it.
-      3. Load exactly one family at a time. Checkpoint an atomic phase-start receipt, extract raw and separately standardized features, checkpoint rows and phase-end hashes, close the llama.cpp process, synchronize CUDA, verify task-owned process exit and VRAM release, then proceed to the next family.
-      4. Use GGUF-embedded llama.cpp tokenization only; never call AutoTokenizer on a GGUF repository. No mock rows, CPU headline fallback, deterministic answer templates, sleep substitutes, or fabricated model identity are allowed.
-      5. Preserve family, relabel, paraphrase, claim-flip, norm, length, lexical, pair/label permutation, raw-model-identity, and duplicate-context controls. Replay every exact label through Python/Z3; model features never become the oracle.
-      6. Require all three families, all declared held splits, at least five semantic-group seeds, and complete row provenance for readiness. Otherwise emit the exact block/partial class. Do not launch Exp5965-style training here.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, model_specs_and_exact_file_hashes, quantization_and_embedded_tokenizer_receipts, runtime_cuda_vram_thermal_and_pid_lease_receipts, immutable_fixture_and_partial_shard_hashes, resume_accept_reject_matrix, per_family_phase_start_end_and_release_receipts, raw_vs_standardized_feature_schema, per_family_row_split_and_class_counts, python_z3_label_replay, shortcut_control_coverage, row_paths_hashes_and_prefix_chain, stale_partial_quarantine_receipt, all_family_corpus_ready_score, retirement_triggered, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         model_specs_and_exact_file_hashes/quantization_and_embedded_tokenizer_receipts principle: every headline row must trace to one mandated local GGUF and its embedded tokenizer.
-         runtime_cuda_vram_thermal_and_pid_lease_receipts principle: live CUDA use, ownership, cleanup, and capacity must be measured rather than inferred.
-         immutable_fixture_and_partial_shard_hashes/resume_accept_reject_matrix principle: resumption is allowed only under exact provenance equality.
-         per_family_phase_start_end_and_release_receipts principle: sequential loading and verified release are the changed mechanism.
-         raw_vs_standardized_feature_schema principle: raw measurements remain recoverable and standardization cannot leak across splits.
-         per_family_row_split_and_class_counts/python_z3_label_replay principle: adequacy and exact authority are reported by semantic group.
-         shortcut_control_coverage principle: representation compatibility must expose norm, length, lexical, identity, permutation, and transform controls.
-         all_family_corpus_ready_score/retirement_triggered principle: readiness needs all families; the repeated VRAM verdict retires this recovery shape.
-         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: report measured `live_local_sota_gguf_cuda_representation_extraction`.
-         verifier_is_oracle/missing_verifier_gaps principle: exact Python/Z3 labels are oracle; learned representations are not.
-         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
-      8. Run interruption/resume, focused unit/spec coverage, fixture/hash, all-family, raw/standardized separation, label replay, control, CUDA/PID/VRAM release, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      0. PRECONDITIONS: recompute the structured gate, hash Exp6103/Exp6114 artifacts and row/split manifests, resolve the exact GGUF and embedded tokenizer, record CUDA/VRAM/thermal/PID leases, seeds, disk/time budget, output paths, protected files, and held-test access guards. Block immediately if the gate is false.
+      1. Ensure REQ-* calibration-only, natural-candidate, K/diversity, model-difficulty, method-validity, exact-label, no-held-access, fixed-policy, and raw-provenance requirements exist; add focused failing tests first.
+      2. Preregister at least three difficulty strata and a bounded decode grid before inference. Sample at least 30 independent calibration questions per family and at least 90 total; semantic siblings cannot cross calibration folds.
+      3. Generate `K >= 8` samples per question with independent recorded seeds, nonzero temperature where declared, `max_new_tokens >= 512`, and raw natural reasoning. Do not use JSON grammar, finite-ID answer tokens, hidden-label retries, deterministic templates, model-authored confidence, or tiny-model headline substitution.
+      4. Extract final answers with a frozen surface parser and replay correctness/method-validity through independent Python and Z3 authorities. Parser failure is a measured failure, not a retry trigger.
+      5. Report per-candidate accuracy with interval, parseability, method-validity, duplicate rate, effective K, answer-cluster entropy, all-wrong rate, oracle@K, tuned-SC, solver conflict strata, relabel/paraphrase sensitivity, tokens, latency, and energy/VRAM telemetry.
+      6. Select one stratum and fixed decode policy using calibration evidence only. Target per-candidate accuracy `[0.40, 0.70]`, parseability `>=0.95`, effective K `>=7.5`, and a numerical all-wrong rate compatible with the later `<=0.10` held gate. If none qualify, write a terminal null/blocked artifact; never relax held inclusion.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_ladder_row_split_and_canary_hashes, model_specs_and_exact_file_hashes, embedded_tokenizer_prompt_and_decode_policy_candidates, calibration_question_family_stratum_and_semantic_group_counts, raw_candidate_row_paths_hashes_and_prefix_chain, generation_seeds_tokens_latency_cuda_vram_thermal_and_pid_receipts, frozen_parser_and_parseability, python_z3_correctness_and_method_validity_replay, per_candidate_accuracy_intervals, duplicate_effective_k_answer_cluster_and_entropy_metrics, all_wrong_oracle_tuned_sc_and_solver_strata, relabel_paraphrase_shortcut_controls, held_test_access_count, selected_stratum_and_fixed_decode_policy, phase_d_calibration_ready_score, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         structured_gate_receipt principle: no model call occurs unless Exp6114 readiness equals 1.
+         immutable_ladder_row_split_and_canary_hashes/calibration_question_family_stratum_and_semantic_group_counts principle: selection is powered on independent frozen calibration groups.
+         model_specs_and_exact_file_hashes/embedded_tokenizer_prompt_and_decode_policy_candidates principle: every row traces to one mandated headline GGUF and preregistered settings.
+         raw_candidate_row_paths_hashes_and_prefix_chain/generation_seeds_tokens_latency_cuda_vram_thermal_and_pid_receipts principle: authentic draws and compute remain auditable.
+         frozen_parser_and_parseability/python_z3_correctness_and_method_validity_replay principle: exact authorities label outcomes and parser failures are not hidden.
+         duplicate_effective_k_answer_cluster_and_entropy_metrics principle: nominal K is not credited when exploration collapses.
+         held_test_access_count/selected_stratum_and_fixed_decode_policy principle: held access must be zero and the policy freezes before Exp6116.
+         phase_d_calibration_ready_score principle: readiness requires all calibration, authenticity, competence, diversity, secrecy, and cleanup gates.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: report measured `live_local_sota_gguf_cuda_generation_plus_exact_validation`.
+         verifier_is_oracle/missing_verifier_gaps principle: Python/Z3 are oracle; tuned SC and model traces are not.
+         honest_verdict principle: use `complete_ready:`, `complete_null:`, `complete_partial:`, or `blocked:`.
+      8. Run focused unit/spec coverage, gate, held-access sentinel, ladder/hash, model/tokenizer, K/diversity, parser, label/method parity, split leakage, raw-row chain, CUDA lifecycle, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6103-phase-d-difficulty-ladder-fixture
-    milestone: "2026.08.529"
-    title: "Sealed low-chance Phase-D model-difficulty ladder"
+  - id: exp6116-phase-d-held-candidate-pool
+    milestone: "2026.08.530"
+    title: "Gated held authentic same-model Phase-D candidate pool"
     priority: critical
     track: phase-d
-    deliverable: results/experiment_6103_phase_d_difficulty_ladder_fixture.json
+    deliverable: results/experiment_6116_phase_d_held_candidate_pool.json
+    max_turns: 50
+    estimated_wall_time_min: 720
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5786-sota-constraint-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "This held collection is unlocked by the sealed Exp6103 ladder and successful calibration, uses a frozen natural-response parser and policy, K>=8 on all 360 independent held questions, and persists raw draws without schema-reprompt retries."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6115-phase-d-calibration-pool
+        artifact_field: phase_d_calibration_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Exp6115 freezes one qualified calibration stratum and decode policy. This task performs the only held candidate acquisition: all 360 semantic-group-disjoint held questions, at least eight authentic samples each, fixed compute, raw natural reasoning, and exact post-generation labels. Held labels may not affect generation, retry, truncation, inclusion, or stopping. MODEL_SPECS: `unsloth/gemma-4-26B-A4B-it-GGUF`, exact cached Q4_K_M file and GGUF-embedded tokenizer. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl
+      - {project_root}/results/experiment_6115_phase_d_calibration_pool.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/scripts/model_cache_helpers.py
+      - {project_root}/scripts/llama_cpp_server_manager.py
+      - {project_root}/python/carnot/constraint_ir_replay.py
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Apply Exp6115's immutable stratum and decode policy to every one of Exp6103's 360 held questions; collect and checkpoint at least eight independent natural reasoning samples per question; label only after generation with exact Python/Z3 authorities; preserve raw rows and complete compute provenance; and write results/experiment_6116_phase_d_held_candidate_pool.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: recompute the structured gate; hash the ladder, held split, calibration artifact, selected policy, model file, embedded tokenizer, prompt, validators, and output prefix; record CUDA/VRAM/thermal/PID leases, disk/RAM/time budget, protected files, and interruption/resume rules. Block with no model call if the gate fails.
+      1. Ensure REQ-* held-secrecy, all-question coverage, K/authenticity, fixed-compute, checkpoint/resume, raw-row, exact-label, no-retry, and release requirements exist; add focused failing and interruption tests first.
+      2. Freeze the exact 360-question inclusion list before generation. Require 120 questions from each family and no semantic sibling shared with calibration.
+      3. Generate `K >= 8` independent samples per question under exactly Exp6115's selected policy and `max_new_tokens >= 512`. Preserve raw prompt and response before parsing. No JSON grammar, finite-ID answer transport, label-aware retry, deterministic candidate builder, or tiny-model headline fallback.
+      4. Checkpoint atomic prefix-chain shards with question ID, semantic group, family, stratum, sample index, seed, prompt/model/tokenizer hashes, raw response, token counts, timings, CUDA device, and task-owned PID lease. Resume only exact-matching prefixes; quarantine stale or partial shards.
+      5. After all raw draws exist, run the frozen parser and independent Python/Z3 correctness and method-validity authorities. Never regenerate a parser failure or all-wrong question.
+      6. Compute integrity diagnostics only: coverage, parseability, duplicates, effective K, answer clusters, exact label counts, method-validity counts, missing/truncated rows, and generation compute. Do not tune, select, or claim headroom here.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_ladder_held_split_policy_validator_and_model_hashes, model_specs_and_exact_file_hashes, quantization_embedded_tokenizer_prompt_and_fixed_decode_policy, held_question_family_stratum_and_semantic_group_counts, raw_candidate_row_paths_hashes_prefix_chain_and_resume_receipts, per_question_k_seed_token_latency_and_completion_counts, cuda_vram_thermal_server_pid_and_release_receipts, frozen_parser_parseability_and_truncation_counts, python_z3_correctness_and_method_validity_replay, duplicate_effective_k_answer_cluster_and_entropy_diagnostics, missing_regenerated_label_aware_retry_and_stale_row_counts, candidate_pool_integrity_score, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         structured_gate_receipt principle: collection starts only after calibration readiness equals 1.
+         immutable_ladder_held_split_policy_validator_and_model_hashes principle: held membership and settings cannot adapt to outcomes.
+         model_specs_and_exact_file_hashes/quantization_embedded_tokenizer_prompt_and_fixed_decode_policy principle: all headline candidates share one auditable mandated model and fixed policy.
+         held_question_family_stratum_and_semantic_group_counts/per_question_k_seed_token_latency_and_completion_counts principle: power and fixed compute are explicit at the independent-question unit.
+         raw_candidate_row_paths_hashes_prefix_chain_and_resume_receipts principle: raw generation is immutable, resumable, and never reconstructed from parsed outputs.
+         frozen_parser_parseability_and_truncation_counts/python_z3_correctness_and_method_validity_replay principle: exact labeling occurs after generation and all failures remain visible.
+         missing_regenerated_label_aware_retry_and_stale_row_counts principle: readiness requires zero missing, regenerated, or label-aware retry rows and quarantined stale shards.
+         candidate_pool_integrity_score principle: integrity is about authentic complete provenance, not scientific headroom.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: report measured `live_local_sota_gguf_cuda_generation_plus_exact_validation`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact validators are oracle; candidate frequency and model traces are not.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `complete_null:`, or `blocked:`.
+      8. Run focused unit/spec coverage, gate, held-secrecy, coverage/K, checkpoint/resume, prefix chain, model/tokenizer/policy, no-retry, parser, Python/Z3 method parity, CUDA lifecycle, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6117-phase-d-headroom-audit
+    milestone: "2026.08.530"
+    title: "Gated question-clustered Phase-D authenticity and headroom audit"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6117_phase_d_headroom_audit.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 240
     requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5879-hardness-headroom-taxonomy-corrigendum
+        verdict: "blocked: science_ready_but_unrelated_global_suite_debt"
+        addressed_by: "This audit uses inherited-debt deltas instead of a false global-zero gate and consumes a newly sealed authentic held pool with question-clustered intervals, method-validity controls, effective K, and a preregistered numerical all-wrong bound."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6116-phase-d-held-candidate-pool
+        artifact_field: candidate_pool_integrity_score
+        op: "=="
+        value: 1.0
     prompt: |
       CONTEXT:
-      Phase D has no corpus in the competent-but-unsaturated band. MMLU-Pro and MuSR candidate pools sat near their chance floors, Exp5786 was genuine but nearly saturated under its one reliable arm, and older large-gap pools were templated fixtures. Solver-Hard shows that SAT-solver conflicts are not a reliable proxy for model hardness; TrapQA and Right Answer, Wrong Method require shortcut and method-validity controls. This task builds and seals the exact fixture before any model inference. Today is {date}.
+      Exp6116 must provide all 360 held questions with authentic raw candidates and exact labels. This task determines whether Phase D has a competent-but-unsaturated selection domain. The observed-p independence expression `1-(1-p)^K` is diagnostic only. Explorative Modeling motivates effective-K diagnostics, while the geometric constrained-optimization work motivates an independently exact feasible-constructor positive control that must remain outside the LLM pool. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json
+      - {project_root}/results/experiment_6103_phase_d_difficulty_ladder_fixture.json
+      - {project_root}/results/experiment_6115_phase_d_calibration_pool.json
+      - {project_root}/results/experiment_6116_phase_d_held_candidate_pool.json
+      - {project_root}/scripts/headroom_gate.py
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
+      - {project_root}/openspec/capabilities/verification/spec.md
+
+      TASK:
+      Audit Exp6116 at the independent-question unit for authentic diversity, competent-but-unsaturated performance, method-validity and shortcut strata, numerical all-wrong rate, tuned-self-consistency baseline, and selectable oracle headroom; include an exact feasible-constructor positive control outside the LLM pool; and write results/experiment_6117_phase_d_headroom_audit.json with a fail-closed readiness verdict.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: recompute the gate and hash all ladder, calibration, held-pool, raw-row, parser, validator, and policy artifacts. Verify 360 independent held groups, `K >= 8`, zero missing/regenerated rows, worktree/protected files, and inherited-debt baselines. Block if integrity is not exactly ready.
+      1. Ensure REQ-* question-cluster, competence, effective-K, all-wrong, tuned-SC, oracle-headroom, authenticity, method-validity, exact-positive-control, and debt-delta requirements exist; add failing tests first.
+      2. Recompute labels independently from raw rows. Detect duplicate completions, duplicate answer clusters, identical seeds, file-order ties, decorative model identity, deterministic templating, answer-first/enumeration shortcuts, parser artifacts, and semantic-group leakage.
+      3. At the question replication unit, report per-candidate accuracy and cluster bootstrap CI, exact enumerated chance floor, effective K, answer-cluster entropy, parseability, method-validity, all-wrong count/rate with interval, oracle@K, tuned SC, and paired oracle-minus-SC interval. Report `1-(1-p)^K` only as a labeled diagnostic.
+      4. Qualification gates are fixed: parseability `>=0.95`; effective K `>=7.5`; per-candidate accuracy in `[0.40,0.70]`; clustered accuracy lower interval above `0.25`; all-wrong rate `<=0.10` and count `<=36/360`; `oracle@K - tuned_SC >=0.10` with clustered lower interval above zero.
+      5. Report family, solver-conflict, relabel, paraphrase, surface, shortcut, method-validity, and identically-wrong-consensus strata. Do not average away a failing family or call solver hardness model hardness.
+      6. Run an independently exact feasible constructor/rounder as a positive control on the same questions. Keep its rows out of candidate diversity, SC, oracle, and headroom calculations; it demonstrates validator reachability only.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_upstream_and_raw_row_hashes, question_replication_and_cluster_bootstrap_contract, exact_label_replay_and_pool_authenticity_audit, parseability_and_truncation, per_candidate_accuracy_and_enumerated_floor_intervals, duplicate_effective_k_answer_cluster_entropy_and_file_order_metrics, all_wrong_count_rate_and_interval, oracle_at_k_tuned_sc_and_paired_headroom_interval, observed_p_independence_diagnostic_only, family_solver_relabel_paraphrase_shortcut_method_and_consensus_strata, exact_feasible_constructor_positive_control_isolation, qualification_gate_matrix, inherited_debt_baselines_and_deltas, candidate_pool_integrity_score, phase_d_headroom_ready_score, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         structured_gate_receipt/candidate_pool_integrity_score principle: no audit claim proceeds from a non-ready pool.
+         question_replication_and_cluster_bootstrap_contract principle: questions, not candidate rows, are the independent unit.
+         exact_label_replay_and_pool_authenticity_audit principle: saved raw rows and exact authorities determine every outcome.
+         per_candidate_accuracy_and_enumerated_floor_intervals principle: model competence is measured against exact chance, not solver conflicts.
+         duplicate_effective_k_answer_cluster_entropy_and_file_order_metrics principle: nominal sample count cannot hide collapsed exploration or order leakage.
+         all_wrong_count_rate_and_interval/oracle_at_k_tuned_sc_and_paired_headroom_interval principle: a qualified pool must contain numerically bounded, selectable headroom.
+         observed_p_independence_diagnostic_only principle: the observed-p formula cannot be a promotion gate or oracle ceiling.
+         exact_feasible_constructor_positive_control_isolation principle: exact construction validates the authority but never enters the authentic candidate pool.
+         qualification_gate_matrix/phase_d_headroom_ready_score principle: readiness is the conjunction of all preregistered gates; no compensating average is allowed.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `deterministic_clustered_audit_of_live_model_rows`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact Python/Z3 labels are oracle and candidate selection remains the open gap.
+         honest_verdict principle: use `complete_ready:`, `complete_null:`, `complete_partial:`, or `blocked:`.
+      8. Run focused unit/spec coverage, gate, exact replay, cluster bootstrap, effective-K, headroom/all-wrong thresholds, positive-control isolation, leakage/order/shortcut controls, debt delta, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6118-phase-d-per-layer-surface
+    milestone: "2026.08.530"
+    title: "Gated matching-base per-layer hidden-state surface qualification"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6118_phase_d_per_layer_surface.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 480
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477
+        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
+        addressed_by: "The retired MMLU-Pro selector is not rerun: this task first qualifies a new exact low-chance corpus, matching-base output_hidden_states access, explicit token/layer alignment, declared precision/device mapping, and immutable caches without training a selector."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6117-phase-d-headroom-audit
+        artifact_field: phase_d_headroom_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Exp6117 must establish authentic selectable headroom before any hidden-state work. The retired MMLU-Pro path used weak/final-token surfaces and cannot be reopened. GGUF generation does not provide an interchangeable per-layer surface. This task separately resolves the base model associated with the mandated generator, proves `transformers` `output_hidden_states=True`, aligns tokens and anchors, and caches features without selector training. MODEL_SPECS: generator provenance `unsloth/gemma-4-26B-A4B-it-GGUF` plus the exact matching base repository/revision resolved from its model card; no GGUF/base equivalence claim beyond documented lineage. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/results/experiment_5178_hidden_state_verifier_pilot_v474.json
+      - {project_root}/results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json
+      - {project_root}/results/experiment_6116_phase_d_held_candidate_pool.json
+      - {project_root}/results/experiment_6117_phase_d_headroom_audit.json
+      - {project_root}/scripts/model_cache_helpers.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Resolve and hash-pin the matching base transformer for the Gemma-4-26B-A4B GGUF; establish token-aligned `output_hidden_states=True` under a declared precision and device map; teacher-force immutable Exp6116 candidates; cache preregistered layerwise pre-answer-marker, answer-token, prefix, and trajectory summaries with complete resource receipts; and write results/experiment_6118_phase_d_per_layer_surface.json without training or evaluating a selector.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: recompute the headroom gate; hash the generator GGUF/card, held pool, raw rows, parser, labels, prompts, and output paths; resolve the base repo/revision, license/access, tokenizer, architecture support for `output_hidden_states`, precision, device map, disk/RAM/swap, both GPUs' VRAM/thermals, PID leases, time budget, root clutter, and protected files. Block before load on any unresolved prerequisite.
+      1. Ensure REQ-* matching-base provenance, access preflight, per-layer output, token alignment, anchor definition, precision/device, immutable cache, grouped split, resource lifecycle, and no-selector requirements exist; add failing canary and alignment tests first.
+      2. Resolve the base repository only through primary model-card provenance. Pin revision and exact weight/tokenizer hashes. Record explicitly that base weights/precision are a different execution substrate from Q4_K_M GGUF generation.
+      3. Run a tiny teacher-forced canary and require nonempty hidden states for declared layers, expected shapes, finite values, stable token IDs, and correct prompt/response boundary alignment before the full cache.
+      4. Define the pre-answer-marker anchor by frozen parser alignment. Cache anchor, answer-token, prefix start/end/delta, layerwise trajectory/delta, norm, and length features. Preserve raw internal tensors or losslessly sufficient declared summaries under size limits; never derive them from output text or logprobs.
+      5. Use question-grouped train/calibration/test cache partitions frozen before selector work. Teacher-force immutable saved candidates only; do not generate, retry, relabel, or drop rows based on features.
+      6. Record model load/unload, CUDA devices, host offload if any, per-phase VRAM/RAM/thermal/timing, task-owned PIDs, interruptions, cache prefix chain, and verified release. No CPU-only headline fallback or decorative base identity.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, immutable_generator_pool_prompt_label_and_raw_row_hashes, model_specs_and_exact_file_hashes, generator_gguf_and_matching_base_lineage_boundary, base_revision_weight_tokenizer_precision_and_device_map_receipts, output_hidden_states_canary_shapes_finiteness_and_layer_count, prompt_response_answer_marker_and_token_alignment_receipts, anchor_answer_prefix_trajectory_norm_and_length_feature_schema, question_grouped_cache_splits_and_leakage_counts, cache_paths_hashes_prefix_chain_row_and_feature_counts, generation_retry_relabel_drop_and_selector_training_counts, cuda_vram_ram_thermal_pid_timing_and_release_receipts, per_layer_surface_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         structured_gate_receipt principle: no base-model load occurs without qualified authentic headroom.
+         model_specs_and_exact_file_hashes/generator_gguf_and_matching_base_lineage_boundary principle: generator and activation extractor are separately pinned substrates and never called identical executions.
+         base_revision_weight_tokenizer_precision_and_device_map_receipts/output_hidden_states_canary_shapes_finiteness_and_layer_count principle: per-layer access must be demonstrated by the actual backend.
+         prompt_response_answer_marker_and_token_alignment_receipts principle: every feature is tied to a reproducible token position and candidate prefix.
+         anchor_answer_prefix_trajectory_norm_and_length_feature_schema principle: load-bearing representations and cheap controls are cached separately.
+         question_grouped_cache_splits_and_leakage_counts/cache_paths_hashes_prefix_chain_row_and_feature_counts principle: future evaluation cannot leak semantic siblings or silently lose rows.
+         generation_retry_relabel_drop_and_selector_training_counts principle: all must be zero; this task only extracts immutable features.
+         cuda_vram_ram_thermal_pid_timing_and_release_receipts principle: complex resource use and cleanup are measured end to end.
+         per_layer_surface_ready_score/retirement_triggered principle: readiness requires provenance, access, alignment, coverage, cache integrity, and release; repeating the prior surface failure retires the shape.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: report measured `live_matching_base_transformers_hidden_state_extraction`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact labels remain oracle; internal features are only candidate signals.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+      8. Run focused unit/spec coverage, gate, model-card lineage, revision/hash, output-hidden-state canary, token/anchor alignment, grouped split/leakage, cache/prefix chain, zero-generation/selector counts, resource lifecycle, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6119-phase-d-hidden-state-selector
+    milestone: "2026.08.530"
+    title: "Gated internal-state Phase-D selector against tuned self-consistency"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6119_phase_d_hidden_state_selector.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5213-hidden-state-verifier-v3-layer-chunk-sweep-v477
+        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
+        addressed_by: "This selector uses a new 360-question exact low-chance corpus with preregistered oracle headroom, matching-base per-layer caches, question-grouped evaluation, explicit anchor/prefix/trajectory features, and cheap/shuffled controls; it does not reopen MMLU-Pro."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6118-phase-d-per-layer-surface
+        artifact_field: per_layer_surface_ready_score
+        op: "=="
+        value: 1.0
+      - upstream: exp6117-phase-d-headroom-audit
+        artifact_field: phase_d_headroom_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Exp6117 must prove selectable headroom and Exp6118 must provide immutable, token-aligned per-layer caches. This task tests whether an oracle-distinct internal signal can choose correct candidates beyond tuned self-consistency. CLUE motivates non-parametric trajectory centroids; Hidden-Align motivates a pre-answer-marker anchor. Both are hypotheses and must compete against final-layer, answer-token, prefix, norm, length, cheap text, and shuffled-label controls. No live LLM call is required; MODEL_SPECS provenance must still preserve the mandated `unsloth/gemma-4-26B-A4B-it-GGUF` generator and matching base revision from Exp6118. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/results/experiment_5213_hidden_state_verifier_v3_layer_chunk_sweep_v477.json
+      - {project_root}/results/experiment_6117_phase_d_headroom_audit.json
+      - {project_root}/results/experiment_6118_phase_d_per_layer_surface.json
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Train and calibrate only preregistered simple probes or non-parametric centroids on Exp6118's question-grouped caches; compare held candidate selection against tuned self-consistency and all cheap/internal controls with paired question-level inference; measure the identically-wrong-consensus stratum; and write results/experiment_6119_phase_d_hidden_state_selector.json without external text/logprob scoring or live generation.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: recompute both structured gates; hash the pool, headroom, cache, feature schema, splits, labels, model provenance, and output paths; verify no candidate or semantic sibling crosses groups, test labels remain sealed, compute budget, protected files, and inherited debt. Block before fitting if either gate fails.
+      1. Ensure REQ-* grouped-split, preregistered-probe, tuned-SC, paired-inference, cheap-control, shuffled-label, positive-control, consensus-stratum, external-scorer exclusion, and retirement requirements exist; add failing tests first.
+      2. Freeze a small model family before fitting: regularized linear/logistic probes and CLUE-style success/failure centroids over anchor, answer-token, prefix delta, and trajectory summaries. Hyperparameters use train/calibration question groups only.
+      3. Baselines/controls must include tuned SC, majority vote, cheap text statistics, completion length, norm, final-layer-only, anchor-only, answer-token-only, prefix-only, trajectory-only, shuffled labels, shuffled feature rows within question, and an oracle-peeking positive control labeled non-deployable.
+      4. Evaluate selection accuracy on held question groups. Report paired delta versus tuned SC, cluster bootstrap CI, exact McNemar/binomial discordance, fixes, harms, ties, abstentions, calibration, AUROC as diagnostic, compute/latency, and `verifier_is_oracle=false`.
+      5. Measure the identically-wrong-consensus stratum with `n >= 30`: questions where the tuned-SC answer is wrong and candidate frequency does not expose the correct choice. If fewer than 30 exist, report underpowered and do not promote.
+      6. Promotion requires held selector accuracy above tuned SC with paired lower interval `>0`, no shuffled-label or shuffled-row reproduction, no cheap text/norm/length baseline matching the gain, positive-control reachability, and no leakage/adversarial flag. Never select a best test layer post hoc.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipts, immutable_pool_headroom_cache_split_label_and_model_hashes, model_specs_and_exact_file_hashes, preregistered_probe_centroid_feature_and_hyperparameter_contract, question_grouped_train_calibration_test_counts_and_leakage, tuned_sc_majority_and_cheap_text_baselines, anchor_answer_prefix_trajectory_final_layer_norm_and_length_controls, shuffled_label_and_within_question_row_controls, oracle_peeking_positive_control_non_deployable, held_selection_accuracy_and_calibration, paired_delta_ci_mcnemar_fixes_harms_ties_and_abstentions, identically_wrong_consensus_stratum_count_metrics_and_power, compute_latency_and_storage_costs, external_text_logprob_confidence_and_live_generation_counts, verifier_is_oracle, missing_verifier_gaps, qualification_gate_matrix, internal_state_selector_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         structured_gate_receipts principle: selector fitting requires both authentic headroom and a qualified per-layer surface.
+         immutable_pool_headroom_cache_split_label_and_model_hashes/model_specs_and_exact_file_hashes principle: all evidence traces to the mandated generator and separately pinned matching base.
+         preregistered_probe_centroid_feature_and_hyperparameter_contract/question_grouped_train_calibration_test_counts_and_leakage principle: no test-selected architecture, layer, or semantic sibling leakage.
+         tuned_sc_majority_and_cheap_text_baselines/anchor_answer_prefix_trajectory_final_layer_norm_and_length_controls principle: internal-state value must beat the strongest matched and cheap explanations.
+         shuffled_label_and_within_question_row_controls/oracle_peeking_positive_control_non_deployable principle: null and reachability controls bound the assay.
+         paired_delta_ci_mcnemar_fixes_harms_ties_and_abstentions principle: promotion is based on paired independent-question evidence, not AUROC alone.
+         identically_wrong_consensus_stratum_count_metrics_and_power principle: the selector's value must be measured where frequency is genuinely wrong and sufficiently powered.
+         external_text_logprob_confidence_and_live_generation_counts principle: all must be zero; the retired external scorer family stays closed.
+         verifier_is_oracle/missing_verifier_gaps principle: the selector is oracle-distinct and any unresolved discriminator remains explicit.
+         qualification_gate_matrix/internal_state_selector_ready_score/retirement_triggered principle: readiness is conjunctive and the same negative retires this exact corpus/surface selector shape.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `cached_matching_base_internal_features_plus_exact_labels_no_llm`.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `underpowered:`, `retired:`, or `blocked:`.
+      8. Run focused unit/spec coverage, both gates, split/leakage, preregistration, baselines/controls, paired statistics, consensus power, no-external-scorer/no-generation, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6120-outcome-committed-reduced-order-csl
+    milestone: "2026.08.530"
+    title: "Outcome-committed reduced-order continuous self-learning"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_6120_outcome_committed_reduced_order_csl.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5895-shortcut-safe-continuous-self-learning
+        verdict: "complete_null: shortcut_safe_csl_not_promotion_eligible"
+        addressed_by: "Exp5967-Exp5969 shipped chronological transactional safety and showed write-through wins; this attempt changes to a fixed-dimensional task/polarity/dynamics state, a read-only decision snapshot, and exact post-outcome commit with matched write-through and delayed controls."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Continuous self-learning is mandatory. Exp5967-Exp5969 provide a ready chronological event fixture, transactional external state, rollback, poison quarantine, protected-prefix retention, and Python/Rust/PyO3 parity. Exp5968 found write-through superior to delayed commit, so delayed commit is only a diagnostic arm. Memoir reports a fixed-budget learning-speed penalty when fast memory is rewritten during the same pondering loop. This task therefore freezes the decision snapshot and writes a bounded reduced-order state only after exact future outcomes. No LLM is required and model weights remain immutable. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -210,38 +544,235 @@ tasks:
       - {project_root}/research-program.md
       - {project_root}/research-references.md
       - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/ops/known-issues.md
-      - {project_root}/results/experiment_5785_exact_constraint_fixture.json
-      - {project_root}/results/experiment_5786_sota_constraint_stream.json
-      - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.json
-      - {project_root}/results/experiment_5879_hardness_headroom_taxonomy_corrigendum.json
-      - {project_root}/python/carnot/constraint_ir_replay.py
-      - {project_root}/openspec/capabilities/verifiable-reasoning/spec.md
-      - {project_root}/openspec/capabilities/verification/spec.md
+      - {project_root}/results/experiment_5895_shortcut_safe_continuous_self_learning.json
+      - {project_root}/results/experiment_5967_delayed_commit_event_fixture.json
+      - {project_root}/results/experiment_5968_delayed_commit_csl_prospective.json
+      - {project_root}/results/experiment_5969_csl_poison_drift_abi_audit.json
+      - {project_root}/python/carnot/session_memory.py
+      - {project_root}/python/carnot/continuous_ebm.py
+      - {project_root}/rust/src/session_memory.rs
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md
+      - {project_root}/ops/e2e-test-plan.md
 
       TASK:
-      Build a sealed calibration/test difficulty ladder from harder parameter draws of the exact Exp5785/Exp5786 constraint families; separate solver hardness, model-facing surface, semantic family, answer-space chance floor, shortcut salience, and exact method-validity labels; write immutable row/split manifests and results/experiment_6103_phase_d_difficulty_ladder_fixture.json without invoking an LLM.
+      Add a fixed-dimensional task/polarity/dynamics utility state to the ready transactional external-memory path; freeze each decision's retrieval snapshot; commit utility only after an exact future outcome; compare against write-through, delayed commit, fixed memory, shuffled retrieval, and no memory over chronological seeds; preserve all safety and ABI invariants; and write results/experiment_6120_outcome_committed_reduced_order_csl.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: hash all source fixtures, generators, exact Python/Z3 validators, prior corrigenda, split manifests, output paths, disk/RAM, root-clutter inventory, and protected files. Confirm no candidate-generation or model-response artifact is imported as a fixture row.
-      1. Add REQ-* exact-generation, low-chance answer-space, calibration/test sealing, solver-vs-model hardness separation, proof-preserving transform, shortcut/path-validity, leakage, and tamper requirements plus failing tests first.
-      2. Generate at least 600 calibration and 360 held-test questions across at least three exact low-chance families, with answer-space floors no greater than 0.25. Parameterize family size/density/width and solver conflicts independently where feasible.
-      3. Add proof-preserving relabels, meaning-preserving paraphrases, surface-order changes, boundary conditions, salient shortcut distractors, and derivation/method-validity labels. Record transforms and exact inverses; do not expose hidden answers or validator traces to later model prompts.
-      4. Freeze semantic-group-disjoint calibration/test splits before inference. No base instance, sibling relabel, paraphrase, near-negative, or answer permutation may cross a split.
-      5. Replay every answer and method-validity label through independent Python and Z3 authorities. Reject disagreements, unreachable truths, duplicate semantic groups, chance-floor ambiguity, or answer-order dependence.
-      6. Publish a bounded calibration policy for Exp6104: calibration may select difficulty strata, temperature, and fixed decoding parameters but may not inspect held-test labels or change held rows. The target per-candidate test band is 0.40-0.70, measured later rather than promised here.
-      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, immutable_source_hashes, family_parameter_and_exact_generation_contract, calibration_and_held_test_counts, semantic_group_splits, answer_space_and_enumerated_chance_floors, solver_hardness_model_surface_and_semantic_strata, proof_preserving_relabel_paraphrase_and_inverse_receipts, shortcut_salience_and_method_validity_manifest, python_z3_parity, duplicate_leakage_unreachable_and_order_dependence_counts, calibration_policy_and_test_secrecy, row_paths_hashes_and_prefix_chain, phase_d_ladder_fixture_ready_score, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         family_parameter_and_exact_generation_contract principle: all instances are generated from public exact rules, never model outputs or hidden answer templates.
-         calibration_and_held_test_counts/semantic_group_splits principle: evaluation power is measured at the independent question group.
-         answer_space_and_enumerated_chance_floors principle: chance is enumerated from each exact answer space, not estimated from observed model accuracy.
-         solver_hardness_model_surface_and_semantic_strata principle: solver conflicts remain diagnostic and are not called model difficulty.
-         proof_preserving_relabel_paraphrase_and_inverse_receipts principle: every transform has auditable meaning and inverse behavior.
-         shortcut_salience_and_method_validity_manifest principle: final-answer correctness is kept separate from the intended reasoning path.
-         python_z3_parity/duplicate_leakage_unreachable_and_order_dependence_counts principle: exact validators and sealed splits are the authority.
-         calibration_policy_and_test_secrecy principle: no held-test label can affect generation settings or inclusion.
-         phase_d_ladder_fixture_ready_score principle: readiness requires all exact, diversity, power, leakage, and tamper gates.
-         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `deterministic_exact_fixture_generation_no_llm`.
-         verifier_is_oracle/missing_verifier_gaps principle: exact Python/Z3 validators are oracle and any uncovered method semantics are explicit gaps.
-         honest_verdict principle: use `complete_ready:`, `complete_partial:`, or `blocked:`.
-      8. Run focused unit/spec coverage, deterministic replay, Python/Z3 parity, split leakage, transform inverse, chance-floor, duplicate/order, tamper, schema, adversarial-verify, applicable E2E, protected-file, and root-clutter checks.
+      0. PRECONDITIONS: hash Exp5967-Exp5969 fixtures, chronological order, exact outcome authority, memory implementation, Rust/PyO3 ABI, rollback/poison policies, output paths, protected files, root clutter, and inherited debt. Confirm weights and model files are immutable.
+      1. Ensure REQ-* reduced-order state, read-only decision snapshot, post-outcome commit, chronological evaluation, matched controls, future-event utility, non-forgetting, poison/rollback, bounded-state, weight immutability, and ABI parity requirements exist; add failing tests first.
+      2. Define a fixed-dimensional state with explicit task, outcome-polarity, and memory-dynamics coordinates plus versioned serialization. Dimension cannot grow with history length; raw exact events remain an audit ledger, not the runtime state.
+      3. Freeze the memory snapshot and state version at decision start. Retrieval and scoring may read it but cannot mutate it. Open a transaction only after the independent exact outcome arrives; record causal event IDs, before/after hashes, commit or rollback, and no same-decision read-after-write.
+      4. Run five chronological seeds with identical events and decisions for reduced-order post-outcome commit, Exp5968-style write-through, delayed commit, fixed memory, shuffled retrieval, and no memory. Preserve an A/A determinism arm.
+      5. Primary evidence is exact future-event utility and learning-speed trajectory versus write-through with paired seed/event intervals. Also report final utility, calibration/AUC if defined, state bytes, feedback coverage, contamination, unsafe accepts, poison, rollback, replay retention, backward transfer, forgetting, and compute.
+      6. Promotion requires a positive paired lower interval versus write-through on future-event utility or a preregistered equal-utility/lower-state Pareto criterion, zero safety/ABI regressions, non-forgetting, bounded state, and immutable weights. Do not promote on memory-hit rate or same-event recovery.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, continuous_self_learning_task, immutable_fixture_event_order_authority_code_and_abi_hashes, reduced_order_state_schema_dimension_version_and_bytes, decision_snapshot_freeze_and_no_same_decision_write_receipts, exact_post_outcome_transaction_commit_and_rollback_receipts, arm_definitions_seed_event_and_aa_determinism_counts, future_event_utility_learning_speed_final_utility_and_paired_intervals, write_through_delayed_fixed_shuffled_and_no_memory_controls, feedback_coverage_contamination_and_state_size, unsafe_accept_poison_rollback_replay_retention_and_nonforgetting_metrics, python_rust_pyo3_fixed_width_abi_parity, model_weight_immutability_receipt, qualification_gate_matrix, outcome_committed_csl_ready_score, retirement_triggered, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         continuous_self_learning_task principle: this is the milestone's explicit FR11 learning experiment.
+         reduced_order_state_schema_dimension_version_and_bytes principle: runtime credit state stays bounded as history grows.
+         decision_snapshot_freeze_and_no_same_decision_write_receipts/exact_post_outcome_transaction_commit_and_rollback_receipts principle: credit cannot circularly affect the decision that generated its own outcome.
+         arm_definitions_seed_event_and_aa_determinism_counts principle: every arm sees matched chronological events and reproducible controls.
+         future_event_utility_learning_speed_final_utility_and_paired_intervals principle: learning speed and eventual capability are distinct, future-looking outcomes.
+         write_through_delayed_fixed_shuffled_and_no_memory_controls principle: Exp5968's winner is the primary comparator and retrieval/commit effects are identifiable.
+         unsafe_accept_poison_rollback_replay_retention_and_nonforgetting_metrics/python_rust_pyo3_fixed_width_abi_parity principle: utility cannot trade away safety, retention, or cross-language semantics.
+         model_weight_immutability_receipt principle: this Tier-2 mechanism changes external state only.
+         qualification_gate_matrix/outcome_committed_csl_ready_score/retirement_triggered principle: promotion is conjunctive and the same non-promotion verdict retires this shape.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `deterministic_exact_verifier_and_versioned_external_state_no_llm`.
+         verifier_is_oracle/missing_verifier_gaps principle: exact future outcomes are oracle; learned utility state is not.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:`.
+      8. Run focused unit/spec coverage, chronological/A-A, snapshot immutability, transaction/rollback/poison, future-event statistics, state bound, non-forgetting, weight immutability, Python/Rust/PyO3 ABI, E2E-007 and E2E-008 as applicable, schema, adversarial-verify, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6121-gatemate-changed-state-gate-v530
+    milestone: "2026.08.530"
+    title: "GateMate changed-physical-state continuity gate"
+    priority: high
+    track: hardware
+    deliverable: results/experiment_6121_gatemate_changed_state_gate_v530.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    operator_override: "CLAUDE.md Hardware-Task Continuity Discipline requires one attached-board task while GateMate remains non-terminal; unchanged state must produce a no-rerun receipt, not another probe."
+    prior_failures:
+      - experiment_id: exp5201-hardware-continuity-gatemate-diagnostic-v476
+        verdict: "complete_hardware_continuity_gatemate_diagnostic_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_v476_narrowed_jtag_protocol_level_polarfire:reachable_no_speedup_claim"
+        addressed_by: "This task hashes and compares physical cable/port/power/DirtyJTAG evidence first, performs no detect when unchanged, and permits exactly one non-destructive IDCODE attempt only after a newer dated physical receipt."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      KV260 and PolarFire have graduated their active continuity stories. GateMate remains opportunistic and blocked at DirtyJTAG IDCODE despite a historical flashed bitstream. Repeating software-only detect commands with unchanged cable/port/power state is retired churn. Hardware continuity is satisfied here by a changed-state gate: no physical delta means no JTAG command and an exact operator action packet; a new dated receipt permits one non-destructive detect. Flashing and speedup claims are outside scope. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-hardware-wishlist.md
+      - {project_root}/ops/status.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json
+      - {project_root}/results/experiment_3866_gatemate_ising_tile_flash_v2.json
+      - {project_root}/scripts/experiments/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.py
+      - {project_root}/openspec/capabilities/hardware-acceleration/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Build a hash-stable receipt for the latest GateMate cable, port, power, board, USB/DirtyJTAG, and operator evidence; compare it with the last attempted state; skip all JTAG commands when unchanged and emit an exact action packet; otherwise perform at most one non-destructive IDCODE detect and a prebuilt smoke only if the expected device appears; and write results/experiment_6121_gatemate_changed_state_gate_v530.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash all prior board artifacts, cables/ports/power descriptions, USB descriptors, tool versions, operator receipts, bitstream hashes, output paths, protected files, and current dirty worktree. Establish whether a newer dated physical receipt exists before invoking hardware.
+      1. Ensure REQ-* physical-state hash, dated-change, no-rerun, non-destructive detect, expected-IDCODE, bitstream immutability, operator authorization, and claim-narrowing requirements exist; add failing tests first.
+      2. If no newer physical receipt changes cable, port, power, board, or DirtyJTAG state, run no openFPGALoader/JTAG detect. Emit the exact cable/port/power/USB action packet and a blocked-on-physical-action terminal artifact.
+      3. If state changed, record before/after evidence and run exactly one bounded, non-destructive detect. Require the expected GateMate IDCODE before any prebuilt host-I/O smoke. Do not synthesize, place, route, pack, flash, or modify firmware.
+      4. If the expected ID appears, run only the already-built read-only/non-destructive smoke whose hash matches prior receipts. Record raw stdout/stderr, command, exit code, USB identity, timing, and board provenance.
+      5. Make no speedup, power-efficiency, current-draw, terminal-hardware, or TSU/Kona claim. Do not touch KV260/PolarFire or infer board execution from simulation.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, prior_and_current_physical_state_hashes, dated_operator_physical_receipt, physical_state_changed, cable_port_power_board_usb_and_dirtyjtag_receipts, detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code, expected_and_observed_idcode, prebuilt_bitstream_and_smoke_hashes, flash_synthesis_place_route_pack_and_firmware_mutation_counts, operator_action_packet, hardware_execution_authenticated, speed_power_and_terminal_claim_counts, retirement_triggered, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         prior_and_current_physical_state_hashes/dated_operator_physical_receipt/physical_state_changed principle: physical change, not another software loop, authorizes one attempt.
+         cable_port_power_board_usb_and_dirtyjtag_receipts principle: every physical and transport assumption is explicit.
+         detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code principle: unchanged state yields zero commands; changed state permits one auditable non-destructive command.
+         expected_and_observed_idcode/prebuilt_bitstream_and_smoke_hashes principle: smoke execution requires authenticated device identity and immutable existing artifacts.
+         flash_synthesis_place_route_pack_and_firmware_mutation_counts principle: all must remain zero without explicit operator authorization.
+         operator_action_packet principle: an unchanged-state block ends with one actionable physical next step.
+         hardware_execution_authenticated/speed_power_and_terminal_claim_counts principle: no execution or performance claim survives without raw hardware evidence.
+         retirement_triggered principle: repeating the same physical block retires this changed-state task shape.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `hardware_state_gate_with_optional_non_destructive_detect`.
+         verifier_is_oracle/missing_verifier_gaps principle: raw IDCODE/host-I/O evidence is authoritative; simulation is not board execution.
+         honest_verdict principle: use `complete_changed_state:`, `blocked_physical_action:`, `retired:`, or `blocked:`.
+      7. Run focused unit/spec coverage, state-hash, no-rerun, one-attempt, command allowlist, IDCODE, bitstream immutability, no-flash/no-speedup, schema, adversarial-verify, applicable hardware E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6122-arc-primitive-reachability-loo
+    milestone: "2026.08.530"
+    title: "ARC live-path generic primitive reachability and held-out attribution"
+    priority: high
+    track: arc-generalization-floor
+    deliverable: results/experiment_6122_arc_primitive_reachability_loo.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 480
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp5756-inert-click-pruner-11game-ab
+        verdict: "complete: inert_click_pruner_fires_at_budget200_prunes_2643_candidates_holds_levels_at_1_no_missed_win_but_states_expanded_did_not_decrease_delta_+22_no_efficiency_benefit"
+        addressed_by: "This does not add another pruner: it first audits reachability of existing game-ID-free primitives from the live agent, requires support on three development games before selecting one, and attributes held-out action/state effects with leave-one-game-out controls."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      ARC-AGI-3 remains the north star, but the local single-shot induction line, prompt/budget variations, inert-click pruning, and convention-transform retries are closed. The one milestone ARC slot is a generalization-floor audit: determine whether existing generic `arc_solver_kit.py` primitives are reachable from the live agent and whether at most one supported primitive has a causal held-out efficiency effect. It is not a game-level solve task and must not duplicate registry credit. Any incidental level outcome is non-headline and requires `solve_provenance: live_agent_self_discovery`. No LLM is required. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/ops/north-star.md
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/results/experiment_5756_inert_click_pruner_11game_ab.json
+      - {project_root}/results/arc_inert_label_defer_20260802/arc_inert_label_defer.json
+      - {project_root}/python/carnot/agentic/arc_solver_kit.py
+      - {project_root}/python/carnot/agentic/arc_competition_agent.py
+      - {project_root}/scripts/arc_loop_solve.py
+      - {project_root}/scripts/arc_levelup_guarantee_lint.py
+      - {project_root}/openspec/capabilities/agentic-verification/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Registry-precheck all 25 games; instrument the live agent using only agent-owned observation/action tapes to measure reachability, firing, and downstream use of existing game-ID-free solver-kit primitives; select at most one primitive supported by at least three development games; run leave-one-game-out live-path A/B on held games for action/state/progress attribution; write results/experiment_6122_arc_primitive_reachability_loo.json; and claim no game-level solve.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash the solve registry, live agent, solver kit, flags, frozen agent-owned tapes, game roster, seeds, action budgets, result paths, protected files, root clutter, and current submitted defaults. Confirm target level count is zero and no already-reproduced level is proposed for re-solving.
+      1. Ensure REQ-* registry-precheck, agent-owned provenance, primitive reachability, game-ID-free support, development/held separation, LOO attribution, solve-provenance, no-duplicate-credit, and default-unchanged requirements exist; add failing tests first.
+      2. Enumerate existing generic primitives and instrument call reachability, preconditions, firing, returned decisions, downstream consumption, actions, states, progress, levels, wall time, and failure reasons. Do not inspect game source, hand adapters, offline ground-truth BFS, registry trajectories, or per-game recipes.
+      3. Use development tapes to select at most one primitive only if it is live-reachable and fires on at least three games with nonzero downstream consumption. If none qualifies, write a clean reachability-null artifact and do not invent a new primitive.
+      4. Freeze selection and run leave-one-game-out A/B on held games through the live E3Agent path with identical seeds/budgets. Primary metrics are actions and states to first progress/level-up plus progress-axis deltas; report levels only as a guarded secondary outcome.
+      5. Preserve all submitted defaults. No feature flip follows from a single budget or unsupported game subset. Report navigation/replay costs, budget-bound cells, agent crashes, missing observations, and multiple-comparison controls.
+      6. Registry-precheck and postcheck every incidental level outcome. REQUIRED `solve_provenance` is `live_agent_self_discovery`; duplicate levels, development proxies, outer-loop RE, or unreachable solver paths receive zero credit and adversarial CRITICAL handling.
+      7. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, registry_precheck_and_postcheck, target_level_solve_claim_count, solve_provenance, agent_owned_tape_code_flag_roster_seed_and_budget_hashes, primitive_inventory_game_id_free_audit, per_primitive_live_reachability_firing_and_downstream_consumption, development_support_and_selection_contract, selected_primitive_or_none, held_out_leave_one_game_out_arm_counts, per_game_actions_states_progress_levels_walltime_and_failure_rows, paired_action_state_progress_and_level_deltas_with_intervals, navigation_replay_budget_bound_crash_and_missing_observation_receipts, duplicate_level_and_unreachable_solver_credit_counts, submitted_defaults_unchanged, live_agent_self_discovery, offline_reproduced_new_level, protected_files_unchanged, random_seed, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         registry_precheck_and_postcheck/target_level_solve_claim_count principle: this task improves a live path and proposes zero game-level solves.
+         solve_provenance/live_agent_self_discovery principle: any incidental outcome must arise from the agent's own attempts and runtime discovery.
+         agent_owned_tape_code_flag_roster_seed_and_budget_hashes principle: only live-agent-owned evidence defines the experiment.
+         primitive_inventory_game_id_free_audit/per_primitive_live_reachability_firing_and_downstream_consumption principle: a generic primitive must be reachable, fire, and affect the live consumer before causal testing.
+         development_support_and_selection_contract/held_out_leave_one_game_out_arm_counts principle: selection support and held attribution are disjoint.
+         paired_action_state_progress_and_level_deltas_with_intervals principle: accuracy and efficiency are measured together at matched game/seed cells.
+         navigation_replay_budget_bound_crash_and_missing_observation_receipts principle: saved actions are not value if replay or failure costs consume them.
+         duplicate_level_and_unreachable_solver_credit_counts principle: both must be zero for any incidental credit.
+         submitted_defaults_unchanged principle: no production flag changes on a bounded generalization-floor result.
+         offline_reproduced_new_level principle: report false unless a live self-discovered path independently passes reproduce; never headline it here.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `offline_arcade_live_agent_runtime_self_discovery_no_llm`.
+         verifier_is_oracle/missing_verifier_gaps principle: environment transitions and reproduce are authority; a primitive is not an oracle.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `underpowered:`, `retired:`, or `blocked:`.
+      8. Run focused unit/spec coverage, registry/precheck, live-path reachability, game-ID-free, development/held LOO, paired attribution, provenance, no-duplicate-credit, ARC guarantee, submitted-default, schema, adversarial-verify, applicable ARC E2E, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6123-v530-capstone-reconciliation
+    milestone: "2026.08.530"
+    title: "Branch-independent .530 capstone and architecture reconciliation"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_6123_v530_capstone_reconciliation.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    operator_override: "2026-05-29 standing operator directive: milestone capstones recur by design and must aggregate every exact declared branch even when upstream tasks are blocked, null, retired, or underpowered."
+    prior_failures:
+      - experiment_id: exp5973-v528-capstone-reconciliation
+        verdict: "complete_with_blocks: .528 reconciled by exact declared deliverables; missing handoff, blocked semantic corpus/ranker cascade, CSL readiness, ARC strip-swap null, and budget feasibility preserved independently"
+        addressed_by: "This capstone consumes a new 12-task identity map, recomputes every structured gate, preserves .530 branch classes independently, and reconciles the architecture document whose 2026-07-03 snapshot is now stale."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.08.530 has 12 declared identities, Exp6112-Exp6123, with a gated Phase-D chain plus independent CSL, GateMate, and ARC branches. A failed or blocked upstream is a valid scientific result and must remain distinct from conductor gate skips. `_bmad/architecture.md` was last reconciled on 2026-07-03 and must describe only components that actually shipped. This task is deliberately ungated so it runs regardless of upstream outcomes. It performs no external publication or push. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/_bmad/prd.md
+      - {project_root}/_bmad/architecture.md
+      - {project_root}/_bmad/traceability.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/research-complete.yaml
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/verifier_gaps.md
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/scripts/capstone_aggregate_available.py
+      - {project_root}/scripts/conductor_gates.py
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+      - {project_root}/ops/e2e-test-plan.md
+
+      TASK:
+      Resolve Exp6112-Exp6122 only by exact `(milestone, task_id, declared deliverable)`; recompute every structured gate; preserve executed, skipped, ready, positive, null, partial, underpowered, blocked, retired, missing, and adversarial-flagged outcomes independently; reconcile relevant OpenSpec requirements, traceability, architecture, status, changelog, conductor log, verifier gaps, hardware and ARC ledgers; and write results/experiment_6123_v530_capstone_reconciliation.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: parse the activated roadmap and all 11 upstream declared paths; hash specs, traceability, architecture, status/changelog, exclusions, registries, protected files, root clutter, and unrelated dirty files. Freshly adversarial-verify every present artifact and distinguish missing from conductor gate-blocked.
+      1. Ensure REQ-* exact-identity, branch-independence, gate-recomputation, terminal-class, retirement, adversarial exclusion, architecture-truth, debt-non-amplification, and protected-file requirements exist; add failing tests first.
+      2. Build an exact task/deliverable matrix and terminal-class enum. Never resolve by newest numeric prefix. A gate skip is not execution, a ready fixture is not a positive selector, and one branch cannot satisfy another branch's gate.
+      3. Recompute Exp6115-Exp6119 gates from upstream artifact fields and compare them with conductor outcomes and title/YAML alignment. Preserve absent, null, nonnumeric, or mismatched fields as explicit failures.
+      4. Recompute scientific gates independently: candidate authenticity/headroom, per-layer access, selector paired gain/controls/power, CSL future-event/safety/ABI, GateMate physical authorization, and ARC provenance/registry/no-duplicate-credit.
+      5. Freshly adversarial-verify all present artifacts. Exclude flagged claims from positive synthesis while preserving the artifact and exact flag reasons. Do not rerun missing or blocked experiments inside the capstone.
+      6. Reconcile relevant OpenSpec files and `_bmad/traceability.md`. Update `_bmad/architecture.md` only with implemented, test-backed components; label planned, blocked, retired, and experiment-only surfaces explicitly. Reconcile ops/status.md, ops/changelog.md, conductor log, verifier gaps, hardware wishlist/status, and ARC registry only where primary artifacts require it.
+      7. Measure inherited unit/lint/spec/root debt and task-owned deltas; require no amplification. Preserve research-roadmap.yaml, scripts/research_conductor.py, ops/north-star.md, exclusions, public/operator-curated docs, historical artifacts, and unrelated worktree edits.
+      8. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, milestone_task_and_declared_deliverable_matrix, exact_evidence_resolution_receipts, per_task_terminal_class_and_reason, executed_skipped_missing_blocked_retired_underpowered_null_ready_positive_and_flagged_counts, gate_recomputation_and_title_yaml_alignment, candidate_pool_headroom_surface_selector_csl_hardware_and_arc_gate_matrix, adversarial_verifier_receipts_and_positive_claim_exclusions, prior_failure_same_verdict_retirement_receipts, branch_independent_scientific_synthesis, prd_gap_and_north_star_delta, specs_traceability_architecture_status_changelog_conductor_verifier_hardware_and_arc_reconciliation, architecture_current_planned_blocked_retired_boundary, inherited_debt_baselines_and_deltas, research_complete_append_readiness, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, missing_verifier_gaps, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         milestone_task_and_declared_deliverable_matrix/exact_evidence_resolution_receipts principle: exact identity and path, never filename aliases, define evidence.
+         per_task_terminal_class_and_reason/executed_skipped_missing_blocked_retired_underpowered_null_ready_positive_and_flagged_counts principle: every outcome belongs to one explicit terminal class without laundering.
+         gate_recomputation_and_title_yaml_alignment principle: every structured predicate is recomputed from primary artifacts and matches its task title.
+         candidate_pool_headroom_surface_selector_csl_hardware_and_arc_gate_matrix principle: each research branch retains its own preregistered authority and gates.
+         adversarial_verifier_receipts_and_positive_claim_exclusions principle: flagged artifacts remain recorded but cannot support positive claims.
+         prior_failure_same_verdict_retirement_receipts principle: every repeated verdict triggers the declared mechanical retirement.
+         branch_independent_scientific_synthesis principle: success or failure in one branch supplies no evidence for another.
+         prd_gap_and_north_star_delta principle: report what changed in FR11, FR12, Phase D, and the live ARC path without redefining the finish line.
+         specs_traceability_architecture_status_changelog_conductor_verifier_hardware_and_arc_reconciliation/architecture_current_planned_blocked_retired_boundary principle: internal docs describe only primary-artifact-backed current state.
+         inherited_debt_baselines_and_deltas principle: task-owned debt cannot increase while unrelated inherited failures remain explicit.
+         protected_files_unchanged principle: active roadmap, conductor, exclusions, north star, public docs, historical results, and unrelated dirty work remain untouched.
+         duration_s/inference_substrate/field_provenance/test_commands/test_exit_codes/reproducibility_checksum principle: use measured `aggregation_from_upstream_artifacts`.
+         verifier_is_oracle/missing_verifier_gaps principle: oracle status and residual discriminators remain branch-specific and explicit.
+         honest_verdict principle: use `complete:`, `complete_with_blocks:`, or `blocked:` and name every terminal branch class.
+      9. Run focused unit/spec coverage, roadmap schema/YAML, exact-path identity, structured gate audit, prior-failure/exclusion lint, terminal-class, retirement, adversarial-verify, ARC guarantee, architecture-truth, traceability/spec coverage, relevant E2E, protected-file, debt-delta, and no-new-root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
