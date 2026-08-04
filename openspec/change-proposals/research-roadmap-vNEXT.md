@@ -5,7 +5,13 @@ Verification, and Reduced-Order Continuous Learning
 
 **Status:** Pre-staged after terminal milestone `2026.07.528`
 
-**Experiment range:** Exp6100-Exp6113
+**Experiment range:** Exp6100-Exp6111
+
+**Architecture freshness note:** `_bmad/architecture.md` was last reconciled on
+2026-07-03, more than 30 days before this plan. It is used here as historical
+architecture evidence, not silently treated as current. Exp6111 must reconcile
+the architecture document against the implemented `.529` surfaces before any
+new component is described as current architecture.
 
 **Primary question:** Can Carnot create the first authentic, adequately powered
 Phase-D candidate pool on which selection is both possible and non-combinatorial,
@@ -92,6 +98,7 @@ events and must preserve `.528` safety/rollback behavior.
 | Solver-Hard, arXiv:2607.17047 | SAT-solver hardness does not consistently predict model difficulty; proof-preserving relabeling exposes surface sensitivity | Exp6103-Exp6105 calibrate observed model accuracy separately from solver conflicts and preserve relabel controls |
 | RoMeRL, arXiv:2608.02508 | Bounded utility coordinates increase feedback density and reduce memory-reward contamination | Exp6108 tests reduced-order state under Carnot's exact chronological safety envelope |
 | Self-Certification of Representation Adequacy, arXiv:2608.02267 | History aliases in a compressed representation cause irreducible decision loss; adequacy must be externally certified | Exp6106 is an explicit access/adequacy gate before Exp6107 can claim a selector result |
+| Right Makes Might / Hidden-Align, arXiv:2606.03234 | Correct rollouts concentrate at the pre-answer-marker anchor, with anchor position and layer depth load-bearing | Exp6106 caches that anchor explicitly; Exp6107 preregisters anchor-only versus prefix, answer-token, final-layer, norm, and length controls without importing the paper's RL claim |
 | Right Answer, Wrong Method, arXiv:2608.02442 | Final-answer correctness can hide enumeration, guessing, or answer-first shortcut behavior | Exp6104-Exp6105 report path-validity and shortcut strata separately from exact correctness |
 | Parallel Trajectory Tempering, arXiv:2607.27077 | Optimization-path reservoirs can maintain equilibrium and expose thermalization | Guarded future work after a viable domain exists; no `.529` PTT benchmark |
 | KAN optimal abstractions, arXiv:2602.06737 | Piecewise-affine KAN abstractions permit explicit MILP error bounds | Guarded future certification; the retired adaptive-KAN accuracy line stays closed |
@@ -120,8 +127,6 @@ flowchart TD
     TX[Transactional memory + rollback]
     ABI[Python/Rust/PyO3 fixed-width ABI]
 
-    KV[KV260 terminal receipt]
-    PF[PolarFire terminal dispatch]
     GM[GateMate physical-state gate]
     ARC[One live ARC floor slot\ngeneric primitive/gotcha mining]
     CAP[Branch-independent capstone]
@@ -139,8 +144,6 @@ flowchart TD
     ATOMS --> CAP
     SELECT --> CAP
     ABI --> CAP
-    KV --> CAP
-    PF --> CAP
     GM --> CAP
     ARC --> CAP
 ```
@@ -169,13 +172,13 @@ The boundaries are load-bearing:
 
 | Class | Tasks | Count |
 |---|---|---:|
-| Infrastructure reservation | Exp6100 transition, Exp6113 capstone | 2 |
+| Infrastructure reservation | Exp6100 transition, Exp6111 capstone | 2 |
 | SOTA ingestion reservation | Exp6101 dated evidence refresh | 1 |
-| Attached-board continuity | Exp6109 KV260, Exp6110 PolarFire, Exp6111 GateMate | 3 |
-| ARC generalization floor | Exp6112 cross-game primitive/gotcha task | 1 |
+| Attached-board continuity | Exp6109 GateMate | 1 |
+| ARC generalization floor | Exp6110 cross-game primitive/gotcha task | 1 |
 | Discretionary Phase D | Exp6103-Exp6107 | 5 |
 | Other discretionary research | Exp6102 semantic corpus recovery, Exp6108 continuous self-learning | 2 |
-| **Total** | Exp6100-Exp6113 | **14** |
+| **Total** | Exp6100-Exp6111 | **12** |
 
 After the fixed reservations and one ARC floor are removed, seven discretionary
 slots remain. Five of seven are Phase D, so Phase D holds the required majority.
@@ -187,7 +190,7 @@ slots remain. Five of seven are Phase D, so Phase D holds the required majority.
 Archive exactly the 13 activated `.528` task identities and their declared
 deliverables. Preserve Exp5961 as a missing declared artifact after three
 wall-clock failures; preserve the Exp5964 block and Exp5965/5966 conductor gate
-blocks; append `.528` at most once; prove Exp6100-Exp6113 collision-free.
+blocks; append `.528` at most once; prove Exp6100-Exp6111 collision-free.
 
 **Deliverable:** `results/experiment_6100_transition_v529.json`
 
@@ -246,9 +249,10 @@ order ties, templating, decorative model identities, and answer-first shortcuts.
 Only after headroom exists, resolve `google/gemma-4-26B-A4B-it` from the GGUF
 card, pin its revision, and establish `output_hidden_states=True` under a
 declared precision/device map. Teacher-force the immutable Exp6104 prompts and
-candidates and cache layerwise answer-token/prefix summaries. The artifact must
-distinguish base weights from the GGUF generator and block if per-layer access,
-token alignment, or resource preconditions fail.
+candidates and cache layerwise pre-answer-marker anchor, answer-token, and
+prefix summaries. The artifact must distinguish base weights from the GGUF
+generator and block if per-layer access, anchor/token alignment, or resource
+preconditions fail.
 
 **Deliverable:** `results/experiment_6106_phase_d_per_layer_surface.json`
 
@@ -256,11 +260,11 @@ token alignment, or resource preconditions fail.
 
 Train simple preregistered probes on cached per-layer features with question-
 grouped train/calibration/test splits. Compare against tuned SC, a cheap
-text-statistical baseline, final-layer-only control, shuffled labels, norm and
-length controls, and an oracle-peeking positive control. Report paired McNemar
-intervals and the identically-wrong-consensus stratum (`n >= 30`). Promotion
-requires a positive paired lower interval, no shuffled-label reproduction, and
-no cheap-baseline match.
+text-statistical baseline, anchor-only, prefix, answer-token, final-layer-only,
+shuffled-label, norm, and length controls, plus an oracle-peeking positive
+control. Report paired McNemar intervals and the identically-wrong-consensus
+stratum (`n >= 30`). Promotion requires a positive paired lower interval, no
+shuffled-label reproduction, and no cheap-baseline match.
 
 **Deliverable:** `results/experiment_6107_phase_d_hidden_state_selector.json`
 
@@ -276,26 +280,7 @@ preserve poison, retention, rollback, state-cap, and ABI controls.
 
 **Deliverable:** `results/experiment_6108_reduced_order_utility_csl.json`
 
-### Exp6109 — KV260 terminal latency/correctness receipt
-
-Use SSH only. Without flashing or touching host block devices, run a bounded,
-hash-pinned workload through the currently loaded Carnot Ising overlay and
-record synthesis identity, UIO result hash, same-schedule CPU equivalence, and
-board latency. This is a POC terminal receipt, not a general Boltzmann,
-production, energy, or speedup claim.
-
-**Deliverable:** `results/experiment_6109_kv260_terminal_receipt_v529.json`
-
-### Exp6110 — PolarFire hash-matched terminal dispatch
-
-Use the reachable Linux board and the existing dispatch harness to run one
-bounded Carnot workload under the passive-cooling ceiling. Require local/input/
-board/output hashes, temperature/duration receipts, and exact result agreement.
-No flash write or speedup inference is allowed.
-
-**Deliverable:** `results/experiment_6110_polarfire_terminal_dispatch_v529.json`
-
-### Exp6111 — GateMate changed-physical-state gate
+### Exp6109 — GateMate changed-physical-state gate
 
 Hash the last DirtyJTAG/cable state and require a new dated operator physical-
 setup receipt before one detect attempt. If unchanged, do not repeat JTAG;
@@ -303,9 +288,9 @@ emit the exact cable/port/power action packet. If changed and the GM1Ax IDCODE
 appears, run the already-built non-destructive smoke path; flashing still
 requires explicit authorization.
 
-**Deliverable:** `results/experiment_6111_gatemate_physical_gate_v529.json`
+**Deliverable:** `results/experiment_6109_gatemate_physical_gate_v529.json`
 
-### Exp6112 — live ARC cross-game gotcha primitive hardening
+### Exp6110 — live ARC cross-game gotcha primitive hardening
 
 Mine agent-owned observation/action tapes for one generic cross-game gotcha
 supported by at least three development games, encode it as a game-ID-free
@@ -314,19 +299,19 @@ held game set. This task must not invoke the closed induction line or claim a
 public level solve. Any incidental level outcome records
 `solve_provenance: live_agent_self_discovery` and remains non-headline.
 
-**Deliverable:** `results/experiment_6112_arc_cross_game_gotcha_primitives.json`
+**Deliverable:** `results/experiment_6110_arc_cross_game_gotcha_primitives.json`
 
 ## Phase D — exact reconciliation
 
-### Exp6113 — branch-independent capstone
+### Exp6111 — branch-independent capstone
 
-Resolve all 13 upstream tasks by declared `(task_id, deliverable)` identity.
+Resolve all 11 upstream tasks by declared `(task_id, deliverable)` identity.
 Preserve ready, positive, null, blocked-precondition, gate-blocked, retired,
 underpowered, missing, and adversarial-flagged classes independently. Reconcile
-specs, traceability, status, and changelog without converting a successful
-branch into evidence for another.
+specs, traceability, the stale architecture document, status, and changelog
+without converting a successful branch into evidence for another.
 
-**Deliverable:** `results/experiment_6113_v529_capstone_reconciliation.json`
+**Deliverable:** `results/experiment_6111_v529_capstone_reconciliation.json`
 
 ## Dependency graph
 
@@ -339,14 +324,12 @@ Exp6103 Phase-D difficulty ladder                                  │
   └─[phase_d_ladder_fixture_ready_score == 1]─> Exp6104 pool        │
        └─[candidate_pool_integrity_score == 1]─> Exp6105 audit      │
             └─[phase_d_headroom_ready_score == 1]─> Exp6106 layers │
-                 └─[per_layer_surface_ready_score == 1 AND          ├─> Exp6113
-                    phase_d_headroom_ready_score == 1]─> Exp6107    │
+                 └─[per_layer_surface_ready_score == 1 AND          │
+                    phase_d_headroom_ready_score == 1]─> Exp6107    ├─> Exp6111
                                                                    │
 Exp5968 + Exp5969 ─> Exp6108 reduced-order CSL ────────────────────┤
-Exp6109 KV260 terminal receipt ─────────────────────────────────────┤
-Exp6110 PolarFire terminal dispatch ────────────────────────────────┤
-Exp6111 GateMate physical gate ─────────────────────────────────────┤
-Exp6092 + Exp6093 + Exp6094 ─> Exp6112 ARC generic primitive ──────┘
+Exp6109 GateMate physical gate ─────────────────────────────────────┤
+Exp6092 + Exp6093 + Exp6094 ─> Exp6110 ARC generic primitive ──────┘
 ```
 
 The capstone is intentionally ungated. It must reconcile blocked, skipped, and
@@ -391,10 +374,12 @@ model blocks the task. GGUF repositories use embedded llama.cpp tokenizers;
 - Exp6108 declares Exp5895. It does not requalify the retired exact slot; it
   changes the mechanism to reduced-order utility credit on the ready `.528`
   stream and explicitly retains the write-through winner.
-- Exp6109-Exp6111 are standing hardware-continuity continuations. Each carries
-  the 2026-05-29 operator override plus the latest cached board-state prior and
-  a concrete forward difference.
-- Exp6112 declares the Exp6091 induction block but does not rerun induction. It
+- Exp6109 is the standing non-terminal GateMate hardware-continuity continuation.
+  It carries the 2026-05-29 operator override, latest cached board-state prior,
+  and a concrete changed-physical-state gate. KV260 and PolarFire are omitted
+  because their adversarial-clean terminal artifacts already satisfy the
+  repository's graduation rule.
+- Exp6110 declares the Exp6091 induction block but does not rerun induction. It
   mines cross-game live observations and hardens a generic primitive, one of the
   explicitly allowed ARC-floor task classes.
 - Every genuine rerun declaration includes `retire_if_same_verdict: true`. No
@@ -402,7 +387,7 @@ model blocks the task. GGUF repositories use embedded llama.cpp tokenizers;
 
 ## ARC provenance and non-duplication
 
-Exp6112 is the only ARC task. It must precheck `ops/arc_solve_registry.yaml` and
+Exp6110 is the only ARC task. It must precheck `ops/arc_solve_registry.yaml` and
 keep it byte-identical. The task uses `make_carnot_agent` / `E3AgentPolicy` and
 may read only agent-owned observations, action outcomes, and runtime reverse-
 engineering state. It may not read game source, instantiate a hand `GameAdapter`,
@@ -420,9 +405,9 @@ level outcome. `development_proxy` and `outer_loop_re` cannot be headline.
 | Dual RTX 3090, 2x24 GB | Exp6102, Exp6104, Exp6106 | Preflight cached model hashes, per-device free VRAM, thermals, disk, llama.cpp/transformers versions, task-owned PID leases, and cleanup. Sequential loading is mandatory; no unrelated process may be killed. |
 | Host RAM and disk | Exp6104, Exp6106 | At least 90 GiB available RAM/swap and 120 GiB free disk before base-model download/offload; atomic checkpoints and compressed hidden-state shards. |
 | CPU/Z3/Rust/PyO3 | Exp6103, Exp6105, Exp6107, Exp6108 | Exact labels, clustered statistics, transactional replay, and fixed-width ABI; no synthetic timing or oracle substitution. |
-| KV260 | Exp6109 | SSH `kria`, existing XDC-constrained Carnot overlay, board-local UIO only. Never inspect host `/dev/mmcblk*`; no flash write. |
-| PolarFire SoC | Exp6110 | SSH `polarfire`, bounded `/tmp` dispatch, passive-cooling limit `<=300s` and `<70C`; no flash or storage mutation outside the task sandbox. |
-| GateMate A1-EVB-2M | Exp6111 | DirtyJTAG physical state. No repeated detect until a changed physical receipt; no flash without explicit authorization. |
+| KV260 | No `.529` task | Graduated on adversarial-clean Exp3600: synthesized Carnot overlay, `kv260_terminal_state_reached=true`, and a measured board transcript. Follow-on work is opportunistic; do not re-run continuity merely to occupy a slot. |
+| PolarFire SoC | No `.529` task | Graduated on adversarial-clean Exp3867: hash-matched end-to-end dispatch with `polarfire_workload_validated=true`. Follow-on work is opportunistic. |
+| GateMate A1-EVB-2M | Exp6109 | DirtyJTAG physical state. No repeated detect until a changed physical receipt; no flash without explicit authorization. |
 | Extropic XTR-0/Z1 | No execution task | Official page still advertises 2026 early access, but Carnot has no authenticated route. Marketing/simulation is not board evidence. |
 
 Every compute task has a step-zero precondition and emits an honest blocked
@@ -447,9 +432,10 @@ class, including honest blocks. Scientific promotion requires:
 4. Exp6108 improves prospective exact-event utility or feedback density over
    `.528`'s winning write-through arm without unsafe acceptance, contamination,
    retention loss, rollback failure, or ABI divergence.
-5. Each attached board produces a fresh exact state/terminal receipt within its
-   authorization boundary, and Exp6112 improves or falsifies one game-ID-free
-   live primitive without solve duplication.
-6. Exp6113 preserves every terminal class, protected file, and adversarial
+5. GateMate produces a fresh changed-state or exact blocked receipt within its
+   authorization boundary, and Exp6110 improves or falsifies one game-ID-free
+   live primitive without solve duplication. KV260 and PolarFire terminal
+   evidence remains immutable and is not re-measured.
+6. Exp6111 preserves every terminal class, protected file, and adversarial
    determination and reconciles the specs and operations ledgers without
    outcome laundering.

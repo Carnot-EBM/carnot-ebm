@@ -31933,6 +31933,17 @@ VRAM rather than by a semantic result.
   prove that the extraction surface is reachable and that held-out labels are
   distinguishable before any selector is credited; fixed-kernel theory does
   not certify later representation repair.
+- **Right Makes Might: Aligning Verified Hidden States Empowers RL Reasoning** -
+  arXiv:2606.03234, https://arxiv.org/abs/2606.03234; Hugging Face paper page at
+  https://huggingface.co/papers/2606.03234. Hidden-Align reports that correct
+  mathematical rollouts naturally concentrate at the token immediately before
+  the answer marker, and that anchor position and layer depth are load-bearing
+  ablations. Carnot hook: Exp6106 must cache an explicit pre-answer-marker
+  anchor alongside prefix and answer-token summaries, and Exp6107 must compare
+  anchor-only, final-layer-only, prefix, norm, and length controls. This is an
+  extraction-control hypothesis, not evidence that a frozen probe will beat
+  tuned self-consistency, not a reproduction of the paper's RL training, and
+  not permission to conflate matching-base activations with GGUF generation.
 
 ### Guarded findings
 
@@ -32016,8 +32027,11 @@ VRAM rather than by a semantic result.
   model hardness.
 - Qualify a matching base-transformer per-layer extraction surface only after
   candidate headroom exists, then compare an internal-state selector with tuned
-  self-consistency and shortcut controls. GGUF generation provenance and base
-  hidden-state extraction must remain distinct and hash-pinned.
+  self-consistency and shortcut controls. Cache the pre-answer-marker anchor
+  motivated by Hidden-Align, but preregister it against prefix, answer-token,
+  final-layer, norm, and length controls rather than assuming transfer. GGUF
+  generation provenance and base hidden-state extraction must remain distinct
+  and hash-pinned.
 - Recover the `.528` exact-atom SOTA corpus with sequential model eviction,
   checkpointed early stopping, and phase timing; the previous result is an
   environmental VRAM block, not evidence against the semantic mechanism.
