@@ -15290,3 +15290,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-04 06:11 UTC | Gated on Exp5970 ready: full ARC strip-swap conven | OK | 93 passed, 1 warning in 10.18s |
 | 2026-08-04 07:34 UTC | Live ARC flagship-LLM budget-2000 wall-clock feasi | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: h pytest.raise |
 | 2026-08-04 08:13 UTC | Live ARC flagship-LLM budget-2000 wall-clock feasi | OK | 93 passed, 1 warning in 10.23s |
+| 2026-08-04 09:00 UTC | Branch-independent .528 capstone and exact reconci | OK | 87 passed, 1 warning in 7.18s |
