@@ -6045,3 +6045,9 @@ The critical path for milestone .250:
 - theme: flagship feasibility concentrated compute runtime under coarse elapsed-time reconstruction
 - key result: the runtime ledger isolates one long compute path, while the available monitoring neither shows task-conditioned GPU idle nor resolves concurrent model scheduling
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.529
+- exp_range: no data available this milestone
+- theme: a short synthesis-heavy closeout exposed missing GPU engagement on the sole compute-bound task
+- key result: honest operational negative -- the compute-bound VRAM-recovery task took 2 minutes while the supplied GPU state was idle; no causal timing breakdown or evidence of parallel multi-model loading is available
+- acceptance: no data available this milestone

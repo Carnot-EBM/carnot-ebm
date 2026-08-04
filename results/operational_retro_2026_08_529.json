@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.529",
+  "generated_at": "2026-08-04T17:43:39.376Z",
+  "retro_type": "operational_in_progress",
+  "summary": "Milestone 2026.08.529 completed 4 experiments in 5.6 minutes, including 1 compute-bound experiment. GPU idle was observed on that compute-bound work, while the remaining experiments were synthesis-only.",
+  "total_wall_time_minutes": 5.6,
+  "experiments_completed": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Dated evidence refresh after the V529 planner marker",
+      "duration_minutes": 3.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Checkpointed all-family exact-atom representation corpus VRAM recovery",
+      "duration_minutes": 1.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .528 into .529",
+      "duration_minutes": 0.94,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Sealed low-chance Phase-D model-difficulty ladder",
+      "duration_minutes": 0.05,
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "GPU idle is flagged for the 2-minute checkpointed all-family exact-atom representation corpus VRAM recovery because the supplied GPU state reported 0% utilization and the timing entry is compute-bound; the available data does not identify the root cause.",
+    "Task-lifecycle telemetry is absent, so the compute-bound duration cannot be separated into launch, model-load, waiting, recovery, inference, and cleanup phases.",
+    "One idle process retained 334MB on GPU 0, leaving avoidable allocation and process-ownership ambiguity before later compute work."
+  ],
+  "improvements_suggested": [
+    "Add a compute-bound GPU-engagement watchdog that samples utilization after launch and fails fast with diagnostics when the GPU remains idle.",
+    "Record task-scoped phase timing, GPU utilization, loaded-model count, and selected runner so idle intervals and scheduling decisions can be attributed to the experiment that caused them.",
+    "Add ownership-aware cleanup at experiment boundaries to release confirmed-idle GPU allocations before VRAM-recovery work.",
+    "Select DualGPURunner only when telemetry confirms that 2 or more models are loaded in parallel; the supplied data does not show such a task in this milestone."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement the compute-bound GPU-engagement watchdog and fail-fast diagnostic artifact.",
+    "Automate ownership-aware cleanup of confirmed-idle GPU processes and allocations between experiments.",
+    "Emit task-correlated phase, GPU, model-concurrency, and runner-selection telemetry."
+  ],
+  "compute_bound_experiments_count": 1,
+  "gpu_idle_on_compute_bound_tasks": true,
+  "estimated_time_savings_pct": 36,
+  "meta_reflection": "The 36% estimate is the upper-bound share represented by the 2-minute compute entry within the locked 5.6-minute milestone wall time, not a measured speedup. The clearest next improvement is to make GPU engagement and runner selection observable at task scope so a later retrospective can distinguish launcher failure, waiting, and cleanup overhead.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
