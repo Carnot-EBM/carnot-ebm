@@ -47837,3 +47837,144 @@ aggregation is not labeled as experimental LLM inference.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5962 | Implemented (`python/carnot/experiment_5962_v528_source_delta_ingestion.py`, `results/experiment_5962_v528_source_delta_ingestion.json`) | Verified (`tests/python/test_experiment_5962_v528_source_delta_ingestion.py`) |
+
+### REQ-REPORT-5973: V528 Capstone Reconciliation Preserves Exact Upstream Identities And Branch Independence
+
+The Exp5973 capstone workflow SHALL read the active milestone `2026.07.528`
+roadmap, the exact Exp5961 through Exp5972 task/deliverable matrix, current
+declared deliverable artifacts, conductor log receipts, exclusions, references
+V528 marker, known issues, protected files, current docs, root-clutter
+inventory, and the Exp5933 aggregation-substrate classifier repair. It SHALL
+write `results/experiment_5973_v528_capstone_reconciliation.json` and SHALL
+declare `inference_substrate="aggregation_from_upstream_artifacts"`. It SHALL
+NOT modify `scripts/research_conductor.py`, `ops/north-star.md`, active
+roadmap tasks or gates, historical result artifacts, registry files, shipped
+policy flags, or unrelated user changes.
+
+The workflow SHALL use only `(task_id, declared_deliverable)` from the active
+roadmap as the evidence index. It SHALL ignore numeric-prefix aliases, including
+unrelated Exp5961-prefixed artifacts, and SHALL preserve each upstream terminal
+class independently as complete, complete-null, complete-ready,
+complete-feasible, blocked-precondition, gate-blocked, missing, retired,
+underpowered, or adversarial-flagged. Missing declared deliverables SHALL NOT
+be treated as success; skipped or gate-blocked tasks SHALL NOT be executed by
+the capstone.
+
+For every present declared artifact, the workflow SHALL record a fresh
+`scripts/adversarial_verify.py --json` receipt. The capstone SHALL classify its
+own substrate as aggregation from upstream artifacts and SHALL NOT inherit
+live-model duration rules from nested quoted upstream receipts, while still
+preserving genuine verifier flags. It SHALL recompute every roadmap gate from
+exact artifact fields, require title/YAML gate alignment, and explain each
+cascade skip without borrowing success from another branch.
+
+The capstone SHALL build independent summaries for the semantic acquisition,
+continuous self-learning, ARC strip-swap, and ARC budget-feasibility branches.
+Semantic fixture readiness SHALL remain separate from GGUF corpus blockage,
+ranker absence, and downstream acquisition gate blocks. CSL fixture,
+prospective utility, and poison/ABI safety SHALL remain separate. ARC
+strip-swap sentinel support and public-game null SHALL remain separate from
+hidden transfer or new solve credit. ARC timing feasibility SHALL remain a
+measured projection only and SHALL NOT imply a flag flip, board claim, registry
+mutation, or new solve credit.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_and_exact_task_deliverable_matrix`,
+`per_task_path_hash_presence_and_terminal_class`,
+`missing_and_gate_block_receipts`, `fresh_adversarial_verifier_receipts`,
+`gate_recomputation_and_cascade_receipts`,
+`semantic_acquisition_branch_summary`,
+`continuous_self_learning_branch_summary`,
+`arc_strip_swap_branch_summary`,
+`arc_budget_feasibility_branch_summary`, `branch_independence_receipt`,
+`prior_failure_retirement_and_exclusion_receipt`,
+`model_and_hardware_policy_receipt`,
+`arc_provenance_registry_and_flag_immutability`,
+`aggregation_substrate_classifier_receipt`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. The honest verdict SHALL
+start with `complete:`, `complete_with_nulls:`, `complete_with_blocks:`, or
+`blocked:`.
+
+Required field principles:
+
+- `status`: principle "capstone state and all aggregation prerequisites are explicit."
+- `preconditions_checked`: principle "capstone state and all aggregation prerequisites are explicit."
+- `milestone_and_exact_task_deliverable_matrix`: principle "the active roadmap's exact IDs and paths are the only evidence index."
+- `per_task_path_hash_presence_and_terminal_class`: principle "every upstream task retains a hash-backed or explicitly absent terminal class."
+- `missing_and_gate_block_receipts`: principle "a skipped task is not an execution failure and a missing ungated artifact is not success."
+- `fresh_adversarial_verifier_receipts`: principle "current exact-path verification, not inherited prose, owns artifact quality."
+- `gate_recomputation_and_cascade_receipts`: principle "every structured gate is recomputed and title/YAML alignment is exact."
+- `semantic_acquisition_branch_summary`: principle "fixture, corpus, ranker, and exact acquisition claims remain separate."
+- `continuous_self_learning_branch_summary`: principle "fixture, prospective utility, and poison/ABI safety remain separate."
+- `arc_strip_swap_branch_summary`: principle "targeted dose, live support, game-unit evidence, and limitations remain visible."
+- `arc_budget_feasibility_branch_summary`: principle "measured timing, projection uncertainty, and no automatic flag change remain visible."
+- `branch_independence_receipt`: principle "no positive, null, retirement, block, or flag in one branch rewrites another."
+- `prior_failure_retirement_and_exclusion_receipt`: principle "same-verdict reruns retire mechanically and no retired dependency is introduced."
+- `model_and_hardware_policy_receipt`: principle "mandated GGUF use, CUDA authenticity, no legacy headline, and no unsupported board claim are checked."
+- `arc_provenance_registry_and_flag_immutability`: principle "any level outcome is live-agent provenance only, with no new solve credit, registry mutation, or flag flip."
+- `aggregation_substrate_classifier_receipt`: principle "the capstone declares aggregation and is not misclassified from nested upstream compute strings."
+- `docs_reconciled`: principle "only evidence-supported internal docs change; protected/unrelated state remains byte-identical."
+- `protected_files_unchanged`: principle "only evidence-supported internal docs change; protected/unrelated state remains byte-identical."
+- `duration_s`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `inference_substrate`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `test_commands`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `test_exit_codes`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `reproducibility_checksum`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `honest_verdict`: principle "use `complete:`, `complete_with_nulls:`, `complete_with_blocks:`, or `blocked:`."
+
+#### SCENARIO-REPORT-5973-EXACT-MATRIX: Active Roadmap Declared Deliverables Are The Only Evidence Index
+
+**Given** the active `.528` roadmap names Exp5961 through Exp5972 with exact
+declared deliverables
+**When** Exp5973 builds the capstone matrix
+**Then** it records exactly those twelve upstream tasks, preserves each declared
+path and hash or explicit absence, ignores numeric-prefix aliases, and records
+the capstone's own Exp5973 output separately.
+
+#### SCENARIO-REPORT-5973-GATES-AND-MISSING: Gates Are Recomputed Without Executing Skipped Tasks
+
+**Given** Exp5964 is blocked with `atom_compatibility_corpus_ready_score=0.0`
+and Exp5965 is absent
+**When** Exp5973 recomputes the Exp5965 and Exp5966 gates
+**Then** Exp5965 is recorded as a conductor gate block or absent skipped task,
+Exp5966 is recorded as a gate-check artifact blocked on missing Exp5965, every
+cascade skip is explained, and no skipped experiment is executed.
+
+#### SCENARIO-REPORT-5973-BRANCH-INDEPENDENCE: Branch Summaries Cannot Borrow Outcomes
+
+**Given** semantic acquisition has a ready fixture but a blocked corpus/ranker
+chain, CSL is complete-ready through poison/ABI audit, ARC strip-swap has a
+ready sentinel and public-game null, and ARC timing is feasible
+**When** Exp5973 builds branch summaries
+**Then** each branch retains its own terminal class, no branch rewrites another,
+public ARC outcomes do not imply hidden transfer, and budget feasibility does
+not flip flags or registry credit.
+
+#### SCENARIO-REPORT-5973-VERIFIER-AND-SUBSTRATE: Fresh Verification Owns Artifact Quality
+
+**Given** present declared upstream deliverables are checked by the current
+`scripts/adversarial_verify.py`
+**When** Exp5973 emits verifier receipts
+**Then** every present exact artifact has a fresh receipt, missing artifacts are
+not verified, genuine flags remain visible, and the capstone itself declares
+`aggregation_from_upstream_artifacts` without inheriting live-model duration
+rules from quoted upstream receipts.
+
+#### SCENARIO-REPORT-5973-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp5973 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, exact-path matrix,
+terminal class, missing/gate receipt, branch summary, policy receipt, protected
+file hash, test command, exit code, checksum, and terminal verdict prefix is
+present; the inference substrate is `aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-5973)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-5973 | Implemented (`python/carnot/experiment_5973_v528_capstone_reconciliation.py`, `results/experiment_5973_v528_capstone_reconciliation.json`) | Verified (`tests/python/test_experiment_5973_v528_capstone_reconciliation.py`) |
