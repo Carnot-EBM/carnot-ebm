@@ -80,6 +80,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import pathlib
 import shutil
 import subprocess
 import sys
@@ -110,13 +111,43 @@ MAX_WALL_S = float(os.environ.get("CARNOT_6091_MAX_WALL_S") or "28800")  # 8h de
 GPU_IDLE_MAX_MIB = 2000
 SEED = 6091
 
+# SUBSTRATE PIN -- DERIVED FROM THE LIVE CONSTANTS, NEVER HARDCODED (corrected 2026-08-03,
+# operator-caught). This block previously hardcoded `gemma-4-31B-it` + a literal snapshot hash
+# pointing at `gemma-4-31B-it-Q4_K_M.gguf` -- the NON-QAT build -- while the live ARC generator is
+# pinned to `gemma-4-31B-it-qat-UD-Q4_K_XL.gguf`. Measuring the induction wall on a different
+# quantization than the live generator actually runs is a substrate mismatch, and a hardcoded
+# snapshot hash is how that drift survived unnoticed. Deriving from the module constants means the
+# experiment cannot silently diverge from the live stack again.
+#
+# MTP IS DELIBERATELY OFF HERE and that is not an omission: ARC_LIVE_GENERATOR_MTP_DEFAULT is "0"
+# for dev hardware because on a 24 GB card the offload MTP forces costs more throughput than the
+# ~1.4x it returns. MTP-on is the SCORED (Kaggle 96 GB) default, where no offload is needed. The
+# drafter must also come from the SAME repo as the target -- a non-QAT drafter paired with a QAT
+# target is accepted by llama.cpp and silently degrades, which _resolve_mtp_head() guards.
+from carnot.agentic.arc_executable_world_model import (  # noqa: E402
+    ARC_LIVE_GENERATOR_MODEL_FILENAME as _LIVE_GGUF_NAME,
+    ARC_LIVE_GENERATOR_MODEL_ID as _LIVE_HF_ID,
+    ARC_LIVE_GENERATOR_REPO_SUBSTR as _LIVE_REPO_SUBSTR,
+)
+
+
+def _resolve_live_gguf() -> str:
+    """Locate the pinned QAT weights in the HF cache without baking a snapshot hash."""
+    root = pathlib.Path.home() / ".cache/huggingface/hub"
+    hits = sorted(root.glob(f"models--*/snapshots/*/{_LIVE_GGUF_NAME}"))
+    if not hits:
+        raise SystemExit(
+            f"blocked_model_not_cached: {_LIVE_GGUF_NAME} not found under {root}. "
+            "PRECONDITIONS: do not fall back to another quantization -- that is the "
+            "substrate mismatch this block was rewritten to prevent."
+        )
+    return str(hits[0])
+
+
 GEMMA: dict[str, Any] = {
-    "repo_substr": "gemma-4-31B-it",
-    "hf_id": "unsloth/gemma-4-31B-it-GGUF",
-    "gguf": (
-        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/"
-        "snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf"
-    ),
+    "repo_substr": _LIVE_REPO_SUBSTR,
+    "hf_id": _LIVE_HF_ID,
+    "gguf": _resolve_live_gguf(),
     "kv_quant": "q8_0",
     "timeout": 1800,
 }
