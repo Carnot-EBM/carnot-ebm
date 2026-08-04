@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.07.528",
+  "generated_at": "2026-08-04T09:06:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 79.6,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Live ARC flagship-LLM budget-2000 wall-clock feasibility",
+      "duration_minutes": 75.36,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Dated evidence refresh after the V528 planner marker",
+      "duration_minutes": 2.52,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp5963 ready: all-three-model GGUF context/atom compatibility corpus",
+      "duration_minutes": 1.07,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp5970 ready: full ARC strip-swap convention-transfer battery",
+      "duration_minutes": 0.47,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Hardness-controlled exact context/atom compatibility fixture",
+      "duration_minutes": 0.09,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Across 79.6 minutes, 11 experiments completed; the 75.36-minute compute-bound Live ARC flagship-LLM budget-2000 wall-clock feasibility experiment concentrated the recorded runtime. The locked task-conditioned GPU-idle field is false, and the supplied evidence does not establish a concurrent multi-model DualGPURunner miss.",
+  "bottlenecks_identified": [
+    "Among the bounded slowest list, compute-bound duration ranks as 75.36 minutes for Live ARC flagship-LLM budget-2000 wall-clock feasibility, 1.07 minutes for the all-three-model GGUF context/atom compatibility corpus, and 0.09 minutes for the hardness-controlled exact fixture; the remaining compute-bound experiment is not named in the supplied top five, and no phase-level data explains the recorded durations.",
+    "Disk-mtime reconstruction supplies experiment-level elapsed time but does not separate queueing, model loading, inference, or teardown, preventing causal attribution of the longest compute path.",
+    "Runner-selection observability is incomplete: the all-three-model corpus label does not establish parallel model loading or record whether DualGPURunner engaged."
+  ],
+  "improvements_suggested": [
+    "Add per-experiment phase timers for queueing, model loading, inference, and teardown, with task-correlated GPU utilization samples.",
+    "Add checkpoint and early-stop controls to long wall-clock feasibility runs so a conclusive budget decision can terminate the run without waiting for the full path.",
+    "Record model concurrency and runner selection in each compute-bound artifact; invoke DualGPURunner when at least two models are actually loaded in parallel, while leaving single-model tasks on one GPU."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the 75.36-minute feasibility path with phase timing and task-scoped GPU telemetry.",
+    "Add a checkpointed wall-clock budget watchdog with an evidence-preserving early-stop result.",
+    "Emit model-concurrency and runner-selection receipts, with conditional DualGPURunner dispatch for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded evidence ranks experiment-level duration but does not reveal why the 75.36-minute path was slow or how GPU utilization evolved during it. Without phase timing or a comparison run, no nonzero prospective savings percentage is defensible, so the estimate remains 0."
+}
