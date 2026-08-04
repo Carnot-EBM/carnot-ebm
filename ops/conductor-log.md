@@ -15299,3 +15299,5 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-04 14:23 UTC | Dated evidence refresh after the V529 planner mark | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ethod_to_task_ |
 | 2026-08-04 15:01 UTC | Dated evidence refresh after the V529 planner mark | OK | 86 passed, 2 warnings in 7.50s |
 | 2026-08-04 15:33 UTC | Checkpointed all-family exact-atom representation  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6102_sota_at |
+| 2026-08-04 16:57 UTC | Checkpointed all-family exact-atom representation  | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: 
+No output thi |

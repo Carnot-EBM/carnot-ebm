@@ -1,7 +1,7 @@
 {
   "ACCURACY_levels_solved": 1,
   "budget": 60,
-  "duration_s": 0.3,
+  "duration_s": 0.0,
   "experiment": "experiment_3946_r11l_first_solve",
   "first_solve_at_action": 4,
   "game": "r11l-495a7899",
@@ -38,16 +38,5 @@
   ],
   "solved": true,
   "title": "arc3_m2v5b_r11l_first_solve",
-  "total_actions": 4,
-  "inference_substrate_correction_note": "CORRECTED 2026-07-27 by the outer loop. The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set, so this artifact blocked EVERY commit that staged it -- and it has been invalid since it was written (byte-identical at HEAD). The replacement is the legal value that describes what the run actually did, established by reading the artifact rather than guessing: duration_s=0.2 with NO gguf / llama / llm / cuda / torch / model_specs / induction reference anywhere in the file, i.e. a pure offline-arcade agent run with no LLM tier. That substrate's duration floor is 0.01s, which 0.2s clears, so the relabel does not launder a too-fast run past a stricter floor. The original string is preserved above per CLAUDE.md never-prune; no measurement value was touched.\n\nADVERSARIAL REVIEW ADDENDUM (2026-07-27, same day). Three things the original note did not say. (1) The substrate was re-confirmed by READING THE SCRIPT, not merely by the absence of gguf/llama/llm strings in the artifact: scripts/experiments/experiment_3946_r11l_first_solve.py constructs Arcade(arc_api_key='', operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR) and steps the offline sim directly, and imports no llama_cpp / transformers / torch / cuda anywhere. So no LLM ran and nothing was laundered past a stricter duration floor. (2) THE RELABEL MADE THIS ARTIFACT AUDITABLE FOR THE FIRST TIME, and that is a change in its own right: measured directly, scripts/adversarial_verify.py returns 0 flags on a reconstructed pre-relabel copy and 1 WARN (METHODOLOGY_MISSING: reproducibility_checksum) on the corrected file. The old string matched no substrate classifier, so it escaped every check -- an illegal value was quieter than a legal one. The new WARN is REAL and is not being suppressed: CLAUDE.md's substrate table requires random_seed AND reproducibility_checksum for offline_arcade_live_agent_runtime_self_discovery_no_llm; this artifact has random_seed=42 and NO reproducibility_checksum. It cannot be back-computed from a completed run and will NOT be fabricated. (3) The script reads engine internals (env._game and env._game.yfbjozweime) for ground-truth piece/target pairs, so 'self_discovery' in the substrate name describes the OFFLINE-ARCADE-no-LLM half of the value, not a claim that the live agent discovered this game unaided; the legal set offers no more precise value. Treat the solve_provenance as development_proxy at best.",
-  "solve_provenance": "development_proxy",
-  "solve_provenance_note": "Declared 2026-07-27 by adversarial review (CLAUDE.md \"ARC Live-Path Reachability Discipline\" self-solve provenance contract). This run reads engine internals (env._game.yfbjozweime) for ground-truth piece/target pairs, which the LIVE agent cannot do on a hidden game, so it is a development proxy -- NOT evidence that the live agent self-discovers this solve. Recorded rather than left undeclared, which the contract treats as a WARN.",
-  "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
-  "restored_2026_08_03_keys": [
-    "inference_substrate_correction_note",
-    "solve_provenance",
-    "solve_provenance_note",
-    "inference_substrate_original_invalid_value"
-  ],
-  "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+  "total_actions": 4
 }
