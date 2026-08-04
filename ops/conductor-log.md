@@ -15319,3 +15319,5 @@ No output thi |
 | 2026-08-04 21:28 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
 | 2026-08-04 21:28 UTC | Gated matching-base per-layer hidden-state surface | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_hea |
 | 2026-08-04 21:30 UTC | Gated internal-state Phase-D selector against tune | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6118-phase-d-per-layer-surface, exp6117-p |
+| 2026-08-04 21:47 UTC | Outcome-committed reduced-order continuous self-le | OK | 89 passed, 1 warning in 11.17s |
+| 2026-08-04 21:49 UTC | Gated internal-state Phase-D selector against tune | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6118-phase-d-per-layer-surface, exp6117-p |
