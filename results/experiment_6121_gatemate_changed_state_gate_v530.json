@@ -1,0 +1,431 @@
+{
+  "cable_port_power_board_usb_and_dirtyjtag_receipts": {
+    "current": {
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+    },
+    "prior": {
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+    }
+  },
+  "dated_operator_physical_receipt": {
+    "board": "Cologne Chip GateMate A1-EVB-2M",
+    "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+    "changes": [],
+    "checked_on": "20260804",
+    "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+    "exists": false,
+    "operator_authorized_detect": false,
+    "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+    "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+    "receipt_date": null,
+    "source": "repo search: no newer dated physical cable/port/power/board/DirtyJTAG receipt found",
+    "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+  },
+  "detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code": {
+    "allowed": false,
+    "attempt_count": 0,
+    "command": null,
+    "duration_s": 0.0,
+    "exit_code": null,
+    "reason": "unchanged_physical_state",
+    "stderr": "",
+    "stdout": ""
+  },
+  "duration_s": 0.084963,
+  "expected_and_observed_idcode": {
+    "expected_idcode": "0x20000001",
+    "matches": false,
+    "observed_idcode": null
+  },
+  "experiment": "experiment_6121_gatemate_changed_state_gate",
+  "experiment_id": "exp6121-gatemate-changed-state-gate-v530",
+  "field_provenance": {
+    "cable_port_power_board_usb_and_dirtyjtag_receipts": {
+      "principle": "Every physical and transport assumption is explicit.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "dated_operator_physical_receipt": {
+      "principle": "A dated receipt is the only operator authorization for a new physical state.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code": {
+      "principle": "Unchanged state yields zero commands; changed state permits one auditable non-destructive command.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "duration_s": {
+      "principle": "Use measured `hardware_state_gate_with_optional_non_destructive_detect` wall time.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "expected_and_observed_idcode": {
+      "principle": "Smoke execution requires authenticated device identity.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "field_provenance": {
+      "principle": "Every field traces to receipts, hashes, command output, or tests.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "flash_synthesis_place_route_pack_and_firmware_mutation_counts": {
+      "principle": "All mutation counts remain zero without explicit operator authorization.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "hardware_execution_authenticated": {
+      "principle": "No execution claim survives without raw hardware evidence.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_changed_state:`, `blocked_physical_action:`, `retired:`, or `blocked:`.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "inference_substrate": {
+      "principle": "Use `hardware_state_gate_with_optional_non_destructive_detect`.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "missing_verifier_gaps": {
+      "principle": "Record missing raw IDCODE or host-I/O evidence instead of inferring.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "operator_action_packet": {
+      "principle": "An unchanged-state block ends with one actionable physical next step.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "physical_state_changed": {
+      "principle": "Bare bool gates every JTAG command.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "prebuilt_bitstream_and_smoke_hashes": {
+      "principle": "Existing artifacts must remain immutable before any read-only smoke.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "preconditions_checked": {
+      "principle": "Hash all evidence before any optional board command.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "prior_and_current_physical_state_hashes": {
+      "principle": "Physical change, not another software loop, authorizes one attempt.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor and operator-reconciled files remain byte-identical.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "reproducibility_checksum": {
+      "principle": "Checksum detects physical-state, artifact, or receipt drift.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "retirement_triggered": {
+      "principle": "Repeating the same physical block retires this changed-state task shape.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "speed_power_and_terminal_claim_counts": {
+      "principle": "No speed, power, current-draw, or terminal-hardware claim is permitted.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "status": {
+      "principle": "Terminal state for the changed-state gate.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "test_commands": {
+      "principle": "Verification commands are recorded.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks becoming success.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    },
+    "verifier_is_oracle": {
+      "principle": "Raw IDCODE/host-I/O evidence is authoritative; simulation is not board execution.",
+      "source": "REQ-HW-6121 / SCENARIO-HW-6121 and local receipts"
+    }
+  },
+  "flash_synthesis_place_route_pack_and_firmware_mutation_counts": {
+    "firmware_mutation": 0,
+    "flash": 0,
+    "pack": 0,
+    "place": 0,
+    "route": 0,
+    "synthesis": 0
+  },
+  "hardware_execution_authenticated": {
+    "authenticated": false,
+    "idcode_authenticated": false,
+    "read_only_smoke_authenticated": false,
+    "simulation_used_as_board_execution": false
+  },
+  "honest_verdict": "blocked_physical_action: unchanged GateMate cable/port/power/board/DirtyJTAG state; no JTAG command run; operator must change physical state and record a dated receipt",
+  "inference_substrate": "hardware_state_gate_with_optional_non_destructive_detect",
+  "milestone": "2026.08.530",
+  "missing_verifier_gaps": [
+    "no_new_raw_idcode_due_to_unchanged_physical_state_gate",
+    "expected_gatemate_idcode_not_observed",
+    "expected_idcode_not_observed"
+  ],
+  "operator_action_packet": {
+    "blocked_command": "openFPGALoader -c dirtyJtag --detect",
+    "board": "Cologne Chip GateMate A1-EVB-2M",
+    "do_not_do": [
+      "do not flash",
+      "do not synthesize",
+      "do not place or route",
+      "do not pack",
+      "do not mutate firmware",
+      "do not repeat detect with unchanged physical state"
+    ],
+    "next_software_action_after_receipt": "rerun Exp6121 once to permit exactly one non-destructive IDCODE detect",
+    "operator_steps": [
+      "Reseat or replace the GateMate USB-C/onboard DirtyJTAG connection.",
+      "Move the GateMate/DirtyJTAG USB connection to a different host root port or powered hub port.",
+      "Confirm and record the GateMate board power LED after the cable/port change.",
+      "Record a new dated physical receipt naming cable, port, power, board, USB, and DirtyJTAG descriptors."
+    ],
+    "packet_id": "gatemate-physical-change-required-v530",
+    "required_physical_delta": "change cable, port, power, board, or DirtyJTAG state"
+  },
+  "physical_state_changed": false,
+  "prebuilt_bitstream_and_smoke_hashes": {
+    "bitstream": {
+      "actual_sha256": "17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217",
+      "matches_prior_receipt": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
+      "prior_receipt_sha256": "17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217",
+      "source_artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json"
+    },
+    "smoke": {
+      "descriptor": "exp6121_prebuilt_read_only_host_io_smoke_v1: may run only after GM1Ax IDCODE 0x20000001; no flash, synthesis, place, route, pack, or firmware mutation",
+      "expected_hash": "d063ad41e448db40061c4a3214bc52dd37317ca6eaa0549a785b341b817341c5",
+      "prior_receipt": "prebuilt descriptor only; no flash or pack command is allowed here"
+    },
+    "smoke_attempt": {
+      "attempted": false,
+      "command": null,
+      "exit_code": null,
+      "hash_matches_prior_receipt": false,
+      "read_only": false,
+      "reason": "expected_idcode_not_observed",
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "preconditions_checked": {
+    "bitstream_hashes": {
+      "bitstream": {
+        "actual_sha256": "17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217",
+        "matches_prior_receipt": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
+        "prior_receipt_sha256": "17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217",
+        "source_artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json"
+      },
+      "smoke": {
+        "descriptor": "exp6121_prebuilt_read_only_host_io_smoke_v1: may run only after GM1Ax IDCODE 0x20000001; no flash, synthesis, place, route, pack, or firmware mutation",
+        "expected_hash": "d063ad41e448db40061c4a3214bc52dd37317ca6eaa0549a785b341b817341c5",
+        "prior_receipt": "prebuilt descriptor only; no flash or pack command is allowed here"
+      }
+    },
+    "cable_port_power_descriptions": {
+      "current_hash": "sha256:a1e7e29c443aac0cbca617a39c582d47b500b7107c3854e9f9fca429513f2ac0",
+      "physical_state_changed": false,
+      "prior_hash": "sha256:a1e7e29c443aac0cbca617a39c582d47b500b7107c3854e9f9fca429513f2ac0"
+    },
+    "dirty_worktree": {
+      "output_path_excluded_from_hash": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
+      "staged_diff_sha256": "sha256:f75d365ba9387987952d640cf176b2341dd7495a2c52810aac33e9dbf9a370fb",
+      "status_line_count_excluding_output": 43,
+      "status_porcelain_sha256": "sha256:7aa8d1bbdc06cdab1a8f736b25fd4dc91c6c1e4ab2b688cacb53a4f2c8d91e33",
+      "tracked_diff_sha256": "sha256:33037ad841beb3b85b2c0ed948726d64669a7964edd575055081097bc9e50f54"
+    },
+    "operator_receipts": {
+      "dated_operator_physical_receipt": {
+        "board": "Cologne Chip GateMate A1-EVB-2M",
+        "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+        "changes": [],
+        "checked_on": "20260804",
+        "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+        "exists": false,
+        "operator_authorized_detect": false,
+        "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+        "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+        "receipt_date": null,
+        "source": "repo search: no newer dated physical cable/port/power/board/DirtyJTAG receipt found",
+        "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+      },
+      "hardware_wishlist_gatemate_block_line": "- GateMate preserves the v477 physical/JTAG block (`0xffffffff`) until the operator changes cable, port, or board power setup.",
+      "path_hashes": {
+        "docs/jtag-wiring-gatemate-dirtyjtag.md": {
+          "bytes": 9170,
+          "path": "docs/jtag-wiring-gatemate-dirtyjtag.md",
+          "present": true,
+          "sha256": "sha256:1d889806996b3a50e20a63af1ecee060afec05a7ef180f6e3accd24cfb6cf159"
+        },
+        "ops/exclusion_manifest.yaml": {
+          "bytes": 45620,
+          "path": "ops/exclusion_manifest.yaml",
+          "present": true,
+          "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+        },
+        "ops/known-issues.md": {
+          "bytes": 1080719,
+          "path": "ops/known-issues.md",
+          "present": true,
+          "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+        },
+        "research-hardware-wishlist.md": {
+          "bytes": 29009,
+          "path": "research-hardware-wishlist.md",
+          "present": true,
+          "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+        }
+      }
+    },
+    "output_paths": {
+      "result_path": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
+      "result_path_hash": "sha256:632f57161619b7ebdb34839a0d083c5b2f920c29ba44c9fdb4f8ba71963f83d2"
+    },
+    "prior_board_artifacts": {
+      "all_hashed": true,
+      "hashes": {
+        "results/experiment_3866_gatemate_ising_tile_flash_v2.json": {
+          "bytes": 14529,
+          "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+          "present": true,
+          "sha256": "sha256:03a7825b2db27ac8a023d24ab27275659741f63e5d965ecf70f77db7ce9be9bb"
+        },
+        "results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json": {
+          "bytes": 15049,
+          "path": "results/experiment_5201_hardware_continuity_gatemate_diagnostic_v476.json",
+          "present": true,
+          "sha256": "sha256:2df589e493a0a616cb9beee718cbe6d1a5a0fe8fda07785c8c2aae818acf4a28"
+        },
+        "results/experiment_5217_hardware_continuity_v477.json": {
+          "bytes": 11644,
+          "path": "results/experiment_5217_hardware_continuity_v477.json",
+          "present": true,
+          "sha256": "sha256:a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9"
+        },
+        "results/experiment_5861_attached_board_state_receipts.json": {
+          "bytes": 39177,
+          "path": "results/experiment_5861_attached_board_state_receipts.json",
+          "present": true,
+          "sha256": "sha256:da8299cc0559f038a5405ea420d18deb3afbf01d4ea03cc5e3d3586e8ede6bbc"
+        }
+      }
+    },
+    "protected_files": {
+      "hashes": {
+        "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "ops/changelog.md": "sha256:2cd7482fed318d169e77ed447e68bd5324069a735633ffb66bbe2d6d5af4ecad",
+        "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+      }
+    },
+    "tool_versions": {
+      "DirtyJTAG": "bcdDevice=0111",
+      "hash": "sha256:bf75d19e2ee2c6ae3dc8378642c59ae334ad5e93fe24b48815b04bcfa9c0352a",
+      "openFPGALoader": "openFPGALoader v1.1.1",
+      "source": "results/experiment_5217_hardware_continuity_v477.json"
+    },
+    "usb_dirtyjtag_descriptors": {
+      "current": {
+        "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+        "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+      },
+      "hash": "sha256:5d02e7b47d02840f97888365d3bac2e4edd8d389cdb12fca0d6342715ce632f0",
+      "prior": {
+        "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+        "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+      }
+    }
+  },
+  "prior_and_current_physical_state_hashes": {
+    "current": "sha256:aaa2e5c20ead56578a309a9fc40af8b3c01861784c6829e53ac38e15c0a6c917",
+    "current_state": {
+      "bitstream_artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "board_provenance": "results/experiment_5217_hardware_continuity_v477.json",
+      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+      "expected_idcode": "0x20000001",
+      "last_attempt_date": "20260704",
+      "observed_idcode": null,
+      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+      "raw_idcode": "0xffffffff",
+      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+    },
+    "prior": "sha256:aaa2e5c20ead56578a309a9fc40af8b3c01861784c6829e53ac38e15c0a6c917",
+    "prior_state": {
+      "bitstream_artifact": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "board_provenance": "results/experiment_5217_hardware_continuity_v477.json",
+      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+      "expected_idcode": "0x20000001",
+      "last_attempt_date": "20260704",
+      "observed_idcode": null,
+      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+      "raw_idcode": "0xffffffff",
+      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+    }
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:2cd7482fed318d169e77ed447e68bd5324069a735633ffb66bbe2d6d5af4ecad",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+    },
+    "all_unchanged": true,
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:2cd7482fed318d169e77ed447e68bd5324069a735633ffb66bbe2d6d5af4ecad",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+    },
+    "changed_paths": []
+  },
+  "random_seed": 6121,
+  "reproducibility_checksum": "029ec052ad5b16f92a08bacc2130951ca1b76883e17df86c7b79b376bc8b38d6",
+  "result_path": "results/experiment_6121_gatemate_changed_state_gate_v530.json",
+  "retirement_triggered": true,
+  "run_date": "20260804",
+  "schema": "carnot.experiment_6121_gatemate_changed_state_gate.v530",
+  "spec_refs": [
+    "REQ-HW-6121",
+    "SCENARIO-HW-6121"
+  ],
+  "speed_power_and_terminal_claim_counts": {
+    "current_draw": 0,
+    "kona": 0,
+    "power_efficiency": 0,
+    "speedup": 0,
+    "terminal_hardware": 0,
+    "tsu": 0
+  },
+  "status": "blocked_physical_action",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6121_gatemate_changed_state_gate_v530.py -q --no-cov",
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_6121_gatemate_changed_state_gate_v530.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_6121_gatemate_changed_state_gate_v530.py",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6121_gatemate_changed_state_gate_v530.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py --min-age-min 0",
+    ".venv/bin/python scripts/check_spec_coverage.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/experiment_6121_gatemate_changed_state_gate_v530.py": 0,
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_6121_gatemate_changed_state_gate_v530.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6121_gatemate_changed_state_gate_v530.py -q --no-cov": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6121_gatemate_changed_state_gate_v530.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py --min-age-min 0": 0
+  },
+  "verifier_is_oracle": true
+}
