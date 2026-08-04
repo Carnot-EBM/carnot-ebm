@@ -614,6 +614,7 @@ fields `status`, `preconditions_checked`, `gate_replay_receipt`,
 
 Required field provenance principles SHALL include:
 
+- `status`: principle "full execution starts only after the authentic sentinel gate and complete matrix/resources are verified."
 - `preconditions_checked`: principle "full execution starts only after the authentic sentinel gate and complete matrix/resources are verified."
 - `gate_replay_receipt`: principle "Exp5970 exact path/hash/value must satisfy `strip_swap_sentinel_ready_score == 1.0`."
 - `registry_precheck_and_hash`: principle "this is generalization measurement over already-cleared games, not a solve task."
