@@ -15315,3 +15315,5 @@ No output thi |
 | 2026-08-04 21:24 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
 | 2026-08-04 21:24 UTC | Gated matching-base per-layer hidden-state surface | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_hea |
 | 2026-08-04 21:26 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
+| 2026-08-04 21:26 UTC | Gated matching-base per-layer hidden-state surface | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6117-phase-d-headroom-audit.phase_d_hea |
+| 2026-08-04 21:28 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
