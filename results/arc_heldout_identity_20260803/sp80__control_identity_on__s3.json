@@ -1,0 +1,144 @@
+{
+  "game": "sp80",
+  "arm": "control_identity_on",
+  "seed": 3,
+  "budget": 400,
+  "shipped_max_actions": 400,
+  "policy_game_id": "sp80",
+  "status": "ok",
+  "e3_dir": "/tmp/arc_heldout_sp80_control_identity_on_iyp2wbdt",
+  "e3_seeded_with_prior_engine": true,
+  "e3_dir_resolved": "/tmp/arc_heldout_sp80_control_identity_on_iyp2wbdt",
+  "result": {
+    "game": "sp80",
+    "arm": "frozen_gemma_pin",
+    "seed": 3,
+    "variant": 0,
+    "start_level": 0,
+    "reached_level": 1,
+    "levels_gained": 1,
+    "solved": true,
+    "actions_to_first_solve": 354,
+    "total_actions": 387,
+    "noop_frac": 0.0155,
+    "revisit_frac": 0.1189,
+    "start_hv": 0.0,
+    "best_hv": 0.0,
+    "hv_progress": null,
+    "n_inductions": 2,
+    "n_plans_found": 0,
+    "plan_found_rate": 0.0,
+    "mean_heldout_accuracy": null,
+    "mean_prefix_accuracy": null,
+    "playbook_injection_modes": [
+      "none",
+      "none"
+    ],
+    "wall_s": 259.5,
+    "timed_out": false,
+    "hit_induction_cap": false,
+    "explored_out": false,
+    "error": null,
+    "hv_progress_measurable": false,
+    "hv_distinct_values_observed": 1,
+    "hv_exception_count": 0,
+    "hv_sentinel_frac": 0.0,
+    "hv_progress_per_level": {
+      "0": 1.0
+    },
+    "hv_progress_best_level": 1.0,
+    "hv_progress_global_legacy": null
+  },
+  "n_trace": 400,
+  "trace_sha256": "1fcc3cc0cee8cde2117b6352d90ad82c34e0504c57251f72b439a8560593987b",
+  "trace_head": [
+    "RESET",
+    "{\"action\":2}",
+    "{\"action\":5}",
+    "{\"action\":6,\"data\":{\"x\":37,\"y\":5}}",
+    "{\"action\":4}",
+    "{\"action\":4}",
+    "{\"action\":3}",
+    "{\"action\":6,\"data\":{\"x\":21,\"y\":55}}",
+    "{\"action\":1}",
+    "{\"action\":1}",
+    "{\"action\":6,\"data\":{\"x\":21,\"y\":55}}",
+    "{\"action\":2}"
+  ],
+  "stub_n_induce_calls": 3,
+  "leak_delivery": {
+    "A1_A5_recommend_approach": {
+      "calls": 3,
+      "ids": [
+        "sp80"
+      ],
+      "first_caller": "arc_competition_agent.py:762",
+      "missing": false
+    },
+    "A1_survey_features": {
+      "calls": 3,
+      "ids": [
+        "None"
+      ],
+      "first_caller": "arc_solve_learning.py:729",
+      "missing": false
+    },
+    "A2_route_for_game": {
+      "calls": 3,
+      "ids": [
+        "sp80"
+      ],
+      "first_caller": "arc_solve_learning.py:731",
+      "missing": false
+    },
+    "A3_game_digest": {
+      "calls": 3,
+      "ids": [
+        "{'game': 'sp80', 'reproducibility': 'rep"
+      ],
+      "first_caller": "arc_solve_learning.py:775",
+      "missing": false
+    },
+    "A4_retrieve_primitives": {
+      "calls": 3,
+      "ids": [
+        "{'game': 'sp80', 'mechanic_class': 'spil"
+      ],
+      "first_caller": "arc_solve_learning.py:783",
+      "missing": false
+    },
+    "A6_select_primitive_operators": {
+      "calls": 3,
+      "ids": [
+        "sp80"
+      ],
+      "first_caller": "arc_solve_learning.py:789",
+      "missing": false
+    },
+    "B1_infer_query_mechanic_tags": {
+      "calls": 0,
+      "ids": [],
+      "first_caller": null,
+      "missing": false
+    },
+    "B3_load_engine": {
+      "calls": 0,
+      "ids": [],
+      "first_caller": null,
+      "missing": false
+    }
+  },
+  "reproduction_gate": {
+    "game": "sp80",
+    "reached_level": 1,
+    "claimed_level": 1,
+    "reproduced": true,
+    "mode": "offline_reproduction_gate_no_quota",
+    "checked_action6_clicks": 145,
+    "oob_action6_clicks": [],
+    "any_oob_action6_clicks": false
+  },
+  "banked_levels": 1,
+  "reproduced": true,
+  "cell_wall_s": 263.47
+}
