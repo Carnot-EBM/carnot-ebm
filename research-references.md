@@ -31871,3 +31871,162 @@ actionable after Exp5936 retired transformed-view atomic generation.
   changed route exists.
 
 <!-- V528-PLANNER-REFRESH-20260726-END -->
+
+## V529 Planner Refresh - 20260804
+
+Incremental planning sweep after the terminal `.528` conductor run and after the
+`V528-PLANNER-REFRESH-20260726-END` boundary. The primary pass queried arXiv
+for 2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising and thermodynamic sampling, hallucination detection, KANs,
+energy-guided decoding, continual/online learning, and representation
+adequacy. The secondary pass rechecked OpenReview, Hugging Face Papers, direct
+Semantic Scholar citation APIs for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), GitHub repositories, Extropic's writing and hardware pages, and
+Logical Intelligence's Kona pages. This block promotes sources absent from the
+sealed V528 sweep or newly actionable after `.528` showed that write-through
+memory beats delayed commit and that the SOTA exact-atom corpus is blocked by
+VRAM rather than by a semantic result.
+
+### New actionable deltas
+
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871; also published on OpenReview at
+  https://openreview.net/pdf/72b799610fa61844e98c1f60e46ef16ad6ceccff.pdf.
+  The method decomposes whole-output energy into a learned quality term and
+  deterministic analytical penalties, while a heterogeneous adapter ensemble
+  supplies an uncertainty signal for regeneration or abstention. Its own
+  confounding analysis finds a model-identity shortcut on code. Carnot hook:
+  first establish a difficulty-calibrated same-model candidate pool with exact
+  labels; then test an internal-state selector against tuned self-consistency,
+  a cheap text baseline, shuffled labels, and an oracle-peeking positive
+  control. Do not import the paper as permission to reopen Carnot's retired
+  external generated-text/LoRA scorer family.
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM
+  Constraint Reasoning** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047; code and aggregate receipts at
+  https://github.com/lucky-verma/solver-hard-is-not-model-hard. Near-matched
+  formulas with sharply different SAT-solver conflict counts do not induce a
+  consistent LLM-accuracy ordering, while proof-preserving relabeling can
+  create extreme model-surface effects. Carnot hook: calibrate candidate-pool
+  difficulty by observed model accuracy, not solver conflicts alone; retain
+  solver metrics only as a separate diagnostic and preregister relabel,
+  paraphrase, and family-held controls.
+- **RoMeRL: Balancing Feedback Coverage and the Memory-Reward Trap in
+  Self-Evolving Agent Memory via Reduced-Order Utility States** -
+  arXiv:2608.02508, https://arxiv.org/abs/2608.02508; evaluation-only public
+  runtime at https://github.com/YOUNG-fnxm/RoMeRL. RoMeRL bounds an expanding
+  history in a fixed-dimensional per-task utility state and separates outcome
+  polarity and memory dynamics, reporting denser feedback and less persistent
+  reward contamination. Carnot hook: after `.528` found write-through superior
+  to delayed commit, test whether a reduced-order utility state improves
+  chronological exact-event utility, memory size, and contamination relative
+  to the winning write-through arm. Keep immutable model weights, exact future
+  outcomes, poison quarantine, protected-prefix retention, and rollback.
+- **Self-Certification of Representation Adequacy: Sequential Certification at
+  Minimum Task Loss** - arXiv:2608.02267,
+  https://arxiv.org/abs/2608.02267. The paper formalizes the irreducible loss
+  caused when a compressed representation aliases histories requiring
+  different actions, and prices sequential external certification as an
+  optimal-stopping problem. Carnot hook: treat representation adequacy as a
+  measured gate, not an assumption. A per-layer hidden-state experiment must
+  prove that the extraction surface is reachable and that held-out labels are
+  distinguishable before any selector is credited; fixed-kernel theory does
+  not certify later representation repair.
+
+### Guarded findings
+
+- **Equilibrium Training of Energy-Based Models with Parallel Trajectory
+  Tempering** - arXiv:2607.27077,
+  https://arxiv.org/abs/2607.27077. PTT uses continuity along the optimization
+  trajectory plus sample reservoirs to maintain equilibrium and estimate
+  thermalization at cost comparable to persistent contrastive divergence. It
+  is a strong future training/sampling method for genuinely multimodal EBMs,
+  but `.529` first needs a viable verifier domain and an authenticated sampler
+  execution surface. Record it now; do not displace the domain-qualification
+  chain with an RBM training benchmark.
+- **Right Answer, Wrong Method: Shortcut Hacking Misleads the Evaluation of LLM
+  Reasoning on Frontier Science Benchmarks** - arXiv:2608.02442,
+  https://arxiv.org/abs/2608.02442. The paper reports that final-answer
+  correctness can credit search, enumeration, guessing, or answer-first
+  verification rather than the targeted reasoning method. Carnot hook: retain
+  exact final-answer labels, but log derivation/path-validity features and
+  answer-first or enumeration shortcuts as separate controls so a new candidate
+  pool is not misreported as evidence of the intended reasoning mechanism.
+- **Real-Time Detection and Repair of LLM Agent Failures** -
+  arXiv:2608.02464, https://arxiv.org/abs/2608.02464. Telemetry-only one-class
+  monitoring is useful, but its strongest result comes from deterministic
+  recomputation and coverage checks followed by rollback and rerun. This
+  supports Carnot's exact monitor/rollback boundary. The learned monitor is
+  deployment-specific and must not replace exact validation or consume the
+  Phase-D-majority allocation in `.529`.
+- **Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold
+  Networks** - arXiv:2602.06737,
+  https://arxiv.org/abs/2602.06737. Piecewise-affine KAN abstractions with
+  explicit local/global error bounds make MILP verification tractable by
+  optimizing a finite piece budget. This is promising if Carnot later ships a
+  KAN energy that requires certification, but it does not repair the retired
+  adaptive-KAN accuracy line or justify a new KAN experiment before the
+  verifier-domain bottleneck is solved.
+- **Decomposing Large-Scale Ising Problems on FPGAs** - arXiv:2602.15985,
+  https://arxiv.org/abs/2602.15985, and **Energy-Efficient p-Bit-Based
+  Fully-Connected Quantum-Inspired Simulated Annealer with Dual BRAM
+  Architecture** - arXiv:2602.16143,
+  https://arxiv.org/abs/2602.16143. Both reinforce hybrid decomposition,
+  explicit communication accounting, and memory-aware replica scheduling.
+  Neither changes Carnot's attached-board state or licenses a speedup claim;
+  fixed-width ABI equivalence and live board receipts remain prerequisites.
+
+### Citation-trail, ecosystem, and hardware status
+
+- **Semantic Scholar:** the dated 2026-08-04 API receipts returned 31 visible
+  EBT citing records and eight ARM-EBM citing records. Newly relevant EBT
+  citations include Solver-Hard (`2607.17047`) and Memoir (`2607.20792`);
+  Distributional EBMs (`2605.18871`) cites ARM-EBM. Counts are discovery
+  receipts, not stable bibliometric claims.
+- **OpenReview / Hugging Face Papers:** Distributional EBMs is promoted above.
+  Hugging Face searches also surfaced DiffuTruth (`2602.11364`), HalluGuard
+  (`2601.18753`), TokenHD (`2605.12384`), and Spilled Energy (`2602.18671`).
+  These are useful hallucination baselines, but their external-text or logit
+  surfaces do not reopen Carnot's retired Phase-D external scorer family.
+- **GitHub:** targeted searches found the public EBT training repository,
+  RoMeRL's read-only evaluation release, Solver-Hard's receipts, and several
+  very small new EBRM demonstrations. No new maintained repository displaces
+  Carnot's exact validators, local GGUF runtime, or transactional-memory
+  implementation. RoMeRL's write-side learner is not in its public release, so
+  Carnot must implement and test the bounded utility-state idea locally rather
+  than claim a reproduction.
+- **Extropic:** the official writing index still ends with the October 2025
+  X0/XTR-0/TSU launch material. The hardware page continues to advertise Z1
+  early access in 2026, but Carnot still has no authenticated XTR-0/Z1
+  execution route. No TSU speed, power, convergence, or availability claim is
+  eligible.
+- **Logical Intelligence:** the public Kona 1.0 and Sudoku pages continue to
+  describe whole-state energy reasoning and exact constraint checking, but
+  expose no public weights, documented local inference API, or reproducible
+  comparator. Kona remains architecture context, not experimental evidence.
+
+### V529 planning impact
+
+- Make construction and qualification of a difficulty-calibrated, same-model,
+  exact-labeled candidate pool the Phase D entry gate. Use at least eight
+  temperature samples per question, an explicit non-truncating token budget,
+  question-clustered intervals, proof-preserving relabel controls, and a
+  numerical all-wrong-rate gate; do not use solver hardness as a proxy for
+  model hardness.
+- Qualify a matching base-transformer per-layer extraction surface only after
+  candidate headroom exists, then compare an internal-state selector with tuned
+  self-consistency and shortcut controls. GGUF generation provenance and base
+  hidden-state extraction must remain distinct and hash-pinned.
+- Recover the `.528` exact-atom SOTA corpus with sequential model eviction,
+  checkpointed early stopping, and phase timing; the previous result is an
+  environmental VRAM block, not evidence against the semantic mechanism.
+- Test reduced-order utility states against `.528`'s winning write-through
+  control on a chronological exact-event stream; delayed commit remains a
+  diagnostic arm rather than the expected winner.
+- Preserve exactly one ARC slot and use it for cross-game gotcha/primitive
+  hardening or held-out live-path measurement. The local single-shot induction
+  line is closed, and the identity-strip dev-twin result is not a credited live
+  solve.
+
+<!-- V529-PLANNER-REFRESH-20260804-END -->

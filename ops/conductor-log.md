@@ -15291,3 +15291,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-04 07:34 UTC | Live ARC flagship-LLM budget-2000 wall-clock feasi | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: h pytest.raise |
 | 2026-08-04 08:13 UTC | Live ARC flagship-LLM budget-2000 wall-clock feasi | OK | 93 passed, 1 warning in 10.23s |
 | 2026-08-04 09:00 UTC | Branch-independent .528 capstone and exact reconci | OK | 87 passed, 1 warning in 7.18s |
+| 2026-08-04 10:06 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1554s (600s silence). Last out |

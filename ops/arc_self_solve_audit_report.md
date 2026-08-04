@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (65 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (68 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,13 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (65 modul
 
 ## Hostile LLM review
 
-**TL;DR: DUPLICATE — zero new live-agent capability; the artifact is also heavily outer-loop-contaminated.**
+**TL;DR: UNCLEAR — zero recent solve artifacts exist to demonstrate any self-discovery advance; reachability alone proves no live capability.**
 
-`results/arc_loop_solve_tu93.json`
+Per-artifact review: none (0 artifacts in the last 7 days).
 
-- **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only level 4, while the registry already records `tu93` through level 9/full clear. Provenance is `development_proxy`; mode is offline; it uses `hand_verifier_cold_start_no_spatial_checkpoint`, expands 4,346 offline states, and provides no live attempt/induction trace or `honest_verdict`. The registry identifies the solver as per-game `GameAdapter _tu93` plus `OfflineSolver`.
-- **Recommended action:** Give no solve credit. Set `honest_verdict=DUPLICATE` and `arc_solve_credited=false`; add a registry precheck preventing emission of ≤L9 as advancement. Retain only as an offline regression fixture.
+**Recommended action:** Produce runtime evidence tying each future solve to a live entrypoint, including the agent’s own observations, attempts, model updates, and successful trajectory. Reject source-derived, offline-BFS, hand-authored per-game, or duplicate solves.
 
-**Pattern watch:** Strong drift toward laundering hand-verifier/offline-search output through a live-reachable entrypoint. Reachability is irrelevant when the actual result comes from a per-game adapter and offline exploration. Require agent-owned runtime evidence from first contact before labeling anything self-discovery.
+**Pattern watch:** No outer-loop drift is evidenced, but neither is autonomous progress. “68 modules reachable” is plumbing—not proof that the live agent discovered a hidden-game solution.
 
