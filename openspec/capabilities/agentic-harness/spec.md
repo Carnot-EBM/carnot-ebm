@@ -666,3 +666,131 @@ state without fabricating replacement rows.
 jackknife support are reported, anchor-destroyed or one/two-game-only regions
 force `complete_null:` or `complete_underpowered:`, and no flag flip, hidden
 transfer, public solve credit, or registry mutation is claimed.
+
+### REQ-ARC-LLB2-5972: LLM-On Budget-2000 Scheduling Feasibility
+
+Experiment 5972 SHALL measure scheduling feasibility only for the adapter-free
+E3 scored path with the LLM on and action budget 2000. It SHALL target exactly
+the seven prior budget-gain games `dc22`, `ft09`, `s5i5`, `su15`, `lf52`,
+`r11l`, and `cd82`, plus a matched `lp85` positive-control pair containing
+the prior `S_minus_frontier_llmon` treatment and its healthy matched control.
+It SHALL write
+`results/experiment_5972_arc_llm_on_budget2000_feasibility.json`.
+
+Before any expensive live run, Exp5972 SHALL perform a registry precheck that
+all target games are already-cleared measurement cases and SHALL record the
+registry hash. It SHALL resolve `MODEL_SPECS` with the mandated flagship
+`unsloth/Qwen3.6-35B-A3B-GGUF`, the exact cached GGUF path/hash, embedded GGUF
+tokenizer loader receipt, public llama.cpp CUDA/offload receipt, genuine GPU
+VRAM/utilization/thermal/process/port receipts, SDK/cache/resource receipts,
+hard per-cell wall limits, total task budget, disk/RAM, checkpoint/resume
+readiness, and cleanup readiness. If the mandated flagship GGUF, CUDA/offload
+path, live E3 path, time, or resource prerequisites are unavailable, Exp5972
+SHALL emit a terminal `blocked:` artifact before model load or live inference
+and SHALL NOT substitute a legacy model or CPU headline.
+
+Before outcomes, Exp5972 SHALL freeze the eight game/arm cells, deterministic
+seed, budget 2000, per-cell timeout, total timeout, shipped scored policy, and
+no-target/no-credit rule. The only credited path SHALL be `make_carnot_agent`
+and `E3AgentPolicy` with GameAdapter, game source, offline BFS, per-game
+calibration, prior-game logs, registry trajectories, hidden-state routes, and
+source-derived escape hatches disabled or counted bare zero.
+
+Exp5972 SHALL run a one-action/model smoke before full cells and require real
+tokens, valid actions, CUDA offload, and process health. Completed cells SHALL
+be checkpointed atomically. Every planned cell SHALL terminate as completed,
+missing, errored, timed out, or generator-invalid; no invalid or censored cell
+may be extrapolated without an explicit censored model. Each live cell SHALL
+record calls, prompt/completion tokens, plan-channel openings, actions,
+progress, level outcomes, elapsed wall time including model load/planning/
+actions/retries/teardown, peak VRAM, GPU utilization, errors, timeouts, and
+generator validity.
+
+Exp5972 SHALL project a 25-game one-arm wall time under the measured
+distribution with bootstrap uncertainty, state load amortization separately,
+compare budget 400 vs budget 2000 timing using the frozen prior artifact
+without rewriting or selectively dropping cells, and report whether 25 games
+fit 12 hours at the upper projection bound. This timing result SHALL NOT
+recommend or perform a `MAX_ACTIONS`, feature-flag, solve-registry, or public
+solve-credit change.
+
+Experiment 5972 SHALL write bare top-level fields `status`,
+`preconditions_checked`, `registry_precheck_and_hash`, `model_specs`,
+`model_file_hash_embedded_tokenizer_llama_cpp_and_cuda_receipts`,
+`gpu_vram_thermal_process_port_and_cleanup_receipts`,
+`game_arm_seed_budget_and_timeout_seal`,
+`live_agent_path_and_disabled_escape_hatches`,
+`smoke_and_checkpoint_resume_receipts`,
+`expected_completed_missing_errored_timed_out_and_generator_invalid_cells`,
+`per_cell_calls_tokens_actions_progress_levels_plan_channel_time_and_gpu_metrics`,
+`lp85_healthy_matched_positive_control`,
+`budget400_frozen_comparison_receipt`,
+`twenty_five_game_twelve_hour_projection_and_interval`,
+`load_amortization_and_censoring_policy`,
+`no_automatic_flag_change_receipt`, `solve_provenance`,
+`no_new_solve_credit_receipt`, `shipped_flag_and_registry_immutability`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field provenance principles SHALL include:
+
+- `status`: principle "missing model, CUDA, live path, time, or resource prerequisites block before the expensive run."
+- `preconditions_checked`: principle "missing model, CUDA, live path, time, or resource prerequisites block before the expensive run."
+- `registry_precheck_and_hash`: principle "every target is an already-cleared measurement case and registry state remains immutable."
+- `model_specs`: principle "the mandated flagship public GGUF and genuine local CUDA path are auditable."
+- `model_file_hash_embedded_tokenizer_llama_cpp_and_cuda_receipts`: principle "the mandated flagship public GGUF and genuine local CUDA path are auditable."
+- `gpu_vram_thermal_process_port_and_cleanup_receipts`: principle "resource authenticity and teardown are measured for every phase."
+- `game_arm_seed_budget_and_timeout_seal`: principle "cells and limits are fixed before outcomes."
+- `live_agent_path_and_disabled_escape_hatches`: principle "only make_carnot_agent/E3AgentPolicy with prohibited routes disabled receives credit."
+- `smoke_and_checkpoint_resume_receipts`: principle "authentic inference precedes full cells and completed evidence survives interruption."
+- `expected_completed_missing_errored_timed_out_and_generator_invalid_cells`: principle "every planned cell has one honest terminal state."
+- `per_cell_calls_tokens_actions_progress_levels_plan_channel_time_and_gpu_metrics`: principle "scheduling, accuracy, and mechanism use remain disaggregated."
+- `lp85_healthy_matched_positive_control`: principle "the previously unpaired plan-channel activation must have a valid matched control."
+- `budget400_frozen_comparison_receipt`: principle "compare with the immutable prior artifact without rewriting or selectively dropping cells."
+- `twenty_five_game_twelve_hour_projection_and_interval`: principle "feasibility uses a measured uncertainty bound under the shared wall clock."
+- `load_amortization_and_censoring_policy`: principle "load reuse and timeouts are modeled explicitly, not hidden in a mean."
+- `no_automatic_flag_change_receipt`: principle "a timing result alone does not authorize a policy mutation."
+- `solve_provenance`: principle "use live_agent_self_discovery; level outcomes come only from the live agent's own attempts/runtime evidence."
+- `no_new_solve_credit_receipt`: principle "incidental public level outcomes are scheduling measurements and do not update solve claims."
+- `shipped_flag_and_registry_immutability`: principle "MAX_ACTIONS defaults, feature flags, and registry remain byte-identical."
+- `protected_files_unchanged`: principle "active roadmap, conductor, exclusions, history, and unrelated changes remain immutable."
+- `duration_s`: principle "use measured live_llm_inference."
+- `inference_substrate`: principle "use measured live_llm_inference."
+- `verifier_is_oracle`: principle "false; public timing does not prove hidden-game performance and single-seed limits are explicit."
+- `missing_verifier_gaps`: principle "false; public timing does not prove hidden-game performance and single-seed limits are explicit."
+- `field_provenance`: principle "artifact fields carry principle annotations tied to the preregistered safeguards."
+- `test_commands`: principle "record focused, coverage, full-suite, spec, E2E, adversarial, protected-file, and clutter checks."
+- `test_exit_codes`: principle "record the actual exit code for each verification command."
+- `reproducibility_checksum`: principle "hash measured rows and immutable precondition receipts, excluding wall-clock duration."
+- `honest_verdict`: principle "use `complete_feasible:`, `complete_infeasible:`, `complete_underpowered:`, or `blocked:`."
+
+### SCENARIO-ARC-LLB2-5972-PRECONDITION-BLOCK
+
+**Given** the target registry entries, mandated Qwen3.6 GGUF cache, embedded
+tokenizer, public llama.cpp CUDA/offload path, live `make_carnot_agent`/
+`E3AgentPolicy` path, resources, ports, checkpoint path, and cleanup checks
+**When** any required prerequisite is missing before model load
+**Then** Exp5972 writes the complete blocked artifact with all required fields,
+zero live cells, immutable registry/protected files, no substituted model, no
+solve credit, no flag advice, and an honest verdict beginning with `blocked:`.
+
+### SCENARIO-ARC-LLB2-5972-SEALED-LIVE-CELLS
+
+**Given** every precondition passes and the smoke records real tokens, a valid
+action, CUDA offload, and process health
+**When** the frozen game/arm/seed/budget cells execute sequentially
+**Then** every cell runs through fresh adapter-free `E3AgentPolicy`, records
+calls/tokens/actions/progress/levels/plan-channel/time/GPU/generator health,
+updates an atomic checkpoint, and ends in exactly one terminal state.
+
+### SCENARIO-ARC-LLB2-5972-PROJECTION-NO-FLAG-FLIP
+
+**Given** complete or censored cell rows and the frozen budget-400 comparison
+artifact
+**When** Exp5972 computes the 25-game 12-hour projection
+**Then** it bootstraps the measured game distribution, states load amortization
+and censoring separately, reports whether the upper bound fits 12 hours, keeps
+`MAX_ACTIONS`, shipped flags, and `ops/arc_solve_registry.yaml` byte-identical,
+and records no public solve credit.
