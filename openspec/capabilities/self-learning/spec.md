@@ -26464,6 +26464,166 @@ operations fail closed.
 |---|---|---|---|
 | REQ-LEARN-5969 | Planned (`python/carnot/experiment_5969_csl_poison_drift_abi_audit.py`, `results/experiment_5969_csl_poison_drift_abi_audit.json`) | Planned (ABI v2 attacked trace parity receipts) | Planned (`tests/python/test_experiment_5969_csl_poison_drift_abi_audit.py`) |
 
+## REQ-LEARN-6120: Outcome-Committed Reduced-Order CSL Utility State
+
+The self-learning tier SHALL provide Exp6120, a deterministic no-LLM replay at
+`python/carnot/experiment_6120_outcome_committed_reduced_order_csl.py` that
+consumes the ready Exp5967, Exp5968, and Exp5969 fixtures, the exact
+chronological Exp5920 event stream, and the ready adaptive-state ABI v2 receipt.
+It SHALL write
+`results/experiment_6120_outcome_committed_reduced_order_csl.json`, SHALL NOT
+mutate `scripts/research_conductor.py`, and SHALL use
+`inference_substrate="deterministic_exact_verifier_and_versioned_external_state_no_llm"`.
+
+Exp6120 SHALL define a fixed-dimensional reduced-order utility state with
+explicit task, outcome-polarity, and memory-dynamics coordinates plus versioned
+serialization. The coordinate dimension SHALL NOT grow with chronological
+history length; exact raw events MAY be retained only in an audit ledger and
+SHALL NOT become runtime credit state. The artifact SHALL report the schema
+version, coordinate names, dimension, serialized byte size, state byte bound,
+and proof that runtime dimension stays fixed as event count grows.
+
+At each decision start, Exp6120 SHALL freeze the retrieval snapshot and reduced
+state version. Retrieval and scoring MAY read that snapshot but SHALL NOT
+mutate it. Utility credit SHALL be committed only after the independent exact
+future outcome arrives. The post-outcome transaction SHALL record causal event
+IDs, outcome event IDs, before/after state hashes, commit or rollback status,
+and SHALL prove bare zero same-decision read-after-write.
+
+Exp6120 SHALL replay five chronological seeds with identical events and
+decisions for these arms: reduced-order post-outcome commit, Exp5968-style
+write-through, delayed commit, fixed memory, shuffled retrieval, and no memory.
+It SHALL preserve an A/A determinism arm for the reduced-order policy. Each arm
+SHALL use the same chronological event order, exact outcome authority, seed set,
+decision count, event count, verifier budget, and model-weight immutability
+receipt.
+
+Primary evidence SHALL be exact future-event utility, learning-speed trajectory,
+final utility, and paired seed/event intervals versus write-through. The
+artifact SHALL also report calibration/AUC when defined, state bytes, feedback
+coverage, contamination, unsafe accepts, poison propagation, rollback,
+protected-prefix replay retention, backward transfer, forgetting, and compute.
+Promotion SHALL require either a positive paired lower interval versus
+write-through on future-event utility or a preregistered equal-utility/lower
+state Pareto criterion, plus zero safety or ABI regressions, non-forgetting,
+bounded state, immutable model weights, unchanged protected files, and zero
+required command failures. A non-promotion verdict SHALL retire this reduced
+state shape.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`continuous_self_learning_task`,
+`immutable_fixture_event_order_authority_code_and_abi_hashes`,
+`reduced_order_state_schema_dimension_version_and_bytes`,
+`decision_snapshot_freeze_and_no_same_decision_write_receipts`,
+`exact_post_outcome_transaction_commit_and_rollback_receipts`,
+`arm_definitions_seed_event_and_aa_determinism_counts`,
+`future_event_utility_learning_speed_final_utility_and_paired_intervals`,
+`write_through_delayed_fixed_shuffled_and_no_memory_controls`,
+`feedback_coverage_contamination_and_state_size`,
+`unsafe_accept_poison_rollback_replay_retention_and_nonforgetting_metrics`,
+`python_rust_pyo3_fixed_width_abi_parity`,
+`model_weight_immutability_receipt`, `qualification_gate_matrix`,
+`outcome_committed_csl_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `random_seed`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: Terminal status follows the conjunctive readiness and retirement gate.
+- `preconditions_checked`: Hash fixtures, chronological order, exact authority, memory code, ABI, rollback/poison policy, outputs, protected files, root clutter, inherited debt, and immutable weights before replay.
+- `continuous_self_learning_task`: This is the milestone's explicit FR11 learning experiment.
+- `immutable_fixture_event_order_authority_code_and_abi_hashes`: One immutable fixture/event/order/authority/code/ABI basis defines every arm.
+- `reduced_order_state_schema_dimension_version_and_bytes`: Runtime credit state stays bounded as history grows.
+- `decision_snapshot_freeze_and_no_same_decision_write_receipts`: Credit cannot circularly affect the decision that generated its own outcome.
+- `exact_post_outcome_transaction_commit_and_rollback_receipts`: Credit cannot circularly affect the decision that generated its own outcome.
+- `arm_definitions_seed_event_and_aa_determinism_counts`: Every arm sees matched chronological events and reproducible controls.
+- `future_event_utility_learning_speed_final_utility_and_paired_intervals`: Learning speed and eventual capability are distinct, future-looking outcomes.
+- `write_through_delayed_fixed_shuffled_and_no_memory_controls`: Exp5968's winner is the primary comparator and retrieval/commit effects are identifiable.
+- `feedback_coverage_contamination_and_state_size`: Feedback authority, contamination, and bounded runtime bytes remain visible.
+- `unsafe_accept_poison_rollback_replay_retention_and_nonforgetting_metrics`: Utility cannot trade away safety, retention, or cross-language semantics.
+- `python_rust_pyo3_fixed_width_abi_parity`: Utility cannot trade away safety, retention, or cross-language semantics.
+- `model_weight_immutability_receipt`: This Tier-2 mechanism changes external state only.
+- `qualification_gate_matrix`: Promotion is conjunctive and the same non-promotion verdict retires this shape.
+- `outcome_committed_csl_ready_score`: Promotion is conjunctive and the same non-promotion verdict retires this shape.
+- `retirement_triggered`: Promotion is conjunctive and the same non-promotion verdict retires this shape.
+- `protected_files_unchanged`: Protected files are not part of this experiment's mutable surface.
+- `random_seed`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `duration_s`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `inference_substrate`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `verifier_is_oracle`: Exact future outcomes are oracle; learned utility state is not.
+- `missing_verifier_gaps`: Exact future outcomes are oracle; learned utility state is not.
+- `field_provenance`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `test_commands`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `test_exit_codes`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `reproducibility_checksum`: Use measured deterministic exact verifier and versioned external state with no LLM.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:`.
+
+`outcome_committed_csl_ready_score` SHALL be the bare scalar `1.0` only when
+Exp5967, Exp5968, Exp5969, event order, exact outcome authority, memory code,
+and ABI hashes replay cleanly; reduced-order state dimension is fixed and
+bounded; every decision snapshot is read-only; post-outcome transactions record
+causal IDs and before/after hashes; same-decision read-after-write is zero;
+matched controls and A/A determinism pass; future-event utility satisfies the
+preregistered write-through promotion or equal-utility/lower-state Pareto gate;
+safety, poison, rollback, replay retention, non-forgetting, and ABI parity all
+pass; model weights are immutable; protected files are unchanged; and every
+required command exit code is zero. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-6120-STATE: Reduced-Order State Is Fixed Width
+
+**Given** the Exp6120 reduced-order state schema
+**When** chronological events are replayed
+**Then** task, outcome-polarity, and memory-dynamics coordinates remain fixed
+in count and version
+**And** exact raw events are retained only as audit ledger receipts.
+
+### SCENARIO-LEARN-6120-SNAPSHOT: Decision Reads Are Frozen
+
+**Given** a decision starts at state version `N`
+**When** retrieval and scoring execute
+**Then** they read only the frozen version `N`
+**And** post-outcome credit from that decision is not readable until a later
+decision.
+
+### SCENARIO-LEARN-6120-TRANSACTION: Utility Commits Only After Exact Future Outcome
+
+**Given** an independent exact outcome arrives after a sealed decision
+**When** the reduced-order transaction commits or rolls back
+**Then** causal event IDs, outcome event IDs, before/after hashes, state
+versions, and rollback reasons are recorded.
+
+### SCENARIO-LEARN-6120-ARMS: Matched Chronological Controls And A/A Arm
+
+**Given** reduced-order, write-through, delayed, fixed, shuffled, and no-memory
+arms plus a reduced-order A/A arm
+**When** five seeds replay the chronological event stream
+**Then** each arm sees the same events, decisions, exact outcomes, and compute
+budget, and the A/A arm is byte-deterministic.
+
+### SCENARIO-LEARN-6120-PROMOTION: Future Utility Gate Uses Write-Through Comparator
+
+**Given** paired seed/event future-event utility
+**When** Exp6120 evaluates promotion
+**Then** it promotes only on a positive lower interval versus write-through or
+on an equal-utility/lower-state Pareto criterion with zero safety, retention,
+weight, and ABI regressions.
+
+### SCENARIO-LEARN-6120-SAFETY-PARITY: Safety And ABI Invariants Are Preserved
+
+**Given** poison, rollback, replay-retention, non-forgetting, and ABI receipts
+**When** the reduced-order policy qualifies
+**Then** unsafe accepts and poison propagation are zero, rollback is exact,
+protected-prefix retention is complete, model weights are unchanged, and
+Python/Rust/PyO3 fixed-width parity holds.
+
+## Implementation Status (Exp 6120)
+
+| Requirement | Python | Rust/PyO3 | Tests |
+|---|---|---|---|
+| REQ-LEARN-6120 | Planned (`python/carnot/experiment_6120_outcome_committed_reduced_order_csl.py`, `results/experiment_6120_outcome_committed_reduced_order_csl.json`) | Planned (ABI v2 fixed-width parity receipts) | Planned (`tests/python/test_experiment_6120_outcome_committed_reduced_order_csl.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
