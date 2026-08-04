@@ -15308,3 +15308,4 @@ No output thi |
 | 2026-08-04 19:36 UTC | Exact terminal-boundary handoff from .529 into .53 | OK | 86 passed, 1 warning in 16.39s |
 | 2026-08-04 19:57 UTC | Dated evidence refresh after the V530 planner mark | OK | 86 passed, 1 warning in 20.92s |
 | 2026-08-04 20:36 UTC | Phase-D task-scoped GPU engagement and sealed-ladd | OK | 86 passed, 1 warning in 26.10s |
+| 2026-08-04 21:16 UTC | Gated calibration-only authentic Phase-D candidate | OK | 86 passed, 1 warning in 10.65s |
