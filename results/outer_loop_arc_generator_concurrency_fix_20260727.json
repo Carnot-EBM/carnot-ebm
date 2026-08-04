@@ -1086,6 +1086,14 @@
         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
+      },
+      {
+        "path": "scripts/arc_llm_on_liveness_lint.py",
+        "sha256_was": "4744d43966104acb2fa56261a4cfba01a10b3009a18506ccd11f8bdb495e7612",
+        "sha256_now": "5e9e05ecb0957f2d86ce43e039b2ce4de469965e1cf84ebfe0393d16b4e9e137",
+        "acknowledged_on": "2026-08-04",
+        "reason": "The 2026-08-04 change to arc_llm_on_liveness_lint.py adds ONE branch: when a row carries no `llm` block there are no call-level primitives to recompute from, so a False stamp is reported as STAMP_FALSE_UNAUDITABLE at WARN instead of STAMP_FALSE_UNEXPLAINED at FAIL. It adds no measurement and changes no computation this artifact performs.",
+        "evidence": "PROVEN BY RUNNING THE LINT BEFORE AND AFTER. Whole-corpus counts moved 56 FAIL / 280 WARN -> 55 FAIL / 281 WARN: exactly one finding reclassified FAIL->WARN, which is the single exp5972 raw_row_summary row this branch was written for. 55 equals the exempt forward-only baseline in ops/arc_llm_on_liveness_baseline.json, so NO pre-existing FAIL was silenced and no NEW finding remains. This artifact reports the generator-concurrency fix and cites no FAIL/WARN count, so no published figure in it moves."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."

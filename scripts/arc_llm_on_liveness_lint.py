@@ -393,6 +393,37 @@ def check_row(row: dict) -> list[dict]:
         # derived stamp as a verdict, it treats a DISAGREEMENT between the stamp and the
         # recomputation as the finding. A lint that can only fire when it already agrees with
         # the derived value is not an independent check.
+        # UNAUDITABLE ROWS ARE A WARN, NOT A FAIL (added 2026-08-04).
+        #
+        # This branch is a DISAGREEMENT detector: the harness stamped the row invalid and the
+        # recomputation found nothing failing, so one of them is wrong. That reasoning only holds
+        # when there were primitives to recompute FROM. A row with no `llm` block carries no
+        # call-level primitives at all, so the lint has not disagreed with the harness -- it has
+        # simply been handed nothing to check, and calling that a FAIL blames the row for the
+        # lint's own blind spot.
+        #
+        # The measured shape that hits this: `walk_rows` descends into SUMMARY SUB-OBJECTS such as
+        # `raw_row_summary`, which holds {generator_healthy_after, induction_attempts_llm_reached,
+        # llm_on_row_valid} and nothing else. Its PARENT row carries the actual reason for the
+        # False stamp -- `generator_valid: False`, `terminal_state: "generator_invalid"` -- but
+        # check_row only ever sees the child. exp5972's budget=1 smoke cell is an honest row that
+        # correctly recorded an invalid generator and was failed for it, blocking every commit in
+        # the repo behind a forward-only gate.
+        #
+        # This module's own DESIGN NOTE already states the principle ("An unauditable row is a
+        # WARN"); this path simply did not implement it.
+        if not isinstance(llm, dict):
+            findings.append(
+                {
+                    "code": "STAMP_FALSE_UNAUDITABLE",
+                    "severity": "WARN",
+                    "detail": "llm_on_row_valid=False and this row carries no `llm` block, so "
+                    "there are no call-level primitives to recompute from -- the stamp cannot be "
+                    "confirmed or contradicted here. Check the parent row for the recorded reason "
+                    "(e.g. generator_valid / terminal_state).",
+                }
+            )
+            return findings
         findings.append(
             {
                 "code": "STAMP_FALSE_UNEXPLAINED",
