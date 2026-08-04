@@ -20641,3 +20641,108 @@ rejected, candidate-order permutations leave labels unchanged, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5963 | Planned (`python/carnot/experiment_5963_exact_atom_pair_fixture.py`, `results/experiment_5963_exact_atom_pair_fixture.json`) | Planned (`tests/python/test_experiment_5963_exact_atom_pair_fixture.py`) |
+
+### REQ-VERIFY-6103: Phase D Exact Difficulty Ladder Fixture
+
+The repository SHALL provide a deterministic no-LLM workflow that writes
+`results/experiment_6103_phase_d_difficulty_ladder_fixture.json`,
+`results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl`, and
+`results/experiment_6103_phase_d_difficulty_ladder_fixture.splits.json` from
+harder public parameter draws of the exact Exp5785/Exp5786 constraint
+families. The workflow SHALL generate at least 600 calibration questions and
+360 held-test questions across at least three exact low-chance families, and
+each row SHALL have an enumerated answer-space chance floor no greater than
+0.25.
+
+Rows SHALL separate semantic family, solver-hardness covariates, model-facing
+surface strata, answer-space floor, shortcut salience, and exact
+method-validity labels. Solver conflicts, deterministic time proxies, and
+density/width settings SHALL be recorded as diagnostic covariates only and
+SHALL NOT be called model difficulty or label authority. Every exact answer and
+method-validity label SHALL replay through independent Python and Z3
+authorities. The builder SHALL reject Python/Z3 disagreements, unreachable
+truths, duplicate semantic groups, chance-floor ambiguity, answer-order
+dependence, non-invertible transforms, split leakage, protected-file drift, or
+row-chain tamper.
+
+Calibration and held-test splits SHALL be sealed before inference at the
+semantic-group level. No base instance, sibling relabel, meaning-preserving
+paraphrase, near-negative, or answer permutation may cross a split. The builder
+SHALL record proof-preserving relabels, meaning-preserving paraphrases,
+surface-order changes, boundary-condition tags, salient shortcut distractors,
+and exact inverse receipts without exposing hidden answers or validator traces
+to later model prompts.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_source_hashes`,
+`family_parameter_and_exact_generation_contract`,
+`calibration_and_held_test_counts`, `semantic_group_splits`,
+`answer_space_and_enumerated_chance_floors`,
+`solver_hardness_model_surface_and_semantic_strata`,
+`proof_preserving_relabel_paraphrase_and_inverse_receipts`,
+`shortcut_salience_and_method_validity_manifest`, `python_z3_parity`,
+`duplicate_leakage_unreachable_and_order_dependence_counts`,
+`calibration_policy_and_test_secrecy`, `row_paths_hashes_and_prefix_chain`,
+`phase_d_ladder_fixture_ready_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `family_parameter_and_exact_generation_contract`: all instances are generated from public exact rules, never model outputs or hidden answer templates.
+- `calibration_and_held_test_counts` and `semantic_group_splits`: evaluation power is measured at the independent question group.
+- `answer_space_and_enumerated_chance_floors`: chance is enumerated from each exact answer space, not estimated from observed model accuracy.
+- `solver_hardness_model_surface_and_semantic_strata`: solver conflicts remain diagnostic and are not called model difficulty.
+- `proof_preserving_relabel_paraphrase_and_inverse_receipts`: every transform has auditable meaning and inverse behavior.
+- `shortcut_salience_and_method_validity_manifest`: final-answer correctness is kept separate from the intended reasoning path.
+- `python_z3_parity` and `duplicate_leakage_unreachable_and_order_dependence_counts`: exact validators and sealed splits are the authority.
+- `calibration_policy_and_test_secrecy`: no held-test label can affect generation settings or inclusion.
+- `phase_d_ladder_fixture_ready_score`: readiness requires all exact, diversity, power, leakage, and tamper gates.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: use measured `deterministic_exact_fixture_generation_no_llm`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: exact Python/Z3 validators are oracle and any uncovered method semantics are explicit gaps.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, or `blocked:`.
+
+### SCENARIO-VERIFY-6103-GENERATION: Low-Chance Calibration And Held Questions Are Sealed
+
+**Given** Exp6103 uses the finite-domain scheduling, logic-grid, and
+typed-finite-choice exact families
+**When** it builds the Phase D ladder
+**Then** it writes at least 600 calibration and 360 held-test semantic-group
+questions, every row has a chance floor no greater than 0.25, and source
+Exp5785/Exp5786 artifacts are hashed but no model-response or
+candidate-generation artifact is imported as a fixture row.
+
+### SCENARIO-VERIFY-6103-TRANSFORMS: Transforms And Shortcut Labels Are Auditable
+
+**Given** proof-preserving relabels, meaning-preserving paraphrases,
+surface-order changes, answer permutations, near-negatives, and salient
+shortcut distractors
+**When** Exp6103 records row receipts
+**Then** every transform records a deterministic inverse, final-answer
+correctness remains separate from method validity, and hidden answers or
+validator traces are absent from model-facing prompts.
+
+### SCENARIO-VERIFY-6103-REPLAY: Python And Z3 Oracles Reject Bad Rows
+
+**Given** Exp6103 row manifests and split manifests are immutable
+**When** rows are replayed, candidate order is permuted, duplicate groups are
+introduced, or row hashes are tampered with
+**Then** Python and Z3 authorities agree on every answer and method-validity
+label, answer-order dependence remains zero, duplicates and leakage are
+rejected, and the prefix chain fails closed on tamper.
+
+### SCENARIO-VERIFY-6103-POLICY: Calibration Cannot Touch Held Labels
+
+**Given** Exp6104 will later run model inference on the sealed ladder
+**When** Exp6103 publishes the calibration policy
+**Then** calibration may select difficulty strata, temperature, and fixed
+decoding parameters, but it may not inspect held-test labels or change held
+rows, and the target held-test band of 0.40 to 0.70 is recorded as a later
+measurement rather than promised by fixture generation.
+
+## Implementation Status (REQ-VERIFY-6103)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6103 | Planned (`python/carnot/experiment_6103_phase_d_difficulty_ladder_fixture.py`, `results/experiment_6103_phase_d_difficulty_ladder_fixture.json`) | Planned (`tests/python/test_experiment_6103_phase_d_difficulty_ladder_fixture.py`) |
