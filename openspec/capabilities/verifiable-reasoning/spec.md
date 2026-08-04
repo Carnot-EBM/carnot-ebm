@@ -20746,3 +20746,119 @@ measurement rather than promised by fixture generation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6103 | Planned (`python/carnot/experiment_6103_phase_d_difficulty_ladder_fixture.py`, `results/experiment_6103_phase_d_difficulty_ladder_fixture.json`) | Planned (`tests/python/test_experiment_6103_phase_d_difficulty_ladder_fixture.py`) |
+
+### REQ-VERIFY-6114: Phase D GPU Ladder Generation Canary
+
+The repository SHALL provide Exp 6114 at
+`python/carnot/experiment_6114_phase_d_gpu_ladder_canary.py` and write
+`results/experiment_6114_phase_d_gpu_ladder_canary.json`. Exp 6114 SHALL use
+only the sealed Exp 6103 exact ladder as its question source, SHALL sample only
+calibration rows, and SHALL refuse any ladder whose readiness score, row-file
+hash, split-manifest hash, Python/Z3 parity receipt, chance-floor receipt, or
+row replay differs from `results/experiment_6103_phase_d_difficulty_ladder_fixture.json`.
+
+Exp 6114 SHALL resolve exactly the measured-fit local GGUF
+`unsloth/gemma-4-26B-A4B-it-GGUF` from the Exp 6102 capacity receipt, SHALL use
+the cached Q4_K_M file and its embedded GGUF tokenizer, and SHALL NOT call
+`AutoTokenizer` or substitute a tiny model. The experiment SHALL select one
+GPU whose free VRAM satisfies the measured 17,186 MiB fit receipt, acquire a
+task-owned model PID lease, load with genuine CUDA offload, and never kill an
+unrelated process.
+
+The canary SHALL generate natural text for at least 12 calibration questions
+spanning `finite_domain_scheduling`, `logic_grid`, and `typed_finite_choice`.
+Each prompt SHALL request natural reasoning and a final answer, use fixed seeds,
+and set `max_new_tokens >= 512`. It SHALL NOT use JSON grammar, finite-ID
+transport, a deterministic answer builder, CPU headline fallback, sleep
+substitution, output-free representation extraction, or any Exp5964/Exp6102
+representation row shard as input.
+
+Lifecycle telemetry SHALL be measured through pre-load, load, decode, teardown,
+and post-release phases. Readiness requires generated tokens, measured decode
+time, task-correlated positive GPU memory engagement, task-owned model PID
+exit, server/worker exit, CUDA/backend synchronization or close receipt, and
+VRAM release toward the pre-load baseline. Capacity, generation, engagement, or
+release failure SHALL retire this canary shape rather than falling back to a
+smaller model.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_ladder_artifact_row_and_split_hashes`,
+`ladder_readiness_and_python_z3_receipt`,
+`model_specs_and_exact_file_hashes`,
+`quantization_and_embedded_tokenizer_receipt`,
+`task_owned_gpu_server_and_pid_lease`,
+`pre_load_decode_and_post_release_vram_thermal_timeline`,
+`generated_calibration_canary_rows_and_hashes`,
+`prompt_decode_seed_and_token_receipts`, `gpu_engagement_attribution`,
+`server_exit_cuda_sync_pid_exit_and_vram_release_receipts`,
+`retired_representation_scope_untouched`,
+`phase_d_compute_and_ladder_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `random_seed`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `immutable_ladder_artifact_row_and_split_hashes` and `ladder_readiness_and_python_z3_receipt`: only the sealed exact fixture can feed the canary.
+- `model_specs_and_exact_file_hashes` and `quantization_and_embedded_tokenizer_receipt`: every generated row traces to the mandated measured-fit GGUF and its embedded tokenizer.
+- `task_owned_gpu_server_and_pid_lease` and `pre_load_decode_and_post_release_vram_thermal_timeline`: resource ownership and lifecycle are measured, not inferred.
+- `generated_calibration_canary_rows_and_hashes` and `prompt_decode_seed_and_token_receipts`: real natural generation is preserved raw and reproducible.
+- `gpu_engagement_attribution` and `server_exit_cuda_sync_pid_exit_and_vram_release_receipts`: readiness requires attributable compute and cleanup.
+- `retired_representation_scope_untouched`: this canary cannot reopen or resume the retired all-family representation corpus.
+- `phase_d_compute_and_ladder_ready_score` and `retirement_triggered`: readiness is exactly 1 only if ladder, generation, engagement, and release gates all pass; the same block retires the shape.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report measured `live_local_sota_gguf_cuda_generation`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: exact Python/Z3 labels remain oracle; generation telemetry is not correctness evidence.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-6114-LADDER-REPLAY: Only The Sealed Exact Ladder Feeds Generation
+
+**Given** Exp6103 has published row and split hashes, readiness 1.0, zero
+Python/Z3 disagreement, and enumerated chance floors
+**When** Exp6114 loads candidate canary rows
+**Then** it verifies the Exp6103 artifact, row file, split manifest, replay
+receipts, and chance-floor receipt exactly, selects only calibration rows, and
+refuses any tamper or held-test input.
+
+### SCENARIO-VERIFY-6114-MEASURED-FIT-MODEL: The 26B GGUF Is The Only Loadable Canary Model
+
+**Given** Exp6102 records `unsloth/gemma-4-26B-A4B-it-GGUF` as fitting one RTX
+3090 at 17,186 MiB while the 35B and 31B families do not meet their declared
+24,576 MiB requirement
+**When** Exp6114 resolves model preconditions
+**Then** it hashes the exact cached Q4_K_M GGUF, uses the embedded tokenizer
+receipt, records `AutoTokenizer` as unused, selects a single fitting GPU, and
+blocks or retires without substituting any other model.
+
+### SCENARIO-VERIFY-6114-REAL-GENERATION: Natural Calibration Generations Are Preserved
+
+**Given** a task-owned GGUF CUDA worker has loaded the measured-fit model
+**When** Exp6114 decodes calibration prompts
+**Then** it writes at least 12 raw natural generations across all three
+families, records prompt hashes, row hashes, fixed seeds, `max_new_tokens >=
+512`, generated token counts, and decode timings, and uses no JSON grammar,
+finite-ID transport, deterministic answer builder, CPU fallback, or sleep
+substitute.
+
+### SCENARIO-VERIFY-6114-LIFECYCLE: GPU Engagement And Release Are Attributable
+
+**Given** Exp6114 owns only the worker PID it started
+**When** load, decode, and teardown telemetry are polled
+**Then** positive GPU memory engagement is attributable to that task, the
+server/worker exits, CUDA/backend synchronization or close is recorded, the
+task-owned PID exits, VRAM releases toward baseline, unrelated PIDs are not
+killed, and failure of these gates retires the canary shape.
+
+### SCENARIO-VERIFY-6114-RETIRED-SCOPE: Representation Shards Stay Untouched
+
+**Given** Exp6102 retired the all-family representation-recovery shape
+**When** Exp6114 runs the generation canary
+**Then** it does not read, resume, append, rewrite, or import Exp5964/Exp6102
+representation row shards, and records stat-only before/after receipts for the
+protected retired-scope paths.
+
+## Implementation Status (REQ-VERIFY-6114)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6114 | Planned (`python/carnot/experiment_6114_phase_d_gpu_ladder_canary.py`, `results/experiment_6114_phase_d_gpu_ladder_canary.json`) | Planned (`tests/python/test_experiment_6114_phase_d_gpu_ladder_canary.py`) |
