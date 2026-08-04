@@ -47978,3 +47978,178 @@ present; the inference substrate is `aggregation_from_upstream_artifacts`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-5973 | Implemented (`python/carnot/experiment_5973_v528_capstone_reconciliation.py`, `results/experiment_5973_v528_capstone_reconciliation.json`) | Verified (`tests/python/test_experiment_5973_v528_capstone_reconciliation.py`) |
+
+### REQ-REPORT-6100: V529 Transition Archives Exactly Activated V528 Identities
+
+The Exp6100 transition workflow SHALL archive milestone `2026.07.528` into
+`2026.08.529` by selecting exactly the thirteen conductor-activated `.528`
+identities Exp5961 through Exp5973 and their declared deliverable paths:
+`results/experiment_5961_transition_v528.json`,
+`results/experiment_5962_v528_source_delta_ingestion.json`,
+`results/experiment_5963_exact_atom_pair_fixture.json`,
+`results/experiment_5964_sota_atom_compatibility_corpus.json`,
+`results/experiment_5965_portable_atom_energy_ranker.json`,
+`results/experiment_5966_discriminative_constraint_acquisition.json`,
+`results/experiment_5967_delayed_commit_memory_fixture.json`,
+`results/experiment_5968_delayed_commit_csl_prospective.json`,
+`results/experiment_5969_csl_poison_drift_abi_audit.json`,
+`results/experiment_5970_arc_strip_swap_sentinel.json`,
+`results/experiment_5971_arc_strip_swap_battery.json`,
+`results/experiment_5972_arc_llm_on_budget2000_feasibility.json`, and
+`results/experiment_5973_v528_capstone_reconciliation.json`. Evidence SHALL be
+resolved only by exact `(milestone, task_id, declared_deliverable)`. Numeric
+prefix substitution, similarly numbered files, prompt-path spelling drift,
+completion-history `result` strings, source-file inference, downstream gate
+inference, or capstone summary laundering SHALL NOT count as terminal evidence.
+
+The workflow SHALL preserve the `.528` exact terminal classes independently:
+Exp5961 SHALL remain `missing`; Exp5962 SHALL remain `complete-null`; Exp5963,
+Exp5967, Exp5968, Exp5969, and Exp5970 SHALL remain `complete-ready`; Exp5964
+SHALL remain `blocked-precondition`; Exp5965 and Exp5966 SHALL remain
+`conductor-gate-blocked`; Exp5971 SHALL remain `complete-null`; Exp5972 SHALL
+remain `feasible-only`; and Exp5973 SHALL remain `complete-with-blocks`.
+Exp5961's absent declared artifact SHALL NOT be converted into success by
+same-number aliases, and Exp5965/Exp5966 SHALL NOT be converted into executed
+experiments by any gate-check or capstone artifact.
+
+The workflow SHALL parse the active roadmap, optionally parse
+`research-roadmap-next.yaml` when present, parse the vNEXT proposal, parse
+`research-complete.yaml`, parse `ops/exclusion_manifest.yaml`, read
+`ops/conductor-log.md` and `ops/known-issues.md`, inventory root-level clutter
+by exact filename, hash protected files, and hash every present declared `.528`
+deliverable before emitting the artifact. It SHALL run or ingest fresh
+adversarial verifier receipts for every present exact declared deliverable and
+SHALL skip verification only for explicitly absent declared artifacts.
+
+The workflow SHALL disclose inherited global test, spec-coverage, and
+root-clutter debt by exact node or file identity and SHALL gate only on deltas:
+`global_suite_failure_delta <= 0`, `global_spec_gap_delta <= 0`, and
+`root_clutter_delta <= 0`. A false global-zero gate SHALL NOT be used.
+
+The workflow SHALL append the exact `.528` milestone block to
+`research-complete.yaml` at most once only when an exact `.528` milestone block
+is absent. Existing duplicate completion history SHALL be measured by canonical
+task signature and SHALL NOT be amplified. The bare
+`duplicate_history_amplification_count` SHALL be `0` for a valid transition
+artifact.
+
+The workflow SHALL scan active and staged roadmaps, completion history,
+proposals, exclusions, results, Python modules, tests, scripts, known
+allocations, and operator issue ledgers for bare Exp6100 through Exp6111
+references. Only the active `.529` roadmap allocation, the vNEXT proposal
+allocation/reservation, and Exp6100-owned implementation, tests, spec, and
+result paths SHALL be allowed. `next_range_collision_count` SHALL be a bare
+integer; it SHALL equal `0` for a completed transition and any unowned bare
+Exp6100 through Exp6111 reference SHALL produce a terminal `blocked:` artifact.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`exact_terminal_classification`, `missing_artifact_receipt`,
+`conductor_gate_block_receipts`, `adversarial_verifier_receipts`,
+`inherited_debt_baselines_and_deltas`, `research_complete_append_count`,
+`duplicate_history_amplification_count`, `next_task_range`,
+`next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. `inference_substrate` SHALL
+be `aggregation_from_upstream_artifacts`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "state the actual transition and every prerequisite checked."
+- `preconditions_checked`: principle "state the actual transition and every prerequisite checked."
+- `milestone_transition`: principle "only the thirteen activated identities and declared paths define `.528`."
+- `activated_task_and_deliverable_matrix`: principle "only the thirteen activated identities and declared paths define `.528`."
+- `exact_terminal_classification`: principle "only the thirteen activated identities and declared paths define `.528`."
+- `missing_artifact_receipt`: principle "absence and preemptive skips remain distinct terminal evidence classes."
+- `conductor_gate_block_receipts`: principle "absence and preemptive skips remain distinct terminal evidence classes."
+- `adversarial_verifier_receipts`: principle "verify present evidence freshly without laundering unrelated debt."
+- `inherited_debt_baselines_and_deltas`: principle "verify present evidence freshly without laundering unrelated debt."
+- `research_complete_append_count`: principle "append at most once and amplify no history."
+- `duplicate_history_amplification_count`: principle "append at most once and amplify no history."
+- `next_task_range`: principle "bare zero collisions authorize Exp6100-Exp6111."
+- `next_range_collision_count`: principle "bare zero collisions authorize Exp6100-Exp6111."
+- `docs_reconciled`: principle "update only owned internal ledgers."
+- `protected_files_unchanged`: principle "update only owned internal ledgers."
+- `duration_s`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `inference_substrate`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `test_commands`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `test_exit_codes`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `reproducibility_checksum`: principle "use measured exact aggregation with `aggregation_from_upstream_artifacts`."
+- `honest_verdict`: principle "use a `complete:` or `blocked:` prefix."
+
+#### SCENARIO-REPORT-6100-ACTIVATED-MATRIX: V528 Archive Uses Thirteen Declared Deliverables Only
+
+**Given** the active `.529` roadmap names Exp6100 as the transition task
+**And** the conductor log records `.528` activation with thirteen queued tasks
+**When** the Exp6100 transition builds its archive matrix
+**Then** it records exactly Exp5961 through Exp5973, uses each exact declared
+deliverable path, records Exp5961 as an absent declared artifact, records
+Exp5965/Exp5966 as conductor gate blocks, and does not use numeric-prefix
+aliases, prompt spelling drift, completion-history `result` strings, or capstone
+summaries as stronger evidence.
+
+#### SCENARIO-REPORT-6100-TERMINAL-CLASSES: V528 Terminal Outcomes Stay Disjoint
+
+**Given** `.528` contains missing, complete-null, complete-ready,
+blocked-precondition, conductor-gate-blocked, feasible-only, and
+complete-with-blocks outcomes
+**When** Exp6100 classifies terminal outcomes
+**Then** each activated task has exactly one terminal class: Exp5961 missing,
+Exp5962 complete-null, Exp5963/Exp5967/Exp5968/Exp5969/Exp5970 complete-ready,
+Exp5964 blocked-precondition, Exp5965/Exp5966 conductor-gate-blocked, Exp5971
+complete-null, Exp5972 feasible-only, and Exp5973 complete-with-blocks.
+
+#### SCENARIO-REPORT-6100-MISSING-AND-GATE-BLOCKS: Absence And Gate Blocks Are Not Executions
+
+**Given** Exp5961 has no declared artifact after three conductor wall-clock
+attempts
+**And** Exp5965/Exp5966 were preemptively conductor-gate-blocked
+**When** Exp6100 emits missing and gate receipts
+**Then** Exp5961 is represented by `missing_artifact_receipt`, Exp5965/Exp5966
+are represented by `conductor_gate_block_receipts`, and neither class is
+verified, executed, or promoted into success by a similarly numbered file.
+
+#### SCENARIO-REPORT-6100-DUPLICATE-DEBT-AND-VERIFIER: History, Debt, And QA Are Delta-Gated
+
+**Given** completion history may already contain an exact `.528` block
+**And** present declared `.528` deliverables are freshly checked by
+`scripts/adversarial_verify.py`
+**And** inherited global suite, spec-coverage, or root-clutter debt may already
+exist
+**When** Exp6100 evaluates readiness
+**Then** it appends no duplicate `.528` block, reports
+`research_complete_append_count` as a bare `0` or `1`, reports
+`duplicate_history_amplification_count` as bare `0`, records verifier receipts
+for present declared paths only, and blocks only positive task-owned debt
+deltas.
+
+#### SCENARIO-REPORT-6100-RANGE-COLLISION: Bare Exp6100-Exp6111 Collisions Block
+
+**Given** the active `.529` roadmap and vNEXT proposal reserve Exp6100 through
+Exp6111
+**When** Exp6100 scans repository paths and content for bare Exp6100 through
+Exp6111 references
+**Then** only allowed allocation/reservation and Exp6100-owned references are
+permitted, and any unowned bare Exp6100 through Exp6111 reference sets a
+nonzero bare `next_range_collision_count` and emits a `blocked:` artifact.
+
+#### SCENARIO-REPORT-6100-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp6100 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, precondition
+receipt, exact activated identity, missing receipt, conductor-gate receipt,
+adversarial-verifier receipt, debt-delta receipt, history receipt,
+range-collision receipt, protected-file hash, test command, exit code,
+checksum, and terminal verdict prefix is present; the inference substrate is
+`aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-6100)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6100 | Implemented (`python/carnot/experiment_6100_transition_v529.py`, `results/experiment_6100_transition_v529.json`) | Verified (`tests/python/test_experiment_6100_transition_v529.py`) |

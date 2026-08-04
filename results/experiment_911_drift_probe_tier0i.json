@@ -1,17 +1,17 @@
 {
   "experiment": 911,
   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
-  "run_date": "20260803",
-  "started_at": "2026-08-03T20:41:39Z",
-  "finished_at": "2026-08-03T20:41:41Z",
-  "duration_s": 2.2,
+  "run_date": "20260804",
+  "started_at": "2026-08-04T11:53:10Z",
+  "finished_at": "2026-08-04T11:55:55Z",
+  "duration_s": 165.52,
   "status": "success",
   "random_seed": 42,
   "reproducibility_checksum": "a6bb133cb1e3638a",
   "metrics_used": "unknown",
-  "ood_auc_drift": 0.9525,
-  "honest_verdict": "tier0i_viable",
-  "inference_mode": "synthetic_runner",
+  "ood_auc_drift": 0.5625,
+  "honest_verdict": "tier0i_marginal",
+  "inference_mode": "real_model",
   "model_name": "Qwen/Qwen3.5-0.8B",
   "probe_layers": [
     -4,
@@ -26,13 +26,13 @@
   "n_train_correct": 80,
   "n_train_halluc": 80,
   "n_eval_pairs": 20,
-  "mean_correct_drift": 0.006839027162641287,
-  "mean_halluc_drift": 0.4711631238460541,
+  "mean_correct_drift": 0.17649930715560913,
+  "mean_halluc_drift": 0.17703746259212494,
   "probe_coef": [
     [
-      1.7925732135772705,
-      2.2740602493286133,
-      2.636138916015625
+      -0.0023168993648141623,
+      0.005692105740308762,
+      0.0595560297369957
     ]
   ],
   "decision_class": "detect",
