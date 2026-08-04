@@ -2442,6 +2442,111 @@ raw-model-identity controls are recorded
 families with preregistered semantic headroom beyond permutation and duplicate
 controls.
 
+### REQ-INFER-SOTA-6102: Exp 6102 Sequential VRAM Recovery For SOTA Atom Corpus
+
+The system SHALL provide Exp 6102 at
+`python/carnot/experiment_6102_sota_atom_corpus_vram_recovery.py` and write
+`results/experiment_6102_sota_atom_corpus_vram_recovery.json` plus declared
+per-family row shards. Exp 6102 is the single recovery attempt for the blocked
+Exp 5964 representation corpus: it SHALL keep the sealed Exp 5963 fixture,
+the Exp 5964 prompt and raw representation schema, and exactly the mandated
+GGUF families `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, but SHALL load only one family at a time.
+It SHALL NOT train an Exp 5965-style ranker.
+
+Before model loading, Exp 6102 SHALL hash the Exp 5963 fixture, Exp 5963 row
+streams, Exp 5964 terminal artifact, and Exp 5964 partial row shards; resolve
+exact cached primary GGUF files and quantizations; record embedded GGUF
+tokenizer receipts without calling `AutoTokenizer`; record disk, RAM, swap,
+per-GPU free/used VRAM, thermals, CUDA/runtime build, task-owned PID leases,
+per-family memory estimates, timeout budget, output paths, protected files,
+and the prior Exp 5964 VRAM verdict. If the first family cannot fit after
+task-owned cleanup, Exp 6102 SHALL write a complete blocked artifact, SHALL
+not load a model, and SHALL mark `retirement_triggered=true` when the verdict
+matches Exp 5964's insufficient-VRAM block. It SHALL never kill or evict an
+unrelated process.
+
+Exp 6102 SHALL resume only rows whose fixture hash, model file hash,
+quantization, tokenizer metadata, prompt hash, feature schema, row hash chain,
+and prefix-chain checksum exactly match the current run receipts. Rejected or
+partial Exp 6102 row shards SHALL be quarantined before replacement; Exp 5964
+partial shards SHALL be recorded as immutable prior evidence and SHALL NOT be
+silently mixed into the Exp 6102 corpus.
+
+For each family phase, Exp 6102 SHALL write an atomic phase-start receipt,
+extract raw output-free representation rows and separately recorded
+within-model train-fold standardization receipts, write checkpointed row shards
+and phase-end hashes, close the llama.cpp backend, synchronize CUDA when
+available, verify task-owned process exit and VRAM release, and only then
+advance to the next family. Labels SHALL be replayed independently through the
+Exp 5963 Python/Z3 exact authority; model features SHALL never become the
+oracle. Shortcut coverage SHALL report family, relabel, paraphrase,
+claim-flip, norm, length, lexical, pair/label permutation, raw-model-identity,
+and duplicate-context controls. Readiness requires all three families, all
+declared held splits, at least five semantic-group seeds, complete row
+provenance, and passing verification commands; otherwise the artifact SHALL
+emit the exact blocked, partial, or retired class.
+
+The terminal artifact SHALL expose `status`, `preconditions_checked`,
+`model_specs_and_exact_file_hashes`,
+`quantization_and_embedded_tokenizer_receipts`,
+`runtime_cuda_vram_thermal_and_pid_lease_receipts`,
+`immutable_fixture_and_partial_shard_hashes`,
+`resume_accept_reject_matrix`,
+`per_family_phase_start_end_and_release_receipts`,
+`raw_vs_standardized_feature_schema`,
+`per_family_row_split_and_class_counts`, `python_z3_label_replay`,
+`shortcut_control_coverage`, `row_paths_hashes_and_prefix_chain`,
+`stale_partial_quarantine_receipt`, `all_family_corpus_ready_score`,
+`retirement_triggered`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Artifact field principles SHALL be recorded as:
+- `model_specs_and_exact_file_hashes` and `quantization_and_embedded_tokenizer_receipts`: every headline row traces to one mandated local GGUF and its embedded tokenizer.
+- `runtime_cuda_vram_thermal_and_pid_lease_receipts`: live CUDA use, ownership, cleanup, and capacity are measured rather than inferred.
+- `immutable_fixture_and_partial_shard_hashes` and `resume_accept_reject_matrix`: resumption is allowed only under exact provenance equality.
+- `per_family_phase_start_end_and_release_receipts`: sequential loading and verified release are the changed recovery mechanism.
+- `raw_vs_standardized_feature_schema`: raw measurements remain recoverable and standardization cannot leak across splits.
+- `per_family_row_split_and_class_counts` and `python_z3_label_replay`: adequacy and exact authority are reported by semantic group.
+- `shortcut_control_coverage`: representation compatibility exposes norm, length, lexical, identity, permutation, transform, and duplicate controls.
+- `all_family_corpus_ready_score` and `retirement_triggered`: readiness needs all families; the repeated VRAM verdict retires this recovery shape.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report measured `live_local_sota_gguf_cuda_representation_extraction`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: exact Python/Z3 labels are oracle; learned representations are not.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+### SCENARIO-INFER-SOTA-6102-BLOCKED-VRAM: First Family Fails Before Model Load
+
+**Given** the Exp 5963 fixture replays and all mandated GGUF files resolve
+**And** measured free VRAM is below the first family's memory estimate after
+task-owned cleanup
+**When** Exp 6102 runs
+**Then** it writes the complete blocked artifact, writes declared empty row
+shards, records CUDA/VRAM/thermal/PID leases, does not call the backend, does
+not kill unrelated processes, and triggers retirement when Exp 5964 already
+blocked for the same insufficient-VRAM verdict.
+
+### SCENARIO-INFER-SOTA-6102-RESUME: Exact Shards Resume And Stale Shards Quarantine
+
+**Given** a prior Exp 6102 row shard exists for one family
+**When** fixture hash, model hash, quantization, embedded tokenizer metadata,
+prompt hashes, feature schema, row hashes, and prefix-chain checksum match
+**Then** the family phase resumes from that shard without re-extraction.
+**And** any mismatched or partial Exp 6102 shard is quarantined before new rows
+are written.
+
+### SCENARIO-INFER-SOTA-6102-CORPUS: Sequential Families Produce Ready Corpus
+
+**Given** all three families fit one at a time and no accepted shard is stale
+**When** Exp 6102 extracts the rows
+**Then** every family writes a phase-start receipt, a phase-end receipt, raw row
+shard hashes, within-family train-fold standardization receipts, split/class
+counts, Python/Z3 label replay, shortcut control coverage, CUDA release
+receipts, and `all_family_corpus_ready_score == 1.0` without launching a
+ranker.
+
 ## Implementation Status
 
 | Requirement | Python | Tests |

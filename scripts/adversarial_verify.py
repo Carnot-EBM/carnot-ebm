@@ -1992,7 +1992,8 @@ def _is_precondition_check_only_blocked(d: dict[str, Any]) -> bool:
     before checking for `blocked_`, so both forms are recognized consistently.
     """
     verdict = str(d.get("honest_verdict") or "")
-    return _strip_verdict_terminal_prefix(verdict).startswith("blocked_")
+    stripped = _strip_verdict_terminal_prefix(verdict).lower()
+    return stripped.startswith("blocked_") or stripped.startswith("blocked:")
 
 
 def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:

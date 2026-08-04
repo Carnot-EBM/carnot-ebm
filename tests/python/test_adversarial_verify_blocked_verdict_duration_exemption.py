@@ -27,7 +27,8 @@ openspec/capabilities/arc-human-replay-frame-change/spec.md for the full inciden
 lint fix traces to (this file itself has no OpenSpec capability of its own -- it tests a script,
 not a product requirement).
 
-Spec refs: REQ-ARC-WMTE-5599-4 (operational lint fix motivated by that experiment's incident).
+Spec refs: REQ-ARC-WMTE-5599-4 (operational lint fix motivated by that experiment's incident),
+REQ-INFER-SOTA-6102 (blocked colon verdict required by the sequential VRAM recovery artifact).
 """
 
 from __future__ import annotations
@@ -108,6 +109,27 @@ class TestExp5713TerminalPrefixedBlockedVerdict:
     def test_terminal_prefixed_non_blocked_verdict_still_not_exempted(self) -> None:
         d = {"honest_verdict": "complete: qwen27b_mtp_plans_more_reliably_than_current_9b"}
         assert av._is_precondition_check_only_blocked(d) is False
+
+    def test_blocked_colon_verdict_is_recognized_for_exp6102(self, tmp_path: Path) -> None:
+        """REQ-INFER-SOTA-6102: blocked: preflight verdicts do not claim model execution."""
+
+        payload = {
+            "experiment": "exp6102_repro",
+            "honest_verdict": "blocked: insufficient_free_vram",
+            "inference_substrate": "live_local_sota_gguf_cuda_representation_extraction",
+            "duration_s": 0.5,
+            "runtime_cuda_vram_thermal_and_pid_lease_receipts": {
+                "capacity_verdicts": {
+                    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+                        "fits": False,
+                        "reason": "insufficient_free_vram",
+                    }
+                }
+            },
+        }
+        report = _report_for_payload(tmp_path, payload)
+        assert "DURATION_TOO_SHORT" not in _flag_kinds(report)
+        assert "METHODOLOGY_MISSING" not in _flag_kinds(report)
 
     def test_exp5713_style_artifact_no_longer_flags_duration_too_short(
         self, tmp_path: Path
