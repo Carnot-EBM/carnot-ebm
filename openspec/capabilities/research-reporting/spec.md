@@ -48309,3 +48309,165 @@ is not labeled as experimental LLM inference.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6101 | Implemented (`python/carnot/experiment_6101_v529_source_delta_ingestion.py`, `results/experiment_6101_v529_source_delta_ingestion.json`) | Verified (`tests/python/test_experiment_6101_v529_source_delta_ingestion.py`) |
+
+### REQ-REPORT-6112: V530 Transition Archives Exactly Activated V529 Identities
+
+The Exp6112 transition workflow SHALL archive milestone `2026.08.529` into
+`2026.08.530` by selecting exactly the four conductor-activated `.529`
+identities Exp6100 through Exp6103 and their declared deliverable paths:
+`results/experiment_6100_transition_v529.json`,
+`results/experiment_6101_v529_source_delta_ingestion.json`,
+`results/experiment_6102_sota_atom_corpus_vram_recovery.json`, and
+`results/experiment_6103_phase_d_difficulty_ladder_fixture.json`. Evidence
+SHALL be resolved only by exact `(milestone, task_id, declared_deliverable)`.
+Numeric-prefix substitution, similarly numbered files, completion-history
+`result` strings, proposal rows, source-file inference, downstream gate
+inference, or capstone summary laundering SHALL NOT count as terminal evidence.
+
+The workflow SHALL preserve the `.529` exact terminal classes independently:
+Exp6100 SHALL remain `complete`, Exp6101 SHALL remain `complete-null`, Exp6102
+SHALL remain `blocked-retired` with `retirement_triggered=true`, and Exp6103
+SHALL remain `complete-ready`. Exp6102's block SHALL NOT be reopened,
+retargeted, or promoted by any transition evidence. Proposal-only Exp6104
+through Exp6111 SHALL be recorded only as unactivated proposal ids and SHALL NOT
+be reported as completed, missing, skipped, or executed experiments.
+
+The workflow SHALL parse the active roadmap, the `.530` activation-plan line,
+the four declared deliverables, `research-complete.yaml`,
+`ops/conductor-log.md`, `ops/exclusion_manifest.yaml`, `ops/known-issues.md`,
+the root-clutter inventory, protected-file hashes, and the dirty worktree
+before emitting the artifact. It SHALL run or ingest fresh
+`scripts/adversarial_verify.py` receipts for every present exact declared
+deliverable. It SHALL disclose inherited global test, spec-coverage, and
+root-clutter debt by exact node or path and SHALL gate only on deltas:
+`global_suite_failure_delta <= 0`, `global_spec_gap_delta <= 0`, and
+`root_clutter_delta <= 0`.
+
+The workflow SHALL append the exact `.529` milestone block to
+`research-complete.yaml` at most once only when a canonical `.529` completion
+block is absent. Existing duplicate completion history SHALL be measured by
+canonical task signature and SHALL NOT be amplified. The bare
+`duplicate_history_amplification_count` SHALL be `0` for a valid transition
+artifact.
+
+The workflow SHALL scan active and staged roadmaps, completion history,
+proposals, exclusions, results, Python modules, tests, scripts, known
+allocations, and operator issue ledgers for bare Exp6112 through Exp6123
+references. Only the active `.530` roadmap allocation, the vNEXT proposal
+reservation, and Exp6112-owned implementation, tests, spec, and result paths
+SHALL be allowed. `next_range_collision_count` SHALL be a bare integer and
+SHALL equal `0` for a completed transition.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`exact_terminal_classification`, `proposal_only_unactivated_id_receipt`,
+`retirement_signal_preserved`, `adversarial_verifier_receipts`,
+`inherited_debt_baselines_and_deltas`, `research_complete_append_count`,
+`duplicate_history_amplification_count`, `next_task_range`,
+`next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. `inference_substrate` SHALL
+be `aggregation_from_upstream_artifacts`, and `honest_verdict` SHALL start with
+`complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "state the actual transition and every prerequisite checked."
+- `preconditions_checked`: principle "state the actual transition and every prerequisite checked."
+- `milestone_transition`: principle "only four activated task identities and their declared paths define `.529`."
+- `activated_task_and_deliverable_matrix`: principle "only four activated task identities and their declared paths define `.529`."
+- `exact_terminal_classification`: principle "only four activated task identities and their declared paths define `.529`."
+- `proposal_only_unactivated_id_receipt`: principle "a proposal is not an activated experiment and is never reported as completed or missing."
+- `retirement_signal_preserved`: principle "Exp6102 remains blocked and retired; transition cannot reopen it."
+- `adversarial_verifier_receipts`: principle "present evidence is freshly checked without laundering unrelated debt."
+- `inherited_debt_baselines_and_deltas`: principle "present evidence is freshly checked without laundering unrelated debt."
+- `research_complete_append_count`: principle "append at most once and amplify no history."
+- `duplicate_history_amplification_count`: principle "append at most once and amplify no history."
+- `next_task_range`: principle "bare zero collisions authorize Exp6112-Exp6123."
+- `next_range_collision_count`: principle "bare zero collisions authorize Exp6112-Exp6123."
+- `docs_reconciled`: principle "update only transition-owned internal ledgers."
+- `protected_files_unchanged`: principle "preserve active roadmap, conductor, exclusions, unrelated dirty files, and historical artifacts."
+- `duration_s`: principle "report measured `aggregation_from_upstream_artifacts` provenance."
+- `inference_substrate`: principle "report measured `aggregation_from_upstream_artifacts` provenance."
+- `field_provenance`: principle "report measured `aggregation_from_upstream_artifacts` provenance."
+- `test_commands`: principle "report measured `aggregation_from_upstream_artifacts` provenance."
+- `test_exit_codes`: principle "report measured `aggregation_from_upstream_artifacts` provenance."
+- `reproducibility_checksum`: principle "report measured `aggregation_from_upstream_artifacts` provenance."
+- `honest_verdict`: principle "use a terminal `complete:` or `blocked:` prefix."
+
+#### SCENARIO-REPORT-6112-ACTIVATED-MATRIX: V529 Archive Uses Four Declared Deliverables Only
+
+**Given** the active `.530` roadmap names Exp6112 as the transition task
+**And** the conductor log records `.529` activation with four queued tasks
+**When** the Exp6112 transition builds its archive matrix
+**Then** it records exactly Exp6100 through Exp6103, uses each exact declared
+deliverable path, and does not use numeric-prefix aliases, proposal rows,
+completion-history `result` strings, or capstone summaries as stronger
+evidence.
+
+#### SCENARIO-REPORT-6112-TERMINAL-CLASSES: V529 Terminal Outcomes Stay Disjoint
+
+**Given** `.529` contains complete, complete-null, blocked-retired, and
+complete-ready outcomes
+**When** Exp6112 classifies terminal outcomes
+**Then** each activated task has exactly one terminal class: Exp6100 complete,
+Exp6101 complete-null, Exp6102 blocked-retired, and Exp6103 complete-ready.
+
+#### SCENARIO-REPORT-6112-UNACTIVATED-PROPOSAL: Proposal-Only IDs Are Not Missing
+
+**Given** Exp6104 through Exp6111 appeared only in a proposal
+**When** Exp6112 emits the unactivated-id receipt
+**Then** those ids are recorded as proposal-only unactivated, with zero
+completed, missing, skipped, executed, or adversarial-verified experiment
+claims.
+
+#### SCENARIO-REPORT-6112-RETIREMENT: Exp6102 Block And Retirement Survive
+
+**Given** the exact Exp6102 declared artifact is blocked and records
+`retirement_triggered=true`
+**When** Exp6112 archives `.529`
+**Then** the transition records `blocked-retired`, preserves the exact blocked
+verdict and retirement signal, and does not reopen, retry, or promote Exp6102.
+
+#### SCENARIO-REPORT-6112-DUPLICATE-DEBT-AND-VERIFIER: History, Debt, And QA Are Delta-Gated
+
+**Given** completion history may already contain an exact `.529` block
+**And** present declared `.529` deliverables are freshly checked by
+`scripts/adversarial_verify.py`
+**And** inherited global suite, spec-coverage, or root-clutter debt may already
+exist
+**When** Exp6112 evaluates readiness
+**Then** it appends no duplicate `.529` block, reports
+`research_complete_append_count` as a bare `0` or `1`, reports
+`duplicate_history_amplification_count` as bare `0`, records verifier receipts
+for present declared paths only, and blocks only positive task-owned debt
+deltas.
+
+#### SCENARIO-REPORT-6112-RANGE-COLLISION: Bare Exp6112-Exp6123 Collisions Block
+
+**Given** the active `.530` roadmap and vNEXT proposal reserve Exp6112 through
+Exp6123
+**When** Exp6112 scans repository paths and content for bare Exp6112 through
+Exp6123 references
+**Then** only allowed allocation/reservation and Exp6112-owned references are
+permitted, and any unowned bare Exp6112 through Exp6123 reference sets a
+nonzero bare `next_range_collision_count` and emits a `blocked:` artifact.
+
+#### SCENARIO-REPORT-6112-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp6112 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, precondition
+receipt, exact activated identity, proposal-only receipt, retirement receipt,
+adversarial-verifier receipt, debt-delta receipt, history receipt,
+range-collision receipt, protected-file hash, test command, exit code,
+checksum, and terminal verdict prefix is present; the inference substrate is
+`aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-6112)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6112 | Implemented (`python/carnot/experiment_6112_transition_v530.py`, `results/experiment_6112_transition_v530.json`) | Verified (`tests/python/test_experiment_6112_transition_v530.py`) |
