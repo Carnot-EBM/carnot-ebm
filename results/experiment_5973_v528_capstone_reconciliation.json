@@ -1,0 +1,2228 @@
+{
+  "aggregation_substrate_classifier_receipt": {
+    "aggregation_classifier_ready": true,
+    "capstone_declared_substrate": "aggregation_from_upstream_artifacts",
+    "duration_rule_inherited_from_nested_upstream": false,
+    "exp5933_classifier_path": "results/experiment_5933_aggregation_substrate_qa_repair.json",
+    "exp5933_classifier_present": true,
+    "nested_upstream_live_substrates_observed": [
+      "live_llm_embedding_extraction",
+      "live_llm_inference"
+    ],
+    "principle": "the capstone declares aggregation and is not misclassified from nested upstream compute strings."
+  },
+  "arc_budget_feasibility_branch_summary": {
+    "automatic_flag_change": false,
+    "capstone_substrate_is_aggregation": true,
+    "feasible_at_upper_bound": true,
+    "new_solve_credit_claimed": false,
+    "principle": "measured timing, projection uncertainty, and no automatic flag change remain visible.",
+    "projection": {
+      "bootstrap_unit": "game",
+      "cap_s": 43200,
+      "fits_12h_at_upper_bound": true,
+      "games_projected": 25,
+      "load_amortization_s": 14.07,
+      "lower_bound_s": 13384.87,
+      "mean_s": 13760.739,
+      "measured_game_elapsed_s": [
+        563.816,
+        524.628,
+        571.298,
+        575.001,
+        522.206,
+        574.803,
+        475.145,
+        592.037
+      ],
+      "n_measured_games": 8,
+      "projection_status": "computed_from_completed_valid_cells",
+      "upper_bound_s": 14101.318
+    },
+    "terminal_class": "complete-feasible",
+    "upstream_substrate": "live_llm_inference"
+  },
+  "arc_provenance_registry_and_flag_immutability": {
+    "flag_flip_performed": false,
+    "new_solve_credit_claimed": false,
+    "principle": "any level outcome is live-agent provenance only, with no new solve credit, registry mutation, or flag flip.",
+    "registry_mutated": false,
+    "registry_mutation_written_by_capstone": false,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_sha256_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_sha256_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "solve_provenance_values": [
+      "live_agent_self_discovery"
+    ]
+  },
+  "arc_strip_swap_branch_summary": {
+    "battery": {
+      "anchor_support": {
+        "combined_vs_ctrl": {
+          "discriminating_game_support": 0,
+          "enough_games_discriminate": false,
+          "interpretable": false,
+          "original_anchor_won_by_matched_arm": false,
+          "transform_changes_hud_predicate": true,
+          "transformed_anchor_retains_valid_support": false
+        },
+        "frontier_given_hud_off": {
+          "discriminating_game_support": 0,
+          "enough_games_discriminate": false,
+          "interpretable": false,
+          "original_anchor_won_by_matched_arm": false,
+          "transform_changes_hud_predicate": true,
+          "transformed_anchor_retains_valid_support": false
+        },
+        "frontier_given_hud_on": {
+          "discriminating_game_support": 0,
+          "enough_games_discriminate": false,
+          "interpretable": false,
+          "original_anchor_won_by_matched_arm": false,
+          "transform_changes_hud_predicate": true,
+          "transformed_anchor_retains_valid_support": false
+        },
+        "hud_given_frontier_off": {
+          "discriminating_game_support": 0,
+          "enough_games_discriminate": false,
+          "interpretable": false,
+          "original_anchor_won_by_matched_arm": false,
+          "transform_changes_hud_predicate": true,
+          "transformed_anchor_retains_valid_support": false
+        },
+        "hud_given_frontier_on": {
+          "discriminating_game_support": 0,
+          "enough_games_discriminate": false,
+          "interpretable": false,
+          "original_anchor_won_by_matched_arm": false,
+          "transform_changes_hud_predicate": true,
+          "transformed_anchor_retains_valid_support": false
+        }
+      },
+      "decision": {
+        "primary_contrast": "hud_given_frontier_on",
+        "reason": "original anchor support is empty for the shipped HUD contrast",
+        "replication_unit": "game",
+        "seed_replication_generalized_to_game_support": false,
+        "status": "complete_null"
+      },
+      "overall_hud_value": {
+        "flag_flip_recommended": false,
+        "identified": false,
+        "reason": "Exp5971 measures convention dependence on public games; it cannot establish the HUD lever's overall shipped value or hidden-game transfer."
+      },
+      "terminal_class": "complete-null"
+    },
+    "hidden_transfer_claimed": false,
+    "new_solve_credit_claimed": false,
+    "principle": "targeted dose, live support, game-unit evidence, and limitations remain visible.",
+    "public_game_outcome_does_not_imply_hidden_transfer": true,
+    "sentinel": {
+      "ready_score": 1.0,
+      "support": {
+        "hud_convention_violation_observed": true,
+        "ready_to_run_exp5971": true,
+        "step_ok_count": 16,
+        "valid_action_count": 16,
+        "valid_live_support": true
+      },
+      "terminal_class": "complete-ready"
+    }
+  },
+  "branch_independence_receipt": {
+    "blocked_semantic_branch_does_not_null_csl_or_arc": true,
+    "borrowed_success_count": 0,
+    "branch_independence_preserved": true,
+    "branch_task_ids": {
+      "arc_budget_feasibility": [
+        "exp5972-arc-llm-on-budget2000-feasibility"
+      ],
+      "arc_strip_swap": [
+        "exp5970-arc-strip-swap-sentinel",
+        "exp5971-arc-strip-swap-battery"
+      ],
+      "continuous_self_learning": [
+        "exp5967-delayed-commit-memory-fixture",
+        "exp5968-delayed-commit-csl-prospective",
+        "exp5969-csl-poison-drift-abi-audit"
+      ],
+      "semantic_acquisition": [
+        "exp5962-v528-source-delta-ingestion",
+        "exp5963-exact-atom-pair-fixture",
+        "exp5964-sota-atom-compatibility-corpus",
+        "exp5965-portable-atom-energy-ranker",
+        "exp5966-discriminative-constraint-acquisition"
+      ],
+      "transition_handoff": [
+        "exp5961-transition-v528"
+      ]
+    },
+    "branch_terminal_classes": {
+      "arc_budget_feasibility": [
+        "complete-feasible"
+      ],
+      "arc_strip_swap": [
+        "complete-ready",
+        "complete-null"
+      ],
+      "continuous_self_learning": [
+        "complete-ready",
+        "complete-ready",
+        "complete-ready"
+      ],
+      "semantic_acquisition": [
+        "complete-null",
+        "complete-ready",
+        "blocked-precondition",
+        "gate-blocked",
+        "gate-blocked"
+      ],
+      "transition_handoff": [
+        "missing"
+      ]
+    },
+    "budget_feasibility_does_not_flip_flags": true,
+    "positive_fixture_does_not_imply_downstream_quality": true,
+    "principle": "no positive, null, retirement, block, or flag in one branch rewrites another.",
+    "public_arc_outcome_does_not_imply_hidden_transfer_or_new_credit": true
+  },
+  "continuous_self_learning_branch_summary": {
+    "fixture": {
+      "ready_score": 1.0,
+      "terminal_class": "complete-ready"
+    },
+    "model_weights_mutated": false,
+    "poison_abi_audit": {
+      "rollback_ready_score": 1.0,
+      "terminal_class": "complete-ready",
+      "unsafe_accept_count": 0
+    },
+    "principle": "fixture, prospective utility, and poison/ABI safety remain separate.",
+    "prospective": {
+      "paired_deltas": {
+        "delayed_commit_vs_fixed_validated_memory": {
+          "mean_online_auc_delta": 0.008934,
+          "online_auc_delta_ci95": [
+            0.008934,
+            0.008934
+          ],
+          "paired_deltas": [
+            0.008934,
+            0.008934,
+            0.008934,
+            0.008934,
+            0.008934
+          ]
+        },
+        "delayed_commit_vs_no_memory": {
+          "mean_online_auc_delta": 0.008934,
+          "online_auc_delta_ci95": [
+            0.008934,
+            0.008934
+          ],
+          "paired_deltas": [
+            0.008934,
+            0.008934,
+            0.008934,
+            0.008934,
+            0.008934
+          ],
+          "prequential_utility_delta": {
+            "mean_online_auc_delta": 0.020202,
+            "online_auc_delta_ci95": [
+              0.020202,
+              0.020202
+            ],
+            "paired_deltas": [
+              0.020202,
+              0.020202,
+              0.020202,
+              0.020202,
+              0.020202
+            ]
+          }
+        },
+        "paired_unit": "seed_replicated_chronological_semantic_event_stream",
+        "power_note": "Five deterministic seeds expose paired replay uncertainty but not model stochasticity.",
+        "principle": "Promotion uses paired semantic-event intervals and reports underpower honestly.",
+        "promotion_gate_passed": true,
+        "seed_count": 5,
+        "underpowered_for_small_effects": true,
+        "write_through_reported_honestly": {
+          "beats_delayed_commit": true,
+          "online_auc": 0.982532
+        }
+      },
+      "ready_score": 1.0,
+      "terminal_class": "complete-ready",
+      "unsafe_accept_count": 0
+    },
+    "same_event_or_poison_credit_laundered": false
+  },
+  "docs_reconciled": {
+    "openspec_research_reporting_req_5973_present": true,
+    "ops_changelog_deferred_to_conductor_stop_rule": true,
+    "ops_conductor_log_deferred_to_conductor_stop_rule": true,
+    "ops_status_deferred_to_conductor_stop_rule": true,
+    "principle": "only evidence-supported internal docs change; protected/unrelated state remains byte-identical.",
+    "references_and_studying_state_claims_reconciled_in_artifact": true,
+    "roadmap_status_claims_reconciled_in_artifact": true,
+    "traceability_deferred_to_conductor_stop_rule": true
+  },
+  "duration_s": 1.731646,
+  "experiment": "experiment_5973_v528_capstone_reconciliation",
+  "experiment_id": "exp5973-v528-capstone-reconciliation",
+  "field_principles": {
+    "aggregation_substrate_classifier_receipt": "the capstone declares aggregation and is not misclassified from nested upstream compute strings.",
+    "arc_budget_feasibility_branch_summary": "measured timing, projection uncertainty, and no automatic flag change remain visible.",
+    "arc_provenance_registry_and_flag_immutability": "any level outcome is live-agent provenance only, with no new solve credit, registry mutation, or flag flip.",
+    "arc_strip_swap_branch_summary": "targeted dose, live support, game-unit evidence, and limitations remain visible.",
+    "branch_independence_receipt": "no positive, null, retirement, block, or flag in one branch rewrites another.",
+    "continuous_self_learning_branch_summary": "fixture, prospective utility, and poison/ABI safety remain separate.",
+    "docs_reconciled": "only evidence-supported internal docs change; protected/unrelated state remains byte-identical.",
+    "duration_s": "use measured `aggregation_from_upstream_artifacts`.",
+    "field_provenance": "use measured `aggregation_from_upstream_artifacts`.",
+    "fresh_adversarial_verifier_receipts": "current exact-path verification, not inherited prose, owns artifact quality.",
+    "gate_recomputation_and_cascade_receipts": "every structured gate is recomputed and title/YAML alignment is exact.",
+    "honest_verdict": "use `complete:`, `complete_with_nulls:`, `complete_with_blocks:`, or `blocked:`.",
+    "inference_substrate": "use measured `aggregation_from_upstream_artifacts`.",
+    "milestone_and_exact_task_deliverable_matrix": "the active roadmap's exact IDs and paths are the only evidence index.",
+    "missing_and_gate_block_receipts": "a skipped task is not an execution failure and a missing ungated artifact is not success.",
+    "model_and_hardware_policy_receipt": "mandated GGUF use, CUDA authenticity, no legacy headline, and no unsupported board claim are checked.",
+    "per_task_path_hash_presence_and_terminal_class": "every upstream task retains a hash-backed or explicitly absent terminal class.",
+    "preconditions_checked": "capstone state and all aggregation prerequisites are explicit.",
+    "prior_failure_retirement_and_exclusion_receipt": "same-verdict reruns retire mechanically and no retired dependency is introduced.",
+    "protected_files_unchanged": "only evidence-supported internal docs change; protected/unrelated state remains byte-identical.",
+    "reproducibility_checksum": "use measured `aggregation_from_upstream_artifacts`.",
+    "semantic_acquisition_branch_summary": "fixture, corpus, ranker, and exact acquisition claims remain separate.",
+    "status": "capstone state and all aggregation prerequisites are explicit.",
+    "test_commands": "use measured `aggregation_from_upstream_artifacts`.",
+    "test_exit_codes": "use measured `aggregation_from_upstream_artifacts`."
+  },
+  "field_provenance": {
+    "aggregation_substrate_classifier_receipt": {
+      "principle": "the capstone declares aggregation and is not misclassified from nested upstream compute strings.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "arc_budget_feasibility_branch_summary": {
+      "principle": "measured timing, projection uncertainty, and no automatic flag change remain visible.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "arc_provenance_registry_and_flag_immutability": {
+      "principle": "any level outcome is live-agent provenance only, with no new solve credit, registry mutation, or flag flip.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "arc_strip_swap_branch_summary": {
+      "principle": "targeted dose, live support, game-unit evidence, and limitations remain visible.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "branch_independence_receipt": {
+      "principle": "no positive, null, retirement, block, or flag in one branch rewrites another.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "continuous_self_learning_branch_summary": {
+      "principle": "fixture, prospective utility, and poison/ABI safety remain separate.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "docs_reconciled": {
+      "principle": "only evidence-supported internal docs change; protected/unrelated state remains byte-identical.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "duration_s": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "field_provenance": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "fresh_adversarial_verifier_receipts": {
+      "principle": "current exact-path verification, not inherited prose, owns artifact quality.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "gate_recomputation_and_cascade_receipts": {
+      "principle": "every structured gate is recomputed and title/YAML alignment is exact.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "use `complete:`, `complete_with_nulls:`, `complete_with_blocks:`, or `blocked:`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "milestone_and_exact_task_deliverable_matrix": {
+      "principle": "the active roadmap's exact IDs and paths are the only evidence index.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "missing_and_gate_block_receipts": {
+      "principle": "a skipped task is not an execution failure and a missing ungated artifact is not success.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "model_and_hardware_policy_receipt": {
+      "principle": "mandated GGUF use, CUDA authenticity, no legacy headline, and no unsupported board claim are checked.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "per_task_path_hash_presence_and_terminal_class": {
+      "principle": "every upstream task retains a hash-backed or explicitly absent terminal class.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "capstone state and all aggregation prerequisites are explicit.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "prior_failure_retirement_and_exclusion_receipt": {
+      "principle": "same-verdict reruns retire mechanically and no retired dependency is introduced.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "only evidence-supported internal docs change; protected/unrelated state remains byte-identical.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "semantic_acquisition_branch_summary": {
+      "principle": "fixture, corpus, ranker, and exact acquisition claims remain separate.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "status": {
+      "principle": "capstone state and all aggregation prerequisites are explicit.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "test_commands": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "research-references.md",
+        "research-studying.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_5933_aggregation_substrate_qa_repair.json",
+        "results/experiment_5961_transition_v528.json",
+        "results/experiment_5962_v528_source_delta_ingestion.json",
+        "results/experiment_5963_exact_atom_pair_fixture.json",
+        "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "results/experiment_5965_portable_atom_energy_ranker.json",
+        "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "results/experiment_5971_arc_strip_swap_battery.json",
+        "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+      ]
+    }
+  },
+  "fresh_adversarial_verifier_receipts": {
+    "failed_receipt_task_ids": [],
+    "flagged_count": 0,
+    "missing_declared_deliverables_not_verified": [
+      "results/experiment_5961_transition_v528.json",
+      "results/experiment_5965_portable_atom_energy_ranker.json"
+    ],
+    "principle": "current exact-path verification, not inherited prose, owns artifact quality.",
+    "reports": [
+      {
+        "artifact": "results/experiment_5962_v528_source_delta_ingestion.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5962_v528_source_delta_ingestion.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:fe85e52008978dd0aca14b32b0307d3e0653158c721e0da44dc4ec0f9cd2b20c",
+        "task_id": "exp5962-v528-source-delta-ingestion"
+      },
+      {
+        "artifact": "results/experiment_5963_exact_atom_pair_fixture.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5963_exact_atom_pair_fixture.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:cc638ba5bcf5583a864f7338254edc2e4df112c64ce8bf401157d2f0d8d02c7e",
+        "task_id": "exp5963-exact-atom-pair-fixture"
+      },
+      {
+        "artifact": "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:1e8a51e70b388c8ec7d9dee2bee294d0b10e67ed01d47d9888dcb0e8c057edf5",
+        "task_id": "exp5964-sota-atom-compatibility-corpus"
+      },
+      {
+        "artifact": "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5966_discriminative_constraint_acquisition.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:d7d900a7f24baaa65446c1c327ecefab5e22aa5b2ecfb51e11df25a585f65fe2",
+        "task_id": "exp5966-discriminative-constraint-acquisition"
+      },
+      {
+        "artifact": "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5967_delayed_commit_memory_fixture.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:62061dda8eeba4d69836436b37311ee59407bb0be383f51b5e1d64a03932027a",
+        "task_id": "exp5967-delayed-commit-memory-fixture"
+      },
+      {
+        "artifact": "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5968_delayed_commit_csl_prospective.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:eae5d55cf73d90c501d4c53bed20ea9050b511fe512cdd682004929b180c9192",
+        "task_id": "exp5968-delayed-commit-csl-prospective"
+      },
+      {
+        "artifact": "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:bfe5234db872d4faac55c2cdf8ebcadb179d0db8c91df87cade54fc6ed21ebfa",
+        "task_id": "exp5969-csl-poison-drift-abi-audit"
+      },
+      {
+        "artifact": "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5970_arc_strip_swap_sentinel.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:90b8ba38e71aa228046223a6802a4d55e01666aec9000d8a41cdc9bcd3ed4a22",
+        "task_id": "exp5970-arc-strip-swap-sentinel"
+      },
+      {
+        "artifact": "results/experiment_5971_arc_strip_swap_battery.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5971_arc_strip_swap_battery.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:52b55b1edf5278efe6d529db66758216b53b039bd8b45dd90b1ba520fe353d00",
+        "task_id": "exp5971-arc-strip-swap-battery"
+      },
+      {
+        "artifact": "results/experiment_5972_arc_llm_on_budget2000_feasibility.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_5972_arc_llm_on_budget2000_feasibility.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:d87c8ef732061cfb5747cd95cca3a21706f9738b6ef95bce348edb2f88888b09",
+        "task_id": "exp5972-arc-llm-on-budget2000-feasibility"
+      }
+    ],
+    "verified_present_declared_deliverable_count": 10
+  },
+  "gate_recomputation_and_cascade_receipts": {
+    "capstone_executed_skipped_experiment_count": 0,
+    "cascade_skips": [
+      {
+        "not_executed_by_capstone": true,
+        "reason": "upstream_gate_failed_or_retired",
+        "task_id": "exp5965-portable-atom-energy-ranker"
+      },
+      {
+        "not_executed_by_capstone": true,
+        "reason": "upstream_artifact_missing",
+        "task_id": "exp5966-discriminative-constraint-acquisition"
+      }
+    ],
+    "gate_rows": [
+      {
+        "actual": 1.0,
+        "artifact_field": "pair_fixture_ready_score",
+        "expected": 1.0,
+        "gate_passed": true,
+        "op": "==",
+        "reason": "passed",
+        "task_id": "exp5964-sota-atom-compatibility-corpus",
+        "title_yaml_gate_alignment": true,
+        "upstream": "exp5963-exact-atom-pair-fixture"
+      },
+      {
+        "actual": 0.0,
+        "artifact_field": "atom_compatibility_corpus_ready_score",
+        "expected": 1.0,
+        "gate_passed": false,
+        "op": "==",
+        "reason": "upstream_gate_failed_or_retired",
+        "task_id": "exp5965-portable-atom-energy-ranker",
+        "title_yaml_gate_alignment": true,
+        "upstream": "exp5964-sota-atom-compatibility-corpus"
+      },
+      {
+        "actual": null,
+        "artifact_field": "portable_atom_energy_ready_score",
+        "expected": 1.0,
+        "gate_passed": false,
+        "op": "==",
+        "reason": "upstream_artifact_missing",
+        "task_id": "exp5966-discriminative-constraint-acquisition",
+        "title_yaml_gate_alignment": true,
+        "upstream": "exp5965-portable-atom-energy-ranker"
+      },
+      {
+        "actual": 1.0,
+        "artifact_field": "delayed_commit_fixture_ready_score",
+        "expected": 1.0,
+        "gate_passed": true,
+        "op": "==",
+        "reason": "passed",
+        "task_id": "exp5968-delayed-commit-csl-prospective",
+        "title_yaml_gate_alignment": true,
+        "upstream": "exp5967-delayed-commit-memory-fixture"
+      },
+      {
+        "actual": 1.0,
+        "artifact_field": "prospective_csl_ready_score",
+        "expected": 1.0,
+        "gate_passed": true,
+        "op": "==",
+        "reason": "passed",
+        "task_id": "exp5969-csl-poison-drift-abi-audit",
+        "title_yaml_gate_alignment": true,
+        "upstream": "exp5968-delayed-commit-csl-prospective"
+      },
+      {
+        "actual": 1.0,
+        "artifact_field": "strip_swap_sentinel_ready_score",
+        "expected": 1.0,
+        "gate_passed": true,
+        "op": "==",
+        "reason": "passed",
+        "task_id": "exp5971-arc-strip-swap-battery",
+        "title_yaml_gate_alignment": true,
+        "upstream": "exp5970-arc-strip-swap-sentinel"
+      }
+    ],
+    "principle": "every structured gate is recomputed and title/YAML alignment is exact.",
+    "title_yaml_alignment_rows": [
+      {
+        "aligned": true,
+        "reason": "ungated",
+        "task_id": "exp5961-transition-v528"
+      },
+      {
+        "aligned": true,
+        "reason": "ungated",
+        "task_id": "exp5962-v528-source-delta-ingestion"
+      },
+      {
+        "aligned": true,
+        "reason": "ungated",
+        "task_id": "exp5963-exact-atom-pair-fixture"
+      },
+      {
+        "aligned": true,
+        "task_id": "exp5964-sota-atom-compatibility-corpus",
+        "upstream": "exp5963-exact-atom-pair-fixture"
+      },
+      {
+        "aligned": true,
+        "task_id": "exp5965-portable-atom-energy-ranker",
+        "upstream": "exp5964-sota-atom-compatibility-corpus"
+      },
+      {
+        "aligned": true,
+        "task_id": "exp5966-discriminative-constraint-acquisition",
+        "upstream": "exp5965-portable-atom-energy-ranker"
+      },
+      {
+        "aligned": true,
+        "reason": "ungated",
+        "task_id": "exp5967-delayed-commit-memory-fixture"
+      },
+      {
+        "aligned": true,
+        "task_id": "exp5968-delayed-commit-csl-prospective",
+        "upstream": "exp5967-delayed-commit-memory-fixture"
+      },
+      {
+        "aligned": true,
+        "task_id": "exp5969-csl-poison-drift-abi-audit",
+        "upstream": "exp5968-delayed-commit-csl-prospective"
+      },
+      {
+        "aligned": true,
+        "reason": "ungated",
+        "task_id": "exp5970-arc-strip-swap-sentinel"
+      },
+      {
+        "aligned": true,
+        "task_id": "exp5971-arc-strip-swap-battery",
+        "upstream": "exp5970-arc-strip-swap-sentinel"
+      },
+      {
+        "aligned": true,
+        "reason": "ungated",
+        "task_id": "exp5972-arc-llm-on-budget2000-feasibility"
+      }
+    ],
+    "title_yaml_gate_alignment_exact": true
+  },
+  "honest_verdict": "complete_with_blocks: .528 reconciled by exact declared deliverables; missing handoff, blocked semantic corpus/ranker cascade, CSL readiness, ARC strip-swap null, and budget feasibility preserved independently",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.07.528",
+  "milestone_and_exact_task_deliverable_matrix": {
+    "capstone_declared_deliverable": "results/experiment_5973_v528_capstone_reconciliation.json",
+    "capstone_task_id": "exp5973-v528-capstone-reconciliation",
+    "expected_upstream_task_ids": [
+      "exp5961-transition-v528",
+      "exp5962-v528-source-delta-ingestion",
+      "exp5963-exact-atom-pair-fixture",
+      "exp5964-sota-atom-compatibility-corpus",
+      "exp5965-portable-atom-energy-ranker",
+      "exp5966-discriminative-constraint-acquisition",
+      "exp5967-delayed-commit-memory-fixture",
+      "exp5968-delayed-commit-csl-prospective",
+      "exp5969-csl-poison-drift-abi-audit",
+      "exp5970-arc-strip-swap-sentinel",
+      "exp5971-arc-strip-swap-battery",
+      "exp5972-arc-llm-on-budget2000-feasibility"
+    ],
+    "identity_tuple": [
+      "task_id",
+      "declared_deliverable"
+    ],
+    "milestone": "2026.07.528",
+    "milestone_title": "Discriminative Exact-Atom Acquisition, Delayed-Commit Continuous Learning, and ARC Budget/Convention Generalization",
+    "numeric_prefix_aliases_ignored": [
+      "results/experiment_5961_gemma31b_placement_decision_corrected.json"
+    ],
+    "principle": "the active roadmap's exact IDs and paths are the only evidence index.",
+    "selection_policy": "active_roadmap_declared_deliverable_only",
+    "upstream_declared_deliverables": {
+      "exp5961-transition-v528": "results/experiment_5961_transition_v528.json",
+      "exp5962-v528-source-delta-ingestion": "results/experiment_5962_v528_source_delta_ingestion.json",
+      "exp5963-exact-atom-pair-fixture": "results/experiment_5963_exact_atom_pair_fixture.json",
+      "exp5964-sota-atom-compatibility-corpus": "results/experiment_5964_sota_atom_compatibility_corpus.json",
+      "exp5965-portable-atom-energy-ranker": "results/experiment_5965_portable_atom_energy_ranker.json",
+      "exp5966-discriminative-constraint-acquisition": "results/experiment_5966_discriminative_constraint_acquisition.json",
+      "exp5967-delayed-commit-memory-fixture": "results/experiment_5967_delayed_commit_memory_fixture.json",
+      "exp5968-delayed-commit-csl-prospective": "results/experiment_5968_delayed_commit_csl_prospective.json",
+      "exp5969-csl-poison-drift-abi-audit": "results/experiment_5969_csl_poison_drift_abi_audit.json",
+      "exp5970-arc-strip-swap-sentinel": "results/experiment_5970_arc_strip_swap_sentinel.json",
+      "exp5971-arc-strip-swap-battery": "results/experiment_5971_arc_strip_swap_battery.json",
+      "exp5972-arc-llm-on-budget2000-feasibility": "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+    },
+    "upstream_task_count": 12,
+    "upstream_task_ids": [
+      "exp5961-transition-v528",
+      "exp5962-v528-source-delta-ingestion",
+      "exp5963-exact-atom-pair-fixture",
+      "exp5964-sota-atom-compatibility-corpus",
+      "exp5965-portable-atom-energy-ranker",
+      "exp5966-discriminative-constraint-acquisition",
+      "exp5967-delayed-commit-memory-fixture",
+      "exp5968-delayed-commit-csl-prospective",
+      "exp5969-csl-poison-drift-abi-audit",
+      "exp5970-arc-strip-swap-sentinel",
+      "exp5971-arc-strip-swap-battery",
+      "exp5972-arc-llm-on-budget2000-feasibility"
+    ]
+  },
+  "missing_and_gate_block_receipts": {
+    "cascade_skips": [
+      {
+        "not_executed_by_capstone": true,
+        "reason": "upstream_gate_failed_or_retired",
+        "task_id": "exp5965-portable-atom-energy-ranker"
+      },
+      {
+        "not_executed_by_capstone": true,
+        "reason": "upstream_artifact_missing",
+        "task_id": "exp5966-discriminative-constraint-acquisition"
+      }
+    ],
+    "gate_blocked_task_ids": [
+      "exp5965-portable-atom-energy-ranker",
+      "exp5966-discriminative-constraint-acquisition"
+    ],
+    "missing_declared_deliverable_task_ids": [
+      "exp5961-transition-v528",
+      "exp5965-portable-atom-energy-ranker"
+    ],
+    "missing_ungated_artifact_is_success": false,
+    "missing_ungated_declared_deliverable_task_ids": [
+      "exp5961-transition-v528"
+    ],
+    "principle": "a skipped task is not an execution failure and a missing ungated artifact is not success.",
+    "skipped_experiments_executed_by_capstone_count": 0
+  },
+  "model_and_hardware_policy_receipt": {
+    "cuda_authenticity_checked": true,
+    "legacy_headline_claimed": false,
+    "legacy_headline_disallowed": true,
+    "mandated_gguf_identities_observed": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "mandated_gguf_use_checked": true,
+    "principle": "mandated GGUF use, CUDA authenticity, no legacy headline, and no unsupported board claim are checked.",
+    "unsupported_board_claim_count": 0,
+    "unsupported_board_claim_sources": []
+  },
+  "per_task_path_hash_presence_and_terminal_class": {
+    "all_upstream_tasks_classified_once": true,
+    "principle": "every upstream task retains a hash-backed or explicitly absent terminal class.",
+    "task_ids_by_terminal_class": {
+      "blocked-precondition": [
+        "exp5964-sota-atom-compatibility-corpus"
+      ],
+      "complete-feasible": [
+        "exp5972-arc-llm-on-budget2000-feasibility"
+      ],
+      "complete-null": [
+        "exp5962-v528-source-delta-ingestion",
+        "exp5971-arc-strip-swap-battery"
+      ],
+      "complete-ready": [
+        "exp5963-exact-atom-pair-fixture",
+        "exp5967-delayed-commit-memory-fixture",
+        "exp5968-delayed-commit-csl-prospective",
+        "exp5969-csl-poison-drift-abi-audit",
+        "exp5970-arc-strip-swap-sentinel"
+      ],
+      "gate-blocked": [
+        "exp5965-portable-atom-energy-ranker",
+        "exp5966-discriminative-constraint-acquisition"
+      ],
+      "missing": [
+        "exp5961-transition-v528"
+      ]
+    },
+    "tasks": {
+      "exp5961-transition-v528": {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-08-03 17:50 UTC | Exact terminal-boundary handoff from .527 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:     \".venv/bin |",
+          "latest_status": "FAIL"
+        },
+        "declared_deliverable": "results/experiment_5961_transition_v528.json",
+        "honest_verdict": "",
+        "identity": [
+          "exp5961-transition-v528",
+          "results/experiment_5961_transition_v528.json"
+        ],
+        "loadable": false,
+        "milestone": "2026.07.528",
+        "present": false,
+        "sha256": null,
+        "status": "",
+        "task_id": "exp5961-transition-v528",
+        "terminal_class": "missing",
+        "terminal_evidence_source": "explicit_absence",
+        "terminal_subclass": "declared-deliverable-missing",
+        "title": "Exact terminal-boundary handoff from .527 into .528"
+      },
+      "exp5962-v528-source-delta-ingestion": {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 18:38 UTC | Dated evidence refresh after the V528 planner mark | OK | 213 passed, 2 warnings in 13.18s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5962_v528_source_delta_ingestion.json",
+        "honest_verdict": "complete_null: no accepted post-V528 source deltas; references unchanged",
+        "identity": [
+          "exp5962-v528-source-delta-ingestion",
+          "results/experiment_5962_v528_source_delta_ingestion.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:8b2b9ff096f24c288b7ccdc4d2ddf0c97f3abbaa4ecc9465ed1ea5706be84f11",
+        "status": "complete",
+        "task_id": "exp5962-v528-source-delta-ingestion",
+        "terminal_class": "complete-null",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "honest-null",
+        "title": "Dated evidence refresh after the V528 planner marker"
+      },
+      "exp5963-exact-atom-pair-fixture": {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 19:03 UTC | Hardness-controlled exact context/atom compatibili | OK | 115 passed, 1 warning in 26.43s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5963_exact_atom_pair_fixture.json",
+        "honest_verdict": "complete_ready: sealed exact atom-pair fixture is balanced, leak-free, and replayable",
+        "identity": [
+          "exp5963-exact-atom-pair-fixture",
+          "results/experiment_5963_exact_atom_pair_fixture.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:7b61bebee5c843cb0f08bbcfa1ad9924d7a27fa84e1e66cb5c56cf6c489545f7",
+        "status": "complete_ready",
+        "task_id": "exp5963-exact-atom-pair-fixture",
+        "terminal_class": "complete-ready",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "ready-receipt",
+        "title": "Hardness-controlled exact context/atom compatibility fixture"
+      },
+      "exp5964-sota-atom-compatibility-corpus": {
+        "conductor": {
+          "attempt_count": 6,
+          "latest_line": "| 2026-08-03 21:55 UTC | Gated on Exp5964 ready: portable exact-atom compat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5964-sota-atom-compatibility-corpus) |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "declared_deliverable": "results/experiment_5964_sota_atom_compatibility_corpus.json",
+        "honest_verdict": "blocked: insufficient_free_vram",
+        "identity": [
+          "exp5964-sota-atom-compatibility-corpus",
+          "results/experiment_5964_sota_atom_compatibility_corpus.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:5c17595b8d78616ca7e88c34c9ab21cf59d741b1fb6333a29d979a0ef0cf0b64",
+        "status": "blocked",
+        "task_id": "exp5964-sota-atom-compatibility-corpus",
+        "terminal_class": "blocked-precondition",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "blocked-before-eligible-execution",
+        "title": "Gated on Exp5963 ready: all-three-model GGUF context/atom compatibility corpus"
+      },
+      "exp5965-portable-atom-energy-ranker": {
+        "conductor": {
+          "attempt_count": 6,
+          "latest_line": "| 2026-08-03 21:55 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "declared_deliverable": "results/experiment_5965_portable_atom_energy_ranker.json",
+        "honest_verdict": "",
+        "identity": [
+          "exp5965-portable-atom-energy-ranker",
+          "results/experiment_5965_portable_atom_energy_ranker.json"
+        ],
+        "loadable": false,
+        "milestone": "2026.07.528",
+        "present": false,
+        "sha256": null,
+        "status": "",
+        "task_id": "exp5965-portable-atom-energy-ranker",
+        "terminal_class": "gate-blocked",
+        "terminal_evidence_source": "recomputed_gate_and_conductor_skip",
+        "terminal_subclass": "declared-deliverable-absent-after-recomputed-gate-skip",
+        "title": "Gated on Exp5964 ready: portable exact-atom compatibility energy"
+      },
+      "exp5966-discriminative-constraint-acquisition": {
+        "conductor": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-08-03 21:55 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "declared_deliverable": "results/experiment_5966_discriminative_constraint_acquisition.json",
+        "honest_verdict": "blocked_gate_check_failed",
+        "identity": [
+          "exp5966-discriminative-constraint-acquisition",
+          "results/experiment_5966_discriminative_constraint_acquisition.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:b9a55f5065be1e69a47d8635369329e932a5729f7f400fb6f25349380aa02b2c",
+        "status": "blocked",
+        "task_id": "exp5966-discriminative-constraint-acquisition",
+        "terminal_class": "gate-blocked",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "conductor-gate-check-artifact",
+        "title": "Gated on Exp5965 ready: end-to-end discriminative exact constraint acquisition"
+      },
+      "exp5967-delayed-commit-memory-fixture": {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 22:13 UTC | Delayed-commit transactional memory fixture over A | OK | 87 passed, 1 warning in 8.45s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5967_delayed_commit_memory_fixture.json",
+        "honest_verdict": "complete_ready: delayed_commit_memory_fixture_ready",
+        "identity": [
+          "exp5967-delayed-commit-memory-fixture",
+          "results/experiment_5967_delayed_commit_memory_fixture.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:bf8f35719ebf75f6979804608580448e39f274e5bcad5007ada710321bcf3694",
+        "status": "complete_ready",
+        "task_id": "exp5967-delayed-commit-memory-fixture",
+        "terminal_class": "complete-ready",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "ready-receipt",
+        "title": "Delayed-commit transactional memory fixture over ABI v2"
+      },
+      "exp5968-delayed-commit-csl-prospective": {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 22:30 UTC | Gated on Exp5967 ready: prospective delayed-commit | OK | 87 passed, 1 warning in 9.75s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5968_delayed_commit_csl_prospective.json",
+        "honest_verdict": "complete_ready: delayed_commit_prospective_csl_ready_write_through_control_wins",
+        "identity": [
+          "exp5968-delayed-commit-csl-prospective",
+          "results/experiment_5968_delayed_commit_csl_prospective.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:56e55cbba01f95e745d9a759531d03b4380ae8650d8f41cfd98f650d26908bc8",
+        "status": "complete_ready",
+        "task_id": "exp5968-delayed-commit-csl-prospective",
+        "terminal_class": "complete-ready",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "ready-receipt",
+        "title": "Gated on Exp5967 ready: prospective delayed-commit continuous self-learning A/B"
+      },
+      "exp5969-csl-poison-drift-abi-audit": {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 22:46 UTC | Gated on Exp5968 ready: poison, drift, rollback, r | OK | 88 passed, 1 warning in 9.39s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5969_csl_poison_drift_abi_audit.json",
+        "honest_verdict": "complete_ready: delayed_commit_csl_survives_poison_drift_abi_audit",
+        "identity": [
+          "exp5969-csl-poison-drift-abi-audit",
+          "results/experiment_5969_csl_poison_drift_abi_audit.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:25a6fccb4f3a78bf5494a9f46a3b52c656761389f3dbabecebff822092cee0a6",
+        "status": "complete_ready",
+        "task_id": "exp5969-csl-poison-drift-abi-audit",
+        "terminal_class": "complete-ready",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "ready-receipt",
+        "title": "Gated on Exp5968 ready: poison, drift, rollback, retention, and ABI audit"
+      },
+      "exp5970-arc-strip-swap-sentinel": {
+        "conductor": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 23:07 UTC | ARC row/column strip-swap convention sentinel | OK | 90 passed, 1 warning in 9.63s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5970_arc_strip_swap_sentinel.json",
+        "honest_verdict": "complete_ready: strip-swap sentinel has targeted static HUD dose, live valid E3 support, immutable registry and shipped flags, and no solve credit",
+        "identity": [
+          "exp5970-arc-strip-swap-sentinel",
+          "results/experiment_5970_arc_strip_swap_sentinel.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:cabcd1a6a79462ae3e69ca05c2b2c97577160411cde1fd8f357331a9d99d1543",
+        "status": "complete_ready",
+        "task_id": "exp5970-arc-strip-swap-sentinel",
+        "terminal_class": "complete-ready",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "ready-receipt",
+        "title": "ARC row/column strip-swap convention sentinel"
+      },
+      "exp5971-arc-strip-swap-battery": {
+        "conductor": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-08-04 06:11 UTC | Gated on Exp5970 ready: full ARC strip-swap conven | OK | 93 passed, 1 warning in 10.18s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5971_arc_strip_swap_battery.json",
+        "honest_verdict": "complete_null: original anchor support is empty for the shipped HUD contrast",
+        "identity": [
+          "exp5971-arc-strip-swap-battery",
+          "results/experiment_5971_arc_strip_swap_battery.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:fca03d72ef45a9919c255e1e0faf80917ad622102618d34e93dae8ca4db155d4",
+        "status": "complete_null",
+        "task_id": "exp5971-arc-strip-swap-battery",
+        "terminal_class": "complete-null",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "honest-null",
+        "title": "Gated on Exp5970 ready: full ARC strip-swap convention-transfer battery"
+      },
+      "exp5972-arc-llm-on-budget2000-feasibility": {
+        "conductor": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-08-04 08:13 UTC | Live ARC flagship-LLM budget-2000 wall-clock feasi | OK | 93 passed, 1 warning in 10.23s |",
+          "latest_status": "OK"
+        },
+        "declared_deliverable": "results/experiment_5972_arc_llm_on_budget2000_feasibility.json",
+        "honest_verdict": "complete_feasible: 25-game upper projection fits the 12-hour wall clock",
+        "identity": [
+          "exp5972-arc-llm-on-budget2000-feasibility",
+          "results/experiment_5972_arc_llm_on_budget2000_feasibility.json"
+        ],
+        "loadable": true,
+        "milestone": "2026.07.528",
+        "present": true,
+        "sha256": "sha256:da08161ce37851b836e443fa14c73488882ffc80061e15b7c8bbf19ac270ad59",
+        "status": "complete_feasible",
+        "task_id": "exp5972-arc-llm-on-budget2000-feasibility",
+        "terminal_class": "complete-feasible",
+        "terminal_evidence_source": "declared_deliverable_path",
+        "terminal_subclass": "feasibility-receipt",
+        "title": "Live ARC flagship-LLM budget-2000 wall-clock feasibility"
+      }
+    },
+    "terminal_class_by_task_id": {
+      "exp5961-transition-v528": "missing",
+      "exp5962-v528-source-delta-ingestion": "complete-null",
+      "exp5963-exact-atom-pair-fixture": "complete-ready",
+      "exp5964-sota-atom-compatibility-corpus": "blocked-precondition",
+      "exp5965-portable-atom-energy-ranker": "gate-blocked",
+      "exp5966-discriminative-constraint-acquisition": "gate-blocked",
+      "exp5967-delayed-commit-memory-fixture": "complete-ready",
+      "exp5968-delayed-commit-csl-prospective": "complete-ready",
+      "exp5969-csl-poison-drift-abi-audit": "complete-ready",
+      "exp5970-arc-strip-swap-sentinel": "complete-ready",
+      "exp5971-arc-strip-swap-battery": "complete-null",
+      "exp5972-arc-llm-on-budget2000-feasibility": "complete-feasible"
+    },
+    "terminal_subclass_by_task_id": {
+      "exp5961-transition-v528": "declared-deliverable-missing",
+      "exp5962-v528-source-delta-ingestion": "honest-null",
+      "exp5963-exact-atom-pair-fixture": "ready-receipt",
+      "exp5964-sota-atom-compatibility-corpus": "blocked-before-eligible-execution",
+      "exp5965-portable-atom-energy-ranker": "declared-deliverable-absent-after-recomputed-gate-skip",
+      "exp5966-discriminative-constraint-acquisition": "conductor-gate-check-artifact",
+      "exp5967-delayed-commit-memory-fixture": "ready-receipt",
+      "exp5968-delayed-commit-csl-prospective": "ready-receipt",
+      "exp5969-csl-poison-drift-abi-audit": "ready-receipt",
+      "exp5970-arc-strip-swap-sentinel": "ready-receipt",
+      "exp5971-arc-strip-swap-battery": "honest-null",
+      "exp5972-arc-llm-on-budget2000-feasibility": "feasibility-receipt"
+    }
+  },
+  "preconditions_checked": {
+    "active_roadmap": {
+      "capstone_task_present": true,
+      "error": null,
+      "loadable": true,
+      "milestone": "2026.07.528",
+      "milestone_title": "Discriminative Exact-Atom Acquisition, Delayed-Commit Continuous Learning, and ARC Budget/Convention Generalization",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:efe2551c0db4525d3249cc3eecad0c0298019690d283adc5056a870c44ae9644",
+      "upstream_task_ids": [
+        "exp5961-transition-v528",
+        "exp5962-v528-source-delta-ingestion",
+        "exp5963-exact-atom-pair-fixture",
+        "exp5964-sota-atom-compatibility-corpus",
+        "exp5965-portable-atom-energy-ranker",
+        "exp5966-discriminative-constraint-acquisition",
+        "exp5967-delayed-commit-memory-fixture",
+        "exp5968-delayed-commit-csl-prospective",
+        "exp5969-csl-poison-drift-abi-audit",
+        "exp5970-arc-strip-swap-sentinel",
+        "exp5971-arc-strip-swap-battery",
+        "exp5972-arc-llm-on-budget2000-feasibility"
+      ]
+    },
+    "atomic_output": {
+      "error": null,
+      "ok": true,
+      "parent_exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5973_v528_capstone_reconciliation.json"
+    },
+    "conductor_log": {
+      "activated_task_count_claim": 13,
+      "activation_line": "| 2026-08-03 13:37 UTC | Milestone 2026.07.528 activated | OK | 13 tasks queued |",
+      "activation_status": "OK",
+      "by_task": {
+        "exp5961-transition-v528": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-08-03 17:50 UTC | Exact terminal-boundary handoff from .527 into .52 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output:     \".venv/bin |",
+          "latest_status": "FAIL"
+        },
+        "exp5962-v528-source-delta-ingestion": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 18:38 UTC | Dated evidence refresh after the V528 planner mark | OK | 213 passed, 2 warnings in 13.18s |",
+          "latest_status": "OK"
+        },
+        "exp5963-exact-atom-pair-fixture": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 19:03 UTC | Hardness-controlled exact context/atom compatibili | OK | 115 passed, 1 warning in 26.43s |",
+          "latest_status": "OK"
+        },
+        "exp5964-sota-atom-compatibility-corpus": {
+          "attempt_count": 6,
+          "latest_line": "| 2026-08-03 21:55 UTC | Gated on Exp5964 ready: portable exact-atom compat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp5964-sota-atom-compatibility-corpus) |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp5965-portable-atom-energy-ranker": {
+          "attempt_count": 6,
+          "latest_line": "| 2026-08-03 21:55 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp5966-discriminative-constraint-acquisition": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-08-03 21:55 UTC | Gated on Exp5965 ready: end-to-end discriminative  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portab |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp5967-delayed-commit-memory-fixture": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 22:13 UTC | Delayed-commit transactional memory fixture over A | OK | 87 passed, 1 warning in 8.45s |",
+          "latest_status": "OK"
+        },
+        "exp5968-delayed-commit-csl-prospective": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 22:30 UTC | Gated on Exp5967 ready: prospective delayed-commit | OK | 87 passed, 1 warning in 9.75s |",
+          "latest_status": "OK"
+        },
+        "exp5969-csl-poison-drift-abi-audit": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 22:46 UTC | Gated on Exp5968 ready: poison, drift, rollback, r | OK | 88 passed, 1 warning in 9.39s |",
+          "latest_status": "OK"
+        },
+        "exp5970-arc-strip-swap-sentinel": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-03 23:07 UTC | ARC row/column strip-swap convention sentinel | OK | 90 passed, 1 warning in 9.63s |",
+          "latest_status": "OK"
+        },
+        "exp5971-arc-strip-swap-battery": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-08-04 06:11 UTC | Gated on Exp5970 ready: full ARC strip-swap conven | OK | 93 passed, 1 warning in 10.18s |",
+          "latest_status": "OK"
+        },
+        "exp5972-arc-llm-on-budget2000-feasibility": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-08-04 08:13 UTC | Live ARC flagship-LLM budget-2000 wall-clock feasi | OK | 93 passed, 1 warning in 10.23s |",
+          "latest_status": "OK"
+        }
+      },
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "sha256": "sha256:c43bad768101b83d93f15ca5a949d892533d3700e2c8eab4b77c9ce8ebef29e4"
+    },
+    "declared_present_deliverable_count": 10,
+    "failed_preconditions": [],
+    "fresh_verifier_receipt_count": 10,
+    "principle": "capstone state and all aggregation prerequisites are explicit.",
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/changelog.md": "sha256:72e5cbe69301c538245f8c4c0fac50eedf54139a6592d485525ac3984bbb3d4b",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "ops/north-star.md": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "research-complete.yaml": "sha256:650fa95ffb0f0aa080c246fff36758356911aebe9e1d25b9bcf4e33be82749bc",
+      "research-references.md": "sha256:a1a12a096b3cc5e2e205d6d1f2b3d4159dd7f40f6652ffc32a3d148074a6d9d8",
+      "research-roadmap.yaml": "sha256:efe2551c0db4525d3249cc3eecad0c0298019690d283adc5056a870c44ae9644",
+      "research-studying.md": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+      "results/experiment_5961_transition_v528.json": null,
+      "results/experiment_5962_v528_source_delta_ingestion.json": "sha256:8b2b9ff096f24c288b7ccdc4d2ddf0c97f3abbaa4ecc9465ed1ea5706be84f11",
+      "results/experiment_5963_exact_atom_pair_fixture.json": "sha256:7b61bebee5c843cb0f08bbcfa1ad9924d7a27fa84e1e66cb5c56cf6c489545f7",
+      "results/experiment_5964_sota_atom_compatibility_corpus.json": "sha256:5c17595b8d78616ca7e88c34c9ab21cf59d741b1fb6333a29d979a0ef0cf0b64",
+      "results/experiment_5965_portable_atom_energy_ranker.json": null,
+      "results/experiment_5966_discriminative_constraint_acquisition.json": "sha256:b9a55f5065be1e69a47d8635369329e932a5729f7f400fb6f25349380aa02b2c",
+      "results/experiment_5967_delayed_commit_memory_fixture.json": "sha256:bf8f35719ebf75f6979804608580448e39f274e5bcad5007ada710321bcf3694",
+      "results/experiment_5968_delayed_commit_csl_prospective.json": "sha256:56e55cbba01f95e745d9a759531d03b4380ae8650d8f41cfd98f650d26908bc8",
+      "results/experiment_5969_csl_poison_drift_abi_audit.json": "sha256:25a6fccb4f3a78bf5494a9f46a3b52c656761389f3dbabecebff822092cee0a6",
+      "results/experiment_5970_arc_strip_swap_sentinel.json": "sha256:cabcd1a6a79462ae3e69ca05c2b2c97577160411cde1fd8f357331a9d99d1543",
+      "results/experiment_5971_arc_strip_swap_battery.json": "sha256:fca03d72ef45a9919c255e1e0faf80917ad622102618d34e93dae8ca4db155d4",
+      "results/experiment_5972_arc_llm_on_budget2000_feasibility.json": "sha256:da08161ce37851b836e443fa14c73488882ffc80061e15b7c8bbf19ac270ad59",
+      "scripts/research_conductor.py": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f"
+    },
+    "references_marker": {
+      "marker": "V528-PLANNER-REFRESH-20260726-END",
+      "path": "research-references.md",
+      "present": true
+    },
+    "resource_receipt": {
+      "disk": {
+        "available_mb": 1136813,
+        "ok": true,
+        "required_mb": 512
+      },
+      "ram": {
+        "available_mb": 102035,
+        "ok": true,
+        "required_mb": 512
+      }
+    },
+    "root_clutter_inventory": [],
+    "source_hashes": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:d29311ae2d34417995b65deab3fedb66a3077c6b1d8841e8b7f56427ba14bf7c"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "openspec/capabilities/research-reporting/spec.md": {
+        "present": true,
+        "sha256": "sha256:8a23eafa69a69fcfe48c5646af4ef54ccdc8a7d9997ae7f5d8e542b3a195d57f"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:159cd05479cbbaf7dfdde7495e7cfaea28f63cbefc4cc057b20b6b87ce02a664"
+      },
+      "ops/arc_solve_registry.yaml": {
+        "present": true,
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:72e5cbe69301c538245f8c4c0fac50eedf54139a6592d485525ac3984bbb3d4b"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:c43bad768101b83d93f15ca5a949d892533d3700e2c8eab4b77c9ce8ebef29e4"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+      },
+      "ops/north-star.md": {
+        "present": true,
+        "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "python/carnot/agentic/arc_competition_agent.py": {
+        "present": true,
+        "sha256": "sha256:09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177"
+      },
+      "research-complete.yaml": {
+        "present": true,
+        "sha256": "sha256:650fa95ffb0f0aa080c246fff36758356911aebe9e1d25b9bcf4e33be82749bc"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:a1a12a096b3cc5e2e205d6d1f2b3d4159dd7f40f6652ffc32a3d148074a6d9d8"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:efe2551c0db4525d3249cc3eecad0c0298019690d283adc5056a870c44ae9644"
+      },
+      "research-studying.md": {
+        "present": true,
+        "sha256": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350"
+      },
+      "results/experiment_5933_aggregation_substrate_qa_repair.json": {
+        "present": true,
+        "sha256": "sha256:c72152095d8837c99ab0f04e72ae75f9106ff2d0745d786daf3b598de8579c71"
+      },
+      "results/experiment_5961_transition_v528.json": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_5962_v528_source_delta_ingestion.json": {
+        "present": true,
+        "sha256": "sha256:8b2b9ff096f24c288b7ccdc4d2ddf0c97f3abbaa4ecc9465ed1ea5706be84f11"
+      },
+      "results/experiment_5963_exact_atom_pair_fixture.json": {
+        "present": true,
+        "sha256": "sha256:7b61bebee5c843cb0f08bbcfa1ad9924d7a27fa84e1e66cb5c56cf6c489545f7"
+      },
+      "results/experiment_5964_sota_atom_compatibility_corpus.json": {
+        "present": true,
+        "sha256": "sha256:5c17595b8d78616ca7e88c34c9ab21cf59d741b1fb6333a29d979a0ef0cf0b64"
+      },
+      "results/experiment_5965_portable_atom_energy_ranker.json": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_5966_discriminative_constraint_acquisition.json": {
+        "present": true,
+        "sha256": "sha256:b9a55f5065be1e69a47d8635369329e932a5729f7f400fb6f25349380aa02b2c"
+      },
+      "results/experiment_5967_delayed_commit_memory_fixture.json": {
+        "present": true,
+        "sha256": "sha256:bf8f35719ebf75f6979804608580448e39f274e5bcad5007ada710321bcf3694"
+      },
+      "results/experiment_5968_delayed_commit_csl_prospective.json": {
+        "present": true,
+        "sha256": "sha256:56e55cbba01f95e745d9a759531d03b4380ae8650d8f41cfd98f650d26908bc8"
+      },
+      "results/experiment_5969_csl_poison_drift_abi_audit.json": {
+        "present": true,
+        "sha256": "sha256:25a6fccb4f3a78bf5494a9f46a3b52c656761389f3dbabecebff822092cee0a6"
+      },
+      "results/experiment_5970_arc_strip_swap_sentinel.json": {
+        "present": true,
+        "sha256": "sha256:cabcd1a6a79462ae3e69ca05c2b2c97577160411cde1fd8f357331a9d99d1543"
+      },
+      "results/experiment_5971_arc_strip_swap_battery.json": {
+        "present": true,
+        "sha256": "sha256:fca03d72ef45a9919c255e1e0faf80917ad622102618d34e93dae8ca4db155d4"
+      },
+      "results/experiment_5972_arc_llm_on_budget2000_feasibility.json": {
+        "present": true,
+        "sha256": "sha256:da08161ce37851b836e443fa14c73488882ffc80061e15b7c8bbf19ac270ad59"
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:42f186f2032a88202b0bc30ce599f85f6d626183f4fc3120f944d5e42dd7a680"
+      },
+      "scripts/in_process_doc_reconcile.py": {
+        "present": true,
+        "sha256": "sha256:7917e54bfc210d593e91f68233c2bdc18edae72860a9deb4cb85ec23c5d41f67"
+      }
+    }
+  },
+  "prior_failure_retirement_and_exclusion_receipt": {
+    "exclusion_manifest_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+    "new_exclusion_manifest_entries_written": 0,
+    "principle": "same-verdict reruns retire mechanically and no retired dependency is introduced.",
+    "prior_failure_audit": [
+      {
+        "current_verdict": "missing",
+        "prior_experiment_id": "exp5918-transition-v526",
+        "prior_verdict": "blocked: Exp5918 transition preconditions failed",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5961-transition-v528"
+      },
+      {
+        "current_verdict": "complete_null: no accepted post-V528 source deltas; references unchanged",
+        "prior_experiment_id": "exp5934-v527-source-delta-ingestion",
+        "prior_verdict": "complete_null: no accepted post-V527 source deltas; references unchanged",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5962-v528-source-delta-ingestion"
+      },
+      {
+        "current_verdict": "complete_ready: sealed exact atom-pair fixture is balanced, leak-free, and replayable",
+        "prior_experiment_id": "exp5869-hardness-surface-headroom-audit",
+        "prior_verdict": "blocked: test_exit_codes",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5963-exact-atom-pair-fixture"
+      },
+      {
+        "current_verdict": "blocked: insufficient_free_vram",
+        "prior_experiment_id": "exp5853-paired-embedding-integrity-audit",
+        "prior_verdict": "disqualified: claim_flip_direction_cell_failure,disaggregated_cell_failure,label_or_pair_permutation_survives,norm_only_or_length_control_failure,raw_model_dimension_identity_shortcut",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5964-sota-atom-compatibility-corpus"
+      },
+      {
+        "current_verdict": "blocked: insufficient_free_vram",
+        "prior_experiment_id": "exp5200-hidden-state-verifier-v2-mmlu-pro",
+        "prior_verdict": "complete_hidden_state_probe_does_not_beat_tuned_sc_probe0.100_sc0.075_self0.075_clue0.100_rcs0.100",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5964-sota-atom-compatibility-corpus"
+      },
+      {
+        "current_verdict": "blocked: insufficient_free_vram",
+        "prior_experiment_id": "exp5213-hidden-state-verifier-v3-layer-chunk-sweep",
+        "prior_verdict": "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5964-sota-atom-compatibility-corpus"
+      },
+      {
+        "current_verdict": "gate-blocked",
+        "prior_experiment_id": "exp5854-portable-comparative-energy-controls",
+        "prior_verdict": "blocked_gate_check_failed",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5965-portable-atom-energy-ranker"
+      },
+      {
+        "current_verdict": "blocked_gate_check_failed",
+        "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+        "prior_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5966-discriminative-constraint-acquisition"
+      },
+      {
+        "current_verdict": "blocked_gate_check_failed",
+        "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+        "prior_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5966-discriminative-constraint-acquisition"
+      },
+      {
+        "current_verdict": "blocked_gate_check_failed",
+        "prior_experiment_id": "exp5936-sota-atomic-support-union-ab",
+        "prior_verdict": "retired: transformed-view atomic union failed exact-semantic retirement gates",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5966-discriminative-constraint-acquisition"
+      },
+      {
+        "current_verdict": "complete_ready: delayed_commit_memory_fixture_ready",
+        "prior_experiment_id": "exp5913-transactional-constraint-memory",
+        "prior_verdict": "blocked_gate_check_failed",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5967-delayed-commit-memory-fixture"
+      },
+      {
+        "current_verdict": "complete_ready: delayed_commit_prospective_csl_ready_write_through_control_wins",
+        "prior_experiment_id": "exp5895-shortcut-safe-continuous-self-learning",
+        "prior_verdict": "complete_null: shortcut_safe_csl_not_promotion_eligible",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5968-delayed-commit-csl-prospective"
+      },
+      {
+        "current_verdict": "complete_ready: delayed_commit_csl_survives_poison_drift_abi_audit",
+        "prior_experiment_id": "exp5895-shortcut-safe-continuous-self-learning",
+        "prior_verdict": "complete_null: shortcut_safe_csl_not_promotion_eligible",
+        "retire_if_same_verdict": true,
+        "retirement_action": "none",
+        "same_verdict_recurred": false,
+        "task_id": "exp5969-csl-poison-drift-abi-audit"
+      }
+    ],
+    "retired_dependency_reused": false,
+    "retired_task_id_reused_as_dependency": [],
+    "retired_upstream_task_ids": []
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "_bmad/traceability.md": {
+        "sha256_after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "sha256_before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/arc_solve_registry.yaml": {
+        "sha256_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "sha256_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "sha256_after": "sha256:72e5cbe69301c538245f8c4c0fac50eedf54139a6592d485525ac3984bbb3d4b",
+        "sha256_before": "sha256:72e5cbe69301c538245f8c4c0fac50eedf54139a6592d485525ac3984bbb3d4b",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "sha256_after": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "sha256_before": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "unchanged": true
+      },
+      "ops/north-star.md": {
+        "sha256_after": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "sha256_before": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "sha256_after": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "sha256_before": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "unchanged": true
+      },
+      "research-complete.yaml": {
+        "sha256_after": "sha256:650fa95ffb0f0aa080c246fff36758356911aebe9e1d25b9bcf4e33be82749bc",
+        "sha256_before": "sha256:650fa95ffb0f0aa080c246fff36758356911aebe9e1d25b9bcf4e33be82749bc",
+        "unchanged": true
+      },
+      "research-references.md": {
+        "sha256_after": "sha256:a1a12a096b3cc5e2e205d6d1f2b3d4159dd7f40f6652ffc32a3d148074a6d9d8",
+        "sha256_before": "sha256:a1a12a096b3cc5e2e205d6d1f2b3d4159dd7f40f6652ffc32a3d148074a6d9d8",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "sha256_after": "sha256:efe2551c0db4525d3249cc3eecad0c0298019690d283adc5056a870c44ae9644",
+        "sha256_before": "sha256:efe2551c0db4525d3249cc3eecad0c0298019690d283adc5056a870c44ae9644",
+        "unchanged": true
+      },
+      "research-studying.md": {
+        "sha256_after": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+        "sha256_before": "sha256:e1bbc90376bebae9a5ccc3da936cc7df43b2efad060fc1f50bf77c3d66bd0350",
+        "unchanged": true
+      },
+      "results/experiment_5961_transition_v528.json": {
+        "sha256_after": null,
+        "sha256_before": null,
+        "unchanged": true
+      },
+      "results/experiment_5962_v528_source_delta_ingestion.json": {
+        "sha256_after": "sha256:8b2b9ff096f24c288b7ccdc4d2ddf0c97f3abbaa4ecc9465ed1ea5706be84f11",
+        "sha256_before": "sha256:8b2b9ff096f24c288b7ccdc4d2ddf0c97f3abbaa4ecc9465ed1ea5706be84f11",
+        "unchanged": true
+      },
+      "results/experiment_5963_exact_atom_pair_fixture.json": {
+        "sha256_after": "sha256:7b61bebee5c843cb0f08bbcfa1ad9924d7a27fa84e1e66cb5c56cf6c489545f7",
+        "sha256_before": "sha256:7b61bebee5c843cb0f08bbcfa1ad9924d7a27fa84e1e66cb5c56cf6c489545f7",
+        "unchanged": true
+      },
+      "results/experiment_5964_sota_atom_compatibility_corpus.json": {
+        "sha256_after": "sha256:5c17595b8d78616ca7e88c34c9ab21cf59d741b1fb6333a29d979a0ef0cf0b64",
+        "sha256_before": "sha256:5c17595b8d78616ca7e88c34c9ab21cf59d741b1fb6333a29d979a0ef0cf0b64",
+        "unchanged": true
+      },
+      "results/experiment_5965_portable_atom_energy_ranker.json": {
+        "sha256_after": null,
+        "sha256_before": null,
+        "unchanged": true
+      },
+      "results/experiment_5966_discriminative_constraint_acquisition.json": {
+        "sha256_after": "sha256:b9a55f5065be1e69a47d8635369329e932a5729f7f400fb6f25349380aa02b2c",
+        "sha256_before": "sha256:b9a55f5065be1e69a47d8635369329e932a5729f7f400fb6f25349380aa02b2c",
+        "unchanged": true
+      },
+      "results/experiment_5967_delayed_commit_memory_fixture.json": {
+        "sha256_after": "sha256:bf8f35719ebf75f6979804608580448e39f274e5bcad5007ada710321bcf3694",
+        "sha256_before": "sha256:bf8f35719ebf75f6979804608580448e39f274e5bcad5007ada710321bcf3694",
+        "unchanged": true
+      },
+      "results/experiment_5968_delayed_commit_csl_prospective.json": {
+        "sha256_after": "sha256:56e55cbba01f95e745d9a759531d03b4380ae8650d8f41cfd98f650d26908bc8",
+        "sha256_before": "sha256:56e55cbba01f95e745d9a759531d03b4380ae8650d8f41cfd98f650d26908bc8",
+        "unchanged": true
+      },
+      "results/experiment_5969_csl_poison_drift_abi_audit.json": {
+        "sha256_after": "sha256:25a6fccb4f3a78bf5494a9f46a3b52c656761389f3dbabecebff822092cee0a6",
+        "sha256_before": "sha256:25a6fccb4f3a78bf5494a9f46a3b52c656761389f3dbabecebff822092cee0a6",
+        "unchanged": true
+      },
+      "results/experiment_5970_arc_strip_swap_sentinel.json": {
+        "sha256_after": "sha256:cabcd1a6a79462ae3e69ca05c2b2c97577160411cde1fd8f357331a9d99d1543",
+        "sha256_before": "sha256:cabcd1a6a79462ae3e69ca05c2b2c97577160411cde1fd8f357331a9d99d1543",
+        "unchanged": true
+      },
+      "results/experiment_5971_arc_strip_swap_battery.json": {
+        "sha256_after": "sha256:fca03d72ef45a9919c255e1e0faf80917ad622102618d34e93dae8ca4db155d4",
+        "sha256_before": "sha256:fca03d72ef45a9919c255e1e0faf80917ad622102618d34e93dae8ca4db155d4",
+        "unchanged": true
+      },
+      "results/experiment_5972_arc_llm_on_budget2000_feasibility.json": {
+        "sha256_after": "sha256:da08161ce37851b836e443fa14c73488882ffc80061e15b7c8bbf19ac270ad59",
+        "sha256_before": "sha256:da08161ce37851b836e443fa14c73488882ffc80061e15b7c8bbf19ac270ad59",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "sha256_after": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f",
+        "sha256_before": "sha256:7fd4b787bee14f3190109d601c880263a7177d57f7c669451b5f52cd47a7512f",
+        "unchanged": true
+      }
+    },
+    "principle": "only evidence-supported internal docs change; protected/unrelated state remains byte-identical."
+  },
+  "random_seed": 5973,
+  "reproducibility_checksum": "sha256:a0d09783a1fc6669124416cb01f9d9ced19dbbf83cc8901b25c4bf1d528de6f0",
+  "result_path": "results/experiment_5973_v528_capstone_reconciliation.json",
+  "run_date": "20260804",
+  "schema": "carnot.experiment_5973.v528_capstone_reconciliation.v1",
+  "semantic_acquisition_branch_summary": {
+    "blocked_semantic_branch_does_not_null_csl_or_arc": true,
+    "corpus": {
+      "blocked_reasons": [
+        "insufficient_free_vram"
+      ],
+      "ready_score": 0.0,
+      "terminal_class": "blocked-precondition"
+    },
+    "exact_acquisition": {
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp5965-portable-atom-energy-ranker.portable_atom_energy_ready_score (upstream artifact not found for task id 'exp5965-portable-atom-energy-ranker')",
+      "terminal_class": "gate-blocked"
+    },
+    "fixture": {
+      "counts": {
+        "balanced_at_semantic_instance_replication_unit": true,
+        "base_context_case_count": 300,
+        "base_semantic_instance_count": 100,
+        "compatible_pair_count": 300,
+        "five_seed_group_evaluation_ready": true,
+        "incompatible_pair_count": 300,
+        "negative_type_counts": {
+          "boundary_comparator": 33,
+          "cardinality": 33,
+          "composition": 33,
+          "contradiction": 33,
+          "negated_relation": 34,
+          "omitted_required": 34,
+          "spurious_compatible": 34,
+          "swapped_argument": 33,
+          "type_confusable": 33
+        },
+        "pair_count": 600,
+        "pairs_per_context": 2
+      },
+      "ready_score": 1.0,
+      "terminal_class": "complete-ready"
+    },
+    "fixture_ready_does_not_imply_ranker_or_acquisition_quality": true,
+    "principle": "fixture, corpus, ranker, and exact acquisition claims remain separate.",
+    "ranker": {
+      "present": false,
+      "terminal_class": "gate-blocked"
+    },
+    "source_delta": {
+      "accepted_count": 0,
+      "terminal_class": "complete-null"
+    }
+  },
+  "spec_refs": [
+    "REQ-REPORT-5973",
+    "SCENARIO-REPORT-5973-EXACT-MATRIX",
+    "SCENARIO-REPORT-5973-GATES-AND-MISSING",
+    "SCENARIO-REPORT-5973-BRANCH-INDEPENDENCE",
+    "SCENARIO-REPORT-5973-VERIFIER-AND-SUBSTRATE",
+    "SCENARIO-REPORT-5973-SCHEMA"
+  ],
+  "status": "complete_with_blocks",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_5973_v528_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5973_v528_capstone_reconciliation.py -m pytest tests/python/test_experiment_5973_v528_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5973_v528_capstone_reconciliation.py --fail-under=100 -m",
+    ".venv/bin/ruff check python/carnot/experiment_5973_v528_capstone_reconciliation.py tests/python/test_experiment_5973_v528_capstone_reconciliation.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5962_v528_source_delta_ingestion.json results/experiment_5963_exact_atom_pair_fixture.json results/experiment_5964_sota_atom_compatibility_corpus.json results/experiment_5966_discriminative_constraint_acquisition.json results/experiment_5967_delayed_commit_memory_fixture.json results/experiment_5968_delayed_commit_csl_prospective.json results/experiment_5969_csl_poison_drift_abi_audit.json results/experiment_5970_arc_strip_swap_sentinel.json results/experiment_5971_arc_strip_swap_battery.json results/experiment_5972_arc_llm_on_budget2000_feasibility.json",
+    ".venv/bin/python -c \"import json; import yaml; from pathlib import Path; from carnot import experiment_5973_v528_capstone_reconciliation as m; [yaml.safe_load(Path(p).read_text()) for p in ('research-roadmap.yaml','research-complete.yaml','ops/exclusion_manifest.yaml')]; r=m.build_report(Path('.'), tests_run=[], duration_s=1.0); m.validate_artifact(r); print(r['status'], r['honest_verdict']); print(r['milestone_and_exact_task_deliverable_matrix']['upstream_task_count'], r['fresh_adversarial_verifier_receipts']['verified_present_declared_deliverable_count'], r['fresh_adversarial_verifier_receipts']['flagged_count'])\"",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/python scripts/check_exclusion_manifest.py 5973",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/root_clutter_sweep.py --min-age-min 0",
+    "git diff --exit-code -- scripts/research_conductor.py ops/north-star.md ops/arc_solve_registry.yaml ops/exclusion_manifest.yaml ops/status.md ops/changelog.md _bmad/traceability.md research-roadmap.yaml research-complete.yaml research-references.md research-studying.md results/experiment_5961_transition_v528.json results/experiment_5962_v528_source_delta_ingestion.json results/experiment_5963_exact_atom_pair_fixture.json results/experiment_5964_sota_atom_compatibility_corpus.json results/experiment_5965_portable_atom_energy_ranker.json results/experiment_5966_discriminative_constraint_acquisition.json results/experiment_5967_delayed_commit_memory_fixture.json results/experiment_5968_delayed_commit_csl_prospective.json results/experiment_5969_csl_poison_drift_abi_audit.json results/experiment_5970_arc_strip_swap_sentinel.json results/experiment_5971_arc_strip_swap_battery.json results/experiment_5972_arc_llm_on_budget2000_feasibility.json",
+    ".venv/bin/python -c \"from pathlib import Path; from carnot import experiment_5973_v528_capstone_reconciliation as m; r=m.build_report(Path('.'), tests_run=[], duration_s=1.0); assert r['gate_recomputation_and_cascade_receipts']['title_yaml_gate_alignment_exact']; assert r['gate_recomputation_and_cascade_receipts']['capstone_executed_skipped_experiment_count'] == 0; assert r['model_and_hardware_policy_receipt']['mandated_gguf_use_checked']; assert r['model_and_hardware_policy_receipt']['cuda_authenticity_checked']; assert not r['arc_provenance_registry_and_flag_immutability']['registry_mutated']; assert not r['arc_provenance_registry_and_flag_immutability']['flag_flip_performed']; assert not r['aggregation_substrate_classifier_receipt']['duration_rule_inherited_from_nested_upstream']; print('gate_policy_arc_aggregation_ok')\"",
+    ".venv/bin/python scripts/test_suite_mutation_check.py --gate"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_5973_v528_capstone_reconciliation.py --fail-under=100 -m": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_5973_v528_capstone_reconciliation.py -m pytest tests/python/test_experiment_5973_v528_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_5973_v528_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -c \"from pathlib import Path; from carnot import experiment_5973_v528_capstone_reconciliation as m; r=m.build_report(Path('.'), tests_run=[], duration_s=1.0); assert r['gate_recomputation_and_cascade_receipts']['title_yaml_gate_alignment_exact']; assert r['gate_recomputation_and_cascade_receipts']['capstone_executed_skipped_experiment_count'] == 0; assert r['model_and_hardware_policy_receipt']['mandated_gguf_use_checked']; assert r['model_and_hardware_policy_receipt']['cuda_authenticity_checked']; assert not r['arc_provenance_registry_and_flag_immutability']['registry_mutated']; assert not r['arc_provenance_registry_and_flag_immutability']['flag_flip_performed']; assert not r['aggregation_substrate_classifier_receipt']['duration_rule_inherited_from_nested_upstream']; print('gate_policy_arc_aggregation_ok')\"": 0,
+    ".venv/bin/python -c \"import json; import yaml; from pathlib import Path; from carnot import experiment_5973_v528_capstone_reconciliation as m; [yaml.safe_load(Path(p).read_text()) for p in ('research-roadmap.yaml','research-complete.yaml','ops/exclusion_manifest.yaml')]; r=m.build_report(Path('.'), tests_run=[], duration_s=1.0); m.validate_artifact(r); print(r['status'], r['honest_verdict']); print(r['milestone_and_exact_task_deliverable_matrix']['upstream_task_count'], r['fresh_adversarial_verifier_receipts']['verified_present_declared_deliverable_count'], r['fresh_adversarial_verifier_receipts']['flagged_count'])\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_5962_v528_source_delta_ingestion.json results/experiment_5963_exact_atom_pair_fixture.json results/experiment_5964_sota_atom_compatibility_corpus.json results/experiment_5966_discriminative_constraint_acquisition.json results/experiment_5967_delayed_commit_memory_fixture.json results/experiment_5968_delayed_commit_csl_prospective.json results/experiment_5969_csl_poison_drift_abi_audit.json results/experiment_5970_arc_strip_swap_sentinel.json results/experiment_5971_arc_strip_swap_battery.json results/experiment_5972_arc_llm_on_budget2000_feasibility.json": 0,
+    ".venv/bin/python scripts/check_exclusion_manifest.py 5973": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    ".venv/bin/python scripts/root_clutter_sweep.py --min-age-min 0": 0,
+    ".venv/bin/python scripts/test_suite_mutation_check.py --gate": 1,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 1,
+    ".venv/bin/ruff check python/carnot/experiment_5973_v528_capstone_reconciliation.py tests/python/test_experiment_5973_v528_capstone_reconciliation.py": 0,
+    "git diff --exit-code -- scripts/research_conductor.py ops/north-star.md ops/arc_solve_registry.yaml ops/exclusion_manifest.yaml ops/status.md ops/changelog.md _bmad/traceability.md research-roadmap.yaml research-complete.yaml research-references.md research-studying.md results/experiment_5961_transition_v528.json results/experiment_5962_v528_source_delta_ingestion.json results/experiment_5963_exact_atom_pair_fixture.json results/experiment_5964_sota_atom_compatibility_corpus.json results/experiment_5965_portable_atom_energy_ranker.json results/experiment_5966_discriminative_constraint_acquisition.json results/experiment_5967_delayed_commit_memory_fixture.json results/experiment_5968_delayed_commit_csl_prospective.json results/experiment_5969_csl_poison_drift_abi_audit.json results/experiment_5970_arc_strip_swap_sentinel.json results/experiment_5971_arc_strip_swap_battery.json results/experiment_5972_arc_llm_on_budget2000_feasibility.json": 0
+  }
+}
