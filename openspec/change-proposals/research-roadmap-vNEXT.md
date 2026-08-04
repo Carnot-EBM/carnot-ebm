@@ -1,372 +1,455 @@
-# Research Roadmap vNEXT — Milestone 2026.07.528
+# Research Roadmap vNEXT — Milestone 2026.08.529
 
-**Milestone title:** Discriminative Exact-Atom Acquisition, Delayed-Commit
-Continuous Learning, and ARC Budget/Convention Generalization
+**Milestone title:** Calibrated Phase-D Candidate Headroom, Internal-State
+Verification, and Reduced-Order Continuous Learning
 
-**Status:** Pre-staged after terminal milestone `2026.07.527`
+**Status:** Pre-staged after terminal milestone `2026.07.528`
 
-**Experiment range:** Exp5961-Exp5973
+**Experiment range:** Exp6100-Exp6113
 
-**Primary question:** Can Carnot replace retired generated-ConstraintIR
-mechanisms with a discriminative exact-atom energy surface, exercise verified
-continuous learning through a delayed transactional commit, and resolve the two
-highest-value open ARC measurements without re-solving public games?
+**Primary question:** Can Carnot create the first authentic, adequately powered
+Phase-D candidate pool on which selection is both possible and non-combinatorial,
+qualify a per-layer internal-state verifier against tuned self-consistency, and
+improve continuous learning after write-through defeated delayed commit, while
+preserving semantic-acquisition, hardware, and live ARC obligations?
 
-## What milestone 2026.07.527 proved
+## What milestone 2026.07.528 proved
 
-| Evidence | Terminal result | Consequence for `.528` |
+| Evidence | Terminal result | Consequence for `.529` |
 |---|---|---|
-| Exp5932 transition | `.526` identities were archived without outcome laundering; live adversarial recheck is clean | Transition mechanics are reusable, but `.528` must preserve the `.527` retirement and gate block explicitly |
-| Exp5933 aggregation QA | The substrate classifier repair is task-ready; paired controls and immutable Exp5931 replay pass | Capstones may aggregate upstream GPU receipts without being misclassified as live inference |
-| Exp5934 source delta | `complete_null`; no post-V527 source was accepted | The planner's V528 marker is the new source boundary |
-| Exp5935 deterministic support | Non-pruning atom support, exact completion, and tamper controls are ready | The exact executor is sound; the unresolved question is how to acquire semantic atoms |
-| Exp5936 all-three-model support union | `retired`; all arms and all three mandated GGUF families had zero parse, atom recall, and exact-semantic success | No more prompt/schema/multi-view generated-IR retries; a new discriminative mechanism is required |
-| Exp5937 downstream CSL | Gate-blocked by Exp5936 retirement | Continuous learning must use the already-ready exact prospective stream and transactional state, not failed model-generated events |
+| Exp5961 transition | The task exhausted three wall-clock attempts and its declared transition artifact is absent | `.529` must preserve the missing-handoff class rather than fabricate a clean transition |
+| Exp5962 source delta | `complete_null`; no post-V528 source was accepted | The V529 planner marker becomes the next exact search boundary |
+| Exp5963 exact atom-pair fixture | Ready with 300 base contexts and 600 exact pairs | The semantic fixture is usable; the blocked step is live all-family representation acquisition |
+| Exp5964 all-family atom corpus | `blocked: insufficient_free_vram`; partial per-model row files exist but readiness is zero | The hypothesis is scientifically unresolved; one changed, checkpointed VRAM-recovery attempt is warranted |
+| Exp5965-Exp5966 ranker/acquisition | Preemptively gate-blocked by Exp5964 | Do not invoke downstream ranker/acquisition work in `.529`; recover the corpus first |
+| Exp5967 delayed-commit fixture | Ready with frozen snapshot, transaction, rollback, and fixed-width ABI semantics | The external-state learning substrate is sound |
+| Exp5968 prospective CSL | Ready, but the matched **write-through control won**; delayed-vs-fixed/no-memory AUC gain was only `0.008934` | Delayed commit is not the next lever; utility-state compression and causal credit assignment are |
+| Exp5969 safety/ABI audit | Ready with zero unsafe accepts and exact Python/Rust/PyO3 replay | `.529` may change utility state while keeping this safety envelope fixed |
+| Exp5970-Exp5971 ARC strip-swap | Sentinel ready, but the full battery was `complete_null` because original anchor support was empty | No more convention-transform variants without live support |
+| Exp5972 ARC budget projection | Eight measured games project a conservative 25-game run below 12 hours | Budget-2000 scheduling is feasible; it does not repair the induction mechanism |
+| Exp5973 capstone | `complete_with_blocks`, preserving missing, blocked, gate-blocked, ready, null, and feasible branches independently | Exact terminal-class aggregation is reusable |
 
-Two outer-loop measurements landed after the `.527` plan and are also binding:
-
-- Increasing ARC `MAX_ACTIONS` from 400 to 2000 produced roughly seven more
-  LLM-off game wins, but LLM-on wall time at 2000 is unknown. No flag change is
-  justified until the seven gain games fit the shared 12-hour budget.
-- The frontier convention result is robust, while HUD convention-dependence is
-  still undecided because roll perturbations destroy the anchor games. A
-  row/column strip swap is the named targeted transform.
+Outer-loop evidence after `.528` further narrows ARC. Exp6091 showed that the
+local single-shot GGUF refinement path produced no engine on any live A/B cell.
+Exp6092 enumerated 23 per-game lookup sites; Exp6093 showed the development twin
+fell from 24/25 to 10/25 when identity support was removed, while identity
+removal was inert on the scored path; Exp6094 measured true adapter-free search
+cost. The local single-shot induction line is therefore closed. The one ARC slot
+in `.529` must harden a generic primitive or mine cross-game gotchas, not change
+prompt, repetition, or budget.
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1 — exact semantic acquisition remains absent
+### Gap 1 — Phase D has neither a viable domain nor an internal verifier moat
 
-The PRD requires natural-language intent to become executable constraints.
-Carnot has exact typed backends, replay, schema support, and a non-pruning atom
-executor, but every recent flagship model path that *generated* the formal
-object has retired. The gap is semantic identification, not syntax.
+The PRD requires FR12 verifiable reasoning beyond easy exact checks. Carnot's
+survey of every candidate-pool-shaped artifact found zero of seven pools that
+combine a competent generator, authentic same-model diversity, unsaturated
+self-consistency, and selectable oracle headroom. Existing apparent headroom is
+either chance-combinatorial, saturated, or manufactured by a deterministic
+builder. Training any verifier on those pools would answer the wrong question.
 
-`.528` changes the direction: enumerate legal atoms deterministically, then use
-output-free GGUF representations to score natural-language/atom compatibility.
-The model proposes an energy over a finite typed atom set; Python/Z3 remains
-the sole semantic authority. HIDE (`2506.17748`) motivates context/candidate
-representation decoupling, while Solver-Hard (`2607.17047`) motivates
-proof-preserving relabel and surface controls.
+`.529` first constructs a difficulty ladder from exact low-chance constraint
+families, then collects at least eight real temperature samples per question
+from `unsloth/gemma-4-26B-A4B-it-GGUF`. It separates generator-above-chance,
+all-wrong, oracle, and tuned-SC tests at the question replication unit. Only a
+qualified pool may unlock matching-base per-layer extraction and a
+TrajSelector-class probe. The external generated-text/logprob scorer family
+remains retired.
 
-### Gap 2 — self-learning infrastructure exists but has not learned prospectively
+### Gap 2 — natural-language semantic acquisition is blocked before the result
 
-Exp5920 provides a chronological exact event stream, Exp5924 provides
-transactional memory, and Exp5926 proves Python/Rust/PyO3 ABI-v2 parity. The
-PRD's FR11 claim still lacks an admitted, prospective, shortcut-resistant update
-loop on that stack.
+The exact atom-pair fixture is ready, but Exp5964 never acquired the full SOTA
+representation corpus because free VRAM was insufficient. That is an
+environmental block, not evidence that context/atom compatibility fails. The
+PRD's natural-language-to-executable-constraint path remains unresolved.
 
-Memoir (`2607.20792`) reports a learning-speed penalty when a pondering step
-writes to the same fast memory it reads. `.528` therefore compares frozen
-read-snapshot/delayed commit against same-event write-through, fixed memory, and
-no memory, then attacks the winner with poison, drift, retention, and rollback
-tests. Model weights stay immutable.
+`.529` makes one disciplined recovery attempt: sequential family loading,
+task-owned process leases, explicit model eviction, phase timing, per-family
+checkpoints, and resume from the three existing partial row files. It uses all
+three mandated GGUF families. No downstream ranker is queued, so a second VRAM
+block retires this recovery shape without causing another cascade.
 
-### Gap 3 — ARC accuracy and efficiency policy is not measured at the live budget
+### Gap 3 — continuous learning is safe, but its credit state is not useful enough
 
-All 25 public games are already cleared; replaying them is not progress.
-Carnot instead needs a reusable hidden-game process whose accuracy and
-efficiency survive convention changes and the official shared wall-clock
-constraint. The two immediate gaps are a targeted HUD transform and LLM-on
-budget-2000 feasibility. Both are measurements of the adapter-free live path,
-not public-level solve tasks or registry updates.
+FR11 requires autonomous improvement from verified experience. Carnot has
+chronological exact events, transactional external memory, rollback, poison
+quarantine, and cross-language parity. Yet `.528` falsified the delayed-commit
+advantage: immediate write-through learned faster under the matched stream.
+
+RoMeRL (`2608.02508`) identifies a different bottleneck: trajectory-indexed
+utilities dilute feedback and co-retrieved memories receive contaminated credit.
+`.529` tests a fixed-dimensional reduced-order utility state against the winning
+write-through policy, delayed commit, fixed memory, shuffled retrieval, and no
+memory. Model weights remain immutable; promotion still depends on exact future
+events and must preserve `.528` safety/rollback behavior.
 
 ## Research findings incorporated
 
-| Source | Finding | `.528` use |
+| Source | Finding | `.529` use |
 |---|---|---|
-| HIDE, arXiv:2506.17748 | Context/output representation decoupling can detect failures in one pass | Exp5963-Exp5966 build and test exact natural-language/atom compatibility |
-| Solver-Hard, arXiv:2607.17047 | Solver hardness and model difficulty dissociate; proof-preserving relabeling exposes surface sensitivity | Candidate fixtures are density/hardness controlled and contain relabel-held splits |
-| Memoir, arXiv:2607.20792 | Coupled read/write fast memory slowed learning at a fixed budget | Exp5967-Exp5969 compare delayed commit to write-through |
-| LTLA, arXiv:2511.16054 | Tractable future-constraint messages can steer decoding efficiently | Guarded future work only; it does not reopen grammar or finite-ID decoding |
-| PAL, arXiv:2503.19466 | Exact constraint normalization can be amortized on GPUs | Reinforces exact backend separation; no semantic-acquisition claim |
-| Million-p-bit and pipelined PIM, arXiv:2606.25313 / 2607.21077 | Sampling hardware needs explicit communication, precision, and throughput-quality contracts | Hardware requirements and ABI context only; no board execution claim |
+| Distributional EBMs, arXiv:2605.18871 | Learned whole-output energy and deterministic penalties are complementary; model-identity shortcuts must be causally audited | Motivates internal selection plus exact labels, but not the retired external-text scorer |
+| Solver-Hard, arXiv:2607.17047 | SAT-solver hardness does not consistently predict model difficulty; proof-preserving relabeling exposes surface sensitivity | Exp6103-Exp6105 calibrate observed model accuracy separately from solver conflicts and preserve relabel controls |
+| RoMeRL, arXiv:2608.02508 | Bounded utility coordinates increase feedback density and reduce memory-reward contamination | Exp6108 tests reduced-order state under Carnot's exact chronological safety envelope |
+| Self-Certification of Representation Adequacy, arXiv:2608.02267 | History aliases in a compressed representation cause irreducible decision loss; adequacy must be externally certified | Exp6106 is an explicit access/adequacy gate before Exp6107 can claim a selector result |
+| Right Answer, Wrong Method, arXiv:2608.02442 | Final-answer correctness can hide enumeration, guessing, or answer-first shortcut behavior | Exp6104-Exp6105 report path-validity and shortcut strata separately from exact correctness |
+| Parallel Trajectory Tempering, arXiv:2607.27077 | Optimization-path reservoirs can maintain equilibrium and expose thermalization | Guarded future work after a viable domain exists; no `.529` PTT benchmark |
+| KAN optimal abstractions, arXiv:2602.06737 | Piecewise-affine KAN abstractions permit explicit MILP error bounds | Guarded future certification; the retired adaptive-KAN accuracy line stays closed |
+| FPGA Ising decomposition / dual-BRAM p-bits, arXiv:2602.15985 / 2602.16143 | Hardware claims require explicit decomposition, memory, communication, and quality accounting | Informs board receipts only; no cross-paper speedup inference |
 
 ## Target architecture
 
 ```mermaid
 flowchart TD
-    NL[Natural-language constraint]
-    ENUM[Schema-derived legal atom enumeration]
-    PAIR[Context / candidate-atom pairs]
-    GGUF[Mandated local GGUF representation extraction]
-    ENERGY[Per-model standardized compatibility energy]
-    SET[Exact-set ranking and bounded completion]
-    PY[Python exact semantics]
-    Z3[Z3 certificate replay]
-    EVENT[Chronological exact event stream]
-    SNAP[Frozen read snapshot]
-    PROPOSE[Versioned memory proposal]
-    FUTURE[Prospective neighborhood validation]
-    STATE[Transactional Python/Rust/PyO3 state]
-    ARC[Adapter-free E3 live agent]
-    STRIP[Strip-swap convention battery]
-    BUDGET[LLM-on budget-2000 timing]
+    FIX[Exact low-chance constraint families]
+    LADDER[Sealed difficulty ladder]
+    GGUF[Gemma-4-26B-A4B GGUF\nK >= 8 authentic samples]
+    POOL[Raw candidate pool\nexact labels + path controls]
+    AUDIT[Question-clustered\ncompetence/headroom audit]
+    BASE[Matching base transformer\nper-layer hidden states]
+    SELECT[Internal-state selector]
+    SC[Tuned self-consistency]
+    EXACT[Python/Z3 exact authority]
+
+    PAIR[Ready exact context/atom pairs]
+    THREE[Three mandated GGUF families\ncheckpointed sequential acquisition]
+    ATOMS[Recovered compatibility corpus]
+
+    EVENTS[Chronological exact events]
+    ROU[Reduced-order utility state]
+    TX[Transactional memory + rollback]
+    ABI[Python/Rust/PyO3 fixed-width ABI]
+
+    KV[KV260 terminal receipt]
+    PF[PolarFire terminal dispatch]
+    GM[GateMate physical-state gate]
+    ARC[One live ARC floor slot\ngeneric primitive/gotcha mining]
     CAP[Branch-independent capstone]
 
-    NL --> ENUM --> PAIR --> GGUF --> ENERGY --> SET
-    SET --> PY
-    SET --> Z3
-    PY -->|exact admit/reject| EVENT
-    Z3 -->|certificate agreement| EVENT
-    EVENT --> SNAP --> PROPOSE --> FUTURE --> STATE
-    STATE -. fixed-width future hardware ABI .-> CAP
-    ARC --> STRIP --> CAP
-    ARC --> BUDGET --> CAP
-    SET --> CAP
-    STATE --> CAP
+    FIX --> LADDER --> GGUF --> POOL --> AUDIT
+    AUDIT -->|qualified only| BASE --> SELECT
+    POOL --> SC
+    EXACT --> AUDIT
+    EXACT --> SELECT
+    SELECT -->|paired comparison| SC
+
+    PAIR --> THREE --> ATOMS
+    EVENTS --> ROU --> TX --> ABI
+
+    ATOMS --> CAP
+    SELECT --> CAP
+    ABI --> CAP
+    KV --> CAP
+    PF --> CAP
+    GM --> CAP
+    ARC --> CAP
 ```
 
-The architectural boundary is load-bearing:
+The boundaries are load-bearing:
 
-- The GGUF model supplies a representation-derived proposal energy, never an
-  acceptance label.
-- Candidate atoms come from public type/operation schemas, not hidden answers.
-- Exact semantics require Python/Z3 agreement.
-- Memory reads a frozen version; promotion occurs only after chronological
-  future-event validation.
-- ARC uses the live adapter-free mechanism and may not inspect game source,
-  use a per-game adapter, run offline ground-truth BFS, or mutate the solve
-  registry.
+- Exact validators label and certify candidates; no learned energy is an oracle.
+- The Phase-D generator is selected by measured transport and competence, not
+  by parameter count or SAT-solver conflict counts.
+- The observed-`p` independence formula is diagnostic only. The preregistered
+  gate uses enumerated chance floors, a numerical all-wrong-rate bound, and a
+  question-clustered oracle-minus-SC interval.
+- GGUF generation and matching-base hidden-state extraction are separate,
+  hash-pinned substrates. The base repository is never treated as the same
+  quantized execution path.
+- The internal selector reads cached hidden states. It does not rerank from
+  generated text, output logprobs, or a model-authored confidence field.
+- Reduced-order self-learning changes external utility state only; exact future
+  events, rollback, poison quarantine, and protected-prefix retention remain
+  authoritative.
+- ARC uses only live-agent observations and generic cross-game mechanisms. No
+  game source, hand adapter, offline ground-truth BFS, registry trajectory, or
+  public-level solve credit is allowed.
 
-## Phase A — evidence boundary and discriminative exact-atom acquisition
+## Reservation and majority accounting
 
-### Exp5961 — terminal transition into `.528`
+| Class | Tasks | Count |
+|---|---|---:|
+| Infrastructure reservation | Exp6100 transition, Exp6113 capstone | 2 |
+| SOTA ingestion reservation | Exp6101 dated evidence refresh | 1 |
+| Attached-board continuity | Exp6109 KV260, Exp6110 PolarFire, Exp6111 GateMate | 3 |
+| ARC generalization floor | Exp6112 cross-game primitive/gotcha task | 1 |
+| Discretionary Phase D | Exp6103-Exp6107 | 5 |
+| Other discretionary research | Exp6102 semantic corpus recovery, Exp6108 continuous self-learning | 2 |
+| **Total** | Exp6100-Exp6113 | **14** |
 
-Archive exactly the six activated `.527` identities and their terminal classes,
-append the milestone at most once, and prove Exp5961-Exp5973 collision-free.
-Inherited repository debt is preserved by identity and may not be amplified.
+After the fixed reservations and one ARC floor are removed, seven discretionary
+slots remain. Five of seven are Phase D, so Phase D holds the required majority.
 
-**Deliverable:** `results/experiment_5961_transition_v528.json`
+## Phase A — exact boundary, source delta, and research prerequisites
 
-### Exp5962 — post-V528 source-delta ingestion
+### Exp6100 — exact transition into `.529`
 
-Search only after the exact V528 reference marker. Zero accepted findings is a
-valid terminal result. The task may append references but may not rewrite
-activated identities, gates, exclusions, or protected files.
+Archive exactly the 13 activated `.528` task identities and their declared
+deliverables. Preserve Exp5961 as a missing declared artifact after three
+wall-clock failures; preserve the Exp5964 block and Exp5965/5966 conductor gate
+blocks; append `.528` at most once; prove Exp6100-Exp6113 collision-free.
 
-**Deliverable:** `results/experiment_5962_v528_source_delta_ingestion.json`
+**Deliverable:** `results/experiment_6100_transition_v529.json`
 
-### Exp5963 — hardness-controlled context/atom pair fixture
+### Exp6101 — post-V529 source-delta ingestion
 
-Extend the ready Exp5868/Exp5879 hardness fixture into a candidate-pair
-benchmark. Freeze legal atom enumeration, hard negatives, family-held splits,
-proof-preserving relabels, paraphrases, claim flips, norm/length controls,
-label permutations, and sealed reference labels before any model load.
+Search only after the exact `V529-PLANNER-REFRESH-20260804-END` marker. Recheck
+arXiv, OpenReview, Hugging Face Papers, Semantic Scholar citation trails,
+GitHub, Extropic, and Kona. Zero accepted findings is a valid terminal result.
 
-**Deliverable:** `results/experiment_5963_exact_atom_pair_fixture.json`
+**Deliverable:** `results/experiment_6101_v529_source_delta_ingestion.json`
 
-### Exp5964 — gated all-three-model GGUF compatibility corpus
+### Exp6102 — all-family exact-atom corpus VRAM recovery
 
-For every required SOTA family, extract output-free final-token embeddings for
-the sealed context/candidate pairs. Standardize within model and fold; never
-concatenate raw family dimensions. Qualification requires non-degenerate
-positive controls and failure of norm-only, length-only, label-permutation, and
-raw-model-identity shortcuts.
+Resume Exp5964's sealed rows with all three mandated GGUF families. Load one
+family at a time, checkpoint before and after each phase, evict only task-owned
+processes, verify CUDA release, and preserve raw/standardized feature separation.
+No ranker training occurs. A repeated `insufficient_free_vram` verdict retires
+this recovery shape.
 
-**Deliverable:** `results/experiment_5964_sota_atom_compatibility_corpus.json`
+**Deliverable:** `results/experiment_6102_sota_atom_corpus_vram_recovery.json`
 
-### Exp5965 — gated portable compatibility-energy ranker
+### Exp6103 — Phase-D difficulty-ladder fixture
 
-Train and evaluate simple preregistered compatibility energies on cached
-representations with family/group-held splits and at least five seeds. Compare
-linear, RBF/HSIC-inspired, cosine, TF-IDF, character n-gram, norm-only,
-length-only, and permutation controls. The headline is held atom ranking and
-calibration, not generic hallucination detection.
+Build a sealed, exact-label, low-chance difficulty ladder from harder parameter
+draws of the Exp5785/Exp5786 families. Separate solver conflicts, surface form,
+answer-space floor, semantic family, and exact method-validity labels. Freeze
+calibration/test instances before model inference.
 
-**Deliverable:** `results/experiment_5965_portable_atom_energy_ranker.json`
+**Deliverable:** `results/experiment_6103_phase_d_difficulty_ladder_fixture.json`
 
-### Exp5966 — gated end-to-end discriminative exact acquisition
+## Phase B — Phase-D candidate headroom and internal-state verifier moat
 
-Use deterministic atom enumeration plus the qualified energy to recover
-multi-atom exact sets. Compare against frozen Exp5936 and structural baselines
-without generating a new IR. Require exact-set success, omitted/spurious atom
-counts, Python/Z3 parity, held-family intervals, abstention, and unsafe-accept
-zero.
+### Exp6104 — gated authentic same-model candidate pool
 
-**Deliverable:** `results/experiment_5966_discriminative_constraint_acquisition.json`
+Use `unsloth/gemma-4-26B-A4B-it-GGUF`, at least eight independent temperature
+samples, and an explicit `max_new_tokens >= 512` budget. Calibrate difficulty on
+the sealed calibration split, then collect at least 360 held test questions.
+Persist raw natural reasoning and final answers without JSON grammar, finite-ID
+transport, parser retry, or deterministic candidate templates.
 
-## Phase B — delayed-commit continuous self-learning
+**Deliverable:** `results/experiment_6104_phase_d_same_model_candidate_pool.json`
 
-### Exp5967 — delayed-commit transaction fixture
+### Exp6105 — gated clustered headroom and authenticity audit
 
-Extend Exp5924 and Exp5926 with a frozen read snapshot, versioned proposal,
-post-event commit, quarantine, and rollback semantics. Compare replay traces for
-same-event write-through and delayed commit without using model outputs or eval
-labels as authority.
+Audit the candidate pool at the question unit. Qualification requires effective
+`K >= 7.5`, parseability at least 95%, per-candidate accuracy in `[0.40, 0.70]`,
+a question-clustered lower interval above the enumerated floor, all-wrong rate
+at most `0.10` (36/360), and `oracle@K - tuned_SC >= 0.10` with a clustered
+lower interval above zero. Report `1-(1-p)^K` only as a diagnostic. Detect file-
+order ties, templating, decorative model identities, and answer-first shortcuts.
 
-**Deliverable:** `results/experiment_5967_delayed_commit_memory_fixture.json`
+**Deliverable:** `results/experiment_6105_phase_d_clustered_headroom_audit.json`
 
-### Exp5968 — gated prospective continuous self-learning A/B
+### Exp6106 — gated matching-base per-layer surface qualification
 
-Run a chronological five-seed comparison over exact events: delayed commit,
-write-through, fixed validated memory, shuffled retrieval, and no memory.
-Promotion uses only future semantic-neighborhood utility and protected-prefix
-retention. Report prequential performance and learning speed; no same-event
-credit is allowed.
+Only after headroom exists, resolve `google/gemma-4-26B-A4B-it` from the GGUF
+card, pin its revision, and establish `output_hidden_states=True` under a
+declared precision/device map. Teacher-force the immutable Exp6104 prompts and
+candidates and cache layerwise answer-token/prefix summaries. The artifact must
+distinguish base weights from the GGUF generator and block if per-layer access,
+token alignment, or resource preconditions fail.
 
-**Deliverable:** `results/experiment_5968_delayed_commit_csl_prospective.json`
+**Deliverable:** `results/experiment_6106_phase_d_per_layer_surface.json`
 
-### Exp5969 — gated poison, drift, retention, rollback, and ABI audit
+### Exp6107 — gated internal-state selector against tuned SC
 
-Attack the selected policy with bounded poison bursts, repeated conflicts,
-distribution shifts, crash/restart, ledger tampering, and Python/Rust/PyO3
-replay. A promotion requires zero unsafe accepts and exact rollback/retention.
+Train simple preregistered probes on cached per-layer features with question-
+grouped train/calibration/test splits. Compare against tuned SC, a cheap
+text-statistical baseline, final-layer-only control, shuffled labels, norm and
+length controls, and an oracle-peeking positive control. Report paired McNemar
+intervals and the identically-wrong-consensus stratum (`n >= 30`). Promotion
+requires a positive paired lower interval, no shuffled-label reproduction, and
+no cheap-baseline match.
 
-**Deliverable:** `results/experiment_5969_csl_poison_drift_abi_audit.json`
+**Deliverable:** `results/experiment_6107_phase_d_hidden_state_selector.json`
 
-## Phase C — ARC convention and shared-budget generalization
+## Phase C — continuous learning, board continuity, and one live ARC floor
 
-### Exp5970 — strip-swap sentinel
+### Exp6108 — reduced-order utility continuous self-learning
 
-Implement row and column strip swaps that move an edge bar beyond the HUD
-tolerance while preserving the rest of the grid. Static-dose and behavioral
-sentinels must show that the target predicate changes without destroying the
-anchor support before a full battery is allowed.
+Add fixed-dimensional task/polarity/dynamics utility coordinates to the ready
+transactional store. Compare reduced-order write-through with the `.528`
+write-through winner, delayed commit, fixed memory, shuffled retrieval, and no
+memory on five chronological seeds. Credit only future-event exact utility;
+preserve poison, retention, rollback, state-cap, and ABI controls.
 
-**Deliverable:** `results/experiment_5970_arc_strip_swap_sentinel.json`
+**Deliverable:** `results/experiment_6108_reduced_order_utility_csl.json`
 
-### Exp5971 — gated full strip-swap convention battery
+### Exp6109 — KV260 terminal latency/correctness receipt
 
-Run the preregistered 25-game × 4-arm × 5-seed battery through the live
-adapter-free E3 policy. Analyze on the game unit, require anchor survival, and
-refuse a HUD verdict when support is empty or statistically incapable of the
-declared claim. Do not change shipped flags or the solve registry.
+Use SSH only. Without flashing or touching host block devices, run a bounded,
+hash-pinned workload through the currently loaded Carnot Ising overlay and
+record synthesis identity, UIO result hash, same-schedule CPU equivalence, and
+board latency. This is a POC terminal receipt, not a general Boltzmann,
+production, energy, or speedup claim.
 
-**Deliverable:** `results/experiment_5971_arc_strip_swap_battery.json`
+**Deliverable:** `results/experiment_6109_kv260_terminal_receipt_v529.json`
 
-### Exp5972 — LLM-on budget-2000 feasibility
+### Exp6110 — PolarFire hash-matched terminal dispatch
 
-Use a mandated flagship local GGUF on the seven named budget-gain games plus a
-healthy rerun of the unmatched `lp85` positive-control cell. Measure true
-per-game and projected 25-game wall clock under the shared 12-hour budget.
-Level outcomes are scheduling measurements only, with
-`solve_provenance=live_agent_self_discovery`; no public solve is credited.
+Use the reachable Linux board and the existing dispatch harness to run one
+bounded Carnot workload under the passive-cooling ceiling. Require local/input/
+board/output hashes, temperature/duration receipts, and exact result agreement.
+No flash write or speedup inference is allowed.
 
-**Deliverable:** `results/experiment_5972_arc_llm_on_budget2000_feasibility.json`
+**Deliverable:** `results/experiment_6110_polarfire_terminal_dispatch_v529.json`
+
+### Exp6111 — GateMate changed-physical-state gate
+
+Hash the last DirtyJTAG/cable state and require a new dated operator physical-
+setup receipt before one detect attempt. If unchanged, do not repeat JTAG;
+emit the exact cable/port/power action packet. If changed and the GM1Ax IDCODE
+appears, run the already-built non-destructive smoke path; flashing still
+requires explicit authorization.
+
+**Deliverable:** `results/experiment_6111_gatemate_physical_gate_v529.json`
+
+### Exp6112 — live ARC cross-game gotcha primitive hardening
+
+Mine agent-owned observation/action tapes for one generic cross-game gotcha
+supported by at least three development games, encode it as a game-ID-free
+`arc_solver_kit.py` primitive, and run leave-one-game-out live-path A/B on a
+held game set. This task must not invoke the closed induction line or claim a
+public level solve. Any incidental level outcome records
+`solve_provenance: live_agent_self_discovery` and remains non-headline.
+
+**Deliverable:** `results/experiment_6112_arc_cross_game_gotcha_primitives.json`
 
 ## Phase D — exact reconciliation
 
-### Exp5973 — branch-independent capstone
+### Exp6113 — branch-independent capstone
 
-Resolve all 12 upstream tasks strictly by declared `(task_id, deliverable)`
-identity. Preserve ready, positive, null, retired, blocked-precondition,
-gate-blocked, underpowered, missing, and adversarial-flagged classes
-independently. Reconcile internal specs and ops docs without converting a
-successful branch into proof for another.
+Resolve all 13 upstream tasks by declared `(task_id, deliverable)` identity.
+Preserve ready, positive, null, blocked-precondition, gate-blocked, retired,
+underpowered, missing, and adversarial-flagged classes independently. Reconcile
+specs, traceability, status, and changelog without converting a successful
+branch into evidence for another.
 
-**Deliverable:** `results/experiment_5973_v528_capstone_reconciliation.json`
+**Deliverable:** `results/experiment_6113_v529_capstone_reconciliation.json`
 
 ## Dependency graph
 
 ```text
-Exp5961 transition ───────────────────────────────────────────────┐
-Exp5962 source delta ─────────────────────────────────────────────┤
-Exp5963 exact atom-pair fixture                                  │
-  └─[pair_fixture_ready_score == 1]─> Exp5964 GGUF corpus        │
-       └─[atom_compatibility_corpus_ready_score == 1]─> Exp5965  │
-            └─[portable_atom_energy_ready_score == 1]─> Exp5966  │
-                                                                 ├─> Exp5973
-Exp5924 + Exp5926 ─> Exp5967 delayed-commit fixture              │
-  └─[delayed_commit_fixture_ready_score == 1]─> Exp5968 CSL      │
-       └─[prospective_csl_ready_score == 1]─> Exp5969 audit      │
-                                                                 │
-Exp5970 strip-swap sentinel                                      │
-  └─[strip_swap_sentinel_ready_score == 1]─> Exp5971 battery     │
-Exp5972 budget-2000 feasibility ─────────────────────────────────┘
+Exp6100 transition ─────────────────────────────────────────────────┐
+Exp6101 source delta ───────────────────────────────────────────────┤
+Exp6102 exact-atom corpus recovery ─────────────────────────────────┤
+                                                                   │
+Exp6103 Phase-D difficulty ladder                                  │
+  └─[phase_d_ladder_fixture_ready_score == 1]─> Exp6104 pool        │
+       └─[candidate_pool_integrity_score == 1]─> Exp6105 audit      │
+            └─[phase_d_headroom_ready_score == 1]─> Exp6106 layers │
+                 └─[per_layer_surface_ready_score == 1 AND          ├─> Exp6113
+                    phase_d_headroom_ready_score == 1]─> Exp6107    │
+                                                                   │
+Exp5968 + Exp5969 ─> Exp6108 reduced-order CSL ────────────────────┤
+Exp6109 KV260 terminal receipt ─────────────────────────────────────┤
+Exp6110 PolarFire terminal dispatch ────────────────────────────────┤
+Exp6111 GateMate physical gate ─────────────────────────────────────┤
+Exp6092 + Exp6093 + Exp6094 ─> Exp6112 ARC generic primitive ──────┘
 ```
 
-The capstone is intentionally ungated. It must reconcile blocked and retired
-branches exactly rather than disappear behind their gates.
+The capstone is intentionally ungated. It must reconcile blocked, skipped, and
+null branches instead of disappearing behind their gates.
 
 ## Model policy
 
-Every task that invokes an LLM must include at least one mandated local model
-in `MODEL_SPECS`. The milestone uses:
+Every LLM-using task carries a literal `MODEL_SPECS` receipt containing at
+least one mandated local GGUF family:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF` — flagship MoE
 - `unsloth/gemma-4-31B-it-GGUF` — flagship dense
 - `unsloth/gemma-4-26B-A4B-it-GGUF` — middle MoE
 
-Exp5964 uses all three via the public llama.cpp GGUF CUDA path and embedded
-tokenizers. Exp5972 uses the flagship Qwen MoE unless its precondition fails,
-in which case the task blocks rather than substitutes a legacy model. Legacy
-Qwen3.5-0.8B or gemma-4-E4B-it may be used only for CPU smoke tests and never
-for headline metrics. No task applies `AutoTokenizer` to a GGUF repository.
+Exp6102 uses all three. Exp6104 uses the 26B-A4B model because it is the only
+mandated family already measured both competent and reliable on the closest
+constraint stream. Exp6106 records that same GGUF as immutable generation
+provenance and uses its card-declared base repository
+`google/gemma-4-26B-A4B-it` solely for per-layer extraction. Base and GGUF
+precision/token alignment are reported separately.
 
-All experiment tasks use `agent_type: codex` and `model: gpt-5.5` under the
-repository's standing Codex-default rule.
+Legacy `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` are permitted only for
+CPU smoke tests. They may not populate headline rows, replace a missing SOTA
+model, satisfy a readiness gate, or provide Phase-D results. A missing mandated
+model blocks the task. GGUF repositories use embedded llama.cpp tokenizers;
+`AutoTokenizer` is never pointed at a `-GGUF` repository.
 
 ## Failed-experiment and retirement discipline
 
-- Exp5964 declares Exp5853, Exp5200, and Exp5213. It changes the task from
-  final-answer/MMLU probing and cross-model raw dimensions to within-model
-  context/atom compatibility on an exact held fixture with shortcut controls.
-- Exp5965 declares the gate-blocked Exp5854 portable-energy attempt and can run
-  only after the replacement corpus passes integrity.
-- Exp5966 declares Exp5909, Exp5923, and Exp5936. It changes the acquisition
-  technique from generated IR/support to deterministic enumeration plus
-  discriminative ranking.
-- Exp5967-Exp5969 declare the blocked/null transactional CSL lineage and use
-  ready Exp5920/Exp5924/Exp5926 prerequisites plus delayed commit.
-- Every declaration includes `retire_if_same_verdict: true`. No task depends on
-  a retired experiment ID and no retired ID is reused.
+- Exp6102 declares Exp5964's exact `blocked: insufficient_free_vram` verdict.
+  The difference is sequential loading, task-owned process leases, phase timing,
+  explicit eviction, and checkpoint/resume. The same verdict retires this shape.
+- Exp6104 declares Exp5786. The prior corpus had only one sample per model,
+  order-determined SC, a dead Qwen arm, and only four selectable questions. The
+  replacement uses one reliable model, `K>=8`, a non-truncating token budget,
+  harder sealed instances, and no file-order baseline.
+- Exp6106 and Exp6107 declare both Exp899 and Exp5178. Exp899 compressed state
+  to three engineered drift features and scored chance; Exp5178 used six
+  questions, final-token-only vectors, and scored hidden `0.000` versus tuned
+  SC `0.333` (`delta=-0.333`). `.529` requires genuine per-layer access, a
+  qualified domain, grouped splits, and falsifiable controls.
+- Exp6108 declares Exp5895. It does not requalify the retired exact slot; it
+  changes the mechanism to reduced-order utility credit on the ready `.528`
+  stream and explicitly retains the write-through winner.
+- Exp6109-Exp6111 are standing hardware-continuity continuations. Each carries
+  the 2026-05-29 operator override plus the latest cached board-state prior and
+  a concrete forward difference.
+- Exp6112 declares the Exp6091 induction block but does not rerun induction. It
+  mines cross-game live observations and hardens a generic primitive, one of the
+  explicitly allowed ARC-floor task classes.
+- Every genuine rerun declaration includes `retire_if_same_verdict: true`. No
+  task requires a retired upstream experiment and no retired ID is reused.
 
 ## ARC provenance and non-duplication
 
-Exp5970 and Exp5971 measure convention transfer and do not claim a level solve.
-Exp5972 records `solve_provenance: live_agent_self_discovery` because level
-outcomes can occur during the timing run, but the artifact must state that they
-are not new solve credit. All ARC tasks must:
+Exp6112 is the only ARC task. It must precheck `ops/arc_solve_registry.yaml` and
+keep it byte-identical. The task uses `make_carnot_agent` / `E3AgentPolicy` and
+may read only agent-owned observations, action outcomes, and runtime reverse-
+engineering state. It may not read game source, instantiate a hand `GameAdapter`,
+run offline ground-truth BFS, create per-game calibration/model tables, reuse
+registry trajectories, or use hidden-game identity as a feature.
 
-- precheck `ops/arc_solve_registry.yaml`;
-- keep the registry byte-identical;
-- use `make_carnot_agent` / `E3AgentPolicy`;
-- disable game source, hand `GameAdapter`, offline ground-truth BFS,
-  per-game calibration/model, registry trajectories, and hidden-game prior;
-- report accuracy and efficiency on the live reachable path.
+The task does not target a level solve. Its required artifact still includes
+`solve_provenance`, fixed to `live_agent_self_discovery` for any incidental
+level outcome. `development_proxy` and `outer_loop_re` cannot be headline.
 
 ## Hardware requirements
 
-| Resource | Use | Requirement |
+| Resource | Tasks | Requirement and claim boundary |
 |---|---|---|
-| Dual RTX 3090 | Exp5964 all-family embeddings; Exp5972 flagship live policy | Preflight cached GGUF hashes, CUDA offload, per-device VRAM, thermal headroom, disk, and process cleanup before model load |
-| CPU/RAM | Exact atom enumeration, Python/Z3 replay, CSL, ARC no-LLM cells | Sufficient for sealed datasets and deterministic replays; no synthetic speed claim |
-| Rust/PyO3 | Exp5967/Exp5969 adaptive-state parity | Reuse ABI v2; fixed-width operations and exact ledger hashes |
-| KV260, GateMate, PolarFire | No execution task | Current routes have no changed authenticated workload path; architecture mapping only |
-| Extropic XTR-0/Z1 | No execution task | No authenticated local access; simulation or vendor claims are not hardware evidence |
+| Dual RTX 3090, 2x24 GB | Exp6102, Exp6104, Exp6106 | Preflight cached model hashes, per-device free VRAM, thermals, disk, llama.cpp/transformers versions, task-owned PID leases, and cleanup. Sequential loading is mandatory; no unrelated process may be killed. |
+| Host RAM and disk | Exp6104, Exp6106 | At least 90 GiB available RAM/swap and 120 GiB free disk before base-model download/offload; atomic checkpoints and compressed hidden-state shards. |
+| CPU/Z3/Rust/PyO3 | Exp6103, Exp6105, Exp6107, Exp6108 | Exact labels, clustered statistics, transactional replay, and fixed-width ABI; no synthetic timing or oracle substitution. |
+| KV260 | Exp6109 | SSH `kria`, existing XDC-constrained Carnot overlay, board-local UIO only. Never inspect host `/dev/mmcblk*`; no flash write. |
+| PolarFire SoC | Exp6110 | SSH `polarfire`, bounded `/tmp` dispatch, passive-cooling limit `<=300s` and `<70C`; no flash or storage mutation outside the task sandbox. |
+| GateMate A1-EVB-2M | Exp6111 | DirtyJTAG physical state. No repeated detect until a changed physical receipt; no flash without explicit authorization. |
+| Extropic XTR-0/Z1 | No execution task | Official page still advertises 2026 early access, but Carnot has no authenticated route. Marketing/simulation is not board evidence. |
 
-Every compute task has a step-zero precondition and must emit an honest
-`blocked:` artifact when required hardware, model files, runtime features, or
-time budgets are absent. No mock model, fake row, sleep substitute, CPU
-headline fallback, or claimed board receipt is permitted.
+Every compute task has a step-zero precondition and emits an honest blocked
+artifact when required hardware, model files, runtime features, or time budgets
+are absent. No mock model, fake row, sleep substitute, CPU headline fallback,
+or inferred board receipt is permitted.
 
 ## Milestone success criteria
 
-The milestone is successful if it produces exact evidence for all branches,
-including honest nulls and blocks. Scientific promotion requires:
+The milestone is operationally complete when every task has an exact terminal
+class, including honest blocks. Scientific promotion requires:
 
-1. The discriminative atom path survives shortcut controls and achieves
-   family-held exact-set recovery above frozen baselines with unsafe acceptance
-   equal to zero.
-2. The delayed-commit learner improves prospective utility or learning speed
-   without protected-prefix regression, poison propagation, or rollback/ABI
-   divergence.
-3. The strip-swap battery either identifies convention dependence with live
-   anchor support or honestly proves the transform cannot decide it.
-4. The budget task produces a measured 25-game wall-clock projection and no
-   flag recommendation unsupported by shared-budget evidence.
-5. Exp5973 preserves every terminal class and all protected files, with fresh
-   adversarial-verifier receipts and no outcome laundering.
-
-## Non-goals
-
-- No generated ConstraintIR, schema reprompt, atomic union, parser retry,
-  finite-ID answer transport, or external generated-text/logprob scorer retry.
-- No KAN adaptive-kernel revival.
-- No public ARC level re-solve, offline source/BFS solve, per-game adapter,
-  registry update, or operator flag flip.
-- No new FPGA bitstream, unchanged board probe, TSU execution, or hardware
-  speedup claim.
-- No model-weight update; continuous learning is versioned external state.
-- No modification of `research-roadmap.yaml` or
-  `scripts/research_conductor.py`, and no push.
+1. Exp6105 qualifies an authentic pool under all preregistered competence,
+   diversity, numerical all-wrong, headroom, clustered-power, and shortcut
+   controls. Otherwise Exp6106/6107 skip before expensive or unfalsifiable work.
+2. Exp6106 proves a real matching-base per-layer extraction surface and Exp6107
+   either beats tuned SC with paired evidence that survives all controls or
+   honestly retires the selector shape.
+3. Exp6102 completes all three exact-atom representation families without
+   fabricating rows or evicting unrelated GPU work; a repeated VRAM block is
+   recorded as terminal rather than cascaded into another ranker attempt.
+4. Exp6108 improves prospective exact-event utility or feedback density over
+   `.528`'s winning write-through arm without unsafe acceptance, contamination,
+   retention loss, rollback failure, or ABI divergence.
+5. Each attached board produces a fresh exact state/terminal receipt within its
+   authorization boundary, and Exp6112 improves or falsifies one game-ID-free
+   live primitive without solve duplication.
+6. Exp6113 preserves every terminal class, protected file, and adversarial
+   determination and reconciles the specs and operations ledgers without
+   outcome laundering.
