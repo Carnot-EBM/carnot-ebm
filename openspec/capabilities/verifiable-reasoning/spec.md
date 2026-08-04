@@ -20862,3 +20862,127 @@ protected retired-scope paths.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6114 | Planned (`python/carnot/experiment_6114_phase_d_gpu_ladder_canary.py`, `results/experiment_6114_phase_d_gpu_ladder_canary.json`) | Planned (`tests/python/test_experiment_6114_phase_d_gpu_ladder_canary.py`) |
+
+### REQ-VERIFY-6115: Phase D Calibration Pool From Sealed Ladder
+
+The repository SHALL provide Exp 6115 at
+`python/carnot/experiment_6115_phase_d_calibration_pool.py` and write
+`results/experiment_6115_phase_d_calibration_pool.json`, with raw candidate
+rows in `results/experiment_6115_phase_d_calibration_pool.rows.jsonl`. Exp
+6115 SHALL run only after Exp 6114 reports readiness exactly 1.0; no model call
+may occur when that structured gate is false.
+
+Exp 6115 SHALL use only Exp 6103 calibration rows to choose one fixed Phase D
+difficulty stratum and decode policy. It SHALL preregister at least three
+difficulty strata and a bounded nonzero-temperature decode grid before
+generation, sample at least 30 independent calibration questions per family
+and at least 90 questions total, keep semantic siblings within calibration
+folds, and keep `held_test_access_count` at zero. It SHALL use exactly
+`unsloth/gemma-4-26B-A4B-it-GGUF`, the cached Q4_K_M file, and the embedded
+GGUF tokenizer recorded by Exp 6114.
+
+For every selected calibration question, Exp 6115 SHALL collect at least eight
+independent natural-reasoning samples with recorded seeds and
+`max_new_tokens >= 512`. It SHALL NOT use JSON grammar, finite-ID transport,
+hidden-label retries, deterministic answer builders, model-authored confidence,
+tiny-model headline substitution, or held-test labels. Parser failure SHALL be
+recorded as a measured failure rather than a retry trigger.
+
+The workflow SHALL freeze a surface parser before replay, then measure exact
+correctness and method-validity labels through independent Python and Z3
+authorities while keeping model accuracy and solver-conflict covariates
+separate. It SHALL report per-candidate accuracy with interval, parseability,
+method-validity, duplicate rate, effective K, answer-cluster entropy,
+all-wrong rate, oracle@K, tuned self-consistency, solver conflict strata,
+relabel/paraphrase/shortcut controls, tokens, latency, CUDA/VRAM/thermal/PID
+receipts, and energy telemetry where available.
+
+The selected fixed stratum/decode policy SHALL be chosen from calibration
+evidence only. Readiness requires per-candidate accuracy in `[0.40, 0.70]`,
+parseability at least `0.95`, effective K at least `7.5`, all-wrong rate no
+greater than `0.10`, authentic generation receipts, zero held access, and clean
+protected-file receipts. If no candidate qualifies, the terminal artifact SHALL
+use a `complete_null:` verdict rather than relaxing held inclusion or decode
+rules.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `immutable_ladder_row_split_and_canary_hashes`,
+`model_specs_and_exact_file_hashes`,
+`embedded_tokenizer_prompt_and_decode_policy_candidates`,
+`calibration_question_family_stratum_and_semantic_group_counts`,
+`raw_candidate_row_paths_hashes_and_prefix_chain`,
+`generation_seeds_tokens_latency_cuda_vram_thermal_and_pid_receipts`,
+`frozen_parser_and_parseability`,
+`python_z3_correctness_and_method_validity_replay`,
+`per_candidate_accuracy_intervals`,
+`duplicate_effective_k_answer_cluster_and_entropy_metrics`,
+`all_wrong_oracle_tuned_sc_and_solver_strata`,
+`relabel_paraphrase_shortcut_controls`, `held_test_access_count`,
+`selected_stratum_and_fixed_decode_policy`,
+`phase_d_calibration_ready_score`, `protected_files_unchanged`,
+`random_seed`, `duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `structured_gate_receipt`: no model call occurs unless Exp6114 readiness equals 1.
+- `immutable_ladder_row_split_and_canary_hashes` and `calibration_question_family_stratum_and_semantic_group_counts`: selection is powered on independent frozen calibration groups.
+- `model_specs_and_exact_file_hashes` and `embedded_tokenizer_prompt_and_decode_policy_candidates`: every row traces to one mandated headline GGUF and preregistered settings.
+- `raw_candidate_row_paths_hashes_and_prefix_chain` and `generation_seeds_tokens_latency_cuda_vram_thermal_and_pid_receipts`: authentic draws and compute remain auditable.
+- `frozen_parser_and_parseability` and `python_z3_correctness_and_method_validity_replay`: exact authorities label outcomes and parser failures are not hidden.
+- `duplicate_effective_k_answer_cluster_and_entropy_metrics`: nominal K is not credited when exploration collapses.
+- `held_test_access_count` and `selected_stratum_and_fixed_decode_policy`: held access must be zero and the policy freezes before Exp6116.
+- `phase_d_calibration_ready_score`: readiness requires all calibration, authenticity, competence, diversity, secrecy, and cleanup gates.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report measured `live_local_sota_gguf_cuda_generation_plus_exact_validation`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: Python/Z3 are oracle; tuned SC and model traces are not.
+- `honest_verdict`: use `complete_ready:`, `complete_null:`, `complete_partial:`, or `blocked:`.
+
+### SCENARIO-VERIFY-6115-GATE: Exp6114 Readiness Controls Model Calls
+
+**Given** Exp6114 has sealed ladder, model, CUDA engagement, and release
+receipts
+**When** Exp6115 evaluates its structured gate
+**Then** generation starts only when Exp6114 readiness is exactly 1.0 and its
+artifact, Exp6103 row, split, and canary hashes replay; otherwise Exp6115
+writes a blocked artifact and records zero backend calls.
+
+### SCENARIO-VERIFY-6115-CALIBRATION-ONLY: Question Selection Never Uses Held Labels
+
+**Given** Exp6103 contains calibration and held-test rows
+**When** Exp6115 selects the calibration pool
+**Then** at least 30 calibration questions per family and 90 total are selected
+across preregistered difficulty strata, semantic groups remain independent,
+and `held_test_access_count` is zero.
+
+### SCENARIO-VERIFY-6115-NATURAL-K: Natural Candidates Preserve K And Diversity Receipts
+
+**Given** the mandated 26B Q4_K_M GGUF and embedded tokenizer are ready
+**When** Exp6115 decodes selected calibration prompts
+**Then** every question receives at least eight nonzero-temperature natural
+reasoning samples with independent recorded seeds, no JSON grammar, no finite
+ID transport, no hidden-label retries, and raw rows sealed by a prefix chain.
+
+### SCENARIO-VERIFY-6115-REPLAY: Parser Failures And Exact Labels Are Auditable
+
+**Given** raw natural candidate rows and sealed Exp6103 authorities
+**When** Exp6115 replays the frozen parser, Python authority, and Z3 authority
+**Then** parse failures count as candidate failures, exact correctness and
+method validity are replayed without solver-conflict leakage, and per-candidate
+accuracy, parseability, method-validity, duplicate/effective-K, entropy,
+all-wrong, oracle@K, tuned-SC, and solver-stratum metrics are reported.
+
+### SCENARIO-VERIFY-6115-POLICY: Fixed Policy Freezes Before Held Evaluation
+
+**Given** calibration-only metrics across preregistered strata and decode
+policies
+**When** Exp6115 selects a Phase D policy
+**Then** the selected stratum and decode policy satisfy the competence,
+parseability, effective-K, all-wrong, authenticity, and secrecy gates, or the
+artifact terminates with `complete_null:` without changing held inclusion.
+
+## Implementation Status (REQ-VERIFY-6115)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6115 | Planned (`python/carnot/experiment_6115_phase_d_calibration_pool.py`, `results/experiment_6115_phase_d_calibration_pool.json`) | Planned (`tests/python/test_experiment_6115_phase_d_calibration_pool.py`) |
