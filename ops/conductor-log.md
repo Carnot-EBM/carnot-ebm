@@ -15287,3 +15287,4 @@ web search: site:extropic.ai/writing XT |
 | 2026-08-03 22:46 UTC | Gated on Exp5968 ready: poison, drift, rollback, r | OK | 88 passed, 1 warning in 9.39s |
 | 2026-08-03 23:07 UTC | ARC row/column strip-swap convention sentinel | OK | 90 passed, 1 warning in 9.63s |
 | 2026-08-04 05:48 UTC | Gated on Exp5970 ready: full ARC strip-swap conven | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-08-04 06:11 UTC | Gated on Exp5970 ready: full ARC strip-swap conven | OK | 93 passed, 1 warning in 10.18s |
