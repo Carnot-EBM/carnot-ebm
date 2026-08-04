@@ -1292,5 +1292,84 @@
     "scored_path_total_banked_levels_heldout": 4.0,
     "registry_total_levels_for_the_same_25_games": 183
   },
-  "honest_verdict": "complete_adapter_free_devtwin_first_level_acquisition_falls_24of25_to_10of25_sign_p_0.000122_and_only_14of25_at_5x_search_budget_while_on_the_scored_path_identity_removal_is_INERT_0_of_25_games_discordant_72_of_75_action_traces_byte_identical_no_p_reachable_and_the_scored_path_banks_4.0_levels_in_400_actions_against_183_hand_tuned_registry_levels"
+  "honest_verdict": "complete_adapter_free_devtwin_first_level_acquisition_falls_24of25_to_10of25_sign_p_0.000122_and_only_14of25_at_5x_search_budget_while_on_the_scored_path_identity_removal_is_INERT_0_of_25_games_discordant_72_of_75_action_traces_byte_identical_no_p_reachable_and_the_scored_path_banks_4.0_levels_in_400_actions_against_183_hand_tuned_registry_levels",
+  "corrections_2026_08_04": {
+    "provenance": "Adversarial review of exp6093, each correction re-verified independently before being applied. Prior values are PRESERVED beside the corrected ones per the never-prune rule.",
+    "corrections": [
+      {
+        "id": "C1_search_cost_is_a_constant",
+        "severity": "blocking_false_field",
+        "retracted": "dev_twin_arc_loop_solve.per_game[].treatment_search_cost == 6000 as a measurement, and the raw cells' search_cost_unit == 'max_expansions_exhausted' on 15 cells.",
+        "why_wrong": "scripts/experiments/outer_loop_arc_devtwin_adapterfree_cell_20260803.py:166 and :176 write `search_cost: args.max_expansions` in BOTH treatment branches and never pass `stats=` to graph_explore_solve_v2. The value is the BUDGET. All the code knew was `traj is None`; it could not observe exhaustion. The control arm's `states_expanded` was always real, so the per-game table printed a measurement and a constant side by side as if comparable.",
+        "replaced_with": "results/experiment_6094_arc_devtwin_true_search_cost.json -- all 25 treatment cells re-run with stats={}.",
+        "measured": {
+          "of_15_failing_cells_labelled_exhausted_truly_exhausted": 13,
+          "sc25_true_expansions_at_6000_and_at_30000": 24,
+          "sc25_distinct_states": 1,
+          "g50t_true_expansions_at_6000_and_at_30000": 4100,
+          "g50t_distinct_states": 843,
+          "cn04_and_dc22_re_probed_at_30000_truly_exhausted": true
+        },
+        "headline_impact": "none -- 24/25 -> 10/25, the sign test and 14/25 at 5x budget are unaffected."
+      },
+      {
+        "id": "C2_capability_wall_wrong_for_two_games",
+        "severity": "interpretive_retraction",
+        "retracted": "dev_twin_long_budget_probe's 'capability wall, not a budget wall' reading as applied to all 11 still-failing games.",
+        "replaced_with": "9 of 11 genuinely exhausted 6000 and again 30000 expansions -- capability wall, reading stands. sc25 and g50t terminated with budget UNUSED at both budgets, so the 5x probe was VACUOUS for them; their failure is a FRONTIER COLLAPSE under the generic state abstraction, not a search-depth limit. sc25 is extreme: 1 distinct state discovered. exp6093's prose already reached this for sc25 ('frontier exhausted', wall_s 4.92) while publishing the contradictory number, and never applied it to g50t.",
+        "guard_this_violated": "The run's own honesty guard #1 (explored_out audit -- distinguish a frontier collapse from a saving) was applied to the scored path, where 0 cells explored out, and never to the dev twin, which is where the collapse actually happened."
+      },
+      {
+        "id": "C3_dev_twin_sign_test_is_post_hoc_not_pre_registered",
+        "severity": "statistical_provenance",
+        "retracted": "the implication that the p=0.000122 dev-twin sign test was covered by docs/research-notes/arc-heldout-identity-prereg-2026-08-03.md.",
+        "replaced_with": "The pre-registration fixes ONLY the scored-path arms (control_identity_on / heldout_identity_off), their metrics, and their min-reachable-p table (the >=6-discordant threshold). The dev-twin adapter-on vs adapter-free comparison appears nowhere in it; the prereg in fact says the registry reach 'must never be reported as a control'. The dev-twin sign test is therefore POST-HOC / exploratory. Its `min_reachable_p_given_observed_discordance` is computed FROM the observed k=14 and is not a pre-stated bound. The stated MIN REACHABLE p of 5.96e-08 belongs to the scored arm.",
+        "process_note": "The prereg was committed in the SAME commit as the results (e96e16fa62), so its priority rests on file mtime (20:38 vs 21:58), not on git history. Commit a pre-registration separately, before launching, next time."
+      },
+      {
+        "id": "C4_the_dev_twin_drop_bundles_a_search_engine_change",
+        "severity": "attribution_narrowing",
+        "retracted": "attributing the whole 24/25 -> 10/25 drop to 'per-game hand-tuning'.",
+        "replaced_with": "The control (`solve_adaptered`) and the treatment (`solve_via_explore`) differ in THREE things, not one: (a) the adapter's per-game action vocabulary / state_key / warmup / branch_mode; (b) a per-game learned verifier warm start; (c) the search engine itself -- verifier-routed best-first versus blind BFS with no verifier and no heuristic. The comparison is still the right one for the November question, because the adapter-free path IS what a hidden game gets, but the attribution sentence must name all three.",
+        "measured_correction_to_the_reviewers_figure": "The reviewer stated 15 of 25 controls had a learned verifier warm start. 15 per-game checkpoints exist on disk (models/arc_verifier_<game>.json, plus 4 cross_game*), but only 12 of 25 control cells actually loaded one: verifier_src == learned_verifier_live_checkpoint on 12, hand_verifier_cold_start_no_spatial_checkpoint on 13. The on-disk count is not the used count."
+      },
+      {
+        "id": "C5_move_count_parity_is_not_optimality",
+        "severity": "wording",
+        "retracted": "'finds optimal solutions where it finds any' (reported in prose; the word does not appear in this artifact).",
+        "replaced_with": "What was measured is move-count PARITY with the adapter on all 10 games it solves (cd82 5=5, ft09 4=4, lf52 8=8, lp85 5=5, ls20 13=13, r11l 3=3, sp80 4=4, su15 7=7, tu93 18=18, vc33 3=3). The adapter's counts are registry-recorded, not proven optimal.",
+        "and_the_cost_side_now_measured": "Same move count, far more search: the generic explorer needs 95-3544 expansions against the adaptered arm's 3-3970 on those same 10 games -- ratio min 2.2x, median 155x, max 1181x (exp6094). Per-game knowledge buys roughly two orders of magnitude of search efficiency even where it is not necessary for success."
+      },
+      {
+        "id": "C6_hidden_state_game_ids_missing_from_the_channel_enumeration",
+        "severity": "enumeration_completeness",
+        "added": "arc_competition_agent.py:6588 gates an 11-game hardcoded list (arc_world_model_trust_energy.HIDDEN_STATE_GAME_IDS = ar25 cd82 cn04 dc22 g50t ka59 m0r0 re86 sc25 sk48 wa30) onto a different world-model-trust branch keyed on self.short. scored_path_identity_channels named only induce_prompt and the engine store.",
+        "delivered_in_this_run": false,
+        "why_not": "`if not ok or self.root_grid is None: return` at arc_competition_agent.py:6523 short-circuits the entire post-induce block under the LLM-off stub -- which independently corroborates the observed B3_load_engine == 0. It is LIVE in the shipped configuration.",
+        "also_noted": "The CLAIMED banked-solution table (arc_competition_agent.py:119, load_solutions at :620, consumed at :4424/:4428) is CarnotAgentPolicy-only (class at :4372; E3AgentPolicy begins at :4492) and is built solely in the cascade=False branch at :7377. The scored default is cascade=True. Genuinely out of scope -- recorded so it is not later mistaken for an unenumerated leak."
+      },
+      {
+        "id": "C7_headline_units_are_not_comparable",
+        "severity": "presentation",
+        "issue": "headline.scored_path_total_banked_levels_control == 4.0 sits beside headline.registry_total_levels_for_the_same_25_games == 183 with no budget qualifier in either field name, and the pre-registration explicitly forbids reporting the registry number as a control.",
+        "corrected_field_names": {
+          "scored_path_total_banked_levels_control_at_400_action_budget": 4.0,
+          "scored_path_total_banked_levels_heldout_at_400_action_budget": 4.0,
+          "registry_hand_tuned_dev_twin_levels_UNBOUNDED_SEARCH_NOT_A_CONTROL": 183
+        },
+        "note": "Prior field names and values are left in headline unchanged per the never-prune rule; these are the names they should be read under."
+      },
+      {
+        "id": "C8_working_tree_observation_not_attributable_to_this_run",
+        "severity": "observation_only",
+        "observed": "results/experiment_6091_refine_engine_visible_ab.json and results/exp6091_refine_engine_visible_shard.jsonl are modified in the working tree, and openspec/capabilities/agentic-harness/spec.md and tests/python/test_experiment_5971_arc_strip_swap_battery.py are modified/untracked.",
+        "attribution": "A concurrent workflow -- commit 6a6baeec9f ([outer-loop] exp6091 ...) landed after e96e16fa62, and the shard changed again DURING this session's read-only probe runs. Not written by this run.",
+        "action_taken": "none -- per the Test-Run Record Integrity Discipline the reported list is evidence to read, never a list to `git checkout --`. Flagged for the operator; nothing reverted, nothing staged."
+      }
+    ],
+    "reviewer_claims_checked_and_narrowed": [
+      "'15 of 25 controls had a learned verifier warm start' -> MEASURED 12 of 25 loaded one (15 checkpoints on disk).",
+      "'search_cost_unit: max_expansions_exhausted on all 25 per-game rows' -> the unit label lives in the RAW CELLS (15 exhausted / 10 budget); the artifact's per_game carries the constant with NO unit field at all. Narrower and more precise than stated."
+    ]
+  }
 }

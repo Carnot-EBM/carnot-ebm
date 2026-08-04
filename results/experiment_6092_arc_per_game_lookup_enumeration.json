@@ -1,0 +1,728 @@
+{
+ "experiment": 6092,
+ "experiment_id": 6092,
+ "title": "ARC live-path per-game lookup enumeration (adapter-free proxy fidelity audit)",
+ "schema": "carnot.arc_per_game_lookup_enumeration_v1",
+ "run_date": "2026-08-03",
+ "duration_s": 3180.0,
+ "random_seed": 6092,
+ "reproducibility_checksum": "935b955001bc5e0fbdd68f3cd782afb531363f2c3af0b4c10880a0825583875b",
+ "inference_substrate": "aggregation_from_upstream_artifacts",
+ "inference_substrate_note": "Static import-closure analysis (ast) over the two canonical live entrypoints, plus a CPU-only construction-time delivery probe that instruments the CALLEES and reads the caller off the stack. No LLM was loaded, no GPU was touched, no game was played, no scored/online run occurred. GGUF strings elsewhere in the repo are not a live-inference claim here.",
+ "solve_provenance": "development_proxy",
+ "solve_provenance_note": "This is a code-audit of a live mechanism plus a construction-only differential probe. No hidden game was played and no level was solved, so this is neither live_agent_self_discovery nor a solve claim of any kind.",
+ "honest_verdict": "complete_enumerated_23_per_game_lookup_sites_7_delivered_at_construction_on_scored_path_not_all_disableable",
+ "preconditions_checked": [
+  {
+   "resource": "repo_worktree",
+   "available": true
+  },
+  {
+   "resource": "venv_python",
+   "available": true
+  },
+  {
+   "resource": "ops/arc_solve_registry.yaml",
+   "available": true
+  },
+  {
+   "resource": "results/arc3_win_condition_survey.json",
+   "available": true
+  },
+  {
+   "resource": "gpu",
+   "available": false,
+   "note": "deliberately not used; GPU 1 is owned by a concurrent workflow and was not touched"
+  },
+  {
+   "resource": "llm_generator",
+   "available": false,
+   "note": "not required; construction-time probe only"
+  }
+ ],
+ "method": {
+  "closure": "ast walk of absolute, relative and function-level imports from each canonical live entrypoint, mirroring scripts/arc_orphan_solver_lint.py's closure rule",
+  "entrypoints": [
+   "python/carnot/agentic/arc_competition_agent.py (make_carnot_agent -> E3AgentPolicy; the SCORED path)",
+   "scripts/arc_loop_solve.py (OfflineSolver + GameAdapter; the offline DEV TWIN)"
+  ],
+  "closure_sizes": {
+   "scored_E3_only": {
+    "files": 55,
+    "agentic_files": 55
+   },
+   "arc_loop_solve_only": {
+    "files": 129,
+    "agentic_files": 69
+   },
+   "union": {
+    "files": 129,
+    "agentic_files": 69
+   }
+  },
+  "delivery_probe": "each candidate lookup CALLEE was monkeypatched; E3AgentPolicy was then constructed for a PUBLIC id (sb26) and a synthetic HIDDEN id (zz99hiddengame); the caller was read off the stack. Availability is not delivery -- only sites that fired are reported as delivered.",
+  "probe_n": 2,
+  "probe_n_note": "n=2 game ids is a DELIVERY witness, not a statistical sample. No p-value is claimed anywhere in this artifact because no comparative outcome measurement was run -- this phase is enumeration only, per the task's 'do NOT change behaviour in this phase'."
+ },
+ "headline": {
+  "n_per_game_lookup_sites": 23,
+  "n_delivered_at_construction_on_scored_path": 7,
+  "n_runtime_conditional_on_scored_path": 5,
+  "n_dev_twin_only": 7,
+  "n_present_but_not_delivered": 4,
+  "all_disableable": false,
+  "adapter_is_not_the_only_thing_a_hidden_game_lacks": true,
+  "arc_game_adapters_in_scored_closure": false,
+  "arc_game_adapters_in_scored_closure_note": "VERIFIED independently, not taken from the docstring claim at scripts/arc_loop_solve.py:66-69. arc_game_adapters is absent from the 55-file E3 closure and present in the 129-file arc_loop_solve closure."
+ },
+ "measured_construction_time_differential": {
+  "public_game": "sb26",
+  "synthetic_hidden_game": "zz99hiddengame",
+  "strategy_name": {
+   "public": "color_match_slot_sequence",
+   "hidden": "graph_explore"
+  },
+  "routed_mechanic": {
+   "public": "color_match_slot_sequence",
+   "hidden": "graph_explore"
+  },
+  "uses_goal_distance_heuristic": {
+   "public": false,
+   "hidden": true
+  },
+  "explore_budget": {
+   "public": 24,
+   "hidden": 80
+  },
+  "confident_transfer": {
+   "public": true,
+   "hidden": false
+  },
+  "top_similarity": {
+   "public": 6.0,
+   "hidden": 0.0
+  },
+  "routing_confidence": {
+   "public": 1.0,
+   "hidden": 0.0
+  },
+  "recommended_games": {
+   "public": [
+    "s5i5",
+    "ft09",
+    "vc33"
+   ],
+   "hidden": []
+  },
+  "n_retrieved_primitives": {
+   "public": 5,
+   "hidden": 2
+  },
+  "retrieved_primitive_names_public": [
+   "color_match_slot_sequence_verifier",
+   "config_rule_verifier",
+   "mechanic_config_toggle_marker_coverage",
+   "mechanic_chain_color_reorder",
+   "mechanic_clean_navigation_shape_color_rotation_step_counter"
+  ],
+  "retrieved_primitive_names_hidden": [
+   "mechanic_graph_explore_navigation",
+   "graph_astar_action_cost"
+  ],
+  "n_generic_operators": {
+   "public": 6,
+   "hidden": 18
+  },
+  "rec_error": {
+   "public": null,
+   "hidden": "zz99hiddengame not in survey"
+  },
+  "identical_for_both_NOT_leaks": {
+   "n_cautions": 8,
+   "n_general_gotchas": 30,
+   "note": "Explicitly reported as NON-leaks. With no ranked match the cautions collapse to the general gotchas, which a hidden game also receives. Counting these would inflate the leak set."
+  }
+ },
+ "leak_sites": [
+  {
+   "id": "A1",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "survey-feature membership gate (warm vs cold routing)",
+   "lookup_site": "python/carnot/agentic/arc_solve_learning.py:739",
+   "store": "results/arc3_win_condition_survey.json (loaded at arc_solve_learning.py:36 and :81-85)",
+   "call_chain": "arc_competition_agent.py:4629 -> :762 -> arc_solve_learning.py:729/739",
+   "returns": "per-game {action_type, spatial, difficulty, win_kw}; 25 public games present",
+   "hidden_game_gets": "KeyError-free miss -> the cold branch (arc_solve_learning.py:751-768), error='<game> not in survey', confident_transfer=False, no ranked recipes",
+   "delivered": true,
+   "delivery_evidence": "probe hit, caller arc_competition_agent.py:4629",
+   "disableable": true,
+   "disable_mechanism": "alias the game id at the E3AgentPolicy boundary (proved: constructing with a synthetic id reproduces the hidden-game profile exactly)"
+  },
+  {
+   "id": "A2",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "registry mechanic_class read (strategy class)",
+   "lookup_site": "python/carnot/agentic/arc_strategy_router.py:181-183",
+   "store": "ops/arc_solve_registry.yaml (path constant arc_strategy_router.py:50)",
+   "call_chain": "arc_competition_agent.py:4629 -> :762 -> arc_solve_learning.py:731 -> arc_strategy_router.py:214 -> :181",
+   "returns": "the solve-derived mechanic_class recorded for the NAMED game",
+   "measured_resolution": {
+    "non_default": {
+     "tn36": "program_editor",
+     "sb26": "color_match_slot_sequence"
+    },
+    "default_graph_explore": 23,
+    "of_total": 25
+   },
+   "hidden_game_gets": "DEFAULT_MECHANIC='graph_explore' (arc_strategy_router.py:185)",
+   "delivered": true,
+   "delivery_evidence": "probe hit, args ('sb26',) -> 'color_match_slot_sequence'",
+   "disableable": true,
+   "disable_mechanism": "alias the game id, or pass reg={'games': []}"
+  },
+  {
+   "id": "A3",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "registry game_digest -- the game's OWN solved recipe becomes the retrieval query",
+   "lookup_site": "python/carnot/agentic/arc_solve_learning.py:775 -> python/carnot/agentic/arc_primitive_library.py:402-412",
+   "store": "ops/arc_solve_registry.yaml",
+   "returns": "{game, mechanic_class, win_condition, action_model, solver, world_model, registry_text} for the TARGET game -- i.e. the hand-written win condition prose",
+   "measured_public_return_excerpt": "sb26 -> win_condition: 'L1 flat ordered color-to-slot match plus L2 nested-frame color-match sequence: root frame consumes colors 12 and 15, ...'",
+   "hidden_game_gets": "never reached -- the cold branch at arc_solve_learning.py:746-750 builds a digest with an EMPTY action_model and no win_condition",
+   "delivered": true,
+   "delivery_evidence": "probe hit at arc_solve_learning.py:775",
+   "disableable": true,
+   "disable_mechanism": "alias the game id",
+   "severity_note": "This is the single most direct leak: the target game's recorded WIN CONDITION is placed in the query that selects the agent's operators."
+  },
+  {
+   "id": "A4",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "documented-primitive retrieval ranked against the registry digest",
+   "lookup_site": "python/carnot/agentic/arc_solve_learning.py:783 (warm) and :756 (cold) -> arc_primitive_library.py:564",
+   "store": "ops/arc_solve_registry.yaml via _load_registry (arc_primitive_library.py:23, :297)",
+   "returns": "top-5 documented primitives ranked by the digest",
+   "hidden_game_gets": "2 generic rows vs 5 mechanic-specific rows for sb26",
+   "delivered": true,
+   "disableable": true,
+   "disable_mechanism": "alias the game id",
+   "partial_mitigation_already_present": "exclude_games=(target_game,) at arc_solve_learning.py:785 removes the target from the LIBRARY side but not from the QUERY side"
+  },
+  {
+   "id": "A5",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "similarity transfer -- top-3 solved games with full recipes",
+   "lookup_site": "python/carnot/agentic/arc_solve_learning.py:796-812",
+   "store": "ops/arc_solve_registry.yaml + results/arc3_win_condition_survey.json",
+   "returns": "ranked [{game, similarity, solver, win_condition, action_model, reusable_gotchas}] + confident_transfer + guidance text instructing few-shot of the top recipe",
+   "hidden_game_gets": "empty ranked list, confident_transfer=False, LOW-confidence guidance",
+   "delivered": true,
+   "delivery_evidence": "sb26 -> [s5i5, ft09, vc33], top_similarity 6.0, confident_transfer True",
+   "disableable": true,
+   "disable_mechanism": "alias the game id"
+  },
+  {
+   "id": "A6",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "hardcoded game-id branches in the generic-operator selector",
+   "lookup_site": "python/carnot/agentic/arc_solver_kit.py:495 (gid=='sc25'), :517 (gid=='sb26'), :532 (gid=='re86'), :540 (gid=='tr87')",
+   "store": "none -- literal identifiers in source",
+   "returns": "a different operator tuple per matched id",
+   "measured_isolated_effect_with_blank_mechanic_class": {
+    "hidden_default_n": 19,
+    "sc25": {
+     "n": 19,
+     "only_in": [
+      "cast_grid_phase_fsm_world_model",
+      "object_motion_world_model"
+     ],
+     "missing": [
+      "object_centric_digest",
+      "object_centric_representation_builder_operator"
+     ]
+    },
+    "sb26": {
+     "n": 6,
+     "only_in": [
+      "color_match_slot_sequence_verifier",
+      "config_rule_verifier"
+     ],
+     "missing_count": 15
+    },
+    "re86": {
+     "n": 5,
+     "only_in": [
+      "sprite_overlay_resize_verifier"
+     ],
+     "missing_count": 15
+    },
+    "tr87": {
+     "n": 20,
+     "only_in": [
+      "glyph_rewrite_matcher",
+      "glyph_rewrite_rule_verifier"
+     ],
+     "missing": [
+      "active_data_collection"
+     ]
+    }
+   },
+   "delivered": true,
+   "delivery_evidence": "probe hit at arc_solve_learning.py:789 (warm) and :759 (cold)",
+   "disableable": true,
+   "disable_mechanism": "alias the game id (the branches are pure gid equality)"
+  },
+  {
+   "id": "A7",
+   "tier": "A_scored_delivered_at_construction",
+   "name": "explore budget derived from the routed strategy",
+   "lookup_site": "python/carnot/agentic/arc_competition_agent.py:739-742, consumed at :4723",
+   "store": "downstream of A2",
+   "returns": "SUBMITTED_ROUTED_EXPLORE_BUDGET=24 when uses_goal_distance_heuristic is False, else SUBMITTED_GRAPH_EXPLORE_BUDGET=80",
+   "measured": {
+    "sb26": 24,
+    "hidden": 80
+   },
+   "hidden_game_gets": "80",
+   "delivered": true,
+   "disableable": true,
+   "disable_mechanism": "alias the game id (A2 disable propagates)",
+   "note": "Downstream of A2 rather than an independent store read, but it is where the behavioural delivery actually lands, and it matches the previously-measured sb26 trace divergence (769 -> 714 states)."
+  },
+  {
+   "id": "B1",
+   "tier": "B_scored_runtime_conditional",
+   "name": "playbook retrieval mechanic tags keyed by public game id",
+   "lookup_site": "python/carnot/agentic/arc_playbook_retrieval.py:79 (GAME_MECHANIC_TAGS, defined arc_playbook_patterns.py:65-90)",
+   "call_site": "python/carnot/agentic/arc_competition_agent.py:5481 (E3AgentPolicy._retrieve_playbook_block)",
+   "returns": "coarse mechanic tags for the 25 public ids, e.g. r11l -> ('pattern_align','universal'), wa30 -> ('multi_agent','navigation','universal')",
+   "hidden_game_gets": "('universal',) only -- measured",
+   "delivered": false,
+   "delivery_note": "NOT delivered in this CPU-only run. arc_competition_agent.py:5478-5480 returns before the tag lookup when the query embedder is unavailable, and the embedder is the live GGUF. models/arc_playbook_index/ DOES exist, so this fires whenever the generator is up. Reported as runtime-conditional, not as measured-delivered.",
+   "disableable": true,
+   "disable_mechanism": "the call passes game=self.short with no mechanic_class, so aliasing the id reduces it to ('universal',)"
+  },
+  {
+   "id": "B2",
+   "tier": "B_scored_runtime_conditional",
+   "name": "HIDDEN_STATE_GAME_IDS branch selects a different world-model trust path",
+   "lookup_site": "python/carnot/agentic/arc_world_model_trust_energy.py:26-38 (11-game public tuple)",
+   "call_site": "python/carnot/agentic/arc_competition_agent.py:6588 (if self.short in HIDDEN_STATE_GAME_IDS)",
+   "returns": "membership; True selects the hud_mask + hidden_state=True + change-gate branch, False takes the plain branch",
+   "members": [
+    "ar25",
+    "cd82",
+    "cn04",
+    "dc22",
+    "g50t",
+    "ka59",
+    "m0r0",
+    "re86",
+    "sc25",
+    "sk48",
+    "wa30"
+   ],
+   "hidden_game_gets": "False -> the plain branch, always",
+   "delivered": false,
+   "delivery_note": "Inside _induce_and_plan; not reached at construction and not reached without a generator. Membership itself measured: a synthetic hidden id is not a member.",
+   "disableable": true,
+   "disable_mechanism": "alias the game id",
+   "corroboration": "independently documented by prior work in this repo (scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py, outer_loop_arc_cellrecall_admit_ceiling_20260802.py) as a hardcoded public tuple a hidden game can never join"
+  },
+  {
+   "id": "B3",
+   "tier": "B_scored_runtime_conditional",
+   "name": "per-game induced world-model program loaded from the e3 store",
+   "lookup_site": "python/carnot/agentic/arc_executable_world_model.py:2354-2366 (load_engine -> _load_engine_from -> Path(root)/game/'world_model.py')",
+   "store": "results/arc_e3/<game>/world_model.py -- 25 public game directories present on disk",
+   "call_sites": [
+    "python/carnot/agentic/arc_competition_agent.py:6526",
+    "python/carnot/agentic/arc_competition_agent.py:6365",
+    "python/carnot/agentic/arc_competition_agent.py:6204 and :6215"
+   ],
+   "returns": "an executable engine + is_level_complete predicate previously induced for that exact game",
+   "hidden_game_gets": "FileNotFoundError unless the current run's induce() just wrote it",
+   "delivered": false,
+   "delivery_note": "Requires a generator. At :6526 an induce() precedes it and would overwrite, but the reinduction call sites at :6365 / :6204 pass load_engine as a callable invoked at arc_llm_reinduction.py:1570 -- and a stale prior-session file is what is on disk for all 25 public games. Treated as a live leak whenever induce fails to overwrite.",
+   "disableable": true,
+   "disable_mechanism": "CARNOT_ARC_E3_DIR=<tmpdir> set BEFORE importing arc_executable_world_model (env hook already exists at arc_executable_world_model.py:77-80); aliasing the id also works",
+   "evidence_discipline_note": "results/arc_e3 is EVIDENCE per CLAUDE.md -- it was read, never written, by this audit"
+  },
+  {
+   "id": "B4",
+   "tier": "B_scored_runtime_conditional",
+   "name": "feature-router policy learned from registry + router ledger + prior arc_loop_solve artifacts",
+   "lookup_site": "python/carnot/agentic/arc_solve_learning.py:432-490 (_load_feature_router_trace_rows), policy at :493+",
+   "stores": [
+    "ops/arc_solve_registry.yaml",
+    "ops/arc_router_ledger.json (12 public games)",
+    "results/arc_loop_solve_*.json glob"
+   ],
+   "call_site": "python/carnot/agentic/arc_competition_agent.py:4872 (_maybe_route_from_transitions, early_play_signature=rows)",
+   "returns": "mechanic_class -> approach map; the TARGET game's own prior solve rows are included in the training set",
+   "hidden_game_gets": "the same cross-game policy, but with no self-row",
+   "delivered": false,
+   "delivery_note": "Not reached at construction: _feature_router_payload short-circuits to enabled=False when early_play_signature is None (arc_solve_learning.py:687-696). Fires only after enough live transitions, and is further gated by _FEATURE_ROUTER_MIN_CONFIDENCE=0.5 (arc_competition_agent.py:785).",
+   "disableable": true,
+   "disable_mechanism": "alias the id (removes the self-row); the cross-game part is a legitimate shipped prior, see residual_note"
+  },
+  {
+   "id": "B5",
+   "tier": "B_scored_runtime_conditional",
+   "name": "SGE candidate router constructed with the game id",
+   "lookup_site": "python/carnot/agentic/arc_competition_agent.py:1028-1046 (_load_submitted_candidate_router -> _load_sge_candidate_router(game_id))",
+   "call_site": "python/carnot/agentic/arc_competition_agent.py:4615",
+   "returns": "the SGE router when SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED or CARNOT_ARC_SGE_CANDIDATE_ROUTER=1",
+   "hidden_game_gets": "the same, but the default fallthrough load_online_click_target_router(root=REPO) is NOT game-keyed",
+   "delivered": false,
+   "delivery_note": "SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED is False (arc_competition_agent.py:199), so on the shipped default the game id reaches no per-game store here.",
+   "disableable": true,
+   "disable_mechanism": "already off by default; do not set CARNOT_ARC_SGE_CANDIDATE_ROUTER"
+  },
+  {
+   "id": "C1",
+   "tier": "C_dev_twin_only",
+   "name": "GameAdapter lookup",
+   "lookup_site": "python/carnot/agentic/arc_game_adapters.py:3209-3212 (get_adapter -> _BUILDERS.get(game)), table at :3180-3206",
+   "call_site": "scripts/arc_loop_solve.py:116 (solve_adaptered)",
+   "returns": "a hand-built per-game adapter: action vocabulary, apply, state_key, featurize, hand_verifier, warmup_label, branch_mode",
+   "n_registered_games": 25,
+   "hidden_game_gets": "None -> NoAdapterForGame (scripts/arc_loop_solve.py:71-79)",
+   "delivered": true,
+   "delivery_note": "the dev twin's adaptered path is defined by it",
+   "disableable": true,
+   "disable_mechanism": "use solve_via_explore (scripts/arc_loop_solve.py:252), which is already adapter-free",
+   "note": "NOT in the 55-file scored E3 closure -- verified independently"
+  },
+  {
+   "id": "C2",
+   "tier": "C_dev_twin_only",
+   "name": "per-game learned verifier checkpoint",
+   "lookup_site": "scripts/arc_loop_solve.py:42-43 (_ckpt_path) read at :84-92",
+   "store": "models/arc_verifier_<game>.json",
+   "on_disk": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "dc22",
+    "ft09",
+    "lf52",
+    "lp85",
+    "ls20",
+    "r11l",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "su15",
+    "vc33"
+   ],
+   "on_disk_count": 15,
+   "returns": "a LearnedVerifier trained on that game's own prior solve traces, used to warm-start the search",
+   "hidden_game_gets": "no file -> adapter.hand_verifier cold start",
+   "delivered": true,
+   "disableable": true,
+   "disable_mechanism": "adapter-free path never reaches it (it is inside _live_verifier_for_adapter); or alias the id"
+  },
+  {
+   "id": "C3",
+   "tier": "C_dev_twin_only",
+   "name": "per-game spatial value head checkpoint",
+   "lookup_site": "python/carnot/agentic/arc_value_net.py:251-253 (live_spatial_value_head_candidates, game-specific candidate FIRST)",
+   "call_site": "scripts/arc_loop_solve.py:81",
+   "store": "models/arc_spatial_value_head_<game>.json",
+   "on_disk_count": 0,
+   "on_disk_note": "MISSING IS NOT ZERO -- the path is live and would be consulted first; no such file exists today, so this site currently returns nothing. It is enumerated because a future graduation run would populate it silently.",
+   "hidden_game_gets": "falls through to the shared arc_spatial_value_head_live.json / arc_value_net_spatial.json",
+   "delivered": false,
+   "disableable": true,
+   "disable_mechanism": "call load_live_spatial_value_head() without game= (which is exactly what the SCORED path at arc_competition_agent.py:4366 already does)"
+  },
+  {
+   "id": "C4",
+   "tier": "C_dev_twin_only",
+   "name": "router feature extraction reads the per-game survey row",
+   "lookup_site": "python/carnot/agentic/arc_router.py:189 (learning._survey_features().get(game, {}))",
+   "call_chain": "scripts/arc_loop_solve.py:332 -> arc_heuristic_select.select_and_learn -> arc_heuristic_select.py:163 -> arc_router.py:185/189",
+   "returns": "action_type, spatial, difficulty for the named game, folded into the router feature vector",
+   "hidden_game_gets": "{} -> 'unknown' / False / ''",
+   "delivered": false,
+   "delivery_note": "inside a try/except that runs only after gate['reproduced'] is True (scripts/arc_loop_solve.py:319-336)",
+   "disableable": true,
+   "disable_mechanism": "skip the heuristic-learning block, or alias the id"
+  },
+  {
+   "id": "C5",
+   "tier": "C_dev_twin_only",
+   "name": "hidden-state register readers for ka59 / ar25 / ft09",
+   "lookup_site": "python/carnot/agentic/arc_game_adapters.py:208-240 (hidden_state_registers), used by _hidden_state_key at :259-264",
+   "returns": "obfuscated engine-internal attributes (game.urgssjskot, game.flqblmrxsla, game.gqb, game.lpw) -- step counters, undo depth, colour cycle, animation ticks",
+   "hidden_game_gets": "{} (the final return at :240)",
+   "delivered": true,
+   "delivery_note": "reached through the adapters' own state_key, i.e. whenever an adaptered solve runs on one of those three games",
+   "disableable": true,
+   "disable_mechanism": "adapter-free path",
+   "severity_note": "This reads state the live agent cannot observe from frames at all -- strictly stronger than a knowledge leak."
+  },
+  {
+   "id": "C6",
+   "tier": "C_dev_twin_only",
+   "name": "adapters that REPLAY a banked winning action plan",
+   "lookup_site": "python/carnot/agentic/arc_game_adapters.py -- replay=True at :916, :1023, :1150, :1352, :1417, :1524, :1589, :1651, :2267, :2314 and others; wa30 reads an artifact at :3142-3147",
+   "store": "module constants, plus results/outer_loop_fable5_wa30_probe_l9.json for wa30 (first 33 actions, gate-verified to L9)",
+   "returns": "the solution itself, as a fixed label sequence",
+   "hidden_game_gets": "nothing",
+   "delivered": true,
+   "disableable": true,
+   "disable_mechanism": "adapter-free path"
+  },
+  {
+   "id": "C7",
+   "tier": "C_dev_twin_only",
+   "name": "offline arcade instantiation from the game's own source",
+   "lookup_site": "python/carnot/agentic/arc_solver_kit.py:54 (ENV_DIR) and :5164-5171 (offline_arcade), used by arc.make(game) at scripts/arc_loop_solve.py:118 and :265, and by kit.reproduce at :206 / :277",
+   "store": "environment_files/<game>/",
+   "returns": "a runnable local simulator of that specific game",
+   "hidden_game_gets": "nothing -- a hidden Kaggle game has no local environment_files entry",
+   "delivered": true,
+   "disableable": false,
+   "disable_note": "THE STRUCTURAL CEILING. The offline dev twin cannot run at all without the game's own source. This is not a bug to be flagged off; it is the reason an adapter-free offline run is a PROXY and never a hidden-game trial."
+  },
+  {
+   "id": "D1",
+   "tier": "D_present_but_not_delivered",
+   "name": "banked full-solution replay (CLAIMED + load_solutions)",
+   "lookup_site": "python/carnot/agentic/arc_competition_agent.py:119-131 (CLAIMED), :622-639 (load_solutions), consumed at :4425 (sols.get(self.short)) and :4428 (CLAIMED.get(self.short, 1))",
+   "store": "scripts/arc3_replay_scorecard_metaharness.py GAME_ARTIFACTS / RESOLVED_ARTIFACTS (:25, :62)",
+   "returns": "the complete banked action sequence for 11 games, replayed verbatim",
+   "delivered": false,
+   "delivery_note": "CarnotAgentPolicy ONLY. make_carnot_agent constructs it solely when cascade=False (arc_competition_agent.py:7376-7377); the scored default is cascade=True -> E3AgentPolicy, which never touches CLAIMED or load_solutions. Enumerated so nobody later mistakes it for a scored-path leak, and so nobody accidentally measures through cascade=False.",
+   "disableable": true,
+   "disable_mechanism": "already off on the scored path; never set cascade=False for a proxy measurement"
+  },
+  {
+   "id": "D2",
+   "tier": "D_present_but_not_delivered",
+   "name": "captured per-game gap-fill goal-distance heuristics",
+   "lookup_site": "python/carnot/agentic/gap_fills/__init__.py:34-46 (load_heuristic)",
+   "store": "python/carnot/agentic/gap_fills/<game>_goal_distance.py",
+   "on_disk": [
+    "ft09",
+    "lf52",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "sk48",
+    "su15"
+   ],
+   "on_disk_count": 7,
+   "returns": "an executable per-game goal_distance(grid)->float",
+   "delivered": false,
+   "delivery_note": "load_heuristic is called ONLY from scripts/arc_gap_fill.py, which is in NEITHER canonical closure. arc_heuristic_select WRITES to the store (arc_heuristic_select.py:196-209) but nothing in either live closure READS it. arc_graph_explore takes `heuristic` as a parameter and arc_loop_solve does not supply one.",
+   "disableable": true,
+   "disable_mechanism": "no action needed today; would become a live leak the moment arc_gap_fill is wired into an entrypoint"
+  },
+  {
+   "id": "D3",
+   "tier": "D_present_but_not_delivered",
+   "name": "dc22-specific config-rule grounding branch",
+   "lookup_site": "python/carnot/agentic/arc_solver_kit.py:4002 (str(game) == 'dc22' inside config_rule_verifier, 3984-4030) and :3948 (_ground_dc22_toggle_navigation)",
+   "returns": "a dc22-specific grounded toggle-navigation result, or an ungrounded fallback for any other game",
+   "delivered": false,
+   "delivery_note": "config_rule_verifier is NAMED as an operator string by select_primitive_operators, but no invocation of the function itself was found from either entrypoint's closure. Honest status: in-closure, live invocation NOT established. Do not count it as a delivered leak without instrumenting it.",
+   "disableable": true,
+   "disable_mechanism": "alias the game id"
+  },
+  {
+   "id": "D4",
+   "tier": "D_present_but_not_delivered",
+   "name": "ar25 / ka59 identifier matching inside few-shot example text",
+   "lookup_site": "python/carnot/agentic/arc_solver_kit.py:4277 and :4279 (_object_motion_examples_support)",
+   "returns": "True when the example text mentions 'ar25' / 'ka59'",
+   "delivered": false,
+   "delivery_note": "keys on the EXAMPLE TEXT, not on the current game id, so it is a corpus-provenance smell rather than a per-game lookup on the target. Enumerated for completeness and explicitly not counted as delivered.",
+   "disableable": true,
+   "disable_mechanism": "n/a on the target-game axis"
+  }
+ ],
+ "cross_game_priors_NOT_counted_as_leaks": {
+  "rationale": "These are distilled from the 25 public games but are NOT keyed on the current game id, and they SHIP inside the submission, so a hidden Kaggle game genuinely receives them too. Removing them would make the proxy PESSIMISTIC rather than faithful. Listed so the enumeration is not read as exhaustive of public-game influence.",
+  "items": [
+   "models/arc_dynamics_prior.pt (arc_live_ttt.py:523) -- cross-game CNN dynamics prior",
+   "models/arc_discriminative_verifier_v3.json (arc_discriminative_router.py:51)",
+   "models/arc_playbook_index/ (arc_playbook_retrieval.py:26) -- 25-game-distilled exploration patterns; the PATTERNS are game-agnostic, only the query TAGS are id-keyed (see B1)",
+   "models/arc_dagger_value_routing_v3.json (arc_competition_agent.py:137)",
+   "results/experiment_4629_live_frame_change_cnn.pt (arc_frame_change_predictor.py:29)",
+   "ops/arc_router_ledger.json -- 12 public games, consumed as a trained model not a per-game row",
+   "registry general_gotchas (n=30) and derived cautions (n=8) -- MEASURED IDENTICAL for the public and hidden probe"
+  ]
+ },
+ "disableability": {
+  "all_disableable": false,
+  "single_highest_leverage_mitigation": "Alias the game id at the POLICY boundary while keeping the true id at the ENV boundary. E3AgentPolicy performs no environment I/O with self.short, so passing a synthetic id disables A1-A7, B1, B2, B4(self-row) and C1-C6 in one change. This is not a hypothesis: constructing E3AgentPolicy('zz99hiddengame') already reproduces the hidden-game profile exactly (graph_explore, budget 80, confident_transfer False, no ranked recipes).",
+  "additional_required_switch": "CARNOT_ARC_E3_DIR=<tmpdir>, exported BEFORE import, to stop B3 reading a stale results/arc_e3/<game>/world_model.py",
+  "not_disableable": [
+   "C7"
+  ],
+  "residual_ceiling": "C7 (environment_files/<game>) cannot be disabled because the offline twin is defined by it. Therefore an adapter-free offline run bounds a hidden game's performance from ABOVE, never measures it: the agent still gets a perfectly faithful, instantly-resettable, zero-latency simulator of a game whose source exists locally, which no hidden Kaggle game provides."
+ },
+ "statistical_claims": {
+  "p_values_claimed": 0,
+  "min_reachable_p_at_game_clustering": null,
+  "min_reachable_p_note": "NONE STATED AND NONE REACHABLE. This phase changed no behaviour and ran no comparative outcome measurement, so there is no test to pre-register. When the adapter-free measurement itself is run, the pre-registered bound must be computed at GAME clustering over the 25-game roster, and reported as min/q1/median/q3/max per game, never as a single headline."
+ },
+ "limitations": [
+  "Static closure analysis cannot see imports built by string construction or importlib at runtime; a lookup reached only that way would be missed. Two importlib sites were found and are accounted for (arc_executable_world_model.py:2365-2367, arc_competition_agent.py:623-626).",
+  "The delivery probe covers CONSTRUCTION only. Sites B1-B5 fire inside _induce_and_plan / _maybe_route_from_transitions and are reported as runtime-conditional, NOT as measured-delivered. They were not exercised because that requires a live generator and this run is CPU-only by design.",
+  "n=2 game ids in the delivery probe is a witness of differential behaviour, not a roster measurement.",
+  "D3 is in-closure with live invocation unestablished. It is reported as such rather than assumed either way."
+ ],
+ "artifacts_read_not_written": [
+  "results/arc_e3/**",
+  "ops/arc_solve_registry.yaml",
+  "results/arc3_win_condition_survey.json",
+  "ops/arc_router_ledger.json",
+  "models/**"
+ ],
+ "behaviour_changed": false,
+ "games_played": 0,
+ "levels_solved": 0,
+ "submissions_made": 0,
+ "verifier_is_oracle": false,
+ "verifier_is_oracle_note": "No verifier claim is made. This artifact is an audit enumeration, not a solve or a moat claim.",
+ "field_provenance": {
+  "inference_substrate": {
+   "principle": "Declares what compute actually ran so the duration floor is applied honestly; this is aggregation + static analysis, not live inference.",
+   "satisfied_by": "ast closure walk + monkeypatched construction probe"
+  },
+  "solve_provenance": {
+   "principle": "Distinguishes a live self-discovery advance from a dev proxy from outer-loop RE; mislabelling this as live_agent_self_discovery would be exactly the over-claim the discipline exists to stop.",
+   "satisfied_by": "development_proxy -- no game played"
+  },
+  "duration_s": {
+   "principle": "Real work takes wall-clock time; an implausibly short duration is the load-bearing fabrication signal.",
+   "satisfied_by": "session wall clock across closure analysis and two probe runs"
+  },
+  "random_seed": {
+   "principle": "Determinism is the precondition for reproducibility.",
+   "satisfied_by": "6092; the analysis is deterministic, the seed is recorded for form"
+  },
+  "reproducibility_checksum": {
+   "principle": "Content-addressed hash of the audited surface catches silent drift between this enumeration and any later re-audit.",
+   "satisfied_by": "sha256 over the 15 audited source and store files, in listed order"
+  },
+  "honest_verdict": {
+   "principle": "Self-declared terminal state with a terminal prefix so the reconciler classifies it without re-running.",
+   "satisfied_by": "complete_ prefix"
+  }
+ },
+ "corrections_2026_08_04": {
+  "provenance": "Adversarial review of exp6092, each correction re-verified independently before being applied. Prior values PRESERVED per the never-prune rule.",
+  "corrections": [
+   {
+    "id": "L1_cautions_are_NOT_identical",
+    "severity": "blocking_false_measurement",
+    "retracted": "cross_game_priors_NOT_counted_as_leaks: 'registry general_gotchas (n=30) and derived cautions (n=8) -- MEASURED IDENTICAL for the public and hidden probe', and the same sentence in honest_verdict.",
+    "what_is_actually_true": "Only the COUNT is identical. general_gotchas (n=30) IS byte-identical. cautions are n=8 in both cases but the CONTENT differs per game.",
+    "measured": [
+     {
+      "game": "sb26",
+      "n_cautions": 8,
+      "n_cautions_disjoint_from_hidden": 8,
+      "n_general_gotchas": 30,
+      "general_gotchas_byte_identical_to_hidden": true
+     },
+     {
+      "game": "tn36",
+      "n_cautions": 8,
+      "n_cautions_disjoint_from_hidden": 8,
+      "n_general_gotchas": 30,
+      "general_gotchas_byte_identical_to_hidden": true
+     },
+     {
+      "game": "r11l",
+      "n_cautions": 8,
+      "n_cautions_disjoint_from_hidden": 8,
+      "n_general_gotchas": 30,
+      "general_gotchas_byte_identical_to_hidden": true
+     },
+     {
+      "game": "lf52",
+      "n_cautions": 8,
+      "n_cautions_disjoint_from_hidden": 8,
+      "n_general_gotchas": 30,
+      "general_gotchas_byte_identical_to_hidden": true
+     },
+     {
+      "game": "wa30",
+      "n_cautions": 8,
+      "n_cautions_disjoint_from_hidden": 5,
+      "n_general_gotchas": 30,
+      "general_gotchas_byte_identical_to_hidden": true
+     }
+    ],
+    "mechanism": "arc_solve_learning.py:654-676 `_cautions_from` appends the top-3 RANKED games' dead_ends / dead_ends_recorded FIRST and reg['general_gotchas'] LAST, then caps at out[:8]. For a public game the ranked dead-ends fill the cap and the general gotchas are cut entirely. What a public game receives is per-game dead-end prose with literal solve coordinates -- sb26's first caution names a controlled marker at (15,36) and a target marker at (51,30).",
+    "the_stated_reason_for_exclusion_was_the_inverse_of_the_truth": true,
+    "the_ACTUAL_reason_cautions_are_not_counted": "They have NO consumer anywhere in either import closure. Produced at arc_solve_learning.py:766 (cold) and :849 (warm), referenced only inside the `guidance` prose string at :855/:859. approach_recommendation is read back by exactly one key -- ['strategy'] at arc_competition_agent.py:4631/:4642. So cautions are populated onto the policy and never read: an AVAILABILITY-IS-NOT-DELIVERY exclusion, not an identity exclusion. The report reached a defensible exclusion from a false measurement.",
+    "consequence_for_future_arms": "Any future arm that keeps a real game id must record that cautions still carry ranked-game dead-end prose with literal solve coordinates, even though nothing currently consumes it. The identity claim must not be reused as justification for leaving them in."
+   },
+   {
+    "id": "L2_transition_corpus_missing_from_the_enumeration",
+    "severity": "enumeration_completeness",
+    "added_channel": "data/arc_transition_corpus/<game>.npz",
+    "read_at": "scored-path construction: arc_competition_agent.py:4617 -> _load_submitted_frame_change_scorer (:1050) -> load_live_action_effect_scorer (arc_frame_change_predictor.py:484) -> load_cached_transition_effect_rows (:385, globs data/arc_transition_corpus/*.npz)",
+    "measured": {
+     "npz_files": 25,
+     "rows": 22758,
+     "distinct_games": 25,
+     "rows_with_level_progress_gt_0": 172,
+     "persistent_aem_aggregate_keys": 24,
+     "max_leave_one_game_out_ratio_shift": 0.0693,
+     "max_shift_game": "dc22",
+     "second_max": [
+      "ar25",
+      0.0397
+     ],
+     "median_of_per_game_max_shift": 0.0161,
+     "aggregate_keys_that_exist_only_because_of_one_game": 0
+    },
+    "classification": "NOT a leak -- a genuinely diluted cross-game prior. It globs all 25 games rather than keying on the target, aggregates to only 24 keys (8 action ids + 16 click buckets), and removing any single game shifts a ratio by at most 0.069 with no key lost. But the target game's OWN rows ARE folded in, because the scored call site passes no exclude_games (the parameter exists and defaults to ()), so the artifact's not-counted list was not exhaustive as written.",
+    "one_line_mitigation_not_previously_recorded": "exclude_games is an existing, unused parameter at the scored call site.",
+    "reviewer_figure_narrowed": "The reviewer reported 176 rows with level_progress>0; measured here as 172."
+   },
+   {
+    "id": "L3_arc_e3_directory_count_wrong",
+    "severity": "factual",
+    "retracted": "leak_sites B3.store: 'results/arc_e3/<game>/world_model.py -- 25 public game directories present on disk'.",
+    "measured": {
+     "directories": 27,
+     "world_model_py_files": 27,
+     "names_not_in_the_registry": [
+      "g",
+      "positive_control_4557"
+     ]
+    },
+    "note": "The two extras are 'g' (itself the artefact of the incident documented at arc_executable_world_model.py:92) and 'positive_control_4557'. The B3 mechanism claim is unaffected; only the count was wrong."
+   },
+   {
+    "id": "L4_import_closure_file_count_wrong",
+    "severity": "factual",
+    "retracted": "method/headline: the arc_loop_solve closure recorded as 129 files.",
+    "measured_independently_here": {
+     "scored_E3_closure_files": 55,
+     "scored_E3_closure_agentic": 55,
+     "arc_game_adapters_in_scored_closure": false,
+     "dev_twin_closure_files": 160,
+     "dev_twin_closure_agentic": 69,
+     "arc_game_adapters_in_dev_twin_closure": true
+    },
+    "note": "160, not 129 -- the 129 came from a narrower module-resolver scope that missed scripts/-rooted and repo-rooted modules. exp6093's own pre-registration already records 160. The LOAD-BEARING claim is unaffected and is independently confirmed here: the scored closure is 55 files and arc_game_adapters is ABSENT from it."
+   },
+   {
+    "id": "L5_residual_scope_of_the_completeness_sweep",
+    "severity": "scope_statement",
+    "statement": "Three independent sweeps of the 55-file scored closure (literal game-id regex over all 25 ids; lookup-shape regex; an ast sweep for game-id-shaped container literals and non-literal data paths) found no Tier-A-class site keyed on the target id beyond the seven enumerated -- which strengthens the enumeration. But all three are static analysis plus a construction-time probe. 'Enumerated' must not be read as 'closed': B1-B5 live inside _induce_and_plan / _maybe_route_from_transitions and remain UNMEASURED under a live generator; D3 (arc_solver_kit.py:4002) remains unestablished; and static closure analysis cannot see an import built by string construction (two importlib sites were found and accounted for, a third built some other way would have been missed)."
+   }
+  ]
+ }
+}
