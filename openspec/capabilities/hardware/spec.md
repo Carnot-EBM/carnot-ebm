@@ -145,6 +145,155 @@ Required field principles:
 
 ---
 
+### REQ-HW-6121
+
+**Title:** Exp6121 GateMate changed-state gate MUST skip unchanged DirtyJTAG detects and permit only one non-destructive IDCODE detect after a dated physical receipt
+
+**Description:**
+Experiment 6121 SHALL produce
+`results/experiment_6121_gatemate_changed_state_gate_v530.json` as a
+hash-stable GateMate physical-state receipt for 20260804. The receipt SHALL
+hash prior board artifacts, cable/port/power descriptions, board identity,
+USB/DirtyJTAG descriptors, tool-version receipts, operator physical-action
+receipts, prebuilt bitstream/smoke hashes, output paths, protected files, and
+the current dirty worktree before any hardware command is considered.
+
+The GateMate authorization state SHALL be derived from a canonical physical
+state hash covering cable, port, power, board, USB, DirtyJTAG, expected IDCODE,
+observed IDCODE, raw IDCODE, bitstream identity, and dated operator receipt. A
+new detect attempt is authorized only when a newer dated physical receipt
+materially changes the cable, port, power, board, or DirtyJTAG state relative to
+the last attempted GateMate state. If the physical state hash is unchanged, the
+experiment MUST run no `openFPGALoader`, JTAG, detect, flash, synthesis,
+place/route, pack, firmware, SSH, or board command, and MUST emit an exact
+operator action packet ending in a blocked-on-physical-action terminal
+artifact. Repeating software-only detect commands with the same cable, port,
+power, board, and DirtyJTAG state is prohibited and SHALL set
+`retirement_triggered=true`.
+
+If and only if a newer dated physical receipt changes state, Exp6121 MAY run at
+most one bounded, non-destructive IDCODE detect using
+`openFPGALoader -c dirtyJtag --detect`. The detect receipt MUST record command,
+attempt count, stdout, stderr, exit code, timing, USB identity, board
+provenance, expected IDCODE, and observed IDCODE. A prebuilt read-only smoke MAY
+run only after the observed IDCODE equals the expected GateMate GM1Ax IDCODE
+`0x20000001`, and only when its existing bitstream and smoke hashes match prior
+receipts. Exp6121 MUST NOT synthesize, place, route, pack, flash, mutate
+firmware, or modify bitstreams, and MUST NOT claim speedup, power efficiency,
+current draw, terminal hardware state, TSU/Kona execution, or board execution
+from simulation.
+
+Required artifact fields:
+
+- `status`
+- `preconditions_checked`
+- `prior_and_current_physical_state_hashes`
+- `dated_operator_physical_receipt`
+- `physical_state_changed`
+- `cable_port_power_board_usb_and_dirtyjtag_receipts`
+- `detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code`
+- `expected_and_observed_idcode`
+- `prebuilt_bitstream_and_smoke_hashes`
+- `flash_synthesis_place_route_pack_and_firmware_mutation_counts`
+- `operator_action_packet`
+- `hardware_execution_authenticated`
+- `speed_power_and_terminal_claim_counts`
+- `retirement_triggered`
+- `protected_files_unchanged`
+- `duration_s`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `missing_verifier_gaps`
+- `field_provenance`
+- `test_commands`
+- `test_exit_codes`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+Required field principles:
+
+- `prior_and_current_physical_state_hashes`: principle "Physical change, not another software loop, authorizes one attempt."
+- `dated_operator_physical_receipt`: principle "A dated receipt is the only operator authorization for a new physical state."
+- `physical_state_changed`: principle "Bare bool gates every JTAG command."
+- `cable_port_power_board_usb_and_dirtyjtag_receipts`: principle "Every physical and transport assumption is explicit."
+- `detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code`: principle "Unchanged state yields zero commands; changed state permits one auditable non-destructive command."
+- `expected_and_observed_idcode`: principle "Smoke execution requires authenticated device identity."
+- `prebuilt_bitstream_and_smoke_hashes`: principle "Existing artifacts must remain immutable before any read-only smoke."
+- `flash_synthesis_place_route_pack_and_firmware_mutation_counts`: principle "All mutation counts remain zero without explicit operator authorization."
+- `operator_action_packet`: principle "An unchanged-state block ends with one actionable physical next step."
+- `hardware_execution_authenticated`: principle "No execution claim survives without raw hardware evidence."
+- `speed_power_and_terminal_claim_counts`: principle "No speed, power, current-draw, or terminal-hardware claim is permitted."
+- `retirement_triggered`: principle "Repeating the same physical block retires this changed-state task shape."
+- `protected_files_unchanged`: principle "Conductor and operator-reconciled files remain byte-identical."
+- `duration_s`: principle "Use measured `hardware_state_gate_with_optional_non_destructive_detect` wall time."
+- `inference_substrate`: principle "Use `hardware_state_gate_with_optional_non_destructive_detect`."
+- `verifier_is_oracle`: principle "Raw IDCODE/host-I/O evidence is authoritative; simulation is not board execution."
+- `missing_verifier_gaps`: principle "Record missing raw IDCODE or host-I/O evidence instead of inferring."
+- `field_provenance`: principle "Every field traces to receipts, hashes, command output, or tests."
+- `test_commands`: principle "Verification commands are recorded."
+- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
+- `reproducibility_checksum`: principle "Checksum detects physical-state, artifact, or receipt drift."
+- `honest_verdict`: principle "Use `complete_changed_state:`, `blocked_physical_action:`, `retired:`, or `blocked:`."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_6121_gatemate_changed_state_gate_v530 --date 20260804`
+  writes `results/experiment_6121_gatemate_changed_state_gate_v530.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-6121` and
+  `SCENARIO-HW-6121`, `random_seed=6121`, and stable
+  `reproducibility_checksum`.
+- Preconditions hash the declared prior GateMate artifacts, cable/port/power
+  descriptions, USB/DirtyJTAG descriptors, tool-version receipts, operator
+  physical receipts, bitstream/smoke hashes, output path, protected files, and
+  dirty worktree before any optional hardware command.
+- If no newer dated physical receipt changes cable, port, power, board, or
+  DirtyJTAG state, `physical_state_changed=false`,
+  `detect_attempt_allowed_attempt_count_command_stdout_stderr_and_exit_code.attempt_count=0`,
+  no command stdout/stderr is present from a new detect, mutation counts are all
+  zero, an exact operator action packet is populated,
+  `hardware_execution_authenticated=false`, `retirement_triggered=true`, and
+  `honest_verdict` begins with `blocked_physical_action:`.
+- If a newer dated physical receipt changes state, exactly one non-destructive
+  detect command may run, its command must equal
+  `openFPGALoader -c dirtyJtag --detect`, and any prebuilt smoke is allowed only
+  when `observed_idcode == expected_idcode == "0x20000001"` and prior bitstream
+  and smoke hashes match.
+- `flash_synthesis_place_route_pack_and_firmware_mutation_counts` reports zero
+  for flash, synthesis, place, route, pack, and firmware mutation in every valid
+  artifact.
+- `speed_power_and_terminal_claim_counts` reports zero speedup, power,
+  current-draw, terminal-hardware, TSU, and Kona claims.
+- `inference_substrate` equals
+  `hardware_state_gate_with_optional_non_destructive_detect`.
+- `verifier_is_oracle=true` only for raw IDCODE/host-I/O evidence and hash
+  equality; simulation never authenticates board execution.
+- Protected files and `scripts/research_conductor.py` remain unchanged.
+
+**Implementation status:** Planned (Exp 6121)
+
+---
+
+### SCENARIO-HW-6121
+
+**Scenario:** Exp6121 blocks an unchanged GateMate physical state without running another DirtyJTAG detect.
+
+**Given:** Exp5217 and Exp5861 record GateMate as blocked at DirtyJTAG/IDCODE
+with raw IDCODE `0xffffffff`, the hardware wishlist says GateMate preserves the
+v477 physical/JTAG block until cable, port, or board power changes, and no newer
+dated operator receipt changes cable, port, power, board, or DirtyJTAG state,
+**When:** Experiment 6121 hashes the prior and current physical-state receipts
+and compares them with the last attempted state,
+**Then:** It writes
+`results/experiment_6121_gatemate_changed_state_gate_v530.json` with unchanged
+physical-state hashes, zero JTAG/detect attempts, zero flash/synthesis/place/
+route/pack/firmware mutation counts, a precise operator action packet, no
+hardware execution or speed/power/terminal claim, `retirement_triggered=true`,
+`inference_substrate=hardware_state_gate_with_optional_non_destructive_detect`,
+and an `honest_verdict` beginning with `blocked_physical_action:`.
+
+**Implementation status:** Planned (Exp 6121)
+
+---
+
 ### REQ-HW-5930
 
 **Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
