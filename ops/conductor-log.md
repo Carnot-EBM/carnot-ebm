@@ -15311,3 +15311,5 @@ No output thi |
 | 2026-08-04 21:16 UTC | Gated calibration-only authentic Phase-D candidate | OK | 86 passed, 1 warning in 10.65s |
 | 2026-08-04 21:18 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
 | 2026-08-04 21:20 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
+| 2026-08-04 21:22 UTC | Gated held authentic same-model Phase-D candidate  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6115-phase-d-calibration-pool.phase_d_c |
+| 2026-08-04 21:24 UTC | Gated question-clustered Phase-D authenticity and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6116-phase-d-held-candidate-pool) |
