@@ -32044,3 +32044,121 @@ VRAM rather than by a semantic result.
   solve.
 
 <!-- V529-PLANNER-REFRESH-20260804-END -->
+
+## V530 Planner Refresh - 20260804
+
+Incremental planning sweep after terminal milestone `2026.08.529` and the
+`V529-PLANNER-REFRESH-20260804-END` boundary. The primary pass rechecked arXiv
+for 2025-2026 energy-based verification and reasoning, constraint satisfaction,
+Ising and probabilistic hardware, hallucination detection, KANs, constrained
+generation, and continual learning. The secondary pass rechecked OpenReview,
+Hugging Face Papers, direct Semantic Scholar citation APIs for EBT
+(`2507.02092`) and ARM-EBM (`2512.15605`), targeted GitHub repositories,
+Extropic's official writing/hardware pages, and Logical Intelligence's Kona
+pages. Findings below are promoted only where they change the experiment
+design after Exp6102 retired the all-family VRAM-recovery shape and Exp6103
+sealed a usable low-chance Phase-D ladder.
+
+### New actionable deltas
+
+- **Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End
+  Generation** - arXiv:2607.27372,
+  https://arxiv.org/abs/2607.27372; submitted 2026-07-29. Explorative Modeling
+  factors training over `K` candidate matches and optimizes against the best
+  match, reporting monotonic gains as exploration grows across language and
+  continuous domains. Carnot hook: treat effective candidate diversity as a
+  measured exploration axis in the Phase-D pool. Preserve every raw draw,
+  report duplicate/effective-`K`, answer-cluster entropy, and oracle gain at
+  fixed generation compute, and keep best-of-`K` as a diagnostic rather than
+  crediting an untrained EBT/XM mechanism. The paper does not justify selecting
+  on held-test labels or replacing tuned self-consistency.
+- **Geometric Algorithms for Neural Combinatorial Optimization with
+  Constraints** - arXiv:2510.24039,
+  https://arxiv.org/abs/2510.24039; v3 dated 2026-01-14. The paper decomposes
+  neural outputs into convex combinations of feasible polytope corners and
+  uses quality-preserving rounding to maintain discrete constraints under
+  self-supervised optimization. Carnot hook: use independently exact feasible
+  construction/rounding as a positive control and retain constraint-tightness
+  strata, but never mix constructor outputs into the authentic LLM candidate
+  pool. This is a future differentiable-constraint route after the current
+  same-model selector question is resolved, not evidence that arbitrary
+  ConstraintIR programs admit the paper's cardinality/matroid assumptions.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792; code linked from the
+  arXiv record. Under matched parameters, compute, data, schedules, and seeds,
+  the read-only-while-pondering arm learned associative recall faster than the
+  arm that rewrote fast memory during the same pondering loop; both later
+  saturated. Carnot hook: the next continuous-self-learning mechanism must
+  freeze the retrieval snapshot during a decision and commit reduced-order
+  utility state only after an exact external outcome. Compare that post-outcome
+  commit with the Exp5968 write-through winner, delayed commit, shuffled
+  retrieval, fixed memory, and no memory; report learning speed separately from
+  eventual capability.
+
+### Supporting implementation and benchmark signals
+
+- **SATQuest** - OpenReview ICLR 2026 Workshop,
+  https://openreview.net/forum?id=Qc2lUJsgOt - continues to support separating
+  instance, problem type, and question format under an exact PySAT authority.
+  The concept is already indexed elsewhere in this ledger. For V530 it is a
+  design control only: Exp6103's sealed families, semantic groups, relabels,
+  and exact Python/Z3 labels remain the immutable fixture.
+- **CLUE and hidden-state serving surfaces** - CLUE remains at
+  https://arxiv.org/abs/2510.01591. The vLLM project now documents hidden-state
+  extraction for speculative-decoding integrations at
+  https://github.com/vllm-project/vllm-project.github.io/blob/main/_posts/2026-03-30-extract-hidden-states.md,
+  while a general extraction API remains an implementation-sensitive surface.
+  Carnot hook: per-layer access is a fail-closed precondition, with exact model
+  revision, precision, device map, token alignment, and memory receipts. This
+  does not make GGUF generation activations interchangeable with matching-base
+  `transformers` activations.
+
+### Citation-trail, repository, and hardware status
+
+- **Semantic Scholar:** a dated 2026-08-04 direct-API receipt returned 32
+  visible EBT citing records and eight ARM-EBM citing records. The new EBT
+  citation relevant to V530 is Explorative Modeling (`2607.27372`); Memoir,
+  Solver-Hard, fixed-point reasoners, LoopUS, Distributional EBMs, and the
+  ARM-EBM citations were already indexed. Counts are endpoint receipts, not
+  stable impact claims.
+- **OpenReview / Hugging Face Papers:** searches reconfirmed SATQuest,
+  Scalable EBMs via adversarial training, NRGPT, Spilled Energy, CLUE,
+  Hidden-Align, and verifier-guided decoding. None supersedes the exact-label,
+  competent-but-unsaturated candidate-pool prerequisite or reopens the retired
+  external generated-text/logprob Phase-D scorer family.
+- **GitHub:** targeted API searches reconfirmed the maintained public EBT
+  repository (`alexiglad/EBT`) and surfaced small EBM/thermodynamic
+  demonstrations, including an unofficial Rust THRML port. No new repository
+  had both direct relevance and enough maintained evidence to displace Carnot's
+  local GGUF, exact-validator, or transactional-memory implementations. No
+  dependency is added from repository popularity alone.
+- **Extropic:** https://extropic.ai/writing still ends with the October 2025
+  launch material. https://extropic.ai/hardware continues to advertise Z1
+  early access in 2026, but Carnot has no authenticated XTR-0/Z1 route. No
+  hardware execution, speed, power, or availability claim is eligible.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models describes Kona
+  as a constraint-enforcement layer beneath generative interfaces, but still
+  exposes no public weights or documented local inference API. It supports the
+  generator/verifier boundary in the V530 architecture diagram; it is not a
+  runnable milestone dependency or comparator.
+
+### V530 planning impact
+
+- Do not rerun the retired all-family representation acquisition. Use the one
+  mandated SOTA GGUF family already measured to fit a 24 GiB 3090 for a
+  task-correlated CUDA canary and authentic candidate generation.
+- Calibrate only on Exp6103's sealed calibration split, then acquire a held
+  same-model pool with fixed compute. Treat effective `K`, answer-cluster
+  diversity, method validity, and all-wrong rate as first-class diagnostics.
+- Qualify matching-base `output_hidden_states` access only after exact headroom
+  is established. Block rather than infer internal features from text,
+  logprobs, model-authored confidence, or decorative model identities.
+- Make the continuous-self-learning arm read-only during each decision and
+  commit a bounded reduced-order state only after exact future evidence. Keep
+  immutable model weights, replay/rollback, poison quarantine, and ABI parity.
+- Preserve exactly one ARC generalization-floor task and one changed-state
+  GateMate task; neither may consume the Phase-D majority or claim an already
+  registered solve.
+
+<!-- V530-PLANNER-REFRESH-20260804-END -->
