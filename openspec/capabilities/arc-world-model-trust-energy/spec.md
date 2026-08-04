@@ -21147,6 +21147,115 @@ session, and is recorded rather than quietly fixed.)
 |---|---|---|
 | REQ-ARC-WMTE-6071 | `python/carnot/agentic/arc_inert_label_memory.py` — `label_key`, `InertLabelMemory` (`observe`, `is_deferrable_key`/`is_deferrable_row`, `set_counts_for_test`, `stats`), `coerce_inert_label_memory`. `python/carnot/agentic/arc_competition_agent.py` — `SUBMITTED_INERT_LABEL_DEFER_ENABLED = False` (+ `_MODE`, `_MIN_OBSERVATIONS`), a top-level import so `scripts/arc_orphan_solver_lint.py` sees the module in the live closure, an `inert_label_memory` kwarg on BOTH `StepwiseExplorer` and `E3AgentPolicy` resolved through the `_fd_gate` ladder, five fire-counters, `inert_label_defer_diagnostics()`, the observe hook in `_ingest` keyed on `unmasked_before`/`unmasked_now`, and the pop hook: `_inert_label_keep_indices` + `_select_untested_index` (the draw rule extracted so the filtered and unfiltered paths cannot drift) called from `_pop_untested_inner`. Drivers: `scripts/arc_inert_label_defer_worker.py` (one cell, one killable subprocess, refuses if `E3_DIR` is the tracked evidence store or induction is not disabled), `scripts/arc_inert_label_defer_ab.py` (3 arms x 25 games x 3 seeds, per-arm scratch engine store), `scripts/arc_inert_label_defer_report.py`. | `tests/python/test_arc_inert_label_memory.py` — 17 tests. **Mutation-proven, 6/6 killed, sources restored byte-identically (sha256 verified):** reverting the pop hook to the pre-6071 rule kills 2; deleting the level-up SACRED veto kills 1; deleting the frame-change veto kills 1; deleting the all-deferrable fail-open kills 1; turning the defer into a DROP kills 1; raising the default evidence floor kills 6. The level-up-veto test was ADDED after the first mutation round found the veto decorative. RESULT: `results/arc_inert_label_defer_20260802/arc_inert_label_defer.json`, adversarial-verify clean, 0 missing observations, A/A 75/75 identical. The lever cuts its own target class **9,208 -> 4,239 actions (-54.0%), 13 games better / 1 worse, p = 0.0018**, and takes the games banking a level inside the LIVE 400-action budget from **3 to 6** (ft09 x59.5, lp85 x9.0, su15 x2.5 on the first level's score). But EVERY pre-registered progress axis is NULL — levels 14 -> 13 at budget 2000 (cd82 loses one at BOTH evidence floors), hand-verifier progress flat, states p = 0.79 — and NAVIGATION IS SIGNIFICANTLY WORSE (12,146 -> 13,903, 12 games worse, p = 0.013): the saved probes buy a deeper graph whose RESET-replay navigation costs 1 + depth. Recommendation: DO NOT flip the default; the next measurement is a LIVE-BUDGET (400-action) A/B where the primary axis is reachable, plus an investigation of cd82. |
 
+## REQ-ARC-WMTE-6122: Solver-Kit Primitive Reachability And Held-Out LOO Generalization-Floor Audit
+
+Experiment 6122 SHALL audit the current `arc_solver_kit.py` generic primitive inventory against
+the live `E3AgentPolicy` / `StepwiseExplorer` action path without inspecting game source, hand
+adapters, offline ground-truth BFS, registry trajectories, or per-game recipes. The audit SHALL
+registry-precheck all 25 public games before any measurement and SHALL target zero new level
+solves. It SHALL hash the solve registry, live agent, solver kit, submitted defaults, flags,
+frozen agent-owned tapes, game roster, seeds, action budgets, result paths, protected files, and
+root-clutter state. It SHALL confirm `target_level_solve_claim_count=0` and that no already
+reproduced level is proposed for re-solving.
+
+The audit SHALL enumerate every operator in `arc_solver_kit.primitive_operator_registry()` and
+record whether each operator is game-ID-free, reachable from the live agent, has observed
+preconditions, fires, returns decisions, and has downstream live consumption in agent-owned
+observation/action tapes. Selection SHALL be frozen before held-out attribution. At most one
+primitive MAY be selected, and only when it is live-reachable, fires on at least three development
+games, has nonzero downstream consumption, and has direct returned-decision receipts sufficient
+to run a causal held-out A/B. If no primitive qualifies, the artifact SHALL emit a clean
+`complete_null:` reachability-null verdict and SHALL NOT invent a new primitive or run an
+unsupported held-out A/B.
+
+When a primitive qualifies, Experiment 6122 SHALL run leave-one-game-out live-path A/B on held
+games through the same E3/Stepwise path with identical seeds and budgets. Primary attribution
+metrics SHALL be actions and states to first progress or level-up plus progress-axis deltas.
+Levels are guarded secondary outcomes only. Every incidental level outcome SHALL be
+registry-prechecked and postchecked, SHALL require `solve_provenance="live_agent_self_discovery"`,
+and SHALL receive zero credit if duplicate, development-proxy, outer-loop reverse-engineered, or
+from an unreachable solver path. Submitted defaults SHALL remain unchanged.
+
+The terminal artifact
+`results/experiment_6122_arc_primitive_reachability_loo.json` SHALL include top-level fields:
+`status`, `preconditions_checked`, `registry_precheck_and_postcheck`,
+`target_level_solve_claim_count`, `solve_provenance`,
+`agent_owned_tape_code_flag_roster_seed_and_budget_hashes`,
+`primitive_inventory_game_id_free_audit`,
+`per_primitive_live_reachability_firing_and_downstream_consumption`,
+`development_support_and_selection_contract`, `selected_primitive_or_none`,
+`held_out_leave_one_game_out_arm_counts`,
+`per_game_actions_states_progress_levels_walltime_and_failure_rows`,
+`paired_action_state_progress_and_level_deltas_with_intervals`,
+`navigation_replay_budget_bound_crash_and_missing_observation_receipts`,
+`duplicate_level_and_unreachable_solver_credit_counts`, `submitted_defaults_unchanged`,
+`live_agent_self_discovery`, `offline_reproduced_new_level`, `protected_files_unchanged`,
+`random_seed`, `duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL include:
+
+- `status`: principle "terminal audit status; complete_null is valid when no supported live solver-kit primitive qualifies for held-out causal attribution."
+- `preconditions_checked`: principle "hashes registry, code, flags, tapes, roster, seeds, budgets, result path, protected files, root clutter, and submitted defaults before trusting the audit."
+- `registry_precheck_and_postcheck`: principle "pre/post public-registry check over all 25 games; this task proposes zero game-level solves."
+- `target_level_solve_claim_count`: principle "must be 0; the task improves measurement of a live path and claims no new level."
+- `solve_provenance`: principle "live_agent_self_discovery is required for any incidental outcome; duplicate/development/outer-loop paths receive zero credit."
+- `agent_owned_tape_code_flag_roster_seed_and_budget_hashes`: principle "only live-agent-owned evidence defines the experiment."
+- `primitive_inventory_game_id_free_audit`: principle "generic primitives must not require game id, source, adapter, or recipe inputs at runtime."
+- `per_primitive_live_reachability_firing_and_downstream_consumption`: principle "a primitive must be reachable, fire, return decisions, and affect a live consumer before causal testing."
+- `development_support_and_selection_contract`: principle "development support and held attribution are disjoint and selection is frozen before held games."
+- `selected_primitive_or_none`: principle "at most one primitive; none is the honest outcome when support is insufficient."
+- `held_out_leave_one_game_out_arm_counts`: principle "held cells are counted only for a frozen selected primitive with matched arms."
+- `per_game_actions_states_progress_levels_walltime_and_failure_rows`: principle "actions, states, progress, guarded levels, wall time, and failure reasons remain per-game auditable."
+- `paired_action_state_progress_and_level_deltas_with_intervals`: principle "accuracy and efficiency are measured together at matched game/seed cells."
+- `navigation_replay_budget_bound_crash_and_missing_observation_receipts`: principle "saved actions are not value if navigation/replay costs, budget bounds, crashes, or missing observations consume them."
+- `duplicate_level_and_unreachable_solver_credit_counts`: principle "both duplicate-level and unreachable-solver credit counts must be zero."
+- `submitted_defaults_unchanged`: principle "no production flag changes follow from a bounded generalization-floor audit."
+- `live_agent_self_discovery`: principle "incidental outcomes, if any, arise only from the agent's own runtime attempts."
+- `offline_reproduced_new_level`: principle "false unless a live self-discovered path independently passes reproduction; never headline it here."
+- `protected_files_unchanged`: principle "`scripts/research_conductor.py` and other protected files are not modified."
+- `random_seed`: principle "determinism precondition for reproducibility."
+- `duration_s`: principle "measured wall-clock for the no-LLM offline-arcade/live-agent audit."
+- `inference_substrate`: principle "offline_arcade_live_agent_runtime_self_discovery_no_llm."
+- `verifier_is_oracle`: principle "false; environment transitions and reproduction are authority, a primitive is not an oracle."
+- `missing_verifier_gaps`: principle "missing live returned-decision receipts or causal arms are explicit gaps, not silently converted into null evidence."
+- `field_provenance`: principle "every required field records its source and rationale."
+- `test_commands`: principle "commands used to verify the artifact are recorded."
+- `test_exit_codes`: principle "verification exit codes are recorded, not asserted in prose."
+- `reproducibility_checksum`: principle "content-addressed payload catches silent drift."
+- `honest_verdict`: principle "uses complete_positive:, complete_null:, underpowered:, retired:, or blocked:."
+
+### SCENARIO-ARC-WMTE-6122-REGISTRY-AND-NO-CREDIT-PRECHECK
+
+Given the solve registry and frozen live-agent tapes are present
+When Experiment 6122 builds preconditions
+Then it hashes the registry, code, flags, tapes, roster, seeds, budgets, protected files and
+submitted defaults, confirms all 25 registry games are prechecked, sets
+`target_level_solve_claim_count=0`, and records that no already reproduced level is proposed
+for re-solving.
+
+### SCENARIO-ARC-WMTE-6122-REACHABILITY-SELECTION-GATE
+
+Given the solver-kit primitive inventory and live E3/Stepwise source path
+When Experiment 6122 audits primitive reachability from agent-owned tapes
+Then each primitive records game-ID-free status, live reachability, firing, returned decisions,
+downstream consumption and failure reason, and no primitive is selected unless at least three
+development games support it with direct causal receipts.
+
+### SCENARIO-ARC-WMTE-6122-HELD-OUT-LOO-OR-CLEAN-NULL
+
+Given selection is frozen
+When no primitive qualifies
+Then the artifact sets `selected_primitive_or_none=null`, held-out LOO arm counts to zero,
+`honest_verdict` to `complete_null: ...`, `submitted_defaults_unchanged=true`,
+`offline_reproduced_new_level=false`, and all duplicate or unreachable solver credit counts to
+zero.
+When one primitive qualifies
+Then held-out leave-one-game-out A/B uses matched live E3 seeds and budgets, reports paired
+action/state/progress/level deltas with intervals, and treats levels only as guarded secondary
+outcomes.
+
 ## REQ-ARC-WMTE-6091: The Refactor Prompt SHALL Be Able To SHOW The Engine It Is Refactoring, And Acceptance SHALL Be Gradeable Before It Is Scored
 
 The system SHALL make the counterexample-guided refinement hypothesis TESTABLE, by (a) delivering
