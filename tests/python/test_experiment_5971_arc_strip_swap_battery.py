@@ -9,7 +9,11 @@ SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL.
 from __future__ import annotations
 
 import json
+import os
+import sys
+import types
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -72,6 +76,85 @@ def _fixture_rows(*, transformed_anchor_live: bool = False) -> list[dict]:
                             "health": {"valid_action_count": 1, "step_ok_count": 1},
                         }
                     )
+    return rows
+
+
+def _row(
+    game: str,
+    seed: int,
+    condition: str,
+    arm: str,
+    *,
+    levels: int,
+    hud_changed: bool = True,
+    terminal_state: str = "completed",
+) -> dict[str, Any]:
+    return {
+        "cell_id": f"{game}|{arm}|{seed}|{condition}",
+        "game": game,
+        "seed": seed,
+        "condition": condition,
+        "arm": arm,
+        "terminal_state": terminal_state,
+        "completed": terminal_state == "completed",
+        "missing": False,
+        "errored": terminal_state == "errored",
+        "generator_invalid": False,
+        "ran": True,
+        "levels": levels,
+        "progress": float(levels),
+        "actions": 1,
+        "actions_to_first_levelup": 1 if levels else None,
+        "elapsed_s": 0.001,
+        "error": None,
+        "transform_selected_condition_id": None
+        if condition == "original"
+        else "C5_strip_swap_rows_bottom_t2",
+        "hud_predicate_changed": condition == "strip_swap" and hud_changed,
+        "hud_mask_resolved_before": True,
+        "hud_mask_resolved_after": condition == "original",
+        "frontier_predicate_dose": 0.0,
+        "policy_decisions": [],
+        "observations": [],
+        "health": {"valid_action_count": 1, "step_ok_count": 1},
+    }
+
+
+def _hud_contrast_rows(
+    directions: list[int],
+    *,
+    original_anchor: bool = True,
+    hud_changed: bool = True,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    seed = 1
+    for index, direction in enumerate(directions, start=1):
+        game = f"p{index}"
+        rows.append(
+            _row(game, seed, "original", "SHIP", levels=1 if original_anchor and index == 1 else 0)
+        )
+        rows.append(_row(game, seed, "original", "FRONT", levels=0))
+        if direction > 0:
+            rows.append(
+                _row(game, seed, "strip_swap", "SHIP", levels=1, hud_changed=hud_changed)
+            )
+            rows.append(
+                _row(game, seed, "strip_swap", "FRONT", levels=0, hud_changed=hud_changed)
+            )
+        elif direction < 0:
+            rows.append(
+                _row(game, seed, "strip_swap", "SHIP", levels=0, hud_changed=hud_changed)
+            )
+            rows.append(
+                _row(game, seed, "strip_swap", "FRONT", levels=1, hud_changed=hud_changed)
+            )
+        else:
+            rows.append(
+                _row(game, seed, "strip_swap", "SHIP", levels=1, hud_changed=hud_changed)
+            )
+            rows.append(
+                _row(game, seed, "strip_swap", "FRONT", levels=1, hud_changed=hud_changed)
+            )
     return rows
 
 
@@ -219,6 +302,21 @@ def test_req_arc_cptb_5971_artifact_schema_validation_and_checksum(
         bad["honest_verdict"] = "ready: bad"
         bad["reproducibility_checksum"] = mod.artifact_checksum(bad)
         mod.validate_artifact(bad)
+    with pytest.raises(ValueError, match="inference_substrate"):
+        bad = json.loads(json.dumps(artifact))
+        bad["inference_substrate"] = "live_llm_inference"
+        bad["reproducibility_checksum"] = mod.artifact_checksum(bad)
+        mod.validate_artifact(bad)
+    with pytest.raises(ValueError, match="policy flags"):
+        bad = json.loads(json.dumps(artifact))
+        bad["shipped_flag_and_registry_immutability"]["policy_flags_modified_by_task"] = True
+        bad["reproducibility_checksum"] = mod.artifact_checksum(bad)
+        mod.validate_artifact(bad)
+    with pytest.raises(ValueError, match="protected files"):
+        bad = json.loads(json.dumps(artifact))
+        bad["protected_files_unchanged"]["all_unchanged"] = False
+        bad["reproducibility_checksum"] = mod.artifact_checksum(bad)
+        mod.validate_artifact(bad)
 
 
 def test_req_arc_cptb_5971_writer_round_trips_json(
@@ -241,3 +339,257 @@ def test_req_arc_cptb_5971_writer_round_trips_json(
 
     assert written is payload
     assert json.loads(out.read_text(encoding="utf-8"))["honest_verdict"] == "complete_null: fixture"
+
+
+def test_req_arc_cptb_5971_precondition_defensive_branches(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-ARC-CPTB-5971: gate replay reports every failed precondition explicitly."""
+
+    ops = tmp_path / "ops"
+    ops.mkdir()
+    (ops / "arc_solve_registry.yaml").write_text("full_game_clear: true\n", encoding="utf-8")
+    monkeypatch.setattr(mod, "public_game_manifest", lambda root: [])
+    monkeypatch.setattr(mod, "preregistered_seeds", lambda root: [1])
+    monkeypatch.setattr(mod, "load_preregistered_arms", lambda root: {"BAD": {}})
+    monkeypatch.setattr(
+        mod,
+        "_resource_receipt",
+        lambda root: {
+            "disk_free_bytes": 1,
+            "disk_total_bytes": 2,
+            "ram_available_bytes": None,
+            "arc_sdk_available": False,
+            "offline_arcade_cache_available": True,
+        },
+    )
+
+    gate = mod.replay_exp5970_gate(tmp_path)
+
+    assert gate["ready"] is False
+    assert {
+        "missing_exp5970_artifact",
+        "strip_swap_sentinel_ready_score_not_1",
+        "transform_schema_hash_mismatch",
+        "public_game_manifest_not_25",
+        "arm_definitions_not_four_preregistered_arms",
+        "seed_manifest_not_5",
+        "arc_sdk_unavailable",
+    } <= set(gate["blocked_reasons"])
+
+
+def test_req_arc_cptb_5971_resource_and_arm_fallbacks(monkeypatch: pytest.MonkeyPatch) -> None:
+    """REQ-ARC-CPTB-5971: resource and arm helpers fail closed under drift."""
+
+    monkeypatch.setattr(mod.os, "sysconf", lambda name: (_ for _ in ()).throw(OSError(name)))
+    real_import = __import__
+
+    def blocked_import(name: str, *args: Any, **kwargs: Any) -> Any:
+        if name == "arcengine":
+            raise ImportError(name)
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr("builtins.__import__", blocked_import)
+    resources = mod._resource_receipt(REPO)
+    assert resources["ram_available_bytes"] is None
+    assert resources["arc_sdk_available"] is False
+
+    monkeypatch.setattr(mod, "_outer_cptb", lambda root: {})
+    assert len(mod.public_game_manifest(REPO)) == 25
+    assert mod.preregistered_seeds(REPO) == [20260726, 20260727, 20260728, 20260729, 20260730]
+
+    fake_module = types.SimpleNamespace(
+        CPTB_ARMS={name: {"kwargs": {}} for name in mod.ARMS}
+    )
+    monkeypatch.setitem(sys.modules, "scripts.experiments.cptb_arms", fake_module)
+    with pytest.raises(ValueError, match="does not pin gated flags"):
+        mod.load_preregistered_arms(REPO)
+
+
+def test_req_arc_cptb_5971_environment_and_matrix_helpers(monkeypatch: pytest.MonkeyPatch) -> None:
+    """SCENARIO-ARC-CPTB-5971-GATE-REPLAY-MATRIX-SEAL: helper branches are explicit."""
+
+    env_name = mod.ARM_ENV_VARS["tier_exhaustion"]
+    monkeypatch.setenv(env_name, "original")
+    with mod._arm_environment({"tier_exhaustion": True}):
+        assert os.environ[env_name] == "1"
+    assert os.environ[env_name] == "original"
+
+    grid = mod.np.zeros((64, 64), dtype=mod.np.uint8)
+    selected = mod._select_strip_condition_for_grid(grid)
+    assert selected.condition_id in {row.condition_id for row in mod.sentinel.STRIP_SWAP_CONDITIONS}
+
+    calls: list[tuple[str, str, int, str]] = []
+
+    def fake_run_live_cell(root: Path, **kwargs: Any) -> dict[str, Any]:
+        calls.append((kwargs["game"], kwargs["arm"], kwargs["seed"], kwargs["condition"]))
+        return _row(kwargs["game"], kwargs["seed"], kwargs["condition"], kwargs["arm"], levels=0)
+
+    seal = {
+        "games": ["g"],
+        "seeds": [1],
+        "action_budget": 2,
+        "wall_time_s": 3.0,
+    }
+    arms = {name: {"kwargs": {}} for name in mod.ARMS}
+    monkeypatch.setattr(mod, "run_live_cell", fake_run_live_cell)
+    rows = mod.run_frozen_matrix(root=REPO, seal=seal, arms=arms)
+    assert len(rows) == len(mod.ARMS) * len(mod.CONDITIONS)
+    assert calls[0] == ("g", "CTRL", 1, "original")
+
+
+def test_scenario_arc_cptb_5971_live_cell_defensive_paths(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-ARC-CPTB-5971-LIVE-PATH-CELL-HEALTH: live cell errors stay on row."""
+
+    original = mod.run_live_cell(
+        REPO,
+        game="tn36",
+        arm="SHIP",
+        seed=20260726,
+        condition="original",
+        arm_kwargs=mod.load_preregistered_arms(REPO)["SHIP"]["kwargs"],
+        action_budget=0,
+        wall_time_s=10.0,
+    )
+    assert original["condition"] == "original"
+    assert original["terminal_state"] == "completed"
+
+    timed = mod.run_live_cell(
+        REPO,
+        game="tn36",
+        arm="SHIP",
+        seed=20260726,
+        condition="original",
+        arm_kwargs=mod.load_preregistered_arms(REPO)["SHIP"]["kwargs"],
+        action_budget=1,
+        wall_time_s=-1.0,
+    )
+    assert timed["terminal_state"] == "errored"
+    assert timed["error"] == "wall_time_budget_exhausted"
+
+    with monkeypatch.context() as mp:
+        levels = iter([0, 0, 1, 1])
+        mp.setattr(mod, "_frame_level", lambda frame: next(levels, 1))
+        leveled = mod.run_live_cell(
+            REPO,
+            game="tn36",
+            arm="SHIP",
+            seed=20260726,
+            condition="original",
+            arm_kwargs=mod.load_preregistered_arms(REPO)["SHIP"]["kwargs"],
+            action_budget=1,
+            wall_time_s=10.0,
+        )
+    assert leveled["actions_to_first_levelup"] == 1
+
+    def raise_action_id(action: Any) -> int:
+        raise RuntimeError("decision boom")
+
+    monkeypatch.setattr(mod.sentinel, "_action_id", raise_action_id)
+    errored = mod.run_live_cell(
+        REPO,
+        game="tn36",
+        arm="SHIP",
+        seed=20260726,
+        condition="original",
+        arm_kwargs=mod.load_preregistered_arms(REPO)["SHIP"]["kwargs"],
+        action_budget=1,
+        wall_time_s=10.0,
+    )
+    assert errored["terminal_state"] == "errored"
+    assert "decision boom" in errored["error"]
+
+    bad_condition = mod.run_live_cell(
+        REPO,
+        game="tn36",
+        arm="SHIP",
+        seed=20260726,
+        condition="bad",
+        arm_kwargs=mod.load_preregistered_arms(REPO)["SHIP"]["kwargs"],
+        action_budget=1,
+        wall_time_s=10.0,
+    )
+    assert bad_condition["terminal_state"] == "errored"
+    assert "unknown condition" in bad_condition["error"]
+
+
+def test_scenario_arc_cptb_5971_game_unit_decision_regions() -> None:
+    """SCENARIO-ARC-CPTB-5971-GAME-UNIT-FORCED-VERDICT-REFUSAL: all verdict regions are named."""
+
+    no_transform = mod.analyze_rows(
+        _hud_contrast_rows([1, 1, 1, 1, 1], hud_changed=False),
+        expected_cells=20,
+    )
+    assert no_transform["convention_dependence_decision"]["status"] == "complete_null"
+    assert "did not change" in no_transform["convention_dependence_decision"]["reason"]
+
+    no_original = mod.analyze_rows(
+        _hud_contrast_rows([1, 1, 1, 1, 1], original_anchor=False),
+        expected_cells=20,
+    )
+    assert no_original["convention_dependence_decision"]["status"] == "complete_null"
+    assert "original anchor" in no_original["convention_dependence_decision"]["reason"]
+
+    p_floor = mod.analyze_rows(_hud_contrast_rows([1, 1, 1]), expected_cells=12)
+    assert p_floor["convention_dependence_decision"]["status"] == "complete_underpowered"
+    assert "p-floor" in p_floor["convention_dependence_decision"]["reason"]
+
+    positive = mod.analyze_rows(_hud_contrast_rows([1, 1, 1, 1, 1]), expected_cells=20)
+    assert positive["convention_dependence_decision"]["status"] == "complete_positive"
+
+    null = mod.analyze_rows(_hud_contrast_rows([1, 1, 1, -1, -1]), expected_cells=20)
+    assert null["convention_dependence_decision"]["status"] == "complete_null"
+    assert "does not support" in null["convention_dependence_decision"]["reason"]
+
+    skipped = _fixture_rows(transformed_anchor_live=True)
+    skipped[0]["terminal_state"] = "errored"
+    skipped[0]["completed"] = False
+    stats = mod._contrast_stats(skipped, treatment="SHIP", control="FRONT", condition="original")
+    assert stats["n_games_with_paired_rows"] >= 1
+    assert mod._jackknife({})["reason"] == "n_games_lt_2"
+
+
+def test_req_arc_cptb_5971_blocked_artifact_and_main(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """REQ-ARC-CPTB-5971: blocked preconditions stop execution and CLI delegates cleanly."""
+
+    gate = mod.replay_exp5970_gate(REPO)
+    gate = {**gate, "ready": False, "blocked_reasons": ["fixture_block"]}
+    monkeypatch.setattr(mod, "replay_exp5970_gate", lambda root: gate)
+    monkeypatch.setattr(mod, "run_frozen_matrix", lambda **kwargs: (_ for _ in ()).throw(AssertionError))
+    blocked = mod.build_artifact(
+        root=REPO,
+        result_output_path=tmp_path / "blocked.json",
+        test_exit_codes={"unit": 0},
+    )
+    assert blocked["status"] == "blocked_precondition"
+    assert blocked["honest_verdict"].startswith("blocked:")
+
+    captured: dict[str, Any] = {}
+
+    def fake_write_artifact(**kwargs: Any) -> dict[str, Any]:
+        captured.update(kwargs)
+        return {"status": "complete_null"}
+
+    monkeypatch.setattr(mod, "write_artifact", fake_write_artifact)
+    rc = mod.main(
+        [
+            "--root",
+            str(REPO),
+            "--out",
+            str(tmp_path / "out.json"),
+            "--action-budget",
+            "2",
+            "--wall-time-s",
+            "3",
+            "--test-exit-codes-json",
+            '{"unit": 0}',
+        ]
+    )
+    assert rc == 0
+    assert captured["action_budget"] == 2
+    assert captured["wall_time_s"] == 3.0
+    assert json.loads(capsys.readouterr().out)["status"] == "complete_null"
