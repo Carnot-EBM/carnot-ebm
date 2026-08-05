@@ -32271,3 +32271,143 @@ became newly actionable after `.530` or changed operational planning.
   as requirements/context only.
 
 <!-- V531-PLANNER-REFRESH-20260804-END -->
+
+## V532 Planner Refresh - 20260805
+
+Incremental planning sweep after terminal milestone `2026.08.531` and the
+`V531-PLANNER-REFRESH-20260804-END` boundary. The primary pass queried arXiv
+for 2025-2026 work on energy-based verification/reasoning, neural constraint
+satisfaction, Ising and thermodynamic sampling, hallucination detection and
+mitigation, KANs, energy-guided decoding, continual learning, and empirical
+difficulty calibration. The secondary pass rechecked OpenReview, Hugging Face
+Papers, direct Semantic Scholar citation APIs for EBT (`2507.02092`) and
+ARM-EBM (`2512.15605`), targeted GitHub repository searches, Extropic's
+official writing/hardware pages, and Logical Intelligence's Kona page. Sources
+below are promoted only when they change the design after Exp6128 exposed a
+bimodal candidate pool: two exact-constraint families were saturated while
+`typed_finite_choice` was below its enumerated-choice floor.
+
+### Newly actionable deltas
+
+- **Every Wrong Answer Counts: Option-Level Psychometrics for LLM
+  Multiple-Choice Benchmarks** - arXiv:2608.02966,
+  https://arxiv.org/abs/2608.02966; submitted 2026-08-03. LLM-NRM models the
+  full response distribution rather than collapsing all wrong options into one
+  outcome, and separates item difficulty from positional preference,
+  calibration sharpness, and difficulty-dependent fallback behavior. Carnot
+  hook: apply an option-aware, label-blind diagnostic to Exp6128's frozen rows
+  before generating again. In particular, determine whether the
+  `typed_finite_choice` floor is a systematic distractor/position trap or true
+  inability, and whether the saturated families contain perturbations with
+  nonzero empirical information. This is a calibration diagnostic, not
+  permission to select held-test items or candidates using gold labels.
+- **Laplace-PSN-IRT: Uncertainty Quantification for Neural Item Response Theory
+  Models of LLM Benchmarks** - arXiv:2607.25257,
+  https://arxiv.org/abs/2607.25257. The paper propagates item-difficulty
+  uncertainty into posterior-expected Fisher information and shows that many
+  point-estimate model comparisons are not distinguishable. Carnot hook: use
+  question-clustered uncertainty when selecting a small empirical calibration
+  bank, retain frozen calibration/held splits, and require posterior or
+  bootstrap support that selected items occupy a competent-but-unsaturated
+  band. Do not fit item selection on held outcomes or treat a point estimate as
+  a gate.
+- **D-Score: A Spectral Hidden-State Signal for Hallucination Detection in
+  Large Language Models** - arXiv:2607.24586,
+  https://arxiv.org/abs/2607.24586; submitted 2026-07-27. D-Score is a
+  training-free single-forward-pass statistic that counts near-leading
+  singular directions in a hidden-activation trajectory. Carnot hook: if a
+  new exact-labeled Phase-D pool first proves selectable headroom and an
+  authenticated matching-base per-layer surface, compare D-Score against a
+  cross-fitted linear mid-layer probe, final-layer summaries, norm/length,
+  answer-label, shuffled-label, and tuned-self-consistency controls. This is a
+  new spectral internal-representation surface; it does not reopen the retired
+  external-text/logprob scorer class, and it is not a reproduction unless the
+  paper's activation-matrix construction is actually matched.
+- **ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning**
+  - arXiv:2606.31191, https://arxiv.org/abs/2606.31191; code linked from the
+  arXiv record. ISM improves a frozen LLM under episodic resets using a compact,
+  actively maintained bank of strategy schemas learned from both successful
+  and failed episodes, with symbolic tools checking intermediate steps and
+  certifying answers. Carnot hook: extend Exp6120's bounded outcome-committed
+  utility state with verifier-certified strategy schemas, keep retrieval
+  read-only during each decision, commit only after exact outcomes, and test
+  chronological future-event utility, idempotent retries, poison quarantine,
+  retention, rollback, memory size, and immutable model weights against the
+  winning utility-only control.
+
+### Guarded findings
+
+- **Reinforcement Learning with Evolving Rubrics as Rewards for Audio
+  Reasoning** - arXiv:2608.02831, https://arxiv.org/abs/2608.02831. Its
+  per-sample rubrics adapt as a policy's weaknesses move, which reinforces the
+  need to detect saturation rather than freeze one nominal difficulty scale.
+  The method trains a policy and depends on model-generated audio rubrics and
+  judges, so it is not a direct Carnot mechanism: exact Python/Z3 outcomes must
+  remain authoritative, model-generated rubrics cannot define the Phase-D
+  label, and no weight-mutating AudioRubrics reproduction is staged.
+- **Recursive Harness Self-Improvement** - arXiv:2607.15524,
+  https://arxiv.org/abs/2607.15524. Iterative pairwise revision of a prompt-level
+  harness reportedly improves synthetic task execution through better context
+  management. Carnot's continuous-self-learning deliverable is narrower and
+  more auditable: immutable model weights, exact outcome certificates, bounded
+  memory, replay, and rollback. Self-editing the conductor or prompt harness is
+  therefore excluded from V532; only the distinction between harness state and
+  model weights is retained as architecture context.
+
+### Citation trail, ecosystem, and hardware status
+
+- **Semantic Scholar:** the dated 2026-08-05 citation API returned 32 visible
+  EBT citing records and eight ARM-EBM citing records, unchanged from V531's
+  relevant trail. Explorative Modeling, Memoir, Solver-Hard, fixed-point
+  reasoners, LoopUS, Distributional EBMs, and the previously indexed ARM-EBM
+  citations remain the actionable set. Counts are endpoint receipts, not stable
+  impact claims.
+- **OpenReview / Hugging Face Papers:** searches reconfirmed VerifyBench,
+  Spilled Energy, Hidden-Align, HalluGuard, selective verification, and other
+  already-indexed verifier work. D-Score is the only newly promoted
+  hidden-state mechanism. None removes the competent-but-unsaturated pool,
+  exact-label, tuned-self-consistency, or shortcut-control prerequisites.
+- **GitHub:** targeted searches after 2026-07-20 surfaced small new EBM and
+  thermodynamic repositories, including an early zero-dependency Rust project,
+  but no repository had the maintained evidence and direct fit needed to
+  displace Carnot's local GGUF, exact-validator, transactional-memory, or Rust
+  sampler implementations. Repository novelty or stars alone do not justify a
+  dependency.
+- **Extropic:** https://extropic.ai/writing still exposes no post-October-2025
+  TSU technical update. https://extropic.ai/hardware continues to list both the
+  Z1 Stick and Z1 Card as early access 2027. Carnot has no authenticated
+  XTR-0/Z1 route, so no TSU execution or speed/power task is eligible.
+- **Logical Intelligence:**
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  Kona as a constraint-enforcement layer beneath generative interfaces, with
+  no public weights, documented local API, or reproducible comparator. It
+  remains architecture context only.
+- **KAN / Ising / FPGA:** the sweep reconfirmed the already-indexed KAN
+  PWA/MILP verification, parallel-tempered neural CSP solvers, FPGA Ising
+  decomposition, and pipelined p-computer work. None changes Carnot's attached
+  hardware state. GateMate remains physically unchanged, KV260 is terminal,
+  PolarFire is opportunistic, and hardware stays requirements-only in V532.
+
+### V532 planning impact
+
+- Diagnose Exp6128's family mixture and option-level response modes entirely
+  from frozen rows before spending more GPU time. Build a new empirical item
+  bank only from calibration-split transformations whose exact labels and
+  difficulty uncertainty are independently recorded.
+- Use a small two-model SOTA-GGUF pilot to identify a model-specific
+  competent-but-unsaturated band, then acquire a same-model held pool only if
+  per-question headroom, effective `K`, method validity, and all-wrong gates
+  pass. Do not average saturated and below-floor families into a passing mean.
+- Test D-Score only behind both the pool-headroom gate and an authenticated
+  per-layer reachability gate. Preserve matching-base/GGUF provenance
+  separation and keep all selector fitting group-isolated from held questions.
+- Make continuous self-learning a frozen-GGUF, verifier-certified strategy
+  memory experiment: read-only decision snapshots, post-outcome commits,
+  idempotent retries, chronological future-event utility, rollback, poison
+  quarantine, and immutable weights.
+- Spend the single ARC floor slot on abstention-aware changed-cell world-model
+  verification using the live agent's own transition evidence. Do not reopen
+  the closed induction/search/pruning lines and do not claim or re-credit a
+  game-level solve.
+
+<!-- V532-PLANNER-REFRESH-20260805-END -->
