@@ -21096,3 +21096,165 @@ retired.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6126 | Planned (`python/carnot/experiment_6126_phase_d_exp6115_transport_forensics.py`, `results/experiment_6126_phase_d_exp6115_transport_forensics.json`) | Planned (`tests/python/test_experiment_6126_phase_d_exp6115_transport_forensics.py`) |
+
+### REQ-VERIFY-6127: Exp6127 Native-Chat Transport Canary On Frozen Exp6115 Slice
+
+The repository SHALL provide Exp 6127 at
+`python/carnot/experiment_6127_phase_d_native_chat_transport_canary.py` and
+write `results/experiment_6127_phase_d_native_chat_transport_canary.json`.
+Exp 6127 SHALL justify exactly one frozen native-chat change from immutable
+Exp 6115 evidence by comparing the exact failed Exp6115 raw-completion
+baseline against one model-native `messages` serialization on the same frozen
+calibration questions and seeds. This is a transport-reachability test, not a
+new constraint language and not a semantic headline.
+
+- REQ-VERIFY-6127-1: The structured gate SHALL hash the ladder artifact and
+  rows, Exp6114 through Exp6116 evidence when present, frozen row identities,
+  the mandated GGUF model file, tokenizer/chat-template metadata, relevant
+  code, output paths, GPU state, lease state, protected files, exclusion
+  manifest, and inherited debt before any model load; if the gate fails, no
+  treatment generation occurs and the artifact is `blocked:`.
+- REQ-VERIFY-6127-2: The frozen slice SHALL contain at least 18 calibration
+  questions, use no held-test labels, balance family exactly, balance
+  difficulty strata within one row, and pair each question to one exact
+  Exp6115 baseline row and one preregistered treatment seed.
+- REQ-VERIFY-6127-3: The paired transport comparison SHALL preserve raw
+  serialized baseline prompts, raw serialized treatment messages, raw
+  completions, stop reasons, token counts, seeds, parser receipts, method
+  labels, exact answer labels, and row hashes for both arms.
+- REQ-VERIFY-6127-4: The treatment SHALL use only
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, the pinned Q4_K_M GGUF file, and the
+  GGUF embedded tokenizer/chat template from the ready Exp6114 CUDA route.
+- REQ-VERIFY-6127-5: The treatment SHALL allow unconstrained natural
+  reasoning before exactly one terminal answer field and SHALL request the
+  answer as `Final answer: <A|B|C|D>`.
+- REQ-VERIFY-6127-6: The treatment SHALL remove the Exp6115 newline stop and
+  allocate a measured non-truncating budget; any `length` stop fails the
+  transport threshold rather than being repaired or retried.
+- REQ-VERIFY-6127-7: Baseline and treatment SHALL use identical questions and
+  preregistered independent seeds; treatment generation SHALL NOT add hidden
+  label retries, grammar, finite-ID transport, parser repair, deterministic
+  answer builders, or semantic-label-conditioned retries.
+- REQ-VERIFY-6127-8: GPU lifecycle receipts SHALL be task-owned and record
+  selected GPU, server PID, load/decode/release timeline, attributable CUDA
+  memory engagement, process exit, backend close/sync, and release toward the
+  pre-load baseline without killing unrelated PIDs.
+- REQ-VERIFY-6127-9: Semantic separation SHALL keep non-empty completion,
+  terminal-field reachability, parseability, channel leakage, method validity,
+  and exact answer accuracy as independent metrics; parseability SHALL NOT
+  substitute for method validity, and accuracy SHALL be reported outside the
+  transport primary.
+- REQ-VERIFY-6127-10: Retirement SHALL be conjunctive and exact: every
+  preregistered transport threshold must pass, method validity must be
+  strictly above baseline with a positive paired lower interval, exact accuracy
+  must not regress, all retired mechanisms must have zero counts, readiness is
+  exactly one only for that conjunctive pass, and the same negative verdict
+  retires this exact attempt.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `immutable_ladder_slice_and_row_hashes`,
+`model_specs_and_exact_file_hashes`,
+`tokenizer_chat_template_and_serialization_hashes`,
+`paired_baseline_treatment_prompt_seed_and_budget_contract`,
+`raw_completion_stop_reason_token_and_terminal_field_receipts`,
+`nonempty_terminal_parse_channel_method_and_accuracy_arm_metrics`,
+`paired_deltas_intervals_and_threshold_matrix`,
+`hidden_label_retry_grammar_finite_id_and_parser_repair_counts`,
+`task_owned_gpu_server_pid_engagement_and_release_timeline`,
+`model_native_transport_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `random_seed`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `structured_gate_receipt`: all immutable upstream, model, runtime, output,
+  GPU, lease, protected-file, exclusion, and inherited-debt checks pass before
+  any treatment model load.
+- `immutable_ladder_slice_and_row_hashes`: the paired slice is frozen from
+  calibration rows only, balanced by family and difficulty, and row identities
+  are conserved.
+- `model_specs_and_exact_file_hashes`: every generated treatment row traces to
+  the one mandated 26B Q4_K_M GGUF and no substitute model.
+- `tokenizer_chat_template_and_serialization_hashes`: treatment serialization
+  uses the pinned model-native chat template and hashes the exact serialized
+  messages before decode.
+- `paired_baseline_treatment_prompt_seed_and_budget_contract`: baseline and
+  treatment share questions and seeds, baseline preserves exact Exp6115 prompt
+  text, and treatment uses no newline stop with a non-truncating budget.
+- `raw_completion_stop_reason_token_and_terminal_field_receipts`: raw
+  completions, stop reasons, token counts, terminal-field counts, and hashes
+  are preserved for both arms.
+- `nonempty_terminal_parse_channel_method_and_accuracy_arm_metrics`: transport
+  reachability, parser behavior, channel leakage, method validity, and exact
+  accuracy are measured separately.
+- `paired_deltas_intervals_and_threshold_matrix`: every preregistered
+  transport threshold must pass; parseability cannot substitute for method
+  validity.
+- `hidden_label_retry_grammar_finite_id_and_parser_repair_counts`: hidden
+  label retries, grammar, finite-ID transport, and parser repair are all zero.
+- `task_owned_gpu_server_pid_engagement_and_release_timeline`: CUDA lifecycle
+  evidence is attributable to the task-owned worker and cleanup is measured.
+- `model_native_transport_ready_score`: readiness is exactly 1 only for the
+  conjunctive threshold pass.
+- `retirement_triggered`: the same negative verdict retires this exact attempt.
+- `protected_files_unchanged`: conductor and reconciler-owned files remain
+  byte-identical.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+  `test_exit_codes`, and `reproducibility_checksum`: report measured
+  `live_local_sota_gguf_cuda_native_chat_transport_canary`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: Python/Z3 labels are
+  oracle for calibration semantics, while transport gaps remain explicit.
+- `honest_verdict`: use `complete_ready:`, `complete_null:`, `retired:`, or
+  `blocked:`.
+
+### SCENARIO-VERIFY-6127-GATE: Structured Gate Blocks Before Model Load
+
+**Given** Exp6103, Exp6114, Exp6115, optional Exp6116, Exp6126, the pinned GGUF,
+runtime metadata, protected-file hashes, GPU state, lease state, and exclusion
+manifest
+**When** Exp6127 evaluates its structured gate
+**Then** it records content hashes and blocks before any treatment model load
+unless every required precondition passes.
+
+### SCENARIO-VERIFY-6127-SLICE: Frozen Calibration Pairing Is Balanced
+
+**Given** immutable Exp6115 calibration candidate rows
+**When** Exp6127 freezes its slice
+**Then** at least 18 questions are selected, family counts are equal,
+difficulty counts differ by at most one, no held-test row is selected, and each
+question maps to exactly one baseline row and one treatment row with the same
+seed.
+
+### SCENARIO-VERIFY-6127-NATIVE-CHAT: Treatment Uses Model-Native Serialization
+
+**Given** the mandated 26B Q4_K_M GGUF and embedded chat template
+**When** Exp6127 decodes the treatment arm
+**Then** it calls the model-native messages path, records serialized messages
+and hashes, removes the newline stop, allows natural reasoning, requests one
+terminal answer field, and uses no grammar, finite-ID transport, parser repair,
+or hidden-label retry.
+
+### SCENARIO-VERIFY-6127-THRESHOLDS: Transport And Semantics Stay Separate
+
+**Given** paired baseline and treatment receipts
+**When** Exp6127 computes metrics and paired intervals
+**Then** treatment non-empty and terminal-field reachability are at least 0.95,
+parseability is at least 0.90, channel leakage is at most 0.05, method validity
+is strictly above baseline with a positive paired lower interval, exact
+accuracy has no regression, and accuracy is not part of the transport primary.
+
+### SCENARIO-VERIFY-6127-LIFECYCLE: GPU Engagement And Release Are Task-Owned
+
+**Given** Exp6127 owns only the worker PID it started
+**When** treatment load, decode, and teardown finish
+**Then** positive GPU memory engagement is attributable to that PID, the worker
+exits, backend close or CUDA sync is recorded, VRAM releases toward baseline,
+and unrelated PIDs are not killed.
+
+## Implementation Status (REQ-VERIFY-6127)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6127 | Planned (`python/carnot/experiment_6127_phase_d_native_chat_transport_canary.py`, `results/experiment_6127_phase_d_native_chat_transport_canary.json`) | Planned (`tests/python/test_experiment_6127_phase_d_native_chat_transport_canary.py`) |
