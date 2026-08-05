@@ -1,0 +1,2016 @@
+{
+  "autocorrelation_effective_sample_size_and_convergence": {
+    "arms": {
+      "context_matched": {
+        "chains": [
+          {
+            "accepted_lag1_autocorrelation": 0.07637001811594203,
+            "effective_sample_size": 219.67285541471622,
+            "sample_count": 256,
+            "seed": 6153
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.05387975061671292,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6154
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.0009994103773584906,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6155
+          },
+          {
+            "accepted_lag1_autocorrelation": 0.019471164850759934,
+            "effective_sample_size": 246.22116883016648,
+            "sample_count": 256,
+            "seed": 6156
+          }
+        ],
+        "effective_sample_size_mean": 244.4735060612207,
+        "effective_sample_size_min": 219.67285541471622,
+        "lag1_autocorrelation_max": 0.07637001811594203,
+        "nonconverged": false,
+        "sample_count": 1024,
+        "support_violation_count": 0
+      },
+      "isolated": {
+        "chains": [
+          {
+            "accepted_lag1_autocorrelation": 0.07637001811594203,
+            "effective_sample_size": 219.67285541471622,
+            "sample_count": 256,
+            "seed": 6153
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.05387975061671292,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6154
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.0009994103773584906,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6155
+          },
+          {
+            "accepted_lag1_autocorrelation": 0.019471164850759934,
+            "effective_sample_size": 246.22116883016648,
+            "sample_count": 256,
+            "seed": 6156
+          }
+        ],
+        "effective_sample_size_mean": 244.4735060612207,
+        "effective_sample_size_min": 219.67285541471622,
+        "lag1_autocorrelation_max": 0.07637001811594203,
+        "nonconverged": false,
+        "sample_count": 1024,
+        "support_violation_count": 0
+      }
+    },
+    "minimum_effective_sample_size": 128.0,
+    "nonconvergence_count": 0,
+    "principle": "Reports sampling uncertainty, lag correlation, ESS, support violations, and nonconvergence.",
+    "support_violation_count": 0
+  },
+  "bound_slack_and_violation_counts": {
+    "arms": {
+      "context_matched": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.0,
+        "precommitted_tv_bound": 0.0,
+        "slack": 0.0
+      },
+      "isolated": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.0,
+        "precommitted_tv_bound": 0.0,
+        "slack": 0.0
+      }
+    },
+    "bound_precommit_sha256": "sha256:7bf2402134136e1c08d69522d0ce418079c3e7438a17dd9c626346da6ff3e516",
+    "principle": "Compares measured joint divergence with the precommitted bound and counts violations.",
+    "violation_count": 0
+  },
+  "context_matched_minus_isolated_intervals": {
+    "context_matching_improved": false,
+    "context_matching_noninferior": true,
+    "exact_delta": 0.0,
+    "noninferiority_margin": 0.0,
+    "primary_metric": "exact_joint_tv",
+    "principle": "States whether context matching improves or noninferiorly preserves primary divergence.",
+    "sampled_delta": 0.0,
+    "sampled_delta_interval_95": [
+      -0.08488134473378872,
+      0.08488134473378872
+    ]
+  },
+  "duration_s": 1.918436,
+  "exact_and_sampled_case_counts": {
+    "exact": {
+      "impossible_state_count": 1530,
+      "kernel_count": 9,
+      "state_space_size": 1536,
+      "support_count": 6,
+      "wire_count": 9
+    },
+    "principle": "Separates exhaustive finite cases from matched sampled bounded cases.",
+    "sampled": {
+      "arms": [
+        "context_matched",
+        "isolated"
+      ],
+      "samples_per_arm": 1024,
+      "seed_count": 4
+    }
+  },
+  "experiment_id": "experiment_6153_thermalized_program_error_audit",
+  "factor_eligibility_and_compilation_manifest": {
+    "compiled_factor_count": 9,
+    "eligibility_rule": "finite_binary_or_categorical_output_context_cardinality_le_8",
+    "eligible_factor_count": 9,
+    "factor_count": 9,
+    "factors": [
+      {
+        "compiled": true,
+        "context_count": 1,
+        "eligible": true,
+        "energy_table": {
+          "[]": {
+            "\"ac_e0_0\"": 0.916290731874155,
+            "\"ac_e0_1\"": 0.6931471805599453,
+            "\"ac_e0_2\"": 2.3025850929940455
+          }
+        },
+        "inputs": [],
+        "kernel_id": "sample_candidate_item",
+        "kind": "categorical_prior",
+        "normalization_error_max": 0.0,
+        "output": "candidate_item",
+        "output_labels": [
+          "ac_e0_0",
+          "ac_e0_1",
+          "ac_e0_2"
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:0b9ea0c4e6abd41d305d597cb580458dfb0f14a3f12fe10c2e340e872ad5da94",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 1,
+        "eligible": true,
+        "energy_table": {
+          "[]": {
+            "0": 2.302585092994046,
+            "1": 0.10536051565782628
+          }
+        },
+        "inputs": [],
+        "kernel_id": "sample_strategy_clean",
+        "kind": "bernoulli_prior",
+        "normalization_error_max": 0.0,
+        "output": "strategy_clean",
+        "output_labels": [
+          0,
+          1
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:80d7344964da5c50defb88d508f97a4dcae09b2050031fa07c595cd93be094ee",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 3,
+        "eligible": true,
+        "energy_table": {
+          "[\"ac_e0_0\"]": {
+            "\"ac_g0_0\"": -0.0,
+            "\"ac_g0_1\"": "hard_forbidden"
+          },
+          "[\"ac_e0_1\"]": {
+            "\"ac_g0_0\"": "hard_forbidden",
+            "\"ac_g0_1\"": -0.0
+          },
+          "[\"ac_e0_2\"]": {
+            "\"ac_g0_0\"": -0.0,
+            "\"ac_g0_1\"": "hard_forbidden"
+          }
+        },
+        "inputs": [
+          "candidate_item"
+        ],
+        "kernel_id": "member_group_lookup",
+        "kind": "deterministic_lookup",
+        "normalization_error_max": 0.0,
+        "output": "member_group",
+        "output_labels": [
+          "ac_g0_0",
+          "ac_g0_1"
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:c394bce06abaa39abf50cac129ee8697e7e3e2adc1cb7fa24b6cb1c641dda125",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 3,
+        "eligible": true,
+        "energy_table": {
+          "[\"ac_e0_0\"]": {
+            "\"clearance_1\"": "hard_forbidden",
+            "\"clearance_2\"": "hard_forbidden",
+            "\"clearance_3\"": -0.0,
+            "\"clearance_4\"": "hard_forbidden"
+          },
+          "[\"ac_e0_1\"]": {
+            "\"clearance_1\"": "hard_forbidden",
+            "\"clearance_2\"": "hard_forbidden",
+            "\"clearance_3\"": "hard_forbidden",
+            "\"clearance_4\"": -0.0
+          },
+          "[\"ac_e0_2\"]": {
+            "\"clearance_1\"": "hard_forbidden",
+            "\"clearance_2\"": -0.0,
+            "\"clearance_3\"": "hard_forbidden",
+            "\"clearance_4\"": "hard_forbidden"
+          }
+        },
+        "inputs": [
+          "candidate_item"
+        ],
+        "kernel_id": "clearance_lookup",
+        "kind": "deterministic_lookup",
+        "normalization_error_max": 0.0,
+        "output": "clearance",
+        "output_labels": [
+          "clearance_1",
+          "clearance_2",
+          "clearance_3",
+          "clearance_4"
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:8dd453c0913b4537eb46671a38562c158d2e7ad2e5ef4623f33b7eff815faad4",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 2,
+        "eligible": true,
+        "energy_table": {
+          "[\"ac_g0_0\"]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          },
+          "[\"ac_g0_1\"]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          }
+        },
+        "inputs": [
+          "member_group"
+        ],
+        "kernel_id": "gate_open_lookup",
+        "kind": "deterministic_lookup",
+        "normalization_error_max": 0.0,
+        "output": "gate_open",
+        "output_labels": [
+          0,
+          1
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:74a15f3edde7815131082dc966d9c593196de5bd524c852d37c018e3622b3b9c",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 3,
+        "eligible": true,
+        "energy_table": {
+          "[\"ac_e0_0\"]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[\"ac_e0_1\"]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          },
+          "[\"ac_e0_2\"]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          }
+        },
+        "inputs": [
+          "candidate_item"
+        ],
+        "kernel_id": "blocked_lookup",
+        "kind": "deterministic_lookup",
+        "normalization_error_max": 0.0,
+        "output": "blocked",
+        "output_labels": [
+          0,
+          1
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:cb92ff2086ab84f42b7a63c0cbf0459f5158249cb97fa5601793cf5965c1dc87",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 4,
+        "eligible": true,
+        "energy_table": {
+          "[\"clearance_1\"]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[\"clearance_2\"]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          },
+          "[\"clearance_3\"]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          },
+          "[\"clearance_4\"]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          }
+        },
+        "inputs": [
+          "clearance"
+        ],
+        "kernel_id": "clearance_ok_lookup",
+        "kind": "deterministic_lookup",
+        "normalization_error_max": 0.0,
+        "output": "clearance_ok",
+        "output_labels": [
+          0,
+          1
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:4e9fbb09e45cb7e079c6f844e91832281a1d0d6d7ebc0c218b09e988f2bdb35a",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 8,
+        "eligible": true,
+        "energy_table": {
+          "[0,0,0]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[0,0,1]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[0,1,0]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[0,1,1]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[1,0,0]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[1,0,1]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          },
+          "[1,1,0]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[1,1,1]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          }
+        },
+        "inputs": [
+          "gate_open",
+          "blocked",
+          "clearance_ok"
+        ],
+        "kernel_id": "eligible_truth_table",
+        "kind": "deterministic_truth_table",
+        "normalization_error_max": 0.0,
+        "output": "eligible",
+        "output_labels": [
+          0,
+          1
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:a9df08a15a69449a7006a3c1bb9ed64b555cc45ba405a4580a1a946cb69794a1",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      },
+      {
+        "compiled": true,
+        "context_count": 4,
+        "eligible": true,
+        "energy_table": {
+          "[0,0]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[0,1]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[1,0]": {
+            "0": -0.0,
+            "1": "hard_forbidden"
+          },
+          "[1,1]": {
+            "0": "hard_forbidden",
+            "1": -0.0
+          }
+        },
+        "inputs": [
+          "eligible",
+          "strategy_clean"
+        ],
+        "kernel_id": "accepted_truth_table",
+        "kind": "deterministic_truth_table",
+        "normalization_error_max": 0.0,
+        "output": "accepted",
+        "output_labels": [
+          0,
+          1
+        ],
+        "parameterization": "support_masked_conditional_energy_table",
+        "probability_table_sha256": "sha256:63e59d457bf4ff570469febddb4a74fa40bc404124fecd5d5211e7e6ae6205ca",
+        "reason": "finite_typed_factor",
+        "support_violation_count": 0
+      }
+    ],
+    "manifest_sha256": "sha256:ffc81f45f15df8955041996b881b65fc63aef186cf5501770d0666df02b74bfc",
+    "normalization_error_max": 0.0,
+    "principle": "Shows exactly which Exp6152 factors were eligible, compiled, support-preserving, and normalized.",
+    "software_ebm_kernel_count": 9,
+    "support_preserved": true
+  },
+  "field_principles": {
+    "autocorrelation_effective_sample_size_and_convergence": "Reports sampling uncertainty, lag correlation, ESS, support violations, and nonconvergence.",
+    "bound_slack_and_violation_counts": "Compares measured joint divergence with the precommitted bound and counts violations.",
+    "context_matched_minus_isolated_intervals": "States whether context matching improves or noninferiorly preserves primary divergence.",
+    "duration_s": "Reports real wall time without padding.",
+    "exact_and_sampled_case_counts": "Separates exhaustive finite cases from matched sampled bounded cases.",
+    "factor_eligibility_and_compilation_manifest": "Shows exactly which Exp6152 factors were eligible, compiled, support-preserving, and normalized.",
+    "field_provenance": "Maps each required field to prompt, spec, source, tests, artifacts, or package receipts.",
+    "hardware_execution_claimed": "Bare false prevents software thermalization from becoming a hardware claim.",
+    "honest_verdict": "Uses a required terminal prefix and states whether program-level error composition held.",
+    "identity_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls": "Proves positive and negative controls detect exact, bad, rewired, support-breaking, and uninformative-bound cases.",
+    "inference_substrate": "Declares `jax_cpu_software_thermalization`, not hardware, GPU, or LLM inference.",
+    "isolated_and_context_matched_training_config": "Freezes calibration data, seeds, steps, schedules, arms, and metrics before outcomes.",
+    "latency_power_energy_and_speedup_claimed": "Bare false prevents software quality evidence from becoming a performance claim.",
+    "missing_verifier_gaps": "Lists absent evidence rather than silently granting readiness.",
+    "per_factor_and_joint_distribution_divergences": "Reports local and end-to-end divergence for isolated and context-matched arms.",
+    "preconditions_checked": "Records CPU JAX, upstream gates, interface availability, output paths, exact references, retired lineage, and protected files before evaluation.",
+    "preregistered_per_factor_to_joint_error_bound": "Hashes the local-error-derived joint bound before joint distribution results are read.",
+    "prior_failure_and_operator_override_receipts": "Preserves the operator override that distinguishes Exp6153 from retired THRML parity scaling.",
+    "protected_files_unchanged": "Confirms conductor and reconciliation files were byte-identical during artifact construction.",
+    "reproducibility_checksum": "Content-addresses the artifact with volatile duration and self-checksum blanked.",
+    "retired_parity_scaling_nonreuse_receipt": "Proves no size sweep or Carnot-versus-vendored-THRML parity table is produced.",
+    "retirement_triggered": "Records whether this run crossed a retired-lineage rule.",
+    "status": "Terminal state separates ready, bound-violated, retired, and blocked Exp6153 outcomes.",
+    "structured_gate_receipt": "Recomputes Exp6145 and Exp6152 readiness instead of trusting stale downstream claims.",
+    "test_commands": "Records focused unit/spec coverage, structured gate, interfaces, bounds, exact/sample divergence, controls, no-hardware, E2E, full pytest, and root-clutter checks.",
+    "test_exit_codes": "Prevents failed commands from becoming readiness evidence.",
+    "thermalized_program_ready_score": "Equals 1.0 only when interfaces execute, support is preserved, the bound holds, context matching is noninferior, controls fire, and no forbidden claim appears.",
+    "torx_thrml_versions_commits_import_and_api_receipts": "Proves the pinned Torx and THRML-compatible software interfaces actually imported and executed.",
+    "upstream_ir_executor_and_exact_reference_hashes": "Binds Exp6152 IR, executor, exact reference, artifact, and tests before factor replacement.",
+    "verifier_is_oracle": "Declares Exp6152 exact enumeration as the oracle for bounded cases."
+  },
+  "field_provenance": {
+    "autocorrelation_effective_sample_size_and_convergence": {
+      "principle": "Reports sampling uncertainty, lag correlation, ESS, support violations, and nonconvergence.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "bound_slack_and_violation_counts": {
+      "principle": "Compares measured joint divergence with the precommitted bound and counts violations.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "context_matched_minus_isolated_intervals": {
+      "principle": "States whether context matching improves or noninferiorly preserves primary divergence.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports real wall time without padding.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "exact_and_sampled_case_counts": {
+      "principle": "Separates exhaustive finite cases from matched sampled bounded cases.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "factor_eligibility_and_compilation_manifest": {
+      "principle": "Shows exactly which Exp6152 factors were eligible, compiled, support-preserving, and normalized.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps each required field to prompt, spec, source, tests, artifacts, or package receipts.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "hardware_execution_claimed": {
+      "principle": "Bare false prevents software thermalization from becoming a hardware claim.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Uses a required terminal prefix and states whether program-level error composition held.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "identity_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls": {
+      "principle": "Proves positive and negative controls detect exact, bad, rewired, support-breaking, and uninformative-bound cases.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares `jax_cpu_software_thermalization`, not hardware, GPU, or LLM inference.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "isolated_and_context_matched_training_config": {
+      "principle": "Freezes calibration data, seeds, steps, schedules, arms, and metrics before outcomes.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "latency_power_energy_and_speedup_claimed": {
+      "principle": "Bare false prevents software quality evidence from becoming a performance claim.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Lists absent evidence rather than silently granting readiness.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "per_factor_and_joint_distribution_divergences": {
+      "principle": "Reports local and end-to-end divergence for isolated and context-matched arms.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Records CPU JAX, upstream gates, interface availability, output paths, exact references, retired lineage, and protected files before evaluation.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "preregistered_per_factor_to_joint_error_bound": {
+      "principle": "Hashes the local-error-derived joint bound before joint distribution results are read.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "prior_failure_and_operator_override_receipts": {
+      "principle": "Preserves the operator override that distinguishes Exp6153 from retired THRML parity scaling.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms conductor and reconciliation files were byte-identical during artifact construction.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact with volatile duration and self-checksum blanked.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "retired_parity_scaling_nonreuse_receipt": {
+      "principle": "Proves no size sweep or Carnot-versus-vendored-THRML parity table is produced.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "retirement_triggered": {
+      "principle": "Records whether this run crossed a retired-lineage rule.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "status": {
+      "principle": "Terminal state separates ready, bound-violated, retired, and blocked Exp6153 outcomes.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "structured_gate_receipt": {
+      "principle": "Recomputes Exp6145 and Exp6152 readiness instead of trusting stale downstream claims.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "test_commands": {
+      "principle": "Records focused unit/spec coverage, structured gate, interfaces, bounds, exact/sample divergence, controls, no-hardware, E2E, full pytest, and root-clutter checks.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Prevents failed commands from becoming readiness evidence.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "thermalized_program_ready_score": {
+      "principle": "Equals 1.0 only when interfaces execute, support is preserved, the bound holds, context matching is noninferior, controls fire, and no forbidden claim appears.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "torx_thrml_versions_commits_import_and_api_receipts": {
+      "principle": "Proves the pinned Torx and THRML-compatible software interfaces actually imported and executed.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "upstream_ir_executor_and_exact_reference_hashes": {
+      "principle": "Binds Exp6152 IR, executor, exact reference, artifact, and tests before factor replacement.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Declares Exp6152 exact enumeration as the oracle for bounded cases.",
+      "sources": [
+        "task_prompt",
+        "arxiv:2608.01615",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_1526_thrml_carnot_parity_n8.json",
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "pypi:extro-torx==0.0.1",
+        "carnot.sampling._vendored_thrml==0.1.3"
+      ]
+    }
+  },
+  "hardware_execution_claimed": false,
+  "honest_verdict": "blocked: program-level error composition held but nonzero_test_commands",
+  "identity_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls": {
+    "all_controls_passed": true,
+    "bad_factor_control_fired": true,
+    "bad_factor_joint_tv": 0.4,
+    "identity_joint_tv": 0.0,
+    "identity_zero_error_control_passed": true,
+    "overly_loose_bound_control_fired": true,
+    "overly_loose_bound_rejected_reason": "slack_exceeds_informative_bound_policy",
+    "overly_loose_candidate_tv_bound": 1.0,
+    "permuted_wire_control_fired": true,
+    "permuted_wire_joint_delta": 0.36000000000000004,
+    "precommitted_bound_hash_checked": "sha256:7bf2402134136e1c08d69522d0ce418079c3e7438a17dd9c626346da6ff3e516",
+    "principle": "Proves positive and negative controls detect exact, bad, rewired, support-breaking, and uninformative-bound cases.",
+    "unsupported_state_control_fired": true,
+    "unsupported_state_violation_count": 1
+  },
+  "inference_substrate": "jax_cpu_software_thermalization",
+  "isolated_and_context_matched_training_config": {
+    "arms": {
+      "context_matched": {
+        "context_weighting": "Exp6152_parent_context_distribution",
+        "objective": "per_factor_conditional_cross_entropy"
+      },
+      "isolated": {
+        "context_weighting": "uniform_over_declared_local_contexts",
+        "objective": "per_factor_conditional_cross_entropy"
+      }
+    },
+    "calibration_source": "Exp6152 exact calibration factors only",
+    "closed_form_steps": 1,
+    "gradient_steps": 0,
+    "held_out_joint_outputs_used_for_training": false,
+    "metrics": [
+      "total_variation",
+      "kl_target_to_replacement",
+      "support_violation_count"
+    ],
+    "principle": "Freezes calibration data, seeds, steps, schedules, arms, and metrics before outcomes.",
+    "resource_matched": true,
+    "sampler_schedule": {
+      "draw_rule": "software_conditional_table_inverse_cdf",
+      "jax_platforms": "cpu",
+      "topological_factor_order": "Exp6152 validated kernel order"
+    },
+    "samples_per_seed": 256,
+    "seeds": [
+      6153,
+      6154,
+      6155,
+      6156
+    ]
+  },
+  "latency_power_energy_and_speedup_claimed": false,
+  "missing_verifier_gaps": [],
+  "per_factor_and_joint_distribution_divergences": {
+    "exact_joint": {
+      "context_matched": {
+        "joint_kl_target_to_candidate": 0.0,
+        "joint_tv": 0.0,
+        "max_abs_probability_delta": 0.0,
+        "normalization_delta": 0.0,
+        "normalization_error": 0.0,
+        "support_count": 6,
+        "support_violation_count": 0
+      },
+      "isolated": {
+        "joint_kl_target_to_candidate": 0.0,
+        "joint_tv": 0.0,
+        "max_abs_probability_delta": 0.0,
+        "normalization_delta": 0.0,
+        "normalization_error": 0.0,
+        "support_count": 6,
+        "support_violation_count": 0
+      }
+    },
+    "per_factor": {
+      "context_matched": [
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "sample_candidate_item",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "sample_strategy_clean",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "member_group_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "clearance_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "gate_open_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "blocked_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "clearance_ok_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "eligible_truth_table",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "accepted_truth_table",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        }
+      ],
+      "isolated": [
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "sample_candidate_item",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "sample_strategy_clean",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "member_group_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "clearance_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "gate_open_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "blocked_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "clearance_ok_lookup",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "eligible_truth_table",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        },
+        {
+          "context_weight_sum": 1.0,
+          "kernel_id": "accepted_truth_table",
+          "max_context_tv": 0.0,
+          "support_violation_count": 0,
+          "weighted_kl": 0.0,
+          "weighted_tv": 0.0
+        }
+      ]
+    },
+    "principle": "Reports local and end-to-end divergence for isolated and context-matched arms.",
+    "program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+    "sampled_joint": {
+      "context_matched": {
+        "chains": [
+          {
+            "accepted_lag1_autocorrelation": 0.07637001811594203,
+            "effective_sample_size": 219.67285541471622,
+            "sample_count": 256,
+            "seed": 6153
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.05387975061671292,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6154
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.0009994103773584906,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6155
+          },
+          {
+            "accepted_lag1_autocorrelation": 0.019471164850759934,
+            "effective_sample_size": 246.22116883016648,
+            "sample_count": 256,
+            "seed": 6156
+          }
+        ],
+        "joint_kl_target_to_candidate": 0.0006218579776870233,
+        "joint_tv": 0.015820312499999996,
+        "max_abs_probability_delta": 0.011523437500000011,
+        "normalization_delta": 0.0,
+        "sample_count": 1024,
+        "seed_count": 4,
+        "support_violation_count": 0,
+        "tv_dkw_radius_95": 0.04244067236689436
+      },
+      "isolated": {
+        "chains": [
+          {
+            "accepted_lag1_autocorrelation": 0.07637001811594203,
+            "effective_sample_size": 219.67285541471622,
+            "sample_count": 256,
+            "seed": 6153
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.05387975061671292,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6154
+          },
+          {
+            "accepted_lag1_autocorrelation": -0.0009994103773584906,
+            "effective_sample_size": 256.0,
+            "sample_count": 256,
+            "seed": 6155
+          },
+          {
+            "accepted_lag1_autocorrelation": 0.019471164850759934,
+            "effective_sample_size": 246.22116883016648,
+            "sample_count": 256,
+            "seed": 6156
+          }
+        ],
+        "joint_kl_target_to_candidate": 0.0006218579776870233,
+        "joint_tv": 0.015820312499999996,
+        "max_abs_probability_delta": 0.011523437500000011,
+        "normalization_delta": 0.0,
+        "sample_count": 1024,
+        "seed_count": 4,
+        "support_violation_count": 0,
+        "tv_dkw_radius_95": 0.04244067236689436
+      }
+    }
+  },
+  "preconditions_checked": {
+    "checks": {
+      "exp6152_program_hashed": true,
+      "jax_platforms_cpu": true,
+      "operator_override_present": true,
+      "output_parent_writable": true,
+      "protected_files_present": true,
+      "retired_lineage_blocked": true,
+      "sampler_spec_has_req_6153": true,
+      "structured_gate_passed": true,
+      "torx_thrml_interfaces_ready": true
+    },
+    "jax_platforms_env": "cpu",
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6153_thermalized_program_error_audit.json",
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "preconditions_ready": true,
+    "principle": "Records CPU JAX, upstream gates, interface availability, output paths, exact references, retired lineage, and protected files before evaluation.",
+    "python": "3.12.13",
+    "run_date": "20260805",
+    "source_hashes": {
+      "output_paths": {
+        "result": "results/experiment_6153_thermalized_program_error_audit.json"
+      },
+      "paths": {
+        "AGENTS.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        "CLAUDE.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
+        },
+        "CODEX.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        "openspec/capabilities/samplers/spec.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:fa6f33872fe3c6412c6290d7d19fa334f7ef28cc8dd6670737ee2b62855fd8c1"
+        },
+        "ops/exclusion_manifest.yaml": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+        },
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:c69351110bc171bfadec8ac410ebf33d706df65a20636a5d97d8fa2e6c993ef8"
+        },
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:c183a0eb598e8e2a5f34f0234386b03c07858cf42a8c12dedb65454d870d8076"
+        },
+        "python/carnot/samplers": {
+          "exists": true,
+          "file_count": 160,
+          "kind": "directory",
+          "sha256": "sha256:217701bff8504050847d7d00d5de95f635252341e0475fcc42c292f65b17b551"
+        },
+        "python/carnot/sampling/_vendored_thrml": {
+          "exists": true,
+          "file_count": 26,
+          "kind": "directory",
+          "sha256": "sha256:18615d96e4fac8304bf0b06caa2b1ce07a24e8ae09cac3bd79490b651e947eb4"
+        },
+        "research-hardware-wishlist.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+        },
+        "research-references.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:88f3113d06d22db603bac5e6e176cba07a3bf391beb6f23fe7a06a1fb70f3a6f"
+        },
+        "research-roadmap.yaml": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:eef368aa157fa351581df56ca64a0df8730ae36c73f78cfef7b2f1df052b052d"
+        },
+        "results/experiment_1526_thrml_carnot_parity_n8.json": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:35e98916ac3056e6ae0414a5a0f04909a46cd1d6e7653770d3245468257d0b6a"
+        },
+        "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:f7cb5e4556ca16513d72b1d3a1684b4326b05cf6c6dc3de51046171b89816839"
+        },
+        "results/experiment_6152_typed_stochastic_constraint_ir.json": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:62cdce73c0f381d05721f1169863b320b1f7d68ddedc8d1c5a50676aa2c9d64c"
+        },
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:7ca26d403f30837792cf92a79fcbc153a3f355e4da2b131413796865beaaeb56"
+        },
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:ecbb4c4bb0c8e3c70d9f4d0858103d355c324aea722fa0665db3f10f6a59120d"
+        }
+      },
+      "protected_files": [
+        "scripts/research_conductor.py",
+        "ops/changelog.md",
+        "ops/status.md",
+        "_bmad/traceability.md"
+      ]
+    }
+  },
+  "preregistered_per_factor_to_joint_error_bound": {
+    "arms": {
+      "context_matched": {
+        "bound_formula": "TV(P,Q) <= sum_i E_P(parent_i)[TV(P_i(.|pa),Q_i(.|pa))]",
+        "kl_bound": 0.0,
+        "kl_formula": "KL(P||Q) = sum_i E_P(parent_i)[KL(P_i(.|pa),Q_i(.|pa))]",
+        "per_factor_errors": [
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "sample_candidate_item",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "sample_strategy_clean",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "member_group_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "clearance_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "gate_open_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "blocked_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "clearance_ok_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "eligible_truth_table",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "accepted_truth_table",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          }
+        ],
+        "pinsker_tv_bound": 0.0,
+        "tv_bound": 0.0
+      },
+      "isolated": {
+        "bound_formula": "TV(P,Q) <= sum_i E_P(parent_i)[TV(P_i(.|pa),Q_i(.|pa))]",
+        "kl_bound": 0.0,
+        "kl_formula": "KL(P||Q) = sum_i E_P(parent_i)[KL(P_i(.|pa),Q_i(.|pa))]",
+        "per_factor_errors": [
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "sample_candidate_item",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "sample_strategy_clean",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "member_group_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "clearance_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "gate_open_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "blocked_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "clearance_ok_lookup",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "eligible_truth_table",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          },
+          {
+            "context_weight_sum": 1.0,
+            "kernel_id": "accepted_truth_table",
+            "max_context_tv": 0.0,
+            "support_violation_count": 0,
+            "weighted_kl": 0.0,
+            "weighted_tv": 0.0
+          }
+        ],
+        "pinsker_tv_bound": 0.0,
+        "tv_bound": 0.0
+      }
+    },
+    "derived_before_joint_evaluation": true,
+    "joint_results_read_before_hash": false,
+    "precommit_payload": {
+      "arms": {
+        "context_matched": {
+          "bound_formula": "TV(P,Q) <= sum_i E_P(parent_i)[TV(P_i(.|pa),Q_i(.|pa))]",
+          "kl_bound": 0.0,
+          "kl_formula": "KL(P||Q) = sum_i E_P(parent_i)[KL(P_i(.|pa),Q_i(.|pa))]",
+          "per_factor_errors": [
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "sample_candidate_item",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "sample_strategy_clean",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "member_group_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "clearance_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "gate_open_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "blocked_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "clearance_ok_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "eligible_truth_table",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "accepted_truth_table",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            }
+          ],
+          "pinsker_tv_bound": 0.0,
+          "tv_bound": 0.0
+        },
+        "isolated": {
+          "bound_formula": "TV(P,Q) <= sum_i E_P(parent_i)[TV(P_i(.|pa),Q_i(.|pa))]",
+          "kl_bound": 0.0,
+          "kl_formula": "KL(P||Q) = sum_i E_P(parent_i)[KL(P_i(.|pa),Q_i(.|pa))]",
+          "per_factor_errors": [
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "sample_candidate_item",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "sample_strategy_clean",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "member_group_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "clearance_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "gate_open_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "blocked_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "clearance_ok_lookup",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "eligible_truth_table",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            },
+            {
+              "context_weight_sum": 1.0,
+              "kernel_id": "accepted_truth_table",
+              "max_context_tv": 0.0,
+              "support_violation_count": 0,
+              "weighted_kl": 0.0,
+              "weighted_tv": 0.0
+            }
+          ],
+          "pinsker_tv_bound": 0.0,
+          "tv_bound": 0.0
+        }
+      },
+      "program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+      "schema": "carnot.exp6153.precommitted_factor_to_joint_bound.v1",
+      "training_config": {
+        "arms": {
+          "context_matched": {
+            "context_weighting": "Exp6152_parent_context_distribution",
+            "objective": "per_factor_conditional_cross_entropy"
+          },
+          "isolated": {
+            "context_weighting": "uniform_over_declared_local_contexts",
+            "objective": "per_factor_conditional_cross_entropy"
+          }
+        },
+        "calibration_source": "Exp6152 exact calibration factors only",
+        "closed_form_steps": 1,
+        "gradient_steps": 0,
+        "held_out_joint_outputs_used_for_training": false,
+        "metrics": [
+          "total_variation",
+          "kl_target_to_replacement",
+          "support_violation_count"
+        ],
+        "principle": "Freezes calibration data, seeds, steps, schedules, arms, and metrics before outcomes.",
+        "resource_matched": true,
+        "sampler_schedule": {
+          "draw_rule": "software_conditional_table_inverse_cdf",
+          "jax_platforms": "cpu",
+          "topological_factor_order": "Exp6152 validated kernel order"
+        },
+        "samples_per_seed": 256,
+        "seeds": [
+          6153,
+          6154,
+          6155,
+          6156
+        ]
+      }
+    },
+    "precommit_sha256": "sha256:7bf2402134136e1c08d69522d0ce418079c3e7438a17dd9c626346da6ff3e516",
+    "primary_arm": "context_matched",
+    "primary_metric": "exact_joint_tv",
+    "principle": "Hashes the local-error-derived joint bound before joint distribution results are read."
+  },
+  "prior_failure_and_operator_override_receipts": {
+    "exclusion_manifest_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+    "operator_override_found": true,
+    "operator_override_summary": "Exp6153 tests typed program-level factor replacement and compositional error bounds; retired THRML/Carnot parity scaling is not reused.",
+    "principle": "Preserves the operator override that distinguishes Exp6153 from retired THRML parity scaling.",
+    "prior_failure_found": true,
+    "research_roadmap_sha256": "sha256:eef368aa157fa351581df56ca64a0df8730ae36c73f78cfef7b2f1df052b052d",
+    "retired_lineage_manifest_found": true
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:48ad61a7143b163b68a54d8e84997e2e2e09397f1cf8431e1af87cdc908aee3a"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:48ad61a7143b163b68a54d8e84997e2e2e09397f1cf8431e1af87cdc908aee3a"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "principle": "Confirms conductor and reconciliation files were byte-identical during artifact construction.",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:5cfd526791377e1b86b993c7ea80fc43fa9f30ed2107a5ae792d672c0b688c31",
+  "retired_parity_scaling_nonreuse_receipt": {
+    "blocked_patterns_checked": [
+      "THRML/Carnot parity n=8",
+      "THRML/Carnot parity n=16",
+      "THRML/Carnot parity n=32",
+      "THRML/Carnot parity n=64",
+      "THRML/Carnot parity n=128",
+      "THRML/Carnot parity n=256",
+      "THRML diverse topology parity",
+      "THRML scaling sweep"
+    ],
+    "carnot_vs_vendored_thrml_parity_table_produced": false,
+    "principle": "Proves no size sweep or Carnot-versus-vendored-THRML parity table is produced.",
+    "prior_artifact_hashes": {
+      "results/experiment_1526_thrml_carnot_parity_n8.json": "sha256:35e98916ac3056e6ae0414a5a0f04909a46cd1d6e7653770d3245468257d0b6a",
+      "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json": "sha256:f7cb5e4556ca16513d72b1d3a1684b4326b05cf6c6dc3de51046171b89816839"
+    },
+    "retired_experiment_ids": [
+      "exp1526",
+      "exp1527",
+      "exp1528",
+      "exp1529",
+      "exp1530",
+      "exp1531",
+      "exp1543",
+      "exp1544"
+    ],
+    "retired_lineage_blocked": true,
+    "retired_manifest_entry_id": "thrml_scaling_sweep_lineage_retired_after_vendoring",
+    "retirement_triggered": false,
+    "size_sweep_produced": false
+  },
+  "retirement_triggered": false,
+  "run_date": "20260805",
+  "schema": "carnot.experiment_6153.thermalized_program_error_audit.v1",
+  "status": "blocked",
+  "structured_gate_receipt": {
+    "exp6145_gate": {
+      "exp6145_artifact": "results/experiment_6145_constraint_shift_stream.json",
+      "exp6145_honest_verdict": "complete_ready: exact_constraint_shift_stream_oracle_separated",
+      "exp6145_ready_score": 1.0,
+      "exp6145_status": "complete_ready",
+      "gate_passed": true,
+      "outcome_sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1",
+      "principle": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
+      "row_sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c",
+      "sidecar_replay_ok": true,
+      "split_sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+    },
+    "exp6152_artifact": "results/experiment_6152_typed_stochastic_constraint_ir.json",
+    "exp6152_artifact_sha256": "sha256:62cdce73c0f381d05721f1169863b320b1f7d68ddedc8d1c5a50676aa2c9d64c",
+    "exp6152_ready_score": 1.0,
+    "exp6152_status": "complete_ready",
+    "exp6152_validate_artifact": true,
+    "gate_passed": true,
+    "principle": "Recomputes Exp6145 and Exp6152 readiness instead of trusting stale downstream claims."
+  },
+  "test_commands": [
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6153_thermalized_program_error_audit.py -q --no-cov -n 0",
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6153_thermalized_program_error_audit.py -m pytest tests/python/test_experiment_6153_thermalized_program_error_audit.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6153_thermalized_program_error_audit.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+    ".venv/bin/ruff check python/carnot/experiment_6153_thermalized_program_error_audit.py tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6153_thermalized_program_error_audit.py tests/python/test_experiment_6153_thermalized_program_error_audit.py",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6153_thermalized_program_error_audit.json",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6153_thermalized_program_error_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6153_thermalized_program_error_audit.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6153_thermalized_program_error_audit.py tests/python/test_experiment_6153_thermalized_program_error_audit.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6153_thermalized_program_error_audit.py tests/python/test_experiment_6153_thermalized_program_error_audit.py": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6153_thermalized_program_error_audit.py -m pytest tests/python/test_experiment_6153_thermalized_program_error_audit.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6153_thermalized_program_error_audit.py --fail-under=100": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q": 2,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6153_thermalized_program_error_audit.py -q --no-cov -n 0": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "thermalized_program_ready_score": 0.0,
+  "torx_thrml_versions_commits_import_and_api_receipts": {
+    "interface_ready": true,
+    "jax": {
+      "default_backend": "cpu",
+      "devices": [
+        "cpu:0"
+      ],
+      "jax_platforms_env": "cpu",
+      "version": "0.10.1"
+    },
+    "principle": "Proves the pinned Torx and THRML-compatible software interfaces actually imported and executed.",
+    "torx": {
+      "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
+      "api_exercised": true,
+      "blocked_reason": null,
+      "compatibility_ready": true,
+      "exercised_api": [
+        "DiscretePCircuit",
+        "StateVectorSimulator",
+        "PNOT",
+        "PditShift"
+      ],
+      "import_namespace": "torx",
+      "importable": true,
+      "installed_version": "0.0.1",
+      "jax_default_backend": "cpu",
+      "jax_devices": [
+        "cpu:0"
+      ],
+      "jax_version": "0.10.1",
+      "package_name": "extro-torx",
+      "pinned_package_version": "0.0.1",
+      "pinned_repository": "https://github.com/extropic-ai/torx",
+      "pinned_repository_commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
+      "pinned_sdist_sha256": "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a",
+      "pinned_wheel_sha256": "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c",
+      "principle": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
+      "program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+      "psc_density": [
+        0.4000000059604645,
+        0.4000000059604645,
+        0.0,
+        0.10000000149011612,
+        0.10000000149011612,
+        0.0
+      ],
+      "psc_density_max_delta": 5.960464455334602e-09,
+      "psc_density_sum_delta": 0.0,
+      "psc_dims": [
+        2,
+        3
+      ],
+      "psc_expected_density": [
+        0.4,
+        0.4,
+        0.0,
+        0.1,
+        0.1,
+        0.0
+      ],
+      "torx_version_attr": "0.0.1"
+    },
+    "upstream_thrml_package": {
+      "blocked_reason": "ModuleNotFoundError: No module named 'thrml'",
+      "importable": false,
+      "module": "thrml"
+    },
+    "vendored_thrml": {
+      "api_exercised": true,
+      "exercised_api": [
+        "CategoricalNode",
+        "Block",
+        "CategoricalEBMFactor"
+      ],
+      "import_namespace": "carnot.sampling._vendored_thrml",
+      "importable": true,
+      "interaction_group_count": 1,
+      "license": "Apache-2.0",
+      "pinned_artifact_sha256": "sha256:f7cb5e4556ca16513d72b1d3a1684b4326b05cf6c6dc3de51046171b89816839",
+      "pinned_by_artifact": "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+      "upstream_repository": "https://github.com/extropic-ai/thrml",
+      "vendor_note": "Vendored from Extropic THRML 0.1.3 for Carnot Exp 1564. Local imports are rewritten under carnot.sampling._vendored_thrml.",
+      "version": "0.1.3"
+    }
+  },
+  "upstream_ir_executor_and_exact_reference_hashes": {
+    "exact_reference_source_sha256": "sha256:508b884fa30c0037dd85b9b4c1d4a3d25296d67ac84b6d012029d829420e3439",
+    "executor_source_sha256": "sha256:8465aa0b6b8bef08cb80cf40db95b8e4b7683bcbbb7f09b0128469c77470802d",
+    "exp6152_artifact_sha256": "sha256:62cdce73c0f381d05721f1169863b320b1f7d68ddedc8d1c5a50676aa2c9d64c",
+    "exp6152_exact_distribution_sha256": "sha256:2252c813883d94e1933bd68c3744148fa93836ddb8c6c80fbf8cc66f1bbc1c09",
+    "exp6152_independent_reference_sha256": "sha256:a561bae10a88bc94d89f4c10acb251a8adffb49d1550354a2298d14b83aef6b2",
+    "exp6152_module_sha256": "sha256:c69351110bc171bfadec8ac410ebf33d706df65a20636a5d97d8fa2e6c993ef8",
+    "exp6152_program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+    "exp6152_tests_sha256": "sha256:7ca26d403f30837792cf92a79fcbc153a3f355e4da2b131413796865beaaeb56",
+    "principle": "Binds Exp6152 IR, executor, exact reference, artifact, and tests before factor replacement."
+  },
+  "verifier_is_oracle": true
+}

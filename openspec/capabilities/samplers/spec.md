@@ -3178,3 +3178,141 @@ compatibility without claiming readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6152 | Planned (`python/carnot/experiment_6152_typed_stochastic_constraint_ir.py`, `results/experiment_6152_typed_stochastic_constraint_ir.json`) | Planned (`tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py`) |
+
+### REQ-SAMPLE-6153: Thermalized Program Error Audit
+
+Carnot MUST provide Exp6153 at
+`python/carnot/experiment_6153_thermalized_program_error_audit.py` and write
+`results/experiment_6153_thermalized_program_error_audit.json` without
+modifying `scripts/research_conductor.py`. Exp6153 SHALL use Exp6152's exact
+typed PSC/DFG program as the semantic oracle, compile every eligible Exp6152
+factor into a software EBM kernel through pinned Torx and THRML-compatible
+interfaces, precommit a factor-to-joint error bound before joint evaluation,
+and compare isolated factor fitting with context-matched fitting under
+resource-matched software-only conditions.
+
+Sub-requirements:
+- REQ-SAMPLE-6153-1: Preconditions SHALL force `JAX_PLATFORMS=cpu`, recompute
+  the structured gate, authenticate Exp6152 IR/executor/exact-reference hashes,
+  record Torx and THRML-compatible version/API receipts, hash exact references,
+  retired lineage, output paths, and protected files, and block readiness if
+  the real software interfaces required by the claim are unavailable.
+- REQ-SAMPLE-6153-2: Factor eligibility SHALL be explicit and deterministic.
+  Eligible finite-domain factors SHALL preserve input/output wire types,
+  category order, support masks, and output normalization when compiled to the
+  local EBM parameterization.
+- REQ-SAMPLE-6153-3: Isolated and context-matched arms SHALL freeze the same
+  Exp6152 program, factors, calibration-only training data, seeds, update
+  count, sampler schedule, metrics, and evaluation groups before any joint
+  divergence is read.
+- REQ-SAMPLE-6153-4: The preregistered per-factor-to-joint bound SHALL be
+  derived and SHA-256 hashed from measured local conditional errors before
+  exact or sampled joint outputs are evaluated. A post-hoc bound SHALL NOT
+  count as evidence.
+- REQ-SAMPLE-6153-5: Exact enumerable cases SHALL report per-factor and joint
+  total-variation/KL divergence exactly. Sampled bounded cases SHALL use
+  matched seeds/sample counts and report uncertainty, lag autocorrelation,
+  effective sample size, nonconvergence, and support violations.
+- REQ-SAMPLE-6153-6: The audit SHALL compare measured joint divergence with
+  the preregistered compositional bound and SHALL report whether context
+  matching improves or noninferiorly preserves the primary divergence relative
+  to isolated fitting.
+- REQ-SAMPLE-6153-7: Identity, deliberately bad factor, permuted-wire,
+  unsupported-state, and overly-loose-bound controls SHALL fire under the audit
+  interface.
+- REQ-SAMPLE-6153-8: Exp6153 SHALL preserve the retired Exp1526-Exp1544
+  boundary by producing no THRML/Carnot size sweep, no vendored-THRML parity
+  table, and no device, latency, power, energy, or speedup claim.
+- REQ-SAMPLE-6153-9: The terminal artifact SHALL include `status`,
+  `preconditions_checked`, `structured_gate_receipt`,
+  `prior_failure_and_operator_override_receipts`,
+  `upstream_ir_executor_and_exact_reference_hashes`,
+  `torx_thrml_versions_commits_import_and_api_receipts`,
+  `factor_eligibility_and_compilation_manifest`,
+  `isolated_and_context_matched_training_config`,
+  `preregistered_per_factor_to_joint_error_bound`,
+  `exact_and_sampled_case_counts`,
+  `per_factor_and_joint_distribution_divergences`,
+  `bound_slack_and_violation_counts`,
+  `context_matched_minus_isolated_intervals`,
+  `autocorrelation_effective_sample_size_and_convergence`,
+  `identity_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls`,
+  `retired_parity_scaling_nonreuse_receipt`, `hardware_execution_claimed`,
+  `latency_power_energy_and_speedup_claimed`,
+  `thermalized_program_ready_score`, `retirement_triggered`,
+  `protected_files_unchanged`, `duration_s`, `inference_substrate`,
+  `verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+  `test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+  `honest_verdict`. `inference_substrate` SHALL equal
+  `jax_cpu_software_thermalization`. `hardware_execution_claimed` and
+  `latency_power_energy_and_speedup_claimed` SHALL be bare `false`.
+  `honest_verdict` SHALL start with `complete_ready:`,
+  `complete_bound_violated:`, `retired:`, or `blocked:` and state whether
+  program-level error composition held.
+
+Required field principles:
+
+- `status`: Terminal state separates ready, bound-violated, retired, and blocked Exp6153 outcomes.
+- `preconditions_checked`: Records CPU JAX, upstream gates, interface availability, output paths, exact references, retired lineage, and protected files before evaluation.
+- `structured_gate_receipt`: Recomputes Exp6145 and Exp6152 readiness instead of trusting stale downstream claims.
+- `prior_failure_and_operator_override_receipts`: Preserves the operator override that distinguishes Exp6153 from retired THRML parity scaling.
+- `upstream_ir_executor_and_exact_reference_hashes`: Binds Exp6152 IR, executor, exact reference, artifact, and tests before factor replacement.
+- `torx_thrml_versions_commits_import_and_api_receipts`: Proves the pinned Torx and THRML-compatible software interfaces actually imported and executed.
+- `factor_eligibility_and_compilation_manifest`: Shows exactly which Exp6152 factors were eligible, compiled, support-preserving, and normalized.
+- `isolated_and_context_matched_training_config`: Freezes calibration data, seeds, steps, schedules, arms, and metrics before outcomes.
+- `preregistered_per_factor_to_joint_error_bound`: Hashes the local-error-derived joint bound before joint distribution results are read.
+- `exact_and_sampled_case_counts`: Separates exhaustive finite cases from matched sampled bounded cases.
+- `per_factor_and_joint_distribution_divergences`: Reports local and end-to-end divergence for isolated and context-matched arms.
+- `bound_slack_and_violation_counts`: Compares measured joint divergence with the precommitted bound and counts violations.
+- `context_matched_minus_isolated_intervals`: States whether context matching improves or noninferiorly preserves primary divergence.
+- `autocorrelation_effective_sample_size_and_convergence`: Reports sampling uncertainty, lag correlation, ESS, support violations, and nonconvergence.
+- `identity_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls`: Proves positive and negative controls detect exact, bad, rewired, support-breaking, and uninformative-bound cases.
+- `retired_parity_scaling_nonreuse_receipt`: Proves no size sweep or Carnot-versus-vendored-THRML parity table is produced.
+- `hardware_execution_claimed`: Bare false prevents software thermalization from becoming a hardware claim.
+- `latency_power_energy_and_speedup_claimed`: Bare false prevents software quality evidence from becoming a performance claim.
+- `thermalized_program_ready_score`: Equals 1.0 only when interfaces execute, support is preserved, the bound holds, context matching is noninferior, controls fire, and no forbidden claim appears.
+- `retirement_triggered`: Records whether this run crossed a retired-lineage rule.
+- `protected_files_unchanged`: Confirms conductor and reconciliation files were byte-identical during artifact construction.
+- `duration_s`: Reports real wall time without padding.
+- `inference_substrate`: Declares `jax_cpu_software_thermalization`, not hardware, GPU, or LLM inference.
+- `verifier_is_oracle`: Declares Exp6152 exact enumeration as the oracle for bounded cases.
+- `missing_verifier_gaps`: Lists absent evidence rather than silently granting readiness.
+- `field_provenance`: Maps each required field to prompt, spec, source, tests, artifacts, or package receipts.
+- `test_commands`: Records focused unit/spec coverage, structured gate, interfaces, bounds, exact/sample divergence, controls, no-hardware, E2E, full pytest, and root-clutter checks.
+- `test_exit_codes`: Prevents failed commands from becoming readiness evidence.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile duration and self-checksum blanked.
+- `honest_verdict`: Uses a required terminal prefix and states whether program-level error composition held.
+
+### SCENARIO-SAMPLE-6153-BOUND-PRECOMMIT: Bound Is Frozen Before Joint Results
+
+**Given** Exp6152's exact finite stochastic program and compiled local EBM
+factors
+**When** Exp6153 computes per-factor conditional divergence
+**Then** it derives and hashes a compositional TV/KL joint bound before exact
+or sampled joint distribution outputs are evaluated
+**And** any later joint result records the precommit hash it consumed.
+
+### SCENARIO-SAMPLE-6153-CONTEXT-MATCHING: Matched Arms Share Work
+
+**Given** isolated and context-matched factor-fitting arms
+**When** both arms train and evaluate on Exp6152's fixed factors, calibration
+data, seeds, steps, sampler schedule, and exact/sampled cases
+**Then** context matching either improves or noninferiorly preserves the
+primary joint divergence relative to isolated fitting
+**And** all per-factor and joint divergence metrics remain tied to the same
+precommitted bound family.
+
+### SCENARIO-SAMPLE-6153-CONTROLS-SCOPE: Controls And Scope Boundaries Fire
+
+**Given** the identity, bad-factor, permuted-wire, unsupported-state, and
+overly-loose-bound controls
+**When** Exp6153 runs the audit
+**Then** the identity control is zero-error, the bad/re-wired/support-breaking
+controls are detected, the loose bound is rejected as uninformative, and no
+retired THRML/Carnot parity-scaling or hardware/performance claim is emitted.
+
+## Implementation Status (REQ-SAMPLE-6153)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6153 | Planned (`python/carnot/experiment_6153_thermalized_program_error_audit.py`, `results/experiment_6153_thermalized_program_error_audit.json`) | Planned (`tests/python/test_experiment_6153_thermalized_program_error_audit.py`) |
