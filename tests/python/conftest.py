@@ -4,6 +4,7 @@ import contextlib
 import os
 import resource
 import sys
+import tempfile
 import warnings
 from pathlib import Path
 
@@ -164,12 +165,66 @@ def _operator_curated_doc_guard():
         return None
 
 
+def _tracked_results_guard():
+    """Import the tracked-results guard, or None if unavailable."""
+    try:
+        from carnot.testing import tracked_results_guard as _g
+
+        return _g
+    except Exception:  # noqa: BLE001 - deliberately total
+        return None
+
+
+def _install_experiment_artifact_root(config) -> None:
+    """Set a validated artifact-output temp root before tests collect modules."""
+    try:
+        from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV, validate_artifact_output_root
+    except Exception:  # noqa: BLE001 - a missing guard should not hide collection failures
+        return
+
+    previous = os.environ.get(ARTIFACT_ROOT_ENV)
+    config._carnot_artifact_root_previous = previous
+    config._carnot_artifact_root_owned = False
+
+    if previous:
+        validate_artifact_output_root(previous)
+        config._carnot_artifact_root = previous
+        return
+
+    root = tempfile.mkdtemp(prefix="carnot-pytest-artifacts-")
+    os.environ[ARTIFACT_ROOT_ENV] = root
+    validate_artifact_output_root(root)
+    config._carnot_artifact_root = root
+    config._carnot_artifact_root_owned = True
+
+
+def _restore_experiment_artifact_root(config) -> None:
+    """Restore the artifact-output env var to its pre-pytest value."""
+    try:
+        from carnot.experiment_artifacts import ARTIFACT_ROOT_ENV
+    except Exception:  # noqa: BLE001
+        return
+    previous = getattr(config, "_carnot_artifact_root_previous", None)
+    if previous is None:
+        os.environ.pop(ARTIFACT_ROOT_ENV, None)
+    else:
+        os.environ[ARTIFACT_ROOT_ENV] = previous
+
+
 def _install_operator_curated_doc_guard() -> None:
     """Install the audit hook that refuses writes to operator-curated documents."""
     guard = _operator_curated_doc_guard()
     if guard is not None:
         # Deliberately total: a guard that can break the suite it guards gets deleted by the
         # first person it inconveniences, which leaves the record unprotected.
+        with contextlib.suppress(Exception):
+            guard.install()
+
+
+def _install_tracked_results_guard() -> None:
+    """Install the audit hook that refuses tracked results writes in tests."""
+    guard = _tracked_results_guard()
+    if guard is not None:
         with contextlib.suppress(Exception):
             guard.install()
 
@@ -187,6 +242,7 @@ def _is_xdist_worker(config) -> bool:
 
 def pytest_configure(config) -> None:
     """Set hard address-space limit and keep the RSS watchdog installed."""
+    _install_experiment_artifact_root(config)
     config._carnot_rlimit_as_set = _set_process_address_space_limit()
     config._carnot_memory_watchdog = PytestMemoryWatchdog()
 
@@ -208,6 +264,7 @@ def pytest_configure(config) -> None:
     # and rewrites the copy is unaffected (see test_experiment_209_cleanup.py, which does
     # exactly that and is correct).
     _install_operator_curated_doc_guard()
+    _install_tracked_results_guard()
 
     # ARM THE RECORD-REWRITE INTERLOCK, HOWEVER PYTEST WAS INVOKED (2026-07-29).
     #
@@ -276,6 +333,9 @@ def _clear_guard_violations() -> None:
     guard = _operator_curated_doc_guard()
     if guard is not None:
         guard.clear_violations()
+    tracked_guard = _tracked_results_guard()
+    if tracked_guard is not None:
+        tracked_guard.clear_violations()
 
 
 def _fail_if_guard_violations() -> None:
@@ -289,17 +349,29 @@ def _fail_if_guard_violations() -> None:
     pass is to not perform the write.
     """
     guard = _operator_curated_doc_guard()
-    if guard is None:
+    if guard is not None:
+        violations = guard.recorded_violations()
+        if violations:
+            guard.clear_violations()
+            detail = "\n\n".join(f"  {v['event']} {v['path']}\n{v['stack']}" for v in violations)
+            raise pytest.fail.Exception(
+                "Test wrote (or attempted to write) an operator-curated document.\n"
+                "CLAUDE.md 'Public Documentation Discipline' forbids the autonomous loop from\n"
+                "editing these files. Redirect the write to tmp_path -- do not delete the test.\n\n"
+                f"{detail}"
+            )
+    tracked_guard = _tracked_results_guard()
+    if tracked_guard is None:
         return
-    violations = guard.recorded_violations()
-    if not violations:
+    tracked_violations = tracked_guard.recorded_violations()
+    if not tracked_violations:
         return
-    guard.clear_violations()
-    detail = "\n\n".join(f"  {v['event']} {v['path']}\n{v['stack']}" for v in violations)
+    tracked_guard.clear_violations()
+    detail = "\n\n".join(f"  {v['event']} {v['path']}\n{v['stack']}" for v in tracked_violations)
     raise pytest.fail.Exception(
-        "Test wrote (or attempted to write) an operator-curated document.\n"
-        "CLAUDE.md 'Public Documentation Discipline' forbids the autonomous loop from\n"
-        "editing these files. Redirect the write to tmp_path -- do not delete the test.\n\n"
+        "Test wrote (or attempted to write) tracked result evidence.\n"
+        "CLAUDE.md 'Test-Run Record Integrity Discipline' forbids tests from\n"
+        "rewriting results/**. Use the artifact-output resolver or tmp_path.\n\n"
         f"{detail}"
     )
 
@@ -374,9 +446,11 @@ def pytest_sessionfinish(session, exitstatus) -> None:
 
     baseline = getattr(config, "_carnot_mutation_baseline", None)
     if baseline is None or _is_xdist_worker(config):
+        _restore_experiment_artifact_root(config)
         return
     mod = _mutation_check_module()
     if mod is None:
+        _restore_experiment_artifact_root(config)
         return
 
     try:
@@ -388,6 +462,7 @@ def pytest_sessionfinish(session, exitstatus) -> None:
         # how this guard destroyed authored work three times.
         attributed = mod.attributed_from_pytest(baseline, run_id)
     except Exception:  # noqa: BLE001 - a diagnostic must never break the suite
+        _restore_experiment_artifact_root(config)
         return
     if muts:
         other = [p for p in muts if p not in attributed]
@@ -416,3 +491,4 @@ def pytest_sessionfinish(session, exitstatus) -> None:
             "so `--check` would refuse."
         )
         warnings.warn(pytest.PytestWarning(" ".join(parts)), stacklevel=2)
+    _restore_experiment_artifact_root(config)
