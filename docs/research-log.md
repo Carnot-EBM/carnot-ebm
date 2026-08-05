@@ -6057,3 +6057,9 @@ The critical path for milestone .250:
 - theme: compute-bound calibration and GPU-canary work led a short closeout without a compute-bound GPU-idle fault
 - key result: honest operational limitation -- two compute-bound entries tied at 2 minutes, while the supplied data supports neither a causal runtime explanation nor a concurrent multi-model runner failure
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.531
+- exp_range: exp6115-exp6128 (visible reference-ID bounds only; the complete milestone range is not available)
+- theme: readiness-gated model-native calibration concentrated the compute-bound operational tail
+- key result: honest operational limitation -- one readiness-gated compute experiment consumed 52.61 of 55.4 minutes, while phase-level causes and any concurrent multi-model runner miss remain unestablished
+- acceptance: no data available this milestone
