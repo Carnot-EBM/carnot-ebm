@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.530",
+  "generated_at": "2026-08-05T00:16:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 7.0,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Exact terminal-boundary handoff from .529 into .530",
+      "duration_minutes": 1.99,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated calibration-only authentic Phase-D candidate pool",
+      "duration_minutes": 1.95,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Phase-D task-scoped GPU engagement and sealed-ladder canary",
+      "duration_minutes": 1.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Dated evidence refresh after the V530 planner marker",
+      "duration_minutes": 1.37,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Branch-independent .530 capstone and architecture reconciliation",
+      "duration_minutes": 0.14,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 10 experiments in 7 minutes, including 4 compute-bound tasks. The two longest compute-bound entries were each reported at 2 minutes; compute-bound GPU idle was false, and the supplied data does not establish a concurrent multi-model task that should have used DualGPURunner.",
+  "bottlenecks_identified": [
+    "The Gated calibration-only authentic Phase-D candidate pool and Phase-D task-scoped GPU engagement and sealed-ladder canary were the longest compute-bound entries at 2 minutes each, but the supplied timing data has no phase breakdown that explains why.",
+    "Disk-modification-time reconstruction provides coarse experiment durations rather than setup, model-load, inference, and teardown timing, limiting causal bottleneck attribution.",
+    "Task-level concurrent model counts and runner-selection traces are absent, so DualGPURunner applicability cannot be audited from the supplied data."
+  ],
+  "improvements_suggested": [
+    "Emit phase timestamps and task-correlated GPU utilization samples for every compute-bound experiment.",
+    "Stamp model count, model-overlap interval, and selected runner in each compute-bound artifact so DualGPURunner applicability is explicit.",
+    "Add a scheduler hint that offers the unused GPU to an independent compute-bound job; keep single-model tasks on one GPU and require DualGPURunner only when at least 2 models are loaded in parallel.",
+    "Prefer live task timestamps over disk-modification-time reconstruction for milestone timing."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-phase timing and task-scoped GPU telemetry to compute-bound experiment artifacts.",
+    "Schedule independent compute-bound jobs onto separate GPUs when concurrency and memory checks pass.",
+    "Record concurrent model count and runner selection so multi-model DualGPURunner misses are directly detectable."
+  ],
+  "estimated_time_savings_pct": 29,
+  "meta_reflection": "The monitor snapshot showed GPU 0 in use at 29% utilization while GPU 1 was idle, but the locked task classification reports no compute-bound GPU-idle fault. That snapshot establishes engagement rather than task-lifetime efficiency, and it does not prove that the second GPU had eligible parallel work. The 29% savings estimate is an upper bound from overlapping one reported 2-minute compute-bound entry within the 7-minute wall time; task independence is not supplied, so the estimate is not a measured speedup."
+}
