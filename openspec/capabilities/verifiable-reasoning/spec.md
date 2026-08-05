@@ -20986,3 +20986,113 @@ artifact terminates with `complete_null:` without changing held inclusion.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6115 | Planned (`python/carnot/experiment_6115_phase_d_calibration_pool.py`, `results/experiment_6115_phase_d_calibration_pool.json`) | Planned (`tests/python/test_experiment_6115_phase_d_calibration_pool.py`) |
+
+### REQ-VERIFY-6126: Exp6115 Transport Forensics From Immutable Rows
+
+The repository SHALL provide Exp 6126 at
+`python/carnot/experiment_6126_phase_d_exp6115_transport_forensics.py` and
+write
+`results/experiment_6126_phase_d_exp6115_transport_forensics.json` without
+performing live inference. Exp 6126 SHALL recompute Exp 6115 transport and
+semantic metrics from the immutable
+`results/experiment_6115_phase_d_calibration_pool.rows.jsonl` rows and SHALL
+require all 720 candidate row identities to be present and unique before
+issuing a non-blocked verdict.
+
+Exp 6126 SHALL attribute empty completions, whitespace-only completions,
+channel-token leakage, terminal answer-field reachability, truncation, parser
+failures, method-validity failures, and unknown cases only to directly
+observable row receipts and static generator configuration. It SHALL NOT infer
+model competence, answer accuracy, method validity, or causal transport
+mechanisms from parse success alone, and it SHALL mark rows with insufficient
+receipt evidence as unknown rather than inventing a cause.
+
+Exp 6126 SHALL trace every row to prompt serialization, stop list, token
+budget, seed, model hash, and server receipt when those receipts exist in Exp
+6115. Absent receipts SHALL be reported as provenance gaps. The workflow SHALL
+inspect the pinned GGUF metadata and runtime llama-cpp chat-template API
+surface without loading the model for generation, then freeze exactly one
+label-blind v2 canary contract using model-native `messages` serialization,
+natural reasoning before a terminal answer field, a non-truncating token
+budget, and no newline stop string.
+
+A model-native chat change SHALL receive
+`model_native_chat_change_justified_score == 1` only when observable
+template/stop/channel evidence explains a material share of the Exp 6115
+failures and the proposed v2 contract is mechanically testable without hidden
+labels. Otherwise the score SHALL be zero and the recovery path SHALL retire.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_exp6114_exp6115_artifact_code_and_row_hashes`,
+`expected_observed_and_missing_row_counts`,
+`nonempty_empty_whitespace_channel_leak_terminal_field_parse_method_and_accuracy_metrics`,
+`family_stratum_stop_reason_token_count_and_duplicate_breakdowns`,
+`row_level_failure_attribution_and_unknown_count`,
+`gguf_model_tokenizer_and_chat_template_provenance`,
+`frozen_v2_messages_reasoning_terminal_field_budget_and_stop_contract`,
+`transport_semantics_separation_receipt`, `hidden_label_retry_count`,
+`retired_scope_nonrecurrence`, `model_native_chat_change_justified_score`,
+`retirement_triggered`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `preconditions_checked`: artifact, row, generator, GGUF metadata, output path, protected-file, exclusion, and dirty-worktree checks happen before the artifact verdict.
+- `immutable_exp6114_exp6115_artifact_code_and_row_hashes`: immutable upstream measurements and code are content-addressed before any derived metric is trusted.
+- `expected_observed_and_missing_row_counts`: 720 unique Exp6115 row identities are conserved or the task blocks instead of silently scoring an incomplete pool.
+- `nonempty_empty_whitespace_channel_leak_terminal_field_parse_method_and_accuracy_metrics`: transport observables, parser outcomes, method validity, and exact answer accuracy stay separate.
+- `family_stratum_stop_reason_token_count_and_duplicate_breakdowns`: aggregate metrics expose where collapse is concentrated rather than hiding it in one headline rate.
+- `row_level_failure_attribution_and_unknown_count`: causal language is limited to directly observed configuration and row receipts.
+- `gguf_model_tokenizer_and_chat_template_provenance`: the proposed repair must be anchored in the pinned model's metadata and installed runtime API surface.
+- `frozen_v2_messages_reasoning_terminal_field_budget_and_stop_contract`: exactly one label-blind canary contract is frozen before any future live retry.
+- `transport_semantics_separation_receipt`: answer accuracy and method validity are never inferred from parse success.
+- `hidden_label_retry_count`: the forensics pass does not open held labels or retry based on hidden correctness.
+- `retired_scope_nonrecurrence`: the diagnostic does not reopen retired scopes or redesign the sealed ladder.
+- `model_native_chat_change_justified_score`: exactly 1 only for an evidence-backed, frozen, label-blind canary contract.
+- `retirement_triggered`: the recovery path retires if that score is zero.
+- `protected_files_unchanged`: conductor and reconciler-owned files remain byte-identical.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report deterministic `aggregation_from_upstream_artifacts` work, not live generation.
+- `verifier_is_oracle` and `missing_verifier_gaps`: Python/Z3 labels remain oracle and missing receipts are explicit gaps.
+- `honest_verdict`: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-6126-CONSERVATION: Immutable Row Identities Are Conserved
+
+**Given** Exp6114 and Exp6115 artifacts, Exp6115 raw rows, the Exp6115
+generator code, the exclusion manifest, and protected-file hashes
+**When** Exp6126 runs without live inference
+**Then** it hashes the immutable inputs, verifies all 720 candidate row
+identities are present and unique, records any missing rows, and blocks if row
+conservation fails.
+
+### SCENARIO-VERIFY-6126-ATTRIBUTION: Observable Failures Are Counted Without Causal Overreach
+
+**Given** Exp6115 row receipts and static generator configuration
+**When** Exp6126 recomputes empty, whitespace-only, channel-fragment,
+terminal-field, truncation, parser, method-validity, and accuracy metrics
+**Then** row-level attribution uses only observed receipt fields and records an
+unknown count for rows where a stronger cause is not present.
+
+### SCENARIO-VERIFY-6126-TEMPLATE: GGUF And Runtime Template Provenance Is Inspected
+
+**Given** the pinned Exp6115 GGUF path and installed llama-cpp runtime
+**When** Exp6126 inspects metadata
+**Then** it records model, tokenizer, chat-template, metadata hashes, and
+runtime chat API availability without performing generation.
+
+### SCENARIO-VERIFY-6126-CONTRACT: The V2 Canary Contract Is Label-Blind And Mechanically Testable
+
+**Given** observed Exp6115 newline-stop, channel-token, and empty-output
+evidence
+**When** Exp6126 evaluates whether a v2 canary is justified
+**Then** the score is exactly one only for a single frozen model-native
+messages contract with no newline stop, a terminal answer field, a larger
+fail-closed token budget, and zero hidden-label retries; otherwise the path is
+retired.
+
+## Implementation Status (REQ-VERIFY-6126)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6126 | Planned (`python/carnot/experiment_6126_phase_d_exp6115_transport_forensics.py`, `results/experiment_6126_phase_d_exp6115_transport_forensics.json`) | Planned (`tests/python/test_experiment_6126_phase_d_exp6115_transport_forensics.py`) |
