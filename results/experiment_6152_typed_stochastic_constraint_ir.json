@@ -1,0 +1,938 @@
+{
+  "compiler_executor_adapter_and_test_paths": {
+    "artifact": "results/experiment_6152_typed_stochastic_constraint_ir.json",
+    "compiler": "compile_exp6145_bounded_workflow",
+    "exact_executor": "execute_exact",
+    "independent_reference": "independent_reference_distribution",
+    "module": "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+    "principle": "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.",
+    "spec": "openspec/capabilities/samplers/spec.md",
+    "tests": "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+    "torx_adapter": "torx_adapter_receipt"
+  },
+  "deterministic_impossible_batch_seed_and_serialization_controls": {
+    "batch_shape_contract": {
+      "batch_size": 16,
+      "ok": true,
+      "wire_count": 9
+    },
+    "deterministic_factor_outputs": {
+      "item0_eligible": 0.4,
+      "item1_eligible": 0,
+      "item2_eligible": 0.1
+    },
+    "impossible_state_probability": 0,
+    "principle": "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.",
+    "seed_replay_equal": true,
+    "serialization_round_trip_checksum_equal": true,
+    "serialization_round_trip_max_joint_delta": 0.0
+  },
+  "deterministic_rebuild_checksum": "sha256:825fe999289a1206302f3c96fdb8cf447b956e23926bd7fc6592577a9ca7df67",
+  "duration_s": 0.0,
+  "exact_enumeration_case_counts": {
+    "conditional_count": 4,
+    "impossible_state_count": 1530,
+    "kernel_count": 9,
+    "marginal_wire_count": 9,
+    "principle": "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.",
+    "state_space_size": 1536,
+    "support_count": 6,
+    "wire_count": 9
+  },
+  "experiment_id": "experiment_6152_typed_stochastic_constraint_ir",
+  "field_principles": {
+    "compiler_executor_adapter_and_test_paths": "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.",
+    "deterministic_impossible_batch_seed_and_serialization_controls": "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.",
+    "deterministic_rebuild_checksum": "A second construction must reproduce the same program and exact-semantics commitment.",
+    "duration_s": "Measured deterministic construction time is reported without padding.",
+    "exact_enumeration_case_counts": "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.",
+    "field_provenance": "Every field traces to the prompt, spec, workflow, source, tests, command receipts, or package metadata.",
+    "honest_verdict": "Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state the exact compiler boundary.",
+    "inference_substrate": "Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly.",
+    "ir_schema_version_types_kernels_and_graph_contract": "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.",
+    "missing_verifier_gaps": "Any absent Torx or non-enumerated semantic evidence is explicit.",
+    "preconditions_checked": "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.",
+    "protected_files_unchanged": "Conductor and reconciler-owned files remain byte-identical during artifact construction.",
+    "reproducibility_checksum": "The artifact hash detects source, schema, probability, adapter, test, or protected-file drift.",
+    "source_workflow_validator_sampler_and_exclusion_hashes": "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.",
+    "status": "A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries.",
+    "structured_gate_receipt": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
+    "support_conditional_joint_normalization_and_marginal_deltas": "Exact enumeration, not sampling, is authoritative on bounded cases.",
+    "test_commands": "Commands document focused unit/spec coverage, structured gate, exact probability, Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, and root-clutter checks.",
+    "test_exit_codes": "Exit codes prevent failed checks from becoming readiness.",
+    "torx_compatibility_scope": "Names the real exercised version/API; source resemblance is not compatibility.",
+    "torx_package_version_commit_import_and_api_receipts": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
+    "typed_stochastic_ir_ready_score": "Exactly one only when exact semantics, controls, serialization, protected files, tests, and real Torx compatibility pass.",
+    "verifier_is_oracle": "The independent exact finite enumerator is the probability oracle for bounded cases.",
+    "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": "Negative controls prove validators and the independent reference catch subtle graph and indexing failures."
+  },
+  "field_provenance": {
+    "compiler_executor_adapter_and_test_paths": {
+      "principle": "Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "deterministic_impossible_batch_seed_and_serialization_controls": {
+      "principle": "Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "deterministic_rebuild_checksum": {
+      "principle": "A second construction must reproduce the same program and exact-semantics commitment.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured deterministic construction time is reported without padding.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "exact_enumeration_case_counts": {
+      "principle": "Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to the prompt, spec, workflow, source, tests, command receipts, or package metadata.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state the exact compiler boundary.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "ir_schema_version_types_kernels_and_graph_contract": {
+      "principle": "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Any absent Torx or non-enumerated semantic evidence is explicit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor and reconciler-owned files remain byte-identical during artifact construction.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The artifact hash detects source, schema, probability, adapter, test, or protected-file drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "source_workflow_validator_sampler_and_exclusion_hashes": {
+      "principle": "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "structured_gate_receipt": {
+      "principle": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "support_conditional_joint_normalization_and_marginal_deltas": {
+      "principle": "Exact enumeration, not sampling, is authoritative on bounded cases.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/spec coverage, structured gate, exact probability, Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, and root-clutter checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "torx_compatibility_scope": {
+      "principle": "Names the real exercised version/API; source resemblance is not compatibility.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "torx_package_version_commit_import_and_api_receipts": {
+      "principle": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "typed_stochastic_ir_ready_score": {
+      "principle": "Exactly one only when exact semantics, controls, serialization, protected files, tests, and real Torx compatibility pass.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The independent exact finite enumerator is the probability oracle for bounded cases.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    },
+    "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": {
+      "principle": "Negative controls prove validators and the independent reference catch subtle graph and indexing failures.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6145_constraint_shift_stream.json",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "pypi:extro-torx==0.0.1",
+        "https://github.com/extropic-ai/torx@f1fc858ed950ecd41935d15c06d0ec7c5e0674ae"
+      ]
+    }
+  },
+  "honest_verdict": "complete_ready: exact_carnot_semantics_and_pinned_torx_api_smoke",
+  "inference_substrate": "jax_cpu_exact_stochastic_program",
+  "ir_schema_version_types_kernels_and_graph_contract": {
+    "dependency_policy": "torx_optional_carnot_exact_executor_required",
+    "graph_validation": {
+      "kernel_count": 9,
+      "ok": true,
+      "schema_version": "carnot.typed_stochastic_constraint_ir.v1",
+      "state_shape_contract": {
+        "batch_axis": "optional_leading_axis",
+        "rank": 1,
+        "wire_count": 9
+      },
+      "topological_kernel_order": [
+        "sample_candidate_item",
+        "sample_strategy_clean",
+        "member_group_lookup",
+        "clearance_lookup",
+        "blocked_lookup",
+        "gate_open_lookup",
+        "clearance_ok_lookup",
+        "eligible_truth_table",
+        "accepted_truth_table"
+      ],
+      "wire_count": 9,
+      "wire_order": [
+        "candidate_item",
+        "strategy_clean",
+        "member_group",
+        "clearance",
+        "gate_open",
+        "blocked",
+        "clearance_ok",
+        "eligible",
+        "accepted"
+      ],
+      "wire_type_counts": {
+        "binary": 6,
+        "categorical": 3
+      }
+    },
+    "kernel_kinds": [
+      "bernoulli_prior",
+      "categorical_prior",
+      "deterministic_lookup",
+      "deterministic_truth_table"
+    ],
+    "kernels": [
+      {
+        "id": "sample_candidate_item",
+        "inputs": [],
+        "kind": "categorical_prior",
+        "output": "candidate_item"
+      },
+      {
+        "id": "sample_strategy_clean",
+        "inputs": [],
+        "kind": "bernoulli_prior",
+        "output": "strategy_clean"
+      },
+      {
+        "id": "member_group_lookup",
+        "inputs": [
+          "candidate_item"
+        ],
+        "kind": "deterministic_lookup",
+        "output": "member_group"
+      },
+      {
+        "id": "clearance_lookup",
+        "inputs": [
+          "candidate_item"
+        ],
+        "kind": "deterministic_lookup",
+        "output": "clearance"
+      },
+      {
+        "id": "gate_open_lookup",
+        "inputs": [
+          "member_group"
+        ],
+        "kind": "deterministic_lookup",
+        "output": "gate_open"
+      },
+      {
+        "id": "blocked_lookup",
+        "inputs": [
+          "candidate_item"
+        ],
+        "kind": "deterministic_lookup",
+        "output": "blocked"
+      },
+      {
+        "id": "clearance_ok_lookup",
+        "inputs": [
+          "clearance"
+        ],
+        "kind": "deterministic_lookup",
+        "output": "clearance_ok"
+      },
+      {
+        "id": "eligible_truth_table",
+        "inputs": [
+          "gate_open",
+          "blocked",
+          "clearance_ok"
+        ],
+        "kind": "deterministic_truth_table",
+        "output": "eligible"
+      },
+      {
+        "id": "accepted_truth_table",
+        "inputs": [
+          "eligible",
+          "strategy_clean"
+        ],
+        "kind": "deterministic_truth_table",
+        "output": "accepted"
+      }
+    ],
+    "normalization_tolerance": 1e-12,
+    "principle": "The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.",
+    "schema_version": "carnot.typed_stochastic_constraint_ir.v1",
+    "wire_types": {
+      "accepted": {
+        "categories": [
+          0,
+          1
+        ],
+        "kind": "binary"
+      },
+      "blocked": {
+        "categories": [
+          0,
+          1
+        ],
+        "kind": "binary"
+      },
+      "candidate_item": {
+        "categories": [
+          "ac_e0_0",
+          "ac_e0_1",
+          "ac_e0_2"
+        ],
+        "kind": "categorical"
+      },
+      "clearance": {
+        "categories": [
+          "clearance_1",
+          "clearance_2",
+          "clearance_3",
+          "clearance_4"
+        ],
+        "kind": "categorical"
+      },
+      "clearance_ok": {
+        "categories": [
+          0,
+          1
+        ],
+        "kind": "binary"
+      },
+      "eligible": {
+        "categories": [
+          0,
+          1
+        ],
+        "kind": "binary"
+      },
+      "gate_open": {
+        "categories": [
+          0,
+          1
+        ],
+        "kind": "binary"
+      },
+      "member_group": {
+        "categories": [
+          "ac_g0_0",
+          "ac_g0_1"
+        ],
+        "kind": "categorical"
+      },
+      "strategy_clean": {
+        "categories": [
+          0,
+          1
+        ],
+        "kind": "binary"
+      }
+    }
+  },
+  "missing_verifier_gaps": [],
+  "preconditions_checked": {
+    "checks": {
+      "exp6145_structured_gate_passed": true,
+      "exp6145_workflow_present": true,
+      "jax_platforms_cpu": true,
+      "output_parent_writable": true,
+      "protected_files_present": true,
+      "sampler_spec_has_req": true,
+      "torx_importable": true,
+      "validator_callable": true
+    },
+    "jax_platforms_env": "cpu",
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6152_typed_stochastic_constraint_ir.json",
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "preconditions_ready": true,
+    "principle": "Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.",
+    "python": "3.12.13",
+    "run_date": "20260805",
+    "source_hash_receipt_sha256": "sha256:76e13995c203bbfd6cabe1fa4172859183123760c23b49008663537065e5bcca",
+    "torx_receipt_sha256": "sha256:6fe47448cbad9a4e03601f41851504f78b1486bd29a6e03c8354096c7e39deeb"
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:c961b93c43a91e152c1d34466d5916cc51e6f2a02c548087e92ad33c21cbcb6f"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:c961b93c43a91e152c1d34466d5916cc51e6f2a02c548087e92ad33c21cbcb6f"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "principle": "Conductor and reconciler-owned files remain byte-identical during artifact construction.",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:9cddf7cc23db022f8276e8fbd5c887fb9404bed563cd7396447896785b78a87b",
+  "run_date": "20260805",
+  "schema": "carnot.experiment_6152.typed_stochastic_constraint_ir.v1",
+  "source_workflow_validator_sampler_and_exclusion_hashes": {
+    "exact_validators": [
+      "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+      "python/carnot/experiment_6145_constraint_shift_stream.py"
+    ],
+    "output_paths": {
+      "result": "results/experiment_6152_typed_stochastic_constraint_ir.json"
+    },
+    "paths": {
+      "AGENTS.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
+      },
+      "CODEX.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "crates/carnot-gibbs": {
+        "exists": true,
+        "file_count": 2,
+        "kind": "directory",
+        "sha256": "sha256:3e4b6d2ead15e20d4e522c5fc6fc6c4e7cfd9c5bacc877e4b5095480f5aaf78b"
+      },
+      "crates/carnot-ising": {
+        "exists": true,
+        "file_count": 2,
+        "kind": "directory",
+        "sha256": "sha256:355f9e4483cbca36525816d6cb50a9e428fb975eb1ce1cdcd3cebaf2d471d899"
+      },
+      "openspec/capabilities/samplers/spec.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:50a7d30dbfd4d4cf4cdaf44d31c991299ab0382308f800ecd45a2df4024fb0ab"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "python/carnot/constraints": {
+        "exists": false,
+        "kind": "file",
+        "sha256": null
+      },
+      "python/carnot/experiment_5896_typed_constraint_ir_fixture.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:e5f95bf908793140602626c5178283986d206d4c57df9dd13edbf25bcc877495"
+      },
+      "python/carnot/experiment_6145_constraint_shift_stream.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:03e3115226209f675cf51a99d81612edda0179807e32ac8603b1e463611f1935"
+      },
+      "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:c69351110bc171bfadec8ac410ebf33d706df65a20636a5d97d8fa2e6c993ef8"
+      },
+      "python/carnot/samplers": {
+        "exists": true,
+        "file_count": 160,
+        "kind": "directory",
+        "sha256": "sha256:217701bff8504050847d7d00d5de95f635252341e0475fcc42c292f65b17b551"
+      },
+      "python/carnot/samplers/backend.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:0223c46e71979cfc8f3d720dbfe03151e5f6258b7fee7291d2ce86f735b4e3e8"
+      },
+      "python/carnot/samplers/thrml_init.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a9f042c0a5929f8aa6da6b31425088f67ea00490ca44b7b5e316f7085d9d2f79"
+      },
+      "research-hardware-wishlist.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+      },
+      "research-references.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:88f3113d06d22db603bac5e6e176cba07a3bf391beb6f23fe7a06a1fb70f3a6f"
+      },
+      "results/experiment_6145_constraint_shift_stream.json": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64"
+      },
+      "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:7ca26d403f30837792cf92a79fcbc153a3f355e4da2b131413796865beaaeb56"
+      }
+    },
+    "principle": "Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "sampler_api_paths": [
+      "python/carnot/samplers/backend.py",
+      "python/carnot/samplers",
+      "crates/carnot-ising",
+      "crates/carnot-gibbs"
+    ],
+    "source_workflow": "results/experiment_6145_constraint_shift_stream.json",
+    "torx_reference": {
+      "commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
+      "package": "extro-torx",
+      "repository": "https://github.com/extropic-ai/torx",
+      "sdist_sha256": "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a",
+      "version": "0.0.1",
+      "wheel_sha256": "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c"
+    }
+  },
+  "status": "complete_ready",
+  "structured_gate_receipt": {
+    "exp6145_artifact": "results/experiment_6145_constraint_shift_stream.json",
+    "exp6145_honest_verdict": "complete_ready: exact_constraint_shift_stream_oracle_separated",
+    "exp6145_ready_score": 1.0,
+    "exp6145_status": "complete_ready",
+    "gate_passed": true,
+    "outcome_sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1",
+    "principle": "Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.",
+    "row_sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c",
+    "sidecar_replay_ok": true,
+    "split_sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+  },
+  "support_conditional_joint_normalization_and_marginal_deltas": {
+    "exact_conditionals": {
+      "p_accepted": 0.45000000000000007,
+      "p_accepted_given_eligible": 0.9000000000000001,
+      "p_eligible": 0.5,
+      "p_item2_given_accepted": 0.19999999999999998
+    },
+    "max_conditional_delta": 0.0,
+    "max_joint_delta": 0.0,
+    "max_marginal_delta": 0.0,
+    "normalization_delta": 0.0,
+    "principle": "Exact enumeration, not sampling, is authoritative on bounded cases.",
+    "reference_conditionals": {
+      "p_accepted": 0.45000000000000007,
+      "p_accepted_given_eligible": 0.9000000000000001,
+      "p_eligible": 0.5,
+      "p_item2_given_accepted": 0.19999999999999998
+    },
+    "support_delta_count": 0,
+    "support_match": true,
+    "tolerance": 1e-12
+  },
+  "test_commands": [
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0",
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py -m pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+    ".venv/bin/ruff check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6152_typed_stochastic_constraint_ir.json",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6152_typed_stochastic_constraint_ir.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6152_typed_stochastic_constraint_ir.py tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py -m pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6152_typed_stochastic_constraint_ir.py --fail-under=100": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py -q --no-cov -n 0": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "torx_compatibility_scope": {
+    "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
+    "compatibility_ready": true,
+    "exercised_api": [
+      "DiscretePCircuit",
+      "StateVectorSimulator",
+      "PNOT",
+      "PditShift"
+    ],
+    "installed_version": "0.0.1",
+    "package": "extro-torx",
+    "pinned_repository_commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
+    "principle": "Names the real exercised version/API; source resemblance is not compatibility."
+  },
+  "torx_package_version_commit_import_and_api_receipts": {
+    "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
+    "api_exercised": true,
+    "blocked_reason": null,
+    "compatibility_ready": true,
+    "exercised_api": [
+      "DiscretePCircuit",
+      "StateVectorSimulator",
+      "PNOT",
+      "PditShift"
+    ],
+    "import_namespace": "torx",
+    "importable": true,
+    "installed_version": "0.0.1",
+    "jax_default_backend": "cpu",
+    "jax_devices": [
+      "cpu:0"
+    ],
+    "jax_version": "0.10.1",
+    "package_name": "extro-torx",
+    "pinned_package_version": "0.0.1",
+    "pinned_repository": "https://github.com/extropic-ai/torx",
+    "pinned_repository_commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
+    "pinned_sdist_sha256": "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a",
+    "pinned_wheel_sha256": "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c",
+    "principle": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
+    "program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+    "psc_density": [
+      0.4000000059604645,
+      0.4000000059604645,
+      0.0,
+      0.10000000149011612,
+      0.10000000149011612,
+      0.0
+    ],
+    "psc_density_max_delta": 5.960464455334602e-09,
+    "psc_density_sum_delta": 0.0,
+    "psc_dims": [
+      2,
+      3
+    ],
+    "psc_expected_density": [
+      0.4,
+      0.4,
+      0.0,
+      0.1,
+      0.1,
+      0.0
+    ],
+    "torx_version_attr": "0.0.1"
+  },
+  "typed_stochastic_ir_ready_score": 1.0,
+  "verifier_is_oracle": true,
+  "wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls": {
+    "all_negative_controls_passed": true,
+    "ambiguous_seed_rejected": true,
+    "category_index_bug_detected": true,
+    "category_index_bug_max_joint_delta": 0.09000000000000001,
+    "cycle_rejected": true,
+    "dangling_wire_rejected": true,
+    "invalid_category_index_rejected": true,
+    "invalid_mass_rejected": true,
+    "principle": "Negative controls prove validators and the independent reference catch subtle graph and indexing failures.",
+    "type_mismatch_rejected": true,
+    "wire_order_bug_detected": true,
+    "wire_order_bug_max_joint_delta": 0.36000000000000004
+  }
+}

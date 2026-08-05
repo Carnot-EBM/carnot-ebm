@@ -3066,3 +3066,115 @@ Sub-requirements:
 **And** sampler-feature guidance is abstained in the identified harmful regimes
 **And** `results/experiment_5142_taco_harm_rootcause_scale_v471.json` is
 written with `conductor_modified=false` and a terminal honest verdict.
+
+### REQ-SAMPLE-6152: Typed Stochastic Constraint IR For Exp6145
+
+Carnot MUST provide Exp6152 at
+`python/carnot/experiment_6152_typed_stochastic_constraint_ir.py` and write
+`results/experiment_6152_typed_stochastic_constraint_ir.json` without modifying
+`scripts/research_conductor.py`. The experiment SHALL represent one bounded
+Exp6145 finite-domain constraint workflow as a dependency-light typed
+Parametrized Stochastic Circuit / Directed Factor Graph style IR with explicit
+binary and categorical wires, local deterministic and stochastic kernels, exact
+finite semantics, stable serialization, and an optional adapter to the real
+pinned Torx package when it is importable.
+
+Sub-requirements:
+- REQ-SAMPLE-6152-1: The IR SHALL declare a schema version, binary and
+  categorical wire types, category order, batch shape contracts, parameter
+  schemas, factor/channel edges, and deterministic/stochastic local-kernel
+  kinds.
+- REQ-SAMPLE-6152-2: Graph validation SHALL reject unsupported cycles,
+  dangling wires, type mismatches, invalid or unnormalized probability mass,
+  duplicate wire or kernel identifiers, invalid category indexes, and ambiguous
+  seeds.
+- REQ-SAMPLE-6152-3: The Carnot executor SHALL compute exact support,
+  conditional probabilities, joint probabilities, normalization, marginals,
+  deterministic factors, impossible states, batch execution, and seed replay by
+  exhaustive finite enumeration rather than sampling.
+- REQ-SAMPLE-6152-4: The compiler SHALL map one bounded Exp6145 workflow into
+  the IR and compare it against an independent exact reference that would catch
+  wire-order and category-index bugs.
+- REQ-SAMPLE-6152-5: Serialization SHALL round trip through canonical JSON
+  without changing semantics, state order, checksums, or executable receipts.
+- REQ-SAMPLE-6152-6: The Torx adapter SHALL name the real package version,
+  import namespace, package metadata, pinned repository commit, and exercised
+  API when Torx is available. If Torx is absent or the API cannot be exercised,
+  compatibility evidence SHALL be blocked honestly and
+  `typed_stochastic_ir_ready_score` SHALL remain `0.0`.
+- REQ-SAMPLE-6152-7: The terminal artifact SHALL include `status`,
+  `preconditions_checked`, `structured_gate_receipt`,
+  `source_workflow_validator_sampler_and_exclusion_hashes`,
+  `torx_package_version_commit_import_and_api_receipts`,
+  `ir_schema_version_types_kernels_and_graph_contract`,
+  `compiler_executor_adapter_and_test_paths`,
+  `exact_enumeration_case_counts`,
+  `support_conditional_joint_normalization_and_marginal_deltas`,
+  `deterministic_impossible_batch_seed_and_serialization_controls`,
+  `wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls`,
+  `torx_compatibility_scope`, `deterministic_rebuild_checksum`,
+  `typed_stochastic_ir_ready_score`, `protected_files_unchanged`,
+  `duration_s`, `inference_substrate`, `verifier_is_oracle`,
+  `missing_verifier_gaps`, `field_provenance`, `test_commands`,
+  `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+  `inference_substrate` SHALL be `jax_cpu_exact_stochastic_program` only when
+  the exact Carnot semantics and real pinned Torx compatibility are exercised;
+  otherwise it SHALL be `carnot_only_blocked_torx_compatibility`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes ready, Carnot-only, null, and blocked compiler boundaries.
+- `preconditions_checked`: Hashes JAX CPU mode, Exp6145 workflow evidence, validators, sampler APIs, Torx metadata, exclusions, outputs, and protected files before construction.
+- `structured_gate_receipt`: Exp6145 readiness and sidecar replay must pass before the stochastic workflow is compiled.
+- `source_workflow_validator_sampler_and_exclusion_hashes`: Content hashes bind the source workflow, exact validators, sampler APIs, Torx package metadata or commit, exclusions, output paths, and protected files.
+- `torx_package_version_commit_import_and_api_receipts`: Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.
+- `ir_schema_version_types_kernels_and_graph_contract`: The versioned IR contract names wire types, kernel schemas, edge rules, state shapes, and normalization gates.
+- `compiler_executor_adapter_and_test_paths`: Paths identify the compiler, exact executor, optional adapter, tests, and artifact boundary.
+- `exact_enumeration_case_counts`: Finite state counts prove bounded exhaustive enumeration rather than sampled evidence.
+- `support_conditional_joint_normalization_and_marginal_deltas`: Exact enumeration, not sampling, is authoritative on bounded cases.
+- `deterministic_impossible_batch_seed_and_serialization_controls`: Deterministic factors, impossible states, batch shape, seed replay, and JSON round trips are checked together.
+- `wire_order_category_type_cycle_dangling_and_invalid_mass_negative_controls`: Negative controls prove validators and the independent reference catch subtle graph and indexing failures.
+- `torx_compatibility_scope`: Names the real exercised version/API; source resemblance is not compatibility.
+- `deterministic_rebuild_checksum`: A second construction must reproduce the same program and exact-semantics commitment.
+- `typed_stochastic_ir_ready_score`: Exactly one only when exact semantics, controls, serialization, protected files, tests, and real Torx compatibility pass.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical during artifact construction.
+- `duration_s`: Measured deterministic construction time is reported without padding.
+- `inference_substrate`: Use `jax_cpu_exact_stochastic_program` or `carnot_only_blocked_torx_compatibility` honestly.
+- `verifier_is_oracle`: The independent exact finite enumerator is the probability oracle for bounded cases.
+- `missing_verifier_gaps`: Any absent Torx or non-enumerated semantic evidence is explicit.
+- `field_provenance`: Every field traces to the prompt, spec, workflow, source, tests, command receipts, or package metadata.
+- `test_commands`: Commands document focused unit/spec coverage, structured gate, exact probability, Torx adapter, serialization, negative controls, protected-file, E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, schema, probability, adapter, test, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_carnot_only:`, `complete_null:`, or `blocked:` and state the exact compiler boundary.
+
+### SCENARIO-SAMPLE-6152-VALIDATION: Typed Graphs Fail Closed
+
+**Given** an Exp6152 PSC/DFG payload with typed binary and categorical wires
+**When** validation inspects cycles, edges, wire types, category indexes,
+probability masses, and seeds
+**Then** valid acyclic graphs are accepted
+**And** unsupported cycles, dangling wires, type mismatches, invalid mass,
+category-index bugs, and ambiguous seeds are rejected deterministically.
+
+### SCENARIO-SAMPLE-6152-EXACT: Enumeration Owns Probabilities
+
+**Given** the bounded Exp6145 stochastic constraint workflow
+**When** the Carnot executor enumerates every finite state
+**Then** support, conditional and joint probabilities, normalization,
+marginals, deterministic factors, impossible states, batches, and seed replay
+match an independent exact reference at the preregistered tolerance.
+
+### SCENARIO-SAMPLE-6152-SERIALIZATION-TORX: Stable JSON And Real Adapter
+
+**Given** the validated Exp6152 IR and pinned Torx package metadata
+**When** the IR is serialized, deserialized, and passed through the Torx adapter
+**Then** serialization preserves exact semantics and checksums
+**And** the adapter reports a real exercised Torx version/API or blocks
+compatibility without claiming readiness.
+
+## Implementation Status (REQ-SAMPLE-6152)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6152 | Planned (`python/carnot/experiment_6152_typed_stochastic_constraint_ir.py`, `results/experiment_6152_typed_stochastic_constraint_ir.json`) | Planned (`tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py`) |
