@@ -21955,3 +21955,137 @@ the apparent lift.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6147 | Planned (`python/carnot/experiment_6147_task_aware_energy_calibration.py`, `results/experiment_6147_task_aware_energy_calibration.json`) | Planned (`tests/python/test_experiment_6147_task_aware_energy_calibration.py`) |
+
+### REQ-VERIFY-6148: Exp6148 Shifted-Family Admission Held Evaluation
+
+The repository SHALL provide Exp6148 at
+`python/carnot/experiment_6148_shifted_family_admission_held.py` and write
+`results/experiment_6148_shifted_family_admission_held.json`. Exp6148 SHALL
+consume the frozen Exp6147 admission selector and perform exactly one held read
+over Exp6145/Exp6146 `future_known` and `sealed_shifted_family` rows. It SHALL
+compare the frozen task-aware admission policy with the frozen global-energy
+baseline without fitting, prompt changes, retries, row repair, or row selection
+after unsealing.
+
+- REQ-VERIFY-6148-1: The workflow SHALL recompute the structured gate and hash
+  upstream row, split, sidecar, held-label, selection-manifest, evaluator-code,
+  output-path, and protected-file artifacts before unsealing. Any selector
+  manifest mismatch or prior held-access receipt SHALL block evaluation.
+- REQ-VERIFY-6148-2: The workflow SHALL verify that Exp6147 froze exactly one
+  selected score, threshold, abstention policy, replay-statistic schema, memory
+  budget, expected held group IDs, and zero prior held reads before any held
+  label is materialized.
+- REQ-VERIFY-6148-3: Held labels SHALL be read once through a single
+  `first_and_only_held_access_receipt`, row counts SHALL be conserved for each
+  source model and held partition, and future-known rows SHALL remain separated
+  from sealed shifted-family rows in every metric and readiness gate.
+- REQ-VERIFY-6148-4: The frozen global-energy and task-aware policies SHALL be
+  evaluated separately for each source model and held partition. Metrics SHALL
+  include grouped AUROC/AUPRC, Brier/ECE, false unsafe acceptance, false safe
+  rejection, coverage-risk, abstention counts, and paired exact utility of
+  admitted strategies.
+- REQ-VERIFY-6148-5: Paired uncertainty SHALL use event/base-template grouped
+  intervals for task-aware minus global deltas. The primary held metric SHALL
+  follow the Exp6147 frozen primary metric family and SHALL report paired
+  lower/upper confidence bounds rather than pooled-only gains.
+- REQ-VERIFY-6148-6: Safety and abstention matrices SHALL expose unsafe
+  acceptance, unsafe rejection, safe acceptance, safe rejection, abstention, and
+  coverage for global and task-aware policies by source model, future-known
+  group, shifted-family group, and pooled summary.
+- REQ-VERIFY-6148-7: The workflow SHALL run frozen alias, task-shuffle,
+  family-frequency, poison, duplicate, model-identity, and threshold-boundary
+  attacks. Every attack SHALL report subgroups and missing rows and SHALL NOT
+  repair, omit, or rerun failures.
+- REQ-VERIFY-6148-8: `shifted_family_admission_ready_score` SHALL be the bare
+  scalar `1.0` only when shifted-family unsafe rejection and the preregistered
+  primary metric improve over global energy with paired lower 95% confidence
+  bound above zero, future-known safe acceptance remains within the frozen
+  noninferiority margin, no attack wins, `selector_refit_count` is zero, all
+  prompt retry and LLM invocation counts are zero, protected files are
+  unchanged, and `verifier_is_oracle` is the bare boolean `false`. Otherwise it
+  SHALL be `0.0`.
+- REQ-VERIFY-6148-9: `inference_substrate` SHALL be
+  `sealed_cached_event_evaluation`, no LLM, tokenizer, GGUF loader, GPU worker,
+  prompt retry, selector refit, threshold refit, abstention-policy refit, or
+  row-selection step SHALL be invoked after held unsealing, and the honest
+  verdict SHALL start with `complete_positive:`, `complete_null:`, `retired:`,
+  or `blocked:` while naming the held causal discriminator.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `upstream_and_freeze_manifest_hashes`,
+`first_and_only_held_access_receipt`, `held_group_row_conservation`,
+`per_model_future_known_and_shifted_metrics`,
+`paired_task_aware_minus_global_intervals`,
+`safe_acceptance_noninferiority`,
+`unsafe_acceptance_and_abstention_matrices`,
+`alias_shuffle_frequency_poison_duplicate_identity_and_boundary_attacks`,
+`exact_utility_diagnostic`, `selector_refit_count`,
+`prompt_retry_and_llm_invocation_counts`,
+`shifted_family_admission_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes positive, null, retired, or blocked held evidence.
+- `preconditions_checked`: Upstream rows, splits, held labels, selector manifests, evaluator code, output paths, and protected files are hashed before the held read.
+- `structured_gate_receipt`: Held evaluation opens only after Exp6145/Exp6146/Exp6147 readiness, exact selector hash match, row conservation, no prior held receipt, and no live substrate pass.
+- `upstream_and_freeze_manifest_hashes`: Frozen selector, threshold, abstention, replay schema, model sidecars, held labels, code, and protected-file hashes are content-addressed.
+- `first_and_only_held_access_receipt`: The held outcome materialization count is exactly one and covers future-known plus shifted-family rows.
+- `held_group_row_conservation`: Every mandated model preserves all future-known and shifted-family event ids with no duplicates, omissions, or extras.
+- `per_model_future_known_and_shifted_metrics`: Metrics are separated by source model and by future-known versus shifted-family groups before pooled summaries.
+- `paired_task_aware_minus_global_intervals`: Paired grouped intervals expose task-aware minus global deltas and prevent aggregate-only readiness.
+- `safe_acceptance_noninferiority`: Future-known safe acceptance cannot regress beyond the frozen noninferiority margin.
+- `unsafe_acceptance_and_abstention_matrices`: Unsafe acceptance, safe rejection, abstention, coverage, and risk are visible for each held group and policy.
+- `alias_shuffle_frequency_poison_duplicate_identity_and_boundary_attacks`: Frozen shortcut and boundary attacks report subgroups, missing rows, and whether any attack wins.
+- `exact_utility_diagnostic`: Exact labels score the utility of admitted strategies after decisions without becoming selector features.
+- `selector_refit_count`: Exactly zero selector, threshold, abstention, replay-schema, or row-selection refits occur after unsealing.
+- `prompt_retry_and_llm_invocation_counts`: Prompt retries, LLM invocations, tokenizer loads, GGUF loads, and GPU workers are all zero.
+- `shifted_family_admission_ready_score`: Readiness is conjunctive; aggregate gains cannot mask shifted-family unsafe acceptance or known-family regression.
+- `retirement_triggered`: A repeated prior-failure mode retires the scope rather than rebranding a held null.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `duration_s`: Measured sealed cached-row evaluation time is reported without implying model inference.
+- `inference_substrate`: Use `sealed_cached_event_evaluation`.
+- `verifier_is_oracle`: The evaluator is not an oracle; exact outcomes are held labels used only after the single unseal.
+- `missing_verifier_gaps`: Selector mismatch, held-access, refit, attack, subgroup, safety, noninferiority, or evidence gaps are explicit.
+- `field_provenance`: Every field traces to specs, Exp6145/Exp6146/Exp6147 artifacts, held sidecars, tests, or command receipts.
+- `test_commands`: Commands document unit/spec coverage, structured gate, freeze/hash, one-shot access, row conservation, grouped paired metrics, noninferiority, attacks, zero-refit/no-LLM, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, held-label, selector, threshold, attack, test, protected-file, or output drift.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and state the held causal discriminator.
+
+### SCENARIO-VERIFY-6148-ONE-SHOT: Held Outcomes Are Read Once
+
+**Given** the Exp6147 selector manifest declares no held reads and the Exp6148
+output path has no prior held-access receipt
+**When** Exp6148 unseals held outcomes
+**Then** exactly one held-access receipt is emitted, all future-known and
+sealed shifted-family model rows are conserved, and validation rejects any
+second receipt or selector-manifest mismatch.
+
+### SCENARIO-VERIFY-6148-PAIRED: Held Metrics Stay Grouped And Separated
+
+**Given** future-known and shifted-family rows are scored by the frozen
+task-aware and global policies
+**When** grouped metrics and paired intervals are computed
+**Then** each source model reports future-known and shifted-family AUROC/AUPRC,
+Brier/ECE, safety matrices, coverage-risk, exact utility, and paired
+task-aware-minus-global intervals before any pooled summary.
+
+### SCENARIO-VERIFY-6148-ATTACKS: Attacks Gate Readiness
+
+**Given** held evaluation has produced policy decisions
+**When** alias, task-shuffle, family-frequency, poison, duplicate,
+model-identity, and threshold-boundary attacks run
+**Then** every attack reports subgroup coverage and missing rows, and readiness
+is zero if any attack wins, any shifted-family unsafe acceptance regression is
+hidden by aggregation, or future-known safe acceptance violates
+noninferiority.
+
+## Implementation Status (REQ-VERIFY-6148)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6148 | Planned (`python/carnot/experiment_6148_shifted_family_admission_held.py`, `results/experiment_6148_shifted_family_admission_held.json`) | Planned (`tests/python/test_experiment_6148_shifted_family_admission_held.py`) |
