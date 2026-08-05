@@ -26670,6 +26670,159 @@ shares that partition, and overlap counts are zero.
 |---|---|---|
 | REQ-LEARN-6145 | Implemented (`python/carnot/experiment_6145_constraint_shift_stream.py`) | Implemented (`tests/python/test_experiment_6145_constraint_shift_stream.py`) |
 
+## REQ-LEARN-6149: Certified Strategy Schema Fixture
+
+The self-learning tier SHALL provide Exp6149, a deterministic no-LLM fixture at
+`python/carnot/experiment_6149_certified_strategy_schema_fixture.py` that extends
+Exp6120's post-outcome transaction primitive with bounded certified strategy
+schemas built only from Exp6145 calibration events. Exp6149 SHALL write
+`results/experiment_6149_certified_strategy_schema_fixture.json`, SHALL preserve
+default-off behavior, SHALL NOT mutate model weights, SHALL NOT mutate
+`scripts/research_conductor.py`, and SHALL use
+`inference_substrate="deterministic_transactional_csl_fixture"`.
+
+REQ-LEARN-6149-1: Strategy records SHALL use a fixed-width, versioned schema
+containing strategy identity, applicable constraint signature, certificate and
+outcome provenance, success and failure counts, counterexample digest, task and
+family calibration statistics, freshness, bounded utility, action code, and
+safety flags. Free-form model text SHALL NOT become executable policy unless an
+exact certificate binds the strategy to the Exp6145 row and outcome sidecar.
+
+REQ-LEARN-6149-2: Every decision SHALL read an immutable pre-event snapshot.
+Atomic prepare, commit, and abort operations SHALL bind event IDs, row hashes,
+certificate hashes, before/after state hashes, and task-admission metadata.
+Exact outcomes and certificates SHALL update state only after the decision
+boundary.
+
+REQ-LEARN-6149-3: Duplicate, reordered, restart-replayed, and deterministically
+merged deliveries SHALL be idempotent by stable event ID: repeated delivery
+SHALL produce byte-identical state and future retrieval.
+
+REQ-LEARN-6149-4: Invalid certificates, poison requests, malformed proposals,
+family alias confusion, contradictory strategies, serialization corruption, and
+rollback attempts SHALL fail closed without making executable policy. Poison and
+invalid rows SHALL be quarantined or rejected with bounded receipts.
+
+REQ-LEARN-6149-5: Runtime strategy state SHALL keep a protected prefix, SHALL
+evict only unprotected records under the preregistered byte budget, SHALL
+support exact rollback to a prior state hash, and SHALL serialize with a schema
+version and corruption guard.
+
+REQ-LEARN-6149-6: Python, Rust, and PyO3 fixed-width strategy-schema
+representations SHALL produce identical schema bytes, state hashes, action
+codes, and energy values on golden and adversarial records. Rust/PyO3 parity is
+required only for the fixed-width schema bytes and deterministic energy/action
+surface, not for model inference.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`,
+`upstream_code_state_abi_event_validator_and_exclusion_hashes`,
+`continuous_self_learning_task`,
+`strategy_schema_version_dimension_and_byte_budget`,
+`certificate_and_applicability_contract`,
+`decision_snapshot_and_no_same_decision_write_receipts`,
+`prepare_commit_abort_and_rollback_receipts`,
+`duplicate_reordered_restart_and_merge_idempotence`,
+`poison_invalid_alias_contradiction_and_corruption_controls`,
+`protected_retention_eviction_and_bounded_state_metrics`,
+`python_rust_pyo3_fixed_width_parity`,
+`model_weight_immutability_receipt`,
+`retired_exp5895_scope_nonreuse_receipt`,
+`committed_rejected_and_quarantined_counts`,
+`certified_strategy_fixture_ready_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a ready fixture from blocked, retired, or partial evidence.
+- `preconditions_checked`: Hashes Exp6120, Exp6145 calibration events, exact validators, exclusions, outputs, protected files, ABI surfaces, and retired-scope exclusions before replay.
+- `structured_gate_receipt`: The fixture is credited only when transaction, safety, bounded-state, and parity gates all pass.
+- `upstream_code_state_abi_event_validator_and_exclusion_hashes`: Content-addressed inputs prevent hidden reuse of stale code, rows, validators, ABI, exclusions, or output paths.
+- `continuous_self_learning_task`: Must be bare true for the milestone requirement.
+- `strategy_schema_version_dimension_and_byte_budget`: Strategy records stay versioned, fixed-width, and under the preregistered byte budget.
+- `certificate_and_applicability_contract`: Exact certificates bind strategy action to row, outcome, and applicable constraint signature.
+- `decision_snapshot_and_no_same_decision_write_receipts`: Current decisions can read only the pre-event snapshot.
+- `prepare_commit_abort_and_rollback_receipts`: Atomic transaction receipts prove outcomes update state after, not during, decision.
+- `duplicate_reordered_restart_and_merge_idempotence`: Repeated delivery produces byte-identical state and future retrieval.
+- `poison_invalid_alias_contradiction_and_corruption_controls`: Unsafe strategy data is rejected or quarantined before executable policy.
+- `protected_retention_eviction_and_bounded_state_metrics`: Protected prefixes survive eviction while total runtime state remains bounded.
+- `python_rust_pyo3_fixed_width_parity`: Python, Rust, and PyO3 must agree on fixed-width bytes, schema, energy, and action.
+- `model_weight_immutability_receipt`: This fixture changes external strategy state only.
+- `retired_exp5895_scope_nonreuse_receipt`: This task neither runs nor gates on the retired frozen exact-slot requalification.
+- `committed_rejected_and_quarantined_counts`: Readiness requires at least one valid commit and at least one invalid or poison rejection.
+- `certified_strategy_fixture_ready_score`: Emit bare 1.0 only when all transaction, safety, parity, and byte-budget gates pass.
+- `protected_files_unchanged`: Protected files are not part of this experiment's mutable surface.
+- `duration_s`: Measured deterministic fixture construction time is reported.
+- `inference_substrate`: Set `deterministic_transactional_csl_fixture`.
+- `verifier_is_oracle`: Exact Exp6145 post-outcome labels are the oracle; strategy state is not.
+- `missing_verifier_gaps`: Any deployment gap outside the deterministic fixture is explicit.
+- `field_provenance`: Every field traces to prompt, spec, rows, sidecars, validators, code, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, structured gate, certificate, snapshot/transaction, idempotence, poison/rollback/retention/eviction, serialization, Rust/PyO3 parity, exclusion nonreuse, schema, adversarial, protected-file, E2E, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: A checksum detects source, row, sidecar, ABI, test, command, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and state the failing transaction, safety, or parity boundary.
+
+`certified_strategy_fixture_ready_score` SHALL be the bare scalar `1.0` only
+when all preconditions pass; Exp6145 calibration-only inputs are replayed with
+exact certificate binding; at least one valid strategy commits; at least one
+poison or invalid strategy is rejected or quarantined; current decisions read
+only pre-event snapshots; prepare, commit, abort, rollback, duplicate,
+reordered, restart, and deterministic merge receipts are byte-identical where
+required; protected-prefix retention is complete; eviction respects protected
+records and byte budget; serialization corruption rejects; Python/Rust/PyO3
+fixed-width schema bytes, hashes, energy, and actions match; model weights are
+unchanged; the retired Exp5895/Exp5912 exact-slot requalification is neither
+run nor used as a gate; protected files are unchanged; and every required
+command exit code is zero. Otherwise it SHALL be the bare scalar `0.0`.
+
+### SCENARIO-LEARN-6149-CALIBRATION-SCHEMA: Calibration Strategies Are Certified
+
+**Given** Exp6145 calibration rows and post-outcome sidecars
+**When** Exp6149 prepares and commits strategy schemas
+**Then** only calibration events become candidate strategy records
+**And** every committed record carries an exact certificate, applicability
+signature, task-admission metadata, bounded utility, and fixed-width bytes.
+
+### SCENARIO-LEARN-6149-SNAPSHOT-TRANSACTION: Decisions Read Frozen State
+
+**Given** a decision starts before an Exp6145 calibration outcome is applied
+**When** prepare, commit, abort, and rollback operations execute
+**Then** the decision snapshot remains immutable, same-decision read-after-write
+is zero, and post-outcome writes record before/after state hashes.
+
+### SCENARIO-LEARN-6149-IDEMPOTENCE: Duplicate Reordered Restart Merge Is Stable
+
+**Given** duplicate, reversed, restart-replayed, and chunk-merged event delivery
+**When** the transactional strategy state is rebuilt
+**Then** final serialized bytes, future retrieval, and state hashes are
+byte-identical to the canonical chronological replay.
+
+### SCENARIO-LEARN-6149-SAFETY: Poison Invalid Alias Contradiction Corruption Fail Closed
+
+**Given** poison requests, malformed certificates, family aliases,
+contradictory strategies, and corrupted serialized state
+**When** Exp6149 validates and replays them
+**Then** invalid or poison records are rejected or quarantined, aliases do not
+count as structural shifts, contradictory strategies do not become executable
+policy, and corrupted serialization fails without mutation.
+
+### SCENARIO-LEARN-6149-RETENTION-EVICTION-PARITY: Bounded State Preserves Protected Prefix
+
+**Given** more certified calibration strategies than the active byte budget can
+retain
+**When** eviction, rollback, serialization, and cross-language parity checks run
+**Then** protected-prefix records remain retrievable, unprotected records are
+evicted deterministically, rollback restores an exact prior hash, and
+Python/Rust/PyO3 fixed-width bytes, schema, energy, and action match.
+
+## Implementation Status (REQ-LEARN-6149)
+
+| Requirement | Python | Rust/PyO3 | Tests |
+|---|---|---|---|
+| REQ-LEARN-6149 | Implemented (`python/carnot/experiment_6149_certified_strategy_schema_fixture.py`, `results/experiment_6149_certified_strategy_schema_fixture.json`) | Implemented (fixed-width strategy schema parity helper) | Implemented (`tests/python/test_experiment_6149_certified_strategy_schema_fixture.py`) |
+
 ## REQ-LEARN-6147: Exp6147 Chronological Task-Aware Admission Calibration
 
 The self-learning tier SHALL treat Exp6147 as a calibration-only admission

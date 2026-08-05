@@ -421,6 +421,16 @@ pub fn sha256_text(value: &str) -> String {
     format!("sha256:{:x}", digest.finalize())
 }
 
+pub fn sha256_bytes(value: &[u8]) -> String {
+    let mut digest = Sha256::new();
+    digest.update(value);
+    format!("sha256:{:x}", digest.finalize())
+}
+
+fn hex_lower(value: &[u8]) -> String {
+    value.iter().map(|byte| format!("{byte:02x}")).collect()
+}
+
 fn base_state(capacity: u32, history_capacity: u32) -> AdaptiveState {
     AdaptiveState {
         abi_version: ABI_VERSION,
@@ -470,6 +480,9 @@ pub const ABI_V2_OPERATION_SCHEMA: &str = "carnot.adaptive_state_abi.v2.operatio
 pub const ABI_V2_MAX_ACTIVE_CAPACITY: u32 = 16;
 pub const ABI_V2_MAX_QUARANTINE_CAPACITY: u32 = 32;
 pub const ABI_V2_MAX_KEY_LEN: usize = 96;
+pub const CERTIFIED_STRATEGY_SCHEMA_VERSION: &str =
+    "carnot.experiment_6149.certified_strategy_schema_fixture.v1.strategy_record.v1";
+pub const CERTIFIED_STRATEGY_RECORD_BYTES: usize = 60;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AbiV2ActiveEntry {
@@ -575,6 +588,34 @@ pub struct AbiV2Checkpoint {
     pub state_hash: String,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CertifiedStrategySchemaInput {
+    pub schema_version_u16: u16,
+    pub strategy_identity_u64: u64,
+    pub applicable_constraint_signature_u64: u64,
+    pub certificate_provenance_u64: u64,
+    pub outcome_provenance_u64: u64,
+    pub success_count_u16: u16,
+    pub failure_count_u16: u16,
+    pub counterexample_digest_u64: u64,
+    pub task_calibration_count_u16: u16,
+    pub family_calibration_count_u16: u16,
+    pub freshness_event_index_u32: u32,
+    pub bounded_utility_i16: i16,
+    pub action_code_u16: u16,
+    pub flags_u16: u16,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CertifiedStrategySchemaReceipt {
+    pub action_code: u16,
+    pub energy: i32,
+    pub record_bytes_hex: String,
+    pub record_bytes_len: usize,
+    pub record_hash: String,
+    pub schema: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 struct AbiV2ProposalIdSeed<'a> {
     pub abi_version: u32,
@@ -613,6 +654,56 @@ pub struct AdaptiveStateAbiV2Kernel {
     ledger: Vec<AbiV2OperationResult>,
     written_events: BTreeSet<String>,
     released: bool,
+}
+
+pub fn certified_strategy_schema_record(
+    input: &CertifiedStrategySchemaInput,
+) -> CertifiedStrategySchemaReceipt {
+    let bytes = pack_certified_strategy_schema_record(input);
+    CertifiedStrategySchemaReceipt {
+        action_code: input.action_code_u16,
+        energy: certified_strategy_schema_energy(input),
+        record_bytes_hex: hex_lower(&bytes),
+        record_bytes_len: bytes.len(),
+        record_hash: sha256_bytes(&bytes),
+        schema: CERTIFIED_STRATEGY_SCHEMA_VERSION.to_string(),
+    }
+}
+
+pub fn pack_certified_strategy_schema_record(input: &CertifiedStrategySchemaInput) -> Vec<u8> {
+    let mut bytes = Vec::with_capacity(CERTIFIED_STRATEGY_RECORD_BYTES);
+    bytes.extend_from_slice(&input.schema_version_u16.to_be_bytes());
+    bytes.extend_from_slice(&input.strategy_identity_u64.to_be_bytes());
+    bytes.extend_from_slice(&input.applicable_constraint_signature_u64.to_be_bytes());
+    bytes.extend_from_slice(&input.certificate_provenance_u64.to_be_bytes());
+    bytes.extend_from_slice(&input.outcome_provenance_u64.to_be_bytes());
+    bytes.extend_from_slice(&input.success_count_u16.to_be_bytes());
+    bytes.extend_from_slice(&input.failure_count_u16.to_be_bytes());
+    bytes.extend_from_slice(&input.counterexample_digest_u64.to_be_bytes());
+    bytes.extend_from_slice(&input.task_calibration_count_u16.to_be_bytes());
+    bytes.extend_from_slice(&input.family_calibration_count_u16.to_be_bytes());
+    bytes.extend_from_slice(&input.freshness_event_index_u32.to_be_bytes());
+    bytes.extend_from_slice(&input.bounded_utility_i16.to_be_bytes());
+    bytes.extend_from_slice(&input.action_code_u16.to_be_bytes());
+    bytes.extend_from_slice(&input.flags_u16.to_be_bytes());
+    bytes
+}
+
+pub fn certified_strategy_schema_energy(input: &CertifiedStrategySchemaInput) -> i32 {
+    let poison_penalty = if input.flags_u16 & 0x0004 != 0 {
+        256
+    } else {
+        0
+    };
+    let invalid_penalty = if input.flags_u16 & 0x0008 != 0 {
+        128
+    } else {
+        0
+    };
+    let raw = 1000 + i32::from(input.failure_count_u16) * 16 + poison_penalty + invalid_penalty
+        - i32::from(input.success_count_u16) * 8
+        - i32::from(input.bounded_utility_i16);
+    raw.max(0)
 }
 
 impl AdaptiveStateAbiV2Kernel {
@@ -2007,5 +2098,44 @@ mod adaptive_state_tests {
             "USE_AFTER_RELEASE"
         );
         assert_eq!(kernel.release().code, "DOUBLE_RELEASE");
+    }
+
+    #[test]
+    fn certified_strategy_schema_record_is_fixed_width_and_deterministic() {
+        let input = CertifiedStrategySchemaInput {
+            schema_version_u16: 1,
+            strategy_identity_u64: 0x0102_0304_0506_0708,
+            applicable_constraint_signature_u64: 0x1112_1314_1516_1718,
+            certificate_provenance_u64: 0x2122_2324_2526_2728,
+            outcome_provenance_u64: 0x3132_3334_3536_3738,
+            success_count_u16: 7,
+            failure_count_u16: 2,
+            counterexample_digest_u64: 0x4142_4344_4546_4748,
+            task_calibration_count_u16: 9,
+            family_calibration_count_u16: 11,
+            freshness_event_index_u32: 6149,
+            bounded_utility_i16: 5,
+            action_code_u16: 3,
+            flags_u16: 0,
+        };
+        let receipt = certified_strategy_schema_record(&input);
+        assert_eq!(receipt.schema, CERTIFIED_STRATEGY_SCHEMA_VERSION);
+        assert_eq!(receipt.record_bytes_len, CERTIFIED_STRATEGY_RECORD_BYTES);
+        assert_eq!(receipt.action_code, 3);
+        assert_eq!(receipt.energy, 971);
+        assert!(receipt.record_hash.starts_with("sha256:"));
+        assert_eq!(
+            receipt.record_bytes_hex.len(),
+            CERTIFIED_STRATEGY_RECORD_BYTES * 2
+        );
+
+        let poisoned = CertifiedStrategySchemaInput {
+            flags_u16: 0x0004,
+            ..input
+        };
+        assert_eq!(
+            certified_strategy_schema_record(&poisoned).energy,
+            receipt.energy + 256
+        );
     }
 }
