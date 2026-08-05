@@ -6063,3 +6063,9 @@ The critical path for milestone .250:
 - theme: readiness-gated model-native calibration concentrated the compute-bound operational tail
 - key result: honest operational limitation -- one readiness-gated compute experiment consumed 52.61 of 55.4 minutes, while phase-level causes and any concurrent multi-model runner miss remain unestablished
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.532
+- exp_range: exp6128-exp6128 (only experiment ID present in the authoritative timing data; the complete milestone range is not available)
+- theme: synthesis workflow latency dominated a brief milestone without a task-scoped GPU-idle finding
+- key result: honest operational limitation -- the sole compute-bound task was the shortest recorded entry, its phase-level timing cause is unavailable, and no concurrent multi-model runner miss is established
+- acceptance: no data available this milestone
