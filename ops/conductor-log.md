@@ -15338,3 +15338,5 @@ No output thi |
 | 2026-08-05 05:21 UTC | Gated on Exp6127 readiness: model-native Phase-D c | OK | 88 passed, 1 warning in 100.36s (0:01:40) |
 | 2026-08-05 05:23 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |
 | 2026-08-05 05:25 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |
+| 2026-08-05 05:27 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |
+| 2026-08-05 05:29 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |
