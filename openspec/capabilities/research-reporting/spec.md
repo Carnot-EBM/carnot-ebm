@@ -49459,3 +49459,149 @@ checksum, and terminal verdict prefix is present; the inference substrate is
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6142 | Implemented (`python/carnot/experiment_6142_transition_v533.py`, `results/experiment_6142_transition_v533.json`) | Implemented (`tests/python/test_experiment_6142_transition_v533.py`) |
+
+### REQ-REPORT-6144: V533 Post-Marker Source Delta Ingestion Preserves Roadmap Identity
+
+The Exp6144 workflow SHALL run a bounded literature-ingestion pass after the
+sealed `V533-PLANNER-REFRESH-20260805-END` marker in
+`research-references.md`. It SHALL first hash the exact marker block,
+`research-references.md`, active `research-roadmap.yaml`, optional
+`research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `ops/known-issues.md`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, the output path
+when present, and protected files. It SHALL record the UTC cutoff,
+same-day ordering uncertainty, endpoint failures, rate limits, and any absent
+staged-roadmap receipt.
+
+The workflow SHALL search only hash-bounded post-marker evidence through
+low-concurrency arXiv, OpenReview, Hugging Face Papers, direct Semantic
+Scholar citation trails for EBT `2507.02092` and ARM-EBM `2512.15605`,
+targeted GitHub repositories, Extropic official writing/hardware pages and
+repositories, and Logical Intelligence Kona/Aleph public pages. arXiv records,
+OpenReview forum pages, official project pages, Extropic pages, Logical
+Intelligence pages, and maintained official repositories SHALL be primary or
+official only when directly opened. Hugging Face Papers, GitHub discovery
+metadata, Semantic Scholar routes, search pages, and local sweep helpers SHALL
+be secondary or tooling unless they link to an opened primary or official page.
+The workflow SHALL NOT invoke `/deep-research` or a local research model.
+
+Every surfaced receipt SHALL be classified as accepted, rejected, duplicate,
+retired-scope, abstained, false-positive, known-false-negative,
+cutoff-confound, or endpoint-failed, and every candidate disposition SHALL
+include a primary or official URL when one is reachable. Accepted findings
+SHALL be newer primary-source evidence or materially changed official evidence
+after the sealed marker, non-duplicate by identifier, title, author,
+mechanism, and existing ledger heading, and SHALL map only to already allocated
+`.533` tasks Exp6145 through Exp6154 or to `defer`. Sources SHALL be rejected
+or abstained when they only rename retired Phase-D, generated-answer,
+CSL exact-slot, THRML parity, ARC, KAN-mutation, unchanged hardware-access, or
+roadmap/task/gate rewrite shapes.
+
+When no accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` unchanged and set
+`references_append_receipt.appended=false`. When accepted findings exist, it
+MAY append exactly one dated post-V533 delta subheading after the sealed
+marker, listing only actionable bounded method-to-task mappings. The workflow
+SHALL NOT change task identities, gates, `research-roadmap.yaml`, optional
+staged roadmap identities or gates, `ops/exclusion_manifest.yaml`,
+`ops/known-issues.md`, `ops/changelog.md`, `ops/status.md`, or
+`scripts/research_conductor.py`.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`search_window_and_marker_receipt`,
+`source_queries_and_endpoint_receipts`,
+`primary_secondary_and_official_source_counts`,
+`accepted_rejected_duplicate_retired_and_abstained_findings`,
+`sota_to_experiment_mapping`,
+`cutoff_rate_limit_and_same_day_uncertainty_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`,
+`openreview_huggingface_github_extropic_and_kona_receipts`,
+`duplicate_and_retired_scope_filter`, `references_append_receipt`,
+`roadmap_identity_gate_and_exclusion_immutability`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty provenance entry and a principle.
+`inference_substrate` SHALL equal `literature_ingestion`; no local research
+model SHALL be invoked. The `honest_verdict` SHALL start with
+`complete_delta:`, `complete_null:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal literature-ingestion state follows marker, source reachability, and classification receipts."
+- `preconditions_checked`: principle "The V533 marker, ledgers, roadmaps, exclusions, sweep helpers, output path, protected files, endpoint failures, and rate limits are recorded before source decisions."
+- `search_window_and_marker_receipt`: principle "Only a hash-anchored post-marker window is eligible."
+- `source_queries_and_endpoint_receipts`: principle "Every source route records role, URL, query, access outcome, timestamp, candidate count, and low-concurrency evidence."
+- `primary_secondary_and_official_source_counts`: principle "Discovery metadata cannot be mistaken for primary or official evidence."
+- `accepted_rejected_duplicate_retired_and_abstained_findings`: principle "Every candidate receives one explicit disposition backed by a primary or official URL."
+- `sota_to_experiment_mapping`: principle "Ingestion may inform execution but cannot add, remove, rename, or re-gate a task."
+- `cutoff_rate_limit_and_same_day_uncertainty_receipts`: principle "Endpoint blocks, rate limits, same-day cutoff uncertainty, and source false positives remain visible."
+- `semantic_scholar_ebt_and_arm_ebm_receipts`: principle "Citation trails are secondary discovery receipts until an opened primary source changes local method scope."
+- `openreview_huggingface_github_extropic_and_kona_receipts`: principle "Official and secondary ecosystem receipts stay grouped by authority."
+- `duplicate_and_retired_scope_filter`: principle "Identifier, title, author, mechanism, heading, duplicate, and retired-scope filters keep closed work closed."
+- `references_append_receipt`: principle "Reference-ledger appends are append-only and forbidden for zero accepted findings."
+- `roadmap_identity_gate_and_exclusion_immutability`: principle "Roadmap task IDs, gates, task identity, and exclusions stay immutable during ingestion."
+- `protected_files_unchanged`: principle "Roadmaps, conductor, ops ledgers, retired-scope controls, and protected sources remain byte-identical unless explicitly owned."
+- `duration_s`: principle "Measured wall time exposes the bounded literature-ingestion substrate."
+- `inference_substrate`: principle "Use `literature_ingestion`; no local research model is invoked."
+- `field_provenance`: principle "Every field traces to source receipts, local hashes, query families, or classification records."
+- `test_commands`: principle "Commands document focused unit/spec coverage, marker/hash, date-window, deduplication, source classification, URL verification, mapping, immutability, schema, adversarial-verify, E2E applicability, protected-file, root-clutter, coverage, and full-suite checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks from becoming success."
+- `reproducibility_checksum`: principle "A checksum detects later marker, source, classification, append, or immutability drift."
+- `honest_verdict`: principle "Use `complete_delta:`, `complete_null:`, or `blocked:` and distinguish endpoint failure from no new science."
+
+#### SCENARIO-REPORT-6144-ZERO-DELTA: Complete Null Leaves References Unchanged
+
+**Given** the V533 planner marker is present, the active `.533` roadmap is
+readable, and at least one primary, official, or reliable secondary route is
+reachable
+**And** every surfaced post-marker item is duplicate, rejected, abstained,
+retired-scope, inaccessible, false-positive, known-false-negative, or a cutoff
+confound
+**When** Exp6144 runs
+**Then** it writes `results/experiment_6144_v533_source_delta_ingestion.json`,
+sets `status=complete`, sets `references_append_receipt.appended=false`,
+records zero accepted findings, separates endpoint blocks from no new science,
+preserves roadmap identities, gates, roadmaps, and exclusions, declares
+`inference_substrate=literature_ingestion`, and emits a `complete_null:`
+verdict.
+
+#### SCENARIO-REPORT-6144-ACCEPT-BOUNDED-DELTA: Accepted Findings Map Inside V533
+
+**Given** a source is newer primary-source evidence or materially changed
+official evidence after the V533 marker, is non-duplicate by identifier, title,
+author, mechanism, and ledger heading, and only sharpens an already allocated
+`.533` task or is explicitly deferred
+**When** the source is accepted
+**Then** the artifact and optional reference append record source id, title,
+URL, source date, receipt id, target experiment or `defer`, bounded source
+hook, authority boundary, method-to-task mapping, and provenance while
+preserving task IDs, gates, model policy, authority boundaries, retired scopes,
+hardware requirements, and headline claims.
+
+#### SCENARIO-REPORT-6144-DUPLICATE-AND-RETIRED-SCOPE: Closed Work Stays Closed
+
+**Given** a source duplicates existing V533 reference headings or only renames
+retired Phase-D, generated-answer, CSL exact-slot, THRML parity, ARC,
+KAN-mutation, unchanged hardware-access, or task/gate rewrite shapes
+**When** the candidate is classified
+**Then** it is rejected as duplicate or retired-scope, the matching rule is
+recorded, and no reference append, roadmap mutation, gate mutation, exclusion
+mutation, hardware claim, Kona claim, or historical rewrite is made.
+
+#### SCENARIO-REPORT-6144-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp6144 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, source receipt,
+finding disposition primary or official URL, Semantic Scholar citation receipt,
+official/discovery grouping, endpoint failure, rate limit, mapping,
+protected-file hash, test command, exit code, checksum, and terminal verdict
+prefix is present; the inference substrate is `literature_ingestion`.
+
+## Implementation Status (REQ-REPORT-6144)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6144 | Implemented (`python/carnot/experiment_6144_v533_source_delta_ingestion.py`, `results/experiment_6144_v533_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_6144_v533_source_delta_ingestion.py`) |
