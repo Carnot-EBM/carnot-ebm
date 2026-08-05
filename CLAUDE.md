@@ -79,6 +79,13 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 
 - **No emojis in public documentation.** README, landing page, technical report, and usage guide must be emoji-free. Professional presentation is critical for community credibility.
 - **Verbose layman explanations in code.** All docstrings and comments should explain WHY, not just WHAT. Write for engineers who are not EBM specialists.
+- **Calibration (operator-approved 2026-08-05): verbose WHY means plain language, not long.**
+  Comments are <=5 lines of plain language a new engineer can read. Incident narratives and
+  measurement history live in the commit message or a research note, referenced by commit hash
+  (`# see commit f6a39bc91`), never inlined into code. No session-internal jargon
+  ("load-bearing", "fail-open", "the tell", raw exp/milestone IDs) without a one-line gloss.
+  This applies to agent-written comments, docstrings, commit bodies, briefs, and the prompts
+  agents write for other agents — subagents mirror the style of whoever briefs them.
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
 
