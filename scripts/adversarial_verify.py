@@ -248,6 +248,7 @@ DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic_verifier_plus_replay",
     "deterministic_exact_verifier_and_versioned_external_state_no_llm",
     "artifact_provenance_audit",
+    "cached_sota_event_energy_calibration",
 )
 DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 
@@ -374,6 +375,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
     "cached_exp5567_responses_no_llm",
     "cached_fixture_replay_no_llm",
+    "cached_sota_event_energy_calibration",
     "deterministic_automaton_no_llm",
     "deterministic_validation_over_canonical_pool",
     "offline_exact_forensics_over_existing_real_gguf_rows_no_llm",
