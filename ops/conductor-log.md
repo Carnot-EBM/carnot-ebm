@@ -15325,3 +15325,4 @@ No output thi |
 | 2026-08-04 23:12 UTC | Gated internal-state Phase-D selector against tune | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6118-phase-d-per-layer-surface, exp6117-p |
 | 2026-08-04 23:23 UTC | GateMate changed-physical-state continuity gate | OK | 94 passed, 1 warning in 11.40s |
 | 2026-08-04 23:39 UTC | ARC live-path generic primitive reachability and h | OK | 86 passed, 1 warning in 9.94s |
+| 2026-08-05 00:11 UTC | Branch-independent .530 capstone and architecture  | OK | 87 passed, 1 warning in 14.73s |
