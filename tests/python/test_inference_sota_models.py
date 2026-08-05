@@ -166,6 +166,25 @@ def test_cached_sota_pair_treats_missing_third_model_as_optional(
     assert missing_optional_models == [GEMMA26_ID]
 
 
+# REQ-VERIFY-6146-2 / SCENARIO-VERIFY-6146-GATE:
+# projector-only GGUFs must not satisfy a headline language-model path.
+def test_resolve_cached_gguf_ignores_newer_projector_snapshot(tmp_path) -> None:
+    cache = tmp_path / "hub"
+    model_dir = cache / "models--unsloth--gemma-4-31B-it-GGUF" / "snapshots"
+    old = model_dir / "old-revision"
+    new = model_dir / "new-revision"
+    old.mkdir(parents=True)
+    new.mkdir(parents=True)
+    language_model = old / "gemma-4-31B-it-Q4_K_M.gguf"
+    projector = new / "mmproj-F16.gguf"
+    language_model.write_bytes(b"GGUF language model placeholder")
+    projector.write_bytes(b"GGUF projector placeholder")
+
+    resolved = sota_models.resolve_cached_gguf(GEMMA31_ID, cache_root=str(cache))
+
+    assert resolved == str(language_model)
+
+
 # SCENARIO-INFER-SOTA-007: TypedDict is importable and usable.
 def test_typed_dict_is_importable() -> None:
     # The type should at least be constructable with literal dicts.
