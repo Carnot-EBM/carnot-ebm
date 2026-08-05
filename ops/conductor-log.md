@@ -15356,3 +15356,4 @@ No output thi |
 | 2026-08-05 12:18 UTC | Frozen Exp6128 option-aware psychometrics and fami | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ad)
 +
 +    bad |
+| 2026-08-05 12:34 UTC | Frozen Exp6128 option-aware psychometrics and fami | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6140_phase_d |
