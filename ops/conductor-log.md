@@ -15357,3 +15357,5 @@ No output thi |
 +
 +    bad |
 | 2026-08-05 12:34 UTC | Frozen Exp6128 option-aware psychometrics and fami | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6140_phase_d |
+| 2026-08-05 12:50 UTC | Frozen Exp6128 option-aware psychometrics and fami | FAIL | No file changes produced |
+| 2026-08-05 12:52 UTC | Gated on Exp6140 design readiness: exact empirical | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6140-phase-d-exp6128-option-psychometrics |
