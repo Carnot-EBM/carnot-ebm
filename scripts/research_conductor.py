@@ -32,6 +32,7 @@ import hashlib
 import json
 import logging
 import os
+import pathlib
 import shutil
 import subprocess
 import sys
@@ -144,6 +145,84 @@ def run_cmd(
         return -1, "", "Command timed out"
     except Exception as e:
         return -1, "", str(e)
+
+
+_DETERMINATION_TOKENS = (
+    "flagged_adversarial",
+    "corrigendum",
+    "correction_note",
+    "solve_provenance",
+    "restored_",
+    "determination_restoration",
+    "inference_substrate_original",
+)
+
+
+def _restore_dropped_determinations() -> None:
+    """Re-add fabrication-gate determinations a TEST RUN stripped, before `git add -A` commits it.
+
+    WHY THIS EXISTS. The conductor commits with `--no-verify` for a good reason -- see the
+    docstring below: hooks that fail mid-commit trigger pre-commit's stash-restore cycle, which
+    has caused silent data loss (ops/known-issues.md 2026-05-03). But `--no-verify` also skips
+    `determination_preservation_lint.py`, whose entire job is to refuse a commit that drops a
+    `flagged_adversarial` stamp or a corrigendum. So the lint exits 1 correctly against these
+    commits and is never run: structurally unreachable, not silently non-firing.
+
+    MEASURED 2026-08-04: the record lost determinations NINE times in one day, always the same
+    shape. An experiment module imported by the test suite rewrites its own artifact in place,
+    dropping the hand-written determination keys; `git add -A` then commits the damage. The stamps
+    are load-bearing -- the fabrication gate requires capstone/headline aggregation to SKIP
+    `flagged_adversarial` artifacts, so a dropped stamp silently re-admits a quarantined result to
+    headline aggregation.
+
+    WHY SELF-HEAL RATHER THAN REFUSE. Refusing would stall the conductor and reintroduce exactly
+    the "commit is blocked, work is at risk" mode `--no-verify` was adopted to prevent. Restoring
+    is strictly additive: keys absent from the working tree are copied back from HEAD, no existing
+    value is touched, and a file with nothing missing is not rewritten at all. So this cannot lose
+    a legitimate edit -- only an edit that DELETES a determination, which is never legitimate.
+
+    FAIL-OPEN BY DESIGN, and that is deliberate: a commit that preserves work is more important
+    than this repair. Any error here is logged and swallowed.
+    """
+    import json as _json
+
+    try:
+        rc, out, _ = run_cmd(["git", "diff", "--name-only", "--diff-filter=M", "--", "results"])
+        if rc != 0 or not out.strip():
+            return
+        paths = [ln.strip() for ln in out.splitlines() if ln.strip().endswith(".json")]
+        for rel in paths:
+            try:
+                rc, head_txt, _ = run_cmd(["git", "show", f"HEAD:{rel}"])
+                if rc != 0:
+                    continue
+                head = _json.loads(head_txt)
+                path = pathlib.Path(rel)
+                cur = _json.loads(path.read_text())
+                if not isinstance(head, dict) or not isinstance(cur, dict):
+                    continue
+                missing = {
+                    k: v
+                    for k, v in head.items()
+                    if any(t in k for t in _DETERMINATION_TOKENS) and k not in cur
+                }
+                if not missing:
+                    continue
+                cur.update(missing)
+                text = path.read_text()
+                lines = text.splitlines()
+                indent = (len(lines[1]) - len(lines[1].lstrip())) if len(lines) > 1 else 2
+                path.write_text(_json.dumps(cur, indent=indent or 2) + "\n")
+                logger.warning(
+                    "Restored %d dropped determination key(s) in %s before commit: %s",
+                    len(missing),
+                    rel,
+                    ",".join(sorted(missing)),
+                )
+            except Exception as exc:  # noqa: BLE001 - fail-open per docstring
+                logger.debug("determination restore skipped for %s: %s", rel, exc)
+    except Exception as exc:  # noqa: BLE001 - fail-open per docstring
+        logger.debug("determination restore pass skipped: %s", exc)
 
 
 def with_agent_signature(message: str) -> str:
@@ -1562,6 +1641,7 @@ def git_commit_and_push(message: str, push: bool = True) -> bool:
     """
     full_message = with_agent_signature(message)
 
+    _restore_dropped_determinations()
     run_cmd(["git", "add", "-A"])
     rc, _, stderr = run_cmd(["git", "commit", "--no-verify", "-m", full_message])
     if rc != 0:
