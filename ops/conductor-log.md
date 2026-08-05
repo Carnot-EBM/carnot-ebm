@@ -15376,3 +15376,5 @@ No output thi |
 | 2026-08-05 22:05 UTC | Gated on Exp6145 stream readiness: certified strat | OK | 92 passed, 1 warning in 31.21s |
 | 2026-08-05 22:07 UTC | Gated on Exp6148 and Exp6149 readiness: frozen-Qwe | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shif |
 | 2026-08-05 22:09 UTC | Gated on Exp6148 and Exp6149 readiness: frozen-Qwe | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shif |
+| 2026-08-05 22:11 UTC | Gated on Exp6148 and Exp6149 readiness: frozen-Qwe | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shif |
+| 2026-08-05 22:13 UTC | Gated on Exp6150 positive utility: default-off tra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6150-frozen-qwen-continuous-self-learning |
