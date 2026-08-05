@@ -21547,3 +21547,135 @@ split-safe design or retires this Exp6128 source-domain recovery.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6140 | Implemented (`python/carnot/experiment_6140_phase_d_exp6128_option_psychometrics.py`, `results/experiment_6140_phase_d_exp6128_option_psychometrics.json`) | Implemented (`tests/python/test_experiment_6140_phase_d_exp6128_option_psychometrics.py`) |
+
+### REQ-VERIFY-6145: Exp6145 Exact Constraint Shift Event Stream
+
+The repository SHALL provide Exp 6145 at
+`python/carnot/experiment_6145_constraint_shift_stream.py` and write
+`results/experiment_6145_constraint_shift_stream.json`,
+`results/experiment_6145_constraint_shift_stream.rows.jsonl`,
+`results/experiment_6145_constraint_shift_stream.splits.json`, and
+`results/experiment_6145_constraint_shift_stream.outcomes.jsonl`.
+Exp 6145 SHALL construct a deterministic chronological stream of at least 240
+constraint events across at least six independently validated families. It
+SHALL use exact local Python and Z3 validators only, SHALL invoke no LLM, SHALL
+not consume the retired Exp6128 source pool, and SHALL not use generated-answer
+transport.
+
+- REQ-VERIFY-6145-1: The workflow SHALL hash existing exact generators and
+  validators, Exp6120 transaction evidence, Exp6140 retirement evidence,
+  exclusion manifests, output paths, and protected files before building rows.
+- REQ-VERIFY-6145-2: Calibration, future-known, and sealed shifted-family
+  partitions SHALL be assigned by base-template identity before derivatives are
+  emitted. A base template and every alias, compositional derivative,
+  contradiction, malformed proposal, and poison control derived from it SHALL
+  remain in exactly one partition.
+- REQ-VERIFY-6145-3: Row chronology SHALL be a strict monotone event stream
+  with stable event IDs, deterministic seed receipts, row hashes, sidecar hashes,
+  split hashes, and a deterministic rebuild checksum.
+- REQ-VERIFY-6145-4: Pre-decision row fields SHALL expose only task and family
+  descriptors, constraint graph summaries, candidate strategy identifiers and
+  features, memory provenance, and chronological history available at decision
+  time. Exact answers, current validator results, held labels, and future
+  events SHALL be absent by interface, not merely by convention.
+- REQ-VERIFY-6145-5: Exact answer sets, parser/typecheck status, current
+  validator results, Python/Z3 outcomes, contradictions, malformed-proposal
+  results, poison results, and diagnostic costs SHALL live only in the
+  post-outcome sidecar.
+- REQ-VERIFY-6145-6: The stream SHALL include known families, compositional
+  variants, one or more sealed held structural-shift families, superficial
+  aliases that do not count as shifts, contradictions, malformed proposals, and
+  strategy-poison controls.
+- REQ-VERIFY-6145-7: Every accepted finite-domain event SHALL be independently
+  cross-checked through Python and Z3. Validator disagreement and unresolved
+  rows SHALL both be zero. Solver cost SHALL be recorded only as a diagnostic
+  and SHALL NOT define difficulty or energy.
+- REQ-VERIFY-6145-8: Split isolation SHALL report zero base-template overlap
+  among calibration, future-known, and sealed shifted-family partitions, and
+  zero derivative leakage across partitions.
+- REQ-VERIFY-6145-9: `constraint_shift_stream_ready_score` SHALL be the bare
+  scalar `1.0` only when all labels validate, split overlap is zero, structural
+  shifts are not aliases, forbidden pre-outcome fields are absent, LLM
+  invocation count is zero, protected files are unchanged, and deterministic
+  rebuild hashes match. Otherwise it SHALL be `0.0`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`source_generator_validator_and_exclusion_hashes`,
+`stream_row_split_and_outcome_sidecar_paths_and_hashes`,
+`event_base_template_family_partition_and_shift_counts`,
+`chronological_order_and_seed_receipt`, `pre_outcome_schema`,
+`post_outcome_schema`, `forbidden_pre_outcome_field_scan`,
+`calibration_future_known_shifted_overlap_counts`,
+`exact_validator_agreement`,
+`contradiction_alias_malformed_and_poison_controls`,
+`deterministic_rebuild_checksum`, `llm_invocation_count`,
+`constraint_shift_stream_ready_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a ready fixture from a blocked or partial fixture.
+- `preconditions_checked`: Hashes exact generators, validators, Exp6120, Exp6140, exclusions, outputs, protected files, and retired mechanisms before construction.
+- `source_generator_validator_and_exclusion_hashes`: Content-addressed sources prove labels came from local exact code, not the retired source pool.
+- `stream_row_split_and_outcome_sidecar_paths_and_hashes`: Immutable row, split, and post-outcome files are independently replayable.
+- `event_base_template_family_partition_and_shift_counts`: Counts prove the stream has enough events, families, base groups, partitions, structural shifts, and non-shift aliases.
+- `chronological_order_and_seed_receipt`: Strict event order and seed receipts make the stream replay deterministic.
+- `pre_outcome_schema`: The learner-visible contract names only decision-time fields.
+- `post_outcome_schema`: Exact answers and validator outcomes are available only after the decision boundary.
+- `forbidden_pre_outcome_field_scan`: Exact answers, current outcomes, held labels, and future events are absent by interface, not convention.
+- `calibration_future_known_shifted_overlap_counts`: Base templates and derivatives never cross calibration, future-known, or sealed shifted-family partitions.
+- `exact_validator_agreement`: Python and Z3 must agree on every exact row with zero unresolved disagreement.
+- `contradiction_alias_malformed_and_poison_controls`: Controls prove contradictions, superficial aliases, malformed proposals, and poison attempts are represented and separated.
+- `deterministic_rebuild_checksum`: A second construction must reproduce byte-equivalent stream commitments.
+- `llm_invocation_count`: The value must be bare zero.
+- `constraint_shift_stream_ready_score`: Exactly one only when labels validate, split overlap is zero, shifts are structural rather than aliases, and rebuild is deterministic.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `duration_s`: Measured deterministic fixture construction time is reported.
+- `inference_substrate`: Use `deterministic_exact_fixture_construction`.
+- `verifier_is_oracle`: Exact Python/Z3 labels are the post-outcome oracle, while the pre-outcome verifier surface is oracle-distinct.
+- `missing_verifier_gaps`: Any non-finite-domain or non-oracle-separation gap is explicit.
+- `field_provenance`: Every field traces to prompt, specs, rows, sidecars, validators, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, exact-label, split/leakage, forbidden-field, shift-vs-alias, contradiction/poison, deterministic rebuild, schema, adversarial, protected-file, applicable E2E, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, row, split, outcome, test, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, or `blocked:` and identify any missing shift or oracle-separation requirement.
+
+### SCENARIO-VERIFY-6145-STREAM: Chronological Rows Are Immutable And Pre-Outcome Only
+
+**Given** Exp6145 builds its row, split, and outcome sidecars
+**When** rows are replayed in chronological order
+**Then** at least 240 events across at least six families have monotone event
+IDs, stable row hashes, base-template-grouped partitions, and no pre-outcome
+exact answers, current validator results, held labels, or future events.
+
+### SCENARIO-VERIFY-6145-EXACT: Python And Z3 Agree
+
+**Given** every Exp6145 event has an exact post-outcome sidecar row
+**When** exact validators are replayed
+**Then** Python and Z3 agree on all finite-domain accepted rows, malformed rows
+reject deterministically, contradictions reject deterministically, poison
+controls do not promote, and unresolved disagreement is zero.
+
+### SCENARIO-VERIFY-6145-SHIFT: Structural Shifts Are Not Aliases
+
+**Given** the stream contains aliases and held structural shifts
+**When** shift receipts are computed
+**Then** alias-only derivatives never count as shifted families, structural
+shift families live only in sealed shifted-family partitions, and derivative
+leakage across calibration, future-known, and sealed shifted-family partitions
+is zero.
+
+### SCENARIO-VERIFY-6145-REBUILD: Fixture Rebuild Is Deterministic
+
+**Given** Exp6145 is rebuilt from the same seed and source code
+**When** row, split, outcome, and artifact commitments are recomputed
+**Then** the deterministic rebuild checksum matches and
+`constraint_shift_stream_ready_score` is `1.0` exactly when every gate passes.
+
+## Implementation Status (REQ-VERIFY-6145)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6145 | Implemented (`python/carnot/experiment_6145_constraint_shift_stream.py`, `results/experiment_6145_constraint_shift_stream.json`) | Implemented (`tests/python/test_experiment_6145_constraint_shift_stream.py`) |

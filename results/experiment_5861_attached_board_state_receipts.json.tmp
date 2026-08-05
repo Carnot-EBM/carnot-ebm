@@ -1,0 +1,946 @@
+{
+  "authenticated_physical_execution_receipts": [],
+  "authenticated_state_operation_parity_score": 0.0,
+  "board_capability_matrix": {
+    "gatemate": {
+      "authenticated_state_operation_execution": false,
+      "authorization": {
+        "bitstream_redesign_authorized": false,
+        "bounded_state_operation_authorized": false,
+        "flash_write_authorized": false,
+        "state_operation_route_changed": false,
+        "storage_write_authorized": false
+      },
+      "board": "gatemate",
+      "capability_class": "unreachable",
+      "exp5859_mapping_ready": false,
+      "measured_state_update_dynamics": false,
+      "missing_external_action": "change cable/port/power until GM1Ax IDCODE is observed",
+      "prior_workload_validated": false,
+      "programmed_image": null,
+      "reachability": "cached_dirtyjtag_no_gm1ax_idcode",
+      "route_changed_since_prior_receipt": false,
+      "same_input_parity_eligible": false,
+      "software_fallback": false,
+      "toolchain_only": true
+    },
+    "kv260": {
+      "authenticated_state_operation_execution": false,
+      "authorization": {
+        "bitstream_redesign_authorized": false,
+        "bounded_state_operation_authorized": false,
+        "flash_write_authorized": false,
+        "state_operation_route_changed": false,
+        "storage_write_authorized": false
+      },
+      "board": "kv260",
+      "capability_class": "programmed_image",
+      "exp5859_mapping_ready": false,
+      "measured_state_update_dynamics": false,
+      "missing_external_action": "provide a changed authenticated KV260 state-operation workload route",
+      "prior_workload_validated": true,
+      "programmed_image": "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+      "reachability": "cached_ssh_reachable",
+      "route_changed_since_prior_receipt": false,
+      "same_input_parity_eligible": false,
+      "software_fallback": false,
+      "toolchain_only": false
+    },
+    "polarfire": {
+      "authenticated_state_operation_execution": false,
+      "authorization": {
+        "bitstream_redesign_authorized": false,
+        "bounded_state_operation_authorized": false,
+        "flash_write_authorized": false,
+        "state_operation_route_changed": false,
+        "storage_write_authorized": false
+      },
+      "board": "polarfire",
+      "capability_class": "authenticated_physical_execution",
+      "exp5859_mapping_ready": false,
+      "measured_state_update_dynamics": false,
+      "missing_external_action": "authorize a bounded adaptive-state workload with board identity and cooling logs",
+      "prior_workload_validated": true,
+      "programmed_image": "board-local Linux workload path only",
+      "reachability": "cached_ssh_reachable",
+      "route_changed_since_prior_receipt": false,
+      "same_input_parity_eligible": false,
+      "software_fallback": false,
+      "toolchain_only": false
+    }
+  },
+  "bounded_operation_mapping": {
+    "capacity_bound": null,
+    "precision": null,
+    "source": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+    "status": "not_mapped_exp5859_not_ready",
+    "supported_operations": [],
+    "unsupported_operations": [
+      "apply_event",
+      "acquire_core",
+      "quarantine",
+      "promote",
+      "select_replay",
+      "roll_back",
+      "serialize",
+      "restore",
+      "canonical_state_hash"
+    ],
+    "unsupported_reason": "not_mapped_exp5859_not_ready"
+  },
+  "capacity_precision_stochasticity_and_observability": {
+    "gatemate": {
+      "capacity": "blocked before GM1Ax IDCODE",
+      "observability": "DirtyJTAG raw IDCODE block only",
+      "precision": "not_observed",
+      "stochastic_update_capability": "not_observed",
+      "supported_operations": []
+    },
+    "kv260": {
+      "capacity": "cached programmed-image POC; adaptive-state capacity not authenticated",
+      "observability": "cached SSH/UIO proof-of-concept receipt only",
+      "precision": "not_authenticated_for_state_ops",
+      "stochastic_update_capability": "not_authenticated_for_state_ops",
+      "supported_operations": []
+    },
+    "polarfire": {
+      "capacity": "prior board-local workload only; adaptive-state capacity not authenticated",
+      "observability": "prior_ssh_stdout_hash_only",
+      "precision": "not_authenticated_for_state_ops",
+      "stochastic_update_capability": "not_authenticated_for_state_ops",
+      "supported_operations": []
+    }
+  },
+  "cpu_reference_receipts": {
+    "operation_trace_hash": "sha256:6c7b430741d18f25e3d60ffd42dc1c8749ddaf656b9d3a15a29fbef0b4437669",
+    "output_hash": null,
+    "reason": "not_mapped_exp5859_not_ready",
+    "software_authority_only": true,
+    "state_hash": null,
+    "status": "not_run_exp5859_not_ready"
+  },
+  "duration_s": 1.25,
+  "exp5859_input_receipt": {
+    "adaptive_state_microkernel_ready_score": 0.0,
+    "blocked_reason": "adaptive_state_microkernel_not_ready",
+    "full_test_suite_exit_code": 2,
+    "honest_verdict": "blocked: adaptive_state_microkernel_conformance_incomplete",
+    "inference_substrate": "deterministic_cross_language_state_execution_no_llm",
+    "mapping_allowed": false,
+    "operation_trace_hash": "sha256:6c7b430741d18f25e3d60ffd42dc1c8749ddaf656b9d3a15a29fbef0b4437669",
+    "path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+    "present": true,
+    "sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba",
+    "status": "blocked"
+  },
+  "experiment": 5861,
+  "experiment_id": "exp5861-attached-board-state-receipts",
+  "field_principles": {
+    "authenticated_physical_execution_receipts": "Board identity and raw logs are required for a hardware claim.",
+    "authenticated_state_operation_parity_score": "EMIT BARE scalar; zero is honest when hardware execution did not occur.",
+    "board_capability_matrix": "Each board owns a separate authenticated state.",
+    "bounded_operation_mapping": "Unsupported operations and capacities remain explicit.",
+    "capacity_precision_stochasticity_and_observability": "Backend semantics matter more than requested topology.",
+    "cpu_reference_receipts": "Same-input software authority anchors parity.",
+    "duration_s": "Measured wall time exposes bootstrap-only hardware receipts.",
+    "exp5859_input_receipt": "Only a qualified bounded kernel may be mapped.",
+    "field_provenance": "Every field traces to board identity, command, log, image, reference, or prior receipt.",
+    "honest_verdict": "A terminal prefix states physical parity, no-change, or blocked outcome.",
+    "inference_substrate": "`authenticated_hardware_state_execution_or_capability_receipt_no_llm` states the observed path.",
+    "per_board_access_and_toolchain_receipts": "Host tools and physical reachability are distinct.",
+    "preconditions_checked": "Identity, access, tools, images, permissions, resources, and outputs precede board commands.",
+    "prior_receipt_hashes": "Existing terminal evidence prevents redundant probes.",
+    "prohibited_claims_absent": "No speed, power, energy, convergence, TSU, Kona, or unsupported sovereignty claim.",
+    "reproducibility_checksum": "A checksum detects board, image, tool, fixture, or log drift.",
+    "requested_vs_programmed_vs_observed_dynamics": "An intended energy/state topology does not prove realized updates.",
+    "same_input_state_and_hash_parity": "Physical and reference outputs must match within declared exact tolerance.",
+    "software_fallback_disclosed": "Fallback can never masquerade as board execution.",
+    "status": "A terminal per-board capability state distinguishes execution, no-change, and block.",
+    "test_commands": "Commands document preconditions, capabilities, parity, claims, and E2E checks.",
+    "test_exit_codes": "Exit codes prevent failed or fallback paths becoming hardware success.",
+    "timing_source_and_raw_logs": "Timing is auditable and cannot become a speedup claim.",
+    "unchanged_precondition_actions_avoided": "Repeated blocked probes are not scientific progress."
+  },
+  "field_provenance": {
+    "authenticated_physical_execution_receipts": [
+      "board raw logs when present"
+    ],
+    "authenticated_state_operation_parity_score": [
+      "same_input_state_and_hash_parity"
+    ],
+    "board_capability_matrix": [
+      "prior_receipts",
+      "board_identities",
+      "access_state"
+    ],
+    "bounded_operation_mapping": [
+      "exp5859_input_receipt",
+      "board_capability_matrix"
+    ],
+    "capacity_precision_stochasticity_and_observability": [
+      "board_capability_matrix"
+    ],
+    "cpu_reference_receipts": [
+      "exp5859_input_receipt",
+      "bounded_operation_mapping"
+    ],
+    "duration_s": [
+      "local wall clock"
+    ],
+    "exp5859_input_receipt": [
+      "results/experiment_5859_adaptive_state_microkernel_parity.json"
+    ],
+    "field_provenance": [
+      "REQ-HW-5861"
+    ],
+    "honest_verdict": [
+      "status",
+      "board_capability_matrix",
+      "prohibited_claims_absent"
+    ],
+    "inference_substrate": [
+      "REQ-HW-5861"
+    ],
+    "per_board_access_and_toolchain_receipts": [
+      "tool_versions",
+      "access_state"
+    ],
+    "preconditions_checked": [
+      "context_documents",
+      "tool_versions",
+      "resources",
+      "atomic_output"
+    ],
+    "prior_receipt_hashes": [
+      "results/experiment_5794_hardware_terminal_action_receipt.json",
+      "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+      "results/experiment_5573_matched_sampler_hardware_continuity.json",
+      "results/experiment_5217_hardware_continuity_v477.json",
+      "results/experiment_5859_adaptive_state_microkernel_parity.json"
+    ],
+    "prohibited_claims_absent": [
+      "claim boundary"
+    ],
+    "reproducibility_checksum": [
+      "canonical artifact JSON"
+    ],
+    "requested_vs_programmed_vs_observed_dynamics": [
+      "hardware_specs",
+      "program_images"
+    ],
+    "same_input_state_and_hash_parity": [
+      "cpu_reference_receipts",
+      "physical_receipts"
+    ],
+    "software_fallback_disclosed": [
+      "claim boundary"
+    ],
+    "status": [
+      "board_capability_matrix",
+      "same_input_state_and_hash_parity"
+    ],
+    "test_commands": [
+      "test_exit_codes keys"
+    ],
+    "test_exit_codes": [
+      "caller supplied command receipts"
+    ],
+    "timing_source_and_raw_logs": [
+      "local tool receipts",
+      "prior receipt hashes"
+    ],
+    "unchanged_precondition_actions_avoided": [
+      "prior receipts",
+      "permissions"
+    ]
+  },
+  "honest_verdict": "no-change: exp5859_not_ready and no changed authenticated board state-operation route; kv260=programmed_image_poc polarfire=prior_physical_workload_only gatemate=blocked_idcode; authenticated_state_operation_parity_score=0.0; no_speedup no_power no_energy no_thermalization no_convergence no_tsu no_kona no_unsupported_sovereignty_claim",
+  "inference_substrate": "authenticated_hardware_state_execution_or_capability_receipt_no_llm",
+  "milestone": "2026.07.517",
+  "per_board_access_and_toolchain_receipts": {
+    "gatemate": {
+      "board": "gatemate",
+      "board_command_run": false,
+      "physical_reachability": "cached_dirtyjtag_no_gm1ax_idcode",
+      "route_changed_since_prior_receipt": false,
+      "toolchain_receipts": {
+        "nextpnr-himbaechel": {
+          "available": true,
+          "command": "nextpnr-himbaechel --version",
+          "duration_s": 0.001,
+          "exit_code": 0,
+          "scope": "local_tool_version_only_no_board_probe",
+          "stderr_excerpt": [],
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_excerpt": [
+            "nextpnr-himbaechel fixture version"
+          ],
+          "stdout_sha256": "sha256:8768a06807b38c1d4cac6c86fbc698cd4619320872f4437fdc4f12f67e043820"
+        },
+        "openFPGALoader": {
+          "available": true,
+          "command": "openFPGALoader -V",
+          "duration_s": 0.001,
+          "exit_code": 0,
+          "scope": "local_tool_version_only_no_board_probe",
+          "stderr_excerpt": [],
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_excerpt": [
+            "openFPGALoader fixture version"
+          ],
+          "stdout_sha256": "sha256:a068fdd814594d7838f927bd3b63d1fabce82a970c8d680a769f5e2b0c6757c2"
+        },
+        "yosys": {
+          "available": true,
+          "command": "yosys -V",
+          "duration_s": 0.001,
+          "exit_code": 0,
+          "scope": "local_tool_version_only_no_board_probe",
+          "stderr_excerpt": [],
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_excerpt": [
+            "yosys fixture version"
+          ],
+          "stdout_sha256": "sha256:315cec7aecc94cb78294070e1431f4ee4fd6c0101cb45938fa41b49f68e3e552"
+        }
+      }
+    },
+    "kv260": {
+      "board": "kv260",
+      "board_command_run": false,
+      "physical_reachability": "cached_ssh_reachable",
+      "route_changed_since_prior_receipt": false,
+      "toolchain_receipts": {
+        "ssh": {
+          "available": true,
+          "command": "ssh -V",
+          "duration_s": 0.001,
+          "exit_code": 0,
+          "scope": "local_tool_version_only_no_board_probe",
+          "stderr_excerpt": [],
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_excerpt": [
+            "ssh fixture version"
+          ],
+          "stdout_sha256": "sha256:2179cd0a6fc298ea09ec0b7057d154fe4c818c5c8f4359c743ae99363a15eef8"
+        }
+      }
+    },
+    "polarfire": {
+      "board": "polarfire",
+      "board_command_run": false,
+      "physical_reachability": "cached_ssh_reachable",
+      "route_changed_since_prior_receipt": false,
+      "toolchain_receipts": {
+        "python": {
+          "available": true,
+          "command": "python --version",
+          "duration_s": 0.001,
+          "exit_code": 0,
+          "scope": "local_tool_version_only_no_board_probe",
+          "stderr_excerpt": [],
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_excerpt": [
+            "python fixture version"
+          ],
+          "stdout_sha256": "sha256:7b8dc75b0e4972e041c15b10e16746edb715fa677be7e913e1efc2b3b939c867"
+        },
+        "ssh": {
+          "available": true,
+          "command": "ssh -V",
+          "duration_s": 0.001,
+          "exit_code": 0,
+          "scope": "local_tool_version_only_no_board_probe",
+          "stderr_excerpt": [],
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_excerpt": [
+            "ssh fixture version"
+          ],
+          "stdout_sha256": "sha256:2179cd0a6fc298ea09ec0b7057d154fe4c818c5c8f4359c743ae99363a15eef8"
+        }
+      }
+    }
+  },
+  "preconditions_checked": {
+    "access_state": {
+      "gatemate": {
+        "cable_or_jtag_state": "cached_cable_or_port_physical_block",
+        "command_candidate": "openFPGALoader -c dirtyJtag --detect",
+        "command_run": false,
+        "interface": "dirtyjtag",
+        "physical_reachability": "cached_dirtyjtag_no_gm1ax_idcode",
+        "raw_idcode": "0xffffffff",
+        "reason_not_run": "unchanged cached cable/JTAG block"
+      },
+      "kv260": {
+        "command_candidate": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+        "command_run": false,
+        "interface": "ssh:kria",
+        "physical_reachability": "cached_ssh_reachable",
+        "reason_not_run": "unchanged cached receipt and no state-operation route change"
+      },
+      "polarfire": {
+        "command_candidate": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+        "command_run": false,
+        "interface": "ssh:polarfire",
+        "physical_reachability": "cached_ssh_reachable",
+        "reason_not_run": "unchanged cached receipt and no authorized adaptive-state workload"
+      }
+    },
+    "atomic_output": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_5861_attached_board_state_receipts.json",
+      "probe_sha256": "sha256:c717934dc852b5e59301ff377137d15a1e5b06afce2ab7bbaaf938938ddba508"
+    },
+    "board_commands_run_during_precondition_collection": [],
+    "board_identities": {
+      "gatemate": {
+        "board": "gatemate",
+        "cached_state": {
+          "board": "gatemate",
+          "cable_state": "cached_cable_or_port_physical_block",
+          "canonical_artifact_path": "results/experiment_5217_hardware_continuity_v477.json",
+          "device_state": "blocked_dirtyjtag_idcode",
+          "dirtyjtag_state": "cached_visible_no_gm1ax_idcode",
+          "expected_idcode": "0x20000001",
+          "flash_state": "not_authorized_not_run",
+          "flash_write_authorized": false,
+          "performance_claim_supported": false,
+          "raw_idcode": "0xffffffff",
+          "storage_write_authorized": false
+        },
+        "identity": "Cologne Chip GateMate A1-EVB-2M via DirtyJTAG",
+        "identity_source": "results/experiment_5794_hardware_terminal_action_receipt.json"
+      },
+      "kv260": {
+        "board": "kv260",
+        "cached_state": {
+          "bitstream_state": "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+          "board": "kv260",
+          "cached_status_text": "reachable",
+          "canonical_artifact_path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+          "flash_write_authorized": false,
+          "host_storage_access_prohibited": true,
+          "host_storage_or_block_device_accessed": false,
+          "performance_claim_supported": false,
+          "ssh_state": "cached_reachable",
+          "storage_write_authorized": false,
+          "workload_state": "cached_hash_smoke_proof_of_concept_not_terminal_benchmark"
+        },
+        "identity": "AMD/Xilinx KV260 via ssh alias kria",
+        "identity_source": "results/experiment_5794_hardware_terminal_action_receipt.json"
+      },
+      "polarfire": {
+        "board": "polarfire",
+        "identity": {
+          "hostname": "mpfs-disco-kit",
+          "kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+          "machine": "riscv64",
+          "workload_sha256": "f1924a326f815722f2c2fbab139c3c1d707bf365f34a956e9b7397fe22524494"
+        },
+        "identity_source": "results/experiment_5573_matched_sampler_hardware_continuity.json"
+      }
+    },
+    "hashed_inputs": {
+      "context_documents": {
+        "AGENTS.md": {
+          "bytes": 1165,
+          "path": "AGENTS.md",
+          "present": true,
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        "CLAUDE.md": {
+          "bytes": 281180,
+          "path": "CLAUDE.md",
+          "present": true,
+          "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
+        },
+        "CODEX.md": {
+          "bytes": 2396,
+          "path": "CODEX.md",
+          "present": true,
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        "openspec/capabilities/hardware/spec.md": {
+          "bytes": 40583,
+          "path": "openspec/capabilities/hardware/spec.md",
+          "present": true,
+          "sha256": "sha256:4d0683eb3b752b996435b0c62ff257454a8c67451fffa6c68e593869de28372c"
+        },
+        "ops/e2e-test-plan.md": {
+          "bytes": 5975,
+          "path": "ops/e2e-test-plan.md",
+          "present": true,
+          "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+        },
+        "ops/known-issues.md": {
+          "bytes": 1080719,
+          "path": "ops/known-issues.md",
+          "present": true,
+          "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+        },
+        "ops/north-star.md": {
+          "bytes": 24434,
+          "path": "ops/north-star.md",
+          "present": true,
+          "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0"
+        },
+        "ops/status.md": {
+          "bytes": 1176672,
+          "path": "ops/status.md",
+          "present": true,
+          "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+        },
+        "research-hardware-wishlist.md": {
+          "bytes": 29009,
+          "path": "research-hardware-wishlist.md",
+          "present": true,
+          "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+        }
+      },
+      "hardware_specs": {
+        "hardware/gatemate/ising_n16_gatemate.ccf": {
+          "bytes": 571,
+          "path": "hardware/gatemate/ising_n16_gatemate.ccf",
+          "present": true,
+          "sha256": "sha256:ae31c6010f5dcd5777328ff539839a1812faee3c27de0911b24f0e84ab98bfc9"
+        },
+        "hardware/gatemate/ising_n16_gatemate.v": {
+          "bytes": 7096,
+          "path": "hardware/gatemate/ising_n16_gatemate.v",
+          "present": true,
+          "sha256": "sha256:5e31deaa27e526aeb3e21cfc2950516edd195584f396895b6d30111442d344e1"
+        },
+        "hardware/gatemate/ising_n16_gatemate_test_vector.json": {
+          "bytes": 2165,
+          "path": "hardware/gatemate/ising_n16_gatemate_test_vector.json",
+          "present": true,
+          "sha256": "sha256:d3b4583f6ddf3ab8f5996a611b96507128c209f3813a488d9a37d5d62df88df4"
+        },
+        "hardware/kv260/README.md": {
+          "bytes": 8484,
+          "path": "hardware/kv260/README.md",
+          "present": true,
+          "sha256": "sha256:6ad6a777f48e96a8f701aa33c0251aed030e41b908cbf7efad3cd6eeed1c6d7f"
+        },
+        "hardware/kv260/app/shell.json": {
+          "bytes": 55,
+          "path": "hardware/kv260/app/shell.json",
+          "present": true,
+          "sha256": "sha256:a13dbd0a508de4656c3ba22aa9f8a41494a5082bcd585589fc366a56cc5ba1c1"
+        },
+        "hardware/kv260/ising_sampler_v4.v": {
+          "bytes": 11326,
+          "path": "hardware/kv260/ising_sampler_v4.v",
+          "present": true,
+          "sha256": "sha256:3fc6356c0c52590a9806547ee1f4477c45ef3b5695f07494962df74f259685c5"
+        },
+        "hardware/kv260/ising_sampler_v4_spec.md": {
+          "bytes": 7640,
+          "path": "hardware/kv260/ising_sampler_v4_spec.md",
+          "present": true,
+          "sha256": "sha256:e13708f8c02fdc398b81b631c0da0a765822593c02c9f45a7b2887bd0e3c2345"
+        },
+        "scripts/polarfire_smoke_v2.py": {
+          "bytes": 2187,
+          "path": "scripts/polarfire_smoke_v2.py",
+          "present": true,
+          "sha256": "sha256:a13a30b458b01cbe56ab518fd1504f23e7abf3c73ffc13efbcf69c49e110ef9c"
+        }
+      },
+      "program_images": {
+        "hardware/fpga/ising_energy_n8_comb.asc": {
+          "bytes": 1085675,
+          "path": "hardware/fpga/ising_energy_n8_comb.asc",
+          "present": true,
+          "sha256": "sha256:1fd80ec0f3bf69a5cd002f3ac2e5cd5024fb03b6aabdd556812bb69af9afbb40"
+        },
+        "hardware/fpga/ising_energy_n8_comb.bin": {
+          "bytes": 135100,
+          "path": "hardware/fpga/ising_energy_n8_comb.bin",
+          "present": true,
+          "sha256": "sha256:a06518c52d77af6420b6a3be9a66219ae3c5dedf5ab3544e3fc879e1a93fd5c2"
+        },
+        "hardware/kv260/app/carnot_ising.dts": {
+          "bytes": 2887,
+          "path": "hardware/kv260/app/carnot_ising.dts",
+          "present": true,
+          "sha256": "sha256:9128e73f702dd7ca45e64cf4e077d191858e916f6a1cc6793855bbb399f44085"
+        },
+        "hardware/kv260/app/package_app.sh": {
+          "bytes": 4801,
+          "path": "hardware/kv260/app/package_app.sh",
+          "present": true,
+          "sha256": "sha256:dc8a2bef99a0c02c2ba50501d46f9d09a9c712cc504dd83057b32d5215e74543"
+        }
+      }
+    },
+    "permissions": {
+      "gatemate": {
+        "bitstream_redesign_authorized": false,
+        "bounded_state_operation_authorized": false,
+        "flash_write_authorized": false,
+        "state_operation_route_changed": false,
+        "storage_write_authorized": false
+      },
+      "kv260": {
+        "bitstream_redesign_authorized": false,
+        "bounded_state_operation_authorized": false,
+        "flash_write_authorized": false,
+        "state_operation_route_changed": false,
+        "storage_write_authorized": false
+      },
+      "polarfire": {
+        "bitstream_redesign_authorized": false,
+        "bounded_state_operation_authorized": false,
+        "flash_write_authorized": false,
+        "state_operation_route_changed": false,
+        "storage_write_authorized": false
+      }
+    },
+    "prior_receipts": {
+      "results/experiment_5217_hardware_continuity_v477.json": {
+        "bytes": 11644,
+        "path": "results/experiment_5217_hardware_continuity_v477.json",
+        "present": true,
+        "sha256": "sha256:a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9"
+      },
+      "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json": {
+        "bytes": 21140,
+        "path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+        "present": true,
+        "sha256": "sha256:ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7"
+      },
+      "results/experiment_5573_matched_sampler_hardware_continuity.json": {
+        "bytes": 21264,
+        "path": "results/experiment_5573_matched_sampler_hardware_continuity.json",
+        "present": true,
+        "sha256": "sha256:e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e"
+      },
+      "results/experiment_5794_hardware_terminal_action_receipt.json": {
+        "bytes": 21232,
+        "path": "results/experiment_5794_hardware_terminal_action_receipt.json",
+        "present": true,
+        "sha256": "sha256:ee5c02f6fdb5cd43a619ee1d7941f787f55257aa24504aad7988868adc255469"
+      },
+      "results/experiment_5859_adaptive_state_microkernel_parity.json": {
+        "bytes": 16992,
+        "path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+        "present": true,
+        "sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba"
+      }
+    },
+    "recorded_before_any_board_command": true,
+    "resources": {
+      "disk": {
+        "available_mb": 1138407,
+        "ok": true,
+        "required_mb": 64
+      },
+      "ram": {
+        "available_mb": 30835,
+        "ok": true,
+        "required_mb": 128
+      }
+    },
+    "run_host": {
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13"
+    },
+    "tool_versions": {
+      "cargo": {
+        "available": true,
+        "command": "cargo --version",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "cargo fixture version"
+        ],
+        "stdout_sha256": "sha256:d7c2912b27fd33d1029977cbd094ff548f0eaf94640aa1a461bcef27b58dbc1c"
+      },
+      "nextpnr-himbaechel": {
+        "available": true,
+        "command": "nextpnr-himbaechel --version",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "nextpnr-himbaechel fixture version"
+        ],
+        "stdout_sha256": "sha256:8768a06807b38c1d4cac6c86fbc698cd4619320872f4437fdc4f12f67e043820"
+      },
+      "openFPGALoader": {
+        "available": true,
+        "command": "openFPGALoader -V",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "openFPGALoader fixture version"
+        ],
+        "stdout_sha256": "sha256:a068fdd814594d7838f927bd3b63d1fabce82a970c8d680a769f5e2b0c6757c2"
+      },
+      "python": {
+        "available": true,
+        "command": "python --version",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "python fixture version"
+        ],
+        "stdout_sha256": "sha256:7b8dc75b0e4972e041c15b10e16746edb715fa677be7e913e1efc2b3b939c867"
+      },
+      "ssh": {
+        "available": true,
+        "command": "ssh -V",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "ssh fixture version"
+        ],
+        "stdout_sha256": "sha256:2179cd0a6fc298ea09ec0b7057d154fe4c818c5c8f4359c743ae99363a15eef8"
+      },
+      "yosys": {
+        "available": true,
+        "command": "yosys -V",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "yosys fixture version"
+        ],
+        "stdout_sha256": "sha256:315cec7aecc94cb78294070e1431f4ee4fd6c0101cb45938fa41b49f68e3e552"
+      }
+    }
+  },
+  "prior_receipt_hashes": {
+    "results/experiment_5217_hardware_continuity_v477.json": {
+      "bytes": 11644,
+      "path": "results/experiment_5217_hardware_continuity_v477.json",
+      "present": true,
+      "sha256": "sha256:a76656762794851707fbbd648e77a1780ff1754f3fa7520d29767a9b50e75de9"
+    },
+    "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json": {
+      "bytes": 21140,
+      "path": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+      "present": true,
+      "sha256": "sha256:ccb6bbc6e00272a89b1a27b6bb958e63fe51b088656acdd787fa7e8e5b91b6b7"
+    },
+    "results/experiment_5573_matched_sampler_hardware_continuity.json": {
+      "bytes": 21264,
+      "path": "results/experiment_5573_matched_sampler_hardware_continuity.json",
+      "present": true,
+      "sha256": "sha256:e1f126c28e853d6b181ea973915a84a08e3a40fa2aaea79e33dbb3c3dd56604e"
+    },
+    "results/experiment_5794_hardware_terminal_action_receipt.json": {
+      "bytes": 21232,
+      "path": "results/experiment_5794_hardware_terminal_action_receipt.json",
+      "present": true,
+      "sha256": "sha256:ee5c02f6fdb5cd43a619ee1d7941f787f55257aa24504aad7988868adc255469"
+    },
+    "results/experiment_5859_adaptive_state_microkernel_parity.json": {
+      "bytes": 16992,
+      "path": "results/experiment_5859_adaptive_state_microkernel_parity.json",
+      "present": true,
+      "sha256": "sha256:446935aaa9e59ae33182f2e6a3659ae479d4f6a143733293edb15ba67347a0ba"
+    }
+  },
+  "prohibited_claims_absent": {
+    "all_absent": true,
+    "convergence_claim_absent": true,
+    "energy_claim_absent": true,
+    "kona_execution_claim_absent": true,
+    "power_claim_absent": true,
+    "speedup_claim_absent": true,
+    "thermalization_claim_absent": true,
+    "tsu_execution_claim_absent": true,
+    "unsupported_sovereignty_claim_absent": true
+  },
+  "random_seed": 5861,
+  "reproducibility_checksum": "sha256:4934ce7a97bc8b5f90a99c99a754ad651d2db8c02ab97d38cd5875ad5eb31f43",
+  "requested_vs_programmed_vs_observed_dynamics": {
+    "gatemate": {
+      "compile_or_reachability_is_execution": false,
+      "observed_state_update_dynamics": null,
+      "programmed_image_observed": false,
+      "requested_topology_is_execution": false
+    },
+    "kv260": {
+      "compile_or_reachability_is_execution": false,
+      "observed_state_update_dynamics": null,
+      "programmed_image_observed": "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+      "requested_topology_is_execution": false
+    },
+    "polarfire": {
+      "compile_or_reachability_is_execution": false,
+      "observed_state_update_dynamics": null,
+      "programmed_image_observed": "board-local Linux workload path only",
+      "requested_topology_is_execution": false
+    },
+    "requested_operation": "adaptive_state_microkernel_same_input_parity",
+    "requested_topology": "bounded adaptive-state ABI from Exp5859"
+  },
+  "run_date": "20260723",
+  "same_input_state_and_hash_parity": {
+    "exact_tolerance": "canonical_json_and_state_hash_identical",
+    "matched_receipt_count": 0,
+    "mismatches": [],
+    "parity_within_exact_tolerance": null,
+    "physical_execution_observed": false,
+    "score_reason": "no same-input authenticated physical execution occurred"
+  },
+  "schema": "carnot.experiment_5861.attached_board_state_receipts.v1",
+  "software_fallback_disclosed": {
+    "cpu_reference_is_not_board_execution": true,
+    "disclosure": "CPU reference receipts are software authority only.",
+    "fallback_can_raise_parity_score": false,
+    "software_fallback_used_for_hardware_claim": false
+  },
+  "spec_refs": [
+    "REQ-HW-5861",
+    "SCENARIO-HW-5861"
+  ],
+  "status": "no_change_no_authenticated_state_operation_execution",
+  "test_commands": [
+    "tests/python/test_experiment_5861_attached_board_state_receipts.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5861_attached_board_state_receipts.json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5861_attached_board_state_receipts.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py --check",
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\""
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/python -c \"from pathlib import Path; assert Path('scripts/research_conductor.py').exists()\"": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_5861_attached_board_state_receipts.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_5861_attached_board_state_receipts.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py --check": 0,
+    "tests/python/test_experiment_5861_attached_board_state_receipts.py": 0
+  },
+  "timing_source_and_raw_logs": {
+    "board_timing_claimed": false,
+    "local_tool_version_receipts": {
+      "cargo": {
+        "available": true,
+        "command": "cargo --version",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "cargo fixture version"
+        ],
+        "stdout_sha256": "sha256:d7c2912b27fd33d1029977cbd094ff548f0eaf94640aa1a461bcef27b58dbc1c"
+      },
+      "nextpnr-himbaechel": {
+        "available": true,
+        "command": "nextpnr-himbaechel --version",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "nextpnr-himbaechel fixture version"
+        ],
+        "stdout_sha256": "sha256:8768a06807b38c1d4cac6c86fbc698cd4619320872f4437fdc4f12f67e043820"
+      },
+      "openFPGALoader": {
+        "available": true,
+        "command": "openFPGALoader -V",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "openFPGALoader fixture version"
+        ],
+        "stdout_sha256": "sha256:a068fdd814594d7838f927bd3b63d1fabce82a970c8d680a769f5e2b0c6757c2"
+      },
+      "python": {
+        "available": true,
+        "command": "python --version",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "python fixture version"
+        ],
+        "stdout_sha256": "sha256:7b8dc75b0e4972e041c15b10e16746edb715fa677be7e913e1efc2b3b939c867"
+      },
+      "ssh": {
+        "available": true,
+        "command": "ssh -V",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "ssh fixture version"
+        ],
+        "stdout_sha256": "sha256:2179cd0a6fc298ea09ec0b7057d154fe4c818c5c8f4359c743ae99363a15eef8"
+      },
+      "yosys": {
+        "available": true,
+        "command": "yosys -V",
+        "duration_s": 0.001,
+        "exit_code": 0,
+        "scope": "local_tool_version_only_no_board_probe",
+        "stderr_excerpt": [],
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_excerpt": [
+          "yosys fixture version"
+        ],
+        "stdout_sha256": "sha256:315cec7aecc94cb78294070e1431f4ee4fd6c0101cb45938fa41b49f68e3e552"
+      }
+    },
+    "new_board_commands": [],
+    "prior_raw_log_sources": {
+      "gatemate": "results/experiment_5217_hardware_continuity_v477.json",
+      "kv260": "results/experiment_5255_hardware_continuity_pkit_boundary_v480.json",
+      "polarfire": "results/experiment_5573_matched_sampler_hardware_continuity.json"
+    },
+    "speedup_claimed": false,
+    "timing_source": "time.perf_counter_for_local_receipt_generation_only"
+  },
+  "unchanged_precondition_actions_avoided": [
+    {
+      "avoided_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "board": "kv260",
+      "external_action_required": "provide a changed authenticated KV260 state-operation workload route",
+      "reason": "unchanged authenticated route or blocked prerequisite"
+    },
+    {
+      "avoided_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "board": "polarfire",
+      "external_action_required": "authorize a bounded adaptive-state workload with board identity and cooling logs",
+      "reason": "unchanged authenticated route or blocked prerequisite"
+    },
+    {
+      "avoided_command": "openFPGALoader -c dirtyJtag --detect",
+      "board": "gatemate",
+      "external_action_required": "change cable/port/power until GM1Ax IDCODE is observed",
+      "reason": "unchanged authenticated route or blocked prerequisite"
+    }
+  ]
+}

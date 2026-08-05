@@ -26624,6 +26624,52 @@ Python/Rust/PyO3 fixed-width parity holds.
 |---|---|---|---|
 | REQ-LEARN-6120 | Planned (`python/carnot/experiment_6120_outcome_committed_reduced_order_csl.py`, `results/experiment_6120_outcome_committed_reduced_order_csl.json`) | Planned (ABI v2 fixed-width parity receipts) | Planned (`tests/python/test_experiment_6120_outcome_committed_reduced_order_csl.py`) |
 
+## REQ-LEARN-6145: Exp6145 Pre-Outcome Stream Interface Separation
+
+The self-learning tier SHALL treat Exp6145 as a deterministic exact-labeled
+chronological event stream, not as a candidate-pool ranking task. The
+learner-visible row interface SHALL contain only pre-decision fields: task and
+family descriptors, constraint graph summaries, candidate strategy identifiers
+and features, memory provenance, and chronological history available at the
+decision time. Exact answers, current validator results, held labels, and future
+events SHALL be stored only in the post-outcome sidecar described by
+REQ-VERIFY-6145.
+
+Calibration, future-known, and sealed shifted-family partitions SHALL be frozen
+by base-template identity before variants are emitted. Every derivative of a
+base template SHALL remain in that base template's partition. Superficial
+aliases SHALL be represented as non-shift derivatives, while structural-shift
+families SHALL be sealed away from calibration.
+
+The terminal Exp6145 artifact fields `pre_outcome_schema`,
+`post_outcome_schema`, `forbidden_pre_outcome_field_scan`,
+`calibration_future_known_shifted_overlap_counts`,
+`event_base_template_family_partition_and_shift_counts`, and
+`constraint_shift_stream_ready_score` SHALL be sufficient for a self-learning
+consumer to prove oracle separation before it reads any exact outcome.
+
+### SCENARIO-LEARN-6145-BOUNDARY: Calibration Cannot See Outcomes
+
+**Given** an Exp6145 calibration consumer reads only the row JSONL and split
+manifest
+**When** it inspects every pre-decision payload
+**Then** exact answers, current validator results, held labels, and future
+events are unavailable by schema and absent from serialized values.
+
+### SCENARIO-LEARN-6145-PARTITIONS: Base Templates Do Not Leak Across Splits
+
+**Given** calibration, future-known, and sealed shifted-family partitions are
+assigned before derivatives are emitted
+**When** split receipts are replayed
+**Then** every base template appears in exactly one partition, every derivative
+shares that partition, and overlap counts are zero.
+
+## Implementation Status (REQ-LEARN-6145)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6145 | Implemented (`python/carnot/experiment_6145_constraint_shift_stream.py`) | Implemented (`tests/python/test_experiment_6145_constraint_shift_stream.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded
