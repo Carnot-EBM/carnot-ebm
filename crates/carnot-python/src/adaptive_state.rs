@@ -1,6 +1,8 @@
 use carnot_core::adaptive_state::{
+    certified_strategy_schema_record as rust_certified_strategy_schema_record,
     AbiV2OperationResult, AdaptiveEvent, AdaptiveStateAbiV2Kernel, AdaptiveStateKernel,
-    OperationResult, MAX_EVENT_ID_LEN, MAX_REASON_LEN, MAX_REPLAY_LIMIT,
+    CertifiedStrategySchemaInput, OperationResult, MAX_EVENT_ID_LEN, MAX_REASON_LEN,
+    MAX_REPLAY_LIMIT,
 };
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
@@ -357,6 +359,66 @@ fn abi_v2_result_to_dict(
     Ok(dict)
 }
 
+#[pyfunction]
+#[pyo3(signature = (
+    schema_version_u16,
+    strategy_identity_u64,
+    applicable_constraint_signature_u64,
+    certificate_provenance_u64,
+    outcome_provenance_u64,
+    success_count_u16,
+    failure_count_u16,
+    counterexample_digest_u64,
+    task_calibration_count_u16,
+    family_calibration_count_u16,
+    freshness_event_index_u32,
+    bounded_utility_i16,
+    action_code_u16,
+    flags_u16
+))]
+fn certified_strategy_schema_record<'py>(
+    py: Python<'py>,
+    schema_version_u16: u16,
+    strategy_identity_u64: u64,
+    applicable_constraint_signature_u64: u64,
+    certificate_provenance_u64: u64,
+    outcome_provenance_u64: u64,
+    success_count_u16: u16,
+    failure_count_u16: u16,
+    counterexample_digest_u64: u64,
+    task_calibration_count_u16: u16,
+    family_calibration_count_u16: u16,
+    freshness_event_index_u32: u32,
+    bounded_utility_i16: i16,
+    action_code_u16: u16,
+    flags_u16: u16,
+) -> PyResult<Bound<'py, PyDict>> {
+    let receipt = rust_certified_strategy_schema_record(&CertifiedStrategySchemaInput {
+        schema_version_u16,
+        strategy_identity_u64,
+        applicable_constraint_signature_u64,
+        certificate_provenance_u64,
+        outcome_provenance_u64,
+        success_count_u16,
+        failure_count_u16,
+        counterexample_digest_u64,
+        task_calibration_count_u16,
+        family_calibration_count_u16,
+        freshness_event_index_u32,
+        bounded_utility_i16,
+        action_code_u16,
+        flags_u16,
+    });
+    let dict = PyDict::new(py);
+    dict.set_item("action_code", receipt.action_code)?;
+    dict.set_item("energy", receipt.energy)?;
+    dict.set_item("record_bytes_hex", receipt.record_bytes_hex)?;
+    dict.set_item("record_bytes_len", receipt.record_bytes_len)?;
+    dict.set_item("record_hash", receipt.record_hash)?;
+    dict.set_item("schema", receipt.schema)?;
+    Ok(dict)
+}
+
 fn parse_event(
     event: &Bound<'_, PyDict>,
     kernel: &AdaptiveStateKernel,
@@ -422,5 +484,6 @@ fn reject(kernel: &AdaptiveStateKernel, code: &str) -> OperationResult {
 pub fn register_adaptive_state_module(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     parent.add_class::<PyAdaptiveStateKernel>()?;
     parent.add_class::<PyAdaptiveStateAbiV2Kernel>()?;
+    parent.add_function(wrap_pyfunction!(certified_strategy_schema_record, parent)?)?;
     Ok(())
 }
