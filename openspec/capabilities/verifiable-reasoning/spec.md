@@ -21415,3 +21415,135 @@ access or threshold relaxation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6128 | Planned (`python/carnot/experiment_6128_phase_d_calibration_pool_v2.py`, `results/experiment_6128_phase_d_calibration_pool_v2.json`) | Planned (`tests/python/test_experiment_6128_phase_d_calibration_pool_v2.py`) |
+
+### REQ-VERIFY-6140: Exp6140 Frozen Exp6128 Option Psychometrics
+
+The repository SHALL provide Exp 6140 at
+`python/carnot/experiment_6140_phase_d_exp6128_option_psychometrics.py` and
+write `results/experiment_6140_phase_d_exp6128_option_psychometrics.json`.
+Exp 6140 SHALL read only immutable Exp6103, Exp6127, and Exp6128 upstream
+artifacts and the frozen Exp6128 row JSONL. It SHALL invoke no live model,
+generate no replacement rows, and declare
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+- REQ-VERIFY-6140-1: The workflow SHALL hash Exp6103, Exp6127, and Exp6128
+  artifacts and raw row files where present, record the dirty worktree, record
+  protected-file hashes, require exactly 720 unique Exp6128 candidate row
+  identities, require exactly 90 question groups, and fail closed if row
+  identities are duplicated or missing.
+- REQ-VERIFY-6140-2: The workflow SHALL rederive raw and question-grouped
+  accuracy, parseability, method validity, oracle@K, tuned self-consistency,
+  oracle-minus-tuned-SC headroom, all-wrong rate, effective K, duplicate
+  rates, and answer-cluster entropy from the frozen rows, then reconcile those
+  values with the Exp6128 source artifact within fixed numeric tolerance.
+- REQ-VERIFY-6140-3: The workflow SHALL report those metrics by family,
+  difficulty stratum, solver-effort stratum, semantic group, exact answer
+  label, response label, exact answer position, response position, sample
+  index, relabel receipts, and shortcut flags so family mixture and
+  non-exchangeability cannot be hidden by aggregate binary accuracy.
+- REQ-VERIFY-6140-4: The workflow SHALL compute option-aware response
+  diagnostics that separate correct-option difficulty, wrong-option identity,
+  positional preference, fallback concentration, and response-cluster
+  concentration. Binary correctness alone SHALL NOT define item difficulty
+  after the measured family mixture.
+- REQ-VERIFY-6140-5: The workflow SHALL report uncertainty at the question
+  group level, using a deterministic question bootstrap or a documented
+  posterior approximation, and SHALL explicitly state that individual draws are
+  not independent questions.
+- REQ-VERIFY-6140-6: The workflow SHALL evaluate candidate transformation
+  classes only as a design specification. Balanced option permutations,
+  typed-choice normalization, controlled distractors, constraint-composition
+  depth, proof-preserving relabels, and templated paraphrases SHALL preserve
+  independently checkable exact answers and SHALL be frozen before any future
+  model responses. The diagnostic SHALL generate no new model rows.
+- REQ-VERIFY-6140-7: Transformation selection SHALL be label-blind with
+  respect to held outcomes. Exp6140 may read exact labels only to evaluate the
+  frozen calibration rows; it SHALL NOT define, alter, or select on held
+  labels, and it SHALL set `verifier_is_oracle=false`.
+- REQ-VERIFY-6140-8: `empirical_item_bank_design_ready_score` SHALL equal
+  `1.0` only when at least one transformation class has a falsifiable exact
+  construction, nonzero calibration information with uncertainty, zero held
+  dependence, and no retired transport or scorer mechanism. Otherwise the score
+  SHALL be `0.0`, `retirement_triggered` SHALL be true for this Exp6128
+  source-domain recovery, and the honest verdict SHALL use `retired:`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`immutable_source_artifact_and_row_hashes`,
+`expected_observed_duplicate_and_missing_row_counts`,
+`rederived_source_metric_reconciliation`,
+`family_stratum_semantic_group_relabel_shortcut_and_position_metrics`,
+`wrong_option_identity_position_fallback_and_response_cluster_diagnostics`,
+`question_clustered_uncertainty_and_effective_information`,
+`saturation_and_below_chance_attribution`,
+`candidate_transformation_specification`,
+`label_blind_and_held_isolation_receipt`,
+`empirical_item_bank_design_ready_score`, `retirement_triggered`,
+`top_level_model_specs_methodology_gap_noted`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `immutable_source_artifact_and_row_hashes`: immutable Exp6103, Exp6127, Exp6128 artifacts and frozen row files are content-addressed before any derived diagnostic is trusted.
+- `expected_observed_duplicate_and_missing_row_counts`: exactly 720 unique candidate rows and 90 question groups are conserved.
+- `rederived_source_metric_reconciliation`: Exp6128 aggregate and grouped metrics are independently rederived from rows and compared to the source artifact.
+- `family_stratum_semantic_group_relabel_shortcut_and_position_metrics`: family, stratum, semantic-group, relabel, shortcut, and position controls expose non-exchangeability.
+- `wrong_option_identity_position_fallback_and_response_cluster_diagnostics`: binary correctness alone cannot define item difficulty after the measured family mixture.
+- `question_clustered_uncertainty_and_effective_information`: uncertainty is measured over question groups, not independent candidate draws.
+- `candidate_transformation_specification`: every proposed transformation must preserve an independently checkable exact answer and be frozen before new model responses.
+- `label_blind_and_held_isolation_receipt`: transformation design and readiness decisions do not select on held labels or alter exact labels.
+- `empirical_item_bank_design_ready_score` and `retirement_triggered`: readiness is exactly one only for a non-degenerate split-safe design; a repeated inability to define one retires this source pool.
+- `top_level_model_specs_methodology_gap_noted`: option-level psychometrics are acknowledged, but this single-model frozen-row audit uses transparent count diagnostics rather than claiming a fitted top-level nominal-response model.
+- `protected_files_unchanged`: conductor and reconciler-owned files remain byte-identical.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report measured `aggregation_from_upstream_artifacts`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: the diagnostic reads exact labels for evaluation but does not define or alter them.
+- `honest_verdict`: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state whether the bimodality is distractor/position, saturation, true inability, or unresolved.
+
+### SCENARIO-VERIFY-6140-CONSERVATION: Frozen Rows Are Conserved
+
+**Given** the Exp6128 artifact and raw candidate rows are immutable
+**When** Exp6140 reads its upstream inputs
+**Then** it hashes all source artifacts and rows, records dirty-worktree and
+protected-file state, conserves 720 unique row identities, conserves 90
+question groups, and declares aggregation-only substrate.
+
+### SCENARIO-VERIFY-6140-RECONCILIATION: Source Metrics Are Rederived
+
+**Given** Exp6128 reports aggregate, family, stratum, oracle, tuned-SC,
+headroom, duplicate, all-wrong, parseability, and method-validity metrics
+**When** Exp6140 recomputes those metrics from rows
+**Then** every compared value reconciles with the source artifact within fixed
+tolerance and disagreements are explicit.
+
+### SCENARIO-VERIFY-6140-OPTION-DIAGNOSTICS: Wrong Options And Positions Are Counted
+
+**Given** frozen rows contain exact labels, response labels, and serialized
+choice order
+**When** Exp6140 computes option diagnostics
+**Then** it reports correct-option position, response-position preference,
+wrong-option identity, fallback concentration, response clusters, family
+saturation, and below-floor typed-choice failure without relying on binary
+accuracy alone.
+
+### SCENARIO-VERIFY-6140-UNCERTAINTY: Questions Are The Statistical Unit
+
+**Given** eight candidate draws share one source question
+**When** Exp6140 reports uncertainty and empirical item information
+**Then** it bootstraps or otherwise approximates uncertainty over question
+groups, records the number of independent question groups, and states that
+candidate draws are not independent questions.
+
+### SCENARIO-VERIFY-6140-TRANSFORM-ISOLATION: Design Freezes Or Retires
+
+**Given** candidate transformations can only be used before future model rows
+**When** Exp6140 evaluates source-domain recovery
+**Then** it records only label-blind exact transformation specifications,
+generates no new model rows, uses no held labels, and either freezes one
+split-safe design or retires this Exp6128 source-domain recovery.
+
+## Implementation Status (REQ-VERIFY-6140)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6140 | Implemented (`python/carnot/experiment_6140_phase_d_exp6128_option_psychometrics.py`, `results/experiment_6140_phase_d_exp6128_option_psychometrics.json`) | Implemented (`tests/python/test_experiment_6140_phase_d_exp6128_option_psychometrics.py`) |
