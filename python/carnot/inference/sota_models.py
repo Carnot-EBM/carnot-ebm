@@ -177,18 +177,25 @@ def resolve_cached_gguf(
         "Q8_0",
     ]
 
+    def _is_language_model_gguf(path: Path) -> bool:
+        name = path.name.lower()
+        if name.startswith(("mmproj", "mtp-")) or "mmproj" in name:
+            return False
+        return all(parent.name.lower() != "mtp" for parent in path.parents)
+
     def _pick(ggufs: list[Path]) -> str | None:
-        if not ggufs:
+        candidates = [g for g in ggufs if _is_language_model_gguf(g)]
+        if not candidates:
             return None
         # Case-insensitive substring match so both
         # "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf" and "Qwen3.6-35B-A3B-Q4_K_M.gguf"
         # score equivalently against preferred_quant="Q4_K_M".
         for token in preference_order:
-            for g in ggufs:
+            for g in candidates:
                 if token.lower() in g.name.lower():
                     return str(g)
         # Nothing matched — return the first file so callers at least get *something*.
-        return str(ggufs[0])
+        return str(candidates[0])
 
     # ---- Search 1: HF hub cache (~/.cache/huggingface/hub or override) ----
     root = Path(cache_root) if cache_root else Path.home() / ".cache" / "huggingface" / "hub"
@@ -198,8 +205,10 @@ def resolve_cached_gguf(
         if snapshots_dir.is_dir():
             snapshots = list(snapshots_dir.iterdir())
             if snapshots:
-                snap = max(snapshots, key=lambda p: p.stat().st_mtime)
-                hit = _pick(sorted(snap.glob("*.gguf")))
+                ggufs: list[Path] = []
+                for snap in sorted(snapshots, key=lambda p: p.stat().st_mtime, reverse=True):
+                    ggufs.extend(sorted(snap.rglob("*.gguf")))
+                hit = _pick(ggufs)
                 if hit is not None:
                     return hit
 

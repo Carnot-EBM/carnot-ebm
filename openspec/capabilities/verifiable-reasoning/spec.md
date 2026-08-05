@@ -21679,3 +21679,147 @@ is zero.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6145 | Implemented (`python/carnot/experiment_6145_constraint_shift_stream.py`, `results/experiment_6145_constraint_shift_stream.json`) | Implemented (`tests/python/test_experiment_6145_constraint_shift_stream.py`) |
+
+### REQ-VERIFY-6146: Exp6146 SOTA Constraint Event Corpus
+
+The repository SHALL provide Exp 6146 at
+`python/carnot/experiment_6146_sota_constraint_event_corpus.py` and write
+`results/experiment_6146_sota_constraint_event_corpus.json` plus one immutable
+row sidecar per mandated model. Exp6146 SHALL consume the Exp6145
+chronological stream and outcome sidecar without exposing post-outcome fields
+to the model, run a frozen no-memory model-native-chat decision over
+calibration, future-known, and sealed shifted-family events, and attach exact
+outcome receipts only after each frozen decision is recorded.
+
+- REQ-VERIFY-6146-1: Model specs SHALL be selected from
+  `cached_sota_pair(gpu_indices=(0, 1), model_indices=(0, 2))` and SHALL include
+  exactly `unsloth/Qwen3.6-35B-A3B-GGUF` and
+  `unsloth/gemma-4-31B-it-GGUF`. Tiny or legacy models SHALL be excluded from
+  headline rows and may appear only in a separately labeled smoke receipt.
+- REQ-VERIFY-6146-2: Each mandated model SHALL resolve to a concrete language
+  model `.gguf` path, revision/snapshot, quantization, byte size, SHA-256 hash,
+  embedded-tokenizer load receipt, chat-template metadata receipt, GPU
+  assignment, and actual use count. Projector-only GGUFs such as `mmproj` SHALL
+  not satisfy the mandated-model path requirement.
+- REQ-VERIFY-6146-3: The workflow SHALL never call
+  `transformers.AutoTokenizer.from_pretrained()` on a GGUF hub ID. Tokenizer and
+  chat-template evidence SHALL come from the embedded GGUF metadata and
+  llama.cpp model-native chat API.
+- REQ-VERIFY-6146-4: Before inference, the workflow SHALL freeze one
+  model-native message template, terminal answer convention, temperature, top-p,
+  repeat penalty, seed schedule, context budget, output paths, exclusions, and
+  protected-file hashes. The prompt SHALL expose only Exp6145 pre-outcome row
+  fields and SHALL exclude exact answers, current validator results, labels,
+  future events, grammars, parser repair, and outcome-conditioned retries.
+- REQ-VERIFY-6146-5: Events SHALL be processed in exact Exp6145 chronological
+  order across calibration, future-known, and sealed shifted-family partitions.
+  Every model/event row SHALL record the pre-outcome strategy proposal,
+  strategy identifier, terminal solution, raw response hash, parser status,
+  token/timing metadata, lifecycle receipt, and then the exact post-outcome ID
+  from the Exp6145 outcome sidecar.
+- REQ-VERIFY-6146-6: Invalid or missing terminal output SHALL be preserved as
+  an honest model outcome. The workflow SHALL NOT retry, repair, replace, or
+  drop rows based on correctness or parseability.
+- REQ-VERIFY-6146-7: Headline inference SHALL block unless both mandated GGUFs
+  are present, embedded-tokenizer loadable, loaded through llama.cpp or
+  `Gemma4QuantizedLoader`, CUDA offload is engaged, and task-owned GPU process
+  lifecycle receipts prove load, readiness, decode, release, no orphan PID, and
+  no retained task-owned VRAM.
+- REQ-VERIFY-6146-8: `sota_constraint_event_corpus_ready_score` SHALL be the
+  bare integer `1` only for complete authentic mandated-model rows, exact row
+  conservation, task-owned CUDA evidence, post-decision validator ordering, no
+  memory, and no hidden outcome-conditioned retry. Otherwise it SHALL be `0`.
+- REQ-VERIFY-6146-9: `inference_substrate` SHALL be
+  `live_local_sota_gguf_cuda` only when all model, tokenizer, CUDA, row,
+  lifecycle, and cleanup receipts prove live local SOTA GGUF CUDA execution.
+  Otherwise the artifact SHALL block and name the missing model, offload, row,
+  or lifecycle evidence in `honest_verdict`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `model_specs`,
+`resolved_model_paths_revisions_quantizations_and_hashes`,
+`embedded_tokenizer_and_chat_template_receipts`,
+`cuda_offload_gpu_engagement_and_task_owned_pid_receipts`,
+`frozen_prompt_decode_and_seed_policy`, `stream_split_and_row_hashes`,
+`per_model_event_row_conservation`,
+`strategy_terminal_solution_and_invalid_output_counts`,
+`post_decision_exact_outcome_receipts`,
+`no_memory_and_no_adaptive_retry_receipts`,
+`calibration_future_and_shift_metrics_by_model`,
+`tiny_model_smoke_rows_excluded_from_headline`,
+`lifecycle_timing_and_cleanup_receipts`,
+`sota_constraint_event_corpus_ready_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes authentic ready rows, partial rows, and blocked runs.
+- `preconditions_checked`: The structured gate recomputes stream, split, model manifest, prompt, chat template, decoder, output path, exclusion, protected-file, GPU lease, and inherited-server hashes before any model load.
+- `structured_gate_receipt`: Headline inference opens only after mandated models, embedded tokenizers, CUDA offload, task ownership, frozen prompts, row sidecars, and protected files pass.
+- `model_specs`: Bare top-level entries include exact mandated hub IDs, resolved GGUF paths, hashes, GPU assignments, and actual use counts.
+- `resolved_model_paths_revisions_quantizations_and_hashes`: Path, revision, quantization, byte size, and SHA-256 evidence prove the selected GGUF is a language model file and not a projector or tiny substitute.
+- `embedded_tokenizer_and_chat_template_receipts`: Tokenizer and chat template receipts come from embedded GGUF metadata and llama.cpp APIs, never AutoTokenizer on a GGUF repo ID.
+- `cuda_offload_gpu_engagement_and_task_owned_pid_receipts`: CUDA evidence is attributable to task-owned workers and shows nonzero GPU engagement for each mandated model.
+- `frozen_prompt_decode_and_seed_policy`: One model-native prompt/template, terminal convention, temperature, top-p, repeat penalty, context budget, and seed schedule are frozen before inference.
+- `stream_split_and_row_hashes`: Exp6145 stream, split, row, and outcome commitments are hashed before decisions and replayed for conservation.
+- `per_model_event_row_conservation`: Every mandated model has exactly one immutable row per Exp6145 event or the artifact blocks.
+- `strategy_terminal_solution_and_invalid_output_counts`: Strategy text, strategy IDs, terminal solutions, parser status, and invalid outputs are counted without hidden retry.
+- `post_decision_exact_outcome_receipts`: The validator runs after the frozen decision and is absent from model inputs.
+- `no_memory_and_no_adaptive_retry_receipts`: Each event is prompted independently with no prior model outputs, no correctness-conditioned retries, no grammar, no finite-ID transport, and no parser repair.
+- `calibration_future_and_shift_metrics_by_model`: Metrics are separated for calibration, future-known, and sealed shifted-family partitions per model.
+- `tiny_model_smoke_rows_excluded_from_headline`: Smoke rows, when present, are labeled separately and excluded from headline readiness and metrics.
+- `lifecycle_timing_and_cleanup_receipts`: Before/load/readiness/decode/release GPU state, PIDs, elapsed time, file hashes, orphan checks, and retained-VRAM checks are recorded.
+- `sota_constraint_event_corpus_ready_score`: Exactly one only for complete authentic mandated-model rows with task-owned CUDA evidence and no hidden outcome-conditioned retry.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `duration_s`: The measured end-to-end Exp6146 run time is reported.
+- `inference_substrate`: Set `live_local_sota_gguf_cuda` only when all receipts prove it; otherwise block.
+- `verifier_is_oracle`: Exp6145 exact Python/Z3 labels are post-decision oracle receipts and are not model inputs.
+- `missing_verifier_gaps`: Missing model, offload, row, lifecycle, cleanup, or oracle-ordering evidence is explicit.
+- `field_provenance`: Every field traces to prompt, specs, Exp6145 sidecars, model manifests, runtime receipts, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, structured gate, model/cache/hash, llama.cpp tokenizer, GPU engagement, row conservation, no-memory/no-retry, outcome ordering, lifecycle cleanup, schema, adversarial verify, protected-file, E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, model, prompt, stream, row, outcome, lifecycle, protected-file, and command drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, or `blocked:` and name any missing model, offload, row, or lifecycle evidence.
+
+### SCENARIO-VERIFY-6146-GATE: Mandated GGUFs And CUDA Gate Headline Rows
+
+**Given** Exp6146 resolves the mandated Qwen flagship MoE and Gemma flagship
+dense entries from the SOTA GGUF cache
+**When** either model is absent, resolves only to a projector GGUF, lacks an
+embedded tokenizer or chat template, lacks CUDA offload, or lacks task-owned
+GPU lifecycle evidence
+**Then** headline inference is blocked, tiny models are not substituted, and
+`honest_verdict` names the missing evidence.
+
+### SCENARIO-VERIFY-6146-ORDERING: Outcomes Are Attached After Decisions
+
+**Given** Exp6146 processes Exp6145 rows in chronological order
+**When** a model response is captured
+**Then** the raw response hash, strategy, terminal solution, parser status,
+seed, token metadata, and timing are persisted before the exact post-outcome
+receipt is attached from the sidecar.
+
+### SCENARIO-VERIFY-6146-NO-MEMORY: Rows Are Independent And Not Retried
+
+**Given** calibration, future-known, and sealed shifted-family rows share one
+frozen prompt/decode policy
+**When** a row is invalid, empty, wrong, or unparseable
+**Then** the row is conserved as an honest model outcome and no memory,
+correctness-conditioned retry, grammar, parser repair, finite-ID transport, or
+hidden label is introduced.
+
+### SCENARIO-VERIFY-6146-LIFECYCLE: Task-Owned CUDA Cleans Up
+
+**Given** live local SOTA GGUF CUDA inference runs
+**When** the workers finish
+**Then** before/load/readiness/decode/release GPU states, task-owned PIDs,
+elapsed time, file hashes, orphan checks, and retained-VRAM checks prove no
+task-owned process or VRAM remains.
+
+## Implementation Status (REQ-VERIFY-6146)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6146 | Planned (`python/carnot/experiment_6146_sota_constraint_event_corpus.py`, `results/experiment_6146_sota_constraint_event_corpus.json`) | Planned (`tests/python/test_experiment_6146_sota_constraint_event_corpus.py`) |

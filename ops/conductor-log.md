@@ -15369,3 +15369,4 @@ No output thi |
 | 2026-08-05 18:21 UTC | Tracked-result test artifact isolation and quarant | OK | 97 passed, 1 warning in 7.30s |
 | 2026-08-05 18:38 UTC | Reliable dated evidence refresh after the V533 pla | OK | 86 passed, 1 warning in 9.23s |
 | 2026-08-05 20:02 UTC | Exact chronological constraint-event stream with h | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:        "exact_ |
+| 2026-08-05 20:09 UTC | Exact chronological constraint-event stream with h | OK | cache hit: 87 passed, 1 warning in 13.84s |
