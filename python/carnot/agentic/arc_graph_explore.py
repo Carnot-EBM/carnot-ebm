@@ -17,6 +17,8 @@ loop wiring.
 
 from __future__ import annotations
 
+import json
+import os
 import random
 from typing import Any, Optional
 
@@ -570,6 +572,7 @@ def graph_explore_solve_v2(
     candidate_router=None,
     structural_energy_scorer=None,
     move_pruner=None,
+    state_key_action_suffix_k: Optional[int] = None,
     stats: Optional[dict] = None,
 ) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
@@ -638,6 +641,56 @@ def graph_explore_solve_v2(
             g[hud] = 0
         return frame_hash(g)
 
+    # --- Non-Markov observation aliasing fix (DEFAULT OFF; REQ-ARC-GE-6110) ---
+    #
+    # WHY: on some games the visible grid does not expose all of the game's state, so two
+    # BEHAVIOURALLY DISTINCT states hash to the same node key. The measured worst case is
+    # sc25 (exp6094): every one of the root's candidate actions is visually inert on its
+    # FIRST application (the game consumes it — hidden "started" state advances, the frame
+    # does not), so every successor aliases into the root node, the root's untested list
+    # drains, and the whole search terminates at 24 expansions having "discovered" 1 state —
+    # identically at a 6000 and a 30000 budget. The frontier collapse is a REPRESENTATION
+    # limit, not a search wall: no budget helps.
+    #
+    # THE FIX: append the last k actions of the arriving path to the node key — the classic
+    # k-th-order-Markov remedy for a non-Markov observation. Same frame reached under a
+    # different recent-action suffix = a different node, so a visually-inert-but-state-
+    # advancing action creates a NEW frontier node instead of aliasing into its parent.
+    # Purely frame-and-own-action derived: no game ids, no per-game constants, nothing the
+    # live agent does not see about its own behaviour.
+    #
+    # THE COST (why it defaults OFF): k>0 inflates the state space — the same true state
+    # reached under different suffixes becomes several nodes, each re-expanded. That spends
+    # budget, so a game that was fine at k=0 can regress. Enable via the env flag
+    # CARNOT_ARC_STATE_KEY_SUFFIX_K=<k> or the explicit parameter; k=0 (the default) is
+    # byte-for-byte the original single-hash identity.
+    if state_key_action_suffix_k is None:
+        try:
+            state_key_action_suffix_k = int(
+                os.environ.get("CARNOT_ARC_STATE_KEY_SUFFIX_K", "0") or "0"
+            )
+        except ValueError:
+            state_key_action_suffix_k = 0
+    suffix_k = max(0, int(state_key_action_suffix_k))
+
+    def _action_suffix(path) -> str:
+        if not suffix_k:
+            return ""
+        parts = []
+        for step in (path or [])[-suffix_k:]:
+            data = step.get("data")
+            # json with sorted keys = a stable, hashable canonical form for click coords etc.
+            parts.append(
+                f"{int(step['action'])}"
+                + (f"@{json.dumps(data, sort_keys=True, default=str)}" if data else "")
+            )
+        return "|k:" + ";".join(parts)
+
+    def _node_key(frame, path) -> str:
+        # k=0 returns node_id(frame) EXACTLY (empty suffix) — the shipped default is
+        # unchanged, which is what the both-directions test asserts.
+        return node_id(frame) + _action_suffix(path)
+
     def _candidates(frame, previous_frame=None):
         return rich_action_candidates(
             frame,
@@ -657,7 +710,7 @@ def graph_explore_solve_v2(
         return f
 
     f0 = replay(prefix)  # root at the post-prefix state (L0 if no prefix)
-    h0 = node_id(f0)
+    h0 = _node_key(f0, prefix)
     states = {h0: {"path": list(prefix), "untested": _candidates(f0), "frame": f0}}
     best = start_level
     expansions = 0
@@ -703,6 +756,13 @@ def graph_explore_solve_v2(
             stats["expansions"] = expansions
             stats["states"] = len(states)
             stats["max_expansions"] = int(max_expansions)
+            stats["state_key_action_suffix_k"] = int(suffix_k)
+            # How many distinct VISIBLE frames the graph holds, independent of suffix
+            # splits. states == distinct_frames when k=0; the gap between them is the
+            # state-space inflation the suffix key paid for its de-aliasing.
+            stats["distinct_frames"] = (
+                len({k.split("|k:", 1)[0] for k in states}) if suffix_k else len(states)
+            )
             stats["proposal_prior_enabled"] = structural_energy_scorer is not None
             stats["expansion_priority_enabled"] = (
                 expansion_priority is not None
@@ -881,7 +941,7 @@ def graph_explore_solve_v2(
             if _game_over(nf) or expansions >= max_expansions:
                 return True, None
         if nf is not None and not _game_over(nf):
-            nh = node_id(nf)
+            nh = _node_key(nf, traj)
             if nh not in states:
                 states[nh] = {
                     "path": traj,
@@ -913,7 +973,7 @@ def graph_explore_solve_v2(
             if _game_over(nf) or expansions >= max_expansions:
                 return True, None
         if nf is not None and not _game_over(nf):
-            nh = node_id(nf)
+            nh = _node_key(nf, traj)
             if nh not in states:
                 states[nh] = {
                     "path": traj,
@@ -984,7 +1044,7 @@ def graph_explore_solve_v2(
             best = max(best, lvl)
             if _game_over(nf):
                 continue
-            nh = node_id(nf)
+            nh = _node_key(nf, traj)
             if nh not in states:  # new state ⇒ add to graph + frontier
                 states[nh] = {
                     "path": traj,
@@ -1103,7 +1163,7 @@ def graph_explore_solve_v2(
                     return _ret(traj, lvl)
                 best = max(best, lvl)
                 if not _game_over(nf):
-                    nh = node_id(nf)
+                    nh = _node_key(nf, traj)
                     if nh not in states:  # new state ⇒ add with A* priority g+h
                         states[nh] = {
                             "path": traj,
