@@ -15349,3 +15349,5 @@ No output thi |
 | 2026-08-05 06:46 UTC | Plan milestone 2026.08.532 | OK | 4 tasks proposed |
 | 2026-08-05 06:48 UTC | Gated on Exp6131 readiness: frozen held mid-layer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6131-phase-d-mid-layer-selector-calibrati |
 | 2026-08-05 06:48 UTC | Milestone 2026.08.532 activated | OK | 4 tasks queued |
+| 2026-08-05 08:11 UTC | Exact terminal-boundary handoff from .531 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ot(staged_mism |
+| 2026-08-05 09:35 UTC | Exact terminal-boundary handoff from .531 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: JAX paths. The |
