@@ -15330,3 +15330,4 @@ No output thi |
 | 2026-08-05 01:13 UTC | Milestone 2026.08.531 activated | OK | 9 tasks queued |
 | 2026-08-05 02:36 UTC | Exact terminal-boundary handoff from .530 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: (tmp_path, []) |
 | 2026-08-05 02:59 UTC | Exact terminal-boundary handoff from .530 into .53 | OK | cache hit: 86 passed, 1 warning in 15.74s |
+| 2026-08-05 03:02 UTC | Dated evidence refresh after the V531 planner mark | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
