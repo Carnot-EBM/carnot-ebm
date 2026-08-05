@@ -5204,6 +5204,17 @@ class LocalGGUFProposer:
     # failed. Closes the diagnostic gap REQ-ARC-FCP-5699-23 through -29 all ran into without ever
     # inspecting.
     last_raw_completion: str = ""
+    # THE TWO CHANNELS, RECORDED SEPARATELY (2026-08-05). `last_raw_completion` holds the FOLDED
+    # text (`<think>reasoning</think>final`), which is faithful to everything the model emitted but
+    # cannot answer the one question that matters when an induce fails on the chat endpoint: WHICH
+    # CHANNEL WAS EMPTY. A completion that ends at `</think>` with 6603 generated tokens looks, in
+    # the folded view, exactly like a model that reasoned at length and wrote no code -- and looks
+    # exactly the same as a model that wrote perfectly good code into a channel the extractor never
+    # read. Those two have opposite fixes (better prompt vs. read the other channel), and exp6091
+    # spent a whole 19-cell run unable to tell them apart. These two fields are PURE OBSERVATION:
+    # nothing branches on them, so recording them changes no behaviour on any path.
+    last_final_content: str = ""
+    last_reasoning_content: str = ""
     # LIVENESS WITNESS (2026-07-27, exp5866 finding 4). The scored ARC path had NO channel
     # at all for "did the generator actually answer": generate()/complete_text() return
     # (False, msg) on a dead or refusing server, every caller treats that as "no induction
@@ -5528,6 +5539,34 @@ class LocalGGUFProposer:
         # OpenAI finish_reason 'length' == hit max_tokens == llama.cpp stop_type 'limit' (overran).
         stop_type = "limit" if choice.get("finish_reason") == "length" else "eos"
         full = f"<think>\n{reasoning}\n</think>\n{final}" if reasoning else final
+        # PURE OBSERVATION -- see the field declarations. Recorded before any branch so the
+        # per-channel truth is available even when the caller goes on to fail the candidate.
+        self.last_final_content = final
+        self.last_reasoning_content = reasoning
+        # OPT-IN EMPTY-ANSWER-CHANNEL FALLBACK (CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK=1).
+        #
+        # WHAT IT IS FOR. This build splits the model's thought channel out into
+        # `reasoning_content` and leaves `content` holding only the post-thought answer. That is
+        # correct and is why `extraction_text` is `final` -- so `_extract_python` cannot grab a
+        # ```python block the model wrote as a DRAFT inside its own reasoning. But when the model
+        # closes its thought channel and emits EOS without writing an answer, `content` is empty,
+        # `extraction_text` is empty, and the candidate is a guaranteed miss no matter what the
+        # model actually worked out. With this flag on, an empty answer channel falls back to the
+        # reasoning channel rather than to nothing.
+        #
+        # WHY IT IS DEFAULT-OFF AND MUST STAY SO. The fallback reads a channel the model did not
+        # nominate as its answer, so it can surface a draft the model was in the middle of
+        # rejecting. That is a real quality risk and the frozen live/scored generator path must not
+        # inherit it silently. It is also strictly a NO-OP whenever `final` is non-empty: every
+        # existing passing path is byte-identical with the flag on or off, which is the property
+        # the both-directions test pins.
+        extraction = final
+        if (
+            not final.strip()
+            and reasoning.strip()
+            and os.environ.get("CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK") == "1"
+        ):
+            extraction = reasoning
         # HOW MANY TOKENS THE SERVER ACTUALLY GENERATED -- normalized into llama.cpp's native
         # `timings.predicted_n` shape. WITHOUT THIS the mode-C detector is STRUCTURALLY DEAD on
         # this endpoint (found 2026-07-27, adversarial review): the normalized dict carried no
@@ -5552,7 +5591,7 @@ class LocalGGUFProposer:
         }
         if isinstance(predicted_n, int):
             normalized["timings"] = {"predicted_n": predicted_n}
-        return normalized, final
+        return normalized, extraction
 
     def _healthy(self) -> bool:
         import urllib.request

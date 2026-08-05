@@ -49215,3 +49215,154 @@ inference substrate is `literature_ingestion`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6139 | Implemented (`python/carnot/experiment_6139_v532_source_delta_ingestion.py`, `results/experiment_6139_v532_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_6139_v532_source_delta_ingestion.py`) |
+
+### REQ-REPORT-6142: Archive .532 Terminal Identities And Activate .533
+
+The Exp6142 workflow SHALL archive exactly the four conductor-activated
+`2026.08.532` identities Exp6138 through Exp6141 by the declared
+`(milestone, task_id, declared_deliverable)` tuple and conductor receipt. It
+SHALL resolve present evidence only from the declared deliverable path, SHALL
+ignore same-number sidecars and aliases, and SHALL NOT treat former proposal
+Exp6142 through Exp6151 prose as activated `.532` experiments or completion
+credit.
+
+The workflow SHALL preserve disjoint terminal classes. Exp6138 SHALL remain
+`complete`; Exp6139 SHALL remain `complete-null` with zero accepted source
+deltas; Exp6140 SHALL remain a `retired` scientific line that closed the
+Exp6128 source-domain recovery; and Exp6141 SHALL remain a structured
+`structured-gate-skip` caused by the Exp6140 readiness gate. A retired
+scientific line and a downstream structured skip SHALL remain different
+terminal evidence classes.
+
+The workflow SHALL parse the active and staged roadmaps when present, the
+`.532` and `.533` activation-plan lines, the exact `.532` deliverables,
+completion history, conductor log, exclusions, dirty worktree, root-clutter
+inventory, protected-file hashes, and the vNEXT proposal before emitting the
+artifact. If `research-roadmap-next.yaml` is present, activation SHALL copy it
+atomically to `research-roadmap.yaml` exactly. If it has already been consumed
+and the active roadmap names `2026.08.533`, the workflow MAY complete by
+recording an already-active activation receipt rather than fabricating a staged
+roadmap.
+
+The workflow SHALL append the exact `.532` completion block to
+`research-complete.yaml` at most once only when a canonical `.532` block is
+absent. Existing duplicate completion history and inherited root-clutter debt
+SHALL be measured and SHALL NOT be amplified. The bare
+`duplicate_history_amplification_count` SHALL equal `0` for a valid transition
+artifact, and historical completion blocks SHALL NOT be rewritten.
+
+The workflow SHALL freshly run or ingest `scripts/adversarial_verify.py --json`
+receipts for every present exact `.532` declared deliverable and SHALL NOT
+verify Exp6141 when its declared artifact is absent because the structured gate
+skipped the agent call. Gate-skip receipts SHALL be recorded as terminal
+evidence, not as experiment runs, and Exp6140's retirement SHALL NOT be
+converted into an Exp6141 run.
+
+The workflow SHALL scan active and staged roadmaps, completion history,
+proposals, exclusions, results, tests, implementation modules, scripts, known
+allocations, and operator issue ledgers for bare Exp6142 through Exp6155
+references. The active `.533` roadmap, the vNEXT proposal reservation,
+Exp6142-owned implementation, tests, spec, and result paths, plus historical
+`.532` proposal-only references from Exp6138/Exp6139 SHALL be allowed.
+`next_range_collision_count` SHALL be a bare integer and SHALL equal `0` for a
+completed transition. This zero-collision result authorizes exactly Exp6142
+through Exp6155 without converting replaced proposal-only identities into live
+result or completion-history collisions.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_transition`, `activated_task_and_deliverable_matrix`,
+`exact_terminal_classification`, `scientific_retirement_receipt`,
+`structured_gate_skip_receipt`, `proposal_only_identities_excluded`,
+`adversarial_verifier_receipts`, `research_complete_append_count`,
+`duplicate_history_amplification_count`, `staged_roadmap_activation_receipt`,
+`next_task_range`, `next_range_collision_count`, `docs_reconciled`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required field SHALL
+have a non-empty provenance entry with a principle. `inference_substrate` SHALL
+be `aggregation_from_upstream_artifacts`, and `honest_verdict` SHALL start
+with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "terminal transition state follows activated identity, exact-path, retirement, gate-skip, activation, and collision receipts."
+- `preconditions_checked`: principle "activated and staged roadmaps, receipts, history, exclusions, dirty worktree, root clutter, and protected hashes are parsed before mutation."
+- `milestone_transition`: principle "only the four activated task identities and declared paths define `.532`."
+- `activated_task_and_deliverable_matrix`: principle "only the four activated task identities and declared paths define `.532`."
+- `exact_terminal_classification`: principle "complete, complete-null, retired, and structured gate-skip states remain separate terminal evidence classes."
+- `scientific_retirement_receipt`: principle "a retired scientific line and a downstream skip remain distinct terminal evidence."
+- `structured_gate_skip_receipt`: principle "a retired scientific line and a downstream skip remain distinct terminal evidence."
+- `proposal_only_identities_excluded`: principle "old proposal prose is neither an experiment nor a collision once replaced by this canonical active range."
+- `adversarial_verifier_receipts`: principle "present exact artifacts are freshly checked; the absent structured skip is not fabricated."
+- `research_complete_append_count`: principle "append `.532` at most once and amplify no history."
+- `duplicate_history_amplification_count`: principle "append `.532` at most once and amplify no history."
+- `staged_roadmap_activation_receipt`: principle "activation is exact when staged YAML exists and already-active when the conductor has consumed it into `research-roadmap.yaml`."
+- `next_task_range`: principle "bare zero collisions authorize exactly Exp6142-Exp6155."
+- `next_range_collision_count`: principle "bare zero collisions authorize exactly Exp6142-Exp6155."
+- `docs_reconciled`: principle "transition-owned spec updates are recorded while conductor-owned ops reconciliation may be deferred."
+- `protected_files_unchanged`: principle "historical artifacts, conductor, exclusions, and unrelated dirty files remain byte-identical except for intentional ledger/result writes."
+- `duration_s`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `inference_substrate`: principle "set `aggregation_from_upstream_artifacts`; this task invokes no research LLM."
+- `field_provenance`: principle "every required field traces to exact local receipts instead of broad glob inference."
+- `test_commands`: principle "commands document focused unit/spec coverage, YAML parse, exact-path, retirement, gate-skip, duplicate-history, activation, exclusion, collision, adversarial-verifier, protected-file, applicable E2E, full-suite, and root-clutter checks."
+- `test_exit_codes`: principle "exit codes prevent failed checks from becoming success."
+- `reproducibility_checksum`: principle "a checksum detects later transition, activation, history, collision, or evidence drift."
+- `honest_verdict`: principle "use a terminal `complete:` or `blocked:` prefix and state whether `.533` was activated."
+
+#### SCENARIO-REPORT-6142-ACTIVATED-MATRIX: V532 Archive Uses Four Declared Identities Only
+
+**Given** the conductor log records `.532` activation with four queued tasks
+**And** the completion ledger records Exp6138 through Exp6141 deliverables
+**When** the Exp6142 transition builds its archive matrix
+**Then** it records exactly Exp6138 through Exp6141, uses each declared
+deliverable path, does not use numeric aliases or result-history strings as
+stronger evidence, and excludes former proposal-only Exp6142 through Exp6151
+from `.532` history.
+
+#### SCENARIO-REPORT-6142-TERMINAL-CLASSES: Retirement And Gate Skip Stay Disjoint
+
+**Given** `.532` contains complete, complete-null, retired, and structured
+gate-skip outcomes
+**When** Exp6142 classifies terminal outcomes
+**Then** each activated task has exactly one terminal class, Exp6140 remains a
+scientific retirement, Exp6141 remains a structured gate skip without a result
+artifact, and the skip is not reported as a run.
+
+#### SCENARIO-REPORT-6142-DUPLICATE-ACTIVATION: History Append And Activation Are Idempotent
+
+**Given** completion history may already contain a canonical `.532` block
+**And** `research-roadmap-next.yaml` may already have been consumed by conductor
+activation
+**When** Exp6142 archives `.532` and activates `.533`
+**Then** it appends no duplicate canonical `.532` block, keeps
+`duplicate_history_amplification_count=0`, records whether activation copied a
+staged roadmap or found `.533` already active, and never rewrites historical
+milestone blocks.
+
+#### SCENARIO-REPORT-6142-RANGE-COLLISION: Bare Exp6142-Exp6155 Collisions Block
+
+**Given** the active `.533` roadmap and vNEXT proposal reserve Exp6142 through
+Exp6155
+**When** Exp6142 scans repository paths and content for bare Exp6142 through
+Exp6155 references
+**Then** only canonical `.533` plan references, Exp6142-owned references, and
+historical `.532` proposal-only references are permitted, and any unowned
+live/result/history reference sets a nonzero bare `next_range_collision_count`
+and emits a `blocked:` artifact.
+
+#### SCENARIO-REPORT-6142-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp6142 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, exact-path matrix,
+terminal class, retirement receipt, structured skip receipt, proposal-only
+exclusion receipt, verifier receipt, history receipt, activation receipt,
+range-collision receipt, protected-file hash, test command, exit code,
+checksum, and terminal verdict prefix is present; the inference substrate is
+`aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-6142)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6142 | Implemented (`python/carnot/experiment_6142_transition_v533.py`, `results/experiment_6142_transition_v533.json`) | Implemented (`tests/python/test_experiment_6142_transition_v533.py`) |
