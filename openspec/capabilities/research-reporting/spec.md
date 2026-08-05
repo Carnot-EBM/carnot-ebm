@@ -48628,3 +48628,144 @@ is not labeled as experimental LLM inference.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6113 | Implemented (`python/carnot/experiment_6113_v530_source_delta_ingestion.py`, `results/experiment_6113_v530_source_delta_ingestion.json`) | Verified (`tests/python/test_experiment_6113_v530_source_delta_ingestion.py`) |
+
+### REQ-REPORT-6123: V530 Capstone Reconciliation Preserves Exact Identity, Branch Independence, And Gate Truth
+
+The Exp6123 capstone workflow SHALL read the active milestone
+`2026.08.530` roadmap and resolve only the exact Exp6112 through Exp6122
+`(milestone, task_id, declared deliverable)` rows. It SHALL write
+`results/experiment_6123_v530_capstone_reconciliation.json`, SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`, and SHALL NOT
+modify `research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/north-star.md`, `ops/exclusion_manifest.yaml`, public/operator-curated
+docs, historical upstream result artifacts, ARC registry files, or unrelated
+dirty worktree edits.
+
+The workflow SHALL preserve terminal classes independently. Executed complete,
+ready, positive, null, partial, underpowered, blocked, retired, missing,
+conductor-gate-skipped, and adversarial-flagged outcomes SHALL remain distinct.
+A gate skip SHALL NOT be reported as execution, a ready upstream fixture SHALL
+NOT be reported as a positive selector, and success or failure in one branch
+SHALL NOT satisfy another branch's gates. Numeric-prefix aliases and completion
+history summaries SHALL NOT replace an exact declared deliverable path.
+
+The workflow SHALL recompute every Exp6115 through Exp6119 structured gate from
+the exact upstream artifact fields, preserving absent, null, nonnumeric, or
+mismatched values as explicit failures. It SHALL compare recomputed gate truth
+with conductor log outcomes and title/YAML alignment. It SHALL recompute the
+scientific branch gates for Phase-D candidate authenticity and headroom,
+per-layer surface access, hidden-state selector evidence, CSL future-event
+utility/safety/ABI evidence, GateMate physical authorization, and ARC
+provenance/registry/no-duplicate-credit evidence without borrowing evidence
+between branches.
+
+For every present exact upstream artifact, the workflow SHALL record a fresh
+`scripts/adversarial_verify.py --json` receipt. Adversarial-flagged artifacts
+SHALL remain in the matrix with exact flag reasons, but their flagged claims
+SHALL be excluded from positive synthesis. Prior failures with
+`retire_if_same_verdict=true` SHALL record same-verdict retirement receipts.
+Architecture, status, changelog, conductor, verifier, hardware, and ARC
+reconciliation SHALL describe only primary-artifact-backed current state and
+SHALL label planned, blocked, retired, and experiment-only surfaces explicitly;
+when a downstream conductor reconciler owns doc writes, Exp6123 SHALL record
+hashes and deferral without editing those ledgers.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`milestone_task_and_declared_deliverable_matrix`,
+`exact_evidence_resolution_receipts`,
+`per_task_terminal_class_and_reason`,
+`executed_skipped_missing_blocked_retired_underpowered_null_ready_positive_and_flagged_counts`,
+`gate_recomputation_and_title_yaml_alignment`,
+`candidate_pool_headroom_surface_selector_csl_hardware_and_arc_gate_matrix`,
+`adversarial_verifier_receipts_and_positive_claim_exclusions`,
+`prior_failure_same_verdict_retirement_receipts`,
+`branch_independent_scientific_synthesis`, `prd_gap_and_north_star_delta`,
+`specs_traceability_architecture_status_changelog_conductor_verifier_hardware_and_arc_reconciliation`,
+`architecture_current_planned_blocked_retired_boundary`,
+`inherited_debt_baselines_and_deltas`, `research_complete_append_readiness`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. Every required top-level field SHALL have a non-empty
+provenance entry with a principle. The `honest_verdict` SHALL start with
+`complete:`, `complete_with_blocks:`, or `blocked:`.
+
+Required field principles:
+
+- `milestone_task_and_declared_deliverable_matrix`: principle "exact identity and path, never filename aliases, define evidence."
+- `exact_evidence_resolution_receipts`: principle "exact identity and path, never filename aliases, define evidence."
+- `per_task_terminal_class_and_reason`: principle "every outcome belongs to one explicit terminal class without laundering."
+- `executed_skipped_missing_blocked_retired_underpowered_null_ready_positive_and_flagged_counts`: principle "every outcome belongs to one explicit terminal class without laundering."
+- `gate_recomputation_and_title_yaml_alignment`: principle "every structured predicate is recomputed from primary artifacts and matches its task title."
+- `candidate_pool_headroom_surface_selector_csl_hardware_and_arc_gate_matrix`: principle "each research branch retains its own preregistered authority and gates."
+- `adversarial_verifier_receipts_and_positive_claim_exclusions`: principle "flagged artifacts remain recorded but cannot support positive claims."
+- `prior_failure_same_verdict_retirement_receipts`: principle "every repeated verdict triggers the declared mechanical retirement."
+- `branch_independent_scientific_synthesis`: principle "success or failure in one branch supplies no evidence for another."
+- `prd_gap_and_north_star_delta`: principle "report what changed in FR11, FR12, Phase D, and the live ARC path without redefining the finish line."
+- `specs_traceability_architecture_status_changelog_conductor_verifier_hardware_and_arc_reconciliation`: principle "internal docs describe only primary-artifact-backed current state."
+- `architecture_current_planned_blocked_retired_boundary`: principle "internal docs describe only primary-artifact-backed current state."
+- `inherited_debt_baselines_and_deltas`: principle "task-owned debt cannot increase while unrelated inherited failures remain explicit."
+- `protected_files_unchanged`: principle "active roadmap, conductor, exclusions, north star, public docs, historical results, and unrelated work remain untouched."
+- `duration_s`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `inference_substrate`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `field_provenance`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `test_commands`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `test_exit_codes`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `reproducibility_checksum`: principle "use measured `aggregation_from_upstream_artifacts`."
+- `verifier_is_oracle`: principle "oracle status and residual discriminators remain branch-specific and explicit."
+- `missing_verifier_gaps`: principle "oracle status and residual discriminators remain branch-specific and explicit."
+- `honest_verdict`: principle "use `complete:`, `complete_with_blocks:`, or `blocked:` and name every terminal branch class."
+
+#### SCENARIO-REPORT-6123-EXACT-MATRIX: Active Roadmap Declared Deliverables Are The Only Evidence Index
+
+**Given** the active `.530` roadmap names Exp6112 through Exp6122 with exact
+declared deliverables
+**When** Exp6123 builds the capstone matrix
+**Then** it records exactly those eleven upstream tasks, preserves each
+declared path and hash or explicit absence, ignores numeric-prefix aliases, and
+records Exp6123's own output separately.
+
+#### SCENARIO-REPORT-6123-GATES: Phase-D Gates Are Recomputed Without Rerunning Skipped Tasks
+
+**Given** Exp6115 is a null artifact with
+`phase_d_calibration_ready_score=0.0`, Exp6116 and Exp6118 are conductor
+pre-gate blocked artifacts, and Exp6117 and Exp6119 declared deliverables are
+absent
+**When** Exp6123 recomputes Exp6115 through Exp6119 gates
+**Then** Exp6115's upstream canary gate passes, Exp6116's calibration gate
+fails, Exp6117 through Exp6119 cascade failures are recorded from exact missing
+or blocked upstream fields, and no skipped task is executed by the capstone.
+
+#### SCENARIO-REPORT-6123-BRANCH-INDEPENDENCE: Scientific Branch Summaries Cannot Borrow Outcomes
+
+**Given** Phase D has a calibration null and later blocked/skipped selectors,
+CSL has a positive ready score, GateMate is blocked on unchanged physical state,
+and ARC has a null no-solve-credit result
+**When** Exp6123 builds branch synthesis
+**Then** Phase D, CSL, hardware, and ARC retain separate terminal classes and
+no branch rewrites another branch's readiness, positive, null, blocked, or
+retired state.
+
+#### SCENARIO-REPORT-6123-ADVERSARIAL-EXCLUSION: Fresh Flags Stay Visible But Cannot Support Positive Claims
+
+**Given** present exact upstream artifacts are checked by the current
+`scripts/adversarial_verify.py`
+**When** one artifact is flagged
+**Then** the flag reason is preserved, the artifact remains in the exact
+matrix, missing artifacts are not verified, and flagged claims are excluded
+from positive synthesis.
+
+#### SCENARIO-REPORT-6123-SCHEMA: Required Fields, Principles, And Checksums Are Stable
+
+**Given** the Exp6123 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, exact-path matrix,
+terminal class, gate receipt, branch synthesis, protected-file hash, test
+command, exit code, checksum, and terminal verdict prefix is present; the
+inference substrate is `aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-6123)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6123 | Implemented (`python/carnot/experiment_6123_v530_capstone_reconciliation.py`, `results/experiment_6123_v530_capstone_reconciliation.json`) | Verified (`tests/python/test_experiment_6123_v530_capstone_reconciliation.py`) |
