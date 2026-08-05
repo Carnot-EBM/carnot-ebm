@@ -15344,3 +15344,5 @@ No output thi |
 | 2026-08-05 05:31 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |
 | 2026-08-05 05:31 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |
 | 2026-08-05 05:33 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |
+| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |
+| 2026-08-05 05:35 UTC | Gated on Exp6131 readiness: frozen held mid-layer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6131-phase-d-mid-layer-selector-calibrati |
