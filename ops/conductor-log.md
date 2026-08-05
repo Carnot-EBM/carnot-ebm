@@ -15335,3 +15335,4 @@ No output thi |
 | 2026-08-05 03:06 UTC | Dated evidence refresh after the V531 planner mark | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |
 | 2026-08-05 03:25 UTC | Exp6115 model-transport forensics and frozen v2 sp | OK | 87 passed, 1 warning in 17.18s |
 | 2026-08-05 04:06 UTC | Gated on Exp6126 justification: model-native Phase | OK | cache hit: 87 passed, 1 warning in 28.15s |
+| 2026-08-05 05:21 UTC | Gated on Exp6127 readiness: model-native Phase-D c | OK | 88 passed, 1 warning in 100.36s (0:01:40) |
