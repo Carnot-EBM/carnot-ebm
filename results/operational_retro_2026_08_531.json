@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.531",
+  "generated_at": "2026-08-05T05:40:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 55.4,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp6127 readiness: model-native Phase-D calibration pool v2",
+      "duration_minutes": 52.61,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6126 justification: model-native Phase-D chat fidelity canary",
+      "duration_minutes": 1.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .530 into .531",
+      "duration_minutes": 1.32,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exp6115 model-transport forensics and frozen v2 specification",
+      "duration_minutes": 0.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Gated on Exp6128 readiness: sealed held Phase-D pool and headroom audit v2",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 6 experiments in 55.4 minutes, including 5 compute-bound experiments. The 52.61-minute model-native Phase-D calibration-pool experiment dominated because it was gated on readiness, followed by the 1.42-minute chat-fidelity canary gated on justification; the supplied timing does not separate gate wait, model startup, and inference. The locked classification does not flag compute-bound GPU idle, although the zombie-server snapshot shows inefficient process lifecycle management.",
+  "bottlenecks_identified": [
+    "Readiness gating around the model-native Phase-D calibration pool v2 concentrated 52.61 of 55.4 minutes in one compute-bound experiment, but the reconstructed timing has no phase breakdown for causal attribution.",
+    "The GPU snapshot found a zombie llama-server retaining 19148 MB on GPU 1, which is a process-lifecycle and VRAM-reclamation issue; it is not classified as compute-bound GPU idle because the locked task-conditioned field is false.",
+    "Model concurrency and runner selection were not recorded, so the supplied data cannot establish that a concurrent multi-model task failed to engage DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Add timestamped readiness-gate states and phase timing so dependency wait, model load, inference, and teardown are measured separately.",
+    "Add an experiment-scoped GPU and process watchdog that correlates utilization with task boundaries and reclaims VRAM from confirmed zombie model servers.",
+    "Record model-load cardinality and runner selection for every compute-bound experiment so DualGPURunner use is auditable only when models actually overlap.",
+    "Use an event-driven ready queue to dispatch independent ready work while a dependency-gated experiment is waiting."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument readiness gates and all compute phases with task-scoped timestamps.",
+    "Detect confirmed zombie model servers and reclaim their VRAM automatically.",
+    "Persist model-overlap and runner-selection provenance for compute-bound work."
+  ],
+  "estimated_time_savings_pct": 95,
+  "meta_reflection": "The 95% estimate is the rounded upper-bound opportunity share represented by 52.61 of 55.4 minutes, not a guaranteed speedup. The locked task-conditioned GPU-idle field is false, and no concurrent multi-model execution is established, so neither compute-bound GPU idle nor a DualGPURunner failure is claimed."
+}
