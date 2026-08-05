@@ -97,7 +97,14 @@ if str(REPO / "python") not in sys.path:
 os.environ.setdefault("JAX_PLATFORMS", "cpu")
 
 ARTIFACT = REPO / "results" / "experiment_6091_refine_engine_visible_ab.json"
-SHARD = REPO / "results" / "exp6091_refine_engine_visible_shard.jsonl"
+# THE SHARD IS A TRACKED RESULTS FILE, so it is env-overridable (2026-08-05). A short
+# transport/diagnostic run must not append rows to -- or resume from -- the real research record;
+# pointing CARNOT_6091_SHARD at a scratch path keeps a probe's rows out of `results/**` entirely.
+# Unset, the behaviour is exactly as before.
+SHARD = Path(
+    os.environ.get("CARNOT_6091_SHARD")
+    or (REPO / "results" / "exp6091_refine_engine_visible_shard.jsonl")
+)
 EVIDENCE_DIRS = ("results/arc_e3", "results/arc_logo_snapshot", "results/arc_e3_origin_fixtures")
 
 # ---- run configuration -----------------------------------------------------------------------
@@ -581,6 +588,31 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
     except FileNotFoundError:
         pass
     prompts_seen.append(induce_prompt(game, list(induction_evidence), int(cell)))
+    # CLEAR THE PROPOSER'S PER-CALL DIAGNOSTICS BEFORE THE CALL -- FABRICATED-EVIDENCE FIX
+    # (2026-08-05).
+    #
+    # These attributes live on the PROPOSER, which is shared across every cell in the run, and
+    # they are only written when a transport call actually returns. If a call raises (network /
+    # server death) the proposer returns its failure tuple WITHOUT touching them, so the block
+    # below then reads -- and records, under THIS cell's id -- the PREVIOUS cell's completion.
+    # That is not a stale display artifact, it is fabricated evidence: the 19-cell 2026-08-03 run
+    # has 8 different games sharing a byte-identical (generated_tokens=6603, chars=13916) pair and
+    # 6 more sharing (5389, 12017), which is impossible for independent generations and means the
+    # per-cell failure evidence that run recorded cannot be trusted at all.
+    # Sentinel-clearing makes an unrecorded call record ABSENCE (None / 0 / "") instead of someone
+    # else's numbers. Absence is honest; a neighbour's completion is not.
+    for _attr, _blank in (
+        ("last_raw_completion", ""),
+        ("last_final_content", ""),
+        ("last_reasoning_content", ""),
+        ("last_stop_type", ""),
+        ("last_generated_tokens", None),
+        ("last_prompt_truncated", None),
+    ):
+        try:
+            setattr(prop, _attr, _blank)
+        except Exception:  # pragma: no cover - attribute set on a plain dataclass cannot fail
+            pass
     t_ind = time.time()
     induce_ok, induce_msg = prop.induce(game, list(induction_evidence), int(cell))
     row["induce_ok"] = bool(induce_ok)
@@ -603,6 +635,18 @@ def run_cell(game: str, trial: int, window: list, cell: int, prop: Any) -> dict[
     row["generated_tokens"] = getattr(prop, "last_generated_tokens", None)
     row["stop_type"] = getattr(prop, "last_stop_type", None)
     row["prompt_truncated"] = getattr(prop, "last_prompt_truncated", None)
+    # WHICH CHANNEL CARRIED THE ANSWER (2026-08-05). Recorded on SUCCESS AND FAILURE alike,
+    # because "the model wrote code but into the reasoning channel" and "the model wrote no code"
+    # are indistinguishable in the folded `last_raw_completion` view -- both read as a completion
+    # ending at `</think>` -- and they have opposite fixes. The 2026-08-03 run's induce_ok=0/19
+    # could not be attributed to either, which is what this pair of counts exists to prevent.
+    _final = str(getattr(prop, "last_final_content", "") or "")
+    _reasoning = str(getattr(prop, "last_reasoning_content", "") or "")
+    row["final_content_chars"] = len(_final)
+    row["reasoning_content_chars"] = len(_reasoning)
+    row["final_content_has_def_engine"] = "def engine" in _final
+    row["reasoning_content_has_def_engine"] = "def engine" in _reasoning
+    row["empty_answer_channel"] = (not _final.strip()) and bool(_reasoning.strip())
     if not induce_ok:
         raw = str(getattr(prop, "last_raw_completion", "") or "")
         row["raw_completion_chars"] = len(raw)
@@ -863,7 +907,14 @@ def main() -> int:
     assert cegis_accept_split_enabled(), "acceptance split did not turn on"
 
     done = load_shard()
-    pending = [(g, t) for t in TRIALS for g in ROSTER if g in windows and (g, t) not in done]
+    # OPTIONAL ROSTER SUBSET (2026-08-05). A transport/diagnostic run needs a handful of cells,
+    # not the full 13-game roster; unset, `roster` IS `ROSTER` and nothing changes. Names not on
+    # the roster are ignored rather than silently inventing a game.
+    _subset = [
+        g.strip() for g in (os.environ.get("CARNOT_6091_GAMES") or "").split(",") if g.strip()
+    ]
+    roster = [g for g in ROSTER if g in _subset] if _subset else list(ROSTER)
+    pending = [(g, t) for t in TRIALS for g in roster if g in windows and (g, t) not in done]
     log(f"resume: {len(done)} cells in shard; {len(pending)} pending")
 
     proc = None
@@ -912,6 +963,20 @@ def main() -> int:
             # retrying it is not arm-favouring. The shipped default is tries=3.
             prop.tries = int(os.environ.get("CARNOT_6091_TRIES") or "2")
             os.environ["CARNOT_ARC_CODEONLY_INDUCE"] = "1"
+            # EMPTY-ANSWER-CHANNEL FALLBACK: ON for this experiment, OFF everywhere else.
+            #
+            # `use_chat_template=True` above means this build splits the model's thought channel
+            # into `reasoning_content` and leaves `content` holding only the post-thought answer,
+            # and `_chat_complete_request` extracts from `content` alone so a draft written inside
+            # the reasoning cannot be mistaken for the answer. When the model closes its thought
+            # channel and stops without writing an answer, that is a guaranteed miss. With this
+            # flag the empty answer channel falls back to the reasoning channel instead of to
+            # nothing. It is a NO-OP on every call where the model did nominate an answer, so it
+            # cannot change a cell that was already working -- it can only convert a certain
+            # failure into an attempt. Default-OFF in the shipped proposer so the frozen
+            # live/scored generator path does not inherit it; turned on HERE, in the experiment,
+            # where the arm is declared. Env-overridable so the null can be re-measured with it off.
+            os.environ.setdefault("CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK", "1")
             # Observe the deepest callee before transport, so every refactor round can prove the
             # engine reached the MODEL's prompt rather than the harness's copy of it.
             install_generate_witness(prop)
@@ -1014,7 +1079,9 @@ def main() -> int:
             "refactor_show_engine_treatment": "1",
             "refactor_show_engine_control": "0",
         },
-        "shard": str(SHARD.relative_to(REPO)),
+        # `relative_to` raises for an out-of-repo override, so fall back to the absolute path --
+        # an off-record probe run must still say plainly WHERE its rows went.
+        "shard": (str(SHARD.relative_to(REPO)) if SHARD.is_relative_to(REPO) else str(SHARD)),
         "evidence_checksum_before": ev_before,
         "evidence_checksum_after": ev_after,
         "evidence_unchanged": ev_before == ev_after,

@@ -15362,3 +15362,6 @@ No output thi |
 | 2026-08-05 13:48 UTC | Plan milestone 2026.08.533 | OK | 14 tasks proposed |
 | 2026-08-05 13:50 UTC | Gated on Exp6140 design readiness: exact empirical | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6140-phase-d-exp6128-option-psychometrics |
 | 2026-08-05 13:50 UTC | Milestone 2026.08.533 activated | OK | 14 tasks queued |
+| 2026-08-05 15:13 UTC | Exact terminal-boundary handoff from .532 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ist.yaml"
++    |
+| 2026-08-05 16:37 UTC | Exact terminal-boundary handoff from .532 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: thub.com/ianbl |
