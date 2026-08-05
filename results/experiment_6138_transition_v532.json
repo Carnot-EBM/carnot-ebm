@@ -1,0 +1,1986 @@
+{
+  "activated_task_and_deliverable_matrix": {
+    "exp6124-transition-v531": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 2,
+        "latest_line": "| 2026-08-05 02:59 UTC | Exact terminal-boundary handoff from .530 into .53 | OK | cache hit: 86 passed, 1 warning in 15.74s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_6124_transition_v531.json",
+      "honest_verdict": "complete: archived exactly twelve terminal .530 identities into .531; gate skips, Exp6121 retirement, and next_range_collision_count=0 preserved",
+      "identity": [
+        "2026.08.531",
+        "exp6124-transition-v531",
+        "results/experiment_6124_transition_v531.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": true,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:fec63839d90aef5f37d267b430cc64d0ee601358ffba9ee508c11cd31da924e5",
+      "status": "complete_with_terminal_receipts",
+      "task_id": "exp6124-transition-v531",
+      "terminal_class": "complete",
+      "terminal_evidence_source": "declared_deliverable_path",
+      "title": "Exact terminal-boundary handoff from .530 into .531"
+    },
+    "exp6125-v531-source-delta-ingestion": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-08-05 03:06 UTC | Dated evidence refresh after the V531 planner mark | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |",
+        "latest_status": "FAIL"
+      },
+      "declared_deliverable": "results/experiment_6125_v531_source_delta_ingestion.json",
+      "honest_verdict": "",
+      "identity": [
+        "2026.08.531",
+        "exp6125-v531-source-delta-ingestion",
+        "results/experiment_6125_v531_source_delta_ingestion.json"
+      ],
+      "loadable": false,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": false,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": null,
+      "status": "",
+      "task_id": "exp6125-v531-source-delta-ingestion",
+      "terminal_class": "no-artifact-backend-failure",
+      "terminal_evidence_source": "conductor_backend_failure_without_artifact",
+      "title": "Dated evidence refresh after the V531 planner marker"
+    },
+    "exp6126-phase-d-exp6115-transport-forensics": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-08-05 03:25 UTC | Exp6115 model-transport forensics and frozen v2 sp | OK | 87 passed, 1 warning in 17.18s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+      "honest_verdict": "complete_ready: exp6115_transport_failure_evidence_supports_label_blind_v2_canary_contract",
+      "identity": [
+        "2026.08.531",
+        "exp6126-phase-d-exp6115-transport-forensics",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": true,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:1b134d93952fbed283d5e6b2bf9bcafa0ce9bb3d58d879a3aaf3e5fdafb6de4b",
+      "status": "complete_ready",
+      "task_id": "exp6126-phase-d-exp6115-transport-forensics",
+      "terminal_class": "complete-ready",
+      "terminal_evidence_source": "declared_deliverable_path",
+      "title": "Exp6115 model-transport forensics and frozen v2 specification"
+    },
+    "exp6127-phase-d-native-chat-transport-canary": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 1,
+        "latest_line": "| 2026-08-05 04:06 UTC | Gated on Exp6126 justification: model-native Phase | OK | cache hit: 87 passed, 1 warning in 28.15s |",
+        "latest_status": "OK"
+      },
+      "declared_deliverable": "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+      "honest_verdict": "complete_ready: native_chat_transport_canary_passed",
+      "identity": [
+        "2026.08.531",
+        "exp6127-phase-d-native-chat-transport-canary",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": true,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:c8bba4a6aa69efba964c24f1c7bed6bab012a556e3667b14c58eb12bbc15491a",
+      "status": "complete_ready",
+      "task_id": "exp6127-phase-d-native-chat-transport-canary",
+      "terminal_class": "complete-ready",
+      "terminal_evidence_source": "declared_deliverable_path",
+      "title": "Gated on Exp6126 justification: model-native Phase-D chat fidelity canary"
+    },
+    "exp6128-phase-d-calibration-pool-v2": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 4,
+        "latest_line": "| 2026-08-05 05:27 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_6128_phase_d_calibration_pool_v2.json",
+      "honest_verdict": "complete_null: no_calibration_policy_met_conjunctive_gates",
+      "identity": [
+        "2026.08.531",
+        "exp6128-phase-d-calibration-pool-v2",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": 0.0,
+      "present": true,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [
+        "results/experiment_6128_phase_d_calibration_pool_v2.rows.jsonl"
+      ],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf",
+      "status": "complete_null",
+      "task_id": "exp6128-phase-d-calibration-pool-v2",
+      "terminal_class": "complete-null",
+      "terminal_evidence_source": "declared_deliverable_path",
+      "title": "Gated on Exp6127 readiness: model-native Phase-D calibration pool v2"
+    },
+    "exp6129-phase-d-held-pool-v2": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 6,
+        "latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_6129_phase_d_held_pool_v2.json",
+      "honest_verdict": "blocked_gate_check_failed",
+      "identity": [
+        "2026.08.531",
+        "exp6129-phase-d-held-pool-v2",
+        "results/experiment_6129_phase_d_held_pool_v2.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": true,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:752ef483b2e49558490bfabb493a2856de0657305abb5ea97bf78fe8f03add39",
+      "status": "blocked",
+      "task_id": "exp6129-phase-d-held-pool-v2",
+      "terminal_class": "conductor-gate-blocked",
+      "terminal_evidence_source": "declared_deliverable_path",
+      "title": "Gated on Exp6128 readiness: sealed held Phase-D pool and headroom audit v2"
+    },
+    "exp6130-phase-d-per-layer-surface-v2": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 6,
+        "latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+      "honest_verdict": "",
+      "identity": [
+        "2026.08.531",
+        "exp6130-phase-d-per-layer-surface-v2",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json"
+      ],
+      "loadable": false,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": false,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": null,
+      "status": "",
+      "task_id": "exp6130-phase-d-per-layer-surface-v2",
+      "terminal_class": "conductor-gate-skipped-missing",
+      "terminal_evidence_source": "conductor_log_gate_skip_without_artifact",
+      "title": "Gated on Exp6129 headroom: authenticated matching-base mid-layer surface v2"
+    },
+    "exp6131-phase-d-mid-layer-selector-calibration": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 3,
+        "latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+      "honest_verdict": "blocked_gate_check_failed",
+      "identity": [
+        "2026.08.531",
+        "exp6131-phase-d-mid-layer-selector-calibration",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json"
+      ],
+      "loadable": true,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": true,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": "sha256:b9f465e8dba3e6e6908ba0d6b95c1da5f9d63ab912175d11b7088b5c1e0bd87d",
+      "status": "blocked",
+      "task_id": "exp6131-phase-d-mid-layer-selector-calibration",
+      "terminal_class": "conductor-gate-blocked",
+      "terminal_evidence_source": "declared_deliverable_path",
+      "title": "Gated on Exp6130 surface: calibration-only mid-layer selector freeze"
+    },
+    "exp6132-phase-d-hidden-state-held-eval": {
+      "activated": true,
+      "conductor": {
+        "attempt_count": 2,
+        "latest_line": "| 2026-08-05 06:48 UTC | Gated on Exp6131 readiness: frozen held mid-layer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6131-phase-d-mid-layer-selector-calibrati |",
+        "latest_status": "GATE_BLOCK"
+      },
+      "declared_deliverable": "results/experiment_6132_phase_d_hidden_state_held_eval.json",
+      "honest_verdict": "",
+      "identity": [
+        "2026.08.531",
+        "exp6132-phase-d-hidden-state-held-eval",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ],
+      "loadable": false,
+      "milestone": "2026.08.531",
+      "phase_d_calibration_ready_score": null,
+      "present": false,
+      "retirement_triggered": false,
+      "same_number_aliases_ignored": [],
+      "selection_policy": "exact_declared_deliverable",
+      "sha256": null,
+      "status": "",
+      "task_id": "exp6132-phase-d-hidden-state-held-eval",
+      "terminal_class": "conductor-gate-skipped-missing",
+      "terminal_evidence_source": "conductor_log_gate_skip_without_artifact",
+      "title": "Gated on Exp6131 readiness: frozen held mid-layer selector evaluation"
+    }
+  },
+  "adversarial_verifier_receipts": {
+    "failed_receipt_task_ids": [],
+    "flagged_count": 2,
+    "missing_declared_deliverables_not_verified": [
+      "results/experiment_6125_v531_source_delta_ingestion.json",
+      "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+      "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+    ],
+    "principle": "present exact artifacts are freshly checked; absent backend failures and gate skips are not fabricated.",
+    "reports": [
+      {
+        "artifact": "results/experiment_6124_transition_v531.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_6124_transition_v531.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "receipt_hash": "sha256:e4724fdd6011558476ae4b3e7699a549758b40090167835b3d4b709011cfc49c",
+        "task_id": "exp6124-transition-v531"
+      },
+      {
+        "artifact": "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "receipt_hash": "sha256:86450021ec3437c483933b5c95e5e3d7a216433df0c5bff1399ff553d7cacbb2",
+        "task_id": "exp6126-phase-d-exp6115-transport-forensics"
+      },
+      {
+        "artifact": "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "exit_code": 1,
+        "flag_count": 1,
+        "flags": [
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "loaded": true,
+        "max_severity": 1,
+        "receipt_hash": "sha256:51b8274ddea1049e6c663844b62fa9d53346c5f4bb0c6be71cd074ab14b532eb",
+        "task_id": "exp6127-phase-d-native-chat-transport-canary"
+      },
+      {
+        "artifact": "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "exit_code": 1,
+        "flag_count": 1,
+        "flags": [
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "loaded": true,
+        "max_severity": 1,
+        "receipt_hash": "sha256:dc4ff2d50fb948028a795353adcada140a3448c4df997afc454780ffdcb2264e",
+        "task_id": "exp6128-phase-d-calibration-pool-v2"
+      },
+      {
+        "artifact": "results/experiment_6129_phase_d_held_pool_v2.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_6129_phase_d_held_pool_v2.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "receipt_hash": "sha256:8a246709ef8093c284c2d097b52a0e0c0cb982a3305be73102e1ac74ff202c38",
+        "task_id": "exp6129-phase-d-held-pool-v2"
+      },
+      {
+        "artifact": "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "loaded": true,
+        "max_severity": -1,
+        "receipt_hash": "sha256:63b2b1baa0801af5681771c62905f1e9fdb9ea1ccca0d4b025148d45b46724da",
+        "task_id": "exp6131-phase-d-mid-layer-selector-calibration"
+      }
+    ],
+    "verified_present_declared_deliverable_count": 6,
+    "warning_receipt_task_ids": [
+      "exp6127-phase-d-native-chat-transport-canary",
+      "exp6128-phase-d-calibration-pool-v2"
+    ]
+  },
+  "docs_reconciled": {
+    "openspec_research_reporting_req_6138_present": true,
+    "ops_changelog_deferred_to_conductor_stop_rule": true,
+    "ops_status_deferred_to_conductor_stop_rule": true,
+    "principle": "transition-owned spec updates are recorded while conductor-owned ops reconciliation may be deferred.",
+    "traceability_deferred_to_conductor_stop_rule": true
+  },
+  "duplicate_history_amplification_count": 0,
+  "duration_s": 78.119321,
+  "exact_terminal_classification": {
+    "all_activated_terminal": true,
+    "classification_source": "exact_declared_deliverables_plus_conductor_receipts",
+    "expected_terminal_class_by_task_id": {
+      "exp6124-transition-v531": "complete",
+      "exp6125-v531-source-delta-ingestion": "no-artifact-backend-failure",
+      "exp6126-phase-d-exp6115-transport-forensics": "complete-ready",
+      "exp6127-phase-d-native-chat-transport-canary": "complete-ready",
+      "exp6128-phase-d-calibration-pool-v2": "complete-null",
+      "exp6129-phase-d-held-pool-v2": "conductor-gate-blocked",
+      "exp6130-phase-d-per-layer-surface-v2": "conductor-gate-skipped-missing",
+      "exp6131-phase-d-mid-layer-selector-calibration": "conductor-gate-blocked",
+      "exp6132-phase-d-hidden-state-held-eval": "conductor-gate-skipped-missing"
+    },
+    "nonterminal_task_ids": [],
+    "principle": "a backend failure, scientific null, and structured gate skip remain separate terminal evidence classes.",
+    "task_ids_by_terminal_class": {
+      "complete": [
+        "exp6124-transition-v531"
+      ],
+      "complete-null": [
+        "exp6128-phase-d-calibration-pool-v2"
+      ],
+      "complete-ready": [
+        "exp6126-phase-d-exp6115-transport-forensics",
+        "exp6127-phase-d-native-chat-transport-canary"
+      ],
+      "conductor-gate-blocked": [
+        "exp6129-phase-d-held-pool-v2",
+        "exp6131-phase-d-mid-layer-selector-calibration"
+      ],
+      "conductor-gate-skipped-missing": [
+        "exp6130-phase-d-per-layer-surface-v2",
+        "exp6132-phase-d-hidden-state-held-eval"
+      ],
+      "no-artifact-backend-failure": [
+        "exp6125-v531-source-delta-ingestion"
+      ]
+    },
+    "terminal_class_by_task_id": {
+      "exp6124-transition-v531": "complete",
+      "exp6125-v531-source-delta-ingestion": "no-artifact-backend-failure",
+      "exp6126-phase-d-exp6115-transport-forensics": "complete-ready",
+      "exp6127-phase-d-native-chat-transport-canary": "complete-ready",
+      "exp6128-phase-d-calibration-pool-v2": "complete-null",
+      "exp6129-phase-d-held-pool-v2": "conductor-gate-blocked",
+      "exp6130-phase-d-per-layer-surface-v2": "conductor-gate-skipped-missing",
+      "exp6131-phase-d-mid-layer-selector-calibration": "conductor-gate-blocked",
+      "exp6132-phase-d-hidden-state-held-eval": "conductor-gate-skipped-missing"
+    }
+  },
+  "exp6128_family_bimodality_preserved": {
+    "aggregate_headroom_preserved": 0.211111,
+    "family_accuracy": {
+      "finite_domain_scheduling": 1.0,
+      "logic_grid": 1.0,
+      "typed_finite_choice": 0.170833
+    },
+    "family_modes": {
+      "finite_domain_scheduling": {
+        "all_wrong_rate": 0.0,
+        "oracle_at_k": 1.0,
+        "question_count": 30,
+        "tuned_sc_accuracy": 1.0
+      },
+      "logic_grid": {
+        "all_wrong_rate": 0.0,
+        "oracle_at_k": 1.0,
+        "question_count": 30,
+        "tuned_sc_accuracy": 1.0
+      },
+      "typed_finite_choice": {
+        "all_wrong_rate": 0.3,
+        "oracle_at_k": 0.7,
+        "question_count": 30,
+        "tuned_sc_accuracy": 0.066667
+      }
+    },
+    "honest_verdict": "complete_null: no_calibration_policy_met_conjunctive_gates",
+    "overall_accuracy": 0.723611,
+    "overall_effective_metrics": {
+      "all_wrong_rate": 0.1,
+      "mean_effective_k": 7.988889,
+      "mean_exact_duplicate_rate": 0.001389,
+      "mean_semantic_duplicate_rate": 0.001389,
+      "oracle_at_k": 0.9,
+      "oracle_minus_tuned_sc": 0.211111,
+      "question_count": 90,
+      "tuned_sc_accuracy": 0.688889
+    },
+    "phase_d_calibration_ready_score": 0.0,
+    "preserved": true,
+    "principle": "Exp6128 remains a complete-null despite valid transport and aggregate headroom because family-conditional difficulty is bimodal.",
+    "saturated_family_task_ids": [
+      "finite_domain_scheduling",
+      "logic_grid"
+    ],
+    "status": "complete_null",
+    "task_id": "exp6128-phase-d-calibration-pool-v2",
+    "typed_family_below_floor": true,
+    "typed_finite_choice_floor": 0.25
+  },
+  "experiment": "experiment_6138_transition_v532",
+  "experiment_id": "exp6138-transition-v532",
+  "field_principles": {
+    "activated_task_and_deliverable_matrix": "only the nine activated task identities and declared paths define `.531`.",
+    "adversarial_verifier_receipts": "present exact artifacts are freshly checked; absent backend failures and gate skips are not fabricated.",
+    "docs_reconciled": "transition-owned spec updates are recorded while conductor-owned ops reconciliation may be deferred.",
+    "duplicate_history_amplification_count": "append `.531` at most once and amplify no history.",
+    "duration_s": "use measured `aggregation_from_upstream_artifacts`.",
+    "exact_terminal_classification": "a backend failure, scientific null, and structured gate skip remain separate terminal evidence classes.",
+    "exp6128_family_bimodality_preserved": "Exp6128 remains a complete-null despite valid transport and aggregate headroom because family-conditional difficulty is bimodal.",
+    "field_provenance": "use measured `aggregation_from_upstream_artifacts`.",
+    "honest_verdict": "use a terminal `complete:` or `blocked:` prefix and state whether `.532` was activated.",
+    "inference_substrate": "use measured `aggregation_from_upstream_artifacts`.",
+    "milestone_transition": "only the nine activated task identities and declared paths define `.531`.",
+    "next_range_collision_count": "bare zero collisions authorize exactly Exp6138-Exp6151.",
+    "next_task_range": "bare zero collisions authorize exactly Exp6138-Exp6151.",
+    "no_artifact_backend_failure_receipt": "Exp6125 is authenticated by conductor failure receipts without inventing a result artifact.",
+    "preconditions_checked": "terminal transition state follows exact-path evidence, no-artifact receipts, activation receipts, and collision scans.",
+    "proposal_only_identities_excluded": "Exp6133-Exp6137 were prose allocations, not activated `.531` experiments.",
+    "protected_files_unchanged": "historical artifacts, conductor, exclusions, and unrelated dirty files remain byte-identical except for intentional ledger/result writes.",
+    "reproducibility_checksum": "use measured `aggregation_from_upstream_artifacts`.",
+    "research_complete_append_count": "append `.531` at most once and amplify no history.",
+    "retirement_signals_preserved": "upstream-retired gate skips and retire-if-same-verdict signals remain closed unless a new activated task reopens them.",
+    "staged_roadmap_activation_receipt": "activation is exact when staged YAML exists and already-active when the conductor has consumed it into `research-roadmap.yaml`.",
+    "status": "terminal transition state follows exact-path evidence, no-artifact receipts, activation receipts, and collision scans.",
+    "structured_gate_skip_receipts": "gate-blocked and gate-skipped downstream branches are terminal evidence, not experiment runs.",
+    "test_commands": "use measured `aggregation_from_upstream_artifacts`.",
+    "test_exit_codes": "use measured `aggregation_from_upstream_artifacts`."
+  },
+  "field_provenance": {
+    "activated_task_and_deliverable_matrix": {
+      "principle": "only the nine activated task identities and declared paths define `.531`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "adversarial_verifier_receipts": {
+      "principle": "present exact artifacts are freshly checked; absent backend failures and gate skips are not fabricated.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "docs_reconciled": {
+      "principle": "transition-owned spec updates are recorded while conductor-owned ops reconciliation may be deferred.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "duplicate_history_amplification_count": {
+      "principle": "append `.531` at most once and amplify no history.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "duration_s": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "exact_terminal_classification": {
+      "principle": "a backend failure, scientific null, and structured gate skip remain separate terminal evidence classes.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "exp6128_family_bimodality_preserved": {
+      "principle": "Exp6128 remains a complete-null despite valid transport and aggregate headroom because family-conditional difficulty is bimodal.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "field_provenance": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "use a terminal `complete:` or `blocked:` prefix and state whether `.532` was activated.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "milestone_transition": {
+      "principle": "only the nine activated task identities and declared paths define `.531`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "next_range_collision_count": {
+      "principle": "bare zero collisions authorize exactly Exp6138-Exp6151.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "next_task_range": {
+      "principle": "bare zero collisions authorize exactly Exp6138-Exp6151.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "no_artifact_backend_failure_receipt": {
+      "principle": "Exp6125 is authenticated by conductor failure receipts without inventing a result artifact.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "terminal transition state follows exact-path evidence, no-artifact receipts, activation receipts, and collision scans.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "proposal_only_identities_excluded": {
+      "principle": "Exp6133-Exp6137 were prose allocations, not activated `.531` experiments.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "historical artifacts, conductor, exclusions, and unrelated dirty files remain byte-identical except for intentional ledger/result writes.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "research_complete_append_count": {
+      "principle": "append `.531` at most once and amplify no history.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "retirement_signals_preserved": {
+      "principle": "upstream-retired gate skips and retire-if-same-verdict signals remain closed unless a new activated task reopens them.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "staged_roadmap_activation_receipt": {
+      "principle": "activation is exact when staged YAML exists and already-active when the conductor has consumed it into `research-roadmap.yaml`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "status": {
+      "principle": "terminal transition state follows exact-path evidence, no-artifact receipts, activation receipts, and collision scans.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "structured_gate_skip_receipts": {
+      "principle": "gate-blocked and gate-skipped downstream branches are terminal evidence, not experiment runs.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "test_commands": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "use measured `aggregation_from_upstream_artifacts`.",
+      "sources": [
+        "research-roadmap.yaml",
+        "research-roadmap-next.yaml",
+        "openspec/change-proposals/research-roadmap-vNEXT.md",
+        "research-complete.yaml",
+        "ops/conductor-log.md",
+        "ops/exclusion_manifest.yaml",
+        "ops/known-issues.md",
+        "openspec/capabilities/research-reporting/spec.md",
+        "results/experiment_6124_transition_v531.json",
+        "results/experiment_6125_v531_source_delta_ingestion.json",
+        "results/experiment_6126_phase_d_exp6115_transport_forensics.json",
+        "results/experiment_6127_phase_d_native_chat_transport_canary.json",
+        "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "results/experiment_6129_phase_d_held_pool_v2.json",
+        "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "results/experiment_6132_phase_d_hidden_state_held_eval.json"
+      ]
+    }
+  },
+  "honest_verdict": "complete: archived exactly nine terminal .531 identities into .532; Exp6125 backend failure, Exp6128 family-bimodal null, gate skips, and next_range_collision_count=0 preserved; .532 activation mode=already_active",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inherited_debt_baselines_and_deltas": {
+    "global_spec_gap_after_node_ids": [
+      "crates/carnot-samplers/src/casal.rs::test_casal_sample",
+      "crates/carnot-samplers/src/ebft.rs::test_ebft_loss_contrastive",
+      "tests/python/agentic/test_arc_agi3_lp85_solver.py::test_attempt_solve",
+      "tests/python/agentic/test_arc_gap4_execution_verifier.py::test_apply_rule",
+      "tests/python/carnot/phase3/test_nrgpt_stub.py::test_generate_sequence_converges"
+    ],
+    "global_spec_gap_baseline_node_ids": [
+      "crates/carnot-samplers/src/casal.rs::test_casal_sample",
+      "crates/carnot-samplers/src/ebft.rs::test_ebft_loss_contrastive",
+      "tests/python/agentic/test_arc_agi3_lp85_solver.py::test_attempt_solve",
+      "tests/python/agentic/test_arc_gap4_execution_verifier.py::test_apply_rule",
+      "tests/python/carnot/phase3/test_nrgpt_stub.py::test_generate_sequence_converges"
+    ],
+    "global_spec_gap_delta": 0,
+    "global_spec_new_gap_node_ids": [],
+    "global_suite_failure_after_node_ids": [
+      "tests/python/test_abstention_http_rest_3810.py::test_req_spoe_3810_http_uses_configured_threshold_path_not_default",
+      "tests/python/test_abstention_http_rest_3810.py::test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain",
+      "tests/python/test_arc_hand_verifier_measurability_2026_07_29.py::test_ast_census_still_finds_exactly_the_known_constant_stubs",
+      "tests/python/test_arc_structured_memory_causal_audit.py::test_req_arc_wmte_5901_repository_artifact_is_current",
+      "tests/python/test_experiment_1504_thrml_carnot_simulator_parity_v3.py::test_installed_thrml_runs_energy_and_stochastic_parity"
+    ],
+    "global_suite_failure_baseline_node_ids": [
+      "tests/python/test_abstention_http_rest_3810.py::test_req_spoe_3810_http_uses_configured_threshold_path_not_default",
+      "tests/python/test_abstention_http_rest_3810.py::test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain",
+      "tests/python/test_arc_hand_verifier_measurability_2026_07_29.py::test_ast_census_still_finds_exactly_the_known_constant_stubs",
+      "tests/python/test_arc_structured_memory_causal_audit.py::test_req_arc_wmte_5901_repository_artifact_is_current",
+      "tests/python/test_experiment_1504_thrml_carnot_simulator_parity_v3.py::test_installed_thrml_runs_energy_and_stochastic_parity"
+    ],
+    "global_suite_failure_delta": 0,
+    "global_suite_new_failure_node_ids": [],
+    "non_amplification_gate_passed": true,
+    "principle": "inherited debt is measured by delta and cannot be amplified.",
+    "root_clutter_after_paths": [],
+    "root_clutter_baseline_paths": [],
+    "root_clutter_delta": 0,
+    "root_clutter_new_paths": []
+  },
+  "milestone": "2026.08.532",
+  "milestone_transition": {
+    "destination_milestone": "2026.08.532",
+    "source_milestone": "2026.08.531",
+    "task_identity_tuple": [
+      "milestone",
+      "task_id",
+      "declared_deliverable"
+    ]
+  },
+  "next_range_collision_count": 0,
+  "next_task_range": {
+    "active_roadmap_deliverables": [
+      "results/experiment_6138_transition_v532.json",
+      "results/experiment_6139_v532_source_delta_ingestion.json",
+      "results/experiment_6140_phase_d_exp6128_option_psychometrics.json",
+      "results/experiment_6141_phase_d_empirical_item_bank.json"
+    ],
+    "active_roadmap_task_count": 4,
+    "active_roadmap_task_ids": [
+      "exp6138-transition-v532",
+      "exp6139-v532-source-delta-ingestion",
+      "exp6140-phase-d-exp6128-option-psychometrics",
+      "exp6141-phase-d-empirical-item-bank"
+    ],
+    "end": "exp6151",
+    "proposal_reservation_source": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "reserved_count": 14,
+    "start": "exp6138"
+  },
+  "no_artifact_backend_failure_receipt": {
+    "attempt_count": 3,
+    "backend": "gemini-3.1-pro-preview",
+    "backend_failure_authenticated": true,
+    "declared_artifact_present": false,
+    "declared_deliverable": "results/experiment_6125_v531_source_delta_ingestion.json",
+    "failure_kind": "gemini_model_metadata_unavailable",
+    "latest_line": "| 2026-08-05 03:06 UTC | Dated evidence refresh after the V531 planner mark | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |",
+    "latest_status": "FAIL",
+    "no_artifact_invented": true,
+    "principle": "Exp6125 is authenticated by conductor failure receipts without inventing a result artifact.",
+    "task_id": "exp6125-v531-source-delta-ingestion",
+    "terminal_class": "no-artifact-backend-failure"
+  },
+  "preconditions_checked": {
+    "active_roadmap": {
+      "deliverables": [
+        "results/experiment_6138_transition_v532.json",
+        "results/experiment_6139_v532_source_delta_ingestion.json",
+        "results/experiment_6140_phase_d_exp6128_option_psychometrics.json",
+        "results/experiment_6141_phase_d_empirical_item_bank.json"
+      ],
+      "error": null,
+      "loadable": true,
+      "milestone": "2026.08.532",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "present": true,
+      "sha256": "sha256:21a0ebb7051ee6d1eea653be6ea1f3d75bfe316bf46705b69d13eee95e2c2b6b",
+      "task_ids": [
+        "exp6138-transition-v532",
+        "exp6139-v532-source-delta-ingestion",
+        "exp6140-phase-d-exp6128-option-psychometrics",
+        "exp6141-phase-d-empirical-item-bank"
+      ]
+    },
+    "adversarial_verifier_available": true,
+    "atomic_output": {
+      "atomic_probe_write_ok": true,
+      "declared_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6138_transition_v532.json",
+      "ok": true
+    },
+    "conductor_log": {
+      "by_task": {
+        "exp6124-transition-v531": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-08-05 02:59 UTC | Exact terminal-boundary handoff from .530 into .53 | OK | cache hit: 86 passed, 1 warning in 15.74s |",
+          "latest_status": "OK"
+        },
+        "exp6125-v531-source-delta-ingestion": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-08-05 03:06 UTC | Dated evidence refresh after the V531 planner mark | FAIL | Codex CLI error: Model metadata for `gemini-3.1-pro-preview` not found. Defau |",
+          "latest_status": "FAIL"
+        },
+        "exp6126-phase-d-exp6115-transport-forensics": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-05 03:25 UTC | Exp6115 model-transport forensics and frozen v2 sp | OK | 87 passed, 1 warning in 17.18s |",
+          "latest_status": "OK"
+        },
+        "exp6127-phase-d-native-chat-transport-canary": {
+          "attempt_count": 1,
+          "latest_line": "| 2026-08-05 04:06 UTC | Gated on Exp6126 justification: model-native Phase | OK | cache hit: 87 passed, 1 warning in 28.15s |",
+          "latest_status": "OK"
+        },
+        "exp6128-phase-d-calibration-pool-v2": {
+          "attempt_count": 4,
+          "latest_line": "| 2026-08-05 05:27 UTC | Gated on Exp6128 readiness: sealed held Phase-D po | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_ |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp6129-phase-d-held-pool-v2": {
+          "attempt_count": 6,
+          "latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp6130-phase-d-per-layer-surface-v2": {
+          "attempt_count": 6,
+          "latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp6131-phase-d-mid-layer-selector-calibration": {
+          "attempt_count": 3,
+          "latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |",
+          "latest_status": "GATE_BLOCK"
+        },
+        "exp6132-phase-d-hidden-state-held-eval": {
+          "attempt_count": 2,
+          "latest_line": "| 2026-08-05 06:48 UTC | Gated on Exp6131 readiness: frozen held mid-layer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6131-phase-d-mid-layer-selector-calibrati |",
+          "latest_status": "GATE_BLOCK"
+        }
+      },
+      "destination_activated_task_count_claim": 4,
+      "destination_activation_line": "| 2026-08-05 06:48 UTC | Milestone 2026.08.532 activated | OK | 4 tasks queued |",
+      "destination_activation_status": "OK",
+      "destination_plan_line": "| 2026-08-05 06:46 UTC | Plan milestone 2026.08.532 | OK | 4 tasks proposed |",
+      "destination_plan_status": "OK",
+      "path": "ops/conductor-log.md",
+      "present": true,
+      "sha256": "sha256:75a9a30bd64aabe7e3dfde5125c35ae31e907c96a211a012ff8012698baeba69",
+      "source_activated_task_count_claim": 9,
+      "source_activation_line": "| 2026-08-05 01:13 UTC | Milestone 2026.08.531 activated | OK | 9 tasks queued |",
+      "source_activation_status": "OK",
+      "source_plan_line": "| 2026-08-05 01:10 UTC | Plan milestone 2026.08.531 | OK | 9 tasks proposed |",
+      "source_plan_status": "OK"
+    },
+    "declared_present_deliverable_hashes": {
+      "exp6124-transition-v531": "sha256:fec63839d90aef5f37d267b430cc64d0ee601358ffba9ee508c11cd31da924e5",
+      "exp6126-phase-d-exp6115-transport-forensics": "sha256:1b134d93952fbed283d5e6b2bf9bcafa0ce9bb3d58d879a3aaf3e5fdafb6de4b",
+      "exp6127-phase-d-native-chat-transport-canary": "sha256:c8bba4a6aa69efba964c24f1c7bed6bab012a556e3667b14c58eb12bbc15491a",
+      "exp6128-phase-d-calibration-pool-v2": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf",
+      "exp6129-phase-d-held-pool-v2": "sha256:752ef483b2e49558490bfabb493a2856de0657305abb5ea97bf78fe8f03add39",
+      "exp6131-phase-d-mid-layer-selector-calibration": "sha256:b9f465e8dba3e6e6908ba0d6b95c1da5f9d63ab912175d11b7088b5c1e0bd87d"
+    },
+    "dirty_worktree": {
+      "command_exit_code": 0,
+      "dirty_paths": [
+        "openspec/capabilities/research-reporting/spec.md",
+        "openspec/papers/paper-v6/section-6-limitations.md",
+        "ops/conductor-heartbeat.json",
+        "ops/conductor-log.md",
+        "ops/conductor-state.json",
+        "python/carnot/experiment_6138_transition_v532.py",
+        "results/checkpoints/experiment_631/checkpoint.json",
+        "results/experiment_1035_dualgpu_rocm_v3.json",
+        "results/experiment_1038_milestone_retro_80.json",
+        "results/experiment_1081_fpga_scale_benchmark.json",
+        "results/experiment_1089_milestone_retro_84.json",
+        "results/experiment_1103_milestone_retro_85.json",
+        "results/experiment_1717_findings_audit.json",
+        "results/experiment_1747_ebt_mode_collapse_check.json",
+        "results/experiment_1822_rtl_synth.log",
+        "results/experiment_1845_hiled.json",
+        "results/experiment_1911_phase4_canonical_decision.json",
+        "results/experiment_1970_domino_fast_constraints.json",
+        "results/experiment_2031.json",
+        "results/experiment_2083_kan4cbc.json",
+        "results/experiment_2090_crane_humaneval.json",
+        "results/experiment_2093_retro.json",
+        "results/experiment_2097_eqm_eval.json",
+        "results/experiment_2427_kv260_yosys_v4.json",
+        "results/experiment_2510_ensemble_v7.json",
+        "results/experiment_2516_capstone_v242.json",
+        "results/experiment_2521_ensemble_v7.json",
+        "results/experiment_2538_kv260_sd_flash.json",
+        "results/experiment_2721_paper_v6_theory_update_v2.json",
+        "results/experiment_2754_empirical_delta_audit.json",
+        "results/experiment_2758_weak_strong_policy_fix_v2.json",
+        "results/experiment_2824_cross_corpus_verifier_matrix.json",
+        "results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+        "results/experiment_3350_kv260_latency_benchmark.json",
+        "results/experiment_3351_gatemate_latency_benchmark.json",
+        "results/experiment_3386_fr11_nonforgetting.json",
+        "results/experiment_3394_kona_global_opt.json",
+        "results/experiment_3395_energy_based_replay.json",
+        "results/experiment_339_session_startup.json",
+        "results/experiment_3408_kona_global_opt.json",
+        "results/experiment_3420_kv260_terminal_latency_transcript_v1.json",
+        "results/experiment_3420_kv260_terminal_transcript.log",
+        "results/experiment_3559_g_gate_status_synthesis_v327.json",
+        "results/experiment_3571_capstone_v328.json",
+        "results/experiment_3574_verifier_factual_hallucination_error_detection.json",
+        "results/experiment_3576_verifier_cross_domain_synthesis.json",
+        "results/experiment_3581_g_gate_status_synthesis_v329.json",
+        "results/experiment_3582_capstone_v329.json",
+        "results/experiment_3598_diagnose_330_cascade_audit.json",
+        "results/experiment_3734_fix_harness_and_bounded_train_chunk1.json",
+        "results/experiment_3843.json",
+        "results/experiment_542_fover_expansion.json",
+        "results/experiment_5794_hardware_terminal_action_receipt.json",
+        "results/experiment_5861_attached_board_state_receipts.json",
+        "results/experiment_696_icalm_abstention.json",
+        "results/experiment_833_constraint_delta_root_cause.json",
+        "results/experiment_885_spectral_attention_probe.json",
+        "results/experiment_911_drift_probe_tier0i.json",
+        "results/pytest_memory_20260805T081051Z.log",
+        "results/pytest_memory_20260805T093432Z.log",
+        "scripts/research_conductor.py",
+        "tests/python/test_experiment_6138_transition_v532.py"
+      ],
+      "git_present": true
+    },
+    "exclusion_manifest": {
+      "error": null,
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "present": true,
+      "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+    },
+    "failed_preconditions": [],
+    "known_issues": {
+      "path": "ops/known-issues.md",
+      "present": true,
+      "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+    },
+    "protected_file_hashes_before": {
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:e3d8019da8d707b6e41c39a8f1be4d7345c087f2e63f19fcd614fadf93f00b0a",
+      "ops/changelog.md": "sha256:d5260651e127081cd6a679a0667305721b1cd3771b2f3d3faf264f6890b47f39",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "ops/known-issues.md": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "results/experiment_6124_transition_v531.json": "sha256:fec63839d90aef5f37d267b430cc64d0ee601358ffba9ee508c11cd31da924e5",
+      "results/experiment_6125_v531_source_delta_ingestion.json": null,
+      "results/experiment_6126_phase_d_exp6115_transport_forensics.json": "sha256:1b134d93952fbed283d5e6b2bf9bcafa0ce9bb3d58d879a3aaf3e5fdafb6de4b",
+      "results/experiment_6127_phase_d_native_chat_transport_canary.json": "sha256:c8bba4a6aa69efba964c24f1c7bed6bab012a556e3667b14c58eb12bbc15491a",
+      "results/experiment_6128_phase_d_calibration_pool_v2.json": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf",
+      "results/experiment_6129_phase_d_held_pool_v2.json": "sha256:752ef483b2e49558490bfabb493a2856de0657305abb5ea97bf78fe8f03add39",
+      "results/experiment_6130_phase_d_per_layer_surface_v2.json": null,
+      "results/experiment_6131_phase_d_mid_layer_selector_calibration.json": "sha256:b9f465e8dba3e6e6908ba0d6b95c1da5f9d63ab912175d11b7088b5c1e0bd87d",
+      "results/experiment_6132_phase_d_hidden_state_held_eval.json": null,
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "range_collision_scan": {
+      "allowed_references": [
+        {
+          "kind": "transition_owned_reference",
+          "numbers": [
+            6138,
+            6151
+          ],
+          "path": "openspec/capabilities/research-reporting/spec.md"
+        },
+        {
+          "kind": "allowed_staged_plan_reference",
+          "numbers": [
+            6138,
+            6139,
+            6140,
+            6141,
+            6142,
+            6143,
+            6144,
+            6145,
+            6146,
+            6147,
+            6148,
+            6149,
+            6150,
+            6151
+          ],
+          "path": "openspec/change-proposals/research-roadmap-vNEXT.md"
+        },
+        {
+          "kind": "transition_owned_reference",
+          "numbers": [
+            6138,
+            6151
+          ],
+          "path": "python/carnot/experiment_6138_transition_v532.py"
+        },
+        {
+          "kind": "allowed_staged_plan_reference",
+          "numbers": [
+            6138,
+            6139,
+            6140,
+            6141,
+            6142,
+            6150,
+            6151
+          ],
+          "path": "research-roadmap.yaml"
+        },
+        {
+          "kind": "transition_owned_reference",
+          "numbers": [
+            6138,
+            6139,
+            6140,
+            6141,
+            6142,
+            6143,
+            6144,
+            6145,
+            6146,
+            6147,
+            6148,
+            6149,
+            6150,
+            6151
+          ],
+          "path": "tests/python/test_experiment_6138_transition_v532.py"
+        }
+      ],
+      "collision_count": 0,
+      "collisions": [],
+      "principle": "bare zero collisions authorize exactly Exp6138-Exp6151.",
+      "range": {
+        "end": 6151,
+        "start": 6138
+      }
+    },
+    "research_complete": {
+      "error": null,
+      "loadable": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "present": true,
+      "sha256": "sha256:974622b5265a4408079c4fdca8afcf970eaef00fc97106a3387cfe55dd3dbde2"
+    },
+    "roadmap_next": {
+      "absence_is_failure_when_active_roadmap_is_v532": false,
+      "error": "missing",
+      "loadable": false,
+      "milestone": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null
+    },
+    "root_clutter_inventory": [],
+    "source_hashes": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:d29311ae2d34417995b65deab3fedb66a3077c6b1d8841e8b7f56427ba14bf7c"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "openspec/capabilities/research-reporting/spec.md": {
+        "present": true,
+        "sha256": "sha256:09d6d2656eba3d0d1d7f4b725c3acf5d967f5262eb4e4b5c46bdf8a2076d33ce"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:e3d8019da8d707b6e41c39a8f1be4d7345c087f2e63f19fcd614fadf93f00b0a"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:d5260651e127081cd6a679a0667305721b1cd3771b2f3d3faf264f6890b47f39"
+      },
+      "ops/conductor-log.md": {
+        "present": true,
+        "sha256": "sha256:75a9a30bd64aabe7e3dfde5125c35ae31e907c96a211a012ff8012698baeba69"
+      },
+      "ops/e2e-test-plan.md": {
+        "present": true,
+        "sha256": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "research-complete.yaml": {
+        "present": true,
+        "sha256": "sha256:974622b5265a4408079c4fdca8afcf970eaef00fc97106a3387cfe55dd3dbde2"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:21a0ebb7051ee6d1eea653be6ea1f3d75bfe316bf46705b69d13eee95e2c2b6b"
+      },
+      "results/experiment_6124_transition_v531.json": {
+        "present": true,
+        "sha256": "sha256:fec63839d90aef5f37d267b430cc64d0ee601358ffba9ee508c11cd31da924e5"
+      },
+      "results/experiment_6125_v531_source_delta_ingestion.json": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_6126_phase_d_exp6115_transport_forensics.json": {
+        "present": true,
+        "sha256": "sha256:1b134d93952fbed283d5e6b2bf9bcafa0ce9bb3d58d879a3aaf3e5fdafb6de4b"
+      },
+      "results/experiment_6127_phase_d_native_chat_transport_canary.json": {
+        "present": true,
+        "sha256": "sha256:c8bba4a6aa69efba964c24f1c7bed6bab012a556e3667b14c58eb12bbc15491a"
+      },
+      "results/experiment_6128_phase_d_calibration_pool_v2.json": {
+        "present": true,
+        "sha256": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf"
+      },
+      "results/experiment_6129_phase_d_held_pool_v2.json": {
+        "present": true,
+        "sha256": "sha256:752ef483b2e49558490bfabb493a2856de0657305abb5ea97bf78fe8f03add39"
+      },
+      "results/experiment_6130_phase_d_per_layer_surface_v2.json": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_6131_phase_d_mid_layer_selector_calibration.json": {
+        "present": true,
+        "sha256": "sha256:b9f465e8dba3e6e6908ba0d6b95c1da5f9d63ab912175d11b7088b5c1e0bd87d"
+      },
+      "results/experiment_6132_phase_d_hidden_state_held_eval.json": {
+        "present": false,
+        "sha256": null
+      },
+      "scripts/adversarial_verify.py": {
+        "present": true,
+        "sha256": "sha256:49b348aed50731ff2c2871554e25479596aae9dd792f1ea47ad5ab4e4b0db5ab"
+      },
+      "scripts/evidence_index_collision_preflight.py": {
+        "present": true,
+        "sha256": "sha256:7a0e80cba4ceee319bdc81af77b9d32422143cb816e6bdab9ebf9d2ec95b407b"
+      }
+    },
+    "vnext_proposal": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "sha256": "sha256:e3d8019da8d707b6e41c39a8f1be4d7345c087f2e63f19fcd614fadf93f00b0a"
+    }
+  },
+  "proposal_only_identities_excluded": {
+    "activated_matrix_task_ids": [
+      "exp6124-transition-v531",
+      "exp6125-v531-source-delta-ingestion",
+      "exp6126-phase-d-exp6115-transport-forensics",
+      "exp6127-phase-d-native-chat-transport-canary",
+      "exp6128-phase-d-calibration-pool-v2",
+      "exp6129-phase-d-held-pool-v2",
+      "exp6130-phase-d-per-layer-surface-v2",
+      "exp6131-phase-d-mid-layer-selector-calibration",
+      "exp6132-phase-d-hidden-state-held-eval"
+    ],
+    "all_excluded_from_activated_matrix": true,
+    "excluded_task_ids": [
+      "exp6133",
+      "exp6134",
+      "exp6135",
+      "exp6136",
+      "exp6137"
+    ],
+    "principle": "Exp6133-Exp6137 were prose allocations, not activated `.531` experiments.",
+    "proposal_only_not_missing_experiment_count": 5,
+    "proposal_only_task_ids": [
+      "exp6133",
+      "exp6134",
+      "exp6135",
+      "exp6136",
+      "exp6137"
+    ]
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256_after": "sha256:e3d8019da8d707b6e41c39a8f1be4d7345c087f2e63f19fcd614fadf93f00b0a",
+        "sha256_before": "sha256:e3d8019da8d707b6e41c39a8f1be4d7345c087f2e63f19fcd614fadf93f00b0a",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256_after": "sha256:d5260651e127081cd6a679a0667305721b1cd3771b2f3d3faf264f6890b47f39",
+        "sha256_before": "sha256:d5260651e127081cd6a679a0667305721b1cd3771b2f3d3faf264f6890b47f39",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256_after": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "sha256_before": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256_after": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
+        "sha256_before": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256_after": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "sha256_before": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "unchanged": true
+      },
+      "results/experiment_6124_transition_v531.json": {
+        "present": true,
+        "sha256_after": "sha256:fec63839d90aef5f37d267b430cc64d0ee601358ffba9ee508c11cd31da924e5",
+        "sha256_before": "sha256:fec63839d90aef5f37d267b430cc64d0ee601358ffba9ee508c11cd31da924e5",
+        "unchanged": true
+      },
+      "results/experiment_6125_v531_source_delta_ingestion.json": {
+        "present": false,
+        "sha256_after": null,
+        "sha256_before": null,
+        "unchanged": true
+      },
+      "results/experiment_6126_phase_d_exp6115_transport_forensics.json": {
+        "present": true,
+        "sha256_after": "sha256:1b134d93952fbed283d5e6b2bf9bcafa0ce9bb3d58d879a3aaf3e5fdafb6de4b",
+        "sha256_before": "sha256:1b134d93952fbed283d5e6b2bf9bcafa0ce9bb3d58d879a3aaf3e5fdafb6de4b",
+        "unchanged": true
+      },
+      "results/experiment_6127_phase_d_native_chat_transport_canary.json": {
+        "present": true,
+        "sha256_after": "sha256:c8bba4a6aa69efba964c24f1c7bed6bab012a556e3667b14c58eb12bbc15491a",
+        "sha256_before": "sha256:c8bba4a6aa69efba964c24f1c7bed6bab012a556e3667b14c58eb12bbc15491a",
+        "unchanged": true
+      },
+      "results/experiment_6128_phase_d_calibration_pool_v2.json": {
+        "present": true,
+        "sha256_after": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf",
+        "sha256_before": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf",
+        "unchanged": true
+      },
+      "results/experiment_6129_phase_d_held_pool_v2.json": {
+        "present": true,
+        "sha256_after": "sha256:752ef483b2e49558490bfabb493a2856de0657305abb5ea97bf78fe8f03add39",
+        "sha256_before": "sha256:752ef483b2e49558490bfabb493a2856de0657305abb5ea97bf78fe8f03add39",
+        "unchanged": true
+      },
+      "results/experiment_6130_phase_d_per_layer_surface_v2.json": {
+        "present": false,
+        "sha256_after": null,
+        "sha256_before": null,
+        "unchanged": true
+      },
+      "results/experiment_6131_phase_d_mid_layer_selector_calibration.json": {
+        "present": true,
+        "sha256_after": "sha256:b9f465e8dba3e6e6908ba0d6b95c1da5f9d63ab912175d11b7088b5c1e0bd87d",
+        "sha256_before": "sha256:b9f465e8dba3e6e6908ba0d6b95c1da5f9d63ab912175d11b7088b5c1e0bd87d",
+        "unchanged": true
+      },
+      "results/experiment_6132_phase_d_hidden_state_held_eval.json": {
+        "present": false,
+        "sha256_after": null,
+        "sha256_before": null,
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256_after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "sha256_before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    },
+    "principle": "historical artifacts, conductor, exclusions, and unrelated dirty files remain byte-identical except for intentional ledger/result writes."
+  },
+  "random_seed": 6138,
+  "reproducibility_checksum": "sha256:ffe00a3c2391ef50d8bb1f0234ba658072150ab07d946f910d711fb9d9c286e9",
+  "research_complete_append_count": 0,
+  "research_complete_append_receipt": {
+    "after_canonical_signature_count": 1,
+    "after_duplicate_history_count": 1538,
+    "after_milestone_block_count": 1,
+    "after_sha256": "sha256:974622b5265a4408079c4fdca8afcf970eaef00fc97106a3387cfe55dd3dbde2",
+    "append_count": 0,
+    "appended": false,
+    "before_canonical_signature_count": 1,
+    "before_duplicate_history_count": 1538,
+    "before_milestone_block_count": 1,
+    "before_sha256": "sha256:974622b5265a4408079c4fdca8afcf970eaef00fc97106a3387cfe55dd3dbde2",
+    "duplicate_history_amplification_count": 0,
+    "reason": "exact_milestone_block_present"
+  },
+  "result_path": "results/experiment_6138_transition_v532.json",
+  "retirement_signals_preserved": {
+    "all_retirement_signals_preserved": true,
+    "principle": "upstream-retired gate skips and retire-if-same-verdict signals remain closed unless a new activated task reopens them.",
+    "prior_failure_retire_if_same_verdict_receipts": [
+      {
+        "experiment_id": "exp6124-transition-v531",
+        "retire_if_same_verdict": true,
+        "task_id": "exp6138-transition-v532"
+      },
+      {
+        "experiment_id": "exp6125-v531-source-delta-ingestion",
+        "retire_if_same_verdict": true,
+        "task_id": "exp6139-v532-source-delta-ingestion"
+      },
+      {
+        "experiment_id": "exp6128-phase-d-calibration-pool-v2",
+        "retire_if_same_verdict": true,
+        "task_id": "exp6140-phase-d-exp6128-option-psychometrics"
+      },
+      {
+        "experiment_id": "exp6128-phase-d-calibration-pool-v2",
+        "retire_if_same_verdict": true,
+        "task_id": "exp6141-phase-d-empirical-item-bank"
+      }
+    ],
+    "reopened_retired_gate_skip_task_ids": [],
+    "retired_gate_skip_task_ids": [
+      "exp6129-phase-d-held-pool-v2",
+      "exp6132-phase-d-hidden-state-held-eval"
+    ],
+    "transition_reopened_retired_downstream_task_count": 0,
+    "upstream_retired_gate_skip_mentions": {
+      "exp6129-phase-d-held-pool-v2": true,
+      "exp6130-phase-d-per-layer-surface-v2": false,
+      "exp6131-phase-d-mid-layer-selector-calibration": false,
+      "exp6132-phase-d-hidden-state-held-eval": true
+    }
+  },
+  "run_date": "20260805",
+  "schema": "carnot.experiment_6138.transition_v532.v1",
+  "spec_refs": [
+    "REQ-REPORT-6138",
+    "SCENARIO-REPORT-6138-ACTIVATED-MATRIX",
+    "SCENARIO-REPORT-6138-TERMINAL-CLASSES",
+    "SCENARIO-REPORT-6138-DUPLICATE-ACTIVATION",
+    "SCENARIO-REPORT-6138-RANGE-COLLISION",
+    "SCENARIO-REPORT-6138-SCHEMA"
+  ],
+  "staged_roadmap_activation_receipt": {
+    "activated": true,
+    "active_after_sha256": "sha256:21a0ebb7051ee6d1eea653be6ea1f3d75bfe316bf46705b69d13eee95e2c2b6b",
+    "active_before_sha256": "sha256:21a0ebb7051ee6d1eea653be6ea1f3d75bfe316bf46705b69d13eee95e2c2b6b",
+    "active_milestone_after": "2026.08.532",
+    "active_roadmap_task_count": 4,
+    "copied_exactly": false,
+    "mode": "already_active",
+    "principle": "activation is exact when staged YAML exists and already-active when the conductor has consumed it into `research-roadmap.yaml`.",
+    "staged_loadable": false,
+    "staged_present": false
+  },
+  "status": "complete_with_terminal_receipts",
+  "structured_gate_skip_receipts": {
+    "by_task": {
+      "exp6129-phase-d-held-pool-v2": {
+        "conductor_latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6129 headroom: authenticated matching- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6129-phase-d-held-pool-v2) |",
+        "conductor_latest_status": "GATE_BLOCK",
+        "declared_artifact_present": true,
+        "declared_deliverable": "results/experiment_6129_phase_d_held_pool_v2.json",
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6128-phase-d-calibration-pool-v2.phase_d_calibration_ready_score (actual=0.0 == expected=1.0)",
+        "gates_evaluated": [
+          {
+            "actual": 0.0,
+            "artifact_field": "phase_d_calibration_ready_score",
+            "expected": 1.0,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=0.0 == expected=1.0",
+            "upstream": "exp6128-phase-d-calibration-pool-v2"
+          }
+        ],
+        "reported_as_run": false,
+        "structured_gate_artifact_present": true,
+        "task_id": "exp6129-phase-d-held-pool-v2",
+        "terminal_class": "conductor-gate-blocked",
+        "verified_by_adversarial_verify": true
+      },
+      "exp6130-phase-d-per-layer-surface-v2": {
+        "conductor_latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |",
+        "conductor_latest_status": "GATE_BLOCK",
+        "declared_artifact_present": false,
+        "declared_deliverable": "results/experiment_6130_phase_d_per_layer_surface_v2.json",
+        "gate_check_summary": "",
+        "gates_evaluated": [],
+        "reported_as_run": false,
+        "structured_gate_artifact_present": false,
+        "task_id": "exp6130-phase-d-per-layer-surface-v2",
+        "terminal_class": "conductor-gate-skipped-missing",
+        "verified_by_adversarial_verify": false
+      },
+      "exp6131-phase-d-mid-layer-selector-calibration": {
+        "conductor_latest_line": "| 2026-08-05 05:33 UTC | Gated on Exp6130 surface: calibration-only mid-lay | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_l |",
+        "conductor_latest_status": "GATE_BLOCK",
+        "declared_artifact_present": true,
+        "declared_deliverable": "results/experiment_6131_phase_d_mid_layer_selector_calibration.json",
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6130-phase-d-per-layer-surface-v2.per_layer_surface_ready_score (upstream artifact not found for task id 'exp6130-phase-d-per-layer-surface-v2')",
+        "gates_evaluated": [
+          {
+            "actual": null,
+            "artifact_field": "per_layer_surface_ready_score",
+            "expected": 1.0,
+            "op": "==",
+            "passed": false,
+            "reason": "upstream artifact not found for task id 'exp6130-phase-d-per-layer-surface-v2'",
+            "upstream": "exp6130-phase-d-per-layer-surface-v2"
+          }
+        ],
+        "reported_as_run": false,
+        "structured_gate_artifact_present": true,
+        "task_id": "exp6131-phase-d-mid-layer-selector-calibration",
+        "terminal_class": "conductor-gate-blocked",
+        "verified_by_adversarial_verify": true
+      },
+      "exp6132-phase-d-hidden-state-held-eval": {
+        "conductor_latest_line": "| 2026-08-05 06:48 UTC | Gated on Exp6131 readiness: frozen held mid-layer | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6131-phase-d-mid-layer-selector-calibrati |",
+        "conductor_latest_status": "GATE_BLOCK",
+        "declared_artifact_present": false,
+        "declared_deliverable": "results/experiment_6132_phase_d_hidden_state_held_eval.json",
+        "gate_check_summary": "",
+        "gates_evaluated": [],
+        "reported_as_run": false,
+        "structured_gate_artifact_present": false,
+        "task_id": "exp6132-phase-d-hidden-state-held-eval",
+        "terminal_class": "conductor-gate-skipped-missing",
+        "verified_by_adversarial_verify": false
+      }
+    },
+    "missing_gate_skips_without_result_files": [
+      "exp6130-phase-d-per-layer-surface-v2",
+      "exp6132-phase-d-hidden-state-held-eval"
+    ],
+    "principle": "gate-blocked and gate-skipped downstream branches are terminal evidence, not experiment runs.",
+    "skipped_branch_reported_as_run_count": 0,
+    "structured_gate_skip_task_ids": [
+      "exp6129-phase-d-held-pool-v2",
+      "exp6130-phase-d-per-layer-surface-v2",
+      "exp6131-phase-d-mid-layer-selector-calibration",
+      "exp6132-phase-d-hidden-state-held-eval"
+    ]
+  },
+  "task_owned_gate_receipts": {
+    "all_required_gate_kinds_present": true,
+    "missing_required_gate_kinds": [],
+    "observed_gate_kinds": [
+      "activation",
+      "adversarial_verifier",
+      "applicable_e2e",
+      "coverage",
+      "duplicate_history",
+      "exact_path",
+      "exclusion_manifest",
+      "no_artifact_failure",
+      "no_new_root_clutter",
+      "protected_file",
+      "range_collision",
+      "structured_gate_skip",
+      "unit",
+      "yaml_parse"
+    ],
+    "principle": "use measured `aggregation_from_upstream_artifacts`.",
+    "receipts": [
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_6138_transition_v532.py -q --no-cov -n 0",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "unit"
+      },
+      {
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6138_transition_v532.py -m pytest tests/python/test_experiment_6138_transition_v532.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6138_transition_v532.py --fail-under=100",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "coverage"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [yaml_parse]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "yaml_parse"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [exact_path]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "exact_path"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [no_artifact_failure]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "no_artifact_failure"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [structured_gate_skip]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "structured_gate_skip"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [duplicate_history]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "duplicate_history"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [activation]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "activation"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [exclusion_manifest]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "exclusion_manifest"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [range_collision]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "range_collision"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [adversarial_verifier_no_critical_flags]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "adversarial_verifier"
+      },
+      {
+        "command": "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [protected_file]",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "protected_file"
+      },
+      {
+        "command": "ops/e2e-test-plan.md reviewed: transition is aggregation_from_upstream_artifacts; no EBM runtime E2E applies",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "applicable_e2e"
+      },
+      {
+        "command": "find . -maxdepth 1 -type f -name '*.py' -print | sort (empty before/after)",
+        "exit_code": 0,
+        "ownership_class": "task_owned",
+        "suite_kind": "no_new_root_clutter"
+      }
+    ],
+    "required_gate_kinds": [
+      "unit",
+      "coverage",
+      "yaml_parse",
+      "exact_path",
+      "no_artifact_failure",
+      "structured_gate_skip",
+      "duplicate_history",
+      "activation",
+      "exclusion_manifest",
+      "range_collision",
+      "adversarial_verifier",
+      "protected_file",
+      "applicable_e2e",
+      "no_new_root_clutter"
+    ],
+    "task_owned_failures": []
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6138_transition_v532.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6138_transition_v532.py -m pytest tests/python/test_experiment_6138_transition_v532.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6138_transition_v532.py --fail-under=100",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [yaml_parse]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [exact_path]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [no_artifact_failure]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [structured_gate_skip]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [duplicate_history]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [activation]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [exclusion_manifest]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [range_collision]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [adversarial_verifier_no_critical_flags]",
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [protected_file]",
+    "ops/e2e-test-plan.md reviewed: transition is aggregation_from_upstream_artifacts; no EBM runtime E2E applies",
+    "find . -maxdepth 1 -type f -name '*.py' -print | sort (empty before/after)",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    "find . -maxdepth 1 -type f -name '*.py' -print | sort"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6138_transition_v532.py -m pytest tests/python/test_experiment_6138_transition_v532.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6138_transition_v532.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6138_transition_v532.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    "find . -maxdepth 1 -type f -name '*.py' -print | sort": 0,
+    "find . -maxdepth 1 -type f -name '*.py' -print | sort (empty before/after)": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [activation]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [adversarial_verifier_no_critical_flags]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [duplicate_history]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [exact_path]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [exclusion_manifest]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [no_artifact_failure]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [protected_file]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [range_collision]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [structured_gate_skip]": 0,
+    "inline Exp6138 real-repo dry-run: build_report(...), failed_preconditions=[], next_range_collision_count=0, append_count=0 [yaml_parse]": 0,
+    "ops/e2e-test-plan.md reviewed: transition is aggregation_from_upstream_artifacts; no EBM runtime E2E applies": 0
+  }
+}

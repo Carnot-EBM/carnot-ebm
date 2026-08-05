@@ -187,7 +187,15 @@ def _restore_dropped_determinations() -> None:
     import json as _json
 
     try:
-        rc, out, _ = run_cmd(["git", "diff", "--name-only", "--diff-filter=M", "--", "results"])
+        # `git diff HEAD`, NOT `git diff`. MEASURED 2026-08-05: plain `git diff` compares the
+        # worktree to the INDEX, so it is blind to damage that has already been staged -- and
+        # `git add -A` on the very next line is about to stage everything anyway. On the tree that
+        # exposed this, plain `git diff` saw 20 files while `git diff HEAD` saw 56, and all seven
+        # determination-carrying artifacts were in the 36 it missed (status `M `, staged). The
+        # first version of this helper therefore restored nothing on the case it was written for.
+        rc, out, _ = run_cmd(
+            ["git", "diff", "HEAD", "--name-only", "--diff-filter=M", "--", "results"]
+        )
         if rc != 0 or not out.strip():
             return
         paths = [ln.strip() for ln in out.splitlines() if ln.strip().endswith(".json")]
