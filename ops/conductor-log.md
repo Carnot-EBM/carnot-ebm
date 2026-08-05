@@ -15371,3 +15371,4 @@ No output thi |
 | 2026-08-05 20:02 UTC | Exact chronological constraint-event stream with h | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:        "exact_ |
 | 2026-08-05 20:09 UTC | Exact chronological constraint-event stream with h | OK | cache hit: 87 passed, 1 warning in 13.84s |
 | 2026-08-05 20:48 UTC | Gated on Exp6145 readiness: flagship-GGUF chronolo | OK | 100 passed, 1 warning in 14.53s |
+| 2026-08-05 21:10 UTC | Gated on Exp6146 corpus readiness: TOOD-style task | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
