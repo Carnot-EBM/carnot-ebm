@@ -26670,6 +26670,43 @@ shares that partition, and overlap counts are zero.
 |---|---|---|
 | REQ-LEARN-6145 | Implemented (`python/carnot/experiment_6145_constraint_shift_stream.py`) | Implemented (`tests/python/test_experiment_6145_constraint_shift_stream.py`) |
 
+## REQ-LEARN-6147: Exp6147 Chronological Task-Aware Admission Calibration
+
+The self-learning tier SHALL treat Exp6147 as a calibration-only admission
+policy freeze over Exp6146 calibration events. Exp6147 SHALL not mutate model
+weights, train a scorer, query an LLM, or read future-known or sealed
+shifted-family outcomes. Exact outcomes SHALL enter only as calibration labels
+after each event's decision-time score has been emitted.
+
+The frozen policy SHALL contain exactly one selected score, one threshold, one
+abstention rule, one replay-statistic schema, and one bounded memory budget.
+Those choices SHALL be derived from calibration evidence only and stored in a
+selection manifest hash that downstream held evaluation can verify before
+unsealing held outcomes.
+
+### SCENARIO-LEARN-6147-FREEZE: Calibration Freezes One Admission Policy
+
+**Given** Exp6147 has replayed Exp6146 calibration events chronologically
+**When** it selects an admission policy
+**Then** the selected score, threshold, abstention rule, replay schema, memory
+budget, and selection-manifest hash are fixed without reading future-known or
+sealed shifted-family labels.
+
+### SCENARIO-LEARN-6147-HELD-UNREAD: Held Outcomes Stay Sealed
+
+**Given** Exp6146 row sidecars contain exact outcome receipts for all
+partitions
+**When** Exp6147 performs calibration-only fitting and evaluation
+**Then** it reads labels only from calibration rows, records zero held-label
+reads, and reports future-known and sealed shifted-family row counts without
+using their exact outcomes.
+
+## Implementation Status (REQ-LEARN-6147)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6147 | Planned (`python/carnot/experiment_6147_task_aware_energy_calibration.py`) | Planned (`tests/python/test_experiment_6147_task_aware_energy_calibration.py`) |
+
 ## REQ-LEARN-5859: Bounded Adaptive-State Microkernel Parity
 
 The self-learning tier SHALL provide Exp5859, a deterministic bounded

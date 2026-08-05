@@ -21823,3 +21823,135 @@ task-owned process or VRAM remains.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6146 | Planned (`python/carnot/experiment_6146_sota_constraint_event_corpus.py`, `results/experiment_6146_sota_constraint_event_corpus.json`) | Planned (`tests/python/test_experiment_6146_sota_constraint_event_corpus.py`) |
+
+### REQ-VERIFY-6147: Exp6147 Task-Aware Admission Energy Calibration
+
+The repository SHALL provide Exp6147 at
+`python/carnot/experiment_6147_task_aware_energy_calibration.py` and write
+`results/experiment_6147_task_aware_energy_calibration.json`. Exp6147 SHALL
+consume the ready Exp6146 row sidecars and Exp6145 pre-outcome rows to build a
+transparent constraint-strategy admission energy. It SHALL adapt the
+training-free task-aware replay-calibration principle from arXiv:2607.29592 to
+Carnot's cached constraint-strategy admission setting without reproducing the
+paper's image classifier and without training or loading a JEPA/text scorer.
+
+- REQ-VERIFY-6147-1: The workflow SHALL recompute the Exp6146 structured gate,
+  hash Exp6145/Exp6146 rows, splits, schemas, metrics, exclusions, output
+  paths, and protected files, and verify that future-known and sealed
+  shifted-family outcomes are not read during Exp6147 calibration.
+- REQ-VERIFY-6147-2: The admission energy SHALL be an explicit deterministic
+  function of decision-time fields only: Exp6145 constraint-graph summaries,
+  task/family descriptors, strategy-schema features, Exp6146 model identity,
+  parser/response-shape fields, and replay statistics computed from earlier
+  calibration events.
+- REQ-VERIFY-6147-3: The workflow SHALL maintain a feature allowlist and
+  forbidden-field scan proving the score cannot read exact answers, current
+  validator outcomes, exact-label hashes, future events, held labels, sealed
+  labels, post-outcome certificates, or outcome receipts. Any such feature in
+  the score input SHALL force `task_aware_energy_calibration_ready_score` to
+  `0.0`.
+- REQ-VERIFY-6147-4: Task-aware location/scale calibration SHALL be
+  chronological and training-free: each calibration event may use only earlier
+  calibration-event replay statistics for its task, with a fixed bounded memory
+  budget and no current outcome.
+- REQ-VERIFY-6147-5: Exp6147 SHALL compare global energy, task-aware energy,
+  family-centering only, nearest replay distance, task frequency, response
+  length, random, and task-label-shuffled controls under the same calibration
+  folds and report score provenance for each.
+- REQ-VERIFY-6147-6: Metrics SHALL be reported per source model before any
+  pooled summary and SHALL include grouped AUROC/AUPRC, Brier/ECE, false unsafe
+  acceptance, false safe rejection, coverage-risk, task-count score scale, and
+  confidence-gap dynamics. Uncertainty SHALL use event/base-template grouped
+  bootstrap intervals.
+- REQ-VERIFY-6147-7: The workflow SHALL run alias, family-frequency,
+  model-identity, length, timestamp, duplicate, outcome-permutation, and
+  label-shuffle attacks, then freeze at most one score, threshold, abstention
+  rule, replay-statistic schema, and memory budget from calibration evidence
+  only.
+- REQ-VERIFY-6147-8: `task_aware_energy_calibration_ready_score` SHALL be the
+  bare scalar `1.0` only if task-aware energy improves the preregistered grouped
+  shifted-proxy metric over global energy with a positive lower 95% interval,
+  forbidden-field and shortcut controls pass, held outcomes remain unread, and
+  the frozen policy keeps a non-degenerate safe/unsafe confusion matrix.
+  Otherwise it SHALL be `0.0`.
+- REQ-VERIFY-6147-9: `inference_substrate` SHALL be
+  `cached_sota_event_energy_calibration`, `verifier_is_oracle` SHALL be the bare
+  boolean `false`, and no LLM, tokenizer, GGUF loader, GPU worker, or training
+  loop SHALL be invoked.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `source_row_split_and_schema_hashes`,
+`decision_time_feature_allowlist_and_forbidden_field_scan`,
+`global_task_aware_and_control_energy_definitions`,
+`chronological_replay_statistics`,
+`per_model_grouped_metrics_and_intervals`,
+`confidence_gap_by_task_count`,
+`calibration_coverage_risk_and_confusion_matrices`,
+`alias_frequency_identity_length_timestamp_duplicate_outcome_permutation_and_shuffle_controls`,
+`selected_score_threshold_abstention_and_memory_budget`,
+`selection_manifest_hash`, `held_outcomes_unread_receipt`,
+`task_aware_energy_calibration_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a ready, null, retired, or blocked calibration.
+- `preconditions_checked`: Exp6145, Exp6146, schemas, exclusions, outputs, and protected files are hashed before scoring.
+- `structured_gate_receipt`: Calibration opens only after Exp6146 readiness, row conservation, schema hashes, no-LLM substrate, and protected files pass.
+- `source_row_split_and_schema_hashes`: Source rows, splits, schemas, metrics, exclusions, and output paths are content-addressed.
+- `decision_time_feature_allowlist_and_forbidden_field_scan`: Any current outcome or exact-answer feature makes the verifier circular and forces readiness zero.
+- `global_task_aware_and_control_energy_definitions`: Every score is a transparent decision-time formula or declared control, not a trained hidden scorer.
+- `chronological_replay_statistics`: Task-aware replay uses only earlier calibration events before each score and updates after the label reveal.
+- `per_model_grouped_metrics_and_intervals`: Each source model is reported separately with event/base-template grouped uncertainty before pooled summaries.
+- `confidence_gap_by_task_count`: Score-scale drift and confidence gaps are diagnosed as task replay counts accumulate.
+- `calibration_coverage_risk_and_confusion_matrices`: The frozen threshold and abstention rule expose unsafe accepts, safe rejects, coverage, and risk.
+- `alias_frequency_identity_length_timestamp_duplicate_outcome_permutation_and_shuffle_controls`: Shortcut, label-shuffle, and duplicate attacks must not explain the task-aware lift.
+- `selected_score_threshold_abstention_and_memory_budget`: One preregistered calibration choice is frozen before held evaluation.
+- `selection_manifest_hash`: The frozen policy is content-addressed for downstream held evaluation.
+- `held_outcomes_unread_receipt`: Future-known and sealed shifted-family outcomes remain unread during calibration.
+- `task_aware_energy_calibration_ready_score`: Exactly one only for positive grouped task-aware lift, clean controls, no forbidden fields, and non-degenerate confusion.
+- `retirement_triggered`: A repeated prior-failure mode retires the experiment rather than rebranding a null.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `duration_s`: Measured cached-row scoring time is reported without implying model inference.
+- `inference_substrate`: Use `cached_sota_event_energy_calibration`; no LLM is loaded.
+- `verifier_is_oracle`: The verifier is not an oracle; exact outcomes are calibration/evaluation labels only.
+- `missing_verifier_gaps`: Any blocked gate, null lift, shortcut, forbidden field, or held-read gap is explicit.
+- `field_provenance`: Every field traces to specs, Exp6145/Exp6146 sidecars, cached rows, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, gate, forbidden-field, replay, metrics, controls, freeze, no-held-read, schema, adversarial, protected-file, E2E-applicable, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, row, split, schema, control, threshold, test, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state whether task-aware calibration adds deconfounded value.
+
+### SCENARIO-VERIFY-6147-FEATURES: Score Inputs Are Oracle-Distinct
+
+**Given** Exp6147 builds decision-time features for each Exp6146 calibration row
+**When** the feature allowlist and forbidden-field scan run
+**Then** score inputs include only pre-outcome graph, strategy, model, task, and
+prior replay-statistic fields, and exact answers, current outcomes, held labels,
+future events, sealed labels, and post-outcome receipts are absent.
+
+### SCENARIO-VERIFY-6147-REPLAY: Task-Aware Calibration Is Chronological
+
+**Given** calibration events arrive in Exp6145 chronological order
+**When** task-aware replay statistics are computed
+**Then** each event score is normalized using only earlier calibration events for
+the same task or an earlier global fallback, and the current label is added only
+after that score is emitted.
+
+### SCENARIO-VERIFY-6147-CONTROLS: Controls And Attacks Gate Readiness
+
+**Given** task-aware energy is compared with global and control scores
+**When** grouped metrics, controls, and attacks are computed
+**Then** the artifact reports per-model intervals, confidence gaps, coverage-risk
+and confusion matrices, and readiness is zero if shuffled labels, outcome
+permutation, frequency, identity, length, timestamp, or duplicate attacks explain
+the apparent lift.
+
+## Implementation Status (REQ-VERIFY-6147)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6147 | Planned (`python/carnot/experiment_6147_task_aware_energy_calibration.py`, `results/experiment_6147_task_aware_energy_calibration.json`) | Planned (`tests/python/test_experiment_6147_task_aware_energy_calibration.py`) |

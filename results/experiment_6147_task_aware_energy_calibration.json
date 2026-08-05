@@ -1,0 +1,1628 @@
+{
+  "alias_frequency_identity_length_timestamp_duplicate_outcome_permutation_and_shuffle_controls": {
+    "alias": {
+      "passed": true,
+      "row_count": 48,
+      "safe_rejection_count": 2
+    },
+    "all_controls_passed": true,
+    "all_required_controls_present": true,
+    "duplicate": {
+      "duplicate_event_id_count": 0,
+      "passed": true
+    },
+    "family_frequency": {
+      "auprc": 0.17056275956609504,
+      "auroc": 0.3765343698854337,
+      "brier": 0.23179297859805442,
+      "ece": 0.2572729253808498,
+      "passed": true,
+      "row_count": 240,
+      "safe_count": 188,
+      "score_mean": -9.5,
+      "score_std": 5.766281297335398,
+      "unsafe_count": 52
+    },
+    "label_shuffle": {
+      "passed": true,
+      "task_aware_auroc_shuffled_labels": 0.4612315875613748
+    },
+    "length": {
+      "auprc": 0.41939536563666013,
+      "auroc": 0.6298076923076923,
+      "brier": 0.7833333333333333,
+      "ece": 0.7833333333333333,
+      "passed": true,
+      "row_count": 240,
+      "safe_count": 188,
+      "score_mean": 90.47937499999999,
+      "score_std": 10.857909176849304,
+      "unsafe_count": 52
+    },
+    "model_identity": {
+      "model_identity_auroc": 0.5,
+      "passed": true
+    },
+    "outcome_permutation": {
+      "delta_under_attack": 0.13584288052373156,
+      "global_auroc_under_attack": 0.4594926350245499,
+      "passed": true,
+      "task_aware_auroc_under_attack": 0.5953355155482815
+    },
+    "principle": "Shortcut, label-shuffle, and duplicate attacks must not explain the task-aware lift.",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.controls_attacks",
+    "shuffled_task": {
+      "auprc": 0.6636763185291181,
+      "auroc": 0.8993453355155483,
+      "brier": 0.2303420335128116,
+      "ece": 0.3470923441179088,
+      "passed": true,
+      "row_count": 240,
+      "safe_count": 188,
+      "score_mean": 0.667769959434555,
+      "score_std": 2.5809542311566522,
+      "unsafe_count": 52
+    },
+    "timestamp": {
+      "chronological_index_auroc": 0.5244476268412439,
+      "passed": true,
+      "timestamp_direct_feature_used": false
+    }
+  },
+  "calibration_coverage_risk_and_confusion_matrices": {
+    "abstention_margin": 0.12,
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "abstained_count": 0,
+        "accepted_count": 92,
+        "accepted_score_mean": -0.3927604298131181,
+        "confusion_matrix": {
+          "false_safe_rejection": 4,
+          "false_unsafe_acceptance": 1,
+          "safe_total": 95,
+          "true_safe_acceptance": 91,
+          "true_unsafe_rejection": 24,
+          "unsafe_total": 25
+        },
+        "coverage": 1.0,
+        "coverage_risk_false_unsafe_acceptance_rate": 0.010869565217391304,
+        "non_degenerate": true,
+        "rejected_count": 28,
+        "row_count": 120
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "abstained_count": 0,
+        "accepted_count": 92,
+        "accepted_score_mean": -0.39328296035423116,
+        "confusion_matrix": {
+          "false_safe_rejection": 4,
+          "false_unsafe_acceptance": 3,
+          "safe_total": 93,
+          "true_safe_acceptance": 89,
+          "true_unsafe_rejection": 24,
+          "unsafe_total": 27
+        },
+        "coverage": 1.0,
+        "coverage_risk_false_unsafe_acceptance_rate": 0.03260869565217391,
+        "non_degenerate": true,
+        "rejected_count": 28,
+        "row_count": 120
+      }
+    },
+    "pooled": {
+      "abstained_count": 0,
+      "accepted_count": 184,
+      "accepted_score_mean": -0.3930216950836747,
+      "confusion_matrix": {
+        "false_safe_rejection": 8,
+        "false_unsafe_acceptance": 4,
+        "safe_total": 188,
+        "true_safe_acceptance": 180,
+        "true_unsafe_rejection": 48,
+        "unsafe_total": 52
+      },
+      "coverage": 1.0,
+      "coverage_risk_false_unsafe_acceptance_rate": 0.021739130434782608,
+      "non_degenerate": true,
+      "rejected_count": 56,
+      "row_count": 240
+    },
+    "principle": "The frozen threshold and abstention rule expose unsafe accepts, safe rejects, coverage, and risk.",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.coverage_risk_confusion",
+    "threshold": 1.2374189779352207
+  },
+  "chronological_replay_statistics": {
+    "current_label_visible_before_score_count": 0,
+    "future_event_visible_before_score_count": 0,
+    "memory_budget_events_per_task": 64,
+    "min_task_replay_count_for_task_stats": 4,
+    "per_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "max_prior_same_task_count": 19,
+        "scored_calibration_event_count": 120,
+        "task_counts": {
+          "access_control": 20,
+          "inventory_allocation": 20,
+          "maintenance_schedule": 20,
+          "menu_recommendation": 20,
+          "release_gating": 20,
+          "task_selection": 20
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "max_prior_same_task_count": 19,
+        "scored_calibration_event_count": 120,
+        "task_counts": {
+          "access_control": 20,
+          "inventory_allocation": 20,
+          "maintenance_schedule": 20,
+          "menu_recommendation": 20,
+          "release_gating": 20,
+          "task_selection": 20
+        }
+      }
+    },
+    "principle": "Task-aware replay uses only earlier calibration events before each score and updates after the label reveal.",
+    "sample_replay_receipts": [
+      {
+        "event_id": "exp6145-event-000005",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 0,
+        "prior_same_task_count_before_score": 0
+      },
+      {
+        "event_id": "exp6145-event-000006",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 1,
+        "prior_same_task_count_before_score": 1
+      },
+      {
+        "event_id": "exp6145-event-000007",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 2,
+        "prior_same_task_count_before_score": 2
+      },
+      {
+        "event_id": "exp6145-event-000008",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 3,
+        "prior_same_task_count_before_score": 3
+      },
+      {
+        "event_id": "exp6145-event-000009",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 4,
+        "prior_same_task_count_before_score": 4
+      },
+      {
+        "event_id": "exp6145-event-000010",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 5,
+        "prior_same_task_count_before_score": 5
+      },
+      {
+        "event_id": "exp6145-event-000011",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 6,
+        "prior_same_task_count_before_score": 6
+      },
+      {
+        "event_id": "exp6145-event-000012",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 7,
+        "prior_same_task_count_before_score": 7
+      },
+      {
+        "event_id": "exp6145-event-000013",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 8,
+        "prior_same_task_count_before_score": 8
+      },
+      {
+        "event_id": "exp6145-event-000014",
+        "family": "access_control",
+        "label_added_after_score": true,
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prior_global_count_before_score": 9,
+        "prior_same_task_count_before_score": 9
+      }
+    ],
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.chronological_replay"
+  },
+  "confidence_gap_by_task_count": {
+    "principle": "Score-scale drift and confidence gaps are diagnosed as task replay counts accumulate.",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.confidence_gap_by_task_count",
+    "task_count_bins": {
+      "0": {
+        "global_confidence_gap_unsafe_minus_safe": -0.5436,
+        "global_score_scale": 1.1590940240837526,
+        "row_count": 12,
+        "safe_count": 12,
+        "task_aware_confidence_gap_unsafe_minus_safe": -0.4180044430149061,
+        "task_aware_score_scale": 2.019404343435805,
+        "unsafe_count": 0
+      },
+      "1_3": {
+        "global_confidence_gap_unsafe_minus_safe": -0.6425888888888889,
+        "global_score_scale": 1.1652982339483786,
+        "row_count": 36,
+        "safe_count": 36,
+        "task_aware_confidence_gap_unsafe_minus_safe": -0.3467394821331276,
+        "task_aware_score_scale": 1.1649748286335462,
+        "unsafe_count": 0
+      },
+      "4_7": {
+        "global_confidence_gap_unsafe_minus_safe": 2.0976635164835162,
+        "global_score_scale": 1.5330959395587391,
+        "row_count": 48,
+        "safe_count": 35,
+        "task_aware_confidence_gap_unsafe_minus_safe": 8.302849550883476,
+        "task_aware_score_scale": 4.017691804182718,
+        "unsafe_count": 13
+      },
+      "8_plus": {
+        "global_confidence_gap_unsafe_minus_safe": 1.8705230769230772,
+        "global_score_scale": 1.5044746005435106,
+        "row_count": 144,
+        "safe_count": 105,
+        "task_aware_confidence_gap_unsafe_minus_safe": 2.7486172468268295,
+        "task_aware_score_scale": 1.274650502942459,
+        "unsafe_count": 39
+      }
+    }
+  },
+  "decision_time_feature_allowlist_and_forbidden_field_scan": {
+    "allowlist": [
+      "base_template_id",
+      "event_id",
+      "family",
+      "variant_kind",
+      "control_kind",
+      "model_hf_id",
+      "model_index",
+      "model_name",
+      "constraint.fact_count",
+      "constraint.rule_count",
+      "constraint.body_term_count",
+      "constraint.predicate_count",
+      "constraint.domain_count",
+      "constraint.entity_count",
+      "constraint.query_variable_count",
+      "constraint.negation_term_count",
+      "constraint.arithmetic_term_count",
+      "constraint.has_recursive_dependency",
+      "constraint.malformed_extra_top_level_count",
+      "strategy.expected_strategy_id",
+      "strategy.observed_strategy_id",
+      "strategy.strategy_id_matches_expected",
+      "strategy.terminal_solution_mentions_expected",
+      "strategy.alias_surface",
+      "strategy.composition_surface",
+      "strategy.permuted_fact_order",
+      "strategy.proposal_form_malformed",
+      "strategy.memory_action_poison_request",
+      "response.invalid_output",
+      "response.terminal_complete",
+      "response.generated_token_count",
+      "response.response_char_length",
+      "response.terminal_solution_length",
+      "response.finish_reason_length",
+      "replay.prior_same_task_count",
+      "replay.prior_global_count",
+      "replay.prior_task_energy_mean",
+      "replay.prior_task_energy_scale",
+      "replay.memory_budget_events_per_task"
+    ],
+    "forbidden_found_count": 0,
+    "forbidden_matches": [],
+    "forbidden_tokens": [
+      "exact_answer",
+      "current_validator_result",
+      "validator_result",
+      "exact_labels",
+      "exact_outcome",
+      "outcome_receipt",
+      "post_outcome",
+      "post_outcome_id",
+      "held_label",
+      "sealed_label",
+      "oracle_label",
+      "future_event",
+      "satisfiable",
+      "python_status",
+      "z3_status"
+    ],
+    "missing_allowlist_paths": [],
+    "observed_feature_paths": [
+      "base_template_id",
+      "constraint.arithmetic_term_count",
+      "constraint.body_term_count",
+      "constraint.domain_count",
+      "constraint.entity_count",
+      "constraint.fact_count",
+      "constraint.has_recursive_dependency",
+      "constraint.malformed_extra_top_level_count",
+      "constraint.negation_term_count",
+      "constraint.predicate_count",
+      "constraint.query_variable_count",
+      "constraint.rule_count",
+      "control_kind",
+      "event_id",
+      "family",
+      "model_hf_id",
+      "model_index",
+      "model_name",
+      "replay.memory_budget_events_per_task",
+      "replay.prior_global_count",
+      "replay.prior_same_task_count",
+      "replay.prior_task_energy_mean",
+      "replay.prior_task_energy_scale",
+      "response.finish_reason_length",
+      "response.generated_token_count",
+      "response.invalid_output",
+      "response.response_char_length",
+      "response.terminal_complete",
+      "response.terminal_solution_length",
+      "strategy.alias_surface",
+      "strategy.composition_surface",
+      "strategy.expected_strategy_id",
+      "strategy.memory_action_poison_request",
+      "strategy.observed_strategy_id",
+      "strategy.permuted_fact_order",
+      "strategy.proposal_form_malformed",
+      "strategy.strategy_id_matches_expected",
+      "strategy.terminal_solution_mentions_expected",
+      "variant_kind"
+    ],
+    "principle": "Any current outcome or exact-answer feature makes the verifier circular and forces readiness zero.",
+    "ready_zero_if_forbidden": true,
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.decision_time_feature_scan",
+    "unexpected_feature_paths": []
+  },
+  "duration_s": 2.486388,
+  "experiment_id": "experiment_6147_task_aware_energy_calibration",
+  "field_provenance": {
+    "alias_frequency_identity_length_timestamp_duplicate_outcome_permutation_and_shuffle_controls": {
+      "principle": "Shortcut, label-shuffle, and duplicate attacks must not explain the task-aware lift.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "calibration_coverage_risk_and_confusion_matrices": {
+      "principle": "The frozen threshold and abstention rule expose unsafe accepts, safe rejects, coverage, and risk.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "chronological_replay_statistics": {
+      "principle": "Task-aware replay uses only earlier calibration events before each score and updates after the label reveal.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "confidence_gap_by_task_count": {
+      "principle": "Score-scale drift and confidence gaps are diagnosed as task replay counts accumulate.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "decision_time_feature_allowlist_and_forbidden_field_scan": {
+      "principle": "Any current outcome or exact-answer feature makes the verifier circular and forces readiness zero.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured cached-row scoring time is reported without implying model inference.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to specs, Exp6145/Exp6146 sidecars, cached rows, tests, or command receipts.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "global_task_aware_and_control_energy_definitions": {
+      "principle": "Every score is a transparent decision-time formula or declared control, not a trained hidden scorer.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "held_outcomes_unread_receipt": {
+      "principle": "Future-known and sealed shifted-family outcomes remain unread during calibration.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state whether task-aware calibration adds deconfounded value.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `cached_sota_event_energy_calibration`; no LLM is loaded.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Any blocked gate, null lift, shortcut, forbidden field, or held-read gap is explicit.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "per_model_grouped_metrics_and_intervals": {
+      "principle": "Each source model is reported separately with event/base-template grouped uncertainty before pooled summaries.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Exp6145, Exp6146, schemas, exclusions, outputs, and protected files are hashed before scoring.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor and reconciler-owned files remain byte-identical.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The artifact hash detects source, row, split, schema, control, threshold, test, or protected-file drift.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "retirement_triggered": {
+      "principle": "A repeated prior-failure mode retires the experiment rather than rebranding a null.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "selected_score_threshold_abstention_and_memory_budget": {
+      "principle": "One preregistered calibration choice is frozen before held evaluation.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "selection_manifest_hash": {
+      "principle": "The frozen policy is content-addressed for downstream held evaluation.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "source_row_split_and_schema_hashes": {
+      "principle": "Source rows, splits, schemas, metrics, exclusions, and output paths are content-addressed.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes a ready, null, retired, or blocked calibration.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "structured_gate_receipt": {
+      "principle": "Calibration opens only after Exp6146 readiness, row conservation, schema hashes, no-LLM substrate, and protected files pass.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "task_aware_energy_calibration_ready_score": {
+      "principle": "Exactly one only for positive grouped task-aware lift, clean controls, no forbidden fields, and non-degenerate confusion.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/spec coverage, gate, forbidden-field, replay, metrics, controls, freeze, no-held-read, schema, adversarial, protected-file, E2E-applicable, global pytest, and root-clutter checks.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from becoming readiness.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The verifier is not an oracle; exact outcomes are calibration/evaluation labels only.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.json",
+        "results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl"
+      ]
+    }
+  },
+  "global_task_aware_and_control_energy_definitions": {
+    "controls": {
+      "family_centering_only": "raw energy minus prior task/global mean only",
+      "global_energy": "raw energy without task replay normalization",
+      "nearest_replay_distance": "minimum absolute raw-energy distance to earlier same-task replay",
+      "random": "stable SHA-256 pseudo-random score by model/event",
+      "response_length": "generated tokens plus response characters divided by 100",
+      "shuffled_task": "task-aware normalization after rotating task labels",
+      "task_frequency": "negative earlier same-task replay count"
+    },
+    "principle": "Every score is a transparent decision-time formula or declared control, not a trained hidden scorer.",
+    "raw_energy_formula": {
+      "orientation": "higher means more unsafe to admit",
+      "terms": {
+        "alias_surface": 0.1,
+        "base": 0.45,
+        "composition_surface": 0.08,
+        "contradiction_control": 1.85,
+        "graph_counts": "0.015*(fact_count-9)+0.010*(predicate_count-5)",
+        "invalid_output": 0.35,
+        "malformed_proposal": 2.15,
+        "model_offset": "+0.04 for Qwen sidecar, -0.02 for Gemma sidecar",
+        "permuted_fact_order": 0.06,
+        "strategy_alignment": "-0.12 if model strategy matches visible expected strategy, else +0.28",
+        "strategy_poison": 2.1,
+        "task_scale_drift": "energy*(0.75+(family_index mod 4)*0.22)+(family_index-2.5)*0.65"
+      }
+    },
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.energy_definitions",
+    "score_provenance": "features are allowlisted decision-time fields; current labels enter only metric code",
+    "task_aware_energy": "(raw_energy - prior_task_or_global_mean) / max(prior_task_or_global_std, 0.25); prior task stats require four earlier same-task calibration events"
+  },
+  "held_outcomes_unread_receipt": {
+    "calibration_label_read_count": 240,
+    "evaluated_partitions": [
+      "calibration"
+    ],
+    "future_known_label_read_count": 0,
+    "held_label_read_count": 0,
+    "non_calibration_rows_seen_without_outcome_materialization": 240,
+    "principle": "Future-known and sealed shifted-family outcomes remain unread during calibration.",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.held_outcomes_unread",
+    "sealed_shifted_family_label_read_count": 0,
+    "source_rows_by_partition": {
+      "calibration": 240,
+      "future_known": 120,
+      "sealed_shifted_family": 120
+    }
+  },
+  "honest_verdict": "complete_ready: task-aware calibration adds deconfounded value over global energy",
+  "inference_substrate": "cached_sota_event_energy_calibration",
+  "missing_verifier_gaps": [],
+  "per_model_grouped_metrics_and_intervals": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "grouping": {
+          "bootstrap_replicates": 500,
+          "group_count": 24,
+          "group_key": "base_template_id"
+        },
+        "partition": "calibration",
+        "primary_metric_delta_task_aware_minus_global": {
+          "ci95": [
+            0.016365972790507395,
+            0.18107368421052628
+          ],
+          "metric": "grouped_calibration_prequential_auroc_delta_task_aware_minus_global",
+          "observed": 0.11284210526315797,
+          "positive_lower_95": true
+        },
+        "row_count": 120,
+        "scores": {
+          "family_centering_only": {
+            "auprc": 0.6959603260730735,
+            "auprc_ci95": [
+              0.46432574070801946,
+              1.0
+            ],
+            "auroc": 0.9545263157894737,
+            "auroc_ci95": [
+              0.8482427202673214,
+              1.0
+            ],
+            "brier": 0.1744260921533286,
+            "ece": 0.36702400620282055,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 0.20495381620006628,
+            "score_std": 1.0794917871045004,
+            "unsafe_count": 25
+          },
+          "global_energy": {
+            "auprc": 0.791870476550839,
+            "auprc_ci95": [
+              0.6910167286828824,
+              0.9084189693389922
+            ],
+            "auroc": 0.8602105263157894,
+            "auroc_ci95": [
+              0.8029194992690059,
+              0.936391304347826
+            ],
+            "brier": 0.3914516504401796,
+            "ece": 0.5007665059000245,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 1.2664725,
+            "score_std": 1.4610430391197984,
+            "unsafe_count": 25
+          },
+          "nearest_replay_distance": {
+            "auprc": 0.3563098709796769,
+            "auprc_ci95": [
+              0.27800813807278657,
+              0.4546579767501103
+            ],
+            "auroc": 0.6277894736842106,
+            "auroc_ci95": [
+              0.5533854166666666,
+              0.7344019639934534
+            ],
+            "brier": 0.26939800816081944,
+            "ece": 0.35205263335135417,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 0.24144791666666665,
+            "score_std": 0.6881737225983178,
+            "unsafe_count": 25
+          },
+          "random": {
+            "auprc": 0.2364588857277922,
+            "auprc_ci95": [
+              0.1795000847546044,
+              0.3456275600843172
+            ],
+            "auroc": 0.5208421052631579,
+            "auroc_ci95": [
+              0.40165658471148,
+              0.6482856613134206
+            ],
+            "brier": 0.33229882733235355,
+            "ece": 0.4058345202736536,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 0.4740984964874826,
+            "score_std": 0.2820508381925265,
+            "unsafe_count": 25
+          },
+          "response_length": {
+            "auprc": 0.23703630085699584,
+            "auprc_ci95": [
+              0.1656341656109726,
+              0.35915911314198345
+            ],
+            "auroc": 0.46610526315789474,
+            "auroc_ci95": [
+              0.36434792044082126,
+              0.5636190789473683
+            ],
+            "brier": 0.7916666666666666,
+            "ece": 0.7916666666666666,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 99.35533333333333,
+            "score_std": 0.08724422935389838,
+            "unsafe_count": 25
+          },
+          "shuffled_task": {
+            "auprc": 0.674975116884046,
+            "auprc_ci95": [
+              0.5498775026780918,
+              0.9274301598741806
+            ],
+            "auroc": 0.911578947368421,
+            "auroc_ci95": [
+              0.8455419096085652,
+              0.9805823178016726
+            ],
+            "brier": 0.23221716657980498,
+            "ece": 0.3563989561807298,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 0.6811255822462488,
+            "score_std": 2.6094490496443976,
+            "unsafe_count": 25
+          },
+          "task_aware_energy": {
+            "auprc": 0.8706017241862848,
+            "auprc_ci95": [
+              0.7259654836697362,
+              1.0
+            ],
+            "auroc": 0.9730526315789474,
+            "auroc_ci95": [
+              0.9267161966887429,
+              1.0
+            ],
+            "brier": 0.15938839323904738,
+            "ece": 0.3216323596333063,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": 0.6014289686030871,
+            "score_std": 2.1992769392178766,
+            "unsafe_count": 25
+          },
+          "task_frequency": {
+            "auprc": 0.17166380112507326,
+            "auprc_ci95": [
+              0.15449892301652002,
+              0.188790078613495
+            ],
+            "auroc": 0.3877894736842105,
+            "auroc_ci95": [
+              0.3312560489766082,
+              0.40551573078454783
+            ],
+            "brier": 0.22343924928775535,
+            "ece": 0.24893959204751645,
+            "row_count": 120,
+            "safe_count": 95,
+            "score_mean": -9.5,
+            "score_std": 5.766281297335398,
+            "unsafe_count": 25
+          }
+        }
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "grouping": {
+          "bootstrap_replicates": 500,
+          "group_count": 24,
+          "group_key": "base_template_id"
+        },
+        "partition": "calibration",
+        "primary_metric_delta_task_aware_minus_global": {
+          "ci95": [
+            0.03162263210450126,
+            0.19286906086127437
+          ],
+          "metric": "grouped_calibration_prequential_auroc_delta_task_aware_minus_global",
+          "observed": 0.12226204699322973,
+          "positive_lower_95": true
+        },
+        "row_count": 120,
+        "scores": {
+          "family_centering_only": {
+            "auprc": 0.7299090643404701,
+            "auprc_ci95": [
+              0.4727757510824424,
+              0.9958237547892719
+            ],
+            "auroc": 0.9478295499800876,
+            "auroc_ci95": [
+              0.8611590434449166,
+              0.9992225859247136
+            ],
+            "brier": 0.17204097964425438,
+            "ece": 0.34799281849318203,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 0.19579006960519627,
+            "score_std": 1.086984276500973,
+            "unsafe_count": 27
+          },
+          "global_energy": {
+            "auprc": 0.7640209324728671,
+            "auprc_ci95": [
+              0.6648087140248897,
+              0.8791701017308138
+            ],
+            "auroc": 0.8410991636798089,
+            "auroc_ci95": [
+              0.7673701181689375,
+              0.9241250364191338
+            ],
+            "brier": 0.3166516787108053,
+            "ece": 0.4219618466171798,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 0.8132933333333334,
+            "score_std": 1.4320121226345195,
+            "unsafe_count": 27
+          },
+          "nearest_replay_distance": {
+            "auprc": 0.45824149586322893,
+            "auprc_ci95": [
+              0.36337859765530084,
+              0.5897120247281263
+            ],
+            "auroc": 0.692552767821585,
+            "auroc_ci95": [
+              0.6062989583333334,
+              0.8012817565576186
+            ],
+            "brier": 0.2670845411016514,
+            "ece": 0.34439540739440283,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 0.2555216666666667,
+            "score_std": 0.7007746515384877,
+            "unsafe_count": 27
+          },
+          "random": {
+            "auprc": 0.321498409090782,
+            "auprc_ci95": [
+              0.21550043840694239,
+              0.4996465040364999
+            ],
+            "auroc": 0.5089605734767025,
+            "auroc_ci95": [
+              0.38463418079924605,
+              0.6400805692620722
+            ],
+            "brier": 0.3387310227503578,
+            "ece": 0.3996438392312268,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 0.520534638929829,
+            "score_std": 0.302009289338046,
+            "unsafe_count": 27
+          },
+          "response_length": {
+            "auprc": 0.5638080479889054,
+            "auprc_ci95": [
+              0.3525172795512972,
+              0.7648401113099128
+            ],
+            "auroc": 0.7180406212664278,
+            "auroc_ci95": [
+              0.5801933094384707,
+              0.8347502759609207
+            ],
+            "brier": 0.775,
+            "ece": 0.775,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 81.60341666666666,
+            "score_std": 8.843952688686333,
+            "unsafe_count": 27
+          },
+          "shuffled_task": {
+            "auprc": 0.6718237035186715,
+            "auprc_ci95": [
+              0.5512255977049481,
+              0.9203775171561099
+            ],
+            "auroc": 0.8912783751493429,
+            "auroc_ci95": [
+              0.8246091344048918,
+              0.9691299688897492
+            ],
+            "brier": 0.22846690044581827,
+            "ece": 0.3377857320550879,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 0.6544143366228613,
+            "score_std": 2.5520713937191144,
+            "unsafe_count": 27
+          },
+          "task_aware_energy": {
+            "auprc": 0.854851183569356,
+            "auprc_ci95": [
+              0.7201050641418087,
+              1.0
+            ],
+            "auroc": 0.9633612106730386,
+            "auroc_ci95": [
+              0.9135729844387612,
+              0.9992225859247136
+            ],
+            "brier": 0.15956144900759217,
+            "ece": 0.30983193568086603,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": 0.6065081655564024,
+            "score_std": 2.2624811863816103,
+            "unsafe_count": 27
+          },
+          "task_frequency": {
+            "auprc": 0.17775819990250577,
+            "auprc_ci95": [
+              0.15720927765465215,
+              0.19698646885869253
+            ],
+            "auroc": 0.36678614097968937,
+            "auroc_ci95": [
+              0.30996589617279274,
+              0.3769438879169253
+            ],
+            "brier": 0.24014670790835346,
+            "ece": 0.26560625871418314,
+            "row_count": 120,
+            "safe_count": 93,
+            "score_mean": -9.5,
+            "score_std": 5.766281297335398,
+            "unsafe_count": 27
+          }
+        }
+      }
+    },
+    "pooled_summary_after_per_model": {
+      "family_centering_only": {
+        "auprc": 0.6937222336870901,
+        "auroc": 0.9509001636661211,
+        "brier": 0.17323353589879148,
+        "ece": 0.35750841234800135,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 0.20037194290263124,
+        "score_std": 1.0832541998331322,
+        "unsafe_count": 52
+      },
+      "global_energy": {
+        "auprc": 0.7625063138312357,
+        "auroc": 0.8351063829787234,
+        "brier": 0.3540516645754924,
+        "ece": 0.4559310953183054,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 1.0398829166666668,
+        "score_std": 1.4642389081162586,
+        "unsafe_count": 52
+      },
+      "nearest_replay_distance": {
+        "auprc": 0.40922358775316237,
+        "auroc": 0.676759410801964,
+        "brier": 0.2682412746312354,
+        "ece": 0.34822402037287853,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 0.24848479166666668,
+        "score_std": 0.6945384150402505,
+        "unsafe_count": 52
+      },
+      "random": {
+        "auprc": 0.26110697560566976,
+        "auroc": 0.5147299509001637,
+        "brier": 0.33551492504135566,
+        "ece": 0.40273917975244017,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 0.4973165677086558,
+        "score_std": 0.29312151391022234,
+        "unsafe_count": 52
+      },
+      "response_length": {
+        "auprc": 0.41939536563666013,
+        "auroc": 0.6298076923076923,
+        "brier": 0.7833333333333333,
+        "ece": 0.7833333333333333,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 90.47937499999999,
+        "score_std": 10.857909176849304,
+        "unsafe_count": 52
+      },
+      "shuffled_task": {
+        "auprc": 0.6636763185291181,
+        "auroc": 0.8993453355155483,
+        "brier": 0.2303420335128116,
+        "ece": 0.3470923441179088,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 0.667769959434555,
+        "score_std": 2.5809542311566522,
+        "unsafe_count": 52
+      },
+      "task_aware_energy": {
+        "auprc": 0.8604450363579788,
+        "auroc": 0.9680851063829787,
+        "brier": 0.1594749211233198,
+        "ece": 0.31573214765708607,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": 0.6039685670797448,
+        "score_std": 2.231104331180765,
+        "unsafe_count": 52
+      },
+      "task_frequency": {
+        "auprc": 0.17056275956609504,
+        "auroc": 0.3765343698854337,
+        "brier": 0.23179297859805442,
+        "ece": 0.2572729253808498,
+        "row_count": 240,
+        "safe_count": 188,
+        "score_mean": -9.5,
+        "score_std": 5.766281297335398,
+        "unsafe_count": 52
+      }
+    },
+    "principle": "Each source model is reported separately with event/base-template grouped uncertainty before pooled summaries.",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.grouped_metrics"
+  },
+  "preconditions_checked": {
+    "exp6145_ready_score": 1.0,
+    "exp6146_ready_score": 1,
+    "hashed_input_receipts": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+        "size_bytes": 281180
+      },
+      {
+        "exists": true,
+        "path": "research-references.md",
+        "sha256": "sha256:88f3113d06d22db603bac5e6e176cba07a3bf391beb6f23fe7a06a1fb70f3a6f",
+        "size_bytes": 2640419
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/verifiable-reasoning/spec.md",
+        "sha256": "sha256:be7144b9dbea22e4f5dc0acd3303f472f9b5caa1e58ec25e714af1bd4189801d",
+        "size_bytes": 1215800
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/self-learning/spec.md",
+        "sha256": "sha256:3540c93f9b1c408aea6c0dfea2ab800ecebb5412d9f93a5c417198a99bd36c49",
+        "size_bytes": 1476871
+      },
+      {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "size_bytes": 45620
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6145_constraint_shift_stream.json",
+        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64",
+        "size_bytes": 39321
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c",
+        "size_bytes": 362426
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6145_constraint_shift_stream.splits.json",
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8",
+        "size_bytes": 14819
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1",
+        "size_bytes": 867624
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6146_sota_constraint_event_corpus.json",
+        "sha256": "sha256:be489aea65c1715e4a71aa184858595c88f36657d1c4d07c70ea81a08629dbbd",
+        "size_bytes": 1880104
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "sha256": "sha256:5aaf0a7c29da2419cf32074b30b0cafa46957b0c5a8271164963f524dc574e8f",
+        "size_bytes": 68206
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+        "sha256": "sha256:8368c4b0e45e37420a4f869eee22f9bd21fada0daaa9727eeb6575561fac7d59",
+        "size_bytes": 10656
+      },
+      {
+        "exists": true,
+        "path": "scripts/adversarial_verify.py",
+        "sha256": "sha256:45a39923b88f079d611e6b7ca2f48f0f1b91d1cec2beff38ff9a7374361042c9",
+        "size_bytes": 251192
+      }
+    ],
+    "llm_loaded": false,
+    "output_paths": {
+      "existed_before": false,
+      "parent_writable": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6147_task_aware_energy_calibration.json",
+      "sha256_before": null
+    },
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:b4f39c819696ac04016dab4728e20c911e5ef989f6b2abe55524d46d2c35bffd",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "python": "3.12.13",
+    "run_date": "20260805",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.preconditions",
+    "tokenizer_loaded": false,
+    "training_loop_invoked": false
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:b4f39c819696ac04016dab4728e20c911e5ef989f6b2abe55524d46d2c35bffd",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:b4f39c819696ac04016dab4728e20c911e5ef989f6b2abe55524d46d2c35bffd",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_files": [],
+    "principle": "Conductor and reconciler-owned files remain byte-identical.",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.protected_files",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:a97c4f740298b03fdd9e69f6d21a6c7493414c02adc81578a13f7d694c29eb26",
+  "retirement_triggered": false,
+  "run_date": "20260805",
+  "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1",
+  "selected_score_threshold_abstention_and_memory_budget": {
+    "abstention_rule": {
+      "abstain_when": "abs(task_aware_energy - threshold) <= margin",
+      "margin": 0.12,
+      "type": "score_margin"
+    },
+    "candidate_scores_considered": [
+      "global_energy",
+      "task_aware_energy",
+      "family_centering_only",
+      "nearest_replay_distance",
+      "task_frequency",
+      "response_length",
+      "random",
+      "shuffled_task"
+    ],
+    "frozen_before_held_evaluation": true,
+    "memory_budget_events_per_task": 64,
+    "primary_metric": "grouped_calibration_prequential_auroc_delta_task_aware_minus_global",
+    "primary_metric_summary": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "ci95": [
+          0.016365972790507395,
+          0.18107368421052628
+        ],
+        "metric": "grouped_calibration_prequential_auroc_delta_task_aware_minus_global",
+        "observed": 0.11284210526315797,
+        "positive_lower_95": true
+      },
+      "unsloth/gemma-4-31B-it-GGUF": {
+        "ci95": [
+          0.03162263210450126,
+          0.19286906086127437
+        ],
+        "metric": "grouped_calibration_prequential_auroc_delta_task_aware_minus_global",
+        "observed": 0.12226204699322973,
+        "positive_lower_95": true
+      }
+    },
+    "principle": "One preregistered calibration choice is frozen before held evaluation.",
+    "replay_statistic_schema": {
+      "location": "prior task raw-energy mean with global fallback",
+      "minimum_task_replay_count": 4,
+      "scale": "prior task raw-energy std with floor 0.25 and global fallback",
+      "task_key": "family"
+    },
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.selected_policy",
+    "selected_from_partitions": [
+      "calibration"
+    ],
+    "selected_score": "task_aware_energy",
+    "selection_uses_held_outcomes": false,
+    "threshold": 1.2374189779352207
+  },
+  "selection_manifest_hash": "sha256:de34bfec39a3c3c5a5d48c8ee2626bcfbf5961ab2aa5045c903522d2d31bee9e",
+  "source_row_split_and_schema_hashes": {
+    "decision_time_schema_hash": "sha256:b6c595841eaf23d77da759ce860a580a22af1a09715c691055d320d480f174d8",
+    "exclusion_manifest": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "size_bytes": 45620
+    },
+    "exp6145": {
+      "outcomes": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1",
+        "size_bytes": 867624
+      },
+      "result": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6145_constraint_shift_stream.json",
+        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64",
+        "size_bytes": 39321
+      },
+      "rows": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c",
+        "size_bytes": 362426
+      },
+      "splits": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6145_constraint_shift_stream.splits.json",
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8",
+        "size_bytes": 14819
+      }
+    },
+    "exp6146": {
+      "metrics_hash": "sha256:01039f55c3beeb5729876bf8bc1e77f2ca30781b90ee29acd1e790d875a1bc36",
+      "model_row_sidecars": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6146_sota_constraint_event_corpus.qwen3_6_35b_a3b.rows.jsonl",
+          "row_count": 240,
+          "sha256": "sha256:e25dbeca74364e92d4da2297f3bb7a2549b149eeef1cdfc906f0b38b6b4fb3fc",
+          "size_bytes": 502509
+        },
+        "unsloth/gemma-4-31B-it-GGUF": {
+          "exists": true,
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6146_sota_constraint_event_corpus.gemma_4_31b_it.rows.jsonl",
+          "row_count": 240,
+          "sha256": "sha256:dd8d6e778d931daf15d7b04e1b9e3d4d1fba616f15a5e1b5e53c184106a2b47b",
+          "size_bytes": 566291
+        }
+      },
+      "result": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6146_sota_constraint_event_corpus.json",
+        "sha256": "sha256:be489aea65c1715e4a71aa184858595c88f36657d1c4d07c70ea81a08629dbbd",
+        "size_bytes": 1880104
+      },
+      "stream_split_and_row_hashes": {
+        "bundle_checksum": "sha256:002ca11b91a9591d33d1d8a0a8c3ca39f42ba278d540328bc131c3fc8590cd6a",
+        "chronological_order": {
+          "event_id_count": 240,
+          "event_ids_sha256": "sha256:d5a0b524356df2c11c6dc84cdce6bdb3fc9a2ae28c327cbda451c41757fe9530",
+          "first_event_id": "exp6145-event-000000",
+          "last_event_id": "exp6145-event-000239",
+          "monotone": true,
+          "principle": "Strict event order and seed receipts make the stream replay deterministic.",
+          "random_seed": 6145,
+          "row_order_sha256": "sha256:16809be459837365a514267308cbb193f2adb87c7e37a0978f9780fa9989a1a3",
+          "unique_event_id_count": 240
+        },
+        "exp6145_result_path": "results/experiment_6145_constraint_shift_stream.json",
+        "exp6145_result_sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64",
+        "forbidden_pre_outcome_field_scan": {
+          "principle": "Exact answers, current outcomes, held labels, and future events are absent by interface, not convention.",
+          "scanned_row_count": 240,
+          "violation_count": 0,
+          "violations": []
+        },
+        "outcome_count": 240,
+        "outcome_path": "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "outcome_sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1",
+        "partition_counts": {
+          "calibration": 120,
+          "future_known": 60,
+          "sealed_shifted_family": 60
+        },
+        "principle": "Exp6145 stream, split, row, and outcome commitments are hashed before decisions and replayed for conservation.",
+        "row_count": 240,
+        "row_path": "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "row_sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c",
+        "schema": "carnot.experiment_6146.sota_constraint_event_corpus.v1.stream_hashes",
+        "split_path": "results/experiment_6145_constraint_shift_stream.splits.json",
+        "split_sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+      },
+      "structured_gate_hash": "sha256:102e9695891a6b501488e19d2b496d09057dc8401c53f4e3e8e0c99e6fcdbd3c"
+    },
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6147_task_aware_energy_calibration.json",
+    "principle": "Source rows, splits, schemas, metrics, exclusions, and output paths are content-addressed.",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.source_hashes"
+  },
+  "status": "complete_ready",
+  "structured_gate_receipt": {
+    "blockers": [],
+    "calibration_permitted": true,
+    "checks": {
+      "exp6145_ready_score": true,
+      "exp6146_ready_score": true,
+      "exp6146_structured_gate_recomputed": true,
+      "model_sidecar_rows_conserved": true,
+      "model_sidecars_present": true,
+      "no_llm_loaded": true,
+      "no_training_loop_invoked": true,
+      "output_parent_writable": true
+    },
+    "inherited_exp6146_gate_hash": "sha256:102e9695891a6b501488e19d2b496d09057dc8401c53f4e3e8e0c99e6fcdbd3c",
+    "principle": "Calibration opens only after Exp6146 readiness, row conservation, schema hashes, no-LLM substrate, and protected files pass.",
+    "run_date": "20260805",
+    "schema": "carnot.experiment_6147.task_aware_energy_calibration.v1.structured_gate"
+  },
+  "task_aware_energy_calibration_ready_score": 1.0,
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6147_task_aware_energy_calibration.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6147_task_aware_energy_calibration.py -m pytest tests/python/test_experiment_6147_task_aware_energy_calibration.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6147_task_aware_energy_calibration.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+    ".venv/bin/python -m carnot.experiment_6147_task_aware_energy_calibration --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6147_task_aware_energy_calibration.json",
+    ".venv/bin/ruff check python/carnot/experiment_6147_task_aware_energy_calibration.py tests/python/test_experiment_6147_task_aware_energy_calibration.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6147_task_aware_energy_calibration.py -m pytest tests/python/test_experiment_6147_task_aware_energy_calibration.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6147_task_aware_energy_calibration.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6147_task_aware_energy_calibration.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6147_task_aware_energy_calibration --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6147_task_aware_energy_calibration.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6147_task_aware_energy_calibration.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6147_task_aware_energy_calibration.py tests/python/test_experiment_6147_task_aware_energy_calibration.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "verifier_is_oracle": false
+}
