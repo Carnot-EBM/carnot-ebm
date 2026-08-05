@@ -105,3 +105,10 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-08-05 13:17 UTC -- NEW
+
+- The public leaderboard is now led by YUTO KOJIMA (1.86), Andy liu (1.69), and Lord Han Solo (1.65). [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+- Competition host Greg Kamradt clarified that private scores are calculated during each submission’s original run and final selections are not rerun. Each run processes both hidden halves; only the public half is displayed during competition. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+- The official agent repository replaced `three.arcprize.org` with `arcprize.org` and corrected the API-key link to `arcprize.org/platform` on August 3. [Merged PR](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74)
+- Kaggle clarified execution limits: Docker logs stop being captured after 10 MB; `/kaggle/working` has a 20 GB quota; CPU submissions receive 30 GB physical RAM enforced through cgroups; and Kaggle sets neither `RLIMIT_NPROC` nor `RLIMIT_AS`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
+

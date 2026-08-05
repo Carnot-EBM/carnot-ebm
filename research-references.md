@@ -32411,3 +32411,137 @@ bimodal candidate pool: two exact-constraint families were saturated while
   game-level solve.
 
 <!-- V532-PLANNER-REFRESH-20260805-END -->
+
+## V533 Planner Refresh - 20260805
+
+Incremental planning sweep after terminal milestone `2026.08.532` and the
+`V532-PLANNER-REFRESH-20260805-END` boundary. The primary pass queried arXiv's
+dated API and paper pages for 2025-2026 work on EBM verification/reasoning,
+neural constraint satisfaction, Ising and thermodynamic computing, LLM
+hallucination detection, KANs, constrained generation, and continual/online
+learning. The secondary pass rechecked OpenReview, Hugging Face Papers,
+Semantic Scholar citation records for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), Extropic's official pages and repositories, GitHub discovery,
+and Logical Intelligence's Kona page. Only deltas that change the post-Exp6140
+plan are promoted.
+
+### Newly actionable deltas
+
+- **TOOD: Task-Aware Out-of-Distribution Score Calibration for Continual
+  Learners** - arXiv:2607.29592,
+  https://arxiv.org/abs/2607.29592; submitted 2026-07-31 and accepted as a
+  CoLLAs 2026 oral. The paper separates ordinary task forgetting from OOD
+  forgetting, diagnoses a falling logit-scale `Confidence Gap` for energy
+  detectors, and proposes training-free per-task energy recalibration using
+  replay-buffer statistics. Carnot hook: treat an unrecognized or shifted
+  exact-constraint family as an admission problem before strategy retrieval.
+  On a chronological stream derived from Exp6120, compare global energy with
+  task-aware replay calibration under task/domain shift, and require calibrated
+  OOD detection, protected-prefix retention, bounded state, and zero outcome
+  leakage before a frozen-GGUF self-learning A/B. This adapts the calibration
+  idea to certified constraint events; it is not a claimed reproduction of the
+  paper's image-classification results.
+- **A Framework for Stochastic Differentiable Programming** -
+  arXiv:2608.01612, https://arxiv.org/abs/2608.01612; submitted 2026-08-03.
+  The paper introduces typed Parametrized Stochastic Circuits and Directed
+  Factor Graphs whose binary, categorical, and continuous stochastic kernels
+  are explicit and differentiable. Its associated Apache-2.0-style public
+  implementation surface is `torx`, https://github.com/extropic-ai/torx, a JAX
+  library created in July 2026 and actively updated during this planning pass.
+  Carnot hook: compile one bounded, exact stochastic constraint workflow into
+  a typed factor-graph intermediate representation and prove probability/
+  support/seed semantics against exhaustive enumeration before touching a
+  thermodynamic backend. The compiler receipt, not a speedup claim, is the
+  deliverable.
+- **Thermalizing Stochastic Programs** - arXiv:2608.01615,
+  https://arxiv.org/abs/2608.01615; submitted 2026-08-03. The paper compiles
+  each factor of a Torx DFG/PSC into a hardware-native EBM, derives how
+  per-factor approximation errors accumulate, and adds context matching plus
+  trajectory-level refinement. Carnot hook: after the exact typed-IR fixture,
+  implement a software-only factor-replacement and compositional-error audit
+  over the same workflow. Compare the measured joint-distribution divergence
+  with a preregistered bound and an unrefined factor-local control; record
+  `thrml`/`torx` package or commit provenance and label the substrate
+  `software_simulation`. This is materially different from the retired THRML
+  scaling/parity sweep: the question is end-to-end program semantics and error
+  composition, not size scaling, latency, or device parity.
+
+### Guarded or non-promoted findings
+
+- **Interpreting Black-Box Large Language Models with Sentence-Level Energy
+  Landscapes** - arXiv:2608.02879,
+  https://arxiv.org/abs/2608.02879; submitted 2026-08-03. It trains a post-hoc
+  EBM surrogate over prompt/response text for sentence-level attribution. This
+  is scientifically relevant to interpretability but substantively overlaps
+  Carnot's retired external generated-text Phase-D scorer class. It is recorded
+  for completeness and is not staged without an operator-authorized new
+  discriminator.
+- **Learning What to Remember: Test-Time Training via Context Distillation** -
+  arXiv:2608.01672, https://arxiv.org/abs/2608.01672. TTCD optimizes fast model
+  weights using a long-window teacher so limited state retains information with
+  future token utility. Future utility is a useful evaluation principle, but
+  in-place parameter mutation conflicts with the current frozen-model,
+  certificate-before-commit CSL contract. The V533 learner therefore keeps
+  immutable GGUF hashes and tests bounded external strategy state instead of
+  reproducing TTCD.
+- **A scalable and resource-efficient pipelined p-computer for probabilistic
+  Ising machines** - arXiv:2607.21077,
+  https://arxiv.org/abs/2607.21077. Its deeply pipelined dense-coupling FPGA
+  design is a useful longer-term hardware reference, but it does not change the
+  current attached-board state or authorize new RTL/bitstream work. V533 keeps
+  hardware requirements at the typed stochastic-program ABI and software
+  conformance layer.
+- The newest KAN search results (`BiKAN`, arXiv:2608.01490; `SparseKAN`,
+  arXiv:2608.00859; and hard-constrained recurrent KAN deployment,
+  arXiv:2608.00737) target basis collapse, compression, and embedded physics
+  models. None supplies a new oracle-distinct verifier or constraint-learning
+  result that clears Carnot's already-tested KAN line, so no KAN task is
+  promoted.
+
+### Secondary-source and ecosystem status
+
+- **Semantic Scholar:** direct citation-list queries still expose the same
+  actionable EBT/ARM-EBM families already indexed: Explorative Modeling,
+  Memoir, Solver-Hard, fixed-point reasoners, LoopUS, Distributional EBMs,
+  ontology constraints, false-first-step planning, and Gibbs-aligned
+  diffusion-LM work. Metadata calls were rate-limited during this pass, so no
+  fresh citation-count claim is made.
+- **OpenReview / Hugging Face Papers:** the pass reconfirmed Distributional
+  EBMs, HalluGuard, DiffuTruth, Spilled Energy, TokenHD, and single-decode
+  confidence methods. The external-text/logit methods remain behind Carnot's
+  retired-scope boundary; none provides a stronger local experiment than
+  task-aware calibrated admission plus certified replay.
+- **GitHub:** the newly public and actively updated
+  `extropic-ai/torx` repository is the only promoted repository delta. Other
+  hallucination, EBM, Ising, constrained-decoding, and KAN repositories did not
+  displace Carnot's exact validators, local GGUF runtime, Rust/PyO3 sampler ABI,
+  or transactional memory.
+- **Extropic:** the official hardware page still lists both Z1 products as
+  early access 2027, so no authenticated hardware, latency, power, or speedup
+  claim is eligible. The Torx/thermalizer papers create a software compiler
+  research path, not a hardware-access path.
+- **Logical Intelligence:** the current Kona 1.0 page still describes a
+  constraint-enforcement layer beneath generative systems, but exposes no
+  public weights, local API, downloadable benchmark, or reproducible
+  comparator. It remains architecture context only.
+
+### V533 planning impact
+
+- Do not continue Exp6140's retired option-psychometric/source-domain recovery
+  chain or its skipped item bank. Move the verification question to exact,
+  chronological constraint events where correctness and distribution shift are
+  independently measurable.
+- Add a task-aware energy-calibration fixture before the continuous
+  self-learning A/B. The learner must abstain or quarantine unfamiliar task
+  families rather than retrieving a superficially similar strategy.
+- Add a typed Torx-compatible stochastic-program IR and a separate
+  thermalization error-composition experiment. Both are software-only and must
+  prove exact/exhaustive semantics before any future probabilistic-hardware
+  claim.
+- Preserve one ARC generalization slot on the live `E3AgentPolicy` path, using
+  held-out adapter-disabled games and no level-solve claim.
+- Spend the mandatory infrastructure slot on redirecting test artifact writes
+  away from tracked `results/`, because destructive test execution currently
+  invalidates evidence and can re-admit adversarially quarantined artifacts.
+
+<!-- V533-PLANNER-REFRESH-20260805-END -->
