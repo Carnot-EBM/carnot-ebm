@@ -15366,3 +15366,4 @@ No output thi |
 +    |
 | 2026-08-05 16:37 UTC | Exact terminal-boundary handoff from .532 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: thub.com/ianbl |
 | 2026-08-05 17:53 UTC | Exact terminal-boundary handoff from .532 into .53 | OK | cache hit: 120 passed, 1 warning in 10.00s |
+| 2026-08-05 18:21 UTC | Tracked-result test artifact isolation and quarant | OK | 97 passed, 1 warning in 7.30s |
