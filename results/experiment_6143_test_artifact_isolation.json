@@ -1,0 +1,1359 @@
+{
+  "atomic_write_receipts": {
+    "production_path_untouched_control": "The redirected atomic JSON test asserts results/experiment_6143_atomic.json does not exist in production results.",
+    "replacement_receipt": "JSON artifact was atomically replaced from value=1 to value=2 under the override root.",
+    "temp_cleanup_receipt": "No *.tmp file remained after successful replacement or simulated os.replace failure.",
+    "tests": [
+      "test_atomic_json_and_text_replacement_use_redirected_root",
+      "test_atomic_write_cleans_temp_file_when_replace_fails"
+    ]
+  },
+  "attempted_tracked_write_detection": {
+    "guard_exception": "TrackedResultWriteError",
+    "hash_unchanged_after_forbidden_attempt": true,
+    "ledger_event": "write",
+    "ledger_path": "results/experiment_1938_nrgpt_loss_probe.json",
+    "negative_control_test": "test_tracked_results_guard_observes_real_forbidden_attempt",
+    "non_vacuous_receipt": "The test opens the real tracked file for text writing and asserts both the raised guard exception and the recorded violation ledger entry.",
+    "observed_real_forbidden_attempt": true,
+    "post_hash": "fa1b4e7971f3782becf4f768816765c7abd3bf9f5399754ddb3fb21e1eedde1c",
+    "pre_hash": "fa1b4e7971f3782becf4f768816765c7abd3bf9f5399754ddb3fb21e1eedde1c",
+    "redirected_writer_control": "test_redirected_writer_does_not_record_tracked_result_violation",
+    "target": "results/experiment_1938_nrgpt_loss_probe.json"
+  },
+  "determination_preservation_lint_receipt": {
+    "command": "python scripts/determination_preservation_lint.py",
+    "exit_code": 0,
+    "stdout": "determination-preservation-lint: OK"
+  },
+  "duration_s": 1053.91,
+  "field_provenance": {
+    "coverage_receipt": "coverage report command in test_commands/new_code_coverage_report",
+    "deliverable_guard_integration": "python/carnot/pipeline/deliverable_guard.py",
+    "guard": "python/carnot/testing/tracked_results_guard.py",
+    "known_mutation_inventory": "ops/known-issues.md and /tmp/carnot_6143_preconditions.json",
+    "postcondition_snapshot": "/tmp/carnot_6143_postconditions.json",
+    "precondition_snapshot": "/tmp/carnot_6143_preconditions.json",
+    "protected_files": "pre/post sha256 comparison plus operator curated doc guard tests",
+    "resolver": "python/carnot/experiment_artifacts.py",
+    "spec": "openspec/capabilities/research-reporting/spec.md REQ-REPORT-6143",
+    "template_integration": "scripts/experiment_template.py",
+    "tests": "tests/python/test_experiment_artifact_isolation.py"
+  },
+  "honest_verdict": "complete_partial: Focused resolver, pytest override, direct-writer compatibility sample, tracked-write detection, traversal/symlink controls, atomic write behavior, quarantine preservation, and protected-file checks passed; pre-existing tracked evidence remained immutable by aggregate digest and sentinel hashes. Repository-wide closure is not claimed because 6198 residual direct-writer call-site rows remain in the census, and repo-wide spec coverage plus one existing template subset check are blocked by pre-existing unrelated failures.",
+  "inference_substrate": "deterministic_infrastructure_test_isolation",
+  "known_mutation_inventory": {
+    "known_45_issue_ids": [
+      "631",
+      "1035",
+      "1038",
+      "1081",
+      "1089",
+      "1103",
+      "1717",
+      "1747",
+      "1750",
+      "1796",
+      "1822",
+      "1861",
+      "1869",
+      "1911",
+      "1938",
+      "1970",
+      "2085",
+      "2090",
+      "2097",
+      "2427",
+      "2510",
+      "2521",
+      "2538",
+      "2721",
+      "2736",
+      "2754",
+      "2758",
+      "2824",
+      "307",
+      "3343",
+      "3350",
+      "3351",
+      "3386",
+      "3394",
+      "3395",
+      "339",
+      "3734",
+      "3946",
+      "4162",
+      "4170",
+      "542",
+      "5861",
+      "833",
+      "885",
+      "911"
+    ],
+    "known_45_issue_ids_count": 45,
+    "sentinel_tracked_result_paths": [
+      "results/checkpoints/experiment_631/checkpoint.json",
+      "results/experiment_1035_dualgpu_rocm_v3.json",
+      "results/experiment_1038_milestone_retro_80.json",
+      "results/experiment_1081_fpga_scale_benchmark.json",
+      "results/experiment_1089_milestone_retro_84.json",
+      "results/experiment_1103_milestone_retro_85.json",
+      "results/experiment_1717_energy_guided_integration.json",
+      "results/experiment_1717_findings_audit.json",
+      "results/experiment_1747_ebt_mode_collapse_check.json",
+      "results/experiment_1747_eqm_sparse_updates.json",
+      "results/experiment_1750_huggingface_retry.json",
+      "results/experiment_1750_symbolic_eval.json",
+      "results/experiment_1796_findings_audit_186_187.json",
+      "results/experiment_1796_performance_ablation.json",
+      "results/experiment_1822_rtl_synth.json",
+      "results/experiment_1822_rtl_synth.log",
+      "results/experiment_1861_equivalence.json",
+      "results/experiment_1869_hiled.json",
+      "results/experiment_1911_e2e.json",
+      "results/experiment_1911_phase4_canonical_decision.json",
+      "results/experiment_1938_nrgpt_loss_probe.json",
+      "results/experiment_1970_domino_fast_constraints.json",
+      "results/experiment_1970_thrml_hookup.json",
+      "results/experiment_2085_pem_sudoku_eval.json",
+      "results/experiment_2090_crane_humaneval.json",
+      "results/experiment_2097_eqm_eval.json",
+      "results/experiment_2427_kv260_yosys_v4.json",
+      "results/experiment_2510_ensemble_v7.json",
+      "results/experiment_2521_ensemble_v7.json",
+      "results/experiment_2538_kv260_sd_flash.json",
+      "results/experiment_2721_paper_v6_theory_update_v2.json",
+      "results/experiment_2736_arxiv_submission_package_prep.json",
+      "results/experiment_2754_empirical_delta_audit.json",
+      "results/experiment_2754_empirical_delta_audit.py",
+      "results/experiment_2758_weak_strong_policy_fix_v2.json",
+      "results/experiment_2824_cross_corpus_verifier_matrix.json",
+      "results/experiment_307_jepa_real_training.json",
+      "results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      "results/experiment_3350_kv260_latency_benchmark.json",
+      "results/experiment_3351_gatemate_latency_benchmark.json",
+      "results/experiment_3386_fr11_nonforgetting.json",
+      "results/experiment_3394_kona_global_opt.json",
+      "results/experiment_3395_energy_based_replay.json",
+      "results/experiment_339_session_startup.json",
+      "results/experiment_3734_fix_harness_and_bounded_train_chunk1.json",
+      "results/experiment_3946_r11l_first_solve.json",
+      "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
+      "results/experiment_4170_sota_ingestion_verifier_moat_guidance.json",
+      "results/experiment_542_fover_expansion.json",
+      "results/experiment_5861_attached_board_state_receipts.json",
+      "results/experiment_631_jepa_v14_oracle.json",
+      "results/experiment_833_constraint_delta_root_cause.json",
+      "results/experiment_885_spectral_attention_probe.json",
+      "results/experiment_911_drift_probe_tier0i.json"
+    ],
+    "sentinel_tracked_result_paths_count": 54,
+    "source": "ops/known-issues.md",
+    "tracked_results_count": 21408,
+    "tracked_results_digest_before": "adf2b88a986b35b0b3b7038679e9515e3a5391f54eb7a93791c9622ab313df06"
+  },
+  "migrated_writer_inventory": {
+    "canonical_atomic_writers": [
+      "atomic_write_bytes",
+      "atomic_write_text",
+      "atomic_write_json"
+    ],
+    "migrated_surfaces": [
+      {
+        "compatibility": "Legacy results/... deliverables resolve to production by default and to the validated override under pytest; explicit repo_root test fixtures can disable override.",
+        "path": "scripts/experiment_template.py",
+        "writes": [
+          "deliverable JSON",
+          "checkpoint JSON"
+        ]
+      },
+      {
+        "compatibility": "Relative results/... assertions resolve through the same resolver; external absolute tmp paths remain supported.",
+        "path": "python/carnot/pipeline/deliverable_guard.py",
+        "writes": []
+      }
+    ]
+  },
+  "output_root_resolver_and_fixture_paths": {
+    "canonical_resolver": "python/carnot/experiment_artifacts.py",
+    "pytest_fixture": "tests/python/conftest.py",
+    "tracked_write_guard": "python/carnot/testing/tracked_results_guard.py",
+    "wired_surfaces": [
+      "scripts/experiment_template.py",
+      "python/carnot/pipeline/deliverable_guard.py"
+    ]
+  },
+  "preconditions_checked": {
+    "agents_and_codex_read": true,
+    "claude_read": true,
+    "deliverable_guard_read": true,
+    "determination_preservation_lint_read": true,
+    "e2e_test_plan_read": true,
+    "experiment_template_read": true,
+    "initial_git_status_short": [],
+    "known_issues_read": true,
+    "post_focus_git_status_short_before_artifact_write": [
+      " M openspec/capabilities/research-reporting/spec.md",
+      " M python/carnot/pipeline/deliverable_guard.py",
+      " M scripts/experiment_template.py",
+      " M tests/python/conftest.py",
+      "?? python/carnot/experiment_artifacts.py",
+      "?? python/carnot/testing/tracked_results_guard.py",
+      "?? tests/python/test_experiment_artifact_isolation.py"
+    ],
+    "postcondition_snapshot": "/tmp/carnot_6143_postconditions.json",
+    "precondition_snapshot": "/tmp/carnot_6143_preconditions.json",
+    "research_conductor_modified": false,
+    "research_reporting_req_6143_added": true,
+    "research_reporting_spec_present": true,
+    "root_clutter_sweep_read": true
+  },
+  "preexisting_worktree_changes_preserved": {
+    "current_changes_are_task_owned": true,
+    "initial_status_short": [],
+    "no_automatic_restores_performed": true,
+    "preexisting_changes_detected": false,
+    "task_owned_paths": [
+      "openspec/capabilities/research-reporting/spec.md",
+      "python/carnot/experiment_artifacts.py",
+      "python/carnot/testing/tracked_results_guard.py",
+      "python/carnot/pipeline/deliverable_guard.py",
+      "scripts/experiment_template.py",
+      "tests/python/conftest.py",
+      "tests/python/test_experiment_artifact_isolation.py",
+      "results/experiment_6143_test_artifact_isolation.json"
+    ]
+  },
+  "production_default_and_test_override_receipts": {
+    "override_environment_name": "CARNOT_EXPERIMENT_ARTIFACT_ROOT",
+    "positive_receipts": [
+      "test_production_default_keeps_historical_results_root",
+      "test_valid_test_override_redirects_legacy_results_path",
+      "test_experiment_template_uses_redirected_output_and_checkpoint_root"
+    ],
+    "production_default_matches_historical_results": true,
+    "production_default_root": "/home/ianblenke/github.com/ianblenke/carnot/results",
+    "pytest_override_lifecycle": "tests/python/conftest.py sets a /tmp/carnot-pytest-artifacts-* root before collection, validates it, installs the tracked-results audit guard, clears ledgers per test, and restores the previous env value at session finish."
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "hash_matrix": {
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/caught-cheating.html": {
+        "after_sha256": "c9a4e44323702287f8460b4a5ee8a3cac52f4d68b34f623868231fd72c128e71",
+        "before_sha256": "c9a4e44323702287f8460b4a5ee8a3cac52f4d68b34f623868231fd72c128e71",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/dogfooding-by-the-numbers.html": {
+        "after_sha256": "e55a80f9e31a05e1e50c87e39f608e81369a3c379999a55a6be1e8655ee7402b",
+        "before_sha256": "e55a80f9e31a05e1e50c87e39f608e81369a3c379999a55a6be1e8655ee7402b",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/energy-scorer-not-generator.html": {
+        "after_sha256": "0cc523c0d484c3f60372e516ec289ff8e8ca758bba32c1f026bb3ee3954301a8",
+        "before_sha256": "0cc523c0d484c3f60372e516ec289ff8e8ca758bba32c1f026bb3ee3954301a8",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/five-fatal-findings.html": {
+        "after_sha256": "32a14f7b29a83c5c31cd276f8f99106e744800a379cacb6ae82cf820d9be377a",
+        "before_sha256": "32a14f7b29a83c5c31cd276f8f99106e744800a379cacb6ae82cf820d9be377a",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/index.html": {
+        "after_sha256": "eb420fb700e8224f2982f8a844b3b93038dc084156934a84ccdb45c949943607",
+        "before_sha256": "eb420fb700e8224f2982f8a844b3b93038dc084156934a84ccdb45c949943607",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/regex-in-an-ntk-costume.html": {
+        "after_sha256": "53344a2e98d191e62e0e17fb6f5c456e57a0dfecfeac3505c6fae51fc76fd8cd",
+        "before_sha256": "53344a2e98d191e62e0e17fb6f5c456e57a0dfecfeac3505c6fae51fc76fd8cd",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/the-auditor-hallucinated.html": {
+        "after_sha256": "540db112af4fe6b9b2b03b5fd7d08119fcc8fc091a6c2235d379ce3fdd9b7da7",
+        "before_sha256": "540db112af4fe6b9b2b03b5fd7d08119fcc8fc091a6c2235d379ce3fdd9b7da7",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/the-beachhead-that-wasnt.html": {
+        "after_sha256": "6b3ac5487a554318e148386c8d06852cade09cad656f2ecfd783ee77bae3718c",
+        "before_sha256": "6b3ac5487a554318e148386c8d06852cade09cad656f2ecfd783ee77bae3718c",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/two-retractions-and-a-rescue.html": {
+        "after_sha256": "810e233e97acaa69ae8dac21ecc05421e1c1d73d5e3013c1c687c1ce6128b0bb",
+        "before_sha256": "810e233e97acaa69ae8dac21ecc05421e1c1d73d5e3013c1c687c1ce6128b0bb",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/verifier-accuracy-paradox.html": {
+        "after_sha256": "6cda35630a98bbe693d5aa3587a6d3f836aa3980b47733b9968bc85de34e5c24",
+        "before_sha256": "6cda35630a98bbe693d5aa3587a6d3f836aa3980b47733b9968bc85de34e5c24",
+        "unchanged": true
+      },
+      "/home/ianblenke/github.com/ianblenke/carnot/docs/blog/why-two-aurocs.html": {
+        "after_sha256": "7db9b877c26ea7fbe7a9c7829d28ee67a1680c26e192dd074dde5f684d54d9d2",
+        "before_sha256": "7db9b877c26ea7fbe7a9c7829d28ee67a1680c26e192dd074dde5f684d54d9d2",
+        "unchanged": true
+      },
+      "LICENSE": {
+        "after_sha256": "7d5e950cbe0079f5da22de8510277dbca16c7a23287c981b3a1ed4ae59aebd98",
+        "before_sha256": "7d5e950cbe0079f5da22de8510277dbca16c7a23287c981b3a1ed4ae59aebd98",
+        "unchanged": true
+      },
+      "NOTICE": {
+        "after_sha256": "39c42ad6b10a70f2c4bf8a2d25f465ccd94010bd0e3a50891024364f969fbf1f",
+        "before_sha256": "39c42ad6b10a70f2c4bf8a2d25f465ccd94010bd0e3a50891024364f969fbf1f",
+        "unchanged": true
+      },
+      "README.md": {
+        "after_sha256": "d74b61a601e2be573901ea3223fcddf1a46b936b70e563862335bc15d0447b00",
+        "before_sha256": "d74b61a601e2be573901ea3223fcddf1a46b936b70e563862335bc15d0447b00",
+        "unchanged": true
+      },
+      "docs/CNAME": {
+        "after_sha256": "2529103a2359b3958e30a72c21c00ab143347b164adb0d14de6c21614e3cb286",
+        "before_sha256": "2529103a2359b3958e30a72c21c00ab143347b164adb0d14de6c21614e3cb286",
+        "unchanged": true
+      },
+      "docs/api-reference.md": {
+        "after_sha256": "9e084d53295586e3e05e58e11fb24b78a88ed99030c966ff1d592cbaf447cd3d",
+        "before_sha256": "9e084d53295586e3e05e58e11fb24b78a88ed99030c966ff1d592cbaf447cd3d",
+        "unchanged": true
+      },
+      "docs/arxiv-paper/main.tex": {
+        "after_sha256": "7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca",
+        "before_sha256": "7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca",
+        "unchanged": true
+      },
+      "docs/cli-usage.md": {
+        "after_sha256": "f2f66c9e4403707df15dbb70b152915af401f0c97bbd371a01cd75cfe7990417",
+        "before_sha256": "f2f66c9e4403707df15dbb70b152915af401f0c97bbd371a01cd75cfe7990417",
+        "unchanged": true
+      },
+      "docs/concepts.md": {
+        "after_sha256": "c317dfa03c62e27e6f571261144ef1408bc0d0133b30b18db5cdc03cc261dec9",
+        "before_sha256": "c317dfa03c62e27e6f571261144ef1408bc0d0133b30b18db5cdc03cc261dec9",
+        "unchanged": true
+      },
+      "docs/getting-started.md": {
+        "after_sha256": "8a98002169b4a163383420f550f017f45dad084f27c65ad4e0754582a6303de7",
+        "before_sha256": "8a98002169b4a163383420f550f017f45dad084f27c65ad4e0754582a6303de7",
+        "unchanged": true
+      },
+      "docs/index.html": {
+        "after_sha256": "7331262972c14af8f4ae5a79ab45093daee80ec3d8b2cd3faec9547ffe50dee1",
+        "before_sha256": "7331262972c14af8f4ae5a79ab45093daee80ec3d8b2cd3faec9547ffe50dee1",
+        "unchanged": true
+      },
+      "docs/mcp-server.md": {
+        "after_sha256": "1072dcca00a33b601c5439f809febf9aa06336719030ee9735747469941550e8",
+        "before_sha256": "1072dcca00a33b601c5439f809febf9aa06336719030ee9735747469941550e8",
+        "unchanged": true
+      },
+      "docs/research-log.md": {
+        "after_sha256": "98d0ead4c78ab5ed213909718ef7ce77474ea64363740a84c5b3e1eaf7829f44",
+        "before_sha256": "98d0ead4c78ab5ed213909718ef7ce77474ea64363740a84c5b3e1eaf7829f44",
+        "unchanged": true
+      },
+      "docs/roadmap.md": {
+        "after_sha256": "8e0a1a0e4ec1a915e5b9a6cb5b1312d7cfb087e557da354a71a8d8a4eb4ec1a1",
+        "before_sha256": "8e0a1a0e4ec1a915e5b9a6cb5b1312d7cfb087e557da354a71a8d8a4eb4ec1a1",
+        "unchanged": true
+      },
+      "docs/tutorial.md": {
+        "after_sha256": "2ebe90e84380952f9bf39ffeff4a53b2b03b7a45d7ef7faa9f4f1975f11c1383",
+        "before_sha256": "2ebe90e84380952f9bf39ffeff4a53b2b03b7a45d7ef7faa9f4f1975f11c1383",
+        "unchanged": true
+      }
+    },
+    "operator_curated_doc_tests_exit_code": 0,
+    "protected_paths_count": 25
+  },
+  "quarantine_field_before_after_matrix": {
+    "results/experiment_1861_equivalence.json": {
+      "after_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "py_loss=0.22222222222222232 and rs_loss=0.22222222222222232 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ]
+      },
+      "after_fields_sha256": "a715000d6976a1b8cafb7ee48477139567ca0e729fc08ea2aa66b8b4501b9d39",
+      "after_sha256": "a0d8a70e64070a77a534cc1a7a4e6ea70622db230f1dd44b412cefddaf5e755c",
+      "before_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "py_loss=0.22222222222222232 and rs_loss=0.22222222222222232 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ]
+      },
+      "before_fields_sha256": "a715000d6976a1b8cafb7ee48477139567ca0e729fc08ea2aa66b8b4501b9d39",
+      "before_sha256": "a0d8a70e64070a77a534cc1a7a4e6ea70622db230f1dd44b412cefddaf5e755c",
+      "field_keys": [
+        "corrigendum_note",
+        "corrigendum_pending",
+        "flagged_adversarial",
+        "flagged_adversarial_restoration_note",
+        "flagged_adversarial_restored_fields"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    },
+    "results/experiment_1938_nrgpt_loss_probe.json": {
+      "after_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "after_fields_sha256": "96e08692f53b354d17421ef7c6b58bdf690a605484ba5a349223d26d4d0d7c76",
+      "after_sha256": "fa1b4e7971f3782becf4f768816765c7abd3bf9f5399754ddb3fb21e1eedde1c",
+      "before_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "nrgpt_grad_norm=9.762868881225586 and ce_grad_norm=9.762868881225586 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "before_fields_sha256": "96e08692f53b354d17421ef7c6b58bdf690a605484ba5a349223d26d4d0d7c76",
+      "before_sha256": "fa1b4e7971f3782becf4f768816765c7abd3bf9f5399754ddb3fb21e1eedde1c",
+      "field_keys": [
+        "corrigendum_note",
+        "corrigendum_pending",
+        "flagged_adversarial",
+        "flagged_adversarial_restoration_note",
+        "flagged_adversarial_restored_fields",
+        "restored_2026_08_03_note"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    },
+    "results/experiment_2085_pem_sudoku_eval.json": {
+      "after_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "after_fields_sha256": "845084b0aa41487aa477e825670deaa5ae9724c5eed659a082df2d465e8bf364",
+      "after_sha256": "638a7ab4784cd6c6aca265321f31e8f7f15dbe6d41568b3ababa3eb928a17c01",
+      "before_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "before_fields_sha256": "845084b0aa41487aa477e825670deaa5ae9724c5eed659a082df2d465e8bf364",
+      "before_sha256": "638a7ab4784cd6c6aca265321f31e8f7f15dbe6d41568b3ababa3eb928a17c01",
+      "field_keys": [
+        "corrigendum_note",
+        "corrigendum_pending",
+        "flagged_adversarial",
+        "flagged_adversarial_restoration_note",
+        "flagged_adversarial_restored_fields",
+        "restored_2026_08_03_note"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    },
+    "results/experiment_3734_fix_harness_and_bounded_train_chunk1.json": {
+      "after_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.3 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "after_fields_sha256": "9f9bce5a15069f31ecc6b7bd31a03694963fde337588b66778033a66213ac725",
+      "after_sha256": "b35f743b51732d438c6e9bf661e0ded6daad3da8f29b68a1ddb36d9e4b51cbf8",
+      "before_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.3 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "before_fields_sha256": "9f9bce5a15069f31ecc6b7bd31a03694963fde337588b66778033a66213ac725",
+      "before_sha256": "b35f743b51732d438c6e9bf661e0ded6daad3da8f29b68a1ddb36d9e4b51cbf8",
+      "field_keys": [
+        "corrigendum_note",
+        "corrigendum_pending",
+        "flagged_adversarial",
+        "flagged_adversarial_restoration_note",
+        "flagged_adversarial_restored_fields",
+        "restored_2026_08_03_note"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    },
+    "results/experiment_3946_r11l_first_solve.json": {
+      "after_fields": {
+        "inference_substrate_correction_note": "CORRECTED 2026-07-27 by the outer loop. The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set, so this artifact blocked EVERY commit that staged it -- and it has been invalid since it was written (byte-identical at HEAD). The replacement is the legal value that describes what the run actually did, established by reading the artifact rather than guessing: duration_s=0.2 with NO gguf / llama / llm / cuda / torch / model_specs / induction reference anywhere in the file, i.e. a pure offline-arcade agent run with no LLM tier. That substrate's duration floor is 0.01s, which 0.2s clears, so the relabel does not launder a too-fast run past a stricter floor. The original string is preserved above per CLAUDE.md never-prune; no measurement value was touched.\n\nADVERSARIAL REVIEW ADDENDUM (2026-07-27, same day). Three things the original note did not say. (1) The substrate was re-confirmed by READING THE SCRIPT, not merely by the absence of gguf/llama/llm strings in the artifact: scripts/experiments/experiment_3946_r11l_first_solve.py constructs Arcade(arc_api_key='', operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR) and steps the offline sim directly, and imports no llama_cpp / transformers / torch / cuda anywhere. So no LLM ran and nothing was laundered past a stricter duration floor. (2) THE RELABEL MADE THIS ARTIFACT AUDITABLE FOR THE FIRST TIME, and that is a change in its own right: measured directly, scripts/adversarial_verify.py returns 0 flags on a reconstructed pre-relabel copy and 1 WARN (METHODOLOGY_MISSING: reproducibility_checksum) on the corrected file. The old string matched no substrate classifier, so it escaped every check -- an illegal value was quieter than a legal one. The new WARN is REAL and is not being suppressed: CLAUDE.md's substrate table requires random_seed AND reproducibility_checksum for offline_arcade_live_agent_runtime_self_discovery_no_llm; this artifact has random_seed=42 and NO reproducibility_checksum. It cannot be back-computed from a completed run and will NOT be fabricated. (3) The script reads engine internals (env._game and env._game.yfbjozweime) for ground-truth piece/target pairs, so 'self_discovery' in the substrate name describes the OFFLINE-ARCADE-no-LLM half of the value, not a claim that the live agent discovered this game unaided; the legal set offers no more precise value. Treat the solve_provenance as development_proxy at best.",
+        "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8.",
+        "solve_provenance": "development_proxy",
+        "solve_provenance_note": "Declared 2026-07-27 by adversarial review (CLAUDE.md \"ARC Live-Path Reachability Discipline\" self-solve provenance contract). This run reads engine internals (env._game.yfbjozweime) for ground-truth piece/target pairs, which the LIVE agent cannot do on a hidden game, so it is a development proxy -- NOT evidence that the live agent self-discovers this solve. Recorded rather than left undeclared, which the contract treats as a WARN."
+      },
+      "after_fields_sha256": "1b086b07051ae378ac7c5495a61f26eee18345578bb3af6b60b166cdef55345f",
+      "after_sha256": "be12ec48055c06159b1f5761b995908d4d250dcd130b160fae29336b17f6875a",
+      "before_fields": {
+        "inference_substrate_correction_note": "CORRECTED 2026-07-27 by the outer loop. The original value 'offline_arc_agi3_perception_planner_real_env_confirmed' is not in scripts/arc_artifact_lint.py's legal set, so this artifact blocked EVERY commit that staged it -- and it has been invalid since it was written (byte-identical at HEAD). The replacement is the legal value that describes what the run actually did, established by reading the artifact rather than guessing: duration_s=0.2 with NO gguf / llama / llm / cuda / torch / model_specs / induction reference anywhere in the file, i.e. a pure offline-arcade agent run with no LLM tier. That substrate's duration floor is 0.01s, which 0.2s clears, so the relabel does not launder a too-fast run past a stricter floor. The original string is preserved above per CLAUDE.md never-prune; no measurement value was touched.\n\nADVERSARIAL REVIEW ADDENDUM (2026-07-27, same day). Three things the original note did not say. (1) The substrate was re-confirmed by READING THE SCRIPT, not merely by the absence of gguf/llama/llm strings in the artifact: scripts/experiments/experiment_3946_r11l_first_solve.py constructs Arcade(arc_api_key='', operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR) and steps the offline sim directly, and imports no llama_cpp / transformers / torch / cuda anywhere. So no LLM ran and nothing was laundered past a stricter duration floor. (2) THE RELABEL MADE THIS ARTIFACT AUDITABLE FOR THE FIRST TIME, and that is a change in its own right: measured directly, scripts/adversarial_verify.py returns 0 flags on a reconstructed pre-relabel copy and 1 WARN (METHODOLOGY_MISSING: reproducibility_checksum) on the corrected file. The old string matched no substrate classifier, so it escaped every check -- an illegal value was quieter than a legal one. The new WARN is REAL and is not being suppressed: CLAUDE.md's substrate table requires random_seed AND reproducibility_checksum for offline_arcade_live_agent_runtime_self_discovery_no_llm; this artifact has random_seed=42 and NO reproducibility_checksum. It cannot be back-computed from a completed run and will NOT be fabricated. (3) The script reads engine internals (env._game and env._game.yfbjozweime) for ground-truth piece/target pairs, so 'self_discovery' in the substrate name describes the OFFLINE-ARCADE-no-LLM half of the value, not a claim that the live agent discovered this game unaided; the legal set offers no more precise value. Treat the solve_provenance as development_proxy at best.",
+        "inference_substrate_original_invalid_value": "offline_arc_agi3_perception_planner_real_env_confirmed",
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8.",
+        "solve_provenance": "development_proxy",
+        "solve_provenance_note": "Declared 2026-07-27 by adversarial review (CLAUDE.md \"ARC Live-Path Reachability Discipline\" self-solve provenance contract). This run reads engine internals (env._game.yfbjozweime) for ground-truth piece/target pairs, which the LIVE agent cannot do on a hidden game, so it is a development proxy -- NOT evidence that the live agent self-discovers this solve. Recorded rather than left undeclared, which the contract treats as a WARN."
+      },
+      "before_fields_sha256": "1b086b07051ae378ac7c5495a61f26eee18345578bb3af6b60b166cdef55345f",
+      "before_sha256": "be12ec48055c06159b1f5761b995908d4d250dcd130b160fae29336b17f6875a",
+      "field_keys": [
+        "inference_substrate_correction_note",
+        "inference_substrate_original_invalid_value",
+        "restored_2026_08_03_note",
+        "solve_provenance",
+        "solve_provenance_note"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    },
+    "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json": {
+      "after_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible.",
+            "kind": "MOAT_CLAIM_RIGOR",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "after_fields_sha256": "a4ccc16dade26c31de707bebff86fb119c302467ef4e996383b999ecabb0cac8",
+      "after_sha256": "11dc5e9c47443d8d8ee7faa369ec92112492ef339b7c923fd1624e72c238e360",
+      "before_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible.",
+            "kind": "MOAT_CLAIM_RIGOR",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "before_fields_sha256": "a4ccc16dade26c31de707bebff86fb119c302467ef4e996383b999ecabb0cac8",
+      "before_sha256": "11dc5e9c47443d8d8ee7faa369ec92112492ef339b7c923fd1624e72c238e360",
+      "field_keys": [
+        "corrigendum_note",
+        "corrigendum_pending",
+        "flagged_adversarial",
+        "flagged_adversarial_restoration_note",
+        "flagged_adversarial_restored_fields",
+        "restored_2026_08_03_note"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    },
+    "results/experiment_4170_sota_ingestion_verifier_moat_guidance.json": {
+      "after_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible.",
+            "kind": "MOAT_CLAIM_RIGOR",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "after_fields_sha256": "a4ccc16dade26c31de707bebff86fb119c302467ef4e996383b999ecabb0cac8",
+      "after_sha256": "f825f49b52894345adbd1680ab0d15d9d595d0d17a7190bee4e4bf3ef98c73b5",
+      "before_fields": {
+        "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation.",
+        "corrigendum_pending": [
+          {
+            "detail": "Moat/verifier-value claim has verifier_is_oracle=None. Every verifier-moat / beats-SC / verifier_value_added claim must declare verifier_is_oracle=False; missing or true is circular and headline-ineligible.",
+            "kind": "MOAT_CLAIM_RIGOR",
+            "severity": "critical"
+          }
+        ],
+        "flagged_adversarial": true,
+        "flagged_adversarial_restoration_note": "RESTORED 2026-07-27 by the outer loop. A conductor re-run overwrote this artifact IN PLACE and dropped its fabrication-gate determination. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true -- so silently losing the stamp RE-ADMITS a quarantined artifact to headline aggregation. The stamp was re-verified against the CURRENT contents before restoring: scripts/adversarial_verify.py still reports 1 flagged for this file, so the determination is live, not historical. The re-run's MEASUREMENT numbers are deliberately kept (fail-forward, never revert); only the determination and its corrigendum record are restored. The structural fix -- stopping the conductor from overwriting artifacts in place -- is filed separately.",
+        "flagged_adversarial_restored_fields": [
+          "flagged_adversarial",
+          "corrigendum_pending",
+          "corrigendum_note"
+        ],
+        "restored_2026_08_03_note": "RESTORED 2026-08-03 by the outer loop. Conductor commit 4b7c813d28 ran `git add -A` after a `pytest tests/python` child had rewritten this artifact in place, and the commit dropped the keys listed in restored_2026_08_03_keys. For most of these files this is the SECOND such loss -- they still carry a flagged_adversarial_restoration_note from the 2026-07-27 incident, which is why the recurrence is recorded here rather than quietly repaired. Per CLAUDE.md's fabrication gate, capstone / evidence-table / paper-v6 / headline-aggregation tasks MUST skip artifacts carrying flagged_adversarial: true, so a silently dropped stamp RE-ADMITS a quarantined artifact to headline aggregation. The conductor's MEASUREMENT values are deliberately kept (fail-forward, never revert); only the determinations and their corrigendum records are restored, byte-identical to their state at commit 509b3ed0e8."
+      },
+      "before_fields_sha256": "a4ccc16dade26c31de707bebff86fb119c302467ef4e996383b999ecabb0cac8",
+      "before_sha256": "f825f49b52894345adbd1680ab0d15d9d595d0d17a7190bee4e4bf3ef98c73b5",
+      "field_keys": [
+        "corrigendum_note",
+        "corrigendum_pending",
+        "flagged_adversarial",
+        "flagged_adversarial_restoration_note",
+        "flagged_adversarial_restored_fields",
+        "restored_2026_08_03_note"
+      ],
+      "fields_unchanged": true,
+      "hash_unchanged": true
+    }
+  },
+  "remaining_unredirected_writer_census": {
+    "files_with_results_literals_and_writer_calls": 6198,
+    "principle": "Residual direct writers are enumerated honestly; this artifact does not claim repository-wide closure from the migrated sample.",
+    "roots_scanned": [
+      "scripts",
+      "python/carnot",
+      "tests/python"
+    ],
+    "row_count": 6198,
+    "sample_first_20": [
+      {
+        "path": "scripts/_build_roadmap_446.py",
+        "result_literal_count": 12,
+        "writer_call_sample": [
+          {
+            "call": "open",
+            "line": 650
+          }
+        ]
+      },
+      {
+        "path": "scripts/adversarial_verify.py",
+        "result_literal_count": 4,
+        "writer_call_sample": [
+          {
+            "call": "p.write_text",
+            "line": 6160
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_arc_gateway_accurate_rescore.py",
+        "result_literal_count": 21,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 2018
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_arc_gateway_rescore.py",
+        "result_literal_count": 7,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 890
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_arc_llm_on_wallclock_envelope.py",
+        "result_literal_count": 2,
+        "writer_call_sample": [
+          {
+            "call": "Path(a.out).write_text",
+            "line": 1664
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_arc_max_actions_answer.py",
+        "result_literal_count": 10,
+        "writer_call_sample": [
+          {
+            "call": "open",
+            "line": 2951
+          },
+          {
+            "call": "json.dump",
+            "line": 2952
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_arc_reset_charge_attribution.py",
+        "result_literal_count": 3,
+        "writer_call_sample": [
+          {
+            "call": "open",
+            "line": 1122
+          },
+          {
+            "call": "json.dump",
+            "line": 1123
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_arc_scored_path_budget_sweep.py",
+        "result_literal_count": 9,
+        "writer_call_sample": [
+          {
+            "call": "Path(a.out).write_text",
+            "line": 2007
+          }
+        ]
+      },
+      {
+        "path": "scripts/analyze_scored_path_lever_ab.py",
+        "result_literal_count": 2,
+        "writer_call_sample": [
+          {
+            "call": "ANALYZED_ARTIFACT_INDEX.write_text",
+            "line": 1799
+          },
+          {
+            "call": "out_path.write_text",
+            "line": 1952
+          }
+        ]
+      },
+      {
+        "path": "scripts/anomaly_escalation.py",
+        "result_literal_count": 2,
+        "writer_call_sample": [
+          {
+            "call": "open",
+            "line": 165
+          }
+        ]
+      },
+      {
+        "path": "scripts/append_spec_2010.py",
+        "result_literal_count": 1,
+        "writer_call_sample": [
+          {
+            "call": "open",
+            "line": 4
+          },
+          {
+            "call": "open",
+            "line": 18
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_fresh_env_sweep.py",
+        "result_literal_count": 3,
+        "writer_call_sample": [
+          {
+            "call": "RESULTS / 'arc3_fresh_env_sweep.json'.write_text",
+            "line": 134
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_learned_verifier_demo.py",
+        "result_literal_count": 1,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 112
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_live_submit.py",
+        "result_literal_count": 4,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 370
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_lp85_offline_solver.py",
+        "result_literal_count": 1,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 59
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_replay_scorecard_metaharness.py",
+        "result_literal_count": 21,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 156
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_sc25_offline_solver.py",
+        "result_literal_count": 1,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 157
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_tn36_offline_solver.py",
+        "result_literal_count": 2,
+        "writer_call_sample": [
+          {
+            "call": "Path('results/arc_explore_trajectory_tn36.json').write_text",
+            "line": 323
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc3_verifier_routed_search_demo.py",
+        "result_literal_count": 1,
+        "writer_call_sample": [
+          {
+            "call": "out.write_text",
+            "line": 95
+          }
+        ]
+      },
+      {
+        "path": "scripts/arc_action6_bounds_audit.py",
+        "result_literal_count": 2,
+        "writer_call_sample": [
+          {
+            "call": "open",
+            "line": 282
+          },
+          {
+            "call": "json.dump",
+            "line": 283
+          },
+          {
+            "call": "open",
+            "line": 140
+          },
+          {
+            "call": "json.dump",
+            "line": 141
+          }
+        ]
+      }
+    ],
+    "source": "/tmp/carnot_6143_preconditions.json direct_writer_census"
+  },
+  "reproducibility_checksum": "8ed478106d9ac3a834b94213677570a49ed1697def5f5e7ac2cda3f9fcc29926",
+  "status": "complete_partial",
+  "test_commands": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_artifact_isolation.py -q --no-cov -o addopts=",
+      "label": "initial_failing_tests_before_implementation"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_artifact_isolation.py -q --no-cov -o addopts=",
+      "label": "focused_isolation_tests"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_artifact_isolation.py tests/python/test_deliverable_guard.py -q --no-cov -o addopts=",
+      "label": "focused_isolation_plus_deliverable_guard"
+    },
+    {
+      "command": "PYTHONFAULTHANDLER=1 .venv/bin/python -m coverage run -m pytest tests/python/test_experiment_artifact_isolation.py -q -o addopts=",
+      "label": "new_code_coverage_run"
+    },
+    {
+      "command": ".venv/bin/python -m coverage report --include='*/python/carnot/experiment_artifacts.py,*/python/carnot/testing/tracked_results_guard.py' --show-missing --fail-under=100",
+      "label": "new_code_coverage_report"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_artifacts.py python/carnot/testing/tracked_results_guard.py python/carnot/pipeline/deliverable_guard.py tests/python/test_experiment_artifact_isolation.py tests/python/conftest.py scripts/experiment_template.py",
+      "label": "ruff_check"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_artifacts.py python/carnot/testing/tracked_results_guard.py python/carnot/pipeline/deliverable_guard.py tests/python/test_experiment_artifact_isolation.py tests/python/conftest.py scripts/experiment_template.py",
+      "label": "ruff_format_check"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_operator_curated_doc_guard.py tests/python/test_operator_curated_docs_lint.py -q --no-cov -o addopts=",
+      "label": "protected_file_tests"
+    },
+    {
+      "command": "python scripts/determination_preservation_lint.py",
+      "label": "determination_preservation_lint"
+    },
+    {
+      "command": "python scripts/root_clutter_sweep.py --min-age-min 0",
+      "label": "root_clutter_dry_run"
+    },
+    {
+      "command": "python scripts/check_spec_coverage.py",
+      "label": "spec_coverage_repo_wide"
+    },
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_template.py::TestExperimentTemplateInit tests/python/test_experiment_template.py::TestCheckpointSaveResume -q --no-cov -o addopts=",
+      "label": "template_mutation_reproducer_subset"
+    }
+  ],
+  "test_exit_codes": {
+    "determination_preservation_lint": {
+      "exit_code": 0,
+      "receipt": "determination-preservation-lint: OK"
+    },
+    "focused_isolation_plus_deliverable_guard": {
+      "exit_code": 0,
+      "receipt": "30 passed; 1 warning."
+    },
+    "focused_isolation_tests": {
+      "exit_code": 0,
+      "receipt": "16 passed; 1 warning."
+    },
+    "initial_failing_tests_before_implementation": {
+      "exit_code": 2,
+      "receipt": "Expected pre-implementation failure: ModuleNotFoundError for carnot.experiment_artifacts."
+    },
+    "new_code_coverage_report": {
+      "exit_code": 0,
+      "receipt": "100% line coverage on python/carnot/experiment_artifacts.py and python/carnot/testing/tracked_results_guard.py: 180 statements, 0 missed."
+    },
+    "new_code_coverage_run": {
+      "exit_code": 0,
+      "receipt": "16 passed; coverage data captured for focused isolation tests."
+    },
+    "protected_file_tests": {
+      "exit_code": 0,
+      "receipt": "63 passed."
+    },
+    "root_clutter_dry_run": {
+      "exit_code": 0,
+      "receipt": "Would quarantine 0 root-level files; would delete 0 quarantined files."
+    },
+    "ruff_check": {
+      "exit_code": 0,
+      "receipt": "All checks passed."
+    },
+    "ruff_format_check": {
+      "exit_code": 0,
+      "receipt": "6 files already formatted."
+    },
+    "spec_coverage_repo_wide": {
+      "exit_code": 1,
+      "receipt": "Repo-wide checker reports 1215 pre-existing unrelated missing spec refs; new REQ-REPORT-6143 tests include explicit spec/scenario refs."
+    },
+    "template_mutation_reproducer_subset": {
+      "exit_code": 1,
+      "receipt": "12 passed before existing memory watchdog failed TestCheckpointSaveResume.test_checkpoint_save_creates_file with Memory leak: +603MB; new checkpoint redirection behavior is covered by tests/python/test_experiment_artifact_isolation.py."
+    }
+  },
+  "tracked_result_hash_before_after_matrix": {
+    "aggregate_digest_after": "adf2b88a986b35b0b3b7038679e9515e3a5391f54eb7a93791c9622ab313df06",
+    "aggregate_digest_algorithm": "sha256 over sorted git ls-files results entries and each path sha256 digest",
+    "aggregate_digest_before": "adf2b88a986b35b0b3b7038679e9515e3a5391f54eb7a93791c9622ab313df06",
+    "aggregate_digest_unchanged": true,
+    "git_status_results_mutations_after_focused_run": [],
+    "post_existing_tracked_results_count": 21408,
+    "pre_existing_tracked_results_count": 21408,
+    "principle": "Every pre-existing tracked result is byte-identical across the focused redirected test run.",
+    "quarantine_changed_paths": [],
+    "sentinel_changed_paths": [],
+    "sentinel_hash_matrix": {
+      "results/checkpoints/experiment_631/checkpoint.json": {
+        "after_sha256": "7ca1a2b3e200e919662b31a176146486665a4c635ae6eebab7b6b3b28d45f61b",
+        "before_sha256": "7ca1a2b3e200e919662b31a176146486665a4c635ae6eebab7b6b3b28d45f61b",
+        "unchanged": true
+      },
+      "results/experiment_1035_dualgpu_rocm_v3.json": {
+        "after_sha256": "cd300ecbe4026d079263f4b7cc262ead7863e8e0996dfe723cde97cff145eaf5",
+        "before_sha256": "cd300ecbe4026d079263f4b7cc262ead7863e8e0996dfe723cde97cff145eaf5",
+        "unchanged": true
+      },
+      "results/experiment_1038_milestone_retro_80.json": {
+        "after_sha256": "ee5425a1ae6425c2a78cc799bfcdf0bb3d89f3a2962e4f3a8d9d8c42174165d1",
+        "before_sha256": "ee5425a1ae6425c2a78cc799bfcdf0bb3d89f3a2962e4f3a8d9d8c42174165d1",
+        "unchanged": true
+      },
+      "results/experiment_1081_fpga_scale_benchmark.json": {
+        "after_sha256": "09809f83953df5d75f1ea15947762403d693ce44df03f99e17ea126081be043e",
+        "before_sha256": "09809f83953df5d75f1ea15947762403d693ce44df03f99e17ea126081be043e",
+        "unchanged": true
+      },
+      "results/experiment_1089_milestone_retro_84.json": {
+        "after_sha256": "1ad7f20243b64fb5c627bc97b600eaa1bd633cf61e85edef2fcfdf591ac6758c",
+        "before_sha256": "1ad7f20243b64fb5c627bc97b600eaa1bd633cf61e85edef2fcfdf591ac6758c",
+        "unchanged": true
+      },
+      "results/experiment_1103_milestone_retro_85.json": {
+        "after_sha256": "c46b7d8cdf0e5d89b9382124bc4efee86f65f43539dd8ac288d9faa49def2b7f",
+        "before_sha256": "c46b7d8cdf0e5d89b9382124bc4efee86f65f43539dd8ac288d9faa49def2b7f",
+        "unchanged": true
+      },
+      "results/experiment_1717_energy_guided_integration.json": {
+        "after_sha256": "4c81208045ec489d5cb2caab4df32d6cee3b8db11659a094c3a8da08236f56b0",
+        "before_sha256": "4c81208045ec489d5cb2caab4df32d6cee3b8db11659a094c3a8da08236f56b0",
+        "unchanged": true
+      },
+      "results/experiment_1717_findings_audit.json": {
+        "after_sha256": "cd3a76de87afa75e07cdd93621034e8a6f4342ee59cfe81ae5e93fcb0081a0c8",
+        "before_sha256": "cd3a76de87afa75e07cdd93621034e8a6f4342ee59cfe81ae5e93fcb0081a0c8",
+        "unchanged": true
+      },
+      "results/experiment_1747_ebt_mode_collapse_check.json": {
+        "after_sha256": "93959b1a1c36203859611c61049f0a082e08c3af273451c3080647004153383d",
+        "before_sha256": "93959b1a1c36203859611c61049f0a082e08c3af273451c3080647004153383d",
+        "unchanged": true
+      },
+      "results/experiment_1747_eqm_sparse_updates.json": {
+        "after_sha256": "3b248f24c75088e754517686b7dcdd24a18ee08ebbaafeb01c6055fe9521d801",
+        "before_sha256": "3b248f24c75088e754517686b7dcdd24a18ee08ebbaafeb01c6055fe9521d801",
+        "unchanged": true
+      },
+      "results/experiment_1750_huggingface_retry.json": {
+        "after_sha256": "613bfd71a6848b4f0eba45e547f76d19361e8d52b1328530f52f6437729731cd",
+        "before_sha256": "613bfd71a6848b4f0eba45e547f76d19361e8d52b1328530f52f6437729731cd",
+        "unchanged": true
+      },
+      "results/experiment_1750_symbolic_eval.json": {
+        "after_sha256": "bf423287ad8d6b51f5a3065a3c5479b951d60bec23a83bacfe542b2d9e7b4ea3",
+        "before_sha256": "bf423287ad8d6b51f5a3065a3c5479b951d60bec23a83bacfe542b2d9e7b4ea3",
+        "unchanged": true
+      },
+      "results/experiment_1796_findings_audit_186_187.json": {
+        "after_sha256": "7b443dac33fcfdf511a232310709a01a66e6b4e648a78def4a14e046c3aefed6",
+        "before_sha256": "7b443dac33fcfdf511a232310709a01a66e6b4e648a78def4a14e046c3aefed6",
+        "unchanged": true
+      },
+      "results/experiment_1796_performance_ablation.json": {
+        "after_sha256": "f90a40d147687786d7cf7d67fcdd8c53cc5c15fdb059f0a1f29393d1f8a6e928",
+        "before_sha256": "f90a40d147687786d7cf7d67fcdd8c53cc5c15fdb059f0a1f29393d1f8a6e928",
+        "unchanged": true
+      },
+      "results/experiment_1822_rtl_synth.json": {
+        "after_sha256": "32958edeb078f08d881eed0e80dcf3f42fad387d292679cb43a24d19ae2ad1a8",
+        "before_sha256": "32958edeb078f08d881eed0e80dcf3f42fad387d292679cb43a24d19ae2ad1a8",
+        "unchanged": true
+      },
+      "results/experiment_1822_rtl_synth.log": {
+        "after_sha256": "3678cdfb132edcca0a9721403003c88f7b8ae1e1ef91f29b714cb380a736675e",
+        "before_sha256": "3678cdfb132edcca0a9721403003c88f7b8ae1e1ef91f29b714cb380a736675e",
+        "unchanged": true
+      },
+      "results/experiment_1861_equivalence.json": {
+        "after_sha256": "a0d8a70e64070a77a534cc1a7a4e6ea70622db230f1dd44b412cefddaf5e755c",
+        "before_sha256": "a0d8a70e64070a77a534cc1a7a4e6ea70622db230f1dd44b412cefddaf5e755c",
+        "unchanged": true
+      },
+      "results/experiment_1869_hiled.json": {
+        "after_sha256": "72a0fbd824ed02894d0a64286a9875e12c84ea7404952d0524764a8ae3b2948d",
+        "before_sha256": "72a0fbd824ed02894d0a64286a9875e12c84ea7404952d0524764a8ae3b2948d",
+        "unchanged": true
+      },
+      "results/experiment_1911_e2e.json": {
+        "after_sha256": "230e446aa77a1ffdd1607095616e8b1feea6d6dc2ecaa4eb00cbcb07a8fcf164",
+        "before_sha256": "230e446aa77a1ffdd1607095616e8b1feea6d6dc2ecaa4eb00cbcb07a8fcf164",
+        "unchanged": true
+      },
+      "results/experiment_1911_phase4_canonical_decision.json": {
+        "after_sha256": "8a69128f5c1e4f424ada4123e35e74745ffe2cbd20fd446f78e7302e805b390a",
+        "before_sha256": "8a69128f5c1e4f424ada4123e35e74745ffe2cbd20fd446f78e7302e805b390a",
+        "unchanged": true
+      },
+      "results/experiment_1938_nrgpt_loss_probe.json": {
+        "after_sha256": "fa1b4e7971f3782becf4f768816765c7abd3bf9f5399754ddb3fb21e1eedde1c",
+        "before_sha256": "fa1b4e7971f3782becf4f768816765c7abd3bf9f5399754ddb3fb21e1eedde1c",
+        "unchanged": true
+      },
+      "results/experiment_1970_domino_fast_constraints.json": {
+        "after_sha256": "1a28958d01e4204ec096026bd72f2e97af33b2ec18a6509e2384a69d9b2b07e5",
+        "before_sha256": "1a28958d01e4204ec096026bd72f2e97af33b2ec18a6509e2384a69d9b2b07e5",
+        "unchanged": true
+      },
+      "results/experiment_1970_thrml_hookup.json": {
+        "after_sha256": "6c9311cfd27bb4db9a9793b7608c044fd24845b0c8e8fd67fbd1551526d2223c",
+        "before_sha256": "6c9311cfd27bb4db9a9793b7608c044fd24845b0c8e8fd67fbd1551526d2223c",
+        "unchanged": true
+      },
+      "results/experiment_2085_pem_sudoku_eval.json": {
+        "after_sha256": "638a7ab4784cd6c6aca265321f31e8f7f15dbe6d41568b3ababa3eb928a17c01",
+        "before_sha256": "638a7ab4784cd6c6aca265321f31e8f7f15dbe6d41568b3ababa3eb928a17c01",
+        "unchanged": true
+      },
+      "results/experiment_2090_crane_humaneval.json": {
+        "after_sha256": "a8346f0a70cbdb5544747d96f0924d247cade66903b3dfcc4b0257501421933b",
+        "before_sha256": "a8346f0a70cbdb5544747d96f0924d247cade66903b3dfcc4b0257501421933b",
+        "unchanged": true
+      },
+      "results/experiment_2097_eqm_eval.json": {
+        "after_sha256": "427e1dc36265f88d10244a90c437da19ba1ec6f1780f937f1ae5b46c178492cf",
+        "before_sha256": "427e1dc36265f88d10244a90c437da19ba1ec6f1780f937f1ae5b46c178492cf",
+        "unchanged": true
+      },
+      "results/experiment_2427_kv260_yosys_v4.json": {
+        "after_sha256": "c2d7793b238f46fd09969194378b989cdaf7b3fa18c3e32a743f27caca07cc32",
+        "before_sha256": "c2d7793b238f46fd09969194378b989cdaf7b3fa18c3e32a743f27caca07cc32",
+        "unchanged": true
+      },
+      "results/experiment_2510_ensemble_v7.json": {
+        "after_sha256": "da2554718ae67fc45d212c2d0cd6d7e049e45c2aa2c393168fe63404955a90ed",
+        "before_sha256": "da2554718ae67fc45d212c2d0cd6d7e049e45c2aa2c393168fe63404955a90ed",
+        "unchanged": true
+      },
+      "results/experiment_2521_ensemble_v7.json": {
+        "after_sha256": "d04f2db399a64d6fc88a6f24e30655c2a62c49d2849c7805631f2f6435c221ea",
+        "before_sha256": "d04f2db399a64d6fc88a6f24e30655c2a62c49d2849c7805631f2f6435c221ea",
+        "unchanged": true
+      },
+      "results/experiment_2538_kv260_sd_flash.json": {
+        "after_sha256": "4f3ce754ba6d7e0f2e42033d533778d90a3028ca1bebface786af8d4dac6c685",
+        "before_sha256": "4f3ce754ba6d7e0f2e42033d533778d90a3028ca1bebface786af8d4dac6c685",
+        "unchanged": true
+      },
+      "results/experiment_2721_paper_v6_theory_update_v2.json": {
+        "after_sha256": "4d205e93637e1d82cf32ee816081078ea490a988600adac438ddb68c1fe0dc18",
+        "before_sha256": "4d205e93637e1d82cf32ee816081078ea490a988600adac438ddb68c1fe0dc18",
+        "unchanged": true
+      },
+      "results/experiment_2736_arxiv_submission_package_prep.json": {
+        "after_sha256": "deefe843002f4409f4ec3358e891fb1adec3506a15afa8b6392ca80ed22c9a87",
+        "before_sha256": "deefe843002f4409f4ec3358e891fb1adec3506a15afa8b6392ca80ed22c9a87",
+        "unchanged": true
+      },
+      "results/experiment_2754_empirical_delta_audit.json": {
+        "after_sha256": "a6b501acbb927734e0b02e2c1280ba2ea62d7277d8892beb13a1a96426a7e540",
+        "before_sha256": "a6b501acbb927734e0b02e2c1280ba2ea62d7277d8892beb13a1a96426a7e540",
+        "unchanged": true
+      },
+      "results/experiment_2754_empirical_delta_audit.py": {
+        "after_sha256": "aca10a43a7819ac28f315b00f934e7d4e32470b7b906e3fabe57dc45be0769ff",
+        "before_sha256": "aca10a43a7819ac28f315b00f934e7d4e32470b7b906e3fabe57dc45be0769ff",
+        "unchanged": true
+      },
+      "results/experiment_2758_weak_strong_policy_fix_v2.json": {
+        "after_sha256": "120f1c5514963498988845fadcc3573556d66f2101acf504f261c715ca9cd148",
+        "before_sha256": "120f1c5514963498988845fadcc3573556d66f2101acf504f261c715ca9cd148",
+        "unchanged": true
+      },
+      "results/experiment_2824_cross_corpus_verifier_matrix.json": {
+        "after_sha256": "df5d8da40a0271d3416ec92aeb8fbccfbe383369824ba5575da86ea5e52084ad",
+        "before_sha256": "df5d8da40a0271d3416ec92aeb8fbccfbe383369824ba5575da86ea5e52084ad",
+        "unchanged": true
+      },
+      "results/experiment_307_jepa_real_training.json": {
+        "after_sha256": "74c3b1b8c8f16dcf3417e5e0ec549d66ec4a79ea8fc0a423ed06201924cf185e",
+        "before_sha256": "74c3b1b8c8f16dcf3417e5e0ec549d66ec4a79ea8fc0a423ed06201924cf185e",
+        "unchanged": true
+      },
+      "results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json": {
+        "after_sha256": "ecc7eb7f522c7272daa53c2d76354c49762f475ddcd2acc91d0a1c9dc3f5285b",
+        "before_sha256": "ecc7eb7f522c7272daa53c2d76354c49762f475ddcd2acc91d0a1c9dc3f5285b",
+        "unchanged": true
+      },
+      "results/experiment_3350_kv260_latency_benchmark.json": {
+        "after_sha256": "84ff751f18ac31ce2f3513b21f172fd789faac878c31f490485d28c3cc665381",
+        "before_sha256": "84ff751f18ac31ce2f3513b21f172fd789faac878c31f490485d28c3cc665381",
+        "unchanged": true
+      },
+      "results/experiment_3351_gatemate_latency_benchmark.json": {
+        "after_sha256": "e77a0af7a310bed727db05c00d967f9f6f470ad49335297b2bbee190fa91d8ac",
+        "before_sha256": "e77a0af7a310bed727db05c00d967f9f6f470ad49335297b2bbee190fa91d8ac",
+        "unchanged": true
+      },
+      "results/experiment_3386_fr11_nonforgetting.json": {
+        "after_sha256": "43a8c8476c473e3a58b26f9dafadc9d6c22b95e749e90948da5f4aeb2b92838f",
+        "before_sha256": "43a8c8476c473e3a58b26f9dafadc9d6c22b95e749e90948da5f4aeb2b92838f",
+        "unchanged": true
+      },
+      "results/experiment_3394_kona_global_opt.json": {
+        "after_sha256": "ba206559590c1a8caeb4827d62a77ec72f59a7e4094db64c746e6b7c9805126e",
+        "before_sha256": "ba206559590c1a8caeb4827d62a77ec72f59a7e4094db64c746e6b7c9805126e",
+        "unchanged": true
+      },
+      "results/experiment_3395_energy_based_replay.json": {
+        "after_sha256": "aa6dc697c74120f8f6608bf47b745c7692936194026ce7589ee7aa01381c174a",
+        "before_sha256": "aa6dc697c74120f8f6608bf47b745c7692936194026ce7589ee7aa01381c174a",
+        "unchanged": true
+      },
+      "results/experiment_339_session_startup.json": {
+        "after_sha256": "2e7e6110380b8c44b224fae1b1cbca91d4742a54b02a2b52ca37004159edeb35",
+        "before_sha256": "2e7e6110380b8c44b224fae1b1cbca91d4742a54b02a2b52ca37004159edeb35",
+        "unchanged": true
+      },
+      "results/experiment_3734_fix_harness_and_bounded_train_chunk1.json": {
+        "after_sha256": "b35f743b51732d438c6e9bf661e0ded6daad3da8f29b68a1ddb36d9e4b51cbf8",
+        "before_sha256": "b35f743b51732d438c6e9bf661e0ded6daad3da8f29b68a1ddb36d9e4b51cbf8",
+        "unchanged": true
+      },
+      "results/experiment_3946_r11l_first_solve.json": {
+        "after_sha256": "be12ec48055c06159b1f5761b995908d4d250dcd130b160fae29336b17f6875a",
+        "before_sha256": "be12ec48055c06159b1f5761b995908d4d250dcd130b160fae29336b17f6875a",
+        "unchanged": true
+      },
+      "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json": {
+        "after_sha256": "11dc5e9c47443d8d8ee7faa369ec92112492ef339b7c923fd1624e72c238e360",
+        "before_sha256": "11dc5e9c47443d8d8ee7faa369ec92112492ef339b7c923fd1624e72c238e360",
+        "unchanged": true
+      },
+      "results/experiment_4170_sota_ingestion_verifier_moat_guidance.json": {
+        "after_sha256": "f825f49b52894345adbd1680ab0d15d9d595d0d17a7190bee4e4bf3ef98c73b5",
+        "before_sha256": "f825f49b52894345adbd1680ab0d15d9d595d0d17a7190bee4e4bf3ef98c73b5",
+        "unchanged": true
+      },
+      "results/experiment_542_fover_expansion.json": {
+        "after_sha256": "236198b479307718a59ba0290a7e348e467d156ad236c86afbc8b56f4cde4039",
+        "before_sha256": "236198b479307718a59ba0290a7e348e467d156ad236c86afbc8b56f4cde4039",
+        "unchanged": true
+      },
+      "results/experiment_5861_attached_board_state_receipts.json": {
+        "after_sha256": "b9c9684e25ab12c0a94bb4a2ab4ee43b6a1bbbc16ed1e4a4e95ae3cd9c3ac558",
+        "before_sha256": "b9c9684e25ab12c0a94bb4a2ab4ee43b6a1bbbc16ed1e4a4e95ae3cd9c3ac558",
+        "unchanged": true
+      },
+      "results/experiment_631_jepa_v14_oracle.json": {
+        "after_sha256": "6a0af3e821a040232a4b4fc65aad62dd9d32995cb6dfa075abbae585364e62f9",
+        "before_sha256": "6a0af3e821a040232a4b4fc65aad62dd9d32995cb6dfa075abbae585364e62f9",
+        "unchanged": true
+      },
+      "results/experiment_833_constraint_delta_root_cause.json": {
+        "after_sha256": "50be61e5de2ac3ab1397056432b4f8ca4bd7274a7a38b9b3ae3a6a68354ce4e4",
+        "before_sha256": "50be61e5de2ac3ab1397056432b4f8ca4bd7274a7a38b9b3ae3a6a68354ce4e4",
+        "unchanged": true
+      },
+      "results/experiment_885_spectral_attention_probe.json": {
+        "after_sha256": "b4f36cf48b98cf07786cb4fece3cea75e9e8385e336b49ccd3f291f9462754d7",
+        "before_sha256": "b4f36cf48b98cf07786cb4fece3cea75e9e8385e336b49ccd3f291f9462754d7",
+        "unchanged": true
+      },
+      "results/experiment_911_drift_probe_tier0i.json": {
+        "after_sha256": "1ce01c11595dca27b6dc495a8b6fe7cb6bd1252c7880babbae0ae22da9c49413",
+        "before_sha256": "1ce01c11595dca27b6dc495a8b6fe7cb6bd1252c7880babbae0ae22da9c49413",
+        "unchanged": true
+      }
+    }
+  },
+  "traversal_symlink_and_broad_target_controls": {
+    "broad_target_controls": [
+      "empty override rejected",
+      "repository root rejected",
+      "production results root rejected",
+      "broad tempfile.gettempdir() root rejected",
+      "missing override directory rejected",
+      "non-temp directory rejected"
+    ],
+    "escape_controls": [
+      "relative traversal rejected",
+      "legacy results/../ traversal rejected",
+      "symlink escape outside override root rejected",
+      "external absolute path rejected while override is active"
+    ],
+    "tests": [
+      "test_invalid_override_targets_fail_closed",
+      "test_missing_and_non_temp_override_targets_fail_closed",
+      "test_traversal_and_symlink_escape_fail",
+      "test_absolute_paths_map_only_when_allowed"
+    ]
+  }
+}

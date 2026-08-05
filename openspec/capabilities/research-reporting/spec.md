@@ -15,6 +15,99 @@ performance.
 
 ## Requirements
 
+### REQ-REPORT-6143: Experiment Test Artifact Isolation
+
+Carnot experiment artifact writers SHALL resolve output paths through one
+canonical artifact-output resolver before writing files. In production, when no
+test override is present, the resolver SHALL keep the existing default artifact
+root at `/home/ianblenke/github.com/ianblenke/carnot/results` and SHALL remain
+compatible with legacy callers that pass paths such as
+`results/experiment_<id>.json`.
+
+The resolver SHALL support an explicit test override for experiment artifact
+output. A test override SHALL be accepted only when the target resolves inside a
+validated temporary directory. It SHALL reject empty values, the repository
+root, the workspace root, the production `results/` directory, broad temporary
+roots such as `/tmp`, traversal outside the override root, and symlink escapes.
+
+The pytest harness SHALL set the artifact-output override before test modules
+are collected or experiment modules execute, and SHALL restore the prior
+environment afterward. Tests that exercise experiment writers SHALL therefore
+write to task-owned temporary paths rather than tracked `results/**` files.
+
+The test harness SHALL detect any attempted write, atomic replacement, move,
+copy, truncate, unlink, or removal targeting a tracked file under `results/**`.
+This detection SHALL fail the responsible test even if the writer catches and
+swallows the original exception, and negative controls SHALL prove a real
+forbidden attempt was observed.
+
+Migrated direct-write surfaces SHALL remain compatible with existing production
+callers and SHALL use atomic replacement for JSON/text artifacts so interrupted
+writes do not leave partial tracked evidence. Redirected writes SHALL preserve
+all pre-existing adversarial/quarantine and corrigendum fields in tracked
+results by never opening those tracked files during test execution.
+
+The Exp 6143 artifact SHALL record pre/post hashes for sentinel and tracked
+result evidence, a quarantine-field before/after matrix, attempted-write
+detection receipts, traversal/symlink/broad-target controls, migrated-writer
+inventory, remaining unredirected writer census, protected-file receipts,
+determination-preservation lint receipts, test commands, exit codes, and an
+honest verdict that states whether tracked evidence remained byte-identical.
+
+#### SCENARIO-REPORT-6143-PRODUCTION-DEFAULT: Production Resolver Keeps Historical Results Root
+
+**Given** no artifact-output test override is set
+**When** an experiment resolves `results/experiment_6143_probe.json`
+**Then** the resolved production path remains under
+`/home/ianblenke/github.com/ianblenke/carnot/results` and legacy callers that
+include the `results/` prefix remain compatible.
+
+#### SCENARIO-REPORT-6143-PYTEST-TEMP-ROOT: Pytest Redirects Writers Before Collection
+
+**Given** pytest is configuring the Carnot Python test session
+**When** experiment modules are collected or executed
+**Then** the artifact-output override is already set to a validated temporary
+directory and an experiment writer resolving a legacy `results/...` path lands
+under that temporary root.
+
+#### SCENARIO-REPORT-6143-INVALID-OVERRIDE: Broad, Repository, Traversal, And Symlink Targets Fail Closed
+
+**Given** a caller provides an empty override, the repository root, the
+production `results/` directory, a broad temp root, a traversal path, or a path
+that resolves through a symlink outside the temporary root
+**When** the resolver validates the target
+**Then** it raises an error before any artifact write occurs.
+
+#### SCENARIO-REPORT-6143-DIRECT-WRITER-COMPATIBILITY: Shared Writers Use Redirected Atomic Paths
+
+**Given** a migrated direct writer receives a legacy `results/...` artifact path
+**When** it writes JSON or text through the shared writer
+**Then** the write is atomic, replaces any prior redirected artifact, leaves no
+temporary file behind, and does not touch the production tracked artifact path.
+
+#### SCENARIO-REPORT-6143-ATTEMPTED-TRACKED-WRITE-DETECTION: Legacy Result Writes Are Observed
+
+**Given** a simulated legacy test writer attempts to open a tracked
+`results/**` file for writing without using the resolver
+**When** the pytest result-write guard is installed
+**Then** the guard records the real forbidden attempt, raises at the write
+boundary, and exposes a violation ledger so swallowed exceptions still fail.
+
+#### SCENARIO-REPORT-6143-QUARANTINE-PRESERVATION: Quarantine Fields Survive Redirected Tests
+
+**Given** tracked sentinel artifacts carry `flagged_adversarial`,
+`corrigendum_pending`, `corrigendum_note`, or related restoration/provenance
+fields
+**When** the focused redirected writer tests run
+**Then** those tracked artifacts remain byte-identical and every protected
+quarantine field remains unchanged.
+
+## Implementation Status (REQ-REPORT-6143)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6143 | Implemented (`python/carnot/experiment_artifacts.py`, `python/carnot/testing/tracked_results_guard.py`, `scripts/experiment_template.py`, `python/carnot/pipeline/deliverable_guard.py`, `tests/python/conftest.py`, `results/experiment_6143_test_artifact_isolation.json`) | Implemented (`tests/python/test_experiment_artifact_isolation.py`) |
+
 ### REQ-REPORT-5335: Archive .486 And Record .487 Activation Preconditions
 
 The Exp 5335 workflow SHALL read `results/experiment_5334_capstone_v486.json`,

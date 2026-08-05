@@ -28,6 +28,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from carnot.experiment_artifacts import ArtifactPathError, resolve_experiment_artifact_path
+
 # ---------------------------------------------------------------------------
 # DeliverableGuard
 # ---------------------------------------------------------------------------
@@ -61,7 +63,17 @@ class DeliverableGuard:
     """
 
     def __init__(self, path: str) -> None:
-        self._path = path
+        self._path = str(self._resolve_guard_path(path))
+
+    @staticmethod
+    def _resolve_guard_path(path: str) -> Path:
+        raw = Path(path)
+        try:
+            return resolve_experiment_artifact_path(path, allow_external_absolute=True)
+        except ArtifactPathError:
+            if raw.is_absolute():
+                return raw
+            raise
 
     def assert_written(self) -> None:
         """Raise FileNotFoundError if the deliverable file is absent.
@@ -103,7 +115,8 @@ class DeliverableGuard:
         FileNotFoundError
             If neither the deliverable nor the partial file exists.
         """
-        if Path(self._path).exists() or Path(partial_path).exists():
+        resolved_partial = self._resolve_guard_path(partial_path)
+        if Path(self._path).exists() or resolved_partial.exists():
             return
         raise FileNotFoundError(
             f"DeliverableGuard: neither deliverable '{self._path}' "

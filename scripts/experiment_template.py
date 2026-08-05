@@ -127,6 +127,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, TypeVar
 
+from carnot.experiment_artifacts import atomic_write_json, resolve_experiment_artifact_path
 from carnot.inference.sota_models import cached_sota_pair
 from carnot.pipeline.deliverable_guard import DeliverableGuard
 from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner
@@ -731,6 +732,7 @@ class ExperimentTemplate:
         # override. The seed is applied in setup() and recorded in every artifact.
         self.random_seed: int = seed
         self._repo_root: Path = repo_root if repo_root is not None else _get_repo_root()
+        self._allow_artifact_override = repo_root is None
         self.checkpoint: dict[str, Any] | None = None
         self._started_at: str = _utc_now()
         self._t0: float = time.perf_counter()
@@ -749,8 +751,16 @@ class ExperimentTemplate:
         self.gpu_runner: Any | None = None
 
         # Set by setup()
-        self._ckpt_dir: Path = self._repo_root / "results" / "checkpoints" / f"experiment_{exp_id}"
-        self._output_path: Path = self._repo_root / deliverable
+        self._ckpt_dir: Path = resolve_experiment_artifact_path(
+            Path("results") / "checkpoints" / f"experiment_{exp_id}",
+            root=self._repo_root,
+            allow_override=self._allow_artifact_override,
+        )
+        self._output_path: Path = resolve_experiment_artifact_path(
+            deliverable,
+            root=self._repo_root,
+            allow_override=self._allow_artifact_override,
+        )
 
         # REQ-INFRA-033: guard that raises FileNotFoundError if the deliverable
         # is absent when assert_deliverable_written() is called at end of main().
@@ -1043,8 +1053,7 @@ class ExperimentTemplate:
             "reason": reason,
             "excluded_by_manifest": str(manifest_path),
         }
-        self._output_path.parent.mkdir(parents=True, exist_ok=True)
-        self._output_path.write_text(json.dumps(artifact, indent=2))
+        atomic_write_json(self._output_path, artifact, allow_override=False)
         _log.info(
             "check_exclusion_manifest: exp %d is excluded — wrote artifact and exiting",
             self.exp_id,
@@ -1409,7 +1418,7 @@ class ExperimentTemplate:
                 )
         # Re-write the artifact.  We keep the same indent=2 convention used by
         # build_result elsewhere to avoid noisy diffs.
-        self._output_path.write_text(json.dumps(artifact, indent=2))
+        atomic_write_json(self._output_path, artifact, allow_override=False)
 
     # ------------------------------------------------------------------
     # setup_gpu()
@@ -1941,9 +1950,7 @@ class ExperimentTemplate:
         """
         payload = {"step": step, "results": partial_results, "saved_at": _utc_now()}
         ckpt_path = self._ckpt_dir / _CHECKPOINT_FILENAME
-        tmp_path = ckpt_path.with_suffix(".tmp")
-        tmp_path.write_text(json.dumps(payload, indent=2))
-        tmp_path.rename(ckpt_path)  # atomic on POSIX
+        atomic_write_json(ckpt_path, payload, allow_override=False)
 
     def checkpoint_resume(self) -> dict[str, Any] | None:
         """Load the checkpoint if it exists; return ``None`` otherwise.
