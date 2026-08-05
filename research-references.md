@@ -32162,3 +32162,112 @@ sealed a usable low-chance Phase-D ladder.
   registered solve.
 
 <!-- V530-PLANNER-REFRESH-20260804-END -->
+
+## V531 Planner Refresh - 20260804
+
+Incremental planning sweep after terminal milestone `2026.08.530` and the
+`V530-PLANNER-REFRESH-20260804-END` boundary. The primary pass rechecked arXiv
+for 2025-2026 energy-based verification and reasoning, neural constraint
+satisfaction, Ising and probabilistic hardware, hallucination detection, KANs,
+energy-guided or constrained decoding, and continual/online learning. The
+secondary pass rechecked OpenReview, Hugging Face Papers, direct Semantic
+Scholar citation APIs for EBT (`2507.02092`) and ARM-EBM (`2512.15605`),
+targeted GitHub repositories, Extropic's official writing/hardware pages, and
+Logical Intelligence's Kona/Aleph pages. This block records only findings that
+became newly actionable after `.530` or changed operational planning.
+
+### Newly actionable deltas
+
+- **IDER: IDempotent Experience Replay for Reliable Continual Learning** -
+  arXiv:2603.00624, https://arxiv.org/abs/2603.00624; code at
+  https://github.com/YutingLi0606/Idempotent-Continual-Learning. IDER treats
+  stability under repeated application as an explicit continual-learning
+  property. Its published mechanism mutates model parameters and therefore is
+  not a direct Carnot fit, but the idempotence criterion is actionable after
+  Exp6120: duplicate or retried exact-outcome deliveries must leave the bounded
+  utility state, future decisions, audit ledger, and rollback result unchanged.
+  The `.531` continuous-self-learning stress test should add duplicate-delivery
+  and reordered-retry controls while retaining immutable model weights,
+  chronological first delivery, exact external outcomes, poison quarantine,
+  protected-prefix retention, and fixed-width ABI parity.
+- **Hallucination Is Linearly Decodable from Mid-Layer Hidden States in
+  Quantized LLMs** - arXiv:2606.02628,
+  https://arxiv.org/abs/2606.02628. This source was indexed earlier, but `.530`
+  makes its layer-localization result newly decisive: Carnot's prior MMLU path
+  tested final-token/final-layer summaries and retired after a null, whereas
+  the paper reports peak held-out truthfulness probes in intermediate layer
+  bands and little gain from an MLP over a linear probe. If the new Phase-D
+  corpus first establishes real headroom, `.531` should fail closed on
+  per-layer access, sweep a preregistered small mid-layer band plus the
+  pre-answer marker, and retain final-layer, norm, length, answer-label,
+  shuffled-label, and tuned-self-consistency controls. This is a genuinely
+  different internal-representation surface, not permission to reopen the
+  retired external generated-text/logprob scorer or MMLU final-embedding path.
+- **Thinking Before Constraining: A Unified Decoding Framework for Large
+  Language Models** - arXiv:2601.07525,
+  https://arxiv.org/abs/2601.07525. The source was also indexed earlier, but
+  Exp6115 supplies the missing local trigger: raw completion with a newline
+  stop produced empty strings and channel fragments despite a 512-token
+  budget. Use the paper only for a small transport canary that compares a
+  model-native chat template with a free-reasoning region followed by one
+  terminal answer field. Do not retry full ConstraintIR generation, finite-ID
+  grammar decoding, parser-only repair, or claim semantic improvement from
+  syntactic success. Exact Python/Z3 labels remain the authority, and the
+  canary must beat the frozen Exp6115 transport on non-empty completion,
+  terminal-field reachability, and parseability before any large pool runs.
+
+### Citation-trail, ecosystem, and hardware status
+
+- **Semantic Scholar:** dated 2026-08-04 direct-API receipts still return 32
+  visible EBT citing records and eight ARM-EBM citing records. The EBT trail is
+  still led by the already-indexed Explorative Modeling, Memoir, Solver-Hard,
+  fixed-point reasoners, LoopUS, and causal-energy work; the ARM-EBM trail
+  remains Path-Measure Dynamics, Constitutional On-Policy Safe Distillation,
+  Distributional EBMs, LoopUS, ontology constraints, Graph Energy Matching,
+  false-first-step planning, and Gibbs-aligned diffusion-LM work. Counts are
+  discovery receipts, not stable bibliometric claims.
+- **OpenReview / Hugging Face Papers:** the pass reconfirmed the probabilistic
+  algebraic layer, Scalable EBMs, NRGPT, Hidden-Align, ALMA, Continual Learning
+  Bench, and trigger-switched constrained decoding. IDER is promoted above.
+  None supplies a competent-but-unsaturated Carnot candidate pool or removes
+  the need for exact labels, tuned self-consistency, and shortcut controls.
+- **GitHub:** targeted and Trending searches exposed no maintained EBM,
+  constraint, KAN, or verifier repository that displaces Carnot's local GGUF
+  runtime, exact validators, or transactional memory. IDER's public repository
+  is a design reference for the idempotence control, not a dependency or a
+  claimed reproduction.
+- **Extropic schedule change:** the current official hardware page at
+  https://extropic.ai/hardware now labels both the Z1 Stick and Z1 Card as
+  **early access 2027**, replacing the 2026 label recorded in V530. Carnot has
+  no authenticated XTR-0/Z1 route, so no TSU task, power result, speedup claim,
+  or 2026 availability assumption is eligible for `.531`.
+- **Logical Intelligence:** the public Kona page still describes a continuous,
+  globally scored, non-autoregressive trace model beneath an LLM coordination
+  layer, and the Aleph page reports machine-checked Lean orchestration. The
+  pages still expose no public Kona weights, documented local API, or
+  reproducible comparator. They support Carnot's generator/verifier boundary
+  only as architecture context.
+
+### V531 planning impact
+
+- Diagnose and repair the Exp6115 model-native transport on a small frozen
+  calibration slice before spending compute on another candidate pool. A
+  transport pass is necessary but never sufficient for a semantic claim.
+- Build the Phase-D pool only with the mandated
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, a pinned chat template, non-truncating
+  budget, genuine same-model `K`, question-clustered intervals, exact labels,
+  effective-`K`, all-wrong, method-validity, relabel, and shortcut controls.
+- Gate any hidden-state experiment on measured candidate headroom and on
+  authenticated matching-base per-layer access; compare a small mid-layer band
+  with the already-negative final-layer surface rather than assuming the paper
+  transfers.
+- Stress Exp6120's outcome-committed reduced-order state under equal state
+  budgets, delayed and duplicate outcomes, domain shift, idempotent retries,
+  poison quarantine, rollback, and future-event utility before any default-off
+  shadow integration.
+- Keep ARC at exactly one live-path instrumentation/ablation slot. Do not rerun
+  the closed induction line or claim a level solve. Do not restage GateMate
+  while its physical-state receipt remains unchanged; retain current hardware
+  as requirements/context only.
+
+<!-- V531-PLANNER-REFRESH-20260804-END -->
