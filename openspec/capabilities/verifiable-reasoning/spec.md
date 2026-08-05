@@ -21258,3 +21258,160 @@ and unrelated PIDs are not killed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6127 | Planned (`python/carnot/experiment_6127_phase_d_native_chat_transport_canary.py`, `results/experiment_6127_phase_d_native_chat_transport_canary.json`) | Planned (`tests/python/test_experiment_6127_phase_d_native_chat_transport_canary.py`) |
+
+### REQ-VERIFY-6128: Exp6128 Phase D Calibration Pool V2
+
+The repository SHALL provide Exp 6128 at
+`python/carnot/experiment_6128_phase_d_calibration_pool_v2.py` and write
+`results/experiment_6128_phase_d_calibration_pool_v2.json`, with raw candidate
+rows in `results/experiment_6128_phase_d_calibration_pool_v2.rows.jsonl`.
+Exp 6128 SHALL freeze the passing Exp6127 model-native chat template and decode
+policy before generation, then answer the calibration-only semantic question:
+whether the mandated local generator yields a competent, diverse, unsaturated
+natural candidate pool.
+
+- REQ-VERIFY-6128-1: The structured gate SHALL recompute and hash Exp6103
+  ladder artifacts, row and split files, Exp6115 rows, Exp6127 canary evidence,
+  the pinned GGUF model file, tokenizer/chat-template metadata, selected
+  calibration IDs, exact validators, relevant code, output paths, GPU and lease
+  state, protected files, exclusion manifest, known issues, and inherited debt
+  before any model load; if the gate fails, generation SHALL be blocked and
+  `backend_call_count` SHALL remain zero.
+- REQ-VERIFY-6128-2: Selection SHALL use only Exp6103 calibration rows, select
+  at least 90 independent questions, balance all three families at 30 questions
+  each, include preregistered difficulty strata, keep semantic groups unique,
+  and record `held_test_access_count == 0`.
+- REQ-VERIFY-6128-3: Generation SHALL use exactly
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, the pinned Q4_K_M file, and the embedded
+  GGUF tokenizer/chat template contract qualified by Exp6127; no legacy small
+  model may contribute headline rows.
+- REQ-VERIFY-6128-4: Every selected question SHALL receive at least eight
+  independent stochastic natural samples with distinct declared seeds and fixed
+  sampling settings. Hidden label retries, deterministic answer builders, JSON
+  grammar, finite-ID transport, parser repair, and held-label-conditioned
+  retries SHALL all have count zero.
+- REQ-VERIFY-6128-5: Every attempted draw SHALL remain auditable in the raw row
+  file, including serialized messages, raw completion, normalized completion,
+  stop reason, token count, latency, seed, model/template hashes, final answer,
+  method trace, exact Python/Z3 labels, parser receipt, and compute receipt.
+  Malformed, unparseable, duplicate, or wrong rows SHALL NOT be silently
+  excluded.
+- REQ-VERIFY-6128-6: Exact correctness and method validity SHALL be replayed
+  through independent Python and Z3 validators from the sealed Exp6103 rows;
+  parser failures count as failures and solver difficulty covariates SHALL NOT
+  become model-competence labels.
+- REQ-VERIFY-6128-7: The workflow SHALL report per-candidate accuracy with a
+  clustered interval, parseability, method validity, effective K, exact and
+  semantic duplicate rates, answer-cluster entropy, all-wrong rate, oracle@K,
+  tuned self-consistency, family/stratum/shortcut/relabel metrics, latency,
+  token counts, and GPU lifecycle receipts.
+- REQ-VERIFY-6128-8: Calibration readiness SHALL require parseability at least
+  `0.95`, effective K at least `7.5`, per-candidate accuracy in `[0.40, 0.70]`
+  with the lower interval above the enumerated `0.25` floor, all-wrong rate at
+  most `0.10`, method validity at least `0.80`, and `oracle@K - tuned_SC` at
+  least `0.10`.
+- REQ-VERIFY-6128-9: Exactly one calibration policy SHALL be frozen only when
+  all competence, method-validity, parseability, diversity, all-wrong, lifecycle,
+  no-hidden-retry, and protected-file gates pass conjunctively. If no policy
+  qualifies, the artifact SHALL stop with `complete_null:` rather than relaxing
+  thresholds or touching held rows.
+- REQ-VERIFY-6128-10: GPU lifecycle receipts SHALL be task-owned and record
+  selected GPU, server PID, load/decode/release timeline, attributable memory
+  engagement, backend close or CUDA sync, process exit, and release toward the
+  pre-load baseline without killing unrelated PIDs.
+- REQ-VERIFY-6128-11: Retirement SHALL be exact: blocked preconditions produce
+  `blocked:`, a completed but unqualified pool produces `complete_null:`, a
+  qualified pool produces `complete_ready:`, and retired mechanisms remain at
+  zero counts.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`,
+`immutable_ladder_split_question_and_validator_hashes`,
+`calibration_question_family_stratum_and_semantic_group_counts`,
+`model_specs_and_exact_file_hashes`,
+`tokenizer_chat_template_decode_seed_and_budget_contract`,
+`attempted_expected_present_missing_and_duplicate_row_counts`,
+`raw_prompt_completion_stop_token_method_answer_and_exact_label_receipts`,
+`per_candidate_accuracy_clustered_intervals_parseability_method_validity`,
+`effective_k_exact_semantic_duplicate_all_wrong_oracle_and_tuned_sc_metrics`,
+`family_stratum_shortcut_relabel_and_answer_cluster_metrics`,
+`task_owned_gpu_server_pid_engagement_and_release_timeline`,
+`hidden_label_retry_and_deterministic_builder_counts`,
+`qualification_gate_matrix`, `frozen_policy_receipt`,
+`phase_d_calibration_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `random_seed`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `structured_gate_receipt`: every immutable input, model, template, runtime, output, GPU, lease, protected-file, exclusion, and inherited-debt check passes before generation.
+- `immutable_ladder_split_question_and_validator_hashes`: sealed ladder, split, selected question, and exact validator receipts are content-addressed before any candidate row is trusted.
+- `calibration_question_family_stratum_and_semantic_group_counts`: calibration selection is powered on independent frozen calibration groups and never held labels.
+- `model_specs_and_exact_file_hashes`: every headline row traces to the single pinned 26B Q4_K_M GGUF and no substitute model.
+- `tokenizer_chat_template_decode_seed_and_budget_contract`: Exp6127's model-native chat template, no-newline-stop decode policy, seeds, and token budget are frozen before generation.
+- `attempted_expected_present_missing_and_duplicate_row_counts`: all attempted draws remain auditable; no malformed, duplicate, or wrong row is silently excluded.
+- `raw_prompt_completion_stop_token_method_answer_and_exact_label_receipts`: raw prompts, messages, completions, stop receipts, token counts, method traces, final answers, and exact labels are preserved.
+- `per_candidate_accuracy_clustered_intervals_parseability_method_validity`: competence, parseability, and method validity are separate gates with clustered uncertainty.
+- `effective_k_exact_semantic_duplicate_all_wrong_oracle_and_tuned_sc_metrics`: nominal K is discounted for exact and semantic duplication, all-wrong, oracle@K, and tuned SC are measured at the question level.
+- `family_stratum_shortcut_relabel_and_answer_cluster_metrics`: family, stratum, shortcut, relabel, and answer-cluster controls expose where readiness succeeds or fails.
+- `task_owned_gpu_server_pid_engagement_and_release_timeline`: CUDA lifecycle evidence is attributable to the task-owned worker and cleanup is measured.
+- `hidden_label_retry_and_deterministic_builder_counts`: hidden label retries, deterministic answer builders, grammar, finite-ID transport, parser repair, and held-label retries are all zero.
+- `qualification_gate_matrix`: all gates are conjunctive and held generation receives one immutable policy.
+- `frozen_policy_receipt`: the held-generation policy is frozen exactly once from calibration evidence, or absent with a complete-null verdict.
+- `phase_d_calibration_ready_score`: readiness is exactly 1 only when the full conjunctive calibration policy gate passes.
+- `retirement_triggered`: retired or blocked conditions are recorded without reopening legacy transports or small-model headline paths.
+- `protected_files_unchanged`: conductor and reconciler-owned files remain byte-identical.
+- `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`, and `reproducibility_checksum`: report measured `live_local_sota_gguf_cuda_native_chat_calibration_pool_v2`.
+- `verifier_is_oracle` and `missing_verifier_gaps`: Python/Z3 labels are oracle for exact finite-domain semantics and any free-form method-trace gaps are explicit.
+- `honest_verdict`: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:`.
+
+### SCENARIO-VERIFY-6128-GATE: Structured Gate Blocks Before Model Load
+
+**Given** Exp6103, Exp6115, Exp6127, the pinned GGUF, tokenizer/chat-template
+metadata, selected calibration IDs, validator hashes, protected-file hashes,
+GPU state, lease state, exclusion manifest, and inherited debt
+**When** Exp6128 evaluates its structured gate
+**Then** it records content hashes and blocks before any model load unless
+every required precondition passes.
+
+### SCENARIO-VERIFY-6128-CALIBRATION-ONLY: Balanced Selection Reads No Held Labels
+
+**Given** the sealed Exp6103 ladder contains calibration and held-test rows
+**When** Exp6128 selects its calibration pool
+**Then** it selects at least 90 calibration questions balanced across the
+three families, records preregistered difficulty-stratum counts, preserves
+semantic-group uniqueness, and keeps held-test access at zero.
+
+### SCENARIO-VERIFY-6128-INDEPENDENT-K: Natural Rows Preserve K And Seeds
+
+**Given** Exp6127's frozen model-native messages policy is ready
+**When** Exp6128 decodes selected calibration prompts
+**Then** every question receives at least eight stochastic natural samples
+with distinct declared seeds, fixed decode settings, raw receipts, exact labels,
+method traces, and compute receipts, with zero hidden retries or deterministic
+answer builders.
+
+### SCENARIO-VERIFY-6128-GATES: Qualification Requires Separate Conjunctive Gates
+
+**Given** raw candidate rows and sealed exact validators
+**When** Exp6128 computes calibration metrics
+**Then** parseability, effective K, accuracy band and floor interval,
+all-wrong rate, method validity, oracle-minus-tuned-SC, lifecycle, protected
+files, and no-hidden-retry gates are evaluated separately and combined
+conjunctively.
+
+### SCENARIO-VERIFY-6128-POLICY: Frozen Policy Or Honest Null
+
+**Given** calibration-only metrics under the frozen Exp6127 transport contract
+**When** Exp6128 chooses a policy
+**Then** exactly one immutable held-generation policy is frozen only if all
+gates pass; otherwise the artifact records `complete_null:` without held-row
+access or threshold relaxation.
+
+## Implementation Status (REQ-VERIFY-6128)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6128 | Planned (`python/carnot/experiment_6128_phase_d_calibration_pool_v2.py`, `results/experiment_6128_phase_d_calibration_pool_v2.json`) | Planned (`tests/python/test_experiment_6128_phase_d_calibration_pool_v2.py`) |
