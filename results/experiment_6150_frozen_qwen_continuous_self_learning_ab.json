@@ -1,0 +1,33 @@
+{
+  "experiment": 6150,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-05",
+  "started_at": "2026-08-05T22:07:07.147455+00:00",
+  "finished_at": "2026-08-05T22:07:07.147455+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp6148 and Exp6149 readiness: frozen-Qwen prospective continuous self-learning A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp6148-shifted-family-admission-held.shifted_family_admission_ready_score (actual=0.0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6148-shifted-family-admission-held",
+      "artifact_field": "shifted_family_admission_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    },
+    {
+      "upstream": "exp6149-certified-strategy-schema-fixture",
+      "artifact_field": "certified_strategy_fixture_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

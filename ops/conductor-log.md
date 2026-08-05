@@ -15373,3 +15373,4 @@ No output thi |
 | 2026-08-05 20:48 UTC | Gated on Exp6145 readiness: flagship-GGUF chronolo | OK | 100 passed, 1 warning in 14.53s |
 | 2026-08-05 21:10 UTC | Gated on Exp6146 corpus readiness: TOOD-style task | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-05 21:33 UTC | Gated on Exp6147 calibration readiness: one-shot s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-05 22:05 UTC | Gated on Exp6145 stream readiness: certified strat | OK | 92 passed, 1 warning in 31.21s |
