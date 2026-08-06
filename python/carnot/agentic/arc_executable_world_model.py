@@ -5489,6 +5489,7 @@ class LocalGGUFProposer:
         temperature: float,
         stop: Optional[list],
         attempt: int = 0,
+        _continuation_prefix: Optional[str] = None,
     ) -> tuple[dict, str]:
         """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
         applies the GGUF's OWN embedded chat template -- the turn delimiters Qwen3.6/ThinkingCap
@@ -5504,17 +5505,30 @@ class LocalGGUFProposer:
             so _extract_python cannot accidentally grab a ```python block written INSIDE the
             model's reasoning trace.
 
+        `_continuation_prefix`, internal-only (set only by the retry this method issues on
+        itself -- see CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION below), appends a trailing
+        assistant-role message so the server continues generation from that exact text instead
+        of starting a fresh turn. Not part of the public call surface.
+
         Raises on a network/transport error; the caller converts that to its failure tuple,
         exactly like the raw /completion path."""
         import json as _json
         import urllib.request
 
+        messages: list[dict[str, str]] = [{"role": "user", "content": prompt}]
+        if _continuation_prefix is not None:
+            messages.append({"role": "assistant", "content": _continuation_prefix})
         payload: dict[str, Any] = {
-            "messages": [{"role": "user", "content": prompt}],
+            "messages": messages,
             "max_tokens": int(max_tokens),
             "temperature": float(temperature),
             "cache_prompt": True,
         }
+        if _continuation_prefix is not None:
+            # llama-server's convention for resuming generation from a supplied assistant
+            # prefix: skip re-adding the template's own generation prompt (the turn markers
+            # that would otherwise be inserted AFTER our partial assistant text, corrupting it).
+            payload["add_generation_prompt"] = False
         # Same opt-in determinism as the raw /completion path -- it must be on BOTH, or the
         # chat-template route (which Qwen3.6/ThinkingCap take) would stay nondeterministic while
         # the artifact claimed a seeded run. `attempt` is threaded in from the retry ladder so
@@ -5567,6 +5581,64 @@ class LocalGGUFProposer:
             and os.environ.get("CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK") == "1"
         ):
             extraction = reasoning
+        # OPT-IN FORCED-CONTINUATION RETRY (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION=1).
+        #
+        # WHAT IT IS FOR. Measured live 2026-08-05, n=5 cells, one call each: the model reasons
+        # correctly (sb26 derives the exact right numpy slice; r11l explicitly decides "let's
+        # just return the grid as is") and then emits EOS at </think> WITHOUT EVER WRITING CODE,
+        # at 4.5k-11.7k tokens -- all well under the 16384 budget, so this is not truncation. The
+        # channel-fallback above cannot help here: it reads the reasoning channel INSTEAD of the
+        # answer channel, but in this failure shape neither channel contains a code block, so the
+        # fallback just substitutes one codeless text for another.
+        #
+        # THE FIX. Re-issue ONE request with the model's own reasoning fed back as a trailing
+        # assistant-role message (an "assistant prefill" -- the standard llama.cpp-server
+        # mechanism for resuming generation from supplied text) plus an explicit nudge to
+        # continue into the code fence. The model continues from exactly where it stopped rather
+        # than re-planning from scratch, so this costs one short follow-up call, not a full retry.
+        #
+        # WHY IT IS DEFAULT-OFF, SEPARATE FROM THE FLAG ABOVE, AND ONLY FIRES ONCE. Same
+        # quality-risk reasoning as the channel fallback -- forcing continuation past a model's
+        # own EOS is a real intervention the frozen live/scored path must not inherit silently.
+        # Kept as a SEPARATE flag (not folded into CARNOT_ARC_EMPTY_CONTENT_FALLBACK) because it
+        # is a materially different mechanism: a second network call, not a different read. Fires
+        # at most once per call -- `_continuation_prefix is None` is what distinguishes a
+        # top-level call from the retry it issues on itself, so the retry can never retry again.
+        # No-op whenever `extraction` already has a code marker: every passing path is untouched
+        # with the flag on or off, which is the property the both-directions test pins.
+        if (
+            _continuation_prefix is None
+            and "```" not in extraction
+            and "def " not in extraction
+            and reasoning.strip()
+            and os.environ.get("CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION") == "1"
+        ):
+            fence = "```python\n"
+            _prefix = reasoning.rstrip() + "\n</think>\n\n" + fence
+            retry_normalized, retry_extraction = self._chat_complete_request(
+                prompt,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                stop=stop,
+                attempt=attempt,
+                _continuation_prefix=_prefix,
+            )
+            # DEFENSIVE, NOT ASSUMED: whether this llama.cpp build echoes the supplied prefix
+            # back in its response, or returns only the newly-generated continuation tokens, is
+            # server-specific and was NOT confirmed before this shipped (see the commit message
+            # for the live-probe result). Handle both without guessing which one is live: if the
+            # retry's own extraction already carries a fence/def marker, the prefix was echoed
+            # and `retry_extraction` is already complete; otherwise it is continuation-only and
+            # our forced fence belongs in front of it.
+            final = (
+                retry_extraction
+                if ("```" in retry_extraction or "def " in retry_extraction)
+                else (fence + retry_extraction if retry_extraction.strip() else "")
+            )
+            full = str(retry_normalized.get("content") or final)
+            extraction = final
+            self.last_final_content = final
+            raw = retry_normalized
         # HOW MANY TOKENS THE SERVER ACTUALLY GENERATED -- normalized into llama.cpp's native
         # `timings.predicted_n` shape. WITHOUT THIS the mode-C detector is STRUCTURALLY DEAD on
         # this endpoint (found 2026-07-27, adversarial review): the normalized dict carried no
