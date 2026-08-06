@@ -21457,3 +21457,129 @@ between engine accuracy and any scored action.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6091 | `python/carnot/agentic/arc_executable_world_model.py` — `refactor_show_engine_enabled()` (env `CARNOT_ARC_REFACTOR_SHOW_ENGINE`, default OFF via `_REFACTOR_SHOW_ENGINE_DEFAULT`), `_current_engine_source()` (bounded at `_REFACTOR_ENGINE_SOURCE_MAX_CHARS`, truncation announced and counted, unreadable engine degrades to the OFF prompt), `_REFACTOR_ENGINE_BLOCK_HEADER`, and a new `engine_source=` keyword on `refactor_prompt` whose splice sits between the instruction and the MISMATCHES block. Drivers: `scripts/experiments/outer_loop_arc_refine_instrument_repro_20260803.py` (reproduces BOTH defects by calling shipped code over the 13 real windows; `results/arc_e3` checksummed before/after and verified unchanged), `scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py` (the 3-arm A/B; refuses to run unless `CARNOT_ARC_E3_DIR` is redirected off the tracked evidence store, and reads the IMPORT-time value so the check cannot be a no-op set from inside), `scripts/experiments/outer_loop_arc_refine_engine_visible_analyse_20260803.py` (pre-registered analysis + the stopping-rule verdict), `scripts/experiments/outer_loop_arc_refine_blocked_artifact_20260803.py` (the honest outcome artifact, every number parsed from an existing file). | `tests/python/test_arc_refactor_show_engine_20260803.py` — 7 tests. **Mutation-proven:** deleting the `{engine_block}` splice from the prompt f-string turns 3 of 7 red (`test_on_arm_delivers_engine_source_into_the_rendered_prompt`, `..._reads_the_engine_off_disk_...`, `test_oversize_engine_is_truncated_and_says_so`); source restored and re-verified green. The OFF arm is asserted byte-identical to the shipped prompt, including with an explicit `engine_source=` passed — the FLAG selects the arm, not the argument. RESULT: **the two instrument defects are FIXED and PROVEN; the live A/B produced NO number.** `results/experiment_6091_refine_engine_visible_ab.json` (adversarial-verify clean) records 2 attempted cells, **0** with `substrate_cuda_throughout`. Every llama-server started on this host was killed within seconds to minutes — lifetimes **369 s / 17 s / 10 s / 53 s** read off the servers' own logs, plus a no-harness standalone control that died at **22 s** — with 0 OOM/abort records and a peak decode of 34.75 tok/s (i.e. genuinely working GPU inference right up to the kill). Ruled out by measurement: host OOM (94 GB free), the 2-hour orphan janitor, the CUDA capacity guard, llama.cpp slot arithmetic (fixed independently with `--parallel 1`), a name-matching reaper (binary copied to a private path), process-group delivery (`setsid` on parent AND `os.setsid()` in the child), and an inherited `SIG_IGN` (llama.cpp reinstalls its own console handler). Stopping the conductor to free the machine was deliberately NOT attempted. **This is NOT a null result** — a null needs cells whose substrate is vouched for, and reporting one would be the fabrication the per-cell substrate witness exists to prevent. |
+
+## REQ-ARC-WMTE-6167: Fixed Task-Aware Multi-Seed Replication
+
+Experiment 6167 SHALL registry-precheck the selected public games before any live
+episode and SHALL refuse duplicate solve work. It SHALL freeze the Exp6154 global
+and task-aware transition-admission policies, thresholds, upstream code hashes,
+result hashes, registry hash, seed list, game list, action budget, exclusions, and
+protected-file hashes before scoring. The selected held set SHALL contain at least
+six public adapter-disabled games, SHALL include `tu93` when present in the public
+catalog, and SHALL use at least three frozen seeds per game with matched action
+budgets. The policy freeze SHALL NOT be fitted from the new held outcomes.
+
+The experiment SHALL run the live scored path
+`make_carnot_agent` / `E3AgentPolicy` and credit only decisions whose policy
+triggered on that live path. The artifact SHALL record that adapters,
+per-game lookup routes, solver-kit shortcuts, registry gotcha text,
+hand calibration, game-source access, offline ground-truth BFS, and LLM induction
+were disabled for the measurement. Transition labels SHALL come only from the
+agent's own runtime attempts and observed before/after frames.
+
+Experiment 6167 SHALL write
+`results/experiment_6167_arc_task_aware_multiseed_replication.json` with these
+bare top-level fields: `status`, `preconditions_checked`,
+`upstream_policy_code_result_and_registry_hashes`,
+`registry_precheck_and_no_duplicate_receipt`,
+`development_and_held_game_split_hash`,
+`global_and_task_aware_freeze_manifests`,
+`adapter_per_game_lookup_solver_gotcha_and_hand_calibration_disable_receipts`,
+`live_entrypoint_and_import_reachability`,
+`own_attempt_transition_provenance`,
+`game_seed_action_budget_and_arm_counts`,
+`per_arm_triggered_decision_counts`,
+`per_game_seed_transition_change_recall_safety_action_and_latency_metrics`,
+`grouped_paired_intervals`,
+`false_confident_admission_and_abstention_matrices`,
+`shuffle_alias_identity_noop_invented_trigger_denominator_light_and_label_controls`,
+`known_negative_tail_receipt`, `solve_claimed`, `level_credit_delta`,
+`registry_levels_unchanged`, `offline_ground_truth_bfs`, `used_game_source`,
+`llm_invocation_count`, `arc_task_aware_multiseed_replication_ready_score`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles SHALL be included for:
+
+- `status`: complete_positive, complete_null, retired, or blocked names the terminal cross-game/seed replication result.
+- `preconditions_checked`: hashes, registry, catalog, seeds, output path, exclusions, protected files, and root clutter are checked before episodes.
+- `upstream_policy_code_result_and_registry_hashes`: Exp6154 policy code, result, live entrypoints, registry, adapters, solvers, gotcha paths, seeds, output, exclusions, and protected files are content-addressed before reuse.
+- `registry_precheck_and_no_duplicate_receipt`: selected public games are already registered and the run refuses duplicate solve credit before any episode.
+- `development_and_held_game_split_hash`: the six-game held set, upstream development source, seeds, and action budgets are frozen before held scoring.
+- `global_and_task_aware_freeze_manifests`: global and task-aware decision rules and thresholds are inherited from Exp6154 before new held episodes and are not fit from held outcomes.
+- `adapter_per_game_lookup_solver_gotcha_and_hand_calibration_disable_receipts`: per-game adapters, lookup routes, solver shortcuts, registry gotcha text, hand calibration, game-source reads, offline BFS, and LLM induction are disabled.
+- `live_entrypoint_and_import_reachability`: the measurement reaches the canonical make_carnot_agent/E3AgentPolicy path rather than an orphan scorer.
+- `own_attempt_transition_provenance`: every scored transition comes from the agent's own runtime action and observed before/after frame.
+- `game_seed_action_budget_and_arm_counts`: game count, seed count, episode count, action budget, and arm counts prove the multi-game/multi-seed matched-budget design.
+- `per_arm_triggered_decision_counts`: only decisions whose scorer triggered on the live path are credited.
+- `per_game_seed_transition_change_recall_safety_action_and_latency_metrics`: every game/seed tail reports transition recall, changed-cell recall, action recall, safety, invalid action, decision, and latency metrics.
+- `grouped_paired_intervals`: task-aware minus global deltas are paired by game and seed and require a positive grouped lower confidence bound for readiness.
+- `false_confident_admission_and_abstention_matrices`: false confident admissions and abstentions are reported by game/seed and arm so safety regressions cannot hide in aggregates.
+- `shuffle_alias_identity_noop_invented_trigger_denominator_light_and_label_controls`: shuffle, alias, identity/no-op, label, invented-trigger, denominator, and light controls guard shortcut and denominator artifacts.
+- `known_negative_tail_receipt`: the prior Exp6154 tu93 negative tail and the current tu93 per-seed tail are named before any positive generalization claim.
+- `solve_claimed`: bare false; this is transition-admission replication, not level solving.
+- `level_credit_delta`: bare 0; registry level totals do not move.
+- `registry_levels_unchanged`: bare true; registry level fields remain unchanged before and after the run.
+- `offline_ground_truth_bfs`: bare false; no exhaustive or oracle ground-truth BFS is run.
+- `used_game_source`: bare false; the experiment does not inspect game implementation source.
+- `llm_invocation_count`: bare zero; the deterministic adapter-disabled live path must not invoke the LLM tier.
+- `arc_task_aware_multiseed_replication_ready_score`: 1 requires positive grouped lower CI, no safety regression, clean controls, live triggers, registry immutability, protected-file immutability, and no solve credit.
+- `protected_files_unchanged`: conductor, ops status/changelog, and traceability files are not modified by this run.
+- `duration_s`: wall-clock runtime is measured for the no-LLM live-path replication.
+- `inference_substrate`: live_e3_adapter_disabled_runtime_transitions declares no LLM/model load while live E3 episodes run.
+- `verifier_is_oracle`: false; observed transitions evaluate admission decisions but do not become a planning oracle.
+- `missing_verifier_gaps`: any blocked gate or negative tail is carried forward as an explicit gap instead of being hidden.
+- `field_provenance`: every required field traces to spec, frozen policy, live rows, controls, or command receipts.
+- `test_commands`: focused unit/spec coverage, registry precheck, live import, disablement, metrics, controls, schema, adversarial, E2E-applicable, protected-file, root-clutter, and full pytest checks are recorded.
+- `test_exit_codes`: verification exit codes are recorded so the artifact cannot imply unrun checks passed.
+- `reproducibility_checksum`: content-addressed checksum detects silent artifact drift.
+- `honest_verdict`: complete_positive:, complete_null:, retired:, or blocked: states cross-game/seed generalization without a solve claim.
+
+The artifact SHALL set `solve_claimed=false`, `offline_ground_truth_bfs=false`,
+`used_game_source=false`, `level_credit_delta=0`,
+`registry_levels_unchanged=true`, and `llm_invocation_count=0` as bare values.
+No `solve_provenance` field is required because no solve is claimed. The ready
+score SHALL require a positive grouped lower confidence bound for task-aware
+minus global, no safety regression, clean controls, live triggered decisions,
+registry immutability, protected-file immutability, and no solve credit. If that
+gate fails, the artifact SHALL still be complete and SHALL emit `complete_null:`
+or `blocked:` with the cross-game/seed tail stated honestly.
+
+### SCENARIO-ARC-WMTE-6167-LIVE-ENTRYPOINT-FIXED-POLICY-AND-PROVENANCE
+
+GIVEN Exp6154 has frozen global and task-aware policy manifests
+WHEN Exp6167 runs public adapter-disabled episodes
+THEN all scored rows SHALL originate from
+`make_carnot_agent/E3AgentPolicy.choose_action`, the fixed task-aware threshold
+SHALL be present before episode collection, held-game outcomes SHALL NOT affect
+the policy freeze, LLM calls SHALL remain zero, and adapter/source/BFS/solver/gotcha
+disable receipts SHALL be present.
+
+### SCENARIO-ARC-WMTE-6167-MULTIGAME-MULTISEED-METRICS-AND-CONTROLS
+
+GIVEN at least six games and three seeds per game
+WHEN global and task-aware arms score triggered decisions
+THEN the artifact SHALL report per-game/seed transition recall, changed-cell
+recall, action recall, false confident admission, abstention, invalid action,
+safety, transition, decision, and latency metrics, grouped paired intervals with
+a lower confidence bound, false-confident/adstention matrices, task-shuffle,
+alias, identity/no-op, label-shuffle, invented-trigger, denominator-inflation,
+light controls, and the known `tu93` negative-tail receipt.
+
+### SCENARIO-ARC-WMTE-6167-NO-SOLVE-REGISTRY-IMMUTABILITY-AND-SCHEMA
+
+GIVEN Exp6167 is a generalization replication and not level solving
+WHEN the artifact is validated
+THEN it SHALL preserve `solve_claimed=false`, `level_credit_delta=0`,
+`registry_levels_unchanged=true`, `offline_ground_truth_bfs=false`,
+`used_game_source=false`, `llm_invocation_count=0`, complete field provenance,
+stable reproducibility checksum, protected-file immutability, and no mutation of
+`ops/arc_solve_registry.yaml` level fields.
+
+## Implementation Status (REQ-ARC-WMTE-6167)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6167 | Pending in `python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py`; the experiment must reuse the live `make_carnot_agent`/`E3AgentPolicy` path and write `results/experiment_6167_arc_task_aware_multiseed_replication.json` without solve credit. | Pending in `tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py`. |
