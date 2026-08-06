@@ -15385,3 +15385,4 @@ No output thi |
 | 2026-08-06 00:44 UTC | Gated on Exp6152 IR readiness: software thermaliza | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:  terminal summ |
 | 2026-08-06 01:18 UTC | Gated on Exp6152 IR readiness: software thermaliza | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6153_thermal |
 | 2026-08-06 02:41 UTC | ARC live-path adapter-disabled task-aware energy g | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "registry_leve |
+| 2026-08-06 02:51 UTC | ARC live-path adapter-disabled task-aware energy g | OK | 108 passed, 1 warning in 22.31s |
