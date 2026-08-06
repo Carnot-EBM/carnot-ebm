@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.533",
+  "generated_at": "2026-08-06T05:51:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 43.0,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Gated on Exp6145 readiness: flagship-GGUF chronological event corpus",
+      "duration_minutes": 18.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Tracked-result test artifact isolation and quarantine preservation",
+      "duration_minutes": 17.57,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Reliable dated evidence refresh after the V533 planner marker",
+      "duration_minutes": 5.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .532 into .533",
+      "duration_minutes": 1.36,
+      "compute_bound": false
+    },
+    {
+      "experiment": "ARC live-path adapter-disabled task-aware energy generalization",
+      "duration_minutes": 0.05,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 43 minutes, including 4 compute-bound experiments. The readiness-gated flagship-GGUF corpus was the longest listed path; compute-bound GPU idle was not observed. The snapshot shows GPU engagement, while the supplied evidence identifies neither parallel model loading nor an incorrect DualGPURunner choice.",
+  "bottlenecks_identified": [
+    "The flagship-GGUF chronological event corpus is the only compute-bound entry in the bounded slowest list and was gated on Exp6145 readiness; its single elapsed span does not distinguish the dependency gate, environment preparation, or generation.",
+    "Tracked-result test artifact isolation and quarantine preservation was the largest synthesis-only delay.",
+    "Modification-time reconstruction lacks subtask markers, so recoverable waiting and initialization cannot be isolated."
+  ],
+  "improvements_suggested": [
+    "Add an Exp6145 dependency-ready receipt and pre-stage the flagship-GGUF corpus path as soon as readiness is recorded.",
+    "Emit phase timers for dependency wait, model load, inference, and artifact serialization on compute-bound tasks.",
+    "Add resumable checkpoints and stage timing to tracked-result isolation and quarantine preservation.",
+    "Bind GPU samples, concurrent model count, and runner selection to each compute-bound task so DualGPURunner eligibility is explicit."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Preflight Exp6145 readiness and stage the flagship-GGUF corpus path before dispatch.",
+    "Instrument dependency, setup, inference, and serialization phases with task-linked timing and GPU receipts.",
+    "Checkpoint the tracked-result isolation workflow and record model concurrency with runner selection."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied record identifies runtime concentration and shows active GPUs, but modification-time reconstruction and a single GPU snapshot cannot quantify avoidable time. The savings percentage therefore stays at zero instead of treating the longest elapsed span as wholly recoverable."
+}
