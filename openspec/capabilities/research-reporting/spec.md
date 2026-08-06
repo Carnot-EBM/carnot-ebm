@@ -50181,3 +50181,153 @@ prefix is present; the inference substrate is `literature_ingestion`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6158 | Planned (`python/carnot/experiment_6158_v534_source_delta_ingestion.py`, `results/experiment_6158_v534_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_6158_v534_source_delta_ingestion.py`) |
+
+### REQ-REPORT-6168: V534 Capstone Exact-Path Reconciliation Preserves Mixed Terminal Evidence
+
+The Exp6168 capstone workflow SHALL resolve Exp6156 through Exp6167 only from
+the active `.534` roadmap's declared task IDs and declared deliverable paths.
+It SHALL ignore same-number result aliases and sidecars for terminal evidence,
+while recording ignored alias candidates for audit. Each declared identity
+SHALL be classified exactly once as complete, positive, flagged, null, partial,
+blocked, internal-blocked, skipped, retired, or missing. A conductor
+`GATE_BLOCK` without an exact artifact SHALL remain a skipped task. An absent
+declared artifact after conductor failures SHALL remain missing. Exp6164 SHALL be treated as mandatory: its exact artifact MUST be present, and if it blocked
+internally it SHALL record whether live self-learning executed instead of being
+converted into a conductor skip.
+
+The workflow SHALL freshly adversarial-verify every present exact artifact.
+Fresh verifier flags, conductor `FLAGGED` receipts, or preserved quarantine
+fields such as `flagged_adversarial` and `corrigendum_pending` SHALL mark an
+artifact as flagged. Flagged results SHALL remain in the ledger with their
+underlying raw class, but SHALL be excluded from positive aggregation.
+
+The workflow SHALL recompute branch summaries from raw artifact fields, not
+prose. It SHALL preserve tracked-evidence and artifact-isolation claims only
+when the Exp6157 exact artifact is delivered. It SHALL recompute fresh stream
+identity, exact-label separation, one-shot held access, policy-freeze counts,
+per-model decision utility/safety/proper-score gates, mandatory continuous
+learning execution and immutability, software-only CNCE nonzero error and
+bound coverage, ARC per-game/per-seed trigger evidence, and ARC no-solve
+fields. Pooled or prose summaries SHALL NOT mask per-model, per-partition, or
+per-game failures.
+
+The workflow SHALL keep authority and execution substrates explicit. Live GGUF
+acquisition, cached CPU analysis, deterministic replay, JAX CPU software
+simulation, and live ARC agent transitions SHALL remain distinct; software simulation SHALL NOT be promoted to hardware. ARC no-solve evidence SHALL
+require `solve_claimed=false`, `level_credit_delta=0`,
+`registry_levels_unchanged=true`, `offline_ground_truth_bfs=false`, and
+`used_game_source=false`.
+
+The artifact SHALL include, at minimum, `status`,
+`preconditions_checked`, `activated_task_and_declared_deliverable_matrix`,
+`exact_terminal_classification`,
+`present_missing_skipped_internal_blocked_null_retired_flagged_and_positive_counts`,
+`structured_gate_receipts`,
+`mandatory_continuous_learning_artifact_receipt`,
+`adversarial_verifier_and_quarantine_receipts`,
+`artifact_isolation_summary`, `fresh_stream_and_sota_corpus_summary`,
+`decision_policy_and_one_shot_replication_summary`,
+`continuous_strategy_learning_and_shadow_summary`,
+`mode_jumping_factor_and_composition_summary`,
+`arc_multiseed_no_solve_summary`,
+`oracle_distinctness_and_inference_substrate_matrix`,
+`model_specs_and_lifecycle_matrix`,
+`prior_failure_retirement_and_exclusion_updates`,
+`open_verifier_and_research_gaps`,
+`spec_bmad_ops_reference_and_completion_reconciliation`,
+`research_complete_append_count`,
+`duplicate_history_amplification_count`, `protected_files_unchanged`,
+`preexisting_worktree_changes_preserved`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+Every required field SHALL have provenance and a principle. The capstone
+`inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`, and
+the `honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "honest capstone state over delivered, missing, skipped, blocked, flagged, null, and positive evidence."
+- `preconditions_checked`: principle "snapshots git status, roadmap matrix, conductor receipts, exact paths, exclusions, quarantine fields, docs, root clutter, and protected-file hashes."
+- `activated_task_and_declared_deliverable_matrix`: principle "only active-roadmap task IDs and declared deliverables define Exp6156-Exp6167 evidence."
+- `exact_terminal_classification`: principle "skip, internal block, missing, partial, null, retirement, flag, complete, and positive remain distinct."
+- `present_missing_skipped_internal_blocked_null_retired_flagged_and_positive_counts`: principle "terminal-state counts do not average away missing artifacts, gate skips, per-model failures, or quarantine."
+- `structured_gate_receipts`: principle "gate outcomes come from declared gates, conductor receipts, and raw upstream ready fields, never prose inference."
+- `mandatory_continuous_learning_artifact_receipt`: principle "Exp6164 must be present and state whether live self-learning executed."
+- `adversarial_verifier_and_quarantine_receipts`: principle "fresh verifier receipts and preserved quarantine fields keep flagged evidence out of positive aggregation."
+- `artifact_isolation_summary`: principle "artifact-isolation closure is credited only from the exact Exp6157 artifact, never from missing evidence."
+- `fresh_stream_and_sota_corpus_summary`: principle "fresh stream and SOTA corpus readiness are recomputed from row, split, overlap, model, and lifecycle fields."
+- `decision_policy_and_one_shot_replication_summary`: principle "policy freeze, held access, per-model utility, safety, and proper-score gates are raw-field summaries."
+- `continuous_strategy_learning_and_shadow_summary`: principle "mandatory CSL internal block and conductor-gated shadow adapter remain separate states."
+- `mode_jumping_factor_and_composition_summary`: principle "software CNCE nonzero error, bound coverage, and no-hardware boundaries remain explicit."
+- `arc_multiseed_no_solve_summary`: principle "ARC game/seed trigger evidence is reported without solve credit."
+- `oracle_distinctness_and_inference_substrate_matrix`: principle "Every claim names its authority and execution surface; software simulation is never hardware."
+- `model_specs_and_lifecycle_matrix`: principle "model specifications and lifecycle receipts are copied only from exact upstream fields."
+- `prior_failure_retirement_and_exclusion_updates`: principle "retirements, exclusions, and skipped branches are recorded without mutating unrelated ledgers."
+- `open_verifier_and_research_gaps`: principle "missing, skipped, blocked, internal-blocked, null, and flagged branches remain open gaps."
+- `spec_bmad_ops_reference_and_completion_reconciliation`: principle "reconciliation is bounded to delivered evidence and conductor-owned doc/status updates may be deferred."
+- `research_complete_append_count`: principle "append `.534` at most once and amplify no history."
+- `duplicate_history_amplification_count`: principle "append `.534` at most once and amplify no history."
+- `protected_files_unchanged`: principle "roadmaps, conductor, BMAD, ops, references, exclusions, verifier scripts, and upstream evidence remain byte-identical during report construction."
+- `preexisting_worktree_changes_preserved`: principle "pre-existing user worktree changes are recorded and not staged or reverted."
+- `duration_s`: principle "measured aggregation duration for upstream-artifact reconciliation."
+- `inference_substrate`: principle "set `aggregation_from_upstream_artifacts`; invoke no research LLM."
+- `field_provenance`: principle "each required field traces to roadmap, conductor, exact artifacts, verifier receipts, or local hashes."
+- `test_commands`: principle "records focused unit/spec coverage, YAML/schema, exact-path, CSL, quarantine, metric, substrate, no-solve, duplicate-history, lint, E2E, protected-file, root-clutter, coverage, and full-suite checks."
+- `test_exit_codes`: principle "exit codes prevent failed checks from becoming success."
+- `reproducibility_checksum`: principle "content checksum detects later capstone drift."
+- `honest_verdict`: principle "use `complete:` or `blocked:` and summarize decision-grade closure without requiring every branch to be positive."
+
+#### SCENARIO-REPORT-6168-EXACT-PATH-TERMINALS: Declared Paths Classify Every V534 Identity Once
+
+**Given** the active `.534` roadmap declares Exp6156 through Exp6167 and the
+conductor log contains mixed OK, FAIL, FLAGGED, and GATE_BLOCK receipts
+**When** Exp6168 builds its matrix
+**Then** it records exactly those twelve task IDs in roadmap order, uses each
+declared deliverable path, records same-number aliases as ignored, classifies
+Exp6157 as missing when its exact artifact is absent after failures, classifies
+Exp6163 and Exp6165 as skipped when only conductor gate receipts exist, and
+does not fill any missing terminal from a glob.
+
+#### SCENARIO-REPORT-6168-MANDATORY-CSL: Exp6164 Is An Artifact-Backed Internal Block
+
+**Given** Exp6164 is mandatory and its exact artifact exists with a failed
+internal Exp6163 prerequisite
+**When** Exp6168 reconciles continuous-learning evidence
+**Then** Exp6164 is present, classified as internal-blocked, records
+`mandatory_artifact_written=true`, records whether live self-learning
+executed, preserves model-weight immutability, and does not treat Exp6164 as a
+conductor skip or positive utility result.
+
+#### SCENARIO-REPORT-6168-QUARANTINE-AND-DECISION-GATES: Flagged Decision Evidence Is Bounded
+
+**Given** Exp6161 and Exp6162 carry quarantine fields or conductor `FLAGGED`
+receipts while raw per-model gates may pass
+**When** Exp6168 computes decision-admission summaries
+**Then** it reports policy freeze, held access, per-model utility,
+safety/noninferiority, Brier/ECE, and conjunctive gates from raw fields, keeps
+flagged artifacts out of positive aggregation, and refuses to let pooled
+success hide per-model or shifted-family failures.
+
+#### SCENARIO-REPORT-6168-SUBSTRATE-ARC-AND-STOCHASTIC: Boundaries Are Not Promoted
+
+**Given** Exp6166 is JAX CPU software with finite nonzero CNCE error and
+Exp6167 is live ARC transition evidence with no solve claim
+**When** Exp6168 reconciles stochastic and ARC branches
+**Then** it records CNCE nonzero error, bound violation counts, no hardware or
+speedup claim, ARC game/seed/trigger counts, and the no-solve fields exactly
+as raw booleans or counts.
+
+#### SCENARIO-REPORT-6168-SCHEMA-HISTORY: Required Fields And History Receipts Are Stable
+
+**Given** the Exp6168 artifact is emitted
+**When** its schema is validated
+**Then** every required field, provenance entry, principle, test command, exit
+code, checksum, protected-file receipt, duplicate-history receipt, and
+terminal verdict prefix is present; the artifact appends no duplicate `.534`
+completion history block and declares `aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-6168)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6168 | Implemented (`python/carnot/experiment_6168_v534_capstone_reconciliation.py`, `results/experiment_6168_v534_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_6168_v534_capstone_reconciliation.py`) |
