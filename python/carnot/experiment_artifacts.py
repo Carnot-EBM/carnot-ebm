@@ -157,6 +157,67 @@ def resolve_experiment_artifact_path(
     return resolved
 
 
+def is_legacy_results_path(path: object) -> bool:
+    """Return True for relative legacy paths spelled as ``results/...``."""
+
+    if isinstance(path, bytes):
+        path = path.decode("utf-8", "surrogateescape")
+    try:
+        raw = os.fspath(path)
+    except TypeError:
+        return False
+    if not isinstance(raw, str) or not raw:
+        return False
+    candidate = Path(raw).expanduser()
+    return not candidate.is_absolute() and bool(candidate.parts) and candidate.parts[0] == "results"
+
+
+def resolve_legacy_results_write_path(
+    path: str | bytes | Path,
+    *,
+    root: Path | str | None = None,
+    ensure_parent: bool = False,
+    env: Mapping[str, str] | None = None,
+    allow_override: bool = True,
+) -> Path:
+    """Resolve result-writer paths while preserving non-result path behavior.
+
+    This helper is narrower than ``resolve_experiment_artifact_path``. Legacy
+    result destinations are routed through the artifact resolver, but ordinary
+    temporary or caller-owned paths keep their historical location.
+    """
+
+    raw = path.decode("utf-8", "surrogateescape") if isinstance(path, bytes) else os.fspath(path)
+    candidate = Path(raw).expanduser()
+    prod = production_artifact_root(root=root)
+    if is_legacy_results_path(candidate):
+        return resolve_experiment_artifact_path(
+            candidate,
+            root=root,
+            ensure_parent=ensure_parent,
+            env=env,
+            allow_override=allow_override,
+            allow_external_absolute=False,
+        )
+    if candidate.is_absolute():
+        resolved = candidate.resolve(strict=False)
+        if _is_relative_to(resolved, prod):
+            return resolve_experiment_artifact_path(
+                resolved,
+                root=root,
+                ensure_parent=ensure_parent,
+                env=env,
+                allow_override=allow_override,
+                allow_external_absolute=False,
+            )
+        if ensure_parent:
+            resolved.parent.mkdir(parents=True, exist_ok=True)
+        return resolved
+    if ensure_parent and candidate.parent != Path("."):
+        candidate.parent.mkdir(parents=True, exist_ok=True)
+    return candidate
+
+
 def atomic_write_bytes(
     path: str | Path,
     data: bytes,

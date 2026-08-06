@@ -34,6 +34,8 @@ import os
 import time
 from pathlib import Path
 
+from carnot.experiment_artifacts import resolve_legacy_results_write_path
+
 
 class AtomicResultWriter:
     """Write a JSON result file atomically, preventing partial-write silent failures.
@@ -55,8 +57,8 @@ class AtomicResultWriter:
 
     def __init__(self, path: str) -> None:
         self.path = path
-        self._final = Path(path)
-        self._tmp = Path(path + ".tmp")
+        self._final = resolve_legacy_results_write_path(path)
+        self._tmp = Path(str(self._final) + ".tmp")
 
     # ------------------------------------------------------------------
     # write()

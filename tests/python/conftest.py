@@ -229,6 +229,14 @@ def _install_tracked_results_guard() -> None:
             guard.install()
 
 
+def _install_legacy_results_write_compat() -> None:
+    """Install the narrow legacy ``results/...`` redirector for pytest writes."""
+    guard = _tracked_results_guard()
+    if guard is not None:
+        with contextlib.suppress(Exception):
+            guard.install_legacy_results_write_compat()
+
+
 def _is_xdist_worker(config) -> bool:
     """True inside an xdist worker process, where this must NOT run.
 
@@ -264,6 +272,7 @@ def pytest_configure(config) -> None:
     # and rewrites the copy is unaffected (see test_experiment_209_cleanup.py, which does
     # exactly that and is correct).
     _install_operator_curated_doc_guard()
+    _install_legacy_results_write_compat()
     _install_tracked_results_guard()
 
     # ARM THE RECORD-REWRITE INTERLOCK, HOWEVER PYTEST WAS INVOKED (2026-07-29).
