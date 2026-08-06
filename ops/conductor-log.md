@@ -15400,3 +15400,4 @@ Still active  |
  |
 | 2026-08-06 13:17 UTC | Reliable dated evidence refresh after the V534 pla | OK | 115 passed, 1 warning in 10.34s |
 | 2026-08-06 13:57 UTC | Fresh chronological decision-calibration stream an | OK | 87 passed, 1 warning in 152.10s (0:02:32) |
+| 2026-08-06 15:01 UTC | Gated on Exp6159 readiness: fresh flagship-GGUF de | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6160_sota_de |
