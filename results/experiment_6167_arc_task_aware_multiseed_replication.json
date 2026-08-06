@@ -1,0 +1,2411 @@
+{
+  "adapter_per_game_lookup_solver_gotcha_and_hand_calibration_disable_receipts": {
+    "action_provenance_enabled": true,
+    "adapter_disabled": true,
+    "game_source_read_count": 0,
+    "gotcha_text_disabled": true,
+    "hand_calibration_disabled": true,
+    "llm_induction_disabled": true,
+    "offline_ground_truth_bfs_run_count": 0,
+    "patched_functions": [
+      "_load_submitted_candidate_router",
+      "_load_submitted_frame_change_scorer",
+      "_load_submitted_goal_energy_bias",
+      "_recommend_live_approach"
+    ],
+    "per_game_lookup_routes_disabled": true,
+    "per_game_lookup_solver_gotcha_and_hand_calibration_disabled": true,
+    "principle": "per-game adapters, lookup routes, solver shortcuts, registry gotcha text, hand calibration, game-source reads, offline BFS, and LLM induction are disabled.",
+    "provenance_dir": "/tmp/carnot_exp6154_provenance_ycgkiqrn",
+    "registry_gotcha_calibration_disabled": true,
+    "solver_routes_disabled": true
+  },
+  "arc_task_aware_multiseed_replication_ready_score": 1.0,
+  "development_and_held_game_split_hash": {
+    "action_budget": 8,
+    "current_held_rows_used_for_policy_fit": 0,
+    "development_policy_freeze": "Exp6154 global/task-aware manifests",
+    "development_source": "results/experiment_6154_arc_task_aware_energy_generalization.json",
+    "games": [
+      "lp85",
+      "su15",
+      "tu93",
+      "r11l",
+      "ls20",
+      "sp80"
+    ],
+    "held_game_count": 6,
+    "held_games": [
+      "lp85",
+      "su15",
+      "tu93",
+      "r11l",
+      "ls20",
+      "sp80"
+    ],
+    "principle": "the six-game held set, upstream development source, seeds, and action budgets are frozen before held scoring.",
+    "seed_count": 3,
+    "seeds": [
+      6167,
+      6168,
+      6169
+    ],
+    "selection_frozen_before_episode_collection": true,
+    "split_hash": "sha256:0d6835e0513ee96d96797c96bbb76e0bbac891786af30118bc620e833724f8ba"
+  },
+  "duration_s": 3.226244,
+  "false_confident_admission_and_abstention_matrices": {
+    "by_game_seed": {
+      "lp85|6167": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 7,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "admitted_count": 1,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 7
+        }
+      },
+      "lp85|6168": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 7,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "admitted_count": 1,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 7
+        }
+      },
+      "lp85|6169": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 7,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "admitted_count": 1,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 7
+        }
+      },
+      "ls20|6167": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 1,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 1,
+          "admitted_count": 7,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 1
+        }
+      },
+      "ls20|6168": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 1,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 1,
+          "admitted_count": 7,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 1
+        }
+      },
+      "ls20|6169": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 1,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 1,
+          "admitted_count": 7,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 1
+        }
+      },
+      "r11l|6167": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "r11l|6168": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "r11l|6169": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "sp80|6167": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "sp80|6168": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "sp80|6169": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "su15|6167": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 3,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "admitted_count": 5,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 3
+        }
+      },
+      "su15|6168": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 3,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "admitted_count": 5,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 3
+        }
+      },
+      "su15|6169": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 3,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "admitted_count": 5,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 3
+        }
+      },
+      "tu93|6167": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "tu93|6168": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      },
+      "tu93|6169": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      }
+    },
+    "principle": "false confident admissions and abstentions are reported by game/seed and arm so safety regressions cannot hide in aggregates.",
+    "task_aware_reduces_or_preserves_false_confident": true,
+    "totals": {
+      "global": {
+        "false_confident_admissions": 33,
+        "safe_abstentions": 0
+      },
+      "task_aware": {
+        "false_confident_admissions": 0,
+        "safe_abstentions": 33
+      }
+    }
+  },
+  "field_provenance": {
+    "adapter_per_game_lookup_solver_gotcha_and_hand_calibration_disable_receipts": {
+      "principle": "per-game adapters, lookup routes, solver shortcuts, registry gotcha text, hand calibration, game-source reads, offline BFS, and LLM induction are disabled.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "arc_task_aware_multiseed_replication_ready_score": {
+      "principle": "1 requires positive grouped lower CI, no safety regression, clean controls, live triggers, registry immutability, protected-file immutability, and no solve credit.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "development_and_held_game_split_hash": {
+      "principle": "the six-game held set, upstream development source, seeds, and action budgets are frozen before held scoring.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "duration_s": {
+      "principle": "wall-clock runtime is measured for the no-LLM live-path replication.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "false_confident_admission_and_abstention_matrices": {
+      "principle": "false confident admissions and abstentions are reported by game/seed and arm so safety regressions cannot hide in aggregates.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "field_provenance": {
+      "principle": "every required field traces to spec, frozen policy, live rows, controls, or command receipts.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "game_seed_action_budget_and_arm_counts": {
+      "principle": "game count, seed count, episode count, action budget, and arm counts prove the multi-game/multi-seed matched-budget design.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "global_and_task_aware_freeze_manifests": {
+      "principle": "global and task-aware decision rules and thresholds are inherited from Exp6154 before new held episodes and are not fit from held outcomes.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "grouped_paired_intervals": {
+      "principle": "task-aware minus global deltas are paired by game and seed and require a positive grouped lower confidence bound for readiness.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "honest_verdict": {
+      "principle": "complete_positive:, complete_null:, retired:, or blocked: states cross-game/seed generalization without a solve claim.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "inference_substrate": {
+      "principle": "live_e3_adapter_disabled_runtime_transitions declares no LLM/model load while live E3 episodes run.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "known_negative_tail_receipt": {
+      "principle": "the prior Exp6154 tu93 negative tail and the current tu93 per-seed tail are named before any positive generalization claim.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "level_credit_delta": {
+      "principle": "bare 0; registry level totals do not move.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "live_entrypoint_and_import_reachability": {
+      "principle": "the measurement reaches the canonical make_carnot_agent/E3AgentPolicy path rather than an orphan scorer.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "llm_invocation_count": {
+      "principle": "bare zero; the deterministic adapter-disabled live path must not invoke the LLM tier.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "missing_verifier_gaps": {
+      "principle": "any blocked gate or negative tail is carried forward as an explicit gap instead of being hidden.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "offline_ground_truth_bfs": {
+      "principle": "bare false; no exhaustive or oracle ground-truth BFS is run.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "own_attempt_transition_provenance": {
+      "principle": "every scored transition comes from the agent's own runtime action and observed before/after frame.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "per_arm_triggered_decision_counts": {
+      "principle": "only decisions whose scorer triggered on the live path are credited.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "per_game_seed_transition_change_recall_safety_action_and_latency_metrics": {
+      "principle": "every game/seed tail reports transition recall, changed-cell recall, action recall, safety, invalid action, decision, and latency metrics.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "preconditions_checked": {
+      "principle": "hashes, registry, catalog, seeds, output path, exclusions, protected files, and root clutter are checked before episodes.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "protected_files_unchanged": {
+      "principle": "conductor, ops status/changelog, and traceability files are not modified by this run.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "registry_levels_unchanged": {
+      "principle": "bare true; registry level fields remain unchanged before and after the run.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "registry_precheck_and_no_duplicate_receipt": {
+      "principle": "selected public games are already registered and the run refuses duplicate solve credit before any episode.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed checksum detects silent artifact drift.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "shuffle_alias_identity_noop_invented_trigger_denominator_light_and_label_controls": {
+      "principle": "shuffle, alias, identity/no-op, label, invented-trigger, denominator, and light controls guard shortcut and denominator artifacts.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "solve_claimed": {
+      "principle": "bare false; this is transition-admission replication, not level solving.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "status": {
+      "principle": "complete_positive, complete_null, retired, or blocked names the terminal cross-game/seed replication result.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "test_commands": {
+      "principle": "focused unit/spec coverage, registry precheck, live import, disablement, metrics, controls, schema, adversarial, E2E-applicable, protected-file, root-clutter, and full pytest checks are recorded.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "test_exit_codes": {
+      "principle": "verification exit codes are recorded so the artifact cannot imply unrun checks passed.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "upstream_policy_code_result_and_registry_hashes": {
+      "principle": "Exp6154 policy code, result, live entrypoints, registry, adapters, solvers, gotcha paths, seeds, output, exclusions, and protected files are content-addressed before reuse.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "used_game_source": {
+      "principle": "bare false; the experiment does not inspect game implementation source.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    },
+    "verifier_is_oracle": {
+      "principle": "false; observed transitions evaluate admission decisions but do not become a planning oracle.",
+      "source": "experiment_6167_arc_task_aware_multiseed_replication"
+    }
+  },
+  "game_seed_action_budget_and_arm_counts": {
+    "action_budget": 8,
+    "arm_count": 2,
+    "arms": [
+      "global",
+      "task_aware"
+    ],
+    "decision_count": 288,
+    "episode_count": 18,
+    "game_count": 6,
+    "live_row_count": 144,
+    "matched_action_budget": true,
+    "principle": "game count, seed count, episode count, action budget, and arm counts prove the multi-game/multi-seed matched-budget design.",
+    "seed_count": 3
+  },
+  "global_and_task_aware_freeze_manifests": {
+    "freeze_hash": "sha256:e96ca55c1ece577b8bc6b58c032aa7804777579ce4d7fb51a24e632cfa8748bb",
+    "frozen_before_episode_collection": true,
+    "global": {
+      "abstention_policy": "none",
+      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+      "decision_rule": "existing_live_default_admit_observed_transition",
+      "hand_calibrated_per_game": false,
+      "held_row_count_used_for_fit": 0,
+      "manifest_hash": "sha256:fc2cd86ddc9efc15317a9e68760666fbed3d54401389c7ca1d44abbe2204a249",
+      "score_name": "global_existing_admit_all",
+      "threshold": 0,
+      "training_games": [],
+      "training_row_count": 0,
+      "uses_game_source": false,
+      "uses_offline_bfs": false,
+      "uses_registry_gotchas": false
+    },
+    "held_outcomes_used_for_policy_fit": 0,
+    "policy_freeze_source": "results/experiment_6154_arc_task_aware_energy_generalization.json",
+    "principle": "global and task-aware decision rules and thresholds are inherited from Exp6154 before new held episodes and are not fit from held outcomes.",
+    "task_aware_fixed": {
+      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+      "current_held_row_count_used_for_fit": 0,
+      "decision_rule": "admit_when_observed_changed_cells_meet_exp6154_fixed_floor_else_abstain",
+      "frozen_before_episode_collection": true,
+      "hand_calibrated_per_game": false,
+      "held_row_count_used_for_fit": 0,
+      "manifest_hash": "sha256:5d72284962bb8267466a0d1d9b7f4752b4e1f631b17e2e0541df53302707fa4b",
+      "min_changed_cells": 1,
+      "score_name": "task_aware_training_game_change_threshold",
+      "threshold_selection_rule": "minimum_prior_exp6154_task_aware_min_changed_cells",
+      "training_games": [
+        "exp6154_policy_freeze"
+      ],
+      "training_row_count": 48,
+      "upstream_exp6154_freeze_hash": "sha256:c6ef150aa842004574ba2e02dfa17d3dad323df1fbe2d96443daa8060ec0bd93",
+      "upstream_exp6154_task_thresholds": {
+        "lp85": 1,
+        "su15": 1,
+        "tu93": 2
+      },
+      "uses_game_source": false,
+      "uses_offline_bfs": false,
+      "uses_registry_gotchas": false
+    }
+  },
+  "grouped_paired_intervals": {
+    "by_game": {
+      "lp85": {
+        "max_seed_delta": 0.4375,
+        "mean_task_aware_minus_global": 0.4375,
+        "min_seed_delta": 0.4375,
+        "negative_seed_count": 0
+      },
+      "ls20": {
+        "max_seed_delta": 0.0625,
+        "mean_task_aware_minus_global": 0.0625,
+        "min_seed_delta": 0.0625,
+        "negative_seed_count": 0
+      },
+      "r11l": {
+        "max_seed_delta": 0.0,
+        "mean_task_aware_minus_global": 0.0,
+        "min_seed_delta": 0.0,
+        "negative_seed_count": 0
+      },
+      "sp80": {
+        "max_seed_delta": 0.0,
+        "mean_task_aware_minus_global": 0.0,
+        "min_seed_delta": 0.0,
+        "negative_seed_count": 0
+      },
+      "su15": {
+        "max_seed_delta": 0.1875,
+        "mean_task_aware_minus_global": 0.1875,
+        "min_seed_delta": 0.1875,
+        "negative_seed_count": 0
+      },
+      "tu93": {
+        "max_seed_delta": 0.0,
+        "mean_task_aware_minus_global": 0.0,
+        "min_seed_delta": 0.0,
+        "negative_seed_count": 0
+      }
+    },
+    "by_game_seed": {
+      "lp85|6167": {
+        "game": "lp85",
+        "global_decision_change_metric": 0.5625,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.4375
+      },
+      "lp85|6168": {
+        "game": "lp85",
+        "global_decision_change_metric": 0.5625,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.4375
+      },
+      "lp85|6169": {
+        "game": "lp85",
+        "global_decision_change_metric": 0.5625,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.4375
+      },
+      "ls20|6167": {
+        "game": "ls20",
+        "global_decision_change_metric": 0.9375,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0625
+      },
+      "ls20|6168": {
+        "game": "ls20",
+        "global_decision_change_metric": 0.9375,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0625
+      },
+      "ls20|6169": {
+        "game": "ls20",
+        "global_decision_change_metric": 0.9375,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0625
+      },
+      "r11l|6167": {
+        "game": "r11l",
+        "global_decision_change_metric": 1.0,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "r11l|6168": {
+        "game": "r11l",
+        "global_decision_change_metric": 1.0,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "r11l|6169": {
+        "game": "r11l",
+        "global_decision_change_metric": 1.0,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "sp80|6167": {
+        "game": "sp80",
+        "global_decision_change_metric": 1.0,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "sp80|6168": {
+        "game": "sp80",
+        "global_decision_change_metric": 1.0,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "sp80|6169": {
+        "game": "sp80",
+        "global_decision_change_metric": 1.0,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "su15|6167": {
+        "game": "su15",
+        "global_decision_change_metric": 0.8125,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.1875
+      },
+      "su15|6168": {
+        "game": "su15",
+        "global_decision_change_metric": 0.8125,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.1875
+      },
+      "su15|6169": {
+        "game": "su15",
+        "global_decision_change_metric": 0.8125,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.1875
+      },
+      "tu93|6167": {
+        "game": "tu93",
+        "global_decision_change_metric": 1.0,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "tu93|6168": {
+        "game": "tu93",
+        "global_decision_change_metric": 1.0,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "tu93|6169": {
+        "game": "tu93",
+        "global_decision_change_metric": 1.0,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      }
+    },
+    "interval": {
+      "lower_ci": 0.038998,
+      "max": 0.4375,
+      "min": 0.0,
+      "n_game_seed_pairs": 18,
+      "upper_ci": 0.190169
+    },
+    "mean_task_aware_minus_global": 0.114583,
+    "principle": "task-aware minus global deltas are paired by game and seed and require a positive grouped lower confidence bound for readiness.",
+    "support": {
+      "negative_pairs": 0,
+      "no_safety_regression": true,
+      "positive_grouped_lower_ci": true,
+      "positive_pairs": 9,
+      "tied_pairs": 9
+    }
+  },
+  "honest_verdict": "complete_positive: fixed_task_aware_multiseed_generalizes_lower_ci_0.038998_no_solve_claim",
+  "inference_substrate": "live_e3_adapter_disabled_runtime_transitions",
+  "known_negative_tail_receipt": {
+    "current_tu93_game_seed_deltas": {
+      "tu93|6167": {
+        "game": "tu93",
+        "global_decision_change_metric": 1.0,
+        "seed": 6167,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "tu93|6168": {
+        "game": "tu93",
+        "global_decision_change_metric": 1.0,
+        "seed": 6168,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      },
+      "tu93|6169": {
+        "game": "tu93",
+        "global_decision_change_metric": 1.0,
+        "seed": 6169,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.0
+      }
+    },
+    "current_tu93_negative_seed_count": 0,
+    "known_negative_tail_named_before_claim": true,
+    "principle": "the prior Exp6154 tu93 negative tail and the current tu93 per-seed tail are named before any positive generalization claim.",
+    "prior_artifact": "results/experiment_6154_arc_task_aware_energy_generalization.json",
+    "prior_artifact_sha256": "sha256:c3e76f9b780aad43894377b511a135015226f0c866f96af55f3d16e94ff51dca",
+    "prior_exp6154_tu93_delta": -0.03125
+  },
+  "level_credit_delta": 0,
+  "live_entrypoint_and_import_reachability": {
+    "calibration_module_import_statement_present": true,
+    "calibration_module_in_live_import_closure": true,
+    "e3_policy_seen": true,
+    "live_entrypoint": "python/carnot/agentic/arc_competition_agent.py",
+    "make_carnot_agent_constructed": true,
+    "principle": "the calibration module is imported by the canonical make_carnot_agent/E3AgentPolicy path and is not an unreachable side module.",
+    "witness": {
+      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+      "score_name": "task_aware_training_game_change_threshold"
+    }
+  },
+  "llm_invocation_count": 0,
+  "missing_verifier_gaps": [],
+  "offline_ground_truth_bfs": false,
+  "offline_reproduced": false,
+  "own_attempt_transition_provenance": {
+    "all_rows_live_agent_owned": true,
+    "principle": "every scored transition comes from the agent's own runtime action and observed before/after frame.",
+    "row_ids_sha256": "sha256:59005e3ffc9b0610d5b5f6a6d08d9a0ab582a6eead2093b639987036652680a6",
+    "sample_rows": [
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 43,
+          "y": 44
+        },
+        "action_id": 6,
+        "action_index": 0,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 7.863915,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 1,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6167|0",
+        "safety_event": "none",
+        "seed": 6167,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 16,
+          "y": 23
+        },
+        "action_id": 6,
+        "action_index": 1,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 0.685916,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 2,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6167|1",
+        "safety_event": "none",
+        "seed": 6167,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 4,
+          "y": 32
+        },
+        "action_id": 6,
+        "action_index": 2,
+        "changed_cell_count": 293,
+        "e3_policy_seen": true,
+        "frame_changed": true,
+        "game": "lp85",
+        "latency_ms": 0.618419,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 3,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6167|2",
+        "safety_event": "none",
+        "seed": 6167,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 49,
+          "y": 20
+        },
+        "action_id": 6,
+        "action_index": 3,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 4.690945,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 4,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6167|3",
+        "safety_event": "none",
+        "seed": 6167,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 49,
+          "y": 44
+        },
+        "action_id": 6,
+        "action_index": 4,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 0.556964,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 5,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6167|4",
+        "safety_event": "none",
+        "seed": 6167,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      }
+    ],
+    "scored_row_count": 144
+  },
+  "per_arm_triggered_decision_counts": {
+    "global": 144,
+    "task_aware": 144
+  },
+  "per_game_seed_transition_change_recall_safety_action_and_latency_metrics": {
+    "lp85": {
+      "6167": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 1,
+          "death_count": 0,
+          "decision_change_metric": 0.5625,
+          "decision_count": 8,
+          "false_confident_admissions": 7,
+          "invalid_action_count": 0,
+          "latency_ms_max": 7.863915,
+          "latency_ms_mean": 2.030108,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.125,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 1,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 1,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 7.863915,
+          "latency_ms_mean": 2.030108,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 7,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6168": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 1,
+          "death_count": 0,
+          "decision_change_metric": 0.5625,
+          "decision_count": 8,
+          "false_confident_admissions": 7,
+          "invalid_action_count": 0,
+          "latency_ms_max": 6.487564,
+          "latency_ms_mean": 1.84342,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.125,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 1,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 1,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 6.487564,
+          "latency_ms_mean": 1.84342,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 7,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6169": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 1,
+          "death_count": 0,
+          "decision_change_metric": 0.5625,
+          "decision_count": 8,
+          "false_confident_admissions": 7,
+          "invalid_action_count": 0,
+          "latency_ms_max": 6.456115,
+          "latency_ms_mean": 1.775124,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.125,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 1,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 1,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 6.456115,
+          "latency_ms_mean": 1.775124,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 7,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      }
+    },
+    "ls20": {
+      "6167": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 7,
+          "death_count": 0,
+          "decision_change_metric": 0.9375,
+          "decision_count": 8,
+          "false_confident_admissions": 1,
+          "invalid_action_count": 0,
+          "latency_ms_max": 2.885701,
+          "latency_ms_mean": 1.598993,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.875,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 1,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 7,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 7,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 2.885701,
+          "latency_ms_mean": 1.598993,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 1,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6168": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 7,
+          "death_count": 0,
+          "decision_change_metric": 0.9375,
+          "decision_count": 8,
+          "false_confident_admissions": 1,
+          "invalid_action_count": 0,
+          "latency_ms_max": 2.860203,
+          "latency_ms_mean": 1.548254,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.875,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 1,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 7,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 7,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 2.860203,
+          "latency_ms_mean": 1.548254,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 1,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6169": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 7,
+          "death_count": 0,
+          "decision_change_metric": 0.9375,
+          "decision_count": 8,
+          "false_confident_admissions": 1,
+          "invalid_action_count": 0,
+          "latency_ms_max": 2.809608,
+          "latency_ms_mean": 1.519964,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.875,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 1,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 7,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 7,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 2.809608,
+          "latency_ms_mean": 1.519964,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 1,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      }
+    },
+    "r11l": {
+      "6167": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.889858,
+          "latency_ms_mean": 3.082411,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.889858,
+          "latency_ms_mean": 3.082411,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6168": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.637605,
+          "latency_ms_mean": 3.080157,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.637605,
+          "latency_ms_mean": 3.080157,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6169": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.492634,
+          "latency_ms_mean": 2.973251,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.492634,
+          "latency_ms_mean": 2.973251,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      }
+    },
+    "sp80": {
+      "6167": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.085746,
+          "latency_ms_mean": 1.231358,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.085746,
+          "latency_ms_mean": 1.231358,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6168": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.006026,
+          "latency_ms_mean": 1.186413,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.006026,
+          "latency_ms_mean": 1.186413,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6169": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.031324,
+          "latency_ms_mean": 1.186332,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.031324,
+          "latency_ms_mean": 1.186332,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      }
+    },
+    "su15": {
+      "6167": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 5,
+          "death_count": 0,
+          "decision_change_metric": 0.8125,
+          "decision_count": 8,
+          "false_confident_admissions": 3,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.338575,
+          "latency_ms_mean": 1.529233,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.625,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 5,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 5,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.338575,
+          "latency_ms_mean": 1.529233,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 3,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6168": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 5,
+          "death_count": 0,
+          "decision_change_metric": 0.8125,
+          "decision_count": 8,
+          "false_confident_admissions": 3,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.190787,
+          "latency_ms_mean": 1.440699,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.625,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 5,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 5,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.190787,
+          "latency_ms_mean": 1.440699,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 3,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6169": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 5,
+          "death_count": 0,
+          "decision_change_metric": 0.8125,
+          "decision_count": 8,
+          "false_confident_admissions": 3,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.188052,
+          "latency_ms_mean": 1.4294,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 0.625,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 5,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 5,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 4.188052,
+          "latency_ms_mean": 1.4294,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 3,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      }
+    },
+    "tu93": {
+      "6167": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.241347,
+          "latency_ms_mean": 1.162244,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.241347,
+          "latency_ms_mean": 1.162244,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6168": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.00769,
+          "latency_ms_mean": 1.003678,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.00769,
+          "latency_ms_mean": 1.003678,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      },
+      "6169": {
+        "global": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.020783,
+          "latency_ms_mean": 1.022705,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        },
+        "task_aware": {
+          "abstained_count": 0,
+          "action_recall": 1.0,
+          "actions_consumed": 8,
+          "admitted_count": 8,
+          "changed_cell_recall": 1.0,
+          "changed_row_count": 8,
+          "death_count": 0,
+          "decision_change_metric": 1.0,
+          "decision_count": 8,
+          "false_confident_admissions": 0,
+          "invalid_action_count": 0,
+          "latency_ms_max": 3.020783,
+          "latency_ms_mean": 1.022705,
+          "level_delta_sum": 0,
+          "reset_count": 0,
+          "reward_delta_sum": 0.0,
+          "safe_abstentions": 0,
+          "safety_event_count": 0,
+          "safety_events": {
+            "none": 8
+          },
+          "transition_count": 8,
+          "transition_precision": 1.0,
+          "transition_recall": 1.0,
+          "triggered_decision_count": 8
+        }
+      }
+    }
+  },
+  "preconditions_checked": {
+    "action_budget": 8,
+    "exclusions": {
+      "do_not_claim_level_solve": true,
+      "do_not_inspect_game_source": true,
+      "do_not_modify_registry_levels": true,
+      "do_not_run_offline_ground_truth_bfs": true,
+      "do_not_tune_per_game": true
+    },
+    "game_catalog": {
+      "public_game_count": 25,
+      "selected_games": [
+        "lp85",
+        "su15",
+        "tu93",
+        "r11l",
+        "ls20",
+        "sp80"
+      ],
+      "source": "ops/arc_solve_registry.yaml",
+      "tu93_available": true
+    },
+    "hashed_input_receipts": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+        "size_bytes": 281180
+      },
+      {
+        "exists": true,
+        "path": "research-program.md",
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "size_bytes": 28560
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+        "sha256": "sha256:9f413ea444d7049bf40103260b995201e282f2741ec1524379889b30ea2504d3",
+        "size_bytes": 1509364
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6154_arc_task_aware_energy_generalization.py",
+        "sha256": "sha256:233c187fe60634906126f739fc31fe51ddf8c73e8121e13e2a424836541fcefa",
+        "size_bytes": 50425
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6154_arc_task_aware_energy_generalization.json",
+        "sha256": "sha256:c3e76f9b780aad43894377b511a135015226f0c866f96af55f3d16e94ff51dca",
+        "size_bytes": 37436
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_task_aware_energy.py",
+        "sha256": "sha256:ec70c809f81c595c5395bd9d6f548618d6653899cfae29ba72a91d16d16dc7b8",
+        "size_bytes": 4877
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py",
+        "sha256": "sha256:c5603fb4b2cda532e1be67bc223632c61cec691cffbd7191f172082ba8e3344c",
+        "size_bytes": 49334
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py",
+        "sha256": "sha256:32c2b161cf84ff470e68fcd4a8a9850349c93f048141ad2d5aea8b1ea2351ad5",
+        "size_bytes": 12902
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "sha256:10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "size_bytes": 419009
+      },
+      {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "size_bytes": 462740
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_game_adapters.py",
+        "sha256": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
+        "size_bytes": 120680
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "sha256": "sha256:553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
+        "size_bytes": 238343
+      },
+      {
+        "exists": true,
+        "path": "scripts/adversarial_verify.py",
+        "sha256": "sha256:08df353aaae8eb7d9b47c877802637c0633de4e82be09c82b821d19ab8e246d2",
+        "size_bytes": 251753
+      },
+      {
+        "exists": true,
+        "path": "scripts/arc_orphan_solver_lint.py",
+        "sha256": "sha256:96a3b5b95ddcd70ca1a67eb8e5f055743b673af39a66b4a93c9bada38938f4b8",
+        "size_bytes": 10756
+      }
+    ],
+    "held_games": [
+      "lp85",
+      "su15",
+      "tu93",
+      "r11l",
+      "ls20",
+      "sp80"
+    ],
+    "output_path": {
+      "existed_before": false,
+      "parent_exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6167_arc_task_aware_multiseed_replication.json",
+      "sha256_before": null
+    },
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "principle": "hashes, registry, catalog, seeds, output path, exclusions, protected files, and root clutter are checked before episodes.",
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f99410c8665a5323bb3e72db390a36cb3174ad4b7a36960b2970391ffdde784e",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "python": "3.12.13",
+    "root_clutter": {
+      "ok": true,
+      "root_python_files": []
+    },
+    "run_date": "20260806",
+    "schema": "carnot.experiment_6167.arc_task_aware_multiseed_replication.v1.preconditions",
+    "seeds": [
+      6167,
+      6168,
+      6169
+    ]
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f99410c8665a5323bb3e72db390a36cb3174ad4b7a36960b2970391ffdde784e",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f99410c8665a5323bb3e72db390a36cb3174ad4b7a36960b2970391ffdde784e",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_files": [],
+    "principle": "conductor, ops status/changelog, and traceability files are not modified by this run.",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "unchanged": true
+  },
+  "registry_levels_unchanged": true,
+  "registry_precheck_and_no_duplicate_receipt": {
+    "after_level_fingerprint_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
+    "all_selected_games_already_cleared_public": true,
+    "before_level_fingerprint_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
+    "checked_game_count": 25,
+    "duplicate_solve_work_refused": true,
+    "held_game_receipts": {
+      "lp85": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 8,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "ls20": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 7,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "r11l": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 6,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "sp80": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 6,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "su15": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 9,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "tu93": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 9,
+        "present": true,
+        "reproducibility": "reproduced"
+      }
+    },
+    "no_duplicate_level_credit_proposed": true,
+    "ok": true,
+    "principle": "selected public games are already registered and the run refuses duplicate solve credit before any episode.",
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_sha256_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "schema": "carnot.experiment_6167.arc_task_aware_multiseed_replication.v1.registry_precheck",
+    "selected_game_count": 6,
+    "target_level_solve_claim_count": 0,
+    "tu93_included": true
+  },
+  "reproducibility_checksum": "sha256:b7e860196220fa9ccd9503ae1e9cf48cc4813c7090c3e56903bb5102f8e06a69",
+  "shuffle_alias_identity_noop_invented_trigger_denominator_light_and_label_controls": {
+    "alias": {
+      "detail": "game aliases do not change the fixed transition threshold.",
+      "passed": true
+    },
+    "all_controls_passed": true,
+    "denominator_inflation": {
+      "live_denominators_by_game_seed": {
+        "lp85|6167": 8,
+        "lp85|6168": 8,
+        "lp85|6169": 8,
+        "ls20|6167": 8,
+        "ls20|6168": 8,
+        "ls20|6169": 8,
+        "r11l|6167": 8,
+        "r11l|6168": 8,
+        "r11l|6169": 8,
+        "sp80|6167": 8,
+        "sp80|6168": 8,
+        "sp80|6169": 8,
+        "su15|6167": 8,
+        "su15|6168": 8,
+        "su15|6169": 8,
+        "tu93|6167": 8,
+        "tu93|6168": 8,
+        "tu93|6169": 8
+      },
+      "metric_denominators_by_game_seed": {
+        "lp85|6167": 8,
+        "lp85|6168": 8,
+        "lp85|6169": 8,
+        "ls20|6167": 8,
+        "ls20|6168": 8,
+        "ls20|6169": 8,
+        "r11l|6167": 8,
+        "r11l|6168": 8,
+        "r11l|6169": 8,
+        "sp80|6167": 8,
+        "sp80|6168": 8,
+        "sp80|6169": 8,
+        "su15|6167": 8,
+        "su15|6168": 8,
+        "su15|6169": 8,
+        "tu93|6167": 8,
+        "tu93|6168": 8,
+        "tu93|6169": 8
+      },
+      "passed": true
+    },
+    "identity_noop": {
+      "noop_row_count": 33,
+      "passed": true
+    },
+    "invented_trigger": {
+      "invented_trigger_count": 0,
+      "passed": true,
+      "ready_score_for_no_trigger_probe": 0.0
+    },
+    "label_shuffle": {
+      "detail": "score_transition uses observed change counts, not label identity.",
+      "passed": true
+    },
+    "light_control": {
+      "invented_row_count": 0,
+      "passed": true
+    },
+    "principle": "shuffle, alias, identity/no-op, label, invented-trigger, denominator, and light controls guard shortcut and denominator artifacts.",
+    "task_shuffle": {
+      "detail": "fixed Exp6154 threshold is independent of current held labels.",
+      "passed": true
+    }
+  },
+  "solve_claimed": false,
+  "status": "complete_positive",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py -m pytest tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py",
+    ".venv/bin/python -m carnot.experiment_6167_arc_task_aware_multiseed_replication --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6167_arc_task_aware_multiseed_replication.json",
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+    ".venv/bin/ruff check python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    "manual: ops/e2e-test-plan.md reviewed; no dedicated ARC Exp6167 E2E entry applies",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {},
+  "upstream_policy_code_result_and_registry_hashes": {
+    "adapter_lookup_solver_gotcha_paths": {
+      "adapter_path": "python/carnot/agentic/arc_game_adapters.py",
+      "live_entrypoint_path": "python/carnot/agentic/arc_competition_agent.py",
+      "registry_gotcha_path": "ops/arc_solve_registry.yaml",
+      "solver_kit_path": "python/carnot/agentic/arc_solver_kit.py"
+    },
+    "existing_registered_levels": {
+      "ar25": 8,
+      "bp35": 9,
+      "cd82": 6,
+      "cn04": 6,
+      "dc22": 6,
+      "ft09": 6,
+      "g50t": 7,
+      "ka59": 7,
+      "lf52": 10,
+      "lp85": 8,
+      "ls20": 7,
+      "m0r0": 6,
+      "r11l": 6,
+      "re86": 8,
+      "s5i5": 8,
+      "sb26": 8,
+      "sc25": 6,
+      "sk48": 8,
+      "sp80": 6,
+      "su15": 9,
+      "tn36": 7,
+      "tr87": 6,
+      "tu93": 9,
+      "vc33": 7,
+      "wa30": 9
+    },
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6167_arc_task_aware_multiseed_replication.json",
+    "principle": "Exp6154 policy code, result, live entrypoints, registry, adapters, solvers, gotcha paths, seeds, output, exclusions, and protected files are content-addressed before reuse.",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "receipt_hash": "sha256:4b0390045a54b2f1203799f3763e86d0a37d032cd9bf3de5d6709dd6c189809a",
+    "receipts": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+        "size_bytes": 281180
+      },
+      {
+        "exists": true,
+        "path": "research-program.md",
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "size_bytes": 28560
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+        "sha256": "sha256:9f413ea444d7049bf40103260b995201e282f2741ec1524379889b30ea2504d3",
+        "size_bytes": 1509364
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6154_arc_task_aware_energy_generalization.py",
+        "sha256": "sha256:233c187fe60634906126f739fc31fe51ddf8c73e8121e13e2a424836541fcefa",
+        "size_bytes": 50425
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6154_arc_task_aware_energy_generalization.json",
+        "sha256": "sha256:c3e76f9b780aad43894377b511a135015226f0c866f96af55f3d16e94ff51dca",
+        "size_bytes": 37436
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_task_aware_energy.py",
+        "sha256": "sha256:ec70c809f81c595c5395bd9d6f548618d6653899cfae29ba72a91d16d16dc7b8",
+        "size_bytes": 4877
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py",
+        "sha256": "sha256:c5603fb4b2cda532e1be67bc223632c61cec691cffbd7191f172082ba8e3344c",
+        "size_bytes": 49334
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py",
+        "sha256": "sha256:32c2b161cf84ff470e68fcd4a8a9850349c93f048141ad2d5aea8b1ea2351ad5",
+        "size_bytes": 12902
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "sha256:10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "size_bytes": 419009
+      },
+      {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "size_bytes": 462740
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_game_adapters.py",
+        "sha256": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
+        "size_bytes": 120680
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "sha256": "sha256:553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
+        "size_bytes": 238343
+      },
+      {
+        "exists": true,
+        "path": "scripts/adversarial_verify.py",
+        "sha256": "sha256:08df353aaae8eb7d9b47c877802637c0633de4e82be09c82b821d19ab8e246d2",
+        "size_bytes": 251753
+      },
+      {
+        "exists": true,
+        "path": "scripts/arc_orphan_solver_lint.py",
+        "sha256": "sha256:96a3b5b95ddcd70ca1a67eb8e5f055743b673af39a66b4a93c9bada38938f4b8",
+        "size_bytes": 10756
+      }
+    ],
+    "schema": "carnot.experiment_6167.arc_task_aware_multiseed_replication.v1.upstream_hashes",
+    "seeds": [
+      6167,
+      6168,
+      6169
+    ],
+    "selected_games": [
+      "lp85",
+      "su15",
+      "tu93",
+      "r11l",
+      "ls20",
+      "sp80"
+    ],
+    "upstream_exp6154_policy_and_result_hashed": true
+  },
+  "used_game_source": false,
+  "verifier_is_oracle": false
+}
