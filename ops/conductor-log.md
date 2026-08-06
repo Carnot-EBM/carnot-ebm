@@ -15398,3 +15398,4 @@ Still active  |
 | 2026-08-06 11:19 UTC | Repository-wide test artifact-isolation compatibil | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ath / "missing |
 | 2026-08-06 12:43 UTC | Repository-wide test artifact-isolation compatibil | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: it more time.
  |
+| 2026-08-06 13:17 UTC | Reliable dated evidence refresh after the V534 pla | OK | 115 passed, 1 warning in 10.34s |
