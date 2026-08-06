@@ -22089,3 +22089,159 @@ noninferiority.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6148 | Planned (`python/carnot/experiment_6148_shifted_family_admission_held.py`, `results/experiment_6148_shifted_family_admission_held.json`) | Planned (`tests/python/test_experiment_6148_shifted_family_admission_held.py`) |
+
+### REQ-VERIFY-6159: Exp6159 Decision-Calibrated Fresh Out-Of-Time Stream
+
+The repository SHALL provide Exp6159 at
+`python/carnot/experiment_6159_decision_calibrated_stream.py` and write
+`results/experiment_6159_decision_calibrated_stream.json`,
+`results/experiment_6159_decision_calibrated_stream.rows.jsonl`,
+`results/experiment_6159_decision_calibrated_stream.splits.json`,
+`results/experiment_6159_decision_calibrated_stream.outcomes.jsonl`, and
+`results/experiment_6159_decision_calibrated_stream.preregistration.json`.
+Exp6159 SHALL construct an independent deterministic chronological exact-event
+stream with at least 240 events across at least six exact families, using
+never-used seeds, event IDs, and base-template identities. It SHALL reuse the
+proven exact IR generator/validator path but SHALL NOT reuse Exp6145 event IDs,
+Exp6148 held rows, Exp6148 held labels, Exp5785/Exp5786 completed fixture
+identities, prior seeds, or prior outcomes.
+
+- REQ-VERIFY-6159-1: The workflow SHALL hash Exp6145 and Exp6148 generator
+  sources, Exp6145 rows, split, and outcome sidecars, Exp6148 held artifacts,
+  Exp5785 and Exp5786 completed lineage artifacts and rows, exclusion manifests,
+  output paths, protected files, and the new source/test/spec files before
+  crediting readiness.
+- REQ-VERIFY-6159-2: Calibration, future-known, and shifted-family-held splits
+  SHALL be assigned by base-template identity before derivative rows are
+  emitted. A base template and all aliases, contradictions, malformed
+  strategies, poison controls, and threshold-boundary controls derived from it
+  SHALL remain in exactly one split.
+- REQ-VERIFY-6159-3: Pre-outcome rows SHALL expose only chronological,
+  family, base-template, graph-summary, candidate-strategy, and
+  decision-plan-reference fields. Exact answers, current outcomes, future
+  labels, held labels, post-outcome receipts, and decision-result fields SHALL
+  be absent from learner-visible rows.
+- REQ-VERIFY-6159-4: Exact answers, Python/Z3 validator outcomes, current
+  outcome labels, unsafe labels, and solver-cost diagnostics SHALL live only in
+  the separately hashed post-outcome sidecar. Held labels SHALL be available
+  only through a one-shot loader contract after preregistration and model rows
+  exist.
+- REQ-VERIFY-6159-5: Before any model inference or held materialization, the
+  workflow SHALL freeze one unsafe-weighted utility cost table, inference plan,
+  primary cluster unit, bootstrap seed schedule, minimum effective sample sizes,
+  unsafe-admission margin, known-family noninferiority margin, Brier/ECE
+  endpoints, descriptive-only AUROC plan, and readiness formula in the
+  preregistration sidecar.
+- REQ-VERIFY-6159-6: The stream SHALL include aliases, contradictions,
+  malformed strategies, poison controls, threshold-boundary controls, and one
+  or more structurally shifted held families. Alias-only derivatives SHALL NOT
+  count as structural shifts.
+- REQ-VERIFY-6159-7: Every exact outcome SHALL be validated independently
+  through local Python and Z3 validators, with zero disagreement and zero
+  unresolved rows. Solver effort SHALL be diagnostic only and SHALL NOT define
+  model difficulty or admission.
+- REQ-VERIFY-6159-8: Prior-fixture nonreuse SHALL prove bare-zero overlap for
+  events, base templates, and seeds against Exp6145, Exp6148, Exp5785, and
+  Exp5786 exposed or completed fixtures.
+- REQ-VERIFY-6159-9: `decision_calibrated_stream_ready_score` SHALL be the bare
+  scalar `1.0` only when identities are fresh, exact labels validate, splits are
+  isolated by base-template group, the decision endpoint is frozen before
+  inference, held access remains zero, prior event/template/seed overlap is
+  bare zero, forbidden pre-outcome fields are absent, protected files are
+  unchanged, LLM invocation count is bare zero, and deterministic rebuild hashes
+  match. Otherwise it SHALL be `0.0`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`prior_fixture_hashes_and_nonreuse_receipt`,
+`stream_row_split_outcome_and_preregistration_paths_and_hashes`,
+`event_template_family_partition_and_shift_counts`,
+`never_used_seed_and_identity_receipts`, `chronological_order`,
+`pre_outcome_schema`, `post_outcome_schema`, `forbidden_field_scan`,
+`exposed_fixture_overlap_counts`, `exact_validator_agreement`,
+`alias_contradiction_malformed_poison_and_boundary_controls`,
+`frozen_utility_cost_table`,
+`primary_cluster_unit_bootstrap_and_sample_size_plan`,
+`safety_and_noninferiority_margins`,
+`brier_ece_and_descriptive_auroc_plan`,
+`held_loader_one_shot_contract`, `deterministic_rebuild_checksum`,
+`llm_invocation_count`, `decision_calibrated_stream_ready_score`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes a ready preregistered stream from a blocked or partial stream.
+- `preconditions_checked`: Exp6145/Exp6148 generators, prior rows, sidecars, seeds, fixtures, exclusions, outputs, and protected files are hashed before construction.
+- `prior_fixture_hashes_and_nonreuse_receipt`: Prior exposed and completed fixtures are content-addressed and compared against fresh Exp6159 identities.
+- `stream_row_split_outcome_and_preregistration_paths_and_hashes`: Row, split, outcome, and preregistration sidecars are disjoint, hashed, and independently replayable.
+- `event_template_family_partition_and_shift_counts`: Counts prove the stream has enough events, families, base templates, partitions, structural shifts, aliases, and controls.
+- `never_used_seed_and_identity_receipts`: New seeds, event IDs, and base-template IDs are committed and have zero overlap with prior fixtures.
+- `chronological_order`: Strict event order and seed schedule make the stream replay deterministic.
+- `pre_outcome_schema`: Learner-visible rows name only fields available before the outcome.
+- `post_outcome_schema`: Exact answers, labels, and validator receipts are isolated behind the post-outcome loader.
+- `forbidden_field_scan`: Exact answers, current outcomes, future labels, held labels, and post-outcome receipts are absent from pre-outcome rows.
+- `exposed_fixture_overlap_counts`: Event, template, and seed overlap are all bare zero.
+- `exact_validator_agreement`: Python and Z3 validators agree on every exact row with zero unresolved disagreements.
+- `alias_contradiction_malformed_poison_and_boundary_controls`: Controls prove aliases, contradictions, malformed strategies, poison attempts, and threshold-boundary cases are present and separated.
+- `frozen_utility_cost_table`: One unsafe-weighted decision cost table is frozen before inference or held materialization.
+- `primary_cluster_unit_bootstrap_and_sample_size_plan`: Paired uncertainty uses a frozen primary cluster unit, bootstrap seeds, and minimum effective sample sizes.
+- `safety_and_noninferiority_margins`: Unsafe-admission and known-family noninferiority margins are frozen prospectively.
+- `brier_ece_and_descriptive_auroc_plan`: Brier and ECE are proper-score endpoints while AUROC remains descriptive only.
+- `held_loader_one_shot_contract`: Held outcome materialization remains zero before inference and any later read must be one-shot.
+- `deterministic_rebuild_checksum`: A second construction reproduces byte-equivalent stream commitments.
+- `llm_invocation_count`: The value must be bare zero.
+- `decision_calibrated_stream_ready_score`: Exactly one only when identities are fresh, labels exact, splits isolated, endpoint frozen, and held access remains zero.
+- `protected_files_unchanged`: Conductor, ops, traceability, and prior fixture files remain byte-identical.
+- `duration_s`: Measured deterministic construction time is reported without implying model inference.
+- `inference_substrate`: Use `deterministic_verifier_plus_replay`.
+- `verifier_is_oracle`: Exact validators are the post-outcome oracle while the decision endpoint is oracle-distinct.
+- `missing_verifier_gaps`: Any identity, split, label, endpoint-freeze, held-access, or prior-fixture gap is explicit.
+- `field_provenance`: Every field traces to prompt, specs, source hashes, sidecars, exact validators, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, exact labels, split/leakage, prior-fixture nonreuse, forbidden fields, endpoint freeze, deterministic rebuild, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, sidecar, preregistration, prior-fixture, test, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, or `blocked:` and state whether prospective preregistration is valid.
+
+### SCENARIO-VERIFY-6159-FRESH: Stream Identities Are New And Chronological
+
+**Given** Exp6159 builds its row, split, outcome, and preregistration sidecars
+**When** the sidecars are replayed
+**Then** at least 240 events across at least six exact families have monotone
+fresh event IDs, fresh base-template IDs, never-used seeds, base-template
+split isolation, and bare-zero overlap with Exp6145, Exp6148, Exp5785, and
+Exp5786 event, template, and seed identities.
+
+### SCENARIO-VERIFY-6159-BOUNDARY: Outcomes Are Isolated Until One-Shot Held Access
+
+**Given** Exp6159 has frozen its decision endpoint and written pre-outcome rows
+**When** forbidden-field and loader-contract checks run
+**Then** pre-outcome rows contain no exact answer, current outcome, future
+label, held label, post-outcome receipt, or decision result, and held outcome
+access remains zero before inference.
+
+### SCENARIO-VERIFY-6159-ENDPOINT: Decision Metrics Are Frozen Prospectively
+
+**Given** Exp6159 writes the preregistration sidecar before model execution
+**When** the artifact is validated
+**Then** the unsafe-weighted utility table, cluster unit, bootstrap seeds,
+minimum effective sample sizes, safety margins, Brier/ECE endpoints,
+descriptive-only AUROC plan, and readiness formula hashes match the frozen
+preregistration manifest.
+
+### SCENARIO-VERIFY-6159-CONTROLS: Exact Controls Validate Separately
+
+**Given** the stream contains aliases, contradictions, malformed strategies,
+poison controls, threshold-boundary controls, and shifted held families
+**When** exact validators and control receipts are replayed
+**Then** Python and Z3 agree on all accepted rows, contradictions and malformed
+strategies reject deterministically, poison controls do not promote, boundary
+controls are present, aliases are not counted as structural shift, and solver
+effort is diagnostic only.
+
+## Implementation Status (REQ-VERIFY-6159)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6159 | Planned (`python/carnot/experiment_6159_decision_calibrated_stream.py`, `results/experiment_6159_decision_calibrated_stream.json`) | Planned (`tests/python/test_experiment_6159_decision_calibrated_stream.py`) |
