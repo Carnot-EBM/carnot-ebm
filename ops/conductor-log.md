@@ -15402,3 +15402,4 @@ Still active  |
 | 2026-08-06 13:57 UTC | Fresh chronological decision-calibration stream an | OK | 87 passed, 1 warning in 152.10s (0:02:32) |
 | 2026-08-06 15:01 UTC | Gated on Exp6159 readiness: fresh flagship-GGUF de | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6160_sota_de |
 | 2026-08-06 15:21 UTC | Gated on Exp6159 readiness: fresh flagship-GGUF de | OK | 87 passed, 1 warning in 30.55s |
+| 2026-08-06 15:44 UTC | Gated on Exp6160 readiness: freeze a decision-cali | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
