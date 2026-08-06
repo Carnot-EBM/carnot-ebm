@@ -63,7 +63,9 @@ class DeliverableGuard:
     """
 
     def __init__(self, path: str) -> None:
-        self._path = str(self._resolve_guard_path(path))
+        resolved = self._resolve_guard_path(path)
+        self._path = str(resolved)
+        self._fallback_path = self._resolve_production_fallback(path, resolved)
 
     @staticmethod
     def _resolve_guard_path(path: str) -> Path:
@@ -74,6 +76,18 @@ class DeliverableGuard:
             if raw.is_absolute():
                 return raw
             raise
+
+    @staticmethod
+    def _resolve_production_fallback(path: str, resolved: Path) -> Path | None:
+        if os.environ.get("PYTEST_CURRENT_TEST"):
+            return None
+        try:
+            fallback = resolve_experiment_artifact_path(path, allow_override=False)
+        except ArtifactPathError:
+            return None
+        if fallback == resolved:
+            return None
+        return fallback
 
     def assert_written(self) -> None:
         """Raise FileNotFoundError if the deliverable file is absent.
@@ -91,13 +105,16 @@ class DeliverableGuard:
         FileNotFoundError
             With a message naming the missing path and citing the RETRO context.
         """
-        if not Path(self._path).exists():
-            raise FileNotFoundError(
-                f"DeliverableGuard: deliverable file '{self._path}' was NOT written. "
-                "This is the RETRO-032/033/036 failure mode: build_result() was called "
-                "but the result was never flushed to disk.  Check that AtomicResultWriter.write() "
-                "or json.dump() was called with this exact path before assert_written()."
-            )
+        if Path(self._path).exists():
+            return
+        if self._fallback_path is not None and self._fallback_path.exists():
+            return
+        raise FileNotFoundError(
+            f"DeliverableGuard: deliverable file '{self._path}' was NOT written. "
+            "This is the RETRO-032/033/036 failure mode: build_result() was called "
+            "but the result was never flushed to disk.  Check that AtomicResultWriter.write() "
+            "or json.dump() was called with this exact path before assert_written()."
+        )
 
     def assert_written_or_partial(self, partial_path: str) -> None:
         """Pass if either the deliverable or a partial result file exists.

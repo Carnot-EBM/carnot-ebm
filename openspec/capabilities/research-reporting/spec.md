@@ -108,6 +108,115 @@ quarantine field remains unchanged.
 |---|---|---|
 | REQ-REPORT-6143 | Implemented (`python/carnot/experiment_artifacts.py`, `python/carnot/testing/tracked_results_guard.py`, `scripts/experiment_template.py`, `python/carnot/pipeline/deliverable_guard.py`, `tests/python/conftest.py`, `results/experiment_6143_test_artifact_isolation.json`) | Implemented (`tests/python/test_experiment_artifact_isolation.py`) |
 
+### REQ-REPORT-6157: Repository-Wide Artifact Isolation Compatibility Closure
+
+Carnot's pytest harness SHALL install the validated experiment artifact-output
+override before collection and before experiment modules can execute import-time
+writers. The harness SHALL also install a narrow legacy compatibility layer for
+relative literal `results/...` write paths while the validated override is
+active, so representative legacy tests can write to the temporary artifact root
+without mutating tracked evidence.
+
+The compatibility layer SHALL redirect only write-intent operations that target
+legacy relative `results/...` paths or shared writer helpers that can be safely
+resolved through the canonical artifact resolver. It SHALL reject traversal,
+the bare `results` directory, repository/workspace results roots, symlink
+escapes, and broad temporary roots. It SHALL NOT redirect absolute production
+tracked-result write attempts used by negative controls; those attempts SHALL
+still be caught and recorded by the tracked-results write guard.
+
+Shared JSON result writers SHALL remain production-compatible while resolving
+legacy `results/...` destinations through the canonical artifact resolver under
+pytest. Atomic replacement paths SHALL write, replace, and verify inside the
+temporary artifact root and SHALL leave pre-existing tracked result files
+byte-identical.
+
+Exp6157 SHALL generate a deterministic direct-writer census grouped by
+mechanism and risk, SHALL create a reviewed exception manifest with owner,
+reason, and expiry for writers not directly migrated in the task, and SHALL
+create a resumable migration ledger keyed by source path and source hash rather
+than mass-editing all residual call sites.
+
+Exp6157 SHALL run collection and representative shards that cover template
+writers, legacy direct writers, atomic replacement, checkpoint/resume,
+adversarial backfill readers, experiment deliverable checks, negative tracked
+write controls, quarantine preservation, protected-file preservation,
+determination-preservation lint, applicable E2E checks, and root-clutter
+checks. Any nonzero command SHALL be classified as `artifact_isolation`,
+`unrelated_preexisting`, or `new_regression`; closure SHALL NOT be reported
+ready with any unclassified failure or artifact-isolation failure.
+
+The Exp6157 artifact SHALL include status, preconditions, prior-failure
+receipt, writer-census before/after grouping, early-override and collection
+receipts, canonical resolver and legacy compatibility receipts, exception and
+migration manifest paths with hashes and progress, attempted tracked-write
+controls, representative shard matrix, failure classification, tracked-result
+hash before/after matrix, quarantine-field before/after matrix, preservation of
+pre-existing worktree changes, isolation violation count, unrelated failure
+count, closure-ready score, determination-preservation receipt, protected-file
+receipt, duration, `inference_substrate="deterministic_repository_test_isolation"`,
+field provenance, test commands, exit codes, reproducibility checksum, and an
+honest terminal verdict that states whether tracked evidence stayed immutable.
+
+#### SCENARIO-REPORT-6157-EARLY-OVERRIDE-COLLECTION: Override Is Active Before Collection
+
+**Given** pytest configures the Carnot Python test session
+**When** experiment test modules are collected
+**Then** `CARNOT_EXPERIMENT_ARTIFACT_ROOT` already names a validated temporary
+directory and collection-time legacy result writers land under that temporary
+root rather than tracked `results/**`.
+
+#### SCENARIO-REPORT-6157-LEGACY-WRITER-COMPATIBILITY: Relative Legacy Writes Redirect Narrowly
+
+**Given** a legacy test writer opens, writes with pathlib, or atomically
+renames to a relative `results/...` path
+**When** the pytest artifact override and compatibility layer are active
+**Then** the write resolves under the override root, the tracked production
+artifact remains byte-identical, and traversal, symlink escapes, bare results
+targets, and broad roots fail closed.
+
+#### SCENARIO-REPORT-6157-ATTEMPTED-WRITE-CONTROL: Absolute Tracked Writes Still Fail
+
+**Given** a negative control attempts to write an absolute tracked file under
+the repository's production `results/` directory
+**When** the tracked-results guard is installed
+**Then** the guard records the real forbidden attempt, raises at the write
+boundary, and exposes the violation ledger even if a test swallows the original
+exception.
+
+#### SCENARIO-REPORT-6157-CENSUS-MANIFESTS: Writers Are Accounted Without Mass Editing
+
+**Given** the repository still contains residual direct-writer census rows
+**When** Exp6157 builds its closure evidence
+**Then** the writer census is deterministic and grouped by mechanism/risk, the
+reviewed exception manifest carries owner/reason/expiry entries, and the
+resumable migration ledger is keyed by source path and source hash.
+
+#### SCENARIO-REPORT-6157-FAILURE-CLASSIFICATION: Isolation Failures Are Separated
+
+**Given** representative shards return zero or nonzero statuses
+**When** Exp6157 classifies the command receipts
+**Then** every nonzero receipt is classified as `artifact_isolation`,
+`unrelated_preexisting`, or `new_regression`, and the ready score is one only
+when isolation violations, tracked-result mutations, unclassified failures,
+and unreviewed manifest entries are all absent.
+
+#### SCENARIO-REPORT-6157-QUARANTINE-AND-ATOMIC-PRESERVATION: Evidence Stays Immutable
+
+**Given** tracked sentinel artifacts carry quarantine, corrigendum, substrate,
+or provenance fields
+**When** collection and representative shards run through redirected writers
+and atomic replacements
+**Then** aggregate tracked-result hashes, sentinel hashes, protected files, and
+all protected quarantine fields are unchanged except for new task-owned
+deliverables explicitly recorded by Exp6157.
+
+## Implementation Status (REQ-REPORT-6157)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6157 | Planned (`python/carnot/experiment_6157_repo_wide_artifact_isolation_closure.py`, `python/carnot/experiment_artifacts.py`, `python/carnot/testing/tracked_results_guard.py`, `python/carnot/pipeline/atomic_writer.py`, `tests/python/conftest.py`, `results/experiment_6157_repo_wide_artifact_isolation_closure.json`) | Planned (`tests/python/test_experiment_artifact_isolation.py`) |
+
 ### REQ-REPORT-5335: Archive .486 And Record .487 Activation Preconditions
 
 The Exp 5335 workflow SHALL read `results/experiment_5334_capstone_v486.json`,
@@ -49909,3 +50018,166 @@ terminal verdict prefix is present; the inference substrate is
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6156 | Implemented (`python/carnot/experiment_6156_transition_v534.py`, `results/experiment_6156_transition_v534.json`) | Implemented (`tests/python/test_experiment_6156_transition_v534.py`) |
+
+### REQ-REPORT-6158: V534 Post-Marker Source Delta Ingestion Preserves Task Identity
+
+The Exp6158 workflow SHALL run a bounded literature-ingestion pass after the
+sealed `V534-PLANNER-REFRESH-20260806-END` marker in
+`research-references.md`. It SHALL first hash the exact marker block,
+`research-references.md`, active `research-roadmap.yaml`, optional
+`research-roadmap-next.yaml` when present,
+`openspec/change-proposals/research-roadmap-vNEXT.md`,
+`ops/exclusion_manifest.yaml`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, the output path when present, and protected
+files. It SHALL record the UTC cutoff, same-day ambiguity, endpoint failures,
+rate limits, and any absent staged-roadmap receipt.
+
+The workflow SHALL search only hash-bounded post-marker evidence through
+low-concurrency arXiv, OpenReview, Hugging Face Papers, direct Semantic
+Scholar citation trails for EBT `2507.02092` and ARM-EBM `2512.15605`,
+targeted GitHub repositories, Extropic official writing/hardware/software
+pages and repositories, and Logical Intelligence Kona/Aleph public pages.
+arXiv records, OpenReview forum pages, official project pages, Extropic
+pages, Logical Intelligence pages, and maintained official repositories SHALL
+be primary or official only when directly opened. Hugging Face Papers,
+GitHub discovery metadata, Semantic Scholar routes, search pages, and local
+sweep helpers SHALL be secondary or tooling unless they link to an opened
+primary or official page. The workflow SHALL NOT invoke `/deep-research` or a
+local research model.
+
+Every surfaced candidate SHALL receive exactly one disposition: accepted,
+rejected, duplicate, completed-scope, retired-scope, abstained,
+false-positive, known-false-negative, cutoff-confound, or endpoint-failed.
+Each disposition SHALL include a primary or official URL when one is
+reachable, plus source id, title, identifier, authors when known, source date,
+receipt id, query family, access outcome, and reason. Accepted findings SHALL
+be newer primary-source evidence or materially changed official evidence
+after the sealed marker, non-duplicate by identifier, title, author,
+mechanism, deliverable shape, and existing ledger heading, and SHALL map only
+to already allocated `.534` tasks Exp6159 through Exp6167 or to `defer`.
+Sources SHALL be rejected, marked completed-scope, retired-scope, or
+abstained when they only duplicate the sealed V534 planner block, repeat
+Exp5785/Exp5786 hardness/surface lineage, reopen retired Phase-D/external
+scorer/generated-answer/CSL exact-slot/THRML/KAN/ARC/hardware shapes, require
+hidden-state or model-weight mutation, or attempt a roadmap/task/gate rewrite.
+
+When no accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` unchanged and set
+`references_append_receipt.appended=false`. When accepted findings exist, it
+MAY append exactly one dated post-V534 delta subheading after the sealed
+marker, listing only actionable bounded method-to-task mappings. The workflow
+SHALL NOT change task identities, gates, `research-roadmap.yaml`, optional
+staged roadmap identities or gates, `ops/exclusion_manifest.yaml`,
+`ops/changelog.md`, `ops/status.md`, or `scripts/research_conductor.py`.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`search_window_and_marker_receipt`,
+`source_queries_and_endpoint_receipts`,
+`primary_secondary_and_official_source_counts`,
+`accepted_rejected_duplicate_completed_retired_and_abstained_findings`,
+`sota_to_experiment_mapping`,
+`cutoff_rate_limit_and_same_day_uncertainty_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_receipts`,
+`openreview_huggingface_github_extropic_and_kona_receipts`,
+`duplicate_completed_and_retired_scope_filter`, `references_append_receipt`,
+`roadmap_identity_gate_and_exclusion_immutability`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. Every required top-level
+field SHALL have a non-empty provenance entry and a principle.
+`inference_substrate` SHALL equal `literature_ingestion`; no local research
+model SHALL be invoked. The `honest_verdict` SHALL start with
+`complete_delta:`, `complete_null:`, or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "Terminal literature-ingestion state follows marker, source reachability, and classification receipts."
+- `preconditions_checked`: principle "The V534 marker, references, active and staged roadmaps, exclusions, sweep helpers, output path, protected files, endpoint failures, rate limits, and same-day ambiguity are recorded before source decisions."
+- `search_window_and_marker_receipt`: principle "Only the hash-bounded post-V534 marker window is eligible."
+- `source_queries_and_endpoint_receipts`: principle "Every source route records role, URL, query, access outcome, timestamp, candidate count, and low-concurrency evidence."
+- `primary_secondary_and_official_source_counts`: principle "Discovery metadata cannot be mistaken for primary or official evidence."
+- `accepted_rejected_duplicate_completed_retired_and_abstained_findings`: principle "Every candidate gets exactly one disposition and a primary or official URL when reachable."
+- `sota_to_experiment_mapping`: principle "Ingestion cannot add, remove, rename, or re-gate tasks."
+- `cutoff_rate_limit_and_same_day_uncertainty_receipts`: principle "Endpoint blocks, rate limits, same-day cutoff uncertainty, and source false positives remain visible."
+- `semantic_scholar_ebt_and_arm_ebm_receipts`: principle "Citation trails are secondary discovery receipts until an opened primary source changes local method scope."
+- `openreview_huggingface_github_extropic_and_kona_receipts`: principle "Official and secondary ecosystem receipts stay grouped by authority."
+- `duplicate_completed_and_retired_scope_filter`: principle "Identifier, title, author, mechanism, deliverable shape, completed lineage, duplicate, and retired-scope filters keep closed work closed."
+- `references_append_receipt`: principle "Reference-ledger appends are append-only and forbidden for zero accepted findings."
+- `roadmap_identity_gate_and_exclusion_immutability`: principle "Roadmap task IDs, gates, task identity, and exclusions stay immutable during ingestion."
+- `protected_files_unchanged`: principle "Roadmaps, conductor, ops ledgers, exclusions, sweep helpers, and protected sources remain byte-identical unless explicitly owned."
+- `duration_s`: principle "Measured wall time exposes the bounded literature-ingestion substrate."
+- `inference_substrate`: principle "Use `literature_ingestion`; no local research model is invoked."
+- `field_provenance`: principle "Every field traces to source receipts, local hashes, query families, or classification records."
+- `test_commands`: principle "Commands document focused unit/spec coverage, marker/hash, date-window, deduplication, source classification, URL verification, mapping, roadmap/exclusion immutability, schema, adversarial-verify, applicable E2E, protected-file, root-clutter, coverage, and full-suite checks."
+- `test_exit_codes`: principle "Exit codes prevent failed checks from becoming success."
+- `reproducibility_checksum`: principle "A checksum detects later marker, source, classification, append, or immutability drift."
+- `honest_verdict`: principle "Use `complete_delta:`, `complete_null:`, or `blocked:` and distinguish endpoint failure from no new science."
+
+#### SCENARIO-REPORT-6158-ZERO-DELTA: Complete Null Leaves References Unchanged
+
+**Given** the V534 planner marker is present, the active `.534` roadmap is
+readable, and at least one primary, official, reliable secondary, or tooling
+route is reachable
+**And** every surfaced post-marker item is duplicate, rejected,
+completed-scope, retired-scope, abstained, inaccessible, false-positive,
+known-false-negative, or a cutoff confound
+**When** Exp6158 runs
+**Then** it writes `results/experiment_6158_v534_source_delta_ingestion.json`,
+sets `status=complete`, sets `references_append_receipt.appended=false`,
+records zero accepted findings, separates endpoint blocks from no new science,
+preserves roadmap identities, gates, roadmaps, and exclusions, declares
+`inference_substrate=literature_ingestion`, and emits a `complete_null:`
+verdict.
+
+#### SCENARIO-REPORT-6158-ACCEPT-BOUNDED-DELTA: Accepted Findings Map Inside V534
+
+**Given** a source is newer primary-source evidence or materially changed
+official evidence after the V534 marker, is non-duplicate by identifier,
+title, author, mechanism, deliverable shape, and ledger heading, and only
+sharpens an already allocated `.534` task or is explicitly deferred
+**When** the source is accepted
+**Then** the artifact and optional reference append record source id, title,
+URL, source date, receipt id, target experiment or `defer`, bounded source
+hook, authority boundary, method-to-task mapping, and provenance while
+preserving task IDs, gates, model policy, authority boundaries, retired
+scopes, hardware requirements, and headline claims.
+
+#### SCENARIO-REPORT-6158-DUPLICATE-COMPLETED-AND-RETIRED-SCOPE: Closed Work Stays Closed
+
+**Given** a source duplicates the sealed V534 planner block, repeats the
+Exp5785/Exp5786 hardness/surface lineage, or only renames retired
+Phase-D, generated-answer, CSL exact-slot, THRML parity, ARC, KAN-mutation,
+hidden-state weight-mutation, unchanged hardware-access, or task/gate rewrite
+shapes
+**When** the candidate is classified
+**Then** it is rejected as duplicate, completed-scope, retired-scope, or
+abstained, the matching rule is recorded, and no reference append, roadmap
+mutation, gate mutation, exclusion mutation, hardware claim, Kona claim, or
+historical rewrite is made.
+
+#### SCENARIO-REPORT-6158-SOURCE-CLASSIFICATION: Primary, Official, Secondary, And Tooling Receipts Stay Distinct
+
+**Given** arXiv, OpenReview, Hugging Face Papers, Semantic Scholar, GitHub,
+Extropic, Logical Intelligence, and local sweep-helper routes return reachable
+or blocked receipts
+**When** Exp6158 groups source evidence
+**Then** primary, official, secondary, and tooling counts remain separate,
+OpenReview challenges and rate limits remain endpoint receipts, Semantic
+Scholar citations stay secondary until opened primary evidence changes scope,
+and `/deep-research` plus local research model invocation counts remain zero.
+
+#### SCENARIO-REPORT-6158-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp6158 artifact is emitted
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, source receipt,
+finding disposition URL, Semantic Scholar citation receipt,
+official/discovery grouping, endpoint failure, rate limit, mapping,
+protected-file hash, test command, exit code, checksum, and terminal verdict
+prefix is present; the inference substrate is `literature_ingestion`.
+
+## Implementation Status (REQ-REPORT-6158)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6158 | Planned (`python/carnot/experiment_6158_v534_source_delta_ingestion.py`, `results/experiment_6158_v534_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_6158_v534_source_delta_ingestion.py`) |

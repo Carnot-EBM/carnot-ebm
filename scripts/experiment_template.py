@@ -765,7 +765,8 @@ class ExperimentTemplate:
         # REQ-INFRA-033: guard that raises FileNotFoundError if the deliverable
         # is absent when assert_deliverable_written() is called at end of main().
         # RETRO-032/033/036: three milestones lost to silently missing result JSONs.
-        self._guard = DeliverableGuard(str(self._output_path))
+        guard_path = deliverable if self._allow_artifact_override else str(self._output_path)
+        self._guard = DeliverableGuard(guard_path)
 
         # REQ-INFRA-073 / RETRO-054: register teardown so GPU VRAM is freed
         # even when the experiment exits abnormally (ctrl-c, exception, conductor kill).
