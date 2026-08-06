@@ -1270,6 +1270,7 @@ def run(
         "schema": SCHEMA,
         "experiment_id": EXPERIMENT_ID,
         "run_date": RUN_DATE,
+        "random_seed": RANDOM_SEED,
         "status": "blocked",
         "preconditions_checked": {
             **_copy_json(preconditions),
