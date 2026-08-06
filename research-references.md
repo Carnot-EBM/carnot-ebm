@@ -32176,7 +32176,7 @@ targeted GitHub repositories, Extropic's official writing/hardware pages, and
 Logical Intelligence's Kona/Aleph pages. This block records only findings that
 became newly actionable after `.530` or changed operational planning.
 
-### Newly actionable deltas
+### Newly reviewed deltas
 
 - **IDER: IDempotent Experience Replay for Reliable Continual Learning** -
   arXiv:2603.00624, https://arxiv.org/abs/2603.00624; code at
@@ -32545,3 +32545,126 @@ plan are promoted.
   invalidates evidence and can re-admit adversarially quarantined artifacts.
 
 <!-- V533-PLANNER-REFRESH-20260805-END -->
+
+## V534 Planner Refresh - 20260806
+
+Incremental planning sweep after terminal milestone `2026.08.533` and the
+`V533-PLANNER-REFRESH-20260805-END` boundary. The primary pass checked current
+2025-2026 arXiv work on energy-based reasoning, neural constraint solving,
+hallucination verification, KANs, constrained generation, stochastic/Ising
+compilation, and continual learning. The secondary pass refreshed OpenReview,
+Hugging Face Papers, Semantic Scholar citation lists for EBT (`2507.02092`) and
+ARM-EBM (`2512.15605`), Extropic and Logical Intelligence first-party pages,
+and GitHub discovery. Findings are separated into experiments that change the
+post-Exp6155 plan and watch-only context.
+
+### Newly actionable deltas
+
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM
+  Constraint Reasoning** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047; submitted 2026-07-19. The study holds
+  clause density and width nearly fixed while varying proof hardness, then
+  finds that exact SAT-solver conflict counts and LLM verdict accuracy need not
+  move together. It also reports large model-dependent accuracy changes under
+  proof-preserving symbol relabeling. This paper appeared in the refreshed EBT
+  citation list. Carnot hook: replace a one-dimensional nominal difficulty
+  label with two preregistered axes -- exact solver effort and proof-preserving
+  surface shift -- and acquire a local-SOTA GGUF corpus with exact SAT/Z3
+  labels. Carnot already executed that deliverable shape in Exp5785/Exp5786;
+  the stream was not ready because Qwen's parser failure rate was 1.0. V534
+  therefore retains the paper's warning but does not repeat the completed
+  hardness/surface fixture or treat solver conflict count as an LLM competence
+  proxy.
+- **Conditional Noise-Contrastive Estimation of Energy-Based Models by Jumping
+  Between Modes** - OpenReview EurIPS 2025 PriGM workshop,
+  https://openreview.net/forum?id=07OWUWmUHp. The method augments local
+  contrastive pairs with a noise distribution that proposes cross-mode pairs,
+  so relative energies of separated modes become identifiable. Carnot hook:
+  make Exp6153's zero-divergence exact factor-composition result non-vacuous by
+  approximating a genuinely multimodal typed factor with local-only and
+  local-plus-mode-jump estimators. Measure factor and joint divergence against
+  the compositional bound under exhaustive software enumeration. This is a
+  software-semantic experiment, not a hardware or latency claim.
+
+### Guarded findings
+
+- **Geometry of Reason: Spectral Signatures of Valid Mathematical Reasoning** -
+  arXiv:2601.00791, https://arxiv.org/abs/2601.00791; revised 2026-06-10 and
+  accepted at ICML 2026. It derives training-free graph-spectral diagnostics
+  from transformer attention and reports strong validity classification and
+  proof-search reranking. Carnot hook, once reachable: compare the attention
+  spectral surface with exact validity labels and shortcut controls. Current
+  `llama.cpp` GGUF receipts do not establish per-head attention-tensor access,
+  so V534 does not claim this surface is locally reachable and stages no live
+  experiment around it.
+- **Sequent-Prover: Training Agents for Formal, Checkable SMT-based Reasoning**
+  - OpenReview ACL ARR May 2026 submission,
+  https://openreview.net/forum?id=DLMqDyHLTu. It trains verifier-using agents to
+  emit SMT-LIB, inspect Z3 feedback, repair formalizations, and track semantic
+  faithfulness rather than solver success alone. The semantic-faithfulness
+  distinction is relevant to Carnot, but a frozen-GGUF test-time feedback
+  wrapper would repeat the already-retired local VerIbmc solver-feedback scope,
+  while the paper's trajectory distillation and preference optimization mutate
+  weights. It is therefore recorded as architecture context, not reopened in
+  V534.
+- **Right Makes Might: Aligning Verified Hidden States Empowers RL Reasoning** -
+  arXiv:2606.03234, https://arxiv.org/abs/2606.03234. Hidden-Align adds an RL
+  training loss that aligns last-layer anchor-token states across correct
+  rollouts. It supports the long-term verified-representation thesis, but the
+  method needs hidden-state training and weight mutation; neither is licensed
+  by the frozen local-GGUF continuous-learning contract. No reproduction is
+  staged.
+
+### Citation trail, ecosystem, and hardware status
+
+- **Semantic Scholar:** direct dated citation-list queries on 2026-08-06
+  returned 32 EBT citing records and eight ARM-EBM citing records. The counts
+  match the previous visible endpoint receipts. `Solver-Hard` is the new
+  citation-trail confirmation; Explorative Modeling, Memoir, LoopUS,
+  Distributional EBMs, Graph Energy Matching, and other already-indexed records
+  are not duplicated. Counts are API receipts, not stable impact claims.
+- **OpenReview / Hugging Face Papers:** OpenReview surfaced the mode-jumping
+  CNCE paper and Sequent-Prover. Hugging Face verification searches did not
+  expose a stronger locally reachable mechanism than the exact-label,
+  hardness-controlled corpus and certified external strategy memory planned
+  here. No output-only or model-judge verifier is promoted across the retired
+  Phase-D boundary.
+- **GitHub:** the pass found no maintained new EBM, constraint, KAN, or sampler
+  repository that displaces Carnot's local GGUF runtime, exact SAT/Z3 labels,
+  typed stochastic IR, Rust/PyO3 sampler ABI, or transactional strategy store.
+  The existing `extropic-ai/torx` software reference remains the relevant
+  stochastic-program comparator.
+- **Extropic:** https://extropic.ai/writing exposes no newer TSU technical
+  update, and https://extropic.ai/hardware still advertises Z1 early access for
+  2027. There is no authenticated device route for V534; Torx/thermalization
+  work remains software simulation only.
+- **Logical Intelligence:** the Kona page still exposes architecture language
+  but no public weights, local API, downloadable benchmark, or reproducible
+  comparator. It remains context rather than an executable baseline.
+- **Attached hardware:** the source sweep does not change local board state.
+  Dual RTX 3090s remain the local SOTA-GGUF substrate; KV260 is terminal,
+  GateMate is physically blocked, and PolarFire is opportunistic. V534 stages
+  no board or speedup claim.
+
+### V534 planning impact
+
+- Do not repeat Exp5785/Exp5786's hardness/surface fixture or use solver
+  hardness as a stand-in for LLM hardness. For the task-aware line, replace
+  Exp6148's saturated AUROC gate only through a fresh, prospectively frozen
+  event stream and a preregistered decision/calibration endpoint.
+- Fit task/hardness-aware energy admission only on calibration rows, then judge
+  it on untouched families with calibration loss, safe utility, and false
+  admission as primary outcomes. AUROC remains descriptive where both classes
+  exist, not the sole gate.
+- Advance verifier-certified strategy memory only behind evidence-substrate and
+  held-admission gates. The continuous learner keeps immutable GGUF hashes,
+  chronological read/commit boundaries, bounded state, replay, rollback, and
+  poison quarantine.
+- Use mode-jumping CNCE to turn the typed stochastic-program line into a
+  nonzero-error composition test. Preserve exact exhaustive semantics and
+  software-only provenance.
+- Keep one no-solve ARC generalization replication on the live task-aware
+  admission path; do not re-credit registered levels or introduce outer-loop
+  game knowledge.
+
+<!-- V534-PLANNER-REFRESH-20260806-END -->

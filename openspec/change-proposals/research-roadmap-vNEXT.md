@@ -1,487 +1,392 @@
-# Research Roadmap vNEXT — Milestone 2026.08.533
+# Research Roadmap vNEXT — Milestone 2026.08.534
 
-**Milestone title:** Task-Aware Energy Calibration, Certified Continuous
-Learning, and Stochastic Program Compilation
+**Milestone title:** Decision-Calibrated Energy, Prospective Strategy Learning,
+and Nontrivial Stochastic Compilation
 
-**Status:** Planned after terminal milestone `2026.08.532`
+**Status:** Planned after terminal milestone `2026.08.533`
 
-**Experiment range:** Exp6142-Exp6155
+**Experiment range:** Exp6156-Exp6168 (13 tasks, four phases)
 
-**Architecture freshness note:** `_bmad/architecture.md` describes the durable
-Rust/PyO3/JAX energy stack, verifier cascade, and SamplerBackend boundary, but
-predates the `.530-.532` reduced-order CSL and Phase-D terminal evidence. It is
-an architecture baseline, not evidence that proposal-only Exp6142-Exp6151 from
-the former `.532` design ran. The active `.532` YAML ended at Exp6141; this
-roadmap replaces those proposal-only identities with the canonical next range.
+**Primary question:** Can Carnot independently reproduce the decision value of
+task-aware energy on a fresh chronological stream, use the resulting admission
+policy to improve frozen flagship GGUFs through verifier-certified strategy
+memory, and turn its exact typed stochastic-program result into a meaningful
+nonzero-error composition test?
 
-**Primary question:** Can Carnot turn exact chronological constraint outcomes
-into a task-aware, oracle-distinct energy admission signal that improves a
-frozen flagship GGUF through certified bounded strategy memory, while proving
-that the same constraint workflow has a typed stochastic-program representation
-and a quantitatively auditable software thermalization path?
+## What milestone 2026.08.533 proved
 
-## What milestone 2026.08.532 proved
-
-| Evidence | Terminal result | Consequence for `.533` |
+| Evidence | Terminal result | Consequence for `.534` |
 |---|---|---|
-| Exp6138 transition | `complete:`; exactly nine `.531` identities were archived, the `.532` activation was already active, and the next-range collision count was zero | Use Exp6142 for the exact `.532 -> .533` handoff and reserve only the identities actually activated in `.532` |
-| Exp6139 source delta | `complete_null:`; no accepted post-V532 delta, with references unchanged | Keep the required ingestion slot, but anchor it after the new `V533-PLANNER-REFRESH-20260805-END` marker and accept a zero delta |
-| Exp6140 option psychometrics | `retired:`; saturated easy families remained position-confounded while typed choice stayed below floor, leaving inability versus distractor/position unresolved | The Exp6128 source-domain recovery is terminal. Do not generate another item bank, pilot, candidate pool, or hidden-state chain from it |
-| Exp6141 item bank | Pre-emptively gate-skipped because Exp6140 readiness was not `1.0` | A skip is not a failed experiment, but the upstream scientific line is closed; no descendant may bypass or relabel that gate |
-| Exp6120 inherited positive | Outcome-committed reduced-order CSL matched eventual utility with less state and exact post-outcome transaction semantics | The natural next test is prospective utility from richer certified strategy state, not another compression or exact-slot requalification |
-| Exp6122 inherited null | No supported solver-kit primitive had direct causal held-out receipts | The ARC slot must measure an already-live, triggered decision surface under adapter-disabled transfer, not propose another unreachable primitive |
-| Operational state | The full Python suite can rewrite tracked result artifacts and strip adversarial quarantine fields | Evidence isolation is a load-bearing prerequisite, not optional cleanup |
+| Exp6143 test isolation | `complete_partial:`; the shared resolver, pytest override, forbidden-write guard, quarantine preservation, and focused mutation controls worked, but 6,198 residual direct-writer census rows and unrelated full-suite failures prevented closure | Finish repository-wide compatibility enforcement and produce a resumable migration/exception manifest before using suite cleanliness as a readiness gate |
+| Exp6145-Exp6146 exact stream | The deterministic shifted constraint stream and authentic Qwen3.6/Gemma-4-31B local-GGUF corpus were ready | The next verifier test can use real exact outcomes and native-chat receipts; no new parser-repair, finite-ID, or source-domain recovery line is needed |
+| Exp6147 task-aware calibration | Scientific artifact was `complete_ready:` with a ready score of `1.0`; it was quarantined by a duration heuristic because analysis consumed cached live-GGUF rows | Preserve the science as non-headline evidence, fix duration/provenance classification separately, and require future artifacts to separate acquisition duration from cached analysis duration |
+| Exp6148 held admission | `complete_null:` on the preregistered shifted AUROC delta because both arms reached AUROC/AUPRC `1.0`; nevertheless task-aware energy improved Brier score, ECE, and exact decision utility for both headline models | Do not relabel the null. Freeze a new decision-focused endpoint on a fresh out-of-time stream and demand independent replication before CSL promotion |
+| Exp6149 strategy fixture | Transaction, rollback, poison quarantine, bounded bytes, protected retention, and Python/Rust/PyO3 fixed-width parity passed; artifact remained `complete_partial:` because repository-level tests were nonzero | Scale the proven schema across the fresh task set after evidence isolation, rather than repeating the retired exact-slot requalification |
+| Exp6150-Exp6151 CSL path | Exp6150 was `blocked_gate_check_failed` on Exp6148/Exp6149 readiness; Exp6151 was pre-emptively skipped | Continuous self-learning still has no prospective utility result; `.534` must run the learner after new evidence and scientific prerequisites, not claim a skipped task |
+| Exp6152-Exp6153 stochastic path | Typed PSC/DFG support, probability, seed, batching, and serialization semantics were ready. Program-level composition held, but the factor approximation had zero divergence and Exp6153 was blocked by nonzero tests | Introduce a genuinely multimodal approximate factor and local-vs-mode-jump controls so the compositional bound is non-vacuous |
+| Exp6154 ARC transfer | Task-aware live transition admission improved two of three held games, regressed one, and made no solve claim | Replicate on more seeds/games with the policy frozen; no registry solve, adapter, or outer-loop RE work is eligible |
+| Exp6155 capstone | `.533` closed honestly with four unflagged positives, one scientific null, three blocked/partial results, and structured skips | `.534` is a replication-and-integration milestone, not a new architecture reset |
 
-The former `.532` proposal described Exp6142-Exp6151, but those tasks were never
-present in the activated roadmap. This `.533` plan intentionally reuses the
-canonical `last_active_id + 1` range with different, post-Exp6140-terminal scope.
-No completion credit or dependency is inherited from proposal-only prose.
+The Exp6147/Exp6148 adversarial flags remain binding for headline aggregation.
+This roadmap records their scientific fields to motivate a new experiment, not
+to remove quarantine or convert a null into a win.
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1 — verification has exact outcomes but no shift-aware, oracle-distinct admission energy
+### Gap 1 — the verifier has a promising calibrated decision signal, but no independent decision-grade result
 
-PRD FR12 requires verifiable reasoning that can recognize when a proposed
-strategy or answer is unsupported. Carnot's external generated-text/logprob
-Phase-D scorer is retired, and Exp6140 closes the attempted source-domain
-recovery for the hidden-state branch. Exact Python/Z3 validators remain strong
-oracles, but they act after the decision and cannot themselves be the learned
-verifier without circularity.
+PRD FR12 requires verifiable reasoning that rejects unsupported strategies at
+the point of use. Exp6148 showed why a ranking-only gate is insufficient: the
+global and task-aware arms were both perfectly rank-separated on the shifted
+set, so AUROC could not measure the large calibration and utility differences.
+Those utility findings were diagnostic because the endpoint was selected after
+the sealed result was visible.
 
-`.533` changes the unit of analysis from a manufactured candidate pool to a
-chronological stream of exact constraint events. The model proposes a strategy
-and terminal solution; an independent exact executor supplies the eventual
-outcome. A task-aware energy consumes only pre-outcome strategy, task, memory,
-and provenance features. TOOD-inspired replay calibration then asks whether the
-current event is in-support for a retrieved strategy. Exact outcomes calibrate
-and evaluate the signal but are never an input at decision time.
+`.534` therefore creates a new out-of-time event stream with never-used seeds
+and template identities, freezes an unsafe-weighted decision rule before held
+outcomes are materialized, and evaluates it once. The primary endpoint is
+cluster-paired decision utility under an explicit cost table, with unsafe false
+admission as a hard safety gate and Brier/ECE as confirmatory proper scores.
+AUROC remains descriptive. This is a registered replication of a new endpoint,
+not a reinterpretation of Exp6148.
 
-### Gap 2 — continuous self-learning is safe and compact, but not prospectively useful
+### Gap 2 — continuous self-learning is mechanically safe but has not improved future live reasoning
 
-PRD FR11 calls for autonomous improvement through verified experience. Exp6120
-established an important transaction primitive: read-only decision snapshots,
-post-outcome commits, rollback, fixed-width state, and immutable weights. It did
-not show that stored experience improves future reasoning over a no-memory or
-utility-only control, especially when task families shift.
+PRD FR11 requires improvement from verified experience. Carnot has the right
+transactional pieces: immutable weights, read-only decision snapshots,
+post-outcome commits, idempotence, bounded memory, rollback, and exact
+certificates. It does not yet have a prospective local-SOTA result because the
+only `.533` A/B was gate-blocked.
 
-`.533` builds certified strategy schemas only from calibration events, combines
-them with task-aware admission, and runs a prospective chronological A/B with
-the frozen `unsloth/Qwen3.6-35B-A3B-GGUF`. The learner may retrieve memory during
-a decision but may commit only after exact external validation. Duplicate and
-reordered deliveries must be idempotent; poison, unfamiliar families, and
-uncertain admission must be quarantined; weights and GGUF hashes stay fixed.
+`.534` scales the certified strategy store and runs a chronological A/B on
+frozen `unsloth/Qwen3.6-35B-A3B-GGUF`, with
+`unsloth/gemma-4-26B-A4B-it-GGUF` as an independent architecture check. The
+arms are no memory, utility-only memory, certificate-only strategy memory, and
+decision-calibrated strategy memory when the new admission policy qualifies.
+Every arm receives the same prompts, token budgets, event order, and exact
+post-decision outcomes. Positive credit requires future-event utility and no
+protected-family regression; retained volume or eventual state equality is not
+learning evidence.
 
-### Gap 3 — the energy stack lacks a program-level bridge to probabilistic hardware
+### Gap 3 — the stochastic-program bridge is exact but scientifically vacuous under zero approximation error
 
-Carnot has Ising/Potts samplers and a backend abstraction, but no typed
-intermediate representation for an end-to-end stochastic constraint workflow.
-Earlier THRML parity sweeps were retired after vendoring because they could no
-longer answer a scientific question. The new Torx/thermalizer work introduces a
-different missing layer: typed stochastic circuits/factor graphs, local factor
-replacement, and compositional error accounting.
+PRD FR5-FR8 and the hardware-native vision require energies and samplers to
+compose through a stable program boundary. Exp6152 supplies that boundary.
+Exp6153's exact factor-table replacement made the observed joint divergence
+zero, which is a useful correctness control but does not test whether local
+factor error actually composes or whether separated modes receive correct
+relative energy.
 
-`.533` first proves exact support and probability semantics for one bounded
-constraint workflow represented as a Torx-compatible PSC/DFG. A separate gated
-experiment replaces factors with software thermodynamic kernels, measures
-joint-distribution divergence, and tests whether the observed error respects a
-preregistered compositional bound. This is software simulation only. It makes
-no Extropic, FPGA, latency, power, or speedup claim.
+`.534` uses mode-jumping Conditional NCE on one small multimodal categorical
+factor. It compares exact, local-only approximate, and local-plus-cross-mode
+approximate factors under exhaustive enumeration, then lowers them through the
+existing typed PSC/DFG and software sampler interfaces. The deliverable is a
+nonzero factor/joint divergence receipt and a valid compositional-error audit,
+not hardware execution or speedup.
 
-The standing ARC generalization floor is handled as a cross-cutting part of Gap
-1: the same task-aware admission idea is tested on live `E3AgentPolicy`
-transitions from adapter-disabled held games, without claiming a level solve.
+Evidence isolation is the cross-cutting operational prerequisite for these
+three gaps. ARC remains the required live generalization floor, but it is not
+one of the three principal PRD gaps.
 
 ## Research findings incorporated
 
-| Source | Finding | `.533` use |
+| Source | Finding | `.534` use |
 |---|---|---|
-| TOOD, arXiv:2607.29592 | Energy-based OOD detectors can lose calibration as tasks accumulate; per-task replay statistics can restore score comparability without retraining | Exp6147-Exp6148 test task-aware energy recalibration for exact constraint-event admission; Exp6154 tests cross-game transfer |
-| A Framework for Stochastic Differentiable Programming, arXiv:2608.01612 | Typed PSC/DFG kernels make stochastic program structure, state types, and differentiable execution explicit | Exp6152 builds and exhaustively validates a Torx-compatible typed constraint workflow |
-| Thermalizing Stochastic Programs, arXiv:2608.01615 | Factor-local EBM replacement needs compositional error accounting; context matching can reduce residual joint error | Exp6153 compares factor-local and context-matched software thermalization under a preregistered joint-divergence bound |
-| `extropic-ai/torx` | A newly public JAX implementation gives an executable PSC/DFG reference surface | Exp6152-Exp6153 pin package/commit provenance and test compatibility without making hardware claims |
-| ISM, arXiv:2606.31191 | Frozen models can benefit from compact strategy memories when updates are verified and actively maintained | Exp6149-Exp6151 test certified bounded strategy memory with exact outcomes and immutable GGUF weights |
-| TTCD, arXiv:2608.01672 | Limited memory should be evaluated by future utility, not retained volume alone | Used only as an evaluation principle; in-place model-weight mutation is excluded |
-| Black-box sentence energy, arXiv:2608.02879 | A post-hoc text EBM can approximate response attribution | Recorded but not staged because it overlaps the retired external-text scorer class |
-| Pipelined p-computer, arXiv:2607.21077 | Dense probabilistic hardware benefits from a pipelined local-field architecture | Hardware context only; no new RTL or attached-board run is authorized |
+| Conditional NCE by Jumping Between Modes, OpenReview `07OWUWmUHp` | Local energy differences can leave relative mode energies unidentified; deliberately sampled cross-mode pairs repair that weakness | Exp6166 constructs a nontrivial multimodal approximate factor and compares local-only with mode-jumping CNCE under exhaustive joint-divergence accounting |
+| Solver-Hard Is Not Model-Hard, arXiv:2607.17047 | Solver conflict counts and LLM accuracy can dissociate; proof-preserving relabeling can dominate nominal solver hardness | Retained as a control principle only. Exp5785/Exp5786 already executed the hardness/surface deliverable, so `.534` does not repeat it |
+| Geometry of Reason, arXiv:2601.00791 | Attention graph spectra may provide training-free validity signals | Watch-only: current GGUF receipts do not establish per-head attention tensor reachability |
+| Sequent-Prover, OpenReview `DLMqDyHLTu` | Solver success is not semantic faithfulness; SMT agents need executable and faithful formalizations | Architecture context only: a frozen test-time feedback wrapper overlaps the retired VerIbmc line, while the paper's training recipe mutates weights |
+| Hidden-Align, arXiv:2606.03234 | Verified correct rollouts can align useful hidden-state geometry during RL | Watch-only because it requires hidden-state access and weight mutation |
+| TOOD, arXiv:2607.29592 | Per-task replay statistics can recalibrate energy under continual task shift | Exp6161 retains the task-aware calibration mechanism but changes the prospectively frozen endpoint from saturated AUROC to safe decision utility/proper scoring |
 
-The complete dated source receipts, negative results, citation-trail status,
-Extropic 2027 hardware boundary, GitHub delta, and Kona non-reproducibility are
-recorded before this design in `research-references.md` under
-`V533 Planner Refresh - 20260805`.
+The dated primary/secondary source receipts, Semantic Scholar counts, negative
+ecosystem results, Extropic 2027 boundary, Kona non-reproducibility, and hardware
+continuity are recorded in `research-references.md` under
+`V534 Planner Refresh - 20260806` before this design.
 
 ## Target architecture
 
 ```mermaid
 flowchart TD
-    EXACT[Exact Python/Z3 generators and validators]
-    STREAM[Chronological constraint-event fixture\nknown and shifted families]
-    GGUF[Mandated frozen SOTA GGUF panel\nstrategy plus terminal solution]
-    OUTCOME[Post-decision exact outcome ledger]
+    ISO[Repository-wide test artifact isolation\nlegacy-writer compatibility and exception manifest]
+    STREAM[Fresh chronological exact stream\nnever-used seeds and template identities]
+    GGUF[Frozen mandated local GGUFs\nQwen3.6 plus Gemma-4-26B]
+    LEDGER[Post-decision exact outcome ledger]
 
-    GLOBAL[Global admission energy]
-    TASKCAL[TOOD-inspired task-aware\nreplay calibration]
-    HELD[Sealed shifted-family\nadmission evaluation]
+    GLOBAL[Global energy control]
+    DECAL[Decision-calibrated task energy\nfrozen cost table and threshold]
+    HELD[One-shot out-of-time replication\nutility, unsafe admission, Brier/ECE]
 
-    SCHEMA[Certified bounded\nstrategy-schema memory]
-    CSL[Frozen-Qwen prospective A/B\nno memory vs utility vs strategy]
-    SHADOW[Default-off transactional adapter\nPython/Rust/PyO3 parity]
+    STORE[Certified bounded strategy store\nPython/Rust/PyO3 parity]
+    CSL[Prospective continuous-learning A/B\nimmutable model weights]
+    SHADOW[Default-off transactional adapter]
 
-    PSC[Typed PSC/DFG IR\nTorx-compatible semantics]
-    THERM[Software factor thermalization\nerror-composition audit]
+    IR[Existing typed PSC/DFG IR]
+    CNCE[Local vs mode-jumping CNCE factor]
+    COMPOSE[Exhaustive factor-to-joint\nerror composition]
 
-    ARC[Adapter-disabled E3AgentPolicy\nheld-game transfer]
-    ISO[Test artifact sandbox\ntracked-results protection]
+    ARC[Live E3AgentPolicy replication\nadapter-disabled, no solve]
     CAP[Branch-independent capstone]
 
-    EXACT --> STREAM --> GGUF --> OUTCOME
-    GGUF --> GLOBAL
-    OUTCOME --> GLOBAL --> TASKCAL --> HELD
-    OUTCOME --> SCHEMA
-    TASKCAL --> SCHEMA --> CSL --> SHADOW
+    STREAM --> GGUF --> LEDGER
+    GGUF --> GLOBAL --> DECAL --> HELD
+    LEDGER --> DECAL
+    STREAM --> STORE
+    ISO --> STORE
+    STORE --> CSL
+    HELD --> CSL --> SHADOW
 
-    STREAM --> PSC --> THERM
-    TASKCAL --> ARC
+    IR --> CNCE --> COMPOSE
+    DECAL -. fixed-policy idea .-> ARC
+
     ISO --> CAP
     HELD --> CAP
     CSL --> CAP
     SHADOW --> CAP
-    THERM --> CAP
+    COMPOSE --> CAP
     ARC --> CAP
 ```
 
 Load-bearing boundaries:
 
-- Exact Python/Z3 executors are the outcome authority. Energy scores, replay
-  calibration, retrieval similarity, model confidence, and memory utility are
-  explicitly oracle-distinct.
-- Task identity/family metadata may calibrate energy, but the current outcome,
-  exact answer, and future held labels are unavailable at decision time.
-- Calibration and held groups are assigned by base template before any SOTA
-  inference. Variants and retries cannot cross splits.
-- Every LLM experiment loads a mandated GGUF through its resolved local file
-  path and llama.cpp embedded tokenizer. `AutoTokenizer` is never called on a
-  GGUF repository ID.
-- Memory is a read-only snapshot during a decision. A transaction commits only
-  after exact outcome validation and is idempotent under duplicate/reordered
-  delivery. GGUF weights never mutate.
-- The typed stochastic IR must match exhaustive exact probabilities before any
-  factor replacement. Thermalization is a separate software-simulation layer
-  whose error is measured rather than assumed.
-- ARC evidence comes from `make_carnot_agent`/`E3AgentPolicy` using its own
-  attempts with per-game adapters disabled. No game source, exhaustive offline
-  BFS, hand adapter, duplicate solve, or level credit is eligible.
-- Tests write only to a task-owned temporary artifact root. The evidence ledger
-  under tracked `results/` is immutable during test execution.
+- Exact Python/Z3 validators own outcomes. Current outcomes, answers, and held
+  labels are absent from decision-time features by interface.
+- The decision cost table, task statistics, energy transform, threshold, and
+  abstention policy are frozen before any held outcome is opened.
+- Exp6148 is never refit, re-gated, or re-headlined. `.534` uses new event IDs,
+  seeds, template groups, model rows, and a predeclared endpoint.
+- Each LLM task resolves a real `.gguf` path, uses the embedded tokenizer and
+  model-native chat template, records GPU lifecycle, and keeps weights/hashes
+  immutable. Legacy small models are smoke-only.
+- Strategy memory is read-only within a decision and can commit only after an
+  exact certificate. Duplicate/reordered delivery is idempotent; poison and
+  unfamiliar families are quarantined; state stays bounded.
+- CNCE work is software-only and must compare against exhaustive exact
+  distributions. No FPGA, Extropic, latency, power, or hardware-speedup claim is
+  permitted.
+- ARC evidence uses `make_carnot_agent`/`E3AgentPolicy` and the live agent's own
+  transitions with per-game adapters disabled. There is no game-source access,
+  offline ground-truth BFS, hand adapter, level solve, or registry increment.
+- Tests write to task-owned temporary roots. Existing user worktree changes and
+  tracked evidence hashes are preserved.
 
 ## Reservation accounting
 
 | Class | Tasks | Count |
 |---|---|---:|
-| Infrastructure | Exp6142 transition, Exp6143 test-artifact isolation, Exp6155 capstone | 3 |
-| SOTA ingestion | Exp6144 | 1 |
-| Shift-aware verifier/admission | Exp6145-Exp6148 | 4 |
-| Continuous self-learning | Exp6149-Exp6151 | 3 |
-| Stochastic-program foundation | Exp6152-Exp6153 | 2 |
-| ARC generalization floor | Exp6154 | 1 |
-| **Total** | Exp6142-Exp6155 | **14** |
-
-The roadmap exceeds the two-slot infrastructure minimum, includes one focused
-SOTA-ingestion task, reserves one ARC generalization task, and contains a
-three-experiment continuous self-learning lane.
+| Transition, evidence isolation, source ingestion | Exp6156-Exp6158 | 3 |
+| Decision-calibrated verifier replication | Exp6159-Exp6162 | 4 |
+| Continuous self-learning | Exp6163-Exp6165 | 3 |
+| Stochastic program, ARC, closure | Exp6166-Exp6168 | 3 |
+| **Total** | Exp6156-Exp6168 | **13** |
 
 ## Phase 0 — evidence-safe transition and execution substrate
 
-### Exp6142 — exact transition into `.533`
+### Exp6156 — exact transition into `.534`
 
-Archive exactly the four activated `.532` identities, preserving Exp6140's
-retirement and Exp6141's structured gate skip. Append `.532` at most once,
-activate `.533`, and prove Exp6142-Exp6155 collision-free. Proposal-only old
-Exp6142-Exp6151 text is not completion evidence.
+Archive exactly the 14 activated `.533` identities, preserve every terminal,
+partial, null, flagged, and gate-skipped state, append `.533` once, activate
+`.534`, and prove Exp6156-Exp6168 collision-free.
 
-**Deliverable:** `results/experiment_6142_transition_v533.json`
+**Deliverable:** `results/experiment_6156_transition_v534.json`
 
-### Exp6143 — tracked-result test artifact isolation
+### Exp6157 — repository-wide artifact-isolation closure
 
-Implement a redirectable experiment output root and force tests to use
-`tmp_path` rather than tracked `results/`. Build a sentinel matrix around the
-known 45-file mutation class, preserve fabrication/quarantine fields, and prove
-the focused suite changes no pre-existing result hash.
+Extend Exp6143's working resolver/guard from a focused sample to collection and
+representative full-suite shards. Add a mechanically enforced compatibility
+surface for legacy result writers, a reviewed exception manifest, and a
+resumable call-site migration ledger. Closure requires zero tracked-result
+writes during the tested shards and clear separation of unrelated suite
+failures from isolation failures; it does not require mechanically rewriting
+all 6,198 census rows in one task.
 
-**Deliverable:** `results/experiment_6143_test_artifact_isolation.json`
+**Deliverable:** `results/experiment_6157_repo_wide_artifact_isolation_closure.json`
 
-### Exp6144 — post-V533 source-delta ingestion
+### Exp6158 — post-V534 source-delta ingestion
 
-Search only after the `V533-PLANNER-REFRESH-20260805-END` marker through the
-reliable low-concurrency source path. Map accepted deltas to existing `.533`
-tasks or defer them; task identities and gates remain immutable. Zero accepted
-deltas is a valid `complete_null:` result.
+Search only after `V534-PLANNER-REFRESH-20260806-END`, classify new sources,
+and map accepted deltas to existing tasks or defer them. Task identities and
+gates remain immutable; zero accepted deltas is valid.
 
-**Deliverable:** `results/experiment_6144_v533_source_delta_ingestion.json`
+**Deliverable:** `results/experiment_6158_v534_source_delta_ingestion.json`
 
-## Phase A — task-aware energy admission on exact chronological events
+## Phase A — prospective decision-calibrated energy replication
 
-### Exp6145 — exact shifted-family chronological stream
+### Exp6159 — fresh decision-calibration stream and preregistration
 
-Create a deterministic chronological stream of at least 240 exact constraint
-events across at least six families, with calibration, future-known, and sealed
-shifted-family groups. Each event exposes pre-outcome task/strategy features and
-a post-decision exact outcome through separate interfaces. Include controlled
-family shifts, superficial aliases, contradictions, and strategy-poison cases.
+Using the proven Exp6145 generators but never-used seeds and base-template
+identities, construct calibration, future-known, and shifted-family partitions.
+Freeze the unsafe-weighted utility table, paired bootstrap unit, minimum sample
+size, safety/non-inferiority margins, proper-score endpoints, and the one-shot
+held loader before model inference. This is not another hardness/surface
+fixture and does not use Exp6148 held rows.
 
-**Deliverable:** `results/experiment_6145_constraint_shift_stream.json`
+**Deliverable:** `results/experiment_6159_decision_calibrated_stream.json`
 
-### Exp6146 — gated flagship-GGUF baseline event corpus
+### Exp6160 — gated fresh local-SOTA decision corpus
 
-Using `unsloth/Qwen3.6-35B-A3B-GGUF` and
-`unsloth/gemma-4-31B-it-GGUF`, run the frozen calibration/future stream through
-model-native chat templates. Record one strategy proposal and terminal solution
-per event, exact post-outcome receipts, task-owned CUDA lifecycle, and immutable
-row sidecars. No memory or adaptive prompt changes are allowed.
+Run `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF` over Exp6159 with native chat, one frozen
+pass per event, no memory, no correctness-conditioned retry, exact
+post-decision validation, and immutable row sidecars.
 
-**Gate:** Exp6145 `constraint_shift_stream_ready_score == 1.0`
+**Gate:** Exp6159 `decision_calibrated_stream_ready_score == 1.0`
 
-**Deliverable:** `results/experiment_6146_sota_constraint_event_corpus.json`
+**Deliverable:** `results/experiment_6160_sota_decision_calibration_corpus.json`
 
-### Exp6147 — gated TOOD-style task-aware energy calibration
+### Exp6161 — gated decision-calibrated task-energy policy
 
-On immutable Exp6146 calibration rows, compare a global admission energy with a
-task-aware replay-calibrated energy, family-centering-only control, shuffled-task
-control, simple distance baselines, and an exact-outcome-blind identity check.
-Preregister one score/threshold and report OOD AUROC/AUPRC, calibration, false
-acceptance, false rejection, and confidence-gap diagnostics by chronological
-task count.
+Fit only on Exp6160 calibration rows. Compare global energy, the Exp6147
+task-aware transform, a decision-calibrated task-energy policy, family-only,
+shuffled-task, alias, frequency, and simple-distance controls. Freeze one policy
+manifest. Readiness requires complete preregistration conformance and useful
+calibration headroom; it does not claim held improvement.
 
-**Gate:** Exp6146 `sota_constraint_event_corpus_ready_score == 1.0`
+**Gate:** Exp6160 `sota_decision_corpus_ready_score == 1.0`
 
-**Deliverable:** `results/experiment_6147_task_aware_energy_calibration.json`
+**Deliverable:** `results/experiment_6161_decision_calibrated_energy_policy.json`
 
-### Exp6148 — gated one-shot shifted-family admission evaluation
+### Exp6162 — gated one-shot prospective admission replication
 
-Freeze Exp6147's score, task-statistic schema, threshold, and abstention policy.
-Evaluate once on sealed future-known and shifted-family groups. A positive claim
-requires improved shifted-family detection and unsafe-strategy rejection without
-regressing known-family safe acceptance; shuffled and alias attacks must fail.
+Open Exp6159 held outcomes once and compare the frozen decision-calibrated
+policy with the global and Exp6147-style controls. Positive credit requires a
+strictly positive lower 95% cluster-paired utility delta for both models, no
+unsafe-admission regression, protected known-family non-inferiority, improved
+Brier score, and no shortcut-control win. AUROC is descriptive.
 
-**Gate:** Exp6147 `task_aware_energy_calibration_ready_score == 1.0`
+**Gate:** Exp6161 `decision_calibrated_policy_ready_score == 1.0`
 
-**Deliverable:** `results/experiment_6148_shifted_family_admission_held.json`
+**Deliverable:** `results/experiment_6162_prospective_admission_replication.json`
 
 ## Phase B — certified continuous self-learning
 
-### Exp6149 — gated certified strategy-schema and idempotence fixture
+### Exp6163 — gated certified strategy-store scale-up
 
-Build a bounded strategy-schema state on calibration events only, extending
-Exp6120's positive post-outcome transaction primitive. Certificates bind a
-strategy to exact constraints, outcome provenance, family/task statistics, and
-counterexamples. Test duplicate/reordered delivery, poison quarantine,
-protected-prefix retention, eviction, rollback, serialization, and fixed-width
-Python/Rust/PyO3 parity. This is not the retired Exp5895 exact-slot replay.
+Scale Exp6149's passed transaction/parity mechanics across every Exp6159 family
+and the fixed decision-policy record. Require bounded capacity stress,
+certificate versioning, family-shift quarantine, protected-prefix retention,
+rollback, restart replay, and Python/Rust/PyO3 parity. The task consumes
+Exp6157's isolation closure and does not reopen retired exact-slot state.
 
-**Gate:** Exp6145 `constraint_shift_stream_ready_score == 1.0`
+**Gates:** Exp6157 `artifact_isolation_closure_ready_score == 1.0` and Exp6159
+`decision_calibrated_stream_ready_score == 1.0`
 
-**Deliverable:** `results/experiment_6149_certified_strategy_schema_fixture.json`
+**Deliverable:** `results/experiment_6163_certified_strategy_store_scaleup.json`
 
-### Exp6150 — gated frozen-Qwen prospective CSL A/B
+### Exp6164 — mandatory prospective continuous strategy-learning A/B
 
-Run a resource-matched chronological A/B with the frozen
-`unsloth/Qwen3.6-35B-A3B-GGUF`: no memory, Exp6120 utility-only state, certified
-strategy memory with global admission, and certified strategy memory with the
-Exp6148 task-aware admission policy. Decisions read a frozen snapshot; commits
-occur only after exact outcomes. The headline is paired future-event utility,
-not eventual equality or memory compression.
+Always execute this task and write an artifact; recompute Exp6162/Exp6163
+prerequisites inside the experiment rather than letting the conductor erase the
+mandatory CSL attempt. If prerequisites qualify, run matched chronological arms
+for Qwen3.6 and a Gemma-4-26B confirmation: no memory, utility-only memory,
+certificate-only strategy memory, and decision-calibrated strategy memory. If a
+prerequisite does not qualify, report `blocked:` without bypassing it. Positive
+credit requires future utility, retention, safety, and immutable-weight gates.
 
-**Gates:** Exp6148 `shifted_family_admission_ready_score == 1.0` and Exp6149
-`certified_strategy_fixture_ready_score == 1.0`
+**Deliverable:** `results/experiment_6164_continuous_strategy_learning_ab.json`
 
-**Deliverable:** `results/experiment_6150_frozen_qwen_continuous_self_learning_ab.json`
+### Exp6165 — gated default-off strategy-memory adapter
 
-### Exp6151 — gated default-off transactional strategy adapter
+Only after a positive Exp6164 result, wire the winning policy behind a
+default-off adapter. Prove off-path equivalence, atomic commit/rollback,
+same-decision write prohibition, restart replay, duplicate suppression, bounded
+bytes, model hash immutability, and cross-language parity.
 
-If Exp6150 is positive, wire the winning state/admission policy behind a
-default-off configuration surface. Prove atomic commit/rollback, restart replay,
-duplicate suppression, bounded bytes, no same-decision write, no weight
-mutation, Python/Rust/PyO3 parity, and baseline-equivalent behavior when off.
+**Gate:** Exp6164 `continuous_strategy_learning_ready_score == 1.0`
 
-**Gate:** Exp6150 `continuous_self_learning_ready_score == 1.0`
+**Deliverable:** `results/experiment_6165_strategy_memory_shadow_adapter.json`
 
-**Deliverable:** `results/experiment_6151_strategy_memory_shadow_adapter.json`
+## Phase C — nontrivial stochastic composition, ARC replication, and closure
 
-## Phase C — stochastic-program bridge, ARC transfer, and closure
+### Exp6166 — mode-jumping approximate-factor thermalization
 
-### Exp6152 — typed Torx-compatible constraint PSC/DFG
+Build one exactly enumerable multimodal categorical factor on Exp6152's typed
+PSC/DFG surface. Compare exact table, local-only CNCE, and local-plus-mode-jump
+CNCE with matched samples/parameters. Require deliberately nonzero approximation
+error, correct relative mode mass, factor and joint TV/KL, compositional-bound
+coverage, context control, deterministic seeds, and software-only provenance.
 
-Represent one bounded stochastic constraint workflow from Exp6145 as typed
-binary/categorical PSC/DFG kernels. Pin Torx package/commit provenance, but keep
-a dependency-light Carnot representation. Exhaustively enumerate small cases
-and prove support, conditional probability, normalization, seed, batching,
-serialization, and degenerate-factor semantics against the exact workflow.
+**Deliverable:** `results/experiment_6166_mode_jumping_factor_thermalization.json`
 
-**Deliverable:** `results/experiment_6152_typed_stochastic_constraint_ir.json`
+### Exp6167 — ARC task-aware multi-seed replication, no solve claim
 
-### Exp6153 — gated software thermalization error-composition audit
+Freeze Exp6154's task-aware live transition-admission policy before running at
+least six registry-prechecked adapter-disabled games and at least three seeds.
+Measure triggered decisions, per-game and grouped change/recall/safety/latency
+metrics, and negative controls. Require the live import path and the agent's own
+runtime transitions. Claim no solve and change no registry level.
 
-Replace Exp6152 factors with software EBM kernels through Torx/THRML-compatible
-interfaces. Compare factor-local training with context matching, calculate a
-preregistered compositional total-variation/KL bound, and measure joint output
-divergence over exact-enumerable and sampled cases. This is not a THRML parity
-scaling sweep and never reports hardware speed, power, or execution.
+**Deliverable:** `results/experiment_6167_arc_task_aware_multiseed_replication.json`
 
-**Gate:** Exp6152 `typed_stochastic_ir_ready_score == 1.0`
+### Exp6168 — branch-independent capstone and reconciliation
 
-**Deliverable:** `results/experiment_6153_thermalized_program_error_audit.json`
+Reconcile all 13 task states, structured gates, missing artifacts,
+adversarial/quarantine fields, model receipts, exact-oracle boundaries,
+continuous-learning evidence, stochastic substrate labels, ARC provenance, and
+test-isolation results. Update durable specs/traceability/ops docs only for work
+actually delivered; preserve nulls, blocks, and skips.
 
-### Exp6154 — ARC live-path task-aware energy generalization
+**Deliverable:** `results/experiment_6168_v534_capstone_reconciliation.json`
 
-Run `make_carnot_agent`/`E3AgentPolicy` on adapter-disabled leave-one-game-out
-episodes across at least three public games, using only the agent's own runtime
-transitions. Compare the existing global transition/world-model admission score
-with training-game-only task-aware calibration. Require triggered decision
-receipts, held-game isolation, action/transition metrics, safety accounting, and
-live-path import reachability. Make no game-level solve claim and no registry
-level increment.
-
-**Deliverable:** `results/experiment_6154_arc_task_aware_energy_generalization.json`
-
-### Exp6155 — branch-independent capstone and reconciliation
-
-Reconcile every `.533` terminal state, gated skip, retirement, missing artifact,
-adversarial flag, model receipt, exact-oracle boundary, stochastic substrate,
-ARC provenance, and test-isolation result. Update durable specs and ops docs only
-for delivered work; preserve failures and proposal-only identities exactly.
-
-**Deliverable:** `results/experiment_6155_v533_capstone_reconciliation.json`
-
-## Dependency graph and conductor order
+## Dependency graph
 
 ```text
-Exp6142 transition
-  ├── Exp6143 test artifact isolation
-  ├── Exp6144 source-delta ingestion
-  ├── Exp6145 exact shifted-family stream
-  │     ├──[stream=1] Exp6146 flagship-GGUF event corpus
-  │     │     └──[corpus=1] Exp6147 task-aware calibration
-  │     │           └──[calibration=1] Exp6148 held admission
-  │     ├──[stream=1] Exp6149 certified strategy fixture
-  │     │     └──[Exp6148=1 AND fixture=1] Exp6150 prospective CSL A/B
-  │     │           └──[CSL=1] Exp6151 shadow adapter
-  │     └── Exp6152 typed stochastic IR
-  │           └──[IR=1] Exp6153 thermalization audit
-  └── Exp6154 ARC live-path generalization
+Exp6156 transition ---------------------------------------------> Exp6168
+Exp6157 artifact isolation -----> Exp6163 strategy scale-up -----+
+Exp6158 source delta --------------------------------------------+
 
-Every terminal branch + Exp6143/Exp6144 ──> Exp6155 capstone
+Exp6159 fresh stream -> Exp6160 live corpus -> Exp6161 policy -> Exp6162 held
+       |                                                       |       |
+       +----------------------> Exp6163 -----------------------+       |
+                                      |                                |
+                                      +------> Exp6164 CSL <-----------+
+                                                       |
+                                                       +-> Exp6165 adapter
+
+Exp6152 prior typed IR -> Exp6166 mode-jumping composition ------> Exp6168
+Exp6154 prior ARC policy -> Exp6167 multi-seed replication ------> Exp6168
+All branches ----------------------------------------------------> Exp6168
 ```
 
-Conductor execution order is exactly Exp6142 through Exp6155. Every natural-
-language gated title has a matching structured `gated_on` entry in
-`research-roadmap-next.yaml`. A failed gate skips the downstream agent call; it
-does not become permission to bypass the prerequisite.
+Structured gates are conjunctive. Exp6164 is intentionally not conductor-gated
+because `research-program.md` requires a continuous-self-learning attempt in
+every milestone; its experiment must still block honestly rather than bypass a
+failed prerequisite.
 
 ## Hardware and runtime requirements
 
-| Resource | Tasks | Requirement and boundary |
+| Task | Runtime | Requirement and claim boundary |
 |---|---|---|
-| Dual RTX 3090, 24 GiB each | Exp6146, Exp6150 | Task-owned CUDA-enabled llama.cpp process; `cached_sota_pair()` or equivalent resolved file paths; one flagship per GPU or sequential eviction; `nvidia-smi` engagement; explicit load/readiness/decode/release receipts |
-| Qwen flagship MoE | Exp6146, Exp6150 | `unsloth/Qwen3.6-35B-A3B-GGUF`; pinned GGUF file hash; embedded tokenizer through llama.cpp; immutable weights |
-| Gemma flagship dense | Exp6146 | `unsloth/gemma-4-31B-it-GGUF`; pinned GGUF file hash; model-native chat template; task-owned lifecycle |
-| CPU/Rust/PyO3 | Exp6142-Exp6145, Exp6147-Exp6149, Exp6151-Exp6155 | Exact validation, task-aware calibration, transaction/ABI parity, exhaustive enumeration, docs, and tests |
-| JAX CPU + Torx/THRML software | Exp6152-Exp6153 | `JAX_PLATFORMS=cpu`; pinned package versions/commits; deterministic seeds; `software_simulation` substrate only |
-| Attached FPGA boards | None | KV260 is POC/terminal for current claims, PolarFire is opportunistic without authorized terminal workload, and GateMate has no changed physical-state receipt. No board command or flash is authorized in this milestone |
-| Extropic hardware | None | Z1 remains early access 2027 and Carnot has no authenticated XTR-0/Z1 route; no hardware, energy, latency, power, or speedup claim |
+| Exp6156-Exp6159 | CPU, filesystem, network for ingestion | Preserve the dirty worktree, use task-owned temporary roots, low-concurrency source access; no accelerator claim |
+| Exp6160 | Dual RTX 3090 preferred | Qwen3.6-35B-A3B and Gemma-4-26B-A4B resolved local GGUFs, real CUDA offload, one task-owned worker/model lease, embedded tokenizer, lifecycle cleanup |
+| Exp6161-Exp6163 | CPU | Cached authentic rows, exact validators, bootstrap/calibration code, Rust/PyO3 toolchain; no LLM invocation |
+| Exp6164 | Dual RTX 3090 preferred | Same frozen Qwen3.6 and Gemma-4-26B hashes, matched chronological arms, explicit GPU leases and teardown; no weight mutation |
+| Exp6165 | CPU plus Rust/PyO3 | Default-off integration only; no production enablement |
+| Exp6166 | CPU/JAX software simulation | Existing Torx-compatible typed IR and vendored THRML boundary; exhaustive small-state enumeration; no device execution, latency, power, or speedup claim |
+| Exp6167 | CPU | Live ARC/WOPR agent path, adapter-disabled games, own-transition evidence; no LLM and no game-level solve |
+| Exp6168 | CPU | Read-only evidence reconciliation and existing validation tooling |
 
-All LLM tasks include a user-mandated SOTA GGUF in `MODEL_SPECS`. Legacy
-Qwen3.5-0.8B or Gemma4-E4B may appear only as non-headline CPU smoke controls.
-No task calls `AutoTokenizer.from_pretrained()` on a GGUF repository ID.
+Attached hardware continuity is unchanged: dual RTX 3090s are the only required
+accelerators; KV260 is terminal, GateMate remains physically blocked, PolarFire
+is opportunistic, Extropic Z1 is unavailable before the advertised 2027 early
+access window, and Kona exposes no executable public baseline. No board task is
+staged because the operator has not reported a changed physical state.
 
-## Preregistered gates and decision rules
+## Completion criteria
 
-1. **Evidence isolation:** Exp6143 passes only if redirected tests write to
-   task-owned temporary roots, all mutation sentinels are detected, quarantine
-   fields survive, and every pre-existing tracked-result hash is unchanged.
-2. **Stream integrity:** Exp6145 requires exact validation, chronological split
-   isolation, zero base-template leakage, both known and genuinely shifted
-   families, pre/post-outcome interface separation, and deterministic rebuild.
-3. **SOTA corpus authenticity:** Exp6146 requires real llama.cpp CUDA offload,
-   task-owned PIDs, mandated file hashes, embedded-tokenizer receipts, complete
-   lifecycle cleanup, frozen prompts, exact post-outcomes, and no fallback
-   headline rows.
-4. **Calibration:** Exp6147 selects at most one score/threshold on calibration
-   groups. Readiness requires a non-degenerate confidence-gap diagnosis,
-   improved grouped OOD/admission performance over global energy, and no
-   outcome, task-alias, length, or family-frequency shortcut.
-5. **Held admission:** Exp6148 is positive only if the preregistered task-aware
-   score improves shifted-family unsafe rejection with a paired lower 95% bound
-   above zero, preserves known-family safe acceptance within a fixed margin,
-   and survives shuffle/alias/poison attacks.
-6. **Certified fixture:** Exp6149 requires zero uncertified commits, zero poison
-   acceptance, exact duplicate/retry state delta zero, rollback identity,
-   protected-prefix retention, bounded bytes, fixed-width ABI parity, and no
-   dependence on the retired Exp5895 exact-slot requalification.
-7. **Continuous learning:** Exp6150 requires positive paired future-event exact
-   utility over both no-memory and utility-only controls, no shifted-family
-   safety regression, zero same-decision writes, bounded memory, successful
-   idempotence/rollback, and unchanged GGUF hashes. Eventual equality alone is
-   not readiness.
-8. **Shadow integration:** Exp6151 remains default off unless every Exp6150
-   scientific and transaction gate passes. Off-mode behavior must hash-match
-   the baseline path.
-9. **Typed stochastic IR:** Exp6152 requires exact support/probability agreement
-   on exhaustively enumerable cases, explicit types, normalized kernels,
-   deterministic seed semantics, and round-trip serialization.
-10. **Thermalization:** Exp6153 is positive only if measured joint divergence is
-    within the preregistered compositional bound and context matching improves
-    or preserves a factor-local control. Any hardware/performance claim is a
-    hard failure.
-11. **ARC:** Exp6154 requires adapter-disabled held-game isolation, nonzero
-    triggered decisions, live-entrypoint reachability, improvement in a
-    preregistered transition/admission metric without safety regression, and
-    zero solve/level claim. The same no-causal-receipt verdict retires this
-    exact cross-game calibration construction.
-12. **Lifecycle:** Any live-model task blocks rather than silently falling back
-    when model hash, CUDA offload, task-owned process, GPU engagement, or cleanup
-    evidence is absent.
+Milestone `.534` is complete when all 13 tasks have a terminal artifact or a
+conductor-recorded structured skip and Exp6168 reconciles them honestly. The
+scientific success bar is stricter than administrative completion:
 
-## Explicit exclusions
+1. fresh decision-calibrated energy reproduces positive held utility for both
+   mandated models without unsafe-admission or known-family regression;
+2. verifier-certified strategy memory improves chronological future utility
+   with immutable weights and bounded, rollback-safe state;
+3. mode-jumping approximate factors improve relative-mode/joint divergence over
+   local-only training while respecting the preregistered composition bound;
+4. the expanded ARC result reports the negative game/seed tail as prominently
+   as the positive tail and claims no solve; and
+5. tracked evidence remains immutable during applicable test shards.
 
-- No continuation of Exp6140's retired source-domain recovery, Exp6141's skipped
-  item bank, or the former proposal-only Phase-D pool/hidden-state descendants.
-- No external generated-text/logprob/LoRA/reward scorer and no black-box
-  sentence-EBM surrogate.
-- No finite-ID, grammar, parser-only, stop-token, hidden-label retry, or
-  ConstraintIR reprompt resurrection.
-- No exact answer, current outcome, future label, or exact-validator result as
-  a decision-time energy input.
-- No weight-mutating TTCD, DPO, GRPO, fast-weight, or online fine-tuning claim.
-- No rerun of the retired Exp5895/Exp5912 exact-slot requalification.
-- No THRML/Carnot size-scaling or parity sweep; Exp6153 tests program-level
-  error composition under a new typed prerequisite.
-- No FPGA bitstream redesign, board flash, GateMate detect retry, KV260
-  revalidation, PolarFire terminal workload, or Extropic hardware claim without
-  new operator-authorized physical state.
-- No ARC public-game re-solve, game-source read, exhaustive offline BFS,
-  per-game adapter, registry-level increment, or hidden-game capability claim.
-- No test writes to tracked `results/`, no modification of
-  `scripts/research_conductor.py`, and no push.
-
-## Milestone success criteria
-
-The milestone succeeds by producing decision-grade closure, including honest
-nulls and gated skips:
-
-1. The test substrate proves that focused experiment tests cannot mutate or
-   de-quarantine pre-existing tracked evidence.
-2. A chronological exact constraint stream and authentic flagship-GGUF event
-   corpus establish the pre/post-outcome boundary needed for oracle-distinct
-   admission research.
-3. TOOD-style task-aware calibration receives one sealed shifted-family test
-   against global energy, with shortcut and uncertainty controls.
-4. Continuous self-learning runs prospectively on a frozen mandated SOTA GGUF
-   and reports future-event utility, exact certificates, admission, retries,
-   poison, rollback, retention, bytes, and immutable-weight evidence.
-5. One exact stochastic constraint program round-trips through a typed PSC/DFG,
-   and its software thermalization either respects a quantitative error bound or
-   records the missing compiler/backend discriminator.
-6. ARC reports an adapter-disabled, live-path held-game generalization result
-   with triggered decisions and no level-solve claim.
-7. Every branch, gate, retirement, missing artifact, adversarial result,
-   substrate boundary, and proposal-only identity is reconciled without
-   changing the protected conductor or active roadmap during planning.
+Null, blocked, retired, quarantined, or skipped outcomes remain valid research
+results. They cannot be converted into completion credit for the criteria above.

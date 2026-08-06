@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (68 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (69 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,11 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (68 modul
 
 ## Hostile LLM review
 
-**TL;DR: NO RECENT SOLVES — zero evidence of new live self-discovery capability. Reachability passes, but reachability alone proves nothing about autonomous solving.**
+TL;DR: No recent ARC solve artifacts exist to review; therefore, there is **no demonstrated self-discovery advance**. The reachability lint passing only proves modules are on the live path, not that the live agent autonomously solved anything.
 
-Per-artifact review: none. No verdicts can be assigned because the last-seven-day artifact set is empty.
+Per-artifact: None (`0` artifacts in the last seven days).
 
-**Recommended action:** Produce a provenance-bearing live-run artifact from either approved entrypoint showing observations, agent-selected attempts, runtime reverse-engineering, and a newly registered hidden-game solve—without source access, offline ground-truth search, or hand-built per-game logic.
+Recommended action: Produce live-run artifacts that clearly record the agent’s observations, attempts, runtime reverse-engineering, and resulting hidden-game solve—without source access, offline ground-truth search, or hand-built per-game logic.
 
-**Pattern watch:** No artifact exposes outer-loop drift, but the total absence of solve evidence is itself a warning: module reachability must not be presented as progress toward autonomous discovery.
+Pattern watch: No artifact-level drift can be assessed. Do not treat the 69-module live closure as solve evidence; reachable machinery can still encode outer-loop knowledge.
 
