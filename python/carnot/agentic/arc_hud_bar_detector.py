@@ -581,6 +581,192 @@ def region_hud_evidence(
 
 
 # ---------------------------------------------------------------------------
+# Stage 3 -- budget-exhaustion estimate from an ADMITTED monotone HUD region
+# ---------------------------------------------------------------------------
+# Spec: REQ-ARC-WMTE-6180
+#
+# WHY THIS EXISTS (2026-08-06). ops/arc_solve_registry.yaml independently documents a
+# per-level action/click "budget meter" -- exhausting it triggers GAME_OVER -- in at least
+# six games (r11l, s5i5, sc25, g50t, bp35, and a session-level analogue elsewhere), each
+# hand-derived from that game's own gotchas with no shared code. Every one of those is
+# exactly the region `region_hud_evidence` already learns to recognise generically (an
+# action-ubiquitous, monotone, irreversible counter). This stage turns an ADMITTED region
+# into a scalar "how close to exhaustion" estimate, with NO per-game constants and no
+# knowledge of the game's actual unit (clicks, energy rows, action ticks) or its numeric
+# threshold -- only the shape of the region's OWN observed trajectory.
+#
+# The proxy is divergence-from-segment-start: count how many of the region's pixels differ
+# from their value in the CURRENT SEGMENT's first frame, as a fraction of the region's
+# size. This works whether the meter fills (more lit pixels as it's consumed, e.g. bp35's
+# action counter) or drains (fewer pixels match the full-energy frame, e.g. sc25's energy
+# bar) -- either way, divergence trends toward 1.0 as the meter approaches whichever
+# extreme triggers GAME_OVER. A linear fit of that fraction against transition index
+# projects how many further actions the observed rate implies before full divergence.
+#
+# TWO CORRECTNESS PROPERTIES an earlier draft got wrong (caught by adversarial review,
+# 2026-08-06, before this ever shipped wired to anything):
+#
+# 1. SEGMENT-AWARE, matching region_hud_evidence's own restart rule ("a counter that
+#    returns to its segment's first value is a NEW segment, not a revisit" -- see that
+#    function's docstring). Every real example this stage targets is a PER-LEVEL meter
+#    that resets on level-up, and `region_hud_evidence` already tolerates that by design.
+#    A version that measured divergence from the trajectory's GLOBAL first frame ignored
+#    resets entirely and, on a realistic "fills partway, resets on level-up, refills"
+#    fixture, overestimated actions-remaining by ~8x in the unsafe direction (falsely
+#    reassuring). This function tracks segments the same way and only ever measures
+#    against the CURRENT (most recent) segment's own start.
+# 2. WINDOWED, not whole-trajectory. A least-squares fit over an ENTIRE segment is biased
+#    positive by any early jump even if the region has been flat ever since -- the fit has
+#    to "explain" the early rise, so a genuinely stalled recent trend still nets a small
+#    positive slope. This function fits the rate over only the most recent
+#    `min_transitions` transitions of the current segment, so a stalled trajectory is
+#    judged on its recent behaviour, not diluted by old history.
+#
+# This function does NOT get called from live search yet -- see arc_solver_kit.py's
+# `budget_aware_path_cost_weight` for the (also default-off) consumer. Shipping the
+# estimator and its consumer separately, both inert until explicitly wired in and
+# validated, follows CLAUDE.md's Phase Prototype + Empirical Validation + Adversarial
+# Check discipline: the primitive earns trust before it earns a place in the live cascade.
+
+BUDGET_ESTIMATE_MIN_TRANSITIONS = 8
+
+
+def _segment_frames(
+    prepared: Sequence[Optional[np.ndarray]], mask_arr: np.ndarray
+) -> list[list[np.ndarray]]:
+    """Split a frame sequence into segments using EXACTLY `region_hud_evidence`'s own
+    restart rule: an episode break (a None frame) OR a return to the segment's first
+    observed region value starts a new segment. Kept as a free function, not inlined,
+    so this logic can never silently drift from the admit-decision it must match."""
+    segments: list[list[np.ndarray]] = []
+    current: list[np.ndarray] = []
+    segment_first_sig: Optional[bytes] = None
+    for g in prepared:
+        if g is None:
+            if current:
+                segments.append(current)
+            current, segment_first_sig = [], None
+            continue
+        sig = _region_signature(g, mask_arr)
+        if segment_first_sig is None:
+            segment_first_sig, current = sig, [g]
+        elif sig == segment_first_sig:
+            if current:
+                segments.append(current)
+            current = [g]
+        else:
+            current.append(g)
+    if current:
+        segments.append(current)
+    return segments
+
+
+def budget_exhaustion_estimate(
+    grids: Sequence[Any],
+    mask: Any,
+    *,
+    evidence: Optional[dict] = None,
+    min_transitions: int = BUDGET_ESTIMATE_MIN_TRANSITIONS,
+) -> dict:
+    """Estimate how many further actions an ADMITTED monotone HUD region can sustain,
+    within its CURRENT segment (see the module-level comment above for why segment-
+    awareness and a windowed fit are both load-bearing, not niceties).
+
+    ``evidence`` should be the dict `region_hud_evidence` already returned for this exact
+    ``(grids, mask)`` pair, if the caller has one -- this function trusts its ``verdict``
+    rather than recomputing Stage 2, so callers who already ran Stage 2 pay for it once.
+    If omitted, this function computes it itself. Either way, a non-``"admit"`` verdict
+    means "abstain": the caller must not act on ``actions_remaining_estimate``.
+
+    Returns a dict with:
+
+    ``verdict``
+        ``"abstain"`` (not enough evidence yet, or the underlying region evidence itself
+        did not admit) or ``"estimate"``.
+    ``fill_fraction``
+        The most recent frame's divergence-from-CURRENT-SEGMENT-start fraction, in
+        [0, 1]. Always populated when at least one usable frame exists, even on abstain,
+        since it costs nothing and is useful diagnostic context.
+    ``n_transitions``
+        Transitions observed WITHIN the current segment only (a level-up reset starts
+        this back at 0, on purpose).
+    ``rate_per_transition``
+        The least-squares slope of ``fill_fraction`` against transition index, fit over
+        only the current segment's most recent ``min_transitions`` transitions. ``None``
+        until ``min_transitions`` usable transitions have been observed in this segment.
+    ``actions_remaining_estimate``
+        ``(1.0 - fill_fraction) / rate_per_transition``, floored at 0. ``None`` when the
+        rate is not yet known, or is non-positive (a non-positive rate means the recent
+        window gives no evidence of approaching exhaustion, so projecting forward would
+        be extrapolating past what was observed -- report "unknown", not a number).
+    """
+    out: dict[str, Any] = {
+        "verdict": "abstain",
+        "reason": "no_mask",
+        "fill_fraction": None,
+        "rate_per_transition": None,
+        "actions_remaining_estimate": None,
+        "n_transitions": 0,
+    }
+    mask_arr = np.asarray(mask, dtype=bool) if mask is not None else None
+    if mask_arr is None or not bool(mask_arr.any()):
+        return out
+
+    ev = evidence if evidence is not None else region_hud_evidence(grids, mask_arr)
+    if ev.get("verdict") != "admit":
+        out["reason"] = f"underlying_region_evidence_{ev.get('verdict', 'unknown')}"
+        return out
+
+    region_size = int(mask_arr.sum())
+    if region_size <= 0:
+        out["reason"] = "empty_mask"
+        return out
+
+    prepared: list[Optional[np.ndarray]] = []
+    for item in grids or ():
+        g = _as_grid(item)
+        prepared.append(g if (g is not None and g.shape == mask_arr.shape) else None)
+
+    segments = _segment_frames(prepared, mask_arr)
+    if not segments:
+        out["reason"] = "no_usable_frame"
+        return out
+
+    current_segment = segments[-1]
+    segment_first_region = current_segment[0][mask_arr]
+    fractions = [
+        int(np.count_nonzero(g[mask_arr] != segment_first_region)) / region_size
+        for g in current_segment
+    ]
+
+    out["fill_fraction"] = round(fractions[-1], 4)
+    out["n_transitions"] = int(len(fractions) - 1)
+
+    if len(fractions) - 1 < int(min_transitions):
+        out["reason"] = "insufficient_transitions"
+        return out
+
+    window = fractions[-(int(min_transitions) + 1) :]
+    xs = np.arange(len(window), dtype=float)
+    ys = np.asarray(window, dtype=float)
+    # Least-squares slope of a straight line through (xs, ys); xs has nonzero variance
+    # whenever len(window) > 1, which insufficient_transitions above already guarantees.
+    slope = float(np.polyfit(xs, ys, 1)[0])
+    out["rate_per_transition"] = round(slope, 6)
+
+    if slope <= 0.0:
+        out["verdict"] = "estimate"
+        out["reason"] = "non_positive_rate_no_projection"
+        return out
+
+    remaining = max(0.0, (1.0 - fractions[-1]) / slope)
+    out["actions_remaining_estimate"] = round(remaining, 2)
+    out["verdict"] = "estimate"
+    out["reason"] = "linear_projection"
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Stage 2b -- DEFERRED ACTIVATION: Stage 1 proposes, Stage 2 confirms, only then apply
 # ---------------------------------------------------------------------------
 

@@ -5161,6 +5161,45 @@ def standing_path_cost_weight(path_cost_weight: Optional[float]) -> float:
     return float(path_cost_weight)
 
 
+# Default-OFF, like every other opt-in live-agent lever in this codebase (e.g.
+# SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED, AUTO_HUD_MASK). See arc_hud_bar_detector.py's
+# Stage 3 docstring: the estimator earns trust before it earns a place in the live cascade.
+BUDGET_AWARE_SEARCH_ENABLED = False
+
+# Below this many estimated-actions-remaining, a candidate plan whose own length would
+# exceed the estimate is penalised rather than pruned outright -- pruning risks discarding
+# the only winning plan on a false-positive estimate; a large additive penalty still lets
+# a plan through if nothing shorter exists, but prefers a shorter one when one does.
+BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION = 50.0
+
+
+def budget_aware_path_cost_weight(
+    *,
+    depth: int,
+    plan_length: Optional[int] = None,
+    actions_remaining_estimate: Optional[float] = None,
+    path_cost_weight: Optional[float] = None,
+) -> float:
+    """REQ-ARC-WMTE-6180: `standing_path_cost_weight`, plus an additive penalty for plans
+    likely to outrun an exhausting HUD budget meter (see
+    `arc_hud_bar_detector.budget_exhaustion_estimate`).
+
+    Pure arithmetic, no side effects -- callers own the decision of whether/when to pass a
+    real ``actions_remaining_estimate`` in (this module never calls the detector itself).
+    ``actions_remaining_estimate=None`` (no admitted estimate yet, or the feature is off)
+    reduces this to exactly `standing_path_cost_weight`'s behaviour -- a genuine no-op, not
+    an approximation of one, so wiring this in cannot silently change behaviour before an
+    estimate actually exists.
+    """
+    base = standing_path_cost_weight(path_cost_weight) * int(depth)
+    if plan_length is None or actions_remaining_estimate is None:
+        return float(base)
+    excess = int(plan_length) - float(actions_remaining_estimate)
+    if excess <= 0:
+        return float(base)
+    return float(base + excess * BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION)
+
+
 def offline_arcade() -> Any:  # pragma: no cover - thin SDK boundary
     """A zero-quota, no-network OFFLINE Arcade over the local environment_files."""
     from arc_agi import Arcade

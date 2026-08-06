@@ -16875,6 +16875,14 @@
         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
+      },
+      {
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "sha256_was": "553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
+        "sha256_now": "13d9e55a8319493fa22fa98f0af2a75b48dad506b33994ffd374f48208a372cc",
+        "acknowledged_on": "2026-08-06",
+        "reason": "2026-08-06 commit added REQ-ARC-WMTE-6180 (budget_aware_path_cost_weight + two module constants) as a PURE ADDITION after standing_path_cost_weight -- `git diff HEAD` on this file is 0 deletions, 39 insertions. No existing statement, function body, or control path this analyser could have executed was touched, and the new function is not referenced by scripts/analyze_arc_reset_charge_attribution.py or any of its other declared dependencies.",
+        "evidence": "`git diff HEAD -- python/carnot/agentic/arc_solver_kit.py | grep -c '^-[^-]'` is 0. The new symbols (budget_aware_path_cost_weight, BUDGET_AWARE_SEARCH_ENABLED, BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION) do not appear anywhere in this artifact's declared dependency scripts."
       }
     ]
   },
