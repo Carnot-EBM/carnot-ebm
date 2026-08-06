@@ -3218,6 +3218,24 @@
     "reason": "Second-order cascade from the 2026-08-03 REQ-ARC-WMTE-6090/6042 acknowledgement pass, and the upstream delta is PROVENANCE METADATA ONLY. This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements block was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
     "evidence": "Measured, not asserted: a key-set and value diff of each upstream artifact against its state at commit 0202829d4da9 reports DROPPED=0, VALUES CHANGED=0, ADDED=8, and all 8 added keys live under provenance.freshness_acknowledgements. Since every number this artifact consumes from upstream is unchanged, a rebuild could not alter any figure here. The upstream acknowledgements themselves rest on a full 374.2s rebuild of results/arc_gateway_card_ground_truth_20260727.json against this working tree, which reproduced every scientific figure byte-identically.",
     "why_not_rebuilt": "A rebuild_command is registered, but rebuilding would recompute nothing: the inputs are bit-identical apart from appended provenance metadata. It would also drop this artifact's own pre-existing acknowledgement blocks, which is the never-prune defect in the rebuild tooling recorded on the sibling artifacts today."
+   },
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
+    "sha256_now": "bcff3bd7c5d657e8aaf32d779e22255daffd3bff2425f26f066f50030f5e16dd",
+    "acknowledged_on": "2026-08-06",
+    "reason": "Third-order cascade from the 2026-08-06 arc_competition_agent.py acknowledgement pass (a single noqa:F401 unused import, verified inert). This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements entry was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
+    "evidence": "Measured, not asserted: each upstream artifact's key set and values, with the `provenance` key popped from both the pre- and post-edit copies, compare equal -- the only difference is inside `provenance.freshness_acknowledgements`, which this analyser does not read (it consumes measurement rows only).",
+    "why_not_rebuilt": "A rebuild_command is registered, but a rebuild attempt this session (2026-08-06) confirmed the standing finding from the 2026-08-03 entry above: it reproduces every measured number byte-identically AND silently drops all 10 pre-existing freshness_acknowledgements entries plus the original_timings_superseded_by_rebuild / rebuild_diff_2026_07_30 corrigendum blocks, because the rebuild script does not carry forward provenance history. Acknowledging in place avoids that never-prune loss."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
+    "sha256_now": "bb34456a1d9b8caefa77c07b6750d85d1b4f8b99edaba2bd2afe9fbc936d1275",
+    "acknowledged_on": "2026-08-06",
+    "reason": "Third-order cascade from the 2026-08-06 arc_competition_agent.py acknowledgement pass (a single noqa:F401 unused import, verified inert). This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements entry was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
+    "evidence": "Measured, not asserted: each upstream artifact's key set and values, with the `provenance` key popped from both the pre- and post-edit copies, compare equal -- the only difference is inside `provenance.freshness_acknowledgements`, which this analyser does not read (it consumes measurement rows only).",
+    "why_not_rebuilt": "A rebuild_command is registered, but a rebuild attempt this session (2026-08-06) confirmed the standing finding from the 2026-08-03 entry above: it reproduces every measured number byte-identically AND silently drops all 10 pre-existing freshness_acknowledgements entries plus the original_timings_superseded_by_rebuild / rebuild_diff_2026_07_30 corrigendum blocks, because the rebuild script does not carry forward provenance history. Acknowledging in place avoids that never-prune loss."
    }
   ]
  },

@@ -1,7 +1,7 @@
 {
  "experiment": "experiment_6091_refine_engine_visible_analysis",
  "spec": "REQ-ARC-WMTE-6091",
- "run_date": "2026-08-04T00:32:26Z",
+ "run_date": "2026-08-06T21:40:28Z",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "solve_provenance": "development_proxy",
  "verifier_is_oracle": false,
@@ -10,628 +10,891 @@
   {
    "experiment_id": "exp6091_shard",
    "path": "results/exp6091_refine_engine_visible_shard.jsonl",
-   "sha256": "8f5f51b58bd25add42284e67399ff0eb7b99ff9132350dcb58f4f1effb9cbef6",
-   "n_cells": 6
+   "sha256": "7f1db3b08eeb83e3fb0beae6b49abb51314ba7cf18a1c6d27f0af339876493e3",
+   "n_cells": 24
   }
  ],
- "n_cells": 6,
+ "n_cells": 24,
  "gradeable_games": [
+  "ar25",
+  "cd82",
+  "ft09",
   "g50t",
+  "lp85",
   "re86",
   "sb26",
+  "sk48",
   "sp80",
   "tr87",
   "tu93"
  ],
- "n_gradeable_games": 6,
- "excluded_games": [],
+ "n_gradeable_games": 11,
+ "excluded_games": [
+  {
+   "game": "r11l",
+   "reason": [
+    "no_gradeable_acceptance_row_within_refinable_floor"
+   ],
+   "oracle_reaches_1": [
+    false,
+    false
+   ],
+   "n_cells": 2
+  },
+  {
+   "game": "vc33",
+   "reason": [
+    "no_gradeable_acceptance_row_within_refinable_floor"
+   ],
+   "oracle_reaches_1": [
+    false,
+    false
+   ],
+   "n_cells": 2
+  }
+ ],
  "missing_arm_values": [
   {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "g50t",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "re86",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "sb26",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "sp80",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_accuracy"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "change_fidelity"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "single_shot",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "refine_control",
-   "metric": "cell_recall"
-  },
-  {
-   "game": "tr87",
-   "trial": 0,
-   "arm": "refine_treatment",
-   "metric": "cell_recall"
-  },
-  {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "single_shot",
    "metric": "change_accuracy"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "refine_control",
    "metric": "change_accuracy"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "refine_treatment",
    "metric": "change_accuracy"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "single_shot",
    "metric": "change_fidelity"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "refine_control",
    "metric": "change_fidelity"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "refine_treatment",
    "metric": "change_fidelity"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "single_shot",
    "metric": "cell_recall"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "refine_control",
    "metric": "cell_recall"
   },
   {
    "game": "tu93",
-   "trial": 0,
+   "trial": 1,
    "arm": "refine_treatment",
    "metric": "cell_recall"
   }
  ],
  "per_game": {
-  "g50t": {
+  "ar25": {
    "single_shot::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_control::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "single_shot::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.679535,
+    "n_trials": 2,
+    "values": [
+     0.421569,
+     0.9375
+    ]
    },
    "refine_control::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.505787,
+    "n_trials": 2,
+    "values": [
+     0.074074,
+     0.9375
+    ]
    },
    "refine_treatment::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.761113,
+    "n_trials": 2,
+    "values": [
+     0.593023,
+     0.929204
+    ]
    },
    "single_shot::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.884259,
+    "n_trials": 2,
+    "values": [
+     0.796296,
+     0.972222
+    ]
    },
    "refine_control::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.523148,
+    "n_trials": 2,
+    "values": [
+     0.074074,
+     0.972222
+    ]
    },
    "refine_treatment::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.958333,
+    "n_trials": 2,
+    "values": [
+     0.944444,
+     0.972222
+    ]
+   }
+  },
+  "cd82": {
+   "single_shot::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_control::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_treatment::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "single_shot::change_fidelity": {
+    "mean": 0.019324,
+    "n_trials": 1,
+    "values": [
+     0.019324
+    ]
+   },
+   "refine_control::change_fidelity": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_treatment::change_fidelity": {
+    "mean": 0.358885,
+    "n_trials": 1,
+    "values": [
+     0.358885
+    ]
+   },
+   "single_shot::cell_recall": {
+    "mean": 0.0199,
+    "n_trials": 1,
+    "values": [
+     0.0199
+    ]
+   },
+   "refine_control::cell_recall": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_treatment::cell_recall": {
+    "mean": 0.512438,
+    "n_trials": 1,
+    "values": [
+     0.512438
+    ]
+   }
+  },
+  "ft09": {
+   "single_shot::change_accuracy": {
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
+   },
+   "refine_control::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_treatment::change_accuracy": {
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
+   },
+   "single_shot::change_fidelity": {
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
+   },
+   "refine_control::change_fidelity": {
+    "mean": 0.105263,
+    "n_trials": 2,
+    "values": [
+     0.210526,
+     0.0
+    ]
+   },
+   "refine_treatment::change_fidelity": {
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
+   },
+   "single_shot::cell_recall": {
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
+   },
+   "refine_control::cell_recall": {
+    "mean": 0.105263,
+    "n_trials": 2,
+    "values": [
+     0.210526,
+     0.0
+    ]
+   },
+   "refine_treatment::cell_recall": {
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  "g50t": {
+   "single_shot::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_control::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_treatment::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "single_shot::change_fidelity": {
+    "mean": 0.201681,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.403361
+    ]
+   },
+   "refine_control::change_fidelity": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_treatment::change_fidelity": {
+    "mean": 0.201681,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.403361
+    ]
+   },
+   "single_shot::cell_recall": {
+    "mean": 0.489796,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.979592
+    ]
+   },
+   "refine_control::cell_recall": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_treatment::cell_recall": {
+    "mean": 0.489796,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.979592
+    ]
+   }
+  },
+  "lp85": {
+   "single_shot::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_control::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "refine_treatment::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
+   },
+   "single_shot::change_fidelity": {
+    "mean": 0.327896,
+    "n_trials": 2,
+    "values": [
+     0.56314,
+     0.092652
+    ]
+   },
+   "refine_control::change_fidelity": {
+    "mean": 0.017065,
+    "n_trials": 2,
+    "values": [
+     0.017065,
+     0.017065
+    ]
+   },
+   "refine_treatment::change_fidelity": {
+    "mean": 0.307744,
+    "n_trials": 2,
+    "values": [
+     0.34471,
+     0.270777
+    ]
+   },
+   "single_shot::cell_recall": {
+    "mean": 0.331058,
+    "n_trials": 2,
+    "values": [
+     0.56314,
+     0.098976
+    ]
+   },
+   "refine_control::cell_recall": {
+    "mean": 0.017065,
+    "n_trials": 2,
+    "values": [
+     0.017065,
+     0.017065
+    ]
+   },
+   "refine_treatment::cell_recall": {
+    "mean": 0.34471,
+    "n_trials": 2,
+    "values": [
+     0.34471,
+     0.34471
+    ]
    }
   },
   "re86": {
    "single_shot::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_control::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "single_shot::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_control::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "single_shot::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_control::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    }
   },
   "sb26": {
    "single_shot::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_control::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "single_shot::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.468931,
+    "n_trials": 2,
+    "values": [
+     0.924528,
+     0.013333
+    ]
    },
    "refine_control::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.924528,
+    "n_trials": 2,
+    "values": [
+     0.924528,
+     0.924528
+    ]
    },
    "single_shot::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.471698,
+    "n_trials": 2,
+    "values": [
+     0.924528,
+     0.018868
+    ]
    },
    "refine_control::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.924528,
+    "n_trials": 2,
+    "values": [
+     0.924528,
+     0.924528
+    ]
+   }
+  },
+  "sk48": {
+   "single_shot::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_control::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_treatment::change_accuracy": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "single_shot::change_fidelity": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_control::change_fidelity": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_treatment::change_fidelity": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "single_shot::cell_recall": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_control::cell_recall": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
+   },
+   "refine_treatment::cell_recall": {
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
    }
   },
   "sp80": {
    "single_shot::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    },
    "refine_control::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    },
    "single_shot::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    },
    "refine_control::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    },
    "single_shot::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    },
    "refine_control::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    }
   },
   "tr87": {
    "single_shot::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_control::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "refine_treatment::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.0
+    ]
    },
    "single_shot::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.211538,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     0.423077
+    ]
    },
    "refine_control::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.016082,
+    "n_trials": 2,
+    "values": [
+     0.016082,
+     0.016082
+    ]
    },
    "refine_treatment::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.194966,
+    "n_trials": 2,
+    "values": [
+     0.042105,
+     0.347826
+    ]
    },
    "single_shot::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.5,
+    "n_trials": 2,
+    "values": [
+     0.0,
+     1.0
+    ]
    },
    "refine_control::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 1.0,
+    "n_trials": 2,
+    "values": [
+     1.0,
+     1.0
+    ]
    },
    "refine_treatment::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.545454,
+    "n_trials": 2,
+    "values": [
+     0.363636,
+     0.727273
+    ]
    }
   },
   "tu93": {
    "single_shot::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
    },
    "refine_control::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
    },
    "refine_treatment::change_accuracy": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
    },
    "single_shot::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.9,
+    "n_trials": 1,
+    "values": [
+     0.9
+    ]
    },
    "refine_control::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
    },
    "refine_treatment::change_fidelity": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.95,
+    "n_trials": 1,
+    "values": [
+     0.95
+    ]
    },
    "single_shot::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.9,
+    "n_trials": 1,
+    "values": [
+     0.9
+    ]
    },
    "refine_control::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.0,
+    "n_trials": 1,
+    "values": [
+     0.0
+    ]
    },
    "refine_treatment::cell_recall": {
-    "mean": null,
-    "n_trials": 0,
-    "values": []
+    "mean": 0.95,
+    "n_trials": 1,
+    "values": [
+     0.95
+    ]
    }
   }
  },
@@ -640,280 +903,478 @@
    "metric": "change_accuracy",
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_treatment",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.0,
+    "cd82": 0.0,
+    "ft09": 0.0,
+    "g50t": 0.0,
+    "lp85": 0.0,
+    "re86": 0.0,
+    "sb26": 0.0,
+    "sk48": 0.0,
+    "sp80": 0.0,
+    "tr87": 0.0,
+    "tu93": 0.0
+   },
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
     "losses_treatment": 0,
-    "ties": 0,
+    "ties": 11,
     "n_discordant": 0,
     "p_two_sided": 1.0,
     "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.181818,
+   "pooled_treatment_mean": 0.181818
   },
   "change_accuracy::treatment_vs_control": {
    "metric": "change_accuracy",
    "baseline_arm": "refine_control",
    "treatment_arm": "refine_treatment",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.0,
+    "cd82": 0.0,
+    "ft09": 1.0,
+    "g50t": 0.0,
+    "lp85": 0.0,
+    "re86": 0.0,
+    "sb26": 0.0,
+    "sk48": 0.0,
+    "sp80": 1.0,
+    "tr87": 0.0,
+    "tu93": 0.0
+   },
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
+    "n_games": 11,
+    "wins_treatment": 2,
     "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "ties": 9,
+    "n_discordant": 2,
+    "p_two_sided": 0.5,
+    "min_reachable_p_at_this_n_discordant": 0.5,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.181818,
+    "ci95": [
+     0.0,
+     0.454545
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.0,
+   "pooled_treatment_mean": 0.181818
   },
   "change_accuracy::control_vs_single_shot": {
    "metric": "change_accuracy",
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_control",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.0,
+    "cd82": 0.0,
+    "ft09": -1.0,
+    "g50t": 0.0,
+    "lp85": 0.0,
+    "re86": 0.0,
+    "sb26": 0.0,
+    "sk48": 0.0,
+    "sp80": -1.0,
+    "tr87": 0.0,
+    "tu93": 0.0
+   },
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "losses_treatment": 2,
+    "ties": 9,
+    "n_discordant": 2,
+    "p_two_sided": 0.5,
+    "min_reachable_p_at_this_n_discordant": 0.5,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": -0.181818,
+    "ci95": [
+     -0.454545,
+     0.0
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.181818,
+   "pooled_treatment_mean": 0.0
   },
   "change_fidelity::treatment_vs_single_shot": {
    "metric": "change_fidelity",
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_treatment",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.081578,
+    "cd82": 0.339561,
+    "ft09": 0.0,
+    "g50t": 0.0,
+    "lp85": -0.020152,
+    "re86": 0.0,
+    "sb26": 0.455597,
+    "sk48": 0.0,
+    "sp80": 0.0,
+    "tr87": -0.016572,
+    "tu93": 0.05
+   },
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "n_games": 11,
+    "wins_treatment": 4,
+    "losses_treatment": 2,
+    "ties": 5,
+    "n_discordant": 6,
+    "p_two_sided": 0.6875,
+    "min_reachable_p_at_this_n_discordant": 0.03125,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.08091,
+    "ci95": [
+     0.003039,
+     0.182179
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.437173,
+   "pooled_treatment_mean": 0.518083
   },
   "change_fidelity::treatment_vs_control": {
    "metric": "change_fidelity",
    "baseline_arm": "refine_control",
    "treatment_arm": "refine_treatment",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.255326,
+    "cd82": 0.358885,
+    "ft09": 0.894737,
+    "g50t": 0.201681,
+    "lp85": 0.290679,
+    "re86": 0.0,
+    "sb26": 0.924528,
+    "sk48": 0.0,
+    "sp80": 1.0,
+    "tr87": 0.178884,
+    "tu93": 0.95
+   },
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
+    "n_games": 11,
+    "wins_treatment": 9,
     "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.00390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.45952,
+    "ci95": [
+     0.240726,
+     0.68261
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.058563,
+   "pooled_treatment_mean": 0.518083
   },
   "change_fidelity::control_vs_single_shot": {
    "metric": "change_fidelity",
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_control",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": -0.173748,
+    "cd82": -0.019324,
+    "ft09": -0.894737,
+    "g50t": -0.201681,
+    "lp85": -0.310831,
+    "re86": 0.0,
+    "sb26": -0.468931,
+    "sk48": 0.0,
+    "sp80": -1.0,
+    "tr87": -0.195456,
+    "tu93": -0.9
+   },
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "losses_treatment": 9,
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.00390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": -0.37861,
+    "ci95": [
+     -0.597947,
+     -0.174013
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.437173,
+   "pooled_treatment_mean": 0.058563
   },
   "cell_recall::treatment_vs_single_shot": {
    "metric": "cell_recall",
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_treatment",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.074074,
+    "cd82": 0.492538,
+    "ft09": 0.0,
+    "g50t": 0.0,
+    "lp85": 0.013652,
+    "re86": 0.0,
+    "sb26": 0.45283,
+    "sk48": 0.0,
+    "sp80": 0.0,
+    "tr87": 0.045454,
+    "tu93": 0.05
+   },
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
+    "n_games": 11,
+    "wins_treatment": 6,
     "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "ties": 5,
+    "n_discordant": 6,
+    "p_two_sided": 0.03125,
+    "min_reachable_p_at_this_n_discordant": 0.03125,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.102595,
+    "ci95": [
+     0.014709,
+     0.22291
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.508792,
+   "pooled_treatment_mean": 0.611387
   },
   "cell_recall::treatment_vs_control": {
    "metric": "cell_recall",
    "baseline_arm": "refine_control",
    "treatment_arm": "refine_treatment",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": 0.435185,
+    "cd82": 0.512438,
+    "ft09": 0.894737,
+    "g50t": 0.489796,
+    "lp85": 0.327645,
+    "re86": 0.0,
+    "sb26": 0.924528,
+    "sk48": 0.0,
+    "sp80": 1.0,
+    "tr87": -0.454546,
+    "tu93": 0.95
+   },
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "n_games": 11,
+    "wins_treatment": 8,
+    "losses_treatment": 1,
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.0390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.461798,
+    "ci95": [
+     0.182323,
+     0.715391
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.149589,
+   "pooled_treatment_mean": 0.611387
   },
   "cell_recall::control_vs_single_shot": {
    "metric": "cell_recall",
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_control",
-   "games_used": [],
-   "games_dropped_incomplete": [
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
-   "per_game_delta": {},
+   "games_dropped_incomplete": [],
+   "per_game_delta": {
+    "ar25": -0.361111,
+    "cd82": -0.0199,
+    "ft09": -0.894737,
+    "g50t": -0.489796,
+    "lp85": -0.313993,
+    "re86": 0.0,
+    "sb26": -0.471698,
+    "sk48": 0.0,
+    "sp80": -1.0,
+    "tr87": 0.5,
+    "tu93": -0.9
+   },
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "n_games": 11,
+    "wins_treatment": 1,
+    "losses_treatment": 8,
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.0390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": -0.359203,
+    "ci95": [
+     -0.611514,
+     -0.089976
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    },
-   "pooled_baseline_mean": null,
-   "pooled_treatment_mean": null
+   "pooled_baseline_mean": 0.508792,
+   "pooled_treatment_mean": 0.149589
   }
  },
  "comparisons_like_for_like_final_round": {
@@ -922,20 +1383,37 @@
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_treatment",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
     "losses_treatment": 0,
-    "ties": 0,
+    "ties": 11,
     "n_discordant": 0,
     "p_two_sided": 1.0,
     "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "change_accuracy::treatment_vs_control": {
@@ -943,20 +1421,37 @@
    "baseline_arm": "refine_control",
    "treatment_arm": "refine_treatment",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
+    "n_games": 11,
+    "wins_treatment": 2,
     "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "ties": 9,
+    "n_discordant": 2,
+    "p_two_sided": 0.5,
+    "min_reachable_p_at_this_n_discordant": 0.5,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.181818,
+    "ci95": [
+     0.0,
+     0.454545
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "change_accuracy::control_vs_single_shot": {
@@ -964,20 +1459,37 @@
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_control",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "losses_treatment": 2,
+    "ties": 9,
+    "n_discordant": 2,
+    "p_two_sided": 0.5,
+    "min_reachable_p_at_this_n_discordant": 0.5,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": -0.181818,
+    "ci95": [
+     -0.454545,
+     0.0
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "change_fidelity::treatment_vs_single_shot": {
@@ -985,20 +1497,37 @@
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_treatment",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "n_games": 11,
+    "wins_treatment": 4,
+    "losses_treatment": 2,
+    "ties": 5,
+    "n_discordant": 6,
+    "p_two_sided": 0.6875,
+    "min_reachable_p_at_this_n_discordant": 0.03125,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.066937,
+    "ci95": [
+     -0.002475,
+     0.154149
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "change_fidelity::treatment_vs_control": {
@@ -1006,20 +1535,37 @@
    "baseline_arm": "refine_control",
    "treatment_arm": "refine_treatment",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
+    "n_games": 11,
+    "wins_treatment": 9,
     "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.00390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.447098,
+    "ci95": [
+     0.234173,
+     0.663213
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "change_fidelity::control_vs_single_shot": {
@@ -1027,20 +1573,37 @@
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_control",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "losses_treatment": 9,
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.00390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": -0.380161,
+    "ci95": [
+     -0.599232,
+     -0.175539
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "cell_recall::treatment_vs_single_shot": {
@@ -1048,20 +1611,37 @@
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_treatment",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
+    "n_games": 11,
+    "wins_treatment": 6,
     "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "ties": 5,
+    "n_discordant": 6,
+    "p_two_sided": 0.03125,
+    "min_reachable_p_at_this_n_discordant": 0.03125,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.092304,
+    "ci95": [
+     0.014709,
+     0.195645
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "cell_recall::treatment_vs_control": {
@@ -1069,20 +1649,37 @@
    "baseline_arm": "refine_control",
    "treatment_arm": "refine_treatment",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "n_games": 11,
+    "wins_treatment": 8,
+    "losses_treatment": 1,
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.0390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": 0.453058,
+    "ci95": [
+     0.17892,
+     0.699937
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   },
   "cell_recall::control_vs_single_shot": {
@@ -1090,20 +1687,37 @@
    "baseline_arm": "single_shot",
    "treatment_arm": "refine_control",
    "value_read": "final_round",
-   "games_used": [],
+   "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
+    "g50t",
+    "lp85",
+    "re86",
+    "sb26",
+    "sk48",
+    "sp80",
+    "tr87",
+    "tu93"
+   ],
    "sign_test": {
-    "n_games": 0,
-    "wins_treatment": 0,
-    "losses_treatment": 0,
-    "ties": 0,
-    "n_discordant": 0,
-    "p_two_sided": 1.0,
-    "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "n_games": 11,
+    "wins_treatment": 1,
+    "losses_treatment": 8,
+    "ties": 2,
+    "n_discordant": 9,
+    "p_two_sided": 0.0390625,
+    "min_reachable_p_at_this_n_discordant": 0.00390625,
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "bootstrap_delta": {
-    "mean": null,
-    "ci95": null
+    "mean": -0.360755,
+    "ci95": [
+     -0.612056,
+     -0.091791
+    ],
+    "n_games": 11,
+    "n_boot": 10000
    }
   }
  },
@@ -1115,11 +1729,11 @@
   "beat_like_for_like_final_round": false
  },
  "round0_induction": {
-  "n_cells": 6,
-  "n_cells_with_round0_engine": 0,
-  "round0_failed_on_every_cell": true,
+  "n_cells": 24,
+  "n_cells_with_round0_engine": 23,
+  "round0_failed_on_every_cell": false,
   "induce_messages": [
-   "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output [HIT n_predict=4096 OUTPUT LIMIT before completing])"
+   "split induce: goal failed: local model code unusable after 2 tries (syntax error line 6: unterminated string literal (detected at line 6))"
   ],
   "why": "If round-0 induction produced no engine, single_shot and BOTH refinement arms are undefined for that cell and no generator prompt can carry an engine. That is an upstream induction failure, NOT a delivery failure and NOT a null."
  },
@@ -1133,11 +1747,16 @@
    "games": []
   },
   "10_plus_cells": {
-   "n_rows": 6,
+   "n_rows": 20,
    "games": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
@@ -1145,23 +1764,28 @@
   },
   "primary_recomputed_on_2plus_cell_rows": {
    "games_used": [
+    "ar25",
+    "cd82",
+    "ft09",
     "g50t",
+    "lp85",
     "re86",
     "sb26",
+    "sk48",
     "sp80",
     "tr87",
     "tu93"
    ],
    "games_dropped_all_1_cell": [],
    "sign_test": {
-    "n_games": 0,
+    "n_games": 11,
     "wins_treatment": 0,
     "losses_treatment": 0,
-    "ties": 0,
+    "ties": 11,
     "n_discordant": 0,
     "p_two_sided": 1.0,
     "min_reachable_p_at_this_n_discordant": null,
-    "min_reachable_p_if_all_games_discordant": null
+    "min_reachable_p_if_all_games_discordant": 0.00097656
    },
    "why": "Failure mode 7: a headline carried by 1-changed-cell rows is a progress counter, not an accuracy. This recomputation is the actual guard; the per-stratum tallies above are descriptive only."
   }
@@ -1189,13 +1813,31 @@
   },
   "oracle_on_acceptance": {
    "reaches_1_by_game": {
+    "ar25": [
+     true
+    ],
+    "cd82": [
+     true
+    ],
+    "ft09": [
+     true
+    ],
     "g50t": [
      true
+    ],
+    "lp85": [
+     true
+    ],
+    "r11l": [
+     false
     ],
     "re86": [
      true
     ],
     "sb26": [
+     true
+    ],
+    "sk48": [
      true
     ],
     "sp80": [
@@ -1206,20 +1848,23 @@
     ],
     "tu93": [
      true
+    ],
+    "vc33": [
+     false
     ]
    }
   }
  },
  "purity_and_delivery": {
-  "n_cells": 6,
+  "n_cells": 24,
   "total_acceptance_answer_leaks_into_any_prompt": 0,
-  "treatment_prompts_containing_engine": 0,
+  "treatment_prompts_containing_engine": 46,
   "control_prompts_containing_engine": 0,
   "callee_side": {
-   "treatment_generator_prompts_with_engine": 0,
+   "treatment_generator_prompts_with_engine": 46,
    "control_generator_prompts_with_engine": 0,
-   "treatment_generator_calls_witnessed": 0,
-   "control_generator_calls_witnessed": 0,
+   "treatment_generator_calls_witnessed": 46,
+   "control_generator_calls_witnessed": 46,
    "harness_and_callee_agree_on_treatment": true,
    "control_stayed_blind": true,
    "why": "The treatment arm is only a treatment if the engine reached the MODEL. A run where this count is 0 has measured the control twice and must not be read as a null."
@@ -1228,36 +1873,36 @@
  "stopping_rule": {
   "statement": "Pre-committed by the operator 2026-08-03 before any number existed: if refinement-with-the-engine-visible does not beat single-shot on gradeable cells, the ARC induction line CLOSES and ARC drops to its CLAUDE.md floor of one slot per milestone.",
   "primary_metric": "change_accuracy on the acceptance block, game-clustered",
-  "primary_result": "BLOCKED: round-0 induction produced no engine on any cell; both refinement arms and single-shot are undefined. This is NOT a null and NOT a delivery failure -- see `induce_messages`.",
+  "primary_result": "UNDERPOWERED: no p below 0.05 was reachable at this number of discordant games; this is not a refutation",
   "primary_sign_test": {
-   "n_games": 0,
+   "n_games": 11,
    "wins_treatment": 0,
    "losses_treatment": 0,
-   "ties": 0,
+   "ties": 11,
    "n_discordant": 0,
    "p_two_sided": 1.0,
    "min_reachable_p_at_this_n_discordant": null,
-   "min_reachable_p_if_all_games_discordant": null
+   "min_reachable_p_if_all_games_discordant": 0.00097656
   },
   "secondary_change_fidelity_beats": false,
   "secondary_sign_test": {
-   "n_games": 0,
-   "wins_treatment": 0,
-   "losses_treatment": 0,
-   "ties": 0,
-   "n_discordant": 0,
-   "p_two_sided": 1.0,
-   "min_reachable_p_at_this_n_discordant": null,
-   "min_reachable_p_if_all_games_discordant": null
+   "n_games": 11,
+   "wins_treatment": 4,
+   "losses_treatment": 2,
+   "ties": 5,
+   "n_discordant": 6,
+   "p_two_sided": 0.6875,
+   "min_reachable_p_at_this_n_discordant": 0.03125,
+   "min_reachable_p_if_all_games_discordant": 0.00097656
   },
-  "treatment_actually_administered": false,
-  "any_treatment_rounds_ran": false,
-  "round0_failed_on_every_cell": true,
+  "treatment_actually_administered": true,
+  "any_treatment_rounds_ran": true,
+  "round0_failed_on_every_cell": false,
   "min_reachable_p_at_this_n_discordant": null,
   "adequately_powered_at_alpha_0_05": false,
   "line_closes": false
  },
- "duration_s": 0.001,
- "honest_verdict": "blocked_round0_induction_produced_no_engine_on_any_cell_not_a_null",
- "reproducibility_checksum": "07cd87b88ff8de7b2e4162106ef94fa6d17d9aaf1c11894cc53615de54f8b357"
+ "duration_s": 0.382,
+ "honest_verdict": "blocked_underpowered_no_p_below_0_05_reachable_not_a_refutation",
+ "reproducibility_checksum": "3ff173c9a069f757f023b93730cf3bf132a872403ee8fad4c17a3c2e909138be"
 }

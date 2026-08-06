@@ -161,6 +161,13 @@
         "acknowledged_on": "2026-08-05",
         "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
         "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "09af1f68207c6293e8f6978a5cd0ae7c105d3829ece79d90f88a88f8b2c69177",
+        "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
+        "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
       }
     ]
   },
