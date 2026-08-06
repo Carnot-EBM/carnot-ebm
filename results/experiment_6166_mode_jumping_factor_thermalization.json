@@ -1,0 +1,1793 @@
+{
+  "bound_slack_and_violation_counts": {
+    "arms": {
+      "bad_factor": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.345,
+        "precommitted_tv_bound": 0.345,
+        "slack": 0.0
+      },
+      "identity": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.0,
+        "precommitted_tv_bound": 0.0,
+        "slack": 0.0
+      },
+      "local_only": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.09312641707730587,
+        "precommitted_tv_bound": 0.09312641707730587,
+        "slack": 0.0
+      },
+      "mode_jump": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.03322186467951663,
+        "precommitted_tv_bound": 0.03322186467951663,
+        "slack": 0.0
+      },
+      "permuted_wire": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.5499999999999999,
+        "precommitted_tv_bound": 0.5499999999999999,
+        "slack": 0.0
+      },
+      "unsupported_state": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.020000000000000004,
+        "precommitted_tv_bound": 0.020000000000000004,
+        "slack": 0.0
+      },
+      "wrong_jump": {
+        "bound_respected": true,
+        "measured_joint_tv": 0.2752953404366189,
+        "precommitted_tv_bound": 0.2752953404366189,
+        "slack": 0.0
+      }
+    },
+    "bound_precommit_sha256": "sha256:b852740cfca9c6e1165c61823492cf9234ad0528c921951b5cc882cb3394d06f",
+    "principle": "Compares measured joint TV with the precommitted bound and counts violations.",
+    "violation_count": 0
+  },
+  "cnce_source_and_algorithm_receipt": {
+    "copied_exact_log_probabilities_into_approximate_arms": false,
+    "forum_url": "https://openreview.net/forum?id=07OWUWmUHp",
+    "local_algorithm": {
+      "cross_mode_mechanism": "add edges comparing left and right mode representatives",
+      "normalizer_handling": "scores_centered_each_step_support_masked_softmax_after_fit",
+      "objective": "conditional_pairwise_logistic_cnce",
+      "orientation_logit": "score(data)-score(noise)+log q(noise|data)-log q(data|noise)"
+    },
+    "paper_id": "07OWUWmUHp",
+    "pdf_url": "https://openreview.net/pdf?id=07OWUWmUHp",
+    "primary_source": "OpenReview EurIPS 2025 PriGM workshop",
+    "principle": "Names OpenReview `07OWUWmUHp`, records reachable source metadata, and states the local conditional pairwise objective used.",
+    "source_access_status": "openreview_browser_challenge_observed_api_403_recorded",
+    "source_metadata_sha256": "sha256:0c8d6cfc7233167b8ab6d7e5bdbe4eeba5a61d3c1c84ee49968157e60ce70ad6",
+    "source_summary": "OpenReview metadata describes conditional NCE with deliberate pairs from different modes so relative energies of separated modes are directly compared.",
+    "title": "Conditional Noise-Contrastive Estimation of Energy-Based Models by Jumping Between Modes"
+  },
+  "deliberately_nonzero_error_receipt": {
+    "approximate_arms": [
+      "local_only",
+      "mode_jump"
+    ],
+    "approximate_error_finite_and_strictly_positive": true,
+    "identity_exact_table_zero_error": true,
+    "identity_joint_tv": 0.0,
+    "local_only_joint_tv": 0.09312641707730587,
+    "mode_jump_joint_tv": 0.03322186467951663,
+    "principle": "Proves approximate divergence is finite and strictly positive while the identity arm remains zero."
+  },
+  "duration_s": 7.346277,
+  "exact_local_only_mode_jump_bad_and_permuted_arm_receipts": {
+    "arms": {
+      "bad_factor": {
+        "arm_name": "bad_factor",
+        "copied_exact_log_probabilities": false,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.16666666666666666,
+          "left_shoulder": 0.16666666666666666,
+          "right_peak": 0.16666666666666666,
+          "right_shoulder": 0.16666666666666666,
+          "unsupported_shadow": 0.0,
+          "valley_left": 0.16666666666666666,
+          "valley_right": 0.16666666666666666
+        },
+        "probability_sha256": "sha256:4081859792c5b33e4c13bd25088cfc8a428c908769f05e1c2ae73243a00e0294",
+        "source": "deliberately_uniform_bad_factor",
+        "support_mask_preserved": true,
+        "training": {}
+      },
+      "identity": {
+        "arm_name": "identity",
+        "copied_exact_log_probabilities": true,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.36,
+          "left_shoulder": 0.24,
+          "right_peak": 0.245,
+          "right_shoulder": 0.105,
+          "unsupported_shadow": 0.0,
+          "valley_left": 0.025,
+          "valley_right": 0.025
+        },
+        "probability_sha256": "sha256:3b9d84dcb5352600a496cbf544baba62a82fdb6eb9b70eb9d66ab677cecc25d8",
+        "source": "exact_table_identity",
+        "support_mask_preserved": true,
+        "training": {}
+      },
+      "local_only": {
+        "arm_name": "local_only",
+        "copied_exact_log_probabilities": false,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.2954822939791224,
+          "left_shoulder": 0.21199320594076249,
+          "right_peak": 0.2920602694125749,
+          "right_shoulder": 0.13820270675900417,
+          "unsupported_shadow": 0.0,
+          "valley_left": 0.024398083002809233,
+          "valley_right": 0.0378634409057268
+        },
+        "probability_sha256": "sha256:bb643af68c8ff532ceffb4f6476e3610b1fcac320288679caa2a53e14cdfe704",
+        "source": "sampled_local_pair_cnce",
+        "support_mask_preserved": true,
+        "training": {
+          "arm_name": "local_only",
+          "finite_parameters": true,
+          "loss_end": 0.5323125477077459,
+          "loss_start": 0.6541316591340789,
+          "pair_sample_count": 4800,
+          "pair_samples_sha256": "sha256:489b050800db5ee73fab66baba84643f144dd85e20715fe1caeddd5fe351daf0",
+          "probabilities": {
+            "left_peak": 0.2954822939791224,
+            "left_shoulder": 0.21199320594076249,
+            "right_peak": 0.2920602694125749,
+            "right_shoulder": 0.13820270675900417,
+            "unsupported_shadow": 0.0,
+            "valley_left": 0.024398083002809233,
+            "valley_right": 0.0378634409057268
+          },
+          "scores": {
+            "left_peak": 0.9420530139779332,
+            "left_shoulder": 0.6099983244886125,
+            "right_peak": 0.9304042808475226,
+            "right_shoulder": 0.182165594731584,
+            "valley_left": -1.552051338466545,
+            "valley_right": -1.1125698755791071
+          }
+        }
+      },
+      "mode_jump": {
+        "arm_name": "mode_jump",
+        "copied_exact_log_probabilities": false,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.3538061427430828,
+          "left_shoulder": 0.26091459480562856,
+          "right_peak": 0.2179719925774006,
+          "right_shoulder": 0.10673266698598052,
+          "unsupported_shadow": 0.0,
+          "valley_left": 0.030125587033952794,
+          "valley_right": 0.030449015853954788
+        },
+        "probability_sha256": "sha256:61e6d6b4cb7bf7e2b685201e993781652b86b85c6846ac5dedbf0a36ee32607d",
+        "source": "sampled_local_plus_cross_mode_pair_cnce",
+        "support_mask_preserved": true,
+        "training": {
+          "arm_name": "mode_jump",
+          "finite_parameters": true,
+          "loss_end": 0.5712219726667892,
+          "loss_start": 0.6839569275114369,
+          "pair_sample_count": 4800,
+          "pair_samples_sha256": "sha256:e5d63ebf4985b7cd3037dc9b3f0b9bcffbe4f4479d2d9ebe6566b6bce5203d59",
+          "probabilities": {
+            "left_peak": 0.3538061427430828,
+            "left_shoulder": 0.26091459480562856,
+            "right_peak": 0.2179719925774006,
+            "right_shoulder": 0.10673266698598052,
+            "unsupported_shadow": 0.0,
+            "valley_left": 0.030125587033952794,
+            "valley_right": 0.030449015853954788
+          },
+          "scores": {
+            "left_peak": 1.1505716978899598,
+            "left_shoulder": 0.8460156849308949,
+            "right_peak": 0.6661891342442097,
+            "right_shoulder": -0.04785017710521702,
+            "valley_left": -1.3128025676505413,
+            "valley_right": -1.302123772309306
+          }
+        }
+      },
+      "permuted_wire": {
+        "arm_name": "permuted_wire",
+        "copied_exact_log_probabilities": false,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.025,
+          "left_shoulder": 0.025,
+          "right_peak": 0.36,
+          "right_shoulder": 0.24,
+          "unsupported_shadow": 0.0,
+          "valley_left": 0.245,
+          "valley_right": 0.105
+        },
+        "probability_sha256": "sha256:0cfc261d18da1a7ac0a21399648a6946a428547da65bf162e451e45d6d59e14d",
+        "source": "deliberately_permuted_category_order",
+        "support_mask_preserved": true,
+        "training": {}
+      },
+      "unsupported_state": {
+        "arm_name": "unsupported_state",
+        "copied_exact_log_probabilities": false,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.36,
+          "left_shoulder": 0.24,
+          "right_peak": 0.245,
+          "right_shoulder": 0.08499999999999999,
+          "unsupported_shadow": 0.02,
+          "valley_left": 0.025,
+          "valley_right": 0.025
+        },
+        "probability_sha256": "sha256:2713a0a941666342ae28d66b5df2fb089a9009c12d1427f4861a9e1677351320",
+        "source": "deliberately_support_breaking_factor",
+        "support_mask_preserved": false,
+        "training": {}
+      },
+      "wrong_jump": {
+        "arm_name": "wrong_jump",
+        "copied_exact_log_probabilities": false,
+        "kernel_id": "sample_multimodal_mode",
+        "lowered_through": "exp6153.SoftwareEBMKernel",
+        "normalization_error": 0.0,
+        "probabilities": {
+          "left_peak": 0.2179719925774006,
+          "left_shoulder": 0.10673266698598052,
+          "right_peak": 0.3538061427430828,
+          "right_shoulder": 0.26091459480562856,
+          "unsupported_shadow": 0.0,
+          "valley_left": 0.030125587033952794,
+          "valley_right": 0.030449015853954788
+        },
+        "probability_sha256": "sha256:69df9f56ffb68f964a9f64b2033944fecfab76c72286f39a85fa41554163578e",
+        "source": "deliberately_inverted_cross_mode_pair_orientation_control",
+        "support_mask_preserved": true,
+        "training": {}
+      }
+    },
+    "principle": "Keeps identity, local-only, mode-jump, deliberately bad, and permuted arms separately named and lowered through the same software-kernel interface.",
+    "shared_lowering_interface": "exp6153.execute_joint_from_ebm_kernels"
+  },
+  "exact_multimodal_factor_support_distribution_and_mode_masses": {
+    "exact_joint_sha256": "sha256:284f7f975f2e64127068822acf87510547e3a23804ab396c23850455e76b9835",
+    "exact_probabilities": {
+      "left_peak": 0.36,
+      "left_shoulder": 0.24,
+      "right_peak": 0.245,
+      "right_shoulder": 0.105,
+      "unsupported_shadow": 0.0,
+      "valley_left": 0.025,
+      "valley_right": 0.025
+    },
+    "labels": [
+      "left_peak",
+      "left_shoulder",
+      "valley_left",
+      "valley_right",
+      "right_peak",
+      "right_shoulder",
+      "unsupported_shadow"
+    ],
+    "mode_labels": {
+      "left_mode": [
+        "left_peak",
+        "left_shoulder"
+      ],
+      "right_mode": [
+        "right_peak",
+        "right_shoulder"
+      ],
+      "valley": [
+        "valley_left",
+        "valley_right"
+      ]
+    },
+    "mode_masses": {
+      "left_mode": 0.6,
+      "right_mode": 0.35,
+      "valley": 0.05
+    },
+    "normalization": 1.0,
+    "normalization_error": 0.0,
+    "principle": "Freezes labels, support mask, exact probabilities, separated modes, mode masses, and relative mode-mass ratio before fitting.",
+    "relative_mode_mass_ratio": 1.7142857142857144,
+    "separation_policy": "left/right modes communicate only through declared cross-mode noise",
+    "state_space_size": 7,
+    "support_count": 6,
+    "support_labels": [
+      "left_peak",
+      "left_shoulder",
+      "valley_left",
+      "valley_right",
+      "right_peak",
+      "right_shoulder"
+    ],
+    "unsupported_states": [
+      "unsupported_shadow"
+    ]
+  },
+  "experiment_id": "experiment_6166_mode_jumping_factor_thermalization",
+  "factor_and_joint_tv_kl_and_mode_mass_ratio_errors": {
+    "arms": {
+      "bad_factor": {
+        "factor_kl_target_to_candidate": 0.3157728727634601,
+        "factor_tv": 0.345,
+        "joint_kl_target_to_candidate": 0.31577287276346006,
+        "joint_tv": 0.345,
+        "mode_mass_ratio": 1.0,
+        "mode_mass_ratio_error": 0.7142857142857144,
+        "mode_masses": {
+          "left_mode": 0.3333333333333333,
+          "right_mode": 0.3333333333333333,
+          "valley": 0.3333333333333333
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.345,
+        "support_count": 6,
+        "support_violation_count": 0
+      },
+      "identity": {
+        "factor_kl_target_to_candidate": 0.0,
+        "factor_tv": 0.0,
+        "joint_kl_target_to_candidate": 0.0,
+        "joint_tv": 0.0,
+        "mode_mass_ratio": 1.7142857142857144,
+        "mode_mass_ratio_error": 0.0,
+        "mode_masses": {
+          "left_mode": 0.6,
+          "right_mode": 0.35,
+          "valley": 0.05
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.0,
+        "support_count": 6,
+        "support_violation_count": 0
+      },
+      "local_only": {
+        "factor_kl_target_to_candidate": 0.019213191484265126,
+        "factor_tv": 0.09312641707730587,
+        "joint_kl_target_to_candidate": 0.019213191484265126,
+        "joint_tv": 0.09312641707730587,
+        "mode_mass_ratio": 1.179454259428344,
+        "mode_mass_ratio_error": 0.5348314548573705,
+        "mode_masses": {
+          "left_mode": 0.5074754999198849,
+          "right_mode": 0.43026297617157905,
+          "valley": 0.06226152390853603
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.09312641707730587,
+        "support_count": 6,
+        "support_violation_count": 0
+      },
+      "mode_jump": {
+        "factor_kl_target_to_candidate": 0.0035227502232131613,
+        "factor_tv": 0.03322186467951663,
+        "joint_kl_target_to_candidate": 0.003522750223213158,
+        "joint_tv": 0.03322186467951663,
+        "mode_mass_ratio": 1.8931688210920798,
+        "mode_mass_ratio_error": 0.17888310680636543,
+        "mode_masses": {
+          "left_mode": 0.6147207375487114,
+          "right_mode": 0.3247046595633811,
+          "valley": 0.060574602887907586
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.03322186467951663,
+        "support_count": 6,
+        "support_violation_count": 0
+      },
+      "permuted_wire": {
+        "factor_kl_target_to_candidate": 1.2290001489228681,
+        "factor_tv": 0.5499999999999999,
+        "joint_kl_target_to_candidate": 1.2290001489228681,
+        "joint_tv": 0.5499999999999999,
+        "mode_mass_ratio": 0.08333333333333334,
+        "mode_mass_ratio_error": 1.6309523809523812,
+        "mode_masses": {
+          "left_mode": 0.05,
+          "right_mode": 0.6,
+          "valley": 0.35
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.5499999999999999,
+        "support_count": 6,
+        "support_violation_count": 0
+      },
+      "unsupported_state": {
+        "factor_kl_target_to_candidate": 0.02218745483505673,
+        "factor_tv": 0.020000000000000004,
+        "joint_kl_target_to_candidate": 0.02218745483505673,
+        "joint_tv": 0.020000000000000004,
+        "mode_mass_ratio": 1.8181818181818183,
+        "mode_mass_ratio_error": 0.10389610389610393,
+        "mode_masses": {
+          "left_mode": 0.6,
+          "right_mode": 0.32999999999999996,
+          "valley": 0.05
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.020000000000000004,
+        "support_count": 7,
+        "support_violation_count": 1
+      },
+      "wrong_jump": {
+        "factor_kl_target_to_candidate": 0.17989863641734957,
+        "factor_tv": 0.2752953404366189,
+        "joint_kl_target_to_candidate": 0.1798986364173496,
+        "joint_tv": 0.2752953404366189,
+        "mode_mass_ratio": 0.5282149108198112,
+        "mode_mass_ratio_error": 1.186070803465903,
+        "mode_masses": {
+          "left_mode": 0.3247046595633811,
+          "right_mode": 0.6147207375487114,
+          "valley": 0.060574602887907586
+        },
+        "normalization_error": 0.0,
+        "precommitted_tv_bound": 0.2752953404366189,
+        "support_count": 6,
+        "support_violation_count": 0
+      }
+    },
+    "bound_precommit_sha256": "sha256:b852740cfca9c6e1165c61823492cf9234ad0528c921951b5cc882cb3394d06f",
+    "evaluated_after_bound_precommit": true,
+    "mode_jump_improved_over_local_only": true,
+    "primary_metric": "exact_joint_tv",
+    "principle": "Reports exact factor/joint divergence, normalization, support, and mode-mass ratio error for every arm."
+  },
+  "field_principles": {
+    "bound_slack_and_violation_counts": "Compares measured joint TV with the precommitted bound and counts violations.",
+    "cnce_source_and_algorithm_receipt": "Names OpenReview `07OWUWmUHp`, records reachable source metadata, and states the local conditional pairwise objective used.",
+    "deliberately_nonzero_error_receipt": "Proves approximate divergence is finite and strictly positive while the identity arm remains zero.",
+    "duration_s": "Reports real wall time without padding.",
+    "exact_local_only_mode_jump_bad_and_permuted_arm_receipts": "Keeps identity, local-only, mode-jump, deliberately bad, and permuted arms separately named and lowered through the same software-kernel interface.",
+    "exact_multimodal_factor_support_distribution_and_mode_masses": "Freezes labels, support mask, exact probabilities, separated modes, mode masses, and relative mode-mass ratio before fitting.",
+    "factor_and_joint_tv_kl_and_mode_mass_ratio_errors": "Reports exact factor/joint divergence, normalization, support, and mode-mass ratio error for every arm.",
+    "field_provenance": "Maps each required field to prompt, spec, source, tests, artifacts, or package receipts.",
+    "frozen_local_and_cross_mode_noise_distributions": "Freezes local pair noise and cross-mode jump noise before training outcomes are read.",
+    "hardware_execution_claimed": "Bare false prevents this software semantic result from becoming a hardware claim.",
+    "honest_verdict": "Uses a required terminal prefix and states whether mode jumping improved composition.",
+    "identity_no_jump_wrong_jump_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls": "Proves exact identity, no-jump/local-only weakness, wrong-jump degradation, bad factor, permuted category wiring, support violation, and loose-bound rejection controls fire.",
+    "inference_substrate": "Declares `jax_cpu_software_multimodal_factor_thermalization`, not hardware, GPU, or LLM inference.",
+    "latency_power_energy_and_speedup_claimed": "Bare false prevents quality evidence from becoming a performance claim.",
+    "matched_training_configs_seeds_samples_and_parameters": "Freezes seeds, samples, optimizer, step count, learning rate, support mask, arm budgets, and primary endpoints before fitting.",
+    "missing_verifier_gaps": "Lists absent evidence rather than silently granting readiness.",
+    "mode_jumping_factor_thermalization_ready_score": "Equals 1.0 only when preconditions pass, nonzero finite error exists, mode jumping improves local-only, the bound holds, controls fire, protected files are unchanged, tests pass, and no forbidden claim appears.",
+    "preconditions_checked": "Hashes CPU mode, upstream typed IR, software interfaces, CNCE source reachability, retired lineage, output paths, and protected files before fitting.",
+    "preregistered_factor_to_joint_bound": "Hashes the factor-derived joint TV/KL bound before joint evaluation.",
+    "prior_failure_and_operator_override_receipts": "Records why Exp6153's exact replacement was vacuous and why this nonzero-error software approximation is allowed without reopening retired parity scaling.",
+    "protected_files_unchanged": "Confirms conductor and reconciliation files were byte-identical during artifact construction.",
+    "reproducibility_checksum": "Content-addresses the artifact with volatile duration and self-checksum blanked.",
+    "retired_parity_scaling_nonreuse_receipt": "Proves no THRML/Carnot scaling sweep or parity table is produced.",
+    "retirement_triggered": "Records whether this run crossed a retired-lineage rule.",
+    "seed_intervals_and_convergence": "Reports deterministic seed intervals, loss trends, finite parameters, and convergence diagnostics.",
+    "status": "Terminal state separates positive, null, retired, and blocked Exp6166 outcomes.",
+    "test_commands": "Records focused unit/spec coverage, version/API, multimodal exact reference, CNCE arms, nonzero-error, bound, controls, no-hardware, JAX CPU, schema, adversarial, protected-file, E2E, full pytest, and root-clutter checks.",
+    "test_exit_codes": "Prevents failed commands from becoming readiness evidence.",
+    "upstream_ir_executor_bound_and_software_version_hashes": "Binds Exp6152 IR/executor, Exp6153 bound/executor code, Torx, vendored THRML, sampler paths, outputs, and protected files.",
+    "verifier_is_oracle": "Declares exact finite enumeration as the oracle."
+  },
+  "field_provenance": {
+    "bound_slack_and_violation_counts": {
+      "principle": "Compares measured joint TV with the precommitted bound and counts violations.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "cnce_source_and_algorithm_receipt": {
+      "principle": "Names OpenReview `07OWUWmUHp`, records reachable source metadata, and states the local conditional pairwise objective used.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "deliberately_nonzero_error_receipt": {
+      "principle": "Proves approximate divergence is finite and strictly positive while the identity arm remains zero.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports real wall time without padding.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "exact_local_only_mode_jump_bad_and_permuted_arm_receipts": {
+      "principle": "Keeps identity, local-only, mode-jump, deliberately bad, and permuted arms separately named and lowered through the same software-kernel interface.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "exact_multimodal_factor_support_distribution_and_mode_masses": {
+      "principle": "Freezes labels, support mask, exact probabilities, separated modes, mode masses, and relative mode-mass ratio before fitting.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "factor_and_joint_tv_kl_and_mode_mass_ratio_errors": {
+      "principle": "Reports exact factor/joint divergence, normalization, support, and mode-mass ratio error for every arm.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Maps each required field to prompt, spec, source, tests, artifacts, or package receipts.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "frozen_local_and_cross_mode_noise_distributions": {
+      "principle": "Freezes local pair noise and cross-mode jump noise before training outcomes are read.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "hardware_execution_claimed": {
+      "principle": "Bare false prevents this software semantic result from becoming a hardware claim.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Uses a required terminal prefix and states whether mode jumping improved composition.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "identity_no_jump_wrong_jump_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls": {
+      "principle": "Proves exact identity, no-jump/local-only weakness, wrong-jump degradation, bad factor, permuted category wiring, support violation, and loose-bound rejection controls fire.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares `jax_cpu_software_multimodal_factor_thermalization`, not hardware, GPU, or LLM inference.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "latency_power_energy_and_speedup_claimed": {
+      "principle": "Bare false prevents quality evidence from becoming a performance claim.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "matched_training_configs_seeds_samples_and_parameters": {
+      "principle": "Freezes seeds, samples, optimizer, step count, learning rate, support mask, arm budgets, and primary endpoints before fitting.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Lists absent evidence rather than silently granting readiness.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "mode_jumping_factor_thermalization_ready_score": {
+      "principle": "Equals 1.0 only when preconditions pass, nonzero finite error exists, mode jumping improves local-only, the bound holds, controls fire, protected files are unchanged, tests pass, and no forbidden claim appears.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Hashes CPU mode, upstream typed IR, software interfaces, CNCE source reachability, retired lineage, output paths, and protected files before fitting.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "preregistered_factor_to_joint_bound": {
+      "principle": "Hashes the factor-derived joint TV/KL bound before joint evaluation.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "prior_failure_and_operator_override_receipts": {
+      "principle": "Records why Exp6153's exact replacement was vacuous and why this nonzero-error software approximation is allowed without reopening retired parity scaling.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms conductor and reconciliation files were byte-identical during artifact construction.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact with volatile duration and self-checksum blanked.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "retired_parity_scaling_nonreuse_receipt": {
+      "principle": "Proves no THRML/Carnot scaling sweep or parity table is produced.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "retirement_triggered": {
+      "principle": "Records whether this run crossed a retired-lineage rule.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "seed_intervals_and_convergence": {
+      "principle": "Reports deterministic seed intervals, loss trends, finite parameters, and convergence diagnostics.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "status": {
+      "principle": "Terminal state separates positive, null, retired, and blocked Exp6166 outcomes.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "test_commands": {
+      "principle": "Records focused unit/spec coverage, version/API, multimodal exact reference, CNCE arms, nonzero-error, bound, controls, no-hardware, JAX CPU, schema, adversarial, protected-file, E2E, full pytest, and root-clutter checks.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Prevents failed commands from becoming readiness evidence.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "upstream_ir_executor_bound_and_software_version_hashes": {
+      "principle": "Binds Exp6152 IR/executor, Exp6153 bound/executor code, Torx, vendored THRML, sampler paths, outputs, and protected files.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Declares exact finite enumeration as the oracle.",
+      "sources": [
+        "task_prompt",
+        "https://openreview.net/forum?id=07OWUWmUHp",
+        "openspec/capabilities/samplers/spec.md",
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py",
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+        "results/experiment_6152_typed_stochastic_constraint_ir.json",
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "results/experiment_6153_thermalized_program_error_audit.json",
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py",
+        "research-references.md",
+        "ops/exclusion_manifest.yaml"
+      ]
+    }
+  },
+  "frozen_local_and_cross_mode_noise_distributions": {
+    "cross_mode_noise": {
+      "contains_cross_mode_jump": true,
+      "mixture_weight": 0.25,
+      "transitions": {
+        "left_peak": {
+          "left_shoulder": 0.75,
+          "right_peak": 0.25
+        },
+        "left_shoulder": {
+          "left_peak": 0.375,
+          "right_shoulder": 0.25,
+          "valley_left": 0.375
+        },
+        "right_peak": {
+          "left_peak": 0.25,
+          "right_shoulder": 0.75
+        },
+        "right_shoulder": {
+          "left_shoulder": 0.25,
+          "right_peak": 0.375,
+          "valley_right": 0.375
+        },
+        "valley_left": {
+          "left_shoulder": 1.0
+        },
+        "valley_right": {
+          "right_shoulder": 1.0
+        }
+      },
+      "undirected_edges": [
+        [
+          "left_peak",
+          "right_peak"
+        ],
+        [
+          "left_shoulder",
+          "right_shoulder"
+        ]
+      ]
+    },
+    "local_noise": {
+      "contains_cross_mode_jump": false,
+      "transitions": {
+        "left_peak": {
+          "left_shoulder": 1.0
+        },
+        "left_shoulder": {
+          "left_peak": 0.5,
+          "valley_left": 0.5
+        },
+        "right_peak": {
+          "right_shoulder": 1.0
+        },
+        "right_shoulder": {
+          "right_peak": 0.5,
+          "valley_right": 0.5
+        },
+        "valley_left": {
+          "left_shoulder": 1.0
+        },
+        "valley_right": {
+          "right_shoulder": 1.0
+        }
+      },
+      "undirected_edges": [
+        [
+          "left_peak",
+          "left_shoulder"
+        ],
+        [
+          "left_shoulder",
+          "valley_left"
+        ],
+        [
+          "right_peak",
+          "right_shoulder"
+        ],
+        [
+          "right_shoulder",
+          "valley_right"
+        ]
+      ]
+    },
+    "noise_sha256": "sha256:081a36d46074ac6e1bba4682e92b1248d5f33fcd9c073c90e72a50ccc6121710",
+    "principle": "Freezes local pair noise and cross-mode jump noise before training outcomes are read.",
+    "support_mask_excludes": [
+      "unsupported_shadow"
+    ],
+    "wrong_jump_noise": {
+      "contains_cross_mode_jump": false,
+      "mixture_weight": 0.25,
+      "transitions": {
+        "left_peak": {
+          "left_shoulder": 0.75,
+          "valley_right": 0.25
+        },
+        "left_shoulder": {
+          "left_peak": 0.5,
+          "valley_left": 0.5
+        },
+        "right_peak": {
+          "right_shoulder": 0.75,
+          "valley_left": 0.25
+        },
+        "right_shoulder": {
+          "right_peak": 0.5,
+          "valley_right": 0.5
+        },
+        "valley_left": {
+          "left_shoulder": 0.75,
+          "right_peak": 0.25
+        },
+        "valley_right": {
+          "left_peak": 0.25,
+          "right_shoulder": 0.75
+        }
+      },
+      "undirected_edges": [
+        [
+          "left_peak",
+          "valley_right"
+        ],
+        [
+          "right_peak",
+          "valley_left"
+        ]
+      ]
+    }
+  },
+  "hardware_execution_claimed": false,
+  "honest_verdict": "blocked: mode jumping improved but nonzero_test_commands",
+  "identity_no_jump_wrong_jump_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls": {
+    "all_controls_passed": true,
+    "bad_factor_control_fired": true,
+    "bad_factor_joint_tv": 0.345,
+    "identity_joint_tv": 0.0,
+    "identity_zero_error_control_passed": true,
+    "loose_bound_candidate_tv_bound": 1.0,
+    "loose_bound_control_fired": true,
+    "loose_bound_slack": 0.9667781353204834,
+    "no_jump_control_fired": true,
+    "no_jump_joint_tv": 0.09312641707730587,
+    "permuted_wire_control_fired": true,
+    "permuted_wire_joint_tv": 0.5499999999999999,
+    "precommitted_bound_hash_checked": "sha256:b852740cfca9c6e1165c61823492cf9234ad0528c921951b5cc882cb3394d06f",
+    "principle": "Proves exact identity, no-jump/local-only weakness, wrong-jump degradation, bad factor, permuted category wiring, support violation, and loose-bound rejection controls fire.",
+    "unsupported_state_control_fired": true,
+    "unsupported_state_violation_count": 1,
+    "wrong_jump_control_fired": true,
+    "wrong_jump_mode_mass_ratio_error": 1.186070803465903
+  },
+  "inference_substrate": "jax_cpu_software_multimodal_factor_thermalization",
+  "latency_power_energy_and_speedup_claimed": false,
+  "matched_training_configs_seeds_samples_and_parameters": {
+    "arms": {
+      "local_only": {
+        "cross_mode_pairs_enabled": false,
+        "noise": "local_noise",
+        "total_pair_samples": 4800
+      },
+      "mode_jump": {
+        "cross_mode_pairs_enabled": true,
+        "noise": "local_plus_cross_mode_noise",
+        "total_pair_samples": 4800
+      }
+    },
+    "exact_log_probabilities_copied_into_approximate_arms": false,
+    "l2_regularization": 0.002,
+    "learning_rate": 0.65,
+    "optimizer": "full_batch_pairwise_logistic_cnce",
+    "optimizer_steps": 900,
+    "primary_endpoint": "factor_tv_and_relative_mode_mass_ratio_error_pre_joint_eval",
+    "principle": "Freezes seeds, samples, optimizer, step count, learning rate, support mask, arm budgets, and primary endpoints before fitting.",
+    "samples_per_seed": 1200,
+    "secondary_endpoint": "factor_kl_target_to_candidate_pre_joint_eval",
+    "seeds": [
+      6166,
+      6167,
+      6168,
+      6169
+    ],
+    "support_mask": {
+      "left_peak": true,
+      "left_shoulder": true,
+      "right_peak": true,
+      "right_shoulder": true,
+      "unsupported_shadow": false,
+      "valley_left": true,
+      "valley_right": true
+    },
+    "training_data_source": "sampled exact factor states plus declared conditional noise"
+  },
+  "missing_verifier_gaps": [],
+  "mode_jumping_factor_thermalization_ready_score": 0.0,
+  "preconditions_checked": {
+    "checks": {
+      "cnce_source_metadata_hashed": true,
+      "exp6152_program_validated": true,
+      "exp6153_zero_divergence_context_hashed": true,
+      "jax_default_backend_cpu": true,
+      "jax_platforms_cpu": true,
+      "output_parent_writable": true,
+      "protected_files_present": true,
+      "retired_lineage_blocked": true,
+      "sampler_spec_has_req_6166": true,
+      "software_interfaces_ready": true
+    },
+    "jax_platforms_env": "cpu",
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6166_mode_jumping_factor_thermalization.json",
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "preconditions_ready": true,
+    "principle": "Hashes CPU mode, upstream typed IR, software interfaces, CNCE source reachability, retired lineage, output paths, and protected files before fitting.",
+    "python": "3.12.13",
+    "run_date": "20260806"
+  },
+  "preregistered_factor_to_joint_bound": {
+    "arms": {
+      "bad_factor": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 0.3157728727634601,
+        "factor_tv": 0.345,
+        "kl_bound": 0.3157728727634601,
+        "support_violation_count": 0,
+        "tv_bound": 0.345
+      },
+      "identity": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 0.0,
+        "factor_tv": 0.0,
+        "kl_bound": 0.0,
+        "support_violation_count": 0,
+        "tv_bound": 0.0
+      },
+      "local_only": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 0.019213191484265126,
+        "factor_tv": 0.09312641707730587,
+        "kl_bound": 0.019213191484265126,
+        "support_violation_count": 0,
+        "tv_bound": 0.09312641707730587
+      },
+      "mode_jump": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 0.0035227502232131613,
+        "factor_tv": 0.03322186467951663,
+        "kl_bound": 0.0035227502232131613,
+        "support_violation_count": 0,
+        "tv_bound": 0.03322186467951663
+      },
+      "permuted_wire": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 1.2290001489228681,
+        "factor_tv": 0.5499999999999999,
+        "kl_bound": 1.2290001489228681,
+        "support_violation_count": 0,
+        "tv_bound": 0.5499999999999999
+      },
+      "unsupported_state": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 0.02218745483505673,
+        "factor_tv": 0.020000000000000004,
+        "kl_bound": 0.02218745483505673,
+        "support_violation_count": 1,
+        "tv_bound": 0.020000000000000004
+      },
+      "wrong_jump": {
+        "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+        "factor_kl": 0.17989863641734957,
+        "factor_tv": 0.2752953404366189,
+        "kl_bound": 0.17989863641734957,
+        "support_violation_count": 0,
+        "tv_bound": 0.2752953404366189
+      }
+    },
+    "derived_before_joint_evaluation": true,
+    "joint_results_read_before_hash": false,
+    "precommit_payload": {
+      "arms": {
+        "bad_factor": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 0.3157728727634601,
+          "factor_tv": 0.345,
+          "kl_bound": 0.3157728727634601,
+          "support_violation_count": 0,
+          "tv_bound": 0.345
+        },
+        "identity": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 0.0,
+          "factor_tv": 0.0,
+          "kl_bound": 0.0,
+          "support_violation_count": 0,
+          "tv_bound": 0.0
+        },
+        "local_only": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 0.019213191484265126,
+          "factor_tv": 0.09312641707730587,
+          "kl_bound": 0.019213191484265126,
+          "support_violation_count": 0,
+          "tv_bound": 0.09312641707730587
+        },
+        "mode_jump": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 0.0035227502232131613,
+          "factor_tv": 0.03322186467951663,
+          "kl_bound": 0.0035227502232131613,
+          "support_violation_count": 0,
+          "tv_bound": 0.03322186467951663
+        },
+        "permuted_wire": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 1.2290001489228681,
+          "factor_tv": 0.5499999999999999,
+          "kl_bound": 1.2290001489228681,
+          "support_violation_count": 0,
+          "tv_bound": 0.5499999999999999
+        },
+        "unsupported_state": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 0.02218745483505673,
+          "factor_tv": 0.020000000000000004,
+          "kl_bound": 0.02218745483505673,
+          "support_violation_count": 1,
+          "tv_bound": 0.020000000000000004
+        },
+        "wrong_jump": {
+          "bound_formula": "single_factor_joint_TV_equals_factor_TV_for_root_categorical_factor",
+          "factor_kl": 0.17989863641734957,
+          "factor_tv": 0.2752953404366189,
+          "kl_bound": 0.17989863641734957,
+          "support_violation_count": 0,
+          "tv_bound": 0.2752953404366189
+        }
+      },
+      "program_checksum": "sha256:6a3225f0676323e1efd13dcd7bd85356bcb9cd104d20d2a2f2933f769634faaf",
+      "schema": "carnot.exp6166.precommitted_factor_to_joint_bound.v1",
+      "training_config": {
+        "arms": {
+          "local_only": {
+            "cross_mode_pairs_enabled": false,
+            "noise": "local_noise",
+            "total_pair_samples": 4800
+          },
+          "mode_jump": {
+            "cross_mode_pairs_enabled": true,
+            "noise": "local_plus_cross_mode_noise",
+            "total_pair_samples": 4800
+          }
+        },
+        "exact_log_probabilities_copied_into_approximate_arms": false,
+        "l2_regularization": 0.002,
+        "learning_rate": 0.65,
+        "optimizer": "full_batch_pairwise_logistic_cnce",
+        "optimizer_steps": 900,
+        "primary_endpoint": "factor_tv_and_relative_mode_mass_ratio_error_pre_joint_eval",
+        "principle": "Freezes seeds, samples, optimizer, step count, learning rate, support mask, arm budgets, and primary endpoints before fitting.",
+        "samples_per_seed": 1200,
+        "secondary_endpoint": "factor_kl_target_to_candidate_pre_joint_eval",
+        "seeds": [
+          6166,
+          6167,
+          6168,
+          6169
+        ],
+        "support_mask": {
+          "left_peak": true,
+          "left_shoulder": true,
+          "right_peak": true,
+          "right_shoulder": true,
+          "unsupported_shadow": false,
+          "valley_left": true,
+          "valley_right": true
+        },
+        "training_data_source": "sampled exact factor states plus declared conditional noise"
+      }
+    },
+    "precommit_sha256": "sha256:b852740cfca9c6e1165c61823492cf9234ad0528c921951b5cc882cb3394d06f",
+    "primary_arm": "mode_jump",
+    "primary_metric": "exact_joint_tv",
+    "principle": "Hashes the factor-derived joint TV/KL bound before joint evaluation."
+  },
+  "prior_failure_and_operator_override_receipts": {
+    "exp6153_artifact": "results/experiment_6153_thermalized_program_error_audit.json",
+    "exp6153_artifact_sha256": "sha256:3d2ce21b327525fa49f8ce3eab73f2411932b0f76a519347d8994c840812b3f3",
+    "exp6153_zero_divergence_exact_replacement_found": true,
+    "operator_cnce_hook_found": false,
+    "operator_override_summary": "Exp6166 intentionally replaces Exp6153's exact-table identity result with finite-sample CNCE approximations that must have nonzero error.",
+    "principle": "Records why Exp6153's exact replacement was vacuous and why this nonzero-error software approximation is allowed without reopening retired parity scaling.",
+    "research_references_sha256": "sha256:99df8131b71e9f4924c694b878b9de60ad8e558dfb24b09a78ca6de7055a787d"
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:9df0fef480cee9e4a3871112a2065ff6b823a4bb4ab4ddebc15da4bdc6e41843"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:9df0fef480cee9e4a3871112a2065ff6b823a4bb4ab4ddebc15da4bdc6e41843"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "kind": "file",
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "principle": "Confirms conductor and reconciliation files were byte-identical during artifact construction.",
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:1f6337669847ff2d2ffaa4072988c4002f4d9a9fcfed2a889f1909c9e26af379",
+  "retired_parity_scaling_nonreuse_receipt": {
+    "blocked_patterns_checked": [
+      "THRML/Carnot parity n=8",
+      "THRML/Carnot parity n=16",
+      "THRML/Carnot parity n=32",
+      "THRML/Carnot parity n=64",
+      "THRML/Carnot parity n=128",
+      "THRML/Carnot parity n=256",
+      "THRML diverse topology parity",
+      "THRML scaling sweep"
+    ],
+    "carnot_vs_vendored_thrml_parity_table_produced": false,
+    "principle": "Proves no THRML/Carnot scaling sweep or parity table is produced.",
+    "prior_artifact_hashes": {
+      "results/experiment_1526_thrml_carnot_parity_n8.json": "sha256:35e98916ac3056e6ae0414a5a0f04909a46cd1d6e7653770d3245468257d0b6a",
+      "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json": "sha256:f7cb5e4556ca16513d72b1d3a1684b4326b05cf6c6dc3de51046171b89816839"
+    },
+    "retired_experiment_ids": [
+      "exp1526",
+      "exp1527",
+      "exp1528",
+      "exp1529",
+      "exp1530",
+      "exp1531",
+      "exp1543",
+      "exp1544"
+    ],
+    "retired_lineage_blocked": true,
+    "retired_manifest_entry_id": "thrml_scaling_sweep_lineage_retired_after_vendoring",
+    "retirement_triggered": false,
+    "size_sweep_produced": false
+  },
+  "retirement_triggered": false,
+  "run_date": "20260806",
+  "schema": "carnot.experiment_6166.mode_jumping_factor_thermalization.v1",
+  "seed_intervals_and_convergence": {
+    "deltas": [
+      {
+        "joint_tv_delta_mode_jump_minus_local": -0.07389571146571286,
+        "mode_ratio_error_delta_mode_jump_minus_local": -0.6475090283837928,
+        "seed": 6166
+      },
+      {
+        "joint_tv_delta_mode_jump_minus_local": -0.0391027508421406,
+        "mode_ratio_error_delta_mode_jump_minus_local": -0.2370519723905904,
+        "seed": 6167
+      },
+      {
+        "joint_tv_delta_mode_jump_minus_local": -0.04965389384900316,
+        "mode_ratio_error_delta_mode_jump_minus_local": -0.21656664029335637,
+        "seed": 6168
+      },
+      {
+        "joint_tv_delta_mode_jump_minus_local": -0.05272356478264677,
+        "mode_ratio_error_delta_mode_jump_minus_local": -0.27979851666959266,
+        "seed": 6169
+      }
+    ],
+    "finite_parameters_all_runs": true,
+    "local_only": [
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.12241282952719391,
+        "loss_end": 0.5384386000443437,
+        "loss_start": 0.6601966969639481,
+        "mode_mass_ratio_error": 0.679528648512113,
+        "seed": 6166
+      },
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.06843297928227585,
+        "loss_end": 0.5212401274501912,
+        "loss_start": 0.6526876025078818,
+        "mode_mass_ratio_error": 0.39286114364263436,
+        "seed": 6167
+      },
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.07996527893657694,
+        "loss_end": 0.5202676498489975,
+        "loss_start": 0.6521099798574157,
+        "mode_mass_ratio_error": 0.45371046307617235,
+        "seed": 6168
+      },
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.10377849601516827,
+        "loss_end": 0.5461749785958415,
+        "loss_start": 0.6515323572069489,
+        "mode_mass_ratio_error": 0.5721558880156199,
+        "seed": 6169
+      }
+    ],
+    "loss_decreased_all_runs": true,
+    "mode_jump": [
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.04851711806148105,
+        "loss_end": 0.5808264917439415,
+        "loss_start": 0.6930682619433819,
+        "mode_mass_ratio_error": 0.03201962012832027,
+        "seed": 6166
+      },
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.029330228440135244,
+        "loss_end": 0.5635165445785161,
+        "loss_start": 0.6801627788303968,
+        "mode_mass_ratio_error": 0.15580917125204397,
+        "seed": 6167
+      },
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.030311385087573785,
+        "loss_end": 0.5491124689726732,
+        "loss_start": 0.6807818747941181,
+        "mode_mass_ratio_error": 0.23714382278281598,
+        "seed": 6168
+      },
+      {
+        "finite_parameters": true,
+        "joint_tv": 0.0510549312325215,
+        "loss_end": 0.5859977851229088,
+        "loss_start": 0.6818147944777243,
+        "mode_mass_ratio_error": 0.29235737134602724,
+        "seed": 6169
+      }
+    ],
+    "mode_jump_improved_primary_metric_all_seeds": true,
+    "mode_jump_improved_ratio_error_all_seeds": true,
+    "principle": "Reports deterministic seed intervals, loss trends, finite parameters, and convergence diagnostics.",
+    "seeds": [
+      6166,
+      6167,
+      6168,
+      6169
+    ]
+  },
+  "status": "blocked",
+  "test_commands": [
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0",
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6166_mode_jumping_factor_thermalization.py -m pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6166_mode_jumping_factor_thermalization.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+    ".venv/bin/ruff check python/carnot/experiment_6166_mode_jumping_factor_thermalization.py tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6166_mode_jumping_factor_thermalization.py tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0 -k exact_factor_support_modes_and_noise_are_frozen",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0 -k mode_jump_improves",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6166_mode_jumping_factor_thermalization.json",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6166_mode_jumping_factor_thermalization.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6166_mode_jumping_factor_thermalization.py tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6166_mode_jumping_factor_thermalization.py tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6166_mode_jumping_factor_thermalization.py -m pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0 && JAX_PLATFORMS=cpu .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6166_mode_jumping_factor_thermalization.py --fail-under=100": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q": 2,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_e2e_serialization.py -q --no-cov -n 0": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0 -k exact_factor_support_modes_and_noise_are_frozen": 0,
+    "JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py -q --no-cov -n 0 -k mode_jump_improves": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "upstream_ir_executor_bound_and_software_version_hashes": {
+    "exp6152_artifact_sha256": "sha256:62cdce73c0f381d05721f1169863b320b1f7d68ddedc8d1c5a50676aa2c9d64c",
+    "exp6152_executor_source_sha256": "sha256:8465aa0b6b8bef08cb80cf40db95b8e4b7683bcbbb7f09b0128469c77470802d",
+    "exp6152_module_sha256": "sha256:c69351110bc171bfadec8ac410ebf33d706df65a20636a5d97d8fa2e6c993ef8",
+    "exp6152_program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+    "exp6153_artifact_sha256": "sha256:3d2ce21b327525fa49f8ce3eab73f2411932b0f76a519347d8994c840812b3f3",
+    "exp6153_bound_source_sha256": "sha256:661eae7b664fb0b1a2ce6a6267a939e0949af6b334025f9aa343caef0271e0ea",
+    "exp6153_joint_executor_source_sha256": "sha256:e3dbc2ffd1417e218e703135cf5cb619d5b7ce595b11537333191c8d773323a7",
+    "exp6153_module_sha256": "sha256:609a3b8a62e9f69ff1393bc5fb7c1ba9a6c1068e160cbea678bbc8b9cf7f1fa6",
+    "exp6166_exact_distribution_sha256": "sha256:284f7f975f2e64127068822acf87510547e3a23804ab396c23850455e76b9835",
+    "exp6166_program_checksum": "sha256:6a3225f0676323e1efd13dcd7bd85356bcb9cd104d20d2a2f2933f769634faaf",
+    "interfaces_ready": true,
+    "jax": {
+      "default_backend": "cpu",
+      "devices": [
+        "cpu:0"
+      ],
+      "jax_platforms_env": "cpu",
+      "version": "0.10.1"
+    },
+    "principle": "Binds Exp6152 IR/executor, Exp6153 bound/executor code, Torx, vendored THRML, sampler paths, outputs, and protected files.",
+    "software_interfaces": {
+      "interface_ready": true,
+      "jax": {
+        "default_backend": "cpu",
+        "devices": [
+          "cpu:0"
+        ],
+        "jax_platforms_env": "cpu",
+        "version": "0.10.1"
+      },
+      "principle": "Proves the pinned Torx and THRML-compatible software interfaces actually imported and executed.",
+      "torx": {
+        "adapter_boundary": "psc_api_smoke_for_binary_and_categorical_wires_not_full_semantic_lowering",
+        "api_exercised": true,
+        "blocked_reason": null,
+        "compatibility_ready": true,
+        "exercised_api": [
+          "DiscretePCircuit",
+          "StateVectorSimulator",
+          "PNOT",
+          "PditShift"
+        ],
+        "import_namespace": "torx",
+        "importable": true,
+        "installed_version": "0.0.1",
+        "jax_default_backend": "cpu",
+        "jax_devices": [
+          "cpu:0"
+        ],
+        "jax_version": "0.10.1",
+        "package_name": "extro-torx",
+        "pinned_package_version": "0.0.1",
+        "pinned_repository": "https://github.com/extropic-ai/torx",
+        "pinned_repository_commit": "f1fc858ed950ecd41935d15c06d0ec7c5e0674ae",
+        "pinned_sdist_sha256": "c7bbeb0c39e5c7f9a241b9d3f68c224b8dddbc29674ffc15c78d21d05eb0149a",
+        "pinned_wheel_sha256": "e51d6efe0a8bc62fb4b2b417d5e4ac8190e3fb22c9d14d9342c207afdc64a23c",
+        "principle": "Real importable Torx package/version/commit/API evidence is recorded; resemblance to public docs is not compatibility.",
+        "program_checksum": "sha256:5380590b18200b3b3140e6909a643fb9cc9a0093308c8702d2ca9fe52b622fc0",
+        "psc_density": [
+          0.4000000059604645,
+          0.4000000059604645,
+          0.0,
+          0.10000000149011612,
+          0.10000000149011612,
+          0.0
+        ],
+        "psc_density_max_delta": 5.960464455334602e-09,
+        "psc_density_sum_delta": 0.0,
+        "psc_dims": [
+          2,
+          3
+        ],
+        "psc_expected_density": [
+          0.4,
+          0.4,
+          0.0,
+          0.1,
+          0.1,
+          0.0
+        ],
+        "torx_version_attr": "0.0.1"
+      },
+      "upstream_thrml_package": {
+        "blocked_reason": "ModuleNotFoundError: No module named 'thrml'",
+        "importable": false,
+        "module": "thrml"
+      },
+      "vendored_thrml": {
+        "api_exercised": true,
+        "exercised_api": [
+          "CategoricalNode",
+          "Block",
+          "CategoricalEBMFactor"
+        ],
+        "import_namespace": "carnot.sampling._vendored_thrml",
+        "importable": true,
+        "interaction_group_count": 1,
+        "license": "Apache-2.0",
+        "pinned_artifact_sha256": "sha256:f7cb5e4556ca16513d72b1d3a1684b4326b05cf6c6dc3de51046171b89816839",
+        "pinned_by_artifact": "results/experiment_1564_thrml_vendored_block_gibbs_replacement.json",
+        "upstream_repository": "https://github.com/extropic-ai/thrml",
+        "vendor_note": "Vendored from Extropic THRML 0.1.3 for Carnot Exp 1564. Local imports are rewritten under carnot.sampling._vendored_thrml.",
+        "version": "0.1.3"
+      }
+    },
+    "source_hashes": {
+      "output_paths": {
+        "result": "results/experiment_6166_mode_jumping_factor_thermalization.json"
+      },
+      "paths": {
+        "AGENTS.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        "CLAUDE.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
+        },
+        "CODEX.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        "openspec/capabilities/samplers/spec.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:e14819ae4b7c7da8ce64b8b9b244016dd333864990e6cc40327a4942792324cd"
+        },
+        "ops/exclusion_manifest.yaml": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+        },
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:c69351110bc171bfadec8ac410ebf33d706df65a20636a5d97d8fa2e6c993ef8"
+        },
+        "python/carnot/experiment_6153_thermalized_program_error_audit.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:609a3b8a62e9f69ff1393bc5fb7c1ba9a6c1068e160cbea678bbc8b9cf7f1fa6"
+        },
+        "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:ced5c0cda575ca90fcc798c30787778cae66808329c13856b60ea89fc3744222"
+        },
+        "python/carnot/samplers": {
+          "exists": true,
+          "file_count": 160,
+          "kind": "directory",
+          "sha256": "sha256:217701bff8504050847d7d00d5de95f635252341e0475fcc42c292f65b17b551"
+        },
+        "python/carnot/sampling/_vendored_thrml": {
+          "exists": true,
+          "file_count": 26,
+          "kind": "directory",
+          "sha256": "sha256:18615d96e4fac8304bf0b06caa2b1ce07a24e8ae09cac3bd79490b651e947eb4"
+        },
+        "research-hardware-wishlist.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a"
+        },
+        "research-references.md": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:99df8131b71e9f4924c694b878b9de60ad8e558dfb24b09a78ca6de7055a787d"
+        },
+        "results/experiment_6152_typed_stochastic_constraint_ir.json": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:62cdce73c0f381d05721f1169863b320b1f7d68ddedc8d1c5a50676aa2c9d64c"
+        },
+        "results/experiment_6153_thermalized_program_error_audit.json": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:3d2ce21b327525fa49f8ce3eab73f2411932b0f76a519347d8994c840812b3f3"
+        },
+        "tests/python/test_experiment_6152_typed_stochastic_constraint_ir.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:7ca26d403f30837792cf92a79fcbc153a3f355e4da2b131413796865beaaeb56"
+        },
+        "tests/python/test_experiment_6153_thermalized_program_error_audit.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:ecbb4c4bb0c8e3c70d9f4d0858103d355c324aea722fa0665db3f10f6a59120d"
+        },
+        "tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py": {
+          "exists": true,
+          "kind": "file",
+          "sha256": "sha256:f685c0909e1e41f44819a740abb4223efdaf2cf22159281f3a181333ccd13d62"
+        }
+      },
+      "protected_files": [
+        "scripts/research_conductor.py",
+        "ops/changelog.md",
+        "ops/status.md",
+        "_bmad/traceability.md"
+      ]
+    }
+  },
+  "verifier_is_oracle": true
+}
