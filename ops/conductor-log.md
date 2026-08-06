@@ -15417,3 +15417,4 @@ Still active  |
 | 2026-08-06 19:14 UTC | Gated on Exp6164 positive utility: default-off tra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6164-continuous-strategy-learning-ab) |
 | 2026-08-06 19:50 UTC | Mode-jumping CNCE for nonzero-error typed-factor t | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6166_mode_ju |
 | 2026-08-06 20:08 UTC | ARC live-path task-aware admission replication acr | OK | 86 passed, 1 warning in 18.53s |
+| 2026-08-06 20:35 UTC | Branch-independent .534 capstone, adversarial veri | OK | 88 passed, 1 warning in 8.90s |
