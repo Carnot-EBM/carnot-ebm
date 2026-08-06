@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.534",
+  "generated_at": "2026-08-06T20:40:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 33.6,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Reliable dated evidence refresh after the V534 planner marker",
+      "duration_minutes": 22.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6159 readiness: fresh flagship-GGUF decision-calibration corpus",
+      "duration_minutes": 9.84,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from .533 into .534",
+      "duration_minutes": 1.59,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Mode-jumping CNCE for nonzero-error typed-factor thermalization",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "ARC live-path task-aware admission replication across games and seeds, no solve",
+      "duration_minutes": 0.05,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.08.534 completed 10 experiments in 33.6 minutes, including 3 compute-bound experiments. The 22.0-minute synthesis-only evidence refresh dominated elapsed time; the longest listed compute-bound task was the 9.84-minute readiness-gated flagship-GGUF corpus, and the locked task-conditioned GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "The 22.0-minute synthesis-only dated-evidence refresh was the largest recorded interval. Its CPU-only execution is correct, so GPU inactivity during that task is not treated as a fault.",
+    "The 9.84-minute flagship-GGUF corpus was gated on Exp6159 readiness, but the bounded data does not separate dependency wait, setup, inference, or teardown; no more specific cause is available this milestone.",
+    "Only the longest listed compute-bound task has a per-task duration in the supplied top-five data; no data available this milestone for the remaining compute-bound task durations or causes.",
+    "The GPU snapshot is not phase-correlated with the experiment ledger, so it cannot establish lifetime utilization or a concurrent multi-model dispatch; the locked compute-task idle classification remains false."
+  ],
+  "improvements_suggested": [
+    "Cache dated-evidence receipts and use hash-based incremental refreshes after planner markers, with a full-refresh fallback.",
+    "Add a readiness preflight that stages prerequisites and model assets before the flagship-GGUF task starts, and record dependency wait, setup, inference, and teardown separately.",
+    "When the dependency graph permits, overlap compute staging with the independent synthesis refresh instead of serializing both intervals.",
+    "Emit task-linked GPU and process telemetry with model-concurrency and runner-selection receipts; select DualGPURunner only for concurrent multi-model execution.",
+    "After a task-scoped ownership and liveness check, automatically tear down inactive model processes when their owning task exits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make dated-evidence refresh incremental and receipt-driven so unchanged sources do not require a full refresh.",
+    "Preflight dependency readiness and conditionally overlap model staging with independent synthesis work.",
+    "Add phase-linked GPU, process-lifecycle, model-concurrency, and runner-selection telemetry."
+  ],
+  "estimated_time_savings_pct": 29,
+  "meta_reflection": "The 29% estimate is a bounded scheduling upper limit obtained by fully avoiding or overlapping the 9.84-minute compute interval against 33.6 minutes of wall time. The data provides no phase breakdown or confirmed concurrent model load, so realized savings and any DualGPURunner opportunity must be measured next milestone."
+}
