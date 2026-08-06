@@ -6069,3 +6069,9 @@ The critical path for milestone .250:
 - theme: synthesis workflow latency dominated a brief milestone without a task-scoped GPU-idle finding
 - key result: honest operational limitation -- the sole compute-bound task was the shortest recorded entry, its phase-level timing cause is unavailable, and no concurrent multi-model runner miss is established
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.533
+- exp_range: exp6145-exp6145 (visible timing-data identifier only; the full milestone bounds are unspecified)
+- theme: dependency-gated flagship corpus execution and tracked-result isolation concentrated the operational tail
+- key result: bounded conclusion -- the readiness gate labels the 19-minute compute leader, the task-aware idle flag remains false, and the evidence never specifies simultaneous model loads or runner dispatch
+- acceptance: 4/4 operational questions answered
