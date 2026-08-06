@@ -2292,5 +2292,18 @@
     "principle": "Exp6159 endpoint/splits/preregistration, Exp6160 rows, Exp6147 fixed score code/manifest, exclusions, and output paths are content-addressed.",
     "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.upstream_hashes"
   },
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.169107 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
+  ]
 }

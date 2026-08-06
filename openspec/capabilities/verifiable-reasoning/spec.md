@@ -22520,3 +22520,144 @@ matches the artifact before any held outcome is opened.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6161 | Planned (`python/carnot/experiment_6161_decision_calibrated_energy_policy.py`, `results/experiment_6161_decision_calibrated_energy_policy.json`) | Planned (`tests/python/test_experiment_6161_decision_calibrated_energy_policy.py`) |
+
+### REQ-VERIFY-6162: Exp6162 Prospective Admission Replication
+
+The repository SHALL provide Exp6162 at
+`python/carnot/experiment_6162_prospective_admission_replication.py` and write
+`results/experiment_6162_prospective_admission_replication.json`. Exp6162
+SHALL be the first prospective held opening for the fresh Exp6159 stream. It
+SHALL consume the frozen Exp6161 decision policy manifest, materialize Exp6159
+future-known and shifted-family-held outcomes exactly once, compare the
+decision-calibrated policy with global and frozen Exp6147-style controls for
+each mandated model and partition, and retire this construction if the same
+decision-grade null repeats.
+
+- REQ-VERIFY-6162-1 (one-shot-held): The workflow SHALL require held access
+  count zero before evaluation and exactly one after evaluation. Any prior
+  `first_and_only_held_access_receipt` at the Exp6162 output path SHALL block
+  held materialization.
+- REQ-VERIFY-6162-2 (manifest-match): The structured gate SHALL hash and
+  compare Exp6159 stream, split, outcome, preregistration, Exp6160 model rows,
+  Exp6161 result, Exp6161 policy manifest, Exp6147 fixed-control code and
+  selection manifest, Exp6148 prior-null artifact, exclusions, output path,
+  access counters, protected files, and the Exp6162 source/test files before
+  any held label is materialized. Any policy-manifest mismatch SHALL block.
+- REQ-VERIFY-6162-3 (per-model/partition): Every decision metric SHALL be
+  reported first by mandated model and by `future_known` versus
+  `shifted_family_held`; pooled summaries SHALL appear only after the separated
+  model/partition blocks.
+- REQ-VERIFY-6162-4 (paired-utility): Decision-calibrated utility minus both
+  global and frozen Exp6147-style controls SHALL be evaluated with the frozen
+  Exp6159 cost table and base-template grouped paired intervals for each model
+  and held partition.
+- REQ-VERIFY-6162-5 (unsafe-admission): For every mandated model and held
+  partition, false unsafe admission under the decision-calibrated policy SHALL
+  be noninferior to both controls within the frozen unsafe-admission margin.
+- REQ-VERIFY-6162-6 (known-family-noninferiority): For every mandated model,
+  future-known decision utility and safe acceptance under the
+  decision-calibrated policy SHALL be noninferior to both controls within the
+  frozen known-family margin.
+- REQ-VERIFY-6162-7 (Brier/ECE): For every mandated model and held partition,
+  Brier score SHALL improve over both controls. ECE SHALL be reported as a
+  supporting calibration metric and SHALL NOT mask a failed Brier or utility
+  gate.
+- REQ-VERIFY-6162-8 (descriptive-ranking): AUROC and AUPRC SHALL be reported
+  for each model, held partition, and policy as descriptive ranking metrics
+  only; they SHALL NOT by themselves create a readiness win.
+- REQ-VERIFY-6162-9 (shortcut-control): Task shuffle, alias, frequency,
+  identity, label shuffle, outcome flip, threshold-boundary, poison, duplicate,
+  and row-order attacks SHALL run. No shortcut, poison, duplicate, boundary, or
+  row-order control may outperform the decision-calibrated policy for readiness.
+- REQ-VERIFY-6162-10 (no-refit): Selector, threshold, abstention, score, row
+  filter, retry, LLM, tokenizer, GGUF loader, GPU worker, and model-loader
+  refit or invocation counts SHALL all be bare zero after held unsealing.
+- REQ-VERIFY-6162-11 (repeated-null-retirement):
+  `prospective_admission_replication_ready_score` SHALL be the bare scalar
+  `1.0` only when both mandated models pass every decision-utility,
+  unsafe-admission, known-family, Brier, row-conservation, no-refit, protected
+  file, and shortcut-control gate. If the gate-permitted Exp6162 result is a
+  decision-grade null and Exp6148 already records the matching prior null,
+  `retirement_triggered` SHALL be true, `retirement_reason` SHALL name the
+  repeated null, and `honest_verdict` SHALL start with `retired:`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `prior_failure_receipt`,
+`stream_rows_endpoint_policy_and_held_hashes`,
+`first_and_only_held_access_receipt`,
+`selector_and_threshold_refit_counts`,
+`per_model_future_known_and_shifted_decision_utility_intervals`,
+`unsafe_admission_and_known_family_noninferiority_gates`,
+`brier_ece_and_descriptive_auroc_auprc_metrics`,
+`exact_action_utility_counts`, `row_conservation`,
+`shortcut_poison_duplicate_boundary_and_order_attacks`,
+`per_model_and_conjunctive_gate_matrix`,
+`prospective_admission_replication_ready_score`, `retirement_triggered`,
+`retirement_reason`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes positive, null, retired, or blocked prospective replication evidence.
+- `preconditions_checked`: Stream, held loader, model rows, endpoint, policy manifest, prior null, exclusions, output path, access counters, and protected files are hashed before the held read.
+- `structured_gate_receipt`: Held evaluation opens only after Exp6159, Exp6160, and Exp6161 are ready, the frozen policy manifest matches, prior held access is absent, access count is zero, and no live substrate is invoked.
+- `prior_failure_receipt`: The prior Exp6148 decision-grade null is recorded as a predecessor, not reused as evidence for Exp6162's fresh stream.
+- `stream_rows_endpoint_policy_and_held_hashes`: Exp6159 stream, split, outcome, preregistration, Exp6160 model rows, Exp6161 policy code/manifest, Exp6147 fixed controls, output paths, held counters, and protected files are content-addressed.
+- `first_and_only_held_access_receipt`: Held outcome materialization count is zero before evaluation and exactly one after future-known plus shifted-family-held outcomes are opened.
+- `selector_and_threshold_refit_counts`: Selector, threshold, abstention, score, row filtering, retry, LLM, tokenizer, GGUF loader, GPU worker, and model-loader counts are all bare zero.
+- `per_model_future_known_and_shifted_decision_utility_intervals`: Decision-calibrated utility deltas against global and Exp6147-fixed controls use base-template grouped paired intervals for each model and held partition before pooling.
+- `unsafe_admission_and_known_family_noninferiority_gates`: Unsafe false admission and future-known safe acceptance/utility noninferiority gates are per-model and cannot be masked by pooled success.
+- `brier_ece_and_descriptive_auroc_auprc_metrics`: Brier, ECE, AUROC, AUPRC, abstention, safe rejection, safe acceptance, and chronological drift are reported by model and partition, with AUROC/AUPRC descriptive only.
+- `exact_action_utility_counts`: Exact held labels score accept, reject, and abstain decisions with the frozen Exp6159 utility table after the single unseal.
+- `row_conservation`: Every mandated model preserves every future-known and shifted-family-held event id with no duplicates, omissions, extras, row filtering, or row-order dependency.
+- `shortcut_poison_duplicate_boundary_and_order_attacks`: Task shuffle, alias, frequency, identity, label shuffle, outcome flip, threshold-boundary, poison, duplicate, and row-order attacks report missing rows and cannot win readiness.
+- `per_model_and_conjunctive_gate_matrix`: Both mandated models and every model/partition gate must pass; pooled summaries cannot mask a model or shifted-family failure.
+- `prospective_admission_replication_ready_score`: Exactly one only when both models and every safety, noninferiority, proper-score, conservation, no-refit, and shortcut gate pass.
+- `retirement_triggered`: A repeated decision-grade null retires this construction instead of re-headlining earlier diagnostics.
+- `retirement_reason`: The reason names the repeated null or records that no retirement fired.
+- `protected_files_unchanged`: Conductor, ops, traceability, and upstream protected files remain byte-identical.
+- `duration_s`: Measured cached held-replay duration is reported without implying model inference.
+- `inference_substrate`: Use `sealed_cached_event_evaluation`.
+- `verifier_is_oracle`: The evaluator is not an oracle; exact outcomes are held labels used only after the single unseal.
+- `missing_verifier_gaps`: Manifest, held-access, row-conservation, utility, safety, noninferiority, Brier, attack, no-refit, protected-file, command, or retirement gaps are explicit.
+- `field_provenance`: Every field traces to specs, Exp6159, Exp6160, Exp6161, Exp6147/Exp6148 artifacts, tests, command receipts, or protected-file receipts.
+- `test_commands`: Commands document focused unit/spec coverage, structured gate, manifest/access, no-refit, grouped utility, safety/noninferiority, proper scores, row conservation, controls, retirement, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, stream, row, held-label, endpoint, policy, manifest, prior-null, attack, command, protected-file, or output drift.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and state the per-model decision result.
+
+### SCENARIO-VERIFY-6162-ONE-SHOT-MANIFEST: Held Outcomes Open Once After Manifest Match
+
+**Given** Exp6159, Exp6160, and Exp6161 are ready, the Exp6161 manifest hash
+matches the artifact, and no Exp6162 held-access receipt exists
+**When** Exp6162 evaluates the fresh held stream
+**Then** future-known and shifted-family-held labels are materialized exactly
+once, all selected-policy and control thresholds remain frozen, and validation
+rejects a second held receipt or manifest mismatch.
+
+### SCENARIO-VERIFY-6162-PER-MODEL-GATES: Utility And Safety Are Conjunctive
+
+**Given** held entries are scored by global, Exp6147-fixed, and
+decision-calibrated policies
+**When** grouped utility intervals, unsafe-admission gates, known-family
+noninferiority gates, Brier/ECE, descriptive AUROC/AUPRC, and action matrices
+are computed
+**Then** each mandated model and each held partition reports separately before
+pooled summaries, and readiness is zero unless every per-model gate passes.
+
+### SCENARIO-VERIFY-6162-ATTACKS-RETIREMENT: Shortcut Controls And Repeated Null Gate Readiness
+
+**Given** held evaluation has produced policy decisions
+**When** task shuffle, alias, frequency, identity, label shuffle, outcome flip,
+threshold-boundary, poison, duplicate, and row-order attacks run
+**Then** no shortcut-control win is allowed for readiness, no refit or LLM count
+may be nonzero, and a repeated decision-grade null triggers retirement fields
+instead of re-headlining Exp6148 diagnostics.
+
+## Implementation Status (REQ-VERIFY-6162)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6162 | Planned (`python/carnot/experiment_6162_prospective_admission_replication.py`, `results/experiment_6162_prospective_admission_replication.json`) | Planned (`tests/python/test_experiment_6162_prospective_admission_replication.py`) |
