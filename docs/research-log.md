@@ -6075,3 +6075,9 @@ The critical path for milestone .250:
 - theme: dependency-gated flagship corpus execution and tracked-result isolation concentrated the operational tail
 - key result: bounded conclusion -- the readiness gate labels the 19-minute compute leader, the task-aware idle flag remains false, and the evidence never specifies simultaneous model loads or runner dispatch
 - acceptance: 4/4 operational questions answered
+
+### Milestone 2026.08.534
+- exp_range: exp6159-exp6159 (only experiment ID present in the authoritative timing data; the complete milestone range is not available)
+- theme: synthesis refresh latency and readiness-gated flagship compute concentrated the operational tail
+- key result: honest operational limitation -- the compute-task idle classification is false, while missing phase attribution and concurrent-model evidence prevent stronger utilization or runner conclusions
+- acceptance: no data available this milestone
