@@ -618,6 +618,130 @@ Sub-requirements:
 
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
+
+---
+
+## REQ-LEARN-6164: Mandatory Artifact for Gated Continuous Strategy Learning A/B
+
+**Given** the continuous self-learning task is scheduled for run date 20260806
+**When** Exp6164 executes
+**Then** it SHALL always write
+`results/experiment_6164_continuous_strategy_learning_ab.json`
+**And** `continuous_self_learning_task` and `mandatory_artifact_written` SHALL
+be bare `true` in the terminal artifact.
+
+### REQ-LEARN-6164 Sub-requirements
+
+- REQ-LEARN-6164-1: Exp6164 SHALL recompute, rather than trust stale prose,
+  the Exp6162 policy/verdict gate and Exp6163 schema/ABI/verdict gate before
+  acquiring GPU leases or loading any model.
+- REQ-LEARN-6164-2: If either prerequisite fails, Exp6164 SHALL emit a
+  `blocked:` honest verdict with `blocked_before_model_load_receipt` proving
+  all model, tokenizer, loader, CUDA, and GPU invocation counts are zero.
+- REQ-LEARN-6164-3: If both prerequisites pass, Exp6164 SHALL define top-level
+  `MODEL_SPECS` containing exactly `unsloth/Qwen3.6-35B-A3B-GGUF` as primary
+  and `unsloth/gemma-4-26B-A4B-it-GGUF` as confirmation, with resolved paths,
+  revisions, quantizations, hashes, loaders, GPUs, native-chat receipts, and
+  before/after weight immutability receipts.
+- REQ-LEARN-6164-4: Exp6164 SHALL compare four resource-matched chronological
+  arms: no memory, Exp6120 utility-only, certificate-only certified strategy,
+  and Exp6162 decision-calibrated certified strategy.
+- REQ-LEARN-6164-5: Every arm SHALL use matched prompts, chronological event
+  order, seeds, token budgets, invocation counts, and wall/resource caps; tiny
+  legacy models are smoke-only and cannot satisfy the headline run.
+- REQ-LEARN-6164-6: Every decision SHALL read a frozen read-only snapshot and
+  only prior certificates; same-decision writes, current labels, label-
+  conditioned retries, prompt adaptation, and weight mutation are forbidden.
+- REQ-LEARN-6164-7: Every accepted strategy update SHALL be committed only
+  after exact post-outcome validation; failed validation SHALL abort or
+  quarantine, and duplicate, reordered, rollback, and restart delivery SHALL
+  be idempotent.
+- REQ-LEARN-6164-8: Exp6164 SHALL report per-model, family, and partition
+  future utility, grouped confidence intervals, accuracy, regret, chronological
+  learning curves, and time-to-benefit; pooled success SHALL NOT mask either
+  mandated model.
+- REQ-LEARN-6164-9: Exp6164 SHALL report protected retention, forgetting,
+  unsafe admission, abstention, poison propagation, bounded state bytes,
+  eviction, rollback, restart, lifecycle cleanup, acquisition duration, and
+  analysis duration.
+- REQ-LEARN-6164-10: `continuous_strategy_learning_ready_score` SHALL be one
+  only when the decision-calibrated arm beats no-memory and utility-only for
+  both mandated models with positive lower confidence intervals, no protected
+  or safety regression, bounded certified state, lifecycle cleanup, and
+  immutable weights.
+
+### REQ-LEARN-6164 Required Artifact Fields and Principles
+
+- `status`: Terminal status distinguishes blocked, positive, null, and retired strategy-learning evidence.
+- `preconditions_checked`: Hash Exp6160 rows, Exp6162 policy/verdict, Exp6163 schema/ABI/verdict, event order, prompts, models, validators, exclusions, outputs, and protected files before GPU acquisition.
+- `continuous_self_learning_task`: This field is bare true because the task is the mandatory FR-11 continuous self-learning run.
+- `mandatory_artifact_written`: This field is bare true because every terminal path must write the Exp6164 artifact.
+- `prerequisite_gate_receipts`: Exp6162 and Exp6163 readiness are recomputed internally and conjunctively.
+- `blocked_before_model_load_receipt`: A failed prerequisite must prove all model, tokenizer, CUDA, and GPU invocation counts are zero.
+- `MODEL_SPECS`: The top-level model list contains only the two mandated frozen SOTA GGUF hub ids.
+- `model_specs`: The lowercase model list mirrors MODEL_SPECS for downstream schema consumers.
+- `resolved_paths_revisions_quantizations_hashes_and_loader_receipts`: Model paths, revisions, quantizations, hashes, loaders, and GPU assignments are resolved only after prerequisites pass.
+- `embedded_tokenizer_chat_template_cuda_pid_and_lifecycle_receipts`: Tokenizer, chat-template, CUDA PID, native-chat, worker, and lifecycle receipts distinguish cached setup from live inference.
+- `arm_definitions_and_resource_matching`: No-memory, Exp6120 utility-only, certificate-only, and decision-calibrated arms are matched on events, prompts, seeds, token budgets, invocations, and resource caps.
+- `chronological_event_order_and_decision_snapshot_receipts`: Every decision reads a frozen read-only snapshot with only prior certificates.
+- `exact_post_outcome_commit_abort_quarantine_receipts`: Strategy writes commit only after exact post-outcome validation, otherwise abort or quarantine.
+- `per_model_family_partition_future_utility_accuracy_regret_and_grouped_intervals`: Future utility, accuracy, regret, and grouped intervals are reported per model, family, and partition before pooling.
+- `learning_speed_and_time_to_benefit`: Chronological learning curves and time-to-benefit are separated from final utility.
+- `protected_retention_forgetting_safety_abstention_and_poison_metrics`: Utility cannot buy protected forgetting, unsafe admission, abstention, or poison regressions.
+- `duplicate_reordered_rollback_restart_eviction_and_state_bytes`: Duplicate, reordered, rollback, restart, eviction, and bounded-state bytes are explicit lifecycle checks.
+- `model_weight_immutability_receipt`: This experiment may update certified external strategy state but never model weights.
+- `acquisition_analysis_duration_and_cleanup_receipts`: GPU acquisition, live inference, cached analysis, and cleanup durations are reported separately.
+- `continuous_strategy_learning_ready_score`: Readiness is one only when the decision-calibrated strategy beats both baselines for both models with positive lower intervals, no regressions, bounded state, cleanup, and immutable weights.
+- `retirement_triggered`: Repeated non-positive strategy-learning evidence can retire the construction instead of hiding a null.
+- `protected_files_unchanged`: Conductor, ops, and traceability files remain outside this experiment's mutable surface.
+- `duration_s`: Measured wall time is reported without classifying cached analysis as live inference.
+- `inference_substrate`: The substrate states whether the run blocked before load or used live local SOTA GGUF CUDA.
+- `verifier_is_oracle`: Exact validators score post-outcome commits, but the decision policy is not an oracle.
+- `missing_verifier_gaps`: Any missing prerequisite, model, lifecycle, safety, or validation gap is made explicit.
+- `field_provenance`: Every field traces to spec, upstream artifacts, model receipts, transaction receipts, tests, commands, or protected-file hashes.
+- `test_commands`: Commands document focused unit, coverage, prerequisite, artifact, model/cache/tokenizer/CUDA, arm matching, chronological isolation, transaction, metrics, immutability, lifecycle, schema, adversarial, protected-file, E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Non-zero verification commands prevent readiness.
+- `reproducibility_checksum`: A checksum detects drift in inputs, model specs, receipts, metrics, commands, protected files, and output paths.
+- `honest_verdict`: Use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and state whether self-learning actually executed.
+
+### SCENARIO-LEARN-6164-BLOCKED: Prerequisite Failure Blocks Before Model Load
+
+**Given** Exp6162 is ready but Exp6163 is missing, schema-incompatible, or not
+ready
+**When** Exp6164 runs
+**Then** the artifact status is `blocked`
+**And** `blocked_before_model_load_receipt` records zero model, tokenizer,
+loader, CUDA, and GPU invocations
+**And** `continuous_strategy_learning_ready_score` is `0.0`.
+
+### SCENARIO-LEARN-6164-MATCHED: Qualified Run Uses Four Chronological Arms
+
+**Given** Exp6162 and Exp6163 both recompute ready
+**When** Exp6164 executes the model-backed A/B
+**Then** no-memory, Exp6120 utility-only, certificate-only strategy, and
+decision-calibrated strategy arms are matched on model, event order, prompts,
+seeds, token budgets, invocation counts, and wall/resource caps.
+
+### SCENARIO-LEARN-6164-TRANSACTION: Strategy Learning is Outcome Committed
+
+**Given** a model decision at event N
+**When** certified strategy state is updated
+**Then** only certificates from events `< N` are retrievable before the
+decision, and state changes commit only after exact outcome validation.
+
+### SCENARIO-LEARN-6164-READY: Positive Readiness is Conjunctive Per Model
+
+**Given** the decision-calibrated strategy arm improves pooled utility but one
+mandated model has a non-positive lower confidence bound, safety regression,
+or mutable weight receipt
+**When** readiness is computed
+**Then** `continuous_strategy_learning_ready_score` is `0.0` and the honest
+verdict is `complete_null:` or `retired:` rather than positive.
+
+**Spec traces:** REQ-LEARN-6164,
+SCENARIO-LEARN-6164-BLOCKED, SCENARIO-LEARN-6164-MATCHED,
+SCENARIO-LEARN-6164-TRANSACTION, SCENARIO-LEARN-6164-READY
+**Implementation Status:** Planned for Exp6164
 | REQ-PSV-013 | Implemented (python/carnot/pipeline/psv_diagnostic.py, scripts/experiment_755_psv_relapse_diagnosis.py) | tests/python/test_experiment_755_psv_diagnosis.py |
 
 ---
