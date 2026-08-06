@@ -1,0 +1,384 @@
+milestone: "2026.08.535"
+milestone_title: "Executable-Trace Internal Verification, Retention-Safe Strategy Memory, and Live-Path Robustness"
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+
+tasks:
+  - id: exp6169-v535-transition
+    milestone: "2026.08.535"
+    title: "Exact terminal-boundary handoff from .534 into .535"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_6169_transition_v535.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 120
+    requires_gpu: false
+    operator_override: "2026-05-29 standing operator directive: versioned milestone transitions recur by design and must preserve exact terminal evidence while advancing the CalVer sequence."
+    prior_failures:
+      - experiment_id: exp6156-v534-transition
+        verdict: "complete: .533 archived exactly once with quarantine, null, block, partial, and skip states preserved; .534 activation mode=already_active"
+        addressed_by: "Exp6169 advances a different exact terminal boundary, archives only completed .534 evidence, collision-checks Exp6169-Exp6182, and activates the independently staged .535 roadmap without amplifying history."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Milestone 2026.08.534 is terminal. Its capstone preserved a missing isolation artifact, structured conductor skips, a mandatory continuous-learning internal block, immutable adversarial flags on scientifically positive decision artifacts, a software-only stochastic block, and a positive no-solve ARC result. Advance to CalVer milestone 2026.08.535 without rewriting any historical determination or duplicating research-complete history. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/research-complete.yaml
+      - {project_root}/results/experiment_6156_transition_v534.json
+      - {project_root}/results/experiment_6168_v534_capstone_reconciliation.json
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/scripts/transition_integrity.py
+      - {project_root}/scripts/determination_preservation_lint.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Validate terminal .534 evidence, append the .534 milestone to research-complete.yaml at most once, prove Exp6169-Exp6182 task/deliverable collision freedom and optional-field validity, activate the exact staged .535 roadmap through the repository's transition mechanism, preserve every historical flag/null/block/skip, and write results/experiment_6169_transition_v535.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot git status, pre-existing user modifications, active/staged roadmap hashes, exact .534 task/deliverable matrix, capstone, completion-history multiplicity, exclusions, quarantine fields, protected files, and root clutter. Do not restore, stage, or overwrite user changes.
+      1. Add or verify REQ-* exact-terminal, append-once, collision, optional-field, gate-reference, quarantine, activation, protected-file, and rollback requirements; write focused failing tests first if transition behavior changes.
+      2. Resolve every Exp6156-Exp6168 terminal state by exact declared path and conductor receipt. Require the Exp6168 capstone and preserve missing, skipped, internally blocked, null, retired, flagged, and positive classes exactly.
+      3. Parse research-roadmap-next.yaml; verify milestone/title/doc, 14 unique IDs, 14 unique deliverables, all prior_failures subfields, no retired-upstream requires chain, supported gate operators, exact prompt endings, one ARC slot, one SOTA-ingestion slot, two infrastructure slots, and mandatory local-GGUF declarations on LLM tasks.
+      4. Append .534 completion history only if absent. Activate .535 through the established atomic transition path; do not hand-edit scripts/research_conductor.py. Roll back on partial activation or mismatched hashes.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, source_and_target_milestones, source_capstone_hash_and_honest_verdict, source_exact_terminal_classification, research_complete_count_before_after, research_complete_append_count, staged_and_activated_roadmap_hashes, activated_task_count, task_id_and_deliverable_collision_matrix, optional_field_and_prior_failure_validation, gate_reference_validation, arc_ingestion_infrastructure_and_phase_d_allocation_receipt, mandatory_model_spec_validation, quarantine_and_determination_before_after_matrix, preexisting_worktree_changes_preserved, activation_mode, rollback_receipt, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         research_complete_append_count principle: zero or one for this transition and exactly one total .534 completion entry afterward.
+         quarantine_and_determination_before_after_matrix principle: historical values are byte-preserved; a current-rule companion never mutates source artifacts.
+         inference_substrate principle: set `deterministic_repository_transition`.
+         honest_verdict principle: use `complete:` or `blocked:` and name append multiplicity and activation mode.
+      6. Run focused unit/spec coverage, YAML parse/schema, exclusions, collision, gate-reference, transition-integrity, duplicate-history, determination-preservation, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6170-v535-task-artifact-isolation-canary
+    milestone: "2026.08.535"
+    title: "Task-scoped artifact-isolation compatibility canary for .535"
+    priority: critical
+    track: infrastructure
+    deliverable: results/experiment_6170_v535_task_artifact_isolation_canary.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6143-test-artifact-isolation
+        verdict: "complete_partial: Focused resolver, pytest override, direct-writer compatibility sample, tracked-write detection, traversal/symlink controls, atomic write behavior, quarantine preservation, and protected-file checks passed; pre-existing tracked evidence remained immutable by aggregate digest and sentinel hashes. Repository-wide closure is not claimed because 6198 residual direct-writer call-site rows remain in the census, and repo-wide spec coverage plus one existing template subset check are blocked by pre-existing unrelated failures."
+        addressed_by: "Exp6170 does not repeat repository-wide closure. It freezes the exact .535 test/artifact paths, proves task-owned temporary roots and canonical resolver compatibility for those paths only, and emits a reusable canary contract that science tasks can check without waiting for the 6,198-row migration."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6143 proved the core resolver and tracked-write guard but not repository-wide closure. Exp6157 then exhausted three hard wall-clock attempts without a deliverable. The .535 science must not depend on a mass migration, yet every new test must preserve tracked evidence. Qualify only the declared Exp6169-Exp6182 test and writer surfaces; do not claim repository-wide isolation. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6143_test_artifact_isolation.json
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/python/carnot/experiment_artifacts.py
+      - {project_root}/python/carnot/testing/tracked_results_guard.py
+      - {project_root}/tests/python/conftest.py
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/pipeline/deliverable_guard.py
+      - {project_root}/scripts/determination_preservation_lint.py
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Inventory the exact .535 experiment/test writers; create the smallest task-scoped compatibility canary using the canonical resolver and task-owned temporary results roots; exercise positive and adversarial writer controls without touching tracked evidence; publish a frozen invocation contract for downstream .535 tests; and write results/experiment_6170_v535_task_artifact_isolation_canary.json without claiming repository-wide closure.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot git status, all pre-existing modified paths, aggregate/sentinel hashes for tracked results, quarantine fields, declared .535 deliverables, candidate test modules, resolver environment, symlink/traversal boundaries, and protected files.
+      1. Add REQ-* task-scope, early-override, canonical-resolver, direct-writer compatibility, task-owned-root, attempted-write, traversal/symlink, atomic-write, quarantine, and explicit-non-closure requirements; write focused failing tests first.
+      2. Build a deterministic .535 writer census keyed by task, module, mechanism, and exact path. Install the temporary root before collection for the frozen canary modules. Do not enumerate or migrate unrelated legacy writers.
+      3. Exercise canonical writer, legacy literal path, atomic replacement, checkpoint/resume, subprocess, attempted tracked write, traversal, symlink escape, workspace/results root, and quarantine preservation controls. A real tracked-write attempt must be caught before mutation.
+      4. Publish a versioned canary invocation and manifest that downstream .535 tasks can run. Classify failures as canary-scope, unrelated pre-existing, or new regression; readiness is zero for any mutation or unclassified canary failure.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, scope_boundary_and_repository_wide_closure_claimed, v535_task_writer_census, frozen_canary_module_and_invocation_manifest, canonical_resolver_and_legacy_compatibility_paths, task_owned_temp_root_receipts, collection_and_subprocess_receipts, attempted_tracked_write_controls, traversal_symlink_workspace_root_and_atomic_controls, tracked_result_hash_before_after_matrix, quarantine_field_before_after_matrix, canary_failure_classification, isolation_violation_count, v535_task_artifact_isolation_ready_score, preexisting_worktree_changes_preserved, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         scope_boundary_and_repository_wide_closure_claimed principle: name Exp6169-Exp6182 only and set repository-wide claim to bare false.
+         v535_task_artifact_isolation_ready_score principle: one only with zero tracked mutations, zero canary-scope failures, frozen invocation, and classified nonzero commands.
+         inference_substrate principle: set `deterministic_task_scoped_repository_test_isolation`.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and state the exact qualified scope.
+      6. Run focused unit/spec coverage, collection, subprocess/direct-writer/atomic controls, negative tracked-write control, path escape controls, hash/quarantine preservation, determination-preservation, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6171-v535-source-delta-ingestion
+    milestone: "2026.08.535"
+    title: "Reliable dated evidence refresh after the V535 planner marker"
+    priority: high
+    track: evidence-ingestion
+    deliverable: results/experiment_6171_v535_source_delta_ingestion.json
+    model: sonnet
+    max_turns: 30
+    estimated_wall_time_min: 120
+    requires_gpu: false
+    operator_override: "2026-05-29 standing operator directive: versioned SOTA-ingestion lineage continuation required by CLAUDE.md; this task advances from the V535 marker and maps only newly dated evidence."
+    prior_failures:
+      - experiment_id: exp6158-v534-source-delta-ingestion
+        verdict: "complete_null: no accepted post-V534 source deltas; references unchanged"
+        addressed_by: "Exp6171 advances to a new hash-bounded post-V535 window after the planner added July 2026 forgetting evidence and requalified CCTU/CLUE/TrajSelector; another zero-delta result is valid and retires novelty claims for this dated window."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The planning sweep is sealed at `V535-PLANNER-REFRESH-20260806-END` in research-references.md. It adds retention/replay requirements and requalifies CCTU, CLUE, and TrajSelector while keeping output-only scorers, KANs, Extropic, Kona, and board integration guarded. Search only evidence created or revised after that exact marker receipt; accept a terminal zero-delta result. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/results/experiment_6158_v534_source_delta_ingestion.json
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/status.md
+      - {project_root}/scripts/reliable_source_delta_ingestion.py
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Verify the exact V535 marker hash, search the bounded arXiv/OpenReview/Hugging Face/Semantic Scholar/GitHub/Extropic/Logical Intelligence window, accept only dated and reproducible post-marker deltas, map accepted findings to Exp6173-Exp6181 without reopening retired scopes, append references only when evidence qualifies, and write results/experiment_6171_v535_source_delta_ingestion.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot marker count/hash/offset, reference hash, source endpoint capabilities, cached receipts, exclusions, roadmap task map, network/tool availability, protected files, and git status.
+      1. Add or verify REQ-* exact-marker, bounded-window, dated-source, source-authority, duplicate, guarded-scope, zero-delta, and immutable-history requirements; write focused failing tests first if ingestion behavior changes.
+      2. Search only records created or revised after the marker receipt. Prefer arXiv/OpenReview and first-party sources; Semantic Scholar counts are discovery receipts, not authority. Record failed/rate-limited endpoint attempts.
+      3. Deduplicate by stable identifier and content hash. Reject undated summaries, already-indexed content without changed applicability, unavailable proprietary claims, and findings that merely rename excluded techniques.
+      4. For each accepted delta, state the exact roadmap task, changed method/gate, local reachability, inference substrate, and retirement conflict. Otherwise leave research-references.md byte-identical and emit `complete_null:`.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, marker_text_count_hash_offset_and_reference_hash, bounded_time_window, source_query_and_endpoint_receipts, semantic_scholar_ebt_and_arm_ebm_counts, candidate_and_deduplicated_record_counts, accepted_rejected_and_guarded_delta_ledger, roadmap_task_mapping, exclusion_and_retirement_conflict_receipt, reference_hash_before_after_and_append_count, zero_delta_accepted, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         accepted_rejected_and_guarded_delta_ledger principle: each row names date, authority, stable ID, local reachability, disposition, and reason.
+         zero_delta_accepted principle: bare true; lack of novelty is a valid result.
+         inference_substrate principle: set `dated_primary_secondary_source_ingestion`.
+         honest_verdict principle: use `complete_delta:`, `complete_null:`, `retired:`, or `blocked:` and name accepted count.
+      6. Run focused ingestion/spec coverage, exact-marker, bounded-window, deduplication, exclusion, reference-immutability or append, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6172-current-rule-quarantine-determination
+    milestone: "2026.08.535"
+    title: "Immutable current-rule companion determination for Exp6161 and Exp6162"
+    priority: high
+    track: infrastructure
+    deliverable: results/experiment_6172_current_rule_quarantine_determination.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 150
+    requires_gpu: false
+    prompt: |
+      CONTEXT:
+      Exp6161 and Exp6162 contain positive scientific verdicts but were historically quarantined by a duration heuristic that treated cached analysis duration as if it were a live acquisition duration. The current adversarial verifier recheck is clean. Historical artifacts and capstone flags are immutable; this task produces a companion determination and an explicit operator boundary, not an unflag or headline promotion. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6161_decision_calibrated_energy_policy.json
+      - {project_root}/results/experiment_6162_prospective_admission_replication.json
+      - {project_root}/results/experiment_6168_v534_capstone_reconciliation.json
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/scripts/determination_preservation_lint.py
+      - {project_root}/python/carnot/pipeline/deliverable_guard.py
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/status.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Hash immutable Exp6161/Exp6162 artifacts, replay the current adversarial verifier with exact rule/version receipts, distinguish acquisition from cached-analysis duration, compare historical and current determinations field by field, prove source bytes and historical quarantine are unchanged, state the operator-only reopen boundary, and write results/experiment_6172_current_rule_quarantine_determination.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot source artifact bytes/hashes, manifests, historical flags/reasons, capstone classification, current verifier code/config/version/hash, git status, protected files, and any pre-existing audit edits. Do not rewrite or copy-normalize source artifacts.
+      1. Add REQ-* immutable-source, rule-version, acquisition-analysis duration, companion-determination, no-unflag, no-headline, operator-boundary, and preservation requirements; write focused failing tests first if determination tooling changes.
+      2. Run the current verifier against exact source bytes and capture commands, stdout/stderr, exit codes, rule IDs, thresholds, timestamps, and result hashes. Do not suppress other warnings to isolate duration.
+      3. Recompute acquisition duration, cached-analysis duration, row generation receipts, model lifecycle, held-access, and science fields from source artifacts. State which historical rule fired and why the current rule differs.
+      4. Compare source hashes, quarantine fields, capstone classification, and git status before/after. The companion may say `current_rule_clean=true`; it must also say `historical_quarantine_preserved=true`, `headline_promotion_authorized=false`, and `operator_reopen_required=true`.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, source_artifact_paths_hashes_and_immutable_bytes, historical_adversarial_flags_reasons_and_capstone_classification, current_verifier_path_version_hash_rule_ids_and_thresholds, current_verifier_commands_exit_codes_and_receipts, acquisition_duration_and_cached_analysis_duration_provenance, model_lifecycle_and_held_access_receipts, field_level_historical_vs_current_determination_matrix, current_rule_clean, historical_quarantine_preserved, headline_promotion_authorized, operator_reopen_required, source_hashes_and_git_status_before_after, preexisting_worktree_changes_preserved, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         current_rule_clean principle: derived only from the unmodified current verifier run and never aliases historical acceptance.
+         historical_quarantine_preserved/headline_promotion_authorized/operator_reopen_required principle: bare true, false, true respectively.
+         inference_substrate principle: set `deterministic_current_rule_companion_determination`.
+         honest_verdict principle: use `complete:` or `blocked:` and state both current-rule and immutable-history outcomes.
+      6. Run focused unit/spec coverage, exact-byte replay, rule/version capture, duration provenance, determination-preservation, no-unflag/no-promotion, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6173-cctu-item-bank-preregistration
+    milestone: "2026.08.535"
+    title: "Frozen executable CCTU-style item bank and Phase-D preregistration"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6173_cctu_item_bank_preregistration.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6128-phase-d-calibration-pool-v2
+        verdict: "complete_null: no_calibration_policy_met_conjunctive_gates"
+        addressed_by: "Exp6128 used finite-choice families with saturated easy strata, below-floor typed choice, and answer-position confounds. Exp6173 changes the domain to executable tool traces, freezes exact step validators before model access, and contains no answer options or option transformations."
+        retire_if_same_verdict: true
+      - experiment_id: exp6140-phase-d-exp6128-option-psychometrics
+        verdict: "retired: saturation plus position-confounded easy families and typed-choice below-floor fallback leave true inability versus distractor/position unresolved for Exp6128 source-domain recovery"
+        addressed_by: "Exp6173 obeys Exp6140's retirement by abandoning source-domain recovery and option transformations entirely; it builds a new exact-validator tool-use bank with resource, behavioral, toolset, response, and cross-step constraints."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Phase D needs a competent but unsaturated best-of-N pool. Exp6128/Exp6140 retired finite-choice source recovery because of saturation, below-floor typed choice, and option-position confounding. CCTU-style executable tool traces remove the answer-position mechanism and supply exact step validators. Freeze the item bank, split, gates, and power before any LLM candidate is generated. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-references.md
+      - {project_root}/results/experiment_1486_cctu_microbenchmark.json
+      - {project_root}/results/experiment_2891_cctu_validator_pilot.json
+      - {project_root}/results/experiment_6128_phase_d_calibration_pool_v2.json
+      - {project_root}/results/experiment_6140_phase_d_exp6128_option_psychometrics.json
+      - {project_root}/python/carnot/verify
+      - {project_root}/tests/python
+      - {project_root}/ops/known-issues.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+      TASK:
+      Build and freeze at least 120 CCTU-style executable tool-use cases with exact validators and balanced constraint taxonomy; split 60 calibration/60 held before generation; preregister K, sampling, parseability, competence, unsaturation, headroom, power, controls, and retirement gates; prove no finite-choice position channel or held-label access; and write results/experiment_6173_cctu_item_bank_preregistration.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: hash CCTU fixtures/validators, prior retired pool artifacts, exclusions, existing task families, model caches without loading models, result/test roots, protected files, and git status. Confirm no candidate outcome file exists for the new bank.
+      1. Add REQ-* bank-freeze, exact-step-validator, constraint-taxonomy, balanced-split, no-option-position, no-model-before-freeze, positive/negative-control, power, headroom, held-seal, and retirement requirements; write validator and leakage tests first.
+      2. Create at least 120 deterministic cases spanning resource, behavior, tool availability, ordering, response schema, cross-step dependency, impossible-request abstention, and compositional constraints. Use no multiple-choice answers and no model-authored correctness.
+      3. Implement exact per-step and terminal validators with known-valid, single-violation, multi-violation, parser-adversarial, and metamorphic controls. Audit validator independence from candidate provenance, surface length, and arbitrary IDs.
+      4. Freeze case IDs, input bytes, validators, taxonomy, calibration/held split, seeds, K>=8, sampling schedule, tuned-consensus definition, clustered inference, and power. Preregister parseability >=0.95; competence strictly above a stated exact/random-plan floor and below saturation; oracle@8 minus tuned consensus >=0.10 with lower CI >0; and at least 30 consensus-wrong/oracle-right groups.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, prior_failure_receipts, cctu_item_bank_path_hash_count_and_schema, calibration_and_held_split_path_hash_counts, constraint_taxonomy_and_balance_matrix, exact_step_and_terminal_validator_paths_hashes_and_versions, validator_positive_negative_metamorphic_and_parser_controls, no_finite_choice_or_answer_position_receipt, no_model_access_before_freeze_receipt, k_sampling_and_consensus_preregistration, parseability_competence_unsaturation_headroom_and_minority_gates, exact_floor_definition_and_provenance, clustered_inference_and_power_plan, held_seal_and_access_log_path_hash, retirement_rule, cctu_item_bank_ready_score, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         cctu_item_bank_ready_score principle: one only with at least 120 frozen validated cases, balanced 60/60 split, exact controls, preregistered gates, and zero candidate/model access.
+         verifier_is_oracle principle: bare true for exact correctness labeling; downstream selectors must remain oracle-distinct.
+         inference_substrate principle: set `deterministic_executable_tool_trace_fixture_and_validators`.
+         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state bank size and freeze status.
+      6. Run focused validator/spec coverage, known-valid/violation/metamorphic/parser controls, split/hash/freeze/leakage tests, finite-choice exclusion, power/gate schema, task-isolation canary when available, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6174-cctu-authentic-k8-pool
+    milestone: "2026.08.535"
+    title: "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6174_cctu_authentic_k8_pool.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 720
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp6115-phase-d-authentic-calibration-pool
+        verdict: "complete_null: no_calibration_stratum_decode_policy_met_gate"
+        addressed_by: "Exp6115 attempted a finite-choice authentic pool whose decode policies never reached the competence/headroom gate. Exp6174 uses an executable trace domain, the mandated dense Gemma-4-31B GGUF, genuine K>=8 temperature draws, native tool/JSON outputs, and no answer-position channel."
+        retire_if_same_verdict: true
+      - experiment_id: exp6128-phase-d-calibration-pool-v2
+        verdict: "complete_null: no_calibration_policy_met_conjunctive_gates"
+        addressed_by: "Exp6128 mixed one-sample finite-choice families and position-confounded outputs. Exp6174 generates eight or more independent same-model traces per frozen exact-validator case with no correctness-conditioned retries or option transformations."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6173-cctu-item-bank-preregistration
+        artifact_field: cctu_item_bank_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Exp6173 freezes a position-free executable tool-trace bank before model access. Populate it with genuine same-model best-of-N candidates from the mandatory dense local GGUF. Exact validators may run only after all raw generations for a case are committed. Do not use correctness-conditioned retry, parser repair informed by labels, a model judge, legacy tiny headline models, or AutoTokenizer on GGUF bytes. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_6173_cctu_item_bank_preregistration.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/inference/sota_models.py
+      - {project_root}/python/carnot/inference/gemma4_quantized.py
+      - {project_root}/python/carnot/inference/llama_chat_template.py
+      - {project_root}/python/carnot/pipeline/gpu_health.py
+      - {project_root}/python/carnot/verify
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities/llm-inference/spec.md
+      - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+      TASK:
+      Gate on Exp6173; use MODEL_SPECS containing `unsloth/gemma-4-31B-it-GGUF`; generate K>=8 independent native-chat tool traces for every frozen calibration and held case with fixed sampling and GPU lifecycle receipts; commit raw traces before exact validation; preserve all parse failures and duplicates; seal labels/access logs; and write results/experiment_6174_cctu_authentic_k8_pool.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify the structured gate, item-bank/split/validator hashes, held seal, exact cached GGUF files and revision, embedded tokenizer/chat template, llama.cpp backend, dual-GPU health/capacity, process ownership, output/checkpoint paths, exclusions, and protected files. Fail closed without downloading or small-model substitution.
+      1. Add REQ-* gate, mandatory-model, embedded-template, native-tool-trace, K-independence, fixed-sampling, raw-before-label, no-retry, parse-failure retention, GPU lifecycle, resume/idempotence, held-seal, and immutable-corpus requirements; write focused failing tests first.
+      2. Define MODEL_SPECS with `unsloth/gemma-4-31B-it-GGUF` and exact local model path/revision/quantization/GPU assignment. Use llama.cpp and the GGUF embedded tokenizer/chat template; never call transformers AutoTokenizer on the GGUF.
+      3. Generate at least K=8 independent temperature samples per case under the preregistered schedule and matched token/tool budgets. Store raw prompt bytes, chat-template rendering, seeds, tokens, logprobs when natively available, tool calls, finish reasons, and timing before correctness validation.
+      4. Preserve invalid JSON, invalid tool calls, timeouts, duplicates, refusals, and truncations as candidates. Make no correctness-conditioned retry or candidate replacement. Resume only by immutable case/sample key and hash.
+      5. After all K raw rows for a case are sealed, run the exact validator once per row and write label sidecars inaccessible to generation. Record calibration and held access logs separately; do not inspect aggregate held outcomes in this task.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, upstream_bank_split_validator_and_preregistration_hashes, model_specs, exact_gguf_files_revision_quantization_hashes_and_sizes, embedded_tokenizer_and_chat_template_receipts, llama_cpp_version_and_command, gpu_assignment_health_process_and_vram_receipts, case_sample_seed_temperature_token_and_tool_budget_matrix, raw_trace_corpus_path_hash_count_and_schema, parse_failure_duplicate_refusal_timeout_and_truncation_counts, no_correctness_conditioned_retry_or_replacement_receipt, raw_before_label_commit_receipts, exact_label_sidecar_paths_hashes_and_counts, calibration_and_held_access_logs, resume_idempotence_and_checkpoint_receipts, cctu_candidate_pool_integrity_score, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         model_specs principle: include exact `unsloth/gemma-4-31B-it-GGUF`; no legacy small model supplies headline rows.
+         cctu_candidate_pool_integrity_score principle: one only with every frozen case represented by K>=8 immutable raw-before-label samples and no correctness-conditioned retry/replacement.
+         inference_substrate principle: set `llama_cpp_local_gemma4_31b_gguf_native_chat_tool_trace_generation`.
+         verifier_is_oracle principle: exact validators are oracle labels after generation; the generator and later selector remain oracle-distinct.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name case/sample coverage and model.
+      7. Run focused unit/spec coverage, structured gate, model/cache/chat-template, raw-before-label, K/seed/sampling, no-retry, parse-failure retention, resume/idempotence, GPU health/cleanup, held-seal, task-isolation canary, schema, adversarial-verify, protected-file, applicable local-GGUF E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6175-cctu-headroom-audit
+    milestone: "2026.08.535"
+    title: "Gated on Exp6174 pool integrity: CCTU competence, unsaturation, and selectable-headroom audit"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6175_cctu_headroom_audit.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 240
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6129-phase-d-held-pool-v2
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6129 could not run because the finite-choice calibration pool failed. Exp6175 consumes a different executable-trace corpus only after an explicit integrity gate and audits competence, unsaturation, consensus headroom, error diversity, and clustered power without answer positions."
+        retire_if_same_verdict: true
+      - experiment_id: exp6140-phase-d-exp6128-option-psychometrics
+        verdict: "retired: saturation plus position-confounded easy families and typed-choice below-floor fallback leave true inability versus distractor/position unresolved for Exp6128 source-domain recovery"
+        addressed_by: "Exp6175 does not transform or recover finite-choice options. It audits exact step-validated tool traces and retires the entire new domain if competence or selectable headroom is absent."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6174-cctu-authentic-k8-pool
+        artifact_field: cctu_candidate_pool_integrity_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      A latent selector is meaningful only if the frozen candidate pool is authentic, parseable, competent but imperfect, and contains groups where exact oracle selection can beat a tuned oracle-blind consensus. Audit those prerequisites before any hidden-state extraction. This task may inspect calibration labels and sealed aggregate held qualification fields, but it must not tune a selector or expose held row labels downstream. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6173_cctu_item_bank_preregistration.json
+      - {project_root}/results/experiment_6174_cctu_authentic_k8_pool.json
+      - {project_root}/results/experiment_6129_phase_d_held_pool_v2.json
+      - {project_root}/results/experiment_6140_phase_d_exp6128_option_psychometrics.json
+      - {project_root}/ops/known-issues.md
+      - {project_root}/python/carnot/verify
+      - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+      TASK:
+      Gate on Exp6174; verify exact-validator labels and corpus authenticity; compute family-stratified parseability, per-candidate competence, error diversity, tuned oracle-blind consensus, oracle@8, consensus-wrong/oracle-right counts, and clustered intervals against preregistered thresholds; keep held row labels sealed; retire the domain on failure; and write results/experiment_6175_cctu_headroom_audit.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify structured gate and upstream hashes, raw-before-label receipts, exact validator version, calibration/held seals, K completeness, no-retry receipt, preregistered gates/power, output paths, exclusions, and protected files.
+      1. Add REQ-* authenticity, parseability, exact-floor, competence, unsaturation, consensus, oracle@K, error-diversity, clustered-inference, held-aggregate, no-selector, and fail-closed retirement requirements; write focused failing tests first.
+      2. Revalidate every label from immutable raw traces. Report parseable and all-sample denominators, candidate accuracy, partial step satisfaction, violation taxonomy, duplicate clusters, and family/constraint-count strata. Never drop failures from headline denominators.
+      3. Tune only the preregistered oracle-blind consensus rule on calibration rows using normalized action/terminal-outcome clusters. It may use agreement but no validator labels at selection time, hidden states, arbitrary IDs, or answer positions.
+      4. Compute oracle@8 and tuned-consensus accuracy with case-clustered intervals. Count groups where consensus is wrong and oracle has at least one valid candidate; characterize error diversity. Held processing may emit only signed aggregate qualification fields and a sealed row-label hash.
+      5. Set readiness one only if preregistered parseability, above-floor competence, below-saturation error, oracle-minus-consensus >=0.10 with lower CI >0, at least 30 selectable minority groups, and family support all pass. Otherwise emit `retired:` and forbid downstream rows.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, upstream_corpus_bank_split_validator_and_preregistration_hashes, label_revalidation_receipt, all_sample_and_parseable_denominators, family_constraint_count_and_violation_strata, exact_floor_definition_value_and_provenance, per_candidate_competence_and_clustered_interval, saturation_and_error_diversity_metrics, tuned_oracle_blind_consensus_definition_freeze_and_accuracy, oracle_at_8_accuracy, oracle_minus_consensus_delta_and_clustered_interval, consensus_wrong_oracle_right_group_count, duplicate_and_shortcut_audits, held_aggregate_qualification_and_row_label_seal_hash, parseability_competence_unsaturation_headroom_and_minority_gate_matrix, phase_d_headroom_ready_score, future_rows_allowed_by_this_artifact, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         phase_d_headroom_ready_score principle: one only when every preregistered conjunct passes; no weighted averaging across failed families.
+         future_rows_allowed_by_this_artifact principle: bare true only with ready score one; otherwise bare false and exact construction retires.
+         verifier_is_oracle principle: exact validators define evaluation labels; tuned consensus is oracle-blind.
+         inference_substrate principle: set `deterministic_exact_tool_trace_headroom_audit`.
+         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and name the failed or passed conjuncts.
+      7. Run focused unit/spec coverage, structured gate, label reproduction, denominators/floors, clustered inference, consensus freeze, oracle/minority gates, held seal, no-selector/no-shortcut, task-isolation canary, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
