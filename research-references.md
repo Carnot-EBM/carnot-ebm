@@ -32668,3 +32668,137 @@ post-Exp6155 plan and watch-only context.
   game knowledge.
 
 <!-- V534-PLANNER-REFRESH-20260806-END -->
+
+## V535 Planner Refresh - 20260806
+
+Incremental planning sweep after terminal milestone `2026.08.534` and the
+`V534-PLANNER-REFRESH-20260806-END` boundary. The primary pass rechecked
+2025-2026 arXiv work on energy-based verification and reasoning, neural
+constraint solving, hidden-state hallucination detection, constrained
+generation, KANs, Ising/probabilistic hardware, and continual learning. The
+secondary pass refreshed OpenReview, Hugging Face Papers, Semantic Scholar
+citation lists for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), GitHub
+implementation signals, Extropic first-party hardware pages, and Logical
+Intelligence's Kona pages. Findings below separate new sources from older
+sources that become actionable only after Exp6140 retired the finite-choice
+Phase-D source-domain recovery.
+
+### Newly actionable continual-learning deltas
+
+- **RL Forgets! Towards Continual Policy Optimization** - arXiv:2607.04364,
+  https://arxiv.org/abs/2607.04364; revised 2026-07-13. The paper finds that
+  current-task KL regularization does not control forgetting caused by drift on
+  prior-task distributions, and reports a prior-distribution behavioral
+  regularizer that reduces forgetting. Carnot hook: the next immutable-weight
+  strategy-memory A/B must score prior-family behavior after every admitted
+  update. Current-stream utility cannot stand in for retention. A memory change
+  promotes only if prospective utility improves without a protected-prefix or
+  prior-family regression, with rollback on violation.
+- **Forgetting in Language Models: Capacity, Optimization, and Self-Generated
+  Replay** - arXiv:2605.26097,
+  https://arxiv.org/abs/2605.26097. Self-generated replay nearly eliminates
+  forgetting in the paper's parameter-updating setting, while limited remaining
+  capacity remains a failure mode. Carnot hook: use a bounded, versioned replay
+  reservoir as an explicit arm in the external strategy-memory experiment and
+  report retained-family utility, state growth, and eviction pressure
+  separately. The paper does not authorize weight mutation or model-authored
+  correctness; Carnot's exact future outcomes remain the admission authority.
+
+### Requalified Phase-D findings
+
+- **CLUE: Non-parametric Verification from Experience via Hidden-State
+  Clustering** - arXiv:2510.01591,
+  https://arxiv.org/abs/2510.01591; OpenReview ICLR 2026 submission withdrawn.
+  CLUE was already indexed in V475, but Exp6128/Exp6140 now change its role:
+  before training a TrajSelector-class probe, run the no-parameter hidden-state
+  delta/nearest-centroid method as the cheapest primary baseline on a genuinely
+  competent, unsaturated pool. The withdrawal makes local reproduction and
+  exact controls more important; source-reported gains are not treated as
+  authority.
+- **CCTU: A Benchmark for Tool Use under Complex Constraints** -
+  arXiv:2603.15309 and https://github.com/Junjie-Ye/CCTU. CCTU was already
+  indexed and Carnot shipped an executable 20-case microbenchmark in Exp1486.
+  It becomes newly actionable as a *domain*, not a new method, because
+  Exp6140 retired the saturated/position-confounded finite-choice recovery.
+  Tool traces have exact step validators, nontrivial resource/behavior/toolset/
+  response constraints, and no multiple-choice answer-position confound.
+  Carnot hook: freeze a larger CCTU-style item bank before generation, collect
+  genuine same-model `K>=8` traces with the mandated dense GGUF, and require
+  parseability, competence, selectable oracle headroom, and clustered
+  uncertainty before any hidden-state selector runs.
+- **TrajSelector: Harnessing Latent Representations for Efficient and Effective
+  Best-of-N in Large Reasoning Models** - arXiv:2510.16449,
+  https://arxiv.org/abs/2510.16449. This remains the learned comparator after a
+  CLUE baseline qualifies. The V535-specific implementation opportunity is
+  concrete: the host has a complete cached `google/gemma-4-31B-it` base
+  checkpoint matching the mandated cached
+  `unsloth/gemma-4-31B-it-GGUF` generator family. Per-layer access, exact
+  revision/precision/device-map receipts, and GGUF-to-base token alignment must
+  still pass before the two substrates may be joined.
+
+### Guarded verification finding
+
+- **Hallucination Detection via Internal States and Structured Reasoning
+  Consistency in Large Language Models** - arXiv:2510.11529,
+  https://arxiv.org/abs/2510.11529; revised 2026-01-08. The paper reports that
+  internal-state probes and externalized reasoning checks have complementary
+  blind spots, then fuses them with multi-path, segment-aware alignment.
+  Carnot hook: include structured-consistency and cheap surface features as
+  diagnostic controls around the internal-state selector, and report family
+  heterogeneity before pooling. Do not train or promote an external generated-
+  text/logprob scorer: that class remains retired, and the hidden-state arm must
+  demonstrate oracle-distinct value on its own.
+
+### Citation trail, ecosystem, KAN, and hardware status
+
+- **Semantic Scholar:** the dated endpoint receipts remain 32 visible EBT
+  citing records and eight ARM-EBM citing records. EBT citations still include
+  Explorative Modeling, Memoir, Solver-Hard, fixed-point reasoners, and LoopUS;
+  ARM-EBM citations still include Distributional EBMs and Gibbs-aligned
+  diffusion-language-model work. No new citing record displaces the competent-
+  pool prerequisite or the internal-state lane. Counts are endpoint receipts,
+  not stable impact claims.
+- **OpenReview / Hugging Face Papers:** searches reconfirmed CLUE,
+  TrajSelector, SATQuest, Energy-Based Constraint Networks,
+  LLM-as-a-Verifier, and verifier-guided decoding. `RL Forgets!` and
+  self-generated replay are the only newly promoted continual-learning deltas.
+  No output-only judge reopens the retired Phase-D external-text scorer family.
+- **GitHub:** targeted EBM, constraint, KAN, and sampler searches found no new
+  maintained dependency that supersedes Carnot's exact validators, local GGUF
+  runtime, or Rust/PyO3 sampler ABI. The vLLM per-layer extraction work remains
+  implementation context; V535 uses the already cached matching-base
+  `transformers` path and fails closed on token/revision mismatch.
+- **Extropic:** https://extropic.ai/writing still ends with the October 2025
+  TSU/X0/XTR-0 material. https://extropic.ai/hardware advertises Z1 early
+  access, but Carnot still has no authenticated device route. No TSU execution,
+  latency, power, energy, or speedup experiment is eligible.
+- **Logical Intelligence:** first-party pages now describe Kona 1.0 as an alpha
+  constraint engine and expose a public Sudoku demonstration, but still provide
+  no public weights, documented local inference API, or downloadable
+  reproducible comparator. Kona remains architecture/product context rather
+  than a milestone dependency.
+- **KANs and probabilistic hardware:** the fresh search did not surface a
+  2025-2026 KAN result that clears Carnot's retired/tested verifier lanes. The
+  million-p-bit FPGA work (`2606.25313`) remains the hardware-sampling reference,
+  but local board state is unchanged: KV260 and PolarFire have terminal
+  receipts, GateMate awaits a dated physical-state change, and no board speedup
+  claim is scheduled.
+
+### V535 planning impact
+
+- Do not rerun Exp6128/Exp6140's finite-choice pool, option transformations, or
+  source-domain recovery. Move Phase D to executable CCTU-style tool traces,
+  freeze the item bank before model access, and fail closed unless the pool is
+  competent, unsaturated, and genuinely selectable.
+- Qualify the cached matching-base Gemma-4-31B per-layer surface only after the
+  pool passes. Run CLUE before a learned TrajSelector-class probe, and keep
+  structured-consistency/length/logprob features as shortcut controls.
+- Run continuous self-learning independently of repository-wide isolation and
+  upstream selector readiness. Use a sealed task-owned store, immutable GGUFs,
+  read-only decision snapshots, post-outcome commits, bounded replay, prior-
+  family retention, quarantine, and rollback.
+- Preserve exactly one ARC slot as a held-out/leave-one-game-out audit of the
+  already-frozen Exp6167 policy. Do not reopen the single-shot induction line,
+  add a per-game adapter, or claim a solve.
+
+<!-- V535-PLANNER-REFRESH-20260806-END -->
