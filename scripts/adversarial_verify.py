@@ -267,6 +267,9 @@ DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
 # value.
 ARC_LIVE_AGENT_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE = "live_agent_environment_interaction"
+ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE = (
+    "live_e3_adapter_disabled_runtime_transitions"
+)
 ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
@@ -368,6 +371,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     *DETERMINISTIC_VERIFIER_SUBSTRATES,
     ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
     ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE,
+    ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE,
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
@@ -1705,6 +1709,13 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
 def _is_declared_honest_zero_delta(k: str, d: dict[str, Any]) -> bool:
     """True for explicit zero deltas documented as measured honest nulls."""
     kl = k.lower()
+    if kl == "level_credit_delta":
+        return (
+            d.get("solve_claimed") is False
+            and d.get("offline_reproduced") is False
+            and int(d.get("level_credit_delta") or 0) == 0
+            and "level_credit_delta" in dict(d.get("field_provenance") or {})
+        )
     if "delta" not in kl:
         return False
     if not d.get("null_delta_methodology_note"):

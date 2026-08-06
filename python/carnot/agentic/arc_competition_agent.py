@@ -31,6 +31,7 @@ import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
 import carnot.agentic.arc_discriminative_router as arc_discriminative_router
 import carnot.agentic.arc_goal_energy_live as arc_goal_energy_live
+import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401
 from carnot.agentic.arc_amortized_exploration import coerce_amortized_first_contact_prior
 from carnot.agentic.arc_color_blob_salience import ColorBlobSaliencePrior, connected_color_blobs
 from carnot.agentic.arc_dense_curiosity_progress import DenseCuriosityProgress

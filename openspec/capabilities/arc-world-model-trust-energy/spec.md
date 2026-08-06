@@ -21256,6 +21256,114 @@ Then held-out leave-one-game-out A/B uses matched live E3 seeds and budgets, rep
 action/state/progress/level deltas with intervals, and treats levels only as guarded secondary
 outcomes.
 
+## REQ-ARC-WMTE-6154: Adapter-Disabled Live Task-Aware Energy Generalization Measurement
+
+Experiment 6154 SHALL run the canonical scored ARC live path
+`make_carnot_agent -> E3AgentPolicy.choose_action` on adapter-disabled
+leave-one-game-out public-game episodes. It SHALL use at least three already
+cleared public games as held transfer fixtures, SHALL read the solve registry
+before any run, and SHALL hash the split, code, config, seeds, protected files,
+and exclusions. The experiment SHALL disable `GameAdapter` access, per-game
+lookup/solver routes, LLM induction, offline ground-truth BFS, game-source
+inspection, and registry gotcha usage for calibration. Every scored transition
+row SHALL originate from the live agent's own runtime action and observed frame.
+
+The experiment SHALL compare the current global transition-admission score with
+a TOOD-inspired task-aware calibration fit only on training-game live runtime
+transitions. For each held game, the calibration SHALL be frozen before held
+episodes and SHALL NOT use held outcomes, held game adapters, registry gotchas,
+per-game constants, offline solver paths, or game source. Global and
+task-aware arms SHALL be matched by game and seed, and both arms SHALL have
+nonzero triggered decision counts; equality with no triggered decisions is a
+null, not safety evidence.
+
+The terminal artifact
+`results/experiment_6154_arc_task_aware_energy_generalization.json` SHALL
+include top-level fields: `status`, `preconditions_checked`,
+`registry_precheck_and_no_duplicate_receipt`, `prior_failure_receipt`,
+`development_and_held_game_split_hash`,
+`adapter_per_game_lookup_solver_and_gotcha_disable_receipts`,
+`live_entrypoint_and_import_reachability`, `own_attempt_transition_provenance`,
+`global_and_task_aware_freeze_manifests`, `per_arm_triggered_decision_counts`,
+`per_game_transition_change_safety_action_and_latency_metrics`,
+`grouped_paired_intervals`,
+`false_confident_admission_and_abstention_matrices`,
+`shuffled_label_alias_identity_noop_light_inventor_raise_denominator_and_no_trigger_controls`,
+`llm_invocation_count`, `used_game_source`, `offline_ground_truth_bfs`,
+`hand_calibrated_per_game`, `solve_claimed`, `offline_reproduced`,
+`level_credit_delta`, `registry_level_fields_unchanged`,
+`arc_task_aware_generalization_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+Required field principles SHALL include:
+
+- `status`: principle "complete_positive, complete_null, retired, or blocked names the terminal held-game result."
+- `preconditions_checked`: principle "registry, split, code, config, seeds, exclusions, protected files, output path, and root clutter are checked before live episodes."
+- `registry_precheck_and_no_duplicate_receipt`: principle "all held fixtures are already-cleared public games and the experiment proposes no duplicate level credit."
+- `prior_failure_receipt`: principle "Exp6122 found no supported direct-causal solver-kit primitive; this task changes the measurement surface rather than claiming a primitive."
+- `development_and_held_game_split_hash`: principle "development and held game identities plus seeds and budgets are content-addressed before held scoring."
+- `adapter_per_game_lookup_solver_and_gotcha_disable_receipts`: principle "adapters, per-game lookup routes, solver routes, registry gotchas, game source, and offline BFS are unavailable to calibration."
+- `live_entrypoint_and_import_reachability`: principle "the calibration module is imported by the canonical make_carnot_agent/E3AgentPolicy path and is not an unreachable side module."
+- `own_attempt_transition_provenance`: principle "every scored row originates from the live agent's own runtime actions and observed frames."
+- `global_and_task_aware_freeze_manifests`: principle "global score, task-aware score, thresholds, and abstention are frozen from training games only before held episodes."
+- `per_arm_triggered_decision_counts`: principle "nonzero decisions in both arms are required; no-trigger equality is a null, not safety evidence."
+- `per_game_transition_change_safety_action_and_latency_metrics`: principle "each held game reports transition precision/recall, changed-cell fidelity, safety events, actions, rewards/levels diagnostics, and latency."
+- `grouped_paired_intervals`: principle "paired task-aware minus global intervals are grouped by held game."
+- `false_confident_admission_and_abstention_matrices`: principle "false confident admissions and safe abstentions are counted separately for both arms."
+- `shuffled_label_alias_identity_noop_light_inventor_raise_denominator_and_no_trigger_controls`: principle "shortcut, no-op, denominator, and no-trigger controls must pass before readiness."
+- `llm_invocation_count`: principle "bare zero; this tests the deterministic generic E3 scaffold."
+- `used_game_source`: principle "false; no game source is read or probed."
+- `offline_ground_truth_bfs`: principle "false; no exhaustive ground-truth search is run."
+- `hand_calibrated_per_game`: principle "false; calibration cannot use per-game held constants."
+- `solve_claimed`: principle "false; this is generalization measurement, not a level solve."
+- `offline_reproduced`: principle "false; reproduction is not used to claim a solve."
+- `level_credit_delta`: principle "0; registry level totals must not move."
+- `registry_level_fields_unchanged`: principle "registry level fields remain byte-identical pre/post."
+- `arc_task_aware_generalization_ready_score`: principle "1 only for positive held decision/change lift, preserved false-confident admissions and safety, live triggers, clean controls, and no-solve provenance."
+- `retirement_triggered`: principle "same no-causal-receipt result retires this exact construction."
+- `protected_files_unchanged`: principle "conductor, ops status/changelog, and traceability files are not modified by this run."
+- `duration_s`: principle "measured deterministic no-LLM live-path runtime."
+- `inference_substrate`: principle "live_e3_adapter_disabled_runtime_transitions."
+- `verifier_is_oracle`: principle "false; observed transitions label evaluation but do not become a solver oracle."
+- `missing_verifier_gaps`: principle "blocked controls, no-trigger rows, or nonpositive held lift are explicit gaps."
+- `field_provenance`: principle "every field traces to specs, code, live rows, controls, or command receipts."
+- `test_commands`: principle "focused unit/spec coverage, live-path/import lint, split isolation, controls, schema, adversarial, protected-file, E2E-applicable, global pytest, and root-clutter checks."
+- `test_exit_codes`: principle "verification exit codes are recorded."
+- `reproducibility_checksum`: principle "content-addressed payload detects silent drift."
+- `honest_verdict`: principle "use complete_positive:, complete_null:, retired:, or blocked: and state the held-game causal receipt."
+
+### SCENARIO-ARC-WMTE-6154-LIVE-ENTRYPOINT-AND-PROVENANCE
+
+Given adapter-disabled E3 public-game episodes and action provenance enabled
+When Experiment 6154 collects rows
+Then `make_carnot_agent` constructs `E3AgentPolicy`, every scored row is linked
+to a live action, frame-before, frame-after, observed change, action budget, and
+latency, and the calibration module is reachable from the
+`arc_competition_agent.py` import closure.
+
+### SCENARIO-ARC-WMTE-6154-TRAINING-HELD-ISOLATION
+
+Given a held game in a leave-one-game-out fold
+When task-aware calibration is fit
+Then only other games' runtime transition rows are used for thresholds and
+abstention, held outcomes remain unread until evaluation, and per-game adapters,
+registry gotchas, source, offline BFS, and per-game constants are excluded.
+
+### SCENARIO-ARC-WMTE-6154-METRICS-CONTROLS-AND-NO-SOLVE
+
+Given matched global and task-aware decisions on held rows
+When the artifact is validated
+Then both arms have nonzero triggered decisions, per-held-game precision,
+recall, changed-cell fidelity, false confident admissions, safe abstentions,
+safety events, action counts, level/reward diagnostics, and latency are
+reported; shuffled-label, task-alias, identity/no-op, light-inventor,
+raise-denominator, and no-trigger controls pass; and `solve_claimed=false`,
+`offline_reproduced=false`, `level_credit_delta=0`,
+`used_game_source=false`, and `offline_ground_truth_bfs=false`.
+
 ## REQ-ARC-WMTE-6091: The Refactor Prompt SHALL Be Able To SHOW The Engine It Is Refactoring, And Acceptance SHALL Be Gradeable Before It Is Scored
 
 The system SHALL make the counterexample-guided refinement hypothesis TESTABLE, by (a) delivering
