@@ -15411,3 +15411,5 @@ Still active  |
 | 2026-08-06 17:11 UTC | Gated on Exp6157 and Exp6159 readiness: certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6157-repo-wide-artifact-isolation-closure |
 | 2026-08-06 17:44 UTC | Mandatory prospective continuous strategy-learning | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6164_continu |
 | 2026-08-06 17:46 UTC | Gated on Exp6164 positive utility: default-off tra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6164-continuous-strategy-learning-ab) |
+| 2026-08-06 18:37 UTC | Mode-jumping CNCE for nonzero-error typed-factor t | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6166_mode_ju |
+| 2026-08-06 18:39 UTC | Gated on Exp6164 positive utility: default-off tra | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6164-continuous-strategy-learning-ab) |
