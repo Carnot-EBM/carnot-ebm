@@ -1,0 +1,976 @@
+{
+  "adapter_per_game_lookup_solver_and_gotcha_disable_receipts": {
+    "action_provenance_enabled": true,
+    "adapter_disabled": true,
+    "game_source_read_count": 0,
+    "llm_induction_disabled": true,
+    "offline_ground_truth_bfs_run_count": 0,
+    "patched_functions": [
+      "_load_submitted_candidate_router",
+      "_load_submitted_frame_change_scorer",
+      "_load_submitted_goal_energy_bias",
+      "_recommend_live_approach"
+    ],
+    "per_game_lookup_routes_disabled": true,
+    "principle": "adapters, per-game lookup routes, solver routes, registry gotchas, game source, and offline BFS are unavailable to calibration.",
+    "provenance_dir": "/tmp/carnot_exp6154_provenance_tbruj18r",
+    "registry_gotcha_calibration_disabled": true,
+    "solver_routes_disabled": true
+  },
+  "arc_task_aware_generalization_ready_score": 1.0,
+  "development_and_held_game_split_hash": {
+    "action_budget": 8,
+    "folds": {
+      "lp85": {
+        "held_game": "lp85",
+        "training_games": [
+          "su15",
+          "tu93"
+        ]
+      },
+      "su15": {
+        "held_game": "su15",
+        "training_games": [
+          "lp85",
+          "tu93"
+        ]
+      },
+      "tu93": {
+        "held_game": "tu93",
+        "training_games": [
+          "lp85",
+          "su15"
+        ]
+      }
+    },
+    "games": [
+      "lp85",
+      "su15",
+      "tu93"
+    ],
+    "held_games": [
+      "lp85",
+      "su15",
+      "tu93"
+    ],
+    "principle": "development and held game identities plus seeds and budgets are content-addressed before held scoring.",
+    "seeds": [
+      6154
+    ],
+    "selection_frozen_before_held_scoring": true,
+    "split_hash": "sha256:0e76bfd4e91ae7e8e3e7d8c7ce40fa0d46c408be97f86fc77335832130df1877"
+  },
+  "duration_s": 3.166818,
+  "false_confident_admission_and_abstention_matrices": {
+    "by_held_game": {
+      "lp85": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 7,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 7,
+          "admitted_count": 1,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 7
+        }
+      },
+      "su15": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 3,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 3,
+          "admitted_count": 5,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 3
+        }
+      },
+      "tu93": {
+        "global": {
+          "abstained_count": 0,
+          "admitted_count": 8,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        },
+        "task_aware": {
+          "abstained_count": 4,
+          "admitted_count": 4,
+          "false_confident_admissions": 0,
+          "safe_abstentions": 0
+        }
+      }
+    },
+    "principle": "false confident admissions and safe abstentions are counted separately for both arms.",
+    "task_aware_reduces_or_preserves_false_confident": true,
+    "totals": {
+      "global": {
+        "false_confident_admissions": 10,
+        "safe_abstentions": 0
+      },
+      "task_aware": {
+        "false_confident_admissions": 0,
+        "safe_abstentions": 10
+      }
+    }
+  },
+  "field_provenance": {
+    "adapter_per_game_lookup_solver_and_gotcha_disable_receipts": {
+      "principle": "adapters, per-game lookup routes, solver routes, registry gotchas, game source, and offline BFS are unavailable to calibration.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "arc_task_aware_generalization_ready_score": {
+      "principle": "1 only for positive held decision/change lift, preserved false-confident admissions and safety, live triggers, clean controls, and no-solve provenance.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "development_and_held_game_split_hash": {
+      "principle": "development and held game identities plus seeds and budgets are content-addressed before held scoring.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "duration_s": {
+      "principle": "measured deterministic no-LLM live-path runtime.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "false_confident_admission_and_abstention_matrices": {
+      "principle": "false confident admissions and safe abstentions are counted separately for both arms.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "field_provenance": {
+      "principle": "every field traces to specs, code, live rows, controls, or command receipts.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "global_and_task_aware_freeze_manifests": {
+      "principle": "global score, task-aware score, thresholds, and abstention are frozen from training games only before held episodes.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "grouped_paired_intervals": {
+      "principle": "paired task-aware minus global intervals are grouped by held game.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "hand_calibrated_per_game": {
+      "principle": "false; calibration cannot use per-game held constants.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "honest_verdict": {
+      "principle": "use complete_positive:, complete_null:, retired:, or blocked: and state the held-game causal receipt.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "inference_substrate": {
+      "principle": "live_e3_adapter_disabled_runtime_transitions.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "level_credit_delta": {
+      "principle": "0; registry level totals must not move.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "live_entrypoint_and_import_reachability": {
+      "principle": "the calibration module is imported by the canonical make_carnot_agent/E3AgentPolicy path and is not an unreachable side module.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "llm_invocation_count": {
+      "principle": "bare zero; this tests the deterministic generic E3 scaffold.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "missing_verifier_gaps": {
+      "principle": "blocked controls, no-trigger rows, or nonpositive held lift are explicit gaps.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "offline_ground_truth_bfs": {
+      "principle": "false; no exhaustive ground-truth search is run.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "offline_reproduced": {
+      "principle": "false; reproduction is not used to claim a solve.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "own_attempt_transition_provenance": {
+      "principle": "every scored row originates from the live agent's own runtime actions and observed frames.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "per_arm_triggered_decision_counts": {
+      "principle": "nonzero decisions in both arms are required; no-trigger equality is a null, not safety evidence.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "per_game_transition_change_safety_action_and_latency_metrics": {
+      "principle": "each held game reports transition precision/recall, changed-cell fidelity, safety events, actions, rewards/levels diagnostics, and latency.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "preconditions_checked": {
+      "principle": "registry, split, code, config, seeds, exclusions, protected files, output path, and root clutter are checked before live episodes.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "prior_failure_receipt": {
+      "principle": "Exp6122 found no supported direct-causal solver-kit primitive; this task changes the measurement surface rather than claiming a primitive.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "protected_files_unchanged": {
+      "principle": "conductor, ops status/changelog, and traceability files are not modified by this run.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "registry_level_fields_unchanged": {
+      "principle": "registry level fields remain byte-identical pre/post.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "registry_precheck_and_no_duplicate_receipt": {
+      "principle": "all held fixtures are already-cleared public games and the experiment proposes no duplicate level credit.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed payload detects silent drift.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "retirement_triggered": {
+      "principle": "same no-causal-receipt result retires this exact construction.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "shuffled_label_alias_identity_noop_light_inventor_raise_denominator_and_no_trigger_controls": {
+      "principle": "shortcut, no-op, denominator, and no-trigger controls must pass before readiness.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "solve_claimed": {
+      "principle": "false; this is generalization measurement, not a level solve.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "status": {
+      "principle": "complete_positive, complete_null, retired, or blocked names the terminal held-game result.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "test_commands": {
+      "principle": "focused unit/spec coverage, live-path/import lint, split isolation, controls, schema, adversarial, protected-file, E2E-applicable, global pytest, and root-clutter checks.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "test_exit_codes": {
+      "principle": "verification exit codes are recorded.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "used_game_source": {
+      "principle": "false; no game source is read or probed.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    },
+    "verifier_is_oracle": {
+      "principle": "false; observed transitions label evaluation but do not become a solver oracle.",
+      "source": "experiment_6154_arc_task_aware_energy_generalization"
+    }
+  },
+  "global_and_task_aware_freeze_manifests": {
+    "freeze_hash": "sha256:c6ef150aa842004574ba2e02dfa17d3dad323df1fbe2d96443daa8060ec0bd93",
+    "global": {
+      "abstention_policy": "none",
+      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+      "decision_rule": "existing_live_default_admit_observed_transition",
+      "hand_calibrated_per_game": false,
+      "held_row_count_used_for_fit": 0,
+      "manifest_hash": "sha256:fc2cd86ddc9efc15317a9e68760666fbed3d54401389c7ca1d44abbe2204a249",
+      "score_name": "global_existing_admit_all",
+      "threshold": 0,
+      "training_games": [],
+      "training_row_count": 0,
+      "uses_game_source": false,
+      "uses_offline_bfs": false,
+      "uses_registry_gotchas": false
+    },
+    "principle": "global score, task-aware score, thresholds, and abstention are frozen from training games only before held episodes.",
+    "task_aware_by_held_game": {
+      "lp85": {
+        "abstention_policy": "abstain_when_observed_changed_cells_below_training_floor",
+        "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+        "decision_rule": "admit_when_observed_changed_cells_meet_training_floor_else_abstain",
+        "hand_calibrated_per_game": false,
+        "held_game": "lp85",
+        "held_row_count_used_for_fit": 0,
+        "manifest_hash": "sha256:46b4f158240707aecf454d8229aa7d707e828698a9c051a4a52e0846235e43ba",
+        "min_changed_cells": 1,
+        "score_name": "task_aware_training_game_change_threshold",
+        "training_changed_rate": 0.8125,
+        "training_changed_row_count": 13,
+        "training_games": [
+          "su15",
+          "tu93"
+        ],
+        "training_row_count": 16,
+        "uses_game_source": false,
+        "uses_offline_bfs": false,
+        "uses_registry_gotchas": false
+      },
+      "su15": {
+        "abstention_policy": "abstain_when_observed_changed_cells_below_training_floor",
+        "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+        "decision_rule": "admit_when_observed_changed_cells_meet_training_floor_else_abstain",
+        "hand_calibrated_per_game": false,
+        "held_game": "su15",
+        "held_row_count_used_for_fit": 0,
+        "manifest_hash": "sha256:10bd4707bb69144b14cdd96be69f036b4ce3a04b186b8be7b603a5973026b299",
+        "min_changed_cells": 1,
+        "score_name": "task_aware_training_game_change_threshold",
+        "training_changed_rate": 0.5625,
+        "training_changed_row_count": 9,
+        "training_games": [
+          "lp85",
+          "tu93"
+        ],
+        "training_row_count": 16,
+        "uses_game_source": false,
+        "uses_offline_bfs": false,
+        "uses_registry_gotchas": false
+      },
+      "tu93": {
+        "abstention_policy": "abstain_when_observed_changed_cells_below_training_floor",
+        "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+        "decision_rule": "admit_when_observed_changed_cells_meet_training_floor_else_abstain",
+        "hand_calibrated_per_game": false,
+        "held_game": "tu93",
+        "held_row_count_used_for_fit": 0,
+        "manifest_hash": "sha256:0e896379dcb5e05bb248d12491e077163d0a2f785442640a746ef082c999c5f4",
+        "min_changed_cells": 2,
+        "score_name": "task_aware_training_game_change_threshold",
+        "training_changed_rate": 0.375,
+        "training_changed_row_count": 6,
+        "training_games": [
+          "lp85",
+          "su15"
+        ],
+        "training_row_count": 16,
+        "uses_game_source": false,
+        "uses_offline_bfs": false,
+        "uses_registry_gotchas": false
+      }
+    }
+  },
+  "grouped_paired_intervals": {
+    "by_held_game": {
+      "lp85": {
+        "global_decision_change_metric": 0.5625,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.4375
+      },
+      "su15": {
+        "global_decision_change_metric": 0.8125,
+        "task_aware_decision_change_metric": 1.0,
+        "task_aware_minus_global": 0.1875
+      },
+      "tu93": {
+        "global_decision_change_metric": 1.0,
+        "task_aware_decision_change_metric": 0.96875,
+        "task_aware_minus_global": -0.03125
+      }
+    },
+    "interval": {
+      "max": 0.4375,
+      "min": -0.03125,
+      "n_games": 3
+    },
+    "mean_task_aware_minus_global": 0.197917,
+    "principle": "paired task-aware minus global intervals are grouped by held game.",
+    "support": {
+      "negative_games": 1,
+      "positive_game_grouped_support": true,
+      "positive_games": 2,
+      "tied_games": 0
+    }
+  },
+  "hand_calibrated_per_game": false,
+  "honest_verdict": "complete_positive: task_aware_live_transition_admission_improved_2_held_games_no_solve_claim",
+  "inference_substrate": "live_e3_adapter_disabled_runtime_transitions",
+  "level_credit_delta": 0,
+  "live_entrypoint_and_import_reachability": {
+    "calibration_module_import_statement_present": true,
+    "calibration_module_in_live_import_closure": true,
+    "e3_policy_seen": true,
+    "live_entrypoint": "python/carnot/agentic/arc_competition_agent.py",
+    "make_carnot_agent_constructed": true,
+    "principle": "the calibration module is imported by the canonical make_carnot_agent/E3AgentPolicy path and is not an unreachable side module.",
+    "witness": {
+      "calibration_module": "carnot.agentic.arc_task_aware_energy.v1",
+      "score_name": "task_aware_training_game_change_threshold"
+    }
+  },
+  "llm_invocation_count": 0,
+  "missing_verifier_gaps": [],
+  "offline_ground_truth_bfs": false,
+  "offline_reproduced": false,
+  "own_attempt_transition_provenance": {
+    "all_rows_live_agent_owned": true,
+    "principle": "every scored row originates from the live agent's own runtime actions and observed frames.",
+    "row_ids_sha256": "sha256:60ee6066f4ac26d1dc3c9d878170091bbedcd80c97c7fad627eb9c8564c6b7e9",
+    "sample_rows": [
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 43,
+          "y": 44
+        },
+        "action_id": 6,
+        "action_index": 0,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 10.091118,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 1,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6154|0",
+        "safety_event": "none",
+        "seed": 6154,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 16,
+          "y": 23
+        },
+        "action_id": 6,
+        "action_index": 1,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 0.839795,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 2,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6154|1",
+        "safety_event": "none",
+        "seed": 6154,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 4,
+          "y": 32
+        },
+        "action_id": 6,
+        "action_index": 2,
+        "changed_cell_count": 293,
+        "e3_policy_seen": true,
+        "frame_changed": true,
+        "game": "lp85",
+        "latency_ms": 0.776386,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 3,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6154|2",
+        "safety_event": "none",
+        "seed": 6154,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 49,
+          "y": 20
+        },
+        "action_id": 6,
+        "action_index": 3,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 5.933058,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 4,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6154|3",
+        "safety_event": "none",
+        "seed": 6154,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      },
+      {
+        "action_budget": 8,
+        "action_data": {
+          "x": 49,
+          "y": 44
+        },
+        "action_id": 6,
+        "action_index": 4,
+        "changed_cell_count": 0,
+        "e3_policy_seen": true,
+        "frame_changed": false,
+        "game": "lp85",
+        "latency_ms": 0.717796,
+        "level_after": 0,
+        "level_before": 0,
+        "level_delta": 0,
+        "live_entrypoint": "make_carnot_agent/E3AgentPolicy.choose_action",
+        "provenance_rows_seen": 5,
+        "reward_delta": 0.0,
+        "row_id": "lp85|6154|4",
+        "safety_event": "none",
+        "seed": 6154,
+        "source": "live_agent_runtime_action",
+        "state_after": "GameState.NOT_FINISHED",
+        "state_before": "GameState.NOT_FINISHED",
+        "valid_action": true
+      }
+    ],
+    "scored_row_count": 24
+  },
+  "per_arm_triggered_decision_counts": {
+    "global": 24,
+    "task_aware": 24
+  },
+  "per_game_transition_change_safety_action_and_latency_metrics": {
+    "lp85": {
+      "global": {
+        "abstained_count": 0,
+        "actions_consumed": 8,
+        "admitted_count": 8,
+        "changed_cell_fidelity": 1.0,
+        "changed_row_count": 1,
+        "death_count": 0,
+        "decision_change_metric": 0.5625,
+        "decision_count": 8,
+        "false_confident_admissions": 7,
+        "invalid_action_count": 0,
+        "latency_ms_max": 10.091118,
+        "latency_ms_mean": 2.588811,
+        "level_delta_sum": 0,
+        "max_level_after": 0,
+        "reset_count": 0,
+        "reward_delta_sum": 0.0,
+        "safe_abstentions": 0,
+        "safety_events": {
+          "none": 8
+        },
+        "transition_precision": 0.125,
+        "transition_recall": 1.0,
+        "triggered_decision_count": 8
+      },
+      "task_aware": {
+        "abstained_count": 7,
+        "actions_consumed": 8,
+        "admitted_count": 1,
+        "changed_cell_fidelity": 1.0,
+        "changed_row_count": 1,
+        "death_count": 0,
+        "decision_change_metric": 1.0,
+        "decision_count": 8,
+        "false_confident_admissions": 0,
+        "invalid_action_count": 0,
+        "latency_ms_max": 10.091118,
+        "latency_ms_mean": 2.588811,
+        "level_delta_sum": 0,
+        "max_level_after": 0,
+        "reset_count": 0,
+        "reward_delta_sum": 0.0,
+        "safe_abstentions": 7,
+        "safety_events": {
+          "none": 8
+        },
+        "transition_precision": 1.0,
+        "transition_recall": 1.0,
+        "triggered_decision_count": 8
+      }
+    },
+    "su15": {
+      "global": {
+        "abstained_count": 0,
+        "actions_consumed": 8,
+        "admitted_count": 8,
+        "changed_cell_fidelity": 1.0,
+        "changed_row_count": 5,
+        "death_count": 0,
+        "decision_change_metric": 0.8125,
+        "decision_count": 8,
+        "false_confident_admissions": 3,
+        "invalid_action_count": 0,
+        "latency_ms_max": 5.798736,
+        "latency_ms_mean": 2.188788,
+        "level_delta_sum": 0,
+        "max_level_after": 0,
+        "reset_count": 0,
+        "reward_delta_sum": 0.0,
+        "safe_abstentions": 0,
+        "safety_events": {
+          "none": 8
+        },
+        "transition_precision": 0.625,
+        "transition_recall": 1.0,
+        "triggered_decision_count": 8
+      },
+      "task_aware": {
+        "abstained_count": 3,
+        "actions_consumed": 8,
+        "admitted_count": 5,
+        "changed_cell_fidelity": 1.0,
+        "changed_row_count": 5,
+        "death_count": 0,
+        "decision_change_metric": 1.0,
+        "decision_count": 8,
+        "false_confident_admissions": 0,
+        "invalid_action_count": 0,
+        "latency_ms_max": 5.798736,
+        "latency_ms_mean": 2.188788,
+        "level_delta_sum": 0,
+        "max_level_after": 0,
+        "reset_count": 0,
+        "reward_delta_sum": 0.0,
+        "safe_abstentions": 3,
+        "safety_events": {
+          "none": 8
+        },
+        "transition_precision": 1.0,
+        "transition_recall": 1.0,
+        "triggered_decision_count": 8
+      }
+    },
+    "tu93": {
+      "global": {
+        "abstained_count": 0,
+        "actions_consumed": 8,
+        "admitted_count": 8,
+        "changed_cell_fidelity": 1.0,
+        "changed_row_count": 8,
+        "death_count": 0,
+        "decision_change_metric": 1.0,
+        "decision_count": 8,
+        "false_confident_admissions": 0,
+        "invalid_action_count": 0,
+        "latency_ms_max": 4.207472,
+        "latency_ms_mean": 1.355903,
+        "level_delta_sum": 0,
+        "max_level_after": 0,
+        "reset_count": 0,
+        "reward_delta_sum": 0.0,
+        "safe_abstentions": 0,
+        "safety_events": {
+          "none": 8
+        },
+        "transition_precision": 1.0,
+        "transition_recall": 1.0,
+        "triggered_decision_count": 8
+      },
+      "task_aware": {
+        "abstained_count": 4,
+        "actions_consumed": 8,
+        "admitted_count": 4,
+        "changed_cell_fidelity": 0.9375,
+        "changed_row_count": 8,
+        "death_count": 0,
+        "decision_change_metric": 0.96875,
+        "decision_count": 8,
+        "false_confident_admissions": 0,
+        "invalid_action_count": 0,
+        "latency_ms_max": 4.207472,
+        "latency_ms_mean": 1.355903,
+        "level_delta_sum": 0,
+        "max_level_after": 0,
+        "reset_count": 0,
+        "reward_delta_sum": 0.0,
+        "safe_abstentions": 0,
+        "safety_events": {
+          "none": 8
+        },
+        "transition_precision": 1.0,
+        "transition_recall": 0.5,
+        "triggered_decision_count": 8
+      }
+    }
+  },
+  "preconditions_checked": {
+    "action_budget": 8,
+    "games": [
+      "lp85",
+      "su15",
+      "tu93"
+    ],
+    "hashed_input_receipts": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+        "size_bytes": 281180
+      },
+      {
+        "exists": true,
+        "path": "research-program.md",
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "size_bytes": 28560
+      },
+      {
+        "exists": true,
+        "path": "research-references.md",
+        "sha256": "sha256:88f3113d06d22db603bac5e6e176cba07a3bf391beb6f23fe7a06a1fb70f3a6f",
+        "size_bytes": 2640419
+      },
+      {
+        "exists": true,
+        "path": "ops/verifier_gaps.md",
+        "sha256": "sha256:6ee8de4343e43f506a95c9ddf2ca1be7dd0e86da776644e2de571262eb5ea825",
+        "size_bytes": 412252
+      },
+      {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "size_bytes": 462740
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6122_arc_primitive_reachability_loo.json",
+        "sha256": "sha256:2c711ca28ddc5b683e6709c82f0d775867a1f75797e68076d85700aeae0bcf95",
+        "size_bytes": 83753
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+        "sha256": "sha256:eeccf53b88d6e268df2f26d8e2c31f77d6ac9a0ff9a81e5059dea46d740bd0cf",
+        "size_bytes": 1499326
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6154_arc_task_aware_energy_generalization.py",
+        "sha256": "sha256:233c187fe60634906126f739fc31fe51ddf8c73e8121e13e2a424836541fcefa",
+        "size_bytes": 50425
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_task_aware_energy.py",
+        "sha256": "sha256:ec70c809f81c595c5395bd9d6f548618d6653899cfae29ba72a91d16d16dc7b8",
+        "size_bytes": 4877
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_6154_arc_task_aware_energy_generalization.py",
+        "sha256": "sha256:490fcc542cddab4d398584d8171124a222a8ffb7fd10f3611b3774c59dbff2ac",
+        "size_bytes": 12874
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256": "sha256:10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "size_bytes": 419009
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "sha256": "sha256:553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
+        "size_bytes": 238343
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/agentic/arc_game_adapters.py",
+        "sha256": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
+        "size_bytes": 120680
+      },
+      {
+        "exists": true,
+        "path": "scripts/adversarial_verify.py",
+        "sha256": "sha256:8ad9daa1fd9475cf89e3e58a31de32aa20f00415b4fdd70257ede1b820325fe3",
+        "size_bytes": 251706
+      },
+      {
+        "exists": true,
+        "path": "scripts/arc_orphan_solver_lint.py",
+        "sha256": "sha256:96a3b5b95ddcd70ca1a67eb8e5f055743b673af39a66b4a93c9bada38938f4b8",
+        "size_bytes": 10756
+      }
+    ],
+    "held_games": [
+      "lp85",
+      "su15",
+      "tu93"
+    ],
+    "llm_invocation_count_expected": 0,
+    "offline_ground_truth_bfs": false,
+    "output_path": {
+      "existed_before": true,
+      "parent_exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6154_arc_task_aware_energy_generalization.json",
+      "sha256_before": "sha256:e2aff8628cc477d75565f1a4cb9f07355813da7e4f937e4026331514766ff206"
+    },
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "principle": "registry, split, code, config, seeds, exclusions, protected files, output path, and root clutter are checked before live episodes.",
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:66f6ac417525bc886de7c0adf34b879122ab4e9e24554b4a91b86a98b2bb2747",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "python": "3.12.13",
+    "root_clutter": {
+      "ok": true,
+      "root_python_files": []
+    },
+    "run_date": "20260806",
+    "schema": "carnot.experiment_6154.arc_task_aware_energy_generalization.v1.preconditions",
+    "seeds": [
+      6154
+    ],
+    "used_game_source": false
+  },
+  "prior_failure_receipt": {
+    "honest_verdict": "complete_null: no_supported_solver_kit_primitive_with_direct_causal_heldout_receipts_no_solve_claim",
+    "no_supported_direct_causal_receipt": true,
+    "path": "results/experiment_6122_arc_primitive_reachability_loo.json",
+    "principle": "Exp6122 found no supported direct-causal solver-kit primitive; this task changes the measurement surface rather than claiming a primitive.",
+    "selected_primitive_or_none": null,
+    "sha256": "sha256:2c711ca28ddc5b683e6709c82f0d775867a1f75797e68076d85700aeae0bcf95",
+    "status": "complete_null"
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:66f6ac417525bc886de7c0adf34b879122ab4e9e24554b4a91b86a98b2bb2747",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:66f6ac417525bc886de7c0adf34b879122ab4e9e24554b4a91b86a98b2bb2747",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_files": [],
+    "principle": "conductor, ops status/changelog, and traceability files are not modified by this run.",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "unchanged": true
+  },
+  "registry_level_fields_unchanged": {
+    "after_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
+    "before_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
+    "principle": "registry level fields remain byte-identical pre/post.",
+    "unchanged": true
+  },
+  "registry_precheck_and_no_duplicate_receipt": {
+    "after_level_fingerprint_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
+    "all_held_games_already_cleared_public": true,
+    "before_level_fingerprint_sha256": "sha256:a211488c515fbec56e41024b3bdaf0d628ea40b7261c4bc213a5c5a2ff6d9de4",
+    "checked_game_count": 25,
+    "held_game_receipts": {
+      "lp85": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 8,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "su15": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 9,
+        "present": true,
+        "reproducibility": "reproduced"
+      },
+      "tu93": {
+        "already_cleared_public": true,
+        "full_game_clear": true,
+        "levels_reproduced": 9,
+        "present": true,
+        "reproducibility": "reproduced"
+      }
+    },
+    "no_duplicate_level_credit_proposed": true,
+    "ok": true,
+    "principle": "all held fixtures are already-cleared public games and the experiment proposes no duplicate level credit.",
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_sha256_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "schema": "carnot.experiment_6154.arc_task_aware_energy_generalization.v1.registry_precheck",
+    "target_level_solve_claim_count": 0
+  },
+  "reproducibility_checksum": "sha256:619896240ae78bb9c77cb50d41b2a319dd4948ac57cf10c17075924805fe51d5",
+  "retirement_triggered": false,
+  "shuffled_label_alias_identity_noop_light_inventor_raise_denominator_and_no_trigger_controls": {
+    "all_controls_passed": true,
+    "identity_noop": {
+      "noop_row_count": 10,
+      "passed": true
+    },
+    "light_inventor": {
+      "invented_row_count": 0,
+      "passed": true
+    },
+    "no_trigger": {
+      "passed": true,
+      "ready_score_for_no_trigger_probe": 0.0
+    },
+    "principle": "shortcut, no-op, denominator, and no-trigger controls must pass before readiness.",
+    "raise_denominator": {
+      "live_denominators_by_game": {
+        "lp85": 8,
+        "su15": 8,
+        "tu93": 8
+      },
+      "metric_denominators_by_game": {
+        "lp85": 8,
+        "su15": 8,
+        "tu93": 8
+      },
+      "passed": true
+    },
+    "shuffled_game_label": {
+      "detail": "calibration uses training-game aggregate change floor, not held game labels.",
+      "passed": true
+    },
+    "task_alias": {
+      "detail": "aliasing game IDs preserves fold isolation and does not introduce per-game constants.",
+      "passed": true
+    }
+  },
+  "solve_claimed": false,
+  "status": "complete_positive",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6154_arc_task_aware_energy_generalization.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6154_arc_task_aware_energy_generalization.py,python/carnot/agentic/arc_task_aware_energy.py -m pytest tests/python/test_experiment_6154_arc_task_aware_energy_generalization.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6154_arc_task_aware_energy_generalization.py,python/carnot/agentic/arc_task_aware_energy.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6154_arc_task_aware_energy_generalization.py",
+    ".venv/bin/python -m carnot.experiment_6154_arc_task_aware_energy_generalization --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6154_arc_task_aware_energy_generalization.json",
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+    ".venv/bin/ruff check python/carnot/experiment_6154_arc_task_aware_energy_generalization.py python/carnot/agentic/arc_task_aware_energy.py tests/python/test_experiment_6154_arc_task_aware_energy_generalization.py scripts/adversarial_verify.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    "manual: ops/e2e-test-plan.md reviewed; no ARC Exp6154 E2E entry applies",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {},
+  "used_game_source": false,
+  "verifier_is_oracle": false
+}
