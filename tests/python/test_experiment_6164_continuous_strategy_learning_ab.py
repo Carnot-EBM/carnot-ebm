@@ -5,7 +5,17 @@ REQ-LEARN-6164-3, REQ-LEARN-6164-4, REQ-LEARN-6164-5, REQ-LEARN-6164-6,
 REQ-LEARN-6164-7, REQ-LEARN-6164-8, REQ-LEARN-6164-9,
 REQ-LEARN-6164-10, SCENARIO-LEARN-6164-BLOCKED,
 SCENARIO-LEARN-6164-MATCHED, SCENARIO-LEARN-6164-TRANSACTION,
-SCENARIO-LEARN-6164-READY.
+SCENARIO-LEARN-6164-READY, REQ-CL-6164-MANDATORY-ARTIFACT,
+REQ-CL-6164-PREREQUISITE-RECOMPUTE, REQ-CL-6164-BLOCKED-MODEL-LOAD,
+REQ-CL-6164-MANDATED-MODEL, REQ-CL-6164-FOUR-ARM-MATCHING,
+REQ-CL-6164-CHRONOLOGICAL-ISOLATION, REQ-CL-6164-READ-ONLY-SNAPSHOT,
+REQ-CL-6164-POST-OUTCOME-COMMIT, REQ-CL-6164-CERTIFICATE,
+REQ-CL-6164-DECISION-ADMISSION, REQ-CL-6164-UTILITY,
+REQ-CL-6164-RETENTION, REQ-CL-6164-POISON, REQ-CL-6164-ROLLBACK,
+REQ-CL-6164-BOUNDED-STATE, REQ-CL-6164-LIFECYCLE,
+REQ-CL-6164-IMMUTABLE-WEIGHT, REQ-CL-6164-READY-SCORE,
+SCENARIO-CL-6164-BLOCKED, SCENARIO-CL-6164-MATCHED,
+SCENARIO-CL-6164-TRANSACTION, SCENARIO-CL-6164-READY.
 """
 
 from __future__ import annotations
@@ -21,7 +31,7 @@ from carnot import experiment_6164_continuous_strategy_learning_ab as mod
 
 
 REPO = Path(__file__).resolve().parents[2]
-SPEC = REPO / "openspec/capabilities/self-learning/spec.md"
+SPEC = REPO / mod.REQUESTED_CONTINUOUS_SPEC_RELATIVE_PATH
 
 
 def _passing_exit_codes() -> dict[str, int]:
@@ -124,27 +134,34 @@ def _run_qualified(tmp_path: Path, *, write: bool = False) -> dict[str, Any]:
 
 
 def test_req_6164_spec_declares_continuous_strategy_learning_contract() -> None:
-    """REQ-LEARN-6164: OpenSpec owns the mandatory artifact contract."""
+    """REQ-CL-6164-MANDATORY-ARTIFACT: OpenSpec owns the artifact contract."""
 
     text = SPEC.read_text(encoding="utf-8")
-    section = text[text.index("## REQ-LEARN-6164") :]
+    section = text[text.index("## REQ-CL-6164-MANDATORY-ARTIFACT") :]
     normalized = " ".join(section.split())
 
     for marker in (
-        "REQ-LEARN-6164-1",
-        "REQ-LEARN-6164-2",
-        "REQ-LEARN-6164-3",
-        "REQ-LEARN-6164-4",
-        "REQ-LEARN-6164-5",
-        "REQ-LEARN-6164-6",
-        "REQ-LEARN-6164-7",
-        "REQ-LEARN-6164-8",
-        "REQ-LEARN-6164-9",
-        "REQ-LEARN-6164-10",
-        "SCENARIO-LEARN-6164-BLOCKED",
-        "SCENARIO-LEARN-6164-MATCHED",
-        "SCENARIO-LEARN-6164-TRANSACTION",
-        "SCENARIO-LEARN-6164-READY",
+        "REQ-CL-6164-PREREQUISITE-RECOMPUTE",
+        "REQ-CL-6164-BLOCKED-MODEL-LOAD",
+        "REQ-CL-6164-MANDATED-MODEL",
+        "REQ-CL-6164-FOUR-ARM-MATCHING",
+        "REQ-CL-6164-CHRONOLOGICAL-ISOLATION",
+        "REQ-CL-6164-READ-ONLY-SNAPSHOT",
+        "REQ-CL-6164-POST-OUTCOME-COMMIT",
+        "REQ-CL-6164-CERTIFICATE",
+        "REQ-CL-6164-DECISION-ADMISSION",
+        "REQ-CL-6164-UTILITY",
+        "REQ-CL-6164-RETENTION",
+        "REQ-CL-6164-POISON",
+        "REQ-CL-6164-ROLLBACK",
+        "REQ-CL-6164-BOUNDED-STATE",
+        "REQ-CL-6164-LIFECYCLE",
+        "REQ-CL-6164-IMMUTABLE-WEIGHT",
+        "REQ-CL-6164-READY-SCORE",
+        "SCENARIO-CL-6164-BLOCKED",
+        "SCENARIO-CL-6164-MATCHED",
+        "SCENARIO-CL-6164-TRANSACTION",
+        "SCENARIO-CL-6164-READY",
         mod.RESULT_RELATIVE_PATH.as_posix(),
         mod.MODEL_SPECS[0]["hf_id"],
         mod.MODEL_SPECS[1]["hf_id"],
@@ -214,6 +231,19 @@ def test_req_6164_prerequisite_recompute_fails_closed_on_bad_6162(
     assert artifact["preconditions_checked"]["model_ids"] == [
         "unsloth/Qwen3.6-35B-A3B-GGUF",
         "unsloth/gemma-4-26B-A4B-it-GGUF",
+    ]
+    continuous_spec_receipts = [
+        receipt
+        for receipt in artifact["preconditions_checked"]["hashed_inputs"]
+        if receipt["path"] == mod.REQUESTED_CONTINUOUS_SPEC_RELATIVE_PATH.as_posix()
+    ]
+    assert continuous_spec_receipts == [
+        {
+            "path": mod.REQUESTED_CONTINUOUS_SPEC_RELATIVE_PATH.as_posix(),
+            "exists": True,
+            "sha256": mod.sha256_file(REPO / mod.REQUESTED_CONTINUOUS_SPEC_RELATIVE_PATH),
+            "size_bytes": (REPO / mod.REQUESTED_CONTINUOUS_SPEC_RELATIVE_PATH).stat().st_size,
+        }
     ]
     assert mod.validate_artifact(artifact) is True
 

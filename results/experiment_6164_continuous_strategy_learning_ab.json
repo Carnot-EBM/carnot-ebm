@@ -22,7 +22,7 @@
     }
   ],
   "acquisition_analysis_duration_and_cleanup_receipts": {
-    "analysis_duration_s": 0.000991,
+    "analysis_duration_s": 0.000724,
     "cached_analysis_misclassified_as_live_inference": false,
     "cleanup": {
       "cuda_contexts_released": true,
@@ -153,7 +153,7 @@
     "rollback_exact": true,
     "state_byte_bound": 4096
   },
-  "duration_s": 0.000991,
+  "duration_s": 0.000724,
   "embedded_tokenizer_chat_template_cuda_pid_and_lifecycle_receipts": {
     "all_loaded": false,
     "chat_template_present": false,
@@ -180,127 +180,127 @@
   "field_provenance": {
     "MODEL_SPECS": {
       "principle": "The top-level model list contains only the two mandated frozen SOTA GGUF hub ids.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "acquisition_analysis_duration_and_cleanup_receipts": {
       "principle": "GPU acquisition, live inference, cached analysis, and cleanup durations are reported separately.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "arm_definitions_and_resource_matching": {
       "principle": "No-memory, Exp6120 utility-only, certificate-only, and decision-calibrated arms are matched on events, prompts, seeds, token budgets, invocations, and resource caps.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "blocked_before_model_load_receipt": {
       "principle": "A failed prerequisite must prove all model, tokenizer, CUDA, and GPU invocation counts are zero.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "chronological_event_order_and_decision_snapshot_receipts": {
       "principle": "Every decision reads a frozen read-only snapshot with only prior certificates.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "continuous_self_learning_task": {
       "principle": "This field is bare true because the task is the mandatory FR-11 continuous self-learning run.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "continuous_strategy_learning_ready_score": {
       "principle": "Readiness is one only when the decision-calibrated strategy beats both baselines for both models with positive lower intervals, no regressions, bounded state, cleanup, and immutable weights.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "duplicate_reordered_rollback_restart_eviction_and_state_bytes": {
       "principle": "Duplicate, reordered, rollback, restart, eviction, and bounded-state bytes are explicit lifecycle checks.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "duration_s": {
       "principle": "Measured wall time is reported without classifying cached analysis as live inference.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "embedded_tokenizer_chat_template_cuda_pid_and_lifecycle_receipts": {
       "principle": "Tokenizer, chat-template, CUDA PID, native-chat, worker, and lifecycle receipts distinguish cached setup from live inference.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "exact_post_outcome_commit_abort_quarantine_receipts": {
       "principle": "Strategy writes commit only after exact post-outcome validation, otherwise abort or quarantine.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "field_provenance": {
       "principle": "Every field traces to spec, upstream artifacts, model receipts, transaction receipts, tests, commands, or protected-file hashes.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "honest_verdict": {
       "principle": "Use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and state whether self-learning actually executed.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "inference_substrate": {
       "principle": "The substrate states whether the run blocked before load or used live local SOTA GGUF CUDA.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "learning_speed_and_time_to_benefit": {
       "principle": "Chronological learning curves and time-to-benefit are separated from final utility.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "mandatory_artifact_written": {
       "principle": "This field is bare true because every terminal path must write the Exp6164 artifact.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "missing_verifier_gaps": {
       "principle": "Any missing prerequisite, model, lifecycle, safety, or validation gap is made explicit.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "model_specs": {
       "principle": "The lowercase model list mirrors MODEL_SPECS for downstream schema consumers.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "model_weight_immutability_receipt": {
       "principle": "This experiment may update certified external strategy state but never model weights.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "per_model_family_partition_future_utility_accuracy_regret_and_grouped_intervals": {
       "principle": "Future utility, accuracy, regret, and grouped intervals are reported per model, family, and partition before pooling.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "preconditions_checked": {
       "principle": "Hash Exp6160 rows, Exp6162 policy/verdict, Exp6163 schema/ABI/verdict, event order, prompts, models, validators, exclusions, outputs, and protected files before GPU acquisition.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "prerequisite_gate_receipts": {
       "principle": "Exp6162 and Exp6163 readiness are recomputed internally and conjunctively.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "protected_files_unchanged": {
       "principle": "Conductor, ops, and traceability files remain outside this experiment's mutable surface.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "protected_retention_forgetting_safety_abstention_and_poison_metrics": {
       "principle": "Utility cannot buy protected forgetting, unsafe admission, abstention, or poison regressions.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "reproducibility_checksum": {
       "principle": "A checksum detects drift in inputs, model specs, receipts, metrics, commands, protected files, and output paths.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "resolved_paths_revisions_quantizations_hashes_and_loader_receipts": {
       "principle": "Model paths, revisions, quantizations, hashes, loaders, and GPU assignments are resolved only after prerequisites pass.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "retirement_triggered": {
       "principle": "Repeated non-positive strategy-learning evidence can retire the construction instead of hiding a null.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "status": {
       "principle": "Terminal status distinguishes blocked, positive, null, and retired strategy-learning evidence.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "test_commands": {
       "principle": "Commands document focused unit, coverage, prerequisite, artifact, model/cache/tokenizer/CUDA, arm matching, chronological isolation, transaction, metrics, immutability, lifecycle, schema, adversarial, protected-file, E2E, global pytest, and root-clutter checks.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "test_exit_codes": {
       "principle": "Non-zero verification commands prevent readiness.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     },
     "verifier_is_oracle": {
       "principle": "Exact validators score post-outcome commits, but the decision policy is not an oracle.",
-      "source": "REQ-LEARN-6164 / Exp6164 receipts"
+      "source": "REQ-CL-6164 / Exp6164 receipts"
     }
   },
   "honest_verdict": "blocked: exp6163_not_ready; self-learning did not execute",
@@ -542,10 +542,10 @@
         "size_bytes": 1498495
       },
       {
-        "exists": false,
+        "exists": true,
         "path": "openspec/capabilities/continuous-learning/spec.md",
-        "sha256": null,
-        "size_bytes": 0
+        "sha256": "sha256:19863431575b78545540a77517473656ed3ad68442b56167103cf28572631d68",
+        "size_bytes": 14883
       },
       {
         "exists": true,
@@ -592,14 +592,14 @@
       {
         "exists": true,
         "path": "python/carnot/experiment_6164_continuous_strategy_learning_ab.py",
-        "sha256": "sha256:810c45ae9e1ccafd5c259bd71e741ed52f702ba1b2822e3cc691fa7cacf5dbd9",
-        "size_bytes": 48183
+        "sha256": "sha256:e14f5c499aff0937c0a219c836f52c9b358d632e4d5eb108eb3c55bb04b59c14",
+        "size_bytes": 48795
       },
       {
         "exists": true,
         "path": "tests/python/test_experiment_6164_continuous_strategy_learning_ab.py",
-        "sha256": "sha256:4fd1a8fef35a52dd10ffbb6c788f472ab09daed85ecefb59083b54e1d440d5f5",
-        "size_bytes": 17940
+        "sha256": "sha256:85674726aac327bca75139cd3e1d646ed3ef01972943a43d440fe153252db2c1",
+        "size_bytes": 19500
       },
       {
         "exists": true,
@@ -635,7 +635,7 @@
     },
     "protected_file_hashes_before": {
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
-      "ops/changelog.md": "sha256:69dc624133bf114ab4bab0db831e7bc05be41397a4e9938e501bf54d7f14158f",
+      "ops/changelog.md": "sha256:b63066d1a5a3ad14d5a150ef81409b9e7fd33d8219f34d181798cfa101f7ec37",
       "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
     },
@@ -695,13 +695,13 @@
   "protected_files_unchanged": {
     "after": {
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
-      "ops/changelog.md": "sha256:69dc624133bf114ab4bab0db831e7bc05be41397a4e9938e501bf54d7f14158f",
+      "ops/changelog.md": "sha256:b63066d1a5a3ad14d5a150ef81409b9e7fd33d8219f34d181798cfa101f7ec37",
       "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
     },
     "before": {
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
-      "ops/changelog.md": "sha256:69dc624133bf114ab4bab0db831e7bc05be41397a4e9938e501bf54d7f14158f",
+      "ops/changelog.md": "sha256:b63066d1a5a3ad14d5a150ef81409b9e7fd33d8219f34d181798cfa101f7ec37",
       "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
     },
@@ -718,7 +718,7 @@
     "unsafe_admission_count": 0,
     "unsafe_admission_regression_count": 0
   },
-  "reproducibility_checksum": "sha256:f506dbe49c5a12ca35ee03ba1742258372498301712e3f6c6845e04969daac02",
+  "reproducibility_checksum": "sha256:e7773a25d09f1fed1550dc91552dbf281a4bc64af3374537e55392441ef8192f",
   "resolved_paths_revisions_quantizations_hashes_and_loader_receipts": {
     "records": [
       {
@@ -768,7 +768,7 @@
   ],
   "test_exit_codes": {
     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6164_continuous_strategy_learning_ab.py -m pytest tests/python/test_experiment_6164_continuous_strategy_learning_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6164_continuous_strategy_learning_ab.py --fail-under=100": 0,
-    ".venv/bin/pytest tests/python -q": 3,
+    ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/pytest tests/python/test_experiment_6162_prospective_admission_replication.py -q --no-cov -n 0": 0,
     ".venv/bin/pytest tests/python/test_experiment_6164_continuous_strategy_learning_ab.py -q --no-cov -n 0": 0,
     ".venv/bin/python -m carnot.experiment_6164_continuous_strategy_learning_ab --validate": 0,
