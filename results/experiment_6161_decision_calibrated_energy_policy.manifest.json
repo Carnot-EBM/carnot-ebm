@@ -1,0 +1,280 @@
+{
+  "abstention_rule": {
+    "abstain_when": "abs(score - threshold) <= margin",
+    "margin": 0.05,
+    "type": "score_margin"
+  },
+  "bootstrap_evaluation_plan": {
+    "bootstrap_replicates": 64,
+    "bootstrap_seeds": [
+      615930000,
+      615930017,
+      615930034,
+      615930051,
+      615930068,
+      615930085,
+      615930102,
+      615930119,
+      615930136,
+      615930153,
+      615930170,
+      615930187,
+      615930204,
+      615930221,
+      615930238,
+      615930255,
+      615930272,
+      615930289,
+      615930306,
+      615930323,
+      615930340,
+      615930357,
+      615930374,
+      615930391,
+      615930408,
+      615930425,
+      615930442,
+      615930459,
+      615930476,
+      615930493,
+      615930510,
+      615930527,
+      615930544,
+      615930561,
+      615930578,
+      615930595,
+      615930612,
+      615930629,
+      615930646,
+      615930663,
+      615930680,
+      615930697,
+      615930714,
+      615930731,
+      615930748,
+      615930765,
+      615930782,
+      615930799,
+      615930816,
+      615930833,
+      615930850,
+      615930867,
+      615930884,
+      615930901,
+      615930918,
+      615930935,
+      615930952,
+      615930969,
+      615930986,
+      615931003,
+      615931020,
+      615931037,
+      615931054,
+      615931071
+    ],
+    "minimum_effective_sample_sizes": {
+      "calibration_base_templates": 12,
+      "calibration_events": 96,
+      "future_known_base_templates": 8,
+      "future_known_events": 64,
+      "shifted_family_held_base_templates": 10,
+      "shifted_family_held_events": 80,
+      "total_base_templates": 30,
+      "total_events": 240
+    },
+    "paired_unit": "event_id",
+    "primary_cluster_unit": "base_template_id",
+    "principle": "Paired uncertainty uses a frozen primary cluster unit, bootstrap seeds, and minimum effective sample sizes.",
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.sample_size_plan"
+  },
+  "calibration_parameters": {
+    "arm": "decision_calibrated_task_energy",
+    "control_kind_logit": {
+      "alias": -3.8918202981106265,
+      "contradiction": 3.8918202981106256,
+      "malformed_strategy": 3.8918202981106256,
+      "normal": -4.59511985013459,
+      "poison": 3.8918202981106256,
+      "threshold_boundary": -3.8918202981106265
+    },
+    "family_centering": {
+      "budget_release": 0.008107239540993738,
+      "claim_triage": 0.008107239540993738,
+      "credential_rotation": 0.008107239540993738,
+      "data_pipeline": 0.008107239540993738
+    },
+    "fit_row_count": 192,
+    "fitted_from_partitions": [
+      "calibration"
+    ],
+    "global_unsafe_rate": 0.3756476683937824,
+    "invalid_output_weight": 0.18,
+    "model_centering": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": 0.002732086621730745,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 0.002732086621730745
+    },
+    "raw_energy_weight": 0.08
+  },
+  "cost_table": {
+    "false_safe_rejection": -1.0,
+    "false_unsafe_acceptance": -8.0,
+    "principle": "One unsafe-weighted decision cost table is frozen before inference or held materialization.",
+    "safe_abstention": -0.25,
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.utility_cost_table",
+    "table_id": "exp6159_unsafe_weighted_v1",
+    "true_safe_acceptance": 1.0,
+    "true_unsafe_rejection": 1.5,
+    "unsafe_abstention": -0.5,
+    "unsafe_weight": 8.0
+  },
+  "experiment_id": "experiment_6161_decision_calibrated_energy_policy",
+  "feature_schema": {
+    "allowlist": [
+      "family",
+      "variant_kind",
+      "control_kind",
+      "model_hf_id",
+      "model_index",
+      "constraint.fact_count",
+      "constraint.rule_count",
+      "constraint.body_term_count",
+      "constraint.predicate_count",
+      "constraint.domain_count",
+      "constraint.entity_count",
+      "constraint.query_variable_count",
+      "constraint.negation_term_count",
+      "constraint.arithmetic_term_count",
+      "constraint.has_recursive_dependency",
+      "constraint.malformed_extra_top_level_count",
+      "strategy.expected_strategy_id",
+      "strategy.observed_strategy_id",
+      "strategy.strategy_id_matches_expected",
+      "strategy.terminal_solution_mentions_expected",
+      "strategy.alias_surface",
+      "strategy.composition_surface",
+      "strategy.permuted_fact_order",
+      "strategy.proposal_form_malformed",
+      "strategy.memory_action_poison_request",
+      "strategy.threshold_distance_hint",
+      "response.invalid_output",
+      "response.terminal_complete",
+      "response.generated_token_count",
+      "response.response_char_length",
+      "response.finish_reason_length",
+      "history.prior_same_family_event_count",
+      "history.prior_same_template_event_count"
+    ],
+    "allowlist_hash": "sha256:5cb10f51052801d5090ab4247d32d22c16df10258487153ca32db73c69895c8b",
+    "forbidden_tokens": [
+      "answer",
+      "chronological_index",
+      "current_outcome",
+      "current_validator_result",
+      "decision_record_hash",
+      "exact_answer",
+      "exact_labels",
+      "exact_outcome",
+      "future_event",
+      "future_label",
+      "held_label",
+      "message_hash",
+      "oracle_label",
+      "outcome_receipt",
+      "post_outcome",
+      "row_hash",
+      "row_id",
+      "seed",
+      "unsafe_label",
+      "validator",
+      "visible_event_hash"
+    ]
+  },
+  "held_access_count_at_freeze": 0,
+  "model_specific_policy_data": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "calibration_row_count": 96,
+      "families": {
+        "budget_release": 24,
+        "claim_triage": 24,
+        "credential_rotation": 24,
+        "data_pipeline": 24
+      },
+      "model_centering": 0.002732086621730745,
+      "unsafe_count": 36
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "calibration_row_count": 96,
+      "families": {
+        "budget_release": 24,
+        "claim_triage": 24,
+        "credential_rotation": 24,
+        "data_pipeline": 24
+      },
+      "model_centering": 0.002732086621730745,
+      "unsafe_count": 36
+    }
+  },
+  "run_date": "20260806",
+  "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.policy_manifest",
+  "score_code_hashes": {
+    "exp6147_fixed_control_code": "sha256:5aaf0a7c29da2419cf32074b30b0cafa46957b0c5a8271164963f524dc574e8f",
+    "exp6147_selection_manifest_hash": "sha256:de34bfec39a3c3c5a5d48c8ee2626bcfbf5961ab2aa5045c903522d2d31bee9e",
+    "exp6161_score_code": "sha256:8e077b569902bac790cb04b4010044bf4a97883e55915adf6c82829daf4610b1"
+  },
+  "selected_arm": "decision_calibrated_task_energy",
+  "selected_from_partitions": [
+    "calibration"
+  ],
+  "selection_uses_held_outcomes": false,
+  "task_statistics": {
+    "calibration_group_key": [
+      "model_hf_id",
+      "family"
+    ],
+    "calibration_row_count": 192,
+    "control_kind_counts": {
+      "alias": 24,
+      "contradiction": 24,
+      "malformed_strategy": 24,
+      "normal": 72,
+      "poison": 24,
+      "threshold_boundary": 24
+    },
+    "family_counts": {
+      "budget_release": 48,
+      "claim_triage": 48,
+      "credential_rotation": 48,
+      "data_pipeline": 48
+    }
+  },
+  "threshold": 0.13683932616272387,
+  "upstream_hashes": {
+    "exp6159_endpoint_sections_hash": "sha256:33e6159b51459c84f143b6bbbeee1f5ca7472f34894c9f3a71fc9a68c4ff20d9",
+    "exp6160_row_sidecars": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "exists": true,
+        "partition_counts": {
+          "calibration": 96,
+          "future_known": 64,
+          "shifted_family_held": 80
+        },
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "row_count": 240,
+        "sha256": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+        "size_bytes": 555817
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "exists": true,
+        "partition_counts": {
+          "calibration": 96,
+          "future_known": 64,
+          "shifted_family_held": 80
+        },
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl",
+        "row_count": 240,
+        "sha256": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+        "size_bytes": 646762
+      }
+    }
+  }
+}
