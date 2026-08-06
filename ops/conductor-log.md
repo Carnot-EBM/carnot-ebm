@@ -15407,3 +15407,5 @@ Still active  |
 | 2026-08-06 16:12 UTC | Gated on Exp6157 and Exp6159 readiness: certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6157-repo-wide-artifact-isolation-closure |
 | 2026-08-06 16:53 UTC | Mandatory prospective continuous strategy-learning | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6164_continu |
 | 2026-08-06 16:55 UTC | Gated on Exp6157 and Exp6159 readiness: certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6157-repo-wide-artifact-isolation-closure |
+| 2026-08-06 17:09 UTC | Mandatory prospective continuous strategy-learning | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6164_continu |
+| 2026-08-06 17:11 UTC | Gated on Exp6157 and Exp6159 readiness: certified | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6157-repo-wide-artifact-isolation-closure |
