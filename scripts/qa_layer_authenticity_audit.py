@@ -211,6 +211,15 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "decides whether an ARC solver counts as live-path-reachable, i.e. whether the "
         "work counts at all",
     ),
+    (
+        PROJECT_ROOT / "python" / "carnot" / "testing" / "tracked_results_guard.py",
+        "RUNTIME guard for the sibling half of the Test-Run Record Integrity Discipline: "
+        "fires at the moment a test writes a tracked results/** file, the exact mechanism "
+        "that silently rewrote the research record (2026-07-29 incident). Same shape as "
+        "operator_curated_doc_guard.py above -- not a pre-commit hook, so --check-targets "
+        "alone would never have found it -- listed here explicitly, added 2026-08-05 after "
+        "landing 7 hours unclassified.",
+    ),
 )
 
 # Pre-commit-wired scripts deliberately OUT of QA-layer scope, each with the reason. This

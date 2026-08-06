@@ -133,9 +133,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
         "path, protected files, endpoint failures, and rate limits are recorded "
         "before source decisions."
     ),
-    "search_window_and_marker_receipt": (
-        "Only a hash-anchored post-marker window is eligible."
-    ),
+    "search_window_and_marker_receipt": ("Only a hash-anchored post-marker window is eligible."),
     "source_queries_and_endpoint_receipts": (
         "Every source route records role, URL, query, access outcome, timestamp, "
         "candidate count, and low-concurrency evidence."
@@ -144,8 +142,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
         "Discovery metadata cannot be mistaken for primary or official evidence."
     ),
     "accepted_rejected_duplicate_retired_and_abstained_findings": (
-        "Every candidate receives one explicit disposition backed by a primary or "
-        "official URL."
+        "Every candidate receives one explicit disposition backed by a primary or official URL."
     ),
     "sota_to_experiment_mapping": (
         "Ingestion may inform execution but cannot add, remove, rename, or re-gate a task."
@@ -168,17 +165,14 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
         "Reference-ledger appends are append-only and forbidden for zero accepted findings."
     ),
     "roadmap_identity_gate_and_exclusion_immutability": (
-        "Roadmap task IDs, gates, task identity, and exclusions stay immutable "
-        "during ingestion."
+        "Roadmap task IDs, gates, task identity, and exclusions stay immutable during ingestion."
     ),
     "protected_files_unchanged": (
         "Roadmaps, conductor, ops ledgers, retired-scope controls, and protected "
         "sources remain byte-identical unless explicitly owned."
     ),
     "duration_s": "Measured wall time exposes the bounded literature-ingestion substrate.",
-    "inference_substrate": (
-        "Use `literature_ingestion`; no local research model is invoked."
-    ),
+    "inference_substrate": ("Use `literature_ingestion`; no local research model is invoked."),
     "field_provenance": (
         "Every field traces to source receipts, local hashes, query families, or "
         "classification records."
@@ -191,8 +185,7 @@ REQUIRED_FIELD_PRINCIPLES: dict[str, str] = {
     ),
     "test_exit_codes": "Exit codes prevent failed checks from becoming success.",
     "reproducibility_checksum": (
-        "A checksum detects later marker, source, classification, append, or "
-        "immutability drift."
+        "A checksum detects later marker, source, classification, append, or immutability drift."
     ),
     "honest_verdict": (
         "Use `complete_delta:`, `complete_null:`, or `blocked:` and distinguish "
@@ -682,7 +675,7 @@ DEFAULT_RETIRED_SCOPE_FINDINGS: tuple[JsonDict, ...] = (
         "retired_reopen_shapes_manifest_guard",
         "retired_scope",
         "Renamed Phase-D, generated-answer, CSL exact-slot, THRML parity, ARC, KAN, or hardware reopen shapes",
-        "https://github.com/ianblenke/carnot/blob/main/ops/exclusion_manifest.yaml",
+        "https://github.com/Carnot-EBM/carnot-ebm/blob/main/ops/exclusion_manifest.yaml",
         identifier="retired_v533_reopen_shapes",
         receipt_id="local_sweep_clusters_v533",
         query_family="local_tooling",
@@ -921,9 +914,7 @@ def _roadmap_snapshot(path: Path) -> JsonDict:
         loaded = {}
     raw_tasks = loaded.get("tasks") if isinstance(loaded.get("tasks"), list) else []
     task_ids = [
-        str(row.get("id"))
-        for row in raw_tasks
-        if isinstance(row, Mapping) and row.get("id")
+        str(row.get("id")) for row in raw_tasks if isinstance(row, Mapping) and row.get("id")
     ]
     gates = [
         {"id": row.get("id"), "gated_on": row.get("gated_on")}
@@ -1150,9 +1141,7 @@ def _bucket_findings(accepted_findings: Sequence[JsonDict]) -> JsonDict:
 def _source_counts(source_receipts: Sequence[JsonDict]) -> JsonDict:
     counts = Counter(str(row["source_role"]) for row in source_receipts)
     return {
-        "principle": REQUIRED_FIELD_PRINCIPLES[
-            "primary_secondary_and_official_source_counts"
-        ],
+        "principle": REQUIRED_FIELD_PRINCIPLES["primary_secondary_and_official_source_counts"],
         "primary": counts["primary"],
         "secondary": counts["secondary"],
         "official": counts["official"],
@@ -1182,9 +1171,7 @@ def _semantic_scholar_receipts(source_receipts: Sequence[JsonDict]) -> JsonDict:
     ebt = by_id.get("semantic_scholar_v533_ebt_citations", {})
     arm = by_id.get("semantic_scholar_v533_arm_ebm_citations", {})
     return {
-        "principle": REQUIRED_FIELD_PRINCIPLES[
-            "semantic_scholar_ebt_and_arm_ebm_receipts"
-        ],
+        "principle": REQUIRED_FIELD_PRINCIPLES["semantic_scholar_ebt_and_arm_ebm_receipts"],
         "ebt_arxiv_id": "2507.02092",
         "arm_ebm_arxiv_id": "2512.15605",
         "ebt_visible_citation_count": ebt.get("candidate_count", 0),
@@ -1321,9 +1308,7 @@ def _immutability_receipt(root: Path) -> JsonDict:
     active = _roadmap_snapshot(root / ROADMAP_RELATIVE_PATH)
     staged = _roadmap_snapshot(root / ROADMAP_NEXT_RELATIVE_PATH)
     return {
-        "principle": REQUIRED_FIELD_PRINCIPLES[
-            "roadmap_identity_gate_and_exclusion_immutability"
-        ],
+        "principle": REQUIRED_FIELD_PRINCIPLES["roadmap_identity_gate_and_exclusion_immutability"],
         "task_ids_unchanged": True,
         "gates_unchanged": True,
         "exclusions_unchanged": True,
@@ -1435,9 +1420,7 @@ def build_artifact(
         "search_started_at": search_started_at,
         "search_finished_at": search_finished_at,
         "search_window_and_marker_receipt": {
-            "principle": REQUIRED_FIELD_PRINCIPLES[
-                "search_window_and_marker_receipt"
-            ],
+            "principle": REQUIRED_FIELD_PRINCIPLES["search_window_and_marker_receipt"],
             "boundary_marker": PLANNER_MARKER,
             "planner_heading": PLANNER_HEADING,
             "marker_line": marker_line,
@@ -1453,9 +1436,7 @@ def build_artifact(
             ),
         },
         "source_queries_and_endpoint_receipts": {
-            "principle": REQUIRED_FIELD_PRINCIPLES[
-                "source_queries_and_endpoint_receipts"
-            ],
+            "principle": REQUIRED_FIELD_PRINCIPLES["source_queries_and_endpoint_receipts"],
             "source_receipts": source_rows,
             "endpoint_failures": endpoint_failures,
             "rate_limit_receipts": rate_limits,
@@ -1482,12 +1463,8 @@ def build_artifact(
             "same_day_ordering_uncertainty": True,
             "utc_cutoff": search_finished_at,
         },
-        "semantic_scholar_ebt_and_arm_ebm_receipts": _semantic_scholar_receipts(
-            source_rows
-        ),
-        "openreview_huggingface_github_extropic_and_kona_receipts": _group_receipts(
-            source_rows
-        ),
+        "semantic_scholar_ebt_and_arm_ebm_receipts": _semantic_scholar_receipts(source_rows),
+        "openreview_huggingface_github_extropic_and_kona_receipts": _group_receipts(source_rows),
         "duplicate_and_retired_scope_filter": _retired_scope_filter(),
         "references_append_receipt": _references_append_receipt(
             accepted_findings=accepted,
@@ -1546,9 +1523,7 @@ def build_and_write_artifact(
         test_commands=test_commands,
         test_exit_codes=test_exit_codes,
     )
-    accepted = dry["accepted_rejected_duplicate_retired_and_abstained_findings"][
-        "accepted"
-    ]
+    accepted = dry["accepted_rejected_duplicate_retired_and_abstained_findings"]["accepted"]
     appended = False
     if dry["status"] == "complete" and accepted and EXECUTION_DELTA_HEADING not in before_text:
         references_path.write_text(
@@ -1599,7 +1574,9 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     source_block = artifact["source_queries_and_endpoint_receipts"]
     _require(isinstance(source_block, Mapping), "source_queries must be an object")
     source_receipts = source_block.get("source_receipts")
-    _require(isinstance(source_receipts, list) and source_receipts, "source_queries missing receipts")
+    _require(
+        isinstance(source_receipts, list) and source_receipts, "source_queries missing receipts"
+    )
     for receipt in source_receipts:
         for field in SOURCE_RECEIPT_REQUIRED_FIELDS:
             _require(field in receipt, f"source receipt missing {field}")
@@ -1650,7 +1627,11 @@ def main() -> int:
         duration_s=round((finished - started).total_seconds(), 6),
     )
     validate_artifact(artifact)
-    print(json.dumps({"status": artifact["status"], "result": artifact["result_path"]}, sort_keys=True))
+    print(
+        json.dumps(
+            {"status": artifact["status"], "result": artifact["result_path"]}, sort_keys=True
+        )
+    )
     return 0
 
 

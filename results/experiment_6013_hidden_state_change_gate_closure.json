@@ -8695,6 +8695,14 @@
         "reason": "REQ-ARC-WMTE-6091 added a DEFAULT-OFF flag (CARNOT_ARC_REFACTOR_SHOW_ENGINE) and a conditional engine-source splice to refactor_prompt. With the flag off the rendered prompt is byte-identical to the pre-6091 version, and no other function in the module changed, so this artifact -- which never sets the flag -- cannot have moved.",
         "evidence": "tests/python/test_arc_refactor_show_engine_20260803.py::test_off_arm_is_byte_identical_to_the_shipped_prompt asserts unset == '0' == the shipped prompt (and that an explicit engine_source= is ignored while off); ::test_flag_defaults_off pins the default. MUTATION-PROVEN: deleting the {engine_block} splice from the prompt f-string turns 3 of 7 tests red, source restored and re-verified green. Rebuild not attempted because every target is a live-GPU measurement and this host cannot currently keep a generator alive (results/experiment_6091_refine_engine_visible_ab.json: server lifetimes 369/17/10/53 s; no-harness control 22 s).",
         "acknowledged_by": "outer-loop 2026-08-03 (REQ-ARC-WMTE-6091)"
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
+        "acknowledged_on": "2026-08-05",
+        "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
+        "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
       }
     ]
   },

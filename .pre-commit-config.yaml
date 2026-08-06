@@ -67,7 +67,15 @@ repos:
   # `.venv/bin/ruff check --fix` and `.venv/bin/ruff format` manually
   # before staging if they want auto-fixes.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.9
+    # v0.15.9 -> v0.15.17 (2026-08-05): pyproject.toml's per-file-ignores gained UP045
+    # (commit cfca5de955), a rule id v0.15.9 does not recognize -- ruff fails to PARSE
+    # the config at all rather than reporting a lint finding, so both hooks below have
+    # been erroring on every commit that reaches them since that commit landed (silently
+    # bypassed via --no-verify on automated commits, but blocking any hook-respecting
+    # commit that touched a Python file). v0.15.17 is not a guess: it is the exact
+    # version already running in .venv/bin/ruff, verified to parse pyproject.toml clean
+    # and pass `ruff check`/`ruff format --check` on this repo before the bump.
+    rev: v0.15.17
     hooks:
       - id: ruff
         args: ["--no-fix"]
