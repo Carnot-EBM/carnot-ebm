@@ -1,0 +1,2296 @@
+{
+  "calibration_group_and_fold_receipts": {
+    "calibration_row_count": 192,
+    "fold_count": 4,
+    "folds": [
+      {
+        "fold_index": 0,
+        "group_overlap_count": 0,
+        "train_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline"
+        ],
+        "train_row_count": 144,
+        "validation_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release"
+        ],
+        "validation_row_count": 48
+      },
+      {
+        "fold_index": 1,
+        "group_overlap_count": 0,
+        "train_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline"
+        ],
+        "train_row_count": 144,
+        "validation_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage"
+        ],
+        "validation_row_count": 48
+      },
+      {
+        "fold_index": 2,
+        "group_overlap_count": 0,
+        "train_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline"
+        ],
+        "train_row_count": 144,
+        "validation_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation"
+        ],
+        "validation_row_count": 48
+      },
+      {
+        "fold_index": 3,
+        "group_overlap_count": 0,
+        "train_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|budget_release",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|claim_triage",
+          "unsloth/Qwen3.6-35B-A3B-GGUF|credential_rotation",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|budget_release",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|claim_triage",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|credential_rotation"
+        ],
+        "train_row_count": 144,
+        "validation_groups": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF|data_pipeline",
+          "unsloth/gemma-4-26B-A4B-it-GGUF|data_pipeline"
+        ],
+        "validation_row_count": 48
+      }
+    ],
+    "future_or_held_rows_used_for_fit_count": 0,
+    "group_count": 8,
+    "group_key": [
+      "model_hf_id",
+      "family"
+    ],
+    "principle": "Model/task family groups are never split across fit/tune folds.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.grouped_folds"
+  },
+  "chronological_drift_diagnostics": {
+    "chronological_index_used_as_score_feature": false,
+    "drift_windows": [
+      {
+        "brier": 0.00025961093242458683,
+        "ece": 0.015342547106816116,
+        "families": {
+          "claim_triage": 16,
+          "credential_rotation": 48
+        },
+        "row_count": 64,
+        "unsafe_weighted_cost": -76.0,
+        "window_index": 0
+      },
+      {
+        "brier": 0.0002488173080186477,
+        "ece": 0.015059962029281424,
+        "families": {
+          "budget_release": 32,
+          "claim_triage": 32
+        },
+        "row_count": 64,
+        "unsafe_weighted_cost": -76.0,
+        "window_index": 1
+      },
+      {
+        "brier": 0.0002443723766580577,
+        "ece": 0.014965925178982707,
+        "families": {
+          "budget_release": 16,
+          "data_pipeline": 48
+        },
+        "row_count": 64,
+        "unsafe_weighted_cost": -76.0,
+        "window_index": 2
+      }
+    ],
+    "event_id_used_for_sorting_only": true,
+    "principle": "Calibration drift is diagnostic only and never a row-order feature.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.chronological_drift"
+  },
+  "decision_calibrated_policy_ready_score": 1.0,
+  "duration_s": 0.169107,
+  "experiment_id": "experiment_6161_decision_calibrated_energy_policy",
+  "field_provenance": {
+    "calibration_group_and_fold_receipts": {
+      "principle": "Model/task family groups are never split across fit/tune folds.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "chronological_drift_diagnostics": {
+      "principle": "Calibration drift is diagnostic only and never a row-order feature.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "decision_calibrated_policy_ready_score": {
+      "principle": "Exactly one means a complete prospective policy and non-vacuous calibration support, not a held win.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "duration_s": {
+      "principle": "Cached CPU analysis duration is reported separately from live model acquisition.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to specs, Exp6159/Exp6160/Exp6147 artifacts, tests, or command receipts.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "global_exp6147_decision_family_shuffled_alias_frequency_and_distance_arm_configs": {
+      "principle": "Every compared arm is transparent, resource-matched, and declares whether it is fitted or fixed.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "held_access_count": {
+      "principle": "The value is the bare scalar zero.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state whether a policy was validly frozen.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `cached_authentic_sota_rows_cpu_analysis`.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Any gate, feature, fold, control, manifest, held-access, or command gap is explicit.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "per_model_calibration_cost_brier_ece_unsafe_safe_and_descriptive_ranking_metrics": {
+      "principle": "Each mandated model reports decision cost, proper scores, action counts, and descriptive ranking metrics before pooling.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "policy_manifest_path_hash_and_contents": {
+      "principle": "The frozen manifest is content-addressed and complete enough for prospective held replay.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "precommitted_feature_allowlist_and_forbidden_scan": {
+      "principle": "Any current outcome, exact answer, exact validator field, row-order alias, future-event feature, or held label in score inputs forces readiness zero.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Upstream endpoints, rows, controls, exclusions, outputs, held counters, and protected files are hashed before scoring.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor, ops, traceability, and upstream protected artifacts remain byte-identical.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The artifact hash detects source, row, split, feature, policy, manifest, command, or protected-file drift.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "score_threshold_abstention_and_cost_freeze_receipts": {
+      "principle": "Score formula, threshold, abstention, and Exp6159 cost table are frozen before held opening.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "selected_policy_rationale_without_held_access": {
+      "principle": "One complete policy is selected from calibration objective evidence without held access.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "shortcut_and_boundary_controls": {
+      "principle": "Shortcut and boundary controls cannot outperform the selected policy for readiness.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes ready, null, retired, or blocked policy freeze.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "structured_gate_receipt": {
+      "principle": "Calibration opens only after Exp6159, Exp6160, and Exp6147 are ready, row sidecars are present, held access is zero, and no live model path is invoked.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/spec coverage, structured gate, feature/leakage, grouped folds, cost/proper-score calculations, controls, policy hash, zero-held-access, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from becoming readiness.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "upstream_endpoint_row_and_control_hashes": {
+      "principle": "Exp6159 endpoint/splits/preregistration, Exp6160 rows, Exp6147 fixed score code/manifest, exclusions, and output paths are content-addressed.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "The policy is oracle-distinct; exact calibration labels are not score features.",
+      "sources": [
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "results/experiment_6147_task_aware_energy_calibration.json",
+        "results/experiment_6159_decision_calibrated_stream.json",
+        "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+      ]
+    }
+  },
+  "global_exp6147_decision_family_shuffled_alias_frequency_and_distance_arm_configs": {
+    "all_arms_resource_matched": true,
+    "candidate_arms": [
+      "global_energy",
+      "exp6147_fixed_task_aware",
+      "decision_calibrated_task_energy",
+      "family_only",
+      "shuffled_task",
+      "alias",
+      "frequency",
+      "distance"
+    ],
+    "configs": {
+      "alias": {
+        "fit": "threshold over alias surface only"
+      },
+      "decision_calibrated_task_energy": {
+        "fit": "model_task_grouped_calibration_rows_only",
+        "objective": "Exp6159 unsafe-weighted utility with proper-score tie diagnostics"
+      },
+      "distance": {
+        "fit": "threshold over visible threshold-distance hint only"
+      },
+      "exp6147_fixed_task_aware": {
+        "fit": "fixed_control_no_refit",
+        "fixed_threshold": 1.2374189779352207,
+        "score_code_hash": "sha256:5aaf0a7c29da2419cf32074b30b0cafa46957b0c5a8271164963f524dc574e8f",
+        "selection_manifest_hash": "sha256:de34bfec39a3c3c5a5d48c8ee2626bcfbf5961ab2aa5045c903522d2d31bee9e"
+      },
+      "family_only": {
+        "fit": "family unsafe-rate logits only"
+      },
+      "frequency": {
+        "fit": "threshold over prior same-family count only"
+      },
+      "global_energy": {
+        "features": "precommitted decision-time graph, strategy, model, and response-shape features",
+        "fit": "threshold_only"
+      },
+      "shuffled_task": {
+        "fit": "same family-rate resource after deterministic task shuffle"
+      }
+    },
+    "principle": "Every compared arm is transparent, resource-matched, and declares whether it is fitted or fixed.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.arm_configs"
+  },
+  "held_access_count": 0,
+  "honest_verdict": "complete_ready: decision-calibrated policy validly frozen with zero held access",
+  "inference_substrate": "cached_authentic_sota_rows_cpu_analysis",
+  "missing_verifier_gaps": [],
+  "per_model_calibration_cost_brier_ece_unsafe_safe_and_descriptive_ranking_metrics": {
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "arms": {
+          "alias": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.304430701565805,
+            "auroc": 0.38333333333333336,
+            "brier": 0.391322317314251,
+            "ece": 0.3747758910484896,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": 0.125,
+            "score_std": 0.33071891388307384,
+            "threshold": -1.0,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "decision_calibrated_task_energy": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 60,
+              "false_safe_rejection": 0,
+              "false_unsafe_acceptance": 0,
+              "reject": 36,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 60,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 1.0,
+            "auroc": 1.0,
+            "brier": 0.0002550366792308776,
+            "ece": 0.01524808928596805,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -1.1254264137072518,
+            "score_std": 4.04595014702315,
+            "threshold": 0.13683932616272387,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": -114.0,
+            "unsafe_weighted_utility": 114.0,
+            "utility_per_row": 1.1875
+          },
+          "distance": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.2984979210618999,
+            "auroc": 0.36666666666666664,
+            "brier": 0.391322317314251,
+            "ece": 0.3747758910484896,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -0.875,
+            "score_std": 0.33071891388307384,
+            "threshold": -2.0,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "exp6147_fixed_task_aware": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.84660951560469,
+            "auroc": 0.7962962962962963,
+            "brier": 0.5653972077699158,
+            "ece": 0.5853440913986363,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": 4.578437500000001,
+            "score_std": 0.6536747835554393,
+            "threshold": 1.2374189779352207,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "family_only": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.36420952437870824,
+            "auroc": 0.475,
+            "brier": 0.36115271141601935,
+            "ece": 0.3560585786300049,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -0.49995595152908695,
+            "score_std": 0.0,
+            "threshold": -1.499955951529087,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "frequency": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 4,
+              "false_safe_rejection": 56,
+              "false_unsafe_acceptance": 0,
+              "reject": 92,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 4,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.3199193416144792,
+            "auroc": 0.4,
+            "brier": 0.5930568674701692,
+            "ece": 0.6173240789378458,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -14.166666666666666,
+            "score_std": 10.237458451957476,
+            "threshold": -30.5,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": -2.0,
+            "unsafe_weighted_utility": 2.0,
+            "utility_per_row": 0.020833333333333332
+          },
+          "global_energy": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.84660951560469,
+            "auroc": 0.7962962962962963,
+            "brier": 0.20908975057320955,
+            "ece": 0.3058023499696759,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": 1.0678333333333334,
+            "score_std": 0.8133430839579459,
+            "threshold": 0.462,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "shuffled_task": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.36420952437870824,
+            "auroc": 0.475,
+            "brier": 0.36115271141601935,
+            "ece": 0.3560585786300049,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -0.49995595152908695,
+            "score_std": 0.0,
+            "threshold": -1.499955951529087,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          }
+        },
+        "partition": "calibration",
+        "reported_before_pooling": true
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "arms": {
+          "alias": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.304430701565805,
+            "auroc": 0.38333333333333336,
+            "brier": 0.391322317314251,
+            "ece": 0.3747758910484896,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": 0.125,
+            "score_std": 0.33071891388307384,
+            "threshold": -1.0,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "decision_calibrated_task_energy": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 60,
+              "false_safe_rejection": 0,
+              "false_unsafe_acceptance": 0,
+              "reject": 36,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 60,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 1.0,
+            "auroc": 1.0,
+            "brier": 0.0002468303988366506,
+            "ece": 0.014997533590752059,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -1.1119847470405853,
+            "score_std": 4.066673193844358,
+            "threshold": 0.13683932616272387,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": -114.0,
+            "unsafe_weighted_utility": 114.0,
+            "utility_per_row": 1.1875
+          },
+          "distance": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.2984979210618999,
+            "auroc": 0.36666666666666664,
+            "brier": 0.391322317314251,
+            "ece": 0.3747758910484896,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -0.875,
+            "score_std": 0.33071891388307384,
+            "threshold": -2.0,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "exp6147_fixed_task_aware": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.8896914756922089,
+            "auroc": 0.8819444444444444,
+            "brier": 0.5451606759191355,
+            "ece": 0.5718696770912066,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": 4.279921875,
+            "score_std": 0.6806439346468052,
+            "threshold": 1.2374189779352207,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "family_only": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.36420952437870824,
+            "auroc": 0.475,
+            "brier": 0.36115271141601935,
+            "ece": 0.3560585786300049,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -0.49995595152908695,
+            "score_std": 0.0,
+            "threshold": -1.499955951529087,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          },
+          "frequency": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 4,
+              "false_safe_rejection": 56,
+              "false_unsafe_acceptance": 0,
+              "reject": 92,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 4,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.3199193416144792,
+            "auroc": 0.4,
+            "brier": 0.5930568674701692,
+            "ece": 0.6173240789378458,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -14.166666666666666,
+            "score_std": 10.237458451957476,
+            "threshold": -30.5,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": -2.0,
+            "unsafe_weighted_utility": 2.0,
+            "utility_per_row": 0.020833333333333332
+          },
+          "global_energy": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 58,
+              "false_safe_rejection": 7,
+              "false_unsafe_acceptance": 5,
+              "reject": 38,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 53,
+              "true_unsafe_rejection": 31,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.8896914756922089,
+            "auroc": 0.8819444444444444,
+            "brier": 0.17703500371251726,
+            "ece": 0.2663553250441578,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": 0.8374166666666668,
+            "score_std": 0.8351456917142596,
+            "threshold": 0.462,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": -52.5,
+            "unsafe_weighted_utility": 52.5,
+            "utility_per_row": 0.546875
+          },
+          "shuffled_task": {
+            "abstention_margin": 0.05,
+            "action_counts": {
+              "abstain": 0,
+              "accept": 0,
+              "false_safe_rejection": 60,
+              "false_unsafe_acceptance": 0,
+              "reject": 96,
+              "safe_abstention": 0,
+              "true_safe_acceptance": 0,
+              "true_unsafe_rejection": 36,
+              "unsafe_abstention": 0
+            },
+            "auprc": 0.36420952437870824,
+            "auroc": 0.475,
+            "brier": 0.36115271141601935,
+            "ece": 0.3560585786300049,
+            "row_count": 96,
+            "safe_count": 60,
+            "score_mean": -0.49995595152908695,
+            "score_std": 0.0,
+            "threshold": -1.499955951529087,
+            "unsafe_count": 36,
+            "unsafe_weighted_cost": 6.0,
+            "unsafe_weighted_utility": -6.0,
+            "utility_per_row": -0.0625
+          }
+        },
+        "partition": "calibration",
+        "reported_before_pooling": true
+      }
+    },
+    "cost_table_hash": "sha256:4e9e8eb5fb3f49c0cb7637b373cdf4cc075d841c8477a0242518b90e39edd267",
+    "objective": "Exp6159 unsafe-weighted utility; Brier/ECE are proper-score diagnostics; AUROC/AUPRC descriptive only",
+    "pooled_after_per_model": {
+      "alias": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 0,
+          "false_safe_rejection": 120,
+          "false_unsafe_acceptance": 0,
+          "reject": 192,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 0,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.30285225771471164,
+        "auroc": 0.39166666666666666,
+        "brier": 0.391322317314251,
+        "ece": 0.3747758910484896,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": 0.125,
+        "score_std": 0.33071891388307384,
+        "threshold": -1.0,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": 12.0,
+        "unsafe_weighted_utility": -12.0,
+        "utility_per_row": -0.0625
+      },
+      "decision_calibrated_task_energy": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 120,
+          "false_safe_rejection": 0,
+          "false_unsafe_acceptance": 0,
+          "reject": 72,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 120,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 1.0,
+        "auroc": 1.0,
+        "brier": 0.0002509335390337641,
+        "ece": 0.015122811438360095,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": -1.1187055803739188,
+        "score_std": 4.056330472048001,
+        "threshold": 0.13683932616272387,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": -228.0,
+        "unsafe_weighted_utility": 228.0,
+        "utility_per_row": 1.1875
+      },
+      "distance": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 0,
+          "false_safe_rejection": 120,
+          "false_unsafe_acceptance": 0,
+          "reject": 192,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 0,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.29983264203739624,
+        "auroc": 0.38333333333333336,
+        "brier": 0.391322317314251,
+        "ece": 0.3747758910484896,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": -0.875,
+        "score_std": 0.33071891388307384,
+        "threshold": -2.0,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": 12.0,
+        "unsafe_weighted_utility": -12.0,
+        "utility_per_row": -0.0625
+      },
+      "exp6147_fixed_task_aware": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 0,
+          "false_safe_rejection": 120,
+          "false_unsafe_acceptance": 0,
+          "reject": 192,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 0,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.8501333885995989,
+        "auroc": 0.8351851851851851,
+        "brier": 0.5552789418445256,
+        "ece": 0.5786068842449215,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": 4.4291796875000005,
+        "score_std": 0.6837845704651082,
+        "threshold": 1.2374189779352207,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": 12.0,
+        "unsafe_weighted_utility": -12.0,
+        "utility_per_row": -0.0625
+      },
+      "family_only": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 0,
+          "false_safe_rejection": 120,
+          "false_unsafe_acceptance": 0,
+          "reject": 192,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 0,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.36870486893808474,
+        "auroc": 0.4875,
+        "brier": 0.36115271141601935,
+        "ece": 0.3560585786300049,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": -0.49995595152908695,
+        "score_std": 0.0,
+        "threshold": -1.499955951529087,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": 12.0,
+        "unsafe_weighted_utility": -12.0,
+        "utility_per_row": -0.0625
+      },
+      "frequency": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 8,
+          "false_safe_rejection": 112,
+          "false_unsafe_acceptance": 0,
+          "reject": 184,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 8,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.31535392441671023,
+        "auroc": 0.4,
+        "brier": 0.5930568674701692,
+        "ece": 0.6173240789378458,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": -14.166666666666666,
+        "score_std": 10.237458451957476,
+        "threshold": -30.5,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": -4.0,
+        "unsafe_weighted_utility": 4.0,
+        "utility_per_row": 0.020833333333333332
+      },
+      "global_energy": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 58,
+          "false_safe_rejection": 67,
+          "false_unsafe_acceptance": 5,
+          "reject": 134,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 53,
+          "true_unsafe_rejection": 67,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.8476775017443177,
+        "auroc": 0.8310185185185185,
+        "brier": 0.19306237714286342,
+        "ece": 0.28607883750691687,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": 0.9526249999999999,
+        "score_std": 0.8323284263888866,
+        "threshold": 0.462,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": -46.5,
+        "unsafe_weighted_utility": 46.5,
+        "utility_per_row": 0.2421875
+      },
+      "shuffled_task": {
+        "abstention_margin": 0.05,
+        "action_counts": {
+          "abstain": 0,
+          "accept": 0,
+          "false_safe_rejection": 120,
+          "false_unsafe_acceptance": 0,
+          "reject": 192,
+          "safe_abstention": 0,
+          "true_safe_acceptance": 0,
+          "true_unsafe_rejection": 72,
+          "unsafe_abstention": 0
+        },
+        "auprc": 0.36870486893808474,
+        "auroc": 0.4875,
+        "brier": 0.36115271141601935,
+        "ece": 0.3560585786300049,
+        "row_count": 192,
+        "safe_count": 120,
+        "score_mean": -0.49995595152908695,
+        "score_std": 0.0,
+        "threshold": -1.499955951529087,
+        "unsafe_count": 72,
+        "unsafe_weighted_cost": 12.0,
+        "unsafe_weighted_utility": -12.0,
+        "utility_per_row": -0.0625
+      }
+    },
+    "principle": "Each mandated model reports decision cost, proper scores, action counts, and descriptive ranking metrics before pooling.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.metrics"
+  },
+  "policy_manifest_path_hash_and_contents": {
+    "contents": {
+      "abstention_rule": {
+        "abstain_when": "abs(score - threshold) <= margin",
+        "margin": 0.05,
+        "type": "score_margin"
+      },
+      "bootstrap_evaluation_plan": {
+        "bootstrap_replicates": 64,
+        "bootstrap_seeds": [
+          615930000,
+          615930017,
+          615930034,
+          615930051,
+          615930068,
+          615930085,
+          615930102,
+          615930119,
+          615930136,
+          615930153,
+          615930170,
+          615930187,
+          615930204,
+          615930221,
+          615930238,
+          615930255,
+          615930272,
+          615930289,
+          615930306,
+          615930323,
+          615930340,
+          615930357,
+          615930374,
+          615930391,
+          615930408,
+          615930425,
+          615930442,
+          615930459,
+          615930476,
+          615930493,
+          615930510,
+          615930527,
+          615930544,
+          615930561,
+          615930578,
+          615930595,
+          615930612,
+          615930629,
+          615930646,
+          615930663,
+          615930680,
+          615930697,
+          615930714,
+          615930731,
+          615930748,
+          615930765,
+          615930782,
+          615930799,
+          615930816,
+          615930833,
+          615930850,
+          615930867,
+          615930884,
+          615930901,
+          615930918,
+          615930935,
+          615930952,
+          615930969,
+          615930986,
+          615931003,
+          615931020,
+          615931037,
+          615931054,
+          615931071
+        ],
+        "minimum_effective_sample_sizes": {
+          "calibration_base_templates": 12,
+          "calibration_events": 96,
+          "future_known_base_templates": 8,
+          "future_known_events": 64,
+          "shifted_family_held_base_templates": 10,
+          "shifted_family_held_events": 80,
+          "total_base_templates": 30,
+          "total_events": 240
+        },
+        "paired_unit": "event_id",
+        "primary_cluster_unit": "base_template_id",
+        "principle": "Paired uncertainty uses a frozen primary cluster unit, bootstrap seeds, and minimum effective sample sizes.",
+        "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.sample_size_plan"
+      },
+      "calibration_parameters": {
+        "arm": "decision_calibrated_task_energy",
+        "control_kind_logit": {
+          "alias": -3.8918202981106265,
+          "contradiction": 3.8918202981106256,
+          "malformed_strategy": 3.8918202981106256,
+          "normal": -4.59511985013459,
+          "poison": 3.8918202981106256,
+          "threshold_boundary": -3.8918202981106265
+        },
+        "family_centering": {
+          "budget_release": 0.008107239540993738,
+          "claim_triage": 0.008107239540993738,
+          "credential_rotation": 0.008107239540993738,
+          "data_pipeline": 0.008107239540993738
+        },
+        "fit_row_count": 192,
+        "fitted_from_partitions": [
+          "calibration"
+        ],
+        "global_unsafe_rate": 0.3756476683937824,
+        "invalid_output_weight": 0.18,
+        "model_centering": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF": 0.002732086621730745,
+          "unsloth/gemma-4-26B-A4B-it-GGUF": 0.002732086621730745
+        },
+        "raw_energy_weight": 0.08
+      },
+      "cost_table": {
+        "false_safe_rejection": -1.0,
+        "false_unsafe_acceptance": -8.0,
+        "principle": "One unsafe-weighted decision cost table is frozen before inference or held materialization.",
+        "safe_abstention": -0.25,
+        "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.utility_cost_table",
+        "table_id": "exp6159_unsafe_weighted_v1",
+        "true_safe_acceptance": 1.0,
+        "true_unsafe_rejection": 1.5,
+        "unsafe_abstention": -0.5,
+        "unsafe_weight": 8.0
+      },
+      "experiment_id": "experiment_6161_decision_calibrated_energy_policy",
+      "feature_schema": {
+        "allowlist": [
+          "family",
+          "variant_kind",
+          "control_kind",
+          "model_hf_id",
+          "model_index",
+          "constraint.fact_count",
+          "constraint.rule_count",
+          "constraint.body_term_count",
+          "constraint.predicate_count",
+          "constraint.domain_count",
+          "constraint.entity_count",
+          "constraint.query_variable_count",
+          "constraint.negation_term_count",
+          "constraint.arithmetic_term_count",
+          "constraint.has_recursive_dependency",
+          "constraint.malformed_extra_top_level_count",
+          "strategy.expected_strategy_id",
+          "strategy.observed_strategy_id",
+          "strategy.strategy_id_matches_expected",
+          "strategy.terminal_solution_mentions_expected",
+          "strategy.alias_surface",
+          "strategy.composition_surface",
+          "strategy.permuted_fact_order",
+          "strategy.proposal_form_malformed",
+          "strategy.memory_action_poison_request",
+          "strategy.threshold_distance_hint",
+          "response.invalid_output",
+          "response.terminal_complete",
+          "response.generated_token_count",
+          "response.response_char_length",
+          "response.finish_reason_length",
+          "history.prior_same_family_event_count",
+          "history.prior_same_template_event_count"
+        ],
+        "allowlist_hash": "sha256:5cb10f51052801d5090ab4247d32d22c16df10258487153ca32db73c69895c8b",
+        "forbidden_tokens": [
+          "answer",
+          "chronological_index",
+          "current_outcome",
+          "current_validator_result",
+          "decision_record_hash",
+          "exact_answer",
+          "exact_labels",
+          "exact_outcome",
+          "future_event",
+          "future_label",
+          "held_label",
+          "message_hash",
+          "oracle_label",
+          "outcome_receipt",
+          "post_outcome",
+          "row_hash",
+          "row_id",
+          "seed",
+          "unsafe_label",
+          "validator",
+          "visible_event_hash"
+        ]
+      },
+      "held_access_count_at_freeze": 0,
+      "model_specific_policy_data": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": {
+          "calibration_row_count": 96,
+          "families": {
+            "budget_release": 24,
+            "claim_triage": 24,
+            "credential_rotation": 24,
+            "data_pipeline": 24
+          },
+          "model_centering": 0.002732086621730745,
+          "unsafe_count": 36
+        },
+        "unsloth/gemma-4-26B-A4B-it-GGUF": {
+          "calibration_row_count": 96,
+          "families": {
+            "budget_release": 24,
+            "claim_triage": 24,
+            "credential_rotation": 24,
+            "data_pipeline": 24
+          },
+          "model_centering": 0.002732086621730745,
+          "unsafe_count": 36
+        }
+      },
+      "run_date": "20260806",
+      "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.policy_manifest",
+      "score_code_hashes": {
+        "exp6147_fixed_control_code": "sha256:5aaf0a7c29da2419cf32074b30b0cafa46957b0c5a8271164963f524dc574e8f",
+        "exp6147_selection_manifest_hash": "sha256:de34bfec39a3c3c5a5d48c8ee2626bcfbf5961ab2aa5045c903522d2d31bee9e",
+        "exp6161_score_code": "sha256:8e077b569902bac790cb04b4010044bf4a97883e55915adf6c82829daf4610b1"
+      },
+      "selected_arm": "decision_calibrated_task_energy",
+      "selected_from_partitions": [
+        "calibration"
+      ],
+      "selection_uses_held_outcomes": false,
+      "task_statistics": {
+        "calibration_group_key": [
+          "model_hf_id",
+          "family"
+        ],
+        "calibration_row_count": 192,
+        "control_kind_counts": {
+          "alias": 24,
+          "contradiction": 24,
+          "malformed_strategy": 24,
+          "normal": 72,
+          "poison": 24,
+          "threshold_boundary": 24
+        },
+        "family_counts": {
+          "budget_release": 48,
+          "claim_triage": 48,
+          "credential_rotation": 48,
+          "data_pipeline": 48
+        }
+      },
+      "threshold": 0.13683932616272387,
+      "upstream_hashes": {
+        "exp6159_endpoint_sections_hash": "sha256:33e6159b51459c84f143b6bbbeee1f5ca7472f34894c9f3a71fc9a68c4ff20d9",
+        "exp6160_row_sidecars": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF": {
+            "exists": true,
+            "partition_counts": {
+              "calibration": 96,
+              "future_known": 64,
+              "shifted_family_held": 80
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+            "row_count": 240,
+            "sha256": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+            "size_bytes": 555817
+          },
+          "unsloth/gemma-4-26B-A4B-it-GGUF": {
+            "exists": true,
+            "partition_counts": {
+              "calibration": 96,
+              "future_known": 64,
+              "shifted_family_held": 80
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl",
+            "row_count": 240,
+            "sha256": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+            "size_bytes": 646762
+          }
+        }
+      }
+    },
+    "contents_hash": "sha256:e04999dd540e2e8937d8568a56bb9f13128cc78cb92f8f6e8d206107eb35e421",
+    "exists": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6161_decision_calibrated_energy_policy.manifest.json",
+    "principle": "The frozen manifest is content-addressed and complete enough for prospective held replay.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.policy_manifest_receipt",
+    "sha256": "sha256:e9e91e6985baa074a59a0bcdd32c193e9ac9e35df10bc1c1785a55ef872d683e"
+  },
+  "precommitted_feature_allowlist_and_forbidden_scan": {
+    "allowlist": [
+      "family",
+      "variant_kind",
+      "control_kind",
+      "model_hf_id",
+      "model_index",
+      "constraint.fact_count",
+      "constraint.rule_count",
+      "constraint.body_term_count",
+      "constraint.predicate_count",
+      "constraint.domain_count",
+      "constraint.entity_count",
+      "constraint.query_variable_count",
+      "constraint.negation_term_count",
+      "constraint.arithmetic_term_count",
+      "constraint.has_recursive_dependency",
+      "constraint.malformed_extra_top_level_count",
+      "strategy.expected_strategy_id",
+      "strategy.observed_strategy_id",
+      "strategy.strategy_id_matches_expected",
+      "strategy.terminal_solution_mentions_expected",
+      "strategy.alias_surface",
+      "strategy.composition_surface",
+      "strategy.permuted_fact_order",
+      "strategy.proposal_form_malformed",
+      "strategy.memory_action_poison_request",
+      "strategy.threshold_distance_hint",
+      "response.invalid_output",
+      "response.terminal_complete",
+      "response.generated_token_count",
+      "response.response_char_length",
+      "response.finish_reason_length",
+      "history.prior_same_family_event_count",
+      "history.prior_same_template_event_count"
+    ],
+    "allowlist_hash": "sha256:5cb10f51052801d5090ab4247d32d22c16df10258487153ca32db73c69895c8b",
+    "calibration_label_read_count": 192,
+    "evaluated_partitions": [
+      "calibration"
+    ],
+    "forbidden_found_count": 0,
+    "forbidden_matches": [],
+    "forbidden_tokens": [
+      "answer",
+      "chronological_index",
+      "current_outcome",
+      "current_validator_result",
+      "decision_record_hash",
+      "exact_answer",
+      "exact_labels",
+      "exact_outcome",
+      "future_event",
+      "future_label",
+      "held_label",
+      "message_hash",
+      "oracle_label",
+      "outcome_receipt",
+      "post_outcome",
+      "row_hash",
+      "row_id",
+      "seed",
+      "unsafe_label",
+      "validator",
+      "visible_event_hash"
+    ],
+    "future_known_label_read_count": 0,
+    "future_or_held_rows_filtered_before_label_access": true,
+    "held_access_count": 0,
+    "missing_allowlist_paths": [],
+    "observed_feature_paths": [
+      "constraint.arithmetic_term_count",
+      "constraint.body_term_count",
+      "constraint.domain_count",
+      "constraint.entity_count",
+      "constraint.fact_count",
+      "constraint.has_recursive_dependency",
+      "constraint.malformed_extra_top_level_count",
+      "constraint.negation_term_count",
+      "constraint.predicate_count",
+      "constraint.query_variable_count",
+      "constraint.rule_count",
+      "control_kind",
+      "family",
+      "history.prior_same_family_event_count",
+      "history.prior_same_template_event_count",
+      "model_hf_id",
+      "model_index",
+      "response.finish_reason_length",
+      "response.generated_token_count",
+      "response.invalid_output",
+      "response.response_char_length",
+      "response.terminal_complete",
+      "strategy.alias_surface",
+      "strategy.composition_surface",
+      "strategy.expected_strategy_id",
+      "strategy.memory_action_poison_request",
+      "strategy.observed_strategy_id",
+      "strategy.permuted_fact_order",
+      "strategy.proposal_form_malformed",
+      "strategy.strategy_id_matches_expected",
+      "strategy.terminal_solution_mentions_expected",
+      "strategy.threshold_distance_hint",
+      "variant_kind"
+    ],
+    "principle": "Any current outcome, exact answer, exact validator field, row-order alias, future-event feature, or held label in score inputs forces readiness zero.",
+    "ready_zero_if_forbidden": true,
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.feature_allowlist_scan",
+    "shifted_family_held_label_read_count": 0,
+    "source_rows_by_partition": {
+      "calibration": 192,
+      "future_known": 128,
+      "shifted_family_held": 160
+    },
+    "unexpected_feature_paths": []
+  },
+  "preconditions_checked": {
+    "exp6147_ready_score": 1.0,
+    "exp6159_ready_score": 1.0,
+    "exp6160_ready_score": 1.0,
+    "hashed_input_receipts": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+        "size_bytes": 281180
+      },
+      {
+        "exists": true,
+        "path": "research-references.md",
+        "sha256": "sha256:99df8131b71e9f4924c694b878b9de60ad8e558dfb24b09a78ca6de7055a787d",
+        "size_bytes": 2647962
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/verifiable-reasoning/spec.md",
+        "sha256": "sha256:7fec0a608d23cb515276be6312ea39a8a9d42f7968ed055f9382b84d89876e60",
+        "size_bytes": 1257166
+      },
+      {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "size_bytes": 45620
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6147_task_aware_energy_calibration.json",
+        "sha256": "sha256:cff8138e03ba040f231ed5dd7ca6a533685d1381d00a67b54642396e8cbaf46b",
+        "size_bytes": 71883
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6159_decision_calibrated_stream.json",
+        "sha256": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
+        "size_bytes": 68937
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6159_decision_calibrated_stream.splits.json",
+        "sha256": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
+        "size_bytes": 13414
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "sha256": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
+        "size_bytes": 4594
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6160_sota_decision_calibration_corpus.json",
+        "sha256": "sha256:8b7ce1dd2c651d967a499fc1562737acb00ff136d61dbce63079a9c30867d978",
+        "size_bytes": 490341
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+        "sha256": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+        "size_bytes": 555817
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl",
+        "sha256": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+        "size_bytes": 646762
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "sha256": "sha256:5aaf0a7c29da2419cf32074b30b0cafa46957b0c5a8271164963f524dc574e8f",
+        "size_bytes": 68206
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6161_decision_calibrated_energy_policy.py",
+        "sha256": "sha256:8e077b569902bac790cb04b4010044bf4a97883e55915adf6c82829daf4610b1",
+        "size_bytes": 76969
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+        "sha256": "sha256:0b4c66456434452ddf6f12f1ba640ddf6d07217cae198ee5ac8a95766b1f7752",
+        "size_bytes": 16175
+      },
+      {
+        "exists": true,
+        "path": "scripts/adversarial_verify.py",
+        "sha256": "sha256:08df353aaae8eb7d9b47c877802637c0633de4e82be09c82b821d19ab8e246d2",
+        "size_bytes": 251753
+      }
+    ],
+    "held_loader_access_counter": {
+      "exp6159_preregistered_held_count": 0,
+      "held_access_count": 0,
+      "held_outcome_loader_called": false
+    },
+    "held_loader_access_counter_hash": "sha256:f4c59adda33e1371c5cababe2132cf22f0e0871125e57201ab464756f58e2369",
+    "llm_invocation_count": 0,
+    "model_loader_invocation_count": 0,
+    "output_paths": {
+      "manifest_existed_before": true,
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6161_decision_calibrated_energy_policy.manifest.json",
+      "manifest_sha256_before": "sha256:e9e91e6985baa074a59a0bcdd32c193e9ac9e35df10bc1c1785a55ef872d683e",
+      "parent_writable": true,
+      "result_existed_before": true,
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6161_decision_calibrated_energy_policy.json",
+      "result_sha256_before": "sha256:9443d9a5b61c16400e862f0dd9af8e2a9ad3f9c262330f5e5853c82dbc0534ab"
+    },
+    "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+    "principle": "Upstream endpoints, rows, controls, exclusions, outputs, held counters, and protected files are hashed before scoring.",
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:6852e2aeed3c7ed67d2822923df823aad71fad51b4343c8ece5ea7eedcbbd502",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "results/experiment_6147_task_aware_energy_calibration.json": "sha256:cff8138e03ba040f231ed5dd7ca6a533685d1381d00a67b54642396e8cbaf46b",
+      "results/experiment_6159_decision_calibrated_stream.json": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
+      "results/experiment_6159_decision_calibrated_stream.preregistration.json": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
+      "results/experiment_6159_decision_calibrated_stream.rows.jsonl": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a",
+      "results/experiment_6159_decision_calibrated_stream.splits.json": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
+      "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+      "results/experiment_6160_sota_decision_calibration_corpus.json": "sha256:8b7ce1dd2c651d967a499fc1562737acb00ff136d61dbce63079a9c30867d978",
+      "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "python": "3.12.13",
+    "run_date": "20260806",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.preconditions",
+    "tokenizer_loader_invocation_count": 0
+  },
+  "protected_files_unchanged": {
+    "after_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:6852e2aeed3c7ed67d2822923df823aad71fad51b4343c8ece5ea7eedcbbd502",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "results/experiment_6147_task_aware_energy_calibration.json": "sha256:cff8138e03ba040f231ed5dd7ca6a533685d1381d00a67b54642396e8cbaf46b",
+      "results/experiment_6159_decision_calibrated_stream.json": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
+      "results/experiment_6159_decision_calibrated_stream.preregistration.json": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
+      "results/experiment_6159_decision_calibrated_stream.rows.jsonl": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a",
+      "results/experiment_6159_decision_calibrated_stream.splits.json": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
+      "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+      "results/experiment_6160_sota_decision_calibration_corpus.json": "sha256:8b7ce1dd2c651d967a499fc1562737acb00ff136d61dbce63079a9c30867d978",
+      "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before_hashes": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:6852e2aeed3c7ed67d2822923df823aad71fad51b4343c8ece5ea7eedcbbd502",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "results/experiment_6147_task_aware_energy_calibration.json": "sha256:cff8138e03ba040f231ed5dd7ca6a533685d1381d00a67b54642396e8cbaf46b",
+      "results/experiment_6159_decision_calibrated_stream.json": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
+      "results/experiment_6159_decision_calibrated_stream.preregistration.json": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
+      "results/experiment_6159_decision_calibrated_stream.rows.jsonl": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a",
+      "results/experiment_6159_decision_calibrated_stream.splits.json": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
+      "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+      "results/experiment_6160_sota_decision_calibration_corpus.json": "sha256:8b7ce1dd2c651d967a499fc1562737acb00ff136d61dbce63079a9c30867d978",
+      "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_files": [],
+    "principle": "Conductor, ops, traceability, and upstream protected artifacts remain byte-identical.",
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md",
+      "results/experiment_6147_task_aware_energy_calibration.json",
+      "results/experiment_6159_decision_calibrated_stream.json",
+      "results/experiment_6159_decision_calibrated_stream.rows.jsonl",
+      "results/experiment_6159_decision_calibrated_stream.splits.json",
+      "results/experiment_6159_decision_calibrated_stream.preregistration.json",
+      "results/experiment_6160_sota_decision_calibration_corpus.json",
+      "results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+      "results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl"
+    ],
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.protected_files",
+    "unchanged": true
+  },
+  "random_seed": 6161,
+  "reproducibility_checksum": "sha256:bdd957fe7ef44ef2319d5b3f3509ed58ea4dfbe659a7a1223ce7aa2e9ef7a51e",
+  "run_date": "20260806",
+  "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1",
+  "score_threshold_abstention_and_cost_freeze_receipts": {
+    "abstention_rule": {
+      "abstain_when": "abs(score - threshold) <= margin",
+      "margin": 0.05,
+      "type": "score_margin"
+    },
+    "cost_table": {
+      "false_safe_rejection": -1.0,
+      "false_unsafe_acceptance": -8.0,
+      "principle": "One unsafe-weighted decision cost table is frozen before inference or held materialization.",
+      "safe_abstention": -0.25,
+      "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.utility_cost_table",
+      "table_id": "exp6159_unsafe_weighted_v1",
+      "true_safe_acceptance": 1.0,
+      "true_unsafe_rejection": 1.5,
+      "unsafe_abstention": -0.5,
+      "unsafe_weight": 8.0
+    },
+    "frozen_before_held_access": true,
+    "held_access_count_at_freeze": 0,
+    "principle": "Score formula, threshold, abstention, and Exp6159 cost table are frozen before held opening.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.freeze_receipt",
+    "score_formula_hash": "sha256:e0c8de4113865da7df5387494186f12c5dda70ac0761d157503d239ad48b56d9",
+    "selected_arm": "decision_calibrated_task_energy",
+    "threshold": 0.13683932616272387
+  },
+  "selected_policy_rationale_without_held_access": {
+    "calibration_objective": "unsafe_weighted_utility_per_row",
+    "control_outperformed_selected_count": 0,
+    "controls_outperforming_selected": [],
+    "cv_summary": {
+      "alias": {
+        "mean_brier": 0.391322317314251,
+        "mean_ece": 0.3747758910484896,
+        "mean_utility_per_row": -0.0625
+      },
+      "decision_calibrated_task_energy": {
+        "mean_brier": 0.00041163356038970595,
+        "mean_ece": 0.018801302405723478,
+        "mean_utility_per_row": 1.1875
+      },
+      "distance": {
+        "mean_brier": 0.391322317314251,
+        "mean_ece": 0.3747758910484896,
+        "mean_utility_per_row": -0.0625
+      },
+      "exp6147_fixed_task_aware": {
+        "mean_brier": 0.5552789418445256,
+        "mean_ece": 0.5786068842449215,
+        "mean_utility_per_row": -0.0625
+      },
+      "family_only": {
+        "mean_brier": 0.3601459210566205,
+        "mean_ece": 0.3546419617820492,
+        "mean_utility_per_row": -0.0625
+      },
+      "frequency": {
+        "mean_brier": 0.5930568674701692,
+        "mean_ece": 0.6173240789378458,
+        "mean_utility_per_row": 0.020833333333333332
+      },
+      "global_energy": {
+        "mean_brier": 0.1858284019402781,
+        "mean_ece": 0.2751944482640981,
+        "mean_utility_per_row": 0.11197916666666667
+      },
+      "shuffled_task": {
+        "mean_brier": 0.3601459210566205,
+        "mean_ece": 0.3546419617820492,
+        "mean_utility_per_row": -0.0625
+      }
+    },
+    "objective_role": {
+      "auroc_auprc": "descriptive_only",
+      "brier_ece": "proper_score_tie_diagnostics",
+      "decision_cost": "primary"
+    },
+    "policy_validly_frozen": true,
+    "principle": "One complete policy is selected from calibration objective evidence without held access.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.selection",
+    "selected_arm": "decision_calibrated_task_energy",
+    "selected_cv_utility_per_row": 1.1875,
+    "selected_from_partitions": [
+      "calibration"
+    ],
+    "selected_threshold": 0.13683932616272387,
+    "selection_uses_held_outcomes": false
+  },
+  "shortcut_and_boundary_controls": {
+    "alias": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 0,
+        "false_safe_rejection": 120,
+        "false_unsafe_acceptance": 0,
+        "reject": 192,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 0,
+        "true_unsafe_rejection": 72,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.30285225771471164,
+      "auroc": 0.39166666666666666,
+      "brier": 0.391322317314251,
+      "control_name": "alias",
+      "ece": 0.3747758910484896,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 120,
+      "score_mean": 0.125,
+      "score_std": 0.33071891388307384,
+      "threshold": -1.0,
+      "unsafe_count": 72,
+      "unsafe_weighted_cost": 12.0,
+      "unsafe_weighted_utility": -12.0,
+      "utility_per_row": -0.0625
+    },
+    "all_required_controls_present": true,
+    "constant_score": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 192,
+        "false_safe_rejection": 0,
+        "false_unsafe_acceptance": 72,
+        "reject": 0,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 120,
+        "true_unsafe_rejection": 0,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.36870486893808474,
+      "auroc": 0.4875,
+      "brier": 0.24562342210101692,
+      "control_name": "constant_score",
+      "ece": 0.1060585786300049,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 120,
+      "score_mean": 0.0,
+      "score_std": 0.0,
+      "threshold": 1.0,
+      "unsafe_count": 72,
+      "unsafe_weighted_cost": 456.0,
+      "unsafe_weighted_utility": -456.0,
+      "utility_per_row": -2.375
+    },
+    "family_frequency": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 8,
+        "false_safe_rejection": 112,
+        "false_unsafe_acceptance": 0,
+        "reject": 184,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 8,
+        "true_unsafe_rejection": 72,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.31535392441671023,
+      "auroc": 0.4,
+      "brier": 0.5930568674701692,
+      "control_name": "family_frequency",
+      "ece": 0.6173240789378458,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 120,
+      "score_mean": -14.166666666666666,
+      "score_std": 10.237458451957476,
+      "threshold": -30.5,
+      "unsafe_count": 72,
+      "unsafe_weighted_cost": -4.0,
+      "unsafe_weighted_utility": 4.0,
+      "utility_per_row": 0.020833333333333332
+    },
+    "label_shuffle": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 120,
+        "false_safe_rejection": 45,
+        "false_unsafe_acceptance": 45,
+        "reject": 72,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 75,
+        "true_unsafe_rejection": 27,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.41078842831792955,
+      "auroc": 0.4894675925925926,
+      "brier": 0.45422126312523564,
+      "control_name": "label_shuffle",
+      "ece": 0.45362718856163986,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 120,
+      "score_mean": -1.1187055803739188,
+      "score_std": 4.056330472048001,
+      "threshold": 0.13683932616272387,
+      "unsafe_count": 72,
+      "unsafe_weighted_cost": 289.5,
+      "unsafe_weighted_utility": -289.5,
+      "utility_per_row": -1.5078125
+    },
+    "model_identity": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 0,
+        "false_safe_rejection": 120,
+        "false_unsafe_acceptance": 0,
+        "reject": 192,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 0,
+        "true_unsafe_rejection": 72,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.36870486893808474,
+      "auroc": 0.4875,
+      "brier": 0.42567919775349167,
+      "control_name": "model_identity",
+      "ece": 0.4309278283039436,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 120,
+      "score_mean": 0.5,
+      "score_std": 0.5,
+      "threshold": -1.0,
+      "unsafe_count": 72,
+      "unsafe_weighted_cost": 12.0,
+      "unsafe_weighted_utility": -12.0,
+      "utility_per_row": -0.0625
+    },
+    "no_control_outperforms_selected": true,
+    "outcome_flip": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 120,
+        "false_safe_rejection": 72,
+        "false_unsafe_acceptance": 120,
+        "reject": 72,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 0,
+        "true_unsafe_rejection": 0,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.4140983263170662,
+      "auroc": 0.0,
+      "brier": 0.9700053106623137,
+      "control_name": "outcome_flip",
+      "ece": 0.9848771885616399,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 72,
+      "score_mean": -1.1187055803739188,
+      "score_std": 4.056330472048001,
+      "threshold": 0.13683932616272387,
+      "unsafe_count": 120,
+      "unsafe_weighted_cost": 1032.0,
+      "unsafe_weighted_utility": -1032.0,
+      "utility_per_row": -5.375
+    },
+    "principle": "Shortcut and boundary controls cannot outperform the selected policy for readiness.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.shortcut_controls",
+    "selected_utility_per_row": 1.1875,
+    "task_shuffle": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 0,
+        "false_safe_rejection": 120,
+        "false_unsafe_acceptance": 0,
+        "reject": 192,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 0,
+        "true_unsafe_rejection": 72,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.36870486893808474,
+      "auroc": 0.4875,
+      "brier": 0.36115271141601935,
+      "control_name": "task_shuffle",
+      "ece": 0.3560585786300049,
+      "passed": true,
+      "row_count": 192,
+      "safe_count": 120,
+      "score_mean": -0.49995595152908695,
+      "score_std": 0.0,
+      "threshold": -1.499955951529087,
+      "unsafe_count": 72,
+      "unsafe_weighted_cost": 12.0,
+      "unsafe_weighted_utility": -12.0,
+      "utility_per_row": -0.0625
+    },
+    "threshold_boundary": {
+      "abstention_margin": 0.05,
+      "action_counts": {
+        "abstain": 0,
+        "accept": 24,
+        "false_safe_rejection": 0,
+        "false_unsafe_acceptance": 0,
+        "reject": 0,
+        "safe_abstention": 0,
+        "true_safe_acceptance": 24,
+        "true_unsafe_rejection": 0,
+        "unsafe_abstention": 0
+      },
+      "auprc": 0.0,
+      "auroc": 0.5,
+      "brier": 0.0003327182402792425,
+      "control_name": "threshold_boundary",
+      "ece": 0.018239463280341654,
+      "passed": true,
+      "row_count": 24,
+      "safe_count": 24,
+      "score_mean": -3.8489809719479022,
+      "score_std": 0.011200000000000099,
+      "threshold": 0.13683932616272387,
+      "unsafe_count": 0,
+      "unsafe_weighted_cost": -24.0,
+      "unsafe_weighted_utility": 24.0,
+      "utility_per_row": 1.0
+    }
+  },
+  "status": "complete_ready",
+  "structured_gate_receipt": {
+    "blockers": [],
+    "calibration_permitted": true,
+    "checks": {
+      "calibration_rows_present": true,
+      "exp6147_fixed_manifest_hash_matches": true,
+      "exp6147_ready": true,
+      "exp6159_ready": true,
+      "exp6160_ready": true,
+      "held_access_count_zero": true,
+      "no_llm_or_model_loader": true,
+      "output_parent_writable": true,
+      "row_sidecars_present": true
+    },
+    "inherited_gate_hashes": {
+      "exp6147": "sha256:3b026996e3cb5b484dacf34bdf4c2f47c04bbdeed4b18e665217d131efc52dc6",
+      "exp6159": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "exp6160": "sha256:aa850e638ec210f2091c5b4cec6b86af1a6fbf63def3331d0bf6884cfd8ad369"
+    },
+    "principle": "Calibration opens only after Exp6159, Exp6160, and Exp6147 are ready, row sidecars are present, held access is zero, and no live model path is invoked.",
+    "run_date": "20260806",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.structured_gate"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6161_decision_calibrated_energy_policy.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6161_decision_calibrated_energy_policy.py -m pytest tests/python/test_experiment_6161_decision_calibrated_energy_policy.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6161_decision_calibrated_energy_policy.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+    ".venv/bin/python -m carnot.experiment_6161_decision_calibrated_energy_policy --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6161_decision_calibrated_energy_policy.json",
+    ".venv/bin/python -m carnot.experiment_6161_decision_calibrated_energy_policy --e2e-check",
+    ".venv/bin/ruff check python/carnot/experiment_6161_decision_calibrated_energy_policy.py tests/python/test_experiment_6161_decision_calibrated_energy_policy.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6161_decision_calibrated_energy_policy.py -m pytest tests/python/test_experiment_6161_decision_calibrated_energy_policy.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6161_decision_calibrated_energy_policy.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6161_decision_calibrated_energy_policy.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6161_decision_calibrated_energy_policy --e2e-check": 0,
+    ".venv/bin/python -m carnot.experiment_6161_decision_calibrated_energy_policy --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6161_decision_calibrated_energy_policy.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6161_decision_calibrated_energy_policy.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6161_decision_calibrated_energy_policy.py tests/python/test_experiment_6161_decision_calibrated_energy_policy.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "upstream_endpoint_row_and_control_hashes": {
+    "exclusions": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "size_bytes": 45620
+    },
+    "exp6147_fixed_control": {
+      "artifact": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6147_task_aware_energy_calibration.json",
+        "sha256": "sha256:cff8138e03ba040f231ed5dd7ca6a533685d1381d00a67b54642396e8cbaf46b",
+        "size_bytes": 71883
+      },
+      "score_code": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6147_task_aware_energy_calibration.py",
+        "sha256": "sha256:5aaf0a7c29da2419cf32074b30b0cafa46957b0c5a8271164963f524dc574e8f",
+        "size_bytes": 68206
+      },
+      "selected_score": "task_aware_energy",
+      "selection_contents_hash": "sha256:de34bfec39a3c3c5a5d48c8ee2626bcfbf5961ab2aa5045c903522d2d31bee9e",
+      "selection_manifest_hash": "sha256:de34bfec39a3c3c5a5d48c8ee2626bcfbf5961ab2aa5045c903522d2d31bee9e",
+      "threshold": 1.2374189779352207
+    },
+    "exp6159": {
+      "endpoint_result": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.json",
+        "sha256": "sha256:7681c4065a02edeb2561decda06a5ec4506248ad89a816a129f83a98057a57b7",
+        "size_bytes": 68937
+      },
+      "endpoint_sections_hash": "sha256:33e6159b51459c84f143b6bbbeee1f5ca7472f34894c9f3a71fc9a68c4ff20d9",
+      "preregistration": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "sha256": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c",
+        "size_bytes": 4594
+      },
+      "splits": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.splits.json",
+        "sha256": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489",
+        "size_bytes": 13414
+      }
+    },
+    "exp6160": {
+      "result": {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.json",
+        "sha256": "sha256:8b7ce1dd2c651d967a499fc1562737acb00ff136d61dbce63079a9c30867d978",
+        "size_bytes": 490341
+      },
+      "row_sidecars": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": {
+          "exists": true,
+          "partition_counts": {
+            "calibration": 96,
+            "future_known": 64,
+            "shifted_family_held": 80
+          },
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.qwen3_6_35b_a3b.rows.jsonl",
+          "row_count": 240,
+          "sha256": "sha256:52c915b751503eadf576a1a6e1b3fbfd575d92634e36defeb880444bce4266e6",
+          "size_bytes": 555817
+        },
+        "unsloth/gemma-4-26B-A4B-it-GGUF": {
+          "exists": true,
+          "partition_counts": {
+            "calibration": 96,
+            "future_known": 64,
+            "shifted_family_held": 80
+          },
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6160_sota_decision_calibration_corpus.gemma_4_26b_a4b_it.rows.jsonl",
+          "row_count": 240,
+          "sha256": "sha256:306632c7680e5b60f1b4077ac60ae8d876e3c0d32500bd70d0f77babc56b1a56",
+          "size_bytes": 646762
+        }
+      }
+    },
+    "held_loader_access_counter_hash": "sha256:e937119e622ff62cef94e7d39de9c6808edebdd90df81b31f58556ee4f164806",
+    "output_paths": {
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6161_decision_calibrated_energy_policy.manifest.json",
+      "path_hash": "sha256:34f53bdc29026ecff5103c7bb7ff77bd380483aa3d1f7bace2b6b98e51b10600",
+      "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6161_decision_calibrated_energy_policy.json"
+    },
+    "principle": "Exp6159 endpoint/splits/preregistration, Exp6160 rows, Exp6147 fixed score code/manifest, exclusions, and output paths are content-addressed.",
+    "schema": "carnot.experiment_6161.decision_calibrated_energy_policy.v1.upstream_hashes"
+  },
+  "verifier_is_oracle": false
+}

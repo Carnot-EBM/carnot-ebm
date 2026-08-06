@@ -22386,3 +22386,137 @@ Exp6146 event IDs, row IDs, and decision hashes.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6160 | Implemented (`python/carnot/experiment_6160_sota_decision_calibration_corpus.py`, `results/experiment_6160_sota_decision_calibration_corpus.json`) | Implemented (`tests/python/test_experiment_6160_sota_decision_calibration_corpus.py`) |
+
+### REQ-VERIFY-6161: Exp6161 Decision-Calibrated Energy Policy Freeze
+
+The repository SHALL provide Exp6161 at
+`python/carnot/experiment_6161_decision_calibrated_energy_policy.py` and write
+`results/experiment_6161_decision_calibrated_energy_policy.json` plus a frozen
+policy manifest. Exp6161 SHALL consume only Exp6160 calibration rows, preserve
+Exp6147 as a fixed control, select exactly one decision policy by the
+preregistered Exp6159 unsafe-weighted calibration objective with proper-score
+tie diagnostics, and SHALL NOT open held outcomes.
+
+- REQ-VERIFY-6161-1: The workflow SHALL recompute the structured gate and hash
+  Exp6159 endpoint, split, and preregistration files; Exp6160 row sidecars;
+  Exp6147 score code and fixed selection manifest; exclusions; output paths;
+  held-loader access counters; and protected files before scoring.
+- REQ-VERIFY-6161-2: Fit, tune, and selection SHALL use only Exp6160
+  `calibration` rows. Future-known rows, shifted-family-held rows, held labels,
+  exact answers, current outcomes, exact validator fields, row-order aliases,
+  post-outcome receipts, and future-event fields SHALL be forbidden score
+  features.
+- REQ-VERIFY-6161-3: The feature allowlist SHALL be precommitted in code before
+  fitting, and any forbidden score input SHALL force
+  `decision_calibrated_policy_ready_score` to the bare scalar `0.0`.
+- REQ-VERIFY-6161-4: All fit and tune folds SHALL group by source model and task
+  family, with no model/task group appearing in both training and validation
+  within a fold.
+- REQ-VERIFY-6161-5: The workflow SHALL resource-match and compare global
+  energy, the frozen Exp6147 task-aware control, a decision-calibrated
+  task-energy policy, family-only, task-shuffled, alias, family-frequency, and
+  simple-distance controls under the same calibration objective.
+- REQ-VERIFY-6161-6: The selected policy SHALL optimize only the Exp6159
+  unsafe-weighted decision objective; Brier score, ECE, AUROC, and AUPRC SHALL
+  be reported, with AUROC/AUPRC descriptive only and not used as readiness
+  wins.
+- REQ-VERIFY-6161-7: The workflow SHALL report per-model calibration cost,
+  Brier, ECE, unsafe/safe action counts, descriptive AUROC/AUPRC, and
+  chronological drift diagnostics before any pooled summary.
+- REQ-VERIFY-6161-8: Label-shuffle, outcome-flip, task-shuffle, alias,
+  family-frequency, model-identity, constant-score, and threshold-boundary
+  controls SHALL run, and no control may outperform the selected policy for
+  readiness.
+- REQ-VERIFY-6161-9: Exactly one complete policy manifest SHALL be frozen before
+  held outcomes are opened. The manifest SHALL include score-code hashes,
+  feature schema, task statistics, calibration parameters, threshold,
+  abstention rule, cost table, model-specific policy data, and the bootstrap
+  evaluation plan.
+- REQ-VERIFY-6161-10: `held_access_count` SHALL be the bare scalar `0`,
+  `inference_substrate` SHALL be
+  `cached_authentic_sota_rows_cpu_analysis`, no LLM or model loader SHALL be
+  invoked, and `decision_calibrated_policy_ready_score` SHALL be `1.0` only for
+  a complete prospective policy with non-vacuous calibration support and zero
+  held access.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `upstream_endpoint_row_and_control_hashes`,
+`precommitted_feature_allowlist_and_forbidden_scan`,
+`calibration_group_and_fold_receipts`,
+`global_exp6147_decision_family_shuffled_alias_frequency_and_distance_arm_configs`,
+`per_model_calibration_cost_brier_ece_unsafe_safe_and_descriptive_ranking_metrics`,
+`chronological_drift_diagnostics`, `shortcut_and_boundary_controls`,
+`selected_policy_rationale_without_held_access`,
+`policy_manifest_path_hash_and_contents`,
+`score_threshold_abstention_and_cost_freeze_receipts`, `held_access_count`,
+`decision_calibrated_policy_ready_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`missing_verifier_gaps`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes ready, null, retired, or blocked policy freeze.
+- `preconditions_checked`: Upstream endpoints, rows, controls, exclusions, outputs, held counters, and protected files are hashed before scoring.
+- `structured_gate_receipt`: Calibration opens only after Exp6159, Exp6160, and Exp6147 are ready, row sidecars are present, held access is zero, and no live model path is invoked.
+- `upstream_endpoint_row_and_control_hashes`: Exp6159 endpoint/splits/preregistration, Exp6160 rows, Exp6147 fixed score code/manifest, exclusions, and output paths are content-addressed.
+- `precommitted_feature_allowlist_and_forbidden_scan`: Any current outcome, exact answer, exact validator field, row-order alias, future-event feature, or held label in score inputs forces readiness zero.
+- `calibration_group_and_fold_receipts`: Model/task family groups are never split across fit/tune folds.
+- `global_exp6147_decision_family_shuffled_alias_frequency_and_distance_arm_configs`: Every compared arm is transparent, resource-matched, and declares whether it is fitted or fixed.
+- `per_model_calibration_cost_brier_ece_unsafe_safe_and_descriptive_ranking_metrics`: Each mandated model reports decision cost, proper scores, action counts, and descriptive ranking metrics before pooling.
+- `chronological_drift_diagnostics`: Calibration drift is diagnostic only and never a row-order feature.
+- `shortcut_and_boundary_controls`: Shortcut and boundary controls cannot outperform the selected policy for readiness.
+- `selected_policy_rationale_without_held_access`: One complete policy is selected from calibration objective evidence without held access.
+- `policy_manifest_path_hash_and_contents`: The frozen manifest is content-addressed and complete enough for prospective held replay.
+- `score_threshold_abstention_and_cost_freeze_receipts`: Score formula, threshold, abstention, and Exp6159 cost table are frozen before held opening.
+- `held_access_count`: The value is the bare scalar zero.
+- `decision_calibrated_policy_ready_score`: Exactly one means a complete prospective policy and non-vacuous calibration support, not a held win.
+- `protected_files_unchanged`: Conductor, ops, traceability, and upstream protected artifacts remain byte-identical.
+- `duration_s`: Cached CPU analysis duration is reported separately from live model acquisition.
+- `inference_substrate`: Use `cached_authentic_sota_rows_cpu_analysis`.
+- `verifier_is_oracle`: The policy is oracle-distinct; exact calibration labels are not score features.
+- `missing_verifier_gaps`: Any gate, feature, fold, control, manifest, held-access, or command gap is explicit.
+- `field_provenance`: Every field traces to specs, Exp6159/Exp6160/Exp6147 artifacts, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, structured gate, feature/leakage, grouped folds, cost/proper-score calculations, controls, policy hash, zero-held-access, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, row, split, feature, policy, manifest, command, or protected-file drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state whether a policy was validly frozen.
+
+### SCENARIO-VERIFY-6161-CALIBRATION-ONLY: Fit Inputs Exclude Held And Oracle Fields
+
+**Given** Exp6161 reads Exp6160 cached model rows
+**When** feature extraction and label access run
+**Then** only calibration rows contribute labels or scores, held access remains
+the bare scalar zero, and forbidden current outcome, exact answer, exact
+validator, row-order, future-event, and held-label fields are absent from score
+inputs.
+
+### SCENARIO-VERIFY-6161-GROUPED-CV: Model And Task Groups Stay Sealed
+
+**Given** Exp6161 tunes arms and thresholds
+**When** grouped calibration folds are constructed
+**Then** every fold groups by `(model_hf_id, family)`, train and validation
+groups are disjoint, and the selected policy records the fold receipts.
+
+### SCENARIO-VERIFY-6161-CONTROLS: Shortcut Controls Cannot Win Readiness
+
+**Given** the decision-calibrated policy and controls have calibration metrics
+**When** label-shuffle, outcome-flip, task-shuffle, alias, family-frequency,
+model-identity, constant-score, and threshold-boundary controls run
+**Then** no control outperforms the selected policy for readiness and ranking
+metrics remain descriptive.
+
+### SCENARIO-VERIFY-6161-FREEZE: One Complete Policy Manifest Freezes Before Held
+
+**Given** calibration objective selection has completed
+**When** Exp6161 writes the artifact
+**Then** exactly one manifest contains score-code hashes, feature schema, task
+statistics, calibration parameters, threshold, abstention rule, cost table,
+model-specific policy data, and bootstrap/evaluation plan, and the manifest hash
+matches the artifact before any held outcome is opened.
+
+## Implementation Status (REQ-VERIFY-6161)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6161 | Planned (`python/carnot/experiment_6161_decision_calibrated_energy_policy.py`, `results/experiment_6161_decision_calibrated_energy_policy.json`) | Planned (`tests/python/test_experiment_6161_decision_calibrated_energy_policy.py`) |
