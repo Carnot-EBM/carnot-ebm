@@ -21583,3 +21583,117 @@ stable reproducibility checksum, protected-file immutability, and no mutation of
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6167 | Pending in `python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py`; the experiment must reuse the live `make_carnot_agent`/`E3AgentPolicy` path and write `results/experiment_6167_arc_task_aware_multiseed_replication.json` without solve credit. | Pending in `tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py`. |
+
+### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
+
+**Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
+action/click "budget meter" (exhausting it triggers `GAME_OVER`) in at least six games --
+r11l (64-click meter, column-0 counter), sc25 (64-row energy bar, drains ~1/action), s5i5
+(bottom-row graphical bar), g50t (hard action-count clock), bp35 (row-63 numeric HUD
+counter) -- each hand-derived from that game's own gotchas, with no shared code. Every one
+of those regions is exactly what `arc_hud_bar_detector.region_hud_evidence` already learns
+to recognise generically: an action-ubiquitous, monotone, irreversible counter, admitted
+without any per-game constant. The gap this closes: recognising the region is not the same
+as knowing how close it is to triggering `GAME_OVER`, and nothing turned the admitted
+region into a scalar estimate a planner could use.
+
+**THE HIDDEN-GAME-LEGALITY CONSTRAINT.** Per CLAUDE.md's ARC Live-Path Reachability
+Discipline and the Generalization-Testing Floor, this system SHALL NOT infer a game's
+actual budget unit, its numeric threshold, or which pixel colour means "filled" from
+source-reading, the public registry, or any other oracle. The estimate SHALL be derived
+solely from the shape of the region's OWN observed trajectory on frames the agent has
+itself seen this episode.
+
+**THE ESTIMATOR (`arc_hud_bar_detector.budget_exhaustion_estimate`).** The system SHALL
+compute, per observed frame, the fraction of the admitted region's pixels that differ from
+their value in the CURRENT SEGMENT's first observed frame ("divergence from segment
+start") -- a proxy that trends toward 1.0 as a meter approaches whichever extreme (fully
+filled or fully drained) triggers `GAME_OVER`, without needing to know which direction
+that is. Segments SHALL be delimited with EXACTLY `region_hud_evidence`'s own restart rule
+(an episode break, or a return to the segment's first observed region value, starts a new
+segment) -- ADVERSARIAL REVIEW FINDING (2026-08-06, caught before this shipped wired to
+anything): a first draft measured divergence from the trajectory's GLOBAL first frame,
+ignoring every game's own per-level meter reset (r11l/sc25/s5i5/g50t/bp35 ALL reset their
+meter on level-up); on a realistic fill-reset-refill fixture it overestimated
+actions-remaining by ~8x in the unsafe, falsely-reassuring direction. The system SHALL fit
+a least-squares linear trend of that fraction against transition index using ONLY the
+current segment's most recent `BUDGET_ESTIMATE_MIN_TRANSITIONS` (8) transitions (a sliding
+window, not the whole segment since its own start) once at least that many are available,
+and SHALL report `actions_remaining_estimate = (1.0 - fill_fraction) / rate_per_transition`
+only when the fitted rate is strictly positive; a non-positive rate SHALL report `None` (no
+projection) rather than extrapolate past what was observed. SECOND ADVERSARIAL REVIEW
+FINDING, same date: a whole-segment (unwindowed) fit is structurally biased POSITIVE by any
+early jump even after the region goes flat, because the fit line must "explain" the jump --
+the windowing requirement above exists specifically to prevent that bias, not as a
+performance nicety. The function SHALL trust a caller-supplied `region_hud_evidence`
+verdict rather than force a recomputation, and SHALL treat any verdict other than `"admit"`
+as `"abstain"` -- the caller MUST NOT act on `actions_remaining_estimate` on an abstain.
+
+**THE CONSUMER (`arc_solver_kit.budget_aware_path_cost_weight`) SHALL be a pure, additive
+extension of `standing_path_cost_weight`** that adds a penalty
+(`BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION`, 50.0 per excess action) only when a
+candidate plan's length exceeds a supplied `actions_remaining_estimate`, and SHALL reduce
+to byte-identical behaviour of `standing_path_cost_weight` whenever
+`actions_remaining_estimate` is `None` -- not an approximation of the old behaviour, the
+same computation, so introducing this function cannot silently change anything before an
+estimate exists to feed it.
+
+**GOVERNED BY THE PHASE PROTOTYPE + EMPIRICAL VALIDATION + ADVERSARIAL CHECK DISCIPLINE.**
+Both the estimator and the consumer SHALL ship default-off
+(`BUDGET_AWARE_SEARCH_ENABLED = False`) and UNWIRED from the live `E3AgentPolicy` /
+`plan_in_model` cascade at initial landing. Wiring either into the live search path is
+OUT OF SCOPE for this requirement and SHALL be tracked as a separate, empirically-validated
+follow-up REQ before any live-agent behaviour change ships -- this REQ's acceptance gate is
+the primitive's own correctness on synthetic and reproduced-game trajectories, not a live
+solve-rate delta.
+
+### SCENARIO-ARC-WMTE-6180-MONOTONE-REGION-PROJECTS-EXHAUSTION
+
+GIVEN a synthetic frame sequence where a masked region's pixels diverge from frame 0 at a
+constant rate over >= 8 transitions
+WHEN `budget_exhaustion_estimate` is called with the admitted `region_hud_evidence` for that
+sequence
+THEN `verdict == "estimate"`, `rate_per_transition` matches the constructed rate, and
+`actions_remaining_estimate` matches the analytically expected remaining-transitions count
+within rounding.
+
+### SCENARIO-ARC-WMTE-6180-SEGMENT-RESET-DOES-NOT-INHERIT-PRIOR-HISTORY
+
+GIVEN a synthetic frame sequence where an admitted region fills most of the way, resets to
+its segment-start value (a level-up), then refills >= 8 further transitions into the new
+segment
+WHEN `budget_exhaustion_estimate` is called
+THEN `n_transitions` and `fill_fraction` reflect ONLY the post-reset segment, and
+`actions_remaining_estimate` matches the analytically expected remaining count for that
+segment alone -- not a figure diluted or inflated by the pre-reset segment's history.
+
+### SCENARIO-ARC-WMTE-6180-ABSTAIN-ON-UNDERLYING-REFUSAL-OR-INSUFFICIENT-EVIDENCE
+
+GIVEN a region whose `region_hud_evidence` verdict is `"refuse"` or `"abstain"`, OR fewer
+than 8 usable transitions have been observed
+WHEN `budget_exhaustion_estimate` is called
+THEN `verdict == "abstain"` and `actions_remaining_estimate is None`, regardless of what the
+raw pixel data looks like.
+
+### SCENARIO-ARC-WMTE-6180-NON-POSITIVE-RATE-DOES-NOT-PROJECT
+
+GIVEN an admitted region whose divergence fraction is flat or decreasing across the
+observed transitions
+WHEN `budget_exhaustion_estimate` is called
+THEN `rate_per_transition <= 0`, `actions_remaining_estimate is None`, and `verdict ==
+"estimate"` (the estimator still reports what it measured; it just declines to
+extrapolate).
+
+### SCENARIO-ARC-WMTE-6180-CONSUMER-IS-A-NO-OP-WITHOUT-AN-ESTIMATE
+
+GIVEN `budget_aware_path_cost_weight` is called with `actions_remaining_estimate=None` (the
+default) for any `depth`/`plan_length`/`path_cost_weight`
+WHEN compared against `standing_path_cost_weight(path_cost_weight) * depth`
+THEN the two values are identical -- introducing the consumer changes nothing until a real
+estimate is threaded in.
+
+## Implementation Status (REQ-ARC-WMTE-6180)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline. | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
