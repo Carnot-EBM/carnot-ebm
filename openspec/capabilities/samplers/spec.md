@@ -3316,3 +3316,137 @@ retired THRML/Carnot parity-scaling or hardware/performance claim is emitted.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6153 | Planned (`python/carnot/experiment_6153_thermalized_program_error_audit.py`, `results/experiment_6153_thermalized_program_error_audit.json`) | Planned (`tests/python/test_experiment_6153_thermalized_program_error_audit.py`) |
+
+### REQ-SAMPLE-6166: Mode-Jumping Factor Thermalization
+
+Carnot MUST provide Exp6166 at
+`python/carnot/experiment_6166_mode_jumping_factor_thermalization.py` and write
+`results/experiment_6166_mode_jumping_factor_thermalization.json` without
+modifying `scripts/research_conductor.py`. Exp6166 SHALL use Exp6152's typed
+PSC/DFG IR and Exp6153's software factor-replacement interfaces to test one
+exactly enumerable multimodal categorical factor with Conditional NCE style
+mode-jumping noise. The experiment is software simulation only.
+
+Sub-requirements:
+- REQ-SAMPLE-6166-MULTIMODAL-FACTOR: The factor SHALL have at least two
+  separated modes, frozen labels, support, exact probabilities, mode masses,
+  a known relative mode-mass ratio, and at least one unsupported state for
+  support-violation controls.
+- REQ-SAMPLE-6166-EXACT-ENUMERATION: Exact factor and joint distributions SHALL
+  be enumerated through Exp6152's typed program executor, and all exact,
+  approximate, identity, bad, and permuted arms SHALL lower through the same
+  Exp6153 software-kernel execution interface.
+- REQ-SAMPLE-6166-LOCAL-CNCE: A local-only CNCE arm SHALL train only from
+  fixed local noise pairs and SHALL not copy exact log probabilities or the
+  exact table into the approximate arm.
+- REQ-SAMPLE-6166-CROSS-MODE-NOISE: A local-plus-cross-mode-jump CNCE arm
+  SHALL add deliberate cross-mode pairs that compare separated modes directly.
+- REQ-SAMPLE-6166-MATCHED-TRAINING: The local-only and mode-jump arms SHALL
+  predeclare matching seeds, total pair budget, optimizer, step count, support
+  mask, local noise, cross-mode noise, and primary TV/KL endpoint before
+  fitting.
+- REQ-SAMPLE-6166-NONZERO-ERROR: Approximate factor and/or joint divergence
+  SHALL be finite and strictly positive, while the exact-table identity arm
+  SHALL remain zero-error.
+- REQ-SAMPLE-6166-RELATIVE-MODE-MASS: The artifact SHALL report relative
+  mode-mass ratio error for local-only and mode-jump arms and use mode-jump
+  improvement as a readiness gate.
+- REQ-SAMPLE-6166-FACTOR-JOINT-DIVERGENCE: The artifact SHALL report exact
+  factor and joint TV, KL, support, normalization, and mode-mass errors for
+  identity, local-only, mode-jump, bad, and permuted controls.
+- REQ-SAMPLE-6166-COMPOSITION-BOUND: The factor-to-joint bound SHALL be
+  derived and SHA-256 hashed before joint evaluation, and measured joint TV
+  SHALL be compared with the precommitted bound.
+- REQ-SAMPLE-6166-CONTROLS: Identity, no-jump, wrong-jump, bad-factor,
+  permuted-wire, unsupported-state, and loose-bound controls SHALL fire under
+  the same audit interface.
+- REQ-SAMPLE-6166-RETIRED-NONREUSE: Exp6166 SHALL preserve the retired
+  THRML/Carnot parity-scaling lineage by producing no size sweep, no parity
+  table, and no retired THRML scaling claim.
+- REQ-SAMPLE-6166-SOFTWARE-ONLY: `hardware_execution_claimed` and
+  `latency_power_energy_and_speedup_claimed` SHALL be bare `false`, and
+  `inference_substrate` SHALL equal
+  `jax_cpu_software_multimodal_factor_thermalization`.
+
+The terminal artifact SHALL include `status`, `preconditions_checked`,
+`prior_failure_and_operator_override_receipts`,
+`upstream_ir_executor_bound_and_software_version_hashes`,
+`cnce_source_and_algorithm_receipt`,
+`exact_multimodal_factor_support_distribution_and_mode_masses`,
+`frozen_local_and_cross_mode_noise_distributions`,
+`matched_training_configs_seeds_samples_and_parameters`,
+`exact_local_only_mode_jump_bad_and_permuted_arm_receipts`,
+`factor_and_joint_tv_kl_and_mode_mass_ratio_errors`,
+`deliberately_nonzero_error_receipt`,
+`preregistered_factor_to_joint_bound`, `bound_slack_and_violation_counts`,
+`seed_intervals_and_convergence`,
+`identity_no_jump_wrong_jump_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls`,
+`retired_parity_scaling_nonreuse_receipt`, `hardware_execution_claimed`,
+`latency_power_energy_and_speedup_claimed`,
+`mode_jumping_factor_thermalization_ready_score`, `retirement_triggered`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `missing_verifier_gaps`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. `honest_verdict` SHALL start with `complete_positive:`,
+`complete_null:`, `retired:`, or `blocked:` and state whether mode jumping
+improved composition.
+
+Required field principles:
+
+- `status`: Terminal state separates positive, null, retired, and blocked Exp6166 outcomes.
+- `preconditions_checked`: Hashes CPU mode, upstream typed IR, software interfaces, CNCE source reachability, retired lineage, output paths, and protected files before fitting.
+- `prior_failure_and_operator_override_receipts`: Records why Exp6153's exact replacement was vacuous and why this nonzero-error software approximation is allowed without reopening retired parity scaling.
+- `upstream_ir_executor_bound_and_software_version_hashes`: Binds Exp6152 IR/executor, Exp6153 bound/executor code, Torx, vendored THRML, sampler paths, outputs, and protected files.
+- `cnce_source_and_algorithm_receipt`: Names OpenReview `07OWUWmUHp`, records reachable source metadata, and states the local conditional pairwise objective used.
+- `exact_multimodal_factor_support_distribution_and_mode_masses`: Freezes labels, support mask, exact probabilities, separated modes, mode masses, and relative mode-mass ratio before fitting.
+- `frozen_local_and_cross_mode_noise_distributions`: Freezes local pair noise and cross-mode jump noise before training outcomes are read.
+- `matched_training_configs_seeds_samples_and_parameters`: Freezes seeds, samples, optimizer, step count, learning rate, support mask, arm budgets, and primary endpoints before fitting.
+- `exact_local_only_mode_jump_bad_and_permuted_arm_receipts`: Keeps identity, local-only, mode-jump, deliberately bad, and permuted arms separately named and lowered through the same software-kernel interface.
+- `factor_and_joint_tv_kl_and_mode_mass_ratio_errors`: Reports exact factor/joint divergence, normalization, support, and mode-mass ratio error for every arm.
+- `deliberately_nonzero_error_receipt`: Proves approximate divergence is finite and strictly positive while the identity arm remains zero.
+- `preregistered_factor_to_joint_bound`: Hashes the factor-derived joint TV/KL bound before joint evaluation.
+- `bound_slack_and_violation_counts`: Compares measured joint TV with the precommitted bound and counts violations.
+- `seed_intervals_and_convergence`: Reports deterministic seed intervals, loss trends, finite parameters, and convergence diagnostics.
+- `identity_no_jump_wrong_jump_bad_factor_permuted_wire_unsupported_state_and_loose_bound_controls`: Proves exact identity, no-jump/local-only weakness, wrong-jump degradation, bad factor, permuted category wiring, support violation, and loose-bound rejection controls fire.
+- `retired_parity_scaling_nonreuse_receipt`: Proves no THRML/Carnot scaling sweep or parity table is produced.
+- `hardware_execution_claimed`: Bare false prevents this software semantic result from becoming a hardware claim.
+- `latency_power_energy_and_speedup_claimed`: Bare false prevents quality evidence from becoming a performance claim.
+- `mode_jumping_factor_thermalization_ready_score`: Equals 1.0 only when preconditions pass, nonzero finite error exists, mode jumping improves local-only, the bound holds, controls fire, protected files are unchanged, tests pass, and no forbidden claim appears.
+- `retirement_triggered`: Records whether this run crossed a retired-lineage rule.
+- `protected_files_unchanged`: Confirms conductor and reconciliation files were byte-identical during artifact construction.
+- `duration_s`: Reports real wall time without padding.
+- `inference_substrate`: Declares `jax_cpu_software_multimodal_factor_thermalization`, not hardware, GPU, or LLM inference.
+- `verifier_is_oracle`: Declares exact finite enumeration as the oracle.
+- `missing_verifier_gaps`: Lists absent evidence rather than silently granting readiness.
+- `field_provenance`: Maps each required field to prompt, spec, source, tests, artifacts, or package receipts.
+- `test_commands`: Records focused unit/spec coverage, version/API, multimodal exact reference, CNCE arms, nonzero-error, bound, controls, no-hardware, JAX CPU, schema, adversarial, protected-file, E2E, full pytest, and root-clutter checks.
+- `test_exit_codes`: Prevents failed commands from becoming readiness evidence.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile duration and self-checksum blanked.
+- `honest_verdict`: Uses a required terminal prefix and states whether mode jumping improved composition.
+
+### SCENARIO-SAMPLE-6166-MULTIMODAL-CNCE: Mode Jumps Improve Relative Mass
+
+**Given** the frozen multimodal categorical factor and matched CNCE training
+budgets
+**When** local-only and local-plus-cross-mode-jump arms fit approximate
+support-masked software kernels
+**Then** the identity arm has zero error
+**And** both approximate arms have finite strictly positive error
+**And** the mode-jump arm has lower joint TV and lower relative mode-mass ratio
+error than the local-only arm.
+
+### SCENARIO-SAMPLE-6166-BOUND-CONTROLS: Bound And Controls Fail Closed
+
+**Given** the precommitted factor-to-joint bound and identity/no-jump/
+wrong-jump/bad/permuted/unsupported/loose controls
+**When** Exp6166 evaluates exact joint outputs
+**Then** joint TV respects the precommitted bound for the approximate arms
+**And** each control fires under the same typed software execution boundary
+**And** no retired parity-scaling, hardware, latency, power, energy, or
+speedup claim is emitted.
+
+## Implementation Status (REQ-SAMPLE-6166)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6166 | Planned (`python/carnot/experiment_6166_mode_jumping_factor_thermalization.py`, `results/experiment_6166_mode_jumping_factor_thermalization.json`) | Planned (`tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py`) |
