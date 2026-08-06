@@ -49605,3 +49605,157 @@ prefix is present; the inference substrate is `literature_ingestion`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6144 | Implemented (`python/carnot/experiment_6144_v533_source_delta_ingestion.py`, `results/experiment_6144_v533_source_delta_ingestion.json`) | Implemented (`tests/python/test_experiment_6144_v533_source_delta_ingestion.py`) |
+
+### REQ-REPORT-6155: V533 Branch-Independent Capstone Reconciliation
+
+The Exp6155 workflow SHALL reconcile milestone `2026.08.533` by reading the
+active roadmap's exact Exp6142 through Exp6154
+`(milestone, task_id, declared_deliverable)` tuples, conductor terminal
+receipts, exact declared artifact paths, exclusion and verifier ledgers,
+protected-file hashes, root
+clutter, completion history, and current worktree state. It SHALL NOT resolve
+evidence by same-number glob, completion-history prose, capstone summaries, or
+nearby aliases. It SHALL write
+`results/experiment_6155_v533_capstone_reconciliation.json`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL declare
+`inference_substrate="aggregation_from_upstream_artifacts"`.
+
+The workflow SHALL classify every Exp6142 through Exp6154 identity into exactly
+one terminal class while preserving the difference between an exact declared
+artifact, a missing artifact, a structured gate skip, a block, a scientific
+null, a retirement, a partial result, and a positive result. A downstream
+structured skip SHALL NOT become a missing-artifact success, a blocked
+precondition SHALL NOT become a null, and a null SHALL NOT become a positive
+subgroup average.
+
+The workflow SHALL freshly run or ingest `scripts/adversarial_verify.py --json`
+for every present exact declared artifact. Artifacts flagged by the verifier or
+carrying quarantine/corrigendum fields SHALL remain in the ledger, but SHALL be
+excluded from positive aggregation. The capstone SHALL preserve quarantine
+fields and SHALL NOT stamp, clear, or rewrite upstream artifacts.
+
+The workflow SHALL recompute capstone summaries only from raw artifact fields:
+tracked-result test isolation from Exp6143; exact stream and SOTA corpus
+authenticity from Exp6145 and Exp6146; task-aware calibration and held
+admission from Exp6147 and Exp6148 while preserving adversarial quarantine;
+continuous self-learning fixture, blocked prospective run, and default-off
+shadow state from Exp6149 through Exp6151; typed stochastic IR and software
+thermalization from Exp6152 and Exp6153; and ARC live-path generalization from
+Exp6154 with `solve_claimed=false`, `offline_reproduced=false`, and
+`level_credit_delta=0`. The workflow SHALL NOT infer a gate from prose.
+
+The workflow SHALL keep oracle authority and execution surface explicit for
+every claim. Software JAX/Torx/THRML-compatible runs SHALL remain software
+simulation or software execution, not hardware. Live GGUF/CUDA model use SHALL
+be credited only from model-spec and lifecycle fields; deterministic ARC
+runtime transitions SHALL remain distinct from LLM inference and from level
+solves.
+
+The workflow SHALL append `.533` completion history at most once and SHALL
+record `duplicate_history_amplification_count=0` for a valid capstone. When a
+separate conductor reconciliation step owns ops, BMAD, references, and
+completion ledgers, Exp6155 MAY record those updates as deferred rather than
+mutating historical text, but it SHALL report that decision in the capstone
+artifact.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`activated_task_and_declared_deliverable_matrix`,
+`exact_terminal_classification`,
+`present_missing_skipped_blocked_null_retired_and_positive_counts`,
+`structured_gate_receipts`,
+`adversarial_verifier_and_quarantine_receipts`,
+`test_artifact_isolation_summary`, `exact_stream_and_sota_corpus_summary`,
+`task_aware_calibration_and_held_summary`,
+`continuous_self_learning_and_shadow_summary`,
+`typed_ir_and_thermalization_summary`,
+`arc_generalization_no_solve_summary`,
+`oracle_distinctness_and_inference_substrate_matrix`,
+`model_specs_and_lifecycle_matrix`,
+`prior_failure_retirement_and_exclusion_updates`,
+`open_verifier_and_research_gaps`,
+`spec_bmad_ops_reference_and_completion_reconciliation`,
+`research_complete_append_count`,
+`duplicate_history_amplification_count`, `protected_files_unchanged`,
+`preexisting_worktree_changes_preserved`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+Every required field SHALL have a non-empty provenance entry and principle.
+`honest_verdict` SHALL start with `complete:` or `blocked:`.
+
+Required field principles:
+
+- `status`: principle "honest capstone state over mixed terminal evidence."
+- `preconditions_checked`: principle "snapshots exact paths, receipts, exclusions, quarantine, docs, root clutter, protected hashes, and worktree state before writing."
+- `activated_task_and_declared_deliverable_matrix`: principle "the active roadmap's exact task IDs and declared paths are the only artifact index."
+- `exact_terminal_classification`: principle "no artifact, structured skip, block, null, retirement, partial, and positive remain different terminal states."
+- `present_missing_skipped_blocked_null_retired_and_positive_counts`: principle "counts expose terminal states without averaging away failed subgroup gates."
+- `structured_gate_receipts`: principle "gate outcomes come from conductor receipts and raw upstream ready fields, never prose inference."
+- `adversarial_verifier_and_quarantine_receipts`: principle "flagged evidence stays in the ledger but cannot support positive aggregation."
+- `test_artifact_isolation_summary`: principle "Exp6143 mutation and quarantine-preservation claims are copied only from its artifact."
+- `exact_stream_and_sota_corpus_summary`: principle "Exp6145 exact rows and Exp6146 model corpus authenticity stay separate."
+- `task_aware_calibration_and_held_summary`: principle "calibration and held admission are recomputed separately and quarantine is preserved."
+- `continuous_self_learning_and_shadow_summary`: principle "CSL fixture, blocked prospective run, and missing shadow adapter remain separate."
+- `typed_ir_and_thermalization_summary`: principle "typed IR exactness and software thermalization are separate from hardware or speedup claims."
+- `arc_generalization_no_solve_summary`: principle "ARC live-path generalization is not a level-solve claim."
+- `oracle_distinctness_and_inference_substrate_matrix`: principle "every claim names its authority and actual execution surface; software simulation is never hardware."
+- `model_specs_and_lifecycle_matrix`: principle "model provenance comes from explicit model_specs and lifecycle receipts."
+- `prior_failure_retirement_and_exclusion_updates`: principle "same-verdict retirements and exclusion changes are recorded without mutating unrelated ledgers."
+- `open_verifier_and_research_gaps`: principle "open gaps preserve flagged, blocked, null, missing, and no-solve boundaries."
+- `spec_bmad_ops_reference_and_completion_reconciliation`: principle "only delivered evidence is reconciled; conductor-owned ledgers may be deferred explicitly."
+- `research_complete_append_count`: principle "append `.533` at most once and amplify no history."
+- `duplicate_history_amplification_count`: principle "append `.533` at most once and amplify no history."
+- `protected_files_unchanged`: principle "roadmap, conductor, exclusions, ops, BMAD, references, and upstream evidence remain unchanged unless explicitly owned."
+- `preexisting_worktree_changes_preserved`: principle "pre-existing user worktree changes are recorded and not staged or reverted."
+- `duration_s`: principle "measured aggregation duration for upstream-artifact reconciliation."
+- `inference_substrate`: principle "set `aggregation_from_upstream_artifacts`; this task invokes no research LLM."
+- `field_provenance`: principle "each field traces to exact local receipts and artifact fields."
+- `test_commands`: principle "records unit, coverage, YAML, exact-path, gate, adversarial, metric, oracle/substrate, duplicate-history, lint, E2E, protected-file, full-suite, and root-clutter checks."
+- `test_exit_codes`: principle "exit codes prevent failed checks from becoming success."
+- `reproducibility_checksum`: principle "content checksum detects later capstone drift."
+- `honest_verdict`: principle "use `complete:` or `blocked:` and preserve decision-grade closure without requiring every branch to be positive."
+
+#### SCENARIO-REPORT-6155-EXACT-MATRIX: V533 Capstone Uses Declared Paths Only
+
+**Given** the active `.533` roadmap declares Exp6142 through Exp6154
+deliverables
+**And** same-number sidecar files may exist outside those declared paths
+**When** Exp6155 builds its matrix
+**Then** it records every declared identity exactly once, resolves evidence
+only at the declared path, leaves Exp6151 as a structured skip when its declared
+artifact is absent but conductor gate receipts skipped it, and does not use a
+sidecar alias as evidence.
+
+#### SCENARIO-REPORT-6155-TERMINAL-AND-QUARANTINE: Flags Do Not Support Positive Aggregation
+
+**Given** present artifacts include positives, nulls, partials, blocks, and
+adversarially flagged artifacts
+**When** Exp6155 classifies terminal outcomes and verifier receipts
+**Then** every task has exactly one terminal class, flagged artifacts remain
+visible in the quarantine ledger, and flagged positives are excluded from
+positive aggregation while their raw terminal class remains recorded.
+
+#### SCENARIO-REPORT-6155-BRANCH-BOUNDARIES: Branch Summaries Preserve Scientific Boundaries
+
+**Given** `.533` includes infrastructure, ingestion, verifier/admission, CSL,
+stochastic-program, and ARC branches
+**When** Exp6155 computes summaries
+**Then** test isolation, stream/corpus authenticity, calibration/held
+admission, CSL/shadow integration, typed IR/thermalization, and ARC no-solve
+claims are derived from their own raw fields and do not borrow gates or
+positives from sibling branches.
+
+#### SCENARIO-REPORT-6155-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** Exp6155 emits its artifact
+**When** its schema is validated
+**Then** every required field, principle, provenance entry, terminal count,
+structured gate receipt, verifier receipt, quarantine entry, oracle/substrate
+row, model provenance row, reconciliation receipt, append count, protected-file
+receipt, test command, exit code, checksum, and terminal verdict prefix is
+present; `inference_substrate` is `aggregation_from_upstream_artifacts`.
+
+## Implementation Status (REQ-REPORT-6155)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6155 | Implemented (`python/carnot/experiment_6155_v533_capstone_reconciliation.py`, `results/experiment_6155_v533_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_6155_v533_capstone_reconciliation.py`) |
