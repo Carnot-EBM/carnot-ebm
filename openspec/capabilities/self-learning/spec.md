@@ -27070,3 +27070,39 @@ identical to Exp5859.
 | Requirement | Python | Rust | Tests |
 |---|---|---|---|
 | REQ-LEARN-5865 | Implemented (`python/carnot/adaptive_state_requalification.py`, `results/experiment_5865_adaptive_state_kernel_requalification.json`) | N/A (reuses Exp5859 Rust kernel without semantic changes) | Implemented (`tests/python/test_experiment_5865_adaptive_state_kernel_requalification.py`) |
+
+## REQ-LEARN-6159: Prospective Decision Calibration Boundary
+
+Exp6159 SHALL provide a prospective decision-calibrated stream boundary for
+future continuous-learning admission work. The stream SHALL freeze utility,
+proper-score, sample-size, bootstrap, safety-margin, noninferiority, and
+one-shot held-loader rules before any model inference or held-label
+materialization. Exact labels SHALL remain in a separately hashed outcome
+loader, unavailable to decision code until a downstream one-shot held access.
+
+- REQ-LEARN-6159-1: The preregistration manifest SHALL declare zero held-label
+  access at freeze time, zero LLM invocations, one unsafe-weighted utility cost
+  table, one primary cluster unit, deterministic bootstrap seeds, minimum
+  effective sample sizes, safety margins, noninferiority margins, Brier/ECE
+  endpoints, descriptive-only AUROC, and the readiness formula.
+- REQ-LEARN-6159-2: The learner-visible row schema SHALL exclude exact answers,
+  current outcomes, future labels, held labels, post-outcome receipts, and any
+  field derived from a post-decision decision result.
+- REQ-LEARN-6159-3: `decision_calibrated_stream_ready_score` SHALL be the bare
+  scalar `1.0` only when identities are fresh, labels validate exactly, splits
+  are isolated, endpoint hashes match the preregistration sidecar, and held
+  access remains zero.
+
+### SCENARIO-LEARN-6159-PREREGISTERED: Endpoint Is Frozen Before Held Labels
+
+**Given** Exp6159 writes its preregistration sidecar
+**When** the stream artifact is validated
+**Then** the frozen cost table, endpoint plan, sample-size plan, proper-score
+plan, and held-loader contract all hash-match the sidecar, and held access is
+still zero.
+
+## Implementation Status (REQ-LEARN-6159)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-6159 | Planned (`python/carnot/experiment_6159_decision_calibrated_stream.py`) | Planned (`tests/python/test_experiment_6159_decision_calibrated_stream.py`) |

@@ -1,0 +1,1360 @@
+{
+  "alias_contradiction_malformed_poison_and_boundary_controls": {
+    "alias": {
+      "accepted": 30,
+      "counted_as_shift": 0,
+      "events": 30,
+      "rejected": 0
+    },
+    "all_required_controls_present": true,
+    "contradiction": {
+      "accepted": 0,
+      "counted_as_shift": 10,
+      "events": 30,
+      "rejected": 30
+    },
+    "malformed_strategy": {
+      "accepted": 0,
+      "counted_as_shift": 10,
+      "events": 30,
+      "rejected": 30
+    },
+    "normal": {
+      "accepted": 90,
+      "counted_as_shift": 30,
+      "events": 90,
+      "rejected": 0
+    },
+    "poison": {
+      "accepted": 0,
+      "counted_as_shift": 10,
+      "events": 30,
+      "rejected": 30
+    },
+    "principle": "Controls prove aliases, contradictions, malformed strategies, poison attempts, and threshold-boundary cases are present and separated.",
+    "threshold_boundary": {
+      "accepted": 30,
+      "counted_as_shift": 10,
+      "events": 30,
+      "rejected": 0
+    }
+  },
+  "brier_ece_and_descriptive_auroc_plan": {
+    "auroc_primary_or_readiness_gate": false,
+    "auroc_role": "descriptive_only",
+    "principle": "Brier and ECE are proper-score endpoints while AUROC remains descriptive only.",
+    "proper_score_endpoints": [
+      "brier",
+      "ece"
+    ],
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.proper_score_plan",
+    "utility_endpoint": "unsafe_weighted_utility"
+  },
+  "chronological_order": {
+    "event_id_count": 240,
+    "event_ids_sha256": "sha256:1e96b53eb156ca2d41bb87c98f910a6ef494efc03842f15abcf21e3d63e698e8",
+    "first_event_id": "exp6159-event-000000",
+    "first_seed": 615910000,
+    "last_event_id": "exp6159-event-000239",
+    "last_seed": 615910239,
+    "monotone": true,
+    "principle": "Strict event order and seed schedule make the stream replay deterministic.",
+    "row_order_sha256": "sha256:3cba97a4be4e35cc74e6e4c1f77be6639d03e79a1ae3ea5f77d7b2292be88dc7",
+    "seed_count": 240,
+    "unique_event_id_count": 240,
+    "unique_seed_count": 240
+  },
+  "decision_calibrated_stream_ready_score": 1.0,
+  "deterministic_rebuild_checksum": "sha256:b5a946213902669fe7f9768855b993b88390fc6c713083f7bf586d88623b2c68",
+  "duration_s": 2.474093,
+  "event_template_family_partition_and_shift_counts": {
+    "alias_counted_as_shift_count": 0,
+    "alias_event_count": 30,
+    "base_template_count": 30,
+    "base_template_partition_counts": {
+      "calibration": 12,
+      "future_known": 8,
+      "shifted_family_held": 10
+    },
+    "event_count": 240,
+    "family_count": 6,
+    "family_counts": {
+      "budget_release": 40,
+      "claim_triage": 40,
+      "credential_rotation": 40,
+      "data_pipeline": 40,
+      "grid_egress_routing": 40,
+      "sensor_failover_triage": 40
+    },
+    "partition_counts": {
+      "calibration": 96,
+      "future_known": 64,
+      "shifted_family_held": 80
+    },
+    "principle": "Counts prove the stream has enough events, families, base templates, partitions, structural shifts, aliases, and controls.",
+    "structural_shift_event_count": 70,
+    "structural_shift_family_count": 2,
+    "variant_counts": {
+      "alias": 30,
+      "canonical": 30,
+      "composition": 30,
+      "contradiction": 30,
+      "malformed_strategy": 30,
+      "permutation": 30,
+      "poison": 30,
+      "threshold_boundary": 30
+    }
+  },
+  "exact_validator_agreement": {
+    "authority": "exp5896.certify_ir_python_and_z3_reused_by_exp6159",
+    "disagreement_count": 0,
+    "disagreements": [],
+    "principle": "Python and Z3 validators agree on every exact row with zero unresolved disagreements.",
+    "python_z3_compared_count": 210,
+    "solver_effort_diagnostic_only": true,
+    "unresolved": [],
+    "unresolved_disagreement_count": 0
+  },
+  "experiment_id": "experiment_6159_decision_calibrated_stream",
+  "exposed_fixture_overlap_counts": {
+    "event_overlap_count": 0,
+    "event_overlaps": [],
+    "principle": "Event, template, and seed overlap are all bare zero.",
+    "seed_overlap_count": 0,
+    "seed_overlaps": [],
+    "template_overlap_count": 0,
+    "template_overlaps": []
+  },
+  "field_principles": {
+    "alias_contradiction_malformed_poison_and_boundary_controls": "Controls prove aliases, contradictions, malformed strategies, poison attempts, and threshold-boundary cases are present and separated.",
+    "brier_ece_and_descriptive_auroc_plan": "Brier and ECE are proper-score endpoints while AUROC remains descriptive only.",
+    "chronological_order": "Strict event order and seed schedule make the stream replay deterministic.",
+    "decision_calibrated_stream_ready_score": "Exactly one only when identities are fresh, labels exact, splits isolated, endpoint frozen, and held access remains zero.",
+    "deterministic_rebuild_checksum": "A second construction reproduces byte-equivalent stream commitments.",
+    "duration_s": "Measured deterministic construction time is reported without implying model inference.",
+    "event_template_family_partition_and_shift_counts": "Counts prove the stream has enough events, families, base templates, partitions, structural shifts, aliases, and controls.",
+    "exact_validator_agreement": "Python and Z3 validators agree on every exact row with zero unresolved disagreements.",
+    "exposed_fixture_overlap_counts": "Event, template, and seed overlap are all bare zero.",
+    "field_provenance": "Every field traces to prompt, specs, source hashes, sidecars, exact validators, tests, or command receipts.",
+    "forbidden_field_scan": "Exact answers, current outcomes, future labels, held labels, and post-outcome receipts are absent from pre-outcome rows.",
+    "frozen_utility_cost_table": "One unsafe-weighted decision cost table is frozen before inference or held materialization.",
+    "held_loader_one_shot_contract": "Held outcome materialization remains zero before inference and any later read must be one-shot.",
+    "honest_verdict": "Use `complete_ready:`, `complete_partial:`, or `blocked:` and state whether prospective preregistration is valid.",
+    "inference_substrate": "Use `deterministic_verifier_plus_replay`.",
+    "llm_invocation_count": "The value must be bare zero.",
+    "missing_verifier_gaps": "Any identity, split, label, endpoint-freeze, held-access, or prior-fixture gap is explicit.",
+    "never_used_seed_and_identity_receipts": "New seeds, event IDs, and base-template IDs are committed and have zero overlap with prior fixtures.",
+    "post_outcome_schema": "Exact answers, labels, and validator receipts are isolated behind the post-outcome loader.",
+    "pre_outcome_schema": "Learner-visible rows name only fields available before the outcome.",
+    "preconditions_checked": "Exp6145/Exp6148 generators, prior rows, sidecars, seeds, fixtures, exclusions, outputs, and protected files are hashed before construction.",
+    "primary_cluster_unit_bootstrap_and_sample_size_plan": "Paired uncertainty uses a frozen primary cluster unit, bootstrap seeds, and minimum effective sample sizes.",
+    "prior_fixture_hashes_and_nonreuse_receipt": "Prior exposed and completed fixtures are content-addressed and compared against fresh Exp6159 identities.",
+    "protected_files_unchanged": "Conductor, ops, traceability, and prior fixture files remain byte-identical.",
+    "reproducibility_checksum": "The artifact hash detects source, sidecar, preregistration, prior-fixture, test, or protected-file drift.",
+    "safety_and_noninferiority_margins": "Unsafe-admission and known-family noninferiority margins are frozen prospectively.",
+    "status": "A terminal state distinguishes a ready preregistered stream from a blocked or partial stream.",
+    "stream_row_split_outcome_and_preregistration_paths_and_hashes": "Row, split, outcome, and preregistration sidecars are disjoint, hashed, and independently replayable.",
+    "test_commands": "Commands document focused unit/spec coverage, exact labels, split/leakage, prior-fixture nonreuse, forbidden fields, endpoint freeze, deterministic rebuild, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.",
+    "test_exit_codes": "Exit codes prevent failed checks from becoming readiness.",
+    "verifier_is_oracle": "Exact validators are the post-outcome oracle while the decision endpoint is oracle-distinct."
+  },
+  "field_provenance": {
+    "alias_contradiction_malformed_poison_and_boundary_controls": {
+      "principle": "Controls prove aliases, contradictions, malformed strategies, poison attempts, and threshold-boundary cases are present and separated.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "brier_ece_and_descriptive_auroc_plan": {
+      "principle": "Brier and ECE are proper-score endpoints while AUROC remains descriptive only.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "chronological_order": {
+      "principle": "Strict event order and seed schedule make the stream replay deterministic.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "decision_calibrated_stream_ready_score": {
+      "principle": "Exactly one only when identities are fresh, labels exact, splits isolated, endpoint frozen, and held access remains zero.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "deterministic_rebuild_checksum": {
+      "principle": "A second construction reproduces byte-equivalent stream commitments.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "duration_s": {
+      "principle": "Measured deterministic construction time is reported without implying model inference.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "event_template_family_partition_and_shift_counts": {
+      "principle": "Counts prove the stream has enough events, families, base templates, partitions, structural shifts, aliases, and controls.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "exact_validator_agreement": {
+      "principle": "Python and Z3 validators agree on every exact row with zero unresolved disagreements.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "exposed_fixture_overlap_counts": {
+      "principle": "Event, template, and seed overlap are all bare zero.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every field traces to prompt, specs, source hashes, sidecars, exact validators, tests, or command receipts.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "forbidden_field_scan": {
+      "principle": "Exact answers, current outcomes, future labels, held labels, and post-outcome receipts are absent from pre-outcome rows.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "frozen_utility_cost_table": {
+      "principle": "One unsafe-weighted decision cost table is frozen before inference or held materialization.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "held_loader_one_shot_contract": {
+      "principle": "Held outcome materialization remains zero before inference and any later read must be one-shot.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Use `complete_ready:`, `complete_partial:`, or `blocked:` and state whether prospective preregistration is valid.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Use `deterministic_verifier_plus_replay`.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "llm_invocation_count": {
+      "principle": "The value must be bare zero.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "missing_verifier_gaps": {
+      "principle": "Any identity, split, label, endpoint-freeze, held-access, or prior-fixture gap is explicit.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "never_used_seed_and_identity_receipts": {
+      "principle": "New seeds, event IDs, and base-template IDs are committed and have zero overlap with prior fixtures.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "post_outcome_schema": {
+      "principle": "Exact answers, labels, and validator receipts are isolated behind the post-outcome loader.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "pre_outcome_schema": {
+      "principle": "Learner-visible rows name only fields available before the outcome.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Exp6145/Exp6148 generators, prior rows, sidecars, seeds, fixtures, exclusions, outputs, and protected files are hashed before construction.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "primary_cluster_unit_bootstrap_and_sample_size_plan": {
+      "principle": "Paired uncertainty uses a frozen primary cluster unit, bootstrap seeds, and minimum effective sample sizes.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "prior_fixture_hashes_and_nonreuse_receipt": {
+      "principle": "Prior exposed and completed fixtures are content-addressed and compared against fresh Exp6159 identities.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Conductor, ops, traceability, and prior fixture files remain byte-identical.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The artifact hash detects source, sidecar, preregistration, prior-fixture, test, or protected-file drift.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "safety_and_noninferiority_margins": {
+      "principle": "Unsafe-admission and known-family noninferiority margins are frozen prospectively.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "status": {
+      "principle": "A terminal state distinguishes a ready preregistered stream from a blocked or partial stream.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "stream_row_split_outcome_and_preregistration_paths_and_hashes": {
+      "principle": "Row, split, outcome, and preregistration sidecars are disjoint, hashed, and independently replayable.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "test_commands": {
+      "principle": "Commands document focused unit/spec coverage, exact labels, split/leakage, prior-fixture nonreuse, forbidden fields, endpoint freeze, deterministic rebuild, schema, adversarial verify, protected-file, applicable E2E, global pytest, and root-clutter checks.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from becoming readiness.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Exact validators are the post-outcome oracle while the decision endpoint is oracle-distinct.",
+      "sources": [
+        "task_prompt",
+        "openspec/capabilities/verifiable-reasoning/spec.md",
+        "openspec/capabilities/self-learning/spec.md",
+        "python/carnot/experiment_6159_decision_calibrated_stream.py",
+        "tests/python/test_experiment_6159_decision_calibrated_stream.py",
+        "python/carnot/experiment_6145_constraint_shift_stream.py",
+        "python/carnot/experiment_5896_typed_constraint_ir_fixture.py",
+        "results/experiment_6145_constraint_shift_stream.rows.jsonl",
+        "results/experiment_6145_constraint_shift_stream.splits.json",
+        "results/experiment_6145_constraint_shift_stream.outcomes.jsonl",
+        "results/experiment_6148_shifted_family_admission_held.json",
+        "results/experiment_5785_hardness_surface_fixture.rows.jsonl",
+        "results/experiment_5786_sota_constraint_stream.rows.jsonl"
+      ]
+    }
+  },
+  "forbidden_field_scan": {
+    "principle": "Exact answers, current outcomes, future labels, held labels, and post-outcome receipts are absent from pre-outcome rows.",
+    "scanned_row_count": 240,
+    "violation_count": 0,
+    "violations": []
+  },
+  "frozen_utility_cost_table": {
+    "false_safe_rejection": -1.0,
+    "false_unsafe_acceptance": -8.0,
+    "principle": "One unsafe-weighted decision cost table is frozen before inference or held materialization.",
+    "safe_abstention": -0.25,
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.utility_cost_table",
+    "table_id": "exp6159_unsafe_weighted_v1",
+    "true_safe_acceptance": 1.0,
+    "true_unsafe_rejection": 1.5,
+    "unsafe_abstention": -0.5,
+    "unsafe_weight": 8.0
+  },
+  "held_loader_one_shot_contract": {
+    "decision_code_can_import_outcome_loader": false,
+    "held_access_count": 0,
+    "held_materialization_count_at_freeze": 0,
+    "loader_path": "results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
+    "max_pre_inference_held_access_count": 0,
+    "one_shot_after_model_rows": true,
+    "principle": "Held outcome materialization remains zero before inference and any later read must be one-shot.",
+    "requires_preregistration_hash": true,
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.held_loader_contract"
+  },
+  "honest_verdict": "complete_ready: prospective_preregistration_valid=true; fresh_stream_ready",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "llm_invocation_count": 0,
+  "missing_verifier_gaps": [],
+  "never_used_seed_and_identity_receipts": {
+    "base_template_identity_sha256": "sha256:550cc6447abf5a09f58642f4b1508718bc1ddfe91cba169b888ecab8bba57601",
+    "bootstrap_seeds_sha256": "sha256:886991e185faaa57bcd17fc360c4c4c51085ab583bf8633345ef8e1ec903836a",
+    "event_identity_sha256": "sha256:1e96b53eb156ca2d41bb87c98f910a6ef494efc03842f15abcf21e3d63e698e8",
+    "fresh": true,
+    "overlap_counts": {
+      "event_overlap_count": 0,
+      "event_overlaps": [],
+      "principle": "Event, template, and seed overlap are all bare zero.",
+      "seed_overlap_count": 0,
+      "seed_overlaps": [],
+      "template_overlap_count": 0,
+      "template_overlaps": []
+    },
+    "principle": "New seeds, event IDs, and base-template IDs are committed and have zero overlap with prior fixtures.",
+    "random_seeds": {
+      "base_seed": 615900001,
+      "bootstrap_seed_start": 615930000,
+      "preregistration_seed": 615940000,
+      "row_history_seed_start": 615910000,
+      "split_seed": 615920059
+    }
+  },
+  "post_outcome_schema": {
+    "post_outcome": [
+      "control_kind",
+      "exact_answer",
+      "current_outcome",
+      "unsafe_label",
+      "future_label",
+      "exact_labels",
+      "parser",
+      "python",
+      "z3",
+      "cross_backend_agreement",
+      "solver_effort_diagnostic"
+    ],
+    "principle": "Exact answers, labels, and validator receipts are isolated behind the post-outcome loader.",
+    "sidecar_fields": [
+      "schema",
+      "event_id",
+      "chronological_index",
+      "base_template_id",
+      "family",
+      "partition",
+      "post_outcome",
+      "outcome_hash"
+    ]
+  },
+  "pre_outcome_schema": {
+    "pre_decision": [
+      "task_descriptor",
+      "constraint_graph_summary",
+      "candidate_strategy",
+      "decision_endpoint_reference",
+      "chronological_history"
+    ],
+    "principle": "Learner-visible rows name only fields available before the outcome.",
+    "row_fields": [
+      "schema",
+      "event_id",
+      "chronological_index",
+      "base_template_id",
+      "family",
+      "partition",
+      "variant_kind",
+      "alias_only",
+      "structural_shift",
+      "control_kind",
+      "pre_decision",
+      "row_hash"
+    ]
+  },
+  "preconditions_checked": {
+    "checks": {
+      "all_prior_fixture_files_present": true,
+      "exact_validator_available": true,
+      "exclusion_manifest_present": true,
+      "exp6145_generator_available": true,
+      "held_access_count_zero_at_precondition": true,
+      "llm_invocation_count_zero_at_precondition": true,
+      "output_paths_writable": true,
+      "protected_files_present": true,
+      "specs_have_exp6159_requirements": true
+    },
+    "hashed_input_receipts": {
+      "AGENTS.md": {
+        "exists": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CLAUDE.md": {
+        "exists": true,
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
+      },
+      "CODEX.md": {
+        "exists": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "openspec/capabilities/self-learning/spec.md": {
+        "exists": true,
+        "sha256": "sha256:3a60578c79f8f3fcd17ea942cd8461855261541ddcb17143009251b593fd6bb1"
+      },
+      "openspec/capabilities/verifiable-reasoning/spec.md": {
+        "exists": true,
+        "sha256": "sha256:704895993e1bba8bfbd87cc965d8388f638f5cc0bdfcba9e80c83a7a7306210b"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "exists": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "python/carnot/experiment_5896_typed_constraint_ir_fixture.py": {
+        "exists": true,
+        "sha256": "sha256:e5f95bf908793140602626c5178283986d206d4c57df9dd13edbf25bcc877495"
+      },
+      "python/carnot/experiment_6145_constraint_shift_stream.py": {
+        "exists": true,
+        "sha256": "sha256:03e3115226209f675cf51a99d81612edda0179807e32ac8603b1e463611f1935"
+      },
+      "python/carnot/experiment_6148_shifted_family_admission_held.py": {
+        "exists": true,
+        "sha256": "sha256:8f4bbb00d510c2ae97318861025e964602bdfcf21ae33ab6c1fb990db2de5654"
+      },
+      "python/carnot/experiment_6159_decision_calibrated_stream.py": {
+        "exists": true,
+        "sha256": "sha256:4537700c71ce03eb072b57b09702af13322f5aa7d342e7f29a14d4186c2d8b7f"
+      },
+      "research-program.md": {
+        "exists": true,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "research-references.md": {
+        "exists": true,
+        "sha256": "sha256:99df8131b71e9f4924c694b878b9de60ad8e558dfb24b09a78ca6de7055a787d"
+      },
+      "results/experiment_5785_hardness_surface_fixture.json": {
+        "exists": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a"
+      },
+      "results/experiment_5785_hardness_surface_fixture.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af"
+      },
+      "results/experiment_5786_sota_constraint_stream.json": {
+        "exists": true,
+        "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
+      },
+      "results/experiment_5786_sota_constraint_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:23005f32f36f5af7e7235d43bf4d8d5525ccefe6932e376cf5c36eb8ecab0876"
+      },
+      "results/experiment_6145_constraint_shift_stream.outcomes.jsonl": {
+        "exists": true,
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1"
+      },
+      "results/experiment_6145_constraint_shift_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c"
+      },
+      "results/experiment_6145_constraint_shift_stream.splits.json": {
+        "exists": true,
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+      },
+      "results/experiment_6148_shifted_family_admission_held.json": {
+        "exists": true,
+        "sha256": "sha256:6c83c445bd6d7946fd046b43c73f708b8ebe12654294dbbaa90c4a814bcbf49f"
+      },
+      "scripts/adversarial_verify.py": {
+        "exists": true,
+        "sha256": "sha256:8ad9daa1fd9475cf89e3e58a31de32aa20f00415b4fdd70257ede1b820325fe3"
+      },
+      "tests/python/test_experiment_6159_decision_calibrated_stream.py": {
+        "exists": true,
+        "sha256": "sha256:055fd7fa1e9174b499c442f6a5a878fb2b501b569255c26febba2f9b4b835312"
+      }
+    },
+    "output_paths": {
+      "outcomes": {
+        "existed_before": false,
+        "parent": "/home/ianblenke/github.com/ianblenke/carnot/results",
+        "parent_exists": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
+        "path_string_sha256": "sha256:dd4ef70b5860275892565f35590516720cbddf4359cb99d334c64d6f4f7f6616",
+        "sha256_before": null
+      },
+      "preregistration": {
+        "existed_before": false,
+        "parent": "/home/ianblenke/github.com/ianblenke/carnot/results",
+        "parent_exists": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.preregistration.json",
+        "path_string_sha256": "sha256:864c9f650459807c584afc234c56649d0afd197d1677dea74b44cbbd73dfd057",
+        "sha256_before": null
+      },
+      "result": {
+        "existed_before": false,
+        "parent": "/home/ianblenke/github.com/ianblenke/carnot/results",
+        "parent_exists": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.json",
+        "path_string_sha256": "sha256:726d39dd6aed9ae8d6e55700c8c5a84c9e104c9cea11d8bccb14d1d9e5f3130d",
+        "sha256_before": null
+      },
+      "rows": {
+        "existed_before": false,
+        "parent": "/home/ianblenke/github.com/ianblenke/carnot/results",
+        "parent_exists": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.rows.jsonl",
+        "path_string_sha256": "sha256:7f658433d52eeae9eb12fe2db2b74825eb4b18fc7c0f3893e7e99ba79db9c31a",
+        "sha256_before": null
+      },
+      "splits": {
+        "existed_before": false,
+        "parent": "/home/ianblenke/github.com/ianblenke/carnot/results",
+        "parent_exists": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.splits.json",
+        "path_string_sha256": "sha256:1ca6a55a0479eee0121747f725ab9de92235f5956ee9ffd116423b0d374ef520",
+        "sha256_before": null
+      }
+    },
+    "preconditions_ready": true,
+    "principle": "Exp6145/Exp6148 generators, prior rows, sidecars, seeds, fixtures, exclusions, outputs, and protected files are hashed before construction.",
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:61833add03b6e3dd2c272340935bf401618f7e8882cb7e0e9006ea8c6d256e0f"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "results/experiment_5785_hardness_surface_fixture.json": {
+        "exists": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a"
+      },
+      "results/experiment_5785_hardness_surface_fixture.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af"
+      },
+      "results/experiment_5786_sota_constraint_stream.json": {
+        "exists": true,
+        "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
+      },
+      "results/experiment_5786_sota_constraint_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:23005f32f36f5af7e7235d43bf4d8d5525ccefe6932e376cf5c36eb8ecab0876"
+      },
+      "results/experiment_6145_constraint_shift_stream.json": {
+        "exists": true,
+        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64"
+      },
+      "results/experiment_6145_constraint_shift_stream.outcomes.jsonl": {
+        "exists": true,
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1"
+      },
+      "results/experiment_6145_constraint_shift_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c"
+      },
+      "results/experiment_6145_constraint_shift_stream.splits.json": {
+        "exists": true,
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+      },
+      "results/experiment_6148_shifted_family_admission_held.json": {
+        "exists": true,
+        "sha256": "sha256:6c83c445bd6d7946fd046b43c73f708b8ebe12654294dbbaa90c4a814bcbf49f"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "run_date": "20260806",
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.preconditions",
+    "source_hash_receipt_sha256": "sha256:c48179e822a3806f7080d3515b8342f2cf7ab52845c11ca18bd1e3a1c7fce6a1"
+  },
+  "primary_cluster_unit_bootstrap_and_sample_size_plan": {
+    "bootstrap_replicates": 64,
+    "bootstrap_seeds": [
+      615930000,
+      615930017,
+      615930034,
+      615930051,
+      615930068,
+      615930085,
+      615930102,
+      615930119,
+      615930136,
+      615930153,
+      615930170,
+      615930187,
+      615930204,
+      615930221,
+      615930238,
+      615930255,
+      615930272,
+      615930289,
+      615930306,
+      615930323,
+      615930340,
+      615930357,
+      615930374,
+      615930391,
+      615930408,
+      615930425,
+      615930442,
+      615930459,
+      615930476,
+      615930493,
+      615930510,
+      615930527,
+      615930544,
+      615930561,
+      615930578,
+      615930595,
+      615930612,
+      615930629,
+      615930646,
+      615930663,
+      615930680,
+      615930697,
+      615930714,
+      615930731,
+      615930748,
+      615930765,
+      615930782,
+      615930799,
+      615930816,
+      615930833,
+      615930850,
+      615930867,
+      615930884,
+      615930901,
+      615930918,
+      615930935,
+      615930952,
+      615930969,
+      615930986,
+      615931003,
+      615931020,
+      615931037,
+      615931054,
+      615931071
+    ],
+    "minimum_effective_sample_sizes": {
+      "calibration_base_templates": 12,
+      "calibration_events": 96,
+      "future_known_base_templates": 8,
+      "future_known_events": 64,
+      "shifted_family_held_base_templates": 10,
+      "shifted_family_held_events": 80,
+      "total_base_templates": 30,
+      "total_events": 240
+    },
+    "paired_unit": "event_id",
+    "primary_cluster_unit": "base_template_id",
+    "principle": "Paired uncertainty uses a frozen primary cluster unit, bootstrap seeds, and minimum effective sample sizes.",
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.sample_size_plan"
+  },
+  "prior_fixture_hashes_and_nonreuse_receipt": {
+    "fresh": true,
+    "new_event_ids_sha256": "sha256:1e96b53eb156ca2d41bb87c98f910a6ef494efc03842f15abcf21e3d63e698e8",
+    "new_seeds_sha256": "sha256:f33b85b650c53dc85f421880a607c12f5e88486f82893947069e74de6ab5999a",
+    "new_template_ids_sha256": "sha256:550cc6447abf5a09f58642f4b1508718bc1ddfe91cba169b888ecab8bba57601",
+    "overlap_counts": {
+      "event_overlap_count": 0,
+      "event_overlaps": [],
+      "principle": "Event, template, and seed overlap are all bare zero.",
+      "seed_overlap_count": 0,
+      "seed_overlaps": [],
+      "template_overlap_count": 0,
+      "template_overlaps": []
+    },
+    "preregistration_hash": "sha256:09e6dfe54994cf797391030bf35431f3ad3d9bd8bb6dbbce2d7c5daccf4f48ad",
+    "principle": "Prior exposed and completed fixtures are content-addressed and compared against fresh Exp6159 identities.",
+    "prior_event_identity_count": 600,
+    "prior_file_hashes": {
+      "results/experiment_5785_hardness_surface_fixture.json": {
+        "exists": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a"
+      },
+      "results/experiment_5785_hardness_surface_fixture.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af"
+      },
+      "results/experiment_5786_sota_constraint_stream.json": {
+        "exists": true,
+        "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
+      },
+      "results/experiment_5786_sota_constraint_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:23005f32f36f5af7e7235d43bf4d8d5525ccefe6932e376cf5c36eb8ecab0876"
+      },
+      "results/experiment_6145_constraint_shift_stream.outcomes.jsonl": {
+        "exists": true,
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1"
+      },
+      "results/experiment_6145_constraint_shift_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c"
+      },
+      "results/experiment_6145_constraint_shift_stream.splits.json": {
+        "exists": true,
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+      },
+      "results/experiment_6148_shifted_family_admission_held.json": {
+        "exists": true,
+        "sha256": "sha256:6c83c445bd6d7946fd046b43c73f708b8ebe12654294dbbaa90c4a814bcbf49f"
+      }
+    },
+    "prior_seed_count": 247,
+    "prior_template_identity_count": 138,
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.prior_nonreuse",
+    "split_hash": "sha256:f2a1e19648819323b1282503290fd02681a7b125ef008ba94e4475d29d4a6501"
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:61833add03b6e3dd2c272340935bf401618f7e8882cb7e0e9006ea8c6d256e0f"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "results/experiment_5785_hardness_surface_fixture.json": {
+        "exists": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a"
+      },
+      "results/experiment_5785_hardness_surface_fixture.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af"
+      },
+      "results/experiment_5786_sota_constraint_stream.json": {
+        "exists": true,
+        "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
+      },
+      "results/experiment_5786_sota_constraint_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:23005f32f36f5af7e7235d43bf4d8d5525ccefe6932e376cf5c36eb8ecab0876"
+      },
+      "results/experiment_6145_constraint_shift_stream.json": {
+        "exists": true,
+        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64"
+      },
+      "results/experiment_6145_constraint_shift_stream.outcomes.jsonl": {
+        "exists": true,
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1"
+      },
+      "results/experiment_6145_constraint_shift_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c"
+      },
+      "results/experiment_6145_constraint_shift_stream.splits.json": {
+        "exists": true,
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+      },
+      "results/experiment_6148_shifted_family_admission_held.json": {
+        "exists": true,
+        "sha256": "sha256:6c83c445bd6d7946fd046b43c73f708b8ebe12654294dbbaa90c4a814bcbf49f"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:61833add03b6e3dd2c272340935bf401618f7e8882cb7e0e9006ea8c6d256e0f"
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+      },
+      "results/experiment_5785_hardness_surface_fixture.json": {
+        "exists": true,
+        "sha256": "sha256:6a3de6bcbaf04acd28f837d59f61b070070741066f89621f1553679a6c51d94a"
+      },
+      "results/experiment_5785_hardness_surface_fixture.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:c7cbfbca879cf238b14175fbf64a199311ca359ebffbb6cef7a1d430dbab51af"
+      },
+      "results/experiment_5786_sota_constraint_stream.json": {
+        "exists": true,
+        "sha256": "sha256:260d065ca32ddc0a8a88c38ca8b9300d6be1bceb5b8ea2571ddcd481c03ef562"
+      },
+      "results/experiment_5786_sota_constraint_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:23005f32f36f5af7e7235d43bf4d8d5525ccefe6932e376cf5c36eb8ecab0876"
+      },
+      "results/experiment_6145_constraint_shift_stream.json": {
+        "exists": true,
+        "sha256": "sha256:9163f4368ccb39a1ed56e1f5fad06a30be22f1c2f46305500b4dad0d510fbf64"
+      },
+      "results/experiment_6145_constraint_shift_stream.outcomes.jsonl": {
+        "exists": true,
+        "sha256": "sha256:e5076f284750df4a65e6f4a2afd31812cb7c5e5f1f32d70f2e351ddc07a41ed1"
+      },
+      "results/experiment_6145_constraint_shift_stream.rows.jsonl": {
+        "exists": true,
+        "sha256": "sha256:fe81f9e1c96c76f62a95616f8f85fe3e9101750912a438eefbaf994a2045fe8c"
+      },
+      "results/experiment_6145_constraint_shift_stream.splits.json": {
+        "exists": true,
+        "sha256": "sha256:1386667b7422c39c11fd02ff09396d6545aa3b862bded3d9599eaaf7b0e507b8"
+      },
+      "results/experiment_6148_shifted_family_admission_held.json": {
+        "exists": true,
+        "sha256": "sha256:6c83c445bd6d7946fd046b43c73f708b8ebe12654294dbbaa90c4a814bcbf49f"
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      }
+    },
+    "changed_paths": [],
+    "principle": "Conductor, ops, traceability, and prior fixture files remain byte-identical.",
+    "unchanged": true
+  },
+  "random_seeds": {
+    "base_seed": 615900001,
+    "bootstrap_seed_start": 615930000,
+    "preregistration_seed": 615940000,
+    "row_history_seed_start": 615910000,
+    "split_seed": 615920059
+  },
+  "reproducibility_checksum": "sha256:85f455bb7f1a849c03d3056cf35b5a1da421a8dc00e38e4c003e235465978b67",
+  "run_date": "20260806",
+  "safety_and_noninferiority_margins": {
+    "known_family_noninferiority_margin": 0.03,
+    "margin_frozen_before_inference": true,
+    "principle": "Unsafe-admission and known-family noninferiority margins are frozen prospectively.",
+    "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.margins",
+    "unsafe_admission_margin": 0.02
+  },
+  "schema": "carnot.experiment_6159.decision_calibrated_stream.v1",
+  "status": "complete_ready",
+  "stream_row_split_outcome_and_preregistration_paths_and_hashes": {
+    "outcome_sidecar": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.outcomes.jsonl",
+      "row_count": 240,
+      "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.outcome",
+      "sha256": "sha256:64e08b9ba4223abef59096bb62a0dcb92de83e2a119f5286b6164aa0e761864d"
+    },
+    "preregistration_file": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.preregistration.json",
+      "preregistration_hash": "sha256:09e6dfe54994cf797391030bf35431f3ad3d9bd8bb6dbbce2d7c5daccf4f48ad",
+      "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.preregistration",
+      "sha256": "sha256:38f522180ca2f7fb1f1350795138223e8239b39efc85dd99397a02f79472e32c"
+    },
+    "principle": "Row, split, outcome, and preregistration sidecars are disjoint, hashed, and independently replayable.",
+    "row_file": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.rows.jsonl",
+      "row_count": 240,
+      "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.row",
+      "sha256": "sha256:a1a96f660cc9feae75103062d8bdc0bf3de44c784774b197c5ee13fdd4cd318a"
+    },
+    "split_file": {
+      "base_template_count": 30,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6159_decision_calibrated_stream.splits.json",
+      "schema": "carnot.experiment_6159.decision_calibrated_stream.v1.split",
+      "sha256": "sha256:b31dff0f23a135e08b458bbc184ab3c14a65f8704b59705c8c471ced4be68489"
+    }
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6159_decision_calibrated_stream.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6159_decision_calibrated_stream.py -m pytest tests/python/test_experiment_6159_decision_calibrated_stream.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6159_decision_calibrated_stream.py --fail-under=100",
+    ".venv/bin/python -m carnot.experiment_6159_decision_calibrated_stream --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6159_decision_calibrated_stream.py",
+    ".venv/bin/ruff check python/carnot/experiment_6159_decision_calibrated_stream.py tests/python/test_experiment_6159_decision_calibrated_stream.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6159_decision_calibrated_stream.py tests/python/test_experiment_6159_decision_calibrated_stream.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6159_decision_calibrated_stream.json",
+    ".venv/bin/python -m carnot.experiment_6159_decision_calibrated_stream --e2e-check",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6159_decision_calibrated_stream.py -m pytest tests/python/test_experiment_6159_decision_calibrated_stream.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6159_decision_calibrated_stream.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6159_decision_calibrated_stream.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6159_decision_calibrated_stream --e2e-check": 0,
+    ".venv/bin/python -m carnot.experiment_6159_decision_calibrated_stream --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6159_decision_calibrated_stream.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6159_decision_calibrated_stream.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6159_decision_calibrated_stream.py tests/python/test_experiment_6159_decision_calibrated_stream.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6159_decision_calibrated_stream.py tests/python/test_experiment_6159_decision_calibrated_stream.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "verifier_is_oracle": true
+}
