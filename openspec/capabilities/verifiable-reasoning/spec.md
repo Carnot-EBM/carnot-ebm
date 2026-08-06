@@ -22245,3 +22245,144 @@ effort is diagnostic only.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6159 | Planned (`python/carnot/experiment_6159_decision_calibrated_stream.py`, `results/experiment_6159_decision_calibrated_stream.json`) | Planned (`tests/python/test_experiment_6159_decision_calibrated_stream.py`) |
+
+### REQ-VERIFY-6160: Exp6160 SOTA Decision Calibration Corpus
+
+The repository SHALL provide Exp6160 at
+`python/carnot/experiment_6160_sota_decision_calibration_corpus.py` and write
+`results/experiment_6160_sota_decision_calibration_corpus.json` plus one
+immutable row sidecar per mandated model. Exp6160 SHALL consume the fresh
+Exp6159 chronological stream and sealed endpoint, recompute the structured gate,
+run one frozen model-native llama.cpp pass per event, and attach exact Exp6159
+outcomes only after each raw decision record is written and hashed.
+
+- REQ-VERIFY-6160-1: `MODEL_SPECS` and `model_specs` SHALL include exactly
+  `unsloth/Qwen3.6-35B-A3B-GGUF` and
+  `unsloth/gemma-4-26B-A4B-it-GGUF` as headline models. Legacy
+  `Qwen/Qwen3.5-0.8B` or `google/gemma-4-E4B-it` entries SHALL NOT appear in
+  headline rows and may appear only as separately labeled CPU smoke receipts.
+- REQ-VERIFY-6160-2: Each mandated model SHALL resolve to a concrete language
+  model `.gguf` path, revision/snapshot, quantization, byte size, SHA-256 hash,
+  embedded-tokenizer receipt, chat-template receipt, loader name, GPU index, and
+  expected full CUDA offload. Projector-only GGUFs SHALL NOT satisfy the gate.
+- REQ-VERIFY-6160-3: The workflow SHALL never call
+  `transformers.AutoTokenizer.from_pretrained()` on a GGUF repository ID.
+  Tokenizer and chat-template evidence SHALL come from embedded GGUF metadata and
+  llama.cpp model-native chat paths.
+- REQ-VERIFY-6160-4: Before inference, the workflow SHALL hash Exp6159 stream,
+  split, outcome, and preregistration files; model files; embedded chat
+  templates; prompt, decoder, seed, output-path, exclusion, and protected-file
+  manifests; and the task-owned GPU lease state.
+- REQ-VERIFY-6160-5: The prompt, chat-template mode, seeds, temperature, context
+  budget, token budget, and terminal answer convention SHALL be frozen before any
+  model call. The workflow SHALL NOT adapt prompts, retrieve or write memory,
+  use grammar repair, retry based on labels, or select rows after outcomes.
+- REQ-VERIFY-6160-6: Exp6159 calibration, future-known, and shifted-family held
+  events SHALL be processed in exact chronological order. Every model/event row
+  SHALL record raw response, strategy parse state, answer parse state, token
+  count, timing, model/GPU receipt, and decision hash before exact outcomes are
+  appended.
+- REQ-VERIFY-6160-7: Invalid, empty, malformed, or parser-failing model output
+  SHALL remain a conserved model event. The workflow SHALL NOT repair, replace,
+  drop, or outcome-conditioned retry invalid rows.
+- REQ-VERIFY-6160-8: Headline readiness SHALL block unless both mandated GGUFs
+  are cached, embedded-tokenizer loadable, loaded through llama.cpp-native paths,
+  CUDA offload is attributable to task-owned workers, and lifecycle receipts
+  prove load, decode, release, no orphan PID, and no retained task-owned VRAM.
+- REQ-VERIFY-6160-9: Row conservation SHALL require exactly one immutable row per
+  Exp6159 event per mandated model, unique row IDs, split-hash consistency, zero
+  outcome leakage into prompts, and zero overlap with Exp6146 event or row
+  identities.
+- REQ-VERIFY-6160-10: `sota_decision_corpus_ready_score` SHALL be the bare
+  scalar `1.0` only when mandated models, real GPU offload, complete conserved
+  rows, post-decision exact outcomes, zero label-conditioned retries, zero
+  memory reads/writes, protected-file identity, and lifecycle cleanup all pass.
+  Otherwise it SHALL be `0.0`, and `honest_verdict` SHALL start with
+  `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:`.
+
+The terminal artifact MUST include `status`, `preconditions_checked`,
+`structured_gate_receipt`, `MODEL_SPECS`, `model_specs`,
+`resolved_model_paths_revisions_quantizations_and_hashes`,
+`embedded_tokenizer_and_chat_template_receipts`,
+`prompt_decoder_and_seed_freeze_manifest`,
+`gpu_offload_pid_lifecycle_and_cleanup_receipts`,
+`per_model_row_paths_hashes_and_counts`,
+`raw_response_strategy_answer_and_invalid_output_counts`,
+`exact_post_decision_outcome_receipts`,
+`chronological_split_family_and_shift_counts`,
+`row_conservation_and_prior_corpus_nonoverlap`,
+`label_conditioned_retry_count`, `memory_read_and_write_counts`,
+`sota_decision_corpus_ready_score`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `verifier_is_oracle`, `missing_verifier_gaps`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: A terminal state distinguishes ready, partial, retired, and blocked local-SOTA decision corpus runs.
+- `preconditions_checked`: The structured gate hashes Exp6159 source files, model/cache evidence, prompt settings, output paths, exclusions, protected files, GPU lease state, and inherited-server state before loading a model.
+- `structured_gate_receipt`: Headline inference opens only after Exp6159 readiness, mandated model resolution, embedded tokenizers, native chat templates, CUDA offload, task ownership, frozen prompts, row sidecars, and protected files pass.
+- `MODEL_SPECS`: The top-level manifest names exactly the mandated Qwen3.6 flagship MoE and Gemma-4-26B middle MoE GGUFs with resolved paths, hashes, loaders, GPU assignments, and expected offload.
+- `model_specs`: The lower-case compatibility manifest mirrors `MODEL_SPECS` so existing artifact readers see the same mandated models.
+- `resolved_model_paths_revisions_quantizations_and_hashes`: Path, revision, quantization, byte size, and SHA-256 evidence prove each GGUF is a language model file and not a projector or legacy smoke substitute.
+- `embedded_tokenizer_and_chat_template_receipts`: Tokenizer and chat template receipts come from embedded GGUF metadata and llama.cpp APIs, never AutoTokenizer on a GGUF repo ID.
+- `prompt_decoder_and_seed_freeze_manifest`: One native-chat prompt, terminal answer convention, temperature, top-p, repeat penalty, context budget, token budget, and deterministic seed schedule are frozen before inference.
+- `gpu_offload_pid_lifecycle_and_cleanup_receipts`: Before/load/decode/release GPU states, task-owned PIDs, offload deltas, orphan checks, and retained-VRAM checks prove real CUDA engagement and clean teardown.
+- `per_model_row_paths_hashes_and_counts`: One immutable sidecar path, row count, and content hash per model makes model rows replayable.
+- `raw_response_strategy_answer_and_invalid_output_counts`: Raw responses, strategy parse state, answer parse state, token counts, timings, and invalid outputs are counted without hidden retry.
+- `exact_post_decision_outcome_receipts`: Exact Exp6159 outcomes are attached only after each decision hash is recorded and are absent from model inputs.
+- `chronological_split_family_and_shift_counts`: Calibration, future-known, and shifted-family rows remain in Exp6159 chronological order with family and structural-shift counts visible.
+- `row_conservation_and_prior_corpus_nonoverlap`: Every Exp6159 event is conserved once per model, row IDs are unique, split hashes match, prompt leakage is zero, and Exp6146 row/event overlap is zero.
+- `label_conditioned_retry_count`: The bare value is zero because correctness-conditioned reruns would leak labels into the corpus.
+- `memory_read_and_write_counts`: Memory reads and writes are bare zeros because Exp6160 measures independent frozen model decisions.
+- `sota_decision_corpus_ready_score`: Exactly one only with both mandated models, real GPU offload, complete conserved rows, no leakage, and clean lifecycle teardown.
+- `protected_files_unchanged`: Conductor, ops, traceability, and prior-corpus protected files remain byte-identical.
+- `duration_s`: The measured end-to-end Exp6160 run time is reported.
+- `inference_substrate`: Set `live_local_sota_gguf_cuda` only when all receipts prove live local SOTA GGUF CUDA execution; otherwise block.
+- `verifier_is_oracle`: Exp6159 exact Python/Z3 labels are post-decision oracle receipts and are not model inputs.
+- `missing_verifier_gaps`: Missing model, cache, tokenizer, CUDA, row, lifecycle, leakage, nonoverlap, or cleanup evidence is explicit.
+- `field_provenance`: Every field traces to specs, Exp6159 sidecars, Exp6146 nonoverlap evidence, model manifests, runtime receipts, tests, or command receipts.
+- `test_commands`: Commands document focused unit/spec coverage, structured gate, model/cache/hash/tokenizer/chat/CUDA, prompt freeze, row conservation/nonoverlap, exact-outcome order, lifecycle cleanup, schema, adversarial verify, protected-file, E2E-applicable, global pytest, and root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from becoming readiness.
+- `reproducibility_checksum`: The artifact hash detects source, model, prompt, stream, row, outcome, lifecycle, protected-file, and command drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name any model-specific parser or transport failure.
+
+### SCENARIO-VERIFY-6160-GATE: Fresh Mandated GGUF Gate Blocks Substitutes
+
+**Given** Exp6160 resolves the mandated Qwen flagship MoE and Gemma middle MoE
+GGUF entries
+**When** either model is absent, resolves only to a projector GGUF, lacks an
+embedded tokenizer or chat template, lacks CUDA offload, or lacks task-owned
+lifecycle evidence
+**Then** headline inference is blocked, legacy models are not substituted, and
+`honest_verdict` names the missing evidence.
+
+### SCENARIO-VERIFY-6160-ORDERING: Outcomes Are Appended After Decisions
+
+**Given** Exp6160 processes Exp6159 rows in chronological split order
+**When** a model response is captured
+**Then** the raw response, strategy parse, answer parse, seed, token metadata,
+timing, and decision hash are persisted before exact post-outcome receipts are
+attached.
+
+### SCENARIO-VERIFY-6160-NO-MEMORY: Invalid Rows Are Conserved Without Retry
+
+**Given** calibration, future-known, and shifted-family rows share one frozen
+prompt and decoder manifest
+**When** a row is empty, invalid, wrong, or unparseable
+**Then** the row is conserved as an honest model outcome and no memory,
+label-conditioned retry, grammar repair, parser repair, or hidden label is used.
+
+### SCENARIO-VERIFY-6160-NONOVERLAP: Fresh Rows Do Not Reuse Exp6146
+
+**Given** Exp6160 row sidecars and Exp6146 prior sidecars are replayed
+**When** conservation checks run
+**Then** every mandated model has exactly one row per Exp6159 event, unique row
+IDs, zero prompt leakage, matching split hashes, and bare-zero overlap with
+Exp6146 event IDs, row IDs, and decision hashes.
+
+## Implementation Status (REQ-VERIFY-6160)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6160 | Implemented (`python/carnot/experiment_6160_sota_decision_calibration_corpus.py`, `results/experiment_6160_sota_decision_calibration_corpus.json`) | Implemented (`tests/python/test_experiment_6160_sota_decision_calibration_corpus.py`) |
