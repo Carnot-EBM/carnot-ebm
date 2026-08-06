@@ -310,6 +310,7 @@ def test_scenario_6160_complete_ready_conserves_rows_and_orders_outcomes(
     assert artifact["status"] == "complete_ready"
     assert artifact["honest_verdict"].startswith("complete_ready:")
     assert artifact["sota_decision_corpus_ready_score"] == 1.0
+    assert artifact["random_seed"] == mod.RANDOM_SEED
     assert artifact["inference_substrate"] == mod.LIVE_INFERENCE_SUBSTRATE
     assert artifact["verifier_is_oracle"] is True
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
