@@ -1,0 +1,24 @@
+{
+  "experiment": 6193,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-07",
+  "started_at": "2026-08-07T15:50:36.378803+00:00",
+  "finished_at": "2026-08-07T15:50:36.378803+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Prospective retention-safe continuous strategy learning A/B gated on Exp6192 seed readiness",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6192-live-strategy-seed-stream.seed_stream_ready_score (actual=0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6192-live-strategy-seed-stream",
+      "artifact_field": "seed_stream_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
