@@ -1,0 +1,24 @@
+{
+  "experiment": 6205,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-07",
+  "started_at": "2026-08-07T22:12:43.202791+00:00",
+  "finished_at": "2026-08-07T22:12:43.202791+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "One-shot held executable-code internal-state selection gated on Exp6204 freeze",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selector_ready_score (upstream artifact not found for task id 'exp6204-calibration-code-selector-v2')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6204-calibration-code-selector-v2",
+      "artifact_field": "selector_ready_score",
+      "op": "==",
+      "expected": 1,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp6204-calibration-code-selector-v2'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
