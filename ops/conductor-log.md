@@ -15498,3 +15498,5 @@ Still active  |
 | 2026-08-07 22:20 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
 | 2026-08-07 22:22 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
 | 2026-08-07 22:24 UTC | Prospective procedural-memory continuous learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2) |
+| 2026-08-07 23:24 UTC | Default-off mode-jump runtime integration from qua | OK | 113 passed, 1 warning in 29.48s |
+| 2026-08-07 23:26 UTC | Prospective procedural-memory continuous learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2) |
