@@ -15425,3 +15425,4 @@ Still active  |
 | 2026-08-07 00:25 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: esearch-comple |
 | 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec |
 | 2026-08-07 02:40 UTC | Task-scoped artifact-isolation compatibility canar | OK | 128 passed, 1 warning in 113.39s (0:01:53) |
+| 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed, 1 warning in 7.93s |
