@@ -36489,3 +36489,110 @@ credited from grammar/type/scope admission alone.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-5921 | Implemented (`python/carnot/experiment_5921_schema_derived_constraintir_support.py`, `results/experiment_5921_schema_derived_constraintir_support.json`) | Implemented (`tests/python/test_experiment_5921_schema_derived_constraintir_support.py`) |
+
+### REQ-VERIFY-6174: Authentic CCTU K8 Tool-Trace Candidate Pool
+
+Carnot SHALL provide an Exp6174 gate and runner that consumes the frozen
+Exp6173 CCTU executable item bank and writes
+`results/experiment_6174_cctu_authentic_k8_pool.json`. The runner SHALL fail
+closed before generation unless the structured gate confirms the Exp6173
+artifact, item-bank, split, validator, held seal, output/checkpoint paths,
+exclusions, protected files, local `unsloth/gemma-4-31B-it-GGUF` GGUF path,
+revision, quantization, embedded tokenizer, embedded chat template,
+llama.cpp-compatible runtime, CUDA-capable llama.cpp backend, dual-GPU health
+and capacity, and task-owned process lease. The gate SHALL NOT download models,
+use a legacy small model, start from a model server inherited from another
+task, or call `transformers.AutoTokenizer` on any GGUF bytes or `-GGUF`
+repository.
+
+When the gate opens, `MODEL_SPECS`/`model_specs` SHALL contain the exact
+`unsloth/gemma-4-31B-it-GGUF` dense model with local path, snapshot revision,
+observed quantization, SHA-256, byte size, llama.cpp loader, and GPU
+assignment. Exp6174 SHALL generate at least `K=8` independent native-chat
+samples for every frozen calibration and held case under a fixed
+seed/temperature/top-p/token/tool-budget matrix. Each raw row SHALL preserve
+case/sample keys, prompt bytes, chat-template rendering, seeds, sampling
+parameters, token and tool budgets, raw completion text, native tool calls when
+returned by llama.cpp, logprobs when natively available, finish reason, timing,
+and GPU/process lifecycle evidence.
+
+All raw rows for the complete case/sample matrix SHALL be written and hashed
+before exact validation begins. Exact Exp6173 validators SHALL run once per raw
+row only after raw commit, and their labels SHALL be written to calibration and
+held sidecars that are not available to generation. Invalid JSON, invalid tool
+calls, timeouts, duplicate raw outputs, refusals, and truncations SHALL remain
+in the raw corpus and SHALL NOT trigger correctness-conditioned retry,
+label-informed parser repair, model-judge replacement, or candidate
+replacement. Resume SHALL use only immutable case/sample keys and raw-row
+hashes; if a key exists with a different hash, the run SHALL block rather than
+overwrite.
+
+The terminal artifact SHALL include `status`, `preconditions_checked`,
+`structured_gate_receipt`,
+`upstream_bank_split_validator_and_preregistration_hashes`, `model_specs`,
+`exact_gguf_files_revision_quantization_hashes_and_sizes`,
+`embedded_tokenizer_and_chat_template_receipts`,
+`llama_cpp_version_and_command`,
+`gpu_assignment_health_process_and_vram_receipts`,
+`case_sample_seed_temperature_token_and_tool_budget_matrix`,
+`raw_trace_corpus_path_hash_count_and_schema`,
+`parse_failure_duplicate_refusal_timeout_and_truncation_counts`,
+`no_correctness_conditioned_retry_or_replacement_receipt`,
+`raw_before_label_commit_receipts`,
+`exact_label_sidecar_paths_hashes_and_counts`,
+`calibration_and_held_access_logs`,
+`resume_idempotence_and_checkpoint_receipts`,
+`cctu_candidate_pool_integrity_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+
+- `model_specs`: include exact `unsloth/gemma-4-31B-it-GGUF`; no legacy small model supplies headline rows.
+- `cctu_candidate_pool_integrity_score`: bare `1.0` only when every frozen case has `K>=8` immutable raw-before-label samples and no correctness-conditioned retry or replacement.
+- `inference_substrate`: use `llama_cpp_local_gemma4_31b_gguf_native_chat_tool_trace_generation`.
+- `verifier_is_oracle`: exact validators are oracle labels after generation; the generator and later selector remain oracle-distinct.
+- `honest_verdict`: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name case/sample coverage and model.
+
+#### SCENARIO-VERIFY-6174-GATE: Structured Gate Blocks Unsafe Generation
+
+Given Exp6173 artifacts or the mandatory local Gemma 31B GGUF, embedded
+tokenizer, embedded chat template, CUDA-capable llama.cpp runtime, dual-GPU
+health, output paths, exclusions, task lease, or protected-file receipts are
+missing,
+when Exp6174 runs,
+then it writes the terminal artifact with explicit blockers, does not generate
+raw rows, does not download or substitute models, and reports
+`cctu_candidate_pool_integrity_score=0.0`.
+
+#### SCENARIO-VERIFY-6174-RAW-BEFORE-LABEL: Raw Rows Commit Before Oracle Labels
+
+Given the structured gate opens and a backend emits raw candidate text for all
+case/sample keys,
+when Exp6174 commits the raw corpus,
+then exact validation starts only after the raw corpus hash and per-case raw
+commit receipts exist, and calibration and held labels are written to separate
+sidecars.
+
+#### SCENARIO-VERIFY-6174-RETENTION: Invalid And Duplicate Candidates Remain
+
+Given raw samples include invalid JSON, invalid tool calls, refusals, timeouts,
+truncations, and duplicate completions,
+when Exp6174 validates the raw corpus,
+then every raw row remains represented, the counts are reported, and no retry,
+repair, model judge, or replacement row is created.
+
+#### SCENARIO-VERIFY-6174-RESUME: Immutable Case/Sample Keys Control Resume
+
+Given an existing raw corpus contains rows for immutable case/sample keys,
+when Exp6174 resumes,
+then matching raw-row hashes are reused without generation and any conflicting
+hash for the same key blocks the run rather than overwriting or replacing the
+candidate.
+
+## Implementation Status (REQ-VERIFY-6174)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6174 | Planned (`python/carnot/experiment_6174_cctu_authentic_k8_pool.py`, `results/experiment_6174_cctu_authentic_k8_pool.json`) | Planned (`tests/python/test_experiment_6174_cctu_authentic_k8_pool.py`) |
