@@ -8734,6 +8734,14 @@
         "acknowledged_on": "2026-08-07",
         "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
         "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
+        "sha256_now": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
+        "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py: 0 hits."
       }
     ]
   },

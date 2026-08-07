@@ -22128,3 +22128,48 @@ bundled default.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6198 | `python/carnot/agentic/arc_executable_world_model.py:induce_think_on`, wired in `LocalGGUFProposer.generate`/`induce`; `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]`. | `tests/python/test_arc_induce_think_mode_20260807.py`. |
+
+### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
+
+**Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
+-- "adopt the Duck/TAAF leaderboard lesson: object-level, not raw-grid, perception"). The mechanism
+already existed (`_object_perception_on()`, `objects_block`, first built for the goal-hypothesis
+verifier line and cited there as REQ-ARC-WMTE-5830) and had ALREADY been A/B'd positive: the
+pre-registered 2026-08-01 held-out change-fidelity A/B
+(`results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json`) measured
+`CARNOT_ARC_OBJECT_PERCEPTION` SIGNIFICANT on its primary metric -- mean delta +0.072084, sign-test
+p=0.0192 over 19/20 discordant games (min reachable p=3.81e-06), gemma-4-31B, 13171.65s real GPU
+wall time, AA control byte-identical, clean on adversarial re-check -- but shipped with the flag
+deliberately left off, recorded explicitly as "moving it is a separate operator decision." This REQ
+is that decision, made on evidence already in hand rather than a fresh measurement.
+
+**THE FLIP.** `_object_perception_on()` (`arc_executable_world_model.py`) changed from
+`os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION") == "1"` (default off) to
+`os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"` (default on, opt out with `=0`). Every
+`induce_prompt` call now appends the connected-component OBJECT STRUCTURE table (translation-invariant
+`object_hash`, containment, adjacency) alongside the raw run-length grid, unless explicitly disabled.
+
+**VERIFICATION.** `tests/python/test_object_perception_induction.py` and
+`test_object_perception_ab_stats.py` updated in lockstep: the crash-guard test that used to assert
+"unset -> no object block" now asserts "unset -> object block present, no crash" (renamed
+`test_induce_prompt_default_path_appends_object_block`), with a new symmetric guard for the opt-out
+path (`test_flag_explicit_off_never_crashes`) and the identity check flipped to assert `"1" ==
+unset` rather than `"0" == unset`. 54/54 tests pass across both files plus
+`test_arc_win_state_positive_example_2026_07_29.py` (unaffected; calls `objects_block` directly, not
+gated by this flag).
+
+**NOT YET DONE (forward work, explicitly not silently dropped).** The recon that motivated this
+lever also named three unbuilt enhancements beyond the existing (now-default-on) mechanism:
+per-transition BEFORE/AFTER object-level diffs (today's object table covers only the INITIAL grid
+plus the win-precursor/opening-board frame, not each transition), translation-invariant object
+TRACKING across those per-transition diffs (reusing `arc_color_blob_salience.object_hash`, which the
+existing table does not consume), and HUD-strip rejection inside the object table specifically (the
+existing `hud_mask` parameter reaches `_transitions_block`'s changed/inert classification but not
+`objects_block`). None of these three land in this pass; they are the genuine "Duck/TAAF adoption"
+work still ahead, distinct from flipping an already-evidenced flag.
+
+## Implementation Status (REQ-ARC-OBJPERC-DEFAULT-ON-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-OBJPERC-DEFAULT-ON-1 | `python/carnot/agentic/arc_executable_world_model.py:_object_perception_on`. | `tests/python/test_object_perception_induction.py`, `tests/python/test_object_perception_ab_stats.py`. |
