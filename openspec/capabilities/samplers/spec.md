@@ -3450,3 +3450,97 @@ speedup claim is emitted.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6166 | Planned (`python/carnot/experiment_6166_mode_jumping_factor_thermalization.py`, `results/experiment_6166_mode_jumping_factor_thermalization.json`) | Planned (`tests/python/test_experiment_6166_mode_jumping_factor_thermalization.py`) |
+
+### REQ-SAMPLE-6180: Exp6166 Reproducibility Adjudication
+
+Carnot MUST provide Exp6180 at
+`python/carnot/experiment_6180_exp6166_reproducibility_adjudication.py` and
+write
+`results/experiment_6180_exp6166_reproducibility_adjudication.json` without
+modifying `scripts/research_conductor.py`, without rewriting any Exp6166
+source, test, or result artifact, and without promoting any hardware,
+latency, power, energy, or speedup claim.
+
+Sub-requirements:
+- REQ-SAMPLE-6180-IMMUTABLE-SOURCE: Exp6180 SHALL snapshot Exp6166 source,
+  test, result, sampler spec, exclusion manifest, protected files, and git
+  status before adjudication and compare the same byte hashes after
+  adjudication.
+- REQ-SAMPLE-6180-NO-REFIT: Exp6180 SHALL NOT invoke Exp6166 training or
+  fitting functions. It SHALL recompute declared metrics only from the
+  immutable Exp6166 artifact probabilities and existing exact software
+  execution code.
+- REQ-SAMPLE-6180-STOCHASTIC-REPLAY: Exp6180 SHALL replay frozen stochastic
+  seeds and conditional-pair hashes from Exp6166 training receipts without
+  changing the historical artifact.
+- REQ-SAMPLE-6180-ISOLATED-TESTS: Exp6180 SHALL record focused task-owned
+  reproducibility checks and classify nonzero suite-level receipts separately
+  from the Exp6166 scientific result.
+- REQ-SAMPLE-6180-OLD-FAILURE-CLASSIFICATION: Exp6180 SHALL preserve
+  Exp6166's historical `blocked` state exactly while classifying the old
+  full-suite exit 2 using focused Exp6166 receipts and Exp6170 task-isolation
+  evidence.
+- REQ-SAMPLE-6180-NO-HARDWARE-PROMOTION: Exp6180 SHALL emit bare false for
+  hardware execution and performance-claim fields and SHALL use a
+  software-only inference substrate:
+  `jax_cpu_software_exp6166_artifact_replay`.
+- REQ-SAMPLE-6180-PROTECTED-FILE: Exp6180 SHALL prove
+  `scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, and
+  `_bmad/traceability.md` remain byte-identical.
+- REQ-SAMPLE-6180-CHECKSUM: Exp6180 SHALL content-address its artifact with a
+  checksum that excludes only volatile duration and the checksum field itself.
+  Focused tests SHALL live at
+  `tests/python/test_experiment_6180_exp6166_reproducibility_adjudication.py`.
+
+The terminal artifact SHALL include `status`, `experiment_id`, `run_date`,
+`preconditions_checked`, `immutable_exp6166_byte_snapshot`,
+`no_refit_receipt`, `stochastic_replay_receipt`,
+`recomputed_metric_determination`, `old_full_suite_failure_classification`,
+`companion_determination`, `no_hardware_promotion_receipt`,
+`protected_files_unchanged`, `before_after_byte_comparison`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: Terminal state for the companion adjudication, not a rewrite of Exp6166.
+- `experiment_id`: Names only the Exp6180 companion artifact.
+- `run_date`: Pins the operator-declared adjudication date.
+- `preconditions_checked`: Snapshots Exp6166 bytes, stochastic seeds, tests, exclusion state, protected files, and git status before work.
+- `immutable_exp6166_byte_snapshot`: Records byte hashes for the Exp6166 result, source, tests, sampler spec, and exclusion manifest.
+- `no_refit_receipt`: States that Exp6166 fitting functions were not invoked and metrics came from historical artifact probabilities.
+- `stochastic_replay_receipt`: Replays deterministic pair-sample hashes for the frozen Exp6166 seeds without changing Exp6166.
+- `recomputed_metric_determination`: Recomputes declared TV, KL, support, normalization, and mode-ratio metrics from immutable probabilities.
+- `old_full_suite_failure_classification`: Classifies the historical full-suite exit 2 while preserving Exp6166's blocked state.
+- `companion_determination`: Separates the positive software-only stochastic determination from the historical blocked artifact.
+- `no_hardware_promotion_receipt`: Prevents stochastic software evidence from becoming hardware, latency, power, energy, or speedup evidence.
+- `protected_files_unchanged`: Confirms conductor and reconciler-owned files stayed byte-identical.
+- `before_after_byte_comparison`: Compares immutable Exp6166 and protected-file bytes before and after adjudication.
+- `field_provenance`: Maps every required field to the prompt, spec, immutable artifacts, tests, and command receipts.
+- `test_commands`: Records focused task-owned tests, new-code coverage, and the single classified full-suite receipt.
+- `test_exit_codes`: Stores command exit codes so failures cannot become silent readiness evidence.
+- `reproducibility_checksum`: Hashes artifact content with only duration and self-checksum blanked.
+- `honest_verdict`: Uses a terminal prefix and states both the reproduced software result and preserved historical block.
+
+### SCENARIO-SAMPLE-6180-READ-ONLY-ADJUDICATION: Existing Evidence Is Replayed Without Refit
+
+**Given** the committed Exp6166 result artifact and module constants
+**When** Exp6180 recomputes metric receipts
+**Then** it does not call Exp6166 training
+**And** it matches the historical arm metrics, stochastic seed hashes, and
+software-only claim fields.
+
+### SCENARIO-SAMPLE-6180-HISTORICAL-BLOCK-PRESERVED: Full-Suite Exit 2 Is Classified
+
+**Given** Exp6166 recorded focused checks at zero and the full Python suite at
+exit 2
+**When** Exp6180 builds its companion determination
+**Then** the historical Exp6166 status remains `blocked`
+**And** the full-suite failure is classified as unrelated pre-existing
+repository-suite state rather than a failed stochastic reproducibility check.
+
+## Implementation Status (REQ-SAMPLE-6180)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6180 | Planned (`python/carnot/experiment_6180_exp6166_reproducibility_adjudication.py`, `results/experiment_6180_exp6166_reproducibility_adjudication.json`) | Planned (`tests/python/test_experiment_6180_exp6166_reproducibility_adjudication.py`) |
