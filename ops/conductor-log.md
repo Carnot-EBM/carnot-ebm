@@ -15496,3 +15496,5 @@ Still active  |
 | 2026-08-07 22:16 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selec |
 | 2026-08-07 22:18 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
 | 2026-08-07 22:20 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
+| 2026-08-07 22:22 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
+| 2026-08-07 22:24 UTC | Prospective procedural-memory continuous learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2) |
