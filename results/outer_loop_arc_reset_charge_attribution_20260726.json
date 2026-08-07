@@ -16923,6 +16923,14 @@
         "acknowledged_on": "2026-08-07",
         "reason": "REQ-ARC-WMTE-TRAJ-TRANSFER-1: appends a new function (object_relative_trajectory_transfer) at the file tail. Purely additive -- git diff shows zero deletions and zero modifications to any pre-existing line -- so no function this artifact's script calls can have changed behavior.",
         "evidence": "git diff HEAD python/carnot/agentic/arc_solver_kit.py | grep '^-' (excluding the diff header) returns 0 lines."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "16d02aad92889a0ba27edd4ce00d37b505f9253a3527675c498cd33656a1e47f",
+        "sha256_now": "39a83214e0753d40441f26c6fb55f9670d64c9a689fa27878a6be9bfb9fd8258",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6180-WIRING (lever #5). Three changes to arc_competition_agent.py, all in StepwiseExplorer: (1) a new __init__ kwarg + _fd_gate resolution (self.budget_aware_search_enabled, default False -- no artifact producing this corpus sets CARNOT_ARC_BUDGET_AWARE_SEARCH); (2) _ingest appends every frame to a new self._budget_frames buffer UNCONDITIONALLY -- strictly additive (new attribute, read-only append of data already in scope, no pre-existing attribute/return value/side effect touched) -- but the ESTIMATE computation that consumes it is itself gated behind the flag, so with the flag off nothing about the search's OBSERVABLE behavior changes; (3) _frontier's depth_cost substitution is explicitly gated ('depth_cost = budget_aware_path_cost_weight(...) if self.budget_aware_search_enabled else depth') -- with the flag off this is the literal `depth` expression, byte-identical to before this lever, not an argument-shaped no-op that happens to reduce to the same value.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: every new branch checked against `self.budget_aware_search_enabled`; the one unconditional addition (_budget_frames append) is a single list.append() with no other effect. tests/python/test_arc_budget_aware_search_live_wiring.py::test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set and ::test_frontier_never_calls_budget_aware_weight_when_flag_off mechanically pin the flag-off byte-identity property by intercepting the call (not just checking the returned value)."
       }
     ]
   },

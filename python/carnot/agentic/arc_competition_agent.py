@@ -58,6 +58,14 @@ from carnot.agentic.arc_program_synthesis_filter import (
 )
 from carnot.agentic.arc_inert_click_pruner import coerce_inert_click_pruner
 
+# REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): TOP-LEVEL for the same lint-closure reason as
+# arc_hazard_pruner below -- StepwiseExplorer._frontier is a per-node hot loop, so this also
+# avoids a repeated per-call import lookup that a function-scoped import would carry.
+from carnot.agentic.arc_solver_kit import (
+    BUDGET_AWARE_SEARCH_ENABLED,
+    budget_aware_path_cost_weight,
+)
+
 # REQ-ARC-WMTE-6071: TOP-LEVEL (not function-local) for the same reason `arc_hazard_pruner` is,
 # below -- `scripts/arc_orphan_solver_lint.py` computes the live entrypoints' import closure from
 # module-level imports, and a solver-side component the lint cannot see is exactly the orphan class
@@ -1612,11 +1620,10 @@ class StepwiseExplorer:
         self._hazard_antecedent_from_last_grid = 0
         # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). The estimator itself
         # (arc_hud_bar_detector.budget_exhaustion_estimate) and its consumer
-        # (arc_solver_kit.budget_aware_path_cost_weight) already existed, built and tested, but
-        # NOTHING on the live path called either -- this wires them in behind the kit's own
-        # BUDGET_AWARE_SEARCH_ENABLED default (currently False; no A/B evidence yet).
-        from carnot.agentic.arc_solver_kit import BUDGET_AWARE_SEARCH_ENABLED
-
+        # (arc_solver_kit.budget_aware_path_cost_weight, imported top-level above) already
+        # existed, built and tested, but NOTHING on the live path called either -- this wires
+        # them in behind the kit's own BUDGET_AWARE_SEARCH_ENABLED default (currently False; no
+        # A/B evidence yet).
         self.budget_aware_search_enabled = _fd_gate(
             budget_aware_search,
             "CARNOT_ARC_BUDGET_AWARE_SEARCH",
@@ -7309,6 +7316,11 @@ SUBMITTED_AGENT_CONFIG = {
         SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED
     ),
     "object_relative_trajectory_transfer_wired": True,
+    # Single source of truth is the kit constant (arc_solver_kit.BUDGET_AWARE_SEARCH_ENABLED,
+    # imported top-level above) -- no separate SUBMITTED_* mirror, per the two-sources-of-truth
+    # risk every other flag entry here is a mirror to avoid.
+    "budget_aware_search_enabled": BUDGET_AWARE_SEARCH_ENABLED,
+    "budget_aware_search_wired": True,
     "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,

@@ -21904,7 +21904,7 @@ estimate is threaded in.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline. | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
+| REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). ~~Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline.~~ **WIRED 2026-08-07, still default-off** -- see REQ-ARC-WMTE-6180-WIRING immediately below for the actual live-path wiring (`StepwiseExplorer`, not `plan_in_model`; see that REQ for why). | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
 
 ### REQ-ARC-REGISTRY-CACHE-1: mtime-Gated Cache for Repeated `ops/arc_solve_registry.yaml` Parses
 
@@ -22247,3 +22247,77 @@ direct result.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-TRAJ-TRANSFER-1 | `python/carnot/agentic/arc_solver_kit.py:object_relative_trajectory_transfer`; `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._begin_level_goal_episode`/`_induce_and_plan`. | `tests/python/test_arc_object_relative_trajectory_transfer.py`, `tests/python/test_arc_trajectory_transfer_cascade.py`. |
+
+### REQ-ARC-WMTE-6180-WIRING: Budget-Exhaustion Meter Wired Into `StepwiseExplorer`
+
+**Origin:** 2026-08-07 operator directive (lever #5 of the ARC six-lever push, `ops/known-issues.md`).
+REQ-ARC-WMTE-6180 built the estimator and its consumer, both genuinely tested, but left them
+unwired by design (the Phase Prototype discipline: prototype + empirical validation criteria +
+adversarial check BEFORE scaling into the live cascade). This REQ is that wiring -- still
+DEFAULT OFF, since no A/B evidence yet exists for whether it helps.
+
+**WHY `StepwiseExplorer`, NOT `plan_in_model`.** REQ-ARC-WMTE-6180's own SCOPE note observed the
+scored path's depth-cost analogues are inline in `StepwiseExplorer._frontier` (raw `depth`,
+hardcoded weight 1.0) and that `plan_in_model` (`arc_executable_world_model.py`) has NO depth-cost
+term at all (FIFO BFS / pure best-first by goal energy) -- so wiring into `plan_in_model` would
+mean adding an entirely new cost dimension to a planner that structurally doesn't have one, a much
+larger change. `StepwiseExplorer._frontier` already HAS the cost term this consumer replaces.
+
+**THE WIRING, three pieces.** (1) FLAG: `budget_aware_search: bool | None = None` kwarg on
+`StepwiseExplorer.__init__`, resolved via the file's existing `_fd_gate` ladder (explicit kwarg >
+`CARNOT_ARC_BUDGET_AWARE_SEARCH` env > `arc_solver_kit.BUDGET_AWARE_SEARCH_ENABLED`, imported
+top-level -- no separate `SUBMITTED_*` mirror, avoiding a second source of truth). (2) PRODUCER:
+`_ingest` appends every observed raw frame to a new `self._budget_frames` buffer
+UNCONDITIONALLY (a single list append, negligible next to everything else `_ingest` already does,
+so the buffer is ready the instant the flag is later flipped for an A/B); the ESTIMATE itself
+(`self.actions_remaining_estimate`) is computed from `budget_exhaustion_estimate(self._budget_frames,
+self.hud_mask)` only when the flag is on AND a HUD mask has been admitted, wrapped defensively
+(an estimator exception yields `None`, never a crash on the live path). (3) CONSUMER: `_frontier`
+computes a `depth_cost` term -- `budget_aware_path_cost_weight(depth=depth, plan_length=depth,
+actions_remaining_estimate=self.actions_remaining_estimate)` when the flag is on, else the bare
+`depth` unchanged -- and substitutes it for the first sort-key element (or the depth-cost half of
+the combined `depth + w*value` term in the `use_value` branch) across all four frontier key
+shapes.
+
+**SCOPE NARROWED FROM THE ORIGINAL PLUMBING SKETCH, disclosed not hidden.** Two simplifications
+from the fuller wiring recon originally proposed: (a) the frame buffer does not insert an explicit
+`None` marker at a RESET boundary -- `arc_hud_bar_detector._segment_frames`'s own resegmentation
+rule (a return to the segment-first region value) still finds a level-up boundary without one, per
+that function's own docstring, so this is a scoped-down v1, not a silent gap; (b) `evidence=None`
+is passed to `budget_exhaustion_estimate` (letting it compute `region_hud_evidence` itself) rather
+than threading through the exact Stage-2 admission certificate (`DeferredMaskActivation`'s private
+`_added_region`/`.evidence`) -- the function's own docstring explicitly supports this as a slower
+but fully valid fallback path. `E3AgentPolicy` gained no pass-through kwarg for this flag (unlike
+`hazard_move_pruner`): nothing yet needs per-instance injection, and the env-var rung of the
+ladder already reaches `StepwiseExplorer` directly.
+
+**BYTE-IDENTITY DISCIPLINE.** With the flag off, `depth_cost` is computed as the literal `depth`
+value, not `budget_aware_path_cost_weight(..., actions_remaining_estimate=None)` -- i.e. the
+SUBSTITUTION itself is gated on the flag, not merely on the estimate being `None`, so the flag-off
+sort key is built from the exact pre-existing expression regardless of whatever the estimate
+attribute happens to hold (a stale value from a prior flag flip, for instance). Verified by a test
+that sets a stale non-`None` estimate on a flag-off explorer and confirms plain-BFS ordering is
+unaffected.
+
+**VERIFICATION.** `tests/python/test_arc_budget_aware_search_live_wiring.py` (13 tests): the flag
+ladder (default off, explicit kwarg either direction overriding env, env either direction), the
+producer (buffer fills unconditionally; estimate computed only with flag-on AND an admitted mask;
+an estimator exception degrades to `None` rather than crashing), and the consumer (mechanism
+verified by intercepting the call to `budget_aware_path_cost_weight` -- not by an emergent
+node-selection outcome, since `depth_cost` is monotonic in `depth` and so most of the four key
+shapes never actually reorder nodes at different depths from this alone; the `use_value` branch is
+where a real reordering becomes possible, per the risk note below). Broader regression sweep (139
+tests across this file, the estimator's own tests, the hazard-pruner live-wiring precedent, and the
+goal-reinduction/trajectory-transfer suites) all passing.
+
+**RISK, carried forward from REQ-ARC-WMTE-6180's own consumer docstring and not yet resolved by
+this wiring.** A false-positive exhaustion estimate applies the 50-per-excess-action penalty to a
+plan that would have won, potentially starving the only winning branch until shallower work
+exhausts -- exactly why this ships default off pending an A/B that watches `levels_gained`, not
+just raw action counts.
+
+## Implementation Status (REQ-ARC-WMTE-6180-WIRING)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6180-WIRING | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer.__init__`/`_ingest`/`_frontier`. | `tests/python/test_arc_budget_aware_search_live_wiring.py`. |
