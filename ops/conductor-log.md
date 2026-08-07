@@ -15445,3 +15445,5 @@ Still active  |
 | 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
 | 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |
 | 2026-08-07 09:14 UTC | Branch-independent .535 capstone | OK | 86 passed, 1 warning in 8.45s |
+| 2026-08-07 10:17 UTC | Plan milestone 2026.08.536 | OK | 14 tasks proposed |
+| 2026-08-07 10:19 UTC | Milestone 2026.08.536 activated | OK | 14 tasks queued |
