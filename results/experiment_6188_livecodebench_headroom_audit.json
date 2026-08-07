@@ -1,0 +1,24 @@
+{
+  "experiment": 6188,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-07",
+  "started_at": "2026-08-07T15:05:10.662206+00:00",
+  "finished_at": "2026-08-07T15:05:10.662206+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Executable-code competence and oracle-headroom audit gated on Exp6187 pool integrity",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.pool_integrity_ready_score (actual=0 == expected=1.0)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6187-livecodebench-authentic-k8-pool",
+      "artifact_field": "pool_integrity_ready_score",
+      "op": "==",
+      "expected": 1.0,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 == expected=1.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

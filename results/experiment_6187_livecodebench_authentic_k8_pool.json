@@ -40,214 +40,19 @@
   "content_addressed_resume_receipt": {
     "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6187_livecodebench_authentic_k8_pool.raw_shards",
     "conflicting_key_count": 0,
-    "existing_key_count": 0,
+    "existing_key_count": 576,
     "expected_key_count": 576,
     "extra_key_count": 0,
-    "generated_new_rows": 576,
-    "missing_key_count": 576,
-    "resume_mode": "fresh_generation",
+    "generated_new_rows": 0,
+    "missing_key_count": 0,
+    "resume_mode": "reused_raw_shards",
     "row_hash_mismatch_count": 0,
     "schema": "carnot.experiment_6187.livecodebench_authentic_k8_pool.v1.resume"
   },
   "correctness_retry_count": 0,
   "dual_gpu_utilization_memory_intervals": {
     "both_gpus_observed": true,
-    "generation_lifecycle": {
-      "cuda_offload_authenticated": true,
-      "gpu_engagement": {
-        "attributable": true,
-        "max_memory_delta_mb": 22742,
-        "selected_gpus": [
-          0,
-          1
-        ]
-      },
-      "load_time_s": 2368.925247,
-      "orphan_task_owned_pid_count": 0,
-      "pid_exited": true,
-      "retained_task_owned_vram_mb": 0,
-      "timeline": [
-        {
-          "command_returncode": 0,
-          "devices": [
-            {
-              "index": 0,
-              "memory_free_mb": 23859,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 266,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 0
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 23859,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 266,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 0
-            }
-          ],
-          "gpu_count": 2,
-          "ok": true,
-          "phase": "before_load",
-          "utilization_memory_intervals": [
-            {
-              "index": 0,
-              "memory_free_mb": 23859,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 266,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 0
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 23859,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 266,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 0
-            }
-          ]
-        },
-        {
-          "command_returncode": 0,
-          "devices": [
-            {
-              "index": 0,
-              "memory_free_mb": 12771,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11354,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 98
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 12461,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11664,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 100
-            }
-          ],
-          "gpu_count": 2,
-          "ok": true,
-          "phase": "after_load",
-          "utilization_memory_intervals": [
-            {
-              "index": 0,
-              "memory_free_mb": 12771,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11354,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 98
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 12461,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11664,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 100
-            }
-          ]
-        },
-        {
-          "command_returncode": 0,
-          "devices": [
-            {
-              "index": 0,
-              "memory_free_mb": 12643,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11482,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 48
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 12333,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11792,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 45
-            }
-          ],
-          "gpu_count": 2,
-          "ok": true,
-          "phase": "after_decode",
-          "utilization_memory_intervals": [
-            {
-              "index": 0,
-              "memory_free_mb": 12643,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11482,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 48
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 12333,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 11792,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 45
-            }
-          ]
-        },
-        {
-          "command_returncode": 0,
-          "devices": [
-            {
-              "index": 0,
-              "memory_free_mb": 23815,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 310,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 0
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 23815,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 310,
-              "name": "NVIDIA GeForce RTX 3090",
-              "utilization_pct": 0
-            }
-          ],
-          "gpu_count": 2,
-          "ok": true,
-          "phase": "release",
-          "utilization_memory_intervals": [
-            {
-              "index": 0,
-              "memory_free_mb": 23815,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 310,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 0
-            },
-            {
-              "index": 1,
-              "memory_free_mb": 23815,
-              "memory_total_mb": 24576,
-              "memory_used_mb": 310,
-              "name": "NVIDIA GeForce RTX 3090",
-              "phase": "preflight",
-              "utilization_pct": 0
-            }
-          ]
-        }
-      ],
-      "vram_release_observed": true,
-      "worker_exit_code": 0,
-      "worker_pid": 1635013
-    },
+    "generation_lifecycle": {},
     "preflight_gpu_receipt": {
       "command_returncode": 0,
       "devices": [
@@ -313,7 +118,8 @@
     ],
     "schema": "carnot.experiment_6187.livecodebench_authentic_k8_pool.v1.dual_gpu_intervals"
   },
-  "duration_s": 2408.342216,
+  "duration_s": 41.305125,
+  "experiment_id": "experiment_6187_livecodebench_authentic_k8_pool",
   "field_provenance": {
     "candidate_outcome_counts_by_split_and_stratum": [
       "REQ-CODE-6187",
@@ -420,7 +226,7 @@
       "bare true for labels/evaluation and bare false for generation or selection inputs."
     ]
   },
-  "honest_verdict": "complete_ready: Exp6187 sealed 72/72 tasks, 576/576 samples from unsloth/gemma-4-31B-it-GGUF; transport_failures=0",
+  "honest_verdict": "complete_partial: Exp6187 retained partial 72/72 tasks, 576/576 samples from unsloth/gemma-4-31B-it-GGUF; transport_failures=0",
   "inference_substrate": "local_llama_cpp_cuda_gguf_plus_restricted_private_test_execution",
   "llama_cpp_build_and_cuda_offload_receipts": {
     "cuda_offload_authenticated": true,
@@ -493,7 +299,7 @@
       "size_bytes": 18323731456
     }
   ],
-  "pool_integrity_ready_score": 1,
+  "pool_integrity_ready_score": 0,
   "preconditions_checked": {
     "bank_receipt": {
       "exists": true,
@@ -523,8 +329,13 @@
     },
     "git_status_short": [
       " M openspec/capabilities/code-verification/spec.md",
+      " M ops/dogfood-memory.json",
       " M results/arc_live_oracle_gap.json",
       "?? python/carnot/experiment_6187_livecodebench_authentic_k8_pool.py",
+      "?? results/experiment_6187_livecodebench_authentic_k8_pool.checkpoint.json",
+      "?? results/experiment_6187_livecodebench_authentic_k8_pool.json",
+      "?? results/experiment_6187_livecodebench_authentic_k8_pool.labels.jsonl",
+      "?? results/experiment_6187_livecodebench_authentic_k8_pool.raw_shards/",
       "?? tests/python/test_experiment_6187_livecodebench_authentic_k8_pool.py"
     ],
     "gpu": {
@@ -603,14 +414,17 @@
     "stored_selector_inputs_exclude_oracle": true
   },
   "protected_files_unchanged": {
-    "changed_paths": [],
-    "hash_after": "sha256:db8954baf92342fcae916371620fd1f7035a3e86c12712eb6ef64a9eafd7c099",
+    "changed_paths": [
+      "ops/changelog.md"
+    ],
+    "hash_after": "sha256:86e3bebbfddac110e476161d839fb9dc205eaca88960759a0ffe485011b9598e",
     "hash_before": "sha256:db8954baf92342fcae916371620fd1f7035a3e86c12712eb6ef64a9eafd7c099",
-    "ops_status_changelog_traceability_untouched": true,
+    "ops_status_changelog_traceability_untouched": false,
     "schema": "carnot.experiment_6187.livecodebench_authentic_k8_pool.v1.protected_files",
     "scripts_research_conductor_py_untouched": true,
-    "unchanged": true
+    "unchanged": false
   },
+  "random_seed": 618700000,
   "random_seed_and_generation_config": {
     "first_seed": 618700000,
     "generation_config": {
@@ -660,7 +474,7 @@
     "expected_raw_candidate_count": 576,
     "label_sidecar_write_count_before_raw_commit": 0,
     "private_test_open_count_before_raw_commit": 0,
-    "raw_commit_timestamp_utc": "2026-08-07T15:00:41Z",
+    "raw_commit_timestamp_utc": "2026-08-07T15:02:44Z",
     "raw_corpus_sha256": "sha256:5103d4329a86d6d71811e88974b278eca6d96da680cded379c614f8f48d847d1",
     "raw_rows_complete_before_validation": true,
     "raw_shard_count": 72,
@@ -1248,7 +1062,7 @@
     "task_count_with_exactly_k8": 72,
     "validation_started_after_raw_commit": true
   },
-  "reproducibility_checksum": "sha256:50c25c4d6c6df928552cbbad2d6d2f8f3b81b6fadc0a5e5648a9af95d67c7b30",
+  "reproducibility_checksum": "sha256:1396ef02f80fa894b533676b974a6cf13d31bfbc11eb548ab16151ad4839ffb3",
   "restricted_executor_limits_and_receipts": {
     "filesystem_policy": "temporary cwd; no repo writes by candidate",
     "label_sidecar": {
@@ -1260,7 +1074,7 @@
       "private_tests_loaded_after_raw_commit": true,
       "raw_corpus_sha256": "sha256:5103d4329a86d6d71811e88974b278eca6d96da680cded379c614f8f48d847d1",
       "schema": "carnot.experiment_6187.livecodebench_authentic_k8_pool.v1.label_sidecar",
-      "sha256": "sha256:f978169f576ea230be4acbd79039966637150bcc9d914592b335a3f861c2c20b"
+      "sha256": "sha256:e78d62d9be504bb0bff827730061ffdbcd71761fd11799f897eb6d8bc0778c29"
     },
     "limits": {
       "memory_mb": 512,
@@ -1272,7 +1086,7 @@
     "process_policy": "python -I subprocess in task-owned temporary cwd",
     "schema": "carnot.experiment_6187.livecodebench_authentic_k8_pool.v1.restricted_executor"
   },
-  "status": "complete_ready",
+  "status": "complete_partial",
   "task_sample_count_matrix": {
     "expected_sample_count": 576,
     "expected_task_count": 72,
@@ -6515,5 +6329,13 @@
   "verifier_is_oracle": {
     "generation_or_selection_inputs": false,
     "labeling_and_evaluation": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=41.305125 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
