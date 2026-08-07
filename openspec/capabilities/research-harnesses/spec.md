@@ -821,3 +821,84 @@ inherits them rather than re-deriving a second divergent set.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-HARNESS-6053 | `scripts/adversarial_verify.py:check_methodology_present` — `duration_s` joins `model_specs`/`random_seed`/`reproducibility_checksum` in the `missing` list, gated on `_is_finite_number`. Reported at `warn`, not `critical`: the corpus predates the requirement and quarantining historical artifacts for a newly-added field would be a retroactive gate, not a fabrication finding. | `tests/python/test_adversarial_verify_absent_duration_2026_07_30.py` — 12 tests, one per scenario plus a present-and-finite control and a non-compute-bound no-op guard. The fixture deliberately carries every OTHER methodology field so a passing "the flag fired" assertion cannot pass for the wrong reason. **Corpus impact measured over all 6311 result artifacts BEFORE shipping: 656 gain the string `duration_s` inside a METHODOLOGY_MISSING warn they ALREADY carried for another reason, and ZERO artifacts acquire a warn they did not previously have.** So the change adds detail to existing findings and quarantines nothing retroactively. **How it was found:** by probing the linter with injected durations while verifying this session's own artifact, not by a unit test — the pre-existing tests all supplied a duration, so they exercised the populated path while the absent path was unguarded. Same mode as REQ-ARC-WMTE-6050 above ("tests test what the author thought to test") and the fourth instance in one session of a comparator treating "no value" as "a value". |
+
+## REQ-INFRA-6197: Terminal Artifact State SHALL Be Classified By A Shared Fail-Closed Contract
+
+Carnot shall provide a reusable terminal-artifact classifier outside
+`scripts/research_conductor.py`. The classifier SHALL read only the artifact
+path and artifact payload, normalize `status` and `honest_verdict`, and classify
+artifacts as terminal only for the explicit outcomes `complete`, `ready`,
+`positive`, `null`, `blocked`, `skipped`, `retired`, and `flagged`.
+
+The classifier SHALL reject missing files, unreadable or malformed JSON,
+non-object JSON, `running`, `running_bootstrap`, bootstrap-only, unknown,
+partial, and contradictory status/verdict combinations as nonterminal. A
+conductor completion receipt SHALL NOT override the artifact path state. A
+flagged artifact SHALL be terminal only when the artifact itself carries
+`flagged_adversarial`, a non-empty `corrigendum_pending`, or an explicit
+flagged status/verdict.
+
+Exp6197 SHALL replay immutable hashed fixtures for good complete/ready/positive,
+honest blocked, skipped/gated, retired, adversarial-flagged, missing,
+malformed, running, running_bootstrap, bootstrap-only, Exp6183, Exp6194,
+Exp6195, and Exp6196 artifacts, then write
+`results/experiment_6197_v537_terminal_artifact_contract.json` atomically. The
+artifact SHALL include principle-annotated field provenance for every
+load-bearing required field, SHALL record `conductor_receipt_override_count: 0`
+and `protected_artifact_mutation_count: 0` as bare numbers, and SHALL preserve
+historical artifacts byte-for-byte.
+
+The Exp6197 artifact SHALL include these required fields: `status`,
+`fixture_paths_and_hashes`, `accepted_terminal_prefixes`,
+`rejected_nonterminal_prefixes`, `status_verdict_cross_product`,
+`exp6183_classification`, `exp6196_classification`,
+`valid_fixture_classifications`, `conductor_receipt_override_count`,
+`protected_artifact_mutation_count`, `classifier_module_and_hash`,
+`focused_test_commands`, `focused_test_exit_codes`,
+`full_suite_command_and_classified_exit_code`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6197-1: Artifact path state outranks conductor receipts
+GIVEN a bootstrap-only, missing, malformed, or running artifact path
+WHEN a conductor receipt claims `OK` or `complete`
+THEN the classifier returns a nonterminal class and records that the receipt did
+not override the artifact state.
+
+### SCENARIO-INFRA-6197-2: Status and verdict must agree or fail closed
+GIVEN every cross-product of terminal, nonterminal, unknown, and contradictory
+`status`/`honest_verdict` prefixes
+WHEN the shared classifier normalizes the pair
+THEN agreed terminal pairs return their terminal class, agreed nonterminal pairs
+return nonterminal classes, and mixed or incompatible pairs return
+`contradictory` or `unknown` rather than a terminal success.
+
+### SCENARIO-INFRA-6197-3: Immutable historical fixtures are replayed by hash
+GIVEN committed result artifacts including Exp6183, Exp6194, Exp6195, Exp6196,
+an honest blocked gate artifact, a retired artifact, an adversarial-flagged
+artifact, and a malformed artifact
+WHEN Exp6197 builds its fixture report
+THEN every present fixture records path, sha256, status, verdict, terminal flag,
+and class without mutating any historical artifact.
+
+### SCENARIO-INFRA-6197-4: Exp6183 and Exp6196 remain nonterminal
+GIVEN `results/experiment_6183_transition_v536.json` and
+`results/experiment_6196_v536_capstone_reconciliation.json` both have
+`status: running_bootstrap`
+WHEN they are classified with simulated completion receipts
+THEN both classifications remain nonterminal bootstrap states.
+
+### SCENARIO-INFRA-6197-5: Exp6197 writes one terminal contract artifact
+GIVEN the shared classifier module and immutable fixture classifications
+WHEN `python -m carnot.experiment_6197_v537_terminal_artifact_contract --date
+20260807` runs
+THEN it atomically writes the required result artifact with all required fields,
+bare zero mutation/override counts, focused and full-suite command receipts,
+`inference_substrate`, `verifier_is_oracle`, field principles, a stable
+reproducibility checksum, and a terminal-prefixed `honest_verdict`.
+
+## Implementation Status (REQ-INFRA-6197)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6197 | Shared classifier: `python/carnot/terminal_artifacts.py`; artifact writer: `python/carnot/experiment_6197_v537_terminal_artifact_contract.py`. | Focused tests: `tests/python/test_terminal_artifact_contract_6197.py` and `tests/python/test_experiment_6197_v537_terminal_artifact_contract.py`. |
