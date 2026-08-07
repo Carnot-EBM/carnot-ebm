@@ -15433,3 +15433,5 @@ Still active  |
 | 2026-08-07 06:19 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6175_cctu_he |
 | 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |
 | 2026-08-07 07:44 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |
+| 2026-08-07 07:44 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |
+| 2026-08-07 07:46 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |
