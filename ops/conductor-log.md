@@ -15420,3 +15420,7 @@ Still active  |
 | 2026-08-06 20:35 UTC | Branch-independent .534 capstone, adversarial veri | OK | 88 passed, 1 warning in 8.90s |
 | 2026-08-06 21:35 UTC | Plan milestone 2026.08.535 | OK | 7 tasks proposed |
 | 2026-08-06 21:38 UTC | Milestone 2026.08.535 activated | OK | 7 tasks queued |
+| 2026-08-06 23:01 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: enance"])
++    |
+| 2026-08-07 00:25 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: esearch-comple |
+| 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec |

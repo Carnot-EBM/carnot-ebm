@@ -50331,3 +50331,215 @@ completion history block and declares `aggregation_from_upstream_artifacts`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6168 | Implemented (`python/carnot/experiment_6168_v534_capstone_reconciliation.py`, `results/experiment_6168_v534_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_6168_v534_capstone_reconciliation.py`) |
+
+### REQ-REPORT-6169: Archive .534 Terminal Evidence And Validate .535 Activation
+
+The Exp6169 workflow SHALL validate terminal milestone `2026.08.534` from the
+exact Exp6156 through Exp6168 declared deliverable paths and conductor receipts.
+It SHALL require the Exp6168 capstone artifact, copy its honest verdict and hash,
+and preserve missing, skipped, internally blocked, null, retired, flagged,
+blocked, complete, and positive terminal classes without rewriting any source
+artifact or current-rule quarantine companion.
+
+The workflow SHALL append the canonical `.534` block to
+`research-complete.yaml` at most once and SHALL leave history unchanged when one
+canonical `.534` block is already present. The artifact SHALL record before and
+after `.534` block counts, append count for this transition, and the invariant
+that exactly one total `.534` completion entry remains afterward.
+
+The workflow SHALL validate the `.535` roadmap source before activation. A
+valid `.535` activation SHALL contain exactly fourteen unique task IDs
+Exp6169 through Exp6182, fourteen unique declared deliverables, supported gate
+operators, valid optional fields, complete `prior_failures` subfields where
+present, no retired-upstream requires chain, exact prompt endings, one ARC slot,
+one SOTA-ingestion slot, two infrastructure slots, and mandatory local-GGUF
+declarations for LLM tasks. It SHALL prove task-ID and deliverable collision
+freedom for Exp6169 through Exp6182.
+
+Activation SHALL use the repository transition path: if
+`research-roadmap-next.yaml` exists and validates as the exact `.535` roadmap,
+it MAY be copied atomically to `research-roadmap.yaml`; if the staged roadmap
+has already been consumed, an already-active fallback MAY complete only when the
+active roadmap validates as the same fourteen-task `.535` plan. If the staged
+roadmap is absent and the active roadmap is missing, mismatched, or only
+partially activated, the workflow SHALL write a terminal `blocked:` artifact,
+record rollback receipts, and SHALL NOT repair the roadmap by hand.
+
+The workflow SHALL snapshot git status, pre-existing worktree changes, staged
+and active roadmap hashes, exact `.534` matrix, capstone hash, completion
+history multiplicity, exclusions, quarantine fields, protected file hashes, and
+root clutter before writing its own artifact. It SHALL preserve protected files,
+including `scripts/research_conductor.py`, upstream result artifacts, ops docs,
+exclusions, and roadmaps unless an exact staged-roadmap activation is performed.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`source_and_target_milestones`, `source_capstone_hash_and_honest_verdict`,
+`source_exact_terminal_classification`,
+`research_complete_count_before_after`, `research_complete_append_count`,
+`staged_and_activated_roadmap_hashes`, `activated_task_count`,
+`task_id_and_deliverable_collision_matrix`,
+`optional_field_and_prior_failure_validation`, `gate_reference_validation`,
+`arc_ingestion_infrastructure_and_phase_d_allocation_receipt`,
+`mandatory_model_spec_validation`,
+`quarantine_and_determination_before_after_matrix`,
+`preexisting_worktree_changes_preserved`, `activation_mode`,
+`rollback_receipt`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+Every required field SHALL have provenance and a principle.
+`inference_substrate` SHALL be `deterministic_repository_transition`, and
+`honest_verdict` SHALL start with `complete:` or `blocked:` while naming append
+multiplicity and activation mode.
+
+#### SCENARIO-REPORT-6169-EXACT-TERMINAL: Source Classes Are Preserved Exactly
+
+**Given** Exp6168 reconciles `.534` with missing, skipped, internal-blocked,
+null, flagged, blocked, complete, and positive terminal classes
+**When** Exp6169 builds the source matrix
+**Then** it records Exp6156 through Exp6168 exactly once, uses declared
+deliverable paths and conductor receipts, requires the Exp6168 capstone, and
+does not mutate source artifacts or quarantine fields.
+
+#### SCENARIO-REPORT-6169-APPEND-ONCE: Completion History Is Idempotent
+
+**Given** `research-complete.yaml` may already contain `.534`
+**When** Exp6169 archives `.534`
+**Then** it appends at most one canonical block, appends zero when a canonical
+`.534` block is already present, and records exactly one `.534` completion
+entry afterward for a valid transition.
+
+#### SCENARIO-REPORT-6169-ROADMAP-VALIDATION: V535 Plan Must Be Fourteen Tasks
+
+**Given** a staged or already-active `.535` roadmap is used for activation
+**When** Exp6169 validates the plan
+**Then** it requires Exp6169 through Exp6182, unique deliverables, valid
+optional fields, valid `prior_failures`, supported gates, prompt endings, ARC,
+SOTA-ingestion, infrastructure, Phase-D, and local-GGUF allocation receipts, and
+zero task or deliverable collisions.
+
+#### SCENARIO-REPORT-6169-PARTIAL-ACTIVATION-BLOCKS: Partial Active Roadmap Fails Closed
+
+**Given** `research-roadmap-next.yaml` is absent
+**And** `research-roadmap.yaml` names `.535` but contains fewer than the
+fourteen Exp6169 through Exp6182 tasks
+**When** Exp6169 evaluates activation
+**Then** it writes a terminal blocked artifact, records the partial activation
+mode, keeps rollback as not-needed because no mutation occurred, and does not
+edit the active roadmap or `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-6169-SCHEMA: Required Fields And Checksums Are Stable
+
+**Given** the Exp6169 artifact is emitted
+**When** its schema is validated
+**Then** every required field, provenance entry, principle, append receipt,
+roadmap hash, validation matrix, protected-file receipt, test command, exit
+code, checksum, and terminal verdict prefix is present.
+
+## Implementation Status (REQ-REPORT-6169)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6169 | Implemented (`python/carnot/experiment_6169_transition_v535.py`, `results/experiment_6169_transition_v535.json`) | Implemented (`tests/python/test_experiment_6169_transition_v535.py`) |
+
+### REQ-REPORT-6170: V535 Task-Scoped Artifact Isolation Canary
+
+The Exp6170 workflow SHALL qualify only the declared Exp6169 through Exp6182
+experiment/test writer surface. It SHALL inventory the `.535` tasks from the
+active roadmap, key every canary census row by task ID, module path, mechanism,
+and exact artifact path, and SHALL NOT claim repository-wide isolation or
+enumerate unrelated legacy writer migrations.
+
+The workflow SHALL publish a frozen versioned invocation manifest for downstream
+`.535` tests. That manifest SHALL name the canary module, the focused pytest
+module, the exact collection/check commands, the artifact-root environment
+variable, and the temporary-root contract that must be active before collection.
+
+The canary SHALL exercise the canonical artifact resolver, legacy relative
+`results/...` compatibility, direct writer compatibility, task-owned temporary
+artifact roots, checkpoint save/resume, subprocess propagation, and atomic
+replacement while proving the production tracked `results/**` files remain
+byte-identical.
+
+The canary SHALL also exercise adversarial controls: a real attempted write to a
+tracked result file must be caught before mutation, traversal and symlink escape
+paths must fail closed, repository/workspace/results roots and broad temporary
+roots must be rejected as artifact roots, atomic writes must leave no temporary
+file behind, and quarantine/corrigendum/provenance fields on sentinel artifacts
+must remain unchanged.
+
+The Exp6170 artifact SHALL include, at minimum, `status`,
+`preconditions_checked`, `scope_boundary_and_repository_wide_closure_claimed`,
+`v535_task_writer_census`, `frozen_canary_module_and_invocation_manifest`,
+`canonical_resolver_and_legacy_compatibility_paths`,
+`task_owned_temp_root_receipts`, `collection_and_subprocess_receipts`,
+`attempted_tracked_write_controls`,
+`traversal_symlink_workspace_root_and_atomic_controls`,
+`tracked_result_hash_before_after_matrix`,
+`quarantine_field_before_after_matrix`, `canary_failure_classification`,
+`isolation_violation_count`, `v535_task_artifact_isolation_ready_score`,
+`preexisting_worktree_changes_preserved`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+`scope_boundary_and_repository_wide_closure_claimed` SHALL name Exp6169 through
+Exp6182 only and SHALL set the repository-wide claim to the bare boolean
+`false`. `v535_task_artifact_isolation_ready_score` SHALL be one only when
+tracked mutations, canary-scope failures, unfrozen invocation data, and
+unclassified nonzero commands are all absent. `inference_substrate` SHALL be
+`deterministic_task_scoped_repository_test_isolation`, and `honest_verdict`
+SHALL start with `complete_ready:`, `complete_partial:`, `retired:`, or
+`blocked:` while stating the exact qualified scope.
+
+#### SCENARIO-REPORT-6170-TASK-SCOPE-NON-CLOSURE: Scope Is Explicitly Bounded
+
+**Given** the active `.535` roadmap declares Exp6169 through Exp6182
+**When** Exp6170 builds its writer census and artifact
+**Then** every census row is keyed to a declared `.535` task and the artifact
+sets repository-wide isolation closure to bare `false`.
+
+#### SCENARIO-REPORT-6170-FROZEN-CANARY-INVOCATION: Downstream Tests Share One Contract
+
+**Given** downstream `.535` tasks need an artifact-isolation smoke contract
+**When** Exp6170 emits its invocation manifest
+**Then** the manifest names the version, module, pytest target, environment
+override, task-owned temporary-root rule, and exact collection/check commands.
+
+#### SCENARIO-REPORT-6170-COMPATIBLE-WRITERS: Canonical, Legacy, Atomic, And Checkpoint Writers Redirect
+
+**Given** the canary installs a validated task-owned artifact root before
+writer execution
+**When** canonical writers, legacy literal writers, atomic replacement,
+checkpoint save/resume, and subprocess writers run
+**Then** each write lands under the task-owned root and no tracked
+`results/**` file is mutated.
+
+#### SCENARIO-REPORT-6170-ADVERSARIAL-CONTROLS: Escapes And Tracked Writes Fail Closed
+
+**Given** the tracked-results guard and legacy compatibility layer are active
+**When** the canary attempts an absolute tracked-result write, traversal,
+symlink escape, workspace/results-root override, broad temp-root override, and
+atomic replacement control
+**Then** the tracked write is recorded before mutation, escape attempts raise,
+invalid roots are rejected, and atomic replacement leaves no temp file behind.
+
+#### SCENARIO-REPORT-6170-QUARANTINE-PRESERVATION: Tracked Evidence Stays Immutable
+
+**Given** sentinel tracked artifacts carry quarantine, corrigendum,
+provenance, substrate, or inference-mode fields
+**When** Exp6170 runs the focused canary controls
+**Then** aggregate tracked-result hashes, sentinel hashes, quarantine-field
+snapshots, and protected-file hashes remain unchanged except for the new
+task-owned Exp6170 deliverable.
+
+#### SCENARIO-REPORT-6170-SCHEMA-READINESS: Artifact Readiness Is Mechanically Auditable
+
+**Given** the Exp6170 artifact is emitted
+**When** its schema is validated
+**Then** every required field has provenance, command receipts and exit codes
+are classified, the checksum is stable, readiness is zero on any mutation or
+unclassified canary failure, and the verdict prefix is terminal.
+
+## Implementation Status (REQ-REPORT-6170)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6170 | Implemented (`python/carnot/experiment_6170_v535_task_artifact_isolation_canary.py`, `results/experiment_6170_v535_task_artifact_isolation_canary.json`) | Implemented (`tests/python/test_experiment_6170_v535_task_artifact_isolation_canary.py`) |
