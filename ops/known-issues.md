@@ -4,7 +4,45 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
-### 2026-08-03 (RULING — ARC induction line is CLOSED; and the determination record was destroyed a THIRD time, by a guard-exempt path)
+### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
+
+The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed
+(paraphrased from the live session; the levers are the outer-loop's numbering):
+
+> "Given that the hardware we run the submissions on in kaggle are far faster than our local
+> hardware, it seems like we should expand our live budget substantially with that understanding
+> (#3). We also no longer have a quota concern so #4 is no longer a blocker. We should tackle
+> #1 + #2 as well as #5 + #6, particularly as we want /think with the 31B model."
+
+Binding consequences:
+
+1. **Live-budget expansion (lever #3, reframed).** The scored live path's budget constants
+   (per-call generation timeouts, wall caps, n_predict ceilings) were derived under
+   iGPU-parity / 16GB-era assumptions that are now void (Kaggle hardware is 96GB-class and far
+   faster than local). Expand them substantially. A LOCAL wall-clock timeout is a dev artifact,
+   not a live-budget violation — do not gate the 31B generator on the old budget.
+2. **exp6091 n_predict=4096 truncation fix (lever #4) is UNBLOCKED** (the quota-window hold is
+   lifted). Apply the one-line fix to BOTH arms per the 2026-08-03 prereg
+   (`docs/research-notes/arc-6091-refinement-shot-prereg-2026-08-03.md`). This is the operator
+   decision the 2026-08-03 ruling reserved: the banked default-OFF refinement capability may be
+   re-run once fixed. The ruling's evidentiary record (0/296 clean engine-units, corrections
+   C2/C4) is NOT retracted — the rerun is a new shot under the prereg's pre-named metric.
+3. **Object-centric induction input (lever #1)** — feed the world-model inducer object-level
+   segmentation (4-connected components, translation-invariant relations, HUD-strip rejection;
+   the Duck/TAAF lesson from the leaderboard technique watch) instead of raw grids; A/B against
+   the 2026-08-02 generation-vs-selection harness.
+4. **Verifier-gated object-relative trajectory transfer (lever #2)** — on level-up, re-anchor
+   the previous level's successful trace by object matching + centroid displacement before
+   spending LLM induction (the FOYSAL general-purpose lever from the technique watch).
+5. **Budget-exhaustion meter wiring (lever #5)** — wire `budget_exhaustion_estimate` /
+   `budget_aware_path_cost_weight` (built 2026-08, default-OFF) into the live path with an A/B.
+6. **/think with the 31B generator (lever #6)** — the June /no_think freeze is LIFTED. Enable
+   extended thinking for gemma-4-31B in the induction path
+   (cf. `reference_gpt56_arcprize_reasoning_effort`: ~26x @Max on ARC-3).
+
+The 2026-08-03 one-slot-floor allocation is amended accordingly: ARC work implementing these six
+levers is operator-authorized above the floor. The 2026-08-03 ruling's record-integrity half
+(conductor determination drops) is untouched by this entry.
 
 **Two things, both decided. Read the ruling first; it is the allocation decision. Read the
 second half if you own the conductor — it is a live, recurring, self-concealing record loss.**
