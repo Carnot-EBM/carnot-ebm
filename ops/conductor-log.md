@@ -15483,3 +15483,5 @@ Still active  |
 | 2026-08-07 22:02 UTC | Authentic Gemma-4-31B K=8 pool gated on Exp6200 de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
 | 2026-08-07 22:04 UTC | Authentic Gemma-4-31B K=8 pool gated on Exp6200 de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |
 | 2026-08-07 22:06 UTC | Executable-code headroom audit gated on Exp6201 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2) |
+| 2026-08-07 22:06 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom |
+| 2026-08-07 22:08 UTC | Executable-code headroom audit gated on Exp6201 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2) |
