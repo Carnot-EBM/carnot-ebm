@@ -50182,6 +50182,129 @@ prefix is present; the inference substrate is `literature_ingestion`.
 |---|---|---|
 | REQ-REPORT-6158 | Planned (`python/carnot/experiment_6158_v534_source_delta_ingestion.py`, `results/experiment_6158_v534_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_6158_v534_source_delta_ingestion.py`) |
 
+### REQ-REPORT-6171: V535 Exact-Marker Source Delta Ingestion Preserves Immutable History
+
+The Exp6171 workflow SHALL run a bounded dated-source ingestion pass after
+the exact `V535-PLANNER-REFRESH-20260806-END` marker in
+`research-references.md`. It SHALL record the marker text count, marker text
+hash, marker block hash, byte offset, one-based line number, pre-search
+reference hash, post-search reference hash, active roadmap task map, cached
+planner receipts, endpoint capabilities, network/tool availability, exclusions,
+protected-file hashes, missing requested input paths, and git status before
+classifying any candidate.
+
+The workflow SHALL search only records created or revised after the exact
+V535 marker receipt. Because the sealed ledger gives a date but no sub-day
+receipt timestamp, same-day primary records dated 2026-08-06 SHALL be treated
+as cutoff confounds unless a reproducible opened authority proves a later
+revision. Eligible routes SHALL include bounded arXiv submitted/updated-date
+windows and opened arXiv primary pages, OpenReview routes, Hugging Face Papers
+as secondary discovery, Semantic Scholar citation counts for EBT `2507.02092`
+and ARM-EBM `2512.15605` as discovery receipts only, targeted GitHub metadata
+and official repositories, Extropic first-party pages/repositories, and Logical
+Intelligence Kona/Aleph first-party pages. Search pages, Semantic Scholar,
+Hugging Face Papers, and GitHub discovery metadata SHALL NOT be accepted as
+source authority unless they lead to an opened primary paper or maintained
+official repository with a dated post-marker change.
+
+Every candidate SHALL be deduplicated by stable identifier and content hash
+before acceptance. Every accepted, rejected, guarded, duplicate, cutoff
+confound, and endpoint-failed row SHALL name date, authority, stable ID, URL,
+content hash or discovery hash when available, local reachability, disposition,
+reason, roadmap task, changed method or gate, inference substrate, and
+retirement conflict. Accepted findings SHALL be dated and reproducible
+post-marker primary or first-party deltas, SHALL map only to Exp6173 through
+Exp6181 or `defer`, and SHALL NOT reopen retired finite-choice Phase-D source
+recovery, output-only scorers, hidden-state weight mutation, generated-answer
+transport, CSL exact-slot reruns, KAN mutation, ARC solve/outer-loop game
+knowledge, unchanged board integration, Extropic/Kona proprietary execution,
+or task/gate rewrites.
+
+When no accepted non-duplicate finding exists, the workflow SHALL leave
+`research-references.md` byte-identical, set `zero_delta_accepted=true`, and
+emit a `complete_null:` verdict naming accepted count zero. When accepted
+findings exist, the workflow MAY append exactly one dated V535 execution delta
+after the sealed marker and SHALL record append count and before/after hashes.
+The workflow SHALL NOT modify `research-roadmap.yaml`, missing optional
+`research-roadmap-next.yaml`, `ops/exclusion_manifest.yaml`, `ops/status.md`,
+`ops/changelog.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The Exp6171 artifact SHALL include, at minimum, `status`,
+`preconditions_checked`,
+`marker_text_count_hash_offset_and_reference_hash`, `bounded_time_window`,
+`source_query_and_endpoint_receipts`,
+`semantic_scholar_ebt_and_arm_ebm_counts`,
+`candidate_and_deduplicated_record_counts`,
+`accepted_rejected_and_guarded_delta_ledger`, `roadmap_task_mapping`,
+`exclusion_and_retirement_conflict_receipt`,
+`reference_hash_before_after_and_append_count`, `zero_delta_accepted`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`. `zero_delta_accepted`
+SHALL be a bare boolean. `inference_substrate` SHALL equal
+`dated_primary_secondary_source_ingestion`. The `honest_verdict` SHALL start
+with `complete_delta:`, `complete_null:`, `retired:`, or `blocked:` and name
+the accepted count.
+
+Required field principles:
+
+- `accepted_rejected_and_guarded_delta_ledger`: principle "Each row names date, authority, stable ID, local reachability, disposition, and reason."
+- `zero_delta_accepted`: principle "Bare true; lack of novelty is a valid result."
+- `inference_substrate`: principle "Set `dated_primary_secondary_source_ingestion`."
+- `honest_verdict`: principle "Use `complete_delta:`, `complete_null:`, `retired:`, or `blocked:` and name accepted count."
+
+#### SCENARIO-REPORT-6171-EXACT-MARKER: Exact V535 Marker Bounds The Window
+
+**Given** `research-references.md` contains exactly one
+`V535-PLANNER-REFRESH-20260806-END` marker
+**When** Exp6171 snapshots the source boundary
+**Then** the artifact records marker count, text hash, block hash, byte
+offset, line number, reference hash, and an exclusive post-marker window
+without accepting same-day undifferentiated records.
+
+#### SCENARIO-REPORT-6171-BOUNDED-DATED-SOURCE: Sources Need Dated Authority
+
+**Given** arXiv, OpenReview, Hugging Face, Semantic Scholar, GitHub,
+Extropic, and Logical Intelligence routes are reachable, blocked, or
+rate-limited
+**When** a candidate lacks a primary or first-party dated post-marker change
+**Then** it is rejected, guarded, marked duplicate, marked cutoff-confound, or
+marked endpoint-failed rather than accepted.
+
+#### SCENARIO-REPORT-6171-DEDUPLICATE-AND-GUARD-SCOPE: Retired Scopes Stay Closed
+
+**Given** candidates repeat an already-indexed source, merely rename an
+excluded method, rely on unavailable proprietary execution, or reopen retired
+output-only scorer, KAN, Extropic, Kona, board, ARC-solve, or finite-choice
+Phase-D scopes
+**When** Exp6171 classifies them
+**Then** stable identifier and content-hash deduplication plus retirement
+conflict checks keep the candidate out of accepted mappings.
+
+#### SCENARIO-REPORT-6171-ZERO-DELTA: Complete Null Preserves References
+
+**Given** no accepted non-duplicate post-marker delta remains after bounded
+source authority, date, deduplication, and retirement filters
+**When** Exp6171 writes its result
+**Then** `research-references.md` stays byte-identical,
+`zero_delta_accepted=true`, append count is zero, accepted count is zero, and
+the honest verdict starts with `complete_null:`.
+
+#### SCENARIO-REPORT-6171-SCHEMA: Required Fields Are Machine-Checkable
+
+**Given** the Exp6171 artifact is emitted
+**When** schema validation runs
+**Then** every required field, field provenance entry, endpoint receipt,
+Semantic Scholar EBT/ARM-EBM count, candidate count, roadmap mapping,
+retirement conflict receipt, protected-file hash, command receipt, exit code,
+checksum, inference substrate, and terminal verdict prefix is present.
+
+## Implementation Status (REQ-REPORT-6171)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6171 | Planned (`python/carnot/experiment_6171_v535_source_delta_ingestion.py`, `results/experiment_6171_v535_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_6171_v535_source_delta_ingestion.py`) |
+
 ### REQ-REPORT-6168: V534 Capstone Exact-Path Reconciliation Preserves Mixed Terminal Evidence
 
 The Exp6168 capstone workflow SHALL resolve Exp6156 through Exp6167 only from
