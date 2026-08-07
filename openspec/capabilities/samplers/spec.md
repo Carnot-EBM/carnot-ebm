@@ -3544,3 +3544,139 @@ repository-suite state rather than a failed stochastic reproducibility check.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6180 | Planned (`python/carnot/experiment_6180_exp6166_reproducibility_adjudication.py`, `results/experiment_6180_exp6166_reproducibility_adjudication.json`) | Planned (`tests/python/test_experiment_6180_exp6166_reproducibility_adjudication.py`) |
+
+### REQ-SAMPLE-6194: Fixed Mode-Jump Rust/PyO3 Sampler Parity
+
+Carnot MUST provide Exp6194 at
+`python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py` and write
+`results/experiment_6194_mode_jump_rust_pyo3_parity.json` without modifying
+Exp6166, Exp6180, `scripts/research_conductor.py`, THRML scaling artifacts,
+two-axis tempering code, or hardware-speed evidence. Exp6194 SHALL port only
+the frozen Exp6166/Exp6180 software mode-jump categorical mechanism into the
+existing Rust sampler crate and expose that mechanism through PyO3.
+
+Sub-requirements:
+- REQ-SAMPLE-6194-PROPOSAL: The Rust sampler SHALL implement the frozen
+  Exp6166 local-plus-cross-mode proposal table over the supported categorical
+  labels and SHALL reject malformed, non-normalized, asymmetric-support, or
+  unsupported-state proposal configurations without fallback.
+- REQ-SAMPLE-6194-ACCEPTANCE: The transition SHALL use the exact
+  Metropolis-Hastings log acceptance
+  `log pi(y)-log pi(x)+log q(x|y)-log q(y|x)`, with
+  `E(label)=-log pi(label)`, and SHALL record proposed label, proposal
+  uniform, acceptance uniform, energies, proposal log probabilities, log
+  acceptance, acceptance probability, accept decision, and state transition.
+- REQ-SAMPLE-6194-RNG-DETERMINISM: The sampler SHALL use a seedable,
+  serializable RNG state and SHALL replay identical short chains for identical
+  `(configuration, initial state, seed)` across Rust and Python.
+- REQ-SAMPLE-6194-SERIALIZATION: The Rust and PyO3 state surfaces SHALL expose
+  typed state snapshot, restore, and serialization/deserialization operations
+  that validate label membership, counters, and schema before use.
+- REQ-SAMPLE-6194-PYO3-BINDING: The PyO3 binding SHALL expose typed
+  construction, one-step, multi-step, energy/proposal queries, snapshot,
+  restore, and serialization operations with explicit `ValueError` failures
+  for invalid inputs.
+- REQ-SAMPLE-6194-EXACT-PARITY: Exp6194 SHALL derive immutable Python fixtures
+  from the committed Exp6166 result and Exp6180 adjudication evidence, then
+  compare exact short-chain energies, proposals, uniforms, accept decisions,
+  states, counters, and final serialized state against Rust/PyO3.
+- REQ-SAMPLE-6194-DISTRIBUTION-PARITY: Exp6194 SHALL predeclare long-run
+  sample count, burn-in, total-variation, KL, acceptance, autocorrelation, and
+  ESS tolerances before inspecting Rust outcomes, then compare Python and
+  Rust/PyO3 empirical frequencies against the exact Exp6166 target.
+- REQ-SAMPLE-6194-ERROR-HANDLING: Broken configurations, bad labels, corrupt
+  snapshots, corrupt serialized states, zero-probability targets, invalid
+  proposal rows, and invalid step counts SHALL fail closed.
+- REQ-SAMPLE-6194-NO-HARDWARE: `hardware_or_speedup_claimed` SHALL be the bare
+  boolean `false`, timing SHALL be diagnostic only, and the inference substrate
+  SHALL equal `local_cpu_rust_pyo3_cross_runtime_sampler_parity`.
+- REQ-SAMPLE-6194-DETERMINATION-PRESERVATION: Exp6194 SHALL snapshot the
+  immutable Exp6166 and Exp6180 hashes and verdicts before and after the run,
+  preserving Exp6166's historical blocked determination and Exp6180's positive
+  companion determination without relabeling either artifact.
+
+The terminal artifact SHALL include `status`, `preconditions_checked`,
+`immutable_exp6166_exp6180_hash_and_verdict_receipt`,
+`fixed_algorithm_equations_config_and_seed`,
+`rust_module_and_pyo3_binding_paths`, `rust_python_api_contract`,
+`exact_transition_fixture_hash_and_parity_matrix`,
+`distribution_frequency_tv_kl_metrics`,
+`acceptance_autocorrelation_and_ess_metrics`,
+`serialization_snapshot_restore_and_error_receipts`,
+`deterministic_seed_replay_receipt`,
+`task_owned_rust_python_test_commands_and_exit_codes`,
+`nonzero_command_classification`, `timing_diagnostic_only`,
+`hardware_or_speedup_claimed`, `historical_artifacts_unchanged`,
+`mode_jump_rust_pyo3_ready_score`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`,
+`test_commands`, `test_exit_codes`, `reproducibility_checksum`, and
+`honest_verdict`. `mode_jump_rust_pyo3_ready_score` SHALL equal exactly `1.0`
+only when exact short-chain parity, preregistered distribution and quality
+tolerances, serialization/error coverage, historical-artifact preservation,
+protected-file preservation, and zero task-owned test failures all hold.
+`honest_verdict` SHALL start with `complete_ready:`, `complete_partial:`,
+`retired:`, or `blocked:` and state exact parity plus every classified nonzero
+command.
+
+Required field principles:
+
+- `status`: Terminal state separates ready, partial, retired, and blocked Exp6194 outcomes.
+- `preconditions_checked`: Records Exp6184 preflight, immutable upstream hashes, toolchain, build surface, output root, exclusions, git status, protected files, and root clutter before implementation evidence is interpreted.
+- `immutable_exp6166_exp6180_hash_and_verdict_receipt`: Preserves the historical blocked Exp6166 determination and positive Exp6180 companion determination by byte hash.
+- `fixed_algorithm_equations_config_and_seed`: Freezes labels, target probabilities, proposal table, MH acceptance equation, RNG, seed, initial state, and tolerances before Rust outcomes are read.
+- `rust_module_and_pyo3_binding_paths`: Lists the Rust kernel, crate exports, PyO3 binding, compatibility import, Python fixture, tests, and artifact paths touched by the port.
+- `rust_python_api_contract`: Names typed construction, one-step, multi-step, energy/proposal queries, snapshot, restore, serialization, and error behavior.
+- `exact_transition_fixture_hash_and_parity_matrix`: Content-addresses the immutable short-chain fixture and records field-by-field Python/Rust parity.
+- `distribution_frequency_tv_kl_metrics`: Measures long-run empirical frequencies and TV/KL against the exact target without timing or hardware claims.
+- `acceptance_autocorrelation_and_ess_metrics`: Reports quality diagnostics so a correct stationary distribution is not inferred from frequencies alone.
+- `serialization_snapshot_restore_and_error_receipts`: Proves snapshot/restore/serialization round trips and corrupt inputs fail closed.
+- `deterministic_seed_replay_receipt`: Proves repeated Python and Rust/PyO3 runs with the same seed replay exactly.
+- `task_owned_rust_python_test_commands_and_exit_codes`: Stores task-owned command receipts so failed local checks cannot become readiness evidence.
+- `nonzero_command_classification`: Classifies every nonzero command separately from exact parity and readiness.
+- `timing_diagnostic_only`: Bare true prevents diagnostic timing from becoming a speed claim.
+- `hardware_or_speedup_claimed`: Bare false prevents Rust/PyO3 parity from becoming FPGA, TSU, CUDA, THRML, latency, power, energy, or speedup evidence.
+- `historical_artifacts_unchanged`: Proves Exp6166 and Exp6180 artifacts were not rewritten.
+- `mode_jump_rust_pyo3_ready_score`: Equals 1.0 only when exact parity, distribution/quality tolerances, serialization/error coverage, preservation, and task-owned tests all pass.
+- `protected_files_unchanged`: Confirms conductor and reconciler-owned files stayed byte-identical.
+- `duration_s`: Reports real wall time without padding.
+- `inference_substrate`: Declares `local_cpu_rust_pyo3_cross_runtime_sampler_parity`, not LLM, GPU, FPGA, TSU, or THRML scaling.
+- `field_provenance`: Maps every required field to prompt, spec, immutable artifacts, source, tests, commands, or computed fixtures.
+- `test_commands`: Records focused cargo, PyO3, Python, spec, artifact, preservation, adversarial, protected-file, root-clutter, and suite receipts.
+- `test_exit_codes`: Stores exit codes for every recorded command.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking only duration and the checksum field.
+- `honest_verdict`: Uses a required terminal prefix and states exact parity plus every classified nonzero command.
+
+### SCENARIO-SAMPLE-6194-EXACT-TRANSITION-PARITY: Rust Replays Frozen Mode-Jump Steps
+
+**Given** immutable Exp6166/Exp6180 hashes, the frozen categorical target, the
+cross-mode proposal table, a seed, and a short-chain Python fixture
+**When** the Rust/PyO3 mode-jump sampler runs the same initial state
+**Then** proposal uniforms, proposed labels, acceptance uniforms, energies,
+proposal log probabilities, log acceptance, acceptance probabilities,
+accept decisions, current labels, counters, RNG state, snapshots, and serialized
+state match the Python fixture exactly within the preregistered tolerance.
+
+### SCENARIO-SAMPLE-6194-DISTRIBUTION-QUALITY-PARITY: Long-Run Diagnostics Match Target
+
+**Given** preregistered long-run sample count, burn-in, TV/KL, acceptance,
+autocorrelation, and ESS tolerances
+**When** Python and Rust/PyO3 run from the same frozen configuration and seed
+**Then** empirical frequencies remain within tolerance of the exact target,
+Python/Rust frequency deltas stay within tolerance, acceptance and quality
+diagnostics are recorded, and timing remains diagnostic only.
+
+### SCENARIO-SAMPLE-6194-SERIALIZATION-ERROR-PRESERVATION: Boundaries Fail Closed
+
+**Given** valid snapshots, serialized states, and malformed controls
+**When** Rust and PyO3 restore states, deserialize payloads, or receive invalid
+labels, probabilities, proposal rows, snapshots, serialized strings, or step
+counts
+**Then** valid states round-trip exactly, corrupt inputs raise explicit errors,
+Exp6166/Exp6180 historical artifacts stay byte-identical, protected files stay
+byte-identical, and no hardware or speedup claim is emitted.
+
+## Implementation Status (REQ-SAMPLE-6194)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6194 | Planned (`crates/carnot-samplers/src/mode_jump.rs`, `crates/carnot-python/src/mode_jump.rs`, `python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py`, `results/experiment_6194_mode_jump_rust_pyo3_parity.json`) | Planned (`crates/carnot-samplers/tests/mode_jump.rs`, `tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py`) |

@@ -23,6 +23,9 @@ try:
         RustIsingModel,
         RustKv260PottsSampler,
         RustLangevinSampler,
+        RustModeJumpConfig,
+        RustModeJumpCore,
+        RustModeJumpState,
         RustOneAxisTemperingConfig,
         RustOneAxisTemperingCore,
         RustOneAxisTemperingState,
@@ -41,6 +44,9 @@ except ImportError:
     RustKv260PottsSampler = None  # type: ignore[assignment,misc]
     RustLangevinSampler = None  # type: ignore[assignment,misc]
     RustHMCSampler = None  # type: ignore[assignment,misc]
+    RustModeJumpConfig = None  # type: ignore[assignment,misc]
+    RustModeJumpCore = None  # type: ignore[assignment,misc]
+    RustModeJumpState = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingConfig = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingCore = None  # type: ignore[assignment,misc]
     RustOneAxisTemperingState = None  # type: ignore[assignment,misc]
@@ -57,6 +63,9 @@ __all__ = [
     "RustIsingModel",
     "RustKv260PottsSampler",
     "RustLangevinSampler",
+    "RustModeJumpConfig",
+    "RustModeJumpCore",
+    "RustModeJumpState",
     "RustOneAxisTemperingConfig",
     "RustOneAxisTemperingCore",
     "RustOneAxisTemperingState",

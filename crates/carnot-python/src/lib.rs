@@ -12,6 +12,7 @@ use pyo3::types::{PyAny, PyDict};
 
 mod adaptive_state;
 mod kv260;
+mod mode_jump;
 mod one_axis_tempering;
 mod pipeline;
 mod s2kan;
@@ -459,6 +460,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // One-axis corrected-cDLS replica exchange
     one_axis_tempering::register_one_axis_tempering_module(m)?;
+
+    // Fixed Exp6166/Exp6180 mode-jump sampler
+    mode_jump::register_mode_jump_module(m)?;
 
     Ok(())
 }
