@@ -20,6 +20,20 @@ from carnot.verify import cctu_item_bank_6173 as exp6173
 
 REPO = Path(__file__).resolve().parents[2]
 SPEC = REPO / "openspec/capabilities/constraint-verification/spec.md"
+NAMED_GATE_REQS = (
+    "REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",
+    "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
+    "REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",
+    "REQ-CONSTRAINT-VERIFY-6175-COMPETENCE",
+    "REQ-CONSTRAINT-VERIFY-6175-UNSATURATION",
+    "REQ-CONSTRAINT-VERIFY-6175-CONSENSUS",
+    "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
+    "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
+    "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
+    "REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE",
+    "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
+    "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
+)
 
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -38,8 +52,43 @@ def test_req_6175_spec_declares_fail_closed_headroom_contract() -> None:
         "SCENARIO-CONSTRAINT-VERIFY-6175-RETIRE-PARSE-FAILURE",
         "deterministic_exact_tool_trace_headroom_audit",
         "future_rows_allowed_by_this_artifact",
+        *NAMED_GATE_REQS,
     ):
         assert marker in section
+
+
+def test_req_6175_named_gates_are_reflected_in_receipts_and_provenance(
+    tmp_path: Path,
+) -> None:
+    """REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY: named gates are auditable."""
+
+    artifact = audit.run(result_path=tmp_path / audit.RESULT_RELATIVE_PATH.name, duration_s=1.0)
+    checks = artifact["preconditions_checked"]["checks"]
+    provenance = artifact["field_provenance"]
+
+    for check_name in (
+        "raw_trace_hash_matches_exp6174",
+        "label_sidecar_hashes_match",
+        "calibration_and_held_seals",
+        "output_paths_declared",
+    ):
+        assert checks[check_name] is True
+
+    expected_field_reqs = {
+        "preconditions_checked": "REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",
+        "all_sample_and_parseable_denominators": "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
+        "exact_floor_definition_value_and_provenance": "REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",
+        "per_candidate_competence_and_clustered_interval": "REQ-CONSTRAINT-VERIFY-6175-COMPETENCE",
+        "saturation_and_error_diversity_metrics": "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
+        "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": "REQ-CONSTRAINT-VERIFY-6175-CONSENSUS",
+        "oracle_at_8_accuracy": "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
+        "oracle_minus_consensus_delta_and_clustered_interval": "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
+        "held_aggregate_qualification_and_row_label_seal_hash": "REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE",
+        "duplicate_and_shortcut_audits": "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
+        "parseability_competence_unsaturation_headroom_and_minority_gate_matrix": "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
+    }
+    for field, req_id in expected_field_reqs.items():
+        assert req_id in provenance[field]
 
 
 def test_scenario_6175_revalidates_exp6174_labels_from_raw_text() -> None:

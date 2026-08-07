@@ -146,6 +146,77 @@ FIELD_PRINCIPLES: dict[str, str] = {
     "honest_verdict": "Terminal prefix names passed or failed conjuncts.",
 }
 
+FIELD_REQUIREMENTS: dict[str, tuple[str, ...]] = {
+    "status": ("REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",),
+    "preconditions_checked": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "structured_gate_receipt": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "upstream_corpus_bank_split_validator_and_preregistration_hashes": (
+        "REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",
+    ),
+    "label_revalidation_receipt": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "all_sample_and_parseable_denominators": (
+        "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
+    ),
+    "family_constraint_count_and_violation_strata": (
+        "REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY",
+        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
+    ),
+    "exact_floor_definition_value_and_provenance": (
+        "REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",
+    ),
+    "per_candidate_competence_and_clustered_interval": (
+        "REQ-CONSTRAINT-VERIFY-6175-COMPETENCE",
+        "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
+    ),
+    "saturation_and_error_diversity_metrics": (
+        "REQ-CONSTRAINT-VERIFY-6175-UNSATURATION",
+        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
+    ),
+    "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": (
+        "REQ-CONSTRAINT-VERIFY-6175-CONSENSUS",
+        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
+    ),
+    "oracle_at_8_accuracy": (
+        "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
+        "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
+    ),
+    "oracle_minus_consensus_delta_and_clustered_interval": (
+        "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
+        "REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE",
+    ),
+    "consensus_wrong_oracle_right_group_count": (
+        "REQ-CONSTRAINT-VERIFY-6175-ORACLE-K",
+        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
+    ),
+    "duplicate_and_shortcut_audits": (
+        "REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY",
+        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
+    ),
+    "held_aggregate_qualification_and_row_label_seal_hash": (
+        "REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE",
+        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
+    ),
+    "parseability_competence_unsaturation_headroom_and_minority_gate_matrix": (
+        "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
+    ),
+    "phase_d_headroom_ready_score": (
+        "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
+    ),
+    "future_rows_allowed_by_this_artifact": (
+        "REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",
+        "REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR",
+    ),
+    "protected_files_unchanged": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "duration_s": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "inference_substrate": ("REQ-CONSTRAINT-VERIFY-6175",),
+    "verifier_is_oracle": ("REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR",),
+    "field_provenance": ("REQ-CONSTRAINT-VERIFY-6175",),
+    "test_commands": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "test_exit_codes": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "reproducibility_checksum": ("REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY",),
+    "honest_verdict": ("REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT",),
+}
+
 
 def run(
     *,
@@ -775,16 +846,41 @@ def preconditions_checked(
 ) -> JsonDict:
     raw_receipt = exp6174_artifact.get("raw_before_label_commit_receipts", {})
     no_retry = exp6174_artifact.get("no_correctness_conditioned_retry_or_replacement_receipt", {})
+    raw_declared = exp6174_artifact.get("raw_trace_corpus_path_hash_count_and_schema", {})
+    labels_declared = exp6174_artifact.get("exact_label_sidecar_paths_hashes_and_counts", {})
+    access_logs = exp6174_artifact.get("calibration_and_held_access_logs", {})
+    output_paths = exp6174_artifact.get("preconditions_checked", {}).get("output_paths", {})
     per_case = Counter(str(row["case_id"]) for row in raw_rows)
+    label_counts_by_split = Counter(str(row.get("split")) for row in label_rows)
+    current_raw_sha256 = sha256_file(paths["raw_trace"])
+    current_calibration_label_sha256 = sha256_file(paths["calibration_label"])
+    current_held_label_sha256 = sha256_file(paths["held_label"])
     checks = {
         "exp6174_status_complete_ready": exp6174_artifact.get("status") == "complete_ready",
         "structured_gate_passed": bool(
             exp6174_artifact.get("structured_gate_receipt", {}).get("passed")
         ),
         "upstream_hashes_match": bool(upstream.get("all_current_hashes_match_exp6174")),
+        "raw_trace_hash_matches_exp6174": raw_declared.get("sha256") == current_raw_sha256
+        and raw_receipt.get("raw_corpus_sha256") == current_raw_sha256
+        and raw_declared.get("count") == len(raw_rows),
+        "label_sidecar_hashes_match": (
+            labels_declared.get("calibration", {}).get("sha256")
+            == current_calibration_label_sha256
+            and labels_declared.get("held", {}).get("sha256") == current_held_label_sha256
+            and labels_declared.get("calibration", {}).get("count")
+            == label_counts_by_split["calibration"]
+            and labels_declared.get("held", {}).get("count") == label_counts_by_split["held"]
+        ),
         "raw_before_label_receipt": raw_receipt.get("validation_started_after_raw_commit") is True
         and raw_receipt.get("raw_rows_complete_before_validation") is True,
         "exact_validator_version": revalidation.get("validator_version_mismatch_count") == 0,
+        "calibration_and_held_seals": (
+            labels_declared.get("labels_inaccessible_to_generation") is True
+            and access_logs.get("held_aggregate_outcomes_inspected") is False
+            and access_logs.get("calibration", {}).get("exists") is True
+            and access_logs.get("held", {}).get("exists") is True
+        ),
         "calibration_and_held_label_counts": len(label_rows) == len(raw_rows) == 120 * K_SAMPLES,
         "k_completeness": len(per_case) == 120 and min(per_case.values(), default=0) >= K_SAMPLES,
         "no_retry_receipt": no_retry
@@ -801,6 +897,10 @@ def preconditions_checked(
             )
         )
         and bool(read_json(paths["preregistration"]).get("clustered_inference_and_power_plan")),
+        "output_paths_declared": all(
+            output_paths.get(name)
+            for name in ("raw_trace", "calibration_label", "held_label", "result")
+        ),
         "output_path_parent_writable": _parent_writable(paths["result"]),
         "exclusion_manifest_present": paths["exclusion_manifest"].is_file(),
         "protected_files_present": all((REPO_ROOT / path).is_file() for path in PROTECTED_FILES),
@@ -1089,7 +1189,7 @@ def protected_files_unchanged(
 
 def field_provenance() -> JsonDict:
     return {
-        field: ["REQ-CONSTRAINT-VERIFY-6175", FIELD_PRINCIPLES[field]]
+        field: ["REQ-CONSTRAINT-VERIFY-6175", *FIELD_REQUIREMENTS[field], FIELD_PRINCIPLES[field]]
         for field in REQUIRED_ARTIFACT_FIELDS
     }
 
