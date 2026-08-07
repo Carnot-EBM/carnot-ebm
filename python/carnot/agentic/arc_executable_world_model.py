@@ -4578,6 +4578,31 @@ def _split_args_for_env(launch_env: Optional[dict]) -> list[str]:
     return ["-sm", "layer", "-ts", ",".join("1" for _ in visible)]
 
 
+class GeneratorCudaRequiredError(RuntimeError):
+    """Raised by `_generator_server_and_env()` when `CARNOT_ARC_GENERATOR_REQUIRE_CUDA=1` is set,
+    a CUDA card was explicitly requested via `CARNOT_ARC_GENERATOR_CUDA_GPU`, and the guard could
+    not place it -- so the caller asked to be told loudly rather than silently degraded to the
+    iGPU HIP build.
+
+    WHY THIS EXISTS (2026-08-07). The HIP fallback below is a deliberate, LOUD-but-permissive
+    default: for the conductor's own routine ARC work, a slow generator beats no generator, so
+    `_generator_server_and_env()` degrades split -> single-card -> iGPU rather than raising. That
+    is correct for that caller. It is WRONG for a CUDA-substrate-specific measurement (e.g. a
+    think-mode A/B whose entire point is comparing decode behavior on the CUDA build): a silent
+    ~2 tok/s HIP substitution there does not degrade the result, it CORRUPTS it -- induce calls
+    time out and look like ordinary induction failures, not an infrastructure fallback. This is
+    exactly what happened to `experiment_6199_gemma_think_mode_ab.py`'s first run attempt (a
+    transient 161 MiB shortfall on gpu1 exhausted the retry window and fell through to HIP with
+    no crash, so the corruption was only caught by a human reading the run log).
+
+    This exception is opt-in (`CARNOT_ARC_GENERATOR_REQUIRE_CUDA=1`, default unset) so the
+    conductor's own generator resolution -- and every other existing caller -- is byte-identical
+    to before. A caller that needs CUDA-or-nothing sets the env var and catches this to emit
+    `honest_verdict: blocked_cuda_unavailable` per the Pre-Launch Preconditions Discipline,
+    instead of running degraded and reporting a corrupted number.
+    """
+
+
 def _generator_server_and_env(
     ffn_cpu_layers: Optional[int] = None, mtp: Optional[bool] = None
 ) -> tuple[Path, Optional[dict]]:
@@ -4702,6 +4727,17 @@ def _generator_server_and_env(
             "~2 tok/s decode for gemma-4-31B-it Q4_K_M, which CANNOT complete a "
             "max_tokens=4096 induce call inside CARNOT_ARC_INDUCE_TIMEOUT -- expect "
             "generate() to fail and the agent to run LLM-OFF."
+        )
+    if gpu and os.environ.get("CARNOT_ARC_GENERATOR_REQUIRE_CUDA") == "1":
+        # Opt-in hard stop -- see GeneratorCudaRequiredError's docstring. `gpu` truthy means CUDA
+        # was explicitly requested (this is the only branch that can reach here with `gpu` set);
+        # default behavior (no CUDA pin requested at all) is completely unaffected.
+        raise GeneratorCudaRequiredError(
+            f"CARNOT_ARC_GENERATOR_REQUIRE_CUDA=1 and CARNOT_ARC_GENERATOR_CUDA_GPU={gpu!r} were "
+            "both set, but no requested CUDA card had headroom (or the CUDA build is missing --  "
+            f"cuda.exists()={cuda.exists()}). Refusing the iGPU HIP fallback instead of silently "
+            "running a CUDA-substrate measurement on HIP at ~2 tok/s. See the "
+            "generator-selection log above for why the CUDA card was refused."
         )
     return (hip if hip.exists() else cuda), None
 

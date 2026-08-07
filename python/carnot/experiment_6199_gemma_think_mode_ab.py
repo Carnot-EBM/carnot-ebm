@@ -414,6 +414,14 @@ def _summarize_pair(rows: list[JsonDict]) -> JsonDict:
 
 def build_artifact(*, roster: tuple[str, ...] = DEFAULT_ROSTER, root: Path = REPO_ROOT) -> JsonDict:
     os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = CUDA_GPU_INDEX
+    # Operator directive (2026-08-07): this A/B measures CUDA-substrate decode/reasoning behavior
+    # specifically -- a silent fallback to the ~2 tok/s iGPU HIP build does not degrade the
+    # measurement, it CORRUPTS it (induce calls time out and look like ordinary induction
+    # failures). REQUIRE_CUDA makes _generator_server_and_env() raise instead of silently
+    # substituting HIP; see GeneratorCudaRequiredError's docstring for the exp6199 incident this
+    # closes. Opt-in and scoped to this process's env, so it does not touch the conductor's own
+    # generator resolution.
+    os.environ["CARNOT_ARC_GENERATOR_REQUIRE_CUDA"] = "1"
     preconds = preconditions(root)
     started_at = time.time()
     miss = _first_precondition_miss(preconds)
@@ -431,7 +439,10 @@ def build_artifact(*, roster: tuple[str, ...] = DEFAULT_ROSTER, root: Path = REP
             started_at,
         )
 
-    from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+    from carnot.agentic.arc_executable_world_model import (
+        GeneratorCudaRequiredError,
+        LocalGGUFProposer,
+    )
 
     prop = LocalGGUFProposer(
         repo_substr=GGUF_REPO_SUBSTR,
@@ -441,7 +452,27 @@ def build_artifact(*, roster: tuple[str, ...] = DEFAULT_ROSTER, root: Path = REP
         max_tokens=SHARED_MAX_TOKENS,
         no_think_prefix="",
     )
-    if not prop._ensure_server():
+    try:
+        server_up = prop._ensure_server()
+    except GeneratorCudaRequiredError as exc:
+        # The guard refused the requested CUDA card and (per REQUIRE_CUDA above) declined to
+        # silently substitute the HIP build. Distinct verdict from the generic
+        # blocked_cuda_server_failed_to_start below -- this is "CUDA was busy/unavailable", not
+        # "the server binary itself would not launch".
+        return _finalize(
+            {
+                "honest_verdict": "complete: blocked_cuda_unavailable",
+                "cuda_required_error": str(exc)[:400],
+                "mtp_enabled": False,
+                "roster": list(roster),
+                "per_game_results": [],
+                "comparison_summary": {},
+                "reason_engaged_at_all": None,
+            },
+            preconds,
+            started_at,
+        )
+    if not server_up:
         return _finalize(
             {
                 "honest_verdict": "complete: blocked_cuda_server_failed_to_start",

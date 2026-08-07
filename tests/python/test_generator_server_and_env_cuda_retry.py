@@ -1,11 +1,17 @@
 """Tests for the CARNOT_ARC_GENERATOR_CUDA_GPU free-VRAM retry fix.
 
 Spec coverage: REQ-ARC-WMTE-5769, SCENARIO-ARC-WMTE-5769-TRANSIENT-LOW-VRAM-SURVIVES-RETRY
+
+Also covers the 2026-08-07 opt-in `CARNOT_ARC_GENERATOR_REQUIRE_CUDA` hard-stop
+(`TestGeneratorRequireCuda`) -- see `GeneratorCudaRequiredError`'s docstring in
+`arc_executable_world_model.py` for the exp6199 incident that motivated it.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
+
+import pytest
 
 import carnot.agentic.arc_executable_world_model as mod
 
@@ -122,3 +128,91 @@ class TestGeneratorServerAndEnvUsesRetry:
 
         assert str(server).endswith("build-hip/bin/llama-server")
         assert env is None
+
+
+class TestGeneratorRequireCuda:
+    """2026-08-07: opt-in `CARNOT_ARC_GENERATOR_REQUIRE_CUDA=1` refuses the iGPU HIP fallback
+    instead of silently returning it, so a CUDA-substrate measurement (exp6199's think-mode A/B)
+    fails loudly rather than corrupting its own result. Default (unset) behavior must be provably
+    unchanged -- the first test below is byte-identical in setup to
+    `test_falls_back_to_hip_when_card_stays_busy` above, just without the env var set."""
+
+    def _fake_cuda_and_hip_exist(self, monkeypatch, cuda_exists=True, hip_exists=True):
+        real_exists = Path.exists
+
+        def _fake_exists(self):
+            s = str(self)
+            if s.endswith("build/bin/llama-server"):
+                return cuda_exists
+            if s.endswith("build-hip/bin/llama-server"):
+                return hip_exists
+            return real_exists(self)
+
+        monkeypatch.setattr(mod.Path, "exists", _fake_exists)
+
+    def test_default_unset_still_falls_back_to_hip(self, monkeypatch):
+        """Regression guard: adding the opt-in must not change the pre-existing default."""
+        monkeypatch.delenv("CARNOT_LLAMA_SERVER", raising=False)
+        monkeypatch.delenv("CARNOT_ARC_GENERATOR_REQUIRE_CUDA", raising=False)
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
+        self._fake_cuda_and_hip_exist(monkeypatch)
+        monkeypatch.setattr(mod, "_cuda_gpu_free_mb", lambda idx: 500)
+        monkeypatch.setattr(mod.time, "sleep", lambda s: None)
+
+        server, env = mod._generator_server_and_env()
+
+        assert str(server).endswith("build-hip/bin/llama-server")
+        assert env is None
+
+    def test_require_cuda_raises_instead_of_falling_back(self, monkeypatch):
+        monkeypatch.delenv("CARNOT_LLAMA_SERVER", raising=False)
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_REQUIRE_CUDA", "1")
+        self._fake_cuda_and_hip_exist(monkeypatch)
+        monkeypatch.setattr(mod, "_cuda_gpu_free_mb", lambda idx: 500)
+        monkeypatch.setattr(mod.time, "sleep", lambda s: None)
+
+        with pytest.raises(mod.GeneratorCudaRequiredError, match="CARNOT_ARC_GENERATOR_CUDA_GPU"):
+            mod._generator_server_and_env()
+
+    def test_require_cuda_raises_when_cuda_binary_missing(self, monkeypatch):
+        """gpu requested but the CUDA build itself is absent -- the split/single-card block never
+        even runs, so the raise must live OUTSIDE that block to still catch this case."""
+        monkeypatch.delenv("CARNOT_LLAMA_SERVER", raising=False)
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_REQUIRE_CUDA", "1")
+        self._fake_cuda_and_hip_exist(monkeypatch, cuda_exists=False)
+
+        with pytest.raises(mod.GeneratorCudaRequiredError):
+            mod._generator_server_and_env()
+
+    def test_require_cuda_does_not_fire_when_no_cuda_gpu_requested(self, monkeypatch):
+        """The flag only guards an EXPLICIT CUDA request. With no pin requested at all, priority-3
+        default (iGPU HIP, no logging, no exception) is completely unaffected."""
+        monkeypatch.delenv("CARNOT_LLAMA_SERVER", raising=False)
+        monkeypatch.delenv("CARNOT_ARC_GENERATOR_CUDA_GPU", raising=False)
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_REQUIRE_CUDA", "1")
+        self._fake_cuda_and_hip_exist(monkeypatch)
+
+        server, env = mod._generator_server_and_env()
+
+        assert str(server).endswith("build-hip/bin/llama-server")
+        assert env is None
+
+    def test_require_cuda_does_not_fire_on_success(self, monkeypatch):
+        """The flag must never interfere with a launch that actually succeeds on CUDA."""
+        monkeypatch.delenv("CARNOT_LLAMA_SERVER", raising=False)
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "1")
+        monkeypatch.setenv("CARNOT_ARC_GENERATOR_REQUIRE_CUDA", "1")
+        self._fake_cuda_and_hip_exist(monkeypatch)
+
+        monkeypatch.setattr(mod, "_cuda_gpu_free_mb", lambda idx: 24400)
+        monkeypatch.setattr(mod, "_cuda_gpu_total_mb", lambda idx: 49152)
+        monkeypatch.setattr(mod, "_default_ffn_cpu_layers", lambda: 12)
+        monkeypatch.setattr(mod.time, "sleep", lambda s: None)
+
+        server, env = mod._generator_server_and_env()
+
+        assert str(server).endswith("build/bin/llama-server")
+        assert env is not None
+        assert env["CUDA_VISIBLE_DEVICES"] == "1"
