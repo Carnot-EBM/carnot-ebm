@@ -112,3 +112,5 @@ CHECK_TIMED_OUT
 - The official agent repository replaced `three.arcprize.org` with `arcprize.org` and corrected the API-key link to `arcprize.org/platform` on August 3. [Merged PR](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74)
 - Kaggle clarified execution limits: Docker logs stop being captured after 10 MB; `/kaggle/working` has a 20 GB quota; CPU submissions receive 30 GB physical RAM enforced through cgroups; and Kaggle sets neither `RLIMIT_NPROC` nor `RLIMIT_AS`. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
 
+## 2026-08-07 13:11 UTC -- checked, nothing new
+
