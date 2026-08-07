@@ -15443,3 +15443,4 @@ Still active  |
 | 2026-08-07 08:14 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
 | 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed, 1 warning in 8.82s |
 | 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |
+| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |
