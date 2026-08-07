@@ -79,7 +79,23 @@ levers is operator-authorized above the floor. The 2026-08-03 ruling's record-in
   p=0.0192, 19/20 discordant). Per-transition object diffs, translation-invariant cross-transition
   tracking, and HUD-strip rejection in the object table remain unbuilt — explicit forward work, see
   the spec entry.
-- **Levers #2 and #5** not yet started this session.
+- **Lever #2 (object-relative trajectory transfer), SHIPPED.** New primitive
+  `arc_solver_kit.object_relative_trajectory_transfer` + a new cascade stage in
+  `E3AgentPolicy._induce_and_plan` (before the expensive LLM reinduction tier) + trace-capture in
+  `_begin_level_goal_episode`. DEFAULT OFF (`SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED`),
+  no A/B run yet. See `openspec/capabilities/arc-world-model-trust-energy/spec.md`
+  REQ-ARC-WMTE-TRAJ-TRANSFER-1. Fixed a real regression this work caught in a PRE-EXISTING test
+  (`test_scenario_arc_wmte_4533_level_boundary_resets_induction`) along the way.
+- **Lever #5 (budget-exhaustion meter), SHIPPED.** Wired the already-built-but-unwired estimator +
+  consumer (REQ-ARC-WMTE-6180) into `StepwiseExplorer` (`_ingest` producer, `_frontier` consumer)
+  -- not `plan_in_model`, which has no depth-cost term to substitute into. DEFAULT OFF
+  (`CARNOT_ARC_BUDGET_AWARE_SEARCH`), no A/B run yet. See spec.md REQ-ARC-WMTE-6180-WIRING.
+
+**All six levers now have code landed this session** (commits `488eb8cede`, `2a08fe0b13`,
+`923a84cebf`, `d13f945fe0`, `3253d562a1`, plus exp6091's completion at `54636cb859`). Four levers
+(#2 /think, #1 object-perception-default-flip aside, #2 trajectory-transfer, #5 budget-meter) ship
+DEFAULT OFF pending A/Bs -- the next natural step is running those A/Bs when GPU time is available
+(GPU 1 was occupied by the exp6091 rerun for most of this session; GPU 0 is conductor-owned).
 
 **Two things, both decided. Read the ruling first; it is the allocation decision. Read the
 second half if you own the conductor — it is a live, recurring, self-concealing record loss.**
