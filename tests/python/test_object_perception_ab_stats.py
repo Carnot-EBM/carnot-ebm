@@ -290,8 +290,11 @@ class TestHeldoutSplitAgainstTheRealPrompt:
         assert held == []
 
     def test_object_block_changes_the_prompt_but_not_the_split(self, monkeypatch) -> None:
+        # Explicit "0"/"1", not unset, for BOTH arms: CARNOT_ARC_OBJECT_PERCEPTION defaults ON
+        # since 2026-08-07 (the flip this A/B's own evidence justified -- see
+        # _object_perception_on()'s docstring), so unset no longer means "off".
         window = _synthetic_window(12)
-        monkeypatch.delenv("CARNOT_ARC_OBJECT_PERCEPTION", raising=False)
+        monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "0")
         p_off = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)
         monkeypatch.setenv("CARNOT_ARC_OBJECT_PERCEPTION", "1")
         p_on = e3.induce_prompt("zz00", window, 1, k=_PRODUCTION_K_AT_MEASUREMENT)

@@ -2917,15 +2917,26 @@ def _induce_transitions_k() -> Optional[int]:
 
 
 def _object_perception_on() -> bool:
-    """LEVER #1 (REQ-ARC-WMTE-5830): DEV-ONLY (unset -> byte-identical pre-existing prompt). When
-    CARNOT_ARC_OBJECT_PERCEPTION=1, induce_prompt appends a connected-component OBJECT table
-    (translation-invariant object_hash for cross-frame identity, containment tree, adjacency)
-    ALONGSIDE the raw run-length grid -- feeding the inducer the object structure that today only
-    feeds the (gated-off) search salience prior. Attacks GAP-ARCH-FEATURES: the raw grid gives the LLM
-    order-1 position-only features (can't track an object across frames after it moves); object_hash can."""
+    """LEVER #1 (REQ-ARC-WMTE-5830, DEFAULT ON since 2026-08-07). When on, induce_prompt appends a
+    connected-component OBJECT table (translation-invariant object_hash for cross-frame identity,
+    containment tree, adjacency) ALONGSIDE the raw run-length grid -- feeding the inducer the object
+    structure that today only feeds the (gated-off) search salience prior. Attacks
+    GAP-ARCH-FEATURES: the raw grid gives the LLM order-1 position-only features (can't track an
+    object across frames after it moves); object_hash can.
+
+    DEFAULT FLIPPED ON (2026-08-07, operator directive: adopt the Duck/TAAF leaderboard lesson --
+    object-level, not raw-grid, perception -- lever #1 of the ARC six-lever push,
+    ops/known-issues.md). Evidence, not a guess: the pre-registered 2026-08-01 held-out A/B
+    (results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json) measured
+    this EXACT flag SIGNIFICANT on its primary metric -- change_fidelity mean delta +0.072084,
+    sign-test p=0.0192 over 19/20 discordant games (min reachable p=3.81e-06), on gemma-4-31B,
+    13171.65s real GPU wall time, AA control byte-identical, clean on adversarial re-check. That
+    artifact shipped with the flag deliberately left off ("moving it is a separate operator
+    decision"); this is that decision, made on the evidence already in hand. Opt out with
+    CARNOT_ARC_OBJECT_PERCEPTION=0."""
     import os
 
-    return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION") == "1"
+    return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"
 
 
 # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
