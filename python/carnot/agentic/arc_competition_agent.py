@@ -138,10 +138,17 @@ SUBMITTED_VALUE_HEAD_FEATURE_SUBSET = "cross_game_features_v3:v2_plus_frame_delt
 DAGGER_VALUE_HEAD_RELATIVE_PATH = "models/arc_dagger_value_routing_v3.json"
 # Exp 4605 wires the live scored path to attempt deeper levels. The verifier stays a tie-breaker
 # (`value_weight=0`) so depth remains primary; deeper target levels only keep the loop alive after L1.
-SUBMITTED_TARGET_LEVELS = 3
+# Raised 3 -> 8 (2026-08-07, operator directive, paired with the MAX_ACTIONS raise above): with more
+# actions available, the +3-levels declare-done cap becomes the next binding give-up limit before the
+# action budget is spent. The scorecard only charges completed levels (a post-solve tail scores 0
+# regardless), so raising this costs wall-clock, not score risk.
+SUBMITTED_TARGET_LEVELS = 8
 # Smart grace-period early-stop: stop this many moves after the LAST level-up if no new level appears
 # (cuts the fruitless post-solve tail, WITHOUT capping the configured scored target). None = disabled.
-SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
+# Enabled 2026-08-07 alongside the MAX_ACTIONS/TARGET_LEVELS raise: pure wall/memory savings with no
+# score cost (the post-solve tail is worth 0 either way), so there is no reason to leave it off once
+# the action budget is large enough for a stalled tail to matter.
+SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 400
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
@@ -7351,9 +7358,18 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
         # needs room to probe + solve several levels. 80 would truncate even our best
         # known game. The real bound is the eval's wall-clock budget (<=12h across all
         # games), not this per-game loop guard; Playback overrides it to 1e6 for the
-        # same reason, so it is an intended override point. 400 comfortably covers our
-        # multi-level replays + explore while staying well inside the time budget.
-        MAX_ACTIONS = 400
+        # same reason, so it is an intended override point.
+        #
+        # Raised 400 -> 2000 (2026-08-07, operator directive: the Kaggle eval GPU is far
+        # faster than local dev hardware, so budgets sized for local wall-clock under-use
+        # the eval envelope). Evidence: results/outer_loop_scored_path_budget_sweep_20260726.json,
+        # 25 games x 3 seeds, LLM-off -- median wins climb 4@400 -> 9@1000 -> 11@2000 -> 12@4000
+        # with no saturation; 2000 captures nearly all of the measured gain (11 of the 12-win
+        # ceiling) while staying inside the artifact's conservative worst-case-safe-host-RAM
+        # ceiling's neighborhood (that ceiling was ~1000 under an UNCONFIRMED 16 GiB host-RAM
+        # assumption -- real host RAM is unmeasured on the actual Kaggle machine, so this is not
+        # pushed to the full 4000 the wall-clock bound alone would allow).
+        MAX_ACTIONS = 2000
 
         def __init__(self, *args, **kwargs) -> None:
             super().__init__(*args, **kwargs)

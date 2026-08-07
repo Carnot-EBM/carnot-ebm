@@ -5376,6 +5376,15 @@
         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "acknowledged_on": "2026-08-07",
+        "reason": "This artifact's quantitative sweep data (wins/actions/score per explicit early_stop_grace and budget value) is unaffected: scripts/arc_scored_path_early_stop_sweep.py:151 passes early_stop_grace=grace directly to the constructed explorer as a PARAMETER, never reading the live SUBMITTED_EARLY_STOP_GRACE class default for the measurement itself. What IS superseded: this artifact's own narrative finding \"SUBMITTED_EARLY_STOP_GRACE still dead code and still None (flag NOT flipped)\" (scripts/analyze_arc_early_stop_sweep.py:294) and its stability-guard assertion that the flag stayed None across the run (arc_scored_path_early_stop_sweep.py:209) correctly describe 2026-07-26; this exact commit (2026-08-07, ops/known-issues.md lever #3) is the authorized flip that finding was informing, not a silent contradiction of it. Its \"shipped MAX_ACTIONS=400\" framing is likewise a dated fact, now superseded by the same commit's MAX_ACTIONS 400->2000 raise.",
+        "evidence": "grep -n SUBMITTED_EARLY_STOP_GRACE scripts/analyze_arc_early_stop_sweep.py (lines 286,289,290,294,500,582) and scripts/arc_scored_path_early_stop_sweep.py (lines 4,51,134,151,183,209,215); the sweep's own row output records early_stop_grace as a swept input field, not a live-constant read.",
+        "note": "APPENDED, not replacing; the artifact's July-26 findings are preserved unedited and remain historically accurate for that date. This acknowledgement documents that this specific later, dated commit is the authorized event superseding its 'not yet flipped' status note, per the never-prune discipline."
       }
     ]
   },

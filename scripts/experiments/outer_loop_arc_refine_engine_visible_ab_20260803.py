@@ -110,7 +110,9 @@ EVIDENCE_DIRS = ("results/arc_e3", "results/arc_logo_snapshot", "results/arc_e3_
 # ---- run configuration -----------------------------------------------------------------------
 GPU_INDEX = 1  # operator: the conductor owns GPU 0.
 PORT = 8977  # NON-DEFAULT (LocalGGUFProposer's default is 8919; prior runs used 8968-8972).
-BUDGET = int(os.environ.get("CARNOT_6091_BUDGET") or "4096")  # the SHIPPED LIVE default
+BUDGET = int(
+    os.environ.get("CARNOT_6091_BUDGET") or "16384"
+)  # measured non-truncating budget, commit 787594eb68
 NCTX_LADDER = [32768, 24576, 20480]
 REFACTOR_ROUNDS = int(os.environ.get("CARNOT_6091_ROUNDS") or "2")
 TRIALS = [int(x) for x in (os.environ.get("CARNOT_6091_TRIALS") or "0,1").split(",")]

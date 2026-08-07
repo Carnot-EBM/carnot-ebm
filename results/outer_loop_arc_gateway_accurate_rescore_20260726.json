@@ -3236,6 +3236,22 @@
     "reason": "Third-order cascade from the 2026-08-06 arc_competition_agent.py acknowledgement pass (a single noqa:F401 unused import, verified inert). This artifact depends on the two upstream artifacts by content hash; those hashes moved solely because a freshness_acknowledgements entry was appended to each of them. No measurement, no row, no derived figure in either upstream file was touched.",
     "evidence": "Measured, not asserted: each upstream artifact's key set and values, with the `provenance` key popped from both the pre- and post-edit copies, compare equal -- the only difference is inside `provenance.freshness_acknowledgements`, which this analyser does not read (it consumes measurement rows only).",
     "why_not_rebuilt": "A rebuild_command is registered, but a rebuild attempt this session (2026-08-06) confirmed the standing finding from the 2026-08-03 entry above: it reproduces every measured number byte-identically AND silently drops all 10 pre-existing freshness_acknowledgements entries plus the original_timings_superseded_by_rebuild / rebuild_diff_2026_07_30 corrigendum blocks, because the rebuild script does not carry forward provenance history. Acknowledging in place avoids that never-prune loss."
+   },
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": "bcff3bd7c5d657e8aaf32d779e22255daffd3bff2425f26f066f50030f5e16dd",
+    "sha256_now": "f1bb314d95ab12ac17077645e8c73028fbea26a19539a97917d1fe3bca28274f",
+    "acknowledged_on": "2026-08-07",
+    "reason": "The only change to this input file is a freshness_acknowledgements block ADDED to its own provenance (documenting that the 2026-08-07 arc_competition_agent.py MAX_ACTIONS/TARGET_LEVELS/EARLY_STOP_GRACE change is inert to it). No measured or reported value in the file changed.",
+    "evidence": "git diff results/outer_loop_arc_gateway_rescore_20260726.json shows one added key (provenance.freshness_acknowledgements); every pre-existing key, including every reported number, is byte-identical."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": "bb34456a1d9b8caefa77c07b6750d85d1b4f8b99edaba2bd2afe9fbc936d1275",
+    "sha256_now": "ec462f25fc3d48abe41be39b89a9fc15646100b6b6145128ed5f14671884e299",
+    "acknowledged_on": "2026-08-07",
+    "reason": "The only change to this input file is a freshness_acknowledgements block ADDED to its own provenance (documenting that the same 2026-08-07 arc_competition_agent.py change is inert to it). No measured or reported value in the file changed.",
+    "evidence": "git diff results/arc_per_level_reset_attribution_20260726.json shows one added key (provenance.freshness_acknowledgements); every pre-existing key, including every reported number, is byte-identical."
    }
   ]
  },

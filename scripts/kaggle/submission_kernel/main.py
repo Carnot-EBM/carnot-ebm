@@ -260,6 +260,22 @@ if server and gguf:
                   "this run is NOT using.", flush=True)
     except Exception as _e:
         print(f"LLM TIER: could not cross-check declared MTP state ({_e!r})", flush=True)
+    # BUDGET EXPANSION FOR THE SCORED RUN ONLY (2026-08-07, operator directive). The local
+    # defaults -- max_tokens=4096 (LocalGGUFProposer, pinned by
+    # tests/python/test_arc_submitted_agent_parity.py, NOT touched here), induce timeout floor
+    # 600s -- were sized under the 16GB/P100-parity assumption
+    # (docs/research-notes/arc-agi3-cuda-submission-runbook-2026-06-30.md), which is void: the
+    # scored card is now requested as a 96GB-class NvidiaRtxPro6000 (kernel-metadata.json). Raise
+    # both env-only, for this kernel's launch alone. `setdefault` so an operator override set some
+    # other way is not clobbered. The VRAM-fit check a few lines below prints a WARNING (does not
+    # abort) if the actual attached card can't hold the raised n_ctx -- machine_shape is a
+    # free-form string the SDK cannot validate locally, so that check is the real safety net here,
+    # not a guess at this point in the code. 1200s covers the slowest local induce observed
+    # (572s at n_ctx 32768 on a 3090, single-stream) with margin for the live path's 4 shared
+    # slots running slower per-request; a timeout firing silently degrades the agent to LLM-off
+    # rather than erroring, so under-shooting this is a silent-failure risk, not just slowness.
+    os.environ.setdefault("CARNOT_ARC_INDUCE_MAX_TOKENS", "8192")
+    os.environ.setdefault("CARNOT_ARC_INDUCE_TIMEOUT", "1200")
     # READ the context-pool size and completion budget from the SHIPPED defaults instead of
     # repeating literals here. The old code printed "ctx=16384" and probed with -c 16384 as
     # hardcoded strings; if the agent's own default had moved, the probe would have validated

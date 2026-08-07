@@ -16891,6 +16891,14 @@
         "acknowledged_on": "2026-08-07",
         "reason": "REQ-ARC-OCD-VECTORIZE-1 rewrote object_centric_digest's connected-component labeling to use scipy.ndimage.label instead of a per-cell flood-fill. Verified field-for-field equivalent to the pre-rewrite algorithm across 30 randomized grids plus edge cases (tests/python/test_arc_object_centric_digest_vectorized.py, 45 tests, all passing) and adversarially reviewed. scripts/analyze_arc_reset_charge_attribution.py does not call object_centric_digest at all (grep confirms zero references), and no other function in arc_solver_kit.py was touched by this change, so nothing this analyser reads could have moved.",
         "evidence": "`grep -n object_centric_digest scripts/analyze_arc_reset_charge_attribution.py` returns zero matches. `git show <commit>:python/carnot/agentic/arc_solver_kit.py` diffed against the prior version confirms the change is confined to object_centric_digest's body and docstring."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "acknowledged_on": "2026-08-07",
+        "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/analyze_arc_reset_charge_attribution.py) references none of the three changed symbols.",
+        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/analyze_arc_reset_charge_attribution.py: 0 hits."
       }
     ]
   },
