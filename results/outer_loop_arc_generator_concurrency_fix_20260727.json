@@ -1125,6 +1125,22 @@
         "acknowledged_on": "2026-08-07",
         "reason": "This commit's kernel edit (scripts/kaggle/submission_kernel/main.py) adds two env.setdefault() calls (CARNOT_ARC_INDUCE_MAX_TOKENS, CARNOT_ARC_INDUCE_TIMEOUT) inserted before the existing context-pool/VRAM-fit diagnostic block this artifact's fix targets. The generator-concurrency fix itself (n_ctx derivation, _generator_cuda_min_free_mb VRAM guard, MTP resolution) is untouched; the new env vars affect max_tokens/timeout only, not the concurrency/VRAM-fit logic this artifact measured.",
         "evidence": "git diff scripts/kaggle/submission_kernel/main.py: single localized insertion before the '_default_induce_n_ctx' diagnostic block; no line in the generator-concurrency VRAM-fit block (_generator_cuda_min_free_mb, MTP resolution) was touched."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
+        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
+        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."

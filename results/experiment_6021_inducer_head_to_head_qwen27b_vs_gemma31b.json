@@ -1422,6 +1422,14 @@
         "acknowledged_on": "2026-08-05",
         "reason": "2026-08-05 fix: force continuation past </think> when the model reasons then emits EOS with no answer (CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION, default off). Additive parameter + env-gated retry block; no existing call path changes.",
         "evidence": "The dependency change adds a new parameter (`_continuation_prefix: Optional[str] = None`) to `_chat_complete_request` that defaults to the pre-change code path exactly, plus a new retry block gated behind `os.environ.get(\"CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION\") == \"1\"`. This artifact's own recorded run predates that flag's existence, so it could not have set it, and the gate is a pure environment-variable check with no other trigger. Not independently rebuilt (see experiment_6011_world_model_change_gate_four_arm.json for the rebuilt sibling exercising the same code path -- zero measured values moved there)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "399b3317e47458719a8788a24e7d08b4dba8d4e0ec916dc995c0ea47dd9fce61",
+        "sha256_now": "3e15d9dd88c761bb77dc8d483b64fb97a620023dd3d6285a6870bb600e375328",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). Every new/changed statement in this edit is gated behind induce_think_on() (or its cached local _think_on) being True, and that resolver returns False unless CARNOT_ARC_INDUCE_THINK=1 is explicitly set -- which nothing in this artifact's dependency chain does. Concretely: (1) the codeonly-branch rewrite reduces to the PRE-EXISTING boolean expression when _think_on is False (`(not False) and X` == `X`); (2) the new `elif _think_on: pass` branch is unreachable; (3) `self.use_chat_template or _think_on` == `self.use_chat_template` when _think_on is False; (4) induce()'s new suffix ternary takes its `else` arm, which is the byte-identical original string, when induce_think_on() is False. Two new top-level symbols (ARC_LIVE_GENERATOR_THINK_DEFAULT, ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, induce_think_on) are purely additive.",
+        "evidence": "Mechanically tested, not just argued: tests/python/test_arc_induce_think_mode_20260807.py::test_think_off_is_byte_identical_codeonly_path and ::test_think_off_induce_appends_pre_opened_fence assert the flag-off request body matches test_codeonly_induce_scoping.py's own pre-existing pins exactly (codeonly directive present, stop=['```'], raw /completion endpoint used, not /v1/chat/completions). 30/30 tests pass across test_arc_induce_think_mode_20260807.py, test_codeonly_induce_scoping.py and test_arc_live_generator_pin.py together."
       }
     ],
     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
