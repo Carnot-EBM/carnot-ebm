@@ -2619,3 +2619,105 @@ when it performs executor dry-runs,
 then it runs deterministic fixtures or maintainer references only, records the
 sandbox policy dimensions, classifies unsupported task forms, and keeps
 `candidate_and_model_access_count` equal to bare `0`.
+
+### REQ-CODE-6187: Authentic LiveCodeBench K8 Pool Collection
+
+The repository shall provide an Exp6187 workflow that collects an authentic
+raw-code candidate pool only from the frozen Exp6186 calibration and
+held-selector tasks:
+- The workflow shall verify the Exp6184 isolation preflight and Exp6186
+  `bank_ready_score == 1` before any model load, and shall snapshot the frozen
+  bank/test hashes, cache paths, git status, protected files, root clutter,
+  executor limits, checkpoint directory, random seeds, generation config,
+  model-cache identity, llama.cpp build, CUDA/offload receipts, and both GPU
+  identity/utilization/memory intervals.
+- The workflow shall use `unsloth/gemma-4-31B-it-GGUF` as the only headline
+  generator, resolved with the `cached_sota_pair()` local-cache pattern or the
+  equivalent single-model GGUF cache resolver. It shall record the exact GGUF
+  filename, file hash, snapshot revision, quantization, context length, chat
+  template receipt, sampling parameters, seed schedule, llama.cpp build,
+  layer/device assignment, and CUDA offload evidence. It shall never pass a
+  GGUF file path to `AutoTokenizer.from_pretrained()`, and legacy small models
+  may only smoke-test the harness outside headline counts.
+- The workflow shall build a deterministic K=8 sample matrix for exactly 72
+  selector tasks: 36 calibration and 36 held-selector tasks from Exp6186, with
+  independent per-task/per-sample seeds and no continuous-learning tasks.
+- For each deterministic sample key, the workflow shall persist model stdout,
+  code-extraction result, timing, token counts, seed, and content hash
+  atomically before private tests are opened. Malformed code, empty output,
+  refusal, timeout, truncation, duplicate, and transport failures shall remain
+  honest retained candidates.
+- The workflow shall resume only missing deterministic sample keys and shall
+  block rather than overwrite or replace an existing conflicting key, failed
+  sample, malformed sample, timed-out sample, or incorrect sample.
+- The workflow shall forbid parser/grammar repair, correctness-conditioned
+  resampling, model judging, label-conditioned retry, and candidate
+  replacement; the terminal artifact shall expose `correctness_retry_count` as
+  a bare `0`.
+- After the complete raw corpus is sealed, the workflow shall run every
+  candidate under a restricted private-test oracle and classify each candidate
+  as syntax, compile, runtime, timeout, security, nondeterminism, test-pass, or
+  test-fail while retaining every raw candidate.
+- Private test source, expected outputs, assertion text, and oracle traces
+  shall never enter prompts, retry logic, raw rows, checkpoint rows, model
+  inputs, stored selector inputs, or label-free downstream features. The
+  verifier is an oracle only for labeling/evaluation and not for generation or
+  selection inputs.
+- The terminal artifact shall be
+  `results/experiment_6187_livecodebench_authentic_k8_pool.json` and shall
+  include the required Exp6187 schema fields, set `inference_substrate` to
+  `local_llama_cpp_cuda_gguf_plus_restricted_private_test_execution`, and set
+  `pool_integrity_ready_score` to bare `1` only with exactly 576 sealed
+  raw-before-label candidates, K=8 for every selector task, authentic
+  Gemma-4-31B CUDA receipts, zero correctness retries, classified restricted
+  execution outcomes, unchanged protected files, and clean private-test
+  noninterference.
+
+### SCENARIO-CODE-6187-GATE-FAIL-CLOSED: Missing Bank, Model, Or CUDA Blocks Before Load
+
+Given Exp6187 must use the frozen Exp6186 bank and the local CUDA GGUF path,
+when Exp6184, Exp6186, the cached Gemma-4-31B GGUF, llama.cpp CUDA offload, or
+dual-GPU availability is not authenticated,
+then it writes a blocked artifact with zero generated rows, no legacy headline
+model substitution, no `AutoTokenizer` GGUF load, and explicit blocked reasons.
+
+### SCENARIO-CODE-6187-K8-SELECTOR-MATRIX: Frozen Selector Tasks Get Eight Independent Seeds
+
+Given Exp6186 froze 36 calibration and 36 held-selector tasks,
+when Exp6187 constructs its generation plan,
+then it emits exactly 576 deterministic sample keys, exactly eight per task,
+independent sample seeds, calibration/held splits only, and no
+continuous-learning task IDs.
+
+### SCENARIO-CODE-6187-RAW-BEFORE-LABEL: Raw Rows Are Content Addressed Before Oracles
+
+Given a generation backend returns raw Python completions,
+when Exp6187 assembles the pool,
+then it atomically writes content-addressed raw shard rows with stdout,
+extraction, timing, token counts, seed, and hash receipts before any
+private-test oracle invocation or label sidecar write begins.
+
+### SCENARIO-CODE-6187-RETENTION-AND-RESTRICTED-EXECUTION: All Candidate Outcomes Are Kept
+
+Given raw completions may be malformed, empty, unsafe, timed out, incorrect, or
+correct,
+when Exp6187 labels the sealed raw corpus,
+then the restricted executor classifies syntax, compile, runtime, timeout,
+security, nondeterminism, test-pass, and test-fail outcomes without replacing
+or resampling any candidate.
+
+### SCENARIO-CODE-6187-PRIVATE-TEST-NONINTERFERENCE: Oracles Cannot Leak Into Prompts
+
+Given Exp6187 needs private tests only after raw sealing,
+when it builds prompts, raw checkpoints, resume receipts, selector-visible
+rows, and artifact summaries,
+then those surfaces contain task text and hashes only, never private test
+source, expected outputs, assertion text, or oracle traces.
+
+### SCENARIO-CODE-6187-CONTENT-ADDRESSED-RESUME: Existing Raw Keys Are Immutable
+
+Given an Exp6187 run finds existing task-owned raw shards,
+when every expected key is present with matching content hashes,
+then it reuses the corpus without generation; when any key is conflicting,
+missing, extra, or hash-mismatched, it resumes only missing keys or blocks
+conflicting immutable evidence rather than overwriting rows.
