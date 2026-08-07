@@ -1,0 +1,1438 @@
+{
+  "adversarial_verification_receipts": {
+    "flagged_task_ids": [
+      "exp6172-current-rule-quarantine-determination",
+      "exp6174-cctu-authentic-k8-pool"
+    ],
+    "receipts_by_task_id": {
+      "exp6170-v535-task-artifact-isolation-canary": {
+        "artifact_path": "results/experiment_6170_v535_task_artifact_isolation_canary.json",
+        "excluded_from_positive_aggregation": false,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:7f2136a6f12f82c09da7b17f1d300b9d3df05852fd15b232ed91ff79f5e3a9fa",
+        "task_id": "exp6170-v535-task-artifact-isolation-canary"
+      },
+      "exp6171-v535-source-delta-ingestion": {
+        "artifact_path": "results/experiment_6171_v535_source_delta_ingestion.json",
+        "excluded_from_positive_aggregation": true,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:01b368d9c6cc829a1d584ac4f9732920aee6be7741a4dfb9c070cdd64059078d",
+        "task_id": "exp6171-v535-source-delta-ingestion"
+      },
+      "exp6172-current-rule-quarantine-determination": {
+        "artifact_path": "results/experiment_6172_current_rule_quarantine_determination.json",
+        "excluded_from_positive_aggregation": true,
+        "exit_code": 1,
+        "flag_count": 2,
+        "flags": [
+          {
+            "detail": "duration_s=0.072188 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "max_severity": 2,
+        "receipt_hash": "sha256:a4ea52ec226c37ac4ef1e2b45d9e261e6dffb9590fb39c6083f1e2759e1cf370",
+        "task_id": "exp6172-current-rule-quarantine-determination"
+      },
+      "exp6173-cctu-item-bank-preregistration": {
+        "artifact_path": "results/experiment_6173_cctu_item_bank_preregistration.json",
+        "excluded_from_positive_aggregation": false,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:128f1c443e02d1c0f4e0dca2a59742e8b2c6ca382c05d41bfd408b0b7584137c",
+        "task_id": "exp6173-cctu-item-bank-preregistration"
+      },
+      "exp6174-cctu-authentic-k8-pool": {
+        "artifact_path": "results/experiment_6174_cctu_authentic_k8_pool.json",
+        "excluded_from_positive_aggregation": false,
+        "exit_code": 1,
+        "flag_count": 1,
+        "flags": [
+          {
+            "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "max_severity": 1,
+        "receipt_hash": "sha256:ec1d5a9290a9c19545caf20cfac04debe1f782ab40c94a4cac18fd04d9662f6a",
+        "task_id": "exp6174-cctu-authentic-k8-pool"
+      },
+      "exp6175-cctu-headroom-audit": {
+        "artifact_path": "results/experiment_6175_cctu_headroom_audit.json",
+        "excluded_from_positive_aggregation": true,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:5afec4b4cc2e5047f3b956f414277f6d4578fba288a9cda6bf79193d735ca3db",
+        "task_id": "exp6175-cctu-headroom-audit"
+      },
+      "exp6177-clue-latent-selector-freeze": {
+        "artifact_path": "results/experiment_6177_clue_latent_selector_freeze.json",
+        "excluded_from_positive_aggregation": true,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": null,
+        "receipt_hash": "sha256:1412550d07223593a9e2287c149f6a57e683704d8fa5395248a324d2c959a359",
+        "task_id": "exp6177-clue-latent-selector-freeze"
+      },
+      "exp6179-retention-safe-continuous-strategy-learning-ab": {
+        "artifact_path": "results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
+        "excluded_from_positive_aggregation": false,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:a4eb88d637dd8f264fcc05e52fded4a5880de71ce6b633fb972a8fc462875dac",
+        "task_id": "exp6179-retention-safe-continuous-strategy-learning-ab"
+      },
+      "exp6180-exp6166-reproducibility-adjudication": {
+        "artifact_path": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
+        "excluded_from_positive_aggregation": false,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:d1bb41c0149eedc22d6be24b2c12801571b0238fb69ad425927079ad4818130a",
+        "task_id": "exp6180-exp6166-reproducibility-adjudication"
+      },
+      "exp6181-arc-logo-shortcut-audit": {
+        "artifact_path": "results/experiment_6181_arc_logo_shortcut_audit.json",
+        "excluded_from_positive_aggregation": false,
+        "exit_code": 0,
+        "flag_count": 0,
+        "flags": [],
+        "max_severity": -1,
+        "receipt_hash": "sha256:bd6125f43433e6d9d0a1feeaf59d44080c341782e2b42026219a31b05565b967",
+        "task_id": "exp6181-arc-logo-shortcut-audit"
+      }
+    },
+    "verified_present_artifact_count": 10
+  },
+  "blocked_artifacts": [
+    "exp6177-clue-latent-selector-freeze"
+  ],
+  "branch_decisions": {
+    "arc": {
+      "final_state": "shortcut_audit_complete_no_solve_no_registry_delta",
+      "level_credit_delta": 0,
+      "registry_delta": 0,
+      "registry_levels_unchanged": true,
+      "shortcut_detected": false,
+      "solve_claimed": false,
+      "solve_credit_promoted": false,
+      "terminal_class": "positive"
+    },
+    "artifact_isolation": {
+      "final_state": "complete_partial_not_repository_wide",
+      "ready_score": 0,
+      "repository_wide_closure_claimed": false
+    },
+    "continuous_strategy_learning": {
+      "final_state": "complete_external_memory_positive_no_weight_mutation",
+      "live_model_generation_claimed": false,
+      "model_weights_immutable": true,
+      "poison_propagation_count": 0,
+      "ready_score": 1.0,
+      "terminal_class": "positive"
+    },
+    "phase_d": {
+      "downstream_selector_promoted": false,
+      "final_state": "retired_headroom_failed_downstream_skipped",
+      "future_rows_allowed": false,
+      "headroom_ready_score": 0.0,
+      "item_bank_ready_score": 1.0,
+      "pool_integrity_score": 1.0,
+      "retired": true
+    },
+    "quarantine": {
+      "current_rule_clean": true,
+      "final_state": "companion_clean_but_historical_quarantine_preserved",
+      "headline_promotion_authorized": false,
+      "historical_quarantine_preserved": true,
+      "operator_reopen_required": true,
+      "terminal_class": "flagged"
+    },
+    "source_delta": {
+      "accepted_count": 0,
+      "final_state": "complete_null_zero_delta"
+    },
+    "stochastic": {
+      "final_state": "software_only_reproducible_no_hardware_promotion",
+      "hardware_promoted": false,
+      "historical_status_preserved": "blocked",
+      "software_reproducible": true,
+      "terminal_class": "positive"
+    },
+    "transition": {
+      "final_state": "missing_not_reconstructed",
+      "transition_deliverable_present": false
+    }
+  },
+  "completion_history_multiplicity": {
+    "count_after": 1,
+    "count_before": 0,
+    "duplicate_history_amplification_count": 0,
+    "milestone": "2026.08.535"
+  },
+  "completion_history_update": {
+    "append_allowed": true,
+    "append_count": 1,
+    "append_requested": true,
+    "reason": "evidence_backed_append_once"
+  },
+  "conductor_receipts": {
+    "exp6169-v535-transition": {
+      "detail": "Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec",
+      "line": "| 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec |",
+      "present": true,
+      "status": "FAIL",
+      "timestamp": "2026-08-07 01:49 UTC"
+    },
+    "exp6170-v535-task-artifact-isolation-canary": {
+      "detail": "128 passed, 1 warning in 113.39s (0:01:53)",
+      "line": "| 2026-08-07 02:40 UTC | Task-scoped artifact-isolation compatibility canar | OK | 128 passed, 1 warning in 113.39s (0:01:53) |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 02:40 UTC"
+    },
+    "exp6171-v535-source-delta-ingestion": {
+      "detail": "86 passed, 1 warning in 7.93s",
+      "line": "| 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed, 1 warning in 7.93s |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 03:32 UTC"
+    },
+    "exp6172-current-rule-quarantine-determination": {
+      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+      "line": "| 2026-08-07 03:49 UTC | Immutable current-rule companion determination for | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+      "present": true,
+      "status": "FLAGGED",
+      "timestamp": "2026-08-07 03:49 UTC"
+    },
+    "exp6173-cctu-item-bank-preregistration": {
+      "detail": "87 passed, 1 warning in 13.53s",
+      "line": "| 2026-08-07 04:36 UTC | Frozen executable CCTU-style item bank and Phase-D | OK | 87 passed, 1 warning in 13.53s |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 04:36 UTC"
+    },
+    "exp6174-cctu-authentic-k8-pool": {
+      "detail": "87 passed, 1 warning in 12.81s",
+      "line": "| 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed, 1 warning in 12.81s |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 05:37 UTC"
+    },
+    "exp6175-cctu-headroom-audit": {
+      "detail": "Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR",
+      "line": "| 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |",
+      "present": true,
+      "status": "FAIL",
+      "timestamp": "2026-08-07 07:42 UTC"
+    },
+    "exp6176-hidden-state-surface-qualification": {
+      "detail": "Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit)",
+      "line": "| 2026-08-07 07:48 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |",
+      "present": true,
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-08-07 07:48 UTC"
+    },
+    "exp6177-clue-latent-selector-freeze": {
+      "detail": "1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification",
+      "line": "| 2026-08-07 07:48 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |",
+      "present": true,
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-08-07 07:48 UTC"
+    },
+    "exp6178-held-internal-state-selection": {
+      "detail": "Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze)",
+      "line": "| 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |",
+      "present": true,
+      "status": "GATE_BLOCK",
+      "timestamp": "2026-08-07 08:31 UTC"
+    },
+    "exp6179-retention-safe-continuous-strategy-learning-ab": {
+      "detail": "87 passed, 1 warning in 10.66s",
+      "line": "| 2026-08-07 08:12 UTC | Mandatory retention-safe continuous strategy-learn | OK | 87 passed, 1 warning in 10.66s |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 08:12 UTC"
+    },
+    "exp6180-exp6166-reproducibility-adjudication": {
+      "detail": "85 passed, 1 warning in 8.82s",
+      "line": "| 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed, 1 warning in 8.82s |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 08:29 UTC"
+    },
+    "exp6181-arc-logo-shortcut-audit": {
+      "detail": "87 passed, 1 warning in 13.84s",
+      "line": "| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |",
+      "present": true,
+      "status": "OK",
+      "timestamp": "2026-08-07 08:47 UTC"
+    }
+  },
+  "declared_task_matrix": {
+    "exp6169-v535-transition": {
+      "conductor_receipt": {
+        "detail": "Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec",
+        "line": "| 2026-08-07 01:49 UTC | Exact terminal-boundary handoff from .534 into .53 | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: d-once, protec |",
+        "present": true,
+        "status": "FAIL",
+        "timestamp": "2026-08-07 01:49 UTC"
+      },
+      "declared_deliverable": "results/experiment_6169_transition_v535.json",
+      "declared_gates": [],
+      "loadable": false,
+      "milestone": "2026.08.535",
+      "present": false,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": null,
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6169-v535-transition",
+      "terminal_class": "missing",
+      "terminal_evidence_source": "declared_path_missing",
+      "title": "Exact terminal-boundary handoff from .534 into .535"
+    },
+    "exp6170-v535-task-artifact-isolation-canary": {
+      "conductor_receipt": {
+        "detail": "128 passed, 1 warning in 113.39s (0:01:53)",
+        "line": "| 2026-08-07 02:40 UTC | Task-scoped artifact-isolation compatibility canar | OK | 128 passed, 1 warning in 113.39s (0:01:53) |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 02:40 UTC"
+      },
+      "declared_deliverable": "results/experiment_6170_v535_task_artifact_isolation_canary.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:d84ddda631729fbc8ffd11bc18b9f52451bf3ce3e72102eb6d8d85bfac76413e",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6170-v535-task-artifact-isolation-canary",
+      "terminal_class": "delivered",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Task-scoped artifact-isolation compatibility canary for .535"
+    },
+    "exp6171-v535-source-delta-ingestion": {
+      "conductor_receipt": {
+        "detail": "86 passed, 1 warning in 7.93s",
+        "line": "| 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed, 1 warning in 7.93s |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 03:32 UTC"
+      },
+      "declared_deliverable": "results/experiment_6171_v535_source_delta_ingestion.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:37d14c85895dc14db5a04972ae3d6f7d0b29a0a739d2c4c91f3fe3c754339d52",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6171-v535-source-delta-ingestion",
+      "terminal_class": "null",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Reliable dated evidence refresh after the V535 planner marker"
+    },
+    "exp6172-current-rule-quarantine-determination": {
+      "conductor_receipt": {
+        "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+        "line": "| 2026-08-07 03:49 UTC | Immutable current-rule companion determination for | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |",
+        "present": true,
+        "status": "FLAGGED",
+        "timestamp": "2026-08-07 03:49 UTC"
+      },
+      "declared_deliverable": "results/experiment_6172_current_rule_quarantine_determination.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:68407f5e319330f3c722f836f9353886743e9c51cf687a9ca033be8db989335a",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6172-current-rule-quarantine-determination",
+      "terminal_class": "flagged",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Immutable current-rule companion determination for Exp6161 and Exp6162"
+    },
+    "exp6173-cctu-item-bank-preregistration": {
+      "conductor_receipt": {
+        "detail": "87 passed, 1 warning in 13.53s",
+        "line": "| 2026-08-07 04:36 UTC | Frozen executable CCTU-style item bank and Phase-D | OK | 87 passed, 1 warning in 13.53s |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 04:36 UTC"
+      },
+      "declared_deliverable": "results/experiment_6173_cctu_item_bank_preregistration.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6173-cctu-item-bank-preregistration",
+      "terminal_class": "positive",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Frozen executable CCTU-style item bank and Phase-D preregistration"
+    },
+    "exp6174-cctu-authentic-k8-pool": {
+      "conductor_receipt": {
+        "detail": "87 passed, 1 warning in 12.81s",
+        "line": "| 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed, 1 warning in 12.81s |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 05:37 UTC"
+      },
+      "declared_deliverable": "results/experiment_6174_cctu_authentic_k8_pool.json",
+      "declared_gates": [
+        {
+          "artifact_field": "cctu_item_bank_ready_score",
+          "op": "==",
+          "upstream": "exp6173-cctu-item-bank-preregistration",
+          "value": 1.0
+        }
+      ],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6174_cctu_authentic_k8_pool.calibration_access_log.json",
+        "results/experiment_6174_cctu_authentic_k8_pool.checkpoint.json",
+        "results/experiment_6174_cctu_authentic_k8_pool.held_access_log.json"
+      ],
+      "same_number_alias_used": false,
+      "sha256": "sha256:4ddb66a0bd6142a2c0e8b4017c280615126d533df927ff1ace41edc71c4c19d4",
+      "sidecar_candidates_ignored": [
+        "results/experiment_6174_cctu_authentic_k8_pool.calibration_access_log.json",
+        "results/experiment_6174_cctu_authentic_k8_pool.calibration_labels.jsonl",
+        "results/experiment_6174_cctu_authentic_k8_pool.checkpoint.json",
+        "results/experiment_6174_cctu_authentic_k8_pool.held_access_log.json",
+        "results/experiment_6174_cctu_authentic_k8_pool.held_labels.jsonl",
+        "results/experiment_6174_cctu_authentic_k8_pool.raw_traces.jsonl"
+      ],
+      "task_id": "exp6174-cctu-authentic-k8-pool",
+      "terminal_class": "flagged",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool"
+    },
+    "exp6175-cctu-headroom-audit": {
+      "conductor_receipt": {
+        "detail": "Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR",
+        "line": "| 2026-08-07 07:42 UTC | Gated on Exp6174 pool integrity: CCTU competence,  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L-CLOSED-RETIR |",
+        "present": true,
+        "status": "FAIL",
+        "timestamp": "2026-08-07 07:42 UTC"
+      },
+      "declared_deliverable": "results/experiment_6175_cctu_headroom_audit.json",
+      "declared_gates": [
+        {
+          "artifact_field": "cctu_candidate_pool_integrity_score",
+          "op": "==",
+          "upstream": "exp6174-cctu-authentic-k8-pool",
+          "value": 1.0
+        }
+      ],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:32e34081c61b4c2210836177cbe6e142745ecdccef3b8ac284852e2444475523",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6175-cctu-headroom-audit",
+      "terminal_class": "retired",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Gated on Exp6174 pool integrity: CCTU competence, unsaturation, and selectable-headroom audit"
+    },
+    "exp6176-hidden-state-surface-qualification": {
+      "conductor_receipt": {
+        "detail": "Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit)",
+        "line": "| 2026-08-07 07:48 UTC | Matching-base per-layer hidden-state surface quali | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6175-cctu-headroom-audit) |",
+        "present": true,
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-08-07 07:48 UTC"
+      },
+      "declared_deliverable": "results/experiment_6176_hidden_state_surface_qualification.json",
+      "declared_gates": [
+        {
+          "artifact_field": "phase_d_headroom_ready_score",
+          "op": "==",
+          "upstream": "exp6175-cctu-headroom-audit",
+          "value": 1.0
+        }
+      ],
+      "loadable": false,
+      "milestone": "2026.08.535",
+      "present": false,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": null,
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6176-hidden-state-surface-qualification",
+      "terminal_class": "skipped",
+      "terminal_evidence_source": "conductor_gate_block",
+      "title": "Matching-base per-layer hidden-state surface qualification"
+    },
+    "exp6177-clue-latent-selector-freeze": {
+      "conductor_receipt": {
+        "detail": "1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification",
+        "line": "| 2026-08-07 07:48 UTC | Calibration-only CLUE and latent selector freeze | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6176-hidden-state-surface-qualification |",
+        "present": true,
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-08-07 07:48 UTC"
+      },
+      "declared_deliverable": "results/experiment_6177_clue_latent_selector_freeze.json",
+      "declared_gates": [
+        {
+          "artifact_field": "hidden_state_surface_ready_score",
+          "op": "==",
+          "upstream": "exp6176-hidden-state-surface-qualification",
+          "value": 1.0
+        }
+      ],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:043859f61a841c90b0a803ffe86c6084414d526d25fee11596f6b429abd62a19",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6177-clue-latent-selector-freeze",
+      "terminal_class": "blocked",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Calibration-only CLUE and latent selector freeze"
+    },
+    "exp6178-held-internal-state-selection": {
+      "conductor_receipt": {
+        "detail": "Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze)",
+        "line": "| 2026-08-07 08:31 UTC | One-shot held internal-state selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6177-clue-latent-selector-freeze) |",
+        "present": true,
+        "status": "GATE_BLOCK",
+        "timestamp": "2026-08-07 08:31 UTC"
+      },
+      "declared_deliverable": "results/experiment_6178_held_internal_state_selection.json",
+      "declared_gates": [
+        {
+          "artifact_field": "calibration_selector_ready_score",
+          "op": "==",
+          "upstream": "exp6177-clue-latent-selector-freeze",
+          "value": 1.0
+        }
+      ],
+      "loadable": false,
+      "milestone": "2026.08.535",
+      "present": false,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": null,
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6178-held-internal-state-selection",
+      "terminal_class": "skipped",
+      "terminal_evidence_source": "conductor_gate_block",
+      "title": "One-shot held internal-state selection"
+    },
+    "exp6179-retention-safe-continuous-strategy-learning-ab": {
+      "conductor_receipt": {
+        "detail": "87 passed, 1 warning in 10.66s",
+        "line": "| 2026-08-07 08:12 UTC | Mandatory retention-safe continuous strategy-learn | OK | 87 passed, 1 warning in 10.66s |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 08:12 UTC"
+      },
+      "declared_deliverable": "results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:f4d571b874ce6aa89089a503a2a1c2f9551c0e401f308dbba61bacf3f8b2ceb0",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6179-retention-safe-continuous-strategy-learning-ab",
+      "terminal_class": "positive",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Mandatory retention-safe continuous strategy-learning A/B"
+    },
+    "exp6180-exp6166-reproducibility-adjudication": {
+      "conductor_receipt": {
+        "detail": "85 passed, 1 warning in 8.82s",
+        "line": "| 2026-08-07 08:29 UTC | Exp6166 evidence-preserving reproducibility adjudi | OK | 85 passed, 1 warning in 8.82s |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 08:29 UTC"
+      },
+      "declared_deliverable": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6180-exp6166-reproducibility-adjudication",
+      "terminal_class": "positive",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Exp6166 evidence-preserving reproducibility adjudication"
+    },
+    "exp6181-arc-logo-shortcut-audit": {
+      "conductor_receipt": {
+        "detail": "87 passed, 1 warning in 13.84s",
+        "line": "| 2026-08-07 08:47 UTC | Single ARC slot leave-one-game-out shortcut audit | OK | 87 passed, 1 warning in 13.84s |",
+        "present": true,
+        "status": "OK",
+        "timestamp": "2026-08-07 08:47 UTC"
+      },
+      "declared_deliverable": "results/experiment_6181_arc_logo_shortcut_audit.json",
+      "declared_gates": [],
+      "loadable": true,
+      "milestone": "2026.08.535",
+      "present": true,
+      "same_number_alias_candidates_ignored": [],
+      "same_number_alias_used": false,
+      "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2",
+      "sidecar_candidates_ignored": [],
+      "task_id": "exp6181-arc-logo-shortcut-audit",
+      "terminal_class": "positive",
+      "terminal_evidence_source": "exact_declared_artifact",
+      "title": "Single ARC slot leave-one-game-out shortcut audit"
+    }
+  },
+  "delivered_artifacts": [
+    "exp6170-v535-task-artifact-isolation-canary",
+    "exp6171-v535-source-delta-ingestion",
+    "exp6172-current-rule-quarantine-determination",
+    "exp6173-cctu-item-bank-preregistration",
+    "exp6174-cctu-authentic-k8-pool",
+    "exp6175-cctu-headroom-audit",
+    "exp6177-clue-latent-selector-freeze",
+    "exp6179-retention-safe-continuous-strategy-learning-ab",
+    "exp6180-exp6166-reproducibility-adjudication",
+    "exp6181-arc-logo-shortcut-audit"
+  ],
+  "duration_s": 1.0,
+  "exact_artifact_hashes": {
+    "exp6169-v535-transition": {
+      "path": "results/experiment_6169_transition_v535.json",
+      "present": false,
+      "sha256": null
+    },
+    "exp6170-v535-task-artifact-isolation-canary": {
+      "path": "results/experiment_6170_v535_task_artifact_isolation_canary.json",
+      "present": true,
+      "sha256": "sha256:d84ddda631729fbc8ffd11bc18b9f52451bf3ce3e72102eb6d8d85bfac76413e"
+    },
+    "exp6171-v535-source-delta-ingestion": {
+      "path": "results/experiment_6171_v535_source_delta_ingestion.json",
+      "present": true,
+      "sha256": "sha256:37d14c85895dc14db5a04972ae3d6f7d0b29a0a739d2c4c91f3fe3c754339d52"
+    },
+    "exp6172-current-rule-quarantine-determination": {
+      "path": "results/experiment_6172_current_rule_quarantine_determination.json",
+      "present": true,
+      "sha256": "sha256:68407f5e319330f3c722f836f9353886743e9c51cf687a9ca033be8db989335a"
+    },
+    "exp6173-cctu-item-bank-preregistration": {
+      "path": "results/experiment_6173_cctu_item_bank_preregistration.json",
+      "present": true,
+      "sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb"
+    },
+    "exp6174-cctu-authentic-k8-pool": {
+      "path": "results/experiment_6174_cctu_authentic_k8_pool.json",
+      "present": true,
+      "sha256": "sha256:4ddb66a0bd6142a2c0e8b4017c280615126d533df927ff1ace41edc71c4c19d4"
+    },
+    "exp6175-cctu-headroom-audit": {
+      "path": "results/experiment_6175_cctu_headroom_audit.json",
+      "present": true,
+      "sha256": "sha256:32e34081c61b4c2210836177cbe6e142745ecdccef3b8ac284852e2444475523"
+    },
+    "exp6176-hidden-state-surface-qualification": {
+      "path": "results/experiment_6176_hidden_state_surface_qualification.json",
+      "present": false,
+      "sha256": null
+    },
+    "exp6177-clue-latent-selector-freeze": {
+      "path": "results/experiment_6177_clue_latent_selector_freeze.json",
+      "present": true,
+      "sha256": "sha256:043859f61a841c90b0a803ffe86c6084414d526d25fee11596f6b429abd62a19"
+    },
+    "exp6178-held-internal-state-selection": {
+      "path": "results/experiment_6178_held_internal_state_selection.json",
+      "present": false,
+      "sha256": null
+    },
+    "exp6179-retention-safe-continuous-strategy-learning-ab": {
+      "path": "results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
+      "present": true,
+      "sha256": "sha256:f4d571b874ce6aa89089a503a2a1c2f9551c0e401f308dbba61bacf3f8b2ceb0"
+    },
+    "exp6180-exp6166-reproducibility-adjudication": {
+      "path": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
+      "present": true,
+      "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87"
+    },
+    "exp6181-arc-logo-shortcut-audit": {
+      "path": "results/experiment_6181_arc_logo_shortcut_audit.json",
+      "present": true,
+      "sha256": "sha256:1c79b66159f07e907444a55364f8266833aa477e91c50ff397c0952b1d6f68a2"
+    }
+  },
+  "experiment": "experiment_6182_v535_capstone_reconciliation",
+  "experiment_id": "exp6182-v535-capstone-reconciliation",
+  "field_provenance": {
+    "adversarial_verification_receipts": {
+      "principle": "present exact artifacts are checked and receipt-hashed",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "blocked_artifacts": {
+      "principle": "blocked_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "branch_decisions": {
+      "principle": "Phase-D, CSL, stochastic, and ARC branches close only to evidence-backed boundaries",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "completion_history_multiplicity": {
+      "principle": "before/after `.535` history count and append-at-most-once evidence",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "completion_history_update": {
+      "principle": "append-once or explicit no-append receipt",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "conductor_receipts": {
+      "principle": "latest matching conductor row for each task, preserving OK, FAIL, FLAGGED, and GATE_BLOCK",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "declared_task_matrix": {
+      "principle": "fixed Exp6169-Exp6181 denominator from active roadmap exact paths",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "delivered_artifacts": {
+      "principle": "delivered_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "duration_s": {
+      "principle": "duration_s is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "exact_artifact_hashes": {
+      "principle": "sha256 of exact declared deliverables only",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "experiment": {
+      "principle": "experiment is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "experiment_id": {
+      "principle": "experiment_id is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "field_provenance": {
+      "principle": "every required output field names roadmap, conductor, exact artifact, verifier, or local hash sources",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "flagged_artifacts": {
+      "principle": "flagged_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "terminal summary starting with complete: or blocked: without strengthening scientific claims.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "aggregation_from_upstream_artifacts",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "milestone": {
+      "principle": "milestone is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "missing_artifacts": {
+      "principle": "missing_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "no_claim_strengthening_receipts": {
+      "principle": "raw fields, not task titles or sidecars, determine promotions",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "null_artifacts": {
+      "principle": "null_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "positive_artifacts": {
+      "principle": "positive_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "preconditions_checked is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "conductor, ops ledgers, traceability, exclusions, and protected sources remain unchanged",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "quarantine_field_receipts": {
+      "principle": "flagged, corrigendum, and historical-quarantine fields are visible before aggregation",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "raw_field_reconciliation": {
+      "principle": "raw_field_reconciliation is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "content-addressed capstone output is stable",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "retired_artifacts": {
+      "principle": "retired_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "run_date": {
+      "principle": "run_date is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "schema": {
+      "principle": "schema is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "skipped_artifacts": {
+      "principle": "skipped_artifacts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "status": {
+      "principle": "status is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "terminal_class_counts": {
+      "principle": "terminal_class_counts is required by REQ-CAPSTONE-6182.",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "terminal_classification": {
+      "principle": "delivered, missing, skipped, null, blocked, retired, flagged, and positive stay disjoint",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "test_commands": {
+      "principle": "verification commands are replayable",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "observed exits are recorded without laundering failures",
+      "sources": [
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "exact_declared_artifacts",
+        "adversarial_verify_receipts",
+        "local_hashes"
+      ]
+    }
+  },
+  "flagged_artifacts": [
+    "exp6172-current-rule-quarantine-determination",
+    "exp6174-cctu-authentic-k8-pool"
+  ],
+  "honest_verdict": "complete: .535 reconciled by exact declared paths with missing transition, gate skips, blocked selector, retired Phase-D headroom, flagged companion quarantine, null source refresh, CSL evidence, software-only stochastic replay, and no-solve ARC preserved",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.08.535",
+  "missing_artifacts": [
+    "exp6169-v535-transition"
+  ],
+  "no_claim_strengthening_receipts": {
+    "arc_no_solve_promoted": false,
+    "current_rule_clean_used_for_headline": false,
+    "flagged_companion_unflagged": false,
+    "principle": "raw fields, not task titles or sidecars, determine promotions",
+    "retired_phase_d_promoted": false,
+    "sidecars_and_aliases_imported": false,
+    "skipped_hidden_state_promoted": false,
+    "stochastic_hardware_promoted": false
+  },
+  "null_artifacts": [
+    "exp6171-v535-source-delta-ingestion"
+  ],
+  "positive_artifacts": [
+    "exp6173-cctu-item-bank-preregistration",
+    "exp6179-retention-safe-continuous-strategy-learning-ab",
+    "exp6180-exp6166-reproducibility-adjudication",
+    "exp6181-arc-logo-shortcut-audit"
+  ],
+  "preconditions_checked": {
+    "artifact_selection_policy": "exact_declared_deliverable_path_only",
+    "completion_history": {
+      "milestone_count": 0,
+      "path": "research-complete.yaml",
+      "sha256": "sha256:067a822b5d232bf221ea796735499bb45c28ca46699c9f1ab88c2fd2843628cd"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:444d65e77c2f842f2d0acf057e4b483729b6d0f7465df51321f1c49ab0dcc40a"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+    },
+    "git_status_short": [
+      " M openspec/capabilities/capstone/spec.md",
+      " M results/experiment_1822_rtl_synth.log",
+      " M results/experiment_2031.json",
+      "?? python/carnot/experiment_6182_v535_capstone_reconciliation.py",
+      "?? tests/python/test_experiment_6182_v535_capstone_reconciliation.py"
+    ],
+    "protected_file_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "openspec/capabilities/capstone/spec.md": "sha256:71a4aaa2c58846370b87f9b1e89fcaa9c85ddae24c81b28f469b240fa2e25ff3",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:c09a9ca816710e7d27d30b34b4dc4e8ee391fd1c2379a00c1e0a0c054a7f31d8",
+      "ops/changelog.md": "sha256:abd735749044e0c31554c0bb368c862db02a10a36bde532086c976dad0a1447f",
+      "ops/conductor-log.md": "sha256:444d65e77c2f842f2d0acf057e4b483729b6d0f7465df51321f1c49ab0dcc40a",
+      "ops/e2e-test-plan.md": "sha256:580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "ops/known-issues.md": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "research-complete.yaml": "sha256:067a822b5d232bf221ea796735499bb45c28ca46699c9f1ab88c2fd2843628cd",
+      "research-roadmap.yaml": "sha256:bd8c32d70b3fb3845704a1c7589d797b1132b798f97b4178d6cb8da3396550e3",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "roadmap": {
+      "declared_task_count": 13,
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:bd8c32d70b3fb3845704a1c7589d797b1132b798f97b4178d6cb8da3396550e3"
+    },
+    "root_clutter_python_files": []
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "files": {
+      "_bmad/traceability.md": {
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "present": true,
+        "unchanged": true
+      },
+      "openspec/capabilities/capstone/spec.md": {
+        "after_sha256": "sha256:71a4aaa2c58846370b87f9b1e89fcaa9c85ddae24c81b28f469b240fa2e25ff3",
+        "before_sha256": "sha256:71a4aaa2c58846370b87f9b1e89fcaa9c85ddae24c81b28f469b240fa2e25ff3",
+        "present": true,
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "after_sha256": "sha256:c09a9ca816710e7d27d30b34b4dc4e8ee391fd1c2379a00c1e0a0c054a7f31d8",
+        "before_sha256": "sha256:c09a9ca816710e7d27d30b34b4dc4e8ee391fd1c2379a00c1e0a0c054a7f31d8",
+        "present": true,
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after_sha256": "sha256:abd735749044e0c31554c0bb368c862db02a10a36bde532086c976dad0a1447f",
+        "before_sha256": "sha256:abd735749044e0c31554c0bb368c862db02a10a36bde532086c976dad0a1447f",
+        "present": true,
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "present": true,
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "after_sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
+        "before_sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7",
+        "present": true,
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after_sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "before_sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "present": true,
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "present": true,
+        "unchanged": true
+      }
+    }
+  },
+  "quarantine_field_receipts": {
+    "flagged_or_quarantined_task_ids": [
+      "exp6172-current-rule-quarantine-determination",
+      "exp6174-cctu-authentic-k8-pool"
+    ],
+    "rows_by_task_id": {
+      "exp6170-v535-task-artifact-isolation-canary": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6170-v535-task-artifact-isolation-canary",
+        "terminal_class": "delivered"
+      },
+      "exp6171-v535-source-delta-ingestion": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6171-v535-source-delta-ingestion",
+        "terminal_class": "null"
+      },
+      "exp6172-current-rule-quarantine-determination": {
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.072188 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "current_verifier_flag_count": 2,
+        "flagged_adversarial": true,
+        "headline_promotion_authorized": false,
+        "historical_quarantine_preserved": true,
+        "task_id": "exp6172-current-rule-quarantine-determination",
+        "terminal_class": "flagged"
+      },
+      "exp6173-cctu-item-bank-preregistration": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6173-cctu-item-bank-preregistration",
+        "terminal_class": "positive"
+      },
+      "exp6174-cctu-authentic-k8-pool": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 1,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6174-cctu-authentic-k8-pool",
+        "terminal_class": "flagged"
+      },
+      "exp6175-cctu-headroom-audit": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6175-cctu-headroom-audit",
+        "terminal_class": "retired"
+      },
+      "exp6177-clue-latent-selector-freeze": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6177-clue-latent-selector-freeze",
+        "terminal_class": "blocked"
+      },
+      "exp6179-retention-safe-continuous-strategy-learning-ab": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6179-retention-safe-continuous-strategy-learning-ab",
+        "terminal_class": "positive"
+      },
+      "exp6180-exp6166-reproducibility-adjudication": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6180-exp6166-reproducibility-adjudication",
+        "terminal_class": "positive"
+      },
+      "exp6181-arc-logo-shortcut-audit": {
+        "corrigendum_pending": null,
+        "current_verifier_flag_count": 0,
+        "flagged_adversarial": false,
+        "headline_promotion_authorized": null,
+        "historical_quarantine_preserved": null,
+        "task_id": "exp6181-arc-logo-shortcut-audit",
+        "terminal_class": "positive"
+      }
+    }
+  },
+  "random_seed": 6182,
+  "raw_field_reconciliation": {
+    "arc": {
+      "level_credit_delta": 0,
+      "registry_delta": 0,
+      "registry_levels_unchanged": true,
+      "shortcut_detected": false,
+      "solve_claimed": false,
+      "solve_credit_promoted": false,
+      "terminal_class": "positive"
+    },
+    "artifact_isolation": {
+      "ready_score": 0,
+      "repository_wide_closure_claimed": false,
+      "terminal_class": "delivered"
+    },
+    "continuous_strategy_learning": {
+      "live_model_generation_claimed": false,
+      "model_weights_immutable": true,
+      "poison_propagation_count": 0,
+      "ready_score": 1.0,
+      "terminal_class": "positive"
+    },
+    "phase_d": {
+      "downstream_selector_promoted": false,
+      "future_rows_allowed": false,
+      "headroom_ready_score": 0.0,
+      "item_bank_ready_score": 1.0,
+      "pool_integrity_score": 1.0,
+      "retired": true
+    },
+    "quarantine_determination": {
+      "current_rule_clean": true,
+      "headline_promotion_authorized": false,
+      "historical_quarantine_preserved": true,
+      "operator_reopen_required": true,
+      "terminal_class": "flagged"
+    },
+    "source_delta": {
+      "accepted_count": 0,
+      "terminal_class": "null",
+      "zero_delta_accepted": true
+    },
+    "stochastic": {
+      "hardware_promoted": false,
+      "historical_status_preserved": "blocked",
+      "software_reproducible": true,
+      "terminal_class": "positive"
+    }
+  },
+  "reproducibility_checksum": "sha256:3d6b07f46051f784edcb325f6c3eb2d9acf1e2313872f02e6b0c29b62d4559ea",
+  "retired_artifacts": [
+    "exp6175-cctu-headroom-audit"
+  ],
+  "run_date": "20260807",
+  "schema": "carnot.experiment_6182.v535_capstone_reconciliation.v1",
+  "skipped_artifacts": [
+    "exp6176-hidden-state-surface-qualification",
+    "exp6178-held-internal-state-selection"
+  ],
+  "status": "complete_with_missing_skipped_blocked_retired_flagged_and_null",
+  "terminal_class_counts": {
+    "blocked": 1,
+    "delivered": 1,
+    "flagged": 2,
+    "missing": 1,
+    "null": 1,
+    "positive": 4,
+    "retired": 1,
+    "skipped": 2
+  },
+  "terminal_classification": {
+    "all_tasks_classified_once": true,
+    "task_ids_by_terminal_class": {
+      "blocked": [
+        "exp6177-clue-latent-selector-freeze"
+      ],
+      "delivered": [
+        "exp6170-v535-task-artifact-isolation-canary"
+      ],
+      "flagged": [
+        "exp6172-current-rule-quarantine-determination",
+        "exp6174-cctu-authentic-k8-pool"
+      ],
+      "missing": [
+        "exp6169-v535-transition"
+      ],
+      "null": [
+        "exp6171-v535-source-delta-ingestion"
+      ],
+      "positive": [
+        "exp6173-cctu-item-bank-preregistration",
+        "exp6179-retention-safe-continuous-strategy-learning-ab",
+        "exp6180-exp6166-reproducibility-adjudication",
+        "exp6181-arc-logo-shortcut-audit"
+      ],
+      "retired": [
+        "exp6175-cctu-headroom-audit"
+      ],
+      "skipped": [
+        "exp6176-hidden-state-surface-qualification",
+        "exp6178-held-internal-state-selection"
+      ]
+    },
+    "terminal_class_by_task_id": {
+      "exp6169-v535-transition": "missing",
+      "exp6170-v535-task-artifact-isolation-canary": "delivered",
+      "exp6171-v535-source-delta-ingestion": "null",
+      "exp6172-current-rule-quarantine-determination": "flagged",
+      "exp6173-cctu-item-bank-preregistration": "positive",
+      "exp6174-cctu-authentic-k8-pool": "flagged",
+      "exp6175-cctu-headroom-audit": "retired",
+      "exp6176-hidden-state-surface-qualification": "skipped",
+      "exp6177-clue-latent-selector-freeze": "blocked",
+      "exp6178-held-internal-state-selection": "skipped",
+      "exp6179-retention-safe-continuous-strategy-learning-ab": "positive",
+      "exp6180-exp6166-reproducibility-adjudication": "positive",
+      "exp6181-arc-logo-shortcut-audit": "positive"
+    }
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py -m pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
+    ".venv/bin/ruff check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6182_v535_capstone_reconciliation.py -m pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6182_v535_capstone_reconciliation.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6182_v535_capstone_reconciliation.py tests/python/test_experiment_6182_v535_capstone_reconciliation.py": 0
+  }
+}

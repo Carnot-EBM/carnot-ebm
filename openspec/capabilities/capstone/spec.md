@@ -3094,3 +3094,96 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-5795 | Planned (`python/carnot/experiment_5795_v516_capstone_reconciliation.py`, `results/experiment_5795_v516_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_5795_v516_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-6182: The `.535` capstone reconciliation workflow
+  `exp6182-v535-capstone-reconciliation` in
+  `python/carnot/experiment_6182_v535_capstone_reconciliation.py` SHALL read
+  the active roadmap declarations for Exp6169 through Exp6181 by exact
+  declared deliverable path only, read conductor receipts, snapshot completion
+  history multiplicity, quarantine fields, exclusions, protected files, and git
+  status before emitting claims, adversarial-verify every present exact
+  artifact, and write
+  `results/experiment_6182_v535_capstone_reconciliation.json` without modifying `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+  `_bmad/traceability.md`. It SHALL preserve delivered, missing, skipped, null,
+  blocked, retired, flagged, and positive terminal classes as separate classes;
+  SHALL treat sidecar files and same-number aliases as noncanonical unless they
+  are the roadmap-declared deliverable; SHALL reconcile branch claims only from
+  raw artifact fields and conductor receipts; SHALL NOT strengthen a scientific
+  claim from task title, sidecar presence, current-rule companion cleanliness,
+  gate-skipped downstream context, development-proxy evidence, or no-solve ARC
+  controls; SHALL update completion history at most once and only with the
+  evidence-backed `.535` task matrix; and SHALL content-address the final
+  artifact with a reproducibility checksum.
+- SCENARIO-CAPSTONE-6182: The artifact
+  `results/experiment_6182_v535_capstone_reconciliation.json` must emit
+  top-level fields `schema`, `experiment`, `experiment_id`, `milestone`,
+  `run_date`, `status`, `preconditions_checked`, `declared_task_matrix`,
+  `conductor_receipts`, `completion_history_multiplicity`,
+  `exact_artifact_hashes`, `adversarial_verification_receipts`,
+  `quarantine_field_receipts`, `terminal_classification`,
+  `terminal_class_counts`, `delivered_artifacts`, `missing_artifacts`,
+  `skipped_artifacts`, `blocked_artifacts`, `retired_artifacts`,
+  `flagged_artifacts`, `null_artifacts`, `positive_artifacts`,
+  `no_claim_strengthening_receipts`, `raw_field_reconciliation`,
+  `branch_decisions`, `completion_history_update`,
+  `protected_files_unchanged`, `duration_s`, `inference_substrate`,
+  `field_provenance`, `test_commands`, `test_exit_codes`,
+  `reproducibility_checksum`, and `honest_verdict`. With the current `.535`
+  evidence, Exp6169's exact deliverable is missing despite conductor hard-wall
+  failures; Exp6170 is complete-partial infrastructure with readiness score
+  zero; Exp6171 is a complete-null source refresh; Exp6172 is flagged as a
+  companion determination while historical quarantine and no-headline boundary
+  remain preserved; Exp6173 and Exp6174 are complete-ready Phase-D setup and
+  pool integrity; Exp6175 is retired with `phase_d_headroom_ready_score=0.0`;
+  Exp6176 and Exp6178 are skipped/missing exact deliverables due failed gates;
+  Exp6177 is blocked at its declared path; Exp6179 is complete positive
+  retention-safe CSL evidence with immutable model weights and no live model
+  generation; Exp6180 is complete-positive software-only reproducibility
+  adjudication with no hardware promotion; and Exp6181 is a no-solve ARC
+  shortcut audit with `solve_claimed=false`, `level_credit_delta=0`, and no
+  registry delta.
+- SCENARIO-CAPSTONE-6182-EXACT-PATH: The workflow must ignore sidecars,
+  same-number aliases, and branch-specific result files when the roadmap
+  declares a different deliverable path. A missing declared JSON path must stay
+  missing or skipped according to the conductor receipt and must not be
+  replaced by sidecar evidence.
+- SCENARIO-CAPSTONE-6182-TERMINAL-CLASS-PRESERVATION: Terminal classes are
+  disjoint. Flagged companion evidence remains flagged even when the current
+  verifier reports clean source bytes; retired scientific scope remains retired
+  and gate-skipped downstream work remains skipped; no-solve ARC evidence stays
+  no-solve with zero registry credit.
+- SCENARIO-CAPSTONE-6182-ADVERSARIAL-VERIFY-AND-CHECKSUM: Every present exact
+  artifact must have an adversarial-verifier receipt or an injected test receipt,
+  with receipt hashes and flagged counts recorded. The output checksum is
+  computed from the complete artifact with the checksum field blanked and must
+  be stable across validation and write/read round trips.
+- SCENARIO-CAPSTONE-6182-FIELD-PRINCIPLES: The required field principles are:
+  `declared_task_matrix` = "fixed Exp6169-Exp6181 denominator from active
+  roadmap exact paths"; `conductor_receipts` = "latest matching conductor row
+  for each task, preserving OK, FAIL, FLAGGED, and GATE_BLOCK"; `completion_history_multiplicity`
+  = "before/after `.535` history count and append-at-most-once evidence";
+  `exact_artifact_hashes` = "sha256 of exact declared deliverables only";
+  `adversarial_verification_receipts` = "present exact artifacts are checked
+  and receipt-hashed"; `quarantine_field_receipts` = "flagged, corrigendum, and
+  historical-quarantine fields are visible before aggregation";
+  `terminal_classification` = "delivered, missing, skipped, null, blocked,
+  retired, flagged, and positive stay disjoint"; `no_claim_strengthening_receipts`
+  = "raw fields, not task titles or sidecars, determine promotions";
+  `branch_decisions` = "Phase-D, CSL, stochastic, and ARC branches close only to
+  evidence-backed boundaries"; `completion_history_update` = "append-once or
+  explicit no-append receipt"; `protected_files_unchanged` = "conductor, ops
+  ledgers, traceability, exclusions, and protected sources remain unchanged";
+  `inference_substrate` = "aggregation_from_upstream_artifacts";
+  `field_provenance` = "every required output field names roadmap, conductor,
+  exact artifact, verifier, or local hash sources"; `test_commands` =
+  "verification commands are replayable"; `test_exit_codes` = "observed exits
+  are recorded without laundering failures"; `reproducibility_checksum` =
+  "content-addressed capstone output is stable"; and `honest_verdict` =
+  "terminal summary starting with complete: or blocked: without strengthening
+  scientific claims."
+
+## Implementation Status (REQ-CAPSTONE-6182)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6182 | Implemented (`python/carnot/experiment_6182_v535_capstone_reconciliation.py`, `results/experiment_6182_v535_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_6182_v535_capstone_reconciliation.py`) |
