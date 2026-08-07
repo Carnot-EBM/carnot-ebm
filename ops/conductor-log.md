@@ -15493,3 +15493,4 @@ Still active  |
 | 2026-08-07 22:14 UTC | Calibration-only CLUE and residualized linear sele | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6203-matching-base-code-hidden-state-v2) |
 | 2026-08-07 22:14 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selec |
 | 2026-08-07 22:16 UTC | Calibration-only CLUE and residualized linear sele | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6203-matching-base-code-hidden-state-v2) |
+| 2026-08-07 22:16 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selec |
