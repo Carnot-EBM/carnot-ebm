@@ -118,3 +118,68 @@ fn scenario_sample_6194_serialization_and_errors_fail_closed() {
     assert!(core.state_from_serialized("not-a-mode-jump-state").is_err());
     assert!(core.run(&state, 0, 0).is_err());
 }
+
+#[test]
+fn req_sample_6208_runtime_adapter_uses_fixed_kernel_contract() {
+    // REQ-SAMPLE-6208-FIXED-KERNEL, REQ-SAMPLE-6208-SHAPE-CONTRACT:
+    // the runtime adapter is allowed to route this exact kernel, not mutate it.
+    let config = frozen_config();
+    assert_eq!(config.labels.len(), 6);
+    assert_eq!(config.target_probabilities.len(), 6);
+    assert_eq!(config.proposal_probabilities.len(), 6);
+    assert!(config
+        .proposal_probabilities
+        .iter()
+        .all(|row| row.len() == 6));
+
+    let core = ModeJumpCore::new(config.clone());
+    let state = ModeJumpState::new("left_peak".to_string(), 6208, 0, 0).unwrap();
+    let summary = core.run(&state, 128, 8).unwrap();
+
+    assert_eq!(summary.sample_count, 120);
+    assert_eq!(summary.attempted_count, 128);
+    assert!(summary.accepted_count <= summary.attempted_count);
+    assert_eq!(summary.frequencies.len(), 6);
+    assert!(summary.effective_sample_size > 0.0);
+    assert!(core
+        .state_from_serialized(&summary.final_state.serialize())
+        .is_ok());
+}
+
+#[test]
+fn req_sample_6208_runtime_controls_reject_malformed_fixed_config() {
+    // REQ-SAMPLE-6208-RUNTIME-ACCOUNTING: broken runtime controls fail closed
+    // before a caller can treat malformed probabilities as the qualified kernel.
+    let config = frozen_config();
+    let mut duplicate_labels = config.labels.clone();
+    duplicate_labels[1] = duplicate_labels[0].clone();
+    assert!(ModeJumpConfig::new(
+        duplicate_labels,
+        config.target_probabilities.clone(),
+        config.proposal_probabilities.clone(),
+    )
+    .is_err());
+
+    let mut non_normalized_target = config.target_probabilities.clone();
+    non_normalized_target[0] += 0.25;
+    assert!(ModeJumpConfig::new(
+        config.labels.clone(),
+        non_normalized_target,
+        config.proposal_probabilities.clone(),
+    )
+    .is_err());
+
+    let mut asymmetric = config.proposal_probabilities.clone();
+    asymmetric[0][1] = 0.0;
+    asymmetric[0][4] = 1.0;
+    assert!(ModeJumpConfig::new(
+        config.labels.clone(),
+        config.target_probabilities.clone(),
+        asymmetric,
+    )
+    .is_err());
+
+    let mut bad_row = config.proposal_probabilities.clone();
+    bad_row[0] = vec![1.0];
+    assert!(ModeJumpConfig::new(config.labels, config.target_probabilities, bad_row).is_err());
+}

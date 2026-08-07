@@ -43,10 +43,16 @@
        one-axis corrected-cDLS Rust/PyO3 kernel. It is opt-in and preserves the
        default CPU backend.
 
-    8. ``get_backend(name)`` — factory function that maps a string name to a
+    8. ``ModeJumpRustBackend`` — optional runtime adapter for the fixed
+       Exp6194 categorical mode-jump Rust/PyO3 kernel. It is opt-in,
+       default-off, and uses exact Python fallback when Rust is disabled or
+       unavailable.
+
+    9. ``get_backend(name)`` — factory function that maps a string name to a
        backend instance. Reads ``CARNOT_BACKEND`` env var as default.
 
-Spec: REQ-SAMPLE-003, REQ-SAMPLE-2250, REQ-SAMPLE-3118, REQ-SAMPLE-5723
+Spec: REQ-SAMPLE-003, REQ-SAMPLE-2250, REQ-SAMPLE-3118, REQ-SAMPLE-5723,
+REQ-SAMPLE-6208
 """
 
 from __future__ import annotations
@@ -63,6 +69,7 @@ import jax.random as jrandom
 import numpy as np
 
 from carnot.samplers.clut_backend import ClutCpuBackend
+from carnot.samplers.mode_jump_rust_backend import ModeJumpRustBackend
 from carnot.samplers.one_axis_rust_backend import OneAxisRustBackend
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
 
@@ -593,6 +600,7 @@ _BACKENDS: dict[str, BackendFactory] = {
     "casal": CASALBackend,
     "clut_cpu": ClutCpuBackend,
     "cpu": CpuBackend,
+    "mode_jump_rust": ModeJumpRustBackend,
     "one_axis_rust": OneAxisRustBackend,
     "tsu": TsuBackend,
 }
@@ -616,6 +624,7 @@ def _build_backend_registry() -> dict[str, type]:
         "clut_cpu": ClutCpuBackend,
         "cpu": CpuBackend,
         "dwave": DWaveNealBackend,
+        "mode_jump_rust": ModeJumpRustBackend,
         "one_axis_rust": OneAxisRustBackend,
         "thrml_tsu": TSUSampler,
     }
