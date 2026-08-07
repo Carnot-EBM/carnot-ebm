@@ -15478,3 +15478,4 @@ Still active  |
 | 2026-08-07 20:07 UTC | Fail-closed terminal-artifact contract after V536  | OK | 93 passed, 1 warning in 8.40s |
 | 2026-08-07 21:14 UTC | Post-V537-marker SOTA delta plus staged-roadmap sc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-07 21:31 UTC | GateMate cached terminal-action audit with changed | OK | 128 passed, 1 warning in 15.14s |
+| 2026-08-07 21:58 UTC | Three-family raw-code envelope canary before any n | OK | 89 passed, 1 warning in 19.69s |
