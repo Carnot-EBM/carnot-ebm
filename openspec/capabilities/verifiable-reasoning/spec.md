@@ -22661,3 +22661,102 @@ instead of re-headlining Exp6148 diagnostics.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-6162 | Planned (`python/carnot/experiment_6162_prospective_admission_replication.py`, `results/experiment_6162_prospective_admission_replication.json`) | Planned (`tests/python/test_experiment_6162_prospective_admission_replication.py`) |
+
+### REQ-VERIFY-6173: CCTU Item Bank Freeze And Preregistration
+
+Carnot SHALL provide Exp6173 at
+`python/carnot/verify/cctu_item_bank_6173.py` and write
+`results/experiment_6173_cctu_item_bank_preregistration.json` after freezing a
+CCTU-style executable tool-use item bank before any LLM candidate generation.
+The bank SHALL contain at least 120 deterministic cases with no multiple-choice
+answer labels, no finite-choice option-position channel, no model-authored
+correctness, and no held-label access before split sealing.
+
+The item bank SHALL span these constraint taxonomy categories: resource,
+behavior, tool availability, ordering, response schema, cross-step dependency,
+impossible-request abstention, and compositional constraints. The split SHALL
+be frozen at 60 calibration and 60 held cases before generation, with case ids,
+input bytes, validators, taxonomy, seeds, K, sampling schedule, tuned-consensus
+definition, clustered inference, power plan, gates, controls, and retirement
+rules all content-addressed.
+
+The validator SHALL implement exact per-step and terminal replay. It SHALL
+include known-valid, single-violation, multi-violation, parser-adversarial, and
+metamorphic controls. Validator outcomes SHALL be independent of candidate
+provenance, surface length, and arbitrary ids. The preconditions receipt SHALL
+hash CCTU fixtures/validators, prior retired Phase D artifacts, exclusions,
+existing task families, model-cache metadata without loading models, result and
+test roots, protected files, and git status, and SHALL confirm that no candidate
+outcome file exists for Exp6173.
+
+The terminal artifact MUST include these fields: `status`,
+`preconditions_checked`, `prior_failure_receipts`,
+`cctu_item_bank_path_hash_count_and_schema`,
+`calibration_and_held_split_path_hash_counts`,
+`constraint_taxonomy_and_balance_matrix`,
+`exact_step_and_terminal_validator_paths_hashes_and_versions`,
+`validator_positive_negative_metamorphic_and_parser_controls`,
+`no_finite_choice_or_answer_position_receipt`,
+`no_model_access_before_freeze_receipt`,
+`k_sampling_and_consensus_preregistration`,
+`parseability_competence_unsaturation_headroom_and_minority_gates`,
+`exact_floor_definition_and_provenance`,
+`clustered_inference_and_power_plan`, `held_seal_and_access_log_path_hash`,
+`retirement_rule`, `cctu_item_bank_ready_score`,
+`protected_files_unchanged`, `duration_s`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Field principles:
+
+- `status`: A terminal state distinguishes ready, null, retired, or blocked bank-freeze evidence.
+- `preconditions_checked`: Hashes sources, exclusions, caches, roots, protected files, and output paths before any generation.
+- `prior_failure_receipts`: Records Exp6128 and Exp6140 retirement causes so the finite-choice path is not reopened.
+- `cctu_item_bank_path_hash_count_and_schema`: Binds the frozen bank path, hash, count, and row schema.
+- `calibration_and_held_split_path_hash_counts`: Proves 60 calibration and 60 held ids were split before generation.
+- `constraint_taxonomy_and_balance_matrix`: Shows every required taxonomy category is present and balanced across splits.
+- `exact_step_and_terminal_validator_paths_hashes_and_versions`: Names the executable validator implementation and version hashes.
+- `validator_positive_negative_metamorphic_and_parser_controls`: Proves validators accept valid traces and reject controlled violations and parser traps.
+- `no_finite_choice_or_answer_position_receipt`: Proves prompts and expected outputs contain no A/B/C/D option labels or answer-position fields.
+- `no_model_access_before_freeze_receipt`: Proves only cache metadata was inspected and no model loader or candidate outcome file was used.
+- `k_sampling_and_consensus_preregistration`: Freezes K>=8, sampling schedule, and tuned-consensus definition before candidates exist.
+- `parseability_competence_unsaturation_headroom_and_minority_gates`: Freezes parseability, competence, unsaturation, headroom, and minority gates.
+- `exact_floor_definition_and_provenance`: Defines the exact/random-plan floor from executable action space, not option count.
+- `clustered_inference_and_power_plan`: Freezes grouped inference, confidence intervals, and sample-size power assumptions.
+- `held_seal_and_access_log_path_hash`: Binds held ids and the zero-access log before generation.
+- `retirement_rule`: Declares the precommitted gate failures that retire the bank.
+- `cctu_item_bank_ready_score`: Equals one only with at least 120 frozen validated cases, balanced 60/60 split, exact controls, preregistered gates, and zero candidate/model access.
+- `protected_files_unchanged`: Confirms operator-curated/protected files remain byte-identical.
+- `duration_s`: Measured deterministic build duration is reported without implying model inference.
+- `inference_substrate`: Must be `deterministic_executable_tool_trace_fixture_and_validators`.
+- `verifier_is_oracle`: Bare true means exact correctness labeling is available; downstream selectors remain oracle-distinct.
+- `field_provenance`: Every field traces to specs, frozen files, controls, preconditions, tests, or command receipts.
+- `test_commands`: Commands document focused validator/spec/freeze/leakage/schema/adversarial/protected-file/root-clutter checks.
+- `test_exit_codes`: Exit codes prevent failed checks from being reported as readiness.
+- `reproducibility_checksum`: Content-addressed checksum detects source, bank, split, control, precondition, or artifact drift.
+- `honest_verdict`: Use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state bank size and freeze status.
+
+### SCENARIO-VERIFY-6173-BANK-FREEZE: Bank Freezes Before Candidate Generation
+
+**Given** Exp6173 has no existing candidate outcome file and no model loader is
+invoked
+**When** the bank and split artifacts are written
+**Then** at least 120 deterministic executable tool-use cases are frozen, 60
+calibration and 60 held ids are sealed, all required taxonomy categories are
+balanced, no finite-choice answer-position channel is present, and readiness is
+one only when the exact controls and preregistered gates are also present.
+
+### SCENARIO-VERIFY-6173-VALIDATORS: Exact Validators Catch Localized Violations
+
+**Given** known-valid, single-violation, multi-violation,
+parser-adversarial, and metamorphic controls for frozen cases
+**When** the Exp6173 validator replays the traces
+**Then** known-valid and metamorphic-equivalent traces pass, controlled
+violations are localized to the expected steps, parser traps are rejected, and
+candidate provenance, surface length, and arbitrary ids do not change labels.
+
+## Implementation Status (REQ-VERIFY-6173)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-6173 | Planned (`python/carnot/verify/cctu_item_bank_6173.py`, `results/experiment_6173_cctu_item_bank_preregistration.json`) | Planned (`tests/python/test_cctu_item_bank_6173.py`) |

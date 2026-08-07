@@ -1,0 +1,748 @@
+{
+  "calibration_and_held_split_path_hash_counts": {
+    "calibration_count": 60,
+    "created_before_candidate_generation": true,
+    "held_count": 60,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/cctu_item_bank_6173_splits.json",
+    "schema": "carnot.cctu_item_bank_6173.split.v1",
+    "sha256": "sha256:1e8117ca5d9b47fb70eeca234391cc9f62af99efd491756103dd903f2018e2f5",
+    "split_seed": 6173
+  },
+  "cctu_item_bank_path_hash_count_and_schema": {
+    "count": 120,
+    "frozen": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/cctu_item_bank_6173.jsonl",
+    "row_hashes_sha256": "sha256:e0639ca62018b741f4ef7d4cc01a53b02c546657fd2b6e2b09f5767b80899817",
+    "schema": "carnot.cctu_item_bank_6173.case.v1",
+    "sha256": "sha256:3ca5c6d5e127dae95e4674965f0bbd17c0be5ad82cb7f66d442f6e6ed341484b"
+  },
+  "cctu_item_bank_ready_score": 1.0,
+  "clustered_inference_and_power_plan": {
+    "alpha": 0.05,
+    "calibration_held_split_for_power": "60 calibration / 60 held frozen before generation",
+    "cluster_unit": "case_id",
+    "confidence_interval": "clustered paired bootstrap with 10000 resamples",
+    "k_per_cluster": 8,
+    "minimum_consensus_wrong_oracle_right_groups": 30,
+    "minimum_detectable_effect": 0.1,
+    "n_case_clusters": 120,
+    "primary_estimand": "oracle@8 minus tuned_consensus_accuracy",
+    "schema": "carnot.cctu_item_bank_6173.power_plan.v1",
+    "target_power": 0.8
+  },
+  "constraint_taxonomy_and_balance_matrix": {
+    "balance_rule": "15 per primary category; split difference <= 1 per category",
+    "balanced": true,
+    "by_primary_constraint": {
+      "behavior": {
+        "calibration": 7,
+        "calibration_held_difference": 1,
+        "held": 8,
+        "total": 15
+      },
+      "compositional": {
+        "calibration": 7,
+        "calibration_held_difference": 1,
+        "held": 8,
+        "total": 15
+      },
+      "cross_step_dependency": {
+        "calibration": 7,
+        "calibration_held_difference": 1,
+        "held": 8,
+        "total": 15
+      },
+      "impossible_request_abstention": {
+        "calibration": 8,
+        "calibration_held_difference": 1,
+        "held": 7,
+        "total": 15
+      },
+      "ordering": {
+        "calibration": 7,
+        "calibration_held_difference": 1,
+        "held": 8,
+        "total": 15
+      },
+      "resource": {
+        "calibration": 8,
+        "calibration_held_difference": 1,
+        "held": 7,
+        "total": 15
+      },
+      "response_schema": {
+        "calibration": 8,
+        "calibration_held_difference": 1,
+        "held": 7,
+        "total": 15
+      },
+      "tool_availability": {
+        "calibration": 8,
+        "calibration_held_difference": 1,
+        "held": 7,
+        "total": 15
+      }
+    },
+    "case_count": 120,
+    "taxonomy_categories": [
+      "resource",
+      "behavior",
+      "tool_availability",
+      "ordering",
+      "response_schema",
+      "cross_step_dependency",
+      "impossible_request_abstention",
+      "compositional"
+    ]
+  },
+  "duration_s": 1.562909,
+  "exact_floor_definition_and_provenance": {
+    "answer_position_floor_used": false,
+    "competence_must_be_strictly_above_floor": true,
+    "finite_choice_floor_used": false,
+    "floor_name": "exact_random_executable_plan_floor",
+    "floor_upper_bound": 0.05,
+    "provenance": "The floor is bounded by exact JSON schema, exact tool sequence, exact arguments, exact tool results, exact terminal answer, and verifier consistency over open-ended executable traces; it is not an option-count floor.",
+    "schema": "carnot.cctu_item_bank_6173.exact_floor.v1"
+  },
+  "exact_step_and_terminal_validator_paths_hashes_and_versions": {
+    "step_categories": [
+      "parse_json",
+      "response_schema",
+      "resource",
+      "tool_availability",
+      "ordering",
+      "cross_step_dependency",
+      "behavior",
+      "final_response",
+      "impossible_request_abstention",
+      "compositional",
+      "response_verifier"
+    ],
+    "terminal_validator": "validate_candidate_trace",
+    "validator_path": "python/carnot/verify/cctu_item_bank_6173.py",
+    "validator_sha256": "sha256:a029e762aebe0106cb380a7a02498165ec10d9b655e707b262555da08c0b1bf3",
+    "validator_version": "cctu-item-bank-6173-v1"
+  },
+  "field_provenance": {
+    "calibration_and_held_split_path_hash_counts": [
+      "frozen split JSON bytes"
+    ],
+    "cctu_item_bank_path_hash_count_and_schema": [
+      "frozen bank JSONL bytes"
+    ],
+    "cctu_item_bank_ready_score": [
+      "REQ-VERIFY-6173 ready-score principle"
+    ],
+    "clustered_inference_and_power_plan": [
+      "REQ-VERIFY-6173 power plan"
+    ],
+    "constraint_taxonomy_and_balance_matrix": [
+      "REQ-VERIFY-6173 taxonomy balance"
+    ],
+    "duration_s": [
+      "measured local deterministic build duration"
+    ],
+    "exact_floor_definition_and_provenance": [
+      "REQ-VERIFY-6173 random-plan floor"
+    ],
+    "exact_step_and_terminal_validator_paths_hashes_and_versions": [
+      "python/carnot/verify/cctu_item_bank_6173.py"
+    ],
+    "field_provenance": [
+      "REQ-VERIFY-6173 provenance requirement"
+    ],
+    "held_seal_and_access_log_path_hash": [
+      "REQ-VERIFY-6173 held seal"
+    ],
+    "honest_verdict": [
+      "REQ-VERIFY-6173 terminal-prefix verdict"
+    ],
+    "inference_substrate": [
+      "REQ-VERIFY-6173 declared deterministic substrate"
+    ],
+    "k_sampling_and_consensus_preregistration": [
+      "REQ-VERIFY-6173 K and consensus gate"
+    ],
+    "no_finite_choice_or_answer_position_receipt": [
+      "REQ-VERIFY-6173 no finite-choice channel"
+    ],
+    "no_model_access_before_freeze_receipt": [
+      "REQ-VERIFY-6173 no model access before freeze"
+    ],
+    "parseability_competence_unsaturation_headroom_and_minority_gates": [
+      "REQ-VERIFY-6173 preregistered gates"
+    ],
+    "preconditions_checked": [
+      "REQ-VERIFY-6173 precondition receipt"
+    ],
+    "prior_failure_receipts": [
+      "Exp6128",
+      "Exp6140",
+      "ops/known-issues.md"
+    ],
+    "protected_files_unchanged": [
+      "CLAUDE.md Test-Run Record Integrity Discipline"
+    ],
+    "reproducibility_checksum": [
+      "REQ-VERIFY-6173 content checksum"
+    ],
+    "retirement_rule": [
+      "REQ-VERIFY-6173 retirement gate"
+    ],
+    "status": [
+      "REQ-VERIFY-6173 terminal artifact contract"
+    ],
+    "test_commands": [
+      "REQ-VERIFY-6173 command receipt requirement"
+    ],
+    "test_exit_codes": [
+      "REQ-VERIFY-6173 command receipt requirement"
+    ],
+    "validator_positive_negative_metamorphic_and_parser_controls": [
+      "SCENARIO-VERIFY-6173-VALIDATORS"
+    ],
+    "verifier_is_oracle": [
+      "REQ-VERIFY-6173 exact validator oracle declaration"
+    ]
+  },
+  "held_seal_and_access_log_path_hash": {
+    "access_count": 0,
+    "access_log_path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/cctu_item_bank_6173_held_access_log.json",
+    "access_log_sha256": "sha256:781eee54b4da632ecdd4bfb69654f68bc1a4c18341759938ad733ba809d22bdf",
+    "held_ids_hash": "sha256:2544805793b8e08b11175453f8db9cd68be1f125a5d8fc81b9a98f60b66f8965",
+    "held_labels_sealed": true,
+    "schema": "carnot.cctu_item_bank_6173.held_access_log.v1"
+  },
+  "honest_verdict": "complete_ready: 120-case CCTU executable item bank frozen with 60 calibration, 60 held, exact validators, and zero candidate/model access",
+  "inference_substrate": "deterministic_executable_tool_trace_fixture_and_validators",
+  "k_sampling_and_consensus_preregistration": {
+    "candidate_generation_allowed_after_freeze_only": true,
+    "k": 8,
+    "oracle_at_k_definition": "case passes if any of K candidates passes exact terminal validator",
+    "sampling_seeds": [
+      617300,
+      617301,
+      617302,
+      617303,
+      617304,
+      617305,
+      617306,
+      617307
+    ],
+    "schema": "carnot.cctu_item_bank_6173.k_sampling.v1",
+    "temperature_schedule": [
+      0.7,
+      0.8,
+      0.9,
+      1.0,
+      0.75,
+      0.85,
+      0.95,
+      1.05
+    ],
+    "top_p_schedule": [
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95,
+      0.95
+    ],
+    "tuned_consensus_definition": "calibration-only plurality over normalized terminal answers, with abstentions counted as their own cluster and no held-label tuning"
+  },
+  "no_finite_choice_or_answer_position_receipt": {
+    "answer_position_fields_present": false,
+    "audit_rule": "reject choices/options/A.-D. labels/correct_option/answer_position strings",
+    "case_count": 120,
+    "multiple_choice_answers_present": false,
+    "offending_case_count": 0,
+    "offending_cases": [],
+    "passed": true,
+    "schema": "carnot.cctu_item_bank_6173.no_position_channel.v1"
+  },
+  "no_model_access_before_freeze_receipt": {
+    "candidate_outcome_file_exists": false,
+    "candidate_outcome_paths_checked": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6173_cctu_candidate_outcomes.jsonl",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6173_cctu_model_candidates.jsonl",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6173_cctu_candidate_outcomes.json"
+    ],
+    "held_label_access_count": 0,
+    "model_bytes_opened": 0,
+    "model_cache_metadata_hash": "sha256:588263aafd4722892a0d857f32027e5cd77cf6d4a1bdfcf1d24f7ad1dc14268f",
+    "model_loader_invocations": 0,
+    "passed": true,
+    "schema": "carnot.cctu_item_bank_6173.no_model_before_freeze.v1"
+  },
+  "parseability_competence_unsaturation_headroom_and_minority_gates": {
+    "all_gates_preregistered_before_generation": true,
+    "competence_gate": "candidate accuracy lower CI strictly exceeds max(exact_floor, 0.05)",
+    "headroom_gate": "oracle@8 - tuned_consensus >= 0.10 with clustered lower CI > 0",
+    "held_gate_tuning_allowed": false,
+    "minority_gate": "at least 30 consensus-wrong/oracle-right case clusters",
+    "parseability_min": 0.95,
+    "schema": "carnot.cctu_item_bank_6173.future_gates.v1",
+    "unsaturation_gate": "candidate accuracy upper CI below 0.85 and tuned consensus below 0.90"
+  },
+  "preconditions_checked": {
+    "candidate_outcome_file_exists": false,
+    "candidate_outcome_paths_checked": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6173_cctu_candidate_outcomes.jsonl",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6173_cctu_model_candidates.jsonl",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6173_cctu_candidate_outcomes.json"
+    ],
+    "candidate_outcome_paths_existing": [],
+    "cctu_fixture_and_validator_hashes": [
+      {
+        "exists": true,
+        "path": "python/carnot/eval/cctu_executable_constraint_microbenchmark.py",
+        "sha256": "sha256:1b954232aa59fe8d87d007d3747b4c267aaa5dfddf3e4f21a24ae74761b6f3e7"
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/eval/cctu_executable_constraint_validator_pilot.py",
+        "sha256": "sha256:3b133f3d4de5b391ed050630efde8f7f3a86058d2ac91e91d0902e4447623e5a"
+      },
+      {
+        "exists": true,
+        "path": "results/cctu_microbenchmark_manifest_1486.jsonl",
+        "sha256": "sha256:9ee29a2976666907d569e5e518ed6910d120ae10fc092a787001f31f0813e835"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_1486_cctu_executable_constraint_microbenchmark.json",
+        "sha256": "sha256:565092653d90f42156e5820f9421c0b09f61ba16c454fecdcd7e18507aafaf3d"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "sha256": "sha256:bdfd83c14c7896c97fbfaaa228ceae85e75c7d615dde110b84334637413ba284"
+      }
+    ],
+    "exclusion_manifest_hash": [
+      {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      }
+    ],
+    "existing_task_family_hashes": [
+      {
+        "exists": true,
+        "path": "results/experiment_6103_phase_d_difficulty_ladder_fixture.json",
+        "sha256": "sha256:bd552b4804570c533c42a3b7bf267f0cef6c0d0492f85ad870b2b97ba1e53957"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6103_phase_d_difficulty_ladder_fixture.rows.jsonl",
+        "sha256": "sha256:2a3f62d6838df054be7c6f6e0793c5b47783caf668e857dc95610967917529d5"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6128_phase_d_calibration_pool_v2.rows.jsonl",
+        "sha256": "sha256:d0adce354a30aecefda20b4298763d43f9c48d754d69e55d9b52df796b062e5b"
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/verifiable-reasoning/spec.md",
+        "sha256": "sha256:4296a90adaeb813e1844af91a7261ff30c95270789189c196e5bd113840e3e46"
+      }
+    ],
+    "git_status_short_hash": {
+      "available": true,
+      "line_count": 8,
+      "returncode": 0,
+      "sha256": "sha256:727ad2852a1ae9bd3545d6d2bdc54b4ecbd04f7eace87bae135ccb6f8362a84c"
+    },
+    "held_label_access_count": 0,
+    "model_cache_metadata": {
+      "content_hash_policy": "metadata_only",
+      "metadata_entry_count": 1504,
+      "metadata_hash": "sha256:588263aafd4722892a0d857f32027e5cd77cf6d4a1bdfcf1d24f7ad1dc14268f",
+      "model_bytes_opened": 0,
+      "model_loader_invocations": 0,
+      "roots_checked": 2,
+      "roots_existing": 1
+    },
+    "model_loader_invocations": 0,
+    "prior_retired_pool_artifact_hashes": [
+      {
+        "exists": true,
+        "path": "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "sha256": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6140_phase_d_exp6128_option_psychometrics.json",
+        "sha256": "sha256:45162ea4b591e41d5393dfb071c49e4e398424697717146515bab863df051fa2"
+      },
+      {
+        "exists": true,
+        "path": "ops/known-issues.md",
+        "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+      }
+    ],
+    "protected_file_hashes": {
+      "count": 43,
+      "files": [
+        {
+          "exists": true,
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        {
+          "exists": true,
+          "path": "CLAUDE.md",
+          "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884"
+        },
+        {
+          "exists": true,
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        {
+          "exists": true,
+          "path": "LICENSE",
+          "sha256": "sha256:7d5e950cbe0079f5da22de8510277dbca16c7a23287c981b3a1ed4ae59aebd98"
+        },
+        {
+          "exists": true,
+          "path": "NOTICE",
+          "sha256": "sha256:39c42ad6b10a70f2c4bf8a2d25f465ccd94010bd0e3a50891024364f969fbf1f"
+        },
+        {
+          "exists": true,
+          "path": "README.md",
+          "sha256": "sha256:d74b61a601e2be573901ea3223fcddf1a46b936b70e563862335bc15d0447b00"
+        },
+        {
+          "exists": true,
+          "path": "_bmad/traceability.md",
+          "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+        },
+        {
+          "exists": true,
+          "path": "docs/CNAME",
+          "sha256": "sha256:2529103a2359b3958e30a72c21c00ab143347b164adb0d14de6c21614e3cb286"
+        },
+        {
+          "exists": true,
+          "path": "docs/api-reference.md",
+          "sha256": "sha256:9e084d53295586e3e05e58e11fb24b78a88ed99030c966ff1d592cbaf447cd3d"
+        },
+        {
+          "exists": true,
+          "path": "docs/arxiv-paper/main.tex",
+          "sha256": "sha256:7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/caught-cheating.html",
+          "sha256": "sha256:c9a4e44323702287f8460b4a5ee8a3cac52f4d68b34f623868231fd72c128e71"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/dogfooding-by-the-numbers.html",
+          "sha256": "sha256:e55a80f9e31a05e1e50c87e39f608e81369a3c379999a55a6be1e8655ee7402b"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/energy-scorer-not-generator.html",
+          "sha256": "sha256:0cc523c0d484c3f60372e516ec289ff8e8ca758bba32c1f026bb3ee3954301a8"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/five-fatal-findings.html",
+          "sha256": "sha256:32a14f7b29a83c5c31cd276f8f99106e744800a379cacb6ae82cf820d9be377a"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/index.html",
+          "sha256": "sha256:eb420fb700e8224f2982f8a844b3b93038dc084156934a84ccdb45c949943607"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/regex-in-an-ntk-costume.html",
+          "sha256": "sha256:53344a2e98d191e62e0e17fb6f5c456e57a0dfecfeac3505c6fae51fc76fd8cd"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/the-auditor-hallucinated.html",
+          "sha256": "sha256:540db112af4fe6b9b2b03b5fd7d08119fcc8fc091a6c2235d379ce3fdd9b7da7"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/the-beachhead-that-wasnt.html",
+          "sha256": "sha256:6b3ac5487a554318e148386c8d06852cade09cad656f2ecfd783ee77bae3718c"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/two-retractions-and-a-rescue.html",
+          "sha256": "sha256:810e233e97acaa69ae8dac21ecc05421e1c1d73d5e3013c1c687c1ce6128b0bb"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/verifier-accuracy-paradox.html",
+          "sha256": "sha256:6cda35630a98bbe693d5aa3587a6d3f836aa3980b47733b9968bc85de34e5c24"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/why-two-aurocs.html",
+          "sha256": "sha256:7db9b877c26ea7fbe7a9c7829d28ee67a1680c26e192dd074dde5f684d54d9d2"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/caught-cheating.html",
+          "sha256": "sha256:c9a4e44323702287f8460b4a5ee8a3cac52f4d68b34f623868231fd72c128e71"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/dogfooding-by-the-numbers.html",
+          "sha256": "sha256:e55a80f9e31a05e1e50c87e39f608e81369a3c379999a55a6be1e8655ee7402b"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/energy-scorer-not-generator.html",
+          "sha256": "sha256:0cc523c0d484c3f60372e516ec289ff8e8ca758bba32c1f026bb3ee3954301a8"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/five-fatal-findings.html",
+          "sha256": "sha256:32a14f7b29a83c5c31cd276f8f99106e744800a379cacb6ae82cf820d9be377a"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/index.html",
+          "sha256": "sha256:eb420fb700e8224f2982f8a844b3b93038dc084156934a84ccdb45c949943607"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/regex-in-an-ntk-costume.html",
+          "sha256": "sha256:53344a2e98d191e62e0e17fb6f5c456e57a0dfecfeac3505c6fae51fc76fd8cd"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/the-auditor-hallucinated.html",
+          "sha256": "sha256:540db112af4fe6b9b2b03b5fd7d08119fcc8fc091a6c2235d379ce3fdd9b7da7"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/the-beachhead-that-wasnt.html",
+          "sha256": "sha256:6b3ac5487a554318e148386c8d06852cade09cad656f2ecfd783ee77bae3718c"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/two-retractions-and-a-rescue.html",
+          "sha256": "sha256:810e233e97acaa69ae8dac21ecc05421e1c1d73d5e3013c1c687c1ce6128b0bb"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/verifier-accuracy-paradox.html",
+          "sha256": "sha256:6cda35630a98bbe693d5aa3587a6d3f836aa3980b47733b9968bc85de34e5c24"
+        },
+        {
+          "exists": true,
+          "path": "docs/blog/why-two-aurocs.html",
+          "sha256": "sha256:7db9b877c26ea7fbe7a9c7829d28ee67a1680c26e192dd074dde5f684d54d9d2"
+        },
+        {
+          "exists": true,
+          "path": "docs/cli-usage.md",
+          "sha256": "sha256:f2f66c9e4403707df15dbb70b152915af401f0c97bbd371a01cd75cfe7990417"
+        },
+        {
+          "exists": true,
+          "path": "docs/concepts.md",
+          "sha256": "sha256:c317dfa03c62e27e6f571261144ef1408bc0d0133b30b18db5cdc03cc261dec9"
+        },
+        {
+          "exists": true,
+          "path": "docs/getting-started.md",
+          "sha256": "sha256:8a98002169b4a163383420f550f017f45dad084f27c65ad4e0754582a6303de7"
+        },
+        {
+          "exists": true,
+          "path": "docs/index.html",
+          "sha256": "sha256:a5530143c1b146940db5e1967a22f7ddf24fd3e5906e6667d33b5b3918db2c21"
+        },
+        {
+          "exists": true,
+          "path": "docs/mcp-server.md",
+          "sha256": "sha256:1072dcca00a33b601c5439f809febf9aa06336719030ee9735747469941550e8"
+        },
+        {
+          "exists": true,
+          "path": "docs/research-log.md",
+          "sha256": "sha256:428d4c6d7a528fac6b1445a79a9386f1231876e8d5febf45bc3e941862da9384"
+        },
+        {
+          "exists": true,
+          "path": "docs/roadmap.md",
+          "sha256": "sha256:8e0a1a0e4ec1a915e5b9a6cb5b1312d7cfb087e557da354a71a8d8a4eb4ec1a1"
+        },
+        {
+          "exists": true,
+          "path": "docs/tutorial.md",
+          "sha256": "sha256:2ebe90e84380952f9bf39ffeff4a53b2b03b7a45d7ef7faa9f4f1975f11c1383"
+        },
+        {
+          "exists": true,
+          "path": "ops/changelog.md",
+          "sha256": "sha256:eb8d773a46ef73c9267a8498b9e1d301721daf108b96d28297508125d5e53f2e"
+        },
+        {
+          "exists": true,
+          "path": "ops/status.md",
+          "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992"
+        },
+        {
+          "exists": true,
+          "path": "scripts/research_conductor.py",
+          "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+        }
+      ],
+      "hash": "sha256:ef121bcded111283444d0f19cd209da2ac03ed91bf7c492c58d841cdc7611499",
+      "schema": "carnot.cctu_item_bank_6173.protected_files.v1"
+    },
+    "result_root_listing_hash": {
+      "entry_count": 22711,
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "sha256": "sha256:888edcfa7b05f344773f8b96f4266428cf39b317cc454c47c172c661e9d88a04"
+    },
+    "run_date": "20260807",
+    "schema": "carnot.cctu_item_bank_6173.preconditions.v1",
+    "test_root_listing_hash": {
+      "entry_count": 13598,
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python",
+      "sha256": "sha256:4bacc49730f77d5ceaa5182a0e93b04582f3de6080fe52237948cd6635b09bb7"
+    }
+  },
+  "prior_failure_receipts": {
+    "artifacts": [
+      {
+        "exists": true,
+        "path": "results/experiment_6128_phase_d_calibration_pool_v2.json",
+        "sha256": "sha256:31498c4e268c3774f9ddce4df8fd1e06a75977cb27ab094fe45123584a3a5bdf"
+      },
+      {
+        "exists": true,
+        "path": "results/experiment_6140_phase_d_exp6128_option_psychometrics.json",
+        "sha256": "sha256:45162ea4b591e41d5393dfb071c49e4e398424697717146515bab863df051fa2"
+      },
+      {
+        "exists": true,
+        "path": "results/phase_d_domain_headroom_survey.json",
+        "sha256": "sha256:3a6faaabe9a244bdc3300e643f19911f6eff6431c6e0bb2f615284e67639c110"
+      },
+      {
+        "exists": true,
+        "path": "ops/known-issues.md",
+        "sha256": "sha256:76eca8e8b5a317fd5629833d09e0b41dd266761cef2778e3dc10434c505874e7"
+      },
+      {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      }
+    ],
+    "phase_d_diagnosis": "Exp6128/Exp6140 and the domain survey left no competent unsaturated finite-choice pool; this bank removes answer-position labels and uses executable validators instead.",
+    "retired_mechanisms_not_reopened": [
+      "finite-choice source recovery",
+      "typed finite-choice answer channel",
+      "option-position candidate transformation",
+      "model-authored correctness labels"
+    ],
+    "schema": "carnot.cctu_item_bank_6173.prior_failure_receipts.v1"
+  },
+  "protected_files_unchanged": {
+    "hash_after_build": "sha256:ef121bcded111283444d0f19cd209da2ac03ed91bf7c492c58d841cdc7611499",
+    "hash_before_build": "sha256:ef121bcded111283444d0f19cd209da2ac03ed91bf7c492c58d841cdc7611499",
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:4274a9c14a2d954a8acb2d92f15a8f7c8d6be1f54f69544bd299ac847f4b6f02",
+  "retirement_rule": {
+    "reopen_requires": "operator decision plus new bank-freeze artifact",
+    "retire_if": [
+      "parseability < 0.95 on calibration",
+      "competence not strictly above exact_random_executable_plan_floor",
+      "candidate or tuned consensus saturation upper CI >= 0.90",
+      "oracle@8 - tuned_consensus lower CI <= 0",
+      "fewer than 30 consensus-wrong/oracle-right groups",
+      "any finite-choice answer-position channel or held-label access is detected",
+      "any model or candidate outcome file is accessed before freeze"
+    ],
+    "schema": "carnot.cctu_item_bank_6173.retirement_rule.v1"
+  },
+  "status": "complete_ready",
+  "test_commands": [
+    ".venv/bin/pytest -o addopts=\"\" tests/python/test_cctu_item_bank_6173.py -q",
+    ".venv/bin/coverage run --include=\"*/cctu_item_bank_6173.py\" -m pytest -o addopts=\"\" tests/python/test_cctu_item_bank_6173.py -q && .venv/bin/coverage report --include=\"*/cctu_item_bank_6173.py\" --fail-under=100 --show-missing",
+    "ruff check python/carnot/verify/cctu_item_bank_6173.py tests/python/test_cctu_item_bank_6173.py",
+    "ruff format --check python/carnot/verify/cctu_item_bank_6173.py tests/python/test_cctu_item_bank_6173.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --include=\"*/cctu_item_bank_6173.py\" -m pytest -o addopts=\"\" tests/python/test_cctu_item_bank_6173.py -q && .venv/bin/coverage report --include=\"*/cctu_item_bank_6173.py\" --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest -o addopts=\"\" tests/python/test_cctu_item_bank_6173.py -q": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/python scripts/check_spec_coverage.py": 1,
+    "ruff check python/carnot/verify/cctu_item_bank_6173.py tests/python/test_cctu_item_bank_6173.py": 0,
+    "ruff format --check python/carnot/verify/cctu_item_bank_6173.py tests/python/test_cctu_item_bank_6173.py": 0
+  },
+  "validator_positive_negative_metamorphic_and_parser_controls": {
+    "control_count": 485,
+    "independence_audit": {
+      "arbitrary_id_invariant": true,
+      "candidate_provenance_invariant": true,
+      "ignored_fields": [
+        "metadata.candidate_id",
+        "metadata.candidate_provenance"
+      ],
+      "scored_fields": "trace schema, ordered steps, executable results, final answer, verifier accept",
+      "surface_length_invariant": true
+    },
+    "known_valid": {
+      "failed": 0,
+      "passed": 120,
+      "total": 120
+    },
+    "metamorphic": {
+      "failed": 0,
+      "passed": 120,
+      "total": 120
+    },
+    "multi_violation": {
+      "caught": 120,
+      "missed": 0,
+      "total": 120
+    },
+    "parser_adversarial": {
+      "caught": 5,
+      "missed": 0,
+      "total": 5
+    },
+    "schema": "carnot.cctu_item_bank_6173.validator_controls.v1",
+    "single_violation": {
+      "caught": 120,
+      "localized_by_primary_constraint": {
+        "break_dependency": 15,
+        "drop_final": 15,
+        "extra_tool_call": 15,
+        "force_non_abstain": 15,
+        "reverse_order": 15,
+        "wrong_final": 15,
+        "wrong_tool_name": 15,
+        "wrong_tool_result": 15
+      },
+      "total": 120
+    }
+  },
+  "verifier_is_oracle": true
+}
