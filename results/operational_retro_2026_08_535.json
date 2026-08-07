@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.535",
+  "generated_at": "2026-08-07T09:20:40Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 24.7,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Reliable dated evidence refresh after the V535 planner marker",
+      "duration_minutes": 13.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool",
+      "duration_minutes": 11.22,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Task-scoped artifact-isolation compatibility canary for .535",
+      "duration_minutes": 0.41,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Frozen executable CCTU-style item bank and Phase-D preregistration",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Single ARC slot leave-one-game-out shortcut audit",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 24.7 minutes, including 3 compute-bound experiments. The longest listed compute-bound experiment took 11.22 minutes and was gated on authentic Gemma-4-31B CCTU bank readiness.",
+  "bottlenecks_identified": [
+    "The 13.0-minute dated-evidence refresh was the longest experiment overall, making synthesis refresh latency the largest observed wall-time concentration.",
+    "The longest listed compute-bound experiment took 11.22 minutes and was gated on authentic Gemma-4-31B CCTU K>=8 bank readiness."
+  ],
+  "improvements_suggested": [
+    "Use content-addressed receipts for dated-evidence inputs and rebuild only sources whose content changed.",
+    "Add an admission check for the authentic Gemma-4-31B CCTU K>=8 bank before dependent compute work enters the run queue.",
+    "Capture GPU samples between task start and finish, keyed by workload class, execution phase, and model count, so compute efficiency can be distinguished from expected synthesis idleness.",
+    "Select DualGPURunner from explicit model-count metadata only when at least two models will be loaded concurrently."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Reuse content-addressed dated-evidence receipts instead of rebuilding unchanged inputs.",
+    "Reject or defer dependent compute work until the authentic Gemma-4-31B CCTU K>=8 bank passes admission.",
+    "Persist per-task GPU intervals with model cardinality and runner selection."
+  ],
+  "estimated_time_savings_pct": 53,
+  "meta_reflection": "The 53% estimate is the rounded share of milestone wall time represented by the 13.0-minute dated-evidence refresh, so it is an addressable upper bound rather than a guaranteed saving. The point-in-time 0% GPU report does not establish idle execution on a compute-bound task, and no supplied data shows a two-model parallel task that failed to engage DualGPURunner."
+}
