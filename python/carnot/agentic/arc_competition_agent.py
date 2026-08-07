@@ -39,6 +39,7 @@ from carnot.agentic.arc_hud_bar_detector import (
     HUD_MASK_GUARD_MAX_SPLIT_NODES,
     DeferredMaskActivation,
     MaskCollapseGuard,
+    budget_exhaustion_estimate,
     mask_summary,
 )
 from carnot.agentic.arc_hud_bar_detector import (
@@ -1174,6 +1175,11 @@ class StepwiseExplorer:
         generic_causal_primitive: Any | None = None,
         epistemic_ledger: Any | bool | None = None,
         structured_evidence_memory: Any | bool | None = None,
+        # REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): default None (not the SUBMITTED_*/kit value)
+        # for the same reason as `hazard_move_pruner` above -- GATED, resolved through the
+        # `_fd_gate` ladder below (explicit kwarg -> env override -> the kit's own
+        # BUDGET_AWARE_SEARCH_ENABLED default).
+        budget_aware_search: bool | None = None,
     ) -> None:
         self.hud_mask = hud_mask  # E1: mask step-counter cells out of node identity
         self.auto_hud_mask = bool(auto_hud_mask)
@@ -1604,6 +1610,26 @@ class StepwiseExplorer:
         self._hazard_prune_errors = 0
         self._hazard_all_pruned_nodes = 0
         self._hazard_antecedent_from_last_grid = 0
+        # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). The estimator itself
+        # (arc_hud_bar_detector.budget_exhaustion_estimate) and its consumer
+        # (arc_solver_kit.budget_aware_path_cost_weight) already existed, built and tested, but
+        # NOTHING on the live path called either -- this wires them in behind the kit's own
+        # BUDGET_AWARE_SEARCH_ENABLED default (currently False; no A/B evidence yet).
+        from carnot.agentic.arc_solver_kit import BUDGET_AWARE_SEARCH_ENABLED
+
+        self.budget_aware_search_enabled = _fd_gate(
+            budget_aware_search,
+            "CARNOT_ARC_BUDGET_AWARE_SEARCH",
+            BUDGET_AWARE_SEARCH_ENABLED,
+        )
+        # Raw per-episode frame buffer feeding the estimator (see _ingest). v1 SCOPE NOTE: does
+        # not insert an explicit None marker at a RESET boundary (the plumbing recon proposed) --
+        # `_segment_frames`'s own resegmentation rule (a return to the segment-first region value)
+        # still finds the level-up boundary without one, per its own docstring, so this is a
+        # scoped-down v1, not a silent gap. Bounded by episode length (MAX_ACTIONS), not
+        # separately capped -- worst case a few MB of uint8 frames, negligible.
+        self._budget_frames: list[Any] = []
+        self.actions_remaining_estimate: Optional[float] = None
         self.generic_causal_primitive = coerce_generic_causal_primitive(generic_causal_primitive)
         self.amortized_first_contact_prior = coerce_amortized_first_contact_prior(
             amortized_first_contact_prior
@@ -3218,6 +3244,24 @@ class StepwiseExplorer:
             node = self.graph.get(h)
             if node is not None:
                 self.go_explore_archive.observe(latest, node.get("path") or [])
+        # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring). Appends `latest` unconditionally (a
+        # single list append is negligible next to everything else `_ingest` already does) so the
+        # buffer is ready the moment the flag is later flipped for an A/B; the estimate itself is
+        # only computed -- and only consumed by `_frontier` -- when the flag is on, so this is a
+        # no-op wall-clock-wise for the shipped default. `self.hud_mask` (the ALREADY-decided,
+        # possibly-Stage-2-confirmed mask from the logic above) is passed as-is; when it is None
+        # (no HUD region ever admitted this episode) the estimate stays None, matching
+        # `budget_exhaustion_estimate`'s own no-mask abstain path.
+        self._budget_frames.append(latest)
+        if self.budget_aware_search_enabled and self.hud_mask is not None:
+            try:
+                self.actions_remaining_estimate = budget_exhaustion_estimate(
+                    self._budget_frames, self.hud_mask
+                )["actions_remaining_estimate"]
+            except Exception:
+                self.actions_remaining_estimate = None
+        else:
+            self.actions_remaining_estimate = None
 
     def _frontier(self) -> Optional[str]:
         # BRIDGE: A*-style frontier order -- priority = depth + value_weight*value. value_weight=0 is
@@ -3315,12 +3359,27 @@ class StepwiseExplorer:
         best_key = None
         for h, node, depth, on_path, action_effect, goal_bias, curiosity in eligible:
             nav_key = self._frontier_navigation_cost_key(h) if self.navigation_cost_tiebreak else ()
+            # LEVER #5 (2026-08-07, REQ-ARC-WMTE-6180 wiring): substitute the bare `depth` cost
+            # term with the budget-aware one ONLY when the flag is on -- not merely when the
+            # estimate happens to be None -- so the flag-off arm's sort key is built from the
+            # exact same expression it always was, per the byte-identity discipline this A/B must
+            # satisfy. `depth` itself (used elsewhere in these tuples, e.g. the use_value branch's
+            # second element) is untouched either way.
+            depth_cost = (
+                budget_aware_path_cost_weight(
+                    depth=depth,
+                    plan_length=depth,
+                    actions_remaining_estimate=self.actions_remaining_estimate,
+                )
+                if self.budget_aware_search_enabled
+                else depth
+            )
             if self.navigation_cost_tiebreak and use_value:
                 value = node.get("value", 0.0)
                 if value is None:
                     value = 0.0
                 key = (
-                    depth,
+                    depth_cost,
                     float(action_effect),
                     w * float(value),
                     self._goal_bias_key(goal_bias),
@@ -3333,7 +3392,7 @@ class StepwiseExplorer:
                 if value is None:
                     value = 0.0
                 key = (
-                    depth + w * float(value),
+                    depth_cost + w * float(value),
                     depth,
                     float(action_effect),
                     self._goal_bias_key(goal_bias),
@@ -3342,7 +3401,7 @@ class StepwiseExplorer:
                 )
             elif self.navigation_cost_tiebreak:
                 key = (
-                    depth,
+                    depth_cost,
                     float(action_effect),
                     self._goal_bias_key(goal_bias),
                     -float(curiosity),
@@ -3351,7 +3410,7 @@ class StepwiseExplorer:
                 )
             else:
                 key = (
-                    depth,
+                    depth_cost,
                     float(action_effect),
                     self._goal_bias_key(goal_bias),
                     -float(curiosity),

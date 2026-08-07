@@ -294,6 +294,211 @@ and an `honest_verdict` beginning with `blocked_physical_action:`.
 
 ---
 
+### REQ-HW-6199
+
+**Title:** Exp6199 GateMate terminal-action audit MUST use cached receipts unless a newer material physical receipt authorizes one detect
+
+**Description:**
+Experiment 6199 SHALL produce
+`results/experiment_6199_gatemate_terminal_action_audit_v537.json` as a
+cached GateMate terminal-action audit for 20260807. The audit SHALL explicitly
+inherit the REQ-HW-6121 authorization boundary: the canonical prior physical
+state, as recorded by Exp6121, is the baseline; only a newer dated operator
+receipt that materially changes cable, port, power, board, USB, or DirtyJTAG
+state may authorize one bounded non-destructive detect. Visibility work that
+does not change physical state MUST be a cached audit, not another terminal
+probe.
+
+Before any hardware command is considered, Exp6199 SHALL hash Exp6121, the
+adversarial-flagged Exp3866 historical flash artifact, hardware bring-up and
+wishlist/known-issues documents, cached tool identity receipts, protected
+operator/conductor files, and any supplied dated operator physical receipt.
+Exp3866 SHALL remain historical context only: its terminal flash transcript is
+excluded from clean GateMate graduation evidence whenever it carries an
+adversarial flag or pending corrigendum.
+
+If the current physical state hash equals the canonical Exp6121 physical-state
+hash, or if the supplied receipt is missing or stale, Exp6199 MUST run zero
+`openFPGALoader`, JTAG, detect, synthesis, place, route, pack, flash, firmware,
+SSH, timing, current, or power commands. It MUST set every hardware command and
+mutation count to bare zero, set `hardware_command_authorized=false`, and emit
+the exact operator action packet that names the required cable/port/power/board
+or DirtyJTAG physical receipt.
+
+If and only if a newer dated operator receipt materially changes cable, port,
+power, board, USB, or DirtyJTAG state relative to Exp6121, Exp6199 MAY run at
+most one command, exactly `openFPGALoader -c dirtyJtag --detect`, with bounded
+timeout and exact stdout, stderr, and exit code captured. Exp6199 MUST NOT
+synthesize, place, route, pack, flash, mutate firmware, run SSH, read timing,
+read current, read power, or claim speed, power, energy, terminal hardware,
+TSU, Kona, or sustained-performance results.
+
+Required artifact fields:
+
+- `status`
+- `prior_receipt_paths_and_hashes`
+- `current_dated_operator_receipt`
+- `prior_and_current_physical_state_hashes`
+- `physical_state_changed`
+- `hardware_command_authorized`
+- `detect_attempt_count_command_stdout_stderr_exit_code`
+- `expected_and_observed_idcode`
+- `mutation_command_counts`
+- `historical_flagged_terminal_evidence_excluded`
+- `operator_action_packet`
+- `hardware_execution_authenticated`
+- `speed_power_energy_terminal_tsu_kona_claim_counts`
+- `passive_cooling_note`
+- `protected_files_unchanged`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `missing_verifier_gaps`
+- `field_provenance`
+- `field_principles`
+- `test_commands`
+- `test_exit_codes`
+- `duration_s`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+Required field principles:
+
+- `prior_receipt_paths_and_hashes`: principle "Hashes precede authorization and prevent stale terminal evidence from graduating."
+- `current_dated_operator_receipt`: principle "Only a newer dated physical receipt can move the GateMate state."
+- `prior_and_current_physical_state_hashes`: principle "Exp6121 is the canonical no-repeat baseline."
+- `physical_state_changed`: principle "A bare bool gates every hardware command."
+- `hardware_command_authorized`: principle "Visibility checks require a material physical delta."
+- `detect_attempt_count_command_stdout_stderr_exit_code`: principle "Zero on cached state; one exact non-destructive detect on changed state."
+- `expected_and_observed_idcode`: principle "IDCODE is visibility evidence, not performance evidence."
+- `mutation_command_counts`: principle "No synthesis, place, route, pack, flash, firmware, SSH, timing, current, or power command is allowed."
+- `historical_flagged_terminal_evidence_excluded`: principle "Adversarial-flagged Exp3866 evidence stays quarantined."
+- `operator_action_packet`: principle "A blocked audit ends with one concrete bench action."
+- `hardware_execution_authenticated`: principle "Detect visibility is not workload execution."
+- `speed_power_energy_terminal_tsu_kona_claim_counts`: principle "No speed, power, energy, terminal, TSU, or Kona claim is permitted."
+- `passive_cooling_note`: principle "GateMate is passively cooled and no sustained-load inference is made."
+- `protected_files_unchanged`: principle "Conductor and reconciler-owned docs remain byte-identical."
+- `inference_substrate`: principle "Use cached receipt audit plus optional non-destructive detect, not LLM inference."
+- `verifier_is_oracle`: principle "Raw hashes and IDCODE text are authoritative for this audit only."
+- `missing_verifier_gaps`: principle "Missing IDCODE or workload evidence is recorded instead of inferred."
+- `field_provenance`: principle "Every field traces to receipts, hashes, command output, or tests."
+- `field_principles`: principle "Each required field carries its reason for existence."
+- `test_commands`: principle "Verification commands are recorded."
+- `test_exit_codes`: principle "Exit codes prevent failed checks becoming success."
+- `duration_s`: principle "Measured wall time is reported without padding."
+- `reproducibility_checksum`: principle "Checksum detects physical-state, receipt, or artifact drift."
+- `honest_verdict`: principle "Use `blocked_no_change:`, `blocked_missing_receipt:`, `blocked_stale_receipt:`, `blocked_idcode:`, or `complete_visible:`."
+
+**Acceptance criteria:**
+- `.venv/bin/python -m carnot.experiment_6199_gatemate_terminal_action_audit_v537 --date 20260807`
+  writes `results/experiment_6199_gatemate_terminal_action_audit_v537.json`.
+- The artifact includes `spec_refs` containing `REQ-HW-6199` and the
+  applicable `SCENARIO-HW-6199-*`, `random_seed=6199`, and a stable
+  `reproducibility_checksum`.
+- `inference_substrate` equals
+  `cached_gatemate_terminal_action_audit_with_optional_single_detect`.
+- Exp6121, Exp3866, hardware bring-up prep, hardware wishlist, known issues,
+  cached tool identities, protected files, and any dated operator receipt are
+  hashed before command authorization is evaluated.
+- Missing, stale, or unchanged physical receipts produce
+  `physical_state_changed=false`, `hardware_command_authorized=false`,
+  zero detect attempts, zero mutation command counts, the exact operator action
+  packet, and no stdout/stderr from a new hardware command.
+- A newer material physical receipt permits exactly one
+  `openFPGALoader -c dirtyJtag --detect` command and no other hardware,
+  synthesis, packing, flashing, SSH, timing, current, or power command.
+- A changed receipt with a wrong or missing IDCODE remains blocked and does not
+  authenticate hardware execution.
+- A changed receipt with the expected GateMate GM1Ax IDCODE
+  `0x20000001` records board visibility only; it still makes no speed, power,
+  energy, terminal-hardware, TSU, Kona, or sustained-load claim.
+- Exp3866 remains unedited and excluded from clean terminal evidence when
+  adversarial-flagged.
+- Protected files and `scripts/research_conductor.py` remain unchanged.
+
+**Implementation status:** Planned (Exp 6199)
+
+---
+
+### SCENARIO-HW-6199-1
+
+**Scenario:** Exp6199 blocks unchanged GateMate state without executing hardware or tool commands.
+
+**Given:** Exp6121 records an unchanged GateMate physical-state hash and no
+newer dated operator receipt changes cable, port, power, board, USB, or
+DirtyJTAG state,
+**When:** Exp6199 hashes prior receipts and compares the current state to the
+canonical Exp6121 baseline,
+**Then:** It writes the terminal-action audit with
+`physical_state_changed=false`, `hardware_command_authorized=false`, detect
+attempt count zero, all mutation command counts zero, the exact operator action
+packet, Exp3866 excluded as historical flagged evidence, and an
+`honest_verdict` beginning with `blocked_no_change:`.
+
+**Implementation status:** Planned (Exp 6199)
+
+---
+
+### SCENARIO-HW-6199-2
+
+**Scenario:** Exp6199 rejects missing and stale operator receipts.
+
+**Given:** No dated physical receipt exists, or a receipt date is not newer than
+the Exp6121 baseline date,
+**When:** Exp6199 computes the physical-state hash,
+**Then:** It treats the state as unchanged for command authorization, runs zero
+hardware/tool commands, and emits `blocked_missing_receipt:` or
+`blocked_stale_receipt:` without lifting Exp3866 quarantine.
+
+**Implementation status:** Planned (Exp 6199)
+
+---
+
+### SCENARIO-HW-6199-3
+
+**Scenario:** Exp6199 permits one detect for a newer material receipt but blocks a wrong IDCODE.
+
+**Given:** A dated operator receipt newer than Exp6121 materially changes
+cable, port, power, board, USB, or DirtyJTAG state,
+**When:** The single permitted `openFPGALoader -c dirtyJtag --detect` receipt
+does not contain expected IDCODE `0x20000001`,
+**Then:** Exp6199 records exactly one detect command, all mutation command
+counts remain zero, hardware execution is not authenticated, and
+`honest_verdict` begins with `blocked_idcode:`.
+
+**Implementation status:** Planned (Exp 6199)
+
+---
+
+### SCENARIO-HW-6199-4
+
+**Scenario:** Exp6199 records changed-state GateMate visibility without performance or terminal claims.
+
+**Given:** A newer material operator receipt authorizes one detect,
+**When:** The detect receipt contains the expected GateMate GM1Ax IDCODE
+`0x20000001`,
+**Then:** Exp6199 records exactly one non-destructive detect and
+IDCODE visibility, keeps hardware execution unauthenticated, keeps all
+speed/power/energy/terminal/TSU/Kona counts at zero, preserves the passive
+cooling note, and emits an `honest_verdict` beginning with `complete_visible:`.
+
+**Implementation status:** Planned (Exp 6199)
+
+---
+
+### SCENARIO-HW-6199-5
+
+**Scenario:** Exp6199 fails closed on command-budget or allowlist violations.
+
+**Given:** An artifact records more than one detect, records a detect command
+without authorization, or records a command other than
+`openFPGALoader -c dirtyJtag --detect`,
+**When:** Exp6199 validates the audit,
+**Then:** validation fails before the artifact can graduate.
+
+**Implementation status:** Planned (Exp 6199)
+
+---
+
 ### REQ-HW-5930
 
 **Title:** Exp5930 adaptive-state ABI v2 board mapping MUST produce static receipts and skip unchanged physical probes
