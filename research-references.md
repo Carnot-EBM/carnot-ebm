@@ -32802,3 +32802,160 @@ Phase-D source-domain recovery.
   add a per-game adapter, or claim a solve.
 
 <!-- V535-PLANNER-REFRESH-20260806-END -->
+
+## V536 Planner Refresh (2026-08-07)
+
+This dated refresh was completed before designing milestone `2026.08.536`.
+It searched arXiv across verification/reasoning EBMs, neural constraint
+satisfaction, Ising/probabilistic sampling, hallucination detection,
+Kolmogorov-Arnold Networks, constrained decoding, thermodynamic/FPGA sampling,
+and continual learning. It also checked OpenReview ICLR 2026, Hugging Face
+Papers, Semantic Scholar citation endpoints for EBT (`2507.02092`) and ARM-EBM
+(`2512.15605`), Extropic writing/docs, targeted GitHub repositories, and
+Logical Intelligence's first-party pages. Source claims below are hypotheses
+until reproduced locally.
+
+### Promoted: executable code as the next internal-state verification domain
+
+- **On LLMs' Internal Representation of Code Correctness** -
+  arXiv:2512.07404, https://arxiv.org/abs/2512.07404; revised 2026-01-21 and
+  accepted at ICSE 2026. The authors contrast hidden states from correct and
+  incorrect code for the same tasks and report selection gains over sequence
+  likelihood and verbalized confidence. Carnot hook: replace the retired CCTU
+  structured-envelope transport with raw code completions labeled only by a
+  frozen execution harness. This is a new domain and transport, not another
+  parser retry; the hidden-state selector must remain test-oracle-distinct.
+- **Code Correctness Is Linearly Decodable from LLM Hidden States Before
+  Generation** - arXiv:2606.14530, https://arxiv.org/abs/2606.14530; v3 dated
+  2026-07-16. On 444 LiveCodeBench tasks, a leakage-free prompt-final probe is
+  reported at AUROC `0.881 +/- 0.008`; after per-dimension prompt-length
+  residualization it remains `0.842 +/- 0.010`, while a prompt-length baseline
+  is `0.657 +/- 0.014`. The same paper reports that successful repair events
+  were too rare to support its repair-geometry question. Carnot hook: freeze
+  calibration/held task IDs before generation, pre-register length and family
+  controls, require nested task-level splits, and test prompt-final versus
+  generated-trace hidden states without claiming repair effects.
+- **CodeCircuit: Toward Inferring LLM-Generated Code Correctness via
+  Attribution Graphs** - arXiv:2602.07080,
+  https://arxiv.org/abs/2602.07080 and
+  https://github.com/bruno686/CodeCircuit. Hugging Face Papers surfaced this
+  mechanistic code-verification line. Carnot hook: reserve attribution-graph
+  features as a later comparator only if a cheap linear/CLUE selector first
+  clears held selection gain; do not spend the next milestone on a complex
+  mechanistic pipeline before the domain is shown selectable.
+- **VeRA: Verified Reasoning Data Augmentation at Scale** - arXiv:2602.13217,
+  https://arxiv.org/abs/2602.13217. VeRA represents tasks as executable
+  templates, coherent instance generators, and deterministic verifiers, then
+  creates equivalent or hardened variants. Carnot hook: freeze executable
+  code-task specifications and deterministic validators before model access;
+  use fresh variants only as a later anti-contamination extension, not as a
+  generator-controlled replacement for the milestone's fixed held split.
+
+### Promoted controls for difficulty, uncertainty, and constrained output
+
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM
+  Constraint Reasoning** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047; submitted 2026-07-19 and identified via the
+  EBT Semantic Scholar citation trail. Near-matched SAT families show solver
+  conflict hardness can dissociate from LLM accuracy and token use, while
+  proof-preserving surface relabeling can dominate results. Carnot hook: do not
+  select the code bank by classical runtime alone. Calibrate on observed local
+  flagship competence, preserve task-family strata, and include surface-
+  preserving controls before calling a pool difficult or generalizable.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871, https://arxiv.org/abs/2605.18871; found in
+  the ARM-EBM citation trail. It combines learned quality energy, deterministic
+  constraint penalties, ensemble uncertainty, and a two-pass abstention loop;
+  its own cross-dataset analysis finds a model-identity shortcut on code.
+  Carnot hook: report family/model identity, uncertainty, and deterministic
+  constraint features separately. The paper does **not** reopen Carnot's
+  retired external generated-text scorer line, and deterministic tests remain
+  label/evaluation oracles rather than selector inputs.
+- **Thinking Before Constraining: A Unified Decoding Framework for Large
+  Language Models** - arXiv:2601.07525,
+  https://arxiv.org/abs/2601.07525; revised 2026-05-28. Its In-Writing method
+  delays structured decoding until a trigger token so free reasoning is not
+  restricted from the first token. This is relevant to Exp6174's `960/960`
+  parse failures, but Carnot's same-scope grammar/parser retry family is
+  already retired. Record the method for a future operator-authorized new
+  transport; do not use it to relaunch CCTU in V536.
+
+### Promoted: continuous memory and thermodynamic software boundaries
+
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792; submitted 2026-07-22 and
+  identified via the EBT citation trail. Under matched compute, writing fast
+  memory during pondering slowed finite-budget learning relative to read-only
+  pondering, although both arms reached the later ceiling and the energy
+  margin did not collapse. Carnot hook: extend Exp6179 with genuinely fresh
+  flagship events, but keep decision-time memory read-only and commit verified
+  outcomes only after the decision. Compare bounded replay against no memory;
+  do not couple writes into the same reasoning pass.
+- **Thermalizing Stochastic Programs** - arXiv:2608.01615,
+  https://arxiv.org/abs/2608.01615; submitted 2026-08-03. The `thermalizers`
+  path compiles directed-factor-graph stochastic programs into approximate
+  hardware-native EBMs and samples them through `torx`/`thrml`, with explicit
+  per-factor and trajectory-level error accounting. Carnot hook: after
+  Exp6180's software CNCE reproduction, qualify a software-only THRML adapter
+  against exact small distributions and Carnot's sampler ABI. No attached TSU,
+  latency, power, energy, or hardware-speedup claim is permitted.
+- **Scaling Up Thermodynamic AI Models** - arXiv:2607.00170,
+  https://arxiv.org/abs/2607.00170. The paper trains high-temperature,
+  Gibbs-sampled Ising inference networks and analyzes an accuracy/cost/
+  autocorrelation schedule tradeoff. Carnot hook: add autocorrelation,
+  effective-sample-size, and schedule receipts to the software adapter rather
+  than treating raw sample count as independent evidence.
+- **THRML documentation and repository** - https://docs.thrml.ai/en/latest/
+  and https://github.com/extropic-ai/thrml. Current docs expose factor graphs,
+  Ising EBMs, block coloring, sampling schedules, and JAX block Gibbs. This is
+  actionable as a software comparator only; Extropic's first-party pages still
+  describe XTR-0/early access without giving Carnot an authenticated device
+  route.
+
+### KAN, OpenReview, GitHub, and product-status findings
+
+- **Symbolic--KAN** - arXiv:2603.23854,
+  https://arxiv.org/abs/2603.23854, and **Softly Symbolifying KANs** -
+  arXiv:2512.07875, https://arxiv.org/abs/2512.07875. Both integrate symbolic
+  primitives and sparsifying/gating objectives into KAN training. They improve
+  the interpretability case for future learned constraint-energy surrogates,
+  but neither supplies evidence that would overturn Carnot's completed KAN
+  comparisons or justify a V536 experiment before the live verification and
+  self-learning gaps.
+- **NRGPT: An Energy-based Alternative for GPT** - OpenReview ICLR 2026 Poster,
+  https://openreview.net/forum?id=B3Muyi2zgo. NRGPT performs iterative energy
+  inference in small language-model settings. It remains architectural context:
+  its datasets and scale do not satisfy Carnot's local flagship verification
+  requirement.
+- **V_1: Unifying Generation and Self-Verification for Parallel Reasoners** -
+  arXiv:2603.04304, https://arxiv.org/abs/2603.04304, surfaced by Hugging Face
+  Papers. Pairwise verification and uncertainty-guided tournaments are a useful
+  later selector comparator, but co-training a generator/verifier exceeds the
+  next milestone's evidence budget. First establish oracle-distinct code
+  selection with frozen generators.
+- **GitHub targeted search:** maintained code was found for the two code-
+  correctness papers and THRML, but no trending repository supersedes Carnot's
+  exact validators, local GGUF runtime, or Rust/PyO3 ABI. New dependencies must
+  be pinned and treated as optional comparators, not architectural authorities.
+- **Logical Intelligence:** first-party search still surfaces Kona 1.0's
+  February 2026 Sudoku demonstration and product claims, but no public weights,
+  reproducible architecture specification, or local API. No newer technical
+  release makes Kona an executable V536 comparator.
+
+### V536 planning impact
+
+- Move the Phase-D majority to a frozen executable-code pool using authentic
+  local flagship completions. Gate all hidden-state work on nonzero parse/run
+  coverage, observed competence, unsaturation, and genuine oracle headroom.
+- Compare CLUE/linear internal-state selectors with length, family, and
+  likelihood controls on task-disjoint calibration/held splits. Unit tests may
+  label/evaluate candidates but may not enter selector features.
+- Turn continuous self-learning from Exp6179's deterministic replay into a
+  prospective two-step experiment: first seal genuinely fresh flagship events,
+  then compare no memory with bounded verified replay under read-only decision
+  snapshots and post-outcome commits.
+- Exercise `thrml` only through exact software parity and sampling-quality
+  receipts. Defer all physical-hardware claims until an authenticated TSU or a
+  dated nonterminal board-state change exists.
+
+<!-- V536-PLANNER-REFRESH-20260807-END -->
