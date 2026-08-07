@@ -50679,6 +50679,135 @@ code, checksum, and terminal verdict prefix is present.
 |---|---|---|
 | REQ-REPORT-6169 | Implemented (`python/carnot/experiment_6169_transition_v535.py`, `results/experiment_6169_transition_v535.json`) | Implemented (`tests/python/test_experiment_6169_transition_v535.py`) |
 
+### REQ-REPORT-6183: Minimal Exact Boundary Transition From .535 To .536
+
+The Exp6183 workflow SHALL write
+`results/experiment_6183_transition_v536.json` with
+`status="running_bootstrap"` before any long validation, then update the same
+artifact atomically when terminal. The bootstrap receipt SHALL snapshot git
+status, pre-existing worktree changes, active and staged roadmap hashes, the
+exact `.535` task/deliverable matrix, Exp6182 capstone hash and verdict,
+completion-history multiplicity, exclusions, protected-file hashes, root
+clutter, and the fact that Exp6169 is missing. A terminal artifact SHALL record
+that the bootstrap artifact survived.
+
+The workflow SHALL validate terminal milestone `2026.08.535` only from exact
+Exp6169 through Exp6182 declared deliverable paths and conductor receipts. It
+SHALL preserve the Exp6169 transition artifact as missing when
+`results/experiment_6169_transition_v535.json` is absent, and SHALL preserve
+missing, null, flagged, blocked, retired, skipped, software-only, no-solve, and
+positive classes from Exp6182 without synthesizing a missing artifact or
+inferring success from task order.
+
+The workflow SHALL append the canonical `.535` completion block to
+`research-complete.yaml` at most once. If one or more `.535` completion entries
+already exist, it SHALL report the exact before/after count, set append count
+to zero, and SHALL NOT copy, reorder, deduplicate, normalize, or otherwise
+amplify pre-existing duplicate history. Duplicate history is diagnostic, not a
+repair target for this task.
+
+The workflow SHALL validate the `.536` task graph from
+`research-roadmap-next.yaml` when present, or from the already-active
+`research-roadmap.yaml` only when the staged file has already been consumed.
+The exact `.536` graph SHALL contain fourteen unique task IDs Exp6183 through
+Exp6196, fourteen unique deliverables, complete `prior_failures` rows where
+present, no retired-upstream `requires`, supported gate operators, exact prompt
+endings, exactly one ARC slot, the mandatory continuous-learning slot, the
+expected Phase-D allocation, and local-GGUF declarations on every LLM task. It
+SHALL report task-ID and deliverable collisions explicitly.
+
+Activation SHALL use the established atomic path: if
+`research-roadmap-next.yaml` exists and validates as the exact `.536` roadmap,
+it MAY be copied atomically to `research-roadmap.yaml`; if the staged roadmap
+has already been consumed, already-active mode MAY complete only when the
+active roadmap validates as the exact `.536` plan. Any missing, mismatched, or
+partial roadmap SHALL produce a terminal `blocked:` artifact with rollback
+receipts and no manual roadmap repair. `scripts/research_conductor.py`,
+historical results, ops docs, exclusions, and determination-preservation guards
+SHALL remain unchanged except for the task-owned result artifact and the
+single allowed completion-history append.
+
+The artifact SHALL include, at minimum, `status`, `preconditions_checked`,
+`bootstrap_artifact_receipt`, `source_and_target_milestones`,
+`source_capstone_hash_and_honest_verdict`,
+`source_exact_terminal_classification`, `missing_exp6169_preserved`,
+`research_complete_exact_occurrence_count_before_after`,
+`research_complete_append_count`, `duplicate_history_not_amplified`,
+`staged_and_activated_roadmap_hashes`, `activated_task_count`,
+`task_id_and_deliverable_collision_matrix`,
+`optional_field_and_prior_failure_validation`, `gate_reference_validation`,
+`arc_csl_model_and_phase_d_allocation_receipt`,
+`mandatory_model_spec_validation`,
+`quarantine_and_determination_before_after_matrix`,
+`preexisting_worktree_changes_preserved`, `activation_mode`,
+`rollback_receipt`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`. Every
+required field SHALL have provenance and a principle. `inference_substrate`
+SHALL be `deterministic_repository_transition`, and `honest_verdict` SHALL
+start with `complete:`, `blocked:`, or `failed:` while naming activation mode,
+exact-history multiplicity, and whether the bootstrap artifact survived.
+
+#### SCENARIO-REPORT-6183-BOOTSTRAP-ARTIFACT: Bootstrap Is Written First
+
+**Given** Exp6183 starts from a clean or dirty worktree
+**When** it begins validation
+**Then** it writes the task-owned result artifact with
+`status="running_bootstrap"` and records precondition receipts before any long
+test or activation command.
+
+#### SCENARIO-REPORT-6183-EXACT-TERMINAL: Missing Exp6169 Stays Missing
+
+**Given** Exp6182 records `.535` terminal classes and Exp6169's declared
+artifact path is absent
+**When** Exp6183 builds the source terminal matrix
+**Then** Exp6169 is classified as missing from exact path plus conductor
+receipt, every other Exp6170 through Exp6182 class is copied from Exp6182, and
+no artifact is synthesized or strengthened.
+
+#### SCENARIO-REPORT-6183-APPEND-AT-MOST-ONCE: Duplicate History Is Not Amplified
+
+**Given** `research-complete.yaml` may contain zero, one, or duplicate `.535`
+entries
+**When** Exp6183 archives `.535`
+**Then** it appends at most one canonical `.535` block, appends zero when any
+`.535` entry already exists, reports before/after occurrence counts, and never
+normalizes unrelated history.
+
+#### SCENARIO-REPORT-6183-ROADMAP-VALIDATION: V536 Plan Must Be Exact
+
+**Given** a staged or already-active `.536` roadmap is used for activation
+**When** Exp6183 validates the task graph
+**Then** it requires the fourteen Exp6183 through Exp6196 tasks, unique
+deliverables, complete prior-failure rows, no retired-upstream requires,
+supported gates, exact prompt endings, exactly one ARC slot, the CSL slot,
+Phase-D allocation, mandatory local-GGUF declarations on all LLM tasks, and
+zero ID or deliverable collisions.
+
+#### SCENARIO-REPORT-6183-ACTIVATION-ROLLBACK: Activation Is Atomic Or Already Active
+
+**Given** `research-roadmap-next.yaml` exists or has already been consumed into
+`research-roadmap.yaml`
+**When** Exp6183 evaluates activation
+**Then** it either atomically activates the staged roadmap, records
+already-active mode for an exact active `.536` plan, or writes blocked status
+with rollback receipts and no protected-file mutation on mismatch.
+
+#### SCENARIO-REPORT-6183-QUARANTINE-PROTECTED-SCHEMA: Determinations And Fields Are Stable
+
+**Given** source artifacts include quarantine, blocked, skipped, retired,
+software-only, no-solve, and null evidence
+**When** Exp6183 emits its terminal artifact
+**Then** all historical source hashes and protected-file hashes are
+byte-preserved, every required field has provenance and a principle, the
+checksum is stable, and the verdict prefix is terminal.
+
+## Implementation Status (REQ-REPORT-6183)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6183 | Planned (`python/carnot/experiment_6183_transition_v536.py`, `results/experiment_6183_transition_v536.json`) | Planned (`tests/python/test_experiment_6183_transition_v536.py`) |
+
 ### REQ-REPORT-6170: V535 Task-Scoped Artifact Isolation Canary
 
 The Exp6170 workflow SHALL qualify only the declared Exp6169 through Exp6182
