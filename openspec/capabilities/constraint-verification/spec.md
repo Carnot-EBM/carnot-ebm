@@ -54,6 +54,92 @@ required schema fields, including
 `inference_substrate="deterministic_exact_tool_trace_headroom_audit"` and
 `verifier_is_oracle=true`.
 
+### REQ-CONSTRAINT-VERIFY-6175-AUTHENTICITY: Upstream Pool Authenticity Gate
+
+Exp6175 SHALL fail closed unless the Exp6174 structured gate passed, current
+upstream bank/split/validator/preregistration bytes match the hashes declared by
+Exp6174, current raw-trace and label-sidecar bytes match Exp6174 receipts, raw
+rows were committed before validation, K=8 rows exist for every frozen case, no
+correctness-conditioned retry/replacement occurred, calibration and held seals
+remain intact, preregistered gates and power are present, output paths are
+writable, exclusions are present, and protected files are byte-stable.
+
+### REQ-CONSTRAINT-VERIFY-6175-PARSEABILITY: All-Sample Parseability Accounting
+
+Exp6175 SHALL compute parseability over every frozen candidate row. Headline
+denominators SHALL retain unparseable completions, truncations, refusals,
+timeouts, duplicates, and exact-validator failures. Parseability SHALL pass only
+when the preregistered minimum is met; unparseable rows SHALL retire the domain
+rather than being filtered out of the headline denominator.
+
+### REQ-CONSTRAINT-VERIFY-6175-EXACT-FLOOR: Exact Floor Provenance
+
+Exp6175 SHALL copy the exact random executable-plan floor from the Exp6173
+preregistration, report its value and provenance, and affirm that no
+finite-choice or answer-position floor is used.
+
+### REQ-CONSTRAINT-VERIFY-6175-COMPETENCE: Candidate Competence Gate
+
+Exp6175 SHALL compute per-candidate all-sample exact-validator accuracy and a
+case-clustered interval. Competence SHALL pass only when the clustered lower
+bound is strictly above the exact floor.
+
+### REQ-CONSTRAINT-VERIFY-6175-UNSATURATION: Imperfect-Pool Gate
+
+Exp6175 SHALL measure whether the candidate pool is competent but imperfect by
+checking that candidate accuracy and tuned consensus are below the
+preregistered saturation limits. This gate SHALL NOT rescue a failed
+parseability, competence, headroom, minority, or family-support conjunct.
+
+### REQ-CONSTRAINT-VERIFY-6175-CONSENSUS: Oracle-Blind Consensus Freeze
+
+Exp6175 SHALL tune only the preregistered oracle-blind consensus family on
+calibration rows using normalized action and terminal-outcome clusters. The
+selection rule SHALL NOT use held labels, hidden states, arbitrary identifiers,
+answer positions, sample indexes, or exact-validator labels at selection time.
+
+### REQ-CONSTRAINT-VERIFY-6175-ORACLE-K: Oracle@K Headroom Measurement
+
+Exp6175 SHALL compute oracle@8 as the case-level accuracy achieved when any of
+the frozen K candidates passes the exact terminal validator. It SHALL compute
+oracle-minus-consensus and retire unless the delta is at least 0.10 with a
+case-clustered lower confidence bound above zero.
+
+### REQ-CONSTRAINT-VERIFY-6175-ERROR-DIVERSITY: Error Diversity and Shortcut Audit
+
+Exp6175 SHALL report normalized-cluster diversity, dominant failure surfaces,
+consensus-wrong/oracle-right counts, duplicate clusters, raw duplicate shares,
+and shortcut audits for answer-position, arbitrary-id, sample-index, and
+hidden-state channels.
+
+### REQ-CONSTRAINT-VERIFY-6175-CLUSTERED-INFERENCE: Case-Clustered Intervals
+
+Exp6175 SHALL compute intervals over case clusters for per-candidate accuracy,
+oracle@8, consensus accuracy, and oracle-minus-consensus. The artifact SHALL
+declare the deterministic resampling method or constant-cluster shortcut used
+for each interval.
+
+### REQ-CONSTRAINT-VERIFY-6175-HELD-AGGREGATE: Held Labels Stay Aggregated
+
+Exp6175 may inspect held labels internally for aggregate qualification, but the
+terminal artifact SHALL emit only held aggregate counts/rates, an aggregate
+signature, and a sealed held row-label hash. It SHALL NOT emit held sample keys,
+row hashes, label hashes, validator-result objects, or per-row held outcomes.
+
+### REQ-CONSTRAINT-VERIFY-6175-NO-SELECTOR: No Selector or Hidden-State Extraction
+
+Exp6175 SHALL be a prerequisite audit only. It SHALL NOT tune a latent selector,
+extract hidden states, expose held row labels downstream, use held rows for
+consensus tuning, or allow any downstream rows when readiness is zero.
+
+### REQ-CONSTRAINT-VERIFY-6175-FAIL-CLOSED-RETIREMENT: Strict Readiness Conjunction
+
+Exp6175 SHALL set `phase_d_headroom_ready_score` to bare `1.0` only when every
+preregistered authenticity, parseability, competence, unsaturation, headroom,
+minority, and family-support conjunct passes. Otherwise it SHALL set `status`
+to `retired` or `blocked`, `future_rows_allowed_by_this_artifact` to bare
+`false`, and `honest_verdict` to a terminal prefix naming the failed conjuncts.
+
 ### SCENARIO-CONSTRAINT-VERIFY-6175-RAW-REVALIDATION: Labels Are Replayed From Raw Text
 
 Given immutable Exp6174 raw trace rows and calibration/held label sidecars,
