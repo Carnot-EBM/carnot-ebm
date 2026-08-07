@@ -32959,3 +32959,79 @@ until reproduced locally.
   dated nonterminal board-state change exists.
 
 <!-- V536-PLANNER-REFRESH-20260807-END -->
+
+## V537 Planner Refresh (2026-08-07, after milestone 2026.08.536)
+
+This refresh was completed before drafting milestone `2026.08.537`. It
+searched arXiv first, then OpenReview, Semantic Scholar citation trails for
+EBT (`2507.02092`) and ARM-EBM (`2512.15605`), Hugging Face Papers, targeted
+GitHub/project pages, Extropic's first-party writing index, and Logical
+Intelligence's Kona pages. Sources already indexed above were not re-added.
+
+### Newly promoted: executable verification loops for code
+
+- **WybeCoder: Verified Imperative Code Generation** - arXiv:2603.29088,
+  https://arxiv.org/abs/2603.29088; project and code links:
+  https://facebookresearch.github.io/wybecoder/. WybeCoder co-evolves
+  imperative code, loop invariants, and proofs through a hybrid of automatic
+  verification-condition generation, CVC5, and interactive Lean. Its reported
+  best system solves 74% of translated Verina tasks and 62% of Clever tasks.
+  Carnot hook: once a valid local code transport exists, retain compiler/test
+  outcomes as exact labels and consider proof/invariant co-generation as a
+  future harder verified-code corpus. It does not solve V536's immediate
+  `max_tokens=128` truncation failure and therefore is not a reason to bypass a
+  cheap transport canary or reopen an external-text scorer.
+- **RepoZero: Can LLMs Generate a Code Repository from Scratch?** -
+  arXiv:2605.07122, https://arxiv.org/abs/2605.07122. RepoZero uses
+  cross-language, sandboxed black-box output equivalence and an Agentic
+  Code-Test Evolution loop; even its strongest evaluated agents remain in the
+  reported 30%-55% pass-rate range. Carnot hook: execution-backed labels and
+  hidden tests remain the right outcome boundary, while generated tests are a
+  later active-verification action only after the fixed candidate pool and
+  oracle-distinct selector are viable. Do not let self-generated tests leak
+  into the private held oracle or selector inputs.
+
+### Current-source confirmations and guarded non-promotions
+
+- **Continuous self-learning:** AgentCL (arXiv:2606.02461), MemoPilot
+  (arXiv:2606.08656 / ICML 2026 OpenReview), and *When Continual Learning
+  Moves to Memory* (arXiv:2604.27003) remain the strongest relevant controls.
+  Together they support controlled compositional streams, procedural rather
+  than raw-trajectory memory, read-only predecision snapshots, and explicit
+  negative-transfer/retention measurement. They do not justify weight updates
+  before Carnot can produce any correct live seed event.
+- **Verifier allocation:** LLM-as-a-Verifier (arXiv:2607.05391) and SEVRA
+  (arXiv:2606.19808) remain already-indexed comparators. LLM-as-a-Verifier's
+  logit-scoring surface is outside Carnot's current local GGUF receipts, while
+  SEVRA reinforces measuring harmful interventions and initial-budget controls.
+  Neither replaces the oracle-distinct hidden-state test.
+- **EBT/ARM-EBM citation trails:** the 2026-08-07 Semantic Scholar pass returned
+  32 EBT citations and 8 ARM-EBM citations. The newest relevant entries
+  (Explorative Modeling, Memoir, Solver-Hard, fixed-point reasoners, LoopUS,
+  Distributional EBMs, Path-Measure Dynamics, and safe distillation) were
+  already indexed. Citation counts are discovery receipts, not quality claims.
+- **Hardware/product status:** Extropic's writing index still exposes no
+  authenticated post-2025 TSU route for Carnot; Logical Intelligence still
+  presents Kona 1.0 as a constraint-enforcement product without public weights,
+  a reproducible architecture specification, or a local API. No TSU/Kona
+  benchmark or hardware-speed claim is currently executable.
+- **KAN and GitHub:** the targeted sweep found no new KAN or EBM repository that
+  supersedes Symbolic-KAN, the existing KAN comparisons, THRML, Carnot's exact
+  validators, or its local GGUF/Rust boundaries. WybeCoder and RepoZero were
+  the only newly promoted code-verification additions.
+
+### V537 planning impact
+
+- Diagnose and qualify a raw-code output envelope before paying for another
+  `K=8` pool. The changed mechanism is a bounded token/envelope canary with raw
+  bytes, finish reasons, extraction, compile, run, and correctness receipts.
+- Re-run the Phase-D chain only if that canary produces complete executable
+  programs, then preserve exact tests as label/evaluation oracles and keep them
+  out of learned-selector features.
+- Rebuild the live strategy seed only after the same transport gate passes;
+  compare bounded procedural memory with no memory prospectively, including
+  negative transfer and family retention.
+- Keep proof co-generation, generated-test evolution, weight-updating memory,
+  TSU/Kona execution, and new KAN training deferred behind those cheaper gates.
+
+<!-- V537-PLANNER-REFRESH-20260807-END -->
