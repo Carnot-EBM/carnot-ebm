@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.536",
+  "generated_at": "2026-08-07T17:14:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 30.8,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Reliable dated evidence refresh after the V536 planner marker",
+      "duration_minutes": 13.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Fixed mode-jump sampler Rust/PyO3 correctness and distribution parity",
+      "duration_minutes": 10.67,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Live dual-family strategy seed stream gated on Exp6186 bank readiness",
+      "duration_minutes": 5.82,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Authentic Gemma-4-31B executable K=8 code pool gated on Exp6186 bank readiness",
+      "duration_minutes": 0.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Task-scoped .536 evidence-isolation preflight with intercepted-write semantics",
+      "duration_minutes": 0.47,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.08.536 completed 12 experiments in 30.8 minutes, including 4 compute-bound experiments. The longest listed compute-bound work was the 5.82-minute live dual-family strategy seed stream, followed by the 0.69-minute authentic Gemma code pool; both descriptions identify an Exp6186 bank-readiness gate, but the supplied data does not isolate why their durations differed. The locked task-conditioned GPU-idle classification is false, while the snapshot is not linked to an experiment interval and supplies no evidence of a parallel multi-model DualGPURunner miss.",
+  "bottlenecks_identified": [
+    "The 13.0-minute reliable dated-evidence refresh was the longest listed experiment and was synthesis-only, making evidence-refresh latency the clearest elapsed-time concentration without implicating GPU use.",
+    "The 10.67-minute Rust/PyO3 sampler correctness and distribution-parity task was the next-longest listed experiment and was also synthesis-only, indicating a second non-GPU execution path worth instrumenting.",
+    "The compute-bound entries name an Exp6186 bank-readiness gate, but no phase-level timing separates dependency wait, model startup, generation, and validation, so the cause of the 5.82-minute compute-bound duration cannot be determined from the supplied data.",
+    "The locked compute-task classification reports no GPU-idle condition. The idle GPU snapshot is not task-correlated evidence and therefore is not identified as a milestone bottleneck.",
+    "No supplied timing or GPU record establishes that a task loaded multiple models in parallel, so no missed DualGPURunner engagement can be identified."
+  ],
+  "improvements_suggested": [
+    "Add content-addressed incremental receipts to the dated-evidence refresh so unchanged inputs can bypass repeated synthesis work.",
+    "Add phase timers to Rust/PyO3 parity work so build, binding, correctness, and distribution checks can be optimized independently.",
+    "Emit a bank-readiness receipt before admitting dependent compute work, and record dependency-wait time separately from execution time.",
+    "Persist task-scoped GPU intervals with workload identity, model count, and runner selection; require DualGPURunner only when at least two models are actually loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make the dated-evidence refresh incremental with content-addressed reuse.",
+    "Instrument synthesis and compute phases, including explicit Exp6186 readiness-wait accounting.",
+    "Record task-correlated GPU, model-count, and runner-selection receipts, with conditional DualGPURunner routing for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded timing list supports runtime ranking but not causal attribution, and the GPU snapshot is not linked to an active experiment interval. Estimated savings therefore remain 0 rather than assigning an unmeasured speedup to the proposed tooling."
+}
