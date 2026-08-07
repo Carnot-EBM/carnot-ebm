@@ -16883,6 +16883,14 @@
         "acknowledged_on": "2026-08-06",
         "reason": "2026-08-06 commit added REQ-ARC-WMTE-6180 (budget_aware_path_cost_weight + two module constants) as a PURE ADDITION after standing_path_cost_weight -- `git diff HEAD` on this file is 0 deletions, 39 insertions. No existing statement, function body, or control path this analyser could have executed was touched, and the new function is not referenced by scripts/analyze_arc_reset_charge_attribution.py or any of its other declared dependencies.",
         "evidence": "`git diff HEAD -- python/carnot/agentic/arc_solver_kit.py | grep -c '^-[^-]'` is 0. The new symbols (budget_aware_path_cost_weight, BUDGET_AWARE_SEARCH_ENABLED, BUDGET_EXHAUSTION_PENALTY_PER_EXCESS_ACTION) do not appear anywhere in this artifact's declared dependency scripts."
+      },
+      {
+        "path": "python/carnot/agentic/arc_solver_kit.py",
+        "sha256_was": "553a407ff3ae8fff60a0f4da8674e46bcaf3167e17e720877c4d39bf44a5811e",
+        "sha256_now": "22e3489437d94f587cd32ed8d68dad1ac98d3614713d43bce1aa74064219cb91",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-OCD-VECTORIZE-1 rewrote object_centric_digest's connected-component labeling to use scipy.ndimage.label instead of a per-cell flood-fill. Verified field-for-field equivalent to the pre-rewrite algorithm across 30 randomized grids plus edge cases (tests/python/test_arc_object_centric_digest_vectorized.py, 45 tests, all passing) and adversarially reviewed. scripts/analyze_arc_reset_charge_attribution.py does not call object_centric_digest at all (grep confirms zero references), and no other function in arc_solver_kit.py was touched by this change, so nothing this analyser reads could have moved.",
+        "evidence": "`grep -n object_centric_digest scripts/analyze_arc_reset_charge_attribution.py` returns zero matches. `git show <commit>:python/carnot/agentic/arc_solver_kit.py` diffed against the prior version confirms the change is confined to object_centric_digest's body and docstring."
       }
     ]
   },
