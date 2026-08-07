@@ -1,0 +1,1068 @@
+{
+  "bank_path_hash_and_calibration_task_ids": {
+    "bank": {
+      "exists": true,
+      "path": "data/research/livecodebench_bank_6186.json",
+      "sha256": "sha256:de7ed9465c40061611c3485912f238cb5f1c983a7a1173ed60744cc91377c911",
+      "size_bytes": 118315
+    },
+    "calibration_task_count": 2,
+    "calibration_task_ids": [
+      "abc307_e",
+      "abc322_a"
+    ],
+    "calibration_task_ids_sha256": "sha256:09b9f68b75de4888d77fc6faa6f472687ab0b809423f2790140b0b9c52708e77",
+    "private_oracle_used_for_task_selection": false,
+    "private_vault_receipt_hash_only": {
+      "opened_by_exp6200": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/livecodebench_bank_6186_private_test_vault.jsonl",
+      "sha256": "sha256:245fe7b3f7c5d08059b832c268afee49fbfdbbe726ec4830e5134efe5777412e"
+    },
+    "public_prompt_bank": {
+      "exists": true,
+      "path": "data/research/livecodebench_bank_6186_public_prompts.jsonl",
+      "sha256": "sha256:483d652a1049e8aae9b9e2fc3baae76df138ba7d2d3a52cd662c954b44b0b1ef",
+      "size_bytes": 279889
+    },
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.bank_task_receipt",
+    "task_selection_rule": "Exp6186 calibration split only; public-sample-capable tasks sorted by runtime, stable_task_hash, task_id."
+  },
+  "configuration_selection_inputs": {
+    "allowed_inputs": [
+      "finish_reason",
+      "generated_token_count",
+      "token_budget",
+      "extraction_status",
+      "compile_status",
+      "public_sample_status"
+    ],
+    "forbidden_inputs": [
+      "private_test_source",
+      "hidden_correctness",
+      "private_oracle_outcome",
+      "label_conditioned_retry",
+      "model_judge"
+    ],
+    "private_oracle_access_count": 0,
+    "private_test_vault_opened": false,
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.selection_inputs",
+    "selection_after_raw_commit": true,
+    "uses_private_oracle": false
+  },
+  "correctness_retry_count": 0,
+  "csl_transport_ready_score": 0,
+  "duration_s": 308.107634,
+  "experiment_id": "experiment_6200_three_family_raw_code_transport_canary",
+  "field_principles": {
+    "bank_path_hash_and_calibration_task_ids": "Only immutable Exp6186 calibration task hashes and public prompt material choose the canary subset.",
+    "configuration_selection_inputs": "Lists the allowed label-blind inputs and forbidden private outcomes.",
+    "correctness_retry_count": "Bare zero; rows are never resampled or repaired from outcomes.",
+    "csl_transport_ready_score": "Both MoE families must be transport-ready for CSL.",
+    "duration_s": "End-to-end wall-clock duration.",
+    "field_principles": "Records why each field exists and what audit failure it prevents.",
+    "field_provenance": "Maps every required artifact field to REQ-CODE-6200.",
+    "frozen_envelope_by_family": "One per-family max-token ceiling is selected without correctness labels.",
+    "generation_matrix": "Every family/task/budget cell has a deterministic seed and immutable key.",
+    "gguf_cache_hash_revision_quantization_receipts": "Exact local GGUF file identity prevents silent model substitution.",
+    "gpu_offload_and_interval_receipts": "CUDA offload and GPU intervals are recorded from preflight and generation.",
+    "honest_verdict": "Terminal verdict names readiness and any blocked or partial transport state.",
+    "inference_substrate": "Declares local three-family llama.cpp CUDA raw-code generation.",
+    "legacy_headline_row_count": "Bare zero; no legacy model row can contribute.",
+    "model_specs": "Exactly the three mandated SOTA GGUF families are eligible.",
+    "per_family_finish_reason_token_extraction_compile_and_public_sample_metrics": "Envelope choice uses transport and public sample evidence only.",
+    "phase_d_transport_ready_score": "Gemma-4-31B dense readiness is the Phase-D transport gate.",
+    "preregistered_budget_grid": "The 512/1024/1536 budget grid is frozen before model load.",
+    "private_oracle_access_count": "Bare zero; hidden tests are forbidden for calibration choice.",
+    "process_wall_time_receipts": "Host process timing keeps live inference auditable.",
+    "prompt_and_embedded_chat_template_receipts": "Prompts use public task text and embedded GGUF chat templates only.",
+    "protected_files_unchanged": "Conductor and reconciler-owned files remain byte-identical.",
+    "raw_before_interpretation_receipt": "Raw bytes are sealed and hashed before extraction or public checks.",
+    "reproducibility_checksum": "Stable artifact checksum excluding duration and itself.",
+    "status": "Terminal state follows bank, cache, CUDA, raw coverage, transport metrics, and readiness gates.",
+    "test_commands": "Commands used for focused tests, coverage, spec coverage, validation, adversarial check, and full pytest.",
+    "test_exit_codes": "Exit codes prevent failed verification from being reported as readiness.",
+    "verifier_is_oracle": "False because this canary does not use private correctness or hidden tests."
+  },
+  "field_provenance": {
+    "bank_path_hash_and_calibration_task_ids": [
+      "REQ-CODE-6200",
+      "Only immutable Exp6186 calibration task hashes and public prompt material choose the canary subset."
+    ],
+    "configuration_selection_inputs": [
+      "REQ-CODE-6200",
+      "Lists the allowed label-blind inputs and forbidden private outcomes."
+    ],
+    "correctness_retry_count": [
+      "REQ-CODE-6200",
+      "Bare zero; rows are never resampled or repaired from outcomes."
+    ],
+    "csl_transport_ready_score": [
+      "REQ-CODE-6200",
+      "Both MoE families must be transport-ready for CSL."
+    ],
+    "duration_s": [
+      "REQ-CODE-6200",
+      "End-to-end wall-clock duration."
+    ],
+    "field_principles": [
+      "REQ-CODE-6200",
+      "Records why each field exists and what audit failure it prevents."
+    ],
+    "field_provenance": [
+      "REQ-CODE-6200",
+      "Maps every required artifact field to REQ-CODE-6200."
+    ],
+    "frozen_envelope_by_family": [
+      "REQ-CODE-6200",
+      "One per-family max-token ceiling is selected without correctness labels."
+    ],
+    "generation_matrix": [
+      "REQ-CODE-6200",
+      "Every family/task/budget cell has a deterministic seed and immutable key."
+    ],
+    "gguf_cache_hash_revision_quantization_receipts": [
+      "REQ-CODE-6200",
+      "Exact local GGUF file identity prevents silent model substitution."
+    ],
+    "gpu_offload_and_interval_receipts": [
+      "REQ-CODE-6200",
+      "CUDA offload and GPU intervals are recorded from preflight and generation."
+    ],
+    "honest_verdict": [
+      "REQ-CODE-6200",
+      "Terminal verdict names readiness and any blocked or partial transport state."
+    ],
+    "inference_substrate": [
+      "REQ-CODE-6200",
+      "Declares local three-family llama.cpp CUDA raw-code generation."
+    ],
+    "legacy_headline_row_count": [
+      "REQ-CODE-6200",
+      "Bare zero; no legacy model row can contribute."
+    ],
+    "model_specs": [
+      "REQ-CODE-6200",
+      "Exactly the three mandated SOTA GGUF families are eligible."
+    ],
+    "per_family_finish_reason_token_extraction_compile_and_public_sample_metrics": [
+      "REQ-CODE-6200",
+      "Envelope choice uses transport and public sample evidence only."
+    ],
+    "phase_d_transport_ready_score": [
+      "REQ-CODE-6200",
+      "Gemma-4-31B dense readiness is the Phase-D transport gate."
+    ],
+    "preregistered_budget_grid": [
+      "REQ-CODE-6200",
+      "The 512/1024/1536 budget grid is frozen before model load."
+    ],
+    "private_oracle_access_count": [
+      "REQ-CODE-6200",
+      "Bare zero; hidden tests are forbidden for calibration choice."
+    ],
+    "process_wall_time_receipts": [
+      "REQ-CODE-6200",
+      "Host process timing keeps live inference auditable."
+    ],
+    "prompt_and_embedded_chat_template_receipts": [
+      "REQ-CODE-6200",
+      "Prompts use public task text and embedded GGUF chat templates only."
+    ],
+    "protected_files_unchanged": [
+      "REQ-CODE-6200",
+      "Conductor and reconciler-owned files remain byte-identical."
+    ],
+    "raw_before_interpretation_receipt": [
+      "REQ-CODE-6200",
+      "Raw bytes are sealed and hashed before extraction or public checks."
+    ],
+    "reproducibility_checksum": [
+      "REQ-CODE-6200",
+      "Stable artifact checksum excluding duration and itself."
+    ],
+    "status": [
+      "REQ-CODE-6200",
+      "Terminal state follows bank, cache, CUDA, raw coverage, transport metrics, and readiness gates."
+    ],
+    "test_commands": [
+      "REQ-CODE-6200",
+      "Commands used for focused tests, coverage, spec coverage, validation, adversarial check, and full pytest."
+    ],
+    "test_exit_codes": [
+      "REQ-CODE-6200",
+      "Exit codes prevent failed verification from being reported as readiness."
+    ],
+    "verifier_is_oracle": [
+      "REQ-CODE-6200",
+      "False because this canary does not use private correctness or hidden tests."
+    ]
+  },
+  "frozen_envelope_by_family": {
+    "gemma4_26b_a4b_moe": {
+      "blocked_reasons": [
+        "no_budget_satisfied_transport_gate"
+      ],
+      "ready": false,
+      "selected_budget_metrics": {},
+      "selected_max_tokens": null,
+      "selection_inputs_private_oracle_free": true,
+      "selection_rule": "no budget met all transport criteria."
+    },
+    "gemma4_31b_dense": {
+      "blocked_reasons": [
+        "no_budget_satisfied_transport_gate"
+      ],
+      "ready": false,
+      "selected_budget_metrics": {},
+      "selected_max_tokens": null,
+      "selection_inputs_private_oracle_free": true,
+      "selection_rule": "no budget met all transport criteria."
+    },
+    "qwen3_35b_a3b_moe": {
+      "blocked_reasons": [
+        "no_budget_satisfied_transport_gate"
+      ],
+      "ready": false,
+      "selected_budget_metrics": {},
+      "selected_max_tokens": null,
+      "selection_inputs_private_oracle_free": true,
+      "selection_rule": "no budget met all transport criteria."
+    }
+  },
+  "generation_matrix": {
+    "expected_cell_count": 18,
+    "generated_cell_count": 18,
+    "independent_seed_per_cell": true,
+    "missing_cell_count": 0,
+    "planned_cells": [
+      {
+        "cell_id": "gemma4_31b_dense::abc307_e::tok512",
+        "family": "gemma4_31b_dense",
+        "max_tokens": 512,
+        "seed": 620000000,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "gemma4_31b_dense::abc307_e::tok1024",
+        "family": "gemma4_31b_dense",
+        "max_tokens": 1024,
+        "seed": 620000001,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "gemma4_31b_dense::abc307_e::tok1536",
+        "family": "gemma4_31b_dense",
+        "max_tokens": 1536,
+        "seed": 620000002,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "gemma4_31b_dense::abc322_a::tok512",
+        "family": "gemma4_31b_dense",
+        "max_tokens": 512,
+        "seed": 620000100,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "gemma4_31b_dense::abc322_a::tok1024",
+        "family": "gemma4_31b_dense",
+        "max_tokens": 1024,
+        "seed": 620000101,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "gemma4_31b_dense::abc322_a::tok1536",
+        "family": "gemma4_31b_dense",
+        "max_tokens": 1536,
+        "seed": 620000102,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "qwen3_35b_a3b_moe::abc307_e::tok512",
+        "family": "qwen3_35b_a3b_moe",
+        "max_tokens": 512,
+        "seed": 620010000,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "qwen3_35b_a3b_moe::abc307_e::tok1024",
+        "family": "qwen3_35b_a3b_moe",
+        "max_tokens": 1024,
+        "seed": 620010001,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "qwen3_35b_a3b_moe::abc307_e::tok1536",
+        "family": "qwen3_35b_a3b_moe",
+        "max_tokens": 1536,
+        "seed": 620010002,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "qwen3_35b_a3b_moe::abc322_a::tok512",
+        "family": "qwen3_35b_a3b_moe",
+        "max_tokens": 512,
+        "seed": 620010100,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "qwen3_35b_a3b_moe::abc322_a::tok1024",
+        "family": "qwen3_35b_a3b_moe",
+        "max_tokens": 1024,
+        "seed": 620010101,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "qwen3_35b_a3b_moe::abc322_a::tok1536",
+        "family": "qwen3_35b_a3b_moe",
+        "max_tokens": 1536,
+        "seed": 620010102,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "gemma4_26b_a4b_moe::abc307_e::tok512",
+        "family": "gemma4_26b_a4b_moe",
+        "max_tokens": 512,
+        "seed": 620020000,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "gemma4_26b_a4b_moe::abc307_e::tok1024",
+        "family": "gemma4_26b_a4b_moe",
+        "max_tokens": 1024,
+        "seed": 620020001,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "gemma4_26b_a4b_moe::abc307_e::tok1536",
+        "family": "gemma4_26b_a4b_moe",
+        "max_tokens": 1536,
+        "seed": 620020002,
+        "task_id": "abc307_e"
+      },
+      {
+        "cell_id": "gemma4_26b_a4b_moe::abc322_a::tok512",
+        "family": "gemma4_26b_a4b_moe",
+        "max_tokens": 512,
+        "seed": 620020100,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "gemma4_26b_a4b_moe::abc322_a::tok1024",
+        "family": "gemma4_26b_a4b_moe",
+        "max_tokens": 1024,
+        "seed": 620020101,
+        "task_id": "abc322_a"
+      },
+      {
+        "cell_id": "gemma4_26b_a4b_moe::abc322_a::tok1536",
+        "family": "gemma4_26b_a4b_moe",
+        "max_tokens": 1536,
+        "seed": 620020102,
+        "task_id": "abc322_a"
+      }
+    ],
+    "resume_receipt": {
+      "conflicting_key_count": 0,
+      "existing_key_count": 0,
+      "expected_key_count": 18,
+      "extra_key_count": 0,
+      "generated_new_rows": 18,
+      "missing_key_count": 18,
+      "raw_shard_directory": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.raw_shards",
+      "resume_mode": "fresh_generation",
+      "row_hash_mismatch_count": 0,
+      "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.resume"
+    },
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.generation_matrix",
+    "unique_seed_count": 18
+  },
+  "gguf_cache_hash_revision_quantization_receipts": {
+    "cached_local_resolver_pattern_used": true,
+    "no_autotokenizer_used": true,
+    "records": [
+      {
+        "chat_template_present": true,
+        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "cuda_offload_authenticated": true,
+        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "embedded_tokenizer_loadable": true,
+        "exists": true,
+        "family": "gemma4_31b_dense",
+        "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+        "gpu": 0,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "llama_cpp_build": "0.3.33",
+        "metadata_summary_sha256": "sha256:e1d7f4030e3ab2831dbd73d0135673726ec8adb135d79335788fc748126e48a2",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "name": "Gemma4-31B-it",
+        "quantization": "Q4_K_M",
+        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+        "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "size_bytes": 18323731456
+      },
+      {
+        "chat_template_present": true,
+        "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+        "cuda_offload_authenticated": true,
+        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+        "embedded_tokenizer_loadable": true,
+        "exists": true,
+        "family": "qwen3_35b_a3b_moe",
+        "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "llama_cpp_build": "0.3.33",
+        "metadata_summary_sha256": "sha256:dc28e5e6b78d34af3b9f8170ca2e56b50a0e19317e585f756a9b800cef231956",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "name": "Qwen3.6-35B-A3B",
+        "quantization": "UD-Q4_K_M",
+        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "size_bytes": 22134528992
+      },
+      {
+        "chat_template_present": true,
+        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "cuda_offload_authenticated": true,
+        "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+        "embedded_tokenizer_loadable": true,
+        "exists": true,
+        "family": "gemma4_26b_a4b_moe",
+        "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "llama_cpp_build": "0.3.33",
+        "metadata_summary_sha256": "sha256:e1d7f4030e3ab2831dbd73d0135673726ec8adb135d79335788fc748126e48a2",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "name": "Gemma4-26B-A4B-it",
+        "quantization": "UD-Q4_K_M",
+        "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+        "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "size_bytes": 16947539744
+      }
+    ],
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.gguf_cache_receipts"
+  },
+  "gpu_offload_and_interval_receipts": {
+    "authentic_cuda_receipts": false,
+    "generation_lifecycle": [
+      {
+        "backend_exception": "ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "cuda_offload_authenticated": false,
+        "family": "gemma4_31b_dense",
+        "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "pid_exited": true,
+        "worker_exit_code": 1,
+        "worker_pid": 1865276
+      },
+      {
+        "backend_exception": "ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "cuda_offload_authenticated": false,
+        "family": "qwen3_35b_a3b_moe",
+        "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "pid_exited": true,
+        "worker_exit_code": 1,
+        "worker_pid": 1865276
+      },
+      {
+        "backend_exception": "ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "cuda_offload_authenticated": false,
+        "family": "gemma4_26b_a4b_moe",
+        "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "pid_exited": true,
+        "worker_exit_code": 1,
+        "worker_pid": 1865276
+      }
+    ],
+    "model_cuda_offload": [
+      {
+        "cuda_offload_authenticated": true,
+        "family": "gemma4_31b_dense",
+        "gpu": 0,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      {
+        "cuda_offload_authenticated": true,
+        "family": "qwen3_35b_a3b_moe",
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+      },
+      {
+        "cuda_offload_authenticated": true,
+        "family": "gemma4_26b_a4b_moe",
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      }
+    ],
+    "preflight_gpu_receipt": {
+      "command_returncode": 0,
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 2411,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 21714,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 56
+        }
+      ],
+      "gpu_count": 2,
+      "ok": true,
+      "utilization_memory_intervals": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "phase": "preflight",
+          "utilization_pct": 0
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 2411,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 21714,
+          "name": "NVIDIA GeForce RTX 3090",
+          "phase": "preflight",
+          "utilization_pct": 56
+        }
+      ]
+    },
+    "preflight_intervals": [
+      {
+        "index": 0,
+        "memory_free_mb": 24120,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 4,
+        "name": "NVIDIA GeForce RTX 3090",
+        "phase": "preflight",
+        "utilization_pct": 0
+      },
+      {
+        "index": 1,
+        "memory_free_mb": 2411,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 21714,
+        "name": "NVIDIA GeForce RTX 3090",
+        "phase": "preflight",
+        "utilization_pct": 56
+      }
+    ],
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.gpu_offload_intervals"
+  },
+  "honest_verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
+  "inference_substrate": "local_three_family_llama_cpp_cuda_raw_code_transport_canary",
+  "legacy_headline_row_count": 0,
+  "model_specs": [
+    {
+      "actual_use_count": 6,
+      "chat_template_present": true,
+      "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_source": "tokenizer.chat_template",
+      "cuda_offload_authenticated": true,
+      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "exists": true,
+      "expected_quantization": "Q4_K_M",
+      "family": "gemma4_31b_dense",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model_headline": false,
+      "llama_cpp_build": "0.3.33",
+      "loader": "llama_cpp.Llama",
+      "metadata_summary_sha256": "sha256:e1d7f4030e3ab2831dbd73d0135673726ec8adb135d79335788fc748126e48a2",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "n_ctx": 4096,
+      "n_gpu_layers": -1,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "Phase-D dense headline transport",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    },
+    {
+      "actual_use_count": 6,
+      "chat_template_present": true,
+      "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_source": "tokenizer.chat_template",
+      "cuda_offload_authenticated": true,
+      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "exists": true,
+      "expected_quantization": "Q4_K_M",
+      "family": "qwen3_35b_a3b_moe",
+      "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model_headline": false,
+      "llama_cpp_build": "0.3.33",
+      "loader": "llama_cpp.Llama",
+      "metadata_summary_sha256": "sha256:dc28e5e6b78d34af3b9f8170ca2e56b50a0e19317e585f756a9b800cef231956",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "n_ctx": 4096,
+      "n_gpu_layers": -1,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "role": "CSL flagship MoE transport",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992
+    },
+    {
+      "actual_use_count": 6,
+      "chat_template_present": true,
+      "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_source": "tokenizer.chat_template",
+      "cuda_offload_authenticated": true,
+      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (8 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "exists": true,
+      "expected_quantization": "Q4_K_M",
+      "family": "gemma4_26b_a4b_moe",
+      "filename": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model_headline": false,
+      "llama_cpp_build": "0.3.33",
+      "loader": "llama_cpp.Llama",
+      "metadata_summary_sha256": "sha256:e1d7f4030e3ab2831dbd73d0135673726ec8adb135d79335788fc748126e48a2",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "n_ctx": 4096,
+      "n_gpu_layers": -1,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "revision": "3365c68df1a83799b846d05324ebfadbb8cc70b3",
+      "role": "CSL middle MoE transport",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744
+    }
+  ],
+  "per_family_finish_reason_token_extraction_compile_and_public_sample_metrics": {
+    "gemma4_26b_a4b_moe": {
+      "by_budget": {
+        "1024": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        },
+        "1536": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        },
+        "512": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        }
+      },
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "CSL middle MoE transport",
+      "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.family_transport_metrics"
+    },
+    "gemma4_31b_dense": {
+      "by_budget": {
+        "1024": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        },
+        "1536": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        },
+        "512": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        }
+      },
+      "model_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "role": "Phase-D dense headline transport",
+      "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.family_transport_metrics"
+    },
+    "qwen3_35b_a3b_moe": {
+      "by_budget": {
+        "1024": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        },
+        "1536": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        },
+        "512": {
+          "cell_count": 2,
+          "compile_status_counts": {
+            "compiled": 2
+          },
+          "compile_success_count": 2,
+          "expected_cell_count": 2,
+          "extraction_status_counts": {
+            "empty": 2
+          },
+          "extraction_success_count": 0,
+          "finish_reason_counts": {
+            "backend_exception": 2
+          },
+          "length_finish_count": 0,
+          "max_generated_token_count": 0,
+          "public_sample_pass_count": 0,
+          "public_sample_status_counts": {
+            "public_sample_fail": 2
+          },
+          "stop_finish_count": 0,
+          "timeout_count": 0,
+          "token_budget_violation_count": 0,
+          "transport_failure_count": 0,
+          "truncation_count": 0
+        }
+      },
+      "model_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "CSL flagship MoE transport",
+      "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.family_transport_metrics"
+    }
+  },
+  "phase_d_transport_ready_score": 0,
+  "preregistered_budget_grid": {
+    "calibration_task_count": 2,
+    "matrix_frozen_before_model_load": true,
+    "matrix_sha256": "sha256:5ae6b14cf0bddcec4d11c818db013870597f36b0796b21035e9c8a38278ed3a5",
+    "model_family_count": 3,
+    "planned_cell_count": 18,
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.budget_grid",
+    "token_budgets": [
+      512,
+      1024,
+      1536
+    ]
+  },
+  "private_oracle_access_count": 0,
+  "process_wall_time_receipts": {
+    "duration_s": 308.107634,
+    "end_utc": "2026-08-07T21:55:26Z",
+    "pid": 1865276,
+    "raw_generation_lifecycle_count": 3,
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.process_wall_time",
+    "start_utc": "2026-08-07T21:50:18Z"
+  },
+  "prompt_and_embedded_chat_template_receipts": {
+    "chat_message_hashes": [
+      "sha256:5dfb3de355833739861450ef6e9a1c2d1b3457730549e4d2d8f32fe90babbe4d",
+      "sha256:94803a3134b9bde1aea3ebd4f50a25527f3a2d63a40ac0e74acf8c96732cf138",
+      "sha256:a64ce30b907db81021215e0d58812b52322fbd90b9acedea7e0256bfd53612b8",
+      "sha256:86aa4df7516867def789abb21a1fcf9567f9947dd4de8ae196c993a88dccf920",
+      "sha256:a6fc59b2609a9882c30a194bd298eacff3d26566bf9805896105916b8bf4b6c8",
+      "sha256:8b9d2222d5bf4c9f319b23b5a1e47c4d7d0b65bbc09b3635cf40659460c1e69f",
+      "sha256:6a5ad3cc245ace0fce474b52db37a1f14750ad5c7e59d64bdda8664391ec0b02",
+      "sha256:be7d3075c579e877d3f1ff5102463a4526dcd5f6efe72f069da2ac4c96c0fced",
+      "sha256:38cecf7024c7efa7d1951a738fd52234d10066d07aff969268253d6f0048a7a5",
+      "sha256:5ae061316e184cd4d026906af733ea50cdb4fbea774f50aea1e4583e5bd1b854",
+      "sha256:abcca9ba85a47f8b392556533b60f9f3b18d603957dc1d3d0fb757f0502c87d6",
+      "sha256:f8897813324df3ac463d071eb5dda04ae40278647db5017029b27776da4b8288",
+      "sha256:253a8d6784adfd41851e7b6a2178ef86affb7b14f00705a6812d4637307eba45",
+      "sha256:2bdeb4a72419e499d7c2cca2e56f433730dfc4f7631c5ada224bed8da2bbf12b",
+      "sha256:5c52e2a2163ebb2a32825c2d86817e9689ea52952aab6fee3937f8dbb7a63a49",
+      "sha256:0b7f1453ddb901bd0fa19e49553f373517541f502de9d1c1cbdad0f3322c052e",
+      "sha256:47e22909752aad5f0256677e0e8802cea751c2e0077ffc57ab05192b1726c541",
+      "sha256:d6d1770cb72c563e0f620b1a95202902370a318766c96cb9a913c75b603012e1"
+    ],
+    "embedded_chat_templates": [
+      {
+        "chat_template_present": true,
+        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "chat_template_source": "tokenizer.chat_template",
+        "family": "gemma4_31b_dense",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "no_autotokenizer_used": true
+      },
+      {
+        "chat_template_present": true,
+        "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+        "chat_template_source": "tokenizer.chat_template",
+        "family": "qwen3_35b_a3b_moe",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "no_autotokenizer_used": true
+      },
+      {
+        "chat_template_present": true,
+        "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+        "chat_template_source": "tokenizer.chat_template",
+        "family": "gemma4_26b_a4b_moe",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "no_autotokenizer_used": true
+      }
+    ],
+    "private_material_in_prompts": false,
+    "prompt_hashes": [
+      "sha256:dc22f287ce21205479b20526be5539d53c8cbe21ae6a04d8fc5e48752cda8a9e",
+      "sha256:c9d51253940a1ad93e42389bd13c69f4378a3e61f2692060dae38bde98c06b05"
+    ],
+    "prompt_task_count": 2,
+    "prompt_task_ids": [
+      "abc307_e",
+      "abc322_a"
+    ],
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.prompt_template_receipts"
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "hash_after": "sha256:4e150e7fe2b044e51599fbae200946cf14938d447b4ed0ddeed16f0fde960a27",
+    "hash_before": "sha256:4e150e7fe2b044e51599fbae200946cf14938d447b4ed0ddeed16f0fde960a27",
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.protected_files",
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "random_seed": 620000000,
+  "raw_before_interpretation_receipt": {
+    "analysis_started_after_raw_commit": true,
+    "compile_count_before_raw_commit": 0,
+    "expected_raw_row_count": 18,
+    "extraction_count_before_raw_commit": 0,
+    "private_oracle_open_count_before_raw_commit": 0,
+    "public_sample_run_count_before_raw_commit": 0,
+    "raw_commit_timestamp_utc": "2026-08-07T21:55:25Z",
+    "raw_corpus_sha256": "sha256:4c55ecda945b1701c5b4b0078c1704734814293290faeb49d6bd62a63feb8224",
+    "raw_rows_complete_before_analysis": true,
+    "raw_shard_count": 3,
+    "raw_shard_directory": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.raw_shards",
+    "raw_shards": [
+      {
+        "count": 6,
+        "exists": true,
+        "filename": "gemma4_26b_a4b_moe.12a863d48be9.jsonl",
+        "mtime_ns": 1786139725487938985,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.raw_shards/gemma4_26b_a4b_moe.12a863d48be9.jsonl",
+        "sha256": "sha256:62a9dbc4038d8533810ccdecd50702740b15722e06f8f93abcf25dc8b46742d1"
+      },
+      {
+        "count": 6,
+        "exists": true,
+        "filename": "gemma4_31b_dense.89fc015a295b.jsonl",
+        "mtime_ns": 1786139725483071374,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.raw_shards/gemma4_31b_dense.89fc015a295b.jsonl",
+        "sha256": "sha256:60219fe5b75030e593304dd4a5ccc7d2fe298a67b8f79274ee738f058b0953ef"
+      },
+      {
+        "count": 6,
+        "exists": true,
+        "filename": "qwen3_35b_a3b_moe.f99bb7db767a.jsonl",
+        "mtime_ns": 1786139725486544478,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.raw_shards/qwen3_35b_a3b_moe.f99bb7db767a.jsonl",
+        "sha256": "sha256:51fd82b728aff77e7f5c2fd2d10da110244314b7066f238047353d377c37ec73"
+      }
+    ],
+    "schema": "carnot.experiment_6200.three_family_raw_code_transport_canary.v1.raw_before_interpretation",
+    "sealed_raw_row_count": 18
+  },
+  "reproducibility_checksum": "sha256:e688d06901d17733bb8eeab35c83f987e6bb5396506d075c124e69fa81bb5a30",
+  "run_date": "20260807",
+  "status": "complete_partial",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6200_three_family_raw_code_transport_canary.py -q -o addopts=",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6200_three_family_raw_code_transport_canary.py -m pytest tests/python/test_experiment_6200_three_family_raw_code_transport_canary.py -q -o addopts= && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6200_three_family_raw_code_transport_canary.py --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6200_three_family_raw_code_transport_canary.py",
+    ".venv/bin/python -m carnot.experiment_6200_three_family_raw_code_transport_canary --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6200_three_family_raw_code_transport_canary.json",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {},
+  "verifier_is_oracle": false
+}

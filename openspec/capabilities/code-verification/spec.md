@@ -2721,3 +2721,89 @@ when every expected key is present with matching content hashes,
 then it reuses the corpus without generation; when any key is conflicting,
 missing, extra, or hash-mismatched, it resumes only missing keys or blocks
 conflicting immutable evidence rather than overwriting rows.
+
+### REQ-CODE-6200: Three-Family Raw-Code Transport Envelope Canary
+
+The repository shall provide an Exp6200 workflow that calibrates raw-code
+serving envelopes for the three mandated SOTA GGUF families without using
+private-test correctness:
+- The workflow shall load only the immutable Exp6186 bank, derive a fixed
+  calibration-only task subset from pre-generation metadata, and freeze the
+  complete model-family x task x output-token-budget matrix before model load.
+- The preregistered output-token budgets shall be exactly 512, 1024, and 1536;
+  each planned cell shall use one deterministic independent seed and shall be
+  generated at most once unless an existing immutable raw row with the same
+  content-addressed key is reused.
+- The workflow shall resolve `unsloth/gemma-4-31B-it-GGUF`,
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF` through the cached GGUF resolver pattern,
+  use each GGUF's embedded llama.cpp tokenizer/chat template, record file hash,
+  cache revision, quantization, context, sampling, llama.cpp build, CUDA layer
+  offload, and GPU interval receipts, and shall never pass a GGUF path or repo
+  ID to `AutoTokenizer`.
+- For every planned cell, raw stdout bytes, raw byte hash, finish reason,
+  generated token count, timing, prompt/config hashes, and model/cache identity
+  shall be atomically persisted before code extraction, compilation, public
+  sample execution, or any other interpretation.
+- The workflow shall apply deterministic extraction, Python syntax/compile
+  checks, and public sample-run checks only. It shall not open the private-test
+  vault, run hidden correctness, resample, repair, retry based on correctness,
+  invoke a model judge, or select configuration from private outcomes.
+- The workflow shall freeze one envelope per family using only finish reason,
+  generated-token enforcement, extraction status, compile status, and public
+  sample-run evidence. Phase-D transport readiness shall require the
+  Gemma-4-31B dense family envelope, while CSL transport readiness shall require
+  both Qwen3.6-35B-A3B and Gemma-4-26B-A4B envelopes.
+- The terminal artifact shall be
+  `results/experiment_6200_three_family_raw_code_transport_canary.json` and
+  include the required Exp6200 schema fields, set
+  `private_oracle_access_count`, `legacy_headline_row_count`, and
+  `correctness_retry_count` to bare `0`, set `verifier_is_oracle` to false,
+  set `inference_substrate` to
+  `local_three_family_llama_cpp_cuda_raw_code_transport_canary`, and preserve
+  an honest blocked or partial verdict when any family remains truncated,
+  non-programmatic, or lacks authentic cache/CUDA evidence.
+
+### SCENARIO-CODE-6200-FROZEN-CALIBRATION-MATRIX: Tasks And Budgets Are Fixed Before Load
+
+Given the immutable Exp6186 bank contains calibration tasks,
+when Exp6200 builds its plan,
+then it selects only calibration split task IDs by a deterministic metadata
+rule, freezes the exact three-family x fixed-task x 512/1024/1536 matrix before
+model load, records the matrix hash, and does not inspect prior raw rows,
+private tests, labels, or correctness while choosing tasks or budgets.
+
+### SCENARIO-CODE-6200-RAW-BEFORE-ANALYSIS: Raw Bytes Are Sealed First
+
+Given a generation backend returns stdout for a planned cell,
+when Exp6200 persists the row,
+then the raw byte payload, raw hash, finish reason, generated tokens, timing,
+seed, and config are written to an immutable raw shard before extraction,
+compilation, public sample-run checks, or envelope selection begin.
+
+### SCENARIO-CODE-6200-PRIVATE-ORACLE-NONACCESS: Configuration Choice Is Label-Blind
+
+Given Exp6200 uses only transport and public samples,
+when it assembles prompts, resumes raw rows, analyzes candidates, and freezes
+family envelopes,
+then the private-test vault remains unopened, hidden correctness never
+participates in retries or envelope selection, and
+`private_oracle_access_count`, `legacy_headline_row_count`, and
+`correctness_retry_count` remain bare `0`.
+
+### SCENARIO-CODE-6200-IMMUTABLE-RESUME: Existing Raw Keys Cannot Be Replaced
+
+Given Exp6200 finds existing raw shards,
+when every expected cell is present with matching row hashes,
+then it reuses those rows without generation; when a row hash mismatch,
+duplicate key, or extra key is found, it blocks rather than overwriting or
+repairing the raw evidence.
+
+### SCENARIO-CODE-6200-CUDA-AND-FAMILY-GATES: Readiness Uses Transport Evidence Only
+
+Given each family has generated canary rows,
+when Exp6200 computes readiness,
+then each family gate uses only authenticated GGUF/CUDA receipts, finish
+reasons, token-budget enforcement, extraction, compile, and public sample-run
+metrics, Phase-D readiness depends only on Gemma-4-31B, CSL readiness depends
+on both MoE families, and no legacy model row can contribute to either score.
