@@ -21671,6 +21671,127 @@ solve SHALL be claimed, `solve_claimed=false`, `level_credit_delta=0`,
 `registry_delta=0`, `registry_levels_unchanged=true`, provenance, test receipts,
 protected-file immutability, and a stable checksum SHALL be present.
 
+## REQ-ARC-WMTE-6195: Prospective Fresh Transition Replay Of Frozen Task-Aware Policy
+
+Experiment 6195 SHALL use the milestone's single ARC slot only to measure
+whether the already-frozen Exp6167 global and task-aware proposal policies
+generalize prospectively to a fresh, disjoint live-agent-owned transition
+stream. The submitted live kernel SHALL collect transitions first, with
+adapters, induction, search, game-source access, offline BFS, per-game lookup
+routes, registry gotcha text, prior-game memory, hidden-state access, and all
+escape hatches disabled. The Exp6167 policies SHALL be replayed only after the
+new transition corpus is hashed and sealed. The replayed policies SHALL NOT
+choose live actions, request observations, change thresholds, fit held data, or
+influence the submitted kernel.
+
+Before acquisition, Exp6195 SHALL run the Exp6184 evidence-isolation preflight
+or validate its checked-in ready artifact, SHALL precheck the ARC solve registry
+for duplicate solve/retired-mechanism risk, and SHALL snapshot hashes for the
+requested prior artifacts, canonical Exp6167/Exp6181 artifacts, frozen policy
+code/config, prior transition IDs, submitted-kernel code, escape-hatch state,
+budgets/seeds, game-source access controls, registry, task-owned output root,
+git status, protected files, and root clutter. Exact prompt-requested upstream
+paths that are absent SHALL be recorded as absent hash receipts rather than
+silently substituted.
+
+Exp6195 SHALL reject any fresh transition ID that overlaps Exp6154, Exp6167, or
+Exp6181 transition IDs. It SHALL compare the Exp6167 global and task-aware
+policies on identical sealed transitions and report proposal-quality delta,
+calibration, support, uncertainty, per-game metrics, task-logo controls,
+negative-control shuffles, and descriptive action-distribution shift. It SHALL
+NOT claim a solve, improve a level, update `ops/arc_solve_registry.yaml`, or
+request registry credit. The artifact SHALL set `solve_provenance` to
+`live_agent_self_discovery` for the acquisition path only, and SHALL set
+`solve_claimed=false`, `level_credit_claimed=false`,
+`live_action_influence_count=0`, and `arc_solve_registry_delta=[]` as bare
+top-level values.
+
+Experiment 6195 SHALL write
+`results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` with
+top-level fields: `status`, `preconditions_checked`,
+`registry_precheck_and_hash`,
+`submitted_kernel_hash_and_escape_hatch_matrix`,
+`prior_transition_hashes_and_disjointness_receipt`,
+`fresh_live_agent_owned_transition_path_hash_count_and_provenance`,
+`seal_before_policy_replay_timestamp`,
+`frozen_exp6167_policy_code_config_and_hash`,
+`identical_transition_replay_receipt`,
+`global_and_task_aware_proposal_quality_metrics`,
+`paired_delta_intervals_and_seed`,
+`calibration_support_and_per_game_metrics`,
+`task_logo_and_shuffle_controls`, `live_action_influence_count`,
+`forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts`,
+`solve_provenance`, `solve_claimed`, `level_credit_claimed`,
+`arc_solve_registry_delta`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`, `test_exit_codes`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL be included for:
+
+- `status`: terminal state is complete_positive, complete_null, retired, or blocked for the prospective replay measurement.
+- `preconditions_checked`: Exp6184, upstream hashes, frozen config, output root, git status, protected files, source controls, and root clutter are checked before replay.
+- `registry_precheck_and_hash`: duplicate solve, retired mechanism, and registry mutation risk is checked before acquisition.
+- `submitted_kernel_hash_and_escape_hatch_matrix`: the submitted live kernel and every disabled adapter/induction/search/source/BFS/prior-memory/hidden-state escape hatch are content-addressed.
+- `prior_transition_hashes_and_disjointness_receipt`: prior Exp6154/Exp6167/Exp6181 transition IDs are hashed and overlap with the new corpus is refused.
+- `fresh_live_agent_owned_transition_path_hash_count_and_provenance`: the fresh corpus path, hash, row count, and live-agent-owned provenance are sealed before analysis.
+- `seal_before_policy_replay_timestamp`: the corpus seal timestamp SHALL precede any policy replay timestamp.
+- `frozen_exp6167_policy_code_config_and_hash`: global/task-aware thresholds and code/config hashes come from Exp6167 with zero refit.
+- `identical_transition_replay_receipt`: both policies score the exact same sealed transition IDs.
+- `global_and_task_aware_proposal_quality_metrics`: proposal-quality metrics are descriptive replay outputs, not live actions.
+- `paired_delta_intervals_and_seed`: task-aware minus global deltas use paired rows, a fixed seed, and uncertainty intervals.
+- `calibration_support_and_per_game_metrics`: calibration, support, and per-game metrics expose tails hidden by aggregates.
+- `task_logo_and_shuffle_controls`: task-logo, label shuffle, row shuffle, and unknown-label controls detect shortcut dependence.
+- `live_action_influence_count`: bare zero because policies are replay-only after corpus sealing.
+- `forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts`: every forbidden access counter must be bare zero.
+- `solve_provenance`: live_agent_self_discovery names the acquisition path only and does not imply a solve.
+- `solve_claimed`: bare false; this task cannot claim a level solve.
+- `level_credit_claimed`: bare false; no level or registry credit is requested.
+- `arc_solve_registry_delta`: empty list; the registry must not change.
+- `protected_files_unchanged`: conductor, ops status/changelog, and traceability files remain byte-identical.
+- `duration_s`: wall-clock duration covers acquisition, sealing, and offline replay.
+- `inference_substrate`: submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay.
+- `field_provenance`: every required field traces to preconditions, sealed corpus, frozen policy, controls, or command receipts.
+- `test_commands`: records focused unit/spec coverage, registry precheck, live-kernel audit, disjointness/seal, frozen-policy hash, forbidden-access, shortcut controls, schema, adversarial, E2E-applicable, protected-file, root-clutter, and full pytest checks.
+- `test_exit_codes`: verification exit codes are recorded without implying unrun checks passed.
+- `reproducibility_checksum`: content-addressed checksum detects artifact drift.
+- `honest_verdict`: complete_positive:, complete_null:, retired:, or blocked: states fresh transition count, policy delta, and no-solve status.
+
+### SCENARIO-ARC-WMTE-6195-FRESH-DISJOINT-SEAL-BEFORE-REPLAY
+
+GIVEN Exp6184 preflight and registry precheck pass
+WHEN the submitted live kernel captures fresh transitions
+THEN the corpus SHALL be live-agent-owned, adapters and escape hatches SHALL be
+disabled, fresh transition IDs SHALL be disjoint from Exp6154/Exp6167/Exp6181,
+the corpus SHALL be hashed, and the seal timestamp SHALL precede any policy
+replay timestamp.
+
+### SCENARIO-ARC-WMTE-6195-FROZEN-IDENTICAL-REPLAY-AND-CONTROLS
+
+GIVEN the sealed fresh corpus and byte-frozen Exp6167 policy manifests
+WHEN global and task-aware policies are replayed offline
+THEN both policies SHALL score identical transition IDs without refit, live
+action influence, new observations, source/BFS/adapter/prior-game/hidden-state
+access, or threshold changes, and the artifact SHALL report proposal-quality
+metrics, paired deltas, calibration, support, per-game metrics, task-logo
+controls, and shuffle controls.
+
+### SCENARIO-ARC-WMTE-6195-NO-SOLVE-REGISTRY-AND-PROTECTED-FILES
+
+GIVEN Exp6195 is a replay-only generalization measurement
+WHEN the artifact is validated
+THEN `solve_provenance` SHALL be `live_agent_self_discovery`,
+`solve_claimed=false`, `level_credit_claimed=false`,
+`live_action_influence_count=0`, forbidden access counts SHALL all be zero,
+`arc_solve_registry_delta=[]`, protected files SHALL be unchanged, and the
+honest verdict SHALL state the fresh transition count, policy delta, and
+no-solve status.
+
+## Implementation Status (REQ-ARC-WMTE-6195)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6195 | Planned in `python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py`; the experiment must reuse the submitted live kernel and write `results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` without solve credit. | Planned in `tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py`. |
+
 ### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
 
 **Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
