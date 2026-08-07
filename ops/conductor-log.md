@@ -15428,3 +15428,4 @@ Still active  |
 | 2026-08-07 03:32 UTC | Reliable dated evidence refresh after the V535 pla | OK | 86 passed, 1 warning in 7.93s |
 | 2026-08-07 03:49 UTC | Immutable current-rule companion determination for | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-07 04:36 UTC | Frozen executable CCTU-style item bank and Phase-D | OK | 87 passed, 1 warning in 13.53s |
+| 2026-08-07 05:37 UTC | Gated on Exp6173 bank readiness: authentic Gemma-4 | OK | 87 passed, 1 warning in 12.81s |
