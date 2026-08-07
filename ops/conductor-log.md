@@ -15474,3 +15474,4 @@ Still active  |
 | 2026-08-07 17:10 UTC | V536 adversarial capstone and exact-path reconcili | OK | 86 passed, 1 warning in 7.94s |
 | 2026-08-07 18:08 UTC | Plan milestone 2026.08.537 | OK | 14 tasks proposed |
 | 2026-08-07 18:10 UTC | Milestone 2026.08.537 activated | OK | 14 tasks queued |
+| 2026-08-07 19:33 UTC | Fail-closed terminal-artifact contract after V536  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ef test_req_in |
