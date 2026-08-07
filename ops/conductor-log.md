@@ -15476,3 +15476,4 @@ Still active  |
 | 2026-08-07 18:10 UTC | Milestone 2026.08.537 activated | OK | 14 tasks queued |
 | 2026-08-07 19:33 UTC | Fail-closed terminal-artifact contract after V536  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ef test_req_in |
 | 2026-08-07 20:07 UTC | Fail-closed terminal-artifact contract after V536  | OK | 93 passed, 1 warning in 8.40s |
+| 2026-08-07 21:14 UTC | Post-V537-marker SOTA delta plus staged-roadmap sc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
