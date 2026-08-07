@@ -21792,6 +21792,116 @@ no-solve status.
 |---|---|---|
 | REQ-ARC-WMTE-6195 | Planned in `python/carnot/experiment_6195_arc_task_aware_prospective_fresh_transition.py`; the experiment must reuse the submitted live kernel and write `results/experiment_6195_arc_task_aware_prospective_fresh_transition.json` without solve credit. | Planned in `tests/python/test_experiment_6195_arc_task_aware_prospective_fresh_transition.py`. |
 
+## REQ-ARC-WMTE-6209: Leave-One-Game-Out Frozen Task-Aware Shadow Measurement
+
+Experiment 6209 SHALL measure leave-one-game-out behavior for the already-frozen
+Exp6195/Exp6167 task-aware and global transition-admission policies on fresh
+live-agent-owned transitions. The experiment SHALL run a registry precheck
+before acquisition, SHALL use only already-cleared public games as evaluation
+fixtures, SHALL freeze the held-out game/seed/action-budget matrix and minimum
+fresh-transition count before acquisition, and SHALL collect rows only through
+the canonical submitted live path `make_carnot_agent -> E3AgentPolicy`. For
+each held-out game, that game's adapter and all source, BFS, prior-game,
+hidden-state, offline-ground-truth, registry-derived action, solver-kit
+reproduction, and LLM-induction escape routes SHALL be disabled and counted as
+bare zero.
+
+The task-aware and global policies SHALL be scored only in shadow after the
+fresh transition corpus is sealed and hashed. Both policies SHALL score
+identical transition rows, SHALL NOT request new observations, SHALL NOT choose
+or alter live actions, SHALL NOT fit held outcomes, SHALL NOT update policy
+thresholds, and SHALL NOT update `ops/arc_solve_registry.yaml`. The artifact
+SHALL report leave-one-game-out train/eval overlap counts, per-game
+accuracy/quality/safety metrics, paired game/seed clustered intervals, treatment
+activation controls, A/A replay controls, label-alias controls, and any losing
+game explicitly rather than hiding it in aggregate. Because this task claims no
+level solve, the artifact SHALL NOT include `solve_provenance`.
+
+Experiment 6209 SHALL write
+`results/experiment_6209_arc_loo_task_aware_shadow.json` with top-level fields:
+`status`, `registry_precheck_and_hash_before_after`,
+`duplicate_solve_target_count`, `preregistered_loo_game_seed_matrix`,
+`canonical_live_agent_entrypoint_receipts`,
+`adapter_disabled_receipts_by_held_out_game`,
+`frozen_policy_paths_and_hashes`, `fresh_transition_paths_hashes_and_counts`,
+`train_eval_overlap_counts`, `task_aware_and_global_shadow_decisions`,
+`loo_accuracy_quality_and_safety_by_game`, `paired_clustered_intervals`,
+`treatment_activation_and_aa_controls`, `live_action_influence_count`,
+`source_bfs_adapter_prior_game_hidden_state_access_counts`, `solve_claimed`,
+`level_credit_delta`, `registry_update_count`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL include:
+
+- `status`: principle "terminal state is complete_positive, complete_null, or blocked for the shadow leave-one-game-out measurement."
+- `registry_precheck_and_hash_before_after`: principle "registry is parsed and hashed before acquisition and after artifact assembly; all chosen games are already-cleared fixtures and the hash must remain unchanged."
+- `duplicate_solve_target_count`: principle "bare zero because cleared public games are evaluation fixtures, not solve targets."
+- `preregistered_loo_game_seed_matrix`: principle "held-out games, seeds, action budget, and minimum fresh-transition count are frozen before acquisition."
+- `canonical_live_agent_entrypoint_receipts`: principle "fresh rows must come through make_carnot_agent/E3AgentPolicy, not a shadow-only collector."
+- `adapter_disabled_receipts_by_held_out_game`: principle "the held-out game's adapter and every source/BFS/prior-game/hidden-state escape route are disabled for each LOO cell."
+- `frozen_policy_paths_and_hashes`: principle "Exp6195/Exp6167 frozen task-aware and global policy code, config, result, and manifests are content-addressed before shadow scoring."
+- `fresh_transition_paths_hashes_and_counts`: principle "the fresh transition corpus path, hash, row counts, and per-game counts are sealed before policy scoring."
+- `train_eval_overlap_counts`: principle "each held-out fold reports zero training/evaluation game overlap and zero held rows used for fit."
+- `task_aware_and_global_shadow_decisions`: principle "both frozen policies score identical sealed rows in shadow and cannot request observations or choose live actions."
+- `loo_accuracy_quality_and_safety_by_game`: principle "per-game accuracy, quality, safety, and losing/tied/winning status are reported so aggregate lift cannot hide a losing game."
+- `paired_clustered_intervals`: principle "task-aware minus global intervals are paired on identical transitions and clustered by game and seed."
+- `treatment_activation_and_aa_controls`: principle "treatment activation, A/A replay invariance, row-order, label-alias, and no-influence controls must pass before a positive verdict."
+- `live_action_influence_count`: principle "bare zero because shadow policies run only after live actions are already collected."
+- `source_bfs_adapter_prior_game_hidden_state_access_counts`: principle "every forbidden source, BFS, adapter, prior-game, hidden-state, LLM, and reproduce access count must be bare zero."
+- `solve_claimed`: principle "bare false because this task claims no level solve."
+- `level_credit_delta`: principle "bare zero because no public-game level credit is requested."
+- `registry_update_count`: principle "bare zero because ops/arc_solve_registry.yaml is not updated."
+- `inference_substrate`: principle "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay."
+- `verifier_is_oracle`: principle "false; observed transitions evaluate shadow decisions but do not become a live action oracle."
+- `field_provenance`: principle "every required field traces to spec, registry receipts, live rows, frozen policies, controls, or command receipts."
+- `field_principles`: principle "principles are emitted next to the artifact so required bare-zero and no-solve meanings are machine-auditable."
+- `test_commands`: principle "records focused unit/spec coverage, coverage for new code, validation, adversarial, live-path lint, root-clutter, E2E-applicable, and full pytest checks."
+- `test_exit_codes`: principle "verification exit codes are recorded without implying unrun checks passed."
+- `duration_s`: principle "wall-clock duration covers registry precheck, acquisition, sealing, shadow scoring, controls, and validation."
+- `reproducibility_checksum`: principle "content-addressed checksum detects later artifact drift."
+- `honest_verdict`: principle "complete_positive:, complete_null:, or blocked: states LOO game count, fresh transition count, shadow delta, losing-game count, and no-solve status."
+
+### SCENARIO-ARC-WMTE-6209-REGISTRY-MATRIX-AND-LIVE-COLLECTION
+
+GIVEN the ARC solve registry and the preregistered leave-one-game-out
+game/seed/action-budget matrix
+WHEN Experiment 6209 starts acquisition
+THEN every chosen game SHALL be confirmed already-cleared in the registry, the
+matrix and minimum fresh-transition count SHALL be hashed before rows are
+collected, fresh rows SHALL come through `make_carnot_agent/E3AgentPolicy`, and
+the held-out adapter plus source/BFS/prior-game/hidden-state escape routes SHALL
+be disabled for every held-out game.
+
+### SCENARIO-ARC-WMTE-6209-SHADOW-IDENTICAL-POLICIES-AND-CONTROLS
+
+GIVEN the sealed fresh transition corpus and frozen Exp6195/Exp6167 policy
+manifests
+WHEN the task-aware and global policies are replayed in shadow
+THEN both policies SHALL score identical transition IDs, policy-requested
+observation count SHALL be zero, policy-live-action count SHALL be zero,
+treatment activation and A/A controls SHALL be reported, label-alias controls
+SHALL pass, and per-game LOO metrics SHALL expose every losing, tied, or winning
+game.
+
+### SCENARIO-ARC-WMTE-6209-NO-SOLVE-REGISTRY-AND-FORBIDDEN-ACCESS
+
+GIVEN Exp6209 is a shadow generalization measurement only
+WHEN the artifact is validated
+THEN `solve_provenance` SHALL be absent, solve_provenance SHALL be absent,
+`solve_claimed=false`,
+`level_credit_delta=0`, `registry_update_count=0`,
+`live_action_influence_count=0`, all forbidden access counts SHALL be bare zero,
+`verifier_is_oracle=false`, the registry hash before and after SHALL match, and
+the honest verdict SHALL state no solve or registry credit.
+
+## Implementation Status (REQ-ARC-WMTE-6209)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6209 | Planned in `python/carnot/experiment_6209_arc_loo_task_aware_shadow.py`; the experiment must reuse the submitted live kernel and write `results/experiment_6209_arc_loo_task_aware_shadow.json` without solve credit or registry updates. | Planned in `tests/python/test_experiment_6209_arc_loo_task_aware_shadow.py`. |
+
 ### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
 
 **Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
