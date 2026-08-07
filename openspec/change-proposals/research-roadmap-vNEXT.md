@@ -1,332 +1,385 @@
-# Research Roadmap vNEXT — Milestone 2026.08.535
+# Research Roadmap vNEXT — Executable Code Verification and Prospective Learning
 
-**Milestone title:** Executable-Trace Internal Verification, Retention-Safe
-Strategy Memory, and Live-Path Robustness
+**Created:** 2026-08-07
 
-**Status:** Planned after terminal milestone `2026.08.534`
+**Target milestone:** `2026.08.536`
 
-**Experiment range:** Exp6169-Exp6182 (14 tasks, four phases)
+**Status:** Planned after terminal milestone `2026.08.535`
 
-**Primary question:** Can Carnot establish an authentic, unsaturated local-SOTA
-reasoning pool with exact executable constraints, use matching-base hidden states
-to select better traces without oracle leakage or surface shortcuts, and improve
-future constraint decisions through bounded external memory without forgetting
-earlier families?
+**Experiment range:** Exp6183-Exp6196 (14 tasks, four phases)
 
-## What milestone 2026.08.534 proved
+**Primary question:** Can Carnot replace the retired CCTU transport with an
+authentic, executable local-SOTA code pool, demonstrate oracle-distinct value
+from matching-model internal states, and turn deterministic replay into
+prospective retention-safe learning while preserving evidence and live-path
+boundaries?
 
-| Evidence | Terminal result | Consequence for `.535` |
+**Informed by:** `research-program.md`, `_bmad/prd.md`,
+`_bmad/architecture.md` (stale baseline, reconciled against newer artifacts),
+`ops/status.md`, `ops/changelog.md`, `research-complete.yaml`, the full prior
+roadmap corpus, `ops/conductor-log.md`, `research-references.md` through the
+V536 marker, `research-hardware-wishlist.md`, `ops/known-issues.md`, and
+`ops/exclusion_manifest.yaml`.
+
+## What milestone 2026.08.535 proved
+
+| Branch | Terminal evidence | Consequence for V536 |
 |---|---|---|
-| Exp6156 transition | `.533` was archived exactly once and `.534` activated with null, block, partial, skip, and quarantine states preserved | Keep the exact-boundary transition and duplicate-history checks; append `.534` at most once |
-| Exp6157 isolation closure | Three hard wall-clock failures produced no deliverable | Do not make repository-wide migration a scientific prerequisite. Prove a narrow task-scoped compatibility canary for every new `.535` test and artifact path |
-| Exp6158 evidence delta | `complete_null:`; no accepted post-V534 source delta | Advance the evidence marker and accept another dated zero-delta result rather than manufacturing novelty |
-| Exp6159-Exp6160 fresh decision corpus | Fresh exact events and a native-chat flagship-GGUF corpus were ready | Local SOTA generation and exact post-generation labels are operational; no small-model headline fallback is needed |
-| Exp6161-Exp6162 decision admission | The policy froze with zero held access and both Qwen3.6-35B-A3B and Gemma-4-26B-A4B passed prospective utility/safety gates | Task-aware energy has independent decision value, but both artifacts were historically quarantined by an obsolete duration heuristic. Preserve the immutable flags and issue only a current-rule companion determination |
-| Exp6163-Exp6165 strategy memory | Exp6163 was skipped behind Exp6157; mandatory Exp6164 wrote an artifact but self-learning did not execute; Exp6165 skipped | Continuous self-learning remains unproved. The next A/B must own its sealed store and stream, always execute independently, and measure forgetting after every update |
-| Exp6166 stochastic composition | Mode jumping improved the deliberately nonzero approximate factor, while the artifact remained `blocked:` because repository tests were nonzero | Re-adjudicate reproducibility with task-owned isolated tests; do not retrain or rewrite Exp6166 |
-| Exp6167 ARC generalization | Frozen task-aware admission had positive grouped lower CI `0.038998`, no solve, and zero registry delta | Use the single permitted ARC slot to test leave-one-game-out and task-label shortcut robustness. Add no new induction mechanism |
-| Exp6168 capstone | `.534` closed with missing isolation evidence, skips, a mandatory CSL internal block, immutable flags, a software-only stochastic block, and the ARC no-solve positive preserved | `.535` must keep branches independent and preserve exact terminal classes rather than requiring universal success |
+| Transition/evidence | Exp6169 exhausted three hard wall-clock attempts and left its exact transition artifact missing. Exp6170 qualified only a task-scoped isolation surface with readiness `0`, and Exp6172's current-rule companion was itself flagged by duration/methodology heuristics. | Start with a minimal exact-boundary receipt and a narrower V536 canary. Do not claim repository-wide isolation or reconstruct the missing Exp6169 artifact. |
+| Phase D pool | Exp6173 froze a valid 120-case bank. Exp6174 collected 960 authentic Gemma-4-31B samples, but all 960 failed the structured parse. Exp6175 therefore retired the CCTU pool for failed parseability, competence, headroom, minority, and family-support gates; Exp6176-Exp6178 were correctly skipped or blocked. | Change domain and transport. Use raw Python code plus a restricted execution oracle, not another CCTU JSON/schema/grammar/parser retry. Preserve the same bank-first, pool-second, headroom-before-hidden-state discipline. |
+| Continuous self-learning | Exp6179 found a positive bounded-replay strategy-memory result with retention, rollback, and poison controls, but no live model generation executed. | Acquire fresh flagship-generated, executable events and run a chronological prospective A/B with read-only decision snapshots and post-outcome commits. Do not treat deterministic replay as continuous live learning. |
+| Stochastic substrate | Exp6180 reproduced Exp6166's mode-jumping CNCE improvement from immutable software evidence while preserving the original blocked status and making no hardware claim. | Move the fixed algorithm across the Rust/PyO3 production boundary and close parity/tests. Do not rerun THRML scaling or claim TSU/board speedup. |
+| ARC | Exp6181 found no task-logo shortcut in the fixed Exp6167 task-aware policy, using 144 live-agent-owned transitions, with no solve or registry delta. | Use the single ARC slot for prospective fresh-transition replay of the already-frozen policy. Add no induction prompt, search lever, per-game adapter, or solve target. |
+| Capstone | Exp6182 preserved missing, null, flagged, blocked, retired, skipped, software-only, and no-solve classes without laundering them. | Keep branches independent and reconcile only exact declared paths. A failed code-selector gate must not suppress CSL, sampler parity, ARC, or the capstone. |
 
 ## The three largest gaps to the PRD vision
 
-### Gap 1 — no oracle-distinct verifier has selected a better answer from a competent unsaturated local-SOTA pool
+### Gap 1 — no oracle-distinct verifier has selected better local-SOTA outputs
 
-PRD FR12 calls for verification that improves reasoning at the point of use.
-Carnot's finite-choice Phase-D attempts did not create a valid test: Exp6128
-mixed saturated easy families with a below-floor typed-choice family and a
-position confound; Exp6140 retired that source-domain recovery. The older
-hidden-state pilot Exp5178 was also adverse (`0.000` versus tuned
-self-consistency `0.333`) and underpowered at six questions.
+PRD FR-12 requires verifiable reasoning that improves outcomes rather than
+merely detecting errors. Carnot has exact code validators and internal-state
+infrastructure, but its latest Phase-D domain never yielded one parseable
+candidate. Earlier MMLU-Pro hidden-state probes did not beat tuned
+self-consistency, and the code oracle-distinct replication was corpus-specific.
+The missing evidence is a fixed, competent, unsaturated, authentic `K>=8` pool
+with an executable oracle used only for labels/evaluation, followed by a
+task-disjoint one-shot selector test.
 
-`.535` changes the domain rather than transforming the retired options.
-CCTU-style executable tool traces have exact step validators and no correct
-answer position. A 120-item bank is frozen before model access, the mandatory
-dense `unsloth/gemma-4-31B-it-GGUF` produces genuine `K>=8` temperature samples,
-and a separate audit must establish parseability, competence, unsaturated
-error, and at least 0.10 selectable oracle headroom before hidden-state work can
-begin. The host's cached matching `google/gemma-4-31B-it` base then supplies
-per-layer states only after exact prompt/completion token alignment. CLUE is the
-cheap non-parametric baseline; a lightweight TrajSelector-class probe is the
-learned contender. Exact validators remain evaluation oracles, never selector
-features.
+### Gap 2 — continuous learning is still replay-only at the live frontier
 
-### Gap 2 — continuous self-learning has safety mechanics but no executed prospective utility or retention result
+PRD FR-11 and the research program require systems that improve from verified
+experience while they run. Exp6179 proved useful transaction mechanics on a
+deterministic event table, not on new flagship generations. Carnot still needs
+a chronological live A/B in which a policy chooses before inference, cannot
+see the test oracle, reads an immutable memory snapshot, and commits the
+verified outcome only after both arms decide.
 
-PRD FR11 requires improvement from verified experience. Exp6164 demonstrated
-honest blocking, not learning. Its repository-wide isolation dependency made a
-safe scientific question hostage to a broad migration task.
+### Gap 3 — positive software mechanisms are not yet portable or prospectively general
 
-`.535` gives the learner a task-owned sealed store and a fresh chronological
-constraint stream. Frozen `unsloth/Qwen3.6-35B-A3B-GGUF` and
-`unsloth/gemma-4-26B-A4B-it-GGUF` compare no memory, fixed memory,
-post-outcome write-through, post-outcome bounded replay, and shuffled retrieval.
-The model weights and decision snapshot remain immutable; commits occur only
-after exact outcomes. Following `RL Forgets!` and the self-generated replay
-study, every admitted update is followed by prior-family retention measurement,
-bounded-state/eviction accounting, poison quarantine, and rollback. Current
-utility cannot compensate for forgetting.
+The PRD calls for a Python/Rust architecture and eventual hardware-neutral
+sampling. Exp6180's mode-jump result is Python/JAX software evidence rather than
+a production Rust/PyO3 contract. The ARC task-aware policy has positive
+retrospective evidence but has only been checked on its existing transition
+corpus. V536 must test cross-runtime parity and fresh live-agent-owned
+generalization without converting either result into a hardware or solve claim.
 
-### Gap 3 — positive branches still lack determination-stable and shortcut-resistant operational closure
-
-The PRD's trustworthy research loop requires evidence that survives reruns,
-test infrastructure, and deployment boundaries. `.534` exposed three distinct
-risks: historical quarantine can disagree with today's verifier rules, a
-scientifically positive stochastic result can be blocked by unrelated test
-commands, and an ARC task-aware policy can exploit task identity instead of a
-generalizable constraint signal.
-
-`.535` addresses these without rewriting history: create an immutable
-companion determination for Exp6161/Exp6162; reproduce Exp6166 under a
-task-scoped isolated test root; and apply leave-one-game-out, unknown-label,
-and label-shuffle controls to the fixed Exp6167 live policy. The ARC task is
-measurement-only, adapter-disabled, uses the agent's own attempts, claims no
-solve, and leaves the registry unchanged.
+An operational sub-gap cuts across all three: transition history and tracked
+result isolation remain partial. V536 reserves two foundation slots for an
+exact transition and a task-scoped evidence canary, but deliberately avoids an
+open-ended repository-wide migration.
 
 ## Research findings incorporated
 
-| Source | Finding | `.535` use |
+| 2025-2026 source | Finding used | V536 response |
 |---|---|---|
-| RL Forgets!, arXiv:2607.04364 | Current-task KL does not control behavioral drift on prior-task distributions | Exp6179 measures protected/prior-family behavior after every update and rolls back any regression |
-| Forgetting in Language Models, arXiv:2605.26097 | Replay can reduce forgetting, while capacity remains a limiting factor | Exp6179 includes a bounded replay arm and reports bytes, capacity, eviction, and retained utility separately |
-| CLUE, arXiv:2510.01591 | Hidden-state deltas and clustering provide a non-parametric verification baseline | Exp6177 runs CLUE before the learned selector and does not treat the withdrawn OpenReview submission as authority |
-| CCTU, arXiv:2603.15309 | Tool-use traces expose complex exact constraints with executable validators | Exp6173-Exp6175 replace retired finite-choice recovery with an exact, position-free candidate pool |
-| TrajSelector, arXiv:2510.16449 | Intermediate latent representations can support best-of-N selection | Exp6176-Exp6178 qualify a matching-base surface, freeze a calibration-only selector, and run one-shot held evaluation |
-| Internal States + Structured Reasoning Consistency, arXiv:2510.11529 | Internal and external consistency signals can expose different failure modes | Structured consistency is a diagnostic shortcut control only; it does not reopen the retired external-text scorer family |
+| *On LLMs' Internal Representation of Code Correctness* (arXiv:2512.07404, ICSE 2026) | Correct and incorrect code from the same task can be separated using model internals and used for sample selection. | Build a new executable-code internal-state branch rather than retrying CCTU or external-text scorers. |
+| *Code Correctness Is Linearly Decodable from LLM Hidden States Before Generation* (arXiv:2606.14530 v3) | Leakage-controlled prompt-final probes retain signal after prompt-length residualization; repair evidence was too sparse. | Test prompt-final and code-final features, residualize length, use nested task splits, and make no repair claim. |
+| *Solver-Hard Is Not Model-Hard* (arXiv:2607.17047) | Classical solver difficulty and surface form can dissociate from model difficulty. | Freeze difficulty/platform strata, but gate on observed flagship competence/headroom and run surface/length controls. |
+| *Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning* (arXiv:2605.18871) | Deterministic penalties and learned energy are complementary; code scorers can learn model identity shortcuts. | Keep exact tests out of selector inputs and report model/family, length, likelihood, and uncertainty controls separately. Do not reopen the retired external-text scorer. |
+| *Memoir: Should a Model Write to Its Memory While It Thinks?* (arXiv:2607.20792) | Same-pass fast-memory writes slowed finite-budget learning relative to read-only pondering. | Keep decision-time memory read-only and commit only verified post-outcome events. |
+| *Thermalizing Stochastic Programs* (arXiv:2608.01615) and *Scaling Up Thermodynamic AI Models* (arXiv:2607.00170) | Factor-boundary compilation requires explicit error accumulation, schedule, autocorrelation, and effective-sample accounting. | Carry Exp6166's fixed mode-jump mechanism into Rust/PyO3 with exact transition/distribution parity and sampling-quality receipts; make no THRML scaling or hardware claim. |
+| VeRA (arXiv:2602.13217) | Executable task specifications enable fresh verified variants and hardening. | Freeze executable task and validator manifests before model access; leave generated variants to a later milestone after the fixed held result. |
+| OpenReview/Hugging Face/GitHub ecosystem checks | NRGPT, V_1, CodeCircuit, and THRML are relevant comparators, but none removes the need for local pool viability and cheap baselines first. | Run CLUE/linear baselines before attribution graphs, pairwise co-training, or new EBM architectures. |
+| Extropic and Logical Intelligence first-party checks | THRML is usable in software, but Carnot has no authenticated TSU route; Kona still has no reproducible local weights/API. | No TSU, Kona, latency, power, or speedup experiment. |
 
-The dated arXiv/OpenReview/Hugging Face/Semantic Scholar/GitHub, Extropic,
-Logical Intelligence, KAN, and hardware receipts were written first to
-`research-references.md` under `V535 Planner Refresh - 20260806`.
+The full dated source record and guarded interpretations are in
+`research-references.md` under
+`V536-PLANNER-REFRESH-20260807-END`.
 
 ## Target architecture
 
-```mermaid
-flowchart TD
-    ISO[Task-scoped evidence canary\nimmutable tracked results]
-    BANK[Frozen CCTU item bank\nexact step validators]
-    GGUF[Gemma-4-31B GGUF\nK>=8 native-chat traces]
-    HEAD[Competence and selectable-headroom audit]
-    BASE[Matching Gemma-4-31B base\nper-layer states + token alignment]
-    CAL[Calibration only\nCLUE + learned latent selector]
-    HELD[One-shot held selection\nvs tuned consensus and controls]
-    STREAM[Fresh chronological events\nQwen3.6 + Gemma-4-26B]
-    MEM[Post-outcome strategy store\nbounded replay + rollback]
-    RET[Future utility and\nper-update retention]
-    STOCH[Exp6166 immutable evidence\ntask-isolated re-adjudication]
-    ARC[Fixed Exp6167 policy\nLOGO + label-shuffle live audit]
-    CAP[Exact-path capstone]
+```text
+                 exact transition + V536 task-scoped evidence canary
+                                      │
+                 ┌────────────────────┼─────────────────────┐
+                 │                    │                     │
+        executable code Phase D   prospective FR-11    portability/generalization
+                 │                    │                     │
+ cached LiveCodeBench snapshot   frozen CSL splits    Exp6166 immutable evidence
+         ┌───────┴────────┐           │                     │
+  frozen cal/held IDs   exact     live seed strategy     Rust core + PyO3 ABI
+  + private-test vault   tests     events, two SOTA      exact transition/
+         │                 │       model families         distribution parity
+ Gemma-4-31B GGUF K=8     │           │
+ raw code before labels   │     read-only snapshot
+         └───────┬─────────┘     choose → generate → verify
+                 │                    │
+ competence + runnable +          post-outcome bounded commit
+ oracle-headroom audit               │
+                 │              prospective memory vs no-memory
+ matching HF Gemma-4-31B
+ prompt/code hidden states
+                 │
+ CLUE + residualized linear probe
+ calibration-only freeze
+                 │
+ one-shot held selection vs tuned SC
 
-    ISO --> BANK --> GGUF --> HEAD --> BASE --> CAL --> HELD
-    ISO --> STREAM --> MEM --> RET
-    ISO --> STOCH
-    ARC --> CAP
-    HELD --> CAP
-    RET --> CAP
-    STOCH --> CAP
+ submitted ARC kernel → fresh agent-owned transitions → fixed Exp6167 replay
+            (source/BFS/adapters/prior logs/hidden state disabled; no solve)
+
+All branches ───────────────────────────────→ exact-path capstone
 ```
 
-Every scored field names an `inference_substrate`, a principle, and
-`field_provenance`. Exact CCTU validators authorize correctness labels only
-after generation. GGUF generation and matching-base hidden-state extraction
-are distinct execution substrates whose token/revision alignment must be
-proved before joining rows.
+The GGUF generation and matching Hugging Face hidden-state surfaces are
+distinct substrates. Joining their rows requires model/revision/hash receipts,
+prompt formatting receipts, token-alignment checks, and an explicit
+quantization-boundary caveat. Exact private tests are the candidate outcome
+oracle; they may label calibration rows and evaluate held rows, but their
+inputs, outputs, failure messages, and derived features may not enter a
+selector before its decision.
 
-## Phase 0 — Evidence-safe foundation (Exp6169-Exp6172)
+## Phase 0 — Exact evidence and dated ingress (Exp6183-Exp6185)
 
-### Exp6169: exact `.534` to `.535` transition
+### Exp6183: minimal exact `.535` to `.536` transition
 
-Archive `.534` exactly once, preserve all flags/blocks/skips, prove task-ID and
-deliverable collision freedom, activate Exp6169-Exp6182, and leave an exact
-transition receipt.
+Write a blocked/ready receipt first, preserve Exp6169 as missing, verify that
+the `.535` completion record is not duplicated, collision-check Exp6183-
+Exp6196, and activate only the exact staged V536 roadmap. This task is
+pre-routed to Opus because the previous Codex transition exhausted three hard
+wall-clock windows.
 
-### Exp6170: task-scoped artifact-isolation compatibility canary
+### Exp6184: V536 evidence-isolation and history-multiplicity canary
 
-Use the canonical artifact resolver, pytest override, attempted-write guard,
-and task-owned temporary roots for all new `.535` tests. This is deliberately
-not another repository-wide closure claim. It fails if any declared canary
-mutates tracked evidence or quarantine fields.
+Qualify only the writers/tests introduced by Exp6183-Exp6196. Separate an
+expected intercepted negative-control attempt from a real isolation mutation,
+prove tracked sentinel/quarantine hashes are unchanged, and report current
+`research-complete.yaml` milestone multiplicity without attempting a global
+history rewrite. Repository-wide closure remains false.
 
-### Exp6171: dated post-V535 evidence delta
+### Exp6185: post-marker source delta
 
-Search only after the `V535-PLANNER-REFRESH-20260806-END` marker. Map genuinely
-new evidence to planned tasks or record a terminal zero-delta result.
+Search primary and named secondary sources strictly after the V536 planner
+marker. Append only genuinely new reliable findings, record null honestly, and
+do not reinsert planning-time sources as runtime deltas.
 
-### Exp6172: immutable quarantine/current-rule determination receipt
+## Phase A — Executable-code Phase D substrate (Exp6186-Exp6189)
 
-Re-run the current adversarial verifier against exact immutable Exp6161 and
-Exp6162 bytes, record rule-version and field-level differences, and issue a
-companion receipt. Historical `flagged_adversarial` fields and capstone
-classification remain unchanged; only an operator may reopen them.
+### Exp6186: frozen LiveCodeBench bank and preregistration
 
-## Phase A — Executable-trace Phase D substrate (Exp6173-Exp6176)
+From the cached dataset revision, freeze 120 task IDs before model access:
+36 calibration, 36 held selector evaluation, 18 CSL seed, and 30 CSL
+prospective. Stratify by platform, difficulty, date, and input mode; hash every
+prompt/test payload; keep private tests in an oracle vault; and pre-register
+pool, competence, runnable, headroom, split, selector, and CSL gates.
 
-### Exp6173: frozen CCTU item bank and preregistration
+### Exp6187: authentic local-SOTA `K=8` code pool
 
-Construct at least 120 executable tool-use cases spanning resource, behavioral,
-toolset, response, ordering, and cross-step constraints. Freeze 60 calibration
-and 60 held cases, exact validators, positive/negative controls, hashes, power,
-and gates before any candidate generation.
+Generate exactly eight raw completions for each of the 72 selector tasks with
+cached `unsloth/gemma-4-31B-it-GGUF` on CUDA. Persist raw text before extraction
+or execution, use bounded restricted execution for labels, checkpoint by
+content hash, and record dual-GPU utilization intervals. Do not retry for
+correctness or expose private tests to the model.
 
-### Exp6174: authentic local-SOTA `K>=8` trace pool
+### Exp6188: runnable competence, unsaturation, and headroom audit
 
-Gated on the item bank. Generate at least eight independent traces per case
-with the cached dense `unsloth/gemma-4-31B-it-GGUF`, embedded chat template,
-and fixed sampling schedule. There are no correctness-conditioned retries,
-model judges, AutoTokenizer-on-GGUF calls, or held-aware parser repairs.
+Using only the frozen pool, assess extraction/runnable coverage, correct and
+incorrect class support, observed competence, oracle@8, tuned label-free code
+self-consistency/equivalence selection, discordant task counts, and all
+pre-registered strata. Downstream rows become eligible only when both
+calibration and held splits have at least 30 tasks, both outcome classes, and
+nonzero selectable headroom. A failure retires this exact pool rather than
+launching hidden-state extraction.
 
-### Exp6175: competence, unsaturation, and headroom audit
+### Exp6189: matching-base hidden-state surface qualification
 
-Gated on pool integrity. Judge traces once with exact step validators and audit
-per-family parseability, per-candidate competence, error diversity, tuned
-consensus, oracle@8, clustered intervals, and at least 30
-consensus-wrong/oracle-right groups. If the pool is saturated, incompetent, or
-unselectable, retire the domain and skip latent verification.
+On a fixed calibration canary only, load the cached matching
+`google/gemma-4-31B-it` checkpoint across the dual RTX 3090 host, replay exact
+prompt/code rows, and qualify prompt-final plus code-final layer features.
+Require exact revision/hash, tokenizer/prompt, row, shape, token-alignment,
+precision, device-map, and quantization-boundary receipts. This experiment does
+not train a selector or inspect held labels.
 
-### Exp6176: matching-base per-layer surface qualification
+## Phase B — Internal verification and prospective FR-11 (Exp6190-Exp6193)
 
-Gated on headroom. Use only the already cached exact
-`google/gemma-4-31B-it` revision with hidden-state output across the dual RTX
-3090s. Prove GGUF/base prompt and completion token alignment, layer/precision/
-device maps, immutable revisions, and no network download. Fail closed on any
-alignment ambiguity.
+### Exp6190: calibration-only CLUE and residualized linear selector freeze
 
-## Phase B — Internal verification and continuous learning (Exp6177-Exp6179)
+Materialize calibration hidden states and label-blind held features. Compare
+CLUE nearest-centroid deltas, residualized linear probes, prompt-final and
+code-final layer summaries, likelihood/entropy, length, difficulty, and random
+controls using nested task-level calibration splits. Freeze one selector,
+threshold, layer/feature recipe, and held-feature checksum before any held
+label join.
 
-### Exp6177: calibration-only CLUE and latent selector freeze
+### Exp6191: one-shot held internal-state code selection
 
-Gated on the qualified surface. Compare CLUE nearest-centroid scoring with a
-small learned layer-aware selector. Tune layers, aggregation, and thresholds
-only on calibration cases. Include tuned consensus, length, logprob, norm,
-final-layer, structured-consistency, shuffled-label, and oracle-peeking controls.
-The oracle-peeking arm proves detectable signal but is never a contender.
+Join the frozen held labels exactly once and compare the locked selector with
+tuned label-free self-consistency/equivalence selection, CLUE, likelihood, and
+random controls. Report task-level paired bootstrap intervals, oracle headroom
+recovered, per-stratum and length-residual results, and shortcut audits.
+Promotion requires positive held gain with a positive lower interval and no
+oracle leakage; a clean null retires this code-family/feature construction.
 
-### Exp6178: one-shot held internal-state selection
+### Exp6192: live two-family strategy seed stream
 
-Gated on a frozen calibration artifact. Open held labels once and compare each
-frozen contender with tuned consensus using clustered/paired inference.
-Promotion requires a positive held confidence bound, failure of shuffled and
-cheap controls to reproduce the gain, no family shortcut, and
-`verifier_is_oracle=false`.
+On the 18 frozen CSL seed tasks, run three fixed code-generation strategies
+with cached `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Persist raw outputs before exact execution,
+freeze the no-memory baseline strategy using only seed outcomes, and create a
+bounded verified experience store. This task acquires seed experience; it does
+not claim prospective improvement.
 
-### Exp6179: mandatory retention-safe continuous strategy-learning A/B
+### Exp6193: prospective retention-safe continuous strategy-learning A/B
 
-This task has no conductor gate and must always write an artifact. It owns its
-sealed store and fresh event stream, uses both mandated flagship MoE GGUFs, and
-commits only exact post-decision certificates. Promotion requires positive
-future-event utility for each headline model, zero unsafe-admission regression,
-zero protected/prior-family retention regression after every update, bounded
-state, successful poison quarantine, and rollback.
+Process the 30 untouched CSL prospective tasks chronologically for both model
+families. The memory arm reads an immutable snapshot and chooses a strategy
+before inference; the no-memory arm uses the frozen seed winner. Both arms
+generate live outputs, and only after both decisions do exact validators commit
+outcomes. Measure utility, learning speed, regret, family retention, abstention,
+state bytes, duplicate/reorder/restart/rollback/eviction safety, and poison
+propagation. Model weights remain immutable.
 
-## Phase C — Reproducibility, live-path robustness, and closure (Exp6180-Exp6182)
+## Phase C — Portable sampling, ARC freshness, and closure (Exp6194-Exp6196)
 
-### Exp6180: Exp6166 evidence-preserving reproducibility adjudication
+### Exp6194: mode-jump Rust/PyO3 parity
 
-Do not refit the stochastic factor. Recompute metrics and hashes from the
-existing code/artifact, run focused tests under the Exp6170 task-owned root,
-classify the old full-suite exit 2, and issue a companion determination. Never
-rewrite Exp6166 or promote a hardware claim.
+Port the fixed Exp6166/Exp6180 mode-jumping proposal and CNCE accounting into
+the existing Rust sampler crate and PyO3 boundary. Compare Python, Rust, and
+PyO3 on exact transition probabilities, seeded traces, distributions, KL,
+autocorrelation, effective sample size, serialization, and error budgets. The
+task is correctness/portability only: no reopened THRML scaling, two-axis
+tempering, TSU, board, or speedup claim.
 
-### Exp6181: single ARC slot — leave-one-game-out shortcut audit
+### Exp6195: single ARC slot — prospective fresh-transition policy replay
 
-Registry-precheck first. Freeze the Exp6167 policy and run adapter-disabled
-live episodes under known, held-out, shuffled, aliased, and unknown task-label
-conditions. Use only `make_carnot_agent`/`E3AgentPolicy` and the agent's own
-runtime attempts. This is a robustness measurement, not a new induction line:
-no source inspection, offline BFS, per-game model, solver kit, gotcha text, or
-level solve.
+Run the submitted live kernel with all escape hatches disabled to collect a
+fresh, disjoint set of agent-owned transitions. Replay the already-frozen
+Exp6167 task-aware and global policies on identical transitions; do not alter
+the agent's actions. Audit task-label aliases again, report generalization and
+safety intervals, and preserve `solve_claimed=false`, `level_credit_delta=0`,
+and registry immutability. This adds no induction or search mechanism.
 
-### Exp6182: branch-independent `.535` capstone
+### Exp6196: branch-independent `.536` capstone
 
-Resolve every declared task by exact path, freshly adversarial-verify present
-artifacts, preserve every skip/null/block/retirement/flag, recompute scientific
-claims from raw fields, and reconcile OpenSpec, BMAD, ops docs, references, and
-completion history only to delivered evidence.
+Resolve every task by exact declared path and conductor receipt, adversarial-
+verify present artifacts, preserve all missing/blocked/skipped/null/retired/
+flagged classes, and reconcile specs, traceability, status, changelog,
+references, exclusions, and hardware notes only where evidence changed.
+Report whether Phase D, prospective FR-11, Rust/PyO3 parity, and the ARC fresh-
+transition result are separately headline-eligible.
+
+## Implementation priority
+
+| Order | Experiments | Reason |
+|---|---|---|
+| 1 | Exp6183-Exp6185 | Establish exact history/evidence and ingest only post-plan source deltas. |
+| 2 | Exp6186 and Exp6192's prerequisite split | Freeze every code task and oracle payload before any model access. |
+| 3 | Exp6187-Exp6188 | Pay for the authentic pool, then decide whether hidden-state work is admissible. |
+| 4 | Exp6189-Exp6191 | Qualify the matching-base surface, freeze on calibration, evaluate held once. |
+| 5 | Exp6192-Exp6193 | Run live seed acquisition and the mandatory prospective self-learning A/B independently of selector success. |
+| 6 | Exp6194-Exp6195 | Close cross-runtime and fresh-live-path generalization without hardware or solve claims. |
+| 7 | Exp6196 | Reconcile exact evidence after every branch reaches a terminal class. |
 
 ## Dependency graph and fail-closed gates
 
 ```text
-Exp6169 transition ────────────────────────────────────────────────┐
-Exp6170 task isolation ─────┬───────────────┬──────────────────────┤
-Exp6171 source delta ───────┤               │                      │
-Exp6172 determination ──────┤               │                      │
-                            │               │                      │
-Exp6173 CCTU bank           │               │                      │
-   └─[bank_ready == 1]→ Exp6174 authentic K>=8 pool               │
-       └─[pool_integrity == 1]→ Exp6175 headroom audit             │
-           └─[headroom_ready == 1]→ Exp6176 per-layer surface      │
-               └─[surface_ready == 1]→ Exp6177 selector freeze     │
-                   └─[calibration_ready == 1]→ Exp6178 held test ──┤
-                                                                    │
-Exp6179 mandatory CSL (ungated; task-owned stream/store) ──────────┤
-Exp6180 Exp6166 adjudication (uses Exp6170 canary when ready) ─────┤
-Exp6181 ARC LOGO audit (one ARC slot; independent) ────────────────┤
-                                                                    ▼
-                                                          Exp6182 capstone
+Exp6183 transition ─────────────┬───────────────┬──────────────────────────┐
+                               │               │                          │
+Exp6184 evidence canary ────────┼──────┐        │                          │
+                               │      │        │                          │
+Exp6185 source delta ───────────┘      │        │                          │
+                                      │        │                          │
+Exp6186 frozen bank [ready==1] ────────┼──→ Exp6192 seed [ready==1] ─→ Exp6193 CSL
+       │                              │
+       └→ Exp6187 K8 pool [integrity==1]
+                    │
+                    └→ Exp6188 headroom [ready==1]
+                                  │
+                                  └→ Exp6189 surface [ready==1]
+                                                    │
+                                                    └→ Exp6190 freeze [ready==1]
+                                                                      │
+                                                                      └→ Exp6191 held
+
+Exp6184 ─→ Exp6194 Rust/PyO3 parity
+Exp6184 ─→ Exp6195 single ARC fresh-transition slot
+
+Exp6183-Exp6195 terminal states ───────────────────────────────→ Exp6196 capstone
 ```
 
-The structured gates are declared in `research-roadmap-next.yaml`; their titles
-and predicates agree exactly. Exp6179 deliberately has no `gated_on` field.
-Exp6180 performs an internal canary check and still emits a terminal artifact if
-Exp6170 is not ready, avoiding disappearance behind a conductor skip.
+Every title-level dependency with an artifact condition is encoded as
+structured `gated_on` YAML. A failed bank/pool/headroom/surface/selector/seed
+gate skips its downstream agent call. Exp6193, Exp6194, Exp6195, and Exp6196 do
+not depend on Phase-D selector success.
 
 ## Allocation and roadmap-rule compliance
 
-| Category | Tasks | Count |
+| Allocation | Experiments | Count |
 |---|---|---:|
-| Phase-D executable-trace/internal verification science | Exp6173-Exp6178 | 6 |
-| Continuous self-learning science | Exp6179 | 1 |
-| Stochastic reproducibility science | Exp6180 | 1 |
-| ARC live-path measurement | Exp6181 | 1 |
-| Transition/evidence/infrastructure/capstone | Exp6169-Exp6172, Exp6182 | 5 |
+| Phase-D executable-code/internal-state science | Exp6186-Exp6191 | 6 |
+| Continuous self-learning science | Exp6192-Exp6193 | 2 |
+| Cross-runtime stochastic science | Exp6194 | 1 |
+| ARC live-path measurement | Exp6195 | 1 |
+| Transition/evidence/source/capstone | Exp6183-Exp6185, Exp6196 | 4 |
+| **Total** | Exp6183-Exp6196 | **14** |
 
-Phase D holds six of nine scientific slots, a majority after required
-reservations. There is exactly one ARC slot and it adds no induction mechanism.
-Exp6170 and Exp6172 are the two infrastructure slots. Exp6171 is the single
-SOTA-ingestion slot.
+Phase D owns six of ten scientific slots, satisfying the standing majority
+rule after infrastructure, CSL, sampler, and ARC reservations. There is exactly
+one ARC slot. The milestone contains the required continuous self-learning
+experiment and no public-facing documentation or publication task.
 
 ## Hardware and model requirements
 
-| Work | Required substrate | Boundary |
+| Resource | Experiments | Requirement and boundary |
 |---|---|---|
-| Exp6174 trace generation | Dual RTX 3090 host; cached `unsloth/gemma-4-31B-it-GGUF` through llama.cpp | Embedded GGUF tokenizer/chat template; no legacy-small headline rows |
-| Exp6176 hidden states | Dual RTX 3090 host; complete cached `google/gemma-4-31B-it` base checkpoint and exact cached GGUF counterpart | No download; exact revision, precision, device map, and token alignment required |
-| Exp6179 CSL | Dual RTX 3090 host; cached `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF` | Immutable weights; task-owned external memory only |
-| Other tasks | CPU/RAM/local disk | No hardware speedup, latency, power, or energy claim |
+| Dual RTX 3090 host | Exp6187, Exp6189, Exp6190, Exp6192, Exp6193 | Record both-device utilization/memory intervals. Fail closed before model load if the requested local CUDA/offload or matching-base device map is unavailable. |
+| Flagship dense GGUF | Exp6187 | `unsloth/gemma-4-31B-it-GGUF`; this is the headline code-pool generator. Legacy small models may smoke the harness only. |
+| Matching dense base checkpoint | Exp6189-Exp6190 | Cached `google/gemma-4-31B-it`, joined to the GGUF family only after revision/token/prompt/row alignment and quantization caveats. |
+| Flagship MoE GGUFs | Exp6192-Exp6193 | `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF`; both are live CSL model families. |
+| CPU/RAM/local disk | Exp6186-Exp6196 | Cached LiveCodeBench snapshot, restricted code execution, content-addressed checkpoints, hidden-feature stores, bootstrap analysis, Rust build, and exact artifacts. |
+| Network | Exp6185 only | Reliable post-marker source checks; compute tasks are local-first and do not download models at runtime. |
+| Rust/PyO3 toolchain | Exp6194 | Existing workspace crates and local extension build; correctness/parity only. |
+| FPGA/TSU boards | None | KV260 and PolarFire have terminal receipts; GateMate has no dated physical-state change; Carnot has no authenticated TSU. No board task or hardware claim is eligible. |
 
-Attached-board continuity is explicit. KV260 and PolarFire already have
-terminal execution receipts (including the PolarFire dispatch-hash receipt in
-Exp3867/Exp3901), so `.535` does not repeat them. GateMate remains blocked on
-the physical DirtyJTAG path; Exp6121 returned the same physical-state block and
-is retired. No GateMate task is eligible without a new dated physical receipt.
-Extropic has no authenticated local TSU route, and Kona exposes no public local
-weights/API or reproducible comparator. Those systems remain references, not
-execution substrates.
+Every runtime experiment that invokes an LLM includes at least one mandated
+SOTA GGUF in `MODEL_SPECS`, resolves it through the existing cache pattern,
+records hash/revision/quantization, and never passes a GGUF path to
+`AutoTokenizer.from_pretrained()`.
 
 ## Promotion and retirement rules
 
-- No Phase-D result is headline evidence unless Exp6175 qualifies the pool,
-  Exp6176 proves matching-base reachability, and Exp6178 beats tuned consensus
-  on untouched held cases with shortcut controls.
-- A hidden-state null or adverse result retires this exact CCTU/Gemma-4-31B
-  selector construction; it does not authorize another finite-choice recovery.
-- Continuous learning promotes only if both headline models improve future
-  exact utility without unsafe or prior-family regression and within the
-  preregistered state bound.
-- Exp6172 and Exp6180 are companion determinations. They never alter immutable
-  historical artifacts or silently remove quarantine.
-- Exp6181 has `solve_claimed=false`, `level_credit_delta=0`, and
-  `solve_provenance=live_agent_self_discovery`; the registry remains unchanged.
-- Any repeated prior verdict triggers the task's declared
-  `retire_if_same_verdict: true` rule and exclusion-manifest update.
+- **Executable bank:** readiness requires 120 unique frozen IDs, four disjoint
+  splits, exact dataset/test hashes, zero candidate/model access, and a private-
+  test vault that cannot enter prompts or features.
+- **Authentic pool:** integrity requires `K=8` raw-before-label coverage for all
+  72 selector tasks, exact local model/CUDA receipts, restricted execution, and
+  deterministic content-addressed resume. Correctness retries are forbidden.
+- **Headroom:** hidden-state work is eligible only with both correct and
+  incorrect candidates, non-saturated competence, at least 30 tasks per
+  selector split, and nonzero oracle recovery beyond tuned label-free
+  self-consistency/equivalence selection. If this fails, retire the exact code
+  pool and skip Exp6189-Exp6191.
+- **Internal selector:** promotion requires positive held task-level gain with
+  a positive bootstrap lower bound, no label/test leakage, and stable
+  length/surface/stratum controls. A clean repeat of the prior no-gain verdict
+  retires this code-family/feature path.
+- **Continuous self-learning:** promotion requires live local flagship
+  generation, predecision read-only snapshots, post-outcome commits, positive
+  lower intervals for both model families, retained prior-family utility,
+  bounded state, immutable weights, and zero poison/rollback safety regression.
+  The same null/blocked verdict triggers retirement rather than another replay.
+- **Rust/PyO3:** readiness means exact transition/distribution/serialization
+  parity and zero task-owned test failures. Timing may be diagnostic only and
+  cannot become a TSU, FPGA, energy, or speedup claim.
+- **ARC:** the fixed policy may be reported only as fresh-transition
+  generalization evidence. `solve_claimed=false`, no registry delta, no source,
+  BFS, adapter, prior-game, hidden-state, or per-game calibration access.
+- **Evidence:** any adversarial flag, missing required field, nonterminal
+  verdict, unclassified nonzero command, tracked-result mutation, or failed
+  structured gate excludes the artifact from headline aggregation.
 
 ## Explicitly deferred
 
-- Weight-mutating hidden-state alignment, RL, LoRA, and internal-model continual
-  learning; `.535` uses frozen local GGUFs and external certified memory.
-- External generated-text/logprob verifier revival, finite-choice option
-  transformations, MMLU source recovery, model judges, and correctness-aware
-  retry loops.
-- New ARC induction, game-specific adapters, source/BFS solves, or any public
-  level re-solve.
-- FPGA/TSU/Kona integration without a new physical or authenticated execution
-  route.
-- KAN experiments absent a new result that clears the recorded retired lanes.
+- Any CCTU, finite-ID answer transport, grammar/parser retry, schema-supported
+  ConstraintIR reprompt, or external generated-text/logprob scorer rerun.
+- Pairwise verifier co-training, CodeCircuit attribution graphs, full EBT/
+  NRGPT training, KAN retraining, and weight-updating continual learning before
+  the cheaper V536 tests qualify their prerequisites.
+- ARC single-shot induction prompt/budget/refinement work, first-contact search
+  signals, inert-click pruning, per-game adapters, offline BFS, or level-solving
+  targets.
+- THRML parity/scaling sweeps, two-axis tempering, FPGA/TSU latency, power,
+  energy, or speedup claims without a new authenticated physical route.
+- Kona benchmarking without reproducible local weights/API.
+- Public documentation, publication, model upload, plugin install, remote
+  message, or push operations.
