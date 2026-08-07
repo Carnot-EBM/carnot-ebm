@@ -3187,3 +3187,89 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6182 | Implemented (`python/carnot/experiment_6182_v535_capstone_reconciliation.py`, `results/experiment_6182_v535_capstone_reconciliation.json`) | Implemented (`tests/python/test_experiment_6182_v535_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-6196: The `.536` capstone reconciliation workflow
+  `exp6196-v536-capstone` in
+  `python/carnot/experiment_6196_v536_capstone_reconciliation.py` SHALL read
+  the active roadmap declarations for Exp6183 through Exp6195 by exact
+  declared deliverable path only, read conductor receipts, snapshot user
+  worktree changes, exact file hashes, structured gates, exclusions, ARC solve
+  registry state, completion-history multiplicity, protected files, root
+  clutter, and a task-owned bootstrap receipt before aggregate checks, and
+  write `results/experiment_6196_v536_capstone_reconciliation.json` without modifying `scripts/research_conductor.py`, `ops/status.md`,
+  `ops/changelog.md`, or `_bmad/traceability.md`. It SHALL preserve
+  bootstrap-only, null, partial, flagged, blocked, retired, gated, skipped,
+  positive, software-only/proxy, and no-solve classes without converting them
+  into milestone success. It SHALL adversarial-verify every present exact
+  artifact, preserve determination classes, classify each preregistered
+  promotion or retirement boundary independently, and SHALL NOT let
+  code-selector gate outcomes suppress CSL, sampler parity, ARC, source, or
+  capstone classifications. It SHALL record model identity, GPU and inference
+  substrate provenance, raw-before-label and private-test boundaries,
+  selector-freeze and transaction-order audits, retention and immutable weight
+  evidence, Rust/PyO3 parity with no hardware claim, ARC live-path solve
+  provenance and registry delta, nonzero command classifications, and a stable
+  reproducibility checksum.
+- SCENARIO-CAPSTONE-6196: The artifact
+  `results/experiment_6196_v536_capstone_reconciliation.json` must emit
+  top-level fields `status`, `preconditions_checked`,
+  `bootstrap_artifact_receipt`, `milestone_task_and_deliverable_matrix`,
+  `exact_path_existence_hash_and_conductor_receipt_matrix`,
+  `structured_gate_and_skip_matrix`,
+  `per_task_honest_verdict_and_terminal_class`,
+  `missing_bootstrap_null_partial_flagged_blocked_retired_gated_skipped_positive_software_proxy_and_no_solve_preservation_matrix`,
+  `adversarial_verify_commands_exit_codes_and_flags`,
+  `determination_preservation_receipt`,
+  `model_identity_gpu_and_inference_substrate_matrix`,
+  `raw_before_label_private_test_selector_freeze_and_transaction_order_audit`,
+  `continuous_learning_retention_lifecycle_and_immutable_weight_audit`,
+  `rust_pyo3_parity_and_no_hardware_claim_audit`,
+  `arc_live_path_solve_provenance_and_registry_delta_audit`,
+  `promotion_retirement_and_exclusion_matrix`,
+  `branch_independence_receipt`,
+  `research_complete_multiplicity_receipt`,
+  `openspec_traceability_status_and_changelog_reconciliation`,
+  `protected_files_unchanged`, `preexisting_worktree_changes_preserved`,
+  `duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+  `test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+  With the current `.536` evidence, Exp6183 is bootstrap-only despite a
+  conductor cache-hit receipt; Exp6184 and Exp6186 are positive infrastructure
+  and bank evidence; Exp6185 is a complete-null source refresh; Exp6187 is
+  partial and flagged with `pool_integrity_ready_score=0`; Exp6188, Exp6190,
+  and Exp6193 are present gate blocks; Exp6189 and Exp6191 are skipped missing
+  exact deliverables under conductor gate blocks; Exp6192 is partial seed-stream
+  evidence with `seed_stream_ready_score=0`; Exp6194 is software Rust/PyO3
+  parity with no hardware or speedup claim; and Exp6195 is positive ARC
+  fresh-transition evidence with no solve or registry credit.
+- SCENARIO-CAPSTONE-6196-BRANCH-INDEPENDENCE: Code-selector gate outcomes from
+  Exp6187 through Exp6191 may retire or skip only the executable-code selector
+  descendants. CSL seed evidence, sampler parity, ARC fresh-transition
+  evidence, source-delta evidence, and the capstone reconciliation remain
+  independently classified from their exact artifacts and conductor receipts.
+- SCENARIO-CAPSTONE-6196-TERMINAL-CLASS-PRESERVATION: A current gate block,
+  missing exact artifact, bootstrap-only artifact, flagged artifact, partial
+  positive precursor, software-only parity result, no-hardware boundary, or
+  no-solve ARC result must remain visible in the preservation matrix and must
+  not be laundered into branch or milestone success.
+- SCENARIO-CAPSTONE-6196-ADVERSARIAL-VERIFY-AND-CHECKSUM: Every present exact
+  artifact must have an adversarial-verifier receipt or injected test receipt
+  with command, exit code, flag count, flags, and receipt hash recorded. The
+  output checksum must be computed from the complete artifact with the checksum
+  field blanked and remain stable across validation and write/read round trips.
+- SCENARIO-CAPSTONE-6196-FIELD-PRINCIPLES: The required field principles are:
+  `branch_independence_receipt` = "code-selector gate outcomes cannot suppress
+  CSL, sampler, ARC, source, or capstone classifications";
+  `inference_substrate` = "deterministic_exact_path_capstone_reconciliation";
+  `honest_verdict` = "terminal summary starts with complete:, complete_partial:,
+  or blocked: and enumerates every nonpositive class plus branch
+  promotion/retirement outcomes"; `protected_files_unchanged` = "conductor,
+  ops status, ops changelog, traceability, exclusions, ARC registry, and
+  protected sources remain unchanged"; `field_provenance` = "every required
+  output field names roadmap, conductor, exact artifact, verifier,
+  determination-preservation, registry, exclusion, or local hash sources".
+
+## Implementation Status (REQ-CAPSTONE-6196)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6196 | Planned (`python/carnot/experiment_6196_v536_capstone_reconciliation.py`, `results/experiment_6196_v536_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_6196_v536_capstone_reconciliation.py`) |
