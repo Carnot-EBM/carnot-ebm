@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Rule Index (navigational aid — added 2026-05-29, additive only)
 
-This file has ~29 distinct MANDATORY rules accreted one-per-incident. Not all
+This file has ~30 distinct MANDATORY rules accreted one-per-incident. Not all
 require active reading: many are now enforced by a pre-commit lint or conductor
 guard, so the prose is reference-only. Use this index to find the load-bearing
 rules fast. **No rule prose was removed — this is a map, not a deletion.**
@@ -39,6 +39,8 @@ read only if debugging the enforcer):**
   corrigenda land + paper rewritten
 
 **ACTIVE — require judgment, read these when planning/executing:**
+CLAUDE.md Writing Style: Simplified Technical English (2026-08-07 — forward-only;
+governs new prose you add to this file, not the existing text) ·
 Codex-Default-v2 (2026-06-10) · Failed-Experiment Rerun · Pre-Launch Preconditions ·
 Adversarial Artifact Verification + Sample-Size Rigor · Inference-Substrate
 Declaration · Principle-Annotated Artifact Fields · Phase Prototype+Validation ·
@@ -88,6 +90,81 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
   agents write for other agents — subagents mirror the style of whoever briefs them.
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
+
+## CLAUDE.md Writing Style: Simplified Technical English (MANDATORY, forward-only)
+
+**Origin:** 2026-08-07 operator directive: "I want to enforce a strict writing
+style of Simplified Technical English (ASD-STE100) in this project's
+Claude.md." This rule governs new prose in this file. It does not govern the
+file's history. Per "Never remove existing content" and the never-prune
+doctrine, existing sections keep their current wording. Do not rewrite old
+text for style alone.
+
+**The rule.** Write new CLAUDE.md prose in STE100-spirit:
+
+1. Keep sentences short. Aim for 20 words or fewer for an instruction. Aim
+   for 25 words or fewer for a description. Split a longer sentence into two.
+2. Give one instruction per sentence. Do not chain two or more unrelated
+   instructions with "and", "but", or a semicolon.
+3. Use active voice. Write "the guard blocks the commit," not "the commit is
+   blocked by the guard."
+4. Use plain words. Avoid jargon the reader has not seen before. When you
+   must use a technical term, an internal name, an env var, or an acronym,
+   gloss it in plain words the first time it appears in the section.
+5. Avoid long noun stacks. Do not chain more than three nouns in a row.
+   Break a long noun stack into a short phrase or a list.
+6. Use a list or a table for related facts or steps. Do not pack them into
+   one long paragraph.
+7. Use simple tenses. Use the simple present for a rule or a fact. Use the
+   simple past for a past incident. Avoid a complex tense when a simple one
+   says the same thing.
+8. Do not stack hedges or vague qualifiers. Avoid "very", "quite",
+   "somewhat", and double negatives.
+
+**What this rule does not do.** This is a style constraint, not a content
+constraint. Do not drop a technical fact, an exact error string, an exact
+command, or an incident detail to meet a word count. Split a long sentence.
+Do not delete the fact inside it. A quoted operator directive stays verbatim,
+word for word, even when it does not follow STE100 style — never paraphrase
+a direct quote.
+
+**How to apply.**
+
+- This rule covers NEW prose you add to CLAUDE.md, from this rule's commit
+  onward. It does not cover existing text.
+- When you add a new MANDATORY rule, or extend an existing one, write the
+  new material in STE100-spirit.
+- When a rule needs a precise conditional (an exact gate formula, an exact
+  regex, an exact set of flags), put the precise form in a code block, a
+  table, or a list. Use short sentences around it to state the instruction
+  in plain words.
+- Exact identifiers stay exact. File paths, commit hashes, function names,
+  env var names, regex patterns, and quoted operator text are never
+  simplified or paraphrased.
+
+**Strictness note.** This is STE100-SPIRIT, not the formal ASD-STE100
+standard. The formal standard uses a fixed ~900-word approved dictionary,
+with one locked part of speech and one locked meaning per word, plus a
+maintained project-specific "technical dictionary" for domain terms. This
+project has no certified STE100 checker. So this rule asks for the SPIRIT of
+the standard — short sentences, active voice, one instruction per sentence,
+plain words — not word-for-word compliance with the formal dictionary. If
+the project later adopts a formal STE100 checker, this rule is the
+placeholder it replaces.
+
+**Mechanical enforcement.** None yet. This rule is honor-discipline, the
+same starting state as most new MANDATORY rules in this file. A future
+Layer-1 lint could flag long sentences and passive voice on lines newly
+added to CLAUDE.md, scoped so it never triggers on the file's existing
+history. Not built yet.
+
+**Cross-references:**
+- 2026-08-07 operator directive — origin
+- CLAUDE.md "Documentation and Communication Standards" (above) — the
+  sibling rule for code comments and public docs; this rule is its
+  counterpart for CLAUDE.md's own prose
+- CLAUDE.md "Never remove existing content" / never-prune doctrine — why
+  this rule is forward-only
 
 ## Verifier Authenticity Discipline (MANDATORY)
 
