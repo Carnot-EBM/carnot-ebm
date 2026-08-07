@@ -902,3 +902,91 @@ reproducibility checksum, and a terminal-prefixed `honest_verdict`.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6197 | Shared classifier: `python/carnot/terminal_artifacts.py`; artifact writer: `python/carnot/experiment_6197_v537_terminal_artifact_contract.py`. | Focused tests: `tests/python/test_terminal_artifact_contract_6197.py` and `tests/python/test_experiment_6197_v537_terminal_artifact_contract.py`. |
+
+## REQ-INFRA-6198: V537 Post-Marker Source Delta And Scope Audit SHALL Be Dated, Null-Safe, And Roadmap-Mechanical
+
+Carnot SHALL build Exp6198 as a deterministic source-delta and staged-scope
+audit for the V537 roadmap. The audit SHALL hash the exact
+`<!-- V537-PLANNER-REFRESH-20260807-END -->` marker, reject every candidate
+without reproducible evidence strictly after the marker timestamp, and treat
+planning-time WybeCoder/RepoZero findings as sealed planner context rather
+than runtime deltas.
+
+Exp6198 SHALL audit `research-roadmap-next.yaml` with `Roadmap`,
+`scripts/exclusion_manifest_lint.py`, and `scripts/audit_roadmap_gates.py`.
+When the staged next-roadmap file is absent, it SHALL record the fallback and
+audit `research-roadmap.yaml` without inventing staged content. The audit SHALL
+mechanically verify all fourteen task prompts, IDs, deliverables,
+dependencies, prior-failure records, model routing, structured gates,
+allocation rules, the single GateMate continuity task, the single ARC slot,
+and at least one prospective continuous self-learning task.
+
+The Exp6198 artifact SHALL be written atomically to
+`results/experiment_6198_v537_post_marker_source_scope_audit.json`. Its
+`inference_substrate` SHALL be exactly
+`post_marker_source_ingestion_and_roadmap_scope_audit`, `verifier_is_oracle`
+SHALL be false, and accepted source deltas SHALL append to
+`research-references.md` only after the V537 marker. If `accepted_count` is 0,
+`research-references.md` SHALL remain byte-identical and `honest_verdict`
+SHALL start with `complete_null:`.
+
+The Exp6198 artifact SHALL include these required fields: `status`,
+`planner_marker_and_hash`, `query_window`, `source_channel_receipts`,
+`discovered_candidates`, `accepted_findings`,
+`rejected_or_duplicate_findings`, `accepted_count`,
+`references_append_receipt`, `roadmap_path_and_hash`,
+`roadmap_schema_result`, `exclusion_manifest_lint_result`,
+`retired_scope_match_count`, `prior_failure_contract_result`,
+`gate_structure_result`, `model_specs_rule_result`, `task_count`,
+`infra_slot_count`, `phase_d_slot_count`, `arc_slot_count`,
+`continuous_self_learning_slot_count`, `hardware_continuity_result`,
+`prompt_section_and_ending_result`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6198-1: Marker Bounds Runtime Evidence
+GIVEN the sealed V537 planner refresh marker in `research-references.md`
+WHEN Exp6198 ingests external source receipts
+THEN it records the marker text, byte/hash receipt, exclusive timestamp window,
+and rejects every candidate dated at or before the marker.
+
+### SCENARIO-INFRA-6198-2: Zero Source Delta Preserves References
+GIVEN every discovered source is pre-marker, secondary-only, duplicate,
+self-referential, endpoint-failed, or missing a strict post-marker timestamp
+WHEN Exp6198 writes its artifact
+THEN `accepted_count` is 0, `accepted_findings` is empty,
+`research-references.md` is byte-identical before and after, and
+`honest_verdict` starts with `complete_null:`.
+
+### SCENARIO-INFRA-6198-3: Accepted Findings Require Strict Date And Scope Safety
+GIVEN a candidate has a source date equal to the marker timestamp, a bare
+same-day date, a duplicate ID or content hash, a retired-scope conflict, or no
+new method/gate applicability
+WHEN Exp6198 classifies candidates
+THEN each candidate is rejected or guarded before any references append. Only a
+primary or first-party candidate dated strictly after the marker with no
+retirement conflict may be accepted.
+
+### SCENARIO-INFRA-6198-4: Roadmap Scope Audit Is Mechanical
+GIVEN the V537 roadmap has fourteen tasks
+WHEN Exp6198 audits schema, exclusions, prior failures, gates, prompts,
+deliverables, dependencies, allocation, hardware continuity, and model rules
+THEN it reports schema/lint/gate success, at least two infrastructure tasks,
+six Phase-D tasks, exactly one ARC task, one GateMate task, and at least one
+prospective continuous self-learning task.
+
+### SCENARIO-INFRA-6198-5: Exp6198 Artifact Schema Is Machine-Checkable
+GIVEN the source receipts, roadmap audit, field principles, command receipts,
+and protected-file hashes
+WHEN Exp6198 validates the artifact
+THEN every required field is present, every required field has provenance and a
+principle, `verifier_is_oracle=false`, the inference substrate is exactly
+`post_marker_source_ingestion_and_roadmap_scope_audit`, and the checksum
+matches the normalized payload.
+
+## Implementation Status (REQ-INFRA-6198)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6198 | `python/carnot/experiment_6198_v537_post_marker_source_scope_audit.py`; terminal artifact `results/experiment_6198_v537_post_marker_source_scope_audit.json`. | `tests/python/test_experiment_6198_v537_post_marker_source_scope_audit.py`. |
