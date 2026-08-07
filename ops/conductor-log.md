@@ -15459,3 +15459,5 @@ Still active  |
 | 2026-08-07 15:11 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6188-livecodebench-headroom-audit) |
 | 2026-08-07 15:11 UTC | Calibration-only CLUE and residualized linear code | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6189-matching-base-code-hidden-state-su |
 | 2026-08-07 15:13 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6188-livecodebench-headroom-audit) |
+| 2026-08-07 15:13 UTC | Calibration-only CLUE and residualized linear code | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6189-matching-base-code-hidden-state-su |
+| 2026-08-07 15:15 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6188-livecodebench-headroom-audit) |
