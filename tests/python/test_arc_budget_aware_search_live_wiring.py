@@ -1,0 +1,191 @@
+"""REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): budget-exhaustion-meter wiring into the live path.
+
+The estimator (`arc_hud_bar_detector.budget_exhaustion_estimate`) and its consumer
+(`arc_solver_kit.budget_aware_path_cost_weight`) already existed, built and tested, but nothing
+on the SCORED path called either -- REQ-ARC-WMTE-6180's own implementation-status row explicitly
+declared wiring out of scope, a separate follow-up. This file covers that follow-up:
+
+  1. The flag ladder (explicit kwarg > env override > the kit's own default).
+  2. PRODUCER: `StepwiseExplorer._ingest` accumulates a raw-frame buffer and updates
+     `self.actions_remaining_estimate`, only when the flag is on and a HUD mask is admitted.
+  3. CONSUMER: `StepwiseExplorer._frontier` calls `budget_aware_path_cost_weight` in place of the
+     bare `depth` cost term, ONLY when the flag is on -- verified by intercepting the call, not by
+     an emergent node-selection outcome (depth_cost is monotonic in depth, so most branches never
+     actually reorder nodes at different depths; the mechanism, not a specific reordering, is what
+     this file pins).
+"""
+
+from __future__ import annotations
+
+import numpy as np
+import pytest
+
+from carnot.agentic import arc_competition_agent as agent
+from carnot.agentic.arc_competition_agent import StepwiseExplorer
+
+
+# --------------------------------------------------------------------------- #
+# (1) flag ladder                                                             #
+# --------------------------------------------------------------------------- #
+def test_flag_defaults_off():
+    assert StepwiseExplorer().budget_aware_search_enabled is False
+
+
+def test_flag_explicit_kwarg_on():
+    assert StepwiseExplorer(budget_aware_search=True).budget_aware_search_enabled is True
+
+
+def test_flag_explicit_kwarg_off_overrides_env(monkeypatch):
+    monkeypatch.setenv("CARNOT_ARC_BUDGET_AWARE_SEARCH", "1")
+    assert StepwiseExplorer(budget_aware_search=False).budget_aware_search_enabled is False
+
+
+def test_flag_env_override_on(monkeypatch):
+    monkeypatch.setenv("CARNOT_ARC_BUDGET_AWARE_SEARCH", "1")
+    assert StepwiseExplorer().budget_aware_search_enabled is True
+
+
+def test_flag_env_override_explicit_off(monkeypatch):
+    monkeypatch.setenv("CARNOT_ARC_BUDGET_AWARE_SEARCH", "0")
+    assert StepwiseExplorer().budget_aware_search_enabled is False
+
+
+def test_buffer_and_estimate_default_empty_before_any_frame():
+    explorer = StepwiseExplorer()
+    assert explorer._budget_frames == []
+    assert explorer.actions_remaining_estimate is None
+
+
+# --------------------------------------------------------------------------- #
+# (2) producer: _ingest accumulates frames + estimate                         #
+# --------------------------------------------------------------------------- #
+def test_ingest_appends_every_frame_regardless_of_flag():
+    """The buffer fill is unconditional (cheap -- a single list append) so it is ready the
+    moment the flag is later flipped; only the ESTIMATE computation is gated."""
+    explorer = StepwiseExplorer()
+    assert explorer.budget_aware_search_enabled is False
+    frame = np.zeros((4, 4), dtype=np.int16)
+    explorer._ingest(frame)
+    assert len(explorer._budget_frames) == 1
+    assert explorer.actions_remaining_estimate is None  # flag off -> never computed
+
+
+def test_ingest_computes_estimate_only_when_flag_on_and_mask_present(monkeypatch):
+    called = {"n": 0}
+
+    def _fake_estimate(grids, mask, **kwargs):
+        called["n"] += 1
+        return {"actions_remaining_estimate": 42.0, "verdict": "estimate"}
+
+    monkeypatch.setattr(agent, "budget_exhaustion_estimate", _fake_estimate)
+
+    explorer = StepwiseExplorer(budget_aware_search=True)
+    frame = np.zeros((4, 4), dtype=np.int16)
+
+    # No mask admitted yet -> estimator must not be called.
+    explorer.hud_mask = None
+    explorer._ingest(frame)
+    assert called["n"] == 0
+    assert explorer.actions_remaining_estimate is None
+
+    # Mask admitted -> estimator is called and the estimate is adopted.
+    explorer.hud_mask = np.ones((4, 4), dtype=bool)
+    explorer._ingest(frame)
+    assert called["n"] == 1
+    assert explorer.actions_remaining_estimate == 42.0
+
+
+def test_ingest_never_calls_estimator_when_flag_off(monkeypatch):
+    called = {"n": 0}
+    monkeypatch.setattr(
+        agent, "budget_exhaustion_estimate", lambda *a, **k: called.update(n=called["n"] + 1) or {}
+    )
+    explorer = StepwiseExplorer()  # flag off (shipped default)
+    explorer.hud_mask = np.ones((4, 4), dtype=bool)
+    explorer._ingest(np.zeros((4, 4), dtype=np.int16))
+    assert called["n"] == 0
+
+
+def test_ingest_estimator_exception_yields_none_not_a_crash(monkeypatch):
+    def _raises(*a, **k):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(agent, "budget_exhaustion_estimate", _raises)
+    explorer = StepwiseExplorer(budget_aware_search=True)
+    explorer.hud_mask = np.ones((4, 4), dtype=bool)
+    explorer._ingest(np.zeros((4, 4), dtype=np.int16))  # must not raise
+    assert explorer.actions_remaining_estimate is None
+
+
+# --------------------------------------------------------------------------- #
+# (3) consumer: _frontier's cost-term substitution                            #
+# --------------------------------------------------------------------------- #
+def _one_node_graph() -> dict:
+    return {
+        "n0": {
+            "path": [{"action": 1, "data": None}, {"action": 2, "data": None}],
+            "untested": [{"action": 3, "data": None}],
+            "value": 0.0,
+            "frame": "plain",
+        }
+    }
+
+
+def test_frontier_never_calls_budget_aware_weight_when_flag_off(monkeypatch):
+    called = {"n": 0}
+
+    def _fake_weight(**kwargs):
+        called["n"] += 1
+        return float(kwargs["depth"])
+
+    monkeypatch.setattr(agent, "budget_aware_path_cost_weight", _fake_weight)
+    explorer = StepwiseExplorer()  # flag off
+    explorer.cur = "root"
+    explorer.graph = _one_node_graph()
+    assert explorer._frontier() == "n0"
+    assert called["n"] == 0
+
+
+def test_frontier_calls_budget_aware_weight_with_estimate_when_flag_on(monkeypatch):
+    calls: list[dict] = []
+
+    def _fake_weight(**kwargs):
+        calls.append(dict(kwargs))
+        return float(kwargs["depth"])  # keep ordering behavior simple for this test
+
+    monkeypatch.setattr(agent, "budget_aware_path_cost_weight", _fake_weight)
+    explorer = StepwiseExplorer(budget_aware_search=True)
+    explorer.actions_remaining_estimate = 7.0
+    explorer.cur = "root"
+    explorer.graph = _one_node_graph()
+
+    assert explorer._frontier() == "n0"
+    assert len(calls) == 1
+    assert calls[0]["depth"] == 2  # len(path)
+    assert calls[0]["plan_length"] == 2
+    assert calls[0]["actions_remaining_estimate"] == 7.0
+
+
+def test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set():
+    """Byte-identity discipline: with the flag off, the sort key must be built from the exact
+    same expression as before this lever, even if actions_remaining_estimate happens to hold a
+    stale value (e.g. left over from a flag flip mid-run in a test)."""
+    explorer_off = StepwiseExplorer()
+    explorer_off.actions_remaining_estimate = 1.0  # would matter if consulted; must not be
+    explorer_off.cur = "root"
+    explorer_off.graph = {
+        "shallow": {
+            "path": [{"action": 1, "data": None}],
+            "untested": [{"action": 9, "data": None}],
+            "value": 0.0,
+            "frame": "a",
+        },
+        "deep": {
+            "path": [{"action": 1, "data": None}, {"action": 2, "data": None}],
+            "untested": [{"action": 9, "data": None}],
+            "value": 0.0,
+            "frame": "b",
+        },
+    }
+    # Plain BFS: shallowest wins, regardless of the (unconsulted) estimate.
+    assert explorer_off._frontier() == "shallow"
