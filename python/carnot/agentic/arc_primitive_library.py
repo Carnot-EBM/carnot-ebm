@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -294,12 +295,46 @@ _CONSTANT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 )
 
 
+_load_registry_cache_lock = threading.Lock()
+_load_registry_cache: dict[Path, tuple[float, dict[str, Any]]] = {}
+
+
 def _load_registry(path: Path = REGISTRY) -> dict[str, Any]:
+    """mtime-gated cache, per-``path`` (2026-08-06): profiling a live sp80 run found this
+    re-parsing the 452KB registry from scratch on every call (3 calls, ~2.1s total in a
+    2000-action run) via its two call sites below. An UNCONDITIONAL cache first shipped
+    here (and on the sibling `arc_solve_learning._registry`) broke
+    tests/python/test_experiment_4447_lilo_documented_primitive_library.py: the research
+    conductor runs concurrently with the test suite and genuinely appends to this file
+    mid-session, so a cache with no invalidation served a stale snapshot for the rest of
+    the process. Gating on `st_mtime` keeps the fast path (a cheap `stat()`, not a 452KB
+    reparse) for a short-lived process where the file cannot change mid-run -- the actual
+    target, a single game-eval subprocess -- while still re-reading correctly inside a
+    long-lived process (the test suite) if the file's mtime genuinely moves. Keyed by
+    `path` so distinct test fixtures (each its own `tmp_path`) never share a cache slot.
+
+    LOCKED (2026-08-06, adversarial review): a real competition submission runs every
+    game's `E3AgentPolicy` on separate THREADS in one process (`Swarm.main()`, see
+    `arc_competition_agent.py`), each indirectly reaching this loader via
+    `recommend_approach()` up to 3x -- an unlocked check-then-write let N threads' near-
+    simultaneous first calls each miss the cache and redundantly reparse. Matches the
+    `RunLocalMechanicLedger` convention already used in this codebase for the same
+    concurrency model."""
     try:
-        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
+        mtime = path.stat().st_mtime
+    except OSError:
         return {"games": []}
-    return loaded if isinstance(loaded, dict) else {"games": []}
+    with _load_registry_cache_lock:
+        cached = _load_registry_cache.get(path)
+        if cached is not None and cached[0] == mtime:
+            return cached[1]
+        try:
+            loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError):
+            return {"games": []}
+        value = loaded if isinstance(loaded, dict) else {"games": []}
+        _load_registry_cache[path] = (mtime, value)
+        return value
 
 
 def _clean_mechanic(value: Any) -> str:

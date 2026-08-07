@@ -21697,3 +21697,92 @@ estimate is threaded in.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6180 | `python/carnot/agentic/arc_hud_bar_detector.py:budget_exhaustion_estimate` (estimator) + `python/carnot/agentic/arc_solver_kit.py:budget_aware_path_cost_weight` (consumer). Both default-off and unwired from the live `E3AgentPolicy`/`plan_in_model` cascade; wiring is a separate, empirically-validated follow-up REQ per the Phase Prototype discipline. | `tests/python/test_arc_budget_exhaustion_estimate.py`. |
+
+### REQ-ARC-REGISTRY-CACHE-1: mtime-Gated Cache for Repeated `ops/arc_solve_registry.yaml` Parses
+
+**Origin:** 2026-08-06, while bisecting a `sp80`/`ft09` Kaggle local-gate timeout regression.
+Profiling a live `sp80` run (cProfile, budget=2000) found `arc_solve_learning.recommend_approach`
+costing ~1.7s/call, almost entirely `yaml.safe_load` re-parsing the 452KB / 6883-line
+`ops/arc_solve_registry.yaml` from scratch on every call, via two separate call sites
+(`arc_solve_learning._registry` and `arc_primitive_library._load_registry`) that each re-read
+unconditionally rather than once per process.
+
+**THE REGRESSION THIS CAUSED.** An UNCONDITIONAL cache (`functools.cache`) was tried first and
+broke `tests/python/test_experiment_4447_lilo_documented_primitive_library.py`'s
+`library_coverage` assertion: the research conductor runs CONCURRENTLY with the test suite and
+genuinely appends games to `ops/arc_solve_registry.yaml` mid-session, so a cache with no
+invalidation served the first read's stale snapshot for the rest of the process. (Root-caused by
+temporarily reverting the change entirely and confirming the SAME assertion fails identically on
+unmodified code -- the coverage threshold was already stale against the live registry
+independent of caching, which is what made the diagnosis take two passes.)
+
+**THE FIX.** The system SHALL cache each function's registry parse keyed on the source file's
+`st_mtime`, not unconditionally: a cache hit requires BOTH the same path (where the function
+takes one) AND an unchanged mtime since the cached read. This SHALL give a cheap `stat()` (not a
+452KB reparse) as the fast path for a short-lived process where the file cannot change mid-run
+(a single game-eval subprocess -- the actual target), while still forcing a correct re-read
+inside a long-lived process (the test suite, or any future long-lived agent process) if the
+file's mtime genuinely moves. `arc_primitive_library._load_registry` SHALL key its cache by
+`path` (it takes one, defaulting to the real registry) so distinct test fixtures never share a
+cache slot, and a path that raised `OSError` on `stat()` SHALL NOT be recorded as a permanent
+cached miss (a file that did not exist yet may exist on a later call).
+
+**WHAT WAS DELIBERATELY NOT CACHED.** `arc_solve_learning._load_feature_router_trace_rows`
+matched the same repeated-full-file-parse shape and was cached in an earlier draft of this fix,
+then reverted: profiling never actually showed it on the hot path this REQ targets, and it
+aggregates THREE separate files (the registry, `arc_router_ledger.json`, and a
+`results/arc_loop_solve_*.json` glob) -- a correct cache would need to gate on all three mtimes,
+real additional complexity for a function with no measured cost problem. It stays uncached.
+
+**MEASURED EFFECT, HONESTLY SCOPED.** Re-profiling `sp80` after the fix showed the YAML-parsing
+cost drop (`_recommend_live_approach`'s wall time fell measurably) but did NOT resolve the
+`sp80`/`ft09` gate timeout on its own: re-running `scripts/kaggle/arc_local_submission_gate.py
+--check` post-fix still shows both games timing out. The profile's dominant costs are elsewhere
+and SCALE with the action budget (`arc_solver_kit.object_centric_digest` at ~1.4ms/call x
+thousands of calls, `arc_graph_explore.rich_action_candidates`,
+`arc_discriminative_router.rank`) while the YAML-parsing cost this REQ fixes was FIXED (roughly
+constant regardless of action budget) -- a real, safe, test-proven win, but not a claim that it
+resolves the timeout regression by itself. That remaining work is a separate, larger
+investigation into the per-step search-loop hot path, not scoped here.
+
+### SCENARIO-ARC-REGISTRY-CACHE-1-SAME-MTIME-SERVES-CACHED-VALUE
+
+GIVEN a registry file has been read once and its mtime has not changed since
+WHEN either cached loader function is called again
+THEN the cached parse is returned, NOT a fresh read of whatever the file currently contains on
+disk (which may have changed underneath, e.g. via a concurrent writer, without a matching mtime
+bump within filesystem timestamp resolution).
+
+### SCENARIO-ARC-REGISTRY-CACHE-1-CHANGED-MTIME-FORCES-REREAD
+
+GIVEN a registry file's content and mtime have both changed since the last cached read
+WHEN either cached loader function is called again
+THEN a fresh read occurs and the new content is returned -- the exact property whose absence
+caused the 2026-08-06 regression on `test_experiment_4447_lilo_documented_primitive_library.py`.
+
+**LOCKED and PATH-KEYED (2026-08-06, adversarial review of the initial fix).** A real
+competition submission runs every game's `E3AgentPolicy` on separate THREADS in one process
+(`Swarm.main()`), each reaching `recommend_approach()` up to 3x, which calls both cached
+loaders -- an UNLOCKED check-then-write let N threads' near-simultaneous first calls each miss
+the cache and redundantly reparse, defeating the fix's own purpose for its highest-value target.
+Both functions SHALL serialize their check-then-write through a `threading.Lock`, matching the
+`RunLocalMechanicLedger` convention already used in this codebase for the same concurrency
+model. `arc_solve_learning._registry` SHALL ALSO be keyed by its source path (even though only
+one path is used in production today) for the same structural reason
+`arc_primitive_library._load_registry`'s sibling cache is keyed by `path` -- an un-keyed cache
+is one un-keyed collision away from cross-test leakage.
+
+### SCENARIO-ARC-REGISTRY-CACHE-1-CONCURRENT-FIRST-ACCESS-PARSES-ONCE
+
+GIVEN N threads call the SAME cached loader function for the same never-before-cached path at
+approximately the same time (synchronized via a barrier so their calls genuinely overlap)
+WHEN all N calls return
+THEN the underlying YAML parse SHALL have been performed exactly once, not once per thread --
+proving the lock actually serializes the race the adversarial review found, not merely that the
+final cached value happens to be correct.
+
+## Implementation Status (REQ-ARC-REGISTRY-CACHE-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-REGISTRY-CACHE-1 | `python/carnot/agentic/arc_solve_learning.py:_registry` + `python/carnot/agentic/arc_primitive_library.py:_load_registry`, both mtime-gated. | `tests/python/test_arc_registry_mtime_cache.py`. |

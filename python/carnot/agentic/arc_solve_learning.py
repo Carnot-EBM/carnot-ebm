@@ -26,6 +26,7 @@ from collections.abc import Mapping
 import json
 from pathlib import Path
 import statistics
+import threading
 from typing import Any, Optional
 
 import yaml
@@ -85,8 +86,41 @@ def _survey_features() -> dict[str, dict]:
     return {e.get("game", ""): _features(e) for e in entries}
 
 
+_registry_cache_lock = threading.Lock()
+_registry_cache: dict[Path, tuple[float, dict]] = {}
+
+
 def _registry() -> dict:
-    return yaml.safe_load(open(REGISTRY))
+    """mtime-gated cache (2026-08-06): profiling a live sp80 run (cProfile, budget=2000)
+    found `recommend_approach` costing 1.7s/call, almost entirely `yaml.safe_load`
+    re-parsing this 452KB / 6883-line file from scratch on every call -- 3 calls in that
+    run alone. An UNCONDITIONAL cache first shipped here broke
+    tests/python/test_experiment_4447_lilo_documented_primitive_library.py: the research
+    conductor runs concurrently with the test suite and genuinely appends to this file
+    mid-session, so a cache with no invalidation served a stale snapshot for the rest of
+    the process. Gating on `st_mtime` keeps the fast path (a single cheap `stat()`, not a
+    452KB reparse) for a short-lived process where the file cannot change mid-run -- the
+    actual target, a single game-eval subprocess -- while still re-reading correctly
+    inside a long-lived process (the test suite) if the file's mtime genuinely moves.
+
+    LOCKED (2026-08-06, adversarial review): a real competition submission runs every
+    game's `E3AgentPolicy` on separate THREADS in one process (`Swarm.main()`, see
+    `arc_competition_agent.py`), each calling `recommend_approach()` up to 3x -- an
+    unlocked check-then-write let N threads' near-simultaneous first calls each miss the
+    cache and redundantly reparse, defeating the fix's own purpose for its highest-value
+    target. `RunLocalMechanicLedger` in the same codebase already locks its shared
+    in-process state for exactly this concurrency model; this matches that convention.
+    Keyed by `REGISTRY` (even though nothing else currently varies the path) for the same
+    structural reason `arc_primitive_library._load_registry`'s sibling cache is keyed by
+    `path` -- an un-keyed cache is one un-keyed collision away from cross-test leakage."""
+    with _registry_cache_lock:
+        mtime = REGISTRY.stat().st_mtime
+        cached = _registry_cache.get(REGISTRY)
+        if cached is None or cached[0] != mtime:
+            value = yaml.safe_load(open(REGISTRY))
+            _registry_cache[REGISTRY] = (mtime, value)
+            return value
+        return cached[1]
 
 
 def _solved_games(reg: dict) -> list[dict]:
@@ -266,9 +300,7 @@ def _cell_connect_effect(changed: list[tuple[int, int, Any, Any]]) -> bool:
     return False
 
 
-def extract_early_play_signature(
-    transitions: Any, *, k: int = 8
-) -> dict[str, Any]:
+def extract_early_play_signature(transitions: Any, *, k: int = 8) -> dict[str, Any]:
     """REQ-CAPSTONE-4582: summarize the first K action effects for mechanic routing.
 
     The signature is intentionally behavioral: it counts which input families
@@ -286,7 +318,9 @@ def extract_early_play_signature(
     avatar_motion = False
     cell_connect = False
     hidden_carry = False
-    visible_pairs: list[tuple[Any, Any, tuple[tuple[Any, ...], ...], tuple[tuple[Any, ...], ...]]] = []
+    visible_pairs: list[
+        tuple[Any, Any, tuple[tuple[Any, ...], ...], tuple[tuple[Any, ...], ...]]
+    ] = []
     seen_effects: dict[
         tuple[Any, Any, tuple[tuple[Any, ...], ...]],
         tuple[tuple[Any, ...], ...],
@@ -294,10 +328,16 @@ def extract_early_play_signature(
     changed_counts: list[int] = []
 
     for row in rows:
-        action_id = row.get("action_id", row.get("action", row.get("a"))) if isinstance(row, dict) else None
+        action_id = (
+            row.get("action_id", row.get("action", row.get("a"))) if isinstance(row, dict) else None
+        )
         data = row.get("data") if isinstance(row, dict) else None
         before = _grid_tuple(row.get("before", row.get("prev"))) if isinstance(row, dict) else ()
-        after = _grid_tuple(row.get("after", row.get("cur", row.get("frame")))) if isinstance(row, dict) else ()
+        after = (
+            _grid_tuple(row.get("after", row.get("cur", row.get("frame"))))
+            if isinstance(row, dict)
+            else ()
+        )
         changed = _changed_cells(before, after)
         changed_counts.append(len(changed))
         if changed:
@@ -320,7 +360,9 @@ def extract_early_play_signature(
         if previous_after is not None and previous_after != after:
             hidden_carry = True
         seen_effects[key] = after
-        visible_pairs.append((action_id, json.dumps(data, sort_keys=True, default=str), before, after))
+        visible_pairs.append(
+            (action_id, json.dumps(data, sort_keys=True, default=str), before, after)
+        )
 
     config_toggle = False
     for index, (_aid, data_key, before, after) in enumerate(visible_pairs):
@@ -351,7 +393,10 @@ def classify_early_play_mechanic(signature: Mapping[str, Any]) -> str:
 
     if signature.get("hidden_carry_state") is True:
         return "hidden_carry_state"
-    if signature.get("avatar_motion_present") is True and int(signature.get("keyboard_effect_count") or 0) > 0:
+    if (
+        signature.get("avatar_motion_present") is True
+        and int(signature.get("keyboard_effect_count") or 0) > 0
+    ):
         return "avatar_navigation"
     if signature.get("config_toggle") is True:
         return "config_toggle"
@@ -374,7 +419,10 @@ def _coarse_mechanic_class(raw: Any, features: Mapping[str, Any] | None = None) 
         return "config_toggle"
     if any(token in text for token in ("connect", "slot", "fill", "merge", "drag")):
         return "click_connect"
-    if any(token in text for token in ("navigation", "goal", "avatar", "graph_explore", "motion", "reflect")):
+    if any(
+        token in text
+        for token in ("navigation", "goal", "avatar", "graph_explore", "motion", "reflect")
+    ):
         return "avatar_navigation"
     features = features or {}
     action_type = str(features.get("action_type") or "").lower()
@@ -394,7 +442,9 @@ def _approach_from_trace(row: Mapping[str, Any]) -> str:
         return "goal_distance_astar"
     if winner == "bfs":
         return "systematic_bfs"
-    solver = str(row.get("solver") or row.get("executor") or row.get("closed_by_operator") or "").lower()
+    solver = str(
+        row.get("solver") or row.get("executor") or row.get("closed_by_operator") or ""
+    ).lower()
     if "goal_distance" in solver or "a_star" in solver or "astar" in solver:
         return "goal_distance_astar"
     if "llm" in solver or "reasoner" in solver:
@@ -425,7 +475,15 @@ def _positive_action_count(row: Mapping[str, Any]) -> float | None:
 
 
 def _load_feature_router_trace_rows(root: Path | str = REPO) -> list[dict[str, Any]]:
-    """Load local self-play/registry traces in a forgiving common row format."""
+    """Load local self-play/registry traces in a forgiving common row format.
+
+    NOT cached (considered 2026-08-06, alongside `_registry` above, then reverted): this
+    function aggregates THREE separate files (the registry, `arc_router_ledger.json`, and
+    a `results/arc_loop_solve_*.json` glob), and profiling never actually showed it on the
+    hot path this fix targets (only `_registry` and `arc_primitive_library._load_registry`
+    did). A correct cache here would need to gate on all three inputs' mtimes, not one;
+    that's real additional complexity for a function with no measured cost problem, so it
+    stays uncached rather than risk the same staleness bug on unproven ground."""
 
     root_path = Path(root)
     rows: list[dict[str, Any]] = []
@@ -454,8 +512,12 @@ def _load_feature_router_trace_rows(root: Path | str = REPO) -> list[dict[str, A
             for entry in ledger.get("entries", []) or []:
                 if not isinstance(entry, Mapping):
                     continue
-                features = entry.get("features") if isinstance(entry.get("features"), Mapping) else {}
-                outcomes = entry.get("outcomes") if isinstance(entry.get("outcomes"), Mapping) else {}
+                features = (
+                    entry.get("features") if isinstance(entry.get("features"), Mapping) else {}
+                )
+                outcomes = (
+                    entry.get("outcomes") if isinstance(entry.get("outcomes"), Mapping) else {}
+                )
                 for approach, outcome in outcomes.items():
                     if isinstance(outcome, Mapping):
                         rows.append(
@@ -594,8 +656,12 @@ def route_feature_approach(
     policy_map = dict(policy or learn_feature_router_policy())
     routes = policy_map.get("routes") if isinstance(policy_map.get("routes"), Mapping) else {}
     route = dict(routes.get(mechanic) or routes.get("unknown") or {})
-    approach = str(route.get("approach") or policy_map.get("default_approach") or "default_graph_explore")
-    descriptor = FEATURE_ROUTER_APPROACHES.get(approach, FEATURE_ROUTER_APPROACHES["default_graph_explore"])
+    approach = str(
+        route.get("approach") or policy_map.get("default_approach") or "default_graph_explore"
+    )
+    descriptor = FEATURE_ROUTER_APPROACHES.get(
+        approach, FEATURE_ROUTER_APPROACHES["default_graph_explore"]
+    )
     return {
         "enabled": True,
         "mechanic_class": mechanic,
@@ -609,7 +675,9 @@ def route_feature_approach(
     }
 
 
-def probe_early_play_signature(env: Any, *, k: int = 8) -> dict[str, Any]:  # pragma: no cover - ARC boundary
+def probe_early_play_signature(
+    env: Any, *, k: int = 8
+) -> dict[str, Any]:  # pragma: no cover - ARC boundary
     """Probe the first few actions in a throwaway env and extract a feature signature."""
 
     from arcengine import GameAction
@@ -850,14 +918,16 @@ def recommend_approach(
         "heuristic_policy": policy,
         "general_gotchas": reg.get("general_gotchas", []),
         "guidance": (
-            ("CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's "
-             "solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot "
-             "the runtime proposer with that recipe AND the `cautions`. "
-             if confident_transfer else
-             "LOW-confidence routing (no solved game cleared the transfer bar): do NOT blind-copy the "
-             "top recipe -- an irrelevant example misleads the proposer (FinAcumen arXiv:2606.17642). "
-             "Induce COLD via the routed strategy.solver / graph-explore, using only the `cautions` + "
-             "general_gotchas as guardrails. ")
+            (
+                "CONFIDENT transfer (top match cleared the bar): start from the top-ranked solved game's "
+                "solver + reuse its action-model and gotchas, only reverse-engineering the DELTA; few-shot "
+                "the runtime proposer with that recipe AND the `cautions`. "
+                if confident_transfer
+                else "LOW-confidence routing (no solved game cleared the transfer bar): do NOT blind-copy the "
+                "top recipe -- an irrelevant example misleads the proposer (FinAcumen arXiv:2606.17642). "
+                "Induce COLD via the routed strategy.solver / graph-explore, using only the `cautions` + "
+                "general_gotchas as guardrails. "
+            )
             + "FIRST follow the routed STRATEGY (strategy.solver). Import arc_solver_kit; run the "
             "reproduction gate; append new mechanics/dead-ends to the registry."
         ),
