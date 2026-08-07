@@ -1,0 +1,24 @@
+{
+  "experiment": 6201,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-07",
+  "started_at": "2026-08-07T22:00:27.097208+00:00",
+  "finished_at": "2026-08-07T22:00:27.097208+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Authentic Gemma-4-31B K=8 pool gated on Exp6200 dense transport readiness",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-canary.phase_d_transport_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6200-three-family-raw-code-transport-canary",
+      "artifact_field": "phase_d_transport_ready_score",
+      "op": "==",
+      "expected": 1,
+      "actual": 0,
+      "passed": false,
+      "reason": "actual=0 == expected=1"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
