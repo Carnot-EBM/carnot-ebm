@@ -1438,6 +1438,14 @@
         "acknowledged_on": "2026-08-07",
         "reason": "REQ-ARC-WMTE-5830 lever #1: CARNOT_ARC_OBJECT_PERCEPTION flipped to DEFAULT ON (previously default off), on the pre-registered 2026-08-01 A/B evidence already measured for this exact flag (change_fidelity +0.072, p=0.0192). This artifact's generating script(s) contain zero references to induce_prompt, .induce(, or CARNOT_ARC_OBJECT_PERCEPTION -- they do not construct or measure an induction prompt at all, so the flag's default has no path to affect anything this artifact reports.",
         "evidence": "grep -c 'induce_prompt|CARNOT_ARC_OBJECT_PERCEPTION|\\.induce\\(' results/inducer_h2h_6021/{build_artifact_6021.py,h2h_arm_runner.py.frozen,h2h_reason_tag_probe.py.frozen}: 0 hits."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "9d4d77e2de1a6d858cd8c83dd762a4b9b5adeae3fa3121540680ca80809f7380",
+        "sha256_now": "8acec1930a7b8ed65f2cde280c6ff8c9d119f5fcdfbe06f18e661d2739476327",
+        "acknowledged_on": "2026-08-07",
+        "reason": "2026-08-07 operator directive (\"We should be using the CUDA llama-server, not HIP/ROCm\"). Adds GeneratorCudaRequiredError (a new exception class, pure addition) and one new conditional branch at the tail of _generator_server_and_env(): `if gpu and os.environ.get('CARNOT_ARC_GENERATOR_REQUIRE_CUDA') == '1': raise GeneratorCudaRequiredError(...)`, inserted immediately before the existing `return (hip if hip.exists() else cuda), None`. No existing line, branch, default, or return value is altered; the new branch is additive and only reachable when CARNOT_ARC_GENERATOR_REQUIRE_CUDA=1 is explicitly set.",
+        "evidence": "grep -rn 'CARNOT_ARC_GENERATOR_REQUIRE_CUDA' across the tree (excluding .venv) matches only: the new class docstring and branch in arc_executable_world_model.py itself, experiment_6199_gemma_think_mode_ab.py (which sets it deliberately, 2026-08-07, to harden its own CUDA-substrate measurement), and the new regression tests in test_generator_server_and_env_cuda_retry.py. Nothing in this artifact's generating script, or anything in its call chain, sets this env var -- the new branch is unreachable dead code from this artifact's perspective, and the pre-existing split/single-card/iGPU degradation logic that DOES run is byte-identical (confirmed by `git diff HEAD -- python/carnot/agentic/arc_executable_world_model.py`, whose only other hunk is the new class definition, which nothing pre-existing references)."
       }
     ],
     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",
