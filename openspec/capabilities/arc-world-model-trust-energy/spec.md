@@ -21920,3 +21920,37 @@ investigated further here; a separate follow-up.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-OCD-VECTORIZE-1 | `python/carnot/agentic/arc_solver_kit.py:object_centric_digest`, vectorized via `scipy.ndimage.label`. | `tests/python/test_arc_object_centric_digest_vectorized.py`. |
+
+### REQ-ARC-FCP-TRANSITION-ROWS-1: Hoist `actions` Out of `load_cached_transition_effect_rows`'s Per-Row Loop
+
+**Origin:** 2026-08-07, continuing the sp80/ft09 Kaggle gate-timeout investigation.
+Profiling an isolated `ft09` run at the gate's full budget (8000 actions) completed
+in 93s -- inside the 115s cap, but with only 22s of margin, and `ft09` still timed
+out under the gate's real 8-way-concurrent-subprocess contention. Profiling a
+budget=2000 `ft09` run found `arc_frame_change_predictor.
+load_cached_transition_effect_rows` (called once per game-eval process, at agent
+setup) indexing `data["actions"][index]` straight off the lazy `.npz` loader INSIDE
+the per-row loop, unlike its six sibling arrays (`grids`, `next_grids`, `xs`, `ys`,
+`lb`, `la`), all of which were hoisted out of the loop once per file.
+`numpy.lib.npyio.NpzFile.__getitem__` is a decompress-and-cache lookup per key, so
+the un-hoisted access re-paid that lookup once per ROW (22758 rows in the real
+corpus) instead of once per FILE.
+
+**THE FIX.** The system SHALL hoist `actions = data["actions"]` out of the per-row
+loop, matching the pattern already used for its six sibling arrays, with no other
+change to row construction or field semantics.
+
+**VERIFICATION.** Byte-identical output confirmed on the real
+`data/arc_transition_corpus/` corpus (sha256 of the JSON-serialized first 500 rows,
+captured before and after the fix, unchanged) and locked in as a permanent
+regression anchor, plus synthetic-fixture tests proving the hoist cannot leak one
+file's actions array into another file's rows (the structurally analogous bug a
+careless hoist -- e.g. lifting `actions` above the FILE loop instead of just above
+the ROW loop -- could introduce). Measured: loading the full real corpus (22758
+rows) dropped from ~2.03s (profiled) to 0.674s measured post-fix, roughly 3x.
+
+## Implementation Status (REQ-ARC-FCP-TRANSITION-ROWS-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-FCP-TRANSITION-ROWS-1 | `python/carnot/agentic/arc_frame_change_predictor.py:load_cached_transition_effect_rows`. | `tests/python/test_arc_transition_effect_rows_hoisted_actions.py`. |

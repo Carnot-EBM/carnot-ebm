@@ -396,8 +396,17 @@ def load_cached_transition_effect_rows(
         ys = data["ys"] if "ys" in data else np.full((grids.shape[0],), -1)
         lb = data["lb"] if "lb" in data else np.zeros((grids.shape[0],), dtype=np.int16)
         la = data["la"] if "la" in data else np.zeros((grids.shape[0],), dtype=np.int16)
+        # 2026-08-07 (REQ-ARC-FCP-TRANSITION-ROWS-1): `actions` was indexed straight off
+        # `data` inside the loop, unlike its six siblings above -- NpzFile.__getitem__ is a
+        # lazy per-key decompress-and-cache lookup, so `data["actions"][index]` re-paid that
+        # lookup once per ROW instead of once per FILE. Hoisting it here matches the pattern
+        # already used for grids/next_grids/xs/ys/lb/la; profiling a live ft09 run found this
+        # among the cost inside load_cached_transition_effect_rows (2.03s, called once per
+        # game-eval process at agent setup -- a fixed cost on ft09's tight sp80/ft09
+        # Kaggle gate-timeout margin, not a per-action one).
+        actions = data["actions"]
         for index in range(int(grids.shape[0])):
-            action_id = int(data["actions"][index])
+            action_id = int(actions[index])
             grid = grids[index]
             delta = _transition_frame_delta(grid, next_grids[index])
             row: dict[str, Any] = {
