@@ -15454,3 +15454,4 @@ Still active  |
 | 2026-08-07 13:40 UTC | Frozen LiveCodeBench bank and private-test boundar | OK | 153 passed, 2 warnings in 12.68s |
 | 2026-08-07 15:03 UTC | Authentic Gemma-4-31B executable K=8 code pool gat | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-07 15:05 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
+| 2026-08-07 15:07 UTC | Executable-code competence and oracle-headroom aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6187-livecodebench-authentic-k8-pool.po |
