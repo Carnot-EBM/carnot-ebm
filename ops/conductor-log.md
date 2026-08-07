@@ -15469,3 +15469,4 @@ Still active  |
 | 2026-08-07 15:52 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6190-calibration-clue-linear-code-selecto |
 | 2026-08-07 15:52 UTC | Prospective retention-safe continuous strategy lea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6192-live-strategy-seed-stream.seed_str |
 | 2026-08-07 15:54 UTC | Prospective retention-safe continuous strategy lea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6192-live-strategy-seed-stream.seed_str |
+| 2026-08-07 16:33 UTC | Fixed mode-jump sampler Rust/PyO3 correctness and  | OK | 87 passed, 1 warning in 9.46s |
