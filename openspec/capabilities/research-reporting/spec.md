@@ -50305,6 +50305,121 @@ checksum, inference substrate, and terminal verdict prefix is present.
 |---|---|---|
 | REQ-REPORT-6171 | Planned (`python/carnot/experiment_6171_v535_source_delta_ingestion.py`, `results/experiment_6171_v535_source_delta_ingestion.json`) | Planned (`tests/python/test_experiment_6171_v535_source_delta_ingestion.py`) |
 
+### REQ-REPORT-6172: Current-Rule Quarantine Companion Determination Preserves Immutable History
+
+The Exp6172 workflow SHALL produce
+`results/experiment_6172_current_rule_quarantine_determination.json` as a
+companion determination for immutable Exp6161 and Exp6162 artifacts. It SHALL
+hash the exact source artifact bytes before and after replay, SHALL NOT rewrite
+or copy-normalize `results/experiment_6161_decision_calibrated_energy_policy.json`,
+`results/experiment_6162_prospective_admission_replication.json`, their
+available manifests, or
+`results/experiment_6168_v534_capstone_reconciliation.json`, and SHALL prove
+the historical quarantine fields and capstone classification remain unchanged.
+
+The workflow SHALL run the current `scripts/adversarial_verify.py` against the
+exact checked-in Exp6161/Exp6162 source bytes. It SHALL record the verifier
+path, git/version receipt, source hash, rule IDs, thresholds, command line,
+stdout, stderr, exit code, timestamps, and JSON result hash. The
+`current_rule_clean` field SHALL be derived only from that unmodified current
+verifier run and SHALL NOT alias historical acceptance, capstone promotion, or
+manual operator approval.
+
+The workflow SHALL distinguish acquisition duration from cached-analysis
+duration. Exp6160 live model row acquisition SHALL remain the acquisition
+receipt, while Exp6161 cached policy analysis and Exp6162 sealed held
+evaluation SHALL be evaluated as cached deterministic analysis under the
+current rule. It SHALL record row-generation receipts, model lifecycle,
+held-access receipts, policy/science fields, the historical
+`DURATION_TOO_SHORT` rationale, the current duration floor, and why the current
+rule differs.
+
+The workflow SHALL compare historical and current determinations field by
+field. It SHALL preserve `flagged_adversarial`, `corrigendum_pending`, source
+hashes, capstone `flagged` terminal classes, and positive underlying science
+classes without unflagging. It SHALL set bare booleans
+`historical_quarantine_preserved=true`,
+`headline_promotion_authorized=false`, and
+`operator_reopen_required=true`; any reopen or headline use SHALL remain an
+operator-only boundary outside this artifact.
+
+The Exp6172 artifact SHALL include, at minimum, `status`,
+`preconditions_checked`,
+`source_artifact_paths_hashes_and_immutable_bytes`,
+`historical_adversarial_flags_reasons_and_capstone_classification`,
+`current_verifier_path_version_hash_rule_ids_and_thresholds`,
+`current_verifier_commands_exit_codes_and_receipts`,
+`acquisition_duration_and_cached_analysis_duration_provenance`,
+`model_lifecycle_and_held_access_receipts`,
+`field_level_historical_vs_current_determination_matrix`,
+`current_rule_clean`, `historical_quarantine_preserved`,
+`headline_promotion_authorized`, `operator_reopen_required`,
+`source_hashes_and_git_status_before_after`,
+`preexisting_worktree_changes_preserved`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic_current_rule_companion_determination`. The `honest_verdict`
+SHALL start with `complete:` or `blocked:` and state both the current-rule
+outcome and immutable-history outcome.
+
+Required field principles:
+
+- `current_rule_clean`: principle "Derived only from the unmodified current verifier run and never aliases historical acceptance."
+- `historical_quarantine_preserved`: principle "Bare true; source quarantine and capstone flagged classifications remain immutable."
+- `headline_promotion_authorized`: principle "Bare false; companion determinations do not authorize headline use."
+- `operator_reopen_required`: principle "Bare true; only the operator can reopen or promote historically quarantined evidence."
+- `inference_substrate`: principle "Set `deterministic_current_rule_companion_determination`."
+- `honest_verdict`: principle "Use `complete:` or `blocked:` and state both current-rule and immutable-history outcomes."
+
+#### SCENARIO-REPORT-6172-IMMUTABLE-SOURCE: Source Bytes And Historical Quarantine Stay Fixed
+
+**Given** Exp6161, Exp6162, their available manifests, and the Exp6168 capstone
+are present
+**When** Exp6172 snapshots and writes its companion determination
+**Then** source hashes, byte counts, `flagged_adversarial`,
+`corrigendum_pending`, and capstone `flagged` classifications are identical
+before and after.
+
+#### SCENARIO-REPORT-6172-CURRENT-RULE-REPLAY: Current Verifier Receipts Drive Only Current Cleanliness
+
+**Given** the current adversarial verifier is hashed and run against the exact
+Exp6161/Exp6162 source paths
+**When** the replay exits clean
+**Then** `current_rule_clean=true` records only the current verifier result and
+does not clear historical flags or authorize positive aggregation.
+
+#### SCENARIO-REPORT-6172-DURATION-PROVENANCE: Acquisition And Cached Analysis Are Separate
+
+**Given** Exp6160 acquired SOTA rows through live GGUF/CUDA execution and
+Exp6161/Exp6162 only analyze cached rows or sealed held labels
+**When** Exp6172 computes duration provenance
+**Then** live acquisition duration, cached analysis duration, current duration
+floor, historical `DURATION_TOO_SHORT` floor, row receipts, model lifecycle,
+and held-access receipts remain separate.
+
+#### SCENARIO-REPORT-6172-OPERATOR-BOUNDARY: No Unflag, No Headline Promotion
+
+**Given** the current rule is clean but historical artifacts are quarantined
+**When** Exp6172 emits its determination matrix
+**Then** `historical_quarantine_preserved=true`,
+`headline_promotion_authorized=false`, and `operator_reopen_required=true`
+are bare booleans and the honest verdict names both outcomes.
+
+#### SCENARIO-REPORT-6172-SCHEMA: Required Fields Are Machine-Checkable
+
+**Given** the Exp6172 artifact is emitted
+**When** schema validation runs
+**Then** every required field, field provenance entry, current verifier
+receipt, duration receipt, matrix row, protected-file receipt, command exit
+code, checksum, inference substrate, and terminal verdict prefix is present.
+
+## Implementation Status (REQ-REPORT-6172)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6172 | Implemented (`python/carnot/experiment_6172_current_rule_quarantine_determination.py`, `results/experiment_6172_current_rule_quarantine_determination.json`) | Implemented (`tests/python/test_experiment_6172_current_rule_quarantine_determination.py`) |
+
 ### REQ-REPORT-6168: V534 Capstone Exact-Path Reconciliation Preserves Mixed Terminal Evidence
 
 The Exp6168 capstone workflow SHALL resolve Exp6156 through Exp6167 only from
