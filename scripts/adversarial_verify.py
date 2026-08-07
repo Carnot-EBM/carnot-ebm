@@ -271,6 +271,9 @@ ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE = "live_agent_environment_interaction"
 ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE = (
     "live_e3_adapter_disabled_runtime_transitions"
 )
+ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE = (
+    "submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay"
+)
 ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE = "offline_arcade_live_agent_runtime_filters_no_new_llm"
 ARC_LIVE_AGENT_NO_LLM_MIN_DURATION_S = (
     0.01  # 10ms/action-scale floor; still nonzero-fabrication-proof
@@ -373,6 +376,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     ARC_LIVE_AGENT_NO_LLM_SUBSTRATE,
     ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE,
     ARC_LIVE_E3_ADAPTER_DISABLED_RUNTIME_TRANSITIONS_SUBSTRATE,
+    ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE,
     ARC_FILTER_RUNTIME_NO_LLM_SUBSTRATE,
     LOG_ANALYSIS_LOCAL_TIMING_SUBSTRATE,
     WEB_BIBLIOGRAPHIC_SEARCH_ONLY_SUBSTRATE,
@@ -2145,7 +2149,11 @@ def _is_arc_live_agent_no_llm(d: dict[str, Any]) -> bool:
     """
     return _inference_substrate_matches(
         d, ARC_LIVE_AGENT_NO_LLM_SUBSTRATE
-    ) or _inference_substrate_matches(d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE)
+    ) or _inference_substrate_matches(
+        d, ARC_LIVE_AGENT_ENV_INTERACTION_SUBSTRATE
+    ) or _inference_substrate_matches(
+        d, ARC_SUBMITTED_KERNEL_OFFLINE_FROZEN_POLICY_REPLAY_SUBSTRATE
+    )
 
 
 def _is_arc_filter_runtime_no_llm(d: dict[str, Any]) -> bool:
