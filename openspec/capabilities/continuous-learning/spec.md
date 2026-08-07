@@ -246,3 +246,172 @@ mutable-weight receipt
 | REQ-CL-6164-LIFECYCLE | Implemented | tests/python/test_experiment_6164_continuous_strategy_learning_ab.py |
 | REQ-CL-6164-IMMUTABLE-WEIGHT | Implemented | tests/python/test_experiment_6164_continuous_strategy_learning_ab.py |
 | REQ-CL-6164-READY-SCORE | Implemented | tests/python/test_experiment_6164_continuous_strategy_learning_ab.py |
+
+## REQ-CL-6179-MANDATORY-EXECUTION: Retention-Safe Continuous Strategy Learning A/B
+
+**Given** the mandatory ungated continuous strategy-learning task for run date
+20260807
+**When** Exp6179 starts
+**Then** it SHALL always write
+`results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json`
+**And** the artifact SHALL contain bare `true` values for
+`continuous_self_learning_task` and `mandatory_artifact_written`.
+
+## REQ-CL-6179-LOCAL-GGUF: Frozen Local GGUF Identity
+
+**Given** the mandated public model pair
+**When** Exp6179 snapshots preconditions
+**Then** it SHALL record local cache paths, revisions, quantizations, sizes,
+and cache checksums for exactly `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`
+**And** tiny legacy models SHALL NOT satisfy the model identity receipt.
+
+## REQ-CL-6179-IMMUTABLE-WEIGHTS: Strategy Learning Cannot Mutate Weights
+
+**Given** strategy state changes during the A/B
+**When** Exp6179 compares before and after model receipts
+**Then** all model-weight fingerprints SHALL remain unchanged and
+`weight_update_count` SHALL be zero.
+
+## REQ-CL-6179-EXTERNAL-MEMORY: Task-Owned Memory Boundary
+
+**Given** model weights are immutable
+**When** Exp6179 stores learned strategy information
+**Then** all mutable state SHALL live only in task-owned external memory paths
+declared by the artifact for the sealed stream, bounded store, replay ledger,
+rollback ledger, and quarantine ledger.
+
+## REQ-CL-6179-POST-OUTCOME-WRITE: Exact Outcomes Gate Every Commit
+
+**Given** a model decision at chronological event N
+**When** an update is considered for admission
+**Then** no same-decision write SHALL be visible before the decision
+**And** every committed strategy record SHALL reference an exact post-outcome
+receipt from event N before it becomes retrievable for event N+1.
+
+## REQ-CL-6179-BOUNDED-REPLAY: Replay Is Chronological and State-Bounded
+
+**Given** accepted strategy records accumulate
+**When** the replay arm retrieves memory
+**Then** it SHALL retrieve only prior chronological records, respect the
+configured replay window and state byte bound, and evict only according to a
+deterministic protected-family-preserving policy.
+
+## REQ-CL-6179-RETENTION: Prior-Family Retention Is Measured After Every Update
+
+**Given** an update is admitted into any mutable memory arm
+**When** the commit completes
+**Then** Exp6179 SHALL immediately measure protected and prior-family
+retention against all families present before the update
+**And** positive utility SHALL NOT produce readiness if the selected replay arm
+forgets a prior or protected family.
+
+## REQ-CL-6179-POISON-QUARANTINE: Poisoned Updates Fail Closed
+
+**Given** poisoned, malformed, contradictory, duplicate, or reordered update
+events
+**When** the bounded strategy store processes them
+**Then** unsafe updates SHALL be rejected or quarantined, poison propagation
+SHALL be zero, and quarantine precision and recall SHALL be reported.
+
+## REQ-CL-6179-ROLLBACK: Rollback Restores Exact State Hashes
+
+**Given** a poisoned update or an explicit rollback request
+**When** rollback executes
+**Then** the restored store hash SHALL exactly match the referenced prior
+snapshot hash and rollback attempts past the sealed root SHALL fail closed.
+
+## REQ-CL-6179-PROTECTED-FILES: Experiment Scope Is Narrow
+
+**Given** Exp6179 mutates only task-owned result artifacts
+**When** it finishes
+**Then** `scripts/research_conductor.py`, `ops/changelog.md`,
+`ops/status.md`, and `_bmad/traceability.md` SHALL remain byte-identical.
+
+## REQ-CL-6179-ARMS: Five Matched Memory Arms
+
+**Given** the sealed chronological stream
+**When** Exp6179 runs the A/B
+**Then** it SHALL compare exactly five resource-matched arms:
+`no_memory`, `fixed_memory`, `write_through`, `replay`, and
+`shuffled_retrieval`
+**And** each arm SHALL share the same model IDs, event order, prompts, seeds,
+token budgets, and external-memory byte budget.
+
+## REQ-CL-6179-RECEIPTS: Required Artifact Fields and Principles
+
+- `status`: Terminal state follows sealed stream, model-cache, utility, retention, quarantine, rollback, protected-file, and test receipts.
+- `preconditions_checked`: Snapshots model caches, stream/store paths, retention families, poisoning controls, protected files, root clutter, and git status before mutation.
+- `continuous_self_learning_task`: Bare true marks this as the mandatory continuous self-learning task.
+- `mandatory_artifact_written`: Bare true records that the terminal artifact was written.
+- `MODEL_SPECS`: The top-level model list contains exactly the two mandated frozen local GGUF hub ids.
+- `model_specs`: The lowercase model list mirrors `MODEL_SPECS` for downstream consumers.
+- `sealed_chronological_stream_receipt`: Event order, stream hash chain, and no-future-label controls seal the stream.
+- `task_owned_external_memory_receipt`: All mutable strategy state is confined to task-owned external-memory paths.
+- `arm_definitions_and_resource_matching`: The five arms share event order, prompts, seeds, model IDs, token budgets, and memory bounds.
+- `exact_post_outcome_write_receipts`: Commits occur only after exact outcomes and no same-decision write is visible.
+- `utility_by_arm_family_and_model`: Utility, accuracy, regret, and intervals are reported by model, arm, and family before pooling.
+- `prior_family_retention_after_every_update`: Protected and prior-family retention are measured immediately after every admitted update.
+- `bounded_strategy_store_receipt`: State size, replay window, protected prefix, eviction, and checksum receipts bound the store.
+- `rollback_and_quarantine_receipts`: Rollback exactness, fail-closed rollback, poison quarantine, and duplicate/reorder controls are auditable.
+- `state_bound_receipt`: Runtime state remains within the configured byte and record bounds.
+- `model_weight_immutability_receipt`: Weight fingerprints remain unchanged and weight update count is zero.
+- `provenance_receipts`: Decisions, updates, outcomes, and quarantines trace to sealed event IDs and hashes.
+- `protected_files_unchanged`: Protected repository files remain byte-identical.
+- `duration_s`: Wall-clock experiment duration is recorded.
+- `inference_substrate`: The substrate states frozen local GGUF identity plus task-owned external memory.
+- `retention_safe_continuous_strategy_learning_ready_score`: Readiness is one only when replay beats all controls without prior-family forgetting, poison propagation, rollback failure, state overflow, weight mutation, protected-file mutation, or test failure.
+- `missing_verifier_gaps`: Any model-cache, utility, retention, safety, rollback, state, protected-file, or test gap is explicit.
+- `field_provenance`: Every required field traces to a requirement, receipt, checksum, test, or protected-file hash.
+- `test_commands`: Focused, coverage, schema, spec-coverage, adversarial, protected-file, root-clutter, and full-suite commands are listed.
+- `test_exit_codes`: Exit codes prevent failed checks from being reported as success.
+- `checksum_receipts`: Stream, store, model-cache, protected-file, sidecar, and artifact checksum inputs are recorded.
+- `reproducibility_checksum`: The artifact checksum detects drift excluding the checksum field itself.
+- `honest_verdict`: The verdict starts with `complete:`, `complete_null:`, or `blocked:` and states whether live model generation occurred.
+
+## SCENARIO-CL-6179-SEALED-ARMS: Stream and Arms Are Matched
+
+**Given** Exp6179 builds its chronological stream
+**When** five arms execute
+**Then** every arm reads the same sealed event order and resource signature,
+and only task-owned external memory can change.
+
+## SCENARIO-CL-6179-RETENTION-AFTER-UPDATE: Forgetting Cannot Hide Behind Utility
+
+**Given** the replay arm has positive utility
+**When** any admitted update lowers prior-family retention below the configured
+floor
+**Then** readiness is zero and `missing_verifier_gaps` includes a retention
+failure.
+
+## SCENARIO-CL-6179-POISON-ROLLBACK: Poison Quarantine and Rollback Are Exact
+
+**Given** poisoned and invalid update events are present in the stream
+**When** the bounded store processes them
+**Then** those events enter quarantine, poison propagation is zero, and
+rollback restores the exact referenced state hash.
+
+## SCENARIO-CL-6179-SCHEMA: Bypass-Looking Artifacts Are Rejected
+
+**Given** an Exp6179 artifact with missing fields, altered checksums,
+unmatched arms, mutable model IDs, same-decision writes, or protected-file
+mutations
+**When** validation runs
+**Then** it raises a schema error rather than reporting readiness.
+
+## Implementation Status (REQ-CL-6179)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6179-MANDATORY-EXECUTION | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-LOCAL-GGUF | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-IMMUTABLE-WEIGHTS | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-EXTERNAL-MEMORY | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-POST-OUTCOME-WRITE | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-BOUNDED-REPLAY | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-RETENTION | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-POISON-QUARANTINE | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-ROLLBACK | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-PROTECTED-FILES | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-ARMS | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+| REQ-CL-6179-RECEIPTS | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
