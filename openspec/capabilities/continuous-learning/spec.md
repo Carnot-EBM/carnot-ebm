@@ -415,3 +415,187 @@ mutations
 | REQ-CL-6179-PROTECTED-FILES | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
 | REQ-CL-6179-ARMS | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
 | REQ-CL-6179-RECEIPTS | Implemented | tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py |
+
+## REQ-CL-6192-MANDATORY-SEED-STREAM: Live Two-Family Strategy Seed Stream
+
+**Given** the frozen Exp6186 LiveCodeBench bank on run date 20260807
+**When** Exp6192 starts
+**Then** it SHALL write
+`results/experiment_6192_live_strategy_seed_stream.json`
+**And** it SHALL use exactly the 18 `csl_seed` tasks from the frozen bank as
+the seed stream for downstream prospective continuous learning.
+
+## REQ-CL-6192-TWO-FAMILY-GGUF: Mandated Local SOTA Families
+
+**Given** Exp6192 resolves model identity
+**When** it prepares generation
+**Then** it SHALL resolve exactly `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through `cached_sota_pair()` or an equivalent
+local GGUF cache resolver
+**And** it SHALL record exact GGUF paths, hashes, revisions, quantizations,
+embedded tokenizer/template receipts, llama.cpp CUDA/offload receipts, and
+both-GPU utilization receipts
+**And** it SHALL NOT pass a GGUF path to `AutoTokenizer.from_pretrained()`.
+
+## REQ-CL-6192-THREE-STRATEGIES: Frozen Label-Blind Strategy Prompts
+
+**Given** the seed task prompts
+**When** generation starts
+**Then** Exp6192 SHALL freeze exactly three general, label-blind
+code-generation strategy prompts before any generation
+**And** each model-strategy-task cell SHALL receive only public prompt material,
+strategy text, deterministic seed/configuration, and model identity.
+
+## REQ-CL-6192-FIXED-ORDER: Balanced Deterministic Coverage Order
+
+**Given** 18 seed tasks, two model families, and three strategy prompts
+**When** Exp6192 constructs the stream
+**Then** it SHALL construct exactly 108 unique model-strategy-task cells using a
+recorded random seed and deterministic order
+**And** every task SHALL appear once for every model-strategy pair with no
+duplicates or omissions.
+
+## REQ-CL-6192-RAW-BEFORE-LABEL: Seal Generations Before Oracle Access
+
+**Given** a generated cell
+**When** Exp6192 records it
+**Then** raw prompt, output, extracted code, timing, token counts, seed, model,
+strategy, and task hashes SHALL be persisted and checkpointed before private
+tests or outcome labels are opened.
+
+## REQ-CL-6192-NO-CORRECTNESS-RETRY: Retain Every First Attempt
+
+**Given** syntax errors, runtime errors, timeouts, refusals, truncations, or
+incorrect outputs
+**When** Exp6192 labels the sealed raw stream
+**Then** it SHALL retain those outcomes without correctness-conditioned retry,
+repair, replacement, parser retry, or label-conditioned regeneration.
+
+## REQ-CL-6192-POST-OUTCOME-COMMIT: Memory Updates Follow Exact Outcomes
+
+**Given** a sealed raw row and restricted-oracle outcome
+**When** Exp6192 initializes seed memory
+**Then** every memory event SHALL commit only after the exact post-generation
+outcome receipt is available
+**And** no memory event SHALL be visible to prompt strategy choice for the seed
+generation itself.
+
+## REQ-CL-6192-BOUNDED-MEMORY: Transactional Seed Memory Store
+
+**Given** seed outcomes are available after labeling
+**When** Exp6192 initializes external strategy memory
+**Then** it SHALL create a bounded append-only transactional event store with a
+declared schema, record capacity, state-byte limit, snapshot/read receipts,
+deterministic eviction, event provenance, and immutable model-weight boundary.
+
+## REQ-CL-6192-FIXED-BASELINE: Seed-Only No-Memory Policy Freeze
+
+**Given** the labeled seed stream
+**When** Exp6192 computes downstream no-memory baselines
+**Then** it SHALL derive one deterministic fixed strategy policy per model
+family using seed outcomes only
+**And** ties SHALL be resolved by the preregistered strategy order rather than
+future/prospective outcomes.
+
+## REQ-CL-6192-RETENTION-SEED: Retention Probe Fixture
+
+**Given** the initialized memory store
+**When** retention is probed
+**Then** protected seed-family summaries and per-family event counts SHALL be
+readable from snapshots without changing the active state.
+
+## REQ-CL-6192-POISON-ROLLBACK: Poison Rejection And Exact Rollback
+
+**Given** poisoned, duplicate, malformed, reordered, or rollback fixture events
+**When** the Exp6192 memory store processes them
+**Then** poison propagation SHALL be zero, invalid events SHALL be rejected or
+quarantined, duplicate delivery SHALL be idempotent, and rollback SHALL restore
+the exact referenced snapshot hash while rollback past the root fails closed.
+
+## REQ-CL-6192-EXACT-PROVENANCE: Required Artifact Fields
+
+Exp6192 SHALL emit these fields with the stated principles:
+
+- `status`: Terminal state follows preconditions, raw coverage, labels, fixed baseline, memory fixtures, protected files, and tests.
+- `preconditions_checked`: Exp6184 preflight, Exp6186 gate, seed/test hashes, model/CUDA/GPU receipts, strategy prompts, order seed, executor limits, memory schema/capacity, git status, protected files, and root clutter are recorded before load.
+- `upstream_bank_hash_and_gate_receipt`: Exp6186 `bank_ready_score==1` plus bank/public/vault hashes gates the seed stream.
+- `model_specs`: Exactly the two mandated GGUF families are listed.
+- `model_cache_hash_revision_quantization_template_and_cuda_receipts`: Exact GGUF file identity, embedded tokenizer/template, no AutoTokenizer, CUDA/offload, and llama.cpp receipts are recorded.
+- `dual_gpu_utilization_memory_intervals`: Both-GPU identity and memory/utilization intervals are preserved.
+- `seed_task_ids_hash_and_strategy_prompts`: The 18 seed task IDs, task hashes, and three frozen label-blind strategy prompts are recorded.
+- `model_strategy_task_order_and_random_seed`: The deterministic 108-cell order and random seed are recorded.
+- `raw_before_label_checkpoint_hashes_and_timestamps`: Raw shards and corpus hashes prove raw outputs were sealed before private labels.
+- `task_model_strategy_coverage_matrix`: Each seed task has all two-model/three-strategy cells.
+- `restricted_oracle_outcomes`: Post-seal restricted-execution outcomes are summarized and sidecar-hashed.
+- `correctness_retry_count`: Bare zero; correctness never triggers retry, repair, replacement, or regeneration.
+- `fixed_no_memory_policy_by_model_family`: Seed-only deterministic policy winners are frozen per family.
+- `bounded_memory_schema_capacity_eviction_and_snapshot_receipt`: Schema, capacity, eviction, snapshots, reads, and append-only ledger receipts describe the initialized store.
+- `initial_memory_event_count_and_hash`: The post-label seed memory event count and hash are recorded.
+- `poison_rollback_and_retention_fixture_receipts`: Poison rejection, rollback exactness, duplicate idempotence, and retention probe fixtures are auditable.
+- `private_test_noninterference_receipt`: Private tests do not enter prompts, raw shards, strategy choice, retries, or baseline policy before labeling.
+- `verifier_is_oracle`: Bare true for post-generation labeling only and bare false for prompt strategy choice.
+- `seed_stream_ready_score`: One only with 108 sealed live generations, complete two-model/three-strategy coverage, zero correctness retries, a frozen per-family baseline, and a bounded tested memory store.
+- `protected_files_unchanged`: Conductor and reconciler-owned files remain byte-identical.
+- `duration_s`: Wall-clock duration is reported.
+- `inference_substrate`: The value is `local_dual_family_llama_cpp_cuda_live_generation_plus_restricted_execution`.
+- `field_provenance`: Every field traces to REQ-CL-6192, receipts, checksums, tests, or protected-file hashes.
+- `test_commands`: Focused unit/spec coverage, model identity, 108-cell coverage/order, raw-before-label, retry prohibition, memory transaction/poison/rollback/retention, schema, adversarial, protected-file, dual-GPU E2E, full pytest, and root-clutter checks are listed.
+- `test_exit_codes`: Failed verification commands prevent readiness.
+- `reproducibility_checksum`: A stable checksum covers inputs, receipts, sidecars, commands, protected files, and output paths excluding duration and itself.
+- `honest_verdict`: Starts with `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and names live generation coverage by family.
+
+## SCENARIO-CL-6192-GATE-FAIL-CLOSED: Missing Model Or CUDA Blocks Before Load
+
+**Given** either mandated GGUF family, llama.cpp CUDA offload, Exp6186 readiness,
+or both-GPU identity is unavailable
+**When** Exp6192 runs
+**Then** it SHALL not call the generation backend and SHALL write a `blocked:`
+artifact with zero sealed live generations.
+
+## SCENARIO-CL-6192-RAW-ORDER-COVERAGE: Seed Stream Is Complete And Sealed
+
+**Given** all gates pass
+**When** the generation backend returns one raw row for every planned cell
+**Then** Exp6192 SHALL seal exactly 108 raw rows before labels, record the
+deterministic order seed, and label only after the raw corpus hash exists.
+
+## SCENARIO-CL-6192-BASELINE-MEMORY: Seed Outcomes Freeze Policy And Store
+
+**Given** the restricted oracle labels the sealed seed stream
+**When** Exp6192 derives downstream seed assets
+**Then** it SHALL freeze a per-family no-memory policy and initialize bounded
+transactional memory from post-outcome events without changing model weights.
+
+## SCENARIO-CL-6192-POISON-ROLLBACK-RETENTION: Memory Fixtures Fail Closed
+
+**Given** duplicate, poisoned, rollback, and retention-probe fixture events
+**When** the bounded memory store processes them
+**Then** duplicate delivery is idempotent, poison is rejected, rollback restores
+the exact prior snapshot hash, rollback past root fails closed, and retention
+probes do not mutate state.
+
+## SCENARIO-CL-6192-SCHEMA: Bypass-Looking Seed Artifacts Are Rejected
+
+**Given** an Exp6192 artifact with missing fields, wrong model identities,
+incomplete 108-cell coverage, labels before raw seal, retry counts, unfrozen
+baseline policy, unbounded memory, private-test interference, protected-file
+mutation, or altered checksum
+**When** validation runs
+**Then** it SHALL raise a schema error rather than reporting readiness.
+
+## Implementation Status (REQ-CL-6192)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-CL-6192-MANDATORY-SEED-STREAM | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-TWO-FAMILY-GGUF | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-THREE-STRATEGIES | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-FIXED-ORDER | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-RAW-BEFORE-LABEL | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-NO-CORRECTNESS-RETRY | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-POST-OUTCOME-COMMIT | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-BOUNDED-MEMORY | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-FIXED-BASELINE | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-RETENTION-SEED | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-POISON-ROLLBACK | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
+| REQ-CL-6192-EXACT-PROVENANCE | Implemented | tests/python/test_experiment_6192_live_strategy_seed_stream.py |
