@@ -1,0 +1,1429 @@
+{
+  "bank_ready_score": 1,
+  "candidate_and_model_access_count": 0,
+  "dataset_name_revision_cache_path_and_hash": {
+    "arrow_file_count": 16,
+    "cache_path": "/home/ianblenke/.cache/huggingface/datasets/livecodebench___code_generation/default/0.0.0/bb83f1c3c643a772b7a2a8f07bd62c2aab76be8f",
+    "cache_sha256": "sha256:d3ff6a5409a6434c084a9c641d7cdc93632c20fc007f454ca9e91d5f8c6c06ce",
+    "cache_unchanged_during_run": true,
+    "dataset_info_sha256": "sha256:f1b5c545c6987aba880b035c2ba1708503080039854288601112de6c07327612",
+    "dataset_name": "livecodebench/code_generation",
+    "download_attempted": false,
+    "revision": "bb83f1c3c643a772b7a2a8f07bd62c2aab76be8f",
+    "task_count": 400
+  },
+  "deterministic_selection_rule_and_seed": {
+    "rule": "group eligible tasks by platform/date_bucket/difficulty/tag_bucket/prompt_size_bucket/supported_runtime; sort each stratum and stratum order by sha256(seed, stable_id, metadata stratum); round-robin strata; assign splits by largest remaining quota fraction",
+    "seed": "20260807-exp6186-livecodebench-bank-v1",
+    "selection_uses_forbidden_outcomes_or_model_data": false
+  },
+  "duration_s": 3.324,
+  "eligible_task_count": 400,
+  "executor_fixture_receipts": {
+    "candidate_solution_count": 0,
+    "filesystem_policy": "fixture cwd is temporary; LCB private cache is not mounted into prompt or selector files",
+    "fixtures": [
+      {
+        "classification": "deterministic_reference_passed",
+        "kind": "maintainer_reference_fixture",
+        "passed": true,
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06"
+      },
+      {
+        "classification": "timeout_enforced",
+        "kind": "timeout_fixture",
+        "passed": true
+      }
+    ],
+    "model_call_count": 0,
+    "network_policy": "no network operation is performed during preregistration fixtures",
+    "nondeterminism_policy": "fixed source, stdin, cwd, and output hashes",
+    "process_policy": "python -I subprocess in task-owned temporary cwd",
+    "resource_policy": "single local Python process, bounded timeout, no candidate generation",
+    "timeout_policy": "per-process wall timeout enforced by subprocess timeout",
+    "unsupported_task_policy": "bank records python_stdio and python_function; unsupported forms are ledgered before generation"
+  },
+  "field_provenance": {
+    "bank_ready_score": {
+      "principle": "one only for 120 unique IDs, exact sizes, zero overlap, stable hashes, isolated vault, classified fixtures, unchanged protected files, and immutable cache.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "candidate_and_model_access_count": {
+      "principle": "bare zero; no candidates, model calls, hidden states, or outcomes are touched.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "dataset_name_revision_cache_path_and_hash": {
+      "principle": "cached LiveCodeBench identity and hash; no runtime download is allowed.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "deterministic_selection_rule_and_seed": {
+      "principle": "seeded metadata-only stratification rule using stable IDs.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "duration_s": {
+      "principle": "wall-clock artifact construction duration.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "eligible_task_count": {
+      "principle": "metadata-only eligible task count before generation or outcome access.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "executor_fixture_receipts": {
+      "principle": "deterministic fixture-only executor dry-run classification.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "field_provenance": {
+      "principle": "maps every required field to REQ-CODE-6186.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "frozen_bank_path_and_hash": {
+      "principle": "content-addressed bank manifest without test source.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "honest_verdict": {
+      "principle": "terminal verdict names exact split counts.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "inference_substrate": {
+      "principle": "declares deterministic cached LiveCodeBench preregistration.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "preconditions_checked": {
+      "principle": "git status, Exp6184 receipt, cache identity, existing banks, executor, toolchain, exclusions, protected files, and root clutter before mutation.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "private_test_access_control_receipt": {
+      "principle": "private oracle access is restricted to executor-only cache coordinates and hashes.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "protected_files_unchanged": {
+      "principle": "protected operational files are hashed before and after the workflow.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "public_prompt_and_private_test_vault_paths_and_hashes": {
+      "principle": "separate public prompt and executor-vault surfaces.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "reproducibility_checksum": {
+      "principle": "hash of the artifact excluding duration and this checksum.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "split_overlap_matrix": {
+      "principle": "pairwise split intersections; off-diagonal values must be zero.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "split_task_ids_and_hashes": {
+      "principle": "split IDs plus prompt, public-test, private-test, metadata, and stable task hashes.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "status": {
+      "principle": "terminal state from exact split, overlap, cache, vault, executor, and protected-file gates.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "stratum_counts": {
+      "principle": "platform/date/difficulty/tag/prompt-size/runtime counts by split.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "test_commands": {
+      "principle": "commands used to verify this artifact.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "test_exit_codes": {
+      "principle": "exit codes for the verification commands.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    },
+    "unsupported_and_exclusion_ledger": {
+      "principle": "unsupported tasks and exclusion reasons from metadata gates.",
+      "source": "python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "spec": "REQ-CODE-6186"
+    }
+  },
+  "frozen_bank_path_and_hash": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/livecodebench_bank_6186.json",
+    "sha256": "sha256:de7ed9465c40061611c3485912f238cb5f1c983a7a1173ed60744cc91377c911"
+  },
+  "honest_verdict": "complete_ready: Exp6186 LiveCodeBench bank calibration=36 held_selector=36 csl_seed=18 csl_prospective=30 unique_ids=120",
+  "inference_substrate": "deterministic_cached_livecodebench_bank_preregistration",
+  "preconditions_checked": {
+    "agents_codex_claude_and_requested_files_read": true,
+    "exclusions": "metadata-ineligible rows only; no outcome-conditioned exclusion",
+    "executor_available": true,
+    "existing_bank_files_before_write": [
+      "data/research/livecodebench_bank_6186.json",
+      "data/research/livecodebench_bank_6186_private_test_vault.jsonl",
+      "data/research/livecodebench_bank_6186_public_prompts.jsonl"
+    ],
+    "exp6184_frozen_isolation_preflight": {
+      "isolation_violation_count": 0,
+      "ready_score": 1,
+      "status": "complete_ready"
+    },
+    "git_status_short": [
+      " M openspec/capabilities/code-verification/spec.md",
+      " M python/carnot/agentic/arc_solver_kit.py",
+      " M results/arc_live_oracle_gap.json",
+      "?? data/research/livecodebench_bank_6186.json",
+      "?? data/research/livecodebench_bank_6186_private_test_vault.jsonl",
+      "?? data/research/livecodebench_bank_6186_public_prompts.jsonl",
+      "?? python/carnot/experiment_6186_livecodebench_bank_preregistration.py",
+      "?? tests/python/test_arc_object_centric_digest_vectorized.py",
+      "?? tests/python/test_experiment_6186_livecodebench_bank_preregistration.py"
+    ],
+    "protected_files_before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:aea57cae8c0bf29692a84e76782dab27314378cf44cac30cea0df20a24bf1b5d",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "python_toolchain_versions": {
+      "coverage": "7.14.1",
+      "datasets": "5.0.0",
+      "docker": "/usr/bin/docker",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "pyarrow": "24.0.0",
+      "pytest": "9.0.3",
+      "python": "3.12.13"
+    },
+    "requested_missing_context": {
+      "results/experiment_4056_code_oracle_distinct_pool_preregistration.json": false
+    },
+    "root_clutter": {
+      "root_py_file_count": 0,
+      "root_py_files": []
+    }
+  },
+  "private_test_access_control_receipt": {
+    "mode": "executor_only_cache_coordinate_hash_index",
+    "raw_private_text_in_public_surfaces": false,
+    "vault_file_mode": "0o600",
+    "vault_group_or_other_readable": false
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:aea57cae8c0bf29692a84e76782dab27314378cf44cac30cea0df20a24bf1b5d",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:aea57cae8c0bf29692a84e76782dab27314378cf44cac30cea0df20a24bf1b5d",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "unchanged": true
+  },
+  "public_prompt_and_private_test_vault_paths_and_hashes": {
+    "private_test_vault": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/livecodebench_bank_6186_private_test_vault.jsonl",
+      "sha256": "sha256:245fe7b3f7c5d08059b832c268afee49fbfdbbe726ec4830e5134efe5777412e"
+    },
+    "public_prompt_bank": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/research/livecodebench_bank_6186_public_prompts.jsonl",
+      "sha256": "sha256:483d652a1049e8aae9b9e2fc3baae76df138ba7d2d3a52cd662c954b44b0b1ef"
+    }
+  },
+  "reproducibility_checksum": "sha256:32dfd9c478f758d9b4562bdd8ce106971efd0850b89803b741ab2d0556e11d07",
+  "split_overlap_matrix": {
+    "calibration": {
+      "calibration": 36,
+      "csl_prospective": 0,
+      "csl_seed": 0,
+      "held_selector": 0
+    },
+    "csl_prospective": {
+      "calibration": 0,
+      "csl_prospective": 30,
+      "csl_seed": 0,
+      "held_selector": 0
+    },
+    "csl_seed": {
+      "calibration": 0,
+      "csl_prospective": 0,
+      "csl_seed": 18,
+      "held_selector": 0
+    },
+    "held_selector": {
+      "calibration": 0,
+      "csl_prospective": 0,
+      "csl_seed": 0,
+      "held_selector": 36
+    }
+  },
+  "split_task_ids_and_hashes": {
+    "calibration": [
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:30edcbf3df1ecb28465394ac12960922d8c5ead3f3bf9b247f562beb5322ea12",
+        "prompt_sha256": "sha256:e357dcd1bfb425f7003c93a40547377fd94cfbd2087fd03a59337ffd9fb3f777",
+        "public_test_sha256": "sha256:9aa612d762f79ae31aec4f6ec5b403b293c166a4c9ae224a3ed7c4feb108a985",
+        "stable_task_hash": "sha256:1fcf55cda7ca18d6b5edaf81b3183d3bf5ab1b2b3f82ec60efd2a8bf7db80d97",
+        "task_id": "abc336_c"
+      },
+      {
+        "metadata_sha256": "sha256:9c530826b743ff032b0b0f42cf8bcadc81ed45b05b59cbf7338d481b4938d3f5",
+        "private_test_sha256": "sha256:80ad03d7c537a17ee701ef26915c74e8f71a2049ec9f2ac65447b6a7e21844b8",
+        "prompt_sha256": "sha256:e0681861595f2cf18103c44ec4bcd069f7476d76ae082ac0e570f0d44f67ce39",
+        "public_test_sha256": "sha256:eac6c36b812721e12271bc5f9632df9918ef3e2f2799b5465940a10a00fd5641",
+        "stable_task_hash": "sha256:d68c4f056add0d639fecf1836285db2baf4b63a9c1a9d94eacf41acea584079c",
+        "task_id": "3279"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:59b2cfa7932140876b117357bacef2d90e546b023c8b65634c2b3badf11ce3f2",
+        "prompt_sha256": "sha256:c97b4e2d706976acaee24d7a3a9d854d58816ec1925e191f6fa573c335cf1e5c",
+        "public_test_sha256": "sha256:1e723b97abeae8438cc45fa308b5ef7103ed30fa3d57f30111658d2d53f54a05",
+        "stable_task_hash": "sha256:29eb3d2e445ad06063cbc4047ab7b6b1836511903da002971429dc643e683d46",
+        "task_id": "abc307_d"
+      },
+      {
+        "metadata_sha256": "sha256:0e2de2598db83268109f0b023e22027e4b8d1b2e7bd538049fa93bbd750e3e5e",
+        "private_test_sha256": "sha256:4a91673214d5def3d7e8af4f8adbb2cfcec6ff3b0d88ff50a1b6a5fbfa42d003",
+        "prompt_sha256": "sha256:74f11f92512a54bbe84d6079ced723911724ad2fa6837f43b9de9699ad87b955",
+        "public_test_sha256": "sha256:ee54f767f7adfcdafe5f7868c933e68f157bc9894564bf4ce707cc7e315e39a1",
+        "stable_task_hash": "sha256:c07ab8b8bff5de073dabcf223a861255d0b8d0b79f0482030bbed65c9d52f6d1",
+        "task_id": "2827"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:c737bd6f59f7c3df9bbf001d35150d25d75346e402e506d6fb6d76d525b21df7",
+        "prompt_sha256": "sha256:de45d753fe193d199581cfd113ee10c6669daffcebdd3dea3b8604d1c870da2c",
+        "public_test_sha256": "sha256:0a58a14e43c02ac35402482e9f86ee6a6bccef790ed7a3eee6004b695b4ad510",
+        "stable_task_hash": "sha256:5c3362a2ab63393ad4b08c709b67568002c6002e45fbe2ee3170bdf4db8ea586",
+        "task_id": "abc308_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:1ae2b9344ad661d6ed27f1735c7eb829fefa2242bf01a25d359c0e815b70291d",
+        "prompt_sha256": "sha256:e394d953a01809cde0522c1c9f4721d09c5d35fe4031bbdf0403110439e953a6",
+        "public_test_sha256": "sha256:0881820d1330aaf219248706fa5773af2de5727d59d4ab88ba64e79349ac8ee7",
+        "stable_task_hash": "sha256:9c35ed113928cee7085380a994afe0ce750cb91f78885310e29ae5ceda4ce135",
+        "task_id": "abc341_b"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:b1618bc51da6c9d2800989ff2e6d240fdb5ff5340c924045c490f44bb3f42a9d",
+        "prompt_sha256": "sha256:ef8f18250d370e158add9adfe11f333bfdc51f2e3768f003cf9e57b1d750bd18",
+        "public_test_sha256": "sha256:6773b460c1020206c552585ad1fddfd6887896aa97b168416f3422fe5dc8d73d",
+        "stable_task_hash": "sha256:613c1b1cf61dbe6e1a911f2375726c633b90e57168933971b43a9eab209cd164",
+        "task_id": "abc341_e"
+      },
+      {
+        "metadata_sha256": "sha256:c650fd07886ed7a0bf3baffb092e147b5dd5eaab3586bdc485ae209d95f9b764",
+        "private_test_sha256": "sha256:6096d7ae809d1464a05dadcb7b61a19a359295e7a42dec3a443c25a1adb5305e",
+        "prompt_sha256": "sha256:66a41c0a97e78a737e6b63f206a96775f6cad5c385e5c747cccfff1a975d998f",
+        "public_test_sha256": "sha256:aa856e415b46b5efe7d88de28fd66c735c1b232d9a5c7d9e342c3ad0d86dde8a",
+        "stable_task_hash": "sha256:d0136e2b9556a448bc3fe4c00f7ce3a690dcccf6ba1463889b0b6f792ca6a854",
+        "task_id": "3151"
+      },
+      {
+        "metadata_sha256": "sha256:07d4ae3ac9970e514c7ca03aad9cc242b58301adc9326d099b18bee013780cae",
+        "private_test_sha256": "sha256:0ebd0eef0aec80837aa6fbd15c182062a1fcead12eff265da0024bb292be16a1",
+        "prompt_sha256": "sha256:202b53fec7692d4c1dc89b2d18a14b803a65fa14cb55729c30062c63db3f858a",
+        "public_test_sha256": "sha256:6ee8be0c5314a7ec17388eae15dea77e24ef901e75ed5a5297ad0aa5ec1e5271",
+        "stable_task_hash": "sha256:4124a9f57f2327296dfd93ce3704d51ed1cdfc6afe47c97c17e4505425ec8ccb",
+        "task_id": "2785"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:849570eb530eda4957fb939f1b462ed46c1b9d21329b5c9977df6149de8fe333",
+        "prompt_sha256": "sha256:ad068c8cee1404676eb5802ac8666e99197b2f7daf63ddfd900cbb4d36bbc252",
+        "public_test_sha256": "sha256:df858a7f8b56b25602504968534f98aa0a7b060e7338e970bb96472b285c3e1d",
+        "stable_task_hash": "sha256:183e4f3bb28beae41ce918d6ffd746c47dad6f253ad7da992b5f36180eb89fb5",
+        "task_id": "abc314_a"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:49f21dc7127955a2240b30e51ea64632d16a0d5df1209c0a8ca282d69f6d9091",
+        "prompt_sha256": "sha256:b855f4a9dab718285c9f7ba53704957efb71bf709f9fdad954f09302e4e10f0b",
+        "public_test_sha256": "sha256:b3d201e83f64c79ffca997067b6dbb922c4f8ae87e65ba64df4ca77d901d866d",
+        "stable_task_hash": "sha256:f52d88d841475f9f4f88090698f684b05310e8318071313ed785dba22625765d",
+        "task_id": "abc302_e"
+      },
+      {
+        "metadata_sha256": "sha256:d289efaad76d20eb1b3d8a26040aabd7c0add649ddbea94a99d43dabe298f6c2",
+        "private_test_sha256": "sha256:7fc01f3809509149ed3ce70576985b4e7a700caf188147812b82699497e35314",
+        "prompt_sha256": "sha256:559e931b720a329c41cb97e4c2ce6b45bccb4bc185ac40f01e03b27100b6e1f5",
+        "public_test_sha256": "sha256:e76a6c5cde2eefd7c3f05f11c977bf6cd32bf1e642abd43e4ad38312aad722bd",
+        "stable_task_hash": "sha256:ee7030d22c08ac69d8b87f356a192d206a2c654dc4822bb85020dc2bb30a1533",
+        "task_id": "3032"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:202c3cac9ccc45edc8c7544e44bbe726451ee02fa40d6d119774701e506f16fd",
+        "prompt_sha256": "sha256:6f906d5cb445273f587021a2a0a4707d246bba3814711a89c659b21daa0708d2",
+        "public_test_sha256": "sha256:196f947f00e089bf58ff25542e40ac0b3e27c5eb13d36a3b50d5c955e910e67b",
+        "stable_task_hash": "sha256:677ca7e8d9c51d5d0fd509f7e7ad759fe3e94b67e9bffcdec464795598c7fbbe",
+        "task_id": "1899_A"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:d62d5c7ae40e18cecec7bba8dbfe8c9c685d7bd0cfab96fbecf939194c6ba7b0",
+        "prompt_sha256": "sha256:130e6040f0987cb94e7ed3387812806b4f4d2412873a8201ef18c6666f951599",
+        "public_test_sha256": "sha256:b53826bc01ff09b9ef6fc8408941059a670fa27de52fda1f565e7bbf116377b2",
+        "stable_task_hash": "sha256:d73f4152134dd1ea86e899486b4f7b2dbf2c35c5a5939a6263131c0b1f361fbc",
+        "task_id": "abc340_e"
+      },
+      {
+        "metadata_sha256": "sha256:cab45d649edc30d2480f2455767ec9019a58ccd579fb05ffb57175b664afb2dc",
+        "private_test_sha256": "sha256:880548c99f0ced1d1528d21babafa630d1d009cbd3f31b2b83b066153f9c9952",
+        "prompt_sha256": "sha256:9aae1f9eae394b198bbdbbc85f664b0ff6d611fb547c48091694d7d44fb0a099",
+        "public_test_sha256": "sha256:8d198ab9753e1edf0eeb9f4b66f83d62be88b75c1180b79f9eb4193d0d807f23",
+        "stable_task_hash": "sha256:56a154c3e728641b80d7030f34f0030a4843adcac8b1e3b6823adde39b0d3e18",
+        "task_id": "3298"
+      },
+      {
+        "metadata_sha256": "sha256:969b51a603188fee98612ce2a475ad225696c21cce78efc4247d0d133689c5a7",
+        "private_test_sha256": "sha256:d0b82e05f0cd6c5544321981be5e8a3439cb8c675ec5da19865a2f2e8a12cab9",
+        "prompt_sha256": "sha256:ea140f90fdd468f388d85478a16c2af71cd27becbb66abf003cae070d7c6e55d",
+        "public_test_sha256": "sha256:ac84f1c8fdc7db0de3c0040c0b21fb74173adb30a3fd2b039eb1dbcc6143a6cb",
+        "stable_task_hash": "sha256:06bd7eedde006462dcfeaf136a387835086306a7accaa9eccb6fc45d3453ae61",
+        "task_id": "3193"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:25fe5987bc0648f6b6aaf7a943a5b711e1401fba3661db0161df9f9e9b84961b",
+        "prompt_sha256": "sha256:04224ac97bbec7cd362a6f3690eff10f69f24785650327da75d4fa790eab7e19",
+        "public_test_sha256": "sha256:7cfd66c059c6376a91dab4b6ae2b360db6de442263fc32e03c920d62fec34a50",
+        "stable_task_hash": "sha256:a5b7d1c33ba1783597c48883769a98fc445aa812aa53058b7b848ac3f6d4d815",
+        "task_id": "1899_B"
+      },
+      {
+        "metadata_sha256": "sha256:5b63259dbf3477f81c0d7ab5062eaa7f1ddce29ebab5cc783905f06e56e32486",
+        "private_test_sha256": "sha256:3b8478c412827b8615883dc7f5dfba09667a17478fddf3e95f8b47aac99555dd",
+        "prompt_sha256": "sha256:8dcf7974e5cc3533fe534abc9a028308d3b52c412490fe19c71aac3863fb17a8",
+        "public_test_sha256": "sha256:564d6fbdbbefa081e073cb9a1c5a85643dd509ca9020a5ebbbf8e2b515661df1",
+        "stable_task_hash": "sha256:8e95c954a97fbc59e6ce6d07cbd9bec776583248405636554e3d8cc87973627e",
+        "task_id": "3164"
+      },
+      {
+        "metadata_sha256": "sha256:ca3305da84041741c4623d61c1e06295ee940df38d95b00aa18461ffb2419959",
+        "private_test_sha256": "sha256:3475ee4c112864ab6e4a82fe210e7d602677b8fbda638559e202875bdf40a78d",
+        "prompt_sha256": "sha256:a79faae02f098f9929fb65a83ec8086b140bdc9733000bdd7cb4343130444812",
+        "public_test_sha256": "sha256:a62ff29fd5b5a38e7a4832c758fd2b669e62fac18939c1b165cd45884f92f6fe",
+        "stable_task_hash": "sha256:5477241a9b47e49e9750d260deb87d2bc7ff9e36aca3ad034158e0be066a35d0",
+        "task_id": "3141"
+      },
+      {
+        "metadata_sha256": "sha256:ceaf88b4739e85a0cf4b6fac24c01bc7ce2dc423494c33e6905e45b723f10469",
+        "private_test_sha256": "sha256:383a0b692c18d7a8d6a130fa21d2524bffbdd078c4512ec288a812e0cd78f0bb",
+        "prompt_sha256": "sha256:646f89eaeed34458e12b8f5e4874167b4a0dd14f70cdfe65482b51bced96e25f",
+        "public_test_sha256": "sha256:31a96a28cb71a29c7c8c0ebff4ed2b4a49757f023e5bbf33ffcf2f50c5ef568e",
+        "stable_task_hash": "sha256:cc91e7e853e4acdc98644b8c5c003fd294be1399c939009f35f676f4f1554139",
+        "task_id": "3243"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:8d76c3a793941d276326bbb3d3013b17253418e4a76a174b82a570afdf5e6721",
+        "prompt_sha256": "sha256:f8b71ae6c802621d85e08c44e0946f4b9fb873112e548df91fd2ebfdb6c42a41",
+        "public_test_sha256": "sha256:fb2c28e009b5b79ee98e25ddb26d0105ac19f112bf0702cca669cf01450f278e",
+        "stable_task_hash": "sha256:af1f50b04ddd897f1f2654904b7600843509958c4bc493d364b7ad6ad6beb1fc",
+        "task_id": "abc309_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:971bf24cfb8b7dc00d166908cccc2d60b145185b98d67529220307c68e25ce2b",
+        "prompt_sha256": "sha256:81c412d1fe6b6fb9808d783f2748f74789d44748dcd5658acd26d274d449bde3",
+        "public_test_sha256": "sha256:457d6acee5844789723516c9cb3832e9aef03d92deb89c2de6ebc1a121551c7c",
+        "stable_task_hash": "sha256:e330da2ea85ac6d2cc9a5e75339f5640c936cdad7b24c92e54d7746fc97cadd6",
+        "task_id": "abc337_b"
+      },
+      {
+        "metadata_sha256": "sha256:e97b55f5bc7180106db0d46761fb70a43915743603fc8851ff2ad8727a3f4610",
+        "private_test_sha256": "sha256:3efe4a755d2a19af698eac036dce294c9c6bda7332d7a385836abcb0aca854af",
+        "prompt_sha256": "sha256:8bccfb56d0b49dea78e942da44ac5124ae5612480ac36a4e326a1f4067c68248",
+        "public_test_sha256": "sha256:9d01030006e73d531d2075dc64e3205c18caa124c7bcfc4c8bfccd5c77830c6a",
+        "stable_task_hash": "sha256:7fb496af3f4b9c6585a87e9379dc71d06683ab1857facb446886e25f40f368c0",
+        "task_id": "3211"
+      },
+      {
+        "metadata_sha256": "sha256:0a968311869d01a61ca54efd245a64e405fdd84e0c9fd77ef9df05138176e3f3",
+        "private_test_sha256": "sha256:cbf669752f8375a6d3370012b068a192c0cfecc9baa3a1dba3652f4a1328d2a3",
+        "prompt_sha256": "sha256:73cd8b1e5ebef2f4c1f180eb77bf1b60ce47c66f55b71056fbf5f190fdeafef3",
+        "public_test_sha256": "sha256:38fe5dcf8d746e53d802488f734dfb6da0befcce593def5c645ac7ac31a1001a",
+        "stable_task_hash": "sha256:5f996c4423fc46c693c40b586971d12a1c6b52c4bf93aafd503c35ebda1dde68",
+        "task_id": "3203"
+      },
+      {
+        "metadata_sha256": "sha256:5b13b20fe8613f7a0c415dddb0829a1aa066d4a384cf4d3b8e96d2569b8c6f6d",
+        "private_test_sha256": "sha256:7d4bd33cf0c150b70080ad1e61a9c4803f8af09682cddb3dd3600a6b032eed51",
+        "prompt_sha256": "sha256:78f3f92a3f2e1bcf36888acc3ab26c0a66f911fc2f2b386c94c04770c9aca663",
+        "public_test_sha256": "sha256:e5299737f168a37d18e1b0fa3ef76a768677d61636bedff72f194a402f3dd778",
+        "stable_task_hash": "sha256:8189096f2f532f726cb4afc1d154af62c75dda4803cf9ff75a1203657e90496a",
+        "task_id": "2831"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:590e28bc5979631ac54e320bfb9511a9a8097fb003a75dc18f98ff6311da7739",
+        "prompt_sha256": "sha256:c9d51253940a1ad93e42389bd13c69f4378a3e61f2692060dae38bde98c06b05",
+        "public_test_sha256": "sha256:2671362190b6597082cc4fb1f54cf264e76bc508a88084f5d5b34a18a5c3d501",
+        "stable_task_hash": "sha256:0c50c4856c17c250508147e6cd3b82b66782e12c451cbefe74dc5aaf60f0f7bc",
+        "task_id": "abc322_a"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:2c673d96695cfe06be6bf1a138cb2df45379561d95ef9e33c23fcfaa87a99add",
+        "prompt_sha256": "sha256:7ec5c36656a3dfac220e69116896523f3a5fc8b945df0e5549c360cbc9dcdcef",
+        "public_test_sha256": "sha256:48b72d365443ad524bbcdfec2ffcbb567f8720667b2e472c248cf7682a6d7d03",
+        "stable_task_hash": "sha256:9c502e1598da141c62366481b26f96ea22e44c4b02cadc7a518cdf81963b5465",
+        "task_id": "abc305_d"
+      },
+      {
+        "metadata_sha256": "sha256:53114583367c4da4ab3b6153490ea5d708bec5cecfcdec6abb88188be9a54470",
+        "private_test_sha256": "sha256:b1853ac97e6b708d0cb7a0c4bcfa17baca9b22c08dd32850b4f4be8f7a0969f6",
+        "prompt_sha256": "sha256:366d02c93441eeb3a48b8bea18b3a62fc370ad75c54cccf16ebb9b5ab11c135f",
+        "public_test_sha256": "sha256:ac0ab1f53eeb5dd2a8f7c549a95a12897e6bdede4ccdfd486e8e24cfc5a99ba2",
+        "stable_task_hash": "sha256:392e2cdb103de5eaf403670965b089c8c9c8865d9322b40864aed2716aa75cda",
+        "task_id": "3025"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:91b2ec815723ae37978058a8d4f2cc11f0f813eaa264bb7f248306c64cbe0717",
+        "prompt_sha256": "sha256:dc22f287ce21205479b20526be5539d53c8cbe21ae6a04d8fc5e48752cda8a9e",
+        "public_test_sha256": "sha256:0d5a54514c6fe29c3b043ff07a4b8e0a805e8e2759cb80a81ea44aa7898d18fa",
+        "stable_task_hash": "sha256:05207c465b394c99fcdfa25e23f250f1939d9a3e7e70b0c6599572c8d7253317",
+        "task_id": "abc307_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:7fdc294dc53cb10356f83eb4561d8f1e288b1db5e08fe7ef0e912d58c121c3ad",
+        "prompt_sha256": "sha256:ad99ceade41ccfbfe19ab4be270324dd8081e8329146b997140d37f27e40e5b2",
+        "public_test_sha256": "sha256:d0205bc54a2466fea048694a58d02b060ef1f58727a2f7073e4302d323001335",
+        "stable_task_hash": "sha256:bdc8095748f768301bcf71cad4d820d0d6b65866befa2817355a9e6973666cf2",
+        "task_id": "abc342_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:0bede026a449da7071eeecfb8b86fee1cf818906bf277b2b41385c4bada207bd",
+        "prompt_sha256": "sha256:410c9f16757f2e61c0b507811236401aa3704e82988ddb579a17683051c7e114",
+        "public_test_sha256": "sha256:29c87641eccf397c1f51d32342d3fcf6660bdb84f2d3dae1ee0c607e504c63d2",
+        "stable_task_hash": "sha256:3099e6b562ae8ff39acb5b6861bd81c5fac2bc316d2950722642acb06726a32f",
+        "task_id": "1883_B"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:2280b6b7ba5b23a5a239044453677f6d81ea07a139e2ee8f974165dc46bcdf89",
+        "prompt_sha256": "sha256:31a7a5bcef219c45b1d2b5df4dec3ac90dbfd22a8a27890bd4e25062d4f8a62e",
+        "public_test_sha256": "sha256:13070a9121fedcc9f52a1ab704d4db877e4b1ab964f84df07e0b3df450614a74",
+        "stable_task_hash": "sha256:34eb97f42ace1af41eb65758ec9f18445eb2e84fccc0440c033031077759732b",
+        "task_id": "1899_D"
+      },
+      {
+        "metadata_sha256": "sha256:da13213e68405d36c3a0bcd5ffc69e2c1fbf944b35fa60d1f569e4872a903f99",
+        "private_test_sha256": "sha256:a338d3f0dd69e35dfa3186b69cd0bf3d03d374ac7ba895de7bd2551e351fecec",
+        "prompt_sha256": "sha256:266d52698774461e5552dbee1cb5b810a767dedac63b0882308c4e5935f0f678",
+        "public_test_sha256": "sha256:e95976822934fc0e96ec8cef97c1c0966d4f1b88635c146cceb0e70efe955c4f",
+        "stable_task_hash": "sha256:c463ca5cf2808f62aade3f7280d81d3ade167090cf288296d4d812acb0b3d50d",
+        "task_id": "3308"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3a8282c5f46cee31699a6cc9149792459e88de7779cb17fb29d39f45054daed0",
+        "prompt_sha256": "sha256:675c43212b31582df6806018f387b6ebeabfd6b298004a9b04f788863087917c",
+        "public_test_sha256": "sha256:8f89f796650651d334d27b89bd26a1c86022a0ac8212f866781129d1b7a9ef1c",
+        "stable_task_hash": "sha256:c240dd4cb10c6a18e0b3bca4d37406e470ae62c8fd0d9d74c40348fb23e7f021",
+        "task_id": "abc315_f"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:4103fcec262b1c58e826a42717f6169b949e097039a44ac1852b4113114240f7",
+        "prompt_sha256": "sha256:d3926c3cf9e3525a9820c4b9818e633453fb3894c4f5a978aa55f341cfbbc3c1",
+        "public_test_sha256": "sha256:95efe576dbd27c76a92f4c4fcafe2cd9140ea70e7fff6c2bec2642aec19e6c77",
+        "stable_task_hash": "sha256:93ee5d9cf68ea56fe2e3921b9dacc53d7e4bafc65d6a6ee4baad34b5a5f105c7",
+        "task_id": "abc318_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:d28182c9ba34b7a9a857ddc7ca983012f89432a850eaea0471e96fdf5de223b9",
+        "prompt_sha256": "sha256:1e546ffa5a55845f3482c30c4180f99811d6c15d5f12e906a86241e21554ada8",
+        "public_test_sha256": "sha256:87d46fdc4d3727dab41d0869f18439c953ac92c983c707ae56a87ca34a83c0d7",
+        "stable_task_hash": "sha256:7ca540f2a0bcf4dd483dbf6ae63f32a30f7d2f9e43a710ee8ab326be765730a4",
+        "task_id": "abc338_d"
+      }
+    ],
+    "csl_prospective": [
+      {
+        "metadata_sha256": "sha256:5e1b3764eaab1dc62b2632d7adc4170580433cfc00c1c9e0fa4a6a77c7fc1904",
+        "private_test_sha256": "sha256:c01e42da8d14d7fe371c4f10f7d4348b72d36311592c71c66d24cfabf0dc8599",
+        "prompt_sha256": "sha256:465f8a3ff61f99076549ae21bd280cb665ad75a6068acf09af36fee075dd70bd",
+        "public_test_sha256": "sha256:517e58cde8c7c605e61e13cc1504908f8b1a4c8bb4c620c07a4ca28e74e73a8d",
+        "stable_task_hash": "sha256:8c578fd4dbd99c78db95dda904fff118ad6173f7ed881bd47eb827b13fd73c9c",
+        "task_id": "3220"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:d91e466be341f4973a935a9c160b1a674fd6dee0ccf50586c7568e2ef00bd62a",
+        "prompt_sha256": "sha256:a45c138461f23635f350d1636b705f994135231c828a23638fefc829ff6b42b8",
+        "public_test_sha256": "sha256:e67f37bd7c9d0e70458a058ecc8d00b83a75763079c98d4b2cfa584c48d5a1a2",
+        "stable_task_hash": "sha256:bec03f02add7ef5af1a3f232a43167fa5c7ed446149cf2296520653ca97f7f8c",
+        "task_id": "abc341_a"
+      },
+      {
+        "metadata_sha256": "sha256:39b74abcceb120c3de0a4bd313405a9b8048e90d933affd0dcff748b72420046",
+        "private_test_sha256": "sha256:47e39ece863046b973c40a1f5afd9630cf20ac0b959dd0e389986313b9d28e27",
+        "prompt_sha256": "sha256:28144e5f4460cfdbd9f763aa71daeb53391ea27bd274aa314127a864f16e7a4e",
+        "public_test_sha256": "sha256:d9b0c8498a13eeb37fada2dc629b2aef8de3f18131d8ee672672dc1ac0a1305c",
+        "stable_task_hash": "sha256:20d6576f2dca80912a2f9b0bd4691a20479b7c0648bba91ee05f7af335178302",
+        "task_id": "3233"
+      },
+      {
+        "metadata_sha256": "sha256:2ba61648cd6eb37481fc11866301b5b9f513cbc18c79b5e24899886a4c352049",
+        "private_test_sha256": "sha256:7dabfa9f43623cd0ec2b3584b4b1317a4c70805b71517f93aa876d983fcb8e47",
+        "prompt_sha256": "sha256:55d14eeea1b5641aab668db4829842822a4e041796a1899523dfdd79e30bd4e4",
+        "public_test_sha256": "sha256:372e71ffb1a10842d74318b6e181936848ca91379a107e20c2b9942a3e81be88",
+        "stable_task_hash": "sha256:a3bfd37acc770dc9b4f81ae63e15f534773019829c6bd1a43cee387bf1f2ef12",
+        "task_id": "3017"
+      },
+      {
+        "metadata_sha256": "sha256:8b74944d128a89117daf063c0406fd6b5c4435fa83e6d86cc2f6fa33261477d8",
+        "private_test_sha256": "sha256:f298d63e79db58cbd838b2dfcb39b2a08559db3d19ee4ae9d1968fa4df63927a",
+        "prompt_sha256": "sha256:6981e44eec87b1fc4584f72c3872c4c88bc886ab6e350f307297a514f3316705",
+        "public_test_sha256": "sha256:cfd96ea7b7e9f1e7bd8cc6b98e5958cb6119cd7e32c9726bcb5adbdd196be4f3",
+        "stable_task_hash": "sha256:ee71ec47db69bd3fdd4458484a9c75779abe1b02e460908e544a0f82ad5eef44",
+        "task_id": "3251"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:c64d9bcd7723bd945c8bf6afcdcbfcf4b2c120d4e57321da4001d1ceedbf5e14",
+        "prompt_sha256": "sha256:537e6dfef0d02befb40eed9005668d15b94e3e0e33c0909d7940d07cd9e56888",
+        "public_test_sha256": "sha256:e28323c44ae6692e063fcfde018c8825c2ae7d663b106fb8af7feeffa5eb2816",
+        "stable_task_hash": "sha256:2812c3df561bf40249879d451876ce402fb551344d62a0a8840c02c0230a698f",
+        "task_id": "abc343_d"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:106c77edc13768da5f30b433572d1416905ec6d41c3c740af90acc18f5047711",
+        "prompt_sha256": "sha256:eb26cfeff3af6b4f5459fe7f0808816540c3da74621f1818717cd8334a8b7112",
+        "public_test_sha256": "sha256:c677734fb331888a6e60ca715f7a768ede6ac964137d1d2fce8933fc0a80309c",
+        "stable_task_hash": "sha256:f9e8925e888ad33fbb2bbd1f3e1965043bacc4699c0a0644dc6260466aff570b",
+        "task_id": "abc309_b"
+      },
+      {
+        "metadata_sha256": "sha256:70b08274e5f85b8fede5344156cfc747b84850814d1e7f6f752d9991f45ec006",
+        "private_test_sha256": "sha256:7698cea029c276cc8a20edf9ecb77594e547c6ec513c6e9766dd67b4e840e6bb",
+        "prompt_sha256": "sha256:4a126fa3aab0244a233888578dbd25a91c927524be675e0d8a4a9e08df7a7e2b",
+        "public_test_sha256": "sha256:6f0c7436eb19b1f1f1c80ef5f1367d5809763180a3d85055e3e793df8ac85dac",
+        "stable_task_hash": "sha256:84dea97420313dcbda15abfae1b348069d72366c7aa2e60c73171499003affe4",
+        "task_id": "2757"
+      },
+      {
+        "metadata_sha256": "sha256:a5e235ae6e839df34bf81d6cf306871455c20e6dc13f82f498adcd295d257bd5",
+        "private_test_sha256": "sha256:ee80c96bf9d1938062d83705101d54d7815fbf1b2a64c844482cc3f5cccb0c90",
+        "prompt_sha256": "sha256:eaba90826fb4dacf724d1d672840cd11f808ac5cd3011d4ed6aa4bddc1edc5b9",
+        "public_test_sha256": "sha256:af0801873d527ffae486600b63b3317c422ed9fc70b56c17c2979878d6642fff",
+        "stable_task_hash": "sha256:df0ed7a4fc557d3426e5ee12663dce80aeb34d2bafa9fdbb53e2d64d12f8db04",
+        "task_id": "2866"
+      },
+      {
+        "metadata_sha256": "sha256:2ebe1abfa78013e08c242494890d9b1de8d26a0d35b02075cf654f8f281487eb",
+        "private_test_sha256": "sha256:390c621060071e4095c4a298355aed6c49202172cd06cfaff143a86e68da7caa",
+        "prompt_sha256": "sha256:c9ff9c3fd138bc830975de555a02d528b1d0c033e97b2b0099d60820d26ec4c1",
+        "public_test_sha256": "sha256:9fb358102fe41476035168352da8bb29ac41523356971f390f74c557e7a12c15",
+        "stable_task_hash": "sha256:5ada3f8db8dd823a4c266c3e6a68dd8b6c8fbbbc7eb3e44728ef824cb52b1a76",
+        "task_id": "3291"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:c015188657df9bceb2452249e98cdb5e178babb3c3800f5b8ee45852ca108d71",
+        "prompt_sha256": "sha256:d3619f3349668f4afed8e4f849846506a8bc0c8824de9b3419232460d19e9438",
+        "public_test_sha256": "sha256:4c79a78c613c589d795d0213f809fea467e129e8f58e47b4adde7e4aa0932411",
+        "stable_task_hash": "sha256:eafbe69804b71b834fd66a6d18f39a958066e0949038212db7caf67477fd5982",
+        "task_id": "abc307_a"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3e650dfbc3e402ea35eef0c051f4aedb1ed886953c82c96ec9f229d639c410d4",
+        "prompt_sha256": "sha256:bb4bee3c72236c733828004bb102e326877fbb093ca33d0eb8ff25961c156358",
+        "public_test_sha256": "sha256:0ee71ad65035fc7d4c7644760f01b12780a4a821bbf3d8cd230f09a49eab2b6b",
+        "stable_task_hash": "sha256:774983fc35050f23774897d88c4eb147d4d23d5339be97212b51f2e9a6ffc87e",
+        "task_id": "abc337_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:abcda6546f709150fac1923c4df576fb25b99e6c8bd95205bf7d051ab279cb1b",
+        "prompt_sha256": "sha256:ba7ec8b94b332423dbb495755e9df475c95c64f7858f7bda68ece290b8faeeef",
+        "public_test_sha256": "sha256:741730e3c6456bb7fdb14ecf71db90cdb948b8614b75d9956de353d3fa85855d",
+        "stable_task_hash": "sha256:2c7ceb811b38ed10a3c45fd8cddee77afb9ca0c9ab4e38f016133a1b2d4840f5",
+        "task_id": "1883_C"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:b752fe831d1a50c4468e0844ade41ab7131b7f3ac03cfb26f7c53e3b764c163d",
+        "prompt_sha256": "sha256:f7ef3f692011598fe7ceabe6ffe7f1fa6b250c4f335c3bec05a722032c713e75",
+        "public_test_sha256": "sha256:12cb487df514d3c97de8827ec73b1c46fbe0915b9a68f461a28cf3586429ab57",
+        "stable_task_hash": "sha256:1950e21f01d700b30a1957b118d1e49c1add8832639f4f9204ef5bb38b3c6282",
+        "task_id": "abc331_e"
+      },
+      {
+        "metadata_sha256": "sha256:504d17a9196cb3f042da1a47cd3d831f36c22e70988dd95d6ce97fcefc449794",
+        "private_test_sha256": "sha256:1164e59ee8d4e5afc9d34742b2ed07aea2cbe389e0d32170b912ab671a69eb48",
+        "prompt_sha256": "sha256:b111e0f0642a2676927f6d30296ad20efbe058062e77833acff15c9e2205e4c8",
+        "public_test_sha256": "sha256:5027bba1508e5da62ccd8e4563586c44e74af75bbd32570420749eed3acbc800",
+        "stable_task_hash": "sha256:a9855da5c73240386820d8943cfd8352d31c9dae0db332a612680da504758408",
+        "task_id": "2854"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:0b0e9b7a5671f7a2e6ac2ca453098e6fba261be036144a33ae3a214a7808104e",
+        "prompt_sha256": "sha256:ca9a77984fff110d736439aeae36937663abd54525bf11c60b5e374605289734",
+        "public_test_sha256": "sha256:36a3dc79ec93fa7e5f1cb131c4cfd09d3f354319c652d7fc0f0706455c135aea",
+        "stable_task_hash": "sha256:940303b167ff027c7bfa7d1ad3eb51f1a40fcbf2f93f52f5573d528af54b395e",
+        "task_id": "abc310_f"
+      },
+      {
+        "metadata_sha256": "sha256:66de173cf4f01e52dd20a3e8ae797acc6866a85845a022a6247436f4e3c452d9",
+        "private_test_sha256": "sha256:117d58cb5cb7c72aa615cf52a0bd5ef9dc22c899efc347aef852632f3e0432f2",
+        "prompt_sha256": "sha256:8853bcd86e74809dd10d7d327936dad06212a22c9749b1210164ed2880f5c381",
+        "public_test_sha256": "sha256:039c1574b88bd1326c9b916e4703684682c1f639f4d2376f2bf24d7655cdb426",
+        "stable_task_hash": "sha256:649765789da209e66aaee14e08595e3bb6f24c1c185f803d97df45bdda058b4e",
+        "task_id": "2884"
+      },
+      {
+        "metadata_sha256": "sha256:a0997a309432b88e84b8ea38f8a02b0cd9d9be851a051a74617044878e15b97d",
+        "private_test_sha256": "sha256:a9009f616b6b1152f68bb72fe4b8975878afb22f852136c5c542a41c8b9d09c6",
+        "prompt_sha256": "sha256:127edc44eea7835cdc9c87cc0aa056a9fbbdd35f4b4c0662f5c07e2f92771f69",
+        "public_test_sha256": "sha256:a5e0be027067f4a8c778313edb3970ccc03cee2071c9e7a59ef40ca02970c578",
+        "stable_task_hash": "sha256:05ddffc3f2e98218dc3cb3276f69db6fe12454817ccc3a110ebfbd3161a490a1",
+        "task_id": "3236"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:c99ee030180f0c8a9b79f86a60137c252ceaf88c37d250930c4b062c9e7618c6",
+        "prompt_sha256": "sha256:c7c68e1331445ae6210ff4a0449bfe982926f2552702db63b08b46bf28e2a551",
+        "public_test_sha256": "sha256:6abca0bc6265743b0c01263bf59a1d93475c80c667d0d879fe4c32d1716afcc2",
+        "stable_task_hash": "sha256:b050c82c0f2f9ddc4b0762313cd5d7f6c19ee3ebc129e95a9d4bf21eba778a84",
+        "task_id": "abc338_f"
+      },
+      {
+        "metadata_sha256": "sha256:adf94e7f47dda4618b4918016537e78bd0221b5fe1b69dd512ce10b16673c68c",
+        "private_test_sha256": "sha256:eb1fdbc45af22d3fc44d11efbcd38cbd2ed01dde99dab11e6055e1e3f01587a4",
+        "prompt_sha256": "sha256:f166aa7adb1db233b705a87c1c766821b72653de848b962c011ac0b3ce7d08c1",
+        "public_test_sha256": "sha256:0cbdc86da97fea2b3d312b44b36f5ba8a86781cf9b2dcb49de578ee6c44a7918",
+        "stable_task_hash": "sha256:2240fbffeceef8f15542dae11412a8e395849d6a57bf5dc4a6f5415e7ef2f2e6",
+        "task_id": "3166"
+      },
+      {
+        "metadata_sha256": "sha256:35efa1318fd10a593e1f1386546a7fc6e4de87e72a3760f4881095d277d21685",
+        "private_test_sha256": "sha256:c5e9202e49690f1e4cacde9413f66f2fa14133c220828961c409cc3a24eb6706",
+        "prompt_sha256": "sha256:c01a9b4f818b2fe9776382fa4510a497d1903eca1e90894ebfaa003a45e3c8e6",
+        "public_test_sha256": "sha256:d49a0cbca5f0654f03b500e476a1caa56bd1f4266c9961afdb4897fc824575ef",
+        "stable_task_hash": "sha256:55a8894bf99220c68614a3cba2d3607b3ed5da0ca29b4d37fb0211efc367ebeb",
+        "task_id": "2784"
+      },
+      {
+        "metadata_sha256": "sha256:56e3f8252d37ae10638b87011cf367f23cee43c44ee85a4d5114de9062d60808",
+        "private_test_sha256": "sha256:2138c11e874403f3f428529641a94e54383adcffbeb5592bfd30f69a2b545702",
+        "prompt_sha256": "sha256:59f34245b9ee5af02244e64ab3efaf4a1cbd57da4238c4580b1e5c439a803d43",
+        "public_test_sha256": "sha256:a21707fc4324733b67c6a89d63de84cdbd907c3a43dbfbe49c436b1e66dc3134",
+        "stable_task_hash": "sha256:98fc0ceb57646a28a33166579a72cf07157dc867751dcb43cda46c24dbfceafa",
+        "task_id": "2892"
+      },
+      {
+        "metadata_sha256": "sha256:2f6343dd94ce89ee5a6f87ae36fc5f36729a6ca5c0b94cfd0304f0df65a644b3",
+        "private_test_sha256": "sha256:6c7a600a07ff768a8eb6e820fa9774b416631ee8a52fcf3b69c6cb11c800f570",
+        "prompt_sha256": "sha256:9759ee22c344945e9dd2c6d10d09c10dc964bdf9929a0737c7fe818c2cdfba2d",
+        "public_test_sha256": "sha256:0ca146864db3da894b73c081d638f5c505d6e42e2e5de669b56dd155314c65a1",
+        "stable_task_hash": "sha256:7b20bfd3799444a19de7466eb54d9364a02b9e268604bc6daf94cdeff93b1c35",
+        "task_id": "3244"
+      },
+      {
+        "metadata_sha256": "sha256:fff98d7c1cd423d9a2e23a17aa4510e4d847235bd3f5e9b2e030b0858116f8de",
+        "private_test_sha256": "sha256:365d6b98e1244182c6d42d0cdcf10e510756df933ef85f5b0a5a862d381c68e8",
+        "prompt_sha256": "sha256:701c45f64c5f6aecb1858a979b1c72b6e4db22529e6a4e57f1dc477b67567443",
+        "public_test_sha256": "sha256:5697dbedfe626151fd7d8af4c8d296b52af2418a9a1513a5d083da4e74d96f21",
+        "stable_task_hash": "sha256:6590dfeca5c1940711b82f7a3ae26c32a815cc29035860d1818979e122638f51",
+        "task_id": "2834"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:1b870f3c5aa976f733647a149d910e8624ede7392572e0b7903ac143b3701798",
+        "prompt_sha256": "sha256:dfcec64dbd1cca8065539ba8518adb9d96cbca592c125d8ad578e68697255594",
+        "public_test_sha256": "sha256:4a40a70852881b2b6149974b0081ecce3c5f10b3270779fcc043746ff320a8a6",
+        "stable_task_hash": "sha256:85a4f9b3b5d5f4dd2f1350ec13e633f1af923b34b047de88fd3115486381d03b",
+        "task_id": "abc324_a"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:d7d42f8cf42cf15ba7f327e46d8437b449b32939cac99f3bfd1e9d5e6e6f618a",
+        "prompt_sha256": "sha256:384d6e2dcd922b3ec9002729b7281245a08b8b013899f41d44cd042436e3bee6",
+        "public_test_sha256": "sha256:0b6ea0eb0cb4a4486a33f05c8260e039a97b328f54df3411bbb69cf4b8470c05",
+        "stable_task_hash": "sha256:6090ab195a20e44252801888a6dbec926d4e55e339ba12a53c2e865446d2e64c",
+        "task_id": "abc333_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:af529d0466fa6351cdcc92d5c67aee3c4273c42665b118a342fa03cdc6878417",
+        "prompt_sha256": "sha256:f569410cdd07ebcc88cd02bba2e96f9bbd123b2e2f2ca66b55318abd0d739274",
+        "public_test_sha256": "sha256:b0b2674bdfe1ab2ce4f85d84e044caa5d322e67146243f16903dfa59393b9228",
+        "stable_task_hash": "sha256:d1f2d9961a29f70a87b0a76d629b9f93652105518e2f7fb62260803e3a3cdfd2",
+        "task_id": "abc343_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:bdfa5778175f12631b1a01745821041be072439654ba4179ff73a9a674916250",
+        "prompt_sha256": "sha256:bd38a8e8853b1a1c4d6a4f5be63d730ced86ea12d6078db993e8ff5673747c41",
+        "public_test_sha256": "sha256:6d3e141176addeb9fc094bfc64053e34bcaea5be6ea4f5e9c164e5eef8eb0f16",
+        "stable_task_hash": "sha256:05542b657c700f31e0e64d2303e38ca5c9c60c4accacce81655512221ba35c89",
+        "task_id": "abc306_c"
+      },
+      {
+        "metadata_sha256": "sha256:5a24276a709ded108a8ffaeb4993dd3d90667a1c85b8cbd695f736512f903c2d",
+        "private_test_sha256": "sha256:ac0132dd91d817935795ee75c4455b9304601db4e5472198cd7b93a006b494ed",
+        "prompt_sha256": "sha256:b0c5c2f778da88022650afada535bbc8ddc8f22ffdb64b18864c981a5d443b9d",
+        "public_test_sha256": "sha256:0a76bd7f43cf2e74c16f6b3adf841ca97f7bbc1be2d6ba577b05522bd39bfd3e",
+        "stable_task_hash": "sha256:88987cfa9969ed4bf9c809483ecccdeb4f2ad843c6d6e357a8b199919a87ee56",
+        "task_id": "2952"
+      },
+      {
+        "metadata_sha256": "sha256:e1438f14f32f7ec7d8a4cf78495b231efc2f069e3b5d4c92c1fc72cd21b6972f",
+        "private_test_sha256": "sha256:4fe9f6250250319280edbfd60bd9b758ea3533c1bfeab0a2bffbb8eadbda9951",
+        "prompt_sha256": "sha256:b70f84dc77809d0c27c4b8feb98d6345410c047ad305bf5d0dade2473c69d967",
+        "public_test_sha256": "sha256:26f532a6dbacec1ecfe6970c3bd2ba520125924a502bad7355f31d4e901052a9",
+        "stable_task_hash": "sha256:e4f5c209b5706be97e5524a63d64e3b22958a1b0e411b96aa65e6d53deed966f",
+        "task_id": "3080"
+      }
+    ],
+    "csl_seed": [
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:e8899df3dfa139a23324caf13c3220f47a8a54b0ab873d7b60d7c08873bbe38c",
+        "prompt_sha256": "sha256:c83f945e281de77ea914195a9647e5ff83f023b640f401a172bc968e8d38df3e",
+        "public_test_sha256": "sha256:0a498fe688e292aa94d120d5e902638d246a04f8621517f8f3d2c3e7e7572e6e",
+        "stable_task_hash": "sha256:930541d546d4dabbc4be1ebb85b9bf6fdcb526cb9687767e9d73dcd20a909e5c",
+        "task_id": "1873_D"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:40a69622fdfe8a4a70de2ec29c8fda32c082353ec231bdbd9a641b4e21854e06",
+        "prompt_sha256": "sha256:58af6f9ffa2fd41381798b899d2a2c696a2f3a30104d354ce80a4e0ccb9f620a",
+        "public_test_sha256": "sha256:9606d2245808bd52102ea3bcc180070cd0a418bc09bbb8c269c4a141edd56f2b",
+        "stable_task_hash": "sha256:49d0ed39f5fa71dc012d6647ebf9fc0f28db3de4685edd34c0d0538813afe62e",
+        "task_id": "1899_C"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:c5bd7222951fca18baba0cc8c93e3b39dfd61742cf8ef5c97193f50ee0c206c9",
+        "prompt_sha256": "sha256:2766b2add9081b8bc62314922a57d5e83a4fce4deaca1bc295214927ecc1f268",
+        "public_test_sha256": "sha256:f9b556ce4ce0362b6ecace9761fb034e106e6a2e6d4d138485fd02db233c93d6",
+        "stable_task_hash": "sha256:052f70e02964a1fbd0472eae9ab122541f2692d70e73d7558024bec6997a3679",
+        "task_id": "abc332_a"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:09adad7c63e8488ea30ba2f40c9b747421f14c146621881df9f6e849788cfa74",
+        "prompt_sha256": "sha256:624309be4aed0b7dc2b13ed70984e77bf8b9670f49bf0979a126096b0cde8be0",
+        "public_test_sha256": "sha256:3dc33c8beff0c40aaf4445c3723a514543e6c8cd9b133dd5540bd9f8c5e02b3f",
+        "stable_task_hash": "sha256:41a79825e1dfe4ecc2ca7aa1992efac7695b73e35818f625a7b799aec8ce7dc9",
+        "task_id": "abc330_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:89afb067efa5e89cbcee7ee4c5ae94086d12788d7135cdc4e8ffc261f0992b81",
+        "prompt_sha256": "sha256:2ec7f7f3c86025d72808f008207be0440f18b5e10f0912410ca1acb421333a16",
+        "public_test_sha256": "sha256:e9a37ca619af58b9fd490ceca0999bfce15d81e50b1556da44c75b04341fa370",
+        "stable_task_hash": "sha256:b1ecfa5c597fb2e10e9c3285341875b2962c2bf386fa5e13ad3784cd2e3f9220",
+        "task_id": "abc308_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:ac9bbfa52ec0f2ce52297aefb504e5a96335b4c527fedbcdd3f95ff44185c478",
+        "prompt_sha256": "sha256:c73ba97ab4878d938819023de793768786f0d9c28f92ff2e57346c3882878f19",
+        "public_test_sha256": "sha256:51f416ba3f2b131d9c6f79318c7ebbe7b837df542d3b32c20be9748979485273",
+        "stable_task_hash": "sha256:191d61ccbf0c0f54b244b44e23c56bf15ed21bc4b35d5ce479eeaef6bc28c24f",
+        "task_id": "1873_A"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:441f840deeba5549eb4fbe682f0616cbd693709f4713fd957539b8a9085ff0c3",
+        "prompt_sha256": "sha256:8077732f612e7baf538ffa14fd5f2d46866f11d0084fc6539b7d2e856801df66",
+        "public_test_sha256": "sha256:91790555d0b2c657eb0f7ee5e85452eb1ebcedda45c37aa475d84363139589ed",
+        "stable_task_hash": "sha256:94e69301ec30ffe7d304655206f7abe8dbb002f6afa4913988a1a80f77130637",
+        "task_id": "abc301_f"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:e0578d9df328e6394bfdbd6596be211e79725fe3fd288be08c3d1e56577be722",
+        "prompt_sha256": "sha256:a93784f42c8b8044560b1594d22957bb6e5d9e3c0380824fdda93441a214f422",
+        "public_test_sha256": "sha256:4ea5d876a5bf94d946ea11603ba418758e82e21c8662c0db004b9ea2cb2a468f",
+        "stable_task_hash": "sha256:0e95d241fde00b8283f193c0fd0f85a8c60a69b0a39e396fbb098b1252146b9a",
+        "task_id": "abc314_f"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:74e24d334b9ef7104d6be51241841823a86cf7b33daac295a13250f74ef8c31e",
+        "prompt_sha256": "sha256:2166aa3b9cce1154bf1f1355316bdca38832335f3fb69200e4826789eb452c28",
+        "public_test_sha256": "sha256:231b28e38cf0d10c9dc6e6f998c37016df7c9a4b3bf8039ea7fec69995b72bb2",
+        "stable_task_hash": "sha256:bbf447f97098462cae539c735d616233fdb228efebebfd911da4235abcf3cdeb",
+        "task_id": "abc335_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:955f0b12f4be6439c69cc8abb5a49a0fa122e2f80212ef09a7ced60a1c4619f0",
+        "prompt_sha256": "sha256:551faf5148817b0a073de4a449483365bdf83ca3591942567f335cd3da85cd49",
+        "public_test_sha256": "sha256:6570e7842bd6b1b4f060ec1ba16cae63786553e6567f4039bde69cb6e24f9774",
+        "stable_task_hash": "sha256:d337e4f1023325a9535b53df23443f79a60da855dcfaed10343717425ed427e2",
+        "task_id": "abc301_d"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:bfc785d36af9679924cb94b2c1eb05cc9d2d5571b144f1c38c6d04becda58f66",
+        "prompt_sha256": "sha256:b780a13337d4e0db698be8b44ce4e36f5cbcc9ea61fb3d6976a8bb2e8c78c7c9",
+        "public_test_sha256": "sha256:2b2ce8f4baa452afef78a2efb9ee8d1763223282ee9026d3d0664c6a894dc1fa",
+        "stable_task_hash": "sha256:8c585a6500324bfcff91d352a3b4bba510c34e6261e1f3043e1eaab12647fa0d",
+        "task_id": "abc332_b"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:fd7a7f16483c8f6e2d4214e1174e33db0c6df3bfc5b3162b4f29c2839b62d7db",
+        "prompt_sha256": "sha256:bb74de1295d74b3875e8757f758a78d57ededf21a377e5ae12038b3930395d75",
+        "public_test_sha256": "sha256:53ff7c8676aa5fcbbcc49181ae31dedd5d3ef39ce4de4c7e1ea6f8ab2dc2cd48",
+        "stable_task_hash": "sha256:a0dda159f2886d1915b34a3a41e540bc2336dbeb9d6e07d51d3651337d1f4879",
+        "task_id": "abc342_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:b4a5ed249252f094152319dfac1594820649aa20be1592e8035dfc194d0b8250",
+        "prompt_sha256": "sha256:43673cb36ce47eb61bdc55c7b8a9ba7adb0d9bbfe347720446aed2d7e3ef4a45",
+        "public_test_sha256": "sha256:dbba271a592a6cf2b63a8eb30a0b9d1a55f42776c872786f6d56d4199ba86bde",
+        "stable_task_hash": "sha256:9ed3888adfbf6fb701c70fcd25f5f70ce92e3a2f7f7fe57adc4a452536980dc6",
+        "task_id": "abc312_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:5d2f0f910b4e479db9678a3936ca3c6f84c8fd062b60e74e98453ba9bc391050",
+        "prompt_sha256": "sha256:3a2059742d1b0f29f5d06e59e94b0023c600efa0b418d4029f91051e45449d14",
+        "public_test_sha256": "sha256:4d644c6648910dfad80eebf5ec0fd1a75bfa3ecf114a4d16349d8cf566ac06f4",
+        "stable_task_hash": "sha256:896756a008733de3b97073f2781cb124ca27b15dec5d39eafad67617df433988",
+        "task_id": "1873_B"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3e245b8fdf040942cbb7da974c2fd33dc800ff039aa3d57392fab6ef467c240c",
+        "prompt_sha256": "sha256:da50ccb44d98f93b1dcfabfc860cd31db4b471e4109e39a272e9c9ebbf55636f",
+        "public_test_sha256": "sha256:3d8d9273c43827c00272c13add3fc50e9a0b9e1dfdc37916545eac2bbd552772",
+        "stable_task_hash": "sha256:dd4ea1cf823f528bc45fc645dc3e0ef49325e949fda5ee66d96191cbd59e7390",
+        "task_id": "abc338_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3b1b70b2789a9f70bc4cb80f3dbc52bbd0e584b909845e1e23272d9abb6e6db0",
+        "prompt_sha256": "sha256:3700f8313569a5eb977b307cee9c17416e8d77202c3e2ab125982203dd47a116",
+        "public_test_sha256": "sha256:b5f0134c5ac1c3f24ea0fed43bd8dca8eb446b6718099087930338eaf0b23200",
+        "stable_task_hash": "sha256:25cb7cfb339b83675a3b811a8794ea9ee68e787dd93c3f97a1cf59db0d7cfb11",
+        "task_id": "abc324_d"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:508046a9a23b0cf51b314cd88d62a407e72c8c2a13263feff68e9e74976260ab",
+        "prompt_sha256": "sha256:6863b15095b94163ca925d3ea31fa1968a4399659b1890eaad29ae9de16f35ca",
+        "public_test_sha256": "sha256:84b5951d16ad3b39771590cae2e572c2c0e33d73ef39806d3e1cdf5198e56591",
+        "stable_task_hash": "sha256:7f2ddc21d8b8d311a9023a5e2e8caceb9746a9438255b15061b24e688396417e",
+        "task_id": "abc339_a"
+      },
+      {
+        "metadata_sha256": "sha256:bb4e6d1fa03254bac8a7b34f254c9531358235467c3f24a4e8f88e7459cc0fd4",
+        "private_test_sha256": "sha256:29400ad355b09e85d05c95f96545f9d1362c08745f4c93dbbc87879aeec8f29b",
+        "prompt_sha256": "sha256:bc3782a7433e516f5e0d353f80d215a8f9fc7ca70fcee8cdb4b25ed2e8c6c899",
+        "public_test_sha256": "sha256:5023bf11984b6a87ae946984dbb83ed18bcab6a076bf8ac2ee7586f67d8baca8",
+        "stable_task_hash": "sha256:548f3fb049eee73122ff0288a2642d42a574a412baf61f62ff1fce716c2537b3",
+        "task_id": "3311"
+      }
+    ],
+    "held_selector": [
+      {
+        "metadata_sha256": "sha256:fdb21d817d210db7dead9e88ed6748a8f602e4bcc8b102560e2ef1711c8282f3",
+        "private_test_sha256": "sha256:dd293467999a4e7f36d781963fac295e629b697bc3ce539c5898c53ac54cd08d",
+        "prompt_sha256": "sha256:039614ae5d0cbd9a8dc64918d3b3a0d172b213562e53f7970e2df43daa8ea5bb",
+        "public_test_sha256": "sha256:ad2bf9f320b1bdbab1b08b87033a3ce81eed4fc067f63452edfd7e222db793fb",
+        "stable_task_hash": "sha256:d486370345d423bdb8ad25bc372bb7083b3d8bd91b6c0039bd2e18ac97f132d8",
+        "task_id": "2779"
+      },
+      {
+        "metadata_sha256": "sha256:e7e48d8f4a6d46820cafc0559e694b2ec550b3084083d07b5000630ecf8c1f3e",
+        "private_test_sha256": "sha256:4d582d0dda65cf945b2404039c4b1a009eab9cc4458e272648e7abc5d9dfb4ec",
+        "prompt_sha256": "sha256:bf745b7b930e641936b7917a45b7961b5893f52d52ef54525c5fd4a98828cbc6",
+        "public_test_sha256": "sha256:2b565903225728740b963e889da059ba3d03a91b00f762af66d75ce2953b8b1b",
+        "stable_task_hash": "sha256:8650a873ec3718a4cf343fe1248c12aa8f7b728c917ec376c3deb0da179d5682",
+        "task_id": "3171"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:7f6089a3998d65cdcc1f3a636072432bec011fc8af3892b2d5df942a0f5ea1de",
+        "prompt_sha256": "sha256:420cc55aa4035486f5c4fdaa1a0dcc5297b83bbb59e06a3b3d9a7b8972f5e329",
+        "public_test_sha256": "sha256:83e3273a5beb5bd1393c58c6c622d30f328ea39c17bca6413cf43e25fbb29fb6",
+        "stable_task_hash": "sha256:6ad1d760469788f4ec78efcc9d87573017b59598f15fdca9889ffab1baa4d046",
+        "task_id": "abc314_e"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3fb767c01232b2374c5c56add8b3e6b3bed06622e391110aa76f197295c6dadb",
+        "prompt_sha256": "sha256:d1dd52e6332066f64d8e801325692c4488e34f869fc4024e9f2e1a397c8e5aff",
+        "public_test_sha256": "sha256:008b0cb26194d983d64299551b326e8b865226ba2a23b416777dddc67f1afe2f",
+        "stable_task_hash": "sha256:65c849781b340c24cf6c2f6d2a7e33fde2ef65a537b2f0fdf6c401bef1fa79b2",
+        "task_id": "abc307_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3bea634724c9dd0dcab231f08a048df2c4001ccfc64d7ce952511df3fc3f8838",
+        "prompt_sha256": "sha256:7279e6f3d92540086f5081a70a1b39a6c3d07c3810e7bb5e8b5392bfd82f4966",
+        "public_test_sha256": "sha256:d46e9f37d1540dd9342158bdf94e1eee451f7739e786f8b876e61fa840ac8372",
+        "stable_task_hash": "sha256:da1d61d40fe7ce89d1fb88499e30b0c33d25ab5192802650203ac45c2353f54a",
+        "task_id": "abc310_c"
+      },
+      {
+        "metadata_sha256": "sha256:6b9630c035f422a89f85099f2f00686f961c50cf861193f96b022e3cc4a9e8e5",
+        "private_test_sha256": "sha256:6e8f365f598ad779ddaf2464547f888a077afc344fa1ed748c0c986c023b63a5",
+        "prompt_sha256": "sha256:5675793317303cb0af044b470c4b25472b0c194fd7401aa5efdc90def156da54",
+        "public_test_sha256": "sha256:b6cfa5d9069a9562c59764e7437934f1a2173dcdc64b4353e262af243a862f96",
+        "stable_task_hash": "sha256:0e998b8ad0acbbb165862cc0f69ac52aa97f602c604ca37675874a8cfd5a0899",
+        "task_id": "3104"
+      },
+      {
+        "metadata_sha256": "sha256:91cf8e4ebf5308907f76804b64ec0e0f9b1a75246b128b2119d837c4064f532c",
+        "private_test_sha256": "sha256:e74164c752b3b8961162fed278d9e5c219b0bf62642bb02ebb2f9a15fac25fe3",
+        "prompt_sha256": "sha256:738281708d2786459547cb1ea57b13e9d7e190491eae7dbc82be0cccbeab9c46",
+        "public_test_sha256": "sha256:9607127f29824cb4355f1700ff92ed721b4953c45b0cf05970ef199f6be98008",
+        "stable_task_hash": "sha256:af007f2e0d81f2fc5096b412dcfac91235052e6a5fdc8c83834f6b769122ee4e",
+        "task_id": "3212"
+      },
+      {
+        "metadata_sha256": "sha256:c4f31ec86b3996f86c77a96d0a9aa72589fc0e39f72e8ad284b4c7738425850f",
+        "private_test_sha256": "sha256:0ee135fe6e93242d72c4c99602204006fdd946cc219675d1c997d1347ad57305",
+        "prompt_sha256": "sha256:d751f508163ffa4ef2abcaee0152ade6a4ffe688b3b114c2d7e011c339b7da48",
+        "public_test_sha256": "sha256:7ce81da4cecaa0abe6cdc51428e39549844b2bb4d6cb6f33b96c9b251dc8dd87",
+        "stable_task_hash": "sha256:fb810fc413fddbb20a9c978dbcb4718156e740c81accd4ecd8c37fdd7308d48c",
+        "task_id": "3224"
+      },
+      {
+        "metadata_sha256": "sha256:3c2e287c220381921667203d16bb08ee8ebd460e58722c895fb6cc308b35df60",
+        "private_test_sha256": "sha256:53cd70367bdc7a860dbffaa3edfe88d0e84f9cfeb79d044faf0863b39278dd34",
+        "prompt_sha256": "sha256:ebebe50c96a0dd2fbc2275d08f2473e5e2f380d8d14a92969efe92832fa1a733",
+        "public_test_sha256": "sha256:4bee24b0c87f0cada95dec1f37ad5df173c9beb9c72322fe58fc6cd14cb656a3",
+        "stable_task_hash": "sha256:e3a9b5d08e6a4c3c1747e8e6394d6bd844c6bf8dcf0c6c8e25100b9412b8caee",
+        "task_id": "2802"
+      },
+      {
+        "metadata_sha256": "sha256:00f5650bd7fedc55b6637aac0ef0f6efff0b60bf20fc42aadae3b2754a77ee09",
+        "private_test_sha256": "sha256:66798c9af8e533872d99f614c969dfb638e7b5282657fe36d32b849424242433",
+        "prompt_sha256": "sha256:ef570402d87b080ebd494e6ab77ba90871f75b8e88595f87fcce5384830ccd26",
+        "public_test_sha256": "sha256:40822ca5bc534f4bedc4fb5410c04c434797ecf82660e953faafdd6556557808",
+        "stable_task_hash": "sha256:9c0570e687b9a5084c7ae7e0c56985a0812fb7b4a89fbc64c8995f2590abeb63",
+        "task_id": "2998"
+      },
+      {
+        "metadata_sha256": "sha256:13ad0d7513a4c32ee8d904149aaceb8f9b40523a0465e5b65a9cb63884c9e6e0",
+        "private_test_sha256": "sha256:7bcb69772161e3267ecbf81bff52372d662763ab8d4d4f07f5f341b7e89ff25c",
+        "prompt_sha256": "sha256:17d2ec02665213a5bb72e4b30707d3293b4d5e187f2f02d9d4b5b837c8a14ffe",
+        "public_test_sha256": "sha256:484747881f27e50093cf9e2be6dd73d3737d281bdb0ee5061d1ad0139d9191bc",
+        "stable_task_hash": "sha256:90df31e0d13eda51ba9f7612d38e08988bdb1190d1d12d8cd6e9c70ccebae404",
+        "task_id": "3347"
+      },
+      {
+        "metadata_sha256": "sha256:8395f60d89172dec3d33afa4c29d446f88529a24a3e37fb7e0fa7eb1a842e5ec",
+        "private_test_sha256": "sha256:aa14bebd709a0d2a1d0027f515f10c44b0f6ff13b1799e9f60338792bff4afbb",
+        "prompt_sha256": "sha256:9716c72ccd4cabe2dcaf46bdadd00a0bfbf497f84694c271c1b1ad46db8b183f",
+        "public_test_sha256": "sha256:c21235d783ab64bba20416fe510c9cd2f49df3050a0c47253c7f6212f81335b5",
+        "stable_task_hash": "sha256:18934a86f1788d63e4bda712bdc193502ff4bb7f0c48be5e8cadc5d347b70a1a",
+        "task_id": "2847"
+      },
+      {
+        "metadata_sha256": "sha256:965ebcd2d883c7d888940d2fb3f793539630d15d1abe0fda4d675afcb2453383",
+        "private_test_sha256": "sha256:c33e23700a7801f1958c3325345b9329a71123cf836aec6e0675f8e738a52912",
+        "prompt_sha256": "sha256:b19e3589741866a854299391493f9fa6d510c7c773b03a7e0580e18a280e17c0",
+        "public_test_sha256": "sha256:e390924488efd958959827a7d0a16c5ef1ceef0b54dba8e21ecce79f38619162",
+        "stable_task_hash": "sha256:1af8d44bcbee34fc813846aca76ffe3a4ab6b5a53ddb61b4336a90063af2be2a",
+        "task_id": "2888"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:fcd9ccc59acfec0a574dc759142781bfb589b2cd9c5de46b1ed7eb6642b8b939",
+        "prompt_sha256": "sha256:b2e5b66275e9ad080aacd7520b4e9b5b27070c78d3ed1188cea367e6395fd5a3",
+        "public_test_sha256": "sha256:75cc4a5da1cb1149ec98da1abe2f9437a0f565a96ffdd45d71abe8698b8ab969",
+        "stable_task_hash": "sha256:6e2e7cf5c6895c4de625edae34845f6e58cc7fc83cc21230ad488c2adb3704bb",
+        "task_id": "abc328_a"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:75a6692bd1f193d765befa1c01e7faddb4c1779f759340fe0d5405a61e19971c",
+        "prompt_sha256": "sha256:f53b805835024894ed7048706f65b4ce3df31f3590058e4bdd76764555be261b",
+        "public_test_sha256": "sha256:d4d800887d52d8911ce933af9e0f726dfd4f45a78738da15afd3f5549d8bf2fd",
+        "stable_task_hash": "sha256:25f67622e358a2d2ff96071485d2d7a633a0122cd5134727468bcf49b5845f6e",
+        "task_id": "abc325_c"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:ef80e9f24a3e04d8e4a72c5976a438496dcbc354bd452aecb408bdfbd6366ea8",
+        "prompt_sha256": "sha256:059c758fe212c09be29ef97cecf5cebe920250d0ab8d100b11ab828b1fd2f3a1",
+        "public_test_sha256": "sha256:ba8bbcdacddcaefcd5d3b856401d60adff7e3001f5a8244744dacf4e1721f102",
+        "stable_task_hash": "sha256:56dd7b1836aa70997730a60584f9ec0dc9ae69b2d6ae1d2015653f26383e7a83",
+        "task_id": "abc328_d"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:66b562a138af9187f102ecbb3ca51ceaaff428d83c9acadca1a429271b3cf5f4",
+        "prompt_sha256": "sha256:2277eda8b68ad3c31c793f28bf1a01d1f1a5753cf31b412abc40c245ce7a27a3",
+        "public_test_sha256": "sha256:91e53efb768ed92a8a5862b57ade20b07e94b48f05cfe0211ed32d4e6dea7962",
+        "stable_task_hash": "sha256:d6b0a514ad5ccfc8e2a3ce1ffea7fdfff3e0b0b4fa617ca5b8c67b66f38528d2",
+        "task_id": "abc302_b"
+      },
+      {
+        "metadata_sha256": "sha256:03ecc8a092ea5c464c6f83c1fe735f6c7a29cc6dae279b40acdfefd207425c35",
+        "private_test_sha256": "sha256:80c89c13a86ab78ecee94b1a7928bb294f31aca2250cb0c2bf0772cf6dd72683",
+        "prompt_sha256": "sha256:d0de0fb63ca4992ce04e1147e74ee1a67c28551616fd56b055630474242ea80b",
+        "public_test_sha256": "sha256:cbbac663a8108952896bbab0c3af84348b6153929da2c53c15fdcce1ef861e1d",
+        "stable_task_hash": "sha256:d65c902c099f99e77354dff2fd627b41d52032038a94a87a658fa16c04aa1999",
+        "task_id": "3329"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:0785e677a51dfedd2199de608f2451bd6775780f5ddc22e6cdf47ec76abc826c",
+        "prompt_sha256": "sha256:e7dd2cb88ab9f2522aa61e2992299035535f3d9cfc207f0511fe5178f7671bbd",
+        "public_test_sha256": "sha256:a1b1c90a613299a2d850579177ee837a7f0242463eb93f7f5f7556a5ced70969",
+        "stable_task_hash": "sha256:6d721e83ceb55824974d8d3afaff9d0d26497dfece473f8984255f4d31fa4940",
+        "task_id": "abc342_a"
+      },
+      {
+        "metadata_sha256": "sha256:2c394defe9f08a4c84dd43549c8349b4b7944209536a125b48fb1e3f2ba86469",
+        "private_test_sha256": "sha256:cfff62543b67b1ec86b3e09a9d150285f30d4f1fd7cc53627b9faa880e613095",
+        "prompt_sha256": "sha256:e9294d7ef4c544e41719c5b07f43ab684348986ccadbfb2e4330f1169d5ca8a8",
+        "public_test_sha256": "sha256:3d413737e708ba4f2273c9c59bc75468cbe9272431c9fed96cb616309cf5db3c",
+        "stable_task_hash": "sha256:23fb991924c88ed0303b7c7319c515c14a1c1a5c64a610c7c271d7f93b2df8f1",
+        "task_id": "2839"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:22f9d520849895f55da4562c7f98a0313808bd2af31e0bd5f73b54c7d2cedb3c",
+        "prompt_sha256": "sha256:fd8601bf7b1ec1389893365f3418f5b107ec80743ecb0f3902137a4777ffe6bd",
+        "public_test_sha256": "sha256:9f4b35071c4e6c6d68f0be96764ac4eea65cb213f61c74a515c14d0aed855af9",
+        "stable_task_hash": "sha256:725f9da5b7c11accfce9366100ff75b323ea99d322507f51a7ee7ff6016ea5ff",
+        "task_id": "abc314_c"
+      },
+      {
+        "metadata_sha256": "sha256:b83a752198780ac9bb6ddbf84865a804a17f39f4b0337aa4df19e8e9018124f5",
+        "private_test_sha256": "sha256:d5988c4721fc6908d6d8d8156b1a8d2e2c26e38c5de69dbbc8a0ee8e5624d0cb",
+        "prompt_sha256": "sha256:e9ec312c79186632a0ebab2f76453db7de8d253817569629995e679804fed4da",
+        "public_test_sha256": "sha256:fb5b62fb7ede4c78654e79f57f241adabd5a159d89d5fea8fe00a766a765d3fc",
+        "stable_task_hash": "sha256:7ee79ea57c738023ec077fe2b79bc016ae2082b69fdc0fa6da653e95251e2825",
+        "task_id": "2877"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:0553e11f368d23bc4c08b692669d089f07512f7860e6cd941837e32d0a534226",
+        "prompt_sha256": "sha256:59898da05e34ea8f8383aafabfd3e0fb457c365c7190ee2a5b0e5d657d174484",
+        "public_test_sha256": "sha256:c6dce0d3e5c6f94c318acb344fef4c94653e3b7933e49c4b4b5ffa3baa2fea59",
+        "stable_task_hash": "sha256:f1601e9da0020071237f03a4a83d7fccc6642b3b8bb5d980a3a1c3828ffe3a68",
+        "task_id": "abc334_d"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:5b7b139069851c0d71dac2a9881825e99f32557188fc7e4c07375492f1413192",
+        "prompt_sha256": "sha256:c50f119dfc6034ccf2b294e8e0c6b497e4318c2ed07d525615effc8f3268b638",
+        "public_test_sha256": "sha256:46a4666027f552e9c0c73ebb8c410b23a628525a6666a59289a8701c1ac27142",
+        "stable_task_hash": "sha256:352d08d8aaa3b299d02805a3b8e26915e0126971109e6462ea40f693b53d9609",
+        "task_id": "abc314_b"
+      },
+      {
+        "metadata_sha256": "sha256:afbe652697d2302e95157f081876a12c43da382e454a6a09b6c1493249adbd65",
+        "private_test_sha256": "sha256:552ea5aa4f78659ebe2f3fe8461f14f9adc58cc09c1e4d40ad36a7e7364116a3",
+        "prompt_sha256": "sha256:0cbef82bfee323fb704fcb753db23d28db6cc5507c7f66c51478557725f6e1aa",
+        "public_test_sha256": "sha256:0e8761975b69ed96b53ceacb6087b7cda6a77e4f6887a3228033f341c3bb7854",
+        "stable_task_hash": "sha256:f792a6b1dd0f4a845871c90272f13fec70a4ef0266b96ec4e77d258d6135a13b",
+        "task_id": "2786"
+      },
+      {
+        "metadata_sha256": "sha256:0a6f4c8446e17db3e4b314374ed1a8cadbcb4f999bbe7587c097219f21cf6659",
+        "private_test_sha256": "sha256:eaf68287054e22ec312ddd7a5b5a7e263309949d9aacd1ecd9b4e2b2c46cd79d",
+        "prompt_sha256": "sha256:75a54cd138d67c7596b64ac517e4e7ce05e9ae281f0a09d18d9252a2b4417645",
+        "public_test_sha256": "sha256:188bd6b584958429cc8bfffdd70f88449a0bbce4a37c954975ecde005fc44fb9",
+        "stable_task_hash": "sha256:249eedbaac7dd7d085f1da59285214ea5d00689ba00b7e271d198433c6797abb",
+        "task_id": "3093"
+      },
+      {
+        "metadata_sha256": "sha256:437b7b970e1eccddcb1e5fea425ae1a89c78a07bcd85bd189d74ed361298f9ca",
+        "private_test_sha256": "sha256:77c0fcf607d7f32232bac4eec242fddcc9ed9e72de47867cdc82d9a7e556614b",
+        "prompt_sha256": "sha256:d4c5ef39b8f022d9b1d59cb113de0e9c9010995fa948ba38e990b9de725f1ccc",
+        "public_test_sha256": "sha256:3986018f9821c3a6998a758d06f9e0de1a6347c1a0ac4c72e931f9c82cd0ab8b",
+        "stable_task_hash": "sha256:8cfba36f4ebd3c35d11958a0838c8932ed576515abc86b607e8bc9940db18e15",
+        "task_id": "3309"
+      },
+      {
+        "metadata_sha256": "sha256:5c664a2f8acad3c9a8d9a3311c2092b8574ac8546a514750ac4f16f715da97fe",
+        "private_test_sha256": "sha256:9dc4479cb2fbdf162976f652f8999ff1a5972b09f8dcb03b1eab37c1260f9596",
+        "prompt_sha256": "sha256:1a81ed9232b18b57fd205bec4709b6320ba69be80b73b1f72766b83133f9bf27",
+        "public_test_sha256": "sha256:b0d8e10eaebbda66c0391f3f48290d26465544f9aab132e0d68f013c60315a8e",
+        "stable_task_hash": "sha256:9c439d0c118ed67a4db2f9e45eb3e542da82f81c8095ecd989a3cb0b8abd7bed",
+        "task_id": "2819"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:87903ee67f6cc176de979e8bb53f4410b969a485ef5d88ec525e2d83810259f0",
+        "prompt_sha256": "sha256:9c6f332cb76270bfbd3429ccbfbefd86e796592d79386371b3ab4a66ae361dc0",
+        "public_test_sha256": "sha256:7a428f9002b5b65a012471a0b5253a17bc0a53d44bcf0bd28c580f45095be080",
+        "stable_task_hash": "sha256:a229d079e540db780ec33f24f2e00fec7df660fab61c8248b886fc73e049af13",
+        "task_id": "abc307_b"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:6a2354acfa5324ff02e9b00b5d12ea2e45118ba5af63c26e56f6792cc15bf814",
+        "prompt_sha256": "sha256:00bcef78370de0d77f419957669d6415971ffafec791fe8f5c0ee8a17699e7d8",
+        "public_test_sha256": "sha256:137f60ad35078c7dd4547b7afcb7c30f6e292b88c7c75542fdeb8ba50e2f0edd",
+        "stable_task_hash": "sha256:5708a1d9718810612bf555204c11369dcff98699fe6148e8741181e0d216ab28",
+        "task_id": "abc328_c"
+      },
+      {
+        "metadata_sha256": "sha256:de20a43aedd0372148336b9835bcddd3671a6fbffc7a675458e6c9b7fda41bd1",
+        "private_test_sha256": "sha256:3d3ffa7f669549b90e6496ce9c8c5ffd631c142203a1525d9fa46b55ed54e9e7",
+        "prompt_sha256": "sha256:349b4dbb8ddf84bbfa60558f4e8f52dc3ffd1973ad485db56efcf51346effce8",
+        "public_test_sha256": "sha256:eeb8a1bdb901242490bd609535a52e632fcaec648828ca8a115944c1bf328ee8",
+        "stable_task_hash": "sha256:894c9d87d58ecfd5bd7f8dc70249fa4189fb6fdfc0d15b8d1c0bdd37bbd3b61b",
+        "task_id": "3183"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:5744c66c414a969b4607cdc31e50f0cba98df91effecdbe05a198f39a2810311",
+        "prompt_sha256": "sha256:52a45c10550f619022360d7a9d389834e58c3e95a6c585832c19bf58fb02f3d9",
+        "public_test_sha256": "sha256:0006426100246520ae2ce9cf93bf92ef873f1eda3b24309afbd50d126f098eec",
+        "stable_task_hash": "sha256:90cd46c964b3c63ea56ddfab8e79292c2a81d384e2e3ef0a07c23b14a09ceb08",
+        "task_id": "abc305_c"
+      },
+      {
+        "metadata_sha256": "sha256:01d4f324f3a9b9cae158e60fdca73dc9e8e5788ad5336c41ada8e6c799485f1c",
+        "private_test_sha256": "sha256:7e0d337a61ac8be774526bdee928afb00a1597a4f02ae9ed1b9abdc7687dfea5",
+        "prompt_sha256": "sha256:523c5be2ae99150ed574fe2304057744442c31b655fb9cc9abfc1f523dcb4d04",
+        "public_test_sha256": "sha256:df7afae5f5123aaf560f8030903a04f471713f5cb7f86062b8f486bb3abb08b1",
+        "stable_task_hash": "sha256:20a05ed53de869288b4a1b80f3ddccb471e192566737b5f772bf128aed91e8c1",
+        "task_id": "3192"
+      },
+      {
+        "metadata_sha256": "sha256:ee8756640eb7a45b6586812ae9c8216afb3b959253ab5bc3677ca95bb9ca3b77",
+        "private_test_sha256": "sha256:0b2182e0aa452ca2ca20b58806e039c9b0a684896baf8eed640028aa394dbb66",
+        "prompt_sha256": "sha256:28afbfcc56798971f773d229692dcd61fbcdc15f22ebc6e84144ec10df1c1f8b",
+        "public_test_sha256": "sha256:7efb27bc7f97739c28a6291af2e891b6e2623f1165452dadb0720b83c515b57e",
+        "stable_task_hash": "sha256:ae30fbad84eb4ab6e9f86bcbdcbd53870b5ed664a38e28229e6eee4ec0a4a905",
+        "task_id": "3261"
+      },
+      {
+        "metadata_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+        "private_test_sha256": "sha256:3a0521a98cbe2ef72ea99667d84ec87a10f606f5ff7bc9f8b574cca0aaf649e4",
+        "prompt_sha256": "sha256:2ccbea7fa582c186a07182071561e8e899c8a6b08038a2d9c5456042e5a71453",
+        "public_test_sha256": "sha256:df1ad476e6ad3550504c52bc519872ff365a9059ed820fb3ea2fd6abe0b73a88",
+        "stable_task_hash": "sha256:5ca292720b15309610f0ee77dd45b3df77d863704349d6b1eb8786a48a61f87e",
+        "task_id": "abc320_d"
+      },
+      {
+        "metadata_sha256": "sha256:a8b9931a2e9dc412e6f3d459e4f082d023edaccb18ee0df2bcb57cadefe5bcef",
+        "private_test_sha256": "sha256:19e034de44afdf300f97337a1eaeeeb0130fdeb84287478c5f0c5b4bbcbc7eb8",
+        "prompt_sha256": "sha256:d8a45c251cb8ce6765565bd73e47dcc6ecea562a45102ad5937fceb8501d3367",
+        "public_test_sha256": "sha256:d2001db35a2d0ecae538c776180b29a83247c74f845d2e7652c3cf35a7d7b5b7",
+        "stable_task_hash": "sha256:3b15d7c1da5c76ae6886271b5f1c742c063e73ba7c8c08da84eda405d341fce5",
+        "task_id": "3091"
+      }
+    ]
+  },
+  "status": "complete_ready",
+  "stratum_counts": {
+    "by_split": {
+      "calibration": {
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2
+      },
+      "csl_prospective": {
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2
+      },
+      "csl_seed": {
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1
+      },
+      "held_selector": {
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+        "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1
+      }
+    },
+    "overall": {
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q2\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q3\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"codeforces\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 1,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2023-Q4\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"easy\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"long\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"hard\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 1,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"atcoder\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_stdio\",\"tag_bucket\":\"untagged\"}": 3,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"medium\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 2,
+      "{\"date_bucket\":\"2024-Q1\",\"difficulty\":\"medium\",\"platform\":\"leetcode\",\"prompt_size_bucket\":\"short\",\"supported_runtime\":\"python_function\",\"tag_bucket\":\"untagged\"}": 3
+    }
+  },
+  "test_commands": {
+    "exp6184_frozen_preflight": ".venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py -q -o addopts=",
+    "exp6186_focused": ".venv/bin/pytest tests/python/test_experiment_6186_livecodebench_bank_preregistration.py -q -o addopts=",
+    "exp6186_new_code_coverage": ".venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_6186_livecodebench_bank_preregistration.py -q -o addopts= && .venv/bin/coverage report --include='python/carnot/experiment_6186_livecodebench_bank_preregistration.py' --fail-under=100 --show-missing"
+  },
+  "test_exit_codes": {
+    "exp6184_frozen_preflight": 0,
+    "exp6186_focused": 0,
+    "exp6186_new_code_coverage": 0
+  },
+  "unsupported_and_exclusion_ledger": {
+    "unsupported": [],
+    "unsupported_count": 0
+  }
+}

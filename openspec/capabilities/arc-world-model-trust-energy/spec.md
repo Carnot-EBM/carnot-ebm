@@ -21873,3 +21873,50 @@ final cached value happens to be correct.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-REGISTRY-CACHE-1 | `python/carnot/agentic/arc_solve_learning.py:_registry` + `python/carnot/agentic/arc_primitive_library.py:_load_registry`, both mtime-gated. | `tests/python/test_arc_registry_mtime_cache.py`. |
+
+### REQ-ARC-OCD-VECTORIZE-1: Vectorize `object_centric_digest`'s Connected-Component Labeling
+
+**Origin:** 2026-08-07, continuing the `sp80`/`ft09` Kaggle gate-timeout regression
+investigation (REQ-ARC-REGISTRY-CACHE-1 above closed one contributing cost but did not
+resolve the timeout). Profiling a live `sp80` run found `arc_solver_kit.
+object_centric_digest` costing 3.6s of pure self-time over 2648 calls (~1.4ms/call) --
+the dominant per-step search cost. The function was a pure-Python pixel-by-pixel
+flood-fill connected-component labeler: the EXACT same anti-pattern this codebase
+already found and fixed once, in the sibling function
+`arc_color_blob_salience.connected_color_blobs` (REQ-ARC-FCP-5699 item-2, 2026-07-16,
+~5.9x faster via `scipy.ndimage.label`).
+
+**THE FIX.** The system SHALL compute connected components via one `ndimage.label` call
+per non-background color (4-connectivity structure matching the original flood-fill's
+up/down/left/right neighbor rule), reusing the exact technique already proven for
+`connected_color_blobs`, rather than a per-cell Python breadth/depth-first search. The
+returned digest's fields (`color`, `area`, `bbox`, `centroid`, `signature`) SHALL be
+unchanged in shape and SHALL be numerically equivalent to the pre-rewrite
+implementation; the final `components.sort()` call (unchanged, a total-order key) makes
+component DISCOVERY order irrelevant to the returned result.
+
+**VERIFICATION, HONESTLY SCOPED.** Field-for-field equivalence is checked against an
+oracle across 30 randomized grids (not 200 -- an earlier draft of this REQ's docstring
+copied an inflated count from the sibling `connected_color_blobs` REQ's own docstring,
+which itself overclaims against its own 30-grid test; caught by adversarial review and
+corrected here rather than propagated). The oracle is a close transcription of the
+pre-rewrite algorithm, not an independently-derived one (also corrected from an
+overclaiming first draft) -- it validly compares two GENUINELY DIFFERENT techniques
+(per-cell BFS vs. `scipy.ndimage.label`), but is not immune to a bug in a CONCEPTION
+both implementations might share.
+
+**MEASURED EFFECT, HONESTLY SCOPED.** Combined with REQ-ARC-REGISTRY-CACHE-1, re-running
+`scripts/kaggle/arc_local_submission_gate.py --check` shows `sp80` (a CORE game) now
+SOLVED, where it previously timed out -- the primary regression target for this
+investigation is fixed. `ft09` (a bonus game) still times out; it was not established
+whether object_centric_digest's cost is also its dominant bottleneck, only that it was
+sp80's. A NEW gate flag appeared post-fix: `lp85`'s per-level action efficiency differs
+from its recorded baseline (plausibly because freed-up wall-clock lets the search explore
+differently within the same 115s cap, not necessarily a real regression) -- not
+investigated further here; a separate follow-up.
+
+## Implementation Status (REQ-ARC-OCD-VECTORIZE-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-OCD-VECTORIZE-1 | `python/carnot/agentic/arc_solver_kit.py:object_centric_digest`, vectorized via `scipy.ndimage.label`. | `tests/python/test_arc_object_centric_digest_vectorized.py`. |

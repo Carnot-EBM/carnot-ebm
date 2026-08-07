@@ -5041,9 +5041,27 @@ def object_centric_digest(
     per occupied tile, not one per pixel, so this does not regress into per-pixel-noise explosion.
     Fails CLOSED: if tiling the background mask would exceed ``grid_fallback_max_tiles``, no
     fallback components are emitted (an arbitrary subset would bias toward whichever tiles happen
-    to iterate first, worse than omitting)."""
+    to iterate first, worse than omitting).
+
+    VECTORIZED (2026-08-07, REQ-ARC-OCD-VECTORIZE-1): profiling a live sp80 run found this
+    costing 3.6s of pure self-time over 2648 calls (~1.4ms/call), the dominant per-step cost
+    on the sp80/ft09 Kaggle gate-timeout regression -- a pure-Python pixel-by-pixel flood-fill,
+    the exact same anti-pattern already found and fixed once in this codebase
+    (``arc_color_blob_salience.connected_color_blobs``, REQ-ARC-FCP-5699 item-2, 2026-07-16,
+    ~5.9x faster via ``scipy.ndimage.label``). Reuses that proven technique: one
+    ``ndimage.label`` call per non-background color (4-connectivity structure matching the
+    original flood-fill's up/down/left/right neighbor rule) instead of a per-cell Python BFS.
+    Verified field-for-field equivalent to the prior flood-fill implementation across 30
+    randomized grids plus realistic structured ARC-frame and edge-case shapes -- see
+    tests/python/test_arc_object_centric_digest_vectorized.py (that file's oracle is a close
+    transcription of the pre-rewrite algorithm, not an independently-derived one -- still a
+    real check of a genuinely different technique, scipy labeling vs. per-cell BFS, just not
+    immune to a shared-conception bug the way a truly independent oracle would be). The final
+    ``components.sort()`` below is unchanged and uses a total order key, so a different
+    component DISCOVERY order from this rewrite cannot change the returned digest."""
 
     import numpy as np
+    from scipy import ndimage
 
     arr = np.asarray(grid)
     if arr.ndim != 2:
@@ -5051,42 +5069,34 @@ def object_centric_digest(
     vals, counts = np.unique(arr, return_counts=True)
     background = int(vals[counts.argmax()]) if len(vals) else 0
     mask = arr != background
-    seen = np.zeros_like(mask, dtype=bool)
     components: list[dict[str, Any]] = []
-    h, w = arr.shape
-    for y0 in range(h):
-        for x0 in range(w):
-            if not mask[y0, x0] or seen[y0, x0]:
+    four_connectivity = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]])
+    for color in vals.tolist():
+        color = int(color)
+        if color == background:
+            continue
+        labeled, n_components = ndimage.label(arr == color, structure=four_connectivity)
+        if n_components == 0:
+            continue
+        for label_id, slice_yx in enumerate(ndimage.find_objects(labeled), start=1):
+            if slice_yx is None:
                 continue
-            color = int(arr[y0, x0])
-            stack = [(y0, x0)]
-            seen[y0, x0] = True
-            cells: list[tuple[int, int]] = []
-            while stack:
-                y, x = stack.pop()
-                cells.append((y, x))
-                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    ny, nx = y + dy, x + dx
-                    if (
-                        0 <= ny < h
-                        and 0 <= nx < w
-                        and mask[ny, nx]
-                        and not seen[ny, nx]
-                        and int(arr[ny, nx]) == color
-                    ):
-                        seen[ny, nx] = True
-                        stack.append((ny, nx))
-            ys = [y for y, _ in cells]
-            xs = [x for _, x in cells]
-            bbox = [min(ys), min(xs), max(ys), max(xs)]
-            area = len(cells)
+            sub = labeled[slice_yx] == label_id
+            area = int(sub.sum())
+            if area == 0:
+                continue
+            ys_local, xs_local = np.nonzero(sub)
+            y0, x0 = slice_yx[0].start, slice_yx[1].start
+            ys = ys_local + y0
+            xs = xs_local + x0
+            bbox = [int(ys.min()), int(xs.min()), int(ys.max()), int(xs.max())]
             signature = f"c{color}:a{area}:bbox{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}"
             components.append(
                 {
                     "color": color,
                     "area": area,
                     "bbox": bbox,
-                    "centroid": [sum(xs) / area, sum(ys) / area],
+                    "centroid": [float(xs.mean()), float(ys.mean())],
                     "signature": signature,
                 }
             )
