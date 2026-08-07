@@ -343,6 +343,15 @@
         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "acknowledged_on": "2026-08-07",
+        "reason": "This artifact's actual measurements (the wall-clock envelope math anchored at explicit budgets b400/b1000/b2000, scripts/analyze_arc_llm_on_wallclock_envelope.py) sweep MAX_ACTIONS as an explicit run_game parameter, not the live class default -- unaffected by this change. What IS superseded: this artifact's own decision-status framing, e.g. line 1590 \"none was made -- MAX_ACTIONS is still 400 in the tree\" and line 1454 \"MAX_ACTIONS stays 400\", both correct descriptions of 2026-07-26 that this exact 2026-08-07 commit (ops/known-issues.md lever #3) supersedes -- this artifact's own envelope analysis is the evidence basis this change cites (see the commit message / arc_competition_agent.py:7356's updated comment).",
+        "evidence": "grep -n MAX_ACTIONS scripts/analyze_arc_llm_on_wallclock_envelope.py (lines 2,1076,1326,1454,1518,1590) and scripts/arc_llm_on_wallclock_budget_probe.py (lines 18,32,69) -- all either sweep budget as an explicit parameter or state the pre-change decision status as of build time.",
+        "note": "APPENDED, not replacing; this artifact's envelope math at each swept budget point remains the evidentiary basis this commit's MAX_ACTIONS raise cites."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."

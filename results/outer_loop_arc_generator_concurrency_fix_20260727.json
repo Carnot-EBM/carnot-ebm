@@ -1109,6 +1109,22 @@
         "sha256_now": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
         "reason": "2026-08-06 conductor commit 84d4b2fe2b added exactly one line to this file: an unused import (`import carnot.agentic.arc_task_aware_energy as arc_task_aware_energy  # noqa: F401`). No existing statement, function body, or control path was touched.",
         "evidence": "`diff` between the pre- and post-commit blobs (git show 84d4b2fe2b~1 vs 84d4b2fe2b) is a single added import line, self-declared unused via noqa: F401. An import-only addition cannot change the behavior of any code path that does not reference the new module, and nothing in this artifact's generating script references arc_task_aware_energy."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "10536d30c22478d9beee770ad7a0a9fa1877777b22f8c2e72dd8765d23d03dda",
+        "sha256_now": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "acknowledged_on": "2026-08-07",
+        "reason": "results/generator_concurrency_fix_20260727/build_fix_artifact.py:733-734 records \"MAX_ACTIONS\": \"UNCHANGED (400)\" and \"SUBMITTED_EARLY_STOP_GRACE\": \"UNCHANGED (None)\" as dated provenance metadata describing the state as of 2026-07-30 -- correct for that date, now superseded by this authorized 2026-08-07 change (ops/known-issues.md lever #3). This artifact's substantive finding (the generator-concurrency VRAM-fit fix, n_ctx 81920, control 6/6 fail vs fix 0/6) does not depend on either constant's value and is unaffected.",
+        "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_EARLY_STOP_GRACE' results/generator_concurrency_fix_20260727/build_fix_artifact.py (lines 733-734, both literal 'UNCHANGED' string values, not live reads)."
+      },
+      {
+        "path": "scripts/kaggle/submission_kernel/main.py",
+        "sha256_was": "eb386f191f48811fc61a70ab1ea8193fdd9b429cd0df46832d5e945077ce7007",
+        "sha256_now": "e71196a5b24c9db379eb5dc71a3d39354dab88b931672d4dc4f866b4b0d351d4",
+        "acknowledged_on": "2026-08-07",
+        "reason": "This commit's kernel edit (scripts/kaggle/submission_kernel/main.py) adds two env.setdefault() calls (CARNOT_ARC_INDUCE_MAX_TOKENS, CARNOT_ARC_INDUCE_TIMEOUT) inserted before the existing context-pool/VRAM-fit diagnostic block this artifact's fix targets. The generator-concurrency fix itself (n_ctx derivation, _generator_cuda_min_free_mb VRAM guard, MTP resolution) is untouched; the new env vars affect max_tokens/timeout only, not the concurrency/VRAM-fit logic this artifact measured.",
+        "evidence": "git diff scripts/kaggle/submission_kernel/main.py: single localized insertion before the '_default_induce_n_ctx' diagnostic block; no line in the generator-concurrency VRAM-fit block (_generator_cuda_min_free_mb, MTP resolution) was touched."
       }
     ],
     "freshness_acknowledgement_chain_repair_20260731": "This session's acknowledgement-writer REPLACED the acknowledgement list instead of appending to it, collapsing a 9-link chain to 3 and destroying 7 committed arc_executable_world_model.py drift records (restored here: 9 committed links + 1 new = 10). No path lost coverage, which is exactly why it was invisible to a path-level check -- each destroyed link recorded a DISTINCT drift event with its own sha256_was -> sha256_now and reason, and the chain is what lets a reader see when each drift was accepted and why. Recorded rather than silently fixed, per the never-prune rule this violated."
