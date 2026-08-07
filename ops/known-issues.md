@@ -44,6 +44,43 @@ The 2026-08-03 one-slot-floor allocation is amended accordingly: ARC work implem
 levers is operator-authorized above the floor. The 2026-08-03 ruling's record-integrity half
 (conductor determination drops) is untouched by this entry.
 
+**PROGRESS LOG (appended, never replacing the directive above):**
+
+- **Lever #4 (exp6091), CLOSED AGAIN — same conclusion, now on complete data instead of blocked
+  data.** The truncation fix landed (`scripts/experiments/outer_loop_arc_refine_engine_visible_ab_20260803.py:113`,
+  budget default 4096->16384) and the rerun completed: 11/11 gradeable games, 0 excluded beyond
+  the one substrate-changed cell already handled by the harness's own exclusion path.
+  `results/experiment_6091_refine_engine_visible_analysis.json`:
+  `honest_verdict=blocked_underpowered_no_p_below_0_05_reachable_not_a_refutation`. Primary
+  (pre-registered, `docs/research-notes/arc-6091-refinement-shot-prereg-2026-08-03.md`):
+  **0 of 11 games discordant** — the worst case the prereg itself named ("all 11 gradeable games
+  carry exactly one gradeable acceptance row each... a merely-good effect of 8 of 11 lands at
+  p=0.23"); with 0 discordant, p=1.0 and no significance is reachable regardless of true effect
+  size. Secondary fidelity: 4W/2L/5T, p=0.6875, also not significant. Mechanism-level secondary
+  (treatment-vs-control fidelity, i.e. does showing the engine help refinement AT ALL): **9W/0L/2T,
+  p=0.00390625** — replicates the identical 9-0 signal seen in the prior incomplete 24-cell run.
+  **Reading, per the prereg's own pre-committed terms:** the fix worked (no more truncation, a
+  real and complete measurement now exists where before there was only a blocked one); it does
+  NOT overturn the 2026-08-03 closure of the single-shot-GGUF-induction axis — if anything it
+  confirms the closure was correct, now on a definitive rather than blocked answer. The mechanism
+  signal (refinement-with-engine-visibility beats refinement-without) is real and worth keeping in
+  the record, but the corpus this ran against structurally cannot promote it to the primary
+  decision metric (0 headroom games). Per the prereg, this axis stays closed; do not propose a
+  further rerun on this exact corpus chasing more discordant primary games — that is the doomed
+  rerun this discipline exists to prevent. `line_closes` field: not set by this run (null, not
+  explicit false); read the verdict string as authoritative.
+- **Lever #3 (live-budget expansion)** and **lever #6 (/think toggle)** shipped as code (commits
+  `488eb8cede`, `2a08fe0b13`) — see the openspec `arc-world-model-trust-energy` spec entries
+  REQ-ARC-WMTE-6198 for both. Lever #6's actual A/B is explicit forward work (no GPU slot available
+  this pass).
+- **Lever #1 (object-centric input), PARTIAL.** The already-evidenced `CARNOT_ARC_OBJECT_PERCEPTION`
+  flag flipped to default ON (commit `923a84cebf`, REQ-ARC-OBJPERC-DEFAULT-ON-1) on the
+  pre-registered 2026-08-01 A/B (`results/outer_loop_arc_object_perception_heldout_ab_change_fidelity_20260801.json`,
+  p=0.0192, 19/20 discordant). Per-transition object diffs, translation-invariant cross-transition
+  tracking, and HUD-strip rejection in the object table remain unbuilt — explicit forward work, see
+  the spec entry.
+- **Levers #2 and #5** not yet started this session.
+
 **Two things, both decided. Read the ruling first; it is the allocation decision. Read the
 second half if you own the conductor — it is a live, recurring, self-concealing record loss.**
 

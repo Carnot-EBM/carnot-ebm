@@ -1,7 +1,7 @@
 {
  "experiment": "experiment_6091_refine_engine_visible_analysis",
  "spec": "REQ-ARC-WMTE-6091",
- "run_date": "2026-08-06T21:40:28Z",
+ "run_date": "2026-08-07T20:47:38Z",
  "inference_substrate": "aggregation_from_upstream_artifacts",
  "solve_provenance": "development_proxy",
  "verifier_is_oracle": false,
@@ -10,11 +10,11 @@
   {
    "experiment_id": "exp6091_shard",
    "path": "results/exp6091_refine_engine_visible_shard.jsonl",
-   "sha256": "7f1db3b08eeb83e3fb0beae6b49abb51314ba7cf18a1c6d27f0af339876493e3",
-   "n_cells": 24
+   "sha256": "19d76ff53cf739fc21dd7c9e6c7468adc3bf6db00c9abb11586cb2118b264578",
+   "n_cells": 26
   }
  ],
- "n_cells": 24,
+ "n_cells": 26,
  "gradeable_games": [
   "ar25",
   "cd82",
@@ -54,6 +54,114 @@
   }
  ],
  "missing_arm_values": [
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "single_shot",
+   "metric": "change_accuracy"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "refine_control",
+   "metric": "change_accuracy"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "refine_treatment",
+   "metric": "change_accuracy"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "single_shot",
+   "metric": "change_fidelity"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "refine_control",
+   "metric": "change_fidelity"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "refine_treatment",
+   "metric": "change_fidelity"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "single_shot",
+   "metric": "cell_recall"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "refine_control",
+   "metric": "cell_recall"
+  },
+  {
+   "game": "cd82",
+   "trial": 1,
+   "arm": "refine_treatment",
+   "metric": "cell_recall"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "single_shot",
+   "metric": "change_accuracy"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "refine_control",
+   "metric": "change_accuracy"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "refine_treatment",
+   "metric": "change_accuracy"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "single_shot",
+   "metric": "change_fidelity"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "refine_control",
+   "metric": "change_fidelity"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "refine_treatment",
+   "metric": "change_fidelity"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "single_shot",
+   "metric": "cell_recall"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "refine_control",
+   "metric": "cell_recall"
+  },
+  {
+   "game": "sk48",
+   "trial": 1,
+   "arm": "refine_treatment",
+   "metric": "cell_recall"
+  },
   {
    "game": "tu93",
    "trial": 1,
@@ -1729,10 +1837,12 @@
   "beat_like_for_like_final_round": false
  },
  "round0_induction": {
-  "n_cells": 24,
+  "n_cells": 26,
   "n_cells_with_round0_engine": 23,
   "round0_failed_on_every_cell": false,
   "induce_messages": [
+   "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')",
+   "split induce: engine failed: local model code unusable after 2 tries (missing ('engine',) in output)",
    "split induce: goal failed: local model code unusable after 2 tries (syntax error line 6: unterminated string literal (detected at line 6))"
   ],
   "why": "If round-0 induction produced no engine, single_shot and BOTH refinement arms are undefined for that cell and no generator prompt can carry an engine. That is an upstream induction failure, NOT a delivery failure and NOT a null."
@@ -1747,7 +1857,7 @@
    "games": []
   },
   "10_plus_cells": {
-   "n_rows": 20,
+   "n_rows": 22,
    "games": [
     "ar25",
     "cd82",
@@ -1856,7 +1966,7 @@
   }
  },
  "purity_and_delivery": {
-  "n_cells": 24,
+  "n_cells": 26,
   "total_acceptance_answer_leaks_into_any_prompt": 0,
   "treatment_prompts_containing_engine": 46,
   "control_prompts_containing_engine": 0,
@@ -1902,7 +2012,7 @@
   "adequately_powered_at_alpha_0_05": false,
   "line_closes": false
  },
- "duration_s": 0.382,
+ "duration_s": 0.525,
  "honest_verdict": "blocked_underpowered_no_p_below_0_05_reachable_not_a_refutation",
- "reproducibility_checksum": "3ff173c9a069f757f023b93730cf3bf132a872403ee8fad4c17a3c2e909138be"
+ "reproducibility_checksum": "f551c4b629b39a5cf1e60dc7596cfa0f2243df49db01d9ba3873d1d27d636142"
 }
