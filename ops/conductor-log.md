@@ -15447,3 +15447,4 @@ Still active  |
 | 2026-08-07 09:14 UTC | Branch-independent .535 capstone | OK | 86 passed, 1 warning in 8.45s |
 | 2026-08-07 10:17 UTC | Plan milestone 2026.08.536 | OK | 14 tasks proposed |
 | 2026-08-07 10:19 UTC | Milestone 2026.08.536 activated | OK | 14 tasks queued |
+| 2026-08-07 10:26 UTC | Minimal exact terminal-boundary handoff from .535  | OK | cache hit: 86 passed, 1 warning in 8.45s |
