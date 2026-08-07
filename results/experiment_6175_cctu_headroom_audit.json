@@ -77,7 +77,7 @@
       }
     ]
   },
-  "duration_s": 0.255292,
+  "duration_s": 0.156977,
   "exact_floor_definition_value_and_provenance": {
     "answer_position_floor_used": false,
     "finite_choice_floor_used": false,
@@ -627,6 +627,26 @@
   },
   "phase_d_headroom_ready_score": 0.0,
   "preconditions_checked": {
+    "audit_source_hashes": [
+      {
+        "exists": true,
+        "path": "openspec/capabilities/constraint-verification/spec.md",
+        "sha256": "sha256:51daa1a4e33bc17e7c796ecca81f9d3c35e283f56910dd58772a8c13b47f4705",
+        "size_bytes": 3922
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/verify/cctu_headroom_audit_6175.py",
+        "sha256": "sha256:c1371aad5adca54dd96a7f305743e1775b0044cda1b836d45bb2a2b3d98bac50",
+        "size_bytes": 52679
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_cctu_headroom_audit_6175.py",
+        "sha256": "sha256:a942753c258af14962ef5c1bc190a13289a75c1ce9a7ff31feb82999b6998798",
+        "size_bytes": 11154
+      }
+    ],
     "blocked_reasons": [],
     "checks": {
       "calibration_and_held_label_counts": true,
@@ -646,7 +666,7 @@
     "passed": true,
     "protected_file_hashes_before": {
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
-      "ops/changelog.md": "sha256:71c31ba28348c9aceeeb688c16cbe117c73a7c24432597f46d571785aeff2dff",
+      "ops/changelog.md": "sha256:74eb15332ad5e8070e6be3d8af2c1d89642c01b158212aefb649649664f78d83",
       "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
     },
@@ -659,13 +679,13 @@
   "protected_files_unchanged": {
     "after": {
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
-      "ops/changelog.md": "sha256:71c31ba28348c9aceeeb688c16cbe117c73a7c24432597f46d571785aeff2dff",
+      "ops/changelog.md": "sha256:74eb15332ad5e8070e6be3d8af2c1d89642c01b158212aefb649649664f78d83",
       "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
     },
     "before": {
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
-      "ops/changelog.md": "sha256:71c31ba28348c9aceeeb688c16cbe117c73a7c24432597f46d571785aeff2dff",
+      "ops/changelog.md": "sha256:74eb15332ad5e8070e6be3d8af2c1d89642c01b158212aefb649649664f78d83",
       "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
     },
@@ -675,7 +695,7 @@
     "scripts_research_conductor_py_untouched": true,
     "unchanged": true
   },
-  "reproducibility_checksum": "sha256:22bd6e9c3654e1e9c78e7393355a55a5bf61edb96ab08af7f5c1638c97ab93c9",
+  "reproducibility_checksum": "sha256:3dc6ab8e594e3ab2eae97cef35316bcc59d3909e15b243c7c8330d4df578796a",
   "saturation_and_error_diversity_metrics": {
     "candidate_accuracy_upper_ci": 0.0,
     "cases_with_more_than_one_cluster": 45,
@@ -720,7 +740,16 @@
     "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
     ".venv/bin/pytest tests/python -q"
   ],
-  "test_exit_codes": {},
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/verify/cctu_headroom_audit_6175.py -m pytest tests/python/test_cctu_headroom_audit_6175.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/verify/cctu_headroom_audit_6175.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_cctu_headroom_audit_6175.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.verify.cctu_headroom_audit_6175 --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6175_cctu_headroom_audit.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_cctu_headroom_audit_6175.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
   "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": {
     "all_sample_case_accuracy": 0.0,
     "calibration_accuracy": 0.0,
