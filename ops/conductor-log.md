@@ -15450,3 +15450,4 @@ Still active  |
 | 2026-08-07 10:26 UTC | Minimal exact terminal-boundary handoff from .535  | OK | cache hit: 86 passed, 1 warning in 8.45s |
 | 2026-08-07 11:49 UTC | Task-scoped .536 evidence-isolation preflight with | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ", lambda *_ar |
 | 2026-08-07 13:04 UTC | Task-scoped .536 evidence-isolation preflight with | OK | cache hit: 88 passed, 1 warning in 117.18s (0:01:57) |
+| 2026-08-07 13:20 UTC | Reliable dated evidence refresh after the V536 pla | OK | 86 passed, 1 warning in 8.91s |
