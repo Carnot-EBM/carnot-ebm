@@ -16899,6 +16899,14 @@
         "acknowledged_on": "2026-08-07",
         "reason": "2026-08-07 operator-authorized change (ops/known-issues.md lever #3) alters exactly three named constants in arc_competition_agent.py -- MAX_ACTIONS 400->2000, SUBMITTED_TARGET_LEVELS 3->8, SUBMITTED_EARLY_STOP_GRACE None->400 -- plus their surrounding comments; git diff --stat confirms no other line moved. This artifact's generating script (scripts/analyze_arc_reset_charge_attribution.py) references none of the three changed symbols.",
         "evidence": "grep -n 'MAX_ACTIONS|SUBMITTED_TARGET_LEVELS|SUBMITTED_EARLY_STOP_GRACE' scripts/analyze_arc_reset_charge_attribution.py: 0 hits."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
       }
     ]
   },

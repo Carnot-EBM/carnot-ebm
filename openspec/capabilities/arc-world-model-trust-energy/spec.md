@@ -22075,3 +22075,56 @@ rows) dropped from ~2.03s (profiled) to 0.674s measured post-fix, roughly 3x.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-FCP-TRANSITION-ROWS-1 | `python/carnot/agentic/arc_frame_change_predictor.py:load_cached_transition_effect_rows`. | `tests/python/test_arc_transition_effect_rows_hoisted_actions.py`. |
+
+### REQ-ARC-WMTE-6198: Think-Mode Toggle For The Gemma-4-31B Induction Path
+
+**Origin:** 2026-08-07 operator directive ("we want /think with the 31B model"), lever #6 of the
+ARC six-lever push recorded at `ops/known-issues.md` (amending the 2026-08-03 one-slot ruling; the
+June `/no_think` freeze is lifted). Gemma-4 has no Qwen-style `/think`-`/no_think` soft-switch
+token -- its reasoning mechanism is a native thought channel that the bundled `llama-server` splits
+into `reasoning_content` only on the `/v1/chat/completions` endpoint (proof:
+`experiment_5764_gemma31b_singleshot_induction_ab.json`, `n_reason_engaged=39/39` under
+`use_chat_template=True`). The best gemma induction numbers on record (exp5764, pooled heldout
+0.3785) were taken in exactly that reasoning-engaged chat configuration; the live path today ships
+the reasoning-suppressed raw+codeonly configuration instead. Which one wins on gemma is an open,
+un-A/B'd question this REQ builds the capability to answer -- it does not itself answer it.
+
+**THE TOGGLE.** `induce_think_on()` resolves `CARNOT_ARC_INDUCE_THINK` (override) falling back to
+`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT` (both `"0"`/off today -- no gemma think-mode A/B evidence
+exists yet; per the project's standing convention, a live-path behavior change ships only after a
+matched-budget offline A/B, so only the default-off capability lands here). When on and the call is
+`codeonly_eligible`: `generate()` skips the code-only directive and its pre-opened fence, routes the
+request through `_chat_complete_request` regardless of the instance's own `use_chat_template`
+setting (gemma's reasoning split only happens on the chat endpoint), and `induce()`'s combined call
+omits its own caller-side pre-opened fence (proven independently to suppress reasoning, per
+exp5714). The "Return ONLY one \`\`\`python code block" instruction is preserved either way. The
+resolved value is recorded at `SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]` so the
+readiness gates can pin whichever value is actually shipped. Scope is deliberately narrowed to the
+INDUCTION path (`codeonly_eligible` calls); `complete_text()`'s SGE/reflect path and the
+greedy-direct dev path are untouched, since the 2026-07-23 gemma smoke found the chat endpoint
+returns EMPTY for those short action-decision calls -- a different, unmeasured failure mode.
+
+**VERIFICATION.** Every new/changed statement is gated behind `induce_think_on()`
+(or its cached local `_think_on`) being `True`; with the flag off the codeonly branch, the
+chat-routing condition, and `induce()`'s appended suffix all reduce to their exact pre-change
+values by construction. `tests/python/test_arc_induce_think_mode_20260807.py` pins this mechanically
+(byte-identical off-arm request body, matching `test_codeonly_induce_scoping.py`'s own pins) and
+pins the on-arm behavior (no codeonly directive, no pre-opened fence, routed to
+`/v1/chat/completions`, gated on `codeonly_eligible`). 30/30 tests pass across that file plus
+`test_codeonly_induce_scoping.py` and `test_arc_live_generator_pin.py`.
+
+**NOT YET DONE (forward work, explicitly not silently dropped).** The actual gemma think-mode A/B
+(new arms in `arc_actions_to_progress.py`'s `ARM_CONFIGS`, run against the 2026-08-02
+generation-vs-selection harness or an equivalent) requires GPU time this pass did not have (GPU 1
+was occupied by the exp6091 rerun; GPU 0 is conductor-owned). Flipping either default to `"1"` is an
+operator/A-B-evidence decision, not part of this REQ. The empty-answer-channel and
+forced-continuation mitigations (`CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK`,
+`CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION`) are deliberately NOT auto-armed by this toggle, so a
+future A/B can measure "think alone" and "think + mitigations" as separate arms rather than a
+bundled default.
+
+## Implementation Status (REQ-ARC-WMTE-6198)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6198 | `python/carnot/agentic/arc_executable_world_model.py:induce_think_on`, wired in `LocalGGUFProposer.generate`/`induce`; `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_AGENT_CONFIG["frozen_generator"]["think_mode"]`. | `tests/python/test_arc_induce_think_mode_20260807.py`. |

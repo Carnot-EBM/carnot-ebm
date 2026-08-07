@@ -5385,6 +5385,14 @@
         "reason": "This artifact's quantitative sweep data (wins/actions/score per explicit early_stop_grace and budget value) is unaffected: scripts/arc_scored_path_early_stop_sweep.py:151 passes early_stop_grace=grace directly to the constructed explorer as a PARAMETER, never reading the live SUBMITTED_EARLY_STOP_GRACE class default for the measurement itself. What IS superseded: this artifact's own narrative finding \"SUBMITTED_EARLY_STOP_GRACE still dead code and still None (flag NOT flipped)\" (scripts/analyze_arc_early_stop_sweep.py:294) and its stability-guard assertion that the flag stayed None across the run (arc_scored_path_early_stop_sweep.py:209) correctly describe 2026-07-26; this exact commit (2026-08-07, ops/known-issues.md lever #3) is the authorized flip that finding was informing, not a silent contradiction of it. Its \"shipped MAX_ACTIONS=400\" framing is likewise a dated fact, now superseded by the same commit's MAX_ACTIONS 400->2000 raise.",
         "evidence": "grep -n SUBMITTED_EARLY_STOP_GRACE scripts/analyze_arc_early_stop_sweep.py (lines 286,289,290,294,500,582) and scripts/arc_scored_path_early_stop_sweep.py (lines 4,51,134,151,183,209,215); the sweep's own row output records early_stop_grace as a swept input field, not a live-constant read.",
         "note": "APPENDED, not replacing; the artifact's July-26 findings are preserved unedited and remain historically accurate for that date. This acknowledgement documents that this specific later, dated commit is the authorized event superseding its 'not yet flipped' status note, per the never-prune discipline."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "e49f24ce1e4e1c150ca0693b80aaf0236dcf9877a9c5d7adb5c9bbf940da019b",
+        "sha256_now": "808746b0d7ae50a6e87b78c5c9f07cc299e6699c310e77c44d21d2625c9bba68",
+        "acknowledged_on": "2026-08-07",
+        "reason": "REQ-ARC-WMTE-6198 (lever #6, think-mode toggle). This edit to arc_competition_agent.py is TWO additive changes: an import (ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT) and one new key in SUBMITTED_AGENT_CONFIG['frozen_generator'] (\"think_mode\": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != \"0\"). Nothing else in the module changed; no existing key, branch or call site was touched.",
+        "evidence": "git diff HEAD python/carnot/agentic/arc_competition_agent.py: 1 import line added, 1 new dict key + comment added, 0 lines removed, 0 existing lines modified. Neither this artifact's generating script nor any code path it exercises reads SUBMITTED_AGENT_CONFIG['frozen_generator']['think_mode'] (a brand-new key nothing consumes yet)."
       }
     ]
   },

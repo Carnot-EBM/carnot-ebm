@@ -3252,6 +3252,22 @@
     "acknowledged_on": "2026-08-07",
     "reason": "The only change to this input file is a freshness_acknowledgements block ADDED to its own provenance (documenting that the same 2026-08-07 arc_competition_agent.py change is inert to it). No measured or reported value in the file changed.",
     "evidence": "git diff results/arc_per_level_reset_attribution_20260726.json shows one added key (provenance.freshness_acknowledgements); every pre-existing key, including every reported number, is byte-identical."
+   },
+   {
+    "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+    "sha256_was": "f1bb314d95ab12ac17077645e8c73028fbea26a19539a97917d1fe3bca28274f",
+    "sha256_now": "bdcd589088f0e138405634c1e08e82139ecf3e14daab1673e5ccafc950d37992",
+    "acknowledged_on": "2026-08-07",
+    "reason": "Second freshness-acknowledgement cascade this session (lever #6, think-mode). The only change to this input file is a SECOND appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
+    "evidence": "git diff results/outer_loop_arc_gateway_rescore_20260726.json shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
+   },
+   {
+    "path": "results/arc_per_level_reset_attribution_20260726.json",
+    "sha256_was": "ec462f25fc3d48abe41be39b89a9fc15646100b6b6145128ed5f14671884e299",
+    "sha256_now": "622acc721dc7f4bcf7f27b3f891ce63c6fae30bf96235268f8dd4b9456b28bf4",
+    "acknowledged_on": "2026-08-07",
+    "reason": "Second freshness-acknowledgement cascade this session (lever #6, think-mode). The only change to this input file is a SECOND appended freshness_acknowledgements entry in its own provenance. No measured or reported value in the file changed.",
+    "evidence": "git diff results/arc_per_level_reset_attribution_20260726.json shows one appended array entry under provenance.freshness_acknowledgements; every pre-existing key, including every reported number, is byte-identical."
    }
   ]
  },

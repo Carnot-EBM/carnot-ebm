@@ -3413,6 +3413,47 @@ ARC_LIVE_GENERATOR_MTP_HEAD_REPO_SUBSTR = "gemma-4-31B-it-qat"
 ARC_LIVE_GENERATOR_MTP_HEAD_ARCH = "gemma4-assistant"  # read from the head GGUF's own header
 ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on gemma-4
 
+# THINK MODE (2026-08-07, operator directive: "we want /think with the 31B model" -- lever #6,
+# ops/known-issues.md, amending the 2026-08-03 one-slot ruling; the June /no_think freeze is
+# LIFTED). Gemma-4 has no Qwen-style /think-/no_think soft-switch token -- exp5764's own note
+# discloses this. Its mechanism is instead a NATIVE thought channel that the bundled llama-server
+# splits into `reasoning_content` on the /v1/chat/completions endpoint (proof:
+# experiment_5764_gemma31b_singleshot_induction_ab.json, n_reason_engaged=39/39 on
+# use_chat_template=True). The best gemma induction numbers on record (exp5764 pooled heldout
+# 0.3785) were ALREADY taken in that reasoning-engaged chat configuration; the LIVE path today
+# ships the reasoning-SUPPRESSED raw+codeonly configuration instead (the codeonly directive +
+# pre-opened fence exist specifically to suppress reasoning for a different failure mode -- see
+# _L2_CODEONLY_DIRECTIVE below). Both configurations are real and neither is a straw man; which
+# one wins on gemma is an open, UN-A/B'd question this flag exists to answer.
+#
+# DEFAULT OFF ON BOTH AXES, on purpose, mirroring the MTP local/scored split above. No think-mode
+# A/B evidence exists yet for gemma-4-31B (exp5714/exp5766 are Qwen-9B-only and an
+# instrument-defect case respectively -- neither is evidence about gemma's native thought
+# channel). This project's standing convention is that a live-path behavior change ships only
+# after a matched-budget offline A/B; building the (default-off) capability is the correct first
+# step, flipping either default is not, until that A/B exists.
+ARC_LIVE_GENERATOR_THINK_DEFAULT = "0"
+ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "0"
+
+
+def induce_think_on() -> bool:
+    """REQ-ARC-WMTE-6198 (lever #6) arm selector. CARNOT_ARC_INDUCE_THINK=1/0 overrides;
+    unset -> ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT (both currently "0", so this resolver is
+    itself inert until an operator flips one of the two knobs post-A/B). Mirrors `_flag_env`'s
+    override-then-shipped-default shape but keys off the SCORED constant, matching the MTP
+    resolver pattern above (`ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT`) -- there is no separate
+    local-default consulted at runtime here because, unlike MTP, think mode has no local-hardware
+    reason to differ from the scored intent; the local/scored split exists so the two answers CAN
+    diverge later without collapsing back into one shared constant, not because they must today.
+    """
+
+    import os
+
+    raw = os.environ.get("CARNOT_ARC_INDUCE_THINK")
+    if raw is not None and raw != "":
+        return raw.strip() == "1"
+    return ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != "0"
+
 
 def _is_mtp_head_file(name: str) -> bool:
     """True if `name` looks like an MTP DRAFT HEAD rather than a main weights file.
@@ -6281,10 +6322,22 @@ class LocalGGUFProposer:
         # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
         # operator directive): a strict improvement (emits valid code in ~10s where the unpatched
         # path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
-        _codeonly = (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0") and codeonly_eligible
+        # THINK MODE (lever #6, default OFF -- see induce_think_on()). Takes priority over
+        # codeonly: the two are mutually exclusive by construction (codeonly exists to SUPPRESS
+        # reasoning; think mode exists to ALLOW it), so an operator flipping CARNOT_ARC_INDUCE_THINK
+        # does not need to also touch CARNOT_ARC_CODEONLY_INDUCE. With think OFF (the shipped
+        # default) this is a pure no-op and the codeonly branch below is byte-identical to before.
+        _think_on = induce_think_on() and codeonly_eligible
+        _codeonly = (
+            (not _think_on)
+            and (os.environ.get("CARNOT_ARC_CODEONLY_INDUCE", "1") != "0")
+            and codeonly_eligible
+        )
         _stop_seq = ["```"] if _codeonly else None
         if _codeonly:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
+        elif _think_on:
+            pass  # no directive, no pre-opened fence: let the model reason before it answers
         elif self.no_think_prefix:  # suppress hybrid-thinking CoT so the model emits code directly
             prompt = self.no_think_prefix + prompt
         # DEFECT-REJECTION + PLAIN RE-ASK (2026-07-31). Armed only where it was measured: the
@@ -6347,7 +6400,12 @@ class LocalGGUFProposer:
                 _payload["stop"] = _stop_seq
             body = _json.dumps(_payload).encode()
             try:
-                if self.use_chat_template:
+                # `or _think_on`: think mode NEEDS the chat endpoint regardless of the instance's
+                # own use_chat_template setting -- gemma's native thought channel is split into
+                # reasoning_content only on /v1/chat/completions (exp5764), never on raw
+                # /completion. With _think_on False (the shipped default) this is exactly
+                # `self.use_chat_template` and nothing here changes.
+                if self.use_chat_template or _think_on:
                     # OpenAI /v1/chat/completions -> server applies the GGUF's embedded chat template
                     # (Qwen3.6/ThinkingCap need the assistant-turn structure; REQ-ARC-WMTE-5725).
                     _response, text = self._chat_complete_request(
@@ -6726,9 +6784,18 @@ class LocalGGUFProposer:
         )
         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
+        #
+        # THINK MODE (lever #6, default OFF): the PRE-OPENED ```python fence below is exactly what
+        # exp5714 proved suppresses reasoning even on its own, independent of the codeonly directive
+        # -- so a think-mode call must not send it either. The instruction to return one code block
+        # stays either way; only the priming fence differs.
+        _induce_suffix = (
+            "\n\nReturn ONLY one ```python code block with engine + is_level_complete."
+            if induce_think_on()
+            else "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n"
+        )
         ok, code = self.generate(
-            base
-            + "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n",
+            base + _induce_suffix,
             ("engine", "is_level_complete"),
             tries=self.tries,
             codeonly_eligible=True,
