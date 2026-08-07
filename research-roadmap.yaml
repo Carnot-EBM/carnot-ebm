@@ -1,28 +1,26 @@
-milestone: "2026.08.535"
-milestone_title: "Executable-Trace Internal Verification, Retention-Safe Strategy Memory, and Live-Path Robustness"
+milestone: "2026.08.536"
+milestone_title: "Executable-Code Internal Verification, Prospective Strategy Learning, and Cross-Runtime Parity"
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
 tasks:
-  - id: exp6169-v535-transition
-    milestone: "2026.08.535"
-    title: "Exact terminal-boundary handoff from .534 into .535"
+  - id: exp6183-v536-transition
+    milestone: "2026.08.536"
+    title: "Minimal exact terminal-boundary handoff from .535 into .536"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_6169_transition_v535.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    estimated_wall_time_min: 120
+    deliverable: results/experiment_6183_transition_v536.json
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 180
     requires_gpu: false
-    operator_override: "2026-05-29 standing operator directive: versioned milestone transitions recur by design and must preserve exact terminal evidence while advancing the CalVer sequence."
     prior_failures:
-      - experiment_id: exp6156-v534-transition
-        verdict: "complete: .533 archived exactly once with quarantine, null, block, partial, and skip states preserved; .534 activation mode=already_active"
-        addressed_by: "Exp6169 advances a different exact terminal boundary, archives only completed .534 evidence, collision-checks Exp6169-Exp6182, and activates the independently staged .535 roadmap without amplifying history."
+      - experiment_id: exp6169-v535-transition
+        verdict: "FAIL: Codex CLI hard wall-clock cap after 4804s; results/experiment_6169_transition_v535.json remained missing"
+        addressed_by: "This attempt is deliberately smaller: it uses the established atomic transition path, validates only the exact .535 terminal set and staged .536 schema, writes its task artifact first, and never performs a broad history rewrite or reconstructs Exp6169."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Milestone 2026.08.534 is terminal. Its capstone preserved a missing isolation artifact, structured conductor skips, a mandatory continuous-learning internal block, immutable adversarial flags on scientifically positive decision artifacts, a software-only stochastic block, and a positive no-solve ARC result. Advance to CalVer milestone 2026.08.535 without rewriting any historical determination or duplicating research-complete history. Today is {date}.
+      Milestone 2026.08.535 is terminal, but its transition artifact at results/experiment_6169_transition_v535.json is honestly missing after three hard wall-clock attempts. Exp6182 nevertheless reconciled the completed .535 experiment surface and preserved missing, null, flagged, blocked, retired, skipped, software-only, and no-solve classes. Advance exactly one CalVer sequence to 2026.08.536 without reconstructing Exp6169, amplifying duplicated completion history, or rewriting any historical determination. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
@@ -32,58 +30,59 @@ tasks:
       - {project_root}/research-roadmap-next.yaml
       - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
       - {project_root}/research-complete.yaml
-      - {project_root}/results/experiment_6156_transition_v534.json
-      - {project_root}/results/experiment_6168_v534_capstone_reconciliation.json
+      - {project_root}/results/experiment_6182_v535_capstone_reconciliation.json
       - {project_root}/ops/conductor-log.md
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/status.md
       - {project_root}/ops/changelog.md
       - {project_root}/scripts/transition_integrity.py
+      - {project_root}/scripts/roadmap_schema.py
       - {project_root}/scripts/determination_preservation_lint.py
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Validate terminal .534 evidence, append the .534 milestone to research-complete.yaml at most once, prove Exp6169-Exp6182 task/deliverable collision freedom and optional-field validity, activate the exact staged .535 roadmap through the repository's transition mechanism, preserve every historical flag/null/block/skip, and write results/experiment_6169_transition_v535.json.
+      Write a bootstrap artifact immediately, validate the exact .535 terminal boundary and staged .536 task graph, append or deduplicate only the exact .535 completion record, atomically activate .536 through the established transition mechanism, and complete results/experiment_6183_transition_v536.json while preserving the missing Exp6169 state.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot git status, pre-existing user modifications, active/staged roadmap hashes, exact .534 task/deliverable matrix, capstone, completion-history multiplicity, exclusions, quarantine fields, protected files, and root clutter. Do not restore, stage, or overwrite user changes.
-      1. Add or verify REQ-* exact-terminal, append-once, collision, optional-field, gate-reference, quarantine, activation, protected-file, and rollback requirements; write focused failing tests first if transition behavior changes.
-      2. Resolve every Exp6156-Exp6168 terminal state by exact declared path and conductor receipt. Require the Exp6168 capstone and preserve missing, skipped, internally blocked, null, retired, flagged, and positive classes exactly.
-      3. Parse research-roadmap-next.yaml; verify milestone/title/doc, 14 unique IDs, 14 unique deliverables, all prior_failures subfields, no retired-upstream requires chain, supported gate operators, exact prompt endings, one ARC slot, one SOTA-ingestion slot, two infrastructure slots, and mandatory local-GGUF declarations on LLM tasks.
-      4. Append .534 completion history only if absent. Activate .535 through the established atomic transition path; do not hand-edit scripts/research_conductor.py. Roll back on partial activation or mismatched hashes.
-      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, source_and_target_milestones, source_capstone_hash_and_honest_verdict, source_exact_terminal_classification, research_complete_count_before_after, research_complete_append_count, staged_and_activated_roadmap_hashes, activated_task_count, task_id_and_deliverable_collision_matrix, optional_field_and_prior_failure_validation, gate_reference_validation, arc_ingestion_infrastructure_and_phase_d_allocation_receipt, mandatory_model_spec_validation, quarantine_and_determination_before_after_matrix, preexisting_worktree_changes_preserved, activation_mode, rollback_receipt, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         research_complete_append_count principle: zero or one for this transition and exactly one total .534 completion entry afterward.
-         quarantine_and_determination_before_after_matrix principle: historical values are byte-preserved; a current-rule companion never mutates source artifacts.
+      0. PRECONDITIONS: snapshot git status, pre-existing user changes, active/staged roadmap hashes, exact .535 task/deliverable matrix, Exp6182, completion-history multiplicity, exclusions, protected files, and root clutter. Before any potentially long validation, write the deliverable with status `running_bootstrap`, those receipts, and an honest nonterminal note; update it atomically as work completes.
+      1. Add or verify REQ-* exact-terminal, append-at-most-once, duplicate-history, collision, optional-field, gate-reference, quarantine, activation, rollback, protected-file, and bootstrap-artifact requirements. Write focused failing tests first only if transition behavior changes.
+      2. Resolve Exp6169-Exp6182 by exact declared paths and conductor receipts. Preserve Exp6169 as missing and every other terminal class exactly. Do not synthesize a missing artifact or infer success from task order.
+      3. Parse research-roadmap-next.yaml and verify target metadata, 14 unique IDs and deliverables, prior_failures completeness, no retired-upstream `requires`, supported gate operators, exact prompt endings, exactly one ARC slot, the required continuous-learning slot, and mandatory local-GGUF declarations on every LLM task.
+      4. Measure exact .535 entries in research-complete.yaml. Append only if the canonical milestone entry is absent; if duplicates already exist, report their count and do not copy, reorder, or normalize unrelated history. Activate .536 only through the established atomic path and roll back on any partial or hash-mismatched operation.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, bootstrap_artifact_receipt, source_and_target_milestones, source_capstone_hash_and_honest_verdict, source_exact_terminal_classification, missing_exp6169_preserved, research_complete_exact_occurrence_count_before_after, research_complete_append_count, duplicate_history_not_amplified, staged_and_activated_roadmap_hashes, activated_task_count, task_id_and_deliverable_collision_matrix, optional_field_and_prior_failure_validation, gate_reference_validation, arc_csl_model_and_phase_d_allocation_receipt, mandatory_model_spec_validation, quarantine_and_determination_before_after_matrix, preexisting_worktree_changes_preserved, activation_mode, rollback_receipt, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         research_complete_append_count principle: zero or one for this transition; never amplify pre-existing duplicate history.
+         quarantine_and_determination_before_after_matrix principle: all historical values are byte-preserved and Exp6169 remains missing.
          inference_substrate principle: set `deterministic_repository_transition`.
-         honest_verdict principle: use `complete:` or `blocked:` and name append multiplicity and activation mode.
-      6. Run focused unit/spec coverage, YAML parse/schema, exclusions, collision, gate-reference, transition-integrity, duplicate-history, determination-preservation, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
+         honest_verdict principle: use `complete:`, `blocked:`, or `failed:` and name activation mode, exact-history multiplicity, and whether the bootstrap artifact survived.
+      6. Run focused unit/spec coverage, YAML schema, exclusions, collision, gate-reference, transition-integrity, duplicate-history, determination-preservation, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6170-v535-task-artifact-isolation-canary
-    milestone: "2026.08.535"
-    title: "Task-scoped artifact-isolation compatibility canary for .535"
+  - id: exp6184-v536-evidence-isolation-preflight
+    milestone: "2026.08.536"
+    title: "Task-scoped .536 evidence-isolation preflight with intercepted-write semantics"
     priority: critical
     track: infrastructure
-    deliverable: results/experiment_6170_v535_task_artifact_isolation_canary.json
+    deliverable: results/experiment_6184_v536_evidence_isolation_preflight.json
+    requires: [exp6183-v536-transition]
     model: opus
     max_turns: 100
-    estimated_wall_time_min: 300
+    estimated_wall_time_min: 240
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp6143-test-artifact-isolation
-        verdict: "complete_partial: Focused resolver, pytest override, direct-writer compatibility sample, tracked-write detection, traversal/symlink controls, atomic write behavior, quarantine preservation, and protected-file checks passed; pre-existing tracked evidence remained immutable by aggregate digest and sentinel hashes. Repository-wide closure is not claimed because 6198 residual direct-writer call-site rows remain in the census, and repo-wide spec coverage plus one existing template subset check are blocked by pre-existing unrelated failures."
-        addressed_by: "Exp6170 does not repeat repository-wide closure. It freezes the exact .535 test/artifact paths, proves task-owned temporary roots and canonical resolver compatibility for those paths only, and emits a reusable canary contract that science tasks can check without waiting for the 6,198-row migration."
+      - experiment_id: exp6170-v535-task-artifact-isolation-canary
+        verdict: "complete_partial: Exp6169-Exp6182 declared .535 canary surface ready_score=0, isolation_violation_count=1, repository_wide_closure_claimed=false."
+        addressed_by: "The .536 preflight narrows to the new task-owned paths and explicitly distinguishes a successfully intercepted negative-control write from an actual tracked mutation; it never treats the expected attempted write as an isolation violation and still refuses repository-wide closure."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp6143 proved the core resolver and tracked-write guard but not repository-wide closure. Exp6157 then exhausted three hard wall-clock attempts without a deliverable. The .535 science must not depend on a mass migration, yet every new test must preserve tracked evidence. Qualify only the declared Exp6169-Exp6182 test and writer surfaces; do not claim repository-wide isolation. Today is {date}.
+      Exp6170 qualified only a partial .535 surface because the negative attempted-write control was counted as an isolation violation even though no tracked result changed. V536 needs a small reusable preflight for its declared modules, with semantics that distinguish an expected intercepted attempt from an actual mutation. Repository-wide direct-writer migration remains out of scope. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/results/experiment_6143_test_artifact_isolation.json
+      - {project_root}/results/experiment_6170_v535_task_artifact_isolation_canary.json
       - {project_root}/research-roadmap.yaml
-      - {project_root}/research-roadmap-next.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
       - {project_root}/python/carnot/experiment_artifacts.py
       - {project_root}/python/carnot/testing/tracked_results_guard.py
       - {project_root}/tests/python/conftest.py
@@ -94,49 +93,52 @@ tasks:
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Inventory the exact .535 experiment/test writers; create the smallest task-scoped compatibility canary using the canonical resolver and task-owned temporary results roots; exercise positive and adversarial writer controls without touching tracked evidence; publish a frozen invocation contract for downstream .535 tests; and write results/experiment_6170_v535_task_artifact_isolation_canary.json without claiming repository-wide closure.
+      Inventory only the declared Exp6183-Exp6196 writer/test surface, freeze a canonical task-owned temporary-root invocation, exercise positive and adversarial controls, classify intercepted negative controls separately from actual mutations, and write results/experiment_6184_v536_evidence_isolation_preflight.json without claiming repository-wide closure.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot git status, all pre-existing modified paths, aggregate/sentinel hashes for tracked results, quarantine fields, declared .535 deliverables, candidate test modules, resolver environment, symlink/traversal boundaries, and protected files.
-      1. Add REQ-* task-scope, early-override, canonical-resolver, direct-writer compatibility, task-owned-root, attempted-write, traversal/symlink, atomic-write, quarantine, and explicit-non-closure requirements; write focused failing tests first.
-      2. Build a deterministic .535 writer census keyed by task, module, mechanism, and exact path. Install the temporary root before collection for the frozen canary modules. Do not enumerate or migrate unrelated legacy writers.
-      3. Exercise canonical writer, legacy literal path, atomic replacement, checkpoint/resume, subprocess, attempted tracked write, traversal, symlink escape, workspace/results root, and quarantine preservation controls. A real tracked-write attempt must be caught before mutation.
-      4. Publish a versioned canary invocation and manifest that downstream .535 tasks can run. Classify failures as canary-scope, unrelated pre-existing, or new regression; readiness is zero for any mutation or unclassified canary failure.
-      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, scope_boundary_and_repository_wide_closure_claimed, v535_task_writer_census, frozen_canary_module_and_invocation_manifest, canonical_resolver_and_legacy_compatibility_paths, task_owned_temp_root_receipts, collection_and_subprocess_receipts, attempted_tracked_write_controls, traversal_symlink_workspace_root_and_atomic_controls, tracked_result_hash_before_after_matrix, quarantine_field_before_after_matrix, canary_failure_classification, isolation_violation_count, v535_task_artifact_isolation_ready_score, preexisting_worktree_changes_preserved, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         scope_boundary_and_repository_wide_closure_claimed principle: name Exp6169-Exp6182 only and set repository-wide claim to bare false.
-         v535_task_artifact_isolation_ready_score principle: one only with zero tracked mutations, zero canary-scope failures, frozen invocation, and classified nonzero commands.
+      0. PRECONDITIONS: snapshot git status, user modifications, aggregate and sentinel hashes for tracked results, quarantine fields, all .536 deliverables, candidate test modules, resolver environment, symlink/traversal boundaries, completion-history multiplicity, protected files, and root clutter.
+      1. Add or verify REQ-* task-scope, early override, canonical resolver, task-owned root, intercepted-attempt, actual-mutation, traversal/symlink, subprocess, atomic write, quarantine, and explicit non-closure requirements; write focused failing tests first if behavior changes.
+      2. Build a deterministic writer census keyed by task, module, mechanism, and exact path. Install the temporary root before collection for the frozen modules. Do not enumerate or migrate unrelated legacy writers.
+      3. Exercise canonical writer, legacy literal path, atomic replacement, checkpoint/resume, subprocess, attempted tracked write, traversal, symlink escape, workspace/results root, and quarantine controls. Count a blocked negative-control attempt as `expected_intercepted_attempt`, not a violation; readiness is zero for any real mutation or unclassified task-scope failure.
+      4. Publish a versioned preflight command and manifest that downstream .536 tasks can run. Report research-complete milestone/task multiplicity diagnostically, but do not mutate history. Set repository-wide closure to bare false.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, scope_boundary, repository_wide_closure_claimed, v536_task_writer_census, frozen_preflight_module_and_invocation_manifest, canonical_resolver_and_legacy_compatibility_paths, task_owned_temp_root_receipts, collection_and_subprocess_receipts, expected_intercepted_attempt_controls, actual_mutation_controls, traversal_symlink_workspace_root_and_atomic_controls, tracked_result_hash_before_after_matrix, quarantine_field_before_after_matrix, research_complete_multiplicity_receipt, preflight_failure_classification, isolation_violation_count, v536_task_artifact_isolation_ready_score, preexisting_worktree_changes_preserved, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         repository_wide_closure_claimed principle: bare false; the scope is Exp6183-Exp6196 only.
+         isolation_violation_count principle: count real mutation, escape, or unclassified task-scope failure; do not count a successfully intercepted negative control.
+         v536_task_artifact_isolation_ready_score principle: one only with zero real mutations, zero escapes, zero unclassified failures, and a frozen invocation.
          inference_substrate principle: set `deterministic_task_scoped_repository_test_isolation`.
          honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and state the exact qualified scope.
       6. Run focused unit/spec coverage, collection, subprocess/direct-writer/atomic controls, negative tracked-write control, path escape controls, hash/quarantine preservation, determination-preservation, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6171-v535-source-delta-ingestion
-    milestone: "2026.08.535"
-    title: "Reliable dated evidence refresh after the V535 planner marker"
+  - id: exp6185-v536-post-marker-source-delta
+    milestone: "2026.08.536"
+    title: "Reliable dated evidence refresh after the V536 planner marker"
     priority: high
     track: evidence-ingestion
-    deliverable: results/experiment_6171_v535_source_delta_ingestion.json
-    model: sonnet
+    deliverable: results/experiment_6185_v536_post_marker_source_delta.json
+    requires: [exp6183-v536-transition]
+    agent_type: codex
+    model: gpt-5.5
     max_turns: 30
     estimated_wall_time_min: 120
     requires_gpu: false
-    operator_override: "2026-05-29 standing operator directive: versioned SOTA-ingestion lineage continuation required by CLAUDE.md; this task advances from the V535 marker and maps only newly dated evidence."
     prior_failures:
-      - experiment_id: exp6158-v534-source-delta-ingestion
-        verdict: "complete_null: no accepted post-V534 source deltas; references unchanged"
-        addressed_by: "Exp6171 advances to a new hash-bounded post-V535 window after the planner added July 2026 forgetting evidence and requalified CCTU/CLUE/TrajSelector; another zero-delta result is valid and retires novelty claims for this dated window."
+      - experiment_id: exp6171-v535-source-delta-ingestion
+        verdict: "complete_null: accepted_count=0; no dated reproducible post-marker deltas; references unchanged"
+        addressed_by: "This task advances to the independently hashed V536 planner marker and a strictly later dated window; another zero-delta result is explicitly terminal and retires novelty claims for this new window without rewriting the V535 result."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      The planning sweep is sealed at `V535-PLANNER-REFRESH-20260806-END` in research-references.md. It adds retention/replay requirements and requalifies CCTU, CLUE, and TrajSelector while keeping output-only scorers, KANs, Extropic, Kona, and board integration guarded. Search only evidence created or revised after that exact marker receipt; accept a terminal zero-delta result. Today is {date}.
+      The planning sweep is sealed at `V536-PLANNER-REFRESH-20260807-END` in research-references.md. It promotes executable-code internal verification, prospective transactional memory, and software-boundary parity while keeping CCTU transport, external-text scorers, KAN retraining, retired ARC levers, and unavailable hardware guarded. Search only evidence created or revised after that exact marker; a terminal zero-delta result is valid. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
       - {project_root}/research-program.md
       - {project_root}/research-references.md
-      - {project_root}/research-roadmap-next.yaml
-      - {project_root}/results/experiment_6158_v534_source_delta_ingestion.json
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6171_v535_source_delta_ingestion.json
       - {project_root}/ops/known-issues.md
       - {project_root}/ops/exclusion_manifest.yaml
       - {project_root}/ops/status.md
@@ -144,467 +146,664 @@ tasks:
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Verify the exact V535 marker hash, search the bounded arXiv/OpenReview/Hugging Face/Semantic Scholar/GitHub/Extropic/Logical Intelligence window, accept only dated and reproducible post-marker deltas, map accepted findings to Exp6173-Exp6181 without reopening retired scopes, append references only when evidence qualifies, and write results/experiment_6171_v535_source_delta_ingestion.json.
+      Verify the exact V536 marker hash, search the bounded arXiv/OpenReview/Hugging Face/Semantic Scholar/GitHub/Extropic/Logical Intelligence window, accept only dated reproducible post-marker deltas, map accepted evidence to Exp6186-Exp6195 without reopening retired scopes, append references only when a finding qualifies, and write results/experiment_6185_v536_post_marker_source_delta.json.
 
       CONCRETE STEPS:
       0. PRECONDITIONS: snapshot marker count/hash/offset, reference hash, source endpoint capabilities, cached receipts, exclusions, roadmap task map, network/tool availability, protected files, and git status.
-      1. Add or verify REQ-* exact-marker, bounded-window, dated-source, source-authority, duplicate, guarded-scope, zero-delta, and immutable-history requirements; write focused failing tests first if ingestion behavior changes.
-      2. Search only records created or revised after the marker receipt. Prefer arXiv/OpenReview and first-party sources; Semantic Scholar counts are discovery receipts, not authority. Record failed/rate-limited endpoint attempts.
-      3. Deduplicate by stable identifier and content hash. Reject undated summaries, already-indexed content without changed applicability, unavailable proprietary claims, and findings that merely rename excluded techniques.
-      4. For each accepted delta, state the exact roadmap task, changed method/gate, local reachability, inference substrate, and retirement conflict. Otherwise leave research-references.md byte-identical and emit `complete_null:`.
+      1. Add or verify REQ-* exact-marker, bounded-window, dated-source, source-authority, duplicate, guarded-scope, zero-delta, and immutable-history requirements; write focused failing tests first only if ingestion behavior changes.
+      2. Search only records created or revised after the marker receipt. Prefer arXiv/OpenReview and first-party sources; Semantic Scholar and repository popularity are discovery receipts, not scientific authority. Record failed or rate-limited attempts.
+      3. Deduplicate by stable identifier and content hash. Reject undated summaries, already-indexed content without changed applicability, proprietary claims without a reproducible local route, and findings that merely rename excluded techniques.
+      4. For each accepted delta, name the exact roadmap task, changed method or gate, local reachability, inference substrate, and retirement conflict. Otherwise leave research-references.md byte-identical and emit `complete_null:`.
       5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, marker_text_count_hash_offset_and_reference_hash, bounded_time_window, source_query_and_endpoint_receipts, semantic_scholar_ebt_and_arm_ebm_counts, candidate_and_deduplicated_record_counts, accepted_rejected_and_guarded_delta_ledger, roadmap_task_mapping, exclusion_and_retirement_conflict_receipt, reference_hash_before_after_and_append_count, zero_delta_accepted, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         accepted_rejected_and_guarded_delta_ledger principle: each row names date, authority, stable ID, local reachability, disposition, and reason.
-         zero_delta_accepted principle: bare true; lack of novelty is a valid result.
+         zero_delta_accepted principle: bare true; absence of qualifying novelty is terminal evidence.
          inference_substrate principle: set `dated_primary_secondary_source_ingestion`.
-         honest_verdict principle: use `complete_delta:`, `complete_null:`, `retired:`, or `blocked:` and name accepted count.
+         honest_verdict principle: use `complete_delta:`, `complete_null:`, `retired:`, or `blocked:` and name the accepted count.
       6. Run focused ingestion/spec coverage, exact-marker, bounded-window, deduplication, exclusion, reference-immutability or append, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6172-current-rule-quarantine-determination
-    milestone: "2026.08.535"
-    title: "Immutable current-rule companion determination for Exp6161 and Exp6162"
-    priority: high
-    track: determination
-    deliverable: results/experiment_6172_current_rule_quarantine_determination.json
+  - id: exp6186-livecodebench-bank-preregistration
+    milestone: "2026.08.536"
+    title: "Frozen LiveCodeBench bank and private-test boundary preregistration"
+    priority: critical
+    track: phase-d-code-verification
+    deliverable: results/experiment_6186_livecodebench_bank_preregistration.json
+    requires: [exp6184-v536-evidence-isolation-preflight, exp6185-v536-post-marker-source-delta]
     agent_type: codex
     model: gpt-5.5
-    max_turns: 30
+    max_turns: 50
     estimated_wall_time_min: 150
     requires_gpu: false
+    prior_failures:
+      - experiment_id: exp4056-code-oracle-distinct-pool-preregistration
+        verdict: "blocked_smoke_failed"
+        addressed_by: "This attempt uses the already cached LiveCodeBench snapshot and existing restricted executor, freezes four task-disjoint roles before generation, validates private tests without exposing them to candidates, and makes bank readiness independent of any model smoke run."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp6161 and Exp6162 contain positive scientific verdicts but were historically quarantined by a duration heuristic that treated cached analysis duration as if it were a live acquisition duration. The current adversarial verifier recheck is clean. Historical artifacts and capstone flags are immutable; this task produces a companion determination and an explicit operator boundary, not an unflag or headline promotion. Today is {date}.
+      The CCTU pool is retired because its finite-ID structured transport produced 960 parse failures. Carnot already has a cached 400-task LiveCodeBench snapshot and exact private-test execution infrastructure. Freeze a 120-task code bank before any generation so later selector and continuous-learning branches cannot choose favorable tasks or leak test content. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/results/experiment_6161_decision_calibrated_energy_policy.json
-      - {project_root}/results/experiment_6162_prospective_admission_replication.json
-      - {project_root}/results/experiment_6168_v534_capstone_reconciliation.json
-      - {project_root}/scripts/adversarial_verify.py
-      - {project_root}/scripts/determination_preservation_lint.py
-      - {project_root}/python/carnot/pipeline/deliverable_guard.py
-      - {project_root}/ops/known-issues.md
-      - {project_root}/ops/status.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_6175_cctu_headroom_audit.json
+      - {project_root}/results/experiment_4056_code_oracle_distinct_pool_preregistration.json
+      - {project_root}/scripts/experiments/offarc_power_evalplus_run.py
+      - {project_root}/python/carnot/pipeline/humaneval_live_benchmark.py
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/data
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+      - {project_root}/openspec/capabilities/constraint-verification/spec.md
       - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Hash immutable Exp6161/Exp6162 artifacts, replay the current adversarial verifier with exact rule/version receipts, distinguish acquisition from cached-analysis duration, compare historical and current determinations field by field, prove source bytes and historical quarantine are unchanged, state the operator-only reopen boundary, and write results/experiment_6172_current_rule_quarantine_determination.json.
+      Deterministically freeze 120 unique cached LiveCodeBench task IDs into 36 calibration, 36 held-selector, 18 continuous-learning seed, and 30 continuous-learning prospective tasks; seal exact prompt/test/metadata hashes and private-test access boundaries; write the bank under data/research/ and results/experiment_6186_livecodebench_bank_preregistration.json without invoking an LLM.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot source artifact bytes/hashes, manifests, historical flags/reasons, capstone classification, current verifier code/config/version/hash, git status, protected files, and any pre-existing audit edits. Do not rewrite or copy-normalize source artifacts.
-      1. Add REQ-* immutable-source, rule-version, acquisition-analysis duration, companion-determination, no-unflag, no-headline, operator-boundary, and preservation requirements; write focused failing tests first if determination tooling changes.
-      2. Run the current verifier against exact source bytes and capture commands, stdout/stderr, exit codes, rule IDs, thresholds, timestamps, and result hashes. Do not suppress other warnings to isolate duration.
-      3. Recompute acquisition duration, cached-analysis duration, row generation receipts, model lifecycle, held-access, and science fields from source artifacts. State which historical rule fired and why the current rule differs.
-      4. Compare source hashes, quarantine fields, capstone classification, and git status before/after. The companion may say `current_rule_clean=true`; it must also say `historical_quarantine_preserved=true`, `headline_promotion_authorized=false`, and `operator_reopen_required=true`.
-      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, source_artifact_paths_hashes_and_immutable_bytes, historical_adversarial_flags_reasons_and_capstone_classification, current_verifier_path_version_hash_rule_ids_and_thresholds, current_verifier_commands_exit_codes_and_receipts, acquisition_duration_and_cached_analysis_duration_provenance, model_lifecycle_and_held_access_receipts, field_level_historical_vs_current_determination_matrix, current_rule_clean, historical_quarantine_preserved, headline_promotion_authorized, operator_reopen_required, source_hashes_and_git_status_before_after, preexisting_worktree_changes_preserved, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         current_rule_clean principle: derived only from the unmodified current verifier run and never aliases historical acceptance.
-         historical_quarantine_preserved/headline_promotion_authorized/operator_reopen_required principle: bare true, false, true respectively.
-         inference_substrate principle: set `deterministic_current_rule_companion_determination`.
-         honest_verdict principle: use `complete:` or `blocked:` and state both current-rule and immutable-history outcomes.
-      6. Run focused unit/spec coverage, exact-byte replay, rule/version capture, duration provenance, determination-preservation, no-unflag/no-promotion, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
+      0. PRECONDITIONS: run the Exp6184 frozen isolation preflight; snapshot git status, cached dataset identity/revision/hash, task count, existing bank files, executor availability, Python/toolchain versions, exclusions, protected files, and root clutter. Fail closed if the dataset is downloaded or silently revised at runtime.
+      1. Add REQ-* cached-snapshot, stable-ID, task-disjoint split, deterministic stratification, prompt/test hash, private-test vault, no-model-access, no-selection-after-outcomes, and immutable-bank requirements; write focused failing tests first.
+      2. Define deterministic eligibility and stratification from metadata available before model generation: platform/date/difficulty/tags, prompt size, and supported language/runtime. Do not use candidate correctness, model scores, or hidden states.
+      3. Freeze exactly 36 calibration, 36 held-selector, 18 CSL seed, and 30 CSL prospective unique IDs with no overlap. Store public prompts separately from encrypted or access-controlled private tests; no test source, assertion text, expected output, or oracle trace may enter prompts or selector features.
+      4. Dry-run the restricted executor on maintainer references or deterministic fixtures only. Record timeout, process, filesystem, network, resource, nondeterminism, and unsupported-task policy. Do not generate candidate solutions.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, dataset_name_revision_cache_path_and_hash, eligible_task_count, deterministic_selection_rule_and_seed, stratum_counts, split_task_ids_and_hashes, split_overlap_matrix, frozen_bank_path_and_hash, public_prompt_and_private_test_vault_paths_and_hashes, private_test_access_control_receipt, candidate_and_model_access_count, executor_fixture_receipts, unsupported_and_exclusion_ledger, bank_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         candidate_and_model_access_count principle: exactly zero.
+         bank_ready_score principle: one only with 120 unique IDs, exact split sizes, zero overlap, stable hashes, private tests inaccessible to prompts/features, and all executor fixtures classified.
+         inference_substrate principle: set `deterministic_cached_livecodebench_bank_preregistration`.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name exact split counts.
+      6. Run focused unit/spec coverage, dataset/cache integrity, split determinism, overlap, private-test noninterference, executor safety fixtures, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6173-cctu-item-bank-preregistration
-    milestone: "2026.08.535"
-    title: "Frozen executable CCTU-style item bank and Phase-D preregistration"
+  - id: exp6187-livecodebench-authentic-k8-pool
+    milestone: "2026.08.536"
+    title: "Authentic Gemma-4-31B executable K=8 code pool gated on Exp6186 bank readiness"
     priority: critical
-    track: phase-d
-    deliverable: results/experiment_6173_cctu_item_bank_preregistration.json
+    track: phase-d-code-verification
+    deliverable: results/experiment_6187_livecodebench_authentic_k8_pool.json
+    requires: [exp6186-livecodebench-bank-preregistration]
+    gated_on:
+      - upstream: exp6186-livecodebench-bank-preregistration
+        artifact_field: bank_ready_score
+        op: '=='
+        value: 1.0
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
-    estimated_wall_time_min: 300
-    requires_gpu: false
-    prior_failures:
-      - experiment_id: exp6128-phase-d-calibration-pool-v2
-        verdict: "complete_null: no_calibration_policy_met_conjunctive_gates"
-        addressed_by: "Exp6128 used finite-choice families with saturated easy strata, below-floor typed choice, and answer-position confounds. Exp6173 changes the domain to executable tool traces, freezes exact step validators before model access, and contains no answer options or option transformations."
-        retire_if_same_verdict: true
-      - experiment_id: exp6140-phase-d-exp6128-option-psychometrics
-        verdict: "retired: saturation plus position-confounded easy families and typed-choice below-floor fallback leave true inability versus distractor/position unresolved for Exp6128 source-domain recovery"
-        addressed_by: "Exp6173 obeys Exp6140's retirement by abandoning source-domain recovery and option transformations entirely; it builds a new exact-validator tool-use bank with resource, behavioral, toolset, response, and cross-step constraints."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Phase D needs a competent but unsaturated best-of-N pool. Exp6128/Exp6140 retired finite-choice source recovery because of saturation, below-floor typed choice, and option-position confounding. CCTU-style executable tool traces remove the answer-position mechanism and supply exact step validators. Freeze the item bank, split, gates, and power before any LLM candidate is generated. Today is {date}.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/research-references.md
-      - {project_root}/results/experiment_1486_cctu_microbenchmark.json
-      - {project_root}/results/experiment_2891_cctu_validator_pilot.json
-      - {project_root}/results/experiment_6128_phase_d_calibration_pool_v2.json
-      - {project_root}/results/experiment_6140_phase_d_exp6128_option_psychometrics.json
-      - {project_root}/python/carnot/verify
-      - {project_root}/tests/python
-      - {project_root}/ops/known-issues.md
-      - {project_root}/ops/exclusion_manifest.yaml
-      - {project_root}/openspec/capabilities/constraint-verification/spec.md
-
-      TASK:
-      Build and freeze at least 120 CCTU-style executable tool-use cases with exact validators and balanced constraint taxonomy; split 60 calibration/60 held before generation; preregister K, sampling, parseability, competence, unsaturation, headroom, power, controls, and retirement gates; prove no finite-choice position channel or held-label access; and write results/experiment_6173_cctu_item_bank_preregistration.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: hash CCTU fixtures/validators, prior retired pool artifacts, exclusions, existing task families, model caches without loading models, result/test roots, protected files, and git status. Confirm no candidate outcome file exists for the new bank.
-      1. Add REQ-* bank-freeze, exact-step-validator, constraint-taxonomy, balanced-split, no-option-position, no-model-before-freeze, positive/negative-control, power, headroom, held-seal, and retirement requirements; write validator and leakage tests first.
-      2. Create at least 120 deterministic cases spanning resource, behavior, tool availability, ordering, response schema, cross-step dependency, impossible-request abstention, and compositional constraints. Use no multiple-choice answers and no model-authored correctness.
-      3. Implement exact per-step and terminal validators with known-valid, single-violation, multi-violation, parser-adversarial, and metamorphic controls. Audit validator independence from candidate provenance, surface length, and arbitrary IDs.
-      4. Freeze case IDs, input bytes, validators, taxonomy, calibration/held split, seeds, K>=8, sampling schedule, tuned-consensus definition, clustered inference, and power. Preregister parseability >=0.95; competence strictly above a stated exact/random-plan floor and below saturation; oracle@8 minus tuned consensus >=0.10 with lower CI >0; and at least 30 consensus-wrong/oracle-right groups.
-      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, prior_failure_receipts, cctu_item_bank_path_hash_count_and_schema, calibration_and_held_split_path_hash_counts, constraint_taxonomy_and_balance_matrix, exact_step_and_terminal_validator_paths_hashes_and_versions, validator_positive_negative_metamorphic_and_parser_controls, no_finite_choice_or_answer_position_receipt, no_model_access_before_freeze_receipt, k_sampling_and_consensus_preregistration, parseability_competence_unsaturation_headroom_and_minority_gates, exact_floor_definition_and_provenance, clustered_inference_and_power_plan, held_seal_and_access_log_path_hash, retirement_rule, cctu_item_bank_ready_score, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         cctu_item_bank_ready_score principle: one only with at least 120 frozen validated cases, balanced 60/60 split, exact controls, preregistered gates, and zero candidate/model access.
-         verifier_is_oracle principle: bare true for exact correctness labeling; downstream selectors must remain oracle-distinct.
-         inference_substrate principle: set `deterministic_executable_tool_trace_fixture_and_validators`.
-         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and state bank size and freeze status.
-      6. Run focused validator/spec coverage, known-valid/violation/metamorphic/parser controls, split/hash/freeze/leakage tests, finite-choice exclusion, power/gate schema, task-isolation canary when available, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp6174-cctu-authentic-k8-pool
-    milestone: "2026.08.535"
-    title: "Gated on Exp6173 bank readiness: authentic Gemma-4-31B CCTU K>=8 pool"
-    priority: critical
-    track: phase-d
-    deliverable: results/experiment_6174_cctu_authentic_k8_pool.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 720
+    estimated_wall_time_min: 540
     requires_gpu: true
     prior_failures:
-      - experiment_id: exp6115-phase-d-authentic-calibration-pool
-        verdict: "complete_null: no_calibration_stratum_decode_policy_met_gate"
-        addressed_by: "Exp6115 attempted a finite-choice authentic pool whose decode policies never reached the competence/headroom gate. Exp6174 uses an executable trace domain, the mandated dense Gemma-4-31B GGUF, genuine K>=8 temperature draws, native tool/JSON outputs, and no answer-position channel."
+      - experiment_id: exp6174-cctu-authentic-k8-pool
+        verdict: "complete_ready: Exp6174 sealed 120/120 cases, 960/960 samples from unsloth/gemma-4-31B-it-GGUF with raw-before-label K8 coverage"
+        addressed_by: "The transport changes completely: this pool asks for raw Python code, checkpoints it before any label, and evaluates it with restricted executable tests; there is no finite-ID JSON schema, parser retry, grammar repair, or correctness-conditioned regeneration."
         retire_if_same_verdict: true
-      - experiment_id: exp6128-phase-d-calibration-pool-v2
-        verdict: "complete_null: no_calibration_policy_met_conjunctive_gates"
-        addressed_by: "Exp6128 mixed one-sample finite-choice families and position-confounded outputs. Exp6174 generates eight or more independent same-model traces per frozen exact-validator case with no correctness-conditioned retries or option transformations."
+      - experiment_id: exp4056-code-oracle-distinct-pool-preregistration
+        verdict: "blocked_smoke_failed"
+        addressed_by: "The cached flagship GGUF and CUDA llama.cpp path are now established, model resolution follows cached_sota_pair(), and the bank/executor preflight is a structured prerequisite rather than an inline smoke assumption."
         retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp6173-cctu-item-bank-preregistration
-        artifact_field: cctu_item_bank_ready_score
-        op: "=="
-        value: 1.0
     prompt: |
       CONTEXT:
-      Exp6173 freezes a position-free executable tool-trace bank before model access. Populate it with genuine same-model best-of-N candidates from the mandatory dense local GGUF. Exact validators may run only after all raw generations for a case are committed. Do not use correctness-conditioned retry, parser repair informed by labels, a model judge, legacy tiny headline models, or AutoTokenizer on GGUF bytes. Today is {date}.
+      Exp6186 freezes 72 task-disjoint selector tasks across calibration and held splits. Collect an authentic K=8 pool from the mandated dense local flagship using raw code transport and restricted private-test execution. This is not a parser/grammar retry: raw generations must be checkpointed before labels, malformed code is an honest candidate outcome, and correctness-conditioned resampling is forbidden. Today is {date}.
 
       EXISTING CODE TO READ FIRST:
       - {project_root}/CLAUDE.md
       - {project_root}/CODEX.md
-      - {project_root}/research-program.md
-      - {project_root}/results/experiment_6173_cctu_item_bank_preregistration.json
       - {project_root}/scripts/experiment_template.py
-      - {project_root}/python/carnot/inference/sota_models.py
-      - {project_root}/python/carnot/inference/gemma4_quantized.py
-      - {project_root}/python/carnot/inference/llama_chat_template.py
-      - {project_root}/python/carnot/pipeline/gpu_health.py
-      - {project_root}/python/carnot/verify
-      - {project_root}/ops/e2e-test-plan.md
-      - {project_root}/openspec/capabilities/llm-inference/spec.md
-      - {project_root}/openspec/capabilities/constraint-verification/spec.md
-
-      TASK:
-      Gate on Exp6173; use MODEL_SPECS containing `unsloth/gemma-4-31B-it-GGUF`; generate K>=8 independent native-chat tool traces for every frozen calibration and held case with fixed sampling and GPU lifecycle receipts; commit raw traces before exact validation; preserve all parse failures and duplicates; seal labels/access logs; and write results/experiment_6174_cctu_authentic_k8_pool.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: verify the structured gate, item-bank/split/validator hashes, held seal, exact cached GGUF files and revision, embedded tokenizer/chat template, llama.cpp backend, dual-GPU health/capacity, process ownership, output/checkpoint paths, exclusions, and protected files. Fail closed without downloading or small-model substitution.
-      1. Add REQ-* gate, mandatory-model, embedded-template, native-tool-trace, K-independence, fixed-sampling, raw-before-label, no-retry, parse-failure retention, GPU lifecycle, resume/idempotence, held-seal, and immutable-corpus requirements; write focused failing tests first.
-      2. Define MODEL_SPECS with `unsloth/gemma-4-31B-it-GGUF` and exact local model path/revision/quantization/GPU assignment. Use llama.cpp and the GGUF embedded tokenizer/chat template; never call transformers AutoTokenizer on the GGUF.
-      3. Generate at least K=8 independent temperature samples per case under the preregistered schedule and matched token/tool budgets. Store raw prompt bytes, chat-template rendering, seeds, tokens, logprobs when natively available, tool calls, finish reasons, and timing before correctness validation.
-      4. Preserve invalid JSON, invalid tool calls, timeouts, duplicates, refusals, and truncations as candidates. Make no correctness-conditioned retry or candidate replacement. Resume only by immutable case/sample key and hash.
-      5. After all K raw rows for a case are sealed, run the exact validator once per row and write label sidecars inaccessible to generation. Record calibration and held access logs separately; do not inspect aggregate held outcomes in this task.
-      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, upstream_bank_split_validator_and_preregistration_hashes, model_specs, exact_gguf_files_revision_quantization_hashes_and_sizes, embedded_tokenizer_and_chat_template_receipts, llama_cpp_version_and_command, gpu_assignment_health_process_and_vram_receipts, case_sample_seed_temperature_token_and_tool_budget_matrix, raw_trace_corpus_path_hash_count_and_schema, parse_failure_duplicate_refusal_timeout_and_truncation_counts, no_correctness_conditioned_retry_or_replacement_receipt, raw_before_label_commit_receipts, exact_label_sidecar_paths_hashes_and_counts, calibration_and_held_access_logs, resume_idempotence_and_checkpoint_receipts, cctu_candidate_pool_integrity_score, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         model_specs principle: include exact `unsloth/gemma-4-31B-it-GGUF`; no legacy small model supplies headline rows.
-         cctu_candidate_pool_integrity_score principle: one only with every frozen case represented by K>=8 immutable raw-before-label samples and no correctness-conditioned retry/replacement.
-         inference_substrate principle: set `llama_cpp_local_gemma4_31b_gguf_native_chat_tool_trace_generation`.
-         verifier_is_oracle principle: exact validators are oracle labels after generation; the generator and later selector remain oracle-distinct.
-         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name case/sample coverage and model.
-      7. Run focused unit/spec coverage, structured gate, model/cache/chat-template, raw-before-label, K/seed/sampling, no-retry, parse-failure retention, resume/idempotence, GPU health/cleanup, held-seal, task-isolation canary, schema, adversarial-verify, protected-file, applicable local-GGUF E2E, and root-clutter checks.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp6175-cctu-headroom-audit
-    milestone: "2026.08.535"
-    title: "Gated on Exp6174 pool integrity: CCTU competence, unsaturation, and selectable-headroom audit"
-    priority: critical
-    track: phase-d
-    deliverable: results/experiment_6175_cctu_headroom_audit.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    estimated_wall_time_min: 240
-    requires_gpu: false
-    prior_failures:
-      - experiment_id: exp6129-phase-d-held-pool-v2
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6129 could not run because the finite-choice calibration pool failed. Exp6175 consumes a different executable-trace corpus only after an explicit integrity gate and audits competence, unsaturation, consensus headroom, error diversity, and clustered power without answer positions."
-        retire_if_same_verdict: true
-      - experiment_id: exp6140-phase-d-exp6128-option-psychometrics
-        verdict: "retired: saturation plus position-confounded easy families and typed-choice below-floor fallback leave true inability versus distractor/position unresolved for Exp6128 source-domain recovery"
-        addressed_by: "Exp6175 does not transform or recover finite-choice options. It audits exact step-validated tool traces and retires the entire new domain if competence or selectable headroom is absent."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp6174-cctu-authentic-k8-pool
-        artifact_field: cctu_candidate_pool_integrity_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT:
-      A latent selector is meaningful only if the frozen candidate pool is authentic, parseable, competent but imperfect, and contains groups where exact oracle selection can beat a tuned oracle-blind consensus. Audit those prerequisites before any hidden-state extraction. This task may inspect calibration labels and sealed aggregate held qualification fields, but it must not tune a selector or expose held row labels downstream. Today is {date}.
-
-      EXISTING CODE TO READ FIRST:
-      - {project_root}/CLAUDE.md
-      - {project_root}/CODEX.md
-      - {project_root}/results/experiment_6173_cctu_item_bank_preregistration.json
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/results/experiment_6186_livecodebench_bank_preregistration.json
       - {project_root}/results/experiment_6174_cctu_authentic_k8_pool.json
-      - {project_root}/results/experiment_6129_phase_d_held_pool_v2.json
-      - {project_root}/results/experiment_6140_phase_d_exp6128_option_psychometrics.json
-      - {project_root}/ops/known-issues.md
-      - {project_root}/python/carnot/verify
-      - {project_root}/openspec/capabilities/constraint-verification/spec.md
+      - {project_root}/python/carnot/pipeline/humaneval_live_benchmark.py
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Gate on Exp6174; verify exact-validator labels and corpus authenticity; compute family-stratified parseability, per-candidate competence, error diversity, tuned oracle-blind consensus, oracle@8, consensus-wrong/oracle-right counts, and clustered intervals against preregistered thresholds; keep held row labels sealed; retire the domain on failure; and write results/experiment_6175_cctu_headroom_audit.json.
+      Use the frozen Exp6186 calibration and held tasks to collect exactly eight raw samples per task from unsloth/gemma-4-31B-it-GGUF on the local CUDA path, seal content-addressed raw generations before private-test labeling, execute every candidate under the restricted oracle, and write results/experiment_6187_livecodebench_authentic_k8_pool.json plus resumable task-owned pool shards.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: verify structured gate and upstream hashes, raw-before-label receipts, exact validator version, calibration/held seals, K completeness, no-retry receipt, preregistered gates/power, output paths, exclusions, and protected files.
-      1. Add REQ-* authenticity, parseability, exact-floor, competence, unsaturation, consensus, oracle@K, error-diversity, clustered-inference, held-aggregate, no-selector, and fail-closed retirement requirements; write focused failing tests first.
-      2. Revalidate every label from immutable raw traces. Report parseable and all-sample denominators, candidate accuracy, partial step satisfaction, violation taxonomy, duplicate clusters, and family/constraint-count strata. Never drop failures from headline denominators.
-      3. Tune only the preregistered oracle-blind consensus rule on calibration rows using normalized action/terminal-outcome clusters. It may use agreement but no validator labels at selection time, hidden states, arbitrary IDs, or answer positions.
-      4. Compute oracle@8 and tuned-consensus accuracy with case-clustered intervals. Count groups where consensus is wrong and oracle has at least one valid candidate; characterize error diversity. Held processing may emit only signed aggregate qualification fields and a sealed row-label hash.
-      5. Set readiness one only if preregistered parseability, above-floor competence, below-saturation error, oracle-minus-consensus >=0.10 with lower CI >0, at least 30 selectable minority groups, and family support all pass. Otherwise emit `retired:` and forbid downstream rows.
-      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, structured_gate_receipt, upstream_corpus_bank_split_validator_and_preregistration_hashes, label_revalidation_receipt, all_sample_and_parseable_denominators, family_constraint_count_and_violation_strata, exact_floor_definition_value_and_provenance, per_candidate_competence_and_clustered_interval, saturation_and_error_diversity_metrics, tuned_oracle_blind_consensus_definition_freeze_and_accuracy, oracle_at_8_accuracy, oracle_minus_consensus_delta_and_clustered_interval, consensus_wrong_oracle_right_group_count, duplicate_and_shortcut_audits, held_aggregate_qualification_and_row_label_seal_hash, parseability_competence_unsaturation_headroom_and_minority_gate_matrix, phase_d_headroom_ready_score, future_rows_allowed_by_this_artifact, protected_files_unchanged, duration_s, inference_substrate, verifier_is_oracle, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-         phase_d_headroom_ready_score principle: one only when every preregistered conjunct passes; no weighted averaging across failed families.
-         future_rows_allowed_by_this_artifact principle: bare true only with ready score one; otherwise bare false and exact construction retires.
-         verifier_is_oracle principle: exact validators define evaluation labels; tuned consensus is oracle-blind.
-         inference_substrate principle: set `deterministic_exact_tool_trace_headroom_audit`.
-         honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and name the failed or passed conjuncts.
-      7. Run focused unit/spec coverage, structured gate, label reproduction, denominators/floors, clustered inference, consensus freeze, oracle/minority gates, held seal, no-selector/no-shortcut, task-isolation canary, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
+      0. PRECONDITIONS: run the Exp6184 isolation preflight; verify Exp6186 `bank_ready_score==1`; snapshot bank/test hashes, cache paths, exact model files/hashes, llama.cpp build and CUDA/offload receipts, both GPU identities/utilization/memory, random seeds, generation config, executor limits, checkpoint directory, git status, protected files, and root clutter. Fail closed before load if the local flagship or requested CUDA path is unavailable.
+      1. Add REQ-* fixed-bank, authentic-model, K=8, independent-seed, raw-before-label, no-correctness-retry, content-addressed-resume, restricted-execution, private-test noninterference, and exact-provenance requirements; write focused failing tests first.
+      2. MODEL_SPECS: headline dense generator `unsloth/gemma-4-31B-it-GGUF`, resolved with the cached_sota_pair() pattern. Record exact GGUF filename/hash, quantization, context, chat template, revision receipt, seed schedule, sampling parameters, llama.cpp build, layers/devices, and CUDA offload. Never pass the GGUF path to AutoTokenizer.from_pretrained(). Legacy small models may smoke the harness only and must not enter headline counts.
+      3. Generate eight independently seeded raw Python candidates for each of 72 frozen tasks. Store model stdout, code-extraction result, timing, token counts, seed, and content hash atomically before any private test is opened. Resume only missing deterministic sample keys; never replace a failed, malformed, timed-out, or incorrect sample.
+      4. After sealing raw data, run the restricted executor against private tests. Label syntax/compile/runtime/timeout/security/nondeterminism/test-pass outcomes and retain every candidate. Verify that test source, expected outputs, and oracle traces never enter model prompts, retry logic, or stored selector inputs.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_bank_hash_and_gate_receipt, model_specs, model_cache_file_hash_revision_quantization_and_template, random_seed_and_generation_config, llama_cpp_build_and_cuda_offload_receipts, dual_gpu_utilization_memory_intervals, task_sample_count_matrix, raw_before_label_checkpoint_paths_hashes_and_timestamps, content_addressed_resume_receipt, candidate_transport_and_extraction_outcomes, restricted_executor_limits_and_receipts, candidate_outcome_counts_by_split_and_stratum, correctness_retry_count, private_test_noninterference_receipt, verifier_is_oracle, pool_integrity_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         correctness_retry_count principle: exactly zero; transport failures remain candidates.
+         verifier_is_oracle principle: bare true for labeling/evaluation and bare false for generation or selection inputs.
+         pool_integrity_ready_score principle: one only with exactly 576 sealed raw-before-label candidates, K=8 for every task, authentic model/CUDA receipts, zero correctness retries, and classified execution outcomes.
+         inference_substrate principle: set `local_llama_cpp_cuda_gguf_plus_restricted_private_test_execution`.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name exact task/sample coverage and any transport failures.
+      6. Run focused unit/spec coverage, model-cache identity, K=8 matrix, raw-before-label ordering, resume idempotence, private-test noninterference, executor safety, schema, adversarial-verify, protected-file, applicable GPU E2E, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6176-hidden-state-surface-qualification
-    milestone: "2026.08.535"
-    title: "Matching-base per-layer hidden-state surface qualification"
+  - id: exp6188-livecodebench-headroom-audit
+    milestone: "2026.08.536"
+    title: "Executable-code competence and oracle-headroom audit gated on Exp6187 pool integrity"
     priority: critical
-    track: phase-d
-    deliverable: results/experiment_6176_hidden_state_surface_qualification.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 420
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp6130-phase-d-per-layer-surface-v2
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6176 is gated on a new CCTU headroom audit and uses the matching cached google/gemma-4-31B-it base only after GGUF trace alignment is proven."
-        retire_if_same_verdict: true
+    track: phase-d-code-verification
+    deliverable: results/experiment_6188_livecodebench_headroom_audit.json
+    requires: [exp6187-livecodebench-authentic-k8-pool]
     gated_on:
-      - upstream: exp6175-cctu-headroom-audit
-        artifact_field: phase_d_headroom_ready_score
-        op: "=="
+      - upstream: exp6187-livecodebench-authentic-k8-pool
+        artifact_field: pool_integrity_ready_score
+        op: '=='
         value: 1.0
-    prompt: |
-      CONTEXT:
-      Qualify the matching-base hidden-state surface only after Exp6175 proves an unsaturated executable-trace pool. Use the cached local-GGUF counterpart and the exact cached `google/gemma-4-31B-it` base revision; do not download or substitute a smaller model. Today is {date}.
-
-      TASK:
-      Verify gate readiness, local-GGUF/base revision reachability, tokenizer and prompt/completion token alignment, layer/precision/device maps, extraction determinism, held-label seal preservation, and write results/experiment_6176_hidden_state_surface_qualification.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot gate artifacts, GGUF/base paths and hashes, GPU state, tokenizer receipts, output roots, protected files, and git status.
-      1. Add or verify REQ-* gate, mandatory-model, local-GGUF, matching-base, token-alignment, hidden-state-shape, deterministic-extraction, held-seal, no-download, and protected-file requirements; write focused failing tests first.
-      2. Fail closed unless the local `google/gemma-4-31B-it` base and exact GGUF counterpart are both reachable with matching revisions and tokenizer evidence.
-      3. Extract only calibration-authorized surface receipts, preserve held labels, and emit field provenance, test commands, checksum, and honest verdict.
-      REQUIRED ARTIFACT FIELDS: status, preconditions_checked, hidden_state_surface_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp6177-clue-latent-selector-freeze
-    milestone: "2026.08.535"
-    title: "Calibration-only CLUE and latent selector freeze"
-    priority: critical
-    track: phase-d
-    deliverable: results/experiment_6177_clue_latent_selector_freeze.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 360
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp6131-phase-d-mid-layer-selector-calibration
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6177 waits for Exp6176 matching-base reachability and freezes CLUE plus learned latent selectors on calibration rows only."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp6176-hidden-state-surface-qualification
-        artifact_field: hidden_state_surface_ready_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT:
-      Freeze CLUE and a lightweight latent selector using only calibration rows from the qualified local-GGUF/matching-base surface. Exact validators are evaluation oracles; selector features must exclude oracle labels, held rows, arbitrary IDs, and surface shortcuts. Today is {date}.
-
-      TASK:
-      Gate on Exp6176, compute CLUE and learned selector candidates, freeze layers/thresholds/control arms on calibration only, prove no held-label access, and write results/experiment_6177_clue_latent_selector_freeze.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot upstream hashes, calibration/held seals, local-GGUF/base receipts, feature schemas, protected files, and git status.
-      1. Add or verify REQ-* gate, calibration-only, CLUE, selector-freeze, oracle-distinct, shortcut-control, shuffled-label, held-seal, and checksum requirements; write focused failing tests first.
-      2. Run CLUE before the learned selector and include tuned consensus, cheap-feature, shuffled-label, oracle-peeking, and surface-shortcut controls.
-      3. Emit frozen selector artifacts with field provenance, tests, reproducibility checksum, and honest verdict.
-      REQUIRED ARTIFACT FIELDS: status, preconditions_checked, calibration_selector_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp6178-held-internal-state-selection
-    milestone: "2026.08.535"
-    title: "One-shot held internal-state selection"
-    priority: critical
-    track: phase-d
-    deliverable: results/experiment_6178_held_internal_state_selection.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
-    estimated_wall_time_min: 360
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp6132-phase-d-hidden-state-held-eval
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Exp6178 opens held labels once only after Exp6177 freezes the local-GGUF/matching-base selector and all shortcut controls."
-        retire_if_same_verdict: true
-    gated_on:
-      - upstream: exp6177-clue-latent-selector-freeze
-        artifact_field: calibration_selector_ready_score
-        op: "=="
-        value: 1.0
-    prompt: |
-      CONTEXT:
-      Run the one-shot held comparison only after calibration selectors are frozen. Use the same local-GGUF/matching-base receipts, exact validators as evaluation oracles, and no post-held tuning. Today is {date}.
-
-      TASK:
-      Open held labels once, compare frozen CLUE/latent selectors to tuned consensus with clustered paired inference and shortcut controls, preserve oracle distinction, and write results/experiment_6178_held_internal_state_selection.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot frozen selector, held seal, local-GGUF/base hashes, exact validators, controls, protected files, and git status.
-      1. Add or verify REQ-* gate, one-shot-held, no-retune, clustered-inference, oracle-distinct, shortcut-control, negative-control, and protected-file requirements; write focused failing tests first.
-      2. Promotion requires positive held confidence bound, cheap/shuffled controls failing to reproduce the gain, no family shortcut, and `verifier_is_oracle=false`.
-      3. Emit exact decision fields, provenance, tests, checksum, and honest verdict.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp6179-retention-safe-continuous-strategy-learning-ab
-    milestone: "2026.08.535"
-    title: "Mandatory retention-safe continuous strategy-learning A/B"
-    priority: critical
-    track: continuous-learning
-    deliverable: results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 80
-    estimated_wall_time_min: 720
-    requires_gpu: true
-    prior_failures:
-      - experiment_id: exp6164-continuous-strategy-learning-ab
-        verdict: "blocked: mandatory continuous strategy-learning did not execute and preserved an internal block"
-        addressed_by: "Exp6179 owns its sealed store and event stream, always emits an artifact, and measures post-update retention with local-GGUF Qwen3.6 and Gemma-4 models."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      This mandatory task is ungated. Use frozen local-GGUF `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF` models with task-owned external memory only. Improvement cannot compensate for forgetting. Today is {date}.
-
-      TASK:
-      Build a sealed chronological stream and bounded strategy store, compare no-memory, fixed-memory, write-through, replay, and shuffled retrieval arms, measure prior-family retention after every update, enforce rollback/quarantine, and write results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot model caches, stream/store paths, retention families, poisoning controls, protected files, and git status.
-      1. Add or verify REQ-* mandatory-execution, local-GGUF, immutable-weights, external-memory, post-outcome-write, bounded-replay, retention, poison-quarantine, rollback, and protected-file requirements; write focused failing tests first.
-      2. Commit memory only after exact outcomes and measure protected/prior-family behavior after every admitted update.
-      3. Emit utility, retention, state-bound, rollback, provenance, test, checksum, and honest-verdict receipts.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp6180-exp6166-reproducibility-adjudication
-    milestone: "2026.08.535"
-    title: "Exp6166 evidence-preserving reproducibility adjudication"
-    priority: high
-    track: stochastic-reproducibility
-    deliverable: results/experiment_6180_exp6166_reproducibility_adjudication.json
     agent_type: codex
     model: gpt-5.5
     max_turns: 30
     estimated_wall_time_min: 180
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp6166-mode-jumping-factor-thermalization
-        verdict: "blocked: software-only stochastic result preserved with nonzero repository test state"
-        addressed_by: "Exp6180 re-adjudicates the immutable Exp6166 evidence under task-owned isolated tests without retraining, rewriting Exp6166, or promoting a hardware claim."
+      - experiment_id: exp6175-cctu-headroom-audit
+        verdict: "retired: Exp6174 CCTU pool failed preregistered headroom conjuncts: parseability, competence, headroom, minority, family_support"
+        addressed_by: "The candidate domain and transport are changed to executable raw code, the pool must pass a separate integrity gate first, and headroom is measured against a tuned label-free code-equivalence/self-consistency selector rather than structured CCTU parsing."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp6166 preserved a scientifically positive software-only stochastic result but remained blocked by nonzero repository tests. Recompute from immutable evidence; do not refit, rewrite source artifacts, or promote a hardware claim. Today is {date}.
+      Hidden-state work is eligible only if the authentic code pool is runnable, neither saturated nor hopeless, contains both correct and incorrect candidates, and leaves recoverable oracle@8 gain beyond tuned label-free selection. Audit this before loading a matching-base checkpoint. A clean failure retires this exact pool and automatically skips Exp6189-Exp6191. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6187_livecodebench_authentic_k8_pool.json
+      - {project_root}/results/experiment_6175_cctu_headroom_audit.json
+      - {project_root}/results/experiment_4057_code_oracle_distinct_pool_collection.json
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+      - {project_root}/openspec/capabilities/selector-evaluation/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Hash Exp6166 evidence, rerun focused task-owned reproducibility checks, classify the old full-suite failure, compare before/after bytes, and write results/experiment_6180_exp6166_reproducibility_adjudication.json.
+      Without invoking an LLM or exposing private tests as selector inputs, quantify pool parse/run competence, per-task outcome diversity, oracle@8 recoverability, tuned label-free self-consistency/code-equivalence performance, calibration/held support, and stratum balance; then write results/experiment_6188_livecodebench_headroom_audit.json with a conjunctive readiness verdict.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot Exp6166 bytes, stochastic seeds, tests, exclusion state, protected files, and git status.
-      1. Add or verify REQ-* immutable-source, no-refit, stochastic-replay, isolated-tests, old-failure-classification, no-hardware-promotion, protected-file, and checksum requirements; write focused failing tests first.
-      2. Recompute declared metrics from existing code/artifacts and preserve historical blocked state exactly.
-      3. Emit companion determination, provenance, tests, checksum, and honest verdict.
+      0. PRECONDITIONS: verify Exp6187 `pool_integrity_ready_score==1`; snapshot pool/bank/test hashes, all raw-before-label timestamps, candidate count matrix, executor label provenance, analysis seed, task-owned output root, git status, protected files, and root clutter.
+      1. Add REQ-* immutable-pool, task-level analysis, runnable-competence, mixed-outcome, oracle@8, label-free-baseline, split-support, stratum-support, uncertainty, and retirement requirements; write focused failing tests first.
+      2. Compute compile/run/pass rates and syntax/runtime/timeout/security categories per task and split. Require at least 30 usable tasks in calibration and 30 in held, with both correct and incorrect candidates and nondegenerate correctness prevalence.
+      3. Tune only label-free code equivalence/self-consistency and deterministic surface baselines on calibration. Features may include normalized code equivalence, duplicate cluster size, generation likelihood if already recorded, length, and execution-free syntax/static signals; exact private-test labels are evaluation targets only.
+      4. Report random@1, first-sample, tuned label-free selector, oracle@8, recoverable gap, minority-class support, effective task count, task-level bootstrap intervals, and platform/date/difficulty strata. Do not train a hidden-state selector or inspect held labels while tuning.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_pool_hash_and_gate_receipt, task_and_sample_counts, compile_run_and_outcome_rates, correctness_prevalence_by_split_and_stratum, usable_and_mixed_outcome_task_counts, calibration_frozen_label_free_baseline_config, random_first_label_free_and_oracle_at_8_metrics, oracle_recovery_over_label_free, task_level_bootstrap_intervals, minority_class_and_stratum_support, private_test_noninterference_receipt, verifier_is_oracle, failed_headroom_conjuncts, headroom_ready_score, retirement_receipt, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         verifier_is_oracle principle: bare true for outcome labels and oracle@8 only; bare false for every deployable baseline input.
+         headroom_ready_score principle: one only with integrity, at least 30 usable tasks per selector split, mixed outcomes, non-saturated competence, minority/stratum support, and positive recoverable oracle gain beyond the tuned label-free selector.
+         retirement_receipt principle: retire this exact code-pool/family path if the same failed conjuncts recur; do not relax thresholds post hoc.
+         inference_substrate principle: set `cached_pool_task_level_statistical_audit`.
+         honest_verdict principle: use `complete_ready:`, `retired:`, or `blocked:` and enumerate every conjunct.
+      6. Run focused unit/spec coverage, immutable-pool/hash, task-level split, baseline noninterference, bootstrap determinism, schema, adversarial-verify, exclusions, protected-file, applicable E2E, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6181-arc-logo-shortcut-audit
-    milestone: "2026.08.535"
-    title: "Single ARC slot leave-one-game-out shortcut audit"
-    priority: high
-    track: arc
-    deliverable: results/experiment_6181_arc_logo_shortcut_audit.json
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 50
+  - id: exp6189-matching-base-code-hidden-state-surface
+    milestone: "2026.08.536"
+    title: "Matching-base code hidden-state surface gated on Exp6188 headroom"
+    priority: critical
+    track: phase-d-code-verification
+    deliverable: results/experiment_6189_matching_base_code_hidden_state_surface.json
+    requires: [exp6188-livecodebench-headroom-audit]
+    gated_on:
+      - upstream: exp6188-livecodebench-headroom-audit
+        artifact_field: headroom_ready_score
+        op: '=='
+        value: 1.0
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 360
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp6176-hidden-state-surface-qualification
+        verdict: "GATE_BLOCK: upstream exp6175 retired"
+        addressed_by: "A new executable-code pool must pass an explicit integrity and headroom gate before this task runs, and the surface uses a cached matching Gemma-4-31B base checkpoint with prompt/token/row/revision alignment rather than the retired CCTU transport."
+        retire_if_same_verdict: true
+      - experiment_id: exp5213-matching-base-hidden-state-probe-v3
+        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
+        addressed_by: "The task family changes from MMLU-Pro multiple choice to executable code, uses same-task correct/incorrect K=8 candidates, tests prompt-final and code-final states with length/surface residualization, and freezes a new leakage audit before any selector training."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6188 must first prove a competent unsaturated code pool with oracle-distinct headroom. Qualify whether the matching cached Gemma-4-31B base checkpoint can provide row-aligned prompt-final and code-final hidden states for the exact GGUF-generated candidates. This task extracts and audits a surface; it does not train a selector or read held correctness during configuration. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6188_livecodebench_headroom_audit.json
+      - {project_root}/results/experiment_5213_matching_base_hidden_state_probe_v3.json
+      - {project_root}/scripts/experiments/exp5178_matching_base_hidden_state_probe_v1.py
+      - {project_root}/scripts/experiments/exp5200_matching_base_hidden_state_probe_v2.py
+      - {project_root}/scripts/experiments/exp5213_matching_base_hidden_state_probe_v3.py
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/openspec/capabilities/selector-evaluation/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Join the authentic unsloth/gemma-4-31B-it-GGUF generation family to cached google/gemma-4-31B-it, prove revision/chat-template/token/prompt/candidate-row alignment, freeze a calibration-only layer/token canary, extract prompt-final and code-final features for every sealed candidate without exposing correctness labels to extraction, and write results/experiment_6189_matching_base_code_hidden_state_surface.json plus content-addressed feature shards.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify Exp6188 `headroom_ready_score==1`; run the Exp6184 isolation preflight; snapshot pool/bank hashes, raw candidates, exact GGUF and base-model cache paths/hashes/revisions, tokenizer/chat template, prompt renderer, device maps, precision, quantization mismatch, both GPU identities/utilization/memory, feature storage estimate, git status, protected files, and root clutter. Fail closed before load if the base checkpoint or requested device map is unavailable.
+      1. Add REQ-* matching-family, revision disclosure, byte/prompt/token/row alignment, calibration-only canary, prompt-final, code-final, label-blind extraction, length/surface controls, content-addressed resume, and leakage audit requirements; write focused failing tests first.
+      2. MODEL_SPECS: mandatory generation-side family `unsloth/gemma-4-31B-it-GGUF` plus matching hidden-state checkpoint `google/gemma-4-31B-it`. Record GGUF file hash/quantization and base revision/weight hashes/dtype/device map. Demonstrate prompt renderer and tokenizer compatibility; disclose that base full-precision states are a matching-family proxy, not literal GGUF activations. Never load a GGUF with AutoTokenizer.from_pretrained().
+      3. Using calibration tasks only, run a fixed small canary across preregistered layer fractions and prompt-final/code-final token positions. Freeze the surface definition using availability, numerical stability, row alignment, and label-free variance criteria; do not optimize on correctness or held labels.
+      4. Extract frozen features for all calibration and held candidates in task/sample order. Store row keys, prompt/code hashes, token spans, attention boundaries, state shapes/dtypes, device receipt, and content hashes. Join correctness only after the full feature store is sealed.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_headroom_hash_and_gate_receipt, model_specs, gguf_and_matching_base_identity_revision_hash_quantization_dtype_and_device_map, prompt_renderer_chat_template_and_tokenizer_alignment, candidate_row_alignment_receipt, calibration_canary_task_ids_and_frozen_surface, prompt_final_and_code_final_layer_token_definition, label_access_timeline, feature_shard_paths_hashes_shapes_and_row_counts, content_addressed_resume_receipt, length_surface_stratum_and_model_identity_control_fields, hidden_state_extraction_gpu_receipts, dual_gpu_utilization_memory_intervals, leakage_audit, surface_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         surface_ready_score principle: one only with exact model-family disclosure, full prompt/token/row alignment, sealed label-blind features for every candidate, stable shapes, and zero leakage.
+         inference_substrate principle: set `cached_matching_base_transformer_hidden_state_extraction_from_authentic_gguf_generations`.
+         honest_verdict principle: use `complete_ready:`, `retired:`, or `blocked:` and name alignment coverage and proxy caveat.
+      6. Run focused unit/spec coverage, model identity, prompt/token/row alignment, label-access timeline, surface freeze, feature hash/resume, leakage, schema, adversarial-verify, protected-file, applicable dual-GPU E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6190-calibration-clue-linear-code-selector
+    milestone: "2026.08.536"
+    title: "Calibration-only CLUE and residualized linear code selector gated on Exp6189 surface"
+    priority: critical
+    track: phase-d-code-verification
+    deliverable: results/experiment_6190_calibration_clue_linear_code_selector.json
+    requires: [exp6189-matching-base-code-hidden-state-surface]
+    gated_on:
+      - upstream: exp6189-matching-base-code-hidden-state-surface
+        artifact_field: surface_ready_score
+        op: '=='
+        value: 1.0
+    model: opus
+    max_turns: 100
     estimated_wall_time_min: 300
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp6167-arc-task-aware-multiseed-replication
-        verdict: "complete_positive: ARC live-path task-aware admission positive with no solve and zero registry delta"
-        addressed_by: "Exp6181 keeps the fixed Exp6167 policy and measures leave-one-game-out, shuffled-label, alias, and unknown-label robustness without adding induction or claiming a solve."
+      - experiment_id: exp6177-clue-latent-selector-freeze
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The new surface is independently gated and executable-code specific; this task trains only on the frozen calibration split, residualizes length and surface controls, and seals the selector before any held-label join."
+        retire_if_same_verdict: true
+      - experiment_id: exp5213-matching-base-hidden-state-probe-v3
+        verdict: "complete_hidden_state_v3_signal_does_not_beat_all_controls_retires_mmlu_hidden_state_path_probe0.075_sc0.075_self0.075_clue0.025_rcs0.025"
+        addressed_by: "The domain is executable code with same-task K=8 alternatives and a private execution oracle; CLUE is compared against residualized linear, likelihood, length, surface, and label-free equivalence controls under nested task splits."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the single ARC slot for `.535`. Freeze the Exp6167 policy, keep adapters disabled, use only live agent self-discovery attempts, and claim no solve or registry delta. Today is {date}.
+      Exp6189 provides sealed label-blind prompt-final and code-final features. Train and freeze lightweight CLUE-style and residualized linear selectors using only the 36 calibration tasks. The held feature matrix may be transformed label-blindly, but held correctness must remain sealed until Exp6191. This is a cached-feature analysis and must not invoke an LLM. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6189_matching_base_code_hidden_state_surface.json
+      - {project_root}/results/experiment_5213_matching_base_hidden_state_probe_v3.json
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities/selector-evaluation/spec.md
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Run leave-one-game-out, known-label, held-out-label, shuffled-label, alias, and unknown-label controls for the fixed Exp6167 ARC policy; prove no source/BFS/solver-kit path; and write results/experiment_6181_arc_logo_shortcut_audit.json.
+      On calibration tasks only, compare CLUE-style latent energy and residualized regularized linear correctness scoring across frozen prompt-final/code-final surfaces and label-free controls, choose one preregistered selector by nested task-level validation, seal every parameter and threshold before held labels are accessible, and write results/experiment_6190_calibration_clue_linear_code_selector.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot registry, Exp6167 policy hashes, task labels, live runtime paths, protected files, and git status.
-      1. Add or verify REQ-* single-arc-slot, fixed-policy, adapter-disabled, live-path, no-solve, no-registry-delta, label-control, shortcut-audit, and protected-file requirements; write focused failing tests first.
-      2. Measure robustness only; add no new induction mechanism or public-level solve.
-      3. Emit solve_claimed=false, level_credit_delta=0, provenance, tests, checksum, and honest verdict.
+      0. PRECONDITIONS: verify Exp6189 `surface_ready_score==1`; snapshot feature/pool/bank hashes, calibration/held task IDs, label-access controls, random seeds, task-level fold assignment, candidate control fields, output root, git status, protected files, and root clutter. Confirm no model weights or private test source are loaded.
+      1. Add REQ-* calibration-only, task-disjoint nested folds, CLUE, residualized-linear, prompt-final/code-final, label-free controls, regularization, deterministic selection, pre-held freeze, and leakage requirements; write focused failing tests first.
+      2. Fit preprocessing on calibration folds only. Residualize hidden features against preregistered prompt/code length, token position, surface syntax, likelihood, duplicate/equivalence cluster, and stratum controls. Keep raw-control baselines as separate competitors rather than blending oracle labels into features.
+      3. Compare fixed CLUE-style energy, regularized linear, residualized linear, likelihood, length/surface, and tuned label-free equivalence/self-consistency using nested task-level folds. Report task-level accuracy/recovery, calibration, uncertainty, coefficient stability, effective sample size, and model-identity shortcut checks.
+      4. Select one primary and at most one diagnostic selector by preregistered calibration criteria. Seal preprocessing, surface, coefficients, thresholds, tie-breaking, input schema, candidate ranking rule, code hash, and held-feature transformation before any held correctness join.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_surface_hash_and_gate_receipt, calibration_and_held_task_ids, label_access_timeline, nested_task_fold_assignment_and_seed, feature_and_control_definitions, residualization_fit_scope, candidate_method_configs, calibration_task_level_metrics_and_intervals, calibration_and_uncertainty_metrics, coefficient_and_surface_stability, model_identity_length_surface_likelihood_and_equivalence_controls, selected_primary_and_diagnostic_method, frozen_selector_path_hash_config_and_code_hash, held_feature_transform_hash, private_test_noninterference_receipt, verifier_is_oracle, selector_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         verifier_is_oracle principle: bare true for calibration targets only and bare false for selector inputs/deployment; held oracle access count is zero.
+         selector_ready_score principle: one only with nested task-disjoint calibration, a fully sealed deterministic selector, zero held-label access, and all shortcut controls reported.
+         inference_substrate principle: set `cached_hidden_feature_calibration_only_selector_training`.
+         honest_verdict principle: use `complete_ready:`, `retired:`, or `blocked:` and name the frozen primary method and held-label access count.
+      6. Run focused unit/spec coverage, task-split determinism, residualization fold isolation, selector freeze/hash, held-label denial, leakage, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp6182-v535-capstone-reconciliation
-    milestone: "2026.08.535"
-    title: "Branch-independent .535 capstone"
+  - id: exp6191-held-code-internal-state-selection
+    milestone: "2026.08.536"
+    title: "One-shot held executable-code internal-state selection gated on Exp6190 selector freeze"
     priority: critical
-    track: capstone
-    deliverable: results/experiment_6182_v535_capstone_reconciliation.json
+    track: phase-d-code-verification
+    deliverable: results/experiment_6191_held_code_internal_state_selection.json
+    requires: [exp6190-calibration-clue-linear-code-selector]
+    gated_on:
+      - upstream: exp6190-calibration-clue-linear-code-selector
+        artifact_field: selector_ready_score
+        op: '=='
+        value: 1.0
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     estimated_wall_time_min: 240
     requires_gpu: false
     prior_failures:
-      - experiment_id: exp6168-v534-capstone-reconciliation
-        verdict: "complete: .534 capstone preserved missing, skipped, internal-blocked, flagged, null, blocked, positive, and no-solve ARC classes"
-        addressed_by: "Exp6182 is the next branch-independent capstone over a new .535 task range and must preserve exact terminal evidence without duplicating prior capstone history."
+      - experiment_id: exp6178-held-internal-state-selection
+        verdict: "GATE_BLOCK: upstream selector exp6177 was blocked"
+        addressed_by: "This held evaluation runs only after an executable pool, headroom audit, matching-base surface, and frozen selector have each passed structured gates; no configuration may change after the held-label join."
+        retire_if_same_verdict: true
+      - experiment_id: exp4264-code-oracle-distinct-replication
+        verdict: "complete: code_oracle_distinct_replication_corpus_specific"
+        addressed_by: "The new evaluation uses cached LiveCodeBench tasks, a mandated Gemma-4-31B authentic K=8 pool, task-disjoint calibration/held splits, matching-base internal states, and tuned label-free code-equivalence controls, so it directly tests whether the earlier corpus-specific result generalizes."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Close `.535` by exact declared paths only. Preserve every delivered, missing, skipped, null, blocked, retired, and flagged class without strengthening scientific claims or rewriting prior determinations. Today is {date}.
+      Exp6190 seals a deterministic internal-state selector before held labels are accessible. Evaluate it once on the 36 held LiveCodeBench tasks against all frozen baselines and oracle@8. Do not retrain, retune, change ties, drop tasks, regenerate candidates, or invoke an LLM after the held join. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6187_livecodebench_authentic_k8_pool.json
+      - {project_root}/results/experiment_6188_livecodebench_headroom_audit.json
+      - {project_root}/results/experiment_6189_matching_base_code_hidden_state_surface.json
+      - {project_root}/results/experiment_6190_calibration_clue_linear_code_selector.json
+      - {project_root}/results/experiment_4264_code_oracle_distinct_replication.json
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/openspec/capabilities/selector-evaluation/spec.md
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
 
       TASK:
-      Resolve Exp6169-Exp6181 by exact deliverable path and conductor receipt, adversarial-verify present artifacts, reconcile claims from raw fields, update only evidence-backed completion history, and write results/experiment_6182_v535_capstone_reconciliation.json.
+      Apply the byte-frozen Exp6190 selector exactly once to held candidates, join private-test labels only after all ranks are sealed, compare task-level selection against random, first, likelihood, surface, tuned label-free equivalence/self-consistency, and oracle@8, quantify shortcut controls and bootstrap uncertainty, and write results/experiment_6191_held_code_internal_state_selection.json.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: snapshot all declared deliverables, conductor receipts, completion multiplicity, quarantine fields, exclusions, protected files, and git status.
-      1. Add or verify REQ-* exact-path, branch-independent, terminal-class-preservation, adversarial-verify, no-claim-strengthening, append-once, protected-file, and checksum requirements; write focused failing tests first.
-      2. Preserve all terminal classes and emit field provenance, test receipts, reproducibility checksum, and honest verdict.
+      0. PRECONDITIONS: verify Exp6190 `selector_ready_score==1`; snapshot all upstream hashes, selector/code/config hash, held task/sample matrix, sealed ranks before label join, tie rules, bootstrap seed, task exclusions fixed upstream, output root, git status, protected files, and root clutter.
+      1. Add REQ-* one-shot-held, immutable-selector, rank-before-label, task-level metric, baseline comparison, paired bootstrap, shortcut control, no-regeneration, and retirement requirements; write focused failing tests first.
+      2. Validate selector inputs and create deterministic ranks for every held task while the private-test label table remains inaccessible. Seal ranks and hashes. Any missing input is an honest failure; do not drop or impute a task after inspecting correctness.
+      3. Join labels once. Compute selected pass@1 for primary/diagnostic selectors, random, first, likelihood, length/surface, tuned equivalence/self-consistency, and oracle@8; report paired task deltas and bootstrap confidence intervals with all ties/failures included.
+      4. Stratify by platform/date/difficulty, candidate correctness prevalence, prompt/code length, model likelihood, duplicate cluster, and surface syntax. Run permutation/label-shuffle controls. Do not interpret oracle@8 as a deployable verifier.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_hash_chain_and_gate_receipt, frozen_selector_config_code_and_hash, held_task_and_sample_counts, rank_before_label_seal_hash_and_timestamp, label_join_receipt, no_regeneration_retraining_retuning_or_posthoc_exclusion_receipt, task_level_metrics_by_method, paired_deltas_over_tuned_label_free_baseline, bootstrap_intervals_and_seed, oracle_at_8_and_recoverable_gap, stratum_and_shortcut_control_metrics, permutation_and_label_shuffle_controls, private_test_noninterference_receipt, verifier_is_oracle, promotion_criteria_met, retirement_receipt, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         verifier_is_oracle principle: bare true for final correctness labels and oracle@8; bare false for the deployed selector and all label-free baselines.
+         promotion_criteria_met principle: bare true only if the frozen primary selector has positive held task-level gain over the tuned label-free baseline with a strictly positive paired-bootstrap lower bound and stable preregistered controls.
+         retirement_receipt principle: a clean repeat of no oracle-distinct gain retires this code-family/feature path rather than triggering another same-scope retry.
+         inference_substrate principle: set `cached_one_shot_held_code_selector_evaluation`.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and name the primary paired delta and confidence interval.
+      6. Run focused unit/spec coverage, upstream hash chain, immutable selector/rank seal, label-join ordering, paired bootstrap determinism, no posthoc exclusion, leakage, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6192-live-strategy-seed-stream
+    milestone: "2026.08.536"
+    title: "Live dual-family strategy seed stream gated on Exp6186 bank readiness"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_6192_live_strategy_seed_stream.json
+    requires: [exp6184-v536-evidence-isolation-preflight, exp6186-livecodebench-bank-preregistration]
+    gated_on:
+      - upstream: exp6186-livecodebench-bank-preregistration
+        artifact_field: bank_ready_score
+        op: '=='
+        value: 1.0
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 480
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5708-live-constraint-response-stream
+        verdict: "blocked: parse_failures"
+        addressed_by: "The stream now uses raw executable Python rather than structured constraint responses, records every failure before private-test labeling, and freezes strategy choice independently from parser success."
+        retire_if_same_verdict: true
+      - experiment_id: exp5786-live-sota-constraint-response-stream
+        verdict: "complete: sota_constraint_response_stream_collected_not_ready:parser_failure_threshold"
+        addressed_by: "The task domain changes to cached LiveCodeBench with a restricted execution oracle, two mandated flagship GGUF families, and no structured answer schema or parser-readiness threshold."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6179 showed that bounded transactional strategy memory can improve deterministic replay, but no live model generation executed. Before a prospective A/B, collect a balanced seed stream on the frozen 18-task CSL seed split from two mandated local-SOTA families under three label-blind strategy prompts. Outcomes are committed only after raw generations are sealed and private tests run. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_6186_livecodebench_bank_preregistration.json
+      - {project_root}/results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json
+      - {project_root}/results/experiment_5708_live_constraint_response_stream.json
+      - {project_root}/results/experiment_5786_live_sota_constraint_response_stream.json
+      - {project_root}/scripts/experiment_template.py
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+
+      TASK:
+      For each of 18 frozen seed tasks, execute three preregistered label-blind strategy prompts once with unsloth/Qwen3.6-35B-A3B-GGUF and once with unsloth/gemma-4-26B-A4B-it-GGUF, seal all 108 raw generations before labeling, compute a fixed no-memory strategy policy from seed outcomes, initialize a bounded transactional memory store, and write results/experiment_6192_live_strategy_seed_stream.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: run Exp6184 preflight; verify Exp6186 `bank_ready_score==1`; snapshot seed task/test hashes, exact model cache files/hashes, llama.cpp CUDA/offload and both-GPU receipts, prompt strategies, model-strategy-task order and random seed, executor limits, memory schema/capacity, git status, protected files, and root clutter. Fail closed before load if either mandated model or CUDA route is unavailable.
+      1. Add REQ-* two-family, three-strategy, fixed-order/randomization, raw-before-label, no-correctness-retry, post-outcome commit, bounded-memory, fixed-baseline, retention-seed, poison/rollback, and exact-provenance requirements; write focused failing tests first.
+      2. MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF`. Resolve through cached_sota_pair(), record exact GGUF files/hashes/quantizations/templates/seeds/llama.cpp build/offload, and never pass a GGUF path to AutoTokenizer.from_pretrained(). Legacy small models may smoke the harness only.
+      3. Freeze three general strategy prompts before generation. Run each model-strategy pair exactly once per seed task in a balanced deterministic order. Seal raw prompt/output/code/timing/token/seed hashes before private-test access; keep syntax/runtime/timeout/incorrect results and never retry for correctness.
+      4. Label after sealing with the restricted oracle. Derive a deterministic per-family fixed no-memory baseline policy using seed tasks only. Initialize a bounded append-only transactional event store with snapshot/read, post-outcome commit, eviction, provenance, poison rejection, rollback, and retention-probe support; do not update model weights.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_bank_hash_and_gate_receipt, model_specs, model_cache_hash_revision_quantization_template_and_cuda_receipts, dual_gpu_utilization_memory_intervals, seed_task_ids_hash_and_strategy_prompts, model_strategy_task_order_and_random_seed, raw_before_label_checkpoint_hashes_and_timestamps, task_model_strategy_coverage_matrix, restricted_oracle_outcomes, correctness_retry_count, fixed_no_memory_policy_by_model_family, bounded_memory_schema_capacity_eviction_and_snapshot_receipt, initial_memory_event_count_and_hash, poison_rollback_and_retention_fixture_receipts, private_test_noninterference_receipt, verifier_is_oracle, seed_stream_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         verifier_is_oracle principle: bare true for post-generation labeling only and bare false for prompt strategy choice.
+         seed_stream_ready_score principle: one only with 108 sealed live generations, complete two-model/three-strategy coverage, zero correctness retries, a frozen per-family baseline, and a bounded tested memory store.
+         inference_substrate principle: set `local_dual_family_llama_cpp_cuda_live_generation_plus_restricted_execution`.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and name live generation coverage by family.
+      6. Run focused unit/spec coverage, model identity, 108-cell coverage/order, raw-before-label, retry prohibition, memory transaction/poison/rollback/retention fixtures, schema, adversarial-verify, protected-file, applicable dual-GPU E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6193-prospective-continuous-strategy-learning-ab
+    milestone: "2026.08.536"
+    title: "Prospective retention-safe continuous strategy learning A/B gated on Exp6192 seed readiness"
+    priority: critical
+    track: continuous-self-learning
+    deliverable: results/experiment_6193_prospective_continuous_strategy_learning_ab.json
+    requires: [exp6192-live-strategy-seed-stream]
+    gated_on:
+      - upstream: exp6192-live-strategy-seed-stream
+        artifact_field: seed_stream_ready_score
+        op: '=='
+        value: 1.0
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 600
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp5709-online-verifier-loop
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "The prospective stream is now executable code with a completed live dual-family seed prerequisite, explicit chronological predecision snapshots, and a restricted post-outcome oracle rather than the blocked structured-response chain."
+        retire_if_same_verdict: true
+      - experiment_id: exp5895-shortcut-safe-csl-transaction
+        verdict: "complete_null: shortcut_safe_csl_not_promotion_eligible"
+        addressed_by: "This attempt changes from exact-slot replay to live flagship generation on 30 unseen chronological tasks, compares memory and fixed-baseline arms prospectively, and requires positive family-specific lower intervals plus retention and lifecycle safety."
+        retire_if_same_verdict: true
+      - experiment_id: exp5912-csl-global-suite-parity
+        verdict: "retired: repeated_global_suite_exit_2_after_frozen_science_parity"
+        addressed_by: "The task does not rerun the retired global-suite parity chain; it uses task-owned focused tests, the Exp6192 bounded store, and preregistered prospective science gates with exact nonzero-command classification."
+        retire_if_same_verdict: true
+      - experiment_id: exp6179-retention-safe-continuous-strategy-learning-ab
+        verdict: "complete: replay beat no-memory, fixed-memory, write-through, and shuffled retrieval while preserving prior-family retention; live model generation did not execute"
+        addressed_by: "Both arms now generate live outputs on frozen unseen tasks from two mandated GGUF families; the memory arm reads an immutable predecision snapshot, both arms decide before labels, and verified events commit only after both decisions."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6179 proved bounded replay mechanics but not continuous learning from new live outcomes. Exp6192 supplies a fixed no-memory policy and initialized transactional memory from 18 seed tasks. Run a chronological 30-task prospective A/B for two flagship families: the memory arm may retrieve only the predecision snapshot, the baseline remains frozen, both arms generate before labels, and the verified event commits only after both decisions. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/results/experiment_6192_live_strategy_seed_stream.json
+      - {project_root}/results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json
+      - {project_root}/scripts/experiments/exp6179_retention_safe_continuous_strategy_learning_ab.py
+      - {project_root}/python/carnot/pipeline
+      - {project_root}/python/carnot/verifiers
+      - {project_root}/openspec/capabilities/continuous-learning/spec.md
+      - {project_root}/openspec/capabilities/code-verification/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Execute the frozen 30-task prospective stream for unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-26B-A4B-it-GGUF, compare a fixed seed-derived no-memory strategy arm against a bounded retrieval-memory arm under chronological predecision/post-outcome transaction ordering, audit retention/lifecycle/poison/rollback safety and immutable weights, and write results/experiment_6193_prospective_continuous_strategy_learning_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify Exp6192 `seed_stream_ready_score==1`; run Exp6184 preflight; snapshot prospective task/test hashes/order, seed policy and memory hashes, exact model files/hashes/configs, llama.cpp/CUDA and both-GPU receipts, arm prompts, transaction schema, statistical plan, retention probes, git status, protected files, and root clutter. Fail closed before load if either live model route is unavailable.
+      1. Add REQ-* prospective unseen stream, two-family, fixed baseline, predecision immutable snapshot, strategy-before-inference, both-decisions-before-label, post-outcome commit, bounded state, immutable weights, family-specific metrics, retention, lifecycle, poison, rollback, and no-leakage requirements; write focused failing tests first.
+      2. MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF`, exactly matching Exp6192 identities/configuration unless a preregistered hardware-safe batch change is recorded. Resolve locally with cached_sota_pair(); no runtime downloads and no GGUF tokenizer misuse.
+      3. For each task in frozen chronological order and for each family, snapshot memory, choose the retrieval arm's strategy and baseline arm's frozen strategy before inference, generate and seal both raw outputs, then open private tests and label both. Only after both labels exist may the event commit. Never rewrite an earlier event, retry for correctness, or let one arm's outcome influence the other's decision.
+      4. After every preregistered block, compute bounded-memory size/eviction, retrieval provenance, cumulative and rolling paired outcomes, retention on seed/prior-family probes, and lifecycle/poison/rollback invariants. Model weights, optimizer state, prompts, baseline policy, and evaluator remain immutable.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, upstream_seed_stream_hash_and_gate_receipt, model_specs, model_identity_config_and_cuda_receipts, dual_gpu_utilization_memory_intervals, prospective_task_ids_hash_and_chronological_order, arm_and_strategy_definitions, per_event_predecision_snapshot_strategy_generation_label_commit_timestamps, both_decisions_before_label_receipt, raw_before_label_hashes, correctness_retry_count, paired_outcomes_by_task_and_model_family, cumulative_and_rolling_learning_curves, overall_and_family_specific_memory_minus_baseline_deltas, paired_bootstrap_or_anytime_valid_intervals, memory_size_eviction_retrieval_and_provenance_ledger, seed_and_prior_family_retention_metrics, lifecycle_poison_and_rollback_receipts, immutable_model_weights_optimizer_prompt_baseline_and_evaluator_receipt, private_test_noninterference_receipt, verifier_is_oracle, continuous_self_learning_promotion_criteria_met, retirement_receipt, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         verifier_is_oracle principle: bare true only after both arms have sealed decisions/generations; bare false for retrieval, strategy choice, and model input.
+         continuous_self_learning_promotion_criteria_met principle: bare true only with live generation in both families, positive memory-minus-baseline lower intervals in each family and overall, no retention regression, bounded state, immutable weights, and zero lifecycle/poison/rollback violations.
+         retirement_receipt principle: if the live run repeats a null, blocked, or replay-only verdict, retire this exact strategy-memory/live-code scope rather than rerunning it unchanged.
+         inference_substrate principle: set `prospective_local_dual_family_live_generation_with_transactional_verified_strategy_memory`.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and name live event counts and paired intervals by family.
+      6. Run focused unit/spec coverage, transaction ordering, arm isolation, raw-before-label, fixed-baseline/immutable-weight hashes, memory bound/eviction, retention/lifecycle/poison/rollback, statistical determinism, schema, adversarial-verify, protected-file, applicable dual-GPU E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6194-mode-jump-rust-pyo3-parity
+    milestone: "2026.08.536"
+    title: "Fixed mode-jump sampler Rust/PyO3 correctness and distribution parity"
+    priority: high
+    track: stochastic-substrate
+    deliverable: results/experiment_6194_mode_jump_rust_pyo3_parity.json
+    requires: [exp6184-v536-evidence-isolation-preflight]
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6166-mode-jumping-cnce-real-run
+        verdict: "blocked: mode jumping improved but nonzero_test_commands"
+        addressed_by: "Exp6180 already reproduced the immutable Python/JAX scientific result; this task does not rerun or relabel it, but ports the fixed transition kernel into existing Rust/PyO3 boundaries and requires task-owned correctness, distribution, serialization, and quality parity with every nonzero command classified."
+        retire_if_same_verdict: true
+      - experiment_id: exp6180-exp6166-reproducibility-adjudication
+        verdict: "complete_positive: Exp6166 software stochastic result reproduced from immutable evidence; historical Exp6166 artifact remains blocked"
+        addressed_by: "The deliverable shape changes from reproducibility adjudication to production-boundary parity: fixed immutable fixtures and the already-reproduced algorithm are implemented behind Rust/PyO3 with no historical verdict mutation or hardware claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6180 reproduced Exp6166's software mode-jump CNCE improvement while preserving Exp6166's blocked determination. Carnot's PRD architecture requires Python/Rust boundaries, but the fixed positive mechanism is not yet represented in the production sampler crates. Port only the frozen algorithm and prove correctness/distribution parity; do not reopen THRML scaling, two-axis tempering, or hardware speed claims. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6166_mode_jumping_cnce_real_run.json
+      - {project_root}/results/experiment_6180_exp6166_reproducibility_adjudication.json
+      - {project_root}/scripts/experiments/exp6166_mode_jumping_cnce_real_run.py
+      - {project_root}/crates/carnot-samplers
+      - {project_root}/crates/carnot-python
+      - {project_root}/python/carnot
+      - {project_root}/tests
+      - {project_root}/openspec/capabilities/sampling/spec.md
+      - {project_root}/openspec/capabilities/rust-python-boundary/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Implement the fixed Exp6166/Exp6180 mode-jump proposal and acceptance semantics in the existing Rust sampler crate, expose deterministic state/seed/step/serialization operations through PyO3, compare exact transitions and long-run distribution/quality diagnostics against immutable Python fixtures, and write results/experiment_6194_mode_jump_rust_pyo3_parity.json without changing historical artifacts or making timing/hardware claims.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: run Exp6184 preflight; snapshot immutable Exp6166/6180 hashes, algorithm/config/seed fixtures, current Rust/PyO3 APIs, cargo lock/toolchain, build features, task-owned output root, exclusions, git status, protected files, and root clutter. Confirm no FPGA, TSU, THRML scaling, or two-axis work is in scope.
+      1. Ensure relevant sampling and Rust/Python specs contain REQ-* proposal, acceptance, RNG determinism, serialization, error handling, Python binding, exact-transition parity, distribution parity, autocorrelation/ESS, and no-hardware-claim requirements; write failing Rust and Python tests first.
+      2. Implement the smallest reusable Rust mode-jump kernel using the fixed proposal/acceptance equations and a seedable RNG. Expose typed PyO3 construction, one-step/multi-step, state snapshot/restore, and serialization with explicit validation and no silent fallback.
+      3. Build immutable fixtures from the existing Python result: exact energies/proposals/uniform variates/accept decisions/states for short chains, plus preregistered long-run target statistics. Do not tune using Rust outcomes.
+      4. Compare exact step parity, empirical state frequencies, total variation/KL where defined, acceptance, autocorrelation, ESS, serialization round-trip, error behavior, and Python/Rust seed reproducibility. Timing is diagnostic only and must not be promoted.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, immutable_exp6166_exp6180_hash_and_verdict_receipt, fixed_algorithm_equations_config_and_seed, rust_module_and_pyo3_binding_paths, rust_python_api_contract, exact_transition_fixture_hash_and_parity_matrix, distribution_frequency_tv_kl_metrics, acceptance_autocorrelation_and_ess_metrics, serialization_snapshot_restore_and_error_receipts, deterministic_seed_replay_receipt, task_owned_rust_python_test_commands_and_exit_codes, nonzero_command_classification, timing_diagnostic_only, hardware_or_speedup_claimed, historical_artifacts_unchanged, mode_jump_rust_pyo3_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         hardware_or_speedup_claimed principle: bare false.
+         mode_jump_rust_pyo3_ready_score principle: one only with exact short-chain parity, preregistered distribution/quality tolerances, serialization/error coverage, and zero task-owned test failures.
+         inference_substrate principle: set `local_cpu_rust_pyo3_cross_runtime_sampler_parity`.
+         honest_verdict principle: use `complete_ready:`, `complete_partial:`, `retired:`, or `blocked:` and state exact parity plus every classified nonzero command.
+      6. Run focused cargo tests, Python binding tests, spec coverage, exact fixture and long-run parity, serialization/error controls, package/import E2E, determination-preservation, schema, adversarial-verify, protected-file, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6195-arc-task-aware-prospective-fresh-transition
+    milestone: "2026.08.536"
+    title: "Prospective fresh-transition generalization of the frozen ARC task-aware policy"
+    priority: high
+    track: arc-live-path
+    deliverable: results/experiment_6195_arc_task_aware_prospective_fresh_transition.json
+    requires: [exp6184-v536-evidence-isolation-preflight]
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6181-arc-logo-shortcut-audit
+        verdict: "complete_no_shortcut_detected: fixed_exp6167_policy_label_controls_invariant_no_solve_no_registry_delta"
+        addressed_by: "The scope changes from a retrospective task-logo shortcut audit on the existing corpus to a prospective disjoint transition acquisition followed by offline replay of the already-frozen policy; it preserves the same no-solve boundary and retires the fresh-transition claim if no generalization evidence appears."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6167 froze a task-aware ARC proposal policy, Exp6181 found no task-logo shortcut on the existing 144 live-agent-owned transitions, and neither claimed a level solve. Use the milestone's single ARC slot to measure whether that already-frozen policy generalizes to a fresh disjoint live-agent-owned transition stream. The submitted kernel captures transitions; the policy is replayed afterward and cannot influence actions. No induction, search, adapter, source reading, BFS, hidden-state route, or solve target is allowed. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/results/experiment_6147_arc_live_path_search_audit.json
+      - {project_root}/results/experiment_6154_arc_live_agent_transition_corpus.json
+      - {project_root}/results/experiment_6167_arc_task_aware_policy.json
+      - {project_root}/results/experiment_6181_arc_logo_shortcut_audit.json
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/python/carnot/agentic
+      - {project_root}/tests/python
+      - {project_root}/openspec/capabilities/agentic-harness/spec.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Submit the existing live agent kernel with all escape hatches disabled to capture a new disjoint transition corpus, seal it before analysis, replay the byte-frozen Exp6167 global and task-aware policies offline on identical new transitions, measure prospective proposal-quality generalization and shortcut controls, and write results/experiment_6195_arc_task_aware_prospective_fresh_transition.json with no solve or registry credit.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: run Exp6184 preflight; registry-precheck all reproduced levels and current live mechanism; snapshot Exp6147/6154/6167/6181 hashes, frozen policy/code/config, prior transition IDs, submitted-kernel hash, escape-hatch states, budgets/seeds, game-source access controls, registry hash, task-owned output root, git status, protected files, and root clutter. Abort if the task would duplicate a solve or require a retired mechanism.
+      1. Add REQ-* fresh-disjoint transition, submitted-kernel-only capture, escape-hatch disablement, seal-before-replay, frozen-policy, identical-transition comparison, source/BFS/adapter/prior-game denial, task-logo shortcut control, no-action-influence, and no-solve requirements; write focused failing tests first.
+      2. Run only the submitted live kernel under the existing honest agent interface and fixed budget to acquire new agent-owned attempts and runtime observations. Hash and seal the transition corpus before loading either comparison policy. Reject any transition ID overlapping Exp6154/6167/6181.
+      3. Offline-replay the byte-frozen Exp6167 global and task-aware policies on exactly the same sealed transitions. Neither policy may choose live actions, request new observations, access source/ground-truth/BFS/per-game adapters/prior-game memory/hidden states, or change thresholds.
+      4. Report proposal-quality delta, calibration, support, uncertainty, per-game/task-logo controls, negative-control shuffles, and any action-distribution shift descriptively. This experiment cannot claim a solve, improve a level, or update the solve registry.
+      5. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, registry_precheck_and_hash, submitted_kernel_hash_and_escape_hatch_matrix, prior_transition_hashes_and_disjointness_receipt, fresh_live_agent_owned_transition_path_hash_count_and_provenance, seal_before_policy_replay_timestamp, frozen_exp6167_policy_code_config_and_hash, identical_transition_replay_receipt, global_and_task_aware_proposal_quality_metrics, paired_delta_intervals_and_seed, calibration_support_and_per_game_metrics, task_logo_and_shuffle_controls, live_action_influence_count, forbidden_source_bfs_adapter_prior_game_hidden_state_access_counts, solve_provenance, solve_claimed, level_credit_claimed, arc_solve_registry_delta, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         solve_provenance principle: set `live_agent_self_discovery` for the acquisition path; this does not imply a solve.
+         solve_claimed and level_credit_claimed principle: both bare false; arc_solve_registry_delta is empty.
+         live_action_influence_count principle: exactly zero because policies are replay-only after corpus sealing.
+         inference_substrate principle: set `submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay`.
+         honest_verdict principle: use `complete_positive:`, `complete_null:`, `retired:`, or `blocked:` and state fresh transition count, policy delta, and no-solve status.
+      6. Run focused unit/spec coverage, registry precheck, submitted-kernel and escape-hatch audit, disjointness/seal ordering, frozen-policy hash, forbidden-access controls, task-logo/shuffle controls, no-registry-delta, schema, adversarial-verify, protected-file, applicable live-agent E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6196-v536-capstone
+    milestone: "2026.08.536"
+    title: "V536 adversarial capstone and exact-path reconciliation"
+    priority: critical
+    track: reconciliation
+    deliverable: results/experiment_6196_v536_capstone_reconciliation.json
+    requires: [exp6183-v536-transition, exp6184-v536-evidence-isolation-preflight, exp6185-v536-post-marker-source-delta, exp6186-livecodebench-bank-preregistration, exp6187-livecodebench-authentic-k8-pool, exp6188-livecodebench-headroom-audit, exp6189-matching-base-code-hidden-state-surface, exp6190-calibration-clue-linear-code-selector, exp6191-held-code-internal-state-selection, exp6192-live-strategy-seed-stream, exp6193-prospective-continuous-strategy-learning-ab, exp6194-mode-jump-rust-pyo3-parity, exp6195-arc-task-aware-prospective-fresh-transition]
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6182-v535-capstone-reconciliation
+        verdict: "complete: .535 reconciled by exact declared paths with missing transition, gate skips, blocked selector, retired Phase-D headroom, flagged companion quarantine, null source refresh, CSL evidence, software-only stochastic replay, and no-solve ARC preserved"
+        addressed_by: "This capstone reconciles the new Exp6183-Exp6195 graph, including executable-code gates, live prospective CSL, Rust/PyO3 parity, and fresh-transition ARC evidence, while retaining the exact-path terminal-class discipline established by Exp6182."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      V536 contains independent executable-code, continuous-learning, stochastic-runtime, ARC-generalization, and evidence branches. Structured gates may skip the hidden-state chain without suppressing CSL, sampler parity, ARC, or this capstone. Reconcile only exact declared artifacts and conductor receipts. Preserve every missing, bootstrap-only, null, partial, flagged, blocked, retired, gated, skipped, positive, software-only, proxy, and no-solve class without laundering it into milestone success. Today is {date}.
+
+      EXISTING CODE TO READ FIRST:
+      - {project_root}/CLAUDE.md
+      - {project_root}/CODEX.md
+      - {project_root}/research-program.md
+      - {project_root}/research-roadmap.yaml
+      - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+      - {project_root}/results/experiment_6183_transition_v536.json
+      - {project_root}/results/experiment_6184_v536_evidence_isolation_preflight.json
+      - {project_root}/results/experiment_6185_v536_post_marker_source_delta.json
+      - {project_root}/results/experiment_6186_livecodebench_bank_preregistration.json
+      - {project_root}/results/experiment_6187_livecodebench_authentic_k8_pool.json
+      - {project_root}/results/experiment_6188_livecodebench_headroom_audit.json
+      - {project_root}/results/experiment_6189_matching_base_code_hidden_state_surface.json
+      - {project_root}/results/experiment_6190_calibration_clue_linear_code_selector.json
+      - {project_root}/results/experiment_6191_held_code_internal_state_selection.json
+      - {project_root}/results/experiment_6192_live_strategy_seed_stream.json
+      - {project_root}/results/experiment_6193_prospective_continuous_strategy_learning_ab.json
+      - {project_root}/results/experiment_6194_mode_jump_rust_pyo3_parity.json
+      - {project_root}/results/experiment_6195_arc_task_aware_prospective_fresh_transition.json
+      - {project_root}/ops/conductor-log.md
+      - {project_root}/ops/exclusion_manifest.yaml
+      - {project_root}/ops/arc_solve_registry.yaml
+      - {project_root}/ops/status.md
+      - {project_root}/ops/changelog.md
+      - {project_root}/scripts/adversarial_verify.py
+      - {project_root}/scripts/determination_preservation_lint.py
+      - {project_root}/ops/e2e-test-plan.md
+      - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+      TASK:
+      Resolve Exp6183-Exp6195 by exact declared paths and conductor receipts, run adversarial verification and determination-preservation checks, evaluate each preregistered promotion/retirement boundary independently, reconcile evidence-backed OpenSpec/traceability/status/changelog statements only, and write results/experiment_6196_v536_capstone_reconciliation.json without creating missing artifacts or changing historical determinations.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot git status, all user modifications, declared task/deliverable graph, exact file existence/hashes, conductor events, structured gates, exclusions, quarantine fields, solve registry, research-complete multiplicity, protected files, and root clutter. Write a task-owned bootstrap receipt before long aggregate checks.
+      1. Add or verify REQ-* exact-path, conductor-receipt, structured-gate, missing-artifact, terminal-class preservation, adversarial flag, independent-branch, model/hardware provenance, no-solve, no-hardware-claim, reconciliation, and bootstrap-artifact requirements; write focused failing tests first only if capstone behavior changes.
+      2. Classify every task independently from its exact artifact and conductor record. A conductor gate skip is not a failed science run; a missing or bootstrap-only artifact is not complete; a current-rule companion cannot mutate a historical flag; nonzero commands require explicit classification.
+      3. Run adversarial verification on each existing artifact and aggregate exact flags. Audit model identities, raw-before-label ordering, private-test access, selector freeze, prospective transaction order, retention, immutable weights, Rust/PyO3 parity, ARC live-path provenance, solve registry delta, and all hardware/software-only boundaries.
+      4. Apply preregistered promotion and retirement rules branch by branch. A failed Exp6188/6189/6190 gate retires or skips only the code-selector descendants. Preserve valid CSL, sampler, ARC, source, and infrastructure evidence independently. Never infer an unrun result.
+      5. Reconcile only evidence-backed requirement statuses in openspec/, _bmad/traceability.md, ops/status.md, and ops/changelog.md. Do not edit the PRD vision, fabricate completeness, normalize research-complete history, remove exclusion entries, or modify source artifacts. Public documentation/publication remains out of scope.
+      6. REQUIRED ARTIFACT FIELDS: status, preconditions_checked, bootstrap_artifact_receipt, milestone_task_and_deliverable_matrix, exact_path_existence_hash_and_conductor_receipt_matrix, structured_gate_and_skip_matrix, per_task_honest_verdict_and_terminal_class, missing_bootstrap_null_partial_flagged_blocked_retired_gated_skipped_positive_software_proxy_and_no_solve_preservation_matrix, adversarial_verify_commands_exit_codes_and_flags, determination_preservation_receipt, model_identity_gpu_and_inference_substrate_matrix, raw_before_label_private_test_selector_freeze_and_transaction_order_audit, continuous_learning_retention_lifecycle_and_immutable_weight_audit, rust_pyo3_parity_and_no_hardware_claim_audit, arc_live_path_solve_provenance_and_registry_delta_audit, promotion_retirement_and_exclusion_matrix, branch_independence_receipt, research_complete_multiplicity_receipt, openspec_traceability_status_and_changelog_reconciliation, protected_files_unchanged, preexisting_worktree_changes_preserved, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+         branch_independence_receipt principle: code-selector gate outcomes cannot suppress CSL, sampler, ARC, source, or capstone classifications.
+         inference_substrate principle: set `deterministic_exact_path_capstone_reconciliation`.
+         honest_verdict principle: use `complete:`, `complete_partial:`, or `blocked:` and enumerate every nonpositive terminal class plus branch promotion/retirement outcomes.
+      7. Run YAML/schema, exact-path, conductor-receipt, structured-gate, adversarial-verify, determination-preservation, model-provenance, private-test/leakage, transaction/retention, Rust/PyO3, ARC registry/no-solve, spec coverage, docs/status consistency, protected-file, applicable E2E, and root-clutter checks. Check git status immediately afterward and do not stage anything.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
