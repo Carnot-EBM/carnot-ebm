@@ -21584,6 +21584,93 @@ stable reproducibility checksum, protected-file immutability, and no mutation of
 |---|---|---|
 | REQ-ARC-WMTE-6167 | Pending in `python/carnot/experiment_6167_arc_task_aware_multiseed_replication.py`; the experiment must reuse the live `make_carnot_agent`/`E3AgentPolicy` path and write `results/experiment_6167_arc_task_aware_multiseed_replication.json` without solve credit. | Pending in `tests/python/test_experiment_6167_arc_task_aware_multiseed_replication.py`. |
 
+## REQ-ARC-WMTE-6181: Single-Slot Exp6167 ARC Logo Shortcut Audit
+
+Experiment 6181 SHALL consume the fixed Exp6167 ARC policy and checked-in
+Exp6167 live-agent self-discovery evidence as a robustness audit only. It SHALL
+occupy the single ARC slot for `.535`/`20260807`, SHALL keep adapters disabled,
+SHALL NOT fit a new induction mechanism, SHALL NOT inspect game source, SHALL
+NOT run offline ground-truth BFS or `arc_solver_kit.reproduce`, SHALL NOT claim
+a public solve, and SHALL NOT change the ARC registry.
+
+The audit SHALL snapshot, before writing the deliverable, the ARC registry
+level fingerprint, Exp6167 policy/result/module hashes, task/game labels,
+live-runtime path receipts, protected-file hashes, root-clutter state, and git
+status for the protected files. It SHALL run leave-one-game-out, known-label,
+held-out-label, shuffled-label, alias, and unknown-label controls against the
+same fixed Exp6167 policy. The controls SHALL use only Exp6167 live agent
+self-discovery attempts or aggregate receipts derived from those attempts, and
+SHALL pass only if relabeling cannot change policy decisions.
+
+Experiment 6181 SHALL write
+`results/experiment_6181_arc_logo_shortcut_audit.json` with top-level fields:
+`status`, `preconditions_checked`, `single_arc_slot_receipt`,
+`fixed_exp6167_policy_freeze`, `adapter_disabled_live_path_receipt`,
+`live_attempt_label_dataset`, `leave_one_game_out_controls`,
+`label_control_results`, `shortcut_audit_summary`,
+`no_source_bfs_solver_kit_path_receipt`, `solve_claimed`,
+`level_credit_delta`, `registry_delta`, `registry_levels_unchanged`,
+`provenance`, `protected_files_unchanged`, `duration_s`,
+`inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles SHALL be included for:
+
+- `status`: terminal audit state; complete_no_shortcut_detected or blocked names whether the fixed-policy shortcut audit is valid.
+- `preconditions_checked`: registry, Exp6167 hashes, task labels, live runtime paths, protected files, root clutter, and protected git status are snapshotted before output.
+- `single_arc_slot_receipt`: proves Exp6181 is the only `.535` ARC slot being claimed by this artifact.
+- `fixed_exp6167_policy_freeze`: content-addresses the inherited Exp6167 policy and proves no held-control refit occurred.
+- `adapter_disabled_live_path_receipt`: carries the Exp6167 adapter-disabled live E3 path receipts.
+- `live_attempt_label_dataset`: exposes the game labels and abstracted label rows derived only from Exp6167 live agent attempts.
+- `leave_one_game_out_controls`: each game is held out exactly once and scored with the same fixed policy.
+- `label_control_results`: known-label, held-out-label, shuffled-label, alias, and unknown-label relabelings must leave decisions invariant.
+- `shortcut_audit_summary`: summarizes whether any label or logo shortcut changed the fixed-policy decisions.
+- `no_source_bfs_solver_kit_path_receipt`: proves source reads, offline BFS, solver-kit reproduction, and adapter routes were not used.
+- `solve_claimed`: bare false; robustness audits never claim public solve credit.
+- `level_credit_delta`: bare 0; known public level totals do not move.
+- `registry_delta`: bare false; no registry update is proposed.
+- `registry_levels_unchanged`: bare true; level fingerprint before and after the audit matches.
+- `provenance`: names Exp6167 as the frozen upstream and live self-discovery evidence source.
+- `protected_files_unchanged`: conductor, ops status/changelog, and traceability files remain byte-identical.
+- `duration_s`: wall-clock duration of the deterministic no-LLM audit.
+- `inference_substrate`: live_e3_adapter_disabled_runtime_transitions declares adapter-disabled no-LLM ARC live-path evidence.
+- `field_provenance`: every required field traces to spec, Exp6167 hashes, live attempts, controls, path guards, or command receipts.
+- `test_commands`: records focused, coverage, spec, validation, adversarial, protected-file, root-clutter, and full-suite checks.
+- `test_exit_codes`: records verification exit codes without implying unrun checks passed.
+- `reproducibility_checksum`: content-addressed checksum detects later audit drift.
+- `honest_verdict`: complete_no_shortcut_detected: or blocked: verdict with no solve or registry delta.
+
+The artifact SHALL set `solve_claimed=false`, `level_credit_delta=0`,
+`registry_delta=false`, and `registry_levels_unchanged=true` as bare top-level
+values. Any path proof failure, non-invariant label control, missing live-agent
+provenance, policy refit, protected-file mutation, or registry delta SHALL make
+the audit blocked rather than positive.
+
+### SCENARIO-ARC-WMTE-6181-SINGLE-SLOT-FIXED-POLICY-PRECONDITIONS
+
+GIVEN Exp6181 is the sole ARC slot for `.535` on `20260807`
+WHEN preconditions are collected
+THEN the registry, Exp6167 policy/result hashes, task labels, live runtime
+paths, protected files, protected git status, root clutter, output path, and
+single-slot identity SHALL be snapshotted before the deliverable is written.
+
+### SCENARIO-ARC-WMTE-6181-LABEL-CONTROLS-AND-SHORTCUT-AUDIT
+
+GIVEN the fixed Exp6167 policy and live self-discovery attempt evidence
+WHEN leave-one-game-out, known-label, held-out-label, shuffled-label, alias,
+and unknown-label controls run
+THEN each control SHALL leave the policy decision signature invariant or the
+shortcut audit SHALL block.
+
+### SCENARIO-ARC-WMTE-6181-NO-SOLVE-PATH-AND-REGISTRY-DELTA
+
+GIVEN Exp6181 is a robustness audit only
+WHEN the artifact is validated
+THEN adapter/source/BFS/solver-kit paths SHALL be disabled, no new induction or
+solve SHALL be claimed, `solve_claimed=false`, `level_credit_delta=0`,
+`registry_delta=0`, `registry_levels_unchanged=true`, provenance, test receipts,
+protected-file immutability, and a stable checksum SHALL be present.
+
 ### REQ-ARC-WMTE-6180: Generic Budget-Meter Exhaustion Estimate From an Admitted Monotone HUD Region
 
 **Origin:** 2026-08-06. `ops/arc_solve_registry.yaml` independently documents a per-level
