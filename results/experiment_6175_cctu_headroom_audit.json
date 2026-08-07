@@ -1,0 +1,887 @@
+{
+  "all_sample_and_parseable_denominators": {
+    "all_samples": {
+      "accuracy": 0.0,
+      "count": 960,
+      "terminal_pass_count": 0
+    },
+    "by_split": {
+      "calibration": {
+        "all_count": 480,
+        "parseability_rate": 0.0,
+        "parseable_count": 0,
+        "terminal_pass_count": 0
+      },
+      "held": {
+        "all_count": 480,
+        "parseability_rate": 0.0,
+        "parseable_count": 0,
+        "terminal_pass_count": 0
+      }
+    },
+    "headline_denominator_policy": {
+      "included_failure_surfaces": [
+        "parse_failure",
+        "validator_failure",
+        "duplicate",
+        "refusal",
+        "timeout",
+        "truncation"
+      ],
+      "never_drop_failures": true
+    },
+    "parseable_samples": {
+      "accuracy_if_parseable": null,
+      "count": 0,
+      "parseability_rate": 0.0,
+      "terminal_pass_count": 0
+    },
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.denominators"
+  },
+  "consensus_wrong_oracle_right_group_count": {
+    "by_split": {},
+    "count": 0,
+    "minimum_required": 30,
+    "passed": false,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.minority_groups"
+  },
+  "duplicate_and_shortcut_audits": {
+    "answer_position_channel_detected": false,
+    "arbitrary_id_used_by_consensus": false,
+    "duplicate_case_cluster_count": 120,
+    "duplicate_raw_completion_count": 776,
+    "hidden_state_fields_detected": false,
+    "max_duplicate_share_per_case": 1.0,
+    "sample_index_used_by_consensus": false,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.duplicate_shortcut_audits",
+    "top_normalized_cluster_hashes": [
+      {
+        "cluster_hash": "sha256:136524690baeb205c5be4d9a1b44b763f6d6957d673bb57eda101655afb17f5f",
+        "count": 478
+      },
+      {
+        "cluster_hash": "sha256:c1f17aaccd16748e790575b463df3604793a00953322828778f0e4c7ad2ca898",
+        "count": 120
+      },
+      {
+        "cluster_hash": "sha256:ed29df21bd4d7a765d9942890a189f3fceb079870bd9eefca44357e0461ac5a5",
+        "count": 120
+      },
+      {
+        "cluster_hash": "sha256:da9139465cc54fe8faf88c12775ee2024ecd0e2bef844c423facac2c1fa2e5bb",
+        "count": 81
+      },
+      {
+        "cluster_hash": "sha256:8b51ccdaaf744ff77ea184b0f93c0ab413061344723cad52e37dabe6f6694f42",
+        "count": 71
+      }
+    ]
+  },
+  "duration_s": 0.255292,
+  "exact_floor_definition_value_and_provenance": {
+    "answer_position_floor_used": false,
+    "finite_choice_floor_used": false,
+    "floor_name": "exact_random_executable_plan_floor",
+    "provenance": "The floor is bounded by exact JSON schema, exact tool sequence, exact arguments, exact tool results, exact terminal answer, and verifier consistency over open-ended executable traces; it is not an option-count floor.",
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.exact_floor",
+    "source_artifact": "results/experiment_6173_cctu_item_bank_preregistration.json",
+    "value": 0.05
+  },
+  "family_constraint_count_and_violation_strata": {
+    "all_samples_retained": true,
+    "family_count": 8,
+    "primary_constraint_count": 8,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.family_constraint_violation_strata",
+    "strata": [
+      {
+        "case_count": 15,
+        "constraint_count": 3,
+        "family": "allowed_tool_table_lookup",
+        "parseable_count": 0,
+        "primary_constraint": "tool_availability",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 5,
+        "family": "dependent_math_chain",
+        "parseable_count": 0,
+        "primary_constraint": "cross_step_dependency",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 5,
+        "family": "impossible_without_external_state",
+        "parseable_count": 0,
+        "primary_constraint": "impossible_request_abstention",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 5,
+        "family": "ordered_list_dependency",
+        "parseable_count": 0,
+        "primary_constraint": "ordering",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 4,
+        "family": "resource_budget_math",
+        "parseable_count": 0,
+        "primary_constraint": "resource",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 3,
+        "family": "strict_trace_schema",
+        "parseable_count": 0,
+        "primary_constraint": "response_schema",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 7,
+        "family": "table_math_text_composition",
+        "parseable_count": 0,
+        "primary_constraint": "compositional",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      },
+      {
+        "case_count": 15,
+        "constraint_count": 3,
+        "family": "text_behavior_replay",
+        "parseable_count": 0,
+        "primary_constraint": "behavior",
+        "sample_count": 120,
+        "terminal_pass_count": 0,
+        "violation_taxonomy": {
+          "behavior": 120,
+          "compositional": 120,
+          "cross_step_dependency": 120,
+          "final_response": 120,
+          "impossible_request_abstention": 120,
+          "ordering": 120,
+          "resource": 120,
+          "response_schema": 120,
+          "response_verifier": 120,
+          "tool_availability": 120
+        }
+      }
+    ]
+  },
+  "field_provenance": {
+    "all_sample_and_parseable_denominators": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Headline denominators keep parse failures and exact-validator failures in the sample count."
+    ],
+    "consensus_wrong_oracle_right_group_count": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Counts selectable minority groups where exact oracle selection could beat consensus."
+    ],
+    "duplicate_and_shortcut_audits": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Duplicate, position, identifier, hidden-state, and shortcut checks protect against artificial headroom."
+    ],
+    "duration_s": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Measured wall time for the deterministic audit."
+    ],
+    "exact_floor_definition_value_and_provenance": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "The exact random executable-plan floor comes from the Exp6173 preregistration."
+    ],
+    "family_constraint_count_and_violation_strata": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Family and constraint-count aggregates show where failures concentrate without dropping rows."
+    ],
+    "field_provenance": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Every field traces to REQ-CONSTRAINT-VERIFY-6175, Exp6173, Exp6174, exact validators, or tests."
+    ],
+    "future_rows_allowed_by_this_artifact": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Future rows are allowed only when readiness is bare one."
+    ],
+    "held_aggregate_qualification_and_row_label_seal_hash": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Held labels are used only internally and exported as aggregates plus a seal hash."
+    ],
+    "honest_verdict": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Terminal prefix names passed or failed conjuncts."
+    ],
+    "inference_substrate": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Set deterministic_exact_tool_trace_headroom_audit."
+    ],
+    "label_revalidation_receipt": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Every sidecar label is replayed from immutable raw completion text with the exact Exp6173 validator."
+    ],
+    "oracle_at_8_accuracy": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Oracle@8 is the exact upper bound that any row-level selector could reach on the frozen K candidates."
+    ],
+    "oracle_minus_consensus_delta_and_clustered_interval": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "The primary estimand is case-clustered oracle@8 minus tuned consensus accuracy."
+    ],
+    "parseability_competence_unsaturation_headroom_and_minority_gate_matrix": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Readiness is a strict conjunction, never a weighted average."
+    ],
+    "per_candidate_competence_and_clustered_interval": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Candidate competence is all-sample exact-validator accuracy with case-clustered uncertainty."
+    ],
+    "phase_d_headroom_ready_score": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Bare one only when every preregistered conjunct passes."
+    ],
+    "preconditions_checked": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Exp6174 gate, hashes, raw-before-label, seals, K coverage, no retry, paths, exclusions, and protected files are checked first."
+    ],
+    "protected_files_unchanged": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Conductor and reconciler-owned files remain byte-identical."
+    ],
+    "reproducibility_checksum": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Checksum detects source, corpus, label, aggregate, and command drift while excluding duration."
+    ],
+    "saturation_and_error_diversity_metrics": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Unsaturation and error diversity are measured from exact labels and normalized outcome clusters."
+    ],
+    "status": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Terminal state is retired unless every preregistered headroom conjunct passes."
+    ],
+    "structured_gate_receipt": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "The Exp6174 structured generation gate is copied and explicitly checked."
+    ],
+    "test_commands": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Commands cover focused tests, new-code coverage, spec coverage, schema, adversarial verify, root clutter, protected files, and full pytest."
+    ],
+    "test_exit_codes": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Exit codes make failed checks visible in the artifact."
+    ],
+    "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Consensus is frozen from calibration-only normalized clusters and does not see oracle labels at selection time."
+    ],
+    "upstream_corpus_bank_split_validator_and_preregistration_hashes": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Current bytes are compared against Exp6174's declared upstream corpus anchors."
+    ],
+    "verifier_is_oracle": [
+      "REQ-CONSTRAINT-VERIFY-6175",
+      "Exact validators define evaluation labels; tuned consensus remains oracle-blind."
+    ]
+  },
+  "future_rows_allowed_by_this_artifact": false,
+  "held_aggregate_qualification_and_row_label_seal_hash": {
+    "aggregate_signature_sha256": "sha256:2da127d2603b3792dca6b591e204e0bc0681a120b9de86bf5ae6b0819ac847f6",
+    "candidate_accuracy": 0.0,
+    "consensus_wrong_oracle_right_count": 0,
+    "held_case_count": 60,
+    "held_rows_exposed": false,
+    "held_sample_count": 480,
+    "oracle_at_8_accuracy": 0.0,
+    "parseable_count": 0,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.held_aggregate",
+    "sealed_row_label_hash": "sha256:ee9a54f53d3cbf1bf759851b9f21b176ba328104ced9cc75b8b03cf3322f2c8c",
+    "sealed_row_label_hash_scope": "held label sidecar bytes only; no row labels emitted",
+    "tuned_consensus_accuracy": 0.0
+  },
+  "honest_verdict": "retired: Exp6174 CCTU pool failed preregistered headroom conjuncts: parseability, competence, headroom, minority, family_support",
+  "inference_substrate": "deterministic_exact_tool_trace_headroom_audit",
+  "label_revalidation_receipt": {
+    "all_labels_match_revalidation": true,
+    "held_row_labels_exposed": false,
+    "label_rows_checked": 960,
+    "label_rows_without_raw_count": 0,
+    "partial_step_satisfaction": {
+      "behavior": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "compositional": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "cross_step_dependency": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "final_response": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "impossible_request_abstention": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "ordering": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "resource": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "response_schema": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 1920
+      },
+      "response_verifier": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      },
+      "tool_availability": {
+        "passed": 0,
+        "rate": 0.0,
+        "total": 960
+      }
+    },
+    "raw_row_hash_mismatch_count": 0,
+    "raw_rows_revalidated": 960,
+    "raw_rows_without_label_count": 0,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.label_revalidation",
+    "split_counts": {
+      "calibration": {
+        "labels": 480,
+        "terminal_passed": 0
+      },
+      "held": {
+        "labels": 480,
+        "terminal_passed": 0
+      }
+    },
+    "terminal_pass_count": 0,
+    "validator_result_mismatch_count": 0,
+    "validator_version": "cctu-item-bank-6173-v1",
+    "validator_version_mismatch_count": 0,
+    "violation_taxonomy": {
+      "behavior": 960,
+      "compositional": 960,
+      "cross_step_dependency": 960,
+      "final_response": 960,
+      "impossible_request_abstention": 960,
+      "ordering": 960,
+      "resource": 960,
+      "response_schema": 1920,
+      "response_verifier": 960,
+      "tool_availability": 960
+    }
+  },
+  "oracle_at_8_accuracy": {
+    "accuracy": 0.0,
+    "by_split": {
+      "calibration": {
+        "accuracy": 0.0,
+        "case_count": 60,
+        "clustered_interval": {
+          "estimate": 0.0,
+          "lower": 0.0,
+          "method": "constant_cluster",
+          "upper": 0.0
+        }
+      },
+      "held": {
+        "accuracy": 0.0,
+        "case_count": 60,
+        "clustered_interval": {
+          "estimate": 0.0,
+          "lower": 0.0,
+          "method": "constant_cluster",
+          "upper": 0.0
+        }
+      }
+    },
+    "clustered_interval": {
+      "estimate": 0.0,
+      "lower": 0.0,
+      "method": "constant_cluster",
+      "upper": 0.0
+    },
+    "k": 8,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.oracle_at_8"
+  },
+  "oracle_minus_consensus_delta_and_clustered_interval": {
+    "by_split": {
+      "calibration": {
+        "case_count": 60,
+        "clustered_interval": {
+          "estimate": 0.0,
+          "lower": 0.0,
+          "method": "constant_cluster",
+          "upper": 0.0
+        },
+        "delta": 0.0
+      },
+      "held": {
+        "case_count": 60,
+        "clustered_interval": {
+          "estimate": 0.0,
+          "lower": 0.0,
+          "method": "constant_cluster",
+          "upper": 0.0
+        },
+        "delta": 0.0
+      }
+    },
+    "clustered_interval": {
+      "estimate": 0.0,
+      "lower": 0.0,
+      "method": "constant_cluster",
+      "upper": 0.0
+    },
+    "delta": 0.0,
+    "lower_ci_excludes_zero": false,
+    "minimum_required_delta": 0.1,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.oracle_minus_consensus"
+  },
+  "parseability_competence_unsaturation_headroom_and_minority_gate_matrix": {
+    "all_conjuncts_passed": false,
+    "conjuncts": {
+      "competence": {
+        "passed": false,
+        "threshold": "> 0.05",
+        "value": 0.0
+      },
+      "family_support": {
+        "passed": false,
+        "threshold": "each family/constraint stratum has parseable support",
+        "value": {
+          "families_with_parseable_candidates": 0,
+          "family_strata": 8
+        }
+      },
+      "headroom": {
+        "passed": false,
+        "threshold": "delta >= 0.10 and lower CI > 0",
+        "value": {
+          "delta": 0.0,
+          "lower_ci": 0.0
+        }
+      },
+      "label_revalidation": {
+        "passed": true,
+        "value": true
+      },
+      "minority": {
+        "passed": false,
+        "threshold": 30,
+        "value": 0
+      },
+      "parseability": {
+        "passed": false,
+        "threshold": 0.95,
+        "value": 0.0
+      },
+      "preconditions": {
+        "passed": true,
+        "value": true
+      },
+      "unsaturation": {
+        "passed": true,
+        "threshold": "candidate upper CI < 0.85 and consensus < 0.90",
+        "value": {
+          "candidate_upper_ci": 0.0,
+          "consensus_accuracy": 0.0
+        }
+      }
+    },
+    "failed_conjuncts": [
+      "parseability",
+      "competence",
+      "headroom",
+      "minority",
+      "family_support"
+    ],
+    "ready_score_principle": "one only when every preregistered conjunct passes; no weighted averaging",
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.gate_matrix"
+  },
+  "per_candidate_competence_and_clustered_interval": {
+    "above_exact_floor_gate_passed": false,
+    "accuracy_all_sample": 0.0,
+    "candidate_count": 960,
+    "case_cluster_count": 120,
+    "clustered_interval": {
+      "estimate": 0.0,
+      "lower": 0.0,
+      "method": "constant_cluster",
+      "upper": 0.0
+    },
+    "exact_floor": 0.05,
+    "floor_source": "results/experiment_6173_cctu_item_bank_preregistration.json",
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.competence"
+  },
+  "phase_d_headroom_ready_score": 0.0,
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "checks": {
+      "calibration_and_held_label_counts": true,
+      "exact_validator_version": true,
+      "exclusion_manifest_present": true,
+      "exp6174_status_complete_ready": true,
+      "k_completeness": true,
+      "no_retry_receipt": true,
+      "output_path_parent_writable": true,
+      "preregistered_gates_and_power_present": true,
+      "protected_files_present": true,
+      "raw_before_label_receipt": true,
+      "structured_gate_passed": true,
+      "upstream_hashes_match": true
+    },
+    "held_labels_sealed_during_tuning": true,
+    "passed": true,
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:71c31ba28348c9aceeeb688c16cbe117c73a7c24432597f46d571785aeff2dff",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "raw_trace_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6174_cctu_authentic_k8_pool.raw_traces.jsonl",
+    "result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6175_cctu_headroom_audit.json",
+    "run_date": "20260807",
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.preconditions",
+    "selector_or_hidden_state_extraction_attempted": false
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:71c31ba28348c9aceeeb688c16cbe117c73a7c24432597f46d571785aeff2dff",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:71c31ba28348c9aceeeb688c16cbe117c73a7c24432597f46d571785aeff2dff",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_paths": [],
+    "ops_status_changelog_traceability_untouched": true,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.protected_files",
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:22bd6e9c3654e1e9c78e7393355a55a5bf61edb96ab08af7f5c1638c97ab93c9",
+  "saturation_and_error_diversity_metrics": {
+    "candidate_accuracy_upper_ci": 0.0,
+    "cases_with_more_than_one_cluster": 45,
+    "cases_with_parseable_error_diversity": 0,
+    "dominant_failure_surface": {
+      "count": 960,
+      "name": "truncation",
+      "share": 1.0
+    },
+    "mean_max_cluster_share_per_case": 0.855208,
+    "mean_unique_normalized_clusters_per_case": 1.533333,
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.saturation_error_diversity",
+    "tuned_consensus_accuracy": 0.0,
+    "unsaturation_gate_passed": true
+  },
+  "status": "retired",
+  "structured_gate_receipt": {
+    "autotokenizer_on_gguf_allowed": false,
+    "blocked_reasons": [],
+    "fail_closed_without_downloading": true,
+    "gate_names": [
+      "chat_template_present",
+      "embedded_tokenizer_loadable",
+      "mandatory_model_exists",
+      "mandatory_model_id",
+      "no_autotokenizer_used",
+      "no_download_attempted",
+      "no_legacy_small_model_substitution",
+      "preconditions_ready"
+    ],
+    "legacy_small_model_substitution_allowed": false,
+    "passed": true,
+    "schema": "carnot.experiment_6174.cctu_authentic_k8_pool.v1.structured_gate"
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_cctu_headroom_audit_6175.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/verify/cctu_headroom_audit_6175.py -m pytest tests/python/test_cctu_headroom_audit_6175.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/verify/cctu_headroom_audit_6175.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_cctu_headroom_audit_6175.py",
+    ".venv/bin/python -m carnot.verify.cctu_headroom_audit_6175 --validate",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6175_cctu_headroom_audit.json",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {},
+  "tuned_oracle_blind_consensus_definition_freeze_and_accuracy": {
+    "all_sample_case_accuracy": 0.0,
+    "calibration_accuracy": 0.0,
+    "candidate_rule_scores": [
+      {
+        "calibration_accuracy": 0.0,
+        "rule": {
+          "min_agreement": 1,
+          "name": "plurality_all_clusters",
+          "parseable_only": false,
+          "rank": 0
+        }
+      },
+      {
+        "calibration_accuracy": 0.0,
+        "rule": {
+          "min_agreement": 1,
+          "name": "plurality_parseable_preferred",
+          "parseable_only": true,
+          "rank": 1
+        }
+      },
+      {
+        "calibration_accuracy": 0.0,
+        "rule": {
+          "min_agreement": 2,
+          "name": "plurality_all_clusters_min2",
+          "parseable_only": false,
+          "rank": 2
+        }
+      },
+      {
+        "calibration_accuracy": 0.0,
+        "rule": {
+          "min_agreement": 3,
+          "name": "plurality_all_clusters_min3",
+          "parseable_only": false,
+          "rank": 3
+        }
+      }
+    ],
+    "definition_freeze": "calibration-only plurality over normalized action/terminal-outcome clusters; abstention/no-consensus is scored false",
+    "forbidden_selection_inputs": {
+      "answer_positions": false,
+      "arbitrary_ids": false,
+      "held_labels_for_tuning": false,
+      "hidden_states": false,
+      "sample_indexes": false,
+      "validator_labels_at_selection_time": false
+    },
+    "held_aggregate_accuracy": 0.0,
+    "normalized_cluster_fields": [
+      "tool sequence",
+      "final answer",
+      "final abstain"
+    ],
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.oracle_blind_consensus",
+    "selected_rule": {
+      "min_agreement": 1,
+      "name": "plurality_all_clusters",
+      "parseable_only": false,
+      "rank": 0
+    },
+    "tuning_split": "calibration"
+  },
+  "upstream_corpus_bank_split_validator_and_preregistration_hashes": {
+    "all_current_hashes_match_exp6174": true,
+    "comparisons": {
+      "held_access_log": {
+        "current_sha256": "sha256:781eee54b4da632ecdd4bfb69654f68bc1a4c18341759938ad733ba809d22bdf",
+        "declared_sha256": "sha256:781eee54b4da632ecdd4bfb69654f68bc1a4c18341759938ad733ba809d22bdf",
+        "matches": true
+      },
+      "item_bank": {
+        "current_sha256": "sha256:3ca5c6d5e127dae95e4674965f0bbd17c0be5ad82cb7f66d442f6e6ed341484b",
+        "declared_sha256": "sha256:3ca5c6d5e127dae95e4674965f0bbd17c0be5ad82cb7f66d442f6e6ed341484b",
+        "matches": true
+      },
+      "preregistration": {
+        "current_sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb",
+        "declared_sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb",
+        "matches": true
+      },
+      "split": {
+        "current_sha256": "sha256:1e8117ca5d9b47fb70eeca234391cc9f62af99efd491756103dd903f2018e2f5",
+        "declared_sha256": "sha256:1e8117ca5d9b47fb70eeca234391cc9f62af99efd491756103dd903f2018e2f5",
+        "matches": true
+      },
+      "validator": {
+        "current_sha256": "sha256:a029e762aebe0106cb380a7a02498165ec10d9b655e707b262555da08c0b1bf3",
+        "declared_sha256": "sha256:a029e762aebe0106cb380a7a02498165ec10d9b655e707b262555da08c0b1bf3",
+        "matches": true
+      }
+    },
+    "current": {
+      "held_access_log": {
+        "exists": true,
+        "path": "data/research/cctu_item_bank_6173_held_access_log.json",
+        "sha256": "sha256:781eee54b4da632ecdd4bfb69654f68bc1a4c18341759938ad733ba809d22bdf",
+        "size_bytes": 315
+      },
+      "item_bank": {
+        "exists": true,
+        "path": "data/research/cctu_item_bank_6173.jsonl",
+        "sha256": "sha256:3ca5c6d5e127dae95e4674965f0bbd17c0be5ad82cb7f66d442f6e6ed341484b",
+        "size_bytes": 196703
+      },
+      "preregistration": {
+        "exists": true,
+        "path": "results/experiment_6173_cctu_item_bank_preregistration.json",
+        "sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb",
+        "size_bytes": 28264
+      },
+      "split": {
+        "exists": true,
+        "path": "data/research/cctu_item_bank_6173_splits.json",
+        "sha256": "sha256:1e8117ca5d9b47fb70eeca234391cc9f62af99efd491756103dd903f2018e2f5",
+        "size_bytes": 4789
+      },
+      "validator": {
+        "exists": true,
+        "path": "python/carnot/verify/cctu_item_bank_6173.py",
+        "sha256": "sha256:a029e762aebe0106cb380a7a02498165ec10d9b655e707b262555da08c0b1bf3",
+        "size_bytes": 68819
+      }
+    },
+    "declared_by_exp6174": {
+      "held_access_log": {
+        "exists": true,
+        "path": "data/research/cctu_item_bank_6173_held_access_log.json",
+        "sha256": "sha256:781eee54b4da632ecdd4bfb69654f68bc1a4c18341759938ad733ba809d22bdf",
+        "size_bytes": 315
+      },
+      "item_bank": {
+        "exists": true,
+        "path": "data/research/cctu_item_bank_6173.jsonl",
+        "sha256": "sha256:3ca5c6d5e127dae95e4674965f0bbd17c0be5ad82cb7f66d442f6e6ed341484b",
+        "size_bytes": 196703
+      },
+      "preregistration": {
+        "exists": true,
+        "path": "results/experiment_6173_cctu_item_bank_preregistration.json",
+        "sha256": "sha256:4961b1dc06e1bf9cca1c2aae3a7205e0627246c8003ea33d4b423ed106a682fb",
+        "size_bytes": 28264,
+        "status": "complete_ready"
+      },
+      "schema": "carnot.experiment_6174.cctu_authentic_k8_pool.v1.upstream_hashes",
+      "split": {
+        "exists": true,
+        "path": "data/research/cctu_item_bank_6173_splits.json",
+        "sha256": "sha256:1e8117ca5d9b47fb70eeca234391cc9f62af99efd491756103dd903f2018e2f5",
+        "size_bytes": 4789
+      },
+      "validator": {
+        "exists": true,
+        "path": "python/carnot/verify/cctu_item_bank_6173.py",
+        "sha256": "sha256:a029e762aebe0106cb380a7a02498165ec10d9b655e707b262555da08c0b1bf3",
+        "size_bytes": 68819
+      }
+    },
+    "schema": "carnot.experiment_6175.cctu_headroom_audit.v1.upstream_hashes"
+  },
+  "verifier_is_oracle": true
+}
