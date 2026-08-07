@@ -43,6 +43,7 @@ try:
         ParallelDenseIsingInertia,
     )
     from .parallel_ising import AnnealingSchedule, ParallelIsingSampler
+    from .mode_jump_rust_backend import ModeJumpRustBackend
     from .one_axis_rust_backend import OneAxisRustBackend
     from .phase4_sampler import Phase4Sampler
     from .potts_sampler import PottsSampler
@@ -63,6 +64,7 @@ else:
         "CASALSampler",
         "ClutLogisticBernoulliSampler",
         "ClutCpuBackend",
+        "ModeJumpRustBackend",
         "OneAxisRustBackend",
         "HMCSampler",
         "KnuthYaoSampler",

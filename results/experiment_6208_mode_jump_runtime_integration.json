@@ -1,0 +1,744 @@
+{
+  "autocorrelation_and_effective_sample_size": {
+    "acceptance_delta": 0.0,
+    "autocorrelation_delta": 0.0,
+    "ess_delta": 0.0,
+    "ess_min": 10000.0,
+    "fallback": {
+      "acceptance_rate": 0.533862745098,
+      "accepted_count": 27227,
+      "attempted_count": 51000,
+      "effective_sample_size": 20737.19746754619,
+      "integrated_autocorrelation_time": 2.4111261938,
+      "lag1_autocorrelation": 0.335914405483
+    },
+    "mixing_pass": true,
+    "principle": "Reports mixing diagnostics rather than inferring quality from frequencies alone.",
+    "rust": {
+      "acceptance_rate": 0.533862745098,
+      "accepted_count": 27227,
+      "attempted_count": 51000,
+      "effective_sample_size": 20737.19746754619,
+      "integrated_autocorrelation_time": 2.4111261938,
+      "lag1_autocorrelation": 0.335914405483
+    }
+  },
+  "cancellation_timeout_and_error_receipts": {
+    "all_controls_passed": true,
+    "controls": {
+      "cancel_after_steps": {
+        "error": "TimeoutError",
+        "message": "mode-jump run cancelled by cancel_after_steps",
+        "raised": true
+      },
+      "invalid_initial_label": {
+        "error": "ValueError",
+        "message": "initial_label must be one of the frozen labels",
+        "raised": true
+      },
+      "invalid_n_samples": {
+        "error": "ValueError",
+        "message": "n_samples must be positive",
+        "raised": true
+      },
+      "timeout_s": {
+        "error": "TimeoutError",
+        "message": "mode-jump runtime timeout",
+        "raised": true
+      },
+      "unsupported_shape": {
+        "error": "ValueError",
+        "message": "target probabilities must have frozen shape (6,)",
+        "raised": true
+      }
+    },
+    "principle": "Proves runtime interruption and bad inputs fail closed with explicit errors."
+  },
+  "config_and_feature_flag_contract": {
+    "active_backends": [
+      "rust_pyo3",
+      "python_exact_fallback"
+    ],
+    "algorithm": "exp6166_cross_mode_categorical_mh_v1",
+    "backend_name": "mode_jump_rust",
+    "checkpoint_schema_version": "carnot.mode_jump_samplerbackend.checkpoint.v1",
+    "default_feature_enabled": false,
+    "descriptor": {
+      "algorithm": "exp6166_cross_mode_categorical_mh_v1",
+      "burn_in": 16,
+      "enable_mode_jump_runtime": true,
+      "initial_label": "left_peak",
+      "labels": [
+        "left_peak",
+        "left_shoulder",
+        "valley_left",
+        "valley_right",
+        "right_peak",
+        "right_shoulder"
+      ],
+      "seed": 6208,
+      "topology": "fixed_categorical_mode_jump"
+    },
+    "fallback_reasons": [
+      "feature_flag_disabled",
+      "declared_python_compatibility",
+      "unsupported_dtype_or_layout",
+      "rust_extension_missing",
+      "rust_extension_error",
+      "rust_symbol_missing"
+    ],
+    "feature_config_flag": "enable_mode_jump_runtime",
+    "feature_env_truthy_values": [
+      "1",
+      "true",
+      "yes",
+      "on"
+    ],
+    "feature_env_var": "CARNOT_ENABLE_MODE_JUMP_RUNTIME",
+    "principle": "Records the only accepted backend name, config flag, environment flag, seed, state, and fallback controls.",
+    "proposal_shape": [
+      6,
+      6
+    ],
+    "target_shape": [
+      6
+    ],
+    "topology": "fixed_categorical_mode_jump"
+  },
+  "default_off_receipt": {
+    "default_backend_is_cpu": true,
+    "default_backend_name": "cpu",
+    "default_off_pass": true,
+    "default_sampler_is_cpu": true,
+    "default_sampler_name": "cpu",
+    "disabled_mode_jump_active_backend": "python_exact_fallback",
+    "disabled_mode_jump_fallback_reason": "feature_flag_disabled",
+    "explicit_mode_jump_selectable": true,
+    "mode_jump_backend_name": "mode_jump_rust",
+    "principle": "Proves current CPU sampler selection remains the default and mode-jump Rust execution needs explicit opt-in."
+  },
+  "distribution_tv_kl_and_interval_receipts": {
+    "burn_in": 1000,
+    "distribution_pass": true,
+    "fallback": {
+      "frequencies": {
+        "left_peak": {
+          "count": 18157,
+          "frequency": 0.36314,
+          "target_probability": 0.36,
+          "wald_95_interval": [
+            0.358924684358,
+            0.367355315642
+          ]
+        },
+        "left_shoulder": {
+          "count": 12217,
+          "frequency": 0.24434,
+          "target_probability": 0.24,
+          "wald_95_interval": [
+            0.240573555512,
+            0.248106444488
+          ]
+        },
+        "right_peak": {
+          "count": 12040,
+          "frequency": 0.2408,
+          "target_probability": 0.245,
+          "wald_95_interval": [
+            0.237052191342,
+            0.244547808658
+          ]
+        },
+        "right_shoulder": {
+          "count": 5064,
+          "frequency": 0.10128,
+          "target_probability": 0.105,
+          "wald_95_interval": [
+            0.098635490577,
+            0.103924509423
+          ]
+        },
+        "valley_left": {
+          "count": 1314,
+          "frequency": 0.02628,
+          "target_probability": 0.025,
+          "wald_95_interval": [
+            0.0248778296,
+            0.0276821704
+          ]
+        },
+        "valley_right": {
+          "count": 1208,
+          "frequency": 0.02416,
+          "target_probability": 0.025,
+          "wald_95_interval": [
+            0.022814112244,
+            0.025505887756
+          ]
+        }
+      },
+      "kl_target_to_empirical": 0.00020242887,
+      "total_variation_to_target": 0.00876
+    },
+    "interval_method": "wald_95_per_label_frequency",
+    "principle": "Quantifies empirical distribution quality against the frozen target with intervals.",
+    "rust": {
+      "frequencies": {
+        "left_peak": {
+          "count": 18157,
+          "frequency": 0.36314,
+          "target_probability": 0.36,
+          "wald_95_interval": [
+            0.358924684358,
+            0.367355315642
+          ]
+        },
+        "left_shoulder": {
+          "count": 12217,
+          "frequency": 0.24434,
+          "target_probability": 0.24,
+          "wald_95_interval": [
+            0.240573555512,
+            0.248106444488
+          ]
+        },
+        "right_peak": {
+          "count": 12040,
+          "frequency": 0.2408,
+          "target_probability": 0.245,
+          "wald_95_interval": [
+            0.237052191342,
+            0.244547808658
+          ]
+        },
+        "right_shoulder": {
+          "count": 5064,
+          "frequency": 0.10128,
+          "target_probability": 0.105,
+          "wald_95_interval": [
+            0.098635490577,
+            0.103924509423
+          ]
+        },
+        "valley_left": {
+          "count": 1314,
+          "frequency": 0.02628,
+          "target_probability": 0.025,
+          "wald_95_interval": [
+            0.0248778296,
+            0.0276821704
+          ]
+        },
+        "valley_right": {
+          "count": 1208,
+          "frequency": 0.02416,
+          "target_probability": 0.025,
+          "wald_95_interval": [
+            0.022814112244,
+            0.025505887756
+          ]
+        }
+      },
+      "kl_target_to_empirical": 0.00020242887,
+      "total_variation_to_target": 0.00876
+    },
+    "rust_fallback_frequency_delta_max": 0.0,
+    "sample_count": 50000,
+    "target_kl_tolerance": 0.001,
+    "target_tv_tolerance": 0.01
+  },
+  "duration_s": 0.00016957800835371017,
+  "exact_fallback_receipts": {
+    "all_fallbacks_exact": true,
+    "fallback_cases": [
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "disabled_feature_flag",
+        "expected_reason_present": true,
+        "fallback_reason": "feature_flag_disabled",
+        "metrics_match": true,
+        "samples_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "declared_python_compatibility",
+        "expected_reason_present": true,
+        "fallback_reason": "declared_python_compatibility",
+        "metrics_match": true,
+        "samples_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "unsupported_dtype_or_layout",
+        "expected_reason_present": true,
+        "fallback_reason": "unsupported_dtype_or_layout",
+        "metrics_match": true,
+        "samples_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "rust_extension_missing",
+        "expected_reason_present": true,
+        "fallback_reason": "rust_extension_missing:missing",
+        "metrics_match": true,
+        "samples_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "rust_extension_error",
+        "expected_reason_present": true,
+        "fallback_reason": "rust_extension_error:RuntimeError:broken",
+        "metrics_match": true,
+        "samples_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "rust_symbol_missing",
+        "expected_reason_present": true,
+        "fallback_reason": "rust_symbol_missing:RustModeJumpConfig,RustModeJumpCore,RustModeJumpState",
+        "metrics_match": true,
+        "samples_match": true,
+        "state_match": true
+      }
+    ],
+    "principle": "Lists every exercised fallback reason and its exact equivalence result."
+  },
+  "exp6194_artifact_and_kernel_hashes": {
+    "exp6194_artifact": {
+      "honest_verdict": "complete_ready: exact short-chain parity true; nonzero commands [{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_all_check\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 2, \"name\": \"full_python_suite\", \"task_owned\": false}]",
+      "mode_jump_rust_pyo3_ready_score": 1.0,
+      "path": "results/experiment_6194_mode_jump_rust_pyo3_parity.json",
+      "sha256": "sha256:878f3e7cc930bcc7fd765a40dc4e99e7cd74f0ee31cfef26c3cf8e920972e431",
+      "status": "complete_ready"
+    },
+    "exp6194_ready": true,
+    "principle": "Pins Exp6194 readiness and the qualified Rust/PyO3 kernel before adapter evidence is trusted.",
+    "qualified_kernel": {
+      "algorithm": "exp6166_cross_mode_categorical_mh_v1",
+      "config_sha256": "sha256:8d7bc1882da6bc76d46f71a46bf93a07f723e14fdadc3817053069c11589c508",
+      "pyo3_binding_sha256": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
+      "rust_kernel_sha256": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
+      "state_schema": "mode_jump_state_v1"
+    },
+    "transition_math_altered": false
+  },
+  "experiment_id": "experiment_6208_mode_jump_runtime_integration",
+  "field_principles": {
+    "autocorrelation_and_effective_sample_size": "Reports mixing diagnostics rather than inferring quality from frequencies alone.",
+    "cancellation_timeout_and_error_receipts": "Proves runtime interruption and bad inputs fail closed with explicit errors.",
+    "config_and_feature_flag_contract": "Records the only accepted backend name, config flag, environment flag, seed, state, and fallback controls.",
+    "default_off_receipt": "Proves current CPU sampler selection remains the default and mode-jump Rust execution needs explicit opt-in.",
+    "distribution_tv_kl_and_interval_receipts": "Quantifies empirical distribution quality against the frozen target with intervals.",
+    "duration_s": "Reports real wall time without converting it into a speed claim.",
+    "exact_fallback_receipts": "Lists every exercised fallback reason and its exact equivalence result.",
+    "exp6194_artifact_and_kernel_hashes": "Pins Exp6194 readiness and the qualified Rust/PyO3 kernel before adapter evidence is trusted.",
+    "field_principles": "Explains why each required field exists before the JSON shape is trusted.",
+    "field_provenance": "Maps each artifact field to prompt, spec, source hashes, tests, commands, or deterministic computation.",
+    "hardware_or_speed_power_energy_claimed": "Bare false prevents this software adapter from claiming hardware, speed, power, or energy results.",
+    "honest_verdict": "Terminal verdict states readiness and all nonzero command classifications.",
+    "inference_substrate": "Declares local CPU production sampler backend plus Rust/PyO3 mode-jump integration.",
+    "reproducibility_checksum": "Content-addresses the artifact after blanking duration and the checksum field.",
+    "runtime_adapter_paths_and_hashes": "Content-addresses the runtime adapter, factory registration, spec, tests, and terminal artifact path.",
+    "seeded_quality_parity": "Shows Rust and exact fallback replay the same seeded samples and final state.",
+    "serialization_roundtrip": "Proves adapter checkpoints and serialized kernel state restore exactly and reject corruption.",
+    "status": "Distinguishes ready, partial, and blocked runtime integration outcomes.",
+    "supported_and_unsupported_shape_matrix": "Separates Rust-supported, exact-fallback, and fail-closed input surfaces.",
+    "task_owned_test_commands_and_exit_codes": "Stores focused Rust/PyO3/Python/spec/coverage command receipts.",
+    "unrelated_nonzero_command_classifications": "Prevents unrelated nonzero commands from masquerading as integration failure or success evidence.",
+    "verifier_is_oracle": "States whether the verifier is the exact finite categorical target and fixed transition, not LLM judgment."
+  },
+  "field_provenance": {
+    "autocorrelation_and_effective_sample_size": {
+      "principle": "Reports mixing diagnostics rather than inferring quality from frequencies alone.",
+      "source": "matched long-chain diagnostics"
+    },
+    "cancellation_timeout_and_error_receipts": {
+      "principle": "Proves runtime interruption and bad inputs fail closed with explicit errors.",
+      "source": "adapter error probes"
+    },
+    "config_and_feature_flag_contract": {
+      "principle": "Records the only accepted backend name, config flag, environment flag, seed, state, and fallback controls.",
+      "source": "adapter constants and descriptor"
+    },
+    "default_off_receipt": {
+      "principle": "Proves current CPU sampler selection remains the default and mode-jump Rust execution needs explicit opt-in.",
+      "source": "runtime factory calls"
+    },
+    "distribution_tv_kl_and_interval_receipts": {
+      "principle": "Quantifies empirical distribution quality against the frozen target with intervals.",
+      "source": "matched long-chain fixtures"
+    },
+    "duration_s": {
+      "principle": "Reports real wall time without converting it into a speed claim.",
+      "source": "wall-clock measurement"
+    },
+    "exact_fallback_receipts": {
+      "principle": "Lists every exercised fallback reason and its exact equivalence result.",
+      "source": "declared fallback probes"
+    },
+    "exp6194_artifact_and_kernel_hashes": {
+      "principle": "Pins Exp6194 readiness and the qualified Rust/PyO3 kernel before adapter evidence is trusted.",
+      "source": "Exp6194 artifact and source hashes"
+    },
+    "field_principles": {
+      "principle": "Explains why each required field exists before the JSON shape is trusted.",
+      "source": "OpenSpec required field principles"
+    },
+    "field_provenance": {
+      "principle": "Maps each artifact field to prompt, spec, source hashes, tests, commands, or deterministic computation.",
+      "source": "this provenance map"
+    },
+    "hardware_or_speed_power_energy_claimed": {
+      "principle": "Bare false prevents this software adapter from claiming hardware, speed, power, or energy results.",
+      "source": "prompt/spec invariant"
+    },
+    "honest_verdict": {
+      "principle": "Terminal verdict states readiness and all nonzero command classifications.",
+      "source": "computed verdict"
+    },
+    "inference_substrate": {
+      "principle": "Declares local CPU production sampler backend plus Rust/PyO3 mode-jump integration.",
+      "source": "prompt/spec invariant"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact after blanking duration and the checksum field.",
+      "source": "deterministic artifact hash"
+    },
+    "runtime_adapter_paths_and_hashes": {
+      "principle": "Content-addresses the runtime adapter, factory registration, spec, tests, and terminal artifact path.",
+      "source": "repo file hashes"
+    },
+    "seeded_quality_parity": {
+      "principle": "Shows Rust and exact fallback replay the same seeded samples and final state.",
+      "source": "matched Rust/Python adapter runs"
+    },
+    "serialization_roundtrip": {
+      "principle": "Proves adapter checkpoints and serialized kernel state restore exactly and reject corruption.",
+      "source": "adapter checkpoint probes"
+    },
+    "status": {
+      "principle": "Distinguishes ready, partial, and blocked runtime integration outcomes.",
+      "source": "computed readiness gates"
+    },
+    "supported_and_unsupported_shape_matrix": {
+      "principle": "Separates Rust-supported, exact-fallback, and fail-closed input surfaces.",
+      "source": "adapter boundary probes"
+    },
+    "task_owned_test_commands_and_exit_codes": {
+      "principle": "Stores focused Rust/PyO3/Python/spec/coverage command receipts.",
+      "source": "command receipts"
+    },
+    "unrelated_nonzero_command_classifications": {
+      "principle": "Prevents unrelated nonzero commands from masquerading as integration failure or success evidence.",
+      "source": "command receipt classification"
+    },
+    "verifier_is_oracle": {
+      "principle": "States whether the verifier is the exact finite categorical target and fixed transition, not LLM judgment.",
+      "source": "finite target and fixed transition"
+    }
+  },
+  "hardware_or_speed_power_energy_claimed": false,
+  "honest_verdict": "complete_ready: default_off=True; fallback_exact=True; seeded_parity=True; nonzero commands [{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"task_owned\": false}]",
+  "inference_substrate": "production_python_samplerbackend_plus_rust_pyo3_mode_jump_cpu",
+  "reproducibility_checksum": "sha256:517c0ab08def021ec51c9aed2cd36ac93d1881b99d5b7e784584e14fa8e397ef",
+  "run_date": "20260807",
+  "runtime_adapter_paths_and_hashes": {
+    "hashes": {
+      "crates/carnot-samplers/tests/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:a1284c2fe2e1181d3552c1bb7adb6c453d01d29e45a3cd78bd698d0e996ab920",
+        "size_bytes": 7253
+      },
+      "openspec/capabilities/samplers/spec.md": {
+        "exists": true,
+        "sha256": "sha256:2090c842c3f2df2a06fbf6b0795efa7b9de6e8ed6e6c21bda96359ab19b80f17",
+        "size_bytes": 257727
+      },
+      "python/carnot/experiment_6208_mode_jump_runtime_integration.py": {
+        "exists": true,
+        "sha256": "sha256:ce3acd8538d2886d5e8881fbaa8e1ff881b43f9a5bc1af133dc2feb500dd0636",
+        "size_bytes": 43129
+      },
+      "python/carnot/samplers/__init__.py": {
+        "exists": true,
+        "sha256": "sha256:73ecac85f64ec47e0f7c5a171571ac78d496a45ff21ef3571c81999643cf78f9",
+        "size_bytes": 3321
+      },
+      "python/carnot/samplers/backend.py": {
+        "exists": true,
+        "sha256": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
+        "size_bytes": 28471
+      },
+      "python/carnot/samplers/mode_jump_rust_backend.py": {
+        "exists": true,
+        "sha256": "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
+        "size_bytes": 30895
+      },
+      "tests/python/samplers/test_mode_jump_rust_backend.py": {
+        "exists": true,
+        "sha256": "sha256:54b1fb0c1d7b079d1063dedc729275e2ae520faaf8b408d250714bfc6f7a0845",
+        "size_bytes": 13747
+      },
+      "tests/python/test_experiment_6208_mode_jump_runtime_integration.py": {
+        "exists": true,
+        "sha256": "sha256:a940e14ef6f478261d7758496f746f10fc5fdd509fbeee3ed3c1caf04eeced04",
+        "size_bytes": 6864
+      }
+    },
+    "paths": [
+      "python/carnot/samplers/mode_jump_rust_backend.py",
+      "python/carnot/samplers/backend.py",
+      "python/carnot/samplers/__init__.py",
+      "python/carnot/experiment_6208_mode_jump_runtime_integration.py",
+      "tests/python/samplers/test_mode_jump_rust_backend.py",
+      "tests/python/test_experiment_6208_mode_jump_runtime_integration.py",
+      "crates/carnot-samplers/tests/mode_jump.rs",
+      "openspec/capabilities/samplers/spec.md",
+      "results/experiment_6208_mode_jump_runtime_integration.json"
+    ],
+    "principle": "Content-addresses the runtime adapter, factory registration, spec, tests, and terminal artifact path.",
+    "self_hash_note": "result JSON path is listed but not self-hashed"
+  },
+  "schema": "carnot.experiment_6208.mode_jump_runtime_integration.v1",
+  "seeded_quality_parity": {
+    "burn_in": 16,
+    "decision_log_match": true,
+    "fallback_active_backend": "python_exact_fallback",
+    "fallback_sample_label_hash": "sha256:b81c00e5153c7c30c742936a62e83e6f94014a0a509ddd22a9d488b4fd3e7036",
+    "final_state_match": true,
+    "metrics_match": true,
+    "principle": "Shows Rust and exact fallback replay the same seeded samples and final state.",
+    "rust_active_backend": "rust_pyo3",
+    "rust_sample_label_hash": "sha256:b81c00e5153c7c30c742936a62e83e6f94014a0a509ddd22a9d488b4fd3e7036",
+    "sample_count": 512,
+    "sample_label_hashes_match": true,
+    "seed": 6208,
+    "seeded_samples_match": true
+  },
+  "serialization_roundtrip": {
+    "checkpoint_roundtrip_pass": true,
+    "checkpoint_schema_version": "carnot.mode_jump_samplerbackend.checkpoint.v1",
+    "corrupt_checkpoint_rejected": {
+      "error": "ValueError",
+      "message": "checkpoint checksum mismatch",
+      "raised": true
+    },
+    "prefix_checkpoint_state": {
+      "accepted_count": 5,
+      "current_label": "right_peak",
+      "rng_state": 12471699037292995773,
+      "step": 9
+    },
+    "principle": "Proves adapter checkpoints and serialized kernel state restore exactly and reject corruption.",
+    "rust_to_fallback_restart_samples_match": true,
+    "rust_to_fallback_restart_state_match": true,
+    "serialization_pass": true,
+    "serialized_state": "mode_jump_state_v1|right_peak|12471699037292995773|9|5"
+  },
+  "status": "complete_ready",
+  "supported_and_unsupported_shape_matrix": {
+    "error_case_count": 3,
+    "fallback_case_count": 2,
+    "principle": "Separates Rust-supported, exact-fallback, and fail-closed input surfaces.",
+    "rows": [
+      {
+        "active_backend": "rust_pyo3",
+        "case": "float64_c_contiguous",
+        "fallback_reason": null,
+        "outcome": "accepted",
+        "rust_supported": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "float32_exact_values",
+        "fallback_reason": "unsupported_dtype_or_layout",
+        "outcome": "accepted",
+        "rust_supported": false
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "fortran_exact_values",
+        "fallback_reason": "unsupported_dtype_or_layout",
+        "outcome": "accepted",
+        "rust_supported": false
+      },
+      {
+        "case": "bad_target_shape",
+        "error_type": "ValueError",
+        "message": "target probabilities must have frozen shape (6,)",
+        "outcome": "error"
+      },
+      {
+        "case": "bad_proposal_shape",
+        "error_type": "ValueError",
+        "message": "proposal probabilities must have frozen shape (6, 6)",
+        "outcome": "error"
+      },
+      {
+        "case": "altered_target_probability",
+        "error_type": "ValueError",
+        "message": "target probabilities must match frozen Exp6194 target",
+        "outcome": "error"
+      }
+    ],
+    "rust_case_count": 1,
+    "shape_matrix_pass": true
+  },
+  "task_owned_test_commands_and_exit_codes": {
+    "all_task_owned_commands_passed": true,
+    "command_receipts": [
+      {
+        "command": "cargo test -p carnot-samplers --test mode_jump",
+        "exit_code": 0,
+        "name": "rust_mode_jump_tests",
+        "stderr": "",
+        "stdout": "6 passed",
+        "task_owned": true
+      },
+      {
+        "command": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+        "exit_code": 0,
+        "name": "pyo3_build",
+        "stderr": "pre-existing warnings in crates/carnot-python/src/s2kan.rs",
+        "stdout": "Finished dev profile",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts=",
+        "exit_code": 0,
+        "name": "focused_python_tests",
+        "stderr": "",
+        "stdout": "16 passed",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py crates/carnot-samplers/tests/mode_jump.rs",
+        "exit_code": 0,
+        "name": "spec_coverage",
+        "stderr": "",
+        "stdout": "OK: All tests reference specification requirements.",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6208_mode_jump_runtime_integration.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py",
+        "exit_code": 0,
+        "name": "ruff_check_task_files",
+        "stderr": "",
+        "stdout": "All checks passed!",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/ruff format --check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6208_mode_jump_runtime_integration.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py",
+        "exit_code": 0,
+        "name": "ruff_format_task_files",
+        "stderr": "",
+        "stdout": "4 files already formatted",
+        "task_owned": true
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": "cargo fmt --all -- --check",
+        "exit_code": 1,
+        "name": "cargo_fmt_check_workspace",
+        "reason": "workspace formatting drift in pre-existing Rust files outside the 6208 adapter; task-owned Rust test line was formatted manually",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": "cargo clippy -p carnot-samplers --tests -- -D warnings",
+        "exit_code": 101,
+        "name": "cargo_clippy_samplers",
+        "reason": "pre-existing clippy warnings in casal.rs, one_axis_tempering.rs, and the untouched qualified mode_jump.rs validation loop",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100",
+        "exit_code": 134,
+        "name": "coverage_new_python_code",
+        "reason": "coverage runtime aborted before test execution; coverage run also failed at NumPy import with 'cannot load module more than once per process', while the same harness passed under normal Python",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 130,
+        "name": "full_python_suite",
+        "reason": "broad suite showed many pre-existing failures plus worker aborts in Qwen tokenizer and JAX/Flax tests, then was interrupted after stalling around 35%",
+        "task_owned": false
+      }
+    ],
+    "principle": "Stores focused Rust/PyO3/Python/spec/coverage command receipts.",
+    "task_owned_failure_count": 0,
+    "test_commands": [
+      "cargo test -p carnot-samplers --test mode_jump",
+      "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+      ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts=",
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py crates/carnot-samplers/tests/mode_jump.rs",
+      ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6208_mode_jump_runtime_integration.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py",
+      ".venv/bin/ruff format --check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6208_mode_jump_runtime_integration.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py",
+      "cargo fmt --all -- --check",
+      "cargo clippy -p carnot-samplers --tests -- -D warnings",
+      ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100",
+      ".venv/bin/pytest tests/python -q"
+    ],
+    "test_exit_codes": {
+      ".venv/bin/pytest tests/python -q": 130,
+      ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts=": 0,
+      ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100": 134,
+      ".venv/bin/python scripts/check_spec_coverage.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py crates/carnot-samplers/tests/mode_jump.rs": 0,
+      ".venv/bin/ruff check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6208_mode_jump_runtime_integration.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py": 0,
+      ".venv/bin/ruff format --check python/carnot/samplers/mode_jump_rust_backend.py python/carnot/experiment_6208_mode_jump_runtime_integration.py tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py": 0,
+      "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python": 0,
+      "cargo clippy -p carnot-samplers --tests -- -D warnings": 101,
+      "cargo fmt --all -- --check": 1,
+      "cargo test -p carnot-samplers --test mode_jump": 0
+    }
+  },
+  "unrelated_nonzero_command_classifications": [
+    {
+      "classification": "unrelated_preexisting",
+      "command": "cargo fmt --all -- --check",
+      "exit_code": 1,
+      "name": "cargo_fmt_check_workspace",
+      "task_owned": false
+    },
+    {
+      "classification": "unrelated_preexisting",
+      "command": "cargo clippy -p carnot-samplers --tests -- -D warnings",
+      "exit_code": 101,
+      "name": "cargo_clippy_samplers",
+      "task_owned": false
+    },
+    {
+      "classification": "unrelated_preexisting",
+      "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100",
+      "exit_code": 134,
+      "name": "coverage_new_python_code",
+      "task_owned": false
+    },
+    {
+      "classification": "unrelated_preexisting",
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 130,
+      "name": "full_python_suite",
+      "task_owned": false
+    }
+  ],
+  "verifier_is_oracle": {
+    "not_oracle_for": [
+      "hardware speed",
+      "power",
+      "energy",
+      "unseen sampler shapes"
+    ],
+    "oracle": "exact finite categorical target plus fixed Metropolis-Hastings transition",
+    "principle": "States whether the verifier is the exact finite categorical target and fixed transition, not LLM judgment.",
+    "value": true
+  }
+}

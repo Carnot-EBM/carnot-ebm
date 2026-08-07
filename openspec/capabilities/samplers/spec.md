@@ -3680,3 +3680,125 @@ byte-identical, and no hardware or speedup claim is emitted.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6194 | Planned (`crates/carnot-samplers/src/mode_jump.rs`, `crates/carnot-python/src/mode_jump.rs`, `python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py`, `results/experiment_6194_mode_jump_rust_pyo3_parity.json`) | Planned (`crates/carnot-samplers/tests/mode_jump.rs`, `tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py`) |
+
+### REQ-SAMPLE-6208: Mode-Jump Runtime Adapter Integration
+
+Carnot MUST expose the qualified fixed mode-jump Rust/PyO3 kernel through the
+existing runtime sampler selection boundary as an explicit, default-off
+backend named `mode_jump_rust`. The default runtime sampler selection SHALL
+remain `cpu` unless a caller explicitly selects `mode_jump_rust`, and the
+mode-jump adapter SHALL still require an explicit runtime feature/config flag
+before routing a supported run through Rust.
+
+Sub-requirements:
+- REQ-SAMPLE-6208-DEFAULT-OFF: `get_backend()` and
+  `get_sampler_backend()` SHALL continue to select the current CPU sampler by
+  default. `mode_jump_rust` SHALL be selectable only by explicit backend name,
+  and Rust execution SHALL be disabled unless
+  `enable_mode_jump_runtime=true` or `CARNOT_ENABLE_MODE_JUMP_RUNTIME=1`.
+- REQ-SAMPLE-6208-FIXED-KERNEL: The adapter SHALL consume Exp6194's ready
+  artifact hash, Rust kernel hash, PyO3 binding hash, fixed algorithm hash,
+  labels, target probabilities, proposal table, RNG semantics, and state
+  schema without changing the qualified transition mathematics.
+- REQ-SAMPLE-6208-SHAPE-CONTRACT: The adapter SHALL accept only the frozen
+  six-label categorical target as `biases.shape == (6,)` and proposal table as
+  `couplings.shape == (6, 6)` with finite normalized probabilities and the
+  frozen label order. Float64 C-contiguous inputs MAY use Rust when the feature
+  flag and PyO3 symbols are available; declared compatibility cases such as
+  float32 or non-C-contiguous valid inputs SHALL use exact Python fallback;
+  malformed or unsupported shapes SHALL fail closed.
+- REQ-SAMPLE-6208-EXACT-FALLBACK: Missing, broken, or incomplete Rust/PyO3
+  bindings, disabled feature flags, declared Python compatibility, and
+  supported-value but Rust-unsupported dtype/layout SHALL record
+  `active_backend="python_exact_fallback"` with a non-empty fallback reason and
+  SHALL produce samples, state, quality metrics, and checkpoints identical to
+  the exact Python fallback.
+- REQ-SAMPLE-6208-RUNTIME-ACCOUNTING: Runtime receipts SHALL preserve seeded
+  quality, empirical distribution TV/KL and interval diagnostics,
+  autocorrelation, ESS, accepted/attempted counts, serialization round trips,
+  corrupt-state rejection, cancellation, timeout, invalid configuration, and
+  unsupported-shape errors at the adapter boundary.
+- REQ-SAMPLE-6208-ARTIFACT: Exp6208 SHALL write
+  `results/experiment_6208_mode_jump_runtime_integration.json` after running
+  matched CPU fixtures with preregistered seeds and adequate chain lengths.
+  Timing SHALL be diagnostic only, SHALL NOT enter readiness, and
+  `hardware_or_speed_power_energy_claimed` SHALL be the bare boolean `false`.
+
+The terminal artifact SHALL include at minimum these top-level fields:
+`status`, `exp6194_artifact_and_kernel_hashes`,
+`runtime_adapter_paths_and_hashes`, `default_off_receipt`,
+`config_and_feature_flag_contract`,
+`supported_and_unsupported_shape_matrix`, `seeded_quality_parity`,
+`distribution_tv_kl_and_interval_receipts`,
+`autocorrelation_and_effective_sample_size`,
+`serialization_roundtrip`, `cancellation_timeout_and_error_receipts`,
+`exact_fallback_receipts`, `task_owned_test_commands_and_exit_codes`,
+`unrelated_nonzero_command_classifications`,
+`hardware_or_speed_power_energy_claimed`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`duration_s`, `reproducibility_checksum`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`production_python_samplerbackend_plus_rust_pyo3_mode_jump_cpu`.
+`honest_verdict` SHALL start with `complete_ready:`,
+`complete_partial:`, or `blocked:` and state default-off, fallback, parity,
+and every classified nonzero command.
+
+Required field principles:
+
+- `status`: Distinguishes ready, partial, and blocked runtime integration outcomes.
+- `exp6194_artifact_and_kernel_hashes`: Pins Exp6194 readiness and the qualified Rust/PyO3 kernel before adapter evidence is trusted.
+- `runtime_adapter_paths_and_hashes`: Content-addresses the runtime adapter, factory registration, spec, tests, and terminal artifact path.
+- `default_off_receipt`: Proves current CPU sampler selection remains the default and mode-jump Rust execution needs explicit opt-in.
+- `config_and_feature_flag_contract`: Records the only accepted backend name, config flag, environment flag, seed, state, and fallback controls.
+- `supported_and_unsupported_shape_matrix`: Separates Rust-supported, exact-fallback, and fail-closed input surfaces.
+- `seeded_quality_parity`: Shows Rust and exact fallback replay the same seeded samples and final state.
+- `distribution_tv_kl_and_interval_receipts`: Quantifies empirical distribution quality against the frozen target with intervals.
+- `autocorrelation_and_effective_sample_size`: Reports mixing diagnostics rather than inferring quality from frequencies alone.
+- `serialization_roundtrip`: Proves adapter checkpoints and serialized kernel state restore exactly and reject corruption.
+- `cancellation_timeout_and_error_receipts`: Proves runtime interruption and bad inputs fail closed with explicit errors.
+- `exact_fallback_receipts`: Lists every exercised fallback reason and its exact equivalence result.
+- `task_owned_test_commands_and_exit_codes`: Stores focused Rust/PyO3/Python/spec/coverage command receipts.
+- `unrelated_nonzero_command_classifications`: Prevents unrelated nonzero commands from masquerading as integration failure or success evidence.
+- `hardware_or_speed_power_energy_claimed`: Bare false prevents this software adapter from claiming hardware, speed, power, or energy results.
+- `inference_substrate`: Declares local CPU production sampler backend plus Rust/PyO3 mode-jump integration.
+- `verifier_is_oracle`: States whether the verifier is the exact finite categorical target and fixed transition, not LLM judgment.
+- `field_provenance`: Maps each artifact field to prompt, spec, source hashes, tests, commands, or deterministic computation.
+- `field_principles`: Explains why each required field exists before the JSON shape is trusted.
+- `duration_s`: Reports real wall time without converting it into a speed claim.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking duration and the checksum field.
+- `honest_verdict`: Terminal verdict states readiness and all nonzero command classifications.
+
+### SCENARIO-SAMPLE-6208-DEFAULT-OFF-FALLBACK: Runtime Selection Is Explicit
+
+**Given** the production sampler factory, no mode-jump feature flag, and the
+fixed Exp6194 categorical target
+**When** callers request the default sampler, explicitly request
+`mode_jump_rust`, or force exact fallback
+**Then** the default remains `cpu`, the mode-jump backend records disabled or
+declared fallback reasons until explicitly enabled, and fallback samples,
+checkpoints, diagnostics, and serialized state match the exact Python path.
+
+### SCENARIO-SAMPLE-6208-RUNTIME-PARITY: Enabled Adapter Matches Exact Fallback
+
+**Given** Exp6194 ready evidence, the frozen target/proposal arrays, seed,
+initial label, burn-in, and retained sample count
+**When** `mode_jump_rust` runs with `enable_mode_jump_runtime=true`
+**Then** Rust/PyO3 and exact fallback seeded samples, final state,
+acceptance accounting, TV/KL, intervals, autocorrelation, ESS, checkpoint
+round trip, and resumed run remain identical within preregistered tolerances.
+
+### SCENARIO-SAMPLE-6208-BOUNDARY-ERRORS: Runtime Adapter Fails Closed
+
+**Given** unsupported shapes, malformed probabilities, bad labels, corrupt
+checkpoints, disabled or broken Rust bindings, cancellation, and timeout
+controls
+**When** the runtime adapter validates or advances a run
+**Then** declared compatibility cases take exact fallback with receipts, while
+unsupported shapes and corrupt inputs raise explicit errors, and the terminal
+artifact still records `hardware_or_speed_power_energy_claimed=false`.
+
+## Implementation Status (REQ-SAMPLE-6208)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6208 | Planned (`python/carnot/samplers/mode_jump_rust_backend.py`, `python/carnot/samplers/backend.py`, `python/carnot/experiment_6208_mode_jump_runtime_integration.py`, `results/experiment_6208_mode_jump_runtime_integration.json`) | Planned (`tests/python/samplers/test_mode_jump_rust_backend.py`, `tests/python/test_experiment_6208_mode_jump_runtime_integration.py`, `crates/carnot-samplers/tests/mode_jump.rs`) |
