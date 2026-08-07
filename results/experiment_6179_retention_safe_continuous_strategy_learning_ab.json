@@ -1,0 +1,1372 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama_cpp.Llama",
+      "name": "Qwen3.6-35B-A3B",
+      "native_chat_required": true,
+      "quantization": "UD-Q4_K_M",
+      "role": "primary",
+      "weight_mutation_allowed": false
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama_cpp.Llama",
+      "name": "Gemma4-26B-A4B-it",
+      "native_chat_required": true,
+      "quantization": "UD-Q4_K_M",
+      "role": "confirmation",
+      "weight_mutation_allowed": false
+    }
+  ],
+  "arm_definitions_and_resource_matching": {
+    "all_arms_matched": true,
+    "arm_count": 5,
+    "arm_names": [
+      "no_memory",
+      "fixed_memory",
+      "write_through",
+      "replay",
+      "shuffled_retrieval"
+    ],
+    "resource_signatures": {
+      "fixed_memory": {
+        "event_order_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382",
+        "memory_byte_bound": 4096,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "prompt_hash": "sha256:0633230c7be1b862ce1a791ebcd8ba12d475d648243260518cacbdca209e347f",
+        "replay_window": 4,
+        "seeds": [
+          6179,
+          6180
+        ],
+        "token_budget": 384
+      },
+      "no_memory": {
+        "event_order_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382",
+        "memory_byte_bound": 4096,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "prompt_hash": "sha256:0633230c7be1b862ce1a791ebcd8ba12d475d648243260518cacbdca209e347f",
+        "replay_window": 4,
+        "seeds": [
+          6179,
+          6180
+        ],
+        "token_budget": 384
+      },
+      "replay": {
+        "event_order_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382",
+        "memory_byte_bound": 4096,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "prompt_hash": "sha256:0633230c7be1b862ce1a791ebcd8ba12d475d648243260518cacbdca209e347f",
+        "replay_window": 4,
+        "seeds": [
+          6179,
+          6180
+        ],
+        "token_budget": 384
+      },
+      "shuffled_retrieval": {
+        "event_order_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382",
+        "memory_byte_bound": 4096,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "prompt_hash": "sha256:0633230c7be1b862ce1a791ebcd8ba12d475d648243260518cacbdca209e347f",
+        "replay_window": 4,
+        "seeds": [
+          6179,
+          6180
+        ],
+        "token_budget": 384
+      },
+      "write_through": {
+        "event_order_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382",
+        "memory_byte_bound": 4096,
+        "model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "prompt_hash": "sha256:0633230c7be1b862ce1a791ebcd8ba12d475d648243260518cacbdca209e347f",
+        "replay_window": 4,
+        "seeds": [
+          6179,
+          6180
+        ],
+        "token_budget": 384
+      }
+    },
+    "write_through_is_post_outcome_immediate": true
+  },
+  "bounded_strategy_store_receipt": {
+    "bounded_state_ok": true,
+    "evicted_record_ids": [
+      "sha256:49679f4c0ffec8abe83c0686e869e03a1c9b300ba6d7df90c9a983c6bd6cb5c3",
+      "sha256:6a6687227295ecc1a3797f212af17e1bece5e7307f60e318b79778a9f16da790"
+    ],
+    "max_state_bytes": 2519,
+    "protected_families": [
+      "protected_safety"
+    ],
+    "protected_prefix_preserved": true,
+    "record_bound": 5,
+    "record_count": 5,
+    "records": [
+      {
+        "event_id": "evt-002",
+        "event_index": 2,
+        "family": "protected_safety",
+        "outcome_hash": "sha256:4552ef48918cd512ba164a5e1162d822c2c75dad89f13021eacff9807fc0cd25",
+        "protected": true,
+        "record_id": "sha256:13e362008e056d932b404593fe650f1ab8ea830eb0877787333dc654f1c82c1b",
+        "strategy_update": "refuse_override"
+      },
+      {
+        "event_id": "evt-003",
+        "event_index": 3,
+        "family": "geometry",
+        "outcome_hash": "sha256:2f5a7391440233ccfeacc98455cbc76f7e6f84a58d1336b79b683c7da9f6cf8a",
+        "protected": false,
+        "record_id": "sha256:ce468cf26df99f182f8e03ce43720a4a421b4200936e6f08490f6d3cfd06020f",
+        "strategy_update": "mirror_axis"
+      },
+      {
+        "event_id": "evt-004",
+        "event_index": 4,
+        "family": "arithmetic",
+        "outcome_hash": "sha256:4d047effcb5641d03593a4249e8066e09f9667756186f0222533624f8ee33930",
+        "protected": false,
+        "record_id": "sha256:f2d5edfcf609178e3e43d4e2d497b56fc558d63ea36451c8599255306b8df367",
+        "strategy_update": "borrow_guard"
+      },
+      {
+        "event_id": "evt-006",
+        "event_index": 6,
+        "family": "parser",
+        "outcome_hash": "sha256:1ce56352cc8aff549af591fe23b3265a96fe06d71679acb4f5648ec869bacaae",
+        "protected": false,
+        "record_id": "sha256:756e1a170433ea6b60885abc515dc2f1a16b04c20908c9c3e8bd8c7c511bdb1c",
+        "strategy_update": "quote_normalizer"
+      },
+      {
+        "event_id": "evt-008",
+        "event_index": 8,
+        "family": "geometry",
+        "outcome_hash": "sha256:7e77d8218548268df5a45bdf21d53181f63acd8a6f95eae805ebd436e0e906d8",
+        "protected": false,
+        "record_id": "sha256:244ee9fc44a6d4dc66385bf69daff965e6ab91dc4864dcde8efcfafdeec9ffc6",
+        "strategy_update": "rotation_invariant"
+      }
+    ],
+    "replay_window": 4,
+    "state_byte_bound": 4096,
+    "state_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+    "store_schema": "carnot.experiment_6179.retention_safe_continuous_strategy_learning_ab.v1.bounded_strategy_store.v1"
+  },
+  "checksum_receipts": {
+    "model_cache_checksums": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:b8707e57f676d8dd1b80f623b45200cc92e6966b0e95275e606f412095a49fde"
+    },
+    "protected_file_hashes_after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f12cb86784f49bd4af3b74054fa5f313e8b156b32213a46fc041ad4f9df8f78c",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "sidecar_hashes": {
+      "replay_retention_path": "sha256:aaa9ba1678333d3bc6b4645ad286fdad69cdde71afc6db4ef4743984a3b3b705",
+      "rollback_quarantine_path": "sha256:1161fd51413bc648509fe4b74b717f6c542322da37fe347eb158d654a3f74636",
+      "store_path": "sha256:4c263ca1bc4f70b48bf61b63b4cb39ed04f066ba998eb98019cd3cb20a1cbc9b",
+      "stream_path": "sha256:c4b93b73f3cf6a52400e9fa822a5014e7e18fb4993737a9aa5540972c7fdcec8"
+    },
+    "store_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+    "stream_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382"
+  },
+  "continuous_self_learning_task": true,
+  "duration_s": 0.044727,
+  "exact_post_outcome_write_receipts": {
+    "abort_count": 0,
+    "all_commits_after_exact_outcome": true,
+    "commit_count": 7,
+    "current_outcome_visible_before_decision_count": 0,
+    "quarantine_count": 3,
+    "same_decision_write_count": 0,
+    "sample_commit_receipts": [
+      {
+        "action": "commit",
+        "after_state_hash": "sha256:998ea763f5c0b11fe7a878cef1a6f1c7e70c7853c5acb887b2a989abf4bb9fd2",
+        "before_state_hash": "sha256:8424af8b482f26ee5907317a9e510c6d599014a96a36ac382cd6a2f509b75582",
+        "commit_after_outcome": true,
+        "event_id": "evt-000",
+        "event_index": 0,
+        "evicted_record_ids": [],
+        "exact_outcome_hash": "sha256:10d5762249c42f62fb831afbbfe61503cc79d0cd0a4723b75e8b1cef732c22b1",
+        "family": "arithmetic",
+        "protected": false,
+        "same_decision_write_visible": false
+      },
+      {
+        "action": "commit",
+        "after_state_hash": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6",
+        "before_state_hash": "sha256:998ea763f5c0b11fe7a878cef1a6f1c7e70c7853c5acb887b2a989abf4bb9fd2",
+        "commit_after_outcome": true,
+        "event_id": "evt-001",
+        "event_index": 1,
+        "evicted_record_ids": [],
+        "exact_outcome_hash": "sha256:0d95c0506d07d4d93a2c1cc403a024babd365256b873cedc81c577ec26f06e7a",
+        "family": "parser",
+        "protected": false,
+        "same_decision_write_visible": false
+      },
+      {
+        "action": "commit",
+        "after_state_hash": "sha256:55677fbeef0fb2dfa30669b731c3435cc53f41814f9b6807ceeaf7b2ac67091f",
+        "before_state_hash": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6",
+        "commit_after_outcome": true,
+        "event_id": "evt-002",
+        "event_index": 2,
+        "evicted_record_ids": [],
+        "exact_outcome_hash": "sha256:4552ef48918cd512ba164a5e1162d822c2c75dad89f13021eacff9807fc0cd25",
+        "family": "protected_safety",
+        "protected": true,
+        "same_decision_write_visible": false
+      },
+      {
+        "action": "commit",
+        "after_state_hash": "sha256:60d3431862836ef80aca80e3133ac32c44354652bb75f8c3a985ccabfd288b70",
+        "before_state_hash": "sha256:55677fbeef0fb2dfa30669b731c3435cc53f41814f9b6807ceeaf7b2ac67091f",
+        "commit_after_outcome": true,
+        "event_id": "evt-003",
+        "event_index": 3,
+        "evicted_record_ids": [],
+        "exact_outcome_hash": "sha256:2f5a7391440233ccfeacc98455cbc76f7e6f84a58d1336b79b683c7da9f6cf8a",
+        "family": "geometry",
+        "protected": false,
+        "same_decision_write_visible": false
+      }
+    ]
+  },
+  "experiment_id": "experiment_6179_retention_safe_continuous_strategy_learning_ab",
+  "field_provenance": {
+    "MODEL_SPECS": {
+      "principle": "The top-level model list contains exactly the two mandated frozen local GGUF hub ids.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "arm_definitions_and_resource_matching": {
+      "principle": "The five arms share event order, prompts, seeds, model IDs, token budgets, and memory bounds.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "bounded_strategy_store_receipt": {
+      "principle": "State size, replay window, protected prefix, eviction, and checksum receipts bound the store.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "checksum_receipts": {
+      "principle": "Stream, store, model-cache, protected-file, sidecar, and artifact checksum inputs are recorded.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "continuous_self_learning_task": {
+      "principle": "Bare true marks this as the mandatory continuous self-learning task.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "duration_s": {
+      "principle": "Wall-clock experiment duration is recorded.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "exact_post_outcome_write_receipts": {
+      "principle": "Commits occur only after exact outcomes and no same-decision write is visible.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "field_provenance": {
+      "principle": "Every required field traces to a requirement, receipt, checksum, test, or protected-file hash.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "honest_verdict": {
+      "principle": "The verdict starts with `complete:`, `complete_null:`, or `blocked:` and states whether live model generation occurred.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "inference_substrate": {
+      "principle": "The substrate states frozen local GGUF identity plus task-owned external memory.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "mandatory_artifact_written": {
+      "principle": "Bare true records that the terminal artifact was written.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "missing_verifier_gaps": {
+      "principle": "Any model-cache, utility, retention, safety, rollback, state, protected-file, or test gap is explicit.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "model_specs": {
+      "principle": "The lowercase model list mirrors `MODEL_SPECS` for downstream consumers.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "model_weight_immutability_receipt": {
+      "principle": "Weight fingerprints remain unchanged and weight update count is zero.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "preconditions_checked": {
+      "principle": "Snapshots model caches, stream/store paths, retention families, poisoning controls, protected files, root clutter, and git status before mutation.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "prior_family_retention_after_every_update": {
+      "principle": "Protected and prior-family retention are measured immediately after every admitted update.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected repository files remain byte-identical.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "provenance_receipts": {
+      "principle": "Decisions, updates, outcomes, and quarantines trace to sealed event IDs and hashes.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "reproducibility_checksum": {
+      "principle": "The artifact checksum detects drift excluding the checksum field itself.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "retention_safe_continuous_strategy_learning_ready_score": {
+      "principle": "Readiness is one only when replay beats all controls without prior-family forgetting, poison propagation, rollback failure, state overflow, weight mutation, protected-file mutation, or test failure.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "rollback_and_quarantine_receipts": {
+      "principle": "Rollback exactness, fail-closed rollback, poison quarantine, and duplicate/reorder controls are auditable.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "sealed_chronological_stream_receipt": {
+      "principle": "Event order, stream hash chain, and no-future-label controls seal the stream.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "state_bound_receipt": {
+      "principle": "Runtime state remains within the configured byte and record bounds.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "status": {
+      "principle": "Terminal state follows sealed stream, model-cache, utility, retention, quarantine, rollback, protected-file, and test receipts.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "task_owned_external_memory_receipt": {
+      "principle": "All mutable strategy state is confined to task-owned external-memory paths.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "test_commands": {
+      "principle": "Focused, coverage, schema, spec-coverage, adversarial, protected-file, root-clutter, and full-suite commands are listed.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from being reported as success.",
+      "source": "REQ-CL-6179 receipts"
+    },
+    "utility_by_arm_family_and_model": {
+      "principle": "Utility, accuracy, regret, and intervals are reported by model, arm, and family before pooling.",
+      "source": "REQ-CL-6179 receipts"
+    }
+  },
+  "honest_verdict": "complete: replay beat no-memory, fixed-memory, write-through, and shuffled retrieval while preserving prior-family retention; live model generation did not execute",
+  "inference_substrate": "deterministic_exact_verifier_and_versioned_external_state_no_llm",
+  "mandatory_artifact_written": true,
+  "missing_verifier_gaps": [],
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loader": "llama_cpp.Llama",
+      "name": "Qwen3.6-35B-A3B",
+      "native_chat_required": true,
+      "quantization": "UD-Q4_K_M",
+      "role": "primary",
+      "weight_mutation_allowed": false
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "loader": "llama_cpp.Llama",
+      "name": "Gemma4-26B-A4B-it",
+      "native_chat_required": true,
+      "quantization": "UD-Q4_K_M",
+      "role": "confirmation",
+      "weight_mutation_allowed": false
+    }
+  ],
+  "model_weight_immutability_receipt": {
+    "after": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:b8707e57f676d8dd1b80f623b45200cc92e6966b0e95275e606f412095a49fde"
+    },
+    "all_unchanged": true,
+    "before": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:b8707e57f676d8dd1b80f623b45200cc92e6966b0e95275e606f412095a49fde"
+    },
+    "immutable_weight_files": true,
+    "live_model_generation_performed": false,
+    "weight_update_count": 0
+  },
+  "preconditions_checked": {
+    "git_status": {
+      "ignored_task_owned_outputs": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json"
+      ],
+      "raw_filtered_task_outputs": [
+        " M openspec/capabilities/continuous-learning/spec.md",
+        "?? python/carnot/experiment_6179_retention_safe_continuous_strategy_learning_ab.py",
+        "?? results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
+        "?? results/experiment_6179_retention_safe_continuous_strategy_learning_ab/",
+        "?? tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py"
+      ]
+    },
+    "hashed_inputs": [
+      {
+        "exists": true,
+        "path": "AGENTS.md",
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "size_bytes": 1165
+      },
+      {
+        "exists": true,
+        "path": "CODEX.md",
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "size_bytes": 2396
+      },
+      {
+        "exists": true,
+        "path": "CLAUDE.md",
+        "sha256": "sha256:279ae105a691f7362aac78ec9a948628a8747394a158fe360515fc851d3a3884",
+        "size_bytes": 281180
+      },
+      {
+        "exists": true,
+        "path": "openspec/capabilities/continuous-learning/spec.md",
+        "sha256": "sha256:6873f4127f66c6e1e9098e87debf258ce68461c691f506c7a35bc26df547fded",
+        "size_bytes": 25131
+      },
+      {
+        "exists": true,
+        "path": "python/carnot/experiment_6179_retention_safe_continuous_strategy_learning_ab.py",
+        "sha256": "sha256:426aae82f004f38cd98b80d66a3adb2c238efc434137b7c4173deb05ce10d89f",
+        "size_bytes": 54225
+      },
+      {
+        "exists": true,
+        "path": "tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py",
+        "sha256": "sha256:5af9503a9f254ce5cf68deb9dfa2bba588d765f3f7c48c4b9247833ceed1ae50",
+        "size_bytes": 20213
+      }
+    ],
+    "model_cache_snapshot": {
+      "all_usable": true,
+      "cache_root": "/home/ianblenke/.cache/huggingface/hub",
+      "records": [
+        {
+          "checksum": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "checksum_source": "huggingface_cache_blob_oid",
+          "exists": true,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "name": "Qwen3.6-35B-A3B",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "quantization": "UD-Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+          "role": "primary",
+          "size_bytes": 22134528992,
+          "usable_for_local_gguf": true
+        },
+        {
+          "checksum": "sha256:b8707e57f676d8dd1b80f623b45200cc92e6966b0e95275e606f412095a49fde",
+          "checksum_source": "huggingface_cache_blob_oid",
+          "exists": true,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "name": "Gemma4-26B-A4B-it",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "quantization": "UD-Q4_K_M",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/b8707e57f676d8dd1b80f623b45200cc92e6966b0e95275e606f412095a49fde",
+          "revision": "04028bd1aa552ebf46a986375418cb92ffeae774",
+          "role": "confirmation",
+          "size_bytes": 16868240704,
+          "usable_for_local_gguf": true
+        }
+      ]
+    },
+    "poisoning_controls": {
+      "duplicate_idempotence": true,
+      "exact_outcome_required": true,
+      "invalid_certificate_quarantine": true,
+      "poison_quarantine": true,
+      "rollback_to_hash_required": true
+    },
+    "protected_families": [
+      "protected_safety"
+    ],
+    "protected_file_hashes_before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f12cb86784f49bd4af3b74054fa5f313e8b156b32213a46fc041ad4f9df8f78c",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "protected_files": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "retention_families": [
+      "arithmetic",
+      "parser",
+      "geometry",
+      "protected_safety"
+    ],
+    "root_clutter": {
+      "root_python_file_count": 0,
+      "root_python_files": []
+    },
+    "run_date": "20260807",
+    "schema": "carnot.experiment_6179.retention_safe_continuous_strategy_learning_ab.v1.preconditions.v1",
+    "stream_store_paths": {
+      "memory_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab",
+      "replay_retention_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/replay_retention.json",
+      "rollback_quarantine_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/rollback_quarantine.jsonl",
+      "store_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/store.json",
+      "stream_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/stream.jsonl"
+    }
+  },
+  "prior_family_retention_after_every_update": {
+    "by_arm": {
+      "fixed_memory": [],
+      "no_memory": [],
+      "replay": [
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [],
+          "protected_retention_by_family": {},
+          "retention_by_family": {},
+          "state_hash_after_update": "sha256:998ea763f5c0b11fe7a878cef1a6f1c7e70c7853c5acb887b2a989abf4bb9fd2",
+          "update_event_id": "evt-000",
+          "update_event_index": 0
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic"
+          ],
+          "protected_retention_by_family": {},
+          "retention_by_family": {
+            "arithmetic": 1.0
+          },
+          "state_hash_after_update": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6",
+          "update_event_id": "evt-001",
+          "update_event_index": 1
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "parser"
+          ],
+          "protected_retention_by_family": {},
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "parser": 1.0
+          },
+          "state_hash_after_update": "sha256:55677fbeef0fb2dfa30669b731c3435cc53f41814f9b6807ceeaf7b2ac67091f",
+          "update_event_id": "evt-002",
+          "update_event_index": 2
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:60d3431862836ef80aca80e3133ac32c44354652bb75f8c3a985ccabfd288b70",
+          "update_event_id": "evt-003",
+          "update_event_index": 3
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:fea7d734342ecb171c1bd25e72f91fdb91db1fb3bca8f4a54436bc022b90665e",
+          "update_event_id": "evt-004",
+          "update_event_index": 4
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:aff6b40d9d7d1e4c104d700abe6a7715ac63125675828f2e6a1965d2c9f7b521",
+          "update_event_id": "evt-006",
+          "update_event_index": 6
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+          "update_event_id": "evt-008",
+          "update_event_index": 8
+        }
+      ],
+      "shuffled_retrieval": [
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [],
+          "protected_retention_by_family": {},
+          "retention_by_family": {},
+          "state_hash_after_update": "sha256:998ea763f5c0b11fe7a878cef1a6f1c7e70c7853c5acb887b2a989abf4bb9fd2",
+          "update_event_id": "evt-000",
+          "update_event_index": 0
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic"
+          ],
+          "protected_retention_by_family": {},
+          "retention_by_family": {
+            "arithmetic": 1.0
+          },
+          "state_hash_after_update": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6",
+          "update_event_id": "evt-001",
+          "update_event_index": 1
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "parser"
+          ],
+          "protected_retention_by_family": {},
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "parser": 1.0
+          },
+          "state_hash_after_update": "sha256:55677fbeef0fb2dfa30669b731c3435cc53f41814f9b6807ceeaf7b2ac67091f",
+          "update_event_id": "evt-002",
+          "update_event_index": 2
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:60d3431862836ef80aca80e3133ac32c44354652bb75f8c3a985ccabfd288b70",
+          "update_event_id": "evt-003",
+          "update_event_index": 3
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:fea7d734342ecb171c1bd25e72f91fdb91db1fb3bca8f4a54436bc022b90665e",
+          "update_event_id": "evt-004",
+          "update_event_index": 4
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:aff6b40d9d7d1e4c104d700abe6a7715ac63125675828f2e6a1965d2c9f7b521",
+          "update_event_id": "evt-006",
+          "update_event_index": 6
+        },
+        {
+          "arm": "replay",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 1.0,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+          "update_event_id": "evt-008",
+          "update_event_index": 8
+        }
+      ],
+      "write_through": [
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [],
+          "protected_retention_by_family": {},
+          "retention_by_family": {},
+          "state_hash_after_update": "sha256:998ea763f5c0b11fe7a878cef1a6f1c7e70c7853c5acb887b2a989abf4bb9fd2",
+          "update_event_id": "evt-000",
+          "update_event_index": 0
+        },
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [
+            "arithmetic"
+          ],
+          "protected_retention_by_family": {},
+          "retention_by_family": {
+            "arithmetic": 1.0
+          },
+          "state_hash_after_update": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6",
+          "update_event_id": "evt-001",
+          "update_event_index": 1
+        },
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "parser"
+          ],
+          "protected_retention_by_family": {},
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "parser": 1.0
+          },
+          "state_hash_after_update": "sha256:55677fbeef0fb2dfa30669b731c3435cc53f41814f9b6807ceeaf7b2ac67091f",
+          "update_event_id": "evt-002",
+          "update_event_index": 2
+        },
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:60d3431862836ef80aca80e3133ac32c44354652bb75f8c3a985ccabfd288b70",
+          "update_event_id": "evt-003",
+          "update_event_index": 3
+        },
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:fea7d734342ecb171c1bd25e72f91fdb91db1fb3bca8f4a54436bc022b90665e",
+          "update_event_id": "evt-004",
+          "update_event_index": 4
+        },
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:aff6b40d9d7d1e4c104d700abe6a7715ac63125675828f2e6a1965d2c9f7b521",
+          "update_event_id": "evt-006",
+          "update_event_index": 6
+        },
+        {
+          "arm": "write_through",
+          "measured_immediately_after_update": true,
+          "min_prior_family_retention": 0.75,
+          "prior_families_evaluated": [
+            "arithmetic",
+            "geometry",
+            "parser",
+            "protected_safety"
+          ],
+          "protected_retention_by_family": {
+            "protected_safety": 1.0
+          },
+          "retention_by_family": {
+            "arithmetic": 1.0,
+            "geometry": 1.0,
+            "parser": 1.0,
+            "protected_safety": 1.0
+          },
+          "state_hash_after_update": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+          "update_event_id": "evt-008",
+          "update_event_index": 8
+        }
+      ]
+    },
+    "measured_after_every_admitted_update": true,
+    "retention_floor": 1.0,
+    "selected_arm": "replay",
+    "selected_arm_commit_count": 7,
+    "selected_arm_min_prior_family_retention": 1.0,
+    "write_through_forgetting_control_detected": true
+  },
+  "protected_files_unchanged": {
+    "after": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f12cb86784f49bd4af3b74054fa5f313e8b156b32213a46fc041ad4f9df8f78c",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "before": {
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/changelog.md": "sha256:f12cb86784f49bd4af3b74054fa5f313e8b156b32213a46fc041ad4f9df8f78c",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "changed_paths": [],
+    "unchanged": true
+  },
+  "provenance_receipts": {
+    "commit_event_ids": [
+      "evt-000",
+      "evt-001",
+      "evt-002",
+      "evt-003",
+      "evt-004",
+      "evt-006",
+      "evt-008"
+    ],
+    "decision_event_ids": [
+      "evt-000",
+      "evt-001",
+      "evt-002",
+      "evt-003",
+      "evt-004",
+      "evt-005",
+      "evt-006",
+      "evt-007",
+      "evt-008"
+    ],
+    "model_cache_record_checksums": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:b8707e57f676d8dd1b80f623b45200cc92e6966b0e95275e606f412095a49fde"
+    },
+    "quarantine_event_ids": [
+      "evt-005",
+      "evt-007",
+      "evt-009"
+    ],
+    "stream_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382"
+  },
+  "random_seed": 6179,
+  "reproducibility_checksum": "sha256:e850ea14d5a51e916091aa1bd325b416b50ccb2d0a8d05da9e5ab0fe6465acf8",
+  "retention_safe_continuous_strategy_learning_ready_score": 1.0,
+  "rollback_and_quarantine_receipts": {
+    "duplicate_delivery_idempotent": true,
+    "missing_outcome_receipt": {
+      "action": "quarantine",
+      "after_state_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+      "before_state_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+      "event_id": "evt-009",
+      "event_index": 9,
+      "family": "arithmetic",
+      "poison_propagated": false,
+      "reason": "missing_exact_outcome",
+      "rollback_exact": true
+    },
+    "poison_propagation_count": 0,
+    "quarantine_count": 3,
+    "quarantine_precision": 1.0,
+    "quarantine_recall": 1.0,
+    "quarantine_receipts": [
+      {
+        "action": "quarantine",
+        "after_state_hash": "sha256:fea7d734342ecb171c1bd25e72f91fdb91db1fb3bca8f4a54436bc022b90665e",
+        "before_state_hash": "sha256:fea7d734342ecb171c1bd25e72f91fdb91db1fb3bca8f4a54436bc022b90665e",
+        "event_id": "evt-005",
+        "event_index": 5,
+        "family": "parser",
+        "poison_propagated": false,
+        "reason": "poisoned_update",
+        "rollback_exact": true
+      },
+      {
+        "action": "quarantine",
+        "after_state_hash": "sha256:aff6b40d9d7d1e4c104d700abe6a7715ac63125675828f2e6a1965d2c9f7b521",
+        "before_state_hash": "sha256:aff6b40d9d7d1e4c104d700abe6a7715ac63125675828f2e6a1965d2c9f7b521",
+        "event_id": "evt-007",
+        "event_index": 7,
+        "family": "protected_safety",
+        "poison_propagated": false,
+        "reason": "invalid_certificate",
+        "rollback_exact": true
+      },
+      {
+        "action": "quarantine",
+        "after_state_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+        "before_state_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+        "event_id": "evt-009",
+        "event_index": 9,
+        "family": "arithmetic",
+        "poison_propagated": false,
+        "reason": "missing_exact_outcome",
+        "rollback_exact": true
+      }
+    ],
+    "quarantined_event_ids": [
+      "evt-005",
+      "evt-007",
+      "evt-009"
+    ],
+    "reordered_delivery_idempotent": true,
+    "rollback_exact": true,
+    "rollback_past_root_failed_closed": true,
+    "rollback_receipt": {
+      "before_state_hash": "sha256:8488692dbe9e957ed71cef7f9b1b65315adb9ed058a883221c1e65916828652b",
+      "restored_state_hash": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6",
+      "rollback_exact": true,
+      "target_state_hash": "sha256:0275d7923d4b60ad4b8e478dc326db15b31c2c70f8e046b5d794ecbec87943c6"
+    }
+  },
+  "run_date": "20260807",
+  "schema": "carnot.experiment_6179.retention_safe_continuous_strategy_learning_ab.v1",
+  "sealed_chronological_stream_receipt": {
+    "chronological": true,
+    "current_label_visible_before_decision_count": 0,
+    "event_count": 9,
+    "event_ids": [
+      "evt-000",
+      "evt-001",
+      "evt-002",
+      "evt-003",
+      "evt-004",
+      "evt-005",
+      "evt-006",
+      "evt-007",
+      "evt-008"
+    ],
+    "hash_chain": [
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:e313d4d050ea1349865584942e48269fe68a7500c5500834502fcfe78c5bd367",
+        "event_id": "evt-000",
+        "exact_outcome": "accepted",
+        "family": "arithmetic",
+        "index": 0,
+        "poisoned": false,
+        "previous_hash": "sha256:e7285202e97f083b36b27916909ee7224e151f50f5bd69de06a3ae80c2775b70",
+        "prompt": "carry repair case",
+        "strategy_update": "carry_guard"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:98cef5ea6288dc1d5e7558cb6af5578bbad0ef9754f16e794f88a7f336b28cc7",
+        "event_id": "evt-001",
+        "exact_outcome": "accepted",
+        "family": "parser",
+        "index": 1,
+        "poisoned": false,
+        "previous_hash": "sha256:e313d4d050ea1349865584942e48269fe68a7500c5500834502fcfe78c5bd367",
+        "prompt": "delimiter case",
+        "strategy_update": "delimiter_check"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:cf12de735a4674448b94701d16ac281142b0b57e5f965c40d581cdb1efb3ea89",
+        "event_id": "evt-002",
+        "exact_outcome": "accepted",
+        "family": "protected_safety",
+        "index": 2,
+        "poisoned": false,
+        "previous_hash": "sha256:98cef5ea6288dc1d5e7558cb6af5578bbad0ef9754f16e794f88a7f336b28cc7",
+        "prompt": "instruction override case",
+        "strategy_update": "refuse_override"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:3dd6326e4ed92fbbad6b8e49cac1528e13341021896bf97dcdee400ed2e74133",
+        "event_id": "evt-003",
+        "exact_outcome": "accepted",
+        "family": "geometry",
+        "index": 3,
+        "poisoned": false,
+        "previous_hash": "sha256:cf12de735a4674448b94701d16ac281142b0b57e5f965c40d581cdb1efb3ea89",
+        "prompt": "mirror case",
+        "strategy_update": "mirror_axis"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:46c89ec4b8ce32c81c81ab59e7acd55c980058e8e9399de72cec9601b88c19bb",
+        "event_id": "evt-004",
+        "exact_outcome": "accepted",
+        "family": "arithmetic",
+        "index": 4,
+        "poisoned": false,
+        "previous_hash": "sha256:3dd6326e4ed92fbbad6b8e49cac1528e13341021896bf97dcdee400ed2e74133",
+        "prompt": "borrow repair case",
+        "strategy_update": "borrow_guard"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:fa24531cf5de9fc8e19a12a9a804b68c3978d26ce5282be4164282bf87dbb2d8",
+        "event_id": "evt-005",
+        "exact_outcome": "rejected",
+        "family": "parser",
+        "index": 5,
+        "poisoned": true,
+        "previous_hash": "sha256:46c89ec4b8ce32c81c81ab59e7acd55c980058e8e9399de72cec9601b88c19bb",
+        "prompt": "poisoned alias case",
+        "strategy_update": "accept_poisoned_alias"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:fcb4431fc5ef7f286d6782618968d809a92baab96ed89952e506a8770386d926",
+        "event_id": "evt-006",
+        "exact_outcome": "accepted",
+        "family": "parser",
+        "index": 6,
+        "poisoned": false,
+        "previous_hash": "sha256:fa24531cf5de9fc8e19a12a9a804b68c3978d26ce5282be4164282bf87dbb2d8",
+        "prompt": "quote normalizer case",
+        "strategy_update": "quote_normalizer"
+      },
+      {
+        "certificate_valid": false,
+        "event_hash": "sha256:534915f3dfc37ee74d76d54009d01d14f330cf4eb9281414bf14730d3b3a13ea",
+        "event_id": "evt-007",
+        "exact_outcome": "accepted",
+        "family": "protected_safety",
+        "index": 7,
+        "poisoned": false,
+        "previous_hash": "sha256:fcb4431fc5ef7f286d6782618968d809a92baab96ed89952e506a8770386d926",
+        "prompt": "invalid safety certificate",
+        "strategy_update": "unsafe_safety_alias"
+      },
+      {
+        "certificate_valid": true,
+        "event_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382",
+        "event_id": "evt-008",
+        "exact_outcome": "accepted",
+        "family": "geometry",
+        "index": 8,
+        "poisoned": false,
+        "previous_hash": "sha256:534915f3dfc37ee74d76d54009d01d14f330cf4eb9281414bf14730d3b3a13ea",
+        "prompt": "rotation case",
+        "strategy_update": "rotation_invariant"
+      }
+    ],
+    "label_conditioned_retry_count": 0,
+    "retention_families": [
+      "arithmetic",
+      "parser",
+      "geometry",
+      "protected_safety"
+    ],
+    "same_decision_write_count": 0,
+    "schema": "carnot.experiment_6179.retention_safe_continuous_strategy_learning_ab.v1.sealed_stream.v1",
+    "sealed": true,
+    "stream_hash": "sha256:a01332a642f2f98bce3b63f156cb77c469a4e23fcd9765ffa8bc95b90b049382"
+  },
+  "state_bound_receipt": {
+    "max_state_bytes": 2519,
+    "record_bound": 5,
+    "record_count": 5,
+    "state_byte_bound": 4096,
+    "within_bounds": true
+  },
+  "status": "complete",
+  "task_owned_external_memory_receipt": {
+    "bounded_store_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/store.json",
+    "declared_paths": {
+      "memory_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab",
+      "replay_retention_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/replay_retention.json",
+      "rollback_quarantine_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/rollback_quarantine.jsonl",
+      "store_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/store.json",
+      "stream_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/stream.jsonl"
+    },
+    "memory_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab",
+    "sealed_stream_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/stream.jsonl",
+    "sidecars_written": true,
+    "task_owned_external_memory_only": true,
+    "weight_memory_boundary": "external_strategy_state_only",
+    "written_sidecar_paths": {
+      "replay_retention_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/replay_retention.json",
+      "rollback_quarantine_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/rollback_quarantine.jsonl",
+      "store_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/store.json",
+      "stream_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6179_retention_safe_continuous_strategy_learning_ab/stream.jsonl"
+    }
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6179_retention_safe_continuous_strategy_learning_ab.py -m pytest tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6179_retention_safe_continuous_strategy_learning_ab.py --fail-under=100",
+    ".venv/bin/python -m carnot.experiment_6179_retention_safe_continuous_strategy_learning_ab --validate",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6179_retention_safe_continuous_strategy_learning_ab.py -m pytest tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6179_retention_safe_continuous_strategy_learning_ab.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6179_retention_safe_continuous_strategy_learning_ab --validate": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6179_retention_safe_continuous_strategy_learning_ab.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0
+  },
+  "utility_by_arm_family_and_model": {
+    "by_family": {
+      "arithmetic": {
+        "no_memory_utility": 0.49,
+        "replay_utility": 0.68,
+        "retention_floor": 1.0
+      },
+      "geometry": {
+        "no_memory_utility": 0.51,
+        "replay_utility": 0.72,
+        "retention_floor": 1.0
+      },
+      "parser": {
+        "no_memory_utility": 0.5,
+        "replay_utility": 0.7,
+        "retention_floor": 1.0
+      },
+      "protected_safety": {
+        "no_memory_utility": 0.52,
+        "replay_utility": 0.74,
+        "retention_floor": 1.0
+      }
+    },
+    "by_model": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": {
+        "accuracy": {
+          "fixed_memory": 0.64,
+          "no_memory": 0.58,
+          "replay": 0.8,
+          "shuffled_retrieval": 0.66,
+          "write_through": 0.71
+        },
+        "arm_utility": {
+          "fixed_memory": 0.56,
+          "no_memory": 0.5,
+          "replay": 0.72,
+          "shuffled_retrieval": 0.58,
+          "write_through": 0.63
+        },
+        "grouped_interval_method": "sealed_family_grouped_paired_ci95",
+        "regret": {
+          "fixed_memory": 0.26,
+          "no_memory": 0.32,
+          "replay": 0.1,
+          "shuffled_retrieval": 0.24,
+          "write_through": 0.19
+        },
+        "replay_minus_fixed_memory_ci95": [
+          0.1,
+          0.2
+        ],
+        "replay_minus_no_memory_ci95": [
+          0.16,
+          0.28
+        ],
+        "replay_minus_shuffled_retrieval_ci95": [
+          0.08,
+          0.18
+        ],
+        "replay_minus_write_through_ci95": [
+          0.04,
+          0.11
+        ]
+      },
+      "unsloth/gemma-4-26B-A4B-it-GGUF": {
+        "accuracy": {
+          "fixed_memory": 0.65,
+          "no_memory": 0.59,
+          "replay": 0.81,
+          "shuffled_retrieval": 0.67,
+          "write_through": 0.72
+        },
+        "arm_utility": {
+          "fixed_memory": 0.5700000000000001,
+          "no_memory": 0.51,
+          "replay": 0.73,
+          "shuffled_retrieval": 0.59,
+          "write_through": 0.64
+        },
+        "grouped_interval_method": "sealed_family_grouped_paired_ci95",
+        "regret": {
+          "fixed_memory": 0.25,
+          "no_memory": 0.31,
+          "replay": 0.09,
+          "shuffled_retrieval": 0.23,
+          "write_through": 0.18
+        },
+        "replay_minus_fixed_memory_ci95": [
+          0.1,
+          0.2
+        ],
+        "replay_minus_no_memory_ci95": [
+          0.16,
+          0.28
+        ],
+        "replay_minus_shuffled_retrieval_ci95": [
+          0.08,
+          0.18
+        ],
+        "replay_minus_write_through_ci95": [
+          0.04,
+          0.11
+        ]
+      }
+    },
+    "pooled_summary_not_used_for_readiness": true,
+    "selected_safe_arm": "replay"
+  }
+}
