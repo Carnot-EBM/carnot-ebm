@@ -15467,3 +15467,4 @@ Still active  |
 | 2026-08-07 15:50 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6190-calibration-clue-linear-code-selecto |
 | 2026-08-07 15:50 UTC | Prospective retention-safe continuous strategy lea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6192-live-strategy-seed-stream.seed_str |
 | 2026-08-07 15:52 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6190-calibration-clue-linear-code-selecto |
+| 2026-08-07 15:52 UTC | Prospective retention-safe continuous strategy lea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6192-live-strategy-seed-stream.seed_str |
