@@ -164,7 +164,7 @@ tasks:
     milestone: "2026.08.535"
     title: "Immutable current-rule companion determination for Exp6161 and Exp6162"
     priority: high
-    track: infrastructure
+    track: determination
     deliverable: results/experiment_6172_current_rule_quarantine_determination.json
     agent_type: codex
     model: gpt-5.5
@@ -381,4 +381,230 @@ tasks:
          inference_substrate principle: set `deterministic_exact_tool_trace_headroom_audit`.
          honest_verdict principle: use `complete_ready:`, `complete_null:`, `retired:`, or `blocked:` and name the failed or passed conjuncts.
       7. Run focused unit/spec coverage, structured gate, label reproduction, denominators/floors, clustered inference, consensus freeze, oracle/minority gates, held seal, no-selector/no-shortcut, task-isolation canary, schema, adversarial-verify, protected-file, applicable E2E, and root-clutter checks.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6176-hidden-state-surface-qualification
+    milestone: "2026.08.535"
+    title: "Matching-base per-layer hidden-state surface qualification"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6176_hidden_state_surface_qualification.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 420
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp6130-phase-d-per-layer-surface-v2
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6176 is gated on a new CCTU headroom audit and uses the matching cached google/gemma-4-31B-it base only after GGUF trace alignment is proven."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6175-cctu-headroom-audit
+        artifact_field: phase_d_headroom_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Qualify the matching-base hidden-state surface only after Exp6175 proves an unsaturated executable-trace pool. Use the cached local-GGUF counterpart and the exact cached `google/gemma-4-31B-it` base revision; do not download or substitute a smaller model. Today is {date}.
+
+      TASK:
+      Verify gate readiness, local-GGUF/base revision reachability, tokenizer and prompt/completion token alignment, layer/precision/device maps, extraction determinism, held-label seal preservation, and write results/experiment_6176_hidden_state_surface_qualification.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot gate artifacts, GGUF/base paths and hashes, GPU state, tokenizer receipts, output roots, protected files, and git status.
+      1. Add or verify REQ-* gate, mandatory-model, local-GGUF, matching-base, token-alignment, hidden-state-shape, deterministic-extraction, held-seal, no-download, and protected-file requirements; write focused failing tests first.
+      2. Fail closed unless the local `google/gemma-4-31B-it` base and exact GGUF counterpart are both reachable with matching revisions and tokenizer evidence.
+      3. Extract only calibration-authorized surface receipts, preserve held labels, and emit field provenance, test commands, checksum, and honest verdict.
+      REQUIRED ARTIFACT FIELDS: status, preconditions_checked, hidden_state_surface_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6177-clue-latent-selector-freeze
+    milestone: "2026.08.535"
+    title: "Calibration-only CLUE and latent selector freeze"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6177_clue_latent_selector_freeze.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp6131-phase-d-mid-layer-selector-calibration
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6177 waits for Exp6176 matching-base reachability and freezes CLUE plus learned latent selectors on calibration rows only."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6176-hidden-state-surface-qualification
+        artifact_field: hidden_state_surface_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Freeze CLUE and a lightweight latent selector using only calibration rows from the qualified local-GGUF/matching-base surface. Exact validators are evaluation oracles; selector features must exclude oracle labels, held rows, arbitrary IDs, and surface shortcuts. Today is {date}.
+
+      TASK:
+      Gate on Exp6176, compute CLUE and learned selector candidates, freeze layers/thresholds/control arms on calibration only, prove no held-label access, and write results/experiment_6177_clue_latent_selector_freeze.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot upstream hashes, calibration/held seals, local-GGUF/base receipts, feature schemas, protected files, and git status.
+      1. Add or verify REQ-* gate, calibration-only, CLUE, selector-freeze, oracle-distinct, shortcut-control, shuffled-label, held-seal, and checksum requirements; write focused failing tests first.
+      2. Run CLUE before the learned selector and include tuned consensus, cheap-feature, shuffled-label, oracle-peeking, and surface-shortcut controls.
+      3. Emit frozen selector artifacts with field provenance, tests, reproducibility checksum, and honest verdict.
+      REQUIRED ARTIFACT FIELDS: status, preconditions_checked, calibration_selector_ready_score, protected_files_unchanged, duration_s, inference_substrate, field_provenance, test_commands, test_exit_codes, reproducibility_checksum, honest_verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6178-held-internal-state-selection
+    milestone: "2026.08.535"
+    title: "One-shot held internal-state selection"
+    priority: critical
+    track: phase-d
+    deliverable: results/experiment_6178_held_internal_state_selection.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 360
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp6132-phase-d-hidden-state-held-eval
+        verdict: "blocked_gate_check_failed"
+        addressed_by: "Exp6178 opens held labels once only after Exp6177 freezes the local-GGUF/matching-base selector and all shortcut controls."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp6177-clue-latent-selector-freeze
+        artifact_field: calibration_selector_ready_score
+        op: "=="
+        value: 1.0
+    prompt: |
+      CONTEXT:
+      Run the one-shot held comparison only after calibration selectors are frozen. Use the same local-GGUF/matching-base receipts, exact validators as evaluation oracles, and no post-held tuning. Today is {date}.
+
+      TASK:
+      Open held labels once, compare frozen CLUE/latent selectors to tuned consensus with clustered paired inference and shortcut controls, preserve oracle distinction, and write results/experiment_6178_held_internal_state_selection.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot frozen selector, held seal, local-GGUF/base hashes, exact validators, controls, protected files, and git status.
+      1. Add or verify REQ-* gate, one-shot-held, no-retune, clustered-inference, oracle-distinct, shortcut-control, negative-control, and protected-file requirements; write focused failing tests first.
+      2. Promotion requires positive held confidence bound, cheap/shuffled controls failing to reproduce the gain, no family shortcut, and `verifier_is_oracle=false`.
+      3. Emit exact decision fields, provenance, tests, checksum, and honest verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6179-retention-safe-continuous-strategy-learning-ab
+    milestone: "2026.08.535"
+    title: "Mandatory retention-safe continuous strategy-learning A/B"
+    priority: critical
+    track: continuous-learning
+    deliverable: results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 80
+    estimated_wall_time_min: 720
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp6164-continuous-strategy-learning-ab
+        verdict: "blocked: mandatory continuous strategy-learning did not execute and preserved an internal block"
+        addressed_by: "Exp6179 owns its sealed store and event stream, always emits an artifact, and measures post-update retention with local-GGUF Qwen3.6 and Gemma-4 models."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This mandatory task is ungated. Use frozen local-GGUF `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF` models with task-owned external memory only. Improvement cannot compensate for forgetting. Today is {date}.
+
+      TASK:
+      Build a sealed chronological stream and bounded strategy store, compare no-memory, fixed-memory, write-through, replay, and shuffled retrieval arms, measure prior-family retention after every update, enforce rollback/quarantine, and write results/experiment_6179_retention_safe_continuous_strategy_learning_ab.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot model caches, stream/store paths, retention families, poisoning controls, protected files, and git status.
+      1. Add or verify REQ-* mandatory-execution, local-GGUF, immutable-weights, external-memory, post-outcome-write, bounded-replay, retention, poison-quarantine, rollback, and protected-file requirements; write focused failing tests first.
+      2. Commit memory only after exact outcomes and measure protected/prior-family behavior after every admitted update.
+      3. Emit utility, retention, state-bound, rollback, provenance, test, checksum, and honest-verdict receipts.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6180-exp6166-reproducibility-adjudication
+    milestone: "2026.08.535"
+    title: "Exp6166 evidence-preserving reproducibility adjudication"
+    priority: high
+    track: stochastic-reproducibility
+    deliverable: results/experiment_6180_exp6166_reproducibility_adjudication.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 180
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6166-mode-jumping-factor-thermalization
+        verdict: "blocked: software-only stochastic result preserved with nonzero repository test state"
+        addressed_by: "Exp6180 re-adjudicates the immutable Exp6166 evidence under task-owned isolated tests without retraining, rewriting Exp6166, or promoting a hardware claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp6166 preserved a scientifically positive software-only stochastic result but remained blocked by nonzero repository tests. Recompute from immutable evidence; do not refit, rewrite source artifacts, or promote a hardware claim. Today is {date}.
+
+      TASK:
+      Hash Exp6166 evidence, rerun focused task-owned reproducibility checks, classify the old full-suite failure, compare before/after bytes, and write results/experiment_6180_exp6166_reproducibility_adjudication.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot Exp6166 bytes, stochastic seeds, tests, exclusion state, protected files, and git status.
+      1. Add or verify REQ-* immutable-source, no-refit, stochastic-replay, isolated-tests, old-failure-classification, no-hardware-promotion, protected-file, and checksum requirements; write focused failing tests first.
+      2. Recompute declared metrics from existing code/artifacts and preserve historical blocked state exactly.
+      3. Emit companion determination, provenance, tests, checksum, and honest verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6181-arc-logo-shortcut-audit
+    milestone: "2026.08.535"
+    title: "Single ARC slot leave-one-game-out shortcut audit"
+    priority: high
+    track: arc
+    deliverable: results/experiment_6181_arc_logo_shortcut_audit.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 300
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6167-arc-task-aware-multiseed-replication
+        verdict: "complete_positive: ARC live-path task-aware admission positive with no solve and zero registry delta"
+        addressed_by: "Exp6181 keeps the fixed Exp6167 policy and measures leave-one-game-out, shuffled-label, alias, and unknown-label robustness without adding induction or claiming a solve."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the single ARC slot for `.535`. Freeze the Exp6167 policy, keep adapters disabled, use only live agent self-discovery attempts, and claim no solve or registry delta. Today is {date}.
+
+      TASK:
+      Run leave-one-game-out, known-label, held-out-label, shuffled-label, alias, and unknown-label controls for the fixed Exp6167 ARC policy; prove no source/BFS/solver-kit path; and write results/experiment_6181_arc_logo_shortcut_audit.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot registry, Exp6167 policy hashes, task labels, live runtime paths, protected files, and git status.
+      1. Add or verify REQ-* single-arc-slot, fixed-policy, adapter-disabled, live-path, no-solve, no-registry-delta, label-control, shortcut-audit, and protected-file requirements; write focused failing tests first.
+      2. Measure robustness only; add no new induction mechanism or public-level solve.
+      3. Emit solve_claimed=false, level_credit_delta=0, provenance, tests, checksum, and honest verdict.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp6182-v535-capstone-reconciliation
+    milestone: "2026.08.535"
+    title: "Branch-independent .535 capstone"
+    priority: critical
+    track: capstone
+    deliverable: results/experiment_6182_v535_capstone_reconciliation.json
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 240
+    requires_gpu: false
+    prior_failures:
+      - experiment_id: exp6168-v534-capstone-reconciliation
+        verdict: "complete: .534 capstone preserved missing, skipped, internal-blocked, flagged, null, blocked, positive, and no-solve ARC classes"
+        addressed_by: "Exp6182 is the next branch-independent capstone over a new .535 task range and must preserve exact terminal evidence without duplicating prior capstone history."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Close `.535` by exact declared paths only. Preserve every delivered, missing, skipped, null, blocked, retired, and flagged class without strengthening scientific claims or rewriting prior determinations. Today is {date}.
+
+      TASK:
+      Resolve Exp6169-Exp6181 by exact deliverable path and conductor receipt, adversarial-verify present artifacts, reconcile claims from raw fields, update only evidence-backed completion history, and write results/experiment_6182_v535_capstone_reconciliation.json.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: snapshot all declared deliverables, conductor receipts, completion multiplicity, quarantine fields, exclusions, protected files, and git status.
+      1. Add or verify REQ-* exact-path, branch-independent, terminal-class-preservation, adversarial-verify, no-claim-strengthening, append-once, protected-file, and checksum requirements; write focused failing tests first.
+      2. Preserve all terminal classes and emit field provenance, test receipts, reproducibility checksum, and honest verdict.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
