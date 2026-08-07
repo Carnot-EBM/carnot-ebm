@@ -2547,3 +2547,75 @@ fields are present, `leak_detected` and `code_signal_survives_heldout` remain
 bare booleans, and the acceptance gate passes only when the suspicious
 in-corpus result is explained and the held-out metric plus leak audit are
 recorded.
+
+### REQ-CODE-6186: Cached LiveCodeBench Bank Preregistration
+
+The repository shall provide an offline Exp6186 workflow that freezes a
+LiveCodeBench code bank before any generation, selector tuning, hidden-state
+extraction, or continuous-learning outcome can influence task choice:
+- The workflow shall load only an already cached LiveCodeBench snapshot and
+  fail closed if the cache is absent, revised during the run, or would require
+  a runtime dataset download.
+- The workflow shall derive stable task IDs and deterministic eligibility from
+  pre-generation metadata only: platform, contest date, difficulty, metadata
+  tags, prompt size, and supported Python runtime. candidate correctness,
+  model scores, hidden states, selector features, or oracle outcomes shall not
+  participate in eligibility, stratification, or split assignment.
+- The workflow shall freeze exactly 120 unique task IDs into four disjoint
+  splits: 36 calibration, 36 held-selector, 18 continuous-learning seed, and
+  30 continuous-learning prospective tasks.
+- The workflow shall seal exact prompt, public-test, private-test, metadata,
+  and stable-task hashes for each selected task while keeping public prompt
+  rows separate from the private-test vault index.
+- The public prompt bank and selector feature rows shall not contain private
+  test source, assertion text, expected output, oracle traces, candidate
+  source, model output, hidden states, or private-test-derived features.
+- The private-test vault shall be access controlled to executor-only use and
+  shall record cache coordinates plus hashes rather than exposing private test
+  text to prompts or selectors.
+- The workflow shall dry-run only deterministic executor fixtures or
+  maintainer references, never candidate solutions, and shall record timeout,
+  process, filesystem, network, resource, nondeterminism, and unsupported-task
+  policies.
+- The terminal artifact shall be
+  `results/experiment_6186_livecodebench_bank_preregistration.json` and shall
+  include the required Exp6186 schema fields, set
+  `candidate_and_model_access_count` to bare `0`, set
+  `inference_substrate` to
+  `deterministic_cached_livecodebench_bank_preregistration`, and set
+  `bank_ready_score` to bare `1` only when all split, overlap, hash,
+  private-test-isolation, executor-fixture, protected-file, and cache
+  immutability checks pass.
+
+### SCENARIO-CODE-6186-CACHED-SNAPSHOT-FAIL-CLOSED: Runtime Downloads Are Forbidden
+
+Given an expected cached LiveCodeBench snapshot identity and file hash,
+when Exp6186 loads the bank,
+then it reads local Arrow cache files directly, records the dataset
+name/revision/cache path/hash/task count, and returns a blocked artifact rather
+than downloading or accepting silent cache revision.
+
+### SCENARIO-CODE-6186-DISJOINT-DETERMINISTIC-SPLITS: Stable Metadata Defines The Bank
+
+Given a cached 400-task LiveCodeBench snapshot,
+when Exp6186 applies its seed and deterministic metadata-only stratification,
+then it emits exactly 36 calibration, 36 held-selector, 18 continuous-learning
+seed, and 30 continuous-learning prospective unique IDs with a zero overlap
+matrix and a reproducible split checksum.
+
+### SCENARIO-CODE-6186-PRIVATE-TEST-NONINTERFERENCE: Prompts And Features Cannot See Oracles
+
+Given Exp6186 must hash private tests for future execution,
+when it writes the public prompt bank, selector feature rows, split manifest,
+and terminal artifact,
+then none of those public surfaces contain private test source, assertion text,
+expected output, oracle traces, candidate source, model output, or hidden
+states, and private-test access is limited to the executor vault receipt.
+
+### SCENARIO-CODE-6186-EXECUTOR-FIXTURE-ONLY: No Candidate Generation During Preregistration
+
+Given Exp6186 validates executor readiness,
+when it performs executor dry-runs,
+then it runs deterministic fixtures or maintainer references only, records the
+sandbox policy dimensions, classifies unsupported task forms, and keeps
+`candidate_and_model_access_count` equal to bare `0`.
