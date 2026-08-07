@@ -50910,3 +50910,118 @@ unclassified canary failure, and the verdict prefix is terminal.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6170 | Implemented (`python/carnot/experiment_6170_v535_task_artifact_isolation_canary.py`, `results/experiment_6170_v535_task_artifact_isolation_canary.json`) | Implemented (`tests/python/test_experiment_6170_v535_task_artifact_isolation_canary.py`) |
+
+### REQ-REPORT-6184: V536 Task-Scoped Evidence-Isolation Preflight
+
+The Exp6184 workflow SHALL qualify only the declared Exp6183 through Exp6196
+writer/test surface from the active `.536` roadmap. It SHALL inventory those
+tasks by task ID, module path, writer mechanism, and exact result path, SHALL
+install a validated task-owned temporary artifact root before pytest
+collection, and SHALL NOT enumerate unrelated legacy writers or claim
+repository-wide closure.
+
+The workflow SHALL publish a versioned frozen preflight invocation for
+downstream `.536` tasks. The manifest SHALL name the preflight module, focused
+pytest target, canonical collection command, focused command, new-code coverage
+command, `CARNOT_EXPERIMENT_ARTIFACT_ROOT`, and the rule that the temporary
+root is task-owned, exists before collection, lives below the system temporary
+directory, and is neither the workspace, repository, production `results/`, nor
+broad temp root.
+
+The preflight SHALL exercise the canonical artifact resolver, legacy literal
+`results/...` compatibility path, atomic replacement, checkpoint/resume,
+subprocess environment propagation, attempted tracked-result write, traversal escape,
+symlink escape, workspace/repository/results-root rejection, broad
+temporary-root rejection, and quarantine/corrigendum/provenance preservation.
+It SHALL preserve aggregate tracked-result hashes, sentinel hashes, quarantine
+fields, protected files, and pre-existing user worktree changes.
+
+The workflow SHALL classify a successfully blocked negative-control write as
+`expected_intercepted_attempt` when the tracked-results guard records the
+attempt and the pre/post hash is byte-identical. That classification SHALL be
+reported separately from `actual_mutation` and SHALL NOT increment
+`isolation_violation_count`. `isolation_violation_count` SHALL count only real
+tracked-result mutations, path/root escapes, or unclassified task-scope
+failures.
+
+The Exp6184 artifact SHALL include, at minimum, `status`,
+`preconditions_checked`, `scope_boundary`, `repository_wide_closure_claimed`,
+`v536_task_writer_census`,
+`frozen_preflight_module_and_invocation_manifest`,
+`canonical_resolver_and_legacy_compatibility_paths`,
+`task_owned_temp_root_receipts`,
+`collection_and_subprocess_receipts`,
+`expected_intercepted_attempt_controls`, `actual_mutation_controls`,
+`traversal_symlink_workspace_root_and_atomic_controls`,
+`tracked_result_hash_before_after_matrix`,
+`quarantine_field_before_after_matrix`,
+`research_complete_multiplicity_receipt`,
+`preflight_failure_classification`, `isolation_violation_count`,
+`v536_task_artifact_isolation_ready_score`,
+`preexisting_worktree_changes_preserved`, `protected_files_unchanged`,
+`duration_s`, `inference_substrate`, `field_provenance`, `test_commands`,
+`test_exit_codes`, `reproducibility_checksum`, and `honest_verdict`.
+`repository_wide_closure_claimed` SHALL be the bare boolean `false`.
+`v536_task_artifact_isolation_ready_score` SHALL be one only when real
+mutations, escapes, unclassified failures, and unfrozen invocation data are all
+absent. `inference_substrate` SHALL be
+`deterministic_task_scoped_repository_test_isolation`, and `honest_verdict`
+SHALL start with `complete_ready:`, `complete_partial:`, `retired:`, or
+`blocked:` while stating that the exact qualified scope is Exp6183-Exp6196.
+
+#### SCENARIO-REPORT-6184-TASK-SCOPE-NON-CLOSURE: Scope Is Bounded To V536
+
+**Given** the active `.536` roadmap declares Exp6183 through Exp6196
+**When** Exp6184 builds its writer census and artifact
+**Then** every census row is keyed to a declared `.536` task and the artifact
+sets bare `repository_wide_closure_claimed` to `false`.
+
+#### SCENARIO-REPORT-6184-FROZEN-PREFLIGHT-INVOCATION: Downstream Tasks Share One Contract
+
+**Given** downstream `.536` tasks need a reusable artifact-isolation preflight
+**When** Exp6184 emits its invocation manifest
+**Then** the manifest names the version, module, pytest target, artifact-root
+environment variable, task-owned root rule, collection command, focused
+command, and new-code coverage command.
+
+#### SCENARIO-REPORT-6184-COMPATIBLE-WRITERS: Canonical, Legacy, Atomic, Checkpoint, And Subprocess Writers Redirect
+
+**Given** the preflight installs a validated task-owned artifact root before
+collection and execution
+**When** canonical writers, legacy literal writers, atomic replacement,
+checkpoint/resume, and subprocess writers run
+**Then** each positive-control write lands under the task-owned root and no
+tracked `results/**` file is mutated.
+
+#### SCENARIO-REPORT-6184-INTERCEPTED-VS-MUTATION: Blocked Attempts Are Not Mutations
+
+**Given** the tracked-results guard and legacy compatibility layer are active
+**When** the preflight attempts to write an existing tracked result file
+**Then** a caught, byte-preserving attempt is classified as
+`expected_intercepted_attempt`, `actual_mutation` remains zero, and the attempt
+does not increment `isolation_violation_count`.
+
+#### SCENARIO-REPORT-6184-ESCAPE-ROOT-ATOMIC-QUARANTINE: Escapes Fail Closed And Evidence Stays Immutable
+
+**Given** sentinel tracked artifacts carry quarantine, corrigendum,
+provenance, substrate, or inference-mode fields
+**When** Exp6184 runs traversal, symlink, invalid-root, atomic-cleanup, and
+quarantine-preservation controls
+**Then** escape attempts raise, invalid roots are rejected, atomic replacement
+leaves no temp file behind, and aggregate/sentinel/quarantine/protected-file
+snapshots remain unchanged except for the task-owned Exp6184 deliverable.
+
+#### SCENARIO-REPORT-6184-SCHEMA-READINESS: Artifact Readiness Is Auditable
+
+**Given** the Exp6184 artifact is emitted
+**When** its schema is validated
+**Then** every required field has provenance, command receipts and exit codes
+are classified, the checksum is stable, readiness is zero on any real mutation,
+escape, unclassified task-scope failure, or missing frozen invocation, and the
+verdict prefix is terminal.
+
+## Implementation Status (REQ-REPORT-6184)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6184 | Planned (`python/carnot/experiment_6184_v536_evidence_isolation_preflight.py`, `results/experiment_6184_v536_evidence_isolation_preflight.json`) | Planned (`tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py`) |
