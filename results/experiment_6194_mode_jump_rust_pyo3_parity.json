@@ -1,0 +1,1083 @@
+{
+  "acceptance_autocorrelation_and_ess_metrics": {
+    "acceptance_delta": 0.0,
+    "autocorrelation_delta": 5.591083152012288e-13,
+    "ess_delta": 1.4431861927732825e-08,
+    "principle": "Reports quality diagnostics so a correct stationary distribution is not inferred from frequencies alone.",
+    "python_acceptance_rate": 0.5299803921568628,
+    "python_effective_sample_size": 20484.358709856482,
+    "python_lag1_autocorrelation": 0.34138062501530275,
+    "rust_acceptance_rate": 0.5299803921568628,
+    "rust_effective_sample_size": 20484.35870984205,
+    "rust_lag1_autocorrelation": 0.34138062501586186
+  },
+  "deterministic_seed_replay_receipt": {
+    "principle": "Proves repeated Python and Rust/PyO3 runs with the same seed replay exactly.",
+    "python_fixture_hash_first": "sha256:64d012fc1d76b3a8f089a9be72c8e7aed2682750c5a837c12eb0af770f7ecc0e",
+    "python_fixture_hash_second": "sha256:64d012fc1d76b3a8f089a9be72c8e7aed2682750c5a837c12eb0af770f7ecc0e",
+    "python_replay_exact": true,
+    "rust_fixture_hash_first": "sha256:64d012fc1d76b3a8f089a9be72c8e7aed2682750c5a837c12eb0af770f7ecc0e",
+    "rust_fixture_hash_second": "sha256:64d012fc1d76b3a8f089a9be72c8e7aed2682750c5a837c12eb0af770f7ecc0e",
+    "rust_replay_exact": true,
+    "seed": 6194
+  },
+  "distribution_frequency_tv_kl_metrics": {
+    "acceptance_delta": 0.0,
+    "autocorrelation_delta": 5.591083152012288e-13,
+    "burn_in": 1000,
+    "distribution_pass": true,
+    "ess_delta": 1.4431861927732825e-08,
+    "principle": "Measures long-run empirical frequencies and TV/KL against the exact target without timing or hardware claims.",
+    "python": {
+      "acceptance_rate": 0.5299803921568628,
+      "accepted_count": 27029,
+      "attempted_count": 51000,
+      "burn_in": 1000,
+      "effective_sample_size": 20484.358709856482,
+      "final_state": {
+        "accepted_count": 27029,
+        "current_label": "right_peak",
+        "rng_state": 2499779468971029986,
+        "step": 51000
+      },
+      "frequencies": {
+        "left_peak": {
+          "count": 17796,
+          "frequency": 0.35592,
+          "target_probability": 0.36
+        },
+        "left_shoulder": {
+          "count": 12058,
+          "frequency": 0.24116,
+          "target_probability": 0.24
+        },
+        "right_peak": {
+          "count": 12456,
+          "frequency": 0.24912,
+          "target_probability": 0.245
+        },
+        "right_shoulder": {
+          "count": 5180,
+          "frequency": 0.1036,
+          "target_probability": 0.105
+        },
+        "valley_left": {
+          "count": 1244,
+          "frequency": 0.02488,
+          "target_probability": 0.025
+        },
+        "valley_right": {
+          "count": 1266,
+          "frequency": 0.02532,
+          "target_probability": 0.025
+        }
+      },
+      "integrated_autocorrelation_time": 2.440886761856081,
+      "kl_target_to_empirical": 7.208536791715917e-05,
+      "lag1_autocorrelation": 0.34138062501530275,
+      "sample_count": 50000,
+      "serialized_final_state": "mode_jump_state_v1|right_peak|2499779468971029986|51000|27029",
+      "tv_to_target": 0.0056000000000000025
+    },
+    "python_rust_frequency_delta_max": 0.0,
+    "python_rust_frequency_deltas": {
+      "left_peak": 0.0,
+      "left_shoulder": 0.0,
+      "right_peak": 0.0,
+      "right_shoulder": 0.0,
+      "valley_left": 0.0,
+      "valley_right": 0.0
+    },
+    "rust": {
+      "acceptance_rate": 0.5299803921568628,
+      "accepted_count": 27029,
+      "attempted_count": 51000,
+      "burn_in": 1000,
+      "effective_sample_size": 20484.35870984205,
+      "final_state": {
+        "accepted_count": 27029,
+        "current_label": "right_peak",
+        "rng_state": 2499779468971029986,
+        "step": 51000
+      },
+      "frequencies": {
+        "left_peak": {
+          "count": 17796,
+          "frequency": 0.35592,
+          "target_probability": 0.36
+        },
+        "left_shoulder": {
+          "count": 12058,
+          "frequency": 0.24116,
+          "target_probability": 0.24
+        },
+        "right_peak": {
+          "count": 12456,
+          "frequency": 0.24912,
+          "target_probability": 0.245
+        },
+        "right_shoulder": {
+          "count": 5180,
+          "frequency": 0.1036,
+          "target_probability": 0.105
+        },
+        "valley_left": {
+          "count": 1244,
+          "frequency": 0.02488,
+          "target_probability": 0.025
+        },
+        "valley_right": {
+          "count": 1266,
+          "frequency": 0.02532,
+          "target_probability": 0.025
+        }
+      },
+      "integrated_autocorrelation_time": 2.4408867618578007,
+      "kl_target_to_empirical": 7.208536791715914e-05,
+      "lag1_autocorrelation": 0.34138062501586186,
+      "sample_count": 50000,
+      "serialized_final_state": "mode_jump_state_v1|right_peak|2499779468971029986|51000|27029",
+      "tv_to_target": 0.0056000000000000025
+    },
+    "sample_count": 50000,
+    "target_probabilities": {
+      "left_peak": 0.36,
+      "left_shoulder": 0.24,
+      "right_peak": 0.245,
+      "right_shoulder": 0.105,
+      "valley_left": 0.025,
+      "valley_right": 0.025
+    },
+    "tolerances": {
+      "acceptance_delta": 0.0,
+      "autocorrelation_delta": 1e-12,
+      "ess_min": 10000.0,
+      "exact_float": 1e-15,
+      "python_rust_freq_delta": 0.0,
+      "target_kl": 0.001,
+      "target_tv": 0.01
+    }
+  },
+  "duration_s": 640.0,
+  "exact_transition_fixture_hash_and_parity_matrix": {
+    "all_fields_match": true,
+    "final_python_state": {
+      "accepted_count": 2,
+      "current_label": "left_peak",
+      "rng_state": 17181667396803735766,
+      "step": 10
+    },
+    "final_rust_state": {
+      "accepted_count": 2,
+      "current_label": "left_peak",
+      "rng_state": 17181667396803735766,
+      "step": 10
+    },
+    "fixture_sha256": "sha256:64d012fc1d76b3a8f089a9be72c8e7aed2682750c5a837c12eb0af770f7ecc0e",
+    "mismatch_count": 0,
+    "parity_rows": [
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 0
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 1
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 2
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 3
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 4
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 5
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 6
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 7
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 8
+      },
+      {
+        "all_fields_match": true,
+        "field_matches": {
+          "acceptance_probability": true,
+          "acceptance_uniform": true,
+          "accepted": true,
+          "current_energy": true,
+          "log_acceptance": true,
+          "proposal_log_forward": true,
+          "proposal_log_reverse": true,
+          "proposal_uniform": true,
+          "proposed_energy": true,
+          "proposed_label": true,
+          "rng_state_after": true,
+          "state_after": true
+        },
+        "mismatches": [],
+        "step_index": 9
+      }
+    ],
+    "principle": "Content-addresses the immutable short-chain fixture and records field-by-field Python/Rust parity.",
+    "serialized_state_match": true,
+    "step_count": 10
+  },
+  "experiment_id": "experiment_6194_mode_jump_rust_pyo3_parity",
+  "field_provenance": {
+    "acceptance_autocorrelation_and_ess_metrics": {
+      "principle": "Reports quality diagnostics so a correct stationary distribution is not inferred from frequencies alone.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "deterministic_seed_replay_receipt": {
+      "principle": "Proves repeated Python and Rust/PyO3 runs with the same seed replay exactly.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "distribution_frequency_tv_kl_metrics": {
+      "principle": "Measures long-run empirical frequencies and TV/KL against the exact target without timing or hardware claims.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "duration_s": {
+      "principle": "Reports real wall time without padding.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "exact_transition_fixture_hash_and_parity_matrix": {
+      "principle": "Content-addresses the immutable short-chain fixture and records field-by-field Python/Rust parity.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "field_provenance": {
+      "principle": "Maps every required field to prompt, spec, immutable artifacts, source, tests, commands, or computed fixtures.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "fixed_algorithm_equations_config_and_seed": {
+      "principle": "Freezes labels, target probabilities, proposal table, MH acceptance equation, RNG, seed, initial state, and tolerances before Rust outcomes are read.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "hardware_or_speedup_claimed": {
+      "principle": "Bare false prevents Rust/PyO3 parity from becoming FPGA, TSU, CUDA, THRML, latency, power, energy, or speedup evidence.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "historical_artifacts_unchanged": {
+      "principle": "Proves Exp6166 and Exp6180 artifacts were not rewritten.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "honest_verdict": {
+      "principle": "Uses a required terminal prefix and states exact parity plus every classified nonzero command.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "immutable_exp6166_exp6180_hash_and_verdict_receipt": {
+      "principle": "Preserves the historical blocked Exp6166 determination and positive Exp6180 companion determination by byte hash.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "inference_substrate": {
+      "principle": "Declares `local_cpu_rust_pyo3_cross_runtime_sampler_parity`, not LLM, GPU, FPGA, TSU, or THRML scaling.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "mode_jump_rust_pyo3_ready_score": {
+      "principle": "Equals 1.0 only when exact parity, distribution/quality tolerances, serialization/error coverage, preservation, and task-owned tests all pass.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "nonzero_command_classification": {
+      "principle": "Classifies every nonzero command separately from exact parity and readiness.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "preconditions_checked": {
+      "principle": "Records Exp6184 preflight, immutable upstream hashes, toolchain, build surface, output root, exclusions, git status, protected files, and root clutter before implementation evidence is interpreted.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms conductor and reconciler-owned files stayed byte-identical.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact after blanking only duration and the checksum field.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "rust_module_and_pyo3_binding_paths": {
+      "principle": "Lists the Rust kernel, crate exports, PyO3 binding, compatibility import, Python fixture, tests, and artifact paths touched by the port.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "rust_python_api_contract": {
+      "principle": "Names typed construction, one-step, multi-step, energy/proposal queries, snapshot, restore, serialization, and error behavior.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "serialization_snapshot_restore_and_error_receipts": {
+      "principle": "Proves snapshot/restore/serialization round trips and corrupt inputs fail closed.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "status": {
+      "principle": "Terminal state separates ready, partial, retired, and blocked Exp6194 outcomes.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "task_owned_rust_python_test_commands_and_exit_codes": {
+      "principle": "Stores task-owned command receipts so failed local checks cannot become readiness evidence.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "test_commands": {
+      "principle": "Records focused cargo, PyO3, Python, spec, artifact, preservation, adversarial, protected-file, root-clutter, and suite receipts.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "test_exit_codes": {
+      "principle": "Stores exit codes for every recorded command.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    },
+    "timing_diagnostic_only": {
+      "principle": "Bare true prevents diagnostic timing from becoming a speed claim.",
+      "source": "prompt/spec/immutable Exp6166-Exp6180 evidence/Rust-PyO3 tests"
+    }
+  },
+  "fixed_algorithm_equations_config_and_seed": {
+    "acceptance_log_ratio": "log(pi(proposed))-log(pi(current))+log(q(current|proposed))-log(q(proposed|current))",
+    "acceptance_rule": "accept when log_acceptance >= 0 or log(u_accept) < log_acceptance",
+    "algorithm_id": "exp6166_cross_mode_categorical_mh_v1",
+    "config_sha256": "sha256:8d7bc1882da6bc76d46f71a46bf93a07f723e14fdadc3817053069c11589c508",
+    "energy_equation": "E(label)=-log(pi(label))",
+    "hardware_scope_excluded": [
+      "FPGA",
+      "TSU",
+      "THRML scaling",
+      "two-axis"
+    ],
+    "historical_determination_preserved": true,
+    "initial_label": "left_peak",
+    "labels": [
+      "left_peak",
+      "left_shoulder",
+      "valley_left",
+      "valley_right",
+      "right_peak",
+      "right_shoulder"
+    ],
+    "long_run_burn_in": 1000,
+    "long_run_sample_count": 50000,
+    "principle": "Freezes labels, target probabilities, proposal table, MH acceptance equation, RNG, seed, initial state, and tolerances before Rust outcomes are read.",
+    "proposal_probabilities": [
+      [
+        0.0,
+        0.75,
+        0.0,
+        0.0,
+        0.25,
+        0.0
+      ],
+      [
+        0.375,
+        0.0,
+        0.375,
+        0.0,
+        0.0,
+        0.25
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.75
+      ],
+      [
+        0.0,
+        0.25,
+        0.0,
+        0.375,
+        0.375,
+        0.0
+      ]
+    ],
+    "proposal_row_order": "global_labels_order",
+    "rng": {
+      "a": 6364136223846793005,
+      "c": 1442695040888963407,
+      "kind": "u64_lcg",
+      "uniform_bits": 53
+    },
+    "seed": 6194,
+    "short_chain_steps": 10,
+    "source_result_hashes": {
+      "exp6166_result": "sha256:34247a16cc1610caf6ec616d3bda868b89fb1e1c23201261f676e315d1533dea",
+      "exp6180_result": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87"
+    },
+    "target_probabilities": {
+      "left_peak": 0.36,
+      "left_shoulder": 0.24,
+      "right_peak": 0.245,
+      "right_shoulder": 0.105,
+      "valley_left": 0.025,
+      "valley_right": 0.025
+    },
+    "tolerances": {
+      "acceptance_delta": 0.0,
+      "autocorrelation_delta": 1e-12,
+      "ess_min": 10000.0,
+      "exact_float": 1e-15,
+      "python_rust_freq_delta": 0.0,
+      "target_kl": 0.001,
+      "target_tv": 0.01
+    }
+  },
+  "hardware_or_speedup_claimed": false,
+  "historical_artifacts_unchanged": {
+    "principle": "Proves Exp6166 and Exp6180 artifacts were not rewritten.",
+    "rows": {
+      "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py": {
+        "after": "sha256:ced5c0cda575ca90fcc798c30787778cae66808329c13856b60ea89fc3744222",
+        "before": "sha256:ced5c0cda575ca90fcc798c30787778cae66808329c13856b60ea89fc3744222",
+        "unchanged": true
+      },
+      "python/carnot/experiment_6180_exp6166_reproducibility_adjudication.py": {
+        "after": "sha256:cda8c68950a2c93355d2fcbd54510554532715fac01e721916e187282013b55d",
+        "before": "sha256:cda8c68950a2c93355d2fcbd54510554532715fac01e721916e187282013b55d",
+        "unchanged": true
+      },
+      "results/experiment_6166_mode_jumping_factor_thermalization.json": {
+        "after": "sha256:34247a16cc1610caf6ec616d3bda868b89fb1e1c23201261f676e315d1533dea",
+        "before": "sha256:34247a16cc1610caf6ec616d3bda868b89fb1e1c23201261f676e315d1533dea",
+        "unchanged": true
+      },
+      "results/experiment_6180_exp6166_reproducibility_adjudication.json": {
+        "after": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
+        "before": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "honest_verdict": "complete_ready: exact short-chain parity true; nonzero commands [{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_all_check\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 2, \"name\": \"full_python_suite\", \"task_owned\": false}]",
+  "immutable_exp6166_exp6180_hash_and_verdict_receipt": {
+    "determination_preserved": true,
+    "exp6166": {
+      "honest_verdict": "blocked: mode jumping improved but nonzero_test_commands",
+      "path": "results/experiment_6166_mode_jumping_factor_thermalization.json",
+      "sha256": "sha256:34247a16cc1610caf6ec616d3bda868b89fb1e1c23201261f676e315d1533dea",
+      "status": "blocked"
+    },
+    "exp6180": {
+      "honest_verdict": "complete_positive: Exp6166 software stochastic result reproduced from immutable evidence; historical Exp6166 artifact remains blocked",
+      "path": "results/experiment_6180_exp6166_reproducibility_adjudication.json",
+      "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
+      "status": "complete_positive"
+    },
+    "principle": "Preserves the historical blocked Exp6166 determination and positive Exp6180 companion determination by byte hash."
+  },
+  "inference_substrate": "local_cpu_rust_pyo3_cross_runtime_sampler_parity",
+  "mode_jump_rust_pyo3_ready_score": 1.0,
+  "nonzero_command_classification": [
+    {
+      "classification": "unrelated_preexisting",
+      "command": "cargo fmt --all -- --check",
+      "exit_code": 1,
+      "name": "cargo_fmt_all_check",
+      "task_owned": false
+    },
+    {
+      "classification": "unrelated_preexisting",
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "name": "full_python_suite",
+      "task_owned": false
+    }
+  ],
+  "preconditions_checked": {
+    "build_features": {
+      "carnot_python_features": "extension-module",
+      "carnot_samplers_features": "default",
+      "pyo3_abi_env": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1"
+    },
+    "current_rust_pyo3_api": {
+      "classes": [
+        "RustModeJumpConfig",
+        "RustModeJumpState",
+        "RustModeJumpCore"
+      ],
+      "config_constructor": [
+        "labels",
+        "target_probabilities",
+        "proposal_probabilities"
+      ],
+      "core_methods": [
+        "energy",
+        "proposal_probability",
+        "step",
+        "step_trace",
+        "run",
+        "state_from_serialized"
+      ],
+      "error_policy": "invalid inputs raise ValueError; no silent Python fallback",
+      "principle": "Names typed construction, one-step, multi-step, energy/proposal queries, snapshot, restore, serialization, and error behavior.",
+      "state_constructor": [
+        "current_label",
+        "rng_state",
+        "step",
+        "accepted_count"
+      ],
+      "state_methods": [
+        "snapshot",
+        "from_snapshot",
+        "serialize",
+        "deserialize"
+      ]
+    },
+    "exclusions": [
+      "FPGA",
+      "TSU",
+      "THRML scaling",
+      "two-axis tempering",
+      "hardware speed"
+    ],
+    "exp6184_preflight": {
+      "artifact_root": "/tmp/carnot-6194-preflight-v4fL6t",
+      "command": "CARNOT_EXPERIMENT_ARTIFACT_ROOT=$(mktemp -d /tmp/carnot-6194-preflight-XXXXXX) .venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py -q -o addopts=",
+      "exit_code": 0
+    },
+    "git_status_short": {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "available": true,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "M crates/carnot-python/src/lib.rs\n M crates/carnot-samplers/src/lib.rs\n M openspec/capabilities/samplers/spec.md\n M python/carnot/_rust_compat.py\n?? .agents/\n?? crates/carnot-python/src/mode_jump.rs\n?? crates/carnot-samplers/src/mode_jump.rs\n?? crates/carnot-samplers/tests/mode_jump.rs\n?? openspec/capabilities/rust-python-boundary/\n?? python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py\n?? skills-lock.json\n?? tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py"
+    },
+    "immutable_hashes_before": {
+      "python/carnot/experiment_6166_mode_jumping_factor_thermalization.py": {
+        "exists": true,
+        "sha256": "sha256:ced5c0cda575ca90fcc798c30787778cae66808329c13856b60ea89fc3744222",
+        "size_bytes": 61980
+      },
+      "python/carnot/experiment_6180_exp6166_reproducibility_adjudication.py": {
+        "exists": true,
+        "sha256": "sha256:cda8c68950a2c93355d2fcbd54510554532715fac01e721916e187282013b55d",
+        "size_bytes": 27069
+      },
+      "results/experiment_6166_mode_jumping_factor_thermalization.json": {
+        "exists": true,
+        "sha256": "sha256:34247a16cc1610caf6ec616d3bda868b89fb1e1c23201261f676e315d1533dea",
+        "size_bytes": 80727
+      },
+      "results/experiment_6180_exp6166_reproducibility_adjudication.json": {
+        "exists": true,
+        "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
+        "size_bytes": 40227
+      }
+    },
+    "preconditions_ready": true,
+    "principle": "Records Exp6184 preflight, immutable upstream hashes, toolchain, build surface, output root, exclusions, git status, protected files, and root clutter before implementation evidence is interpreted.",
+    "protected_files_before": {
+      "_bmad/traceability.md": {
+        "exists": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "size_bytes": 1198752
+      },
+      "ops/changelog.md": {
+        "exists": true,
+        "sha256": "sha256:bb502eda31586c7e152d25deaf38ee69707efcd72f5c8bc13cfd62f5f149164c",
+        "size_bytes": 4050061
+      },
+      "ops/status.md": {
+        "exists": true,
+        "sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "size_bytes": 1176672
+      },
+      "scripts/research_conductor.py": {
+        "exists": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "size_bytes": 307361
+      }
+    },
+    "root_clutter_before": [],
+    "run_date": "20260807",
+    "task_owned_output_root": "results/experiment_6194_mode_jump_rust_pyo3_parity.json",
+    "toolchain": {
+      "cargo": {
+        "argv": [
+          "cargo",
+          "--version"
+        ],
+        "available": true,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "cargo 1.97.1 (c980f4866 2026-06-30) (Arch Linux rust 1:1.97.1-1.1)"
+      },
+      "cargo_lock_hash": "sha256:a1e23eaa9806224fa95dec250f904815c8cb6d8616330d6655725fc5d03e6985",
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "python": "3.12.13",
+      "rust_toolchain_file_present": false,
+      "rustc": {
+        "argv": [
+          "rustc",
+          "--version"
+        ],
+        "available": true,
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Arch Linux rust 1:1.97.1-1.1)"
+      }
+    }
+  },
+  "protected_files_unchanged": {
+    "principle": "Confirms conductor and reconciler-owned files stayed byte-identical.",
+    "rows": {
+      "_bmad/traceability.md": {
+        "after": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "before": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "after": "sha256:bb502eda31586c7e152d25deaf38ee69707efcd72f5c8bc13cfd62f5f149164c",
+        "before": "sha256:bb502eda31586c7e152d25deaf38ee69707efcd72f5c8bc13cfd62f5f149164c",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "after": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "before": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "after": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "before": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    },
+    "unchanged": true
+  },
+  "reproducibility_checksum": "sha256:0a287afef469d2f3e5d9d915d5ff83d1c766d8c6af844823b6b203bb0a916c86",
+  "run_date": "20260807",
+  "rust_module_and_pyo3_binding_paths": {
+    "hashes": {
+      "crates/carnot-python/src/lib.rs": {
+        "exists": true,
+        "sha256": "sha256:6f59c0bb5e1937928b9f7db5d328e8c6d4747fe98df3c1bd965798a80ee54809",
+        "size_bytes": 14039
+      },
+      "crates/carnot-python/src/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
+        "size_bytes": 8079
+      },
+      "crates/carnot-samplers/src/lib.rs": {
+        "exists": true,
+        "sha256": "sha256:b2a87d947fcb854898796deb89fb34947fd46226a95d28da78f4c16b93f5658b",
+        "size_bytes": 24908
+      },
+      "crates/carnot-samplers/src/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
+        "size_bytes": 16667
+      },
+      "crates/carnot-samplers/tests/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:7ec4484a6619a802fddd912071c1057454bf82532a8fbdaa241afd03d3b8cec3",
+        "size_bytes": 4909
+      },
+      "python/carnot/_rust_compat.py": {
+        "exists": true,
+        "sha256": "sha256:2290b705ceb96fe23c11c8e9bd5f156182d1e5f7a5263a4211da30bc578b97c3",
+        "size_bytes": 2707
+      },
+      "python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py": {
+        "exists": true,
+        "sha256": "sha256:9bda51b6627945c236829b9a3b1c3184c40fca29cd9d14dc515e9ec6c8eea553",
+        "size_bytes": 44010
+      },
+      "tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py": {
+        "exists": true,
+        "sha256": "sha256:722d02e9a02492b2bbdc164d8501ff87ce114bb4cf24218fa6e15526dc1cf2dd",
+        "size_bytes": 11293
+      }
+    },
+    "paths": [
+      "crates/carnot-samplers/src/mode_jump.rs",
+      "crates/carnot-samplers/src/lib.rs",
+      "crates/carnot-samplers/tests/mode_jump.rs",
+      "crates/carnot-python/src/mode_jump.rs",
+      "crates/carnot-python/src/lib.rs",
+      "python/carnot/_rust_compat.py",
+      "python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py",
+      "tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py",
+      "results/experiment_6194_mode_jump_rust_pyo3_parity.json"
+    ],
+    "principle": "Lists the Rust kernel, crate exports, PyO3 binding, compatibility import, Python fixture, tests, and artifact paths touched by the port."
+  },
+  "rust_python_api_contract": {
+    "classes": [
+      "RustModeJumpConfig",
+      "RustModeJumpState",
+      "RustModeJumpCore"
+    ],
+    "config_constructor": [
+      "labels",
+      "target_probabilities",
+      "proposal_probabilities"
+    ],
+    "core_methods": [
+      "energy",
+      "proposal_probability",
+      "step",
+      "step_trace",
+      "run",
+      "state_from_serialized"
+    ],
+    "error_policy": "invalid inputs raise ValueError; no silent Python fallback",
+    "principle": "Names typed construction, one-step, multi-step, energy/proposal queries, snapshot, restore, serialization, and error behavior.",
+    "state_constructor": [
+      "current_label",
+      "rng_state",
+      "step",
+      "accepted_count"
+    ],
+    "state_methods": [
+      "snapshot",
+      "from_snapshot",
+      "serialize",
+      "deserialize"
+    ]
+  },
+  "schema": "carnot.experiment_6194.mode_jump_rust_pyo3_parity.v1",
+  "serialization_snapshot_restore_and_error_receipts": {
+    "all_error_controls_passed": true,
+    "error_controls": {
+      "bad_label_energy": {
+        "error": "ValueError",
+        "message": "label not in mode-jump configuration: unsupported_shadow",
+        "raised": true
+      },
+      "corrupt_serialized_state": {
+        "error": "ValueError",
+        "message": "serialized state must use mode_jump_state_v1 schema",
+        "raised": true
+      },
+      "corrupt_snapshot": {
+        "error": "ValueError",
+        "message": "snapshot missing rng_state",
+        "raised": true
+      },
+      "empty_config": {
+        "error": "ValueError",
+        "message": "labels must be non-empty",
+        "raised": true
+      },
+      "zero_step_run": {
+        "error": "ValueError",
+        "message": "n_steps must be positive",
+        "raised": true
+      },
+      "zero_target_probability": {
+        "error": "ValueError",
+        "message": "target_probabilities values must be positive on support",
+        "raised": true
+      }
+    },
+    "principle": "Proves snapshot/restore/serialization round trips and corrupt inputs fail closed.",
+    "serialization_roundtrip_pass": true,
+    "serialized_state": "mode_jump_state_v1|left_peak|6194|0|0",
+    "snapshot_roundtrip_pass": true
+  },
+  "status": "complete_ready",
+  "task_owned_rust_python_test_commands_and_exit_codes": {
+    "all_task_owned_commands_passed": true,
+    "command_receipts": [
+      {
+        "command": "tmp=$(mktemp -d /tmp/carnot-6194-preflight-XXXXXX) && CARNOT_EXPERIMENT_ARTIFACT_ROOT=\"$tmp\" .venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py -q -o addopts=",
+        "exit_code": 0,
+        "name": "exp6184_preflight",
+        "summary": "7 passed, 1 warning in 112.24s; artifact root /tmp/carnot-6194-preflight-v4fL6t",
+        "task_owned": true
+      },
+      {
+        "command": "cargo test -p carnot-samplers --test mode_jump",
+        "exit_code": 0,
+        "name": "cargo_mode_jump_tests",
+        "summary": "4 passed; exact transition, MH acceptance, distribution quality, serialization/error controls",
+        "task_owned": true
+      },
+      {
+        "command": "rustfmt --check crates/carnot-samplers/src/mode_jump.rs crates/carnot-samplers/tests/mode_jump.rs crates/carnot-python/src/mode_jump.rs",
+        "exit_code": 0,
+        "name": "rustfmt_touched_check",
+        "summary": "touched Rust files formatted",
+        "task_owned": true
+      },
+      {
+        "command": "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+        "exit_code": 0,
+        "name": "pyo3_build",
+        "summary": "build succeeded; pre-existing s2kan warnings only",
+        "task_owned": true
+      },
+      {
+        "command": "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so && .venv/bin/python -c \"import carnot._rust as r; assert hasattr(r, 'RustModeJumpCore'); print('RustModeJumpCore import OK')\"",
+        "exit_code": 0,
+        "name": "package_import_e2e",
+        "summary": "RustModeJumpCore import OK",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py -q --no-cov -n 0",
+        "exit_code": 0,
+        "name": "focused_python_parity_tests",
+        "summary": "6 passed; PyO3 exact parity, distribution, serialization/error, schema",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py -m pytest tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py --fail-under=100",
+        "exit_code": 0,
+        "name": "new_python_module_coverage",
+        "summary": "6 passed; 352 statements, 0 missed, 100% coverage",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py crates/carnot-samplers/tests/mode_jump.rs",
+        "exit_code": 0,
+        "name": "spec_coverage",
+        "summary": "OK: all tests reference specification requirements",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py",
+        "exit_code": 0,
+        "name": "ruff_check",
+        "summary": "All checks passed",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/ruff format --check python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py",
+        "exit_code": 0,
+        "name": "ruff_format_check",
+        "summary": "2 files already formatted",
+        "task_owned": true
+      },
+      {
+        "command": "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+        "exit_code": 0,
+        "name": "protected_file_check",
+        "summary": "no protected file status output",
+        "task_owned": true
+      },
+      {
+        "command": ".venv/bin/python scripts/root_clutter_sweep.py",
+        "exit_code": 0,
+        "name": "root_clutter_check",
+        "summary": "dry-run: quarantine 0, delete 0, skipped younger possibly in-flight 1",
+        "task_owned": true
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": "cargo fmt --all -- --check",
+        "exit_code": 1,
+        "name": "cargo_fmt_all_check",
+        "summary": "repository-wide check reports pre-existing rustfmt drift in older modules including gec.rs, verification_learning.rs, s2kan.rs, casal.rs, ebft.rs; touched files passed separate rustfmt check",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 2,
+        "name": "full_python_suite",
+        "summary": "single mandated broad run stopped after unrelated failures and worker crashes; 108 failed, 9643 passed, 8 skipped, 14 errors in 371.42s at KeyboardInterrupt",
+        "task_owned": false
+      }
+    ],
+    "principle": "Stores task-owned command receipts so failed local checks cannot become readiness evidence.",
+    "task_owned_failure_count": 0
+  },
+  "test_commands": [
+    "tmp=$(mktemp -d /tmp/carnot-6194-preflight-XXXXXX) && CARNOT_EXPERIMENT_ARTIFACT_ROOT=\"$tmp\" .venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py -q -o addopts=",
+    "cargo test -p carnot-samplers --test mode_jump",
+    "rustfmt --check crates/carnot-samplers/src/mode_jump.rs crates/carnot-samplers/tests/mode_jump.rs crates/carnot-python/src/mode_jump.rs",
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python",
+    "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so && .venv/bin/python -c \"import carnot._rust as r; assert hasattr(r, 'RustModeJumpCore'); print('RustModeJumpCore import OK')\"",
+    ".venv/bin/pytest tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py -m pytest tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py crates/carnot-samplers/tests/mode_jump.rs",
+    ".venv/bin/ruff check python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py",
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "cargo fmt --all -- --check",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py -m pytest tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py -q --no-cov -n 0": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py crates/carnot-samplers/tests/mode_jump.rs": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py tests/python/test_experiment_6194_mode_jump_rust_pyo3_parity.py": 0,
+    "PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python": 0,
+    "cargo fmt --all -- --check": 1,
+    "cargo test -p carnot-samplers --test mode_jump": 0,
+    "cp target/debug/libcarnot_python.so python/carnot/_rust.cpython-312-x86_64-linux-gnu.so && .venv/bin/python -c \"import carnot._rust as r; assert hasattr(r, 'RustModeJumpCore'); print('RustModeJumpCore import OK')\"": 0,
+    "git status --short -- scripts/research_conductor.py ops/changelog.md ops/status.md _bmad/traceability.md": 0,
+    "rustfmt --check crates/carnot-samplers/src/mode_jump.rs crates/carnot-samplers/tests/mode_jump.rs crates/carnot-python/src/mode_jump.rs": 0,
+    "tmp=$(mktemp -d /tmp/carnot-6194-preflight-XXXXXX) && CARNOT_EXPERIMENT_ARTIFACT_ROOT=\"$tmp\" .venv/bin/pytest tests/python/test_experiment_6184_v536_evidence_isolation_preflight.py -q -o addopts=": 0
+  },
+  "timing_diagnostic_only": true
+}
