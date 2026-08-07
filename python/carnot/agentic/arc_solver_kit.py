@@ -6058,3 +6058,137 @@ def bisect_death_prefix(
         "evaluations": evaluations,
         "monotone_assumption": True,
     }
+
+
+def object_relative_trajectory_transfer(
+    old_first_grid: Any,
+    new_first_grid: Any,
+    actions: Sequence[Mapping[str, Any]],
+    *,
+    cell: int = 1,
+    min_matched_fraction: float = 0.5,
+    max_displacement_std: float = 2.0,
+) -> dict[str, Any]:
+    """LEVER #2 (2026-08-07, REQ-ARC-WMTE-TRAJ-TRANSFER-1): re-anchor a level's successful action
+    trace to a NEW level by object matching, so the trace can be tried on the new level BEFORE
+    spending an LLM re-induction call. The FOYSAL leaderboard-technique-watch lever (2026-08-01
+    entry, docs/research-notes/arc-agi3-leaderboard-technique-watch.md): "replays the preceding
+    level's solution, then matches objects by color/area, estimates their mean centroid
+    displacement, and translates all ACTION6 coordinates accordingly."
+
+    `old_first_grid` / `new_first_grid` are the two levels' opening LOGICAL grids (post
+    `to_logical`, matching `object_centric_digest`'s convention -- NOT raw frame pixels). `actions`
+    is the completed level's trace as `{"action": int, "data": dict|None}` steps (see
+    `E3AgentPolicy._completed_level_trace`). `cell` is the logical-to-frame-pixel scale factor
+    (`E3AgentPolicy.cell`) -- displacement is measured on LOGICAL grids but ACTION6 `x`/`y` are
+    FRAME pixels in [0, 63], so the translation must be scaled by it.
+
+    MATCHING. Greedy, not optimal-assignment: for each old-grid component, the nearest same-color
+    unmatched new-grid component wins, ranked by (area difference, centroid distance) in that
+    order -- exact-area matches are preferred over merely-close ones, consistent with ARC games
+    typically translating/recoloring objects rather than resizing them. `object_centric_digest`'s
+    `centroid` is `[x, y]` (X-FIRST, see that function) -- do NOT mix with `_mask_centroid`'s
+    `(row, col)` = `(y, x)` ordering used elsewhere in this module.
+
+    CONFIDENCE. `transfer_confident` requires BOTH `matched_fraction >= min_matched_fraction`
+    (most of the old level's objects have a plausible counterpart -- a low fraction means the new
+    level is not simply an object-translated variant) AND `displacement_std <=
+    max_displacement_std` (the matched objects moved by roughly the SAME amount -- a high spread
+    means either a bad-match or a level that transformed non-uniformly, and a single mean
+    displacement cannot describe it). Neither condition alone is sufficient: a level with one
+    matched pair trivially has zero spread, and a level with uniform spread but few matches is
+    still evidence-thin. Callers MUST gate on this field, not merely on `matched_pairs > 0`.
+
+    BOUNDS. Every translated ACTION6 click is checked against `_action6_out_of_live_bounds` (the
+    live [0, 63] API bound, not the offline arcade's unchecked one -- the exact asymmetry that
+    caused lf52's live-400/offline-clean split) and DROPPED (not clamped) if it would fail, since a
+    clamped-into-bounds click is a different, unvalidated click, not a translated one. Non-ACTION6
+    steps (and ACTION6 steps missing x/y) pass through unchanged -- displacement only applies to
+    click coordinates.
+
+    Returns a dict (`verifier_is_oracle: False` -- this is generation, not verification;
+    the caller's own gate + the live level counter are the oracle) with `matched_pairs`,
+    `total_old_components`, `matched_fraction`, `mean_dx`/`mean_dy` (logical-grid units),
+    `displacement_std`, `translated_actions`, `oob_dropped`, and `transfer_confident`.
+    """
+
+    old_digest = object_centric_digest(old_first_grid)
+    new_digest = object_centric_digest(new_first_grid)
+    old_components = list(old_digest["components"])
+    new_components = list(new_digest["components"])
+    used_new = [False] * len(new_components)
+
+    displacements: list[tuple[float, float]] = []
+    for old_comp in old_components:
+        best_idx: Optional[int] = None
+        best_score: Optional[tuple[float, float]] = None
+        for idx, new_comp in enumerate(new_components):
+            if used_new[idx] or new_comp["color"] != old_comp["color"]:
+                continue
+            area_diff = float(abs(int(new_comp["area"]) - int(old_comp["area"])))
+            cx0, cy0 = old_comp["centroid"]
+            cx1, cy1 = new_comp["centroid"]
+            centroid_dist = ((cx1 - cx0) ** 2 + (cy1 - cy0) ** 2) ** 0.5
+            score = (area_diff, centroid_dist)
+            if best_score is None or score < best_score:
+                best_score = score
+                best_idx = idx
+        if best_idx is not None:
+            used_new[best_idx] = True
+            new_comp = new_components[best_idx]
+            displacements.append(
+                (
+                    new_comp["centroid"][0] - old_comp["centroid"][0],
+                    new_comp["centroid"][1] - old_comp["centroid"][1],
+                )
+            )
+
+    total_old_components = len(old_components)
+    matched_pairs = len(displacements)
+    matched_fraction = (matched_pairs / total_old_components) if total_old_components else 0.0
+
+    if displacements:
+        mean_dx = sum(d[0] for d in displacements) / matched_pairs
+        mean_dy = sum(d[1] for d in displacements) / matched_pairs
+        var = sum((d[0] - mean_dx) ** 2 + (d[1] - mean_dy) ** 2 for d in displacements) / (
+            2 * matched_pairs
+        )
+        displacement_std = var**0.5
+    else:
+        mean_dx = mean_dy = 0.0
+        displacement_std = float("inf")
+
+    translated_actions: list[dict[str, Any]] = []
+    oob_dropped = 0
+    for step in actions:
+        action_id = int(step.get("action"))
+        data = step.get("data")
+        if action_id == 6 and isinstance(data, Mapping) and "x" in data and "y" in data:
+            new_x = int(round(float(data["x"]) + mean_dx * cell))
+            new_y = int(round(float(data["y"]) + mean_dy * cell))
+            if _action6_out_of_live_bounds(new_x, new_y):
+                oob_dropped += 1
+                continue
+            translated_actions.append({"action": action_id, "data": {"x": new_x, "y": new_y}})
+        else:
+            translated_actions.append({"action": action_id, "data": data})
+
+    transfer_confident = bool(
+        total_old_components > 0
+        and matched_fraction >= min_matched_fraction
+        and displacement_std <= max_displacement_std
+    )
+
+    return {
+        "operator": "object_relative_trajectory_transfer",
+        "matched_pairs": matched_pairs,
+        "total_old_components": total_old_components,
+        "matched_fraction": matched_fraction,
+        "mean_dx": mean_dx,
+        "mean_dy": mean_dy,
+        "displacement_std": displacement_std,
+        "translated_actions": translated_actions,
+        "oob_dropped": oob_dropped,
+        "transfer_confident": transfer_confident,
+        "verifier_is_oracle": False,
+    }

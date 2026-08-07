@@ -22173,3 +22173,77 @@ work still ahead, distinct from flipping an already-evidenced flag.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-OBJPERC-DEFAULT-ON-1 | `python/carnot/agentic/arc_executable_world_model.py:_object_perception_on`. | `tests/python/test_object_perception_induction.py`, `tests/python/test_object_perception_ab_stats.py`. |
+
+### REQ-ARC-WMTE-TRAJ-TRANSFER-1: Verifier-Gated Object-Relative Trajectory Transfer
+
+**Origin:** 2026-08-07 operator directive (lever #2 of the ARC six-lever push, `ops/known-issues.md`
+-- the FOYSAL leaderboard-technique-watch lever, 2026-08-01 entry in
+`docs/research-notes/arc-agi3-leaderboard-technique-watch.md`: "replays the preceding level's
+solution, then matches objects by color/area, estimates their mean centroid displacement, and
+translates all ACTION6 coordinates accordingly." Its own implementation was source-reading and
+therefore forbidden by the ARC Live-Path Reachability Discipline; the GENERAL-PURPOSE technique
+underneath it is not.
+
+**THE MECHANISM, three pieces.** (1) `arc_solver_kit.object_relative_trajectory_transfer` (new
+primitive, file tail): runs `object_centric_digest` on both levels' opening logical grids, greedily
+matches same-color components by (area difference, centroid distance) in that priority order,
+computes a mean centroid displacement + spread over the matched pairs, translates every ACTION6
+step's `x`/`y` by that displacement (scaled by `cell`), and drops (never clamps) any translated
+click that fails `_action6_out_of_live_bounds`. Returns `transfer_confident` gated on BOTH
+`matched_fraction >= min_matched_fraction` AND `displacement_std <= max_displacement_std` --
+neither alone is sufficient (a single matched pair trivially has zero spread; uniform spread with
+few matches is still evidence-thin). (2) `E3AgentPolicy._begin_level_goal_episode` stashes the
+just-completed level's trace (explore transitions + any executed plan steps) and its opening
+logical grid at the one instant both are still intact -- the same reasoning that already applies to
+the win-transition capture immediately above it in the same method. Defensive against a malformed
+transition row (unit tests, or any future caller, constructing the policy with placeholder
+transitions) via `getattr(..., None)` rather than a hard attribute access. (3) A new cascade stage
+in `E3AgentPolicy._induce_and_plan`'s `level_up_reinduction` branch, inserted BEFORE the expensive
+`execute_bounded_llm_reinduction` call: on a confident transfer, installs the translated actions as
+`self.plan` and returns with `attempt["engine_source"] = "object_relative_trajectory_transfer"` --
+byte-identical exit shape to the structured-nav and TTT-prior tiers it sits beside.
+
+**DEFAULT OFF**, `SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = False` (env override
+`CARNOT_ARC_TRAJECTORY_TRANSFER`, resolved once at `E3AgentPolicy.__init__`), pending an A/B: the
+lever presumes the next level is an object-translated variant of the previous one, true for some
+ARC games and false for others -- a layout change should fail the confidence gate, but a
+coincidental high match on a re-skinned level would replay a wrong trace at real action cost.
+Recorded in `SUBMITTED_AGENT_CONFIG` (`object_relative_trajectory_transfer_enabled`,
+`..._wired: True`). Fire-counters (`attempt["trajectory_transfer"]`) are recorded on every reason
+the stage does or doesn't fire -- including a distinct `{"skipped": "no_completed_level_trace"}`
+for "flag on but nothing to transfer yet" -- so a zero-fire cell is auditable rather than silently
+absent, per the exp5836 dead-observe-channel lesson (CLAUDE.md-adjacent discipline already applied
+to the sibling hazard-move-pruner lever in this same file).
+
+**LIVE-PATH REACHABILITY.** `arc_solver_kit` is imported directly (function-scoped, inside the
+gated branch, matching this file's own established pattern for conditionally-executed imports) --
+not merely referenced in a comment, which the ARC Live-Path Reachability Discipline's orphan lint
+would not count as genuine execution reachability. `scripts/arc_orphan_solver_lint.py` confirmed
+green (69 modules in the live closure) after this change.
+
+**KNOWN IMPRECISION, disclosed not hidden.** `self.transitions` omits plan-executed steps and
+transition-cycle-verifier-rejected rows; concatenating explore-then-plan transitions can misorder a
+genuine explore/execute/explore interleaving within one level. The confidence gate plus the live
+level counter (a wrong plan simply fails to level up, at bounded action cost -- the same
+execution-time-oracle argument already accepted for structured-nav in this file) bound the damage;
+an A/B analysing this lever should report trace-source composition, not just aggregate win rate.
+
+**VERIFICATION.** `tests/python/test_arc_object_relative_trajectory_transfer.py` (10 tests) covers
+the primitive in isolation: uniform-shift translation (including the logical-to-frame `cell` scale
+factor), identity on no shift, non-click pass-through, no-matchable-objects and empty-grid edge
+cases, the two independent confidence-gate conditions (fraction, spread) each failing on their own,
+out-of-bounds click dropping, area-before-distance match priority, and malformed action data
+pass-through. `tests/python/test_arc_trajectory_transfer_cascade.py` (7 tests) covers the wiring:
+trace capture (explore transitions, executed plan steps, the pre-first-level-up default), and the
+cascade stage's three outcomes (flag off -> untouched, matching a pre-existing byte-identity
+contract; flag on + confident -> short-circuits before the LLM tier; flag on + unconfident -> falls
+through). Fixing these tests caught a real regression in a PRE-EXISTING test
+(`test_scenario_arc_wmte_4533_level_boundary_resets_induction`, which constructs the policy with a
+placeholder `object()` transition) before it reached CI -- the defensive `getattr` fix above is a
+direct result.
+
+## Implementation Status (REQ-ARC-WMTE-TRAJ-TRANSFER-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-TRAJ-TRANSFER-1 | `python/carnot/agentic/arc_solver_kit.py:object_relative_trajectory_transfer`; `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._begin_level_goal_episode`/`_induce_and_plan`. | `tests/python/test_arc_object_relative_trajectory_transfer.py`, `tests/python/test_arc_trajectory_transfer_cascade.py`. |

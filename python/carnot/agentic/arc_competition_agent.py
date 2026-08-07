@@ -312,6 +312,16 @@ SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED = False
 SUBMITTED_HAZARD_MOVE_PRUNER_MODE = (
     "online_charger_hazard_fit_from_own_deaths_trust_and_specificity_gated"
 )
+# LEVER #2 (2026-08-07, REQ-ARC-WMTE-TRAJ-TRANSFER-1, operator directive, ops/known-issues.md).
+# On level-up, before spending the expensive LLM-reinduction tier, try replaying the JUST-COMPLETED
+# level's own successful action trace, re-anchored to the new level by object matching + mean
+# centroid displacement (arc_solver_kit.object_relative_trajectory_transfer). Cheap (no LLM call)
+# and self-discovery-compatible (uses only the agent's own runtime trajectory -- no game-source
+# reading, no registry lookup). DEFAULT OFF pending an A/B: the lever presumes the next level is an
+# object-translated variant of the previous one, which is true for some ARC games and false for
+# others (a layout change should fail the confidence gate, but a coincidental high match on a
+# re-skinned level would replay a wrong trace at real action cost).
+SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
 # IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,
@@ -4772,6 +4782,22 @@ class E3AgentPolicy:
         # `self.transitions` because `_episode_transition_start` deliberately excludes it from the
         # new level's dynamics window; see `_begin_level_goal_episode`.
         self._win_transition: Any = None
+        # LEVER #2 (2026-08-07): the completed level's replayable trace + anchor grid, stashed by
+        # `_begin_level_goal_episode` at the one instant both are still intact. See that method for
+        # why. Consumed by the trajectory-transfer cascade stage in `_induce_and_plan`.
+        self._completed_level_trace: list[dict[str, Any]] = []
+        self._completed_level_first_grid: Any = None
+        self._completed_level_cell: int = 1
+        # Resolved once here, not per-call: this branch fires once per level-up (not the per-action
+        # hot path StepwiseExplorer's own env-read prohibition targets), but a single resolution
+        # still avoids the instrument being arm-able mid-episode.
+        self.trajectory_transfer_enabled = (
+            os.environ.get(
+                "CARNOT_ARC_TRAJECTORY_TRANSFER",
+                "1" if SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED else "0",
+            )
+            == "1"
+        )
         self._episode_transition_start = 0
         self._episode_dsl_transition_start = 0
         self._level_reinduction_pending = False
@@ -5008,6 +5034,34 @@ class E3AgentPolicy:
         # that burst would otherwise re-record the same transition.
         if self.transitions:
             self._win_transition = self.transitions[-1]
+        # LEVER #2 (2026-08-07, REQ-ARC-WMTE-TRAJ-TRANSFER-1): stash the JUST-COMPLETED level's
+        # successful action trace + its opening logical grid, for the same reason the win
+        # transition above is captured here rather than later -- one statement down,
+        # `_episode_transition_start` moves past the explore transitions and `self.plan`/`self.pi`
+        # are cleared, so this is the last instant either is intact. `self.root_grid` is still the
+        # OLD level's opening grid; the boundary-detection call site overwrites it only after this
+        # method returns. Explore-phase transitions for the completed episode are
+        # `self.transitions[self._episode_transition_start:]` (the window this method is about to
+        # advance past); any EXECUTED plan steps (a level won by a plan replay, not exploration)
+        # are `self.plan[:self.pi]`, about to be cleared two statements down. Concatenated in that
+        # order -- explore-then-plan misorders a genuine explore/execute/explore interleaving, a
+        # known imprecision the trajectory-transfer consumer's confidence gate must tolerate, not
+        # silently trust.
+        # `getattr(..., None)` + the `is not None` filter, not a bare `t.action`: this method must
+        # tolerate a placeholder in `self.transitions` (a bare `object()`, or any row missing the
+        # real Transition shape) without raising -- exactly the "unit tests construct the policy
+        # bare" case named above, which a hard attribute access would break.
+        self._completed_level_trace: list[dict[str, Any]] = [
+            {"action": int(_action), "data": getattr(t, "data", None)}
+            for t in self.transitions[self._episode_transition_start :]
+            if (_action := getattr(t, "action", None)) is not None
+        ] + [
+            {"action": int(step.get("action")), "data": step.get("data")}
+            for step in self.plan[: self.pi]
+            if isinstance(step, dict) and step.get("action") is not None
+        ]
+        self._completed_level_first_grid = self.root_grid
+        self._completed_level_cell = self.cell
         self._episode_transition_start = len(self.transitions)
         self._episode_dsl_transition_start = len(self._dsl_transitions)
         self.induced = False
@@ -6202,6 +6256,50 @@ class E3AgentPolicy:
             if attempt["reason"] == "level_up_reinduction" or next_level_episode:
                 attempt["reason"] = "level_up_reinduction"
                 self._fit_dsl_model()
+                # LEVER #2 (2026-08-07, REQ-ARC-WMTE-TRAJ-TRANSFER-1, DEFAULT OFF): before paying
+                # for an LLM re-induction call, try replaying the JUST-COMPLETED level's own
+                # successful trace, re-anchored to the new level by object matching. Cheap (no LLM
+                # call) and self-discovery-compatible (uses only the agent's own runtime
+                # trajectory). Every branch records `attempt["trajectory_transfer"]` even when the
+                # flag is off, so a fire-counter of 0 is auditable rather than silently absent (the
+                # exp5836 dead-observe-channel lesson: a zero-fire cell is UNINTERPRETABLE, never
+                # "the lever does not help", unless the counters distinguish why).
+                if (
+                    self.trajectory_transfer_enabled
+                    and self._completed_level_trace
+                    and self._completed_level_first_grid is not None
+                    and self.root_grid is not None
+                ):
+                    try:
+                        from carnot.agentic import arc_solver_kit as kit
+
+                        transfer = kit.object_relative_trajectory_transfer(
+                            self._completed_level_first_grid,
+                            self.root_grid,
+                            self._completed_level_trace,
+                            cell=self._completed_level_cell,
+                        )
+                        attempt["trajectory_transfer"] = {
+                            "matched_pairs": transfer["matched_pairs"],
+                            "total_old_components": transfer["total_old_components"],
+                            "matched_fraction": transfer["matched_fraction"],
+                            "displacement_std": transfer["displacement_std"],
+                            "oob_dropped": transfer["oob_dropped"],
+                            "transfer_confident": transfer["transfer_confident"],
+                        }
+                        if transfer["transfer_confident"] and transfer["translated_actions"]:
+                            self.plan = list(transfer["translated_actions"])
+                            attempt["planned"] = True
+                            attempt["plan_length"] = len(self.plan)
+                            attempt["engine_source"] = "object_relative_trajectory_transfer"
+                            return
+                    except Exception as _trt_e:
+                        attempt["trajectory_transfer_error"] = repr(_trt_e)[:120]
+                elif self.trajectory_transfer_enabled:
+                    # Flag on but no completed-level trace to transfer (e.g. the very first
+                    # level, or a level won before this policy tracked one) -- distinguishable
+                    # from "ran and declined", per the fire-counter discipline above.
+                    attempt["trajectory_transfer"] = {"skipped": "no_completed_level_trace"}
                 structural_goal_provider = None
                 try:
                     from carnot.agentic.arc_value_learner import structural_alignment_goal_candidate
@@ -7148,6 +7246,10 @@ SUBMITTED_AGENT_CONFIG = {
     "hazard_move_pruner_enabled": SUBMITTED_HAZARD_MOVE_PRUNER_ENABLED,
     "hazard_move_pruner_mode": SUBMITTED_HAZARD_MOVE_PRUNER_MODE,
     "hazard_move_pruner_wired": True,
+    "object_relative_trajectory_transfer_enabled": (
+        SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED
+    ),
+    "object_relative_trajectory_transfer_wired": True,
     "amortized_first_contact_prior_enabled": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_ENABLED,
     "amortized_first_contact_prior_mode": SUBMITTED_AMORTIZED_FIRST_CONTACT_PRIOR_MODE,
     "go_explore_archive_enabled": SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED,
