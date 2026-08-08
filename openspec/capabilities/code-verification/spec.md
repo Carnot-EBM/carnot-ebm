@@ -2807,3 +2807,86 @@ then each family gate uses only authenticated GGUF/CUDA receipts, finish
 reasons, token-budget enforcement, extraction, compile, and public sample-run
 metrics, Phase-D readiness depends only on Gemma-4-31B, CSL readiness depends
 on both MoE families, and no legacy model row can contribute to either score.
+
+### REQ-INFRA-6212: Three-Family GGUF Runtime Recovery
+
+The repository shall provide an Exp6212 workflow that recovers and proves the
+three mandated GGUF runtime path after Exp6200 failed before generation:
+- The workflow shall treat
+  `results/experiment_6200_three_family_raw_code_transport_canary.json` as the
+  upstream failure receipt. It shall record the path and hash before live
+  reproduction.
+- The workflow shall resolve `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF` through the local cached GGUF resolver.
+  It shall record exact paths, sizes, hashes, cache revisions, observed
+  quantization, metadata, and embedded chat-template receipts. It shall never
+  pass a GGUF directory or repo ID to `AutoTokenizer`.
+- The workflow shall preflight both GPUs. It shall record owner PID, command,
+  VRAM, and utilization before and after each owned canary. If safe admission
+  is unavailable, it shall write a blocked artifact without starting or
+  killing any model process.
+- The workflow shall reproduce one Exp6200-style model-load failure per
+  family under read-only preflight. It shall classify the failure layer as file
+  integrity, loader compatibility, VRAM admission, CUDA placement, bad flags,
+  or process lifecycle.
+- The workflow shall apply only task-owned runtime fixes. It shall not mutate
+  any GGUF file. It shall not kill unrelated processes. It shall not change
+  prompts, output budgets, scientific tasks, or `scripts/research_conductor.py`.
+- The workflow shall start one owned llama.cpp server canary per family, prove
+  real CUDA layer offload, persist at least one deterministic raw output token
+  before teardown, and record command, PID, lifetime, stderr, exit code, CUDA
+  layer receipts, first-token hash, and first-token latency.
+- `three_family_runtime_ready_score` shall be `1` only when all three families
+  have independent owned-process, CUDA-offload, and persisted-token receipts.
+  `gemma_4_31b_runtime_ready_score` shall be `1` only when the dense Gemma
+  family has the same receipts.
+- The terminal artifact shall be
+  `results/experiment_6212_three_family_gguf_runtime_recovery.json` and include
+  the required fields `status`, `upstream_exp6200_path_and_hash`,
+  `preconditions_checked`,
+  `gpu_owner_pid_memory_and_utilization_before_after`, `model_specs`,
+  `exact_gguf_paths_sizes_hashes_revisions_quantizations`,
+  `embedded_chat_template_receipts`,
+  `loader_and_llama_cpp_build_receipts`, `minimal_failure_reproductions`,
+  `root_cause_classification`, `task_owned_fix_paths_and_hashes`,
+  `per_family_server_command_pid_lifetime_stderr_and_exit`,
+  `per_family_cuda_layer_offload`,
+  `per_family_first_token_bytes_hash_and_latency`,
+  `gemma_4_31b_runtime_ready_score`,
+  `three_family_runtime_ready_score`, `unrelated_process_kill_count`,
+  `gguf_mutation_count`, `protected_files_unchanged`,
+  `inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+  `field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+  `reproducibility_checksum`, and `honest_verdict`. It shall set
+  `unrelated_process_kill_count` and `gguf_mutation_count` to bare `0`, set
+  `verifier_is_oracle` to false, set `inference_substrate` to
+  `local_three_family_llama_cpp_server_cuda_runtime_recovery`, and preserve an
+  honest blocked or partial verdict when any family lacks authentic receipts.
+
+### SCENARIO-INFRA-6212-BLOCKS-WHEN-GPU-OWNED: Unsafe Admission Does Not Start Servers
+
+Given Exp6212 sees a GPU owner that is not its own process tree, or insufficient
+free VRAM for the selected family,
+when it evaluates runtime admission,
+then it writes a blocked artifact, records the owner PID, command, memory, and
+utilization, starts no llama.cpp server, kills no process, and reports
+`unrelated_process_kill_count=0`.
+
+### SCENARIO-INFRA-6212-CLASSIFIES-EXP6200-LOAD-FAILURE: Generic ValueError Is Localized
+
+Given Exp6200 recorded `ValueError: Failed to load model from file` before
+generation,
+when Exp6212 reproduces one load attempt per family,
+then the artifact includes each process lifetime, full stderr receipt, exit
+code, and a root-cause classification that distinguishes file integrity,
+loader compatibility, VRAM admission, CUDA placement, bad flags, and external
+termination.
+
+### SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA: Scores Need Three Receipts
+
+Given Exp6212 launches one owned canary server per family,
+when it computes readiness,
+then a family is ready only after the server process is task-owned, CUDA layers
+are offloaded, and at least one deterministic raw output token is persisted
+with byte hash and latency before teardown.

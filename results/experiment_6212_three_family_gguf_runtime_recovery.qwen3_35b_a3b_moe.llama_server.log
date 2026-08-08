@@ -1,0 +1,56 @@
+0.00.032.629 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.032.631 I device_info:
+0.00.258.385 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
+0.00.482.874 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)
+0.00.482.886 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)
+0.00.483.015 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.483.075 I srv          init: running without SSL
+0.00.483.105 I srv          init: using 23 threads for HTTP server
+0.00.483.110 I srv          init: The UI is disabled
+0.00.483.110 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable
+0.00.483.216 I srv         start: binding port with default address family
+0.00.484.366 I srv  llama_server: loading model
+0.00.484.372 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf'
+0.11.887.044 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.11.906.504 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.12.051.967 I srv    load_model: initializing slots, n_slots = 1
+0.12.136.893 W srv    load_model: speculative decoding will use checkpoints
+0.12.136.919 W common_speculative_init: no implementations specified for speculative decoding
+0.12.136.921 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512
+0.12.136.961 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.12.136.962 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.12.136.963 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.12.136.964 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
+0.12.137.045 I srv          init: idle slots will be saved to prompt cache upon starting a new task
+0.12.160.164 I init: chat template, example_format: '<|im_start|>system
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+'
+0.12.176.546 I srv          init: init: chat template, thinking = 0
+0.12.176.614 I srv  llama_server: model loaded
+0.12.176.622 I srv  llama_server: server is listening on http://127.0.0.1:62120
+0.12.176.634 I srv  update_slots: all slots are idle
+0.13.065.825 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.13.065.830 I srv  get_availabl: updating prompt cache
+0.13.065.841 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+0.13.065.851 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)
+0.13.065.852 I srv  get_availabl: prompt cache update took 0.02 ms
+0.13.065.893 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.13.318.110 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 7, pos_max = 7, n_tokens = 8, size = 62.813 MiB)
+0.13.378.402 I slot print_timing: id  0 | task 0 | prompt eval time =     312.46 ms /    12 tokens (   26.04 ms per token,    38.41 tokens per second)
+0.13.378.412 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)
+0.13.378.414 I slot print_timing: id  0 | task 0 |       total time =     312.46 ms /    13 tokens
+0.13.378.418 I slot print_timing: id  0 | task 0 |    graphs reused =          1
+0.13.378.462 I slot      release: id  0 | task 0 | stop processing: n_tokens = 12, truncated = 0
+0.13.378.481 I srv  update_slots: all slots are idle
+0.13.387.818 I srv    operator(): operator(): cleaning up before exit...
