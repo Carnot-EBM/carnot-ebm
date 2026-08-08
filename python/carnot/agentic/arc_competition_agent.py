@@ -154,9 +154,16 @@ DAGGER_VALUE_HEAD_RELATIVE_PATH = "models/arc_dagger_value_routing_v3.json"
 SUBMITTED_TARGET_LEVELS = 8
 # Smart grace-period early-stop: stop this many moves after the LAST level-up if no new level appears
 # (cuts the fruitless post-solve tail, WITHOUT capping the configured scored target). None = disabled.
-# Enabled 2026-08-07 alongside the MAX_ACTIONS/TARGET_LEVELS raise: pure wall/memory savings with no
-# score cost (the post-solve tail is worth 0 either way), so there is no reason to leave it off once
-# the action budget is large enough for a stalled tail to matter.
+# Set to 400 on 2026-08-07 alongside the MAX_ACTIONS/TARGET_LEVELS raise: pure wall/memory savings
+# with no score cost (the post-solve tail is worth 0 either way), so there is no reason to leave it
+# off once the action budget is large enough for a stalled tail to matter.
+#
+# CORRECTION (2026-08-08, live-agent-adversarial-review-2026-08-08.md, Gaps finding 1): setting
+# this constant did NOT enable the mechanism. E3AgentPolicy never read it or forwarded it to the
+# explorer, so every scored game ran its fruitless post-solve tail to the full action budget
+# regardless of this value -- a silent no-op from 2026-08-07 to 2026-08-08. E3AgentPolicy now
+# accepts `early_stop_grace` and forwards it to StepwiseExplorer (see its __init__ and
+# SUBMITTED_AGENT_CONFIG["early_stop_grace"]), so this value is genuinely live as of 2026-08-08.
 SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 400
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
@@ -4599,6 +4606,11 @@ class E3AgentPolicy:
         hud_mask_stage2_confirm: bool | None = None,
         value_head: Any = _DEFAULT_VALUE_HEAD,
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
+        # REQ finding (live-agent-adversarial-review-2026-08-08, Gaps #1): defaults to the
+        # SUBMITTED_* constant directly, matching target_levels/value_weight/search_mode above --
+        # unlike the boolean feature flags below this is a plain numeric knob with no
+        # CARNOT_ARC_* env override convention of its own, so there is no `_fd_gate` ladder here.
+        early_stop_grace: Optional[int] = SUBMITTED_EARLY_STOP_GRACE,
         search_mode: str = SUBMITTED_SEARCH_MODE,
         mechanic_detector=None,
         frame_change_scorer: Any = _DEFAULT_FRAME_CHANGE_SCORER,
@@ -4742,6 +4754,7 @@ class E3AgentPolicy:
         elif goal_candidate_guidance is False:
             goal_candidate_guidance = None
         self.explorer = StepwiseExplorer(
+            early_stop_grace=early_stop_grace,
             target_levels=target_levels,
             auto_hud_mask=auto_hud_mask,
             edge_bar_hud_mask=edge_bar_hud_mask,
@@ -7244,6 +7257,11 @@ SUBMITTED_AGENT_CONFIG = {
     "cascade": True,
     # explorer config the live agent actually runs.
     "value_weight": SUBMITTED_VALUE_WEIGHT,
+    # REQ finding (live-agent-adversarial-review-2026-08-08, Gaps #1): pinned here so the parity
+    # test below can catch a future re-drift between the declared config and what the explorer
+    # actually receives. Fixed 2026-08-08 -- was previously read nowhere (see the comment on the
+    # SUBMITTED_EARLY_STOP_GRACE declaration for the incident this closes).
+    "early_stop_grace": SUBMITTED_EARLY_STOP_GRACE,
     "target_levels": SUBMITTED_TARGET_LEVELS,
     "search_mode": SUBMITTED_SEARCH_MODE,
     "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
@@ -7558,6 +7576,7 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                 E3AgentPolicy(
                     gid,
                     proposer=proposer,
+                    early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
                     search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),

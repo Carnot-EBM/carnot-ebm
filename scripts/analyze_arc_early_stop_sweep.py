@@ -280,21 +280,45 @@ def preconditions_checked(paths: list[str]) -> list[dict]:
         "silently equal the control and produce a clean, meaningless null.",
     )
 
-    def _flag_is_dead():
+    def _flag_wiring_state():
+        """STALE-ASSERTION FIX (2026-08-08, live-agent-adversarial-review-2026-08-08.md, Gaps
+        finding 1). This check used to require SUBMITTED_EARLY_STOP_GRACE to still equal None
+        (true when this sweep first ran, 2026-07-26). On 2026-08-07 the operator set the
+        constant to 400, but a wiring bug meant E3AgentPolicy never read or forwarded it -- the
+        old check would have silently reported `available: False` for that reason alone, without
+        saying why. Fixed 2026-08-08: E3AgentPolicy now accepts `early_stop_grace` and forwards
+        it to StepwiseExplorer, and the value is pinned in SUBMITTED_AGENT_CONFIG. This check now
+        confirms that wiring is genuinely in place, so a re-run of this analysis reads the
+        mechanism's CURRENT state instead of an assumption baked in when the sweep was written.
+        """
         sys.path.insert(0, str(REPO / "python"))
-        src = (REPO / "python/carnot/agentic/arc_competition_agent.py").read_text()
-        n = src.count("SUBMITTED_EARLY_STOP_GRACE")
+        import inspect
+
         from carnot.agentic import arc_competition_agent as comp
 
-        return (n == 1 and comp.SUBMITTED_EARLY_STOP_GRACE is None), (
-            f"occurrences_in_agent_module={n}, value={comp.SUBMITTED_EARLY_STOP_GRACE!r}"
+        e3_param = inspect.signature(comp.E3AgentPolicy.__init__).parameters.get("early_stop_grace")
+        e3_default = None if e3_param is None else e3_param.default
+        config_value = comp.SUBMITTED_AGENT_CONFIG.get("early_stop_grace")
+        wired = (
+            e3_param is not None
+            and e3_default == comp.SUBMITTED_EARLY_STOP_GRACE
+            and config_value == comp.SUBMITTED_EARLY_STOP_GRACE
+        )
+        return wired, (
+            f"submitted_value={comp.SUBMITTED_EARLY_STOP_GRACE!r}, "
+            f"e3_init_default={e3_default!r}, "
+            f"submitted_agent_config_value={config_value!r}"
         )
 
     _chk(
-        "SUBMITTED_EARLY_STOP_GRACE still dead code and still None (flag NOT flipped)",
-        _flag_is_dead,
-        "This measurement sweeps a PARAMETER and must leave the shipped configuration untouched. "
-        "One occurrence (its own declaration) and a value of None is the proof that it did.",
+        "SUBMITTED_EARLY_STOP_GRACE is wired through E3AgentPolicy (fixed 2026-08-08)",
+        _flag_wiring_state,
+        "The sweep driver (arc_scored_path_early_stop_sweep.py) sets the parameter directly on "
+        "the constructed explorer instance, bypassing E3AgentPolicy entirely, so this analysis "
+        "does not depend on the fix to read its own rows correctly. This check instead confirms "
+        "the SHIPPED default now matches what the sweep measured as a deliberate change -- a "
+        "silent regression back to dead code would otherwise go unnoticed by every other check "
+        "in this file.",
     )
 
     def _rows_witness():
