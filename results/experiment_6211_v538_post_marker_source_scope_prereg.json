@@ -31,15 +31,15 @@
         "source_role": "primary",
         "query": "submittedDate:[202608080144 TO 202608082359] AND EBM/ARC/continual/hardware/KAN terms",
         "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202608080144%20TO%202608082359%5D",
-        "accessed_at": "2026-08-08T01:56:26Z",
-        "access_outcome": "http_429_rate_limited",
-        "failure_class": "rate_limited",
-        "date_evidence": "strict submittedDate endpoint did not return records during this run",
+        "accessed_at": "2026-08-08T02:40:27Z",
+        "access_outcome": "reachable_http_200_zero_results",
+        "failure_class": "none",
+        "date_evidence": "strict submittedDate endpoint returned zero topic records",
         "candidate_ids": [],
         "candidate_count": 0,
-        "status": 429,
-        "total_results": null,
-        "receipt_hash": "sha256:93a88aa4bf3835fecf86f1a3826c2680faca1f2d47292f59fcfe87449119e79e"
+        "status": 200,
+        "total_results": 0,
+        "receipt_hash": "sha256:d9975d80f7ae7084eea94f953cee521b262eb4746684b05db9195ddab1713278"
       },
       {
         "receipt_id": "openreview_v538_energy_route",
@@ -48,14 +48,15 @@
         "source_role": "secondary",
         "query": "content=energy-based&limit=5",
         "url": "https://api.openreview.net/notes?content=energy-based&limit=5",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:42Z",
         "access_outcome": "http_403_challenge_required",
         "failure_class": "challenge_required",
         "date_evidence": "route returned challenge metadata rather than note dates",
         "candidate_ids": [],
         "candidate_count": 0,
         "status": 403,
-        "receipt_hash": "sha256:f88e4551432739943c2a0bdcbf94b37b820e9b5b32f2776d2fb142f6dcd96f61"
+        "request_id": "2026-08-08-984284",
+        "receipt_hash": "sha256:13dff42c0206807aa8bbc57fe726426a59c4107dc36ea3c77614d108a2f197d1"
       },
       {
         "receipt_id": "semantic_scholar_v538_ebt_citations",
@@ -64,19 +65,20 @@
         "source_role": "secondary",
         "query": "arXiv:2507.02092 citations",
         "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:27Z",
         "access_outcome": "reachable_http_200_32_records_no_post_marker",
         "failure_class": "none",
         "date_evidence": "newest visible publicationDate 2026-07-29",
         "candidate_ids": [
           "2607.27372",
           "2607.20792",
-          "2607.17047"
+          "2607.17047",
+          "2607.11555"
         ],
         "candidate_count": 32,
         "status": 200,
         "newest_publication_date": "2026-07-29",
-        "receipt_hash": "sha256:79f0307731e3d8226b8168add0bff5e0bb8c9be923961984159e9f6fcb89f482"
+        "receipt_hash": "sha256:3d4f3f7940c01ef81fd78d85ba97e76fe14a825de8ed08da9d43210dc5fb017c"
       },
       {
         "receipt_id": "semantic_scholar_v538_arm_ebm_citations",
@@ -85,19 +87,21 @@
         "source_role": "secondary",
         "query": "arXiv:2512.15605 citations",
         "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:27Z",
         "access_outcome": "reachable_http_200_8_records_no_post_marker",
         "failure_class": "none",
         "date_evidence": "newest visible publicationDate 2026-07-02",
         "candidate_ids": [
           "2607.02154",
           "2606.03089",
-          "2605.18871"
+          "2605.18871",
+          "2605.11011",
+          "2604.00555"
         ],
         "candidate_count": 8,
         "status": 200,
         "newest_publication_date": "2026-07-02",
-        "receipt_hash": "sha256:9e0cd7daf8ba4bd03429186e0f4d760a533b2dd1cecbb2d1976b7e7184516189"
+        "receipt_hash": "sha256:08ad3e52e7ce5076608ef071cdadcc8344337a26de2a1f961a673c966d3a111c"
       },
       {
         "receipt_id": "huggingface_papers_v538_aug8",
@@ -106,17 +110,25 @@
         "source_role": "secondary",
         "query": "date/2026-08-08",
         "url": "https://huggingface.co/papers/date/2026-08-08",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:27Z",
         "access_outcome": "reachable_http_200_secondary_feed",
         "failure_class": "secondary_feed_only",
         "date_evidence": "date page is secondary and exposed no strict post-marker primary timestamp",
         "candidate_ids": [
-          "2608.05987",
-          "2607.28609"
+          "2607.28609",
+          "2608.01049",
+          "2608.01481",
+          "2608.01492",
+          "2608.01851",
+          "2608.03451",
+          "2608.04956",
+          "2608.05137",
+          "2608.05138",
+          "2608.05248"
         ],
-        "candidate_count": 2,
+        "candidate_count": 10,
         "status": 200,
-        "receipt_hash": "sha256:c104574921631ba2e6b706c5a1c9cf8b2449e1989279ec9aaa683f32578dd392"
+        "receipt_hash": "sha256:6ef949602af71a6d81e99de85f03b028432290d05499accb3bc85f4f2fa8c81a"
       },
       {
         "receipt_id": "github_v538_arc_agi3_after_marker",
@@ -125,7 +137,7 @@
         "source_role": "secondary",
         "query": "ARC-AGI-3 pushed:>2026-08-08T01:44:27Z",
         "url": "https://api.github.com/search/repositories?q=ARC-AGI-3+pushed:%3E2026-08-08T01:44:27Z&sort=updated&order=desc&per_page=5",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:27Z",
         "access_outcome": "reachable_http_200_total_count_0",
         "failure_class": "none",
         "date_evidence": "strict pushed_at filter returned zero repositories",
@@ -133,7 +145,7 @@
         "candidate_count": 0,
         "status": 200,
         "total_count": 0,
-        "receipt_hash": "sha256:ae7a6a7c9e9fa3c88edb4b6331b56fd16b033bd89daf15900ba4262f6b5a2dc7"
+        "receipt_hash": "sha256:32a5d4e1d2fb59d30dfa631bdba9721060bb1589a486025e86fc02bbb282f5dc"
       },
       {
         "receipt_id": "extropic_v538_first_party_pages",
@@ -142,19 +154,20 @@
         "source_role": "official",
         "query": "writing, hardware, and software pages",
         "url": "https://extropic.ai/ ; https://extropic.ai/writing ; https://extropic.ai/hardware ; https://extropic.ai/software",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:42Z",
         "access_outcome": "reachable_http_200_no_dated_post_marker_local_route",
         "failure_class": "no_changed_since_endpoint",
-        "date_evidence": "pages expose no strict post-marker public TSU/Z1 route for local execution",
+        "date_evidence": "pages expose no strict post-marker timestamp or authenticated local TSU/Z1 route",
         "candidate_ids": [
           "home",
           "writing",
+          "from-one-to-one-billion",
           "hardware",
           "software"
         ],
-        "candidate_count": 4,
+        "candidate_count": 5,
         "status": 200,
-        "receipt_hash": "sha256:436775185bf7078e1efe5a5568e537f92c5dea6afb033de3435c57cb4d57ab99"
+        "receipt_hash": "sha256:b944c7af841da230dc09af2852223649419e3e041b214b4df9d169a91b48eb73"
       },
       {
         "receipt_id": "logical_intelligence_v538_kona",
@@ -163,16 +176,17 @@
         "source_role": "official",
         "query": "Kona EBM first-party page",
         "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
-        "accessed_at": "2026-08-08T01:56:26Z",
+        "accessed_at": "2026-08-08T02:40:27Z",
         "access_outcome": "reachable_http_200_no_public_weights_or_api",
         "failure_class": "none",
-        "date_evidence": "first-party page exposes no public weights, local API, or architecture spec",
+        "date_evidence": "first-party page published 2026-06-26 and exposes no public weights, local API, or architecture spec",
         "candidate_ids": [
           "kona_1_0"
         ],
         "candidate_count": 1,
         "status": 200,
-        "receipt_hash": "sha256:19fc75b416fb0fd4873f070505bbd03ab4ee91d6c569cbddd9ef13774c47a3de"
+        "published_at": "2026-06-26T23:47:00Z",
+        "receipt_hash": "sha256:dacc4ec18638b8399c2fa2b316c318edc534c67108bf6d1934430be8d8b837e1"
       }
     ],
     "required_channels": [
@@ -206,13 +220,6 @@
       "arXiv": 1
     },
     "failure_receipts": [
-      {
-        "receipt_id": "arxiv_v538_topics_after_marker",
-        "channel": "arxiv_topics",
-        "authority": "arXiv",
-        "failure_class": "rate_limited",
-        "access_outcome": "http_429_rate_limited"
-      },
       {
         "receipt_id": "openreview_v538_energy_route",
         "channel": "openreview",
@@ -1109,9 +1116,9 @@
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py": 0,
     "sed -n 1,220p ops/e2e-test-plan.md": 0,
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6211_v538_post_marker_source_scope_prereg.json": 0,
-    ".venv/bin/pytest tests/python -q": 3
+    ".venv/bin/pytest tests/python -q": 2
   },
-  "duration_s": 6.874142995104194,
-  "reproducibility_checksum": "sha256:24ece2d1c0b0a3c60683a83c76557199f0e3276e90756acfa5297be1ead5722b",
+  "duration_s": 6.249221493955702,
+  "reproducibility_checksum": "sha256:fe0670b01acb2a45fc1ea4a09c917b1b21b2cd68eb7fa31308c32fdb723fc78d",
   "honest_verdict": "blocked: accepted_count=0; V538 source, roadmap, causal contract, or verification command failed"
 }
