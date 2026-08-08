@@ -22284,6 +22284,88 @@ work still ahead, distinct from flipping an already-evidenced flag.
 |---|---|---|
 | REQ-ARC-OBJPERC-DEFAULT-ON-1 | `python/carnot/agentic/arc_executable_world_model.py:_object_perception_on`. | `tests/python/test_object_perception_induction.py`, `tests/python/test_object_perception_ab_stats.py`. |
 
+### REQ-ARC-WMTE-6213: Default-Off Transition Object-Delta Perception Table
+
+**Origin:** 2026-08-07 operator directive, lever #1. The existing
+`CARNOT_ARC_OBJECT_PERCEPTION` path is default on and emits a static object
+table. It does not emit per-transition object deltas. It also does not reject
+HUD-strip components inside that object table.
+
+The live world-model induction prompt SHALL have a second, separate
+default-off flag named `CARNOT_ARC_OBJECT_DELTA_PERCEPTION`. When the flag is
+unset or set to `0`, the canonical prompt SHALL remain unchanged except for
+the already-default-on static object table. When the flag is set to `1`, the
+prompt SHALL append a versioned object-delta table.
+
+The object-delta table SHALL be built only from consecutive agent-visible
+logical grids plus the chosen action and action data. It SHALL NOT use game
+source, hidden state, adapters, BFS rollouts, or registry trajectories.
+
+The table SHALL include:
+
+- 4-connected same-color components for each before and after grid.
+- Component fields for color, area, bounding box, centroid, normalized shape
+  id, and color-aware identity signature.
+- Action-conditioned before/after deltas.
+- Translation-invariant matches between unique before/after identity
+  signatures.
+- Translation-invariant pair relations for matched objects.
+- Conservative HUD-strip rejection. A strip can be removed from the object
+  table only when it is a thin frame-edge band, a broad strip-like component
+  is visible in it, and at least one observed transition changes only inside
+  that strip. Objects crossing out of the strip SHALL remain admitted.
+- Fail-open ambiguity. If a shape/color identity signature has more than one
+  possible before or after object, matching for that signature SHALL be
+  skipped and recorded as ambiguous.
+- Fail-open fallback. Any serialization error SHALL return an empty block so
+  raw-grid induction stays live.
+
+The implementation SHALL prove live reachability from
+`arc_competition_agent.py` through `arc_executable_world_model.induce_prompt`,
+deterministic serialization, prompt insertion behind the new flag, mutation
+sensitivity for the prompt hook, identity normalization, HUD rejection, and
+ambiguity guard, and no ARC score or solve claim.
+
+#### SCENARIO-ARC-WMTE-6213-TRANSLATION
+
+**Given** two visible transitions where components translate by the same
+offset
+**When** the object-delta table is built
+**Then** unique components match by normalized shape and color
+**And** their pair relation stays invariant under the translation.
+
+#### SCENARIO-ARC-WMTE-6213-HUD-REJECTION
+
+**Given** a thin edge strip with broad strip-like pixels and a transition that
+changes only inside that strip
+**When** the object-delta table is built
+**Then** components wholly inside the strip are rejected from the table
+**And** components that extend outside the strip are kept.
+
+#### SCENARIO-ARC-WMTE-6213-FAIL-OPEN
+
+**Given** duplicate same-shape same-color components before and after a
+transition
+**When** identity matching would be ambiguous
+**Then** the matching for that signature is skipped
+**And** the prompt table records a fail-open ambiguity receipt.
+
+#### SCENARIO-ARC-WMTE-6213-PROMPT-WIRING
+
+**Given** the canonical world-model induction prompt
+**When** `CARNOT_ARC_OBJECT_DELTA_PERCEPTION` is unset
+**Then** no object-delta table is inserted.
+
+**When** `CARNOT_ARC_OBJECT_DELTA_PERCEPTION=1`
+**Then** the object-delta table is inserted
+**And** `CARNOT_ARC_OBJECT_PERCEPTION` remains independently default on.
+
+## Implementation Status (REQ-ARC-WMTE-6213)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6213 | `python/carnot/agentic/arc_object_delta_perception.py`; prompt hook in `python/carnot/agentic/arc_executable_world_model.py:_object_delta_perception_block`; artifact builder in `python/carnot/experiment_6213_arc_object_delta_perception_wiring.py`. Default off via `CARNOT_ARC_OBJECT_DELTA_PERCEPTION`. | `tests/python/test_arc_object_delta_perception_6213.py`. |
+
 ### REQ-ARC-WMTE-TRAJ-TRANSFER-1: Verifier-Gated Object-Relative Trajectory Transfer
 
 **Origin:** 2026-08-07 operator directive (lever #2 of the ARC six-lever push, `ops/known-issues.md`
@@ -22431,3 +22513,98 @@ just raw action counts.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6180-WIRING | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer.__init__`/`_ingest`/`_frontier`. | `tests/python/test_arc_budget_aware_search_live_wiring.py`. |
+
+### REQ-ARC-WMTE-6220: SUBMITTED_EARLY_STOP_GRACE Reaches The Live Agent
+
+**Origin:** 2026-08-08 adversarial review of the scored live agent
+(`docs/research-notes/live-agent-adversarial-review-2026-08-08.md`, Gaps finding 1). The constant
+`SUBMITTED_EARLY_STOP_GRACE = 400` was set 2026-08-07 alongside the `MAX_ACTIONS` raise and
+commented as enabled, but `E3AgentPolicy` never read or forwarded it. Every scored game ran its
+post-solve tail to the full action budget with no wall-clock safeguard, while the record claimed
+one was on. Four independent review lenses found this same defect.
+
+**The fix.** `E3AgentPolicy.__init__` now accepts `early_stop_grace` (default
+`SUBMITTED_EARLY_STOP_GRACE`) and forwards it to the `StepwiseExplorer` it constructs.
+`SUBMITTED_AGENT_CONFIG["early_stop_grace"]` carries the same value, and `make_carnot_agent`'s real
+scored construction site passes it through. `StepwiseExplorer`'s own default stays `None` — the
+fix lives at the caller, not the callee, so any other caller that omits the kwarg keeps its old
+behavior.
+
+**Tests.** `tests/python/test_arc_early_stop_grace_wiring_20260808.py` pins: the config value; the
+default reaching the explorer instance attribute; the constructor kwarg genuinely threaded (spies
+on the `StepwiseExplorer.__init__` call itself, not just the resulting attribute); the explicit
+override path; and the real scored entrypoint (`make_carnot_agent`) forwarding the config value.
+
+## Implementation Status (REQ-ARC-WMTE-6220)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6220 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy.__init__`, `SUBMITTED_AGENT_CONFIG`, `make_carnot_agent`; `scripts/analyze_arc_early_stop_sweep.py:_flag_wiring_state`. | `tests/python/test_arc_early_stop_grace_wiring_20260808.py`. |
+
+### REQ-ARC-WMTE-6221: LocalGGUFProposer Terminates A Stale Child Before Relaunch
+
+**Origin:** 2026-08-08 adversarial review (same document, Correctness finding 4). On a
+wait-exhaustion timeout, `_ensure_server` returned failure but left the still-loading `llama-server`
+child running and referenced; the next call found the server unhealthy, skipped reuse, and Popen'd
+a second child on the same port, overwriting `self._proc` — so `stop()` could only ever reach the
+newest child, and the orphan (eventually holding real VRAM) became unreachable by any cleanup path.
+
+**The fix.** A new `LocalGGUFProposer._terminate_stale_proc(reason)` checks whether `self._proc` is
+set and still alive; if so it sends SIGTERM, waits up to 5s, escalates to SIGKILL if needed, then
+always clears the reference. Called at both sites the review named: immediately before the `Popen`
+that would otherwise overwrite `self._proc`, and right after wait-exhaustion, before returning
+failure. A cleanup event is recorded on its own diagnostic channel
+(`orphaned_child_cleanups` → `liveness_witness()["generator_orphaned_child_cleanups"]`), separate
+from `n_server_failures`, so a leak-from-a-prior-attempt cannot spuriously flip a liveness gate for
+a run whose eventual server is healthy — the same reasoning the file already applies to
+`reuse_refusals`. `stop()` itself is unchanged; the review cited it only as evidence of the
+reachability problem, not as the fix target.
+
+**Tests.** `tests/python/test_arc_ensure_server_leak_fix_20260808.py` pins: wait-exhaustion
+terminates the child and clears `self._proc`; a live prior child is terminated before a replacement
+launch; an already-dead prior child is left alone; no prior child is a clean no-op; SIGKILL fires
+when SIGTERM does not reap in time.
+
+## Implementation Status (REQ-ARC-WMTE-6221)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6221 | `python/carnot/agentic/arc_executable_world_model.py:LocalGGUFProposer._terminate_stale_proc`, wired into `_ensure_server`. | `tests/python/test_arc_ensure_server_leak_fix_20260808.py`. |
+
+### REQ-ARC-WMTE-6222: StepwiseExplorer Shares One BFS Per Call Instead Of One Per Node
+
+**Origin:** 2026-08-08 adversarial review (same document, Speed finding 1). `_frontier` ran a fresh,
+independent BFS over the whole known graph for every eligible node on every call, then `next_move`
+re-ran BFS again for the winner; `_partial_forward_path` repeated the same shape, firing one BFS per
+candidate ancestor. Every one of these BFS calls shares the same source, `self.cur`, so they were
+computing the same distances repeatedly. Cost grows with the action budget, which this project just
+raised 400 → 2000.
+
+**The fix.** A cache keyed on `(self.cur, self._adj_version)` (`_adj_version` bumps only when
+`_record_forward_edge` learns a genuinely new edge) holds one shared-source BFS distance/path map,
+computed to completion by `_forward_paths_from` and served by `_cur_forward_paths`. A new
+`_exact_forward_path(src, dst)` is an O(1) cache lookup when `src == self.cur` and falls back
+unchanged to the original `_exact_shortest_path` otherwise, so `_similarity_shortest_path`'s
+different-source calls are untouched. `_shortest_path` (used by both `_frontier`'s per-node key and
+`next_move`'s winner lookup) and `_partial_forward_path`'s ancestor scan now call
+`_exact_forward_path` instead of re-running BFS. `_exact_shortest_path` itself is unchanged and
+still the only path for non-`self.cur` sources.
+
+**Behavior preservation.** Both the old and new BFS use the same FIFO queue, the same per-node edge
+iteration order, and the same first-arrival-wins semantics; running to completion instead of
+stopping early cannot change which path is assigned to a node, since neither implementation ever
+revisits an already-assigned node. Verified on a graph with a genuine same-depth tie between two
+routes to confirm tie-break order matches exactly, not just on trees with no ties.
+
+**Tests.** `tests/python/test_experiment_4523_forward_walk_navigation.py` adds two tests alongside
+the four pre-existing ones: node-by-node agreement between `_exact_forward_path` and the untouched
+`_exact_shortest_path` on a branching graph with an unreachable node, plus cache reuse/invalidation
+on a new edge and on `self.cur` moving; and a spy proving `_partial_forward_path` now runs exactly
+one shared BFS across three candidate ancestors (versus three independent runs before), replaying
+the old per-ancestor algorithm inline to confirm a byte-identical result.
+
+## Implementation Status (REQ-ARC-WMTE-6222)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6222 | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer._forward_paths_from`/`_cur_forward_paths`/`_exact_forward_path`, wired into `_shortest_path`/`_partial_forward_path`. | `tests/python/test_experiment_4523_forward_walk_navigation.py`. |
