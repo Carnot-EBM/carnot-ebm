@@ -3,14 +3,21 @@
 Origin: operator directive "we want /think with the 31B model" (ops/known-issues.md, amending the
 2026-08-03 one-slot ruling; the June /no_think freeze is lifted). Gemma-4 has no Qwen-style
 /think-/no_think soft-switch token; its native thought channel only splits into `reasoning_content`
-on the /v1/chat/completions endpoint (exp5764). `induce_think_on()` is a DEFAULT-OFF resolver
-(env CARNOT_ARC_INDUCE_THINK, falling back to ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT, currently
-"0" -- no gemma think-mode A/B evidence exists yet). These tests pin two properties:
+on the /v1/chat/completions endpoint (exp5764). `induce_think_on()` resolves env
+CARNOT_ARC_INDUCE_THINK, falling back to ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT.
 
-  1. Think OFF (the shipped default) is BYTE-IDENTICAL to pre-lever-#6 behaviour -- the load-bearing
-     property, mirroring test_codeonly_induce_scoping.py's own off-arm pins.
-  2. Think ON skips the codeonly directive + pre-opened fence and routes through the chat endpoint
-     instead of raw /completion -- the actual mechanism the lever adds.
+FLIPPED TO ON 2026-08-08 (operator directive, on the evidence in
+experiment_6199_gemma_think_mode_ab.json / REQ-ARC-WMTE-6198's spec entry: 10/10 games induced on
+both arms, reasoning engaged 10/10 vs 0/10, a consistent induction-quality edge for think). These
+tests pin two properties, each exercised via an EXPLICIT env override rather than "leave it
+unset" -- the shipped default is a value that can change again; the request-construction logic
+each branch pins should not depend on which value happens to be current:
+
+  1. Think OFF (CARNOT_ARC_INDUCE_THINK=0) is BYTE-IDENTICAL to pre-lever-#6 behaviour -- the
+     load-bearing property, mirroring test_codeonly_induce_scoping.py's own off-arm pins.
+  2. Think ON (CARNOT_ARC_INDUCE_THINK=1) skips the codeonly directive + pre-opened fence and
+     routes through the chat endpoint instead of raw /completion -- the actual mechanism the
+     lever adds, and the shipped default as of 2026-08-08.
 """
 
 from __future__ import annotations
@@ -100,9 +107,11 @@ def _one_transition() -> list[Transition]:
 # --------------------------------------------------------------------------- #
 # induce_think_on() resolver                                                  #
 # --------------------------------------------------------------------------- #
-def test_think_defaults_off_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_think_defaults_on_when_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Shipped default as of 2026-08-08 (see module docstring). Pinned so a future silent
+    flip back to off is caught here rather than only in the live/scored config."""
     monkeypatch.delenv("CARNOT_ARC_INDUCE_THINK", raising=False)
-    assert induce_think_on() is False
+    assert induce_think_on() is True
 
 
 def test_think_env_override_on(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -116,12 +125,14 @@ def test_think_env_override_explicit_off(monkeypatch: pytest.MonkeyPatch) -> Non
 
 
 # --------------------------------------------------------------------------- #
-# think OFF (shipped default): byte-identical to pre-lever-#6 behaviour       #
+# think OFF (explicit override): byte-identical to pre-lever-#6 behaviour     #
 # --------------------------------------------------------------------------- #
 def test_think_off_is_byte_identical_codeonly_path(monkeypatch: pytest.MonkeyPatch) -> None:
-    """With CARNOT_ARC_INDUCE_THINK unset, generate() must take the EXACT codeonly branch
-    test_codeonly_induce_scoping.py::test_induce_eligible_is_codeonly_with_stop pins."""
-    monkeypatch.delenv("CARNOT_ARC_INDUCE_THINK", raising=False)
+    """With CARNOT_ARC_INDUCE_THINK=0, generate() must take the EXACT codeonly branch
+    test_codeonly_induce_scoping.py::test_induce_eligible_is_codeonly_with_stop pins. Explicit
+    override rather than "leave it unset" -- the shipped default flipped to on 2026-08-08, but
+    this branch's request-construction logic is unchanged and still needs pinning."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
     monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
     cap = _capture_raw(monkeypatch)
     p = _proposer(monkeypatch)
@@ -133,9 +144,9 @@ def test_think_off_is_byte_identical_codeonly_path(monkeypatch: pytest.MonkeyPat
 
 
 def test_think_off_induce_appends_pre_opened_fence(monkeypatch: pytest.MonkeyPatch) -> None:
-    """With think off, induce()'s combined call still pre-opens the ```python fence (unchanged
-    from before lever #6)."""
-    monkeypatch.delenv("CARNOT_ARC_INDUCE_THINK", raising=False)
+    """With think explicitly off, induce()'s combined call still pre-opens the ```python fence
+    (unchanged from before lever #6)."""
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
     monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
     cap = _capture_raw(monkeypatch)
     p = _proposer(monkeypatch)

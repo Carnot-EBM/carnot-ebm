@@ -1454,6 +1454,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6221 (fix2 of the 2026-08-08 adversarial-review fix pass). Adds LocalGGUFProposer._terminate_stale_proc(), which stops a still-referenced live llama-server child before _ensure_server() overwrites self._proc with a new one, instead of silently orphaning it. This changes RESOURCE CLEANUP on a future server-restart edge case (a wait-exhaustion timeout or a refused-for-reuse server) -- it does not change what game actions were taken, what the model generated, or any other value already recorded when this artifact was built. Whatever server produced this artifact's own numbers was already the healthy, live server at the time; this fix only affects what happens to a DIFFERENT, stale process reference that a future launch would otherwise abandon.",
         "evidence": "git diff HEAD~2..HEAD~1 -- python/carnot/agentic/arc_executable_world_model.py (this fix's own diff, applied on top of fix1): purely additive (61 insertions, 0 deletions) -- a new dataclass field (orphaned_child_cleanups), a new method (_terminate_stale_proc), and two new call sites inside _ensure_server's failure/retry paths. No existing statement, return value, or successful-launch code path is touched; the new calls only fire when self._proc already references a live process that a subsequent step is about to overwrite or has already failed to become healthy."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "dcc8b3a290005d45098dff4c42c49206063c2a4b4bd42fa4f4f95b0fee7e3245",
+        "sha256_now": "502098fe3c7d3378cb2bb31a5f74a1b2e69c2e9423f6c5dd22f74dbdb83aea4b",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
+        "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
       }
     ],
     "rebuild_command": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python results/inducer_h2h_6021/build_artifact_6021.py",

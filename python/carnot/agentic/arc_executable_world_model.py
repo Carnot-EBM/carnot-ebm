@@ -3437,14 +3437,18 @@ ARC_LIVE_GENERATOR_NO_THINK_PREFIX = ""  # /no_think is a Qwen3 token; inert on 
 # _L2_CODEONLY_DIRECTIVE below). Both configurations are real and neither is a straw man; which
 # one wins on gemma is an open, UN-A/B'd question this flag exists to answer.
 #
-# DEFAULT OFF ON BOTH AXES, on purpose, mirroring the MTP local/scored split above. No think-mode
-# A/B evidence exists yet for gemma-4-31B (exp5714/exp5766 are Qwen-9B-only and an
-# instrument-defect case respectively -- neither is evidence about gemma's native thought
-# channel). This project's standing convention is that a live-path behavior change ships only
-# after a matched-budget offline A/B; building the (default-off) capability is the correct first
-# step, flipping either default is not, until that A/B exists.
-ARC_LIVE_GENERATOR_THINK_DEFAULT = "0"
-ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "0"
+# WAS "0" ON BOTH AXES pending the matched-budget offline A/B this project's standing
+# convention required before a live-path default flip. That A/B landed 2026-08-08
+# (experiment_6199_gemma_think_mode_ab.json, REQ-ARC-WMTE-6198): 10/10 games induced on both
+# arms, think mode engaged real reasoning 10/10 vs 0/10 for no_think, and think mode had a
+# consistent edge on induction quality (heldout_accuracy, goal_predicate_accuracy) -- never
+# losing where the arms differed. The narrower levelup_positive_recall metric was inconclusive
+# (7 of 10 games showed no signal either way). Operator directive 2026-08-08, on that evidence:
+# flip think mode on going forward. `ARC_LIVE_GENERATOR_THINK_DEFAULT` is flipped alongside the
+# SCORED constant for consistency even though `induce_think_on()` only ever reads the SCORED one
+# (see its own docstring) -- nothing in the tree consults the non-scored constant at runtime.
+ARC_LIVE_GENERATOR_THINK_DEFAULT = "1"
+ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "1"
 
 
 def induce_think_on() -> bool:
