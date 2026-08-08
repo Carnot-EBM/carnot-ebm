@@ -292,26 +292,66 @@ def test_guard_at_defaults_exceeds_a_3090_which_is_the_honest_answer(wm, monkeyp
     The retargeted contract is the one that actually matters to a caller: WITH THE SHIPPED
     DEFAULTS AND A LOCAL CUDA OPT-IN, THE GENERATOR MUST END UP SOMEWHERE USABLE. The no-offload
     arithmetic is kept as a component assertion, not as the definition of correct behaviour.
+
+    RETARGETED AGAIN 2026-08-08 (REQ-ARC-WMTE-6227). `_INDUCE_WORST_CASE_PROMPT_TOKENS` moved
+    15767 -> 22352 (a re-measurement under current defaults -- k=all transitions, object table on
+    -- found the old constant stale; see that constant's own comment), raising
+    `_default_induce_n_ctx()` 81920 -> 106496. At the new n_ctx, the max auto-fit offload (12
+    layers, `_FFN_CPU_AUTOFIT_MAX_LAYERS`) no longer brings the footprint under a realistic-idle
+    3090's free VRAM -- confirmed directly (a no-offload launch at 106496 does not even fit a
+    24576 MiB card at all: `cudaMalloc failed: out of memory` on the compute-buffer reservation,
+    not a graceful decline). Raising the offload cap is NOT the fix: `_FFN_CPU_AUTOFIT_MAX_LAYERS`
+    was calibrated against a decode-throughput/induce-timeout tradeoff, and a BIGGER worst-case
+    prompt makes that tradeoff WORSE at more offloaded layers, not better -- so a cap raise would
+    reintroduce the exact `test_mtp_on_is_refused_locally_rather_than_auto_offloaded_into_a_timeout`
+    -style timeout risk (in `test_arc_generator_migration_defects.py`) for the mtp-OFF arm too.
+
+    So THIS test's "must end up somewhere usable AT THE SHIPPED DEFAULTS" contract is retargeted
+    once more: the shipped DEFAULT n_ctx correctly REFUSES a realistic-idle 3090 for the absolute
+    worst-case prompt (a genuine, measured physical constraint, not a regression to compensate
+    for), and the property that must still hold is that the DOCUMENTED escape hatch --
+    `CARNOT_ARC_INDUCE_N_CTX` -- actually restores usability for a local developer who accepts a
+    smaller worst-case-prompt safety margin. That is what "must end up somewhere usable" now
+    means: not at ANY n_ctx unconditionally, but reachable via the lever the module's own
+    docstring already names for exactly this box class.
     """
     monkeypatch.delenv("CARNOT_ARC_FFN_CPU_LAYERS", raising=False)
     # Component fact (unchanged, still measured): with zero offload the requirement exceeds a 3090.
     assert wm._generator_cuda_min_free_mb(0) > 24576
     # ...and the documented escape hatch actually escapes: 12 offloaded layers brings the
-    # requirement under an idle 3090's free memory.
-    assert wm._generator_cuda_min_free_mb(12) < 24576
+    # requirement under an idle 3090's free memory -- AT THE OLD n_ctx (81920) this constant's
+    # own historical basis. The default n_ctx no longer satisfies this at all (see below), which
+    # is exactly the regression this component assertion exists to catch if reintroduced silently.
+    with monkeypatch.context() as m:
+        m.setenv("CARNOT_ARC_INDUCE_N_CTX", "81920")
+        assert wm._generator_cuda_min_free_mb(12) < 24576
 
-    # THE SHIPPED-DEFAULT CONTRACT. On a card with a realistic idle free-VRAM reading, the
-    # auto-fit must pick a layer count that (a) exists, (b) stays inside the throughput cap, and
-    # (c) actually satisfies the guard it is being fitted against. Driven through a stubbed
-    # free-VRAM reading rather than the real card so the assertion is deterministic and does not
-    # depend on which GPU happens to be idle when the suite runs.
+    # THE SHIPPED-DEFAULT CONTRACT (2026-08-08: the corrected worst case genuinely refuses this
+    # card, and that refusal must be loud, not silent).
     monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
     monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: 24123)
     monkeypatch.setattr(wm, "_cuda_gpu_total_mb", lambda _idx: 24576)
+    wm.GENERATOR_SELECTION_LOG.clear()
+    wm._GENERATOR_SELECTION_SEEN.clear()
+    layers = wm._default_ffn_cpu_layers()
+    assert layers == 0, (
+        "the shipped default must REFUSE (not silently under-offload) on a realistic-idle 3090 "
+        f"at the corrected worst-case n_ctx; got {layers} nonzero layers -- if this now fits, "
+        "either the worst-case prompt constant shrank again or the autofit cap moved, and this "
+        "test's numbers need a fresh re-derivation"
+    )
+    joined = "\n".join(wm.GENERATOR_SELECTION_LOG)
+    assert "cannot fit the generator" in joined, f"the refusal must be logged; got:\n{joined}"
+
+    # THE ESCAPE HATCH CONTRACT: a local developer who explicitly accepts a smaller worst-case
+    # safety margin (CARNOT_ARC_INDUCE_N_CTX=81920, this constant's own historical value) DOES get
+    # a usable card -- "must end up somewhere usable" still holds, reachable via the documented
+    # lever, which is the property this test was originally written to protect.
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_N_CTX", "81920")
     layers = wm._default_ffn_cpu_layers()
     assert 0 < layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS, (
-        "the shipped default must offload SOMETHING on a 3090 -- 0 layers is the outage this "
-        f"test was retargeted to forbid (got {layers})"
+        "the documented CARNOT_ARC_INDUCE_N_CTX escape hatch must restore a usable local card; "
+        f"got {layers} layers at n_ctx=81920"
     )
     assert wm._generator_cuda_min_free_mb(layers) <= 24123, (
         "auto-fit picked a layer count that still does not satisfy the guard it was fitted "

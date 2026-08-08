@@ -57,6 +57,57 @@ restart semantics, so this is a non-issue — close it; or (2) it does, and a ch
 gets scoped against the framework's actual restart contract. Do not build checkpointing before
 step (a) confirms what the framework actually does.
 
+### NEW 2026-08-08 (FOUND DURING REQ-ARC-WMTE-6227's REGRESSION SWEEP — pre-existing, unrelated, NOT fixed)
+
+Context: the 2026-08-08 adversarial live-agent review's Correctness finding 5 fix (re-measuring
+`_INDUCE_WORST_CASE_PROMPT_TOKENS`) ran a broad regression sweep before committing. 19 test
+failures surfaced that are confirmed, via a clean detached-HEAD worktree with zero uncommitted
+changes (neither this fix's edits nor the conductor's own in-flight `REQ-ARC-WMTE-6213` work),
+to be **already broken on `main` independent of any of today's work**:
+
+1. **`tests/python/test_arc_goal_predicate_shadowing.py` — 5 of 18 tests fail.** All fail the same
+   way: `ok, _ = p.induce(...)` (or `.generate(...)`) returns `False` where the test expects
+   `True`, against a MOCKED HTTP `/completion` response sequence (`_seq_urlopen`). Affected: the
+   `CARNOT_ARC_GOAL_DEDUP=1` split-induce dedup path (defective/declined engine half, numpy-import
+   guarantee, exactly-one-definition emission) and the plain split-induce binding test.
+2. **`tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` — 12 of 15 tests fail.**
+   Same shape: `induce()`/`generate()` returns `ok=False` unexpectedly against mocked response
+   sequences. Affected: repeat-penalty payload construction, the reask-on-defect mechanism (clean
+   engine never reasked, defective triggers exactly one reask, reask budget exhaustion, goal-only
+   calls skip the engine gate and the penalty), and the malformed-penalty fallback.
+3. **`tests/python/test_arc_submitted_agent_parity.py` — 2 tests fail, different root cause.**
+   `SUBMITTED_AGENT_CONFIG["frozen_generator"]["model_id"]` reads `"unsloth/gemma-4-31B-it-qat-
+   GGUF"` (the qat variant `ARC_LIVE_GENERATOR_MODEL_ID`/`ARC_LIVE_GENERATOR_REPO_SUBSTR`/
+   `ARC_LIVE_GENERATOR_MODEL_FILENAME` have named since the 2026-07-31 qat-vs-Q4_K_M head-to-head,
+   `results/outer_loop_arc_qat_vs_q4km_h2h_20260731.json`), while these two tests still assert the
+   plain `"unsloth/gemma-4-31B-it-GGUF"` string. This looks like simple test staleness against an
+   already-shipped, deliberate model choice, not a live bug — but it was not investigated further
+   (out of scope for the fix that found it).
+
+**Why (1) and (2) are the more concerning pair.** They share a symptom (a mocked induce/generate
+call unexpectedly reports failure) across two DIFFERENT test files covering DIFFERENT features
+(goal-predicate dedup vs repeat-penalty/reask), which suggests either a single shared root cause
+somewhere in `induce()`'s common request/response handling, or a shared test-fixture/helper
+regression. Neither was isolated — the investigation that found these stopped at "confirmed
+pre-existing and unrelated to REQ-ARC-WMTE-6223 through 6227," per the discipline of not scope-
+creeping a token-count fix into an unrelated 19-test investigation.
+
+**Scope for the follow-up:**
+
+a. Bisect (or read recent history on) `induce()`/`generate()`'s shared request/response path and
+   whatever helper `_seq_urlopen`/`_proposer()` (defined per test file, but likely near-identical)
+   construct, to find why a mocked response sequence that WORKED before now yields `ok=False`.
+b. Check whether the qat model-id switch (finding 3, same day-ish as this discovery) touches any
+   shared code path finding 1/2 also exercise — `repo_substr`, `no_think_prefix`, or similar
+   construction defaults that a mocked-HTTP test would be sensitive to.
+c. For finding 3 specifically: confirm the qat variant is still the intended shipped model (per
+   the 2026-07-31 h2h), then simply update the two stale assertions.
+
+**Falsifiable gate.** This follow-up ends when all 19 tests pass again, OR when each failure is
+individually re-classified with a specific root cause and either fixed or the test itself is
+updated with a dated correction note (matching this project's own established pattern) explaining
+why the old assertion no longer holds.
+
 ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
 
 The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed

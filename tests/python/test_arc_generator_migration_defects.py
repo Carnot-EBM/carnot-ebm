@@ -126,7 +126,9 @@ def test_the_missing_invariant_demand_never_exceeds_what_the_hardware_supplies(
         )
 
 
-def test_the_shipped_local_default_is_satisfiable_on_a_real_3090(wm, monkeypatch) -> None:
+def test_the_shipped_local_default_is_refused_on_a_real_3090_at_the_corrected_n_ctx(
+    wm, monkeypatch
+) -> None:
     """The concrete instance of the invariant, on the hardware this project actually has.
 
     A 3090 idles at 24123 MiB free, NOT 24576. Asserting against the total is how a guard can be
@@ -136,22 +138,42 @@ def test_the_shipped_local_default_is_satisfiable_on_a_real_3090(wm, monkeypatch
     parametrized over mtp, asserting BOTH arms were satisfiable. The mtp=True arm no longer is, by
     design -- see `test_mtp_on_is_refused_locally_rather_than_auto_offloaded_into_a_timeout` below
     for the contract that replaced it.
+
+    RETARGETED AGAIN 2026-08-08 (REQ-ARC-WMTE-6227). This test's ORIGINAL name and body (preserved
+    in the docstring above, and in git history) asserted the mtp-OFF local default IS satisfiable
+    on a 3090 -- and it was, at the THEN-shipped n_ctx=81920 (7 offloaded layers fit within the
+    _FFN_CPU_AUTOFIT_MAX_LAYERS=12 cap). `_INDUCE_WORST_CASE_PROMPT_TOKENS` moved 15767 -> 22352
+    (a re-measurement under current defaults -- see that constant's own comment), raising
+    `_default_induce_n_ctx()` 81920 -> 106496. At the new n_ctx, mtp-OFF needs MORE than 12
+    offloaded layers to fit a 24123 MiB-free 3090 -- it falls off the same cap the mtp-ON arm
+    already fell off in the 2026-07-28 third pass, for the identical reason: the offload needed
+    exceeds the cap `_default_ffn_cpu_layers()`'s own docstring names as the throughput-timeout
+    threshold, so auto-fit correctly REFUSES rather than silently selecting a configuration slow
+    enough to time out induction. This is not a regression this test should paper over -- it is
+    the guard doing its job with a NOW-CORRECT worst-case figure, and the local-dev remedy is the
+    documented `CARNOT_ARC_INDUCE_N_CTX` override, not raising the offload cap (which would
+    reintroduce the timeout risk `_FFN_CPU_AUTOFIT_MAX_LAYERS` was measured to prevent).
     """
     monkeypatch.setenv("CARNOT_ARC_MTP", "0")
     monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
     monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: RTX3090_IDLE_FREE_MIB)
     monkeypatch.setattr(wm, "_cuda_gpu_total_mb", lambda _idx: RTX3090_TOTAL_MIB)
+    wm.GENERATOR_SELECTION_LOG.clear()
+    wm._GENERATOR_SELECTION_SEEN.clear()
 
     layers = wm._default_ffn_cpu_layers()
-    assert 0 < layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS, (
-        f"expected the auto-fit to offload something on a 3090; got {layers}"
+    assert layers == 0, (
+        f"expected the auto-fit to REFUSE on a 3090 at the corrected n_ctx (needs more than "
+        f"_FFN_CPU_AUTOFIT_MAX_LAYERS={wm._FFN_CPU_AUTOFIT_MAX_LAYERS} offloaded layers to fit); "
+        f"got {layers} -- if this now passes with a nonzero layer count, either the worst-case "
+        "prompt constant shrank again or the autofit cap moved, and this test's numbers need a "
+        "fresh re-derivation, not a silent bump"
     )
-    assert wm._generator_cuda_min_free_mb(layers, False) <= RTX3090_IDLE_FREE_MIB
-    # ...and the end-to-end placement agrees: the CUDA build, pinned to the requested card.
-    server, env = wm._generator_server_and_env(layers, False)
-    assert server.name == "llama-server"
-    assert env is not None and env.get("CUDA_VISIBLE_DEVICES") == "0", (
-        "the guard passed but the CUDA build was not selected -- the two halves disagree"
+    # ...and the refusal is AUDIBLE (mirrors the mtp-on refusal test below): the whole failure
+    # class this module guards against is a degraded configuration that no channel reports.
+    joined = "\n".join(wm.GENERATOR_SELECTION_LOG)
+    assert "cannot fit the generator" in joined, (
+        f"the refusal must be logged, not silent; got:\n{joined}"
     )
 
 
@@ -195,9 +217,19 @@ def test_mtp_on_is_refused_locally_rather_than_auto_offloaded_into_a_timeout(
 
     The SCORED path is unaffected: see
     `test_the_scored_96gb_card_needs_no_offload_at_all_with_mtp_on`.
+
+    UPDATED 2026-08-08 (REQ-ARC-WMTE-6227). `_default_induce_n_ctx()` moved 81920 -> 106496 (see
+    `test_the_shipped_local_default_is_refused_on_a_real_3090_at_the_corrected_n_ctx` for why).
+    MTP-off no longer fits in 7 layers at the new n_ctx either -- both arms now fall off the same
+    12-layer cap, so both assertions read -1. The BOTH-REFUSED outcome and the reasoning above are
+    otherwise unchanged: this is the guard correctly refusing a configuration slow enough to time
+    out, not a capability regression to compensate for.
     """
     n_ctx = wm._default_induce_n_ctx()
-    assert wm._ffn_cpu_layers_to_fit(RTX3090_IDLE_FREE_MIB, n_ctx, False) == 7
+    assert wm._ffn_cpu_layers_to_fit(RTX3090_IDLE_FREE_MIB, n_ctx, False) == -1, (
+        "MTP-off no longer auto-fits a 3090 at the corrected n_ctx -- see this test's 2026-08-08 "
+        "update note for why that is now the correct answer"
+    )
     assert wm._ffn_cpu_layers_to_fit(RTX3090_IDLE_FREE_MIB, n_ctx, True) == -1, (
         "MTP-on must NOT auto-fit on a 3090 -- the offload it needs is a net throughput loss"
     )
@@ -520,17 +552,35 @@ def test_proposer_fits_the_offload_to_its_own_mtp_not_the_environment_default(
     harnesses construct `LocalGGUFProposer(mtp=...)` explicitly, so the two disagreed routinely,
     and the result was a guard validating a configuration the server was not about to run --
     CUDA declined, iGPU fallback at ~2 tok/s, induce timeout, silent LLM-off.
+
+    FREE-VRAM READING RAISED 24123 (RTX3090_IDLE_FREE_MIB) -> 24576 (RTX3090_TOTAL_MIB), 2026-08-08
+    (REQ-ARC-WMTE-6227). `_default_induce_n_ctx()` moved 81920 -> 106496 (see the shipped-local-
+    default test above), and at RTX3090_IDLE_FREE_MIB BOTH mtp arms now refuse (both return 0/-1
+    layers, per `test_mtp_on_is_refused_locally_rather_than_auto_offloaded_into_a_timeout`'s own
+    2026-08-08 update) -- which would make this test's own-mtp-vs-env-mtp comparison vacuous, since
+    "sized from the env's mtp" and "sized from this proposer's own mtp" produce the SAME (refused)
+    answer when neither can fit at all. This test's PURPOSE is narrower than realistic-idle-VRAM
+    coverage (that is what the shipped-local-default test is for): it only needs ONE free-VRAM
+    reading where the two mtp arms still land on DIFFERENT layer counts, so the property under
+    test (own-mtp, not env-mtp) stays demonstrable. RTX3090_TOTAL_MIB is that reading here (11
+    layers vs refused, swept empirically against the real module functions) -- a generous,
+    already-established constant in this file, not a fabricated one.
     """
     monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
     monkeypatch.setenv("CARNOT_ARC_MTP", "0")  # environment says OFF
-    monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: RTX3090_IDLE_FREE_MIB)
+    monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: RTX3090_TOTAL_MIB)
     monkeypatch.setattr(wm, "_cuda_gpu_total_mb", lambda _idx: RTX3090_TOTAL_MIB)
 
     # A proposer that agrees with the environment gets the environment's fit.
-    assert wm.LocalGGUFProposer(mtp=False).ffn_cpu_layers == 7
+    env_fit = wm.LocalGGUFProposer(mtp=False).ffn_cpu_layers
+    assert env_fit > 0, (
+        f"sanity: this test needs the mtp=False arm to actually fit (nonzero layers) at "
+        f"RTX3090_TOTAL_MIB free, or it cannot demonstrate the own-mtp-vs-env-mtp property; got "
+        f"{env_fit}"
+    )
     # A proposer that DISAGREES must be fitted for ITS OWN value, and must say so.
     p = wm.LocalGGUFProposer(mtp=True)
-    assert p.ffn_cpu_layers != 7, (
+    assert p.ffn_cpu_layers != env_fit, (
         "the offload was sized from the env default, not from this proposer's mtp"
     )
     assert "differs from the environment default" in p.ffn_cpu_layers_refit_note
