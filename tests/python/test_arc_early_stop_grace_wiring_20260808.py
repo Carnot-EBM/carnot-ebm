@@ -46,7 +46,6 @@ def test_submitted_early_stop_grace_pinned_in_agent_config():
     other field, and this key was simply missing from it."""
     assert "early_stop_grace" in SUBMITTED_AGENT_CONFIG
     assert SUBMITTED_AGENT_CONFIG["early_stop_grace"] == SUBMITTED_EARLY_STOP_GRACE
-    assert SUBMITTED_AGENT_CONFIG["early_stop_grace"] == 400
 
 
 def test_e3_agent_policy_default_reaches_explorer_instance_attribute():
@@ -54,7 +53,6 @@ def test_e3_agent_policy_default_reaches_explorer_instance_attribute():
     `None` StepwiseExplorer itself still defaults to when nobody threads a value through."""
     pol = E3AgentPolicy("paritytest", proposer=None, value_head=lambda _frame: 0.0)
     assert pol.explorer.early_stop_grace == SUBMITTED_EARLY_STOP_GRACE
-    assert pol.explorer.early_stop_grace == 400
 
 
 def test_e3_agent_policy_forwards_early_stop_grace_via_constructor_kwarg(monkeypatch):
@@ -111,4 +109,3 @@ def test_carnot_agent_scored_entrypoint_passes_submitted_grace_to_e3_policy(monk
 
     assert "early_stop_grace" in captured_kwargs
     assert captured_kwargs["early_stop_grace"] == SUBMITTED_AGENT_CONFIG["early_stop_grace"]
-    assert captured_kwargs["early_stop_grace"] == 400

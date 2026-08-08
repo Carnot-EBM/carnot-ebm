@@ -22535,6 +22535,15 @@ default reaching the explorer instance attribute; the constructor kwarg genuinel
 on the `StepwiseExplorer.__init__` call itself, not just the resulting attribute); the explicit
 override path; and the real scored entrypoint (`make_carnot_agent`) forwarding the config value.
 
+**CORRECTION (2026-08-08, same day).** An audit of `results/early_stop_sweep_20260726/rows_*.json`
+found the "no score cost" premise behind the shipped value of 400 was false: `tu93` reaches level 1
+at action 334 and level 2 at action 1538 on 3 of 3 tested seeds, a reproducible 1204-action gap. A
+grace of 400 would stop the agent before level 2, every time, at the shipped `MAX_ACTIONS=2000`
+budget. `cd82` shows the same shape on 1 of 3 seeds. `SUBMITTED_EARLY_STOP_GRACE` is reverted to
+`None` (off) — the wiring this REQ fixed stays correct and tested; only the shipped default value
+is pulled back, pending an A/B measuring total levels reached (grace on vs off) across the full
+game roster.
+
 ## Implementation Status (REQ-ARC-WMTE-6220)
 
 | REQ | Implementation | Tests |
