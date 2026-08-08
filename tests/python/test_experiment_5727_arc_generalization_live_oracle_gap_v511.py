@@ -284,12 +284,14 @@ def test_req_arc_wmte_5727_e3_proposer_port_env_override(monkeypatch) -> None:
     proposer = policy._proposer()
 
     assert isinstance(proposer, LocalGGUFProposer)
-    # Re-pinned 2026-07-28 (operator directive): the live generator is gemma-4-31B-it, and mtp is
-    # OFF because that model declares no MTP heads -- leaving it on would emit
-    # `--spec-type draft-mtp --model-draft <the same 18.3GB file>` and load the weights twice.
+    # Pin is gemma-4-31B-it-qat (repinned 2026-07-31, VRAM-only -- a 20-game head-to-head found
+    # QAT and Q4_K_M statistically indistinguishable on quality, sign test p=1.0; QAT saves ~1GB
+    # VRAM and matches the required QAT MTP drafter). mtp is OFF locally because the model DOES
+    # have MTP (a separate head file) but a 24GB card must offload ~14 FFN layers to fit it,
+    # costing more decode than MTP returns -- not because the model lacks MTP heads.
     # This assertion reads the REAL `_proposer()`, so it is one of the sites that would catch a
     # partial revert; see tests/python/test_arc_live_generator_pin.py for the full set.
-    assert proposer.repo_substr == "gemma-4-31B-it"
+    assert proposer.repo_substr == "gemma-4-31B-it-qat"
     assert proposer.port == 8922
     assert proposer.mtp is False
     assert proposer.kv_quant == "q8_0"

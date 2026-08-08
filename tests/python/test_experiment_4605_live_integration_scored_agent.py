@@ -101,9 +101,14 @@ def test_req_capstone_4605_submitted_policy_wires_safe_live_stack(monkeypatch) -
             return 0.5
 
     stub_router = CrossGameDiscriminativeCandidateRouter(StubVerifier())
+    # Patch load_online_click_target_router, not load_cross_game_discriminative_router directly:
+    # since commit ca8e078ccb (2026-07-25, Exp5904/5927) _load_submitted_candidate_router's
+    # default path wraps the discriminative router inside an OnlineClickTargetRouter, so a stub
+    # swapped in at load_cross_game_discriminative_router only ever reaches .base of that
+    # wrapper, never policy.explorer.candidate_router itself.
     monkeypatch.setattr(
         comp.arc_discriminative_router,
-        "load_cross_game_discriminative_router",
+        "load_online_click_target_router",
         lambda **_kwargs: stub_router,
     )
 
