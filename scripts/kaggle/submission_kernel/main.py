@@ -61,9 +61,21 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 COMP = "/kaggle/input/competitions/arc-prize-2026-arc-agi-3"
+
+# CARNOT_ARC_SERVER_LOG_DIR (2026-08-08 adversarial review, Gaps finding 7). Unset, the agent's
+# llama-server stderr log falls back to tempfile.gettempdir() -- inside the ephemeral Kaggle
+# container, that is gone the moment the run ends. That log is the ONLY discriminator between a
+# recoverable context-overflow (HTTP 500, server survives) and a server death via
+# ggml_abort/SIGSEGV (server gone, every later request RemoteDisconnected) -- without it, a
+# mid-eval generator death is undiagnosable after the fact, one hop downstream of where that
+# logging chain was built. `setdefault` so an operator override still wins. Set here, at the top
+# of the OUTER script, before `run_env = os.environ.copy()` below -- child processes (the swarm,
+# and whatever it spawns per game) inherit this through normal environment inheritance.
+os.environ.setdefault("CARNOT_ARC_SERVER_LOG_DIR", "/kaggle/working")
 
 # 1) competition-provided wheels, offline (mirrors the canonical control notebook)
 subprocess.run(
@@ -93,7 +105,20 @@ from pathlib import Path
 inp = Path("/kaggle/input")
 # self-locate the bundled carnot package (mount nests under .../datasets/<owner>/<slug>/);
 # arc_competition_agent.py is at .../python/carnot/agentic/... -> sys.path needs .../python
-carnot = next(p.parents[2] for p in inp.rglob("carnot/agentic/arc_competition_agent.py"))
+# LOUD ON MISSING (2026-08-08 adversarial review, Gaps finding 6): a bare next() over this
+# rglob raised a message-free StopIteration at import time -- a missing or re-laid-out dataset
+# killed the run before any game, with the kernel still printing "complete" downstream. list()
+# the hits first so a missing dataset gets one clear, actionable line instead of a bare
+# traceback nobody reading the tail of a 12h log would recognize.
+_carnot_hits = list(inp.rglob("carnot/agentic/arc_competition_agent.py"))
+if not _carnot_hits:
+    print(
+        "FATAL: carnot/agentic/arc_competition_agent.py not found under /kaggle/input -- "
+        "attach the carnot package dataset to this kernel and re-run.",
+        flush=True,
+    )
+    raise SystemExit("carnot package dataset not attached")
+carnot = _carnot_hits[0].parents[2]
 sys.path.insert(0, str(carnot))
 
 # HYBRID EXPLORER DIVERSITY (validated 2026-06-21). The depth_first_ride StepwiseExplorer over-commits to
@@ -299,6 +324,18 @@ if server and gguf:
         print(f"LLM GPU HARDWARE: {_smi.stdout.strip() or _smi.stderr.strip()!r}", flush=True)
     except Exception as _se:
         print(f"LLM GPU HARDWARE: unavailable ({_se!r})", flush=True)
+    # HOST RAM, next to the GPU line (2026-08-08 adversarial review, Gaps finding 5).
+    # MAX_ACTIONS=2000 in arc_competition_agent.py is sized on an ADMITTEDLY UNCONFIRMED 16 GiB
+    # host-RAM assumption (the competition framework retains every frame for the whole episode,
+    # so RAM grows with action count). Nothing before this print has ever recorded what RAM the
+    # scored container actually has -- the same "measure, don't infer" gap the GPU line above
+    # closed for VRAM. REPORTS, DOES NOT ABORT, same reasoning as the VRAM fit check below.
+    try:
+        with open("/proc/meminfo") as _mf:
+            _mem_total_line = next((_l for _l in _mf if _l.startswith("MemTotal:")), None)
+        print(f"HOST RAM: {(_mem_total_line or 'MemTotal line not found').strip()}", flush=True)
+    except Exception as _me:
+        print(f"HOST RAM: unavailable ({_me!r})", flush=True)
     # THE FIT CHECK ON THE **SCORED** CARD. `_generator_cuda_min_free_mb()` is the project's VRAM
     # arithmetic, but on this path it is otherwise NEVER EVALUATED: `_generator_server_and_env()`
     # returns at priority 1 on CARNOT_LLAMA_SERVER (which this kernel always sets), so the guard,
@@ -312,6 +349,12 @@ if server and gguf:
     # budget, and the agent would proceed LLM-OFF while still reporting itself as the LLM-on scored
     # path. This prints the comparison so the failure is legible in the log instead of being
     # inferred later from a suspiciously low score.
+    #
+    # CORRECTION 2026-08-08 (REQ-ARC-WMTE-6227): the illustrative "81920 / ~25.2 GB" pair above is
+    # historical. `_INDUCE_WORST_CASE_PROMPT_TOKENS` moved 15767 -> 22352 (a stale-constant fix),
+    # which raises the shipped n_ctx to 106496 and the no-offload requirement past 26.6 GB. The
+    # print below reads `_generator_cuda_min_free_mb()` live, so the ACTUAL number on any given run
+    # is always current; only this illustrative prose example is now out of date.
     #
     # REPORTS, DOES NOT ABORT. A wrong-but-running submission is worth more than no submission, and
     # the remedy (a different machine_shape, a lower n_ctx, MTP off) is an operator decision that
@@ -609,15 +652,36 @@ if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
     )
     # 7) play all gateway games (12h Kaggle cap). main.py fetches the game list from the
     #    gateway, runs the swarm, and the gateway records the scorecard that is scored.
+    #
+    # TIMEOUT MARGIN + VISIBLE EXIT STATUS (2026-08-08 adversarial review, Gaps finding 4). The
+    # timeout used to equal the FULL 12h cap with `TimeoutExpired` uncaught and the return code
+    # never inspected -- a run that dies AT the deadline ended as a hard kill or an uncaught
+    # traceback, and a swarm that crashed at t=0 was indistinguishable from a clean 12h success by
+    # the terminal "complete" line below. 41400s (30 min short of the 43200s cap) gives this
+    # process room to observe and print the outcome before Kaggle's own harness kills the kernel;
+    # `check=False` is unchanged (a non-zero exit still lets Save & Run produce whatever partial
+    # submission the swarm managed), but the exit is now NAMED instead of silent.
     run_env = os.environ.copy()
     run_env["MPLBACKEND"] = "agg"  # headless matplotlib (canonical nb sets this)
-    subprocess.run(
-        [sys.executable, "main.py", "--agent", "carnotagent"],
-        cwd=fw,
-        env=run_env,
-        timeout=43200,
-        check=False,
-    )
+    _swarm_t0 = time.time()
+    try:
+        _swarm_result = subprocess.run(
+            [sys.executable, "main.py", "--agent", "carnotagent"],
+            cwd=fw,
+            env=run_env,
+            timeout=41400,
+            check=False,
+        )
+        print(
+            f"SWARM EXITED rc={_swarm_result.returncode} after {time.time() - _swarm_t0:.0f}s",
+            flush=True,
+        )
+    except subprocess.TimeoutExpired:
+        print(
+            f"SWARM TIMED OUT after {time.time() - _swarm_t0:.0f}s "
+            "(41400s budget) -- killed before the swarm process exited on its own",
+            flush=True,
+        )
 else:
     # NON-rerun: write the placeholder submission so Save & Run produces a valid entry.
     import pandas as pd
