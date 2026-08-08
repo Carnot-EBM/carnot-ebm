@@ -68,6 +68,26 @@ MEASURED_32768_GEMMA31B_MIB = 21416
 # n_ctx 32768 over 0/12/24/40 CPU layers: 21416 / 19072 / 16728 / 13580 MiB.
 MEASURED_FREED_PER_CPU_FFN_LAYER_MIB = 195.3
 
+# NEW SHIPPED n_ctx (2026-08-08, REQ-ARC-WMTE-6227): _INDUCE_WORST_CASE_PROMPT_TOKENS moved
+# 15767 -> 22352 (a re-measurement under current defaults -- k=all transitions, object table on
+# -- found the old constant stale), which raises `_default_induce_n_ctx()` 81920 -> 106496.
+#
+# RECONSTRUCTED, NOT DIRECTLY MEASURED, and that gap is disclosed rather than papered over. A
+# no-offload launch at n_ctx=106496 does NOT fit a 24576 MiB 3090 at all -- confirmed directly:
+# `cudaMalloc failed: out of memory` on `ggml_backend_cuda_buffer_type_alloc_buffer: allocating
+# 1026.80 MiB`, the compute-buffer reservation, immediately after model+KV load. So the no-offload
+# figure below is RECONSTRUCTED from a real launch WITH FFN offload (12 CPU-FFN layers, the same
+# `-ot` lever and per-layer credit `MEASURED_FREED_PER_CPU_FFN_LAYER_MIB` used throughout this
+# file): measured per-PID residency 22780 MiB + 12*195.3 = 25123.6 MiB. That figure lands within
+# 0.4 MiB (0.0016%) of the linear model's own prediction at 106496
+# (`_VRAM_GEMMA31B_INTERCEPT_MIB + _VRAM_GEMMA31B_PER_CTX_MIB*106496 + _VRAM_PER_SLOT_MIB*4` =
+# 25124.0), which is strong independent corroboration of the model's ctx-slope term this far past
+# the two points (32768, 81920) it was originally fit to -- but it is still an offload-and-
+# reconstruct measurement, not a direct one, because a direct one cannot be taken on this
+# hardware. Rounded DOWN to the nearest whole MiB (never up, for a footprint threshold) to
+# 25123.
+MEASURED_106496_GEMMA31B_MIB = 25123
+
 
 @pytest.fixture()
 def wm(monkeypatch):
@@ -117,14 +137,14 @@ def test_guard_exceeds_the_measured_footprint_at_the_shipped_n_ctx(wm) -> None:
 
     This is the assertion that fails if someone raises n_ctx again without touching the guard.
     """
-    assert wm._default_induce_n_ctx() == 81920, (
+    assert wm._default_induce_n_ctx() == 106496, (
         "the shipped context-pool size moved; re-measure the footprint before updating this test, "
         "do not just edit the constant"
     )
     guard = wm._generator_cuda_min_free_mb()
-    assert guard > MEASURED_81920_GEMMA31B_MIB, (
+    assert guard > MEASURED_106496_GEMMA31B_MIB, (
         f"free-VRAM guard {guard} MiB does not exceed the MEASURED "
-        f"{MEASURED_81920_GEMMA31B_MIB} MiB footprint of the launch it guards -- a card between "
+        f"{MEASURED_106496_GEMMA31B_MIB} MiB footprint of the launch it guards -- a card between "
         "the two passes the guard and then cudaMalloc-fails, silently returning the agent to "
         "LLM-off"
     )
@@ -132,12 +152,18 @@ def test_guard_exceeds_the_measured_footprint_at_the_shipped_n_ctx(wm) -> None:
 
 def test_guard_carries_real_margin_over_the_measured_footprint(wm) -> None:
     """A guard that merely equals the footprint admits a card with zero slack for driver
-    overhead, allocator fragmentation, or a second transient process. Require a real margin."""
+    overhead, allocator fragmentation, or a second transient process. Require a real margin.
+
+    Checked against MEASURED_106496_GEMMA31B_MIB, not the historical 81920 figure (2026-08-08,
+    REQ-ARC-WMTE-6227): the guard this test reads is `_generator_cuda_min_free_mb()` at
+    whatever `_default_induce_n_ctx()` CURRENTLY returns, so comparing it against a footprint
+    measured for a DIFFERENT n_ctx would silently stop being apples-to-apples the moment the
+    two diverged -- exactly the gap this file exists to close for the constant itself."""
     guard = wm._generator_cuda_min_free_mb()
-    margin = guard - MEASURED_81920_GEMMA31B_MIB
+    margin = guard - MEASURED_106496_GEMMA31B_MIB
     assert margin >= 1000, (
         f"only {margin} MiB of margin between the guard ({guard}) and the measured footprint "
-        f"({MEASURED_81920_GEMMA31B_MIB}); binding a card this tightly is how the 2026-07-21 "
+        f"({MEASURED_106496_GEMMA31B_MIB}); binding a card this tightly is how the 2026-07-21 "
         "self-heal-onto-a-full-card incident happened"
     )
 
@@ -168,9 +194,10 @@ def test_the_autofit_guard_carries_real_margin_over_the_autofit_footprint(wm, mo
     Comparing the guard against `_predicted_generator_vram_mib` would be circular -- the guard is
     computed FROM that predictor, so the assertion would hold no matter how wrong the envelope was.
     Instead the expected footprint is rebuilt from the two independently measured constants at the
-    top of this file: the measured 81920 no-offload residency, minus the measured per-layer credit.
+    top of this file: the measured 106496 no-offload residency, minus the measured per-layer
+    credit.
 
-    Subtracting a credit measured at n_ctx 32768 from a footprint measured at 81920 is sound
+    Subtracting a credit measured at n_ctx 32768 from a footprint measured at 106496 is sound
     because the `-ot` lever moves FFN *weight* tensors to system RAM, and weight size does not
     depend on the context-pool size (what n_ctx moves is the KV cache, which stays on the card).
 
@@ -179,8 +206,16 @@ def test_the_autofit_guard_carries_real_margin_over_the_autofit_footprint(wm, mo
     with or without a GPU.
     """
     # A 3090 with a few hundred MiB of driver/desktop overhead already resident -- i.e. the
-    # realistic case where the no-offload guard (25388 MiB) does NOT fit but a small offload does.
-    free_mb = 24123
+    # realistic case where the no-offload guard (26623 MiB) does NOT fit but a small offload does.
+    #
+    # RAISED 24123 -> 24400 (2026-08-08, REQ-ARC-WMTE-6227). At the new n_ctx=106496, the max
+    # auto-fit offload (_FFN_CPU_AUTOFIT_MAX_LAYERS=12) frees 12*195.3=2343.6 MiB, landing the
+    # guard-inclusive footprint at 24280 MiB -- ABOVE the old 24123 free_mb, so at that value the
+    # auto-fit correctly refuses to engage at all (0 layers: even its maximum offload cannot
+    # satisfy the margin). 24400 is the smallest round free_mb, swept empirically against the real
+    # module functions, where 12 layers both engages and satisfies the guard -- still a realistic
+    # "few hundred MiB of overhead" reading on a 24576 MiB card.
+    free_mb = 24400
     monkeypatch.setenv("CARNOT_ARC_GENERATOR_CUDA_GPU", "0")
     monkeypatch.setattr(wm, "_cuda_gpu_free_mb", lambda _idx: free_mb)
 
@@ -192,7 +227,9 @@ def test_the_autofit_guard_carries_real_margin_over_the_autofit_footprint(wm, mo
     assert layers <= wm._FFN_CPU_AUTOFIT_MAX_LAYERS
 
     guard = wm._generator_cuda_min_free_mb(layers)
-    expected_footprint = MEASURED_81920_GEMMA31B_MIB - layers * MEASURED_FREED_PER_CPU_FFN_LAYER_MIB
+    expected_footprint = (
+        MEASURED_106496_GEMMA31B_MIB - layers * MEASURED_FREED_PER_CPU_FFN_LAYER_MIB
+    )
 
     margin = guard - expected_footprint
     # `guard` is an int over a float footprint, so allow 1 MiB for truncation. Derived from the

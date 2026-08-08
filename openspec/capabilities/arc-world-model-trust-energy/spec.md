@@ -22800,3 +22800,74 @@ scorers actually run. Plus the pre-existing goal-bias/action-effect test suites 
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6226 | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer._goal_bias_score`/`_action_effect_frontier_key` (node-dict caches), `_goal_bias_generation` counter bumped in `set_goal_bias`. | `tests/python/test_arc_frontier_key_memoization_20260808.py`. |
+
+### REQ-ARC-WMTE-6227: The Shared-Context-Pool Admission Arithmetic SHALL Be Sized Against The Current-Defaults Worst-Case Prompt
+
+**Origin:** 2026-08-08 adversarial review, Correctness finding 5. `_INDUCE_WORST_CASE_PROMPT_TOKENS
+= 15767` was measured 2026-07-28 at `k=8` transitions with no object table. Neither is the shipped
+default any more: `k` defaults to ALL transitions (2026-08-01), and the object-perception table is
+default ON (2026-08-07). The context pool `_default_induce_n_ctx()` derives from this constant, so
+a stale figure understates how much prompt budget the shared pool actually needs to survive K=4
+concurrent worst-case induce calls.
+
+**The fix.** Re-measured through the real gemma-4-31B-it Q4_K_M GGUF tokenizer
+(`llama_cpp.Llama(vocab_only=True)`), same methodology as the constant's 2026-07-28 predecessor
+measurement: one worst-case `induce_prompt()` call (64x64 logical grid, 25 transitions, rng seed
+5900), now built with `k=None` (current default) and `CARNOT_ARC_OBJECT_PERCEPTION` left unset
+(its own default -- object table ON). Result: **22352 tokens**, +41.8% over the stale 15767, and
+it EXCEEDS the OLD per-slot budget (81920/4 - 4096 = 16384 tokens) by 5968 tokens -- a real
+overflow risk at K=4 concurrency, not a cosmetic constant bump. `_default_induce_n_ctx()`'s
+arithmetic is unchanged and derives the new pool size automatically: `need = 4*(22352+4096) =
+105792`, rounded up to `n_ctx = 106496`. The Kaggle kernel's own concurrency preflight probe
+(`scripts/kaggle/submission_kernel/main.py`) imports the constant directly rather than holding a
+copy, so it inherits the fix with no separate kernel-side edit.
+
+**Consequence discovered and honestly resolved: local 24GB-3090 dev no longer auto-fits the
+worst-case prompt at all.** At the new n_ctx, even the maximum FFN-CPU-offload auto-fit
+(`_FFN_CPU_AUTOFIT_MAX_LAYERS=12`) cannot bring the footprint under a realistic-idle 3090's free
+VRAM (confirmed by a real launch attempt: a no-offload server at n_ctx=106496 does not even fit a
+24576 MiB card -- `cudaMalloc failed: out of memory` on the compute-buffer reservation, not a
+graceful decline). Real per-PID VRAM measurement (12 CPU-FFN layers, since a no-offload launch
+cannot complete on this hardware): 22780 MiB resident, reconstructing to 25123.6 MiB no-offload --
+within 0.4 MiB (0.0016%) of the linear VRAM model's own prediction at 106496 (25124.0 MiB), strong
+corroboration of the model's ctx-slope term this far past the two points it was fit to. Raising the
+offload cap is NOT the fix: it was calibrated against a decode-throughput/induce-timeout tradeoff
+that gets WORSE, not better, with a larger worst-case prompt. This is a genuine, measured physical
+constraint on local dev hardware, not a regression to paper over -- the documented
+`CARNOT_ARC_INDUCE_N_CTX` override remains the correct local-dev remedy. **The Kaggle SCORED path
+(96GB) is unaffected** -- confirmed by the pre-existing `test_the_scored_96gb_card_needs_no_
+offload_at_all_with_mtp_on` passing unchanged.
+
+**Tests.** `tests/python/test_arc_induce_worst_case_prompt_tokens_20260808.py` (new): pins the
+constant's value directly, pins the derived n_ctx arithmetic, and asserts the new worst case
+genuinely exceeds the old per-slot budget (the load-bearing finding, not just a value change).
+`tests/python/test_arc_generator_vram_guard.py`: updated to assert `_default_induce_n_ctx() ==
+106496` and check the guard against a new `MEASURED_106496_GEMMA31B_MIB` constant (the real
+offload-and-reconstruct measurement above), with the reconstruction methodology disclosed in a
+comment rather than presented as a direct measurement. `tests/python/test_arc_ffn_cpu_offload.py`
+and `tests/python/test_arc_generator_migration_defects.py`: three tests retargeted (with dated
+correction docstrings preserving the original reasoning, per this project's never-prune
+discipline) from "the shipped local default must auto-fit a 3090" to "the shipped default
+correctly REFUSES a 3090 for the worst case, and the documented `CARNOT_ARC_INDUCE_N_CTX` escape
+hatch restores usability" -- the same refusal pattern this file already established for the mtp-ON
+arm in the 2026-07-28 third pass, now also correctly applying to mtp-OFF at the corrected n_ctx.
+
+**Pre-existing, unrelated test failures found during this fix's regression sweep (not caused by
+this fix, not fixed by it -- flagged for separate investigation).** Confirmed via a clean
+detached-HEAD worktree with zero uncommitted changes (both this fix's edits and the conductor's
+own in-flight `REQ-ARC-WMTE-6213` work absent): `tests/python/test_arc_goal_predicate_shadowing.py`
+(5 of 18 tests) and `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` (12 of 15
+tests) fail with `induce()`/`generate()` returning `ok=False` where the tests expect `True`, against
+mocked HTTP response sequences. Also `tests/python/test_arc_submitted_agent_parity.py` (2 tests)
+fail on `SUBMITTED_AGENT_CONFIG["frozen_generator"]["model_id"]` reading the `-qat-GGUF` variant
+while the tests still expect the plain `-GGUF` variant -- `ARC_LIVE_GENERATOR_MODEL_ID` in
+`arc_executable_world_model.py` has read `"unsloth/gemma-4-31B-it-qat-GGUF"` since the 2026-07-31
+qat-vs-Q4_K_M head-to-head, so these two tests are stale against an already-shipped, deliberate
+model choice. None of these 19 failures were introduced or touched by REQ-ARC-WMTE-6223 through
+6227; they predate this fix pass and need their own root-cause investigation.
+
+## Implementation Status (REQ-ARC-WMTE-6227)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6227 | `python/carnot/agentic/arc_executable_world_model.py:_INDUCE_WORST_CASE_PROMPT_TOKENS` (15767 -> 22352), `_default_induce_n_ctx` docstring correction. | `tests/python/test_arc_induce_worst_case_prompt_tokens_20260808.py`; updates to `tests/python/test_arc_generator_vram_guard.py`, `tests/python/test_arc_ffn_cpu_offload.py`, `tests/python/test_arc_generator_migration_defects.py`. |

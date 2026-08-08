@@ -8830,6 +8830,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6225/6226 (2026-08-08): fixed a never-empty floor on the discriminative frontier prune (StepwiseExplorer._frontier), and memoized two per-node frontier scoring keys (_goal_bias_score, _action_effect_frontier_key) on the node dict. Same reachability argument as the immediately-prior 6223/6224 acknowledgement pass on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction so the explorer never reaches _frontier's discriminative-prune branch with a live game in flight, or (for the one genuinely live-LLM artifact) its own recorded data shows zero induction attempts across every cell of every arm. See that acknowledgement entry (same path, sha256_was == this entry's sha256_was) for the full per-script grep evidence.",
         "evidence": "Re-verified for this second edit: `git diff arc_competition_agent.py` between the 6223/6224 commit and this one touches only StepwiseExplorer.__init__ (two new counters), set_goal_bias, _goal_bias_score, _action_effect_frontier_key, and _frontier's pruning loop -- none of which are reachable from any of this artifact's dependency scripts any more than the previous edit was (same grep results: no E3AgentPolicy construction, or construction gated behind CARNOT_ARC_DISABLE_INDUCTION=1, or zero recorded induction attempts)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. This script's only e3/_e3prov symbols are collect_transitions, load_engine, logical_hud_mask, E3_DIR, and three SUBMITTED_WORLD_MODEL_*_ENABLED constants -- none touch prompt/n_ctx sizing.",
+        "evidence": "Grep: `grep -oE 'e3\\.[A-Za-z_]+|_e3prov\\.[A-Za-z_]+' scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py | sort -u` -> the symbols above, none of them _INDUCE_WORST_CASE_PROMPT_TOKENS or _default_induce_n_ctx."
       }
     ]
   },

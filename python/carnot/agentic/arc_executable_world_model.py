@@ -2939,6 +2939,22 @@ def _object_perception_on() -> bool:
     return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"
 
 
+def _object_delta_perception_block(trans: list[Transition]) -> str:
+    """REQ-ARC-WMTE-6213: append transition object deltas only for the explicit arm."""
+
+    try:
+        from carnot.agentic import arc_object_delta_perception
+    except Exception:
+        return ""
+    if not arc_object_delta_perception.object_delta_perception_on():
+        return ""
+    try:
+        block = arc_object_delta_perception.object_delta_block(trans)
+    except Exception:
+        return ""
+    return ("\n" + block) if block else ""
+
+
 # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
 # path. Default OFF (env CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED unset -> byte-identical
 # prompt, exactly like the CARNOT_ARC_CODEONLY_INDUCE / _REFACTOR_STRUCTURE_REMINDER
@@ -3044,7 +3060,7 @@ deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
 {_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled, win_transition=win_transition)}
-{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}"""
+{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{_object_delta_perception_block(trans)}"""
 
 
 _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8
@@ -3720,7 +3736,30 @@ _LLAMA_SERVER_DEFAULT_SLOTS = 4
 # and the round-up to a 4096 multiple absorbs the difference entirely. The constant moves anyway:
 # a stale tokenizer-derived number that happens not to change the answer today is still a landmine
 # for the next person who changes max_tokens.
-_INDUCE_WORST_CASE_PROMPT_TOKENS = 15767
+#
+# RE-MEASURED AGAIN 2026-08-08 (REQ-ARC-WMTE-6227, 2026-08-08 adversarial review, Correctness
+# finding 5). The 15767 figure above was measured at `k=8` transitions with NO object table.
+# Neither is the shipped default any more: `k` defaults to ALL transitions (2026-08-01, see
+# `_induce_transitions_k`), and the object-perception table is default ON (2026-08-07, see
+# `_object_perception_on`). Method, same as the 2026-07-28 pass: built ONE worst-case
+# `induce_prompt()` call (64x64 grid, 25 transitions, same rng seed 5900 as the prior
+# measurement, so the two are apples-to-apples) via `results/arc_gemma31b_migration_evidence_
+# 20260728/fitgrid/mkprompt.py`'s own methodology, extended to `k=None` (the current default)
+# with `CARNOT_ARC_OBJECT_PERCEPTION` left unset (its own default, "1" -- object table ON) and
+# `CARNOT_ARC_OBJECT_DELTA_PERCEPTION` left unset (REQ-ARC-WMTE-6213's block, still an uncommitted
+# opt-in arm at measurement time, correctly excluded from a shipped-defaults figure). Tokenized
+# through the gemma-4-31B-it Q4_K_M GGUF via `llama_cpp.Llama(vocab_only=True)`, same as before.
+#
+# RESULT: 22352 tokens under current defaults, vs 20071 tokens at k=8 with the object table
+# (the object table alone already moved the k=8 figure from 17930 to 20071 -- +11.9% -- before
+# the k=all default is even applied). 22352 is +41.8% over the stale 15767 this constant held,
+# and it EXCEEDS the OLD per-slot budget (81920/4 - 4096 = 16384 tokens) by 5968 tokens -- a
+# worst-case induce call at K=4 concurrency could genuinely overflow the old pool, exactly the
+# HTTP-500 / server-death / silent-truncation failure modes `_default_induce_n_ctx()`'s own
+# docstring documents. The constant moves to the real, current-defaults worst case rather than
+# to a rounded or padded figure, because `_default_induce_n_ctx()` already rounds UP to the next
+# 4096-token pool size and adding padding here would just be double-rounding.
+_INDUCE_WORST_CASE_PROMPT_TOKENS = 22352
 # Mirrors LocalGGUFProposer.max_tokens and the CARNOT_ARC_INDUCE_MAX_TOKENS default read at both
 # construction sites in arc_competition_agent.py. Named here so the context-pool derivation and
 # the completion budget cannot drift apart -- see _default_induce_n_ctx().
@@ -4886,6 +4925,15 @@ def _default_induce_n_ctx() -> int:
     and therefore cannot silently diverge from each other, which is the failure the
     REQ-ARC-FCP-5699-35 comment at that second site records having already happened once
     for max_tokens.
+
+    CORRECTION 2026-08-08 (REQ-ARC-WMTE-6227). The "81920 = 4*(15734+4096)" arithmetic above is
+    now historical: `_INDUCE_WORST_CASE_PROMPT_TOKENS` moved 15767 -> 22352 (see that constant's
+    own comment for the re-measurement under current defaults -- k=all transitions, object table
+    on). This function's arithmetic is unchanged and picks the new figure up automatically
+    (`need = 4*(22352+4096) = 105792`, rounded up to `n_ctx = 106496`), so no code here needed to
+    change -- only the worst-case-prompt constant it reads. Recorded so a reader doing the old
+    arithmetic by hand does not conclude this function is wrong; it is the constant's docstring
+    that moved.
     """
     import os
 
