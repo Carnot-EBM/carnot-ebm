@@ -113,6 +113,30 @@ SHARED_MAX_TOKENS = 16384
 INDUCE_TIMEOUT_S = 1500
 REASONING_TAGS = ("<think", "</think", "<thinking", "<reasoning")
 
+# CHECKPOINT (2026-08-08). Three prior runs of this script were killed mid-flight by the Claude
+# Code harness (session/background-task cleanup, cause not fully pinned down -- see the session's
+# own workflow investigation). Each kill lost 20 minutes to 2+ hours of real GPU work. This file
+# holds the game/arm rows completed SO FAR. A fresh process reads it on start and skips any
+# (game, arm) pair it already has, instead of redoing finished work. Deliberately outside
+# `results/` -- this is working state, not a result artifact (see the Test-Run Record Integrity
+# Discipline on writing into `results/`). Deleted on a clean finish so a later fresh run does not
+# accidentally resume from an old experiment's rows.
+CHECKPOINT_PATH = Path("/tmp/carnot_exp6199_gemma_think_checkpoint.json")
+
+
+def _load_checkpoint() -> list[JsonDict]:
+    if not CHECKPOINT_PATH.exists():
+        return []
+    try:
+        return json.loads(CHECKPOINT_PATH.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []  # a half-written checkpoint from a kill mid-write; start clean rather than crash
+
+
+def _save_checkpoint(rows: list[JsonDict]) -> None:
+    CHECKPOINT_PATH.write_text(json.dumps(rows, default=str), encoding="utf-8")
+
+
 MODEL_SPECS = [
     {
         "name": "gemma-4-31B-it-qat",
@@ -501,29 +525,44 @@ def build_artifact(*, roster: tuple[str, ...] = DEFAULT_ROSTER, root: Path = REP
         if verbose:
             print(f"[exp6199] {msg}", flush=True)
 
-    rows: list[JsonDict] = []
+    rows: list[JsonDict] = _load_checkpoint()
+    done_windows = {r["game"] for r in rows if r.get("arm") == "window"}
+    done_arms = {(r["game"], r["arm"]) for r in rows if r.get("arm") in ("no_think", "think")}
+    if rows:
+        _log(f"resumed from checkpoint: {len(rows)} rows already done ({len(done_arms)} arms)")
+
     for game in roster:
+        if game in done_windows:
+            _log(f"{game} window SKIPPED (checkpoint)")
+            continue
         try:
             built = build_levelup_window(game)
         except Exception as exc:
             rows.append({"game": game, "arm": "window", "window_error": repr(exc)[:200]})
+            _save_checkpoint(rows)
             _log(f"{game} window ERROR {repr(exc)[:80]}")
             continue
         if built is None:
             rows.append({"game": game, "arm": "window", "no_levelup_window": True})
+            _save_checkpoint(rows)
             _log(f"{game} no_levelup_window (skipped)")
             continue
         window, cell = built
         _log(f"{game} window n={len(window)} cell={cell}")
         for arm in ("no_think", "think"):
+            if (game, arm) in done_arms:
+                _log(f"{game} {arm} SKIPPED (checkpoint)")
+                continue
             r = run_arm(prop, game, arm, window, cell)
             rows.append(r)
+            _save_checkpoint(rows)
             _log(
                 f"{game} {arm} ok={r.get('induction_ok')} reason={r.get('reason_engaged')} "
                 f"heldout={r.get('heldout_accuracy')} lu_recall={r.get('levelup_positive_recall')} "
                 f"s={r.get('induce_s')}"
             )
 
+    CHECKPOINT_PATH.unlink(missing_ok=True)  # clean finish -- a later run must not resume from this
     comp = _summarize_pair(rows)
     think_rows = [r for r in rows if r.get("arm") == "think" and r.get("induction_ok")]
     reason_engaged_at_all = any(r.get("reason_engaged") for r in think_rows)
