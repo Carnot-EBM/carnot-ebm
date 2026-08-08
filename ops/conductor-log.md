@@ -15513,3 +15513,4 @@ Still active  |
 | 2026-08-08 22:02 UTC | Held-out canonical live-path A/B for transition-aw | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-08 23:26 UTC | Within-game object-relative trajectory-transfer ca | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: _s": 3.0},
 +   |
+| 2026-08-08 23:53 UTC | Within-game object-relative trajectory-transfer ca | OK | 109 passed, 1 warning in 29.70s |
