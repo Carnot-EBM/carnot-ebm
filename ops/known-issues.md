@@ -4,6 +4,59 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
+
+Context: this session root-caused three unexplained kills of a dev script's background process
+(exp6199, the gemma think-mode A/B). The kills came from the Claude Code harness itself, not the
+host OS (a small workflow ruled out kernel OOM, GPU faults, cgroup kills, and every local cron/
+timer job). Answering the user's direct question, the investigation checked the SCORED live
+agent for the same class of resilience, at two levels:
+
+1. **Generator (`llama-server`) crash — real, and already in constant use.**
+   `_ensure_server()` runs on every `generate()`/`induce()` call
+   (`arc_executable_world_model.py:6370`, `:6636`). It checks server health first and relaunches
+   automatically if the server died. This exact mechanism repaired the CUDA/HIP fallback bug
+   found earlier this session.
+2. **LLM tier failing entirely — real, and stated as a design goal.** `_induce_and_plan`'s
+   cascade falls through to non-LLM search (`StepwiseExplorer`) when the LLM tier fails. The
+   Kaggle submission kernel's own top-of-file comment says so directly: "the agent degrades
+   gracefully to the CPU graph-explore cascade... so the submission still plays games even if
+   the LLM tier is unavailable."
+
+**What is NOT checked: a crash of the scored agent's own Python process mid-episode** (not a
+subprocess — the process the competition framework itself drives). No checkpoint of
+`E3AgentPolicy` state (transitions, learned verifier, level progress) exists. Whether the
+competition's own `ARC-AGI-3-Agents` framework restarts a crashed agent process, and whether any
+state would carry over if it did, is unknown — that framework is external, Kaggle-provided code,
+not read this session.
+
+**A prior incident on record fits the same pattern.** The exp6091 rerun entry below (the RULING
+section) already recorded every `llama-server` on the host killed within seconds to minutes
+(lifetimes 369s/17s/10s/53s, plus a 22s control), no OOM or abort record, 34.75 tok/s decode
+right up to the kill. That is the same signature — a kill with zero host-OS trace — this
+session's exp6199 investigation found, but on a different script, a different day, and it killed
+`llama-server` directly rather than a driving Python process. Worth checking whether the two
+incidents share a cause.
+
+**Scope for the follow-up — investigate first, do not build speculative recovery code:**
+
+a. Read the `ARC-AGI-3-Agents` competition framework's own episode-driver code (once attached /
+   available) for its crash-and-restart behavior: does a crashed agent process lose the
+   in-progress episode outright, or does the framework retry or reconnect?
+b. If the framework DOES restart an agent process for a fresh attempt: design a scoped
+   `E3AgentPolicy` state checkpoint (periodic, keyed per game/level), modeled on the
+   `_load_checkpoint()` / `_save_checkpoint()` pattern this session added to exp6199, so a
+   restarted process can resume instead of starting the level over.
+c. If the framework does NOT restart crashed processes: the finding is that whole-process
+   resilience is a non-issue for the scored path — a crash just ends that attempt, the same as
+   any other terminal episode outcome. Close it; do not build a checkpoint mechanism nothing
+   would use.
+
+**Falsifiable gate.** This follow-up ends in one of two honest states: (1) the framework has no
+restart semantics, so this is a non-issue — close it; or (2) it does, and a checkpoint design
+gets scoped against the framework's actual restart contract. Do not build checkpointing before
+step (a) confirms what the framework actually does.
+
 ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
 
 The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed
