@@ -22871,3 +22871,61 @@ model choice. None of these 19 failures were introduced or touched by REQ-ARC-WM
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6227 | `python/carnot/agentic/arc_executable_world_model.py:_INDUCE_WORST_CASE_PROMPT_TOKENS` (15767 -> 22352), `_default_induce_n_ctx` docstring correction. | `tests/python/test_arc_induce_worst_case_prompt_tokens_20260808.py`; updates to `tests/python/test_arc_generator_vram_guard.py`, `tests/python/test_arc_ffn_cpu_offload.py`, `tests/python/test_arc_generator_migration_defects.py`. |
+
+### REQ-ARC-WMTE-6228: Four Kaggle Submission-Kernel Gaps — Swarm Timeout, Host-RAM Preflight, Self-Locate, Server-Log Persistence
+
+**Origin:** 2026-08-08 adversarial review, Gaps findings 4/5/6/7. All four live in
+`scripts/kaggle/submission_kernel/main.py`, the single-file bootstrap Kaggle runs for the scored
+submission. None of the four is reachable from a normal local test run — they only fire on the
+actual Kaggle container — so each fix is paired with a source-slice-and-`exec()` test that runs
+the real shipped statements against a controlled namespace, mirroring the existing
+`test_arc_kernel_agent_src_executable.py` pattern.
+
+**Gap 4 — swarm subprocess timeout equalled the full 12h Kaggle cap.** `TimeoutExpired` was
+uncaught, the return code was never inspected, and the terminal `"...notebook complete."` line
+printed unconditionally — a run that died at the deadline ended as a hard kill or an uncaught
+traceback, and a swarm that crashed at t=0 was indistinguishable from a clean 12h run by the log
+tail. Fixed: `timeout=41400` (30 min margin under the 43200s cap), wrapped in
+`try`/`except subprocess.TimeoutExpired`, with an explicit `SWARM EXITED rc=N after Ns` /
+`SWARM TIMED OUT after Ns` print either way.
+
+**Gap 5 — `MAX_ACTIONS = 2000` sized on an unconfirmed 16 GiB host-RAM assumption, with no
+preflight to confirm it.** Fixed: a `/proc/meminfo` `MemTotal:` print added inside `AGENT_SRC`
+right after the existing `nvidia-smi` `LLM GPU HARDWARE:` line (the agent process runs on the
+scored host, so it reads its own `/proc`). Reports, does not abort — same contract as the
+existing VRAM fit-check print it sits next to. The VRAM-check block's own illustrative
+"n_ctx 81920 / ~25.2 GB" example, now stale after REQ-ARC-WMTE-6227's re-measurement, gets a
+dated correction note rather than a silent edit (the print itself reads
+`_generator_cuda_min_free_mb()` live, so the real number was never stale — only the prose
+example was).
+
+**Gap 6 — the agent-code self-locate was a bare `next()` over an rglob.** A missing or
+re-laid-out dataset raised a message-free `StopIteration` at import time, killing the run before
+any game, with the kernel still printing "complete" downstream. Fixed: `list()` the hits first;
+on empty, print one loud, actionable "attach the dataset" line and `raise SystemExit` instead of
+letting the bare `StopIteration` propagate.
+
+**Gap 7 — the agent's llama-server stderr log landed in `/tmp` inside the ephemeral Kaggle
+container.** That log is the only discriminator between a recoverable context-overflow (HTTP
+500, server survives) and a server death via `ggml_abort`/SIGSEGV (server gone, every later
+request `RemoteDisconnected`) — without it, a mid-eval generator death is undiagnosable after the
+fact. `arc_executable_world_model.py` already reads `CARNOT_ARC_SERVER_LOG_DIR` with a
+`tempfile.gettempdir()` fallback; the kernel never set it. Fixed:
+`os.environ.setdefault("CARNOT_ARC_SERVER_LOG_DIR", "/kaggle/working")` at the very top of the
+OUTER kernel script, before `run_env = os.environ.copy()` — so the swarm subprocess (and whatever
+it spawns per game) inherits it through normal environment inheritance. `setdefault` so an
+operator override still wins.
+
+**Tests.** `tests/python/test_arc_kaggle_kernel_gaps_20260808.py` (10 tests): self-locate fails
+loudly on a missing dataset and still resolves correctly on a present one; the host-RAM print
+reads a real `/proc/meminfo`-shaped input and degrades gracefully on a read failure; the
+server-log-dir `setdefault` is positioned before `run_env`'s copy and never overrides an operator
+value; the swarm timeout carries real margin under the Kaggle cap, prints the return code on a
+normal exit, and catches+names a `TimeoutExpired` instead of letting it propagate uncaught. Plus
+the pre-existing kernel test suite (22 tests across 3 files), unchanged and still green.
+
+## Implementation Status (REQ-ARC-WMTE-6228)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6228 | `scripts/kaggle/submission_kernel/main.py` — swarm timeout/try-except (Gap 4), `/proc/meminfo` preflight print in `AGENT_SRC` (Gap 5), self-locate `list()`+loud-`SystemExit` (Gap 6), `CARNOT_ARC_SERVER_LOG_DIR` setdefault (Gap 7). | `tests/python/test_arc_kaggle_kernel_gaps_20260808.py`. |
