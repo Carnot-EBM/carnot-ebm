@@ -22233,6 +22233,21 @@ forced-continuation mitigations (`CARNOT_ARC_CHAT_EMPTY_CONTENT_FALLBACK`,
 future A/B can measure "think alone" and "think + mitigations" as separate arms rather than a
 bundled default.
 
+**DONE (2026-08-08), mixed result.** `experiment_6199_gemma_think_mode_ab.json` (5 attempts; the
+first 4 were corrupted by an infrastructure bug — a 300s-per-attempt HTTP timeout that was never
+actually raised by an earlier fix; see the artifact's own methodology notes). The 5th attempt
+completed cleanly: 10 of 10 games induced successfully on both arms, think mode engaged real
+reasoning on 10 of 10 calls (`think_reason_engaged_frac: 1.0`) versus 0 of 10 for no_think —
+first clean confirmation the mechanism itself works. The result does not cleanly resolve "ship
+think mode": on `heldout_accuracy` and `goal_predicate_accuracy` (informative on roughly half the
+roster each), think mode has a consistent edge and never loses on `heldout_accuracy` where the
+two arms differ (0.10 vs 0.37 pooled mean). On `levelup_positive_recall`, the auto-generated
+verdict (`no_think_higher_winrecognition_1_to_2`) is real but thin: 7 of 10 games show 0/0 (no
+signal either way), leaving only 3 informative games, split 1 think / 2 no_think. Read together:
+weak evidence favoring think mode on induction quality, inconclusive-to-slightly-negative on the
+specific level-up-recognition metric, on a small sample. Neither default (`CARNOT_ARC_INDUCE_
+THINK`, `ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT`) is flipped by this result alone.
+
 ## Implementation Status (REQ-ARC-WMTE-6198)
 
 | REQ | Implementation | Tests |
