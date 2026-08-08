@@ -3412,6 +3412,22 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Second-order cascade from REQ-ARC-WMTE-6229 (fix \"Gap 2\" of the 2026-08-08 adversarial-review fix pass). Both cited artifacts got a freshness_acknowledgements entry for the same arc_competition_agent.py change, which changed THEIR OWN file hash -- their own numbers are unchanged (see their own acknowledgement entries), only the bookkeeping grew.",
         "evidence": "diff of the cited artifact's own numeric fields is empty; only its provenance.freshness_acknowledgements array grew."
+      },
+      {
+        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+        "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
+        "sha256_now": "3b2a623651801f36a07fe55f239d2087cfd8460ba8692d5844485f8e6563bccd",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6230 (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging Gap 3's arc_competition_agent.py drift INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by this commit's source-code change directly -- a provenance side effect of the acknowledgement mechanism itself, same shape as the REQ-ARC-WMTE-6229 cascade earlier this session. The cited artifacts' own NUMBERS are unchanged (only their provenance block grew an acknowledgement entry); this artifact's own rescore numbers are therefore also unaffected.",
+        "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry (see the REQ-ARC-WMTE-6230 acknowledgement pass, same commit) -- no change to any row/score/metric field either file reports."
+      },
+      {
+        "path": "results/arc_per_level_reset_attribution_20260726.json",
+        "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
+        "sha256_now": "62a019d3a6bb41f1b6952292643aa377f23f95ed4965fd4bfb24c856cb21e508",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6230 (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging Gap 3's arc_competition_agent.py drift INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by this commit's source-code change directly -- a provenance side effect of the acknowledgement mechanism itself, same shape as the REQ-ARC-WMTE-6229 cascade earlier this session. The cited artifacts' own NUMBERS are unchanged (only their provenance block grew an acknowledgement entry); this artifact's own rescore numbers are therefore also unaffected.",
+        "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry (see the REQ-ARC-WMTE-6230 acknowledgement pass, same commit) -- no change to any row/score/metric field either file reports."
       }
     ]
   },

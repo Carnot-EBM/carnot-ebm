@@ -2790,6 +2790,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6229 (2026-08-08): bounded re-induction on renewed stall, gated off by default behind CARNOT_ARC_BOUNDED_REINDUCTION (unset in every one of this artifact's rebuild paths), plus always-on generator_liveness_witness() diagnostic fields. Same reachability argument as the 6223/6224/6225/6226 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or runs with CARNOT_ARC_DISABLE_INDUCTION=1 set before construction (so _should_enter_induction's new branch, gated on `stalled`, is never reached because the whole induction machinery is structurally unreachable), or its own recorded data shows zero induction attempts across every cell of every arm. See the matching prior acknowledgement entry (same path) for the full per-script grep evidence.",
         "evidence": "Same grep/self-measured evidence as the prior 6223-6226 acknowledgement passes on this path; the new code in this commit (the __init__/level-boundary attempt-count resets, the _should_enter_induction branch, generator_liveness_witness fields) is confined to E3AgentPolicy methods none of these scripts reach any more than the prior edits were."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
+        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
       }
     ]
   },

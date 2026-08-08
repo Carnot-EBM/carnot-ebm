@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import threading
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 
@@ -1104,38 +1105,117 @@ def _sge_candidate_router_requested() -> bool:
     )
 
 
+# 2026-08-08 adversarial review, Gaps finding 3: both loaders below used to degrade to
+# None through bare `except Exception` with no counter, no stderr line, and no witness
+# field, even though SUBMITTED_AGENT_CONFIG declares both components enabled. A THREAD
+# LOCAL, not a plain module-level dict: the scored swarm runs one thread per game (see
+# scripts/kaggle/submission_kernel/main.py), and a bare global would let two games'
+# construction interleave and read back each other's diagnostics. `__init__` reads its
+# own thread's slot immediately after calling the loader on the SAME thread, so this is
+# race-free without a lock. The loaders' return type is untouched (still `Any | None`)
+# because 10+ other callers -- experiments, tests, and the production
+# arc_reactive_verifier_filter.py -- depend on that bare shape; this is a side channel,
+# not a signature change.
+_component_load_diagnostics = threading.local()
+
+
 def _load_submitted_candidate_router(game_id: str = "unknown_game") -> Any | None:
     """Load the live candidate router. Default: the Exp5904/5927 online click wrapper,
     default-off around the Exp4545 v3 discriminative router. REQ-ARC-FCP-5699-11: when
     SUBMITTED_SGE_CANDIDATE_ROUTER_ENABLED (or CARNOT_ARC_SGE_CANDIDATE_ROUTER=1, for
     measurement runs), tries the SGE router first, falling through to the discriminative
     router (never None-ing out the live path) if SGE construction fails for any reason --
-    default False, so behavior is unchanged unless explicitly opted in."""
+    default False, so behavior is unchanged unless explicitly opted in.
 
+    REQ-ARC-WMTE-6230 (2026-08-08, Gaps finding 3): sets
+    `_component_load_diagnostics.candidate_router` before returning, and prints one
+    greppable line ("CANDIDATE ROUTER LOAD ...") on a fallback or a total failure, so a
+    silent None no longer looks identical to "not requested"."""
+
+    diag: dict[str, Any] = {
+        "sge_attempted": False,
+        "sge_loaded": False,
+        "sge_error": None,
+        "discriminative_loaded": False,
+        "discriminative_error": None,
+        "loaded": False,
+    }
     if _sge_candidate_router_requested():
+        diag["sge_attempted"] = True
         try:
             sge_router = _load_sge_candidate_router(game_id)
             if sge_router is not None:
+                diag["sge_loaded"] = True
+                diag["loaded"] = True
+                _component_load_diagnostics.candidate_router = diag
                 return sge_router
-        except Exception:
-            pass
+        except Exception as exc:
+            diag["sge_error"] = repr(exc)[:200]
+            print(
+                f"CANDIDATE ROUTER LOAD FALLBACK (game={game_id}): SGE router failed "
+                f"({diag['sge_error']}), trying the discriminative router.",
+                flush=True,
+            )
     try:
-        return arc_discriminative_router.load_online_click_target_router(root=REPO)
-    except Exception:
-        return None
+        router = arc_discriminative_router.load_online_click_target_router(root=REPO)
+        if router is not None:
+            diag["discriminative_loaded"] = True
+            diag["loaded"] = True
+            _component_load_diagnostics.candidate_router = diag
+            return router
+    except Exception as exc:
+        diag["discriminative_error"] = repr(exc)[:200]
+    print(
+        f"CANDIDATE ROUTER LOAD FAILED (game={game_id}): no router installed, agent runs "
+        f"UNROUTED. sge_error={diag['sge_error']!r} "
+        f"discriminative_error={diag['discriminative_error']!r}",
+        flush=True,
+    )
+    _component_load_diagnostics.candidate_router = diag
+    return None
 
 
 def _load_submitted_frame_change_scorer() -> Any | None:
-    """REQ-ARC-FCP-4629/5373: load the validated live action-effect scorer."""
+    """REQ-ARC-FCP-4629/5373: load the validated live action-effect scorer.
 
+    REQ-ARC-WMTE-6230 (2026-08-08, Gaps finding 3): sets
+    `_component_load_diagnostics.frame_change_scorer` before returning, and prints one
+    greppable line ("FRAME-CHANGE SCORER LOAD FAILED ...") whenever the tier is enabled
+    but degrades to None, so the action-effect prior's silent downstream disablement
+    (`action_effect_expansion_prior` gated on `frame_change_scorer is not None`) is no
+    longer unwitnessed."""
+
+    diag: dict[str, Any] = {"enabled": bool(SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED)}
     if not SUBMITTED_FRAME_CHANGE_PREDICTOR_ENABLED:
+        diag["loaded"] = False
+        diag["error"] = None
+        _component_load_diagnostics.frame_change_scorer = diag
         return None
     try:
         scorer = load_live_action_effect_scorer(root=REPO)
         if scorer is None:
+            diag["loaded"] = False
+            diag["error"] = None
+            print(
+                "FRAME-CHANGE SCORER LOAD FAILED: load_live_action_effect_scorer "
+                "returned None -- action-effect prior degrades to inert.",
+                flush=True,
+            )
+            _component_load_diagnostics.frame_change_scorer = diag
             return None
+        diag["loaded"] = True
+        diag["error"] = None
+        _component_load_diagnostics.frame_change_scorer = diag
         return GroundTruthValidatedFrameChangeScorer(scorer)
-    except Exception:
+    except Exception as exc:
+        diag["loaded"] = False
+        diag["error"] = repr(exc)[:200]
+        print(
+            f"FRAME-CHANGE SCORER LOAD FAILED: {diag['error']} -- action-effect prior "
+            "degrades to inert.",
+            flush=True,
+        )
+        _component_load_diagnostics.frame_change_scorer = diag
         return None
 
 
@@ -4883,10 +4963,32 @@ class E3AgentPolicy:
             min(1.0, float(program_synthesis_filter_trust_threshold)),
         )
         initial_program_filter = coerce_program_synthesis_filter(program_synthesis_filter)
+        # REQ-ARC-WMTE-6230 (2026-08-08, Gaps finding 3): read back the loader's own
+        # thread-local diagnostics IMMEDIATELY after calling it, on the same thread that
+        # made the call -- see the thread-local's docstring for why a plain module-level
+        # dict would race under the scored swarm's one-thread-per-game concurrency. The
+        # explicit-override branches (a caller passed a real router/scorer directly, so
+        # the loader never ran) get an honest degenerate diagnostic instead of stale data.
         if candidate_router is _DEFAULT_CANDIDATE_ROUTER:
             candidate_router = _load_submitted_candidate_router(game_id=self.short)
+            self._candidate_router_load_diagnostics = dict(
+                getattr(_component_load_diagnostics, "candidate_router", {"loaded": False})
+            )
+        else:
+            self._candidate_router_load_diagnostics = {
+                "loaded": candidate_router is not None,
+                "caller_supplied": True,
+            }
         if frame_change_scorer is _DEFAULT_FRAME_CHANGE_SCORER:
             frame_change_scorer = _load_submitted_frame_change_scorer()
+            self._frame_change_scorer_load_diagnostics = dict(
+                getattr(_component_load_diagnostics, "frame_change_scorer", {"loaded": False})
+            )
+        else:
+            self._frame_change_scorer_load_diagnostics = {
+                "loaded": frame_change_scorer is not None,
+                "caller_supplied": True,
+            }
         if action_prior is None and SUBMITTED_COLOR_BLOB_SALIENCE_ENABLED:
             action_prior = ColorBlobSaliencePrior()
         action_prior = coerce_object_history_salience_prior(
@@ -7414,6 +7516,21 @@ class E3AgentPolicy:
                 len(self.transitions) - int(self._transitions_at_last_induction_attempt)
             ),
             "bounded_reinduction_enabled": bool(_bounded_reinduction_enabled()),
+            # 2026-08-08 adversarial review, Gaps finding 3: the candidate router and the
+            # frame-change scorer used to degrade to None through a bare `except Exception`
+            # with no counter, no stderr line, and no witness field -- so a row could carry
+            # `llm_on_row_valid: true` while running fully UNROUTED or with the
+            # action-effect prior silently inert. Recorded UNCONDITIONALLY (set in
+            # __init__, before either return point below) so a degraded row is visible
+            # without re-running.
+            "candidate_router_loaded": bool(self._candidate_router_load_diagnostics.get("loaded")),
+            "candidate_router_load_diagnostics": dict(self._candidate_router_load_diagnostics),
+            "frame_change_scorer_loaded": bool(
+                self._frame_change_scorer_load_diagnostics.get("loaded")
+            ),
+            "frame_change_scorer_load_diagnostics": dict(
+                self._frame_change_scorer_load_diagnostics
+            ),
             "induction_attempts_planned": sum(
                 1 for a in self.induction_attempts if a.get("planned")
             ),
