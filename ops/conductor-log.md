@@ -15510,3 +15510,6 @@ Still active  |
 | 2026-08-08 03:55 UTC | Post-V538-marker SOTA delta and causal-scope prere | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6211_v538_po |
 | 2026-08-08 04:15 UTC | Three-family GGUF load, CUDA admission, and lifecy | OK | 87 passed, 1 warning in 7.96s |
 | 2026-08-08 21:33 UTC | Default-off transition-aware ARC object representa | OK | 126 passed, 1 warning in 8.98s |
+| 2026-08-08 22:02 UTC | Held-out canonical live-path A/B for transition-aw | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-08 23:26 UTC | Within-game object-relative trajectory-transfer ca | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: _s": 3.0},
++   |
