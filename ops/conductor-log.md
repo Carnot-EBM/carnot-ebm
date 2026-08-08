@@ -15505,3 +15505,4 @@ Still active  |
 | 2026-08-08 00:44 UTC | V537 exact-path adversarial capstone using fail-cl | OK | 86 passed, 1 warning in 12.17s |
 | 2026-08-08 01:44 UTC | Plan milestone 2026.08.538 | OK | 14 tasks proposed |
 | 2026-08-08 01:46 UTC | Milestone 2026.08.538 activated | OK | 14 tasks queued |
+| 2026-08-08 02:35 UTC | Post-V538-marker SOTA delta and causal-scope prere | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6211_v538_po |
