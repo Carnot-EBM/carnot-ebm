@@ -22558,6 +22558,106 @@ direct result.
 |---|---|---|
 | REQ-ARC-WMTE-TRAJ-TRANSFER-1 | `python/carnot/agentic/arc_solver_kit.py:object_relative_trajectory_transfer`; `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._begin_level_goal_episode`/`_induce_and_plan`. | `tests/python/test_arc_object_relative_trajectory_transfer.py`, `tests/python/test_arc_trajectory_transfer_cascade.py`. |
 
+### REQ-ARC-WMTE-6215: Object-Relative Trajectory Transfer A/B
+
+Experiment 6215 SHALL measure the default-off object-relative trajectory
+transfer stage from REQ-ARC-WMTE-TRAJ-TRANSFER-1. It SHALL compare matched
+disabled and enabled arms through the canonical live agent path
+`make_carnot_agent -> E3AgentPolicy -> _induce_and_plan`. It SHALL measure only
+within-game level-to-level transfer. It SHALL NOT use another game's trace,
+game source, offline BFS, adapters, hidden state, or registry trajectories as a
+live input.
+
+Before any arm runs, the experiment SHALL hash `ops/arc_solve_registry.yaml`,
+verify that the selected public fixtures are already full-game cleared, and
+freeze the game, seed, level-boundary, and minimum transfer-opportunity matrix.
+It SHALL also freeze the primary avoided-induction metric, the quality guard,
+and the safety gate.
+
+The experiment SHALL build each cell from agent-visible prior and current
+opening observations plus the prior level's agent-visible action trace. The
+treatment SHALL match same-game objects and centroid displacement only from
+those observations. It SHALL run the transfer before the expensive LLM
+reinduction tier. The control SHALL keep the transfer flag disabled and SHALL
+otherwise hold the fallback world-model inducer, sampling, observations, and
+action budget fixed.
+
+The fallback inducer for both arms SHALL be the Exp6212-qualified
+`unsloth/gemma-4-31B-it-GGUF` Q4_K_M runtime. The artifact SHALL record the
+model file, hash, quantization, llama.cpp build, CUDA layer receipt, process
+identity, and first-token receipt. Legacy models SHALL contribute zero rows.
+
+The experiment SHALL persist every match, displacement, verifier decision,
+transfer action, fallback call, and process receipt before aggregation. It
+SHALL report treatment fire, verifier accept/reject counts, centroid
+displacement validity, avoided LLM induction calls, actions, score, wall time,
+paired clustered intervals, and per-game harmful regressions. A treatment that
+does not fire on the predeclared opportunity floor SHALL be an instrument
+failure, not a null.
+
+Experiment 6215 SHALL write
+`results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json` with
+bare top-level fields for `status`,
+`registry_precheck_and_hash_before_after`,
+`preregistered_game_seed_level_boundary_matrix`, `model_specs`,
+`canonical_live_entrypoint_receipts`, `matched_arm_configuration`,
+`within_game_only_receipt`, `treatment_fire_and_reason_counts`,
+`verifier_accept_reject_counts`, `centroid_displacement_validity`,
+`avoided_llm_induction_calls`,
+`engine_fidelity_score_actions_and_wall_time_by_arm_game`,
+`paired_clustered_intervals`, `harmful_regression_count_and_games`,
+`aa_control`,
+`prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts`,
+`solve_claimed`, `level_credit_delta`, `registry_update_count`,
+`ab_complete_score`, `trajectory_transfer_promotion_ready_score`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`, `test_exit_codes`,
+`duration_s`, `reproducibility_checksum`, and `honest_verdict`.
+
+The fields `solve_claimed` and `verifier_is_oracle` SHALL be false. The fields
+`level_credit_delta`, `registry_update_count`, and each forbidden-access count
+SHALL be bare `0`. The artifact SHALL NOT include `solve_provenance`, because
+no solve is claimed.
+
+#### SCENARIO-ARC-WMTE-6215-REGISTRY-PRECHECK
+
+**Given** the ARC solve registry and the proposed level-boundary matrix
+**When** Experiment 6215 builds its preregistration
+**Then** the registry hash is recorded before arm execution
+**And** selected games are already full-game cleared
+**And** the same registry hash is recorded after aggregation.
+
+#### SCENARIO-ARC-WMTE-6215-WITHIN-GAME-ONLY
+
+**Given** a frozen game, seed, and level boundary
+**When** the disabled and enabled arms run
+**Then** the prior trace and current observation come from the same game cell
+**And** all cross-game, source, BFS, adapter, registry-trajectory, and
+hidden-state access counts are bare `0`.
+
+#### SCENARIO-ARC-WMTE-6215-CANONICAL-LIVE-AGENT
+
+**Given** a transfer opportunity
+**When** the enabled arm reaches level-up reinduction
+**Then** `E3AgentPolicy._induce_and_plan` tries the transfer stage before the
+LLM fallback
+**And** a confident transfer avoids one fallback induction call.
+
+#### SCENARIO-ARC-WMTE-6215-ARTIFACT-GUARDS
+
+**Given** the completed artifact
+**When** it is validated
+**Then** all required fields are present
+**And** solve, credit, registry-update, oracle, and forbidden-access fields are
+false or bare `0`
+**And** `solve_provenance` is absent.
+
+## Implementation Status (REQ-ARC-WMTE-6215)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6215 | `python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py`. | `tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py`. |
+
 ### REQ-ARC-WMTE-6180-WIRING: Budget-Exhaustion Meter Wired Into `StepwiseExplorer`
 
 **Origin:** 2026-08-07 operator directive (lever #5 of the ARC six-lever push, `ops/known-issues.md`).
@@ -23090,3 +23190,77 @@ untouched).
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6229 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._should_enter_induction` (`"renewed_stall_reinduction"` branch), `_bounded_reinduction_enabled`/`_REINDUCTION_TRANSITION_THRESHOLD`/`_REINDUCTION_MAX_ATTEMPTS`, `generator_liveness_witness` diagnostic fields. | `tests/python/test_arc_bounded_reinduction_20260808.py`. |
+
+### REQ-ARC-WMTE-6230: Component Load Failures SHALL Be Witnessed, Not Swallowed Silently
+
+**Origin:** 2026-08-08 adversarial review, Gaps finding 3. `_load_submitted_candidate_router`
+and `_load_submitted_frame_change_scorer` degrade to `None` through bare `except Exception`
+fallbacks with no counter, no stderr line, and no witness field, even though
+`SUBMITTED_AGENT_CONFIG` declares both components enabled. A row could therefore carry
+`llm_on_row_valid: true` while the agent runs fully UNROUTED (no candidate router at all) or
+with the action-effect prior silently inert (`action_effect_expansion_prior` is gated on
+`frame_change_scorer is not None`), and nothing in the artifact would show it.
+
+**The fix.** Both loaders now populate a per-call diagnostic dict (`sge_attempted`/
+`sge_loaded`/`sge_error`/`discriminative_loaded`/`discriminative_error`/`loaded` for the
+router; `enabled`/`loaded`/`error` for the scorer) on a **thread-local** side channel
+(`_component_load_diagnostics = threading.local()`), and print one greppable line
+(`"CANDIDATE ROUTER LOAD FALLBACK ..."` / `"CANDIDATE ROUTER LOAD FAILED ..."` /
+`"FRAME-CHANGE SCORER LOAD FAILED ..."`) on every fallback or failure. `E3AgentPolicy.__init__`
+reads its own thread's slot immediately after calling each loader -- same thread, so no lock is
+needed -- and stores the result as `self._candidate_router_load_diagnostics` /
+`self._frame_change_scorer_load_diagnostics`. When a caller supplies a router/scorer directly
+(bypassing the loader), `__init__` records an honest `{"loaded": bool, "caller_supplied": True}`
+instead of stale loader data. `generator_liveness_witness()` surfaces both diagnostics
+unconditionally as `candidate_router_loaded`/`candidate_router_load_diagnostics`/
+`frame_change_scorer_loaded`/`frame_change_scorer_load_diagnostics`, on both the
+`proposer is None` early-return path and the normal path.
+
+**Why a thread-local, not a plain module-level dict.** The scored swarm runs one thread per
+game (`scripts/kaggle/submission_kernel/main.py`). A bare global dict would let two
+concurrently-constructing games' diagnostics interleave, so one game's artifact could report
+the OTHER game's load outcome. `threading.local()` gives each thread its own attribute
+namespace, closing that race by construction rather than by convention.
+
+**Why the loaders' return type is unchanged.** A first attempt at this fix changed both
+loaders to return `tuple[Any | None, dict]` so `__init__` could read diagnostics directly off
+the return value. Before committing, a repo-wide grep found 10+ other callers -- several
+experiments, several tests, and the production module
+`python/carnot/agentic/arc_reactive_verifier_filter.py` -- that all depend on the existing
+bare `Any | None` shape. That attempt was reverted (`git checkout --`) in favour of the
+thread-local side channel implemented here, which adds the diagnostic without changing what
+either function returns to any existing caller.
+
+**Tests.** `tests/python/test_arc_component_load_diagnostics_20260808.py` (19 tests): the
+candidate-router loader's default/SGE-fallback/total-failure paths report the correct
+diagnostic shape and print the correct greppable line (or no line, on the clean default path);
+the frame-change-scorer loader's disabled/loader-returns-None/loader-raises/success paths do
+the same; `E3AgentPolicy.__init__` populates both diagnostics correctly on the default
+loader-driven path AND on the caller-supplied-override path (including an explicit `None`
+override); `generator_liveness_witness()` surfaces both diagnostics correctly on both the
+`proposer is None` early-return path and the normal path, and reflects a degraded router as
+`candidate_router_loaded: False`; both loaders are confirmed to still return a bare object or
+`None`, never a tuple (the regression guard for the reverted first attempt); and a thread-local
+isolation class confirms `_component_load_diagnostics` is a genuine `threading.local()`
+instance and that two threads racing through the candidate-router loader with different
+per-thread outcomes (driven by the `game_id` argument alone, no shared mutable global
+monkeypatched from inside a thread) do not cross-contaminate each other's diagnostic. Plus a
+regression sweep: the full `test_arc_component_load_diagnostics_20260808.py` +
+`test_arc_bounded_reinduction_20260808.py` + `test_arc_kaggle_kernel_gaps_20260808.py` +
+frontier/token-count suites from the earlier Gaps fixes (57 tests), the competition-agent
+adapter/gateway/liveness-lint/reactive-verifier-filter suites (71 tests), and the two other
+`generator_liveness_witness`-dependent suites (`test_arc_gate_diagnostics_mask_witness.py` +
+`test_arc_scored_path_liveness_witness.py`, 45 tests) all still green. A broader sweep of all
+47 test files that construct `E3AgentPolicy` (424 tests) showed 5 pre-existing failures,
+confirmed via `git stash` to reproduce identically against clean HEAD before this change (2 in
+`test_arc_submitted_agent_parity.py` already filed in `ops/known-issues.md`; 3 more --
+`test_experiment_4605_live_integration_scored_agent.py`,
+`test_experiment_4821_structural_energy_s3_generation_lift.py`,
+`test_experiment_5727_arc_generalization_live_oracle_gap_v511.py` -- newly discovered by this
+sweep, unrelated to this change, not yet filed).
+
+## Implementation Status (REQ-ARC-WMTE-6230)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6230 | `python/carnot/agentic/arc_competition_agent.py:_load_submitted_candidate_router`/`_load_submitted_frame_change_scorer` (`_component_load_diagnostics` thread-local), `E3AgentPolicy.__init__` diagnostic wiring, `generator_liveness_witness` diagnostic fields. | `tests/python/test_arc_component_load_diagnostics_20260808.py`. |

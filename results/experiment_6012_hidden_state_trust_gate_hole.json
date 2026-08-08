@@ -320,6 +320,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: this artifact declares BOTH arc_competition_agent.py and arc_executable_world_model.py as dependencies; this entry covers the arc_competition_agent.py side (the other is acknowledged separately). Same reachability argument as the 6223-6226 acknowledgement passes: bounded re-induction is gated off by default (CARNOT_ARC_BOUNDED_REINDUCTION unset in this artifact's rebuild path), and the always-on liveness-witness diagnostic fields are read-only additions.",
         "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "sha256_now": "2102adecb1e9073cd62cffc1b215d1065fd08dbaf76f9d168a08e6af047b033e",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
+        "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
       }
     ]
   },

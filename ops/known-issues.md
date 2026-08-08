@@ -108,6 +108,40 @@ individually re-classified with a specific root cause and either fixed or the te
 updated with a dated correction note (matching this project's own established pattern) explaining
 why the old assertion no longer holds.
 
+**ADDENDUM 2026-08-08 (FOUND DURING REQ-ARC-WMTE-6230's REGRESSION SWEEP — 3 more, pre-existing,
+unrelated, NOT fixed).** The Gaps finding 3 fix (component-load diagnostics) ran a sweep across
+all 47 test files that construct `E3AgentPolicy` (424 tests). 5 failed; 2 are the
+`test_arc_submitted_agent_parity.py` pair already covered above. The other 3 are NEW, confirmed
+via `git stash` (re-running against clean HEAD with this fix's edits stashed out) to reproduce
+identically without any of today's changes present:
+
+4. **`tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py::test_req_arc_wmte_5727_e3_proposer_port_env_override`
+   — same qat root cause as finding 3.** Asserts `proposer.repo_substr == "gemma-4-31B-it"`; gets
+   `"gemma-4-31B-it-qat"`. Almost certainly the same stale-assertion-against-the-2026-07-31-qat-
+   switch as finding 3 above, in a different test file. Scope item (c) above should sweep for
+   this exact assertion pattern repo-wide rather than fixing finding 3 and 4 as two unrelated
+   one-offs.
+5. **`tests/python/test_experiment_4605_live_integration_scored_agent.py::test_req_capstone_4605_submitted_policy_wires_safe_live_stack`
+   — a DIFFERENT root cause.** Injects a stub `CrossGameDiscriminativeCandidateRouter` via
+   `monkeypatch.setattr(comp.arc_discriminative_router, "load_cross_game_discriminative_router",
+   ...)` and asserts `policy.explorer.candidate_router is stub_router`; gets an
+   `OnlineClickTargetRouter` instead. Reads like the live candidate-router loader's SGE/
+   discriminative precedence (`_load_submitted_candidate_router`, see REQ-ARC-WMTE-6230 above)
+   no longer routes through `load_cross_game_discriminative_router` at all on this path — worth
+   checking whether that loader was superseded by the online-click-target router and this test
+   is stale, or whether a real routing regression dropped a call site. Not investigated further.
+6. **`tests/python/test_experiment_4821_structural_energy_s3_generation_lift.py::test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan`
+   — `IndexError: list index out of range` on `captured[-1]`.** The test monkeypatches
+   `plan_in_model` to append its kwargs to `captured` and calls `policy._induce_and_plan()`
+   directly with a hand-built `_FakeProposer`/`_FakeVerifier`/`transitions`/`root_grid`; `plan_in_
+   model` is apparently never called at all (list stays empty), so `_induce_and_plan` exits via
+   some other branch before reaching planning. Not investigated further — worth checking whether
+   a recent change to `_induce_and_plan`'s early-exit conditions (trust gate, stall check, etc.)
+   now trips before this hand-built fixture reaches the plan call.
+
+**Falsifiable gate (addendum).** Same shape as above: ends when all 3 pass again, or each is
+individually re-classified and fixed or corrected with a dated note.
+
 ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
 
 The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed
