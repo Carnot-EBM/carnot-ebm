@@ -5553,6 +5553,43 @@ class E3AgentPolicy:
         except Exception:
             return
 
+    def _track_prev_for_transition(self, move: tuple, latest: Any) -> None:
+        """Record the pre-action grid for a PLAN step, the same way the explore branch
+        already does for an explore step.
+
+        `self._prev` is how one `next_move()` call hands the NEXT call the grid an action
+        started from. The transition-collection block at the top of `_next_move_routed`
+        reads `self._prev`, pairs it with the frame the action produced, and appends a
+        `Transition` to `self.transitions` -- that is the ONLY way the agent learns from
+        its own actions. The explore branch sets `self._prev` right after choosing a
+        move; before this method existed, the two PLAN-step call sites did not, so
+        `self._prev` stayed `None` for the whole `execute` phase and every replayed plan
+        step produced no `Transition` at all (see
+        docs/research-notes/live-agent-adversarial-review-2026-08-08.md, "Correctness"
+        finding 1). Call this right after choosing a plan move, mirroring the explore
+        branch's own timing: `latest` here is the frame the move is ABOUT to act on, not
+        the frame it produces.
+
+        `_remember_active_probe_origin` above does the same `self._prev` assignment, but
+        ONLY when an active probe is pending and this move happens to match it -- a
+        narrow, unrelated bookkeeping path. Calling both is safe: when the probe
+        condition holds, this method recomputes the identical triple; when it does not,
+        this method is the only one that fires.
+        """
+        if latest is None:
+            self._prev = None
+            return
+        from carnot.agentic.arc_agi3_world_model import grid_of
+        from carnot.agentic.arc_executable_world_model import detect_cell, to_logical
+
+        self.cell = detect_cell(grid_of(latest))
+        kind, data = move
+        if kind in ("RESET", None):
+            self._prev = None
+            return
+        self._prev = (to_logical(grid_of(latest), self.cell), int(kind), data)
+        self._prev_level = _level_of(latest)
+
     def _observe_active_probe_transition(self, transition: Any) -> None:
         if self._active_probe_pending is None or self._active_probe_controller is None:
             return
@@ -6172,6 +6209,7 @@ class E3AgentPolicy:
                 if self._execute_plan_from_current:
                     mv = self._next_plan_move()
                     self._remember_active_probe_origin(mv, latest)
+                    self._track_prev_for_transition(mv, latest)
                     self._prov_top = "induce.plan_from_current"
                     return mv
                 self._prov_top = "induce.plan_needs_reset"
@@ -6181,6 +6219,7 @@ class E3AgentPolicy:
         if self.phase == "execute" and self.pi < len(self.plan):
             mv = self._next_plan_move()
             self._remember_active_probe_origin(mv, latest)
+            self._track_prev_for_transition(mv, latest)
             self._prov_top = "execute.plan_step"
             return mv
         # plan exhausted / no model -> keep exploring
@@ -6266,6 +6305,22 @@ class E3AgentPolicy:
             attempt["skipped"] = "no_active_transitions"
             return
 
+        # `_execute_plan_from_current` starts True only for a LEVEL-UP reinduction (see
+        # `_begin_level_goal_episode`), but it is NOT guaranteed False afterward: an active-probe
+        # transition can re-enter induction (`_observe_active_probe_transition` sets
+        # `phase="induce"` directly) without going through either reset site, so the flag can
+        # still be True here. Whenever it is True, `next_move()` replays the plan this method
+        # produces starting from WHEREVER the agent already is -- no reset first. `self.root_grid`
+        # is only correct when the agent really will be reset back to it before the plan runs.
+        # Use the outcome grid of the agent's own most recent transition as the real starting
+        # point instead, falling back to `root_grid` when there is no transition yet to read one
+        # from, or when a reset really is coming (`_execute_plan_from_current` is False).
+        _plan_start_grid = (
+            self.transitions[-1].next_grid
+            if self._execute_plan_from_current and self.transitions
+            else self.root_grid
+        )
+
         try:
             if self.program_synthesis_filter_enabled:
                 try:
@@ -6313,14 +6368,18 @@ class E3AgentPolicy:
                     is_nav = bool(getattr(nav, "displacement", None)) and (
                         getattr(nav, "goal_color", None) is not None
                     )
-                    # Pass root_grid so the gate ALSO requires the goal colour present at plan-start
-                    # (REQ-ARC-WMTE-5883): otherwise a goal absent from the start grid reads as already-won
-                    # and plan_in_model returns a bogus ~1-step 'win' that wastes a real action.
-                    is_confident = is_nav and nav.is_confident_nav(grid=self.root_grid)
+                    # Pass the plan's real starting grid so the gate ALSO requires the goal
+                    # colour present at plan-start (REQ-ARC-WMTE-5883): otherwise a goal absent
+                    # from the start grid reads as already-won and plan_in_model returns a bogus
+                    # ~1-step 'win' that wastes a real action. Was `self.root_grid` -- fixed to
+                    # `_plan_start_grid` so this check agrees with where the plan produced a few
+                    # lines down will actually be replayed from (see the comment above this
+                    # method's `try:` block).
+                    is_confident = is_nav and nav.is_confident_nav(grid=_plan_start_grid)
                     attempt["structured_nav_is_nav_game"] = bool(is_nav)
                     attempt["structured_nav_confident"] = bool(is_confident)
                     is_nav = is_confident
-                    if is_nav and self.root_grid is not None:
+                    if is_nav and _plan_start_grid is not None:
                         nav_eng, nav_isdone = nav.as_callables()
                         # Record the standard metrics for diagnostics, but do NOT gate on the full-grid
                         # exact-match heldout: a CORRECT avatar-only nav model scores heldout ~0 (it models
@@ -6350,7 +6409,7 @@ class E3AgentPolicy:
                             e3.plan_in_model,
                             nav_eng,
                             nav_isdone,
-                            self.root_grid,
+                            _plan_start_grid,
                             diagnostics=_nav_diag,
                             goal_energy_override=nav.goal_energy,  # REQ-ARC-WMTE-5845: nav-specific best-first
                         )
@@ -6375,13 +6434,15 @@ class E3AgentPolicy:
 
                 _eng, _isdone, _diag = gated_engine_from_transitions(self.short, active_transitions)
                 attempt["ttt_prior_engine"] = _diag
-                if _eng is not None and self.root_grid is not None:
+                # Was `self.root_grid` -- fixed to `_plan_start_grid` for the same reason as the
+                # structured-nav branch above (see the comment above this method's `try:` block).
+                if _eng is not None and _plan_start_grid is not None:
                     _plan_diag: dict = {}
                     _plan = self._call_plan_in_model(
                         e3.plan_in_model,
                         _eng,
                         _isdone,
-                        self.root_grid,
+                        _plan_start_grid,
                         diagnostics=_plan_diag,
                     )
                     attempt["ttt_prior_engine_plan_diagnostics"] = _plan_diag
@@ -6439,6 +6500,13 @@ class E3AgentPolicy:
                 # flag is off, so a fire-counter of 0 is auditable rather than silently absent (the
                 # exp5836 dead-observe-channel lesson: a zero-fire cell is UNINTERPRETABLE, never
                 # "the lever does not help", unless the counters distinguish why).
+                # `self.root_grid` here is intentionally NOT swapped for `_plan_start_grid`. This
+                # call does object matching between two LEVELS' OPENING layouts (`old_first_grid`
+                # vs `new_first_grid`) to estimate how much objects moved between them -- it needs
+                # the grid from the moment the new level opened, not wherever the agent has since
+                # wandered to. Feeding it the current (already-displaced) grid would corrupt the
+                # match, not fix a bug: an avatar or pushed object that moved during post-boundary
+                # exploration would read as part of the level-to-level object displacement.
                 if (
                     self.trajectory_transfer_enabled
                     and self._completed_level_trace
@@ -6504,7 +6572,11 @@ class E3AgentPolicy:
                     game=self.short,
                     transitions=active_transitions,
                     cell=self.cell,
-                    root_grid=self.root_grid,
+                    # Was `self.root_grid` -- fixed to `_plan_start_grid` for the same reason as
+                    # the structured-nav / TTT-prior branches above (see the comment above this
+                    # method's `try:` block). `execute_bounded_llm_reinduction` uses this value
+                    # throughout as the grid every candidate engine plans and is graded from.
+                    root_grid=_plan_start_grid,
                     proposer=reinduction_proposer,
                     candidate_provider=self._world_model_candidates,
                     load_engine=reinduction_load_engine,
@@ -6581,6 +6653,13 @@ class E3AgentPolicy:
                     self.plan = list(outcome.plan)
                 return
             self._fit_dsl_model()
+            # `_plan_start_grid`, not `self.root_grid`, is the start point for every planner call
+            # below. This branch is not ONLY reached by STALL / first-contact:
+            # `_observe_active_probe_transition` can also land here with
+            # `_execute_plan_from_current` still True, because it sets `phase="induce"` directly
+            # and skips the two resets guarded by `phase == "explore"`. On that path
+            # `_plan_start_grid` correctly picks the current grid; on true STALL it still
+            # resolves to `self.root_grid`, so behavior there is unchanged.
             # REQ-ARC-WMTE-5717/5718: STALL / first-contact path only (the level_up_reinduction
             # branch returned above). Arm the DEV-ONLY playbook injection on the cached proposer.
             # RETRIEVAL (5718) takes precedence when gated on: inject the top-K patterns relevant to
@@ -6641,7 +6720,7 @@ class E3AgentPolicy:
                         game=self.short,
                         transitions=active_transitions,
                         cell=self.cell,
-                        root_grid=self.root_grid,
+                        root_grid=_plan_start_grid,
                         proposer=self._proposer(),
                         candidate_provider=self._world_model_candidates,
                         load_engine=e3.load_engine,
@@ -6705,7 +6784,7 @@ class E3AgentPolicy:
                         self.plan = list(stall_outcome.plan)
                         return
                 # else: fall through to active_probe_controller / plain single-shot path below
-            if self.active_probe_controller_enabled and self.root_grid is not None:
+            if self.active_probe_controller_enabled and _plan_start_grid is not None:
                 try:
                     from carnot.agentic.arc_active_probe import (
                         ActiveProbeController,
@@ -6723,9 +6802,9 @@ class E3AgentPolicy:
                         )
                     controller = self._active_probe_controller
                     actions = probe_actions_from_model_candidates(
-                        e3._model_candidates(self.root_grid)
+                        e3._model_candidates(_plan_start_grid)
                     )
-                    chosen_probe = controller.choose_probe(self.root_grid, actions)
+                    chosen_probe = controller.choose_probe(_plan_start_grid, actions)
                     attempt["active_probe_enabled"] = True
                     attempt["active_probe_candidate_names"] = [
                         str(candidate.name) for candidate in candidate_pool
@@ -6802,7 +6881,7 @@ class E3AgentPolicy:
                 self.cell,
                 **_induce_kwargs,
             )
-            if not ok or self.root_grid is None:
+            if not ok or _plan_start_grid is None:
                 attempt["skipped"] = "proposer_failed_or_missing_root"
                 return
             engine, is_done = e3.load_engine(self.short)
@@ -6828,9 +6907,9 @@ class E3AgentPolicy:
                         )
                     controller = self._active_probe_controller
                     actions = probe_actions_from_model_candidates(
-                        e3._model_candidates(self.root_grid)
+                        e3._model_candidates(_plan_start_grid)
                     )
-                    chosen_probe = controller.choose_probe(self.root_grid, actions)
+                    chosen_probe = controller.choose_probe(_plan_start_grid, actions)
                     attempt["active_probe_enabled"] = True
                     attempt["active_probe_candidate_names"] = [
                         str(candidate.name) for candidate in candidate_pool
@@ -7038,7 +7117,7 @@ class E3AgentPolicy:
             # default on the strength of one investigation session.
             if os.environ.get("CARNOT_ARC_PLAIN_PATH_GOAL_SATISFIABILITY_CHECK") == "1":
                 goal_check = _goal_satisfiability_check(
-                    engine=engine, goal=is_done, start_grid=self.root_grid
+                    engine=engine, goal=is_done, start_grid=_plan_start_grid
                 )
                 attempt["goal_predicate_satisfiable"] = bool(goal_check.get("satisfiable"))
                 attempt["goal_satisfiability"] = dict(goal_check)
@@ -7081,7 +7160,7 @@ class E3AgentPolicy:
             # replays this plan in the real env, halting on divergence.
             _plan_diag2: dict = {}
             plan = self._call_plan_in_model(
-                e3.plan_in_model, engine, is_done, self.root_grid, diagnostics=_plan_diag2
+                e3.plan_in_model, engine, is_done, _plan_start_grid, diagnostics=_plan_diag2
             )
             attempt["plan_diagnostics"] = _plan_diag2
             if plan:
@@ -7100,7 +7179,7 @@ class E3AgentPolicy:
                 subgoal_result = plan_hierarchical_subgoals(
                     engine=engine,
                     final_goal=is_done,
-                    start_grid=self.root_grid,
+                    start_grid=_plan_start_grid,
                     subgoals=subgoals,
                     plan_in_model=self._guided_plan_in_model(e3.plan_in_model),
                     value_head=self.value_head,
@@ -7131,7 +7210,7 @@ class E3AgentPolicy:
                     max_subgoals=self.subgoal_budget,
                 )
                 factored_result = e3.plan_factored_subgoal_sequence(
-                    start_grid=self.root_grid,
+                    start_grid=_plan_start_grid,
                     final_goal=is_done,
                     experts=expert_result.experts,
                     subgoals=subgoals,

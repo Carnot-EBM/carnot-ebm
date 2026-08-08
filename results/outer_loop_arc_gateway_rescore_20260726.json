@@ -1174,6 +1174,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
         "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "5666e3a5205e4bb4d07a485d019219d739474ba8577ec795a94817f24b471bb7",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6223/6224 (2026-08-08): fixed a bug where plan-step execution never recorded a Transition (self._prev was populated only in next_move()'s two plan-step branches, via a new _track_prev_for_transition call), and a bug where level-up / STALL-path reinduction planned from self.root_grid instead of a new _plan_start_grid local. Both changes are confined inside E3AgentPolicy: the two next_move() plan-step call sites, and _induce_and_plan()'s internal grid selection. Its rebuild chain (arc_gateway_rescore.py -> arc_gateway_exact_attribution.py -> analyze_arc_gateway_rescore.py) has exactly one live-cell function, arc_gateway_exact_attribution.py:run_cell, which sets os.environ['CARNOT_ARC_DISABLE_INDUCTION']='1' (line 64) before its E3AgentPolicy(...) construction (line 69). Neither arc_gateway_rescore.py nor analyze_arc_gateway_rescore.py constructs E3AgentPolicy or calls next_move/_induce_and_plan at all (grep: no match in either file).",
+        "evidence": "The artifact's own `inference_substrate` is `aggregation_from_upstream_artifacts`, consistent with the only live component (arc_gateway_exact_attribution.py) running with induction structurally disabled. Grep: `grep -n E3AgentPolicy scripts/arc_gateway_rescore.py scripts/analyze_arc_gateway_rescore.py` -> no matches; `grep -n CARNOT_ARC_DISABLE_INDUCTION scripts/arc_gateway_exact_attribution.py` -> line 64, preceding the line-69 construction."
       }
     ]
   },

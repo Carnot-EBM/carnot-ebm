@@ -22648,3 +22648,78 @@ the old per-ancestor algorithm inline to confirm a byte-identical result.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6222 | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer._forward_paths_from`/`_cur_forward_paths`/`_exact_forward_path`, wired into `_shortest_path`/`_partial_forward_path`. | `tests/python/test_experiment_4523_forward_walk_navigation.py`. |
+
+### REQ-ARC-WMTE-6223: Plan-Step Execution SHALL Record Real Transitions, Not A Stale Explore Row
+
+**Origin:** 2026-08-08 adversarial review, Correctness finding 1. Plan execution was fully
+open-loop: `next_move()`'s plan-step branches (`induce.plan_from_current`, `execute.plan_step`)
+call `_next_plan_move()` and return the chosen action directly, without ever appending a
+`Transition` for the step the agent just took. `self._prev` is nulled at induce time and never
+re-set during plan execution, so a plan-won level's `_win_transition` — read from `self._prev` —
+was a stale pre-plan explore row, not the actual winning step.
+
+**The fix.** A new `E3AgentPolicy._track_prev_for_transition(move, latest)` mirrors the explore
+branch's own `self._prev` / `self._prev_level` / `self.cell` bookkeeping (grid-before, action,
+level-before), called right after `_remember_active_probe_origin` at both plan-step call sites.
+The next call into `next_move()` then completes the transition exactly as the explore branch
+already does — the append-a-`Transition`-from-`self._prev` logic at the top of `next_move()` is
+unchanged; this fix only makes plan steps populate `self._prev` the same way explore steps do.
+
+**Tests.** `tests/python/test_arc_plan_execution_transition_capture_20260808.py`: a plan step
+records `self._prev` but appends no transition yet (transition count unchanged on step 1); the
+second call completes the transition (count grows by exactly one, with the right grid/action/level
+fields); a real 2-step plan-win scenario asserts `_win_transition` is the actual winning step, not
+a stale explore row; existing plan-branch provenance labels and action sequence are unaffected.
+
+## Implementation Status (REQ-ARC-WMTE-6223)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6223 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._track_prev_for_transition`, wired into both plan-step branches of `next_move`. | `tests/python/test_arc_plan_execution_transition_capture_20260808.py`. |
+
+### REQ-ARC-WMTE-6224: Level-Up Reinduction SHALL Plan From The Grid The Agent Is Actually On
+
+**Origin:** 2026-08-08 adversarial review, Correctness finding 2, then a hostile-verifier-found
+gap in the first fix. `_induce_and_plan` planned every branch from `self.root_grid` — the grid
+captured the moment a level opened — even when `self._execute_plan_from_current` is True and
+`next_move()` replays the produced plan starting from wherever the agent already is, with no
+RESET first. A level-up reinduction only fires after at least one post-boundary transition, so by
+construction the agent has already moved by the time this runs — a plan planned from `root_grid`
+is wrong from step 0.
+
+**The fix.** A `_plan_start_grid` local, resolved once near the top of `_induce_and_plan`, reads
+`self.transitions[-1].next_grid` when `self._execute_plan_from_current` is True and at least one
+transition exists, else falls back to `self.root_grid` unchanged. Every planner-start-grid read in
+the `level_up_reinduction` branch and the STALL/reentry branch now uses this local instead of
+`self.root_grid` directly. The `object_relative_trajectory_transfer` branch's `self.root_grid`
+reads are intentionally left alone — that branch matches between two levels' opening layouts, a
+different question from "where does the plan start."
+
+**The gap the first version of this fix left.** The first pass scoped the swap to the
+`level_up_reinduction` branch only, on the claim that `self._execute_plan_from_current` is
+"guaranteed False" in the STALL path. A hostile verifier reviewing the fix found that claim false:
+`_observe_active_probe_transition` (fired from `next_move()` after any recorded transition,
+independent of `self.phase`) sets `phase="induce"` directly, bypassing the two reset sites that
+only run inside `if self.phase == "explore":`. So the STALL path can be reentered with
+`_execute_plan_from_current` still True — concretely, the active-probe disambiguation loop's own
+single-step plan re-enters induction this way after observing its outcome. The STALL path's
+`execute_bounded_llm_reinduction` call and every other `self.root_grid` read from there to the end
+of the method (the two active-probe blocks, the dynamics-trust gate, the plain single-shot
+`plan_in_model` call, subgoal search, the factored planner) were swapped to `_plan_start_grid` too,
+closing the gap. Severity was bounded: the STALL path is reentered this way only when
+`CARNOT_ARC_ACTIVE_PROBE=1` (default off), so the default scored path was never affected — but the
+shipped comment claiming the guarantee was false, and is now corrected.
+
+**Tests.** `tests/python/test_arc_level_up_reinduction_plan_start_grid_20260808.py`: the
+level-up-reinduction branch plans from the current grid, not the stale opening grid; the
+RESET-replay path (`_execute_plan_from_current=False`) is unaffected; the empty-transitions
+fallback ordering is documented; a new `_observe_active_probe_transition` reentry test confirms it
+leaves `_execute_plan_from_current` True (the mechanism that makes the gap reachable); and a new
+STALL-path reentry test drives that exact scenario against the STALL path's own
+`execute_bounded_llm_reinduction` call site, confirming it now plans from the current grid too.
+
+## Implementation Status (REQ-ARC-WMTE-6224)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6224 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._induce_and_plan` (`_plan_start_grid` local, swapped into both the level-up and STALL/reentry branches). | `tests/python/test_arc_level_up_reinduction_plan_start_grid_20260808.py`. |
