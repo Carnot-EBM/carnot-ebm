@@ -174,7 +174,17 @@ SUBMITTED_TARGET_LEVELS = 8
 # 3 seeds (1038-action gap). So the value is back to `None` (off) until an A/B measures total
 # levels reached, grace on vs off, across the full roster -- the wiring fix above stays; only
 # the shipped VALUE is reverted.
-SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
+#
+# THIRD CORRECTION (2026-08-08, same day, the A/B). experiment_6214_early_stop_grace_
+# counterfactual_ab.json replays the recorded level-up sequences from the null-grace sweep rows
+# against candidate grace values, across all 25 public games x 3 seeds. Result: 1204 (tu93's
+# exact measured gap) is the largest value that costs zero levels against this data, but it is a
+# fit to the observed sample, not a safety-margined threshold -- an unmeasured game or a
+# different seed could plausibly land at 1205 and get cut. 1300 gives the same zero-level-cost
+# guarantee with a 96-action margin, saving ~4753 of 145614 total actions (~3.3%) -- real but far
+# smaller than 400's ~20%, because a genuinely safe grace value does not buy much here. Set to
+# 1300 (operator directive, margin over sample-fit).
+SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 1300
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24

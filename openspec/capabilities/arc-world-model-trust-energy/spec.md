@@ -22559,6 +22559,22 @@ budget. `cd82` shows the same shape on 1 of 3 seeds. `SUBMITTED_EARLY_STOP_GRACE
 is pulled back, pending an A/B measuring total levels reached (grace on vs off) across the full
 game roster.
 
+**FOLLOW-UP (2026-08-08, same day): the A/B.** `experiment_6214_early_stop_grace_counterfactual_ab.json`
+replays the exact recorded `level_up_actions` sequences from the null-grace sweep rows against
+candidate grace values, across all 25 public games x 3 seeds (75 rows), at the shipped budget. This
+is an EXACT counterfactual, not an approximation, because the grace mechanism cannot change any
+agent behavior before the moment it fires. Result: grace=400 and grace=800 both cost 4 of the
+baseline's 40 total levels (in `cd82` and `tu93`, confirming the chat-audit finding at full-corpus
+scale) while saving 17,435-28,937 actions. The largest grace value that costs ZERO levels against
+this exact data is 1204 (saves 6,199 actions, ~4.3%) — but 1204 is precisely `tu93`'s measured
+gap, so it is a fit to the observed sample, not a safety-margined threshold; a slightly different
+seed or an unmeasured 26th game could plausibly have a gap of 1205 and get cut. 1300 gives the
+same zero-level-cost guarantee against this data with a 96-action margin, saving 4,753 actions
+(~3.3%). Either way, the SAFE savings are far smaller than 400's ~20% — the wall-clock benefit
+this REQ originally justified with "no score cost" does not really exist at a grace value that is
+actually safe. `SUBMITTED_EARLY_STOP_GRACE` is set to 1300 (operator directive, choosing the
+margined value over the sample-fit one) — a real but modest win, not the win originally claimed.
+
 ## Implementation Status (REQ-ARC-WMTE-6220)
 
 | REQ | Implementation | Tests |

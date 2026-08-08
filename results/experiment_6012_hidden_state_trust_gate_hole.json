@@ -264,6 +264,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6198 default flip (2026-08-08 operator directive, on the experiment_6199_gemma_think_mode_ab.json A/B evidence): ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT/ARC_LIVE_GENERATOR_THINK_DEFAULT flip 0 -> 1. Every historical artifact in this corpus was generated under the OLD default (think mode off) -- this change affects FUTURE induce() calls only. It cannot retroactively alter any already-recorded game action, model output, or measured value in this artifact.",
         "evidence": "git diff on arc_executable_world_model.py: a value change on two module constants plus their comment, no other statement touched. induce_think_on() itself (the resolver function) is byte-identical; only the constant it falls back to when CARNOT_ARC_INDUCE_THINK is unset changed. Any artifact whose generating run set that env var explicitly is unaffected regardless; any artifact that left it unset was generated before this commit existed, under the prior default."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
+        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
+        "acknowledged_on": "2026-08-08",
+        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
+        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
       }
     ]
   },
