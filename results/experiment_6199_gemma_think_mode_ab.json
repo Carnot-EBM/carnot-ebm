@@ -1,0 +1,340 @@
+{
+  "experiment": "experiment_6199_gemma_think_mode_ab",
+  "schema": "carnot.exp6199.gemma_think_mode_ab.v1",
+  "result_path": "results/experiment_6199_gemma_think_mode_ab.json",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": [
+    {
+      "name": "gemma-4-31B-it-qat",
+      "hf_id": "unsloth/gemma-4-31B-it-qat-GGUF",
+      "role": "E3AgentPolicy tier-3 world-model induction proposer (the live pin since 2026-07-28)",
+      "server": "fresh CUDA llama-server, -ngl 999, q8_0 KV, MTP OFF (local-dev default; MTP interaction with think mode is a separate, untested axis this run deliberately does not conflate -- see REQ-ARC-WMTE-6198's own risk note on this)",
+      "mtp": false
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": {
+      "principle": "terminal-prefixed; think helping, hurting, tying, or never engaging reasoning at all are all distinct, real, citable outcomes"
+    },
+    "inference_substrate": {
+      "principle": "live_llm_inference -- both arms invoke the real gemma-4-31B-it-qat server on a 3090, not mocked; 60s duration floor applies to the whole run"
+    },
+    "reason_engaged_at_all": {
+      "principle": "the load-bearing mechanistic finding: did CARNOT_ARC_INDUCE_THINK=1 ever actually produce a reasoning trace on gemma? If false, the mechanism (not just a prior string toggle) is inert and should be retired, not the induction-quality comparison itself"
+    },
+    "solve_provenance": {
+      "principle": "development_proxy -- adaptered offline dev-twin windows, not a live-agent hidden-game self-discovery solve; declared so adversarial_verify can tell them apart"
+    },
+    "random_seed": {
+      "principle": "determinism precondition for reproducibility"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash catches silent drift on replay"
+    }
+  },
+  "solve_provenance": "development_proxy",
+  "random_seed": 6199,
+  "prior_failures": [
+    {
+      "experiment_id": "exp5594-think-mode-induction-quality-ab",
+      "req": "REQ-ARC-WMTE-5594",
+      "verdict": "complete: think_mode_ab_equal_success_no_think_higher_accuracy",
+      "root_cause": "N=2, Qwen-only, no level-up window in either run",
+      "addressed_by": "not addressed directly -- superseded by the generator switch; see exp5714 below for the mechanism that actually explains the Qwen-era result",
+      "retire_if_same_verdict": false
+    },
+    {
+      "experiment_id": "exp5714-think-mode-rescoped-ab",
+      "req": "REQ-ARC-WMTE-5714",
+      "verdict": "complete: think_toggle_inert_under_codeonly_but_genuine_reasoning_...",
+      "root_cause": "tested Qwen3.5-9B-MTP's /think-/no_think STRING TOGGLE, which the live stack's codeonly directive structurally overrides -- an inert mechanism on the model this project used at the time",
+      "addressed_by": "gemma-4-31B-it-qat (the live pin since 2026-07-28) has no such string token at all; REQ-ARC-WMTE-6198 built a genuinely different mechanism (chat-endpoint routing to gemma's native thought channel) this experiment tests for the first time -- not a rerun of the same toggle on the same model",
+      "retire_if_same_verdict": true
+    }
+  ],
+  "honest_verdict": "complete: think_mode_mechanism_inert_no_reasoning_trace_ever_engaged",
+  "mtp_enabled": false,
+  "roster": [
+    "dc22",
+    "m0r0",
+    "sk48",
+    "ls20",
+    "cd82",
+    "ft09",
+    "tr87",
+    "vc33",
+    "cn04",
+    "sp80",
+    "ar25",
+    "ka59"
+  ],
+  "per_game_results": [
+    {
+      "game": "dc22",
+      "arm": "window",
+      "no_levelup_window": true
+    },
+    {
+      "game": "m0r0",
+      "arm": "no_think",
+      "induce_s": 209.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 3791,
+      "n_generate_calls": 3,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "m0r0",
+      "arm": "think",
+      "induce_s": 614.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: TimeoutError('timed out')"
+    },
+    {
+      "game": "sk48",
+      "arm": "no_think",
+      "induce_s": 233.5,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 4979,
+      "n_generate_calls": 2,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0336,
+      "goal_predicate_accuracy": 0.0833,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 1.0
+    },
+    {
+      "game": "sk48",
+      "arm": "think",
+      "induce_s": 481.7,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "ls20",
+      "arm": "no_think",
+      "induce_s": 257.8,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 1485,
+      "n_generate_calls": 1,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "ls20",
+      "arm": "think",
+      "induce_s": 67.1,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "cd82",
+      "arm": "no_think",
+      "induce_s": 320.5,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: GPU llama-server failed for gemma-4-31B-it-qat; SOTA models must run on GPU (no CPU fallback)"
+    },
+    {
+      "game": "cd82",
+      "arm": "think",
+      "induce_s": 150.4,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "ft09",
+      "arm": "no_think",
+      "induce_s": 63.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "ft09",
+      "arm": "think",
+      "induce_s": 490.5,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: GPU llama-server failed for gemma-4-31B-it-qat; SOTA models must run on GPU (no CPU fallback)"
+    },
+    {
+      "game": "tr87",
+      "arm": "no_think",
+      "induce_s": 335.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "tr87",
+      "arm": "think",
+      "induce_s": 205.9,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: RemoteDisconnected('Remote end closed connection without response')"
+    },
+    {
+      "game": "vc33",
+      "arm": "no_think",
+      "induce_s": 216.7,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 6837,
+      "n_generate_calls": 2,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.9868,
+      "goal_predicate_accuracy": 0.6667,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "vc33",
+      "arm": "think",
+      "induce_s": 600.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: TimeoutError('timed out')"
+    },
+    {
+      "game": "cn04",
+      "arm": "no_think",
+      "induce_s": 613.1,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 8650,
+      "n_generate_calls": 7,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.9342,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "cn04",
+      "arm": "think",
+      "induce_s": 600.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: TimeoutError('timed out')"
+    },
+    {
+      "game": "sp80",
+      "arm": "no_think",
+      "induce_s": 174.2,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 3822,
+      "n_generate_calls": 2,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.9412,
+      "goal_predicate_accuracy": 0.5,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "sp80",
+      "arm": "think",
+      "induce_s": 600.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: TimeoutError('timed out')"
+    },
+    {
+      "game": "ar25",
+      "arm": "no_think",
+      "induce_s": 366.1,
+      "induction_ok": true,
+      "reason_engaged": false,
+      "max_raw_completion_len": 4660,
+      "n_generate_calls": 3,
+      "heldout_accuracy": 0.0,
+      "cell_recall": 0.0,
+      "goal_predicate_accuracy": 0.9167,
+      "n_real_levelups": 1,
+      "levelup_positive_recall": 0.0
+    },
+    {
+      "game": "ar25",
+      "arm": "think",
+      "induce_s": 600.3,
+      "induction_ok": false,
+      "reason_engaged": false,
+      "max_raw_completion_len": 0,
+      "n_generate_calls": 0,
+      "induction_failure_detail": "split induce: engine failed: local gguf (GPU server) failed: TimeoutError('timed out')"
+    },
+    {
+      "game": "ka59",
+      "arm": "window",
+      "window_error": "ValueError(\"invalid literal for int() with base 10: 'C:1'\")"
+    }
+  ],
+  "comparison_summary": {
+    "n_games_both_induced": 0,
+    "no_think_induction_success": 5,
+    "think_induction_success": 0,
+    "no_think_reason_engaged_frac": 0.0,
+    "think_reason_engaged_frac": 0.0,
+    "mean_heldout_no_think": 0.0,
+    "mean_heldout_think": null,
+    "mean_goal_predicate_no_think": 0.6167,
+    "mean_goal_predicate_think": null,
+    "mean_levelup_recall_no_think": 0.2,
+    "mean_levelup_recall_think": null,
+    "per_game_headtohead_think_tie_nothink": {
+      "goal_predicate_accuracy": [
+        0,
+        0,
+        0
+      ],
+      "levelup_positive_recall": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "reason_engaged_at_all": false,
+  "duration_s": 7538.037,
+  "preconditions_checked": {
+    "offline_arcade_importable": true,
+    "adapters_available": true,
+    "e3_import": true,
+    "gguf_cached": true,
+    "cuda_llama_server_present": true,
+    "cuda_server_up_or_gpu1_headroom": true,
+    "ok": true
+  },
+  "reproducibility_checksum": "a46edce0f0cdcf14699a5ab0054ff2498e12ec065c9134c39ebc89fbc78be0dd"
+}
