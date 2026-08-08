@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.537",
+  "generated_at": "2026-08-08T00:50:28Z",
+  "retro_type": "operational_full",
+  "summary": "The milestone completed 11 experiments in 10.5 minutes. Five experiments were compute-bound, and the longest listed compute-bound experiment took 5 minutes. Compute-bound GPU idle was false.",
+  "total_wall_time_minutes": 10.5,
+  "experiments_completed": 11,
+  "slowest_experiments": [
+    {
+      "experiment": "V537 exact-path adversarial capstone using fail-closed terminal classification",
+      "duration_minutes": 5.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Three-family raw-code envelope canary before any new pool or seed stream",
+      "duration_minutes": 5.14,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Post-V537-marker SOTA delta plus staged-roadmap scope audit",
+      "duration_minutes": 0.12,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Single ARC slot: leave-one-game-out shadow generalization of the frozen task-awa",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Fail-closed terminal-artifact contract after V536 bootstrap-only completions",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "bottlenecks_identified": [
+    "The three-family raw-code envelope canary was the longest listed compute-bound experiment at 5 minutes. The data does not contain phase timings, so it does not identify the cause.",
+    "The synthesis-only capstone also took 5 minutes. Its lack of GPU use is correct behavior and is not a GPU bottleneck.",
+    "The GPU report is a single snapshot without experiment or model-count links. It cannot measure GPU efficiency across compute-task lifetimes.",
+    "no data available this milestone for concurrent multi-model execution or DualGPURunner engagement."
+  ],
+  "improvements_suggested": [
+    "Record load, inference, wait, and artifact-write timings for each experiment.",
+    "Attach GPU utilization samples to the active experiment and record the model count and selected runner.",
+    "When at least two independent model jobs are ready, place them on separate GPUs. Keep single-model jobs on the normal single-GPU path.",
+    "Report concurrent multi-model windows so the conductor can detect a missed DualGPURunner selection."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-phase timers to the compute canary and synthesis capstone paths.",
+    "Persist task-linked GPU, model-count, and runner-selection telemetry.",
+    "Schedule independent model jobs on separate GPUs when concurrent work exists."
+  ],
+  "compute_bound_experiments_count": 5,
+  "gpu_idle_on_compute_bound_tasks": false,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The timing order identifies where to measure, but it does not explain why the longest tasks took 5 minutes. A savings estimate above zero needs measured phase costs or a timed scheduling comparison.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}

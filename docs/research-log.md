@@ -6081,3 +6081,9 @@ The critical path for milestone .250:
 - theme: synthesis refresh latency and readiness-gated flagship compute concentrated the operational tail
 - key result: honest operational limitation -- the compute-task idle classification is false, while missing phase attribution and concurrent-model evidence prevent stronger utilization or runner conclusions
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.537
+- exp_range: no data available this milestone
+- theme: a short closeout concentrated runtime in one compute canary and one synthesis capstone
+- key result: the compute leader took 5 minutes; the data shows no compute-task GPU idle, but it cannot explain the runtime cause or assess concurrent model dispatch
+- acceptance: no data available this milestone
