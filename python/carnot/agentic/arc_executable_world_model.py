@@ -5348,6 +5348,15 @@ class LocalGGUFProposer:
     observed_server_n_ctx: Optional[int] = None
     reuse_n_ctx_check: str = "not_checked"
     reuse_refusals: list = field(default_factory=list)
+    # Live children this instance TERMINATED because a later step was about to overwrite the
+    # `self._proc` reference that was the only thing keeping them reachable (2026-08-08 review
+    # finding 4: a still-loading server left running past the wait budget, or a refused-for-reuse
+    # server, used to be silently dropped when the next launch replaced `self._proc`, orphaning a
+    # process that could hold ~20 GB of VRAM with nothing left able to stop it). Bounded and kept
+    # on its OWN channel, like `reuse_refusals` above, and for the same reason: this is bookkeeping
+    # about a PRIOR attempt, not a failure of the CURRENT one, so it must not feed
+    # `n_server_failures` and flip a liveness gate for a run whose eventual server is healthy.
+    orphaned_child_cleanups: list = field(default_factory=list)
     # ...and the same declared-vs-actual treatment for WHICH MODEL is loaded (2026-07-28). Added
     # with the generator switch: `repo_substr` is our INTENT, and a stale server from the previous
     # pin satisfied every prior reuse condition, so the witness could report gemma while the run
@@ -5531,6 +5540,9 @@ class LocalGGUFProposer:
             # the launch used -- see `LocalGGUFProposer.__post_init__`. Empty in the normal case.
             "generator_ffn_cpu_layers": int(self.ffn_cpu_layers),
             "generator_ffn_cpu_layers_refit_note": str(self.ffn_cpu_layers_refit_note),
+            # A prior launch attempt's child that this instance had to stop itself, so the leak
+            # is visible in the artifact rather than only in `nvidia-smi` on the host.
+            "generator_orphaned_child_cleanups": list(self.orphaned_child_cleanups),
         }
 
     def _record_completion_diagnostics(self, response: dict) -> None:
@@ -5901,6 +5913,44 @@ class LocalGGUFProposer:
         self.reuse_n_ctx_check = f"refused_smaller_pool observed={observed} want={self.n_ctx}"
         return False
 
+    def _terminate_stale_proc(self, reason: str) -> None:
+        """Terminate whatever `self._proc` currently holds, if it is still alive, then clear it.
+
+        THE LEAK THIS CLOSES (2026-08-08 review finding 4). `_ensure_server` had two places that
+        replace `self._proc` -- the fresh Popen after a wait-exhaustion timeout, and the fresh
+        Popen after refusing to reuse an already-running server on our port -- and neither one
+        stopped the PREVIOUS child first. `stop()` can only ever terminate whatever `self._proc`
+        currently points at, so the instant it was reassigned the earlier process became
+        unreachable by any cleanup path this class has, and kept running (and holding its VRAM)
+        until something outside this process noticed and killed it by hand. Calling this right
+        before every such reassignment, and once more on the wait-exhaustion return itself, means
+        a live child is never dropped without first being asked (then told) to exit.
+
+        SIGTERM first, like `stop()` already uses, so a graceful shutdown is always tried first;
+        a short wait; SIGKILL only if it refuses to die within that wait. A cleanup step must
+        never itself take down the launch it is protecting, so every failure mode here is caught
+        and folded into the diagnostic instead of raised.
+        """
+        proc = self._proc
+        self._proc = None
+        if proc is None or proc.poll() is not None:
+            return  # never launched, or already exited on its own -- nothing to clean up
+        diagnostic = f"{reason} (pid={getattr(proc, 'pid', '?')}, port={self.port})"
+        try:
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    diagnostic += "; did not exit even after kill()"
+        except Exception as exc:  # cleanup must never crash the launch it is protecting
+            diagnostic += f"; termination raised {exc!r}"
+        if len(self.orphaned_child_cleanups) < 24:
+            self.orphaned_child_cleanups.append(diagnostic[:400])
+
     def _ensure_server(self) -> bool:
         if self._healthy():
             if self._reusable():
@@ -6066,6 +6116,11 @@ class LocalGGUFProposer:
         except OSError:
             self._stderr_log_path = None
             _err_sink = subprocess.DEVNULL
+        # A live child from an earlier launch attempt on this instance (still loading past a
+        # prior wait budget, or refused above for reuse) is about to be dropped by the assignment
+        # below. Stop it first -- see `_terminate_stale_proc` for why an unreferenced live server
+        # is worse than a failed launch.
+        self._terminate_stale_proc("terminated before launching a replacement llama-server")
         self.last_launch_argv = tuple(args)
         self._proc = subprocess.Popen(
             args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
@@ -6077,6 +6132,12 @@ class LocalGGUFProposer:
                 self._verify_mtp_engaged()
                 return True
             time.sleep(2)
+        # WAIT EXHAUSTED: the server never answered /health in time. It may still be loading, or
+        # it may be permanently stuck -- either way, returning failure here used to leave it
+        # running, referenced only by `self._proc`, one call away from being silently orphaned
+        # the next time this method Popens a replacement. Stop it now instead of hoping a later
+        # call remembers to.
+        self._terminate_stale_proc("terminated: never became healthy within the wait budget")
         return False
 
     # The POSITIVE marker llama.cpp prints when `--spec-type draft-mtp` is genuinely wired up. Read
