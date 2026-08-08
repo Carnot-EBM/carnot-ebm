@@ -8846,6 +8846,22 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
         "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Independent drift, NOT caused by REQ-ARC-WMTE-6229: the conductor's own concurrent REQ-ARC-WMTE-6213 work (commits 82d658de95 / 1754910e0f, 'Default-off transition-aware ARC object representation wiring') landed while this fix was in progress, changing arc_executable_world_model.py's hash independently. Reachability re-verified against the CURRENT file: this artifact's own scripts import only change_gate_decision, collect_transitions, E3_DIR, load_engine, logical_hud_mask, WorldModelVerifier (or, for the inducer head-to-head, read completed historical run transcripts rather than re-invoking the module) -- none of which the conductor's addition (_object_delta_perception_block + its one call site in induce_prompt, gated behind the separate, still-default-off CARNOT_ARC_OBJECT_DELTA_PERCEPTION) touches.",
+        "evidence": "Grep: `grep -oE 'e3\\.[A-Za-z_]+|_e3prov\\.[A-Za-z_]+' <script>` on each of experiment_6011/6012/6013's own source -> change_gate_decision, collect_transitions, E3_DIR, load_engine, logical_hud_mask, WorldModelVerifier, and three SUBMITTED_WORLD_MODEL_*_ENABLED constants -- unchanged by the conductor's addition. experiment_6021 carries the same 17+ prior acknowledgements on this exact path with the same 'reads completed run transcripts, does not re-invoke the module' argument."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "sha256_now": "c4b142e5ae099329fa43e4eba443c8e5dbb1a3b7bc60b138cb5e715a2fc5f9a9",
+        "acknowledged_on": "2026-08-08",
+        "reason": "REQ-ARC-WMTE-6229 (2026-08-08), second-dependency pass: this artifact declares BOTH arc_competition_agent.py and arc_executable_world_model.py as dependencies; this entry covers the arc_competition_agent.py side (the other is acknowledged separately). Same reachability argument as the 6223-6226 acknowledgement passes: bounded re-induction is gated off by default (CARNOT_ARC_BOUNDED_REINDUCTION unset in this artifact's rebuild path), and the always-on liveness-witness diagnostic fields are read-only additions.",
+        "evidence": "See the sibling acknowledgement entry for this same path (different sha256_was/now pair) for the full grep-based reachability evidence; this entry covers the second declared dependency only."
       }
     ]
   },
