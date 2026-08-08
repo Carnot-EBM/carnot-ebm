@@ -103,6 +103,14 @@ SERVER_PORT = 8940  # non-default, avoids colliding with any conductor-owned war
 # value results/experiment_6091_refine_engine_visible_ab.json's completed rerun (this session)
 # measured as non-truncating for gemma at this budget class.
 SHARED_MAX_TOKENS = 16384
+# HTTP timeout per induce attempt, in seconds. `LocalGGUFProposer.timeout` is a plain dataclass
+# field (default 300s) -- it does NOT read CARNOT_ARC_INDUCE_TIMEOUT, that is a separate,
+# unrelated helper used by other call sites. An env var alone does nothing here; this value
+# must be passed explicitly to the constructor. 300s x 2 retry attempts is why every think-arm
+# row in the first two runs of this experiment timed out at ~600s even after CARNOT_ARC_INDUCE_
+# TIMEOUT=1500 was set on the process -- the override never reached this field. 1500 gives a
+# full 16384-token think-mode completion (~800s at ~20 tok/s single-card decode) real headroom.
+INDUCE_TIMEOUT_S = 1500
 REASONING_TAGS = ("<think", "</think", "<thinking", "<reasoning")
 
 MODEL_SPECS = [
@@ -451,6 +459,7 @@ def build_artifact(*, roster: tuple[str, ...] = DEFAULT_ROSTER, root: Path = REP
         kv_quant="q8_0",
         max_tokens=SHARED_MAX_TOKENS,
         no_think_prefix="",
+        timeout=INDUCE_TIMEOUT_S,
     )
     try:
         server_up = prop._ensure_server()
