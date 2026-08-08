@@ -991,6 +991,115 @@ matches the normalized payload.
 |---|---|---|
 | REQ-INFRA-6198 | `python/carnot/experiment_6198_v537_post_marker_source_scope_audit.py`; terminal artifact `results/experiment_6198_v537_post_marker_source_scope_audit.json`. | `tests/python/test_experiment_6198_v537_post_marker_source_scope_audit.py`. |
 
+## REQ-INFRA-6211: V538 Source Delta And ARC Causal Preregistration SHALL Be Strictly Post-Marker And Nonmutating
+
+Carnot SHALL build Exp6211 as a deterministic V538 source-delta and ARC
+causal-scope preregistration audit. The audit SHALL hash the exact
+`<!-- V538-PLANNER-REFRESH-20260807-END -->` marker, search only a window
+strictly after that marker, and reject planning-time ARCANA, Cost-Effective
+Agent Harnesses, Hyper-SET, audited skill-graph, Extropic, Kona, KAN,
+Hugging Face, GitHub, EBT, and ARM-EBM findings as runtime deltas unless a
+new dated reproducible record changes a V538 method or gate.
+
+Exp6211 SHALL record receipts for all named source channels even when a
+channel is unavailable, returns zero records, or returns only duplicate or
+pre-marker evidence. It SHALL deduplicate candidates against both discovered
+rows and existing `research-references.md` text before any append. If
+`accepted_count` is 0, `research-references.md` SHALL remain byte-identical
+and `honest_verdict` SHALL start with `complete_null:`.
+
+Exp6211 SHALL audit `research-roadmap.yaml` without changing it. It SHALL use
+`Roadmap`, `scripts/exclusion_manifest_lint.py`, and
+`scripts/audit_roadmap_gates.py`, then mechanically verify model routing,
+prompt endings, prior-failure records, retired dependency absence, active
+hardware boundaries, phase counts, the ARC task count, and the continuous
+self-learning slot count. `retired_scope_match_count` SHALL be the bare
+integer 0 when no hard retired-scope exposure is present.
+
+Exp6211 SHALL freeze the ARC A/B causal contracts before live measurement.
+The machine-readable contract SHALL define treatment activation, A/A noise
+floor, matched budget, matched game/seed controls, per-game losses, forbidden
+source/BFS/adapter/hidden-state/registry access, no solve claim, registry hash
+nonmutation, and allowed outcome vocabulary. A missing or permissive causal
+contract SHALL make the artifact invalid.
+
+The Exp6211 artifact SHALL be written atomically to
+`results/experiment_6211_v538_post_marker_source_scope_prereg.json`. Its
+`inference_substrate` SHALL be exactly
+`post_marker_source_ingestion_and_arc_causal_preregistration`,
+`verifier_is_oracle` SHALL be false, and every required field SHALL have a
+field-principle entry.
+
+The Exp6211 artifact SHALL include these required fields: `status`,
+`planner_marker_and_hash`, `query_window`, `source_channel_receipts`,
+`discovered_candidates`, `accepted_findings`,
+`rejected_or_duplicate_findings`, `accepted_count`,
+`references_append_receipt`, `roadmap_path_and_hash`,
+`roadmap_schema_result`, `exclusion_manifest_lint_result`,
+`retired_scope_match_count`, `prior_failure_contract_result`,
+`gate_structure_result`, `model_specs_rule_result`, `task_count`,
+`phase_counts`, `arc_task_count`, `continuous_self_learning_slot_count`,
+`hardware_boundary_result`, `arc_outcome_vocabulary`,
+`matched_control_contract`, `no_solve_and_registry_nonmutation_contract`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6211-1: V538 Marker Bounds Runtime Evidence
+GIVEN the sealed V538 planner refresh marker in `research-references.md`
+WHEN Exp6211 ingests source receipts and candidates
+THEN it records the marker text, marker hash, reference hash, exclusive start
+timestamp, and rejects every candidate dated at or before the marker.
+
+### SCENARIO-INFRA-6211-2: Duplicate Or Null Source Search Preserves References
+GIVEN every discovered source is pre-marker, duplicate, secondary-only,
+endpoint-failed, or already present in `research-references.md`
+WHEN Exp6211 writes its artifact
+THEN `accepted_count` is the bare integer 0, `accepted_findings` is empty,
+`research-references.md` is byte-identical before and after, and every named
+source channel still has a receipt.
+
+### SCENARIO-INFRA-6211-3: Accepted Findings Require Strict Date, Novelty, And Scope Safety
+GIVEN a candidate has a source date equal to the marker timestamp, a bare
+same-day date, a duplicate ID or content hash, existing reference text, a
+retired-scope conflict, or no method/gate applicability
+WHEN Exp6211 classifies candidates
+THEN it rejects or guards the candidate before any references append. Only a
+primary or first-party candidate dated strictly after the V538 marker with no
+retirement conflict and new V538 applicability may be accepted.
+
+### SCENARIO-INFRA-6211-4: Roadmap Counts And Contracts Are Mechanical
+GIVEN the V538 active roadmap has fourteen tasks
+WHEN Exp6211 audits schema, exclusions, prior failures, gates, prompts, model
+rules, phase counts, ARC tasks, CSL slots, and hardware boundaries
+THEN it reports clean schema, gate, exclusion, model, and prior-failure
+results, exact phase counts, four ARC A/B tasks, one continuous self-learning
+slot, and no unauthorized hardware promotion.
+
+### SCENARIO-INFRA-6211-5: ARC Causal Contracts Fail Closed
+GIVEN the four operator-authorized ARC A/Bs have not run live measurement
+WHEN Exp6211 validates the preregistration artifact
+THEN it requires the frozen outcome vocabulary, treatment-fire gate, A/A noise
+floor, matched game/seed/budget controls, per-game-loss reporting, no-solve
+boundary, forbidden-access counts, and registry hash before/after
+nonmutation contract.
+
+### SCENARIO-INFRA-6211-6: Exp6211 Artifact Schema Is Machine-Checkable
+GIVEN source receipts, roadmap audits, causal contracts, command receipts, and
+protected-file hashes
+WHEN Exp6211 validates the artifact
+THEN every required field is present, every required field has provenance and
+a principle, `verifier_is_oracle=false`, the inference substrate is exactly
+`post_marker_source_ingestion_and_arc_causal_preregistration`, and the
+checksum matches the normalized payload.
+
+## Implementation Status (REQ-INFRA-6211)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6211 | `python/carnot/experiment_6211_v538_post_marker_source_scope_prereg.py`; terminal artifact `results/experiment_6211_v538_post_marker_source_scope_prereg.json`. | `tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
