@@ -33035,3 +33035,108 @@ Intelligence's Kona pages. Sources already indexed above were not re-added.
   TSU/Kona execution, and new KAN training deferred behind those cheaper gates.
 
 <!-- V537-PLANNER-REFRESH-20260807-END -->
+
+## V538 Planner Refresh (2026-08-07, after milestone 2026.08.537)
+
+This refresh was completed before drafting milestone `2026.08.538`. It
+searched arXiv across EBM reasoning, neural constraint solving, Ising and
+probabilistic sampling, hallucination verification, KANs, constrained
+generation, hardware sampling, and continual learning. It then checked ICLR
+2026 OpenReview results, Hugging Face Papers, Semantic Scholar citation trails
+for EBT (`2507.02092`) and ARM-EBM (`2512.15605`), Extropic's first-party
+writing index, targeted GitHub/project pages, and Logical Intelligence's Kona
+pages. Source claims remain hypotheses until Carnot reproduces them locally.
+
+### Promoted: object-grounded and budget-aware reasoning loops
+
+- **ARCANA: A Reflective Multi-Agent Program Synthesis Framework for
+  ARC-AGI-2 Reasoning** - arXiv:2607.09059,
+  https://arxiv.org/abs/2607.09059. ARCANA separates object-centric scene-graph
+  perception, program hypotheses, symbolic execution, and failure-driven
+  reflection. Carnot hook: complete the operator-directed object-perception
+  lever with per-transition object deltas, translation-invariant identity
+  tracking, and HUD-strip rejection, then measure that representation through
+  the canonical live E3 path. ARCANA is a static ARC-AGI-2 result; it does not
+  authorize importing task solutions, adapters, source access, or solve credit.
+- **Cost-Effective Agent Harnesses for Abstract Reasoning and Generalization
+  on ARC-AGI-1** - arXiv:2607.06764,
+  https://arxiv.org/abs/2607.06764. The paper separates pattern exploration
+  from executable definition, reports generation-bound rather than
+  selection-bound behavior, and finds a measurable think-tool ablation under a
+  fixed budget. Carnot hook: pre-register the local Gemma-4-31B `/think` A/B
+  against `/no_think`, keep the executable replay verifier fixed, and report
+  quality together with tokens, wall time, and harmful regressions. Its static
+  ARC-AGI-1 numbers are not evidence for the interactive ARC-AGI-3 live path.
+- **Do Coding Agents Need Executable World Models, Simplification, and
+  Verification to Solve ARC-AGI-3?** - arXiv:2607.15439,
+  https://arxiv.org/abs/2607.15439. This already-indexed nested ablation remains
+  the closest causal template for Carnot's newly shipped trajectory transfer
+  and budget-aware search switches. Carnot hook for V538: use matched seeds,
+  identical budgets, explicit fire counts, exact observation replay, and
+  deletion-style attribution before any default flip.
+
+### Promoted: energy recurrence and auditable continuous learning
+
+- **Hyper-SET: Designing Transformers via Hyperspherical Energy
+  Minimization** - arXiv:2502.11646 and ICLR 2026 OpenReview poster,
+  https://arxiv.org/abs/2502.11646 and
+  https://openreview.net/forum?id=FinhjyDgYA. Hyper-SET derives recurrent
+  attention, feed-forward updates, and normalization from constrained energy
+  minimization and reports test-time iteration extrapolation on Sudoku.
+  Carnot hook: retain energy monotonicity and train-short/test-long iteration
+  curves as future Phase-3 comparators. Do not start a new training track in
+  V538 while the live ARC levers and local flagship runtime remain unmeasured.
+- **Audited Skill-Graph Self-Improvement for Agentic LLMs via Verifiable
+  Rewards, Experience Synthesis, and Continual Memory** - arXiv:2512.23760,
+  https://arxiv.org/abs/2512.23760. The paper treats self-improvement as
+  promotion of interface-bounded skills after verifier-backed replay and
+  contract checks, with reconstructible rewards and rollback. Carnot hook:
+  test continuous constraint learning as append-only procedural skill
+  promotion on a sealed stream, with read-only decision snapshots, exact
+  verifier receipts, retention, negative-transfer, quarantine, and rollback.
+  This supports FR-11 without mutable GGUF weights or decision-time writes.
+
+### Source checks with no new executable promotion
+
+- **Semantic Scholar:** the current pass returned 32 EBT citations and 8
+  ARM-EBM citations. Newest relevant entries included Explorative Modeling,
+  Fixed-Point Reasoners, LoopUS, world-model failure diagnostics, safe
+  distillation, and Distributional EBMs; all were already indexed before this
+  refresh or did not clear a nearer Carnot gate. Citation counts are discovery
+  receipts, not evidence quality.
+- **Hugging Face Papers:** LLM-as-a-Verifier (`2607.05391`), SEVRA
+  (`2606.19808`), VeRA (`2602.13217`), and V_1 (`2603.04304`) remain the useful
+  current comparators. Their lessons are already represented by probabilistic
+  scoring controls, harmful-intervention accounting, executable validators,
+  and uncertainty-aware allocation; none reopens the retired external-text
+  scorer lane.
+- **Extropic and hardware:** Extropic's current writing index still ends with
+  its October 2025 X0/XTR-0 and TSU explainers. It exposes THRML simulation but
+  no authenticated Carnot device route. No physical TSU, latency, power, or
+  hardware-speed claim is schedulable. The local GateMate branch also lacks a
+  new dated physical receipt, so V538 must not repeat the cached presence audit.
+- **Kona, KAN, and GitHub:** Kona's first-party pages still offer product and
+  Sudoku claims without public weights or a reproducible local API. The KAN
+  sweep found no result that supersedes Carnot's completed verifier work;
+  `All-KAN` is a useful index, not a reason to reopen a retired comparison.
+  Targeted GitHub search found ARC harnesses and paper repositories, but no
+  dependency that supersedes Carnot's canonical live agent, exact replay
+  boundary, GGUF runtime, or sampler ABI.
+
+### V538 planning impact
+
+- Make the operator-authorized ARC levers the measured center of the milestone:
+  finish object-delta perception, then run independent matched A/Bs for object
+  perception, trajectory transfer, budget-aware search, and Gemma-4-31B
+  thinking before testing combinations.
+- Repair the Exp6200 model-load/runtime admission failure before any new Phase-D
+  or LLM-seeded continual-learning generation. Do not rerun the 18-cell code
+  canary unchanged.
+- Keep continuous self-learning independent of GPU availability by using a
+  sealed, verifier-labeled constraint stream and append-only procedural skills.
+  Promotion must pass replay, retention, negative-transfer, quarantine, and
+  rollback checks.
+- Preserve hardware continuity as a documented blocked boundary only. Do not
+  spend an experiment on GateMate until a new physical-state receipt exists.
+
+<!-- V538-PLANNER-REFRESH-20260807-END -->
