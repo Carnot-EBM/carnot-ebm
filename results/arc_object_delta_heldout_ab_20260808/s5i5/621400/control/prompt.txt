@@ -1,0 +1,250 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 's5i5'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [2, 3, 4, 5, 11, 13, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/s5i5/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x64
+r1:5x64
+r2:5x64
+r3:5x64
+r4:5x64
+r5:5x64
+r6:5x64
+r7:5x64
+r8:5x64
+r9:5x27,3x1,14x8,5x16,13x1,5x11
+r10:5x27,3x1,14x6,13x1,14x1,5x15,13x1,5x1,13x1,5x10
+r11:5x27,3x1,14x8,5x16,13x1,5x11
+r12:5x64
+r13:5x64
+r14:5x64
+r15:5x64
+r16:5x64
+r17:5x64
+r18:5x36,2x13,5x15
+r19:5x36,2x1,4x5,3x1,4x5,2x1,5x15
+r20:5x36,2x1,4x1,14x3,4x1,3x1,4x1,14x3,4x1,2x1,5x15
+r21:5x36,2x1,4x1,14x1,4x3,3x1,4x3,14x1,4x1,2x1,5x15
+r22:5x36,2x1,4x1,14x3,4x1,3x1,4x1,14x3,4x1,2x1,5x15
+r23:5x36,2x1,4x5,3x1,4x5,2x1,5x15
+r24:5x36,2x13,5x15
+r25:5x64
+r26:5x64
+r27:5x9,3x3,5x52
+r28:5x9,11x3,5x52
+r29:5x9,11x3,5x52
+r30:5x9,11x3,5x52
+r31:5x9,11x3,5x52
+r32:5x9,11x3,5x52
+r33:5x9,11x3,5x52
+r34:5x9,11x1,13x1,11x1,5x52
+r35:5x9,11x3,5x9,2x7,5x36
+r36:5x21,2x1,4x5,2x1,5x36
+r37:5x21,2x1,4x1,11x3,4x1,2x1,5x36
+r38:5x21,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r39:5x21,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r40:5x21,2x1,4x5,2x1,5x36
+r41:5x21,2x1,3x5,2x1,5x36
+r42:5x21,2x1,4x5,2x1,5x36
+r43:5x21,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r44:5x21,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r45:5x21,2x1,4x1,11x3,4x1,2x1,5x36
+r46:5x21,2x1,4x5,2x1,5x36
+r47:5x21,2x7,5x36
+r48:5x64
+r49:5x64
+r50:5x64
+r51:5x10,13x1,5x53
+r52:5x9,13x1,5x1,13x1,5x52
+r53:5x10,13x1,5x53
+r54:5x64
+r55:5x64
+r56:5x64
+r57:5x64
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:3x63,4x1
+--- ACTION6 data={'x': 48, 'y': 21} (level 0->0): changed cells (FULL, run-length) = r9c36:14x3 r10c34:14x1 r10c36:14x1,13x1,14x1 r11c36:14x3 r63c61:4x2
+--- ACTION6 data={'x': 48, 'y': 21} (level 0->0): changed cells (FULL, run-length) = r9c39:14x3 r10c37:14x1 r10c39:14x1,13x1,14x1 r11c39:14x3 r63c60:4x1
+--- ACTION6 data={'x': 48, 'y': 21} (level 0->0): changed cells (FULL, run-length) = r9c42:14x3 r10c40:14x1 r10c42:14x1,13x1,14x1 r11c42:14x3 r63c59:4x1
+--- ACTION6 data={'x': 48, 'y': 21} (level 0->0): changed cells (FULL, run-length) = r9c45:14x3 r10c43:14x1 r10c45:14x1,13x1,14x1 r11c45:14x3 r63c58:4x1
+--- ACTION6 data={'x': 48, 'y': 21} (level 0->0): changed cells (FULL, run-length) = r9c48:14x3 r10c46:14x1 r10c48:14x1,13x1,14x1 r11c48:14x3 r63c56:4x2
+--- ACTION6 data={'x': 48, 'y': 21} (level 0->0): changed cells (FULL, run-length) = r9c51:14x1 r9c53:14x1 r10c49:14x1 r10c52:13x1 r11c51:14x1 r11c53:14x1 r63c55:4x1
+--- ACTION6 data={'x': 24, 'y': 47} (level 0->0): changed cells (FULL, run-length) = r34c10:11x1 r36c9:11x3 r37c9:11x1,13x1,11x1 r38c9:11x3 r63c54:4x1
+--- ACTION6 data={'x': 24, 'y': 47} (level 0->0): changed cells (FULL, run-length) = r37c10:11x1 r39c9:11x3 r40c9:11x1,13x1,11x1 r41c9:11x3 r63c52:4x2
+--- ACTION6 data={'x': 24, 'y': 47} (level 0->0): changed cells (FULL, run-length) = r40c10:11x1 r42c9:11x3 r43c9:11x1,13x1,11x1 r44c9:11x3 r63c51:4x1
+--- ACTION6 data={'x': 24, 'y': 47} (level 0->0): changed cells (FULL, run-length) = r43c10:11x1 r45c9:11x3 r46c9:11x1,13x1,11x1 r47c9:11x3 r63c50:4x1
+WIN TRANSITION (this is how the level was completed): applying ACTION6 data={'x': 24, 'y': 47} to the grid below completed the level (level 0->1).
+CONSTRAINT: is_level_complete(engine(GRID_BELOW, 6, data)) must return True.
+Do NOT assume the rendered next frame is the win state -- the completing action also re-lays out the board for the next level, so the completed configuration of THIS level is never drawn. Reason about what the winning move accomplishes, not about how the following screen looks.
+GRID BEFORE THE COMPLETING ACTION (run-length encoded):
+r0:5x64
+r1:5x64
+r2:5x64
+r3:5x64
+r4:5x64
+r5:5x64
+r6:5x64
+r7:5x64
+r8:5x64
+r9:5x27,3x1,14x24,13x1,14x1,5x10
+r10:5x27,3x1,14x23,13x3,5x10
+r11:5x27,3x1,14x24,13x1,14x1,5x10
+r12:5x64
+r13:5x64
+r14:5x64
+r15:5x64
+r16:5x64
+r17:5x64
+r18:5x36,2x13,5x15
+r19:5x36,2x1,4x5,3x1,4x5,2x1,5x15
+r20:5x36,2x1,4x1,14x3,4x1,3x1,4x1,14x3,4x1,2x1,5x15
+r21:5x36,2x1,4x1,14x1,4x3,3x1,4x3,14x1,4x1,2x1,5x15
+r22:5x36,2x1,4x1,14x3,4x1,3x1,4x1,14x3,4x1,2x1,5x15
+r23:5x36,2x1,4x5,3x1,4x5,2x1,5x15
+r24:5x36,2x13,5x15
+r25:5x64
+r26:5x64
+r27:5x9,3x3,5x52
+r28:5x9,11x3,5x52
+r29:5x9,11x3,5x52
+r30:5x9,11x3,5x52
+r31:5x9,11x3,5x52
+r32:5x9,11x3,5x52
+r33:5x9,11x3,5x52
+r34:5x9,11x3,5x52
+r35:5x9,11x3,5x9,2x7,5x36
+r36:5x9,11x3,5x9,2x1,4x5,2x1,5x36
+r37:5x9,11x3,5x9,2x1,4x1,11x3,4x1,2x1,5x36
+r38:5x9,11x3,5x9,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r39:5x9,11x3,5x9,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r40:5x9,11x3,5x9,2x1,4x5,2x1,5x36
+r41:5x9,11x3,5x9,2x1,3x5,2x1,5x36
+r42:5x9,11x3,5x9,2x1,4x5,2x1,5x36
+r43:5x9,11x3,5x9,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r44:5x9,11x3,5x9,2x1,4x1,11x1,4x1,11x1,4x1,2x1,5x36
+r45:5x9,11x3,5x9,2x1,4x1,11x3,4x1,2x1,5x36
+r46:5x9,11x3,5x9,2x1,4x5,2x1,5x36
+r47:5x9,11x3,5x9,2x7,5x36
+r48:5x9,11x3,5x52
+r49:5x9,11x1,13x1,11x1,5x52
+r50:5x9,11x3,5x52
+r51:5x10,13x1,5x53
+r52:5x9,13x1,5x1,13x1,5x52
+r53:5x10,13x1,5x53
+r54:5x64
+r55:5x64
+r56:5x64
+r57:5x64
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:3x49,4x15
+OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):
+INITIAL OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj0: color=5 bbox=(0, 0, 62, 63) px=3786 centroid=(31.1,31.6) shape=3d2ed7160efe2fa2
+  obj29: color=3 bbox=(63, 0, 63, 62) px=63 centroid=(63.0,31.0) shape=b361413a1cc7ff34
+  obj9: color=2 bbox=(18, 36, 24, 48) px=36 centroid=(21.0,42.0) shape=61cb152545beb2f9
+  obj18: color=2 bbox=(35, 21, 47, 27) px=36 centroid=(41.0,24.0) shape=3059cb54f20dca52
+  obj2: color=14 bbox=(9, 28, 11, 35) px=23 centroid=(10.0,31.4) shape=71636b2842df4b95
+  obj16: color=11 bbox=(28, 9, 35, 11) px=23 centroid=(31.4,10.0) shape=2e86214327d94acb
+  obj10: color=4 bbox=(19, 37, 23, 41) px=18 centroid=(21.0,39.1) shape=d0c7f782570e4c35
+  obj12: color=4 bbox=(19, 43, 23, 47) px=18 centroid=(21.0,44.9) shape=9b75feb013184053
+  obj19: color=4 bbox=(36, 22, 40, 26) px=18 centroid=(38.1,24.0) shape=f848532c687d17ee
+  obj22: color=4 bbox=(42, 22, 46, 26) px=18 centroid=(43.9,24.0) shape=831cc6a3d182474d
+  obj13: color=14 bbox=(20, 38, 22, 40) px=7 centroid=(21.0,38.9) shape=dc97c31231c94fc2
+  obj14: color=14 bbox=(20, 44, 22, 46) px=7 centroid=(21.0,45.1) shape=91fc627444676a69
+  obj20: color=11 bbox=(37, 23, 39, 25) px=7 centroid=(37.9,24.0) shape=87d9784ea16af9dd
+  obj23: color=11 bbox=(43, 23, 45, 25) px=7 centroid=(44.1,24.0) shape=22dcb5e0a6a050b4
+  obj11: color=3 bbox=(19, 42, 23, 42) px=5 centroid=(21.0,42.0) shape=6621af166a4a928a
+  obj21: color=3 bbox=(41, 22, 41, 26) px=5 centroid=(41.0,24.0) shape=ee297416a5519125
+  obj1: color=3 bbox=(9, 27, 11, 27) px=3 centroid=(10.0,27.0) shape=a65619e0ca7f0927
+  obj15: color=3 bbox=(27, 9, 27, 11) px=3 centroid=(27.0,10.0) shape=8683bbee3e68cc39
+  obj3: color=13 bbox=(9, 52, 9, 52) px=1 centroid=(9.0,52.0) shape=f180422627aaa852
+  obj4: color=13 bbox=(10, 34, 10, 34) px=1 centroid=(10.0,34.0) shape=f180422627aaa852
+  obj5: color=13 bbox=(10, 51, 10, 51) px=1 centroid=(10.0,51.0) shape=f180422627aaa852
+  obj6: color=5 bbox=(10, 52, 10, 52) px=1 centroid=(10.0,52.0) shape=e5d99bf73c2dd477
+  obj7: color=13 bbox=(10, 53, 10, 53) px=1 centroid=(10.0,53.0) shape=f180422627aaa852
+  obj8: color=13 bbox=(11, 52, 11, 52) px=1 centroid=(11.0,52.0) shape=f180422627aaa852
+  obj17: color=13 bbox=(34, 10, 34, 10) px=1 centroid=(34.0,10.0) shape=f180422627aaa852
+  obj24: color=13 bbox=(51, 10, 51, 10) px=1 centroid=(51.0,10.0) shape=f180422627aaa852
+  obj25: color=13 bbox=(52, 9, 52, 9) px=1 centroid=(52.0,9.0) shape=f180422627aaa852
+  obj26: color=5 bbox=(52, 10, 52, 10) px=1 centroid=(52.0,10.0) shape=e5d99bf73c2dd477
+  obj27: color=13 bbox=(52, 11, 52, 11) px=1 centroid=(52.0,11.0) shape=f180422627aaa852
+  obj28: color=13 bbox=(53, 10, 53, 10) px=1 centroid=(53.0,10.0) shape=f180422627aaa852
+  obj30: color=4 bbox=(63, 63, 63, 63) px=1 centroid=(63.0,63.0) shape=37498db7511152b7
+  containment (parent->children): {0: [1, 2, 3, 5, 6, 7, 8, 9, 15, 16, 18, 24, 25, 26, 27, 28], 2: [4], 9: [10, 11, 12], 10: [13], 12: [14], 16: [17], 18: [19, 21, 22], 19: [20], 22: [23]}
+  adjacency (touching id pairs): [[0, 1], [0, 2], [0, 3], [0, 5], [0, 7], [0, 8], [0, 9], [0, 15], [0, 16], [0, 18], [0, 24], [0, 25], [0, 27], [0, 28], [0, 29], [0, 30], [1, 2], [2, 4], [3, 6], [5, 6], [6, 7], [6, 8], [9, 10], [9, 11], [9, 12], [10, 11], [10, 13], [11, 12], [12, 14], [15, 16], [16, 17], [18, 19], [18, 21], [18, 22], [19, 20], [19, 21], [21, 22], [22, 23], [24, 26], [25, 26], [26, 27], [26, 28], [29, 30]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+
+BOARD BEFORE THE COMPLETING ACTION OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj0: color=5 bbox=(0, 0, 62, 63) px=3692 centroid=(31.3,31.7) shape=d01306b10b804776
+  obj2: color=14 bbox=(9, 28, 11, 51) px=71 centroid=(10.0,39.3) shape=a43cda8ec004468f
+  obj13: color=11 bbox=(28, 9, 50, 11) px=68 centroid=(38.9,10.0) shape=1799f01a1d4b717f
+  obj26: color=3 bbox=(63, 0, 63, 48) px=49 centroid=(63.0,24.0) shape=6996956b19ea081f
+  obj6: color=2 bbox=(18, 36, 24, 48) px=36 centroid=(21.0,42.0) shape=61cb152545beb2f9
+  obj14: color=2 bbox=(35, 21, 47, 27) px=36 centroid=(41.0,24.0) shape=3059cb54f20dca52
+  obj7: color=4 bbox=(19, 37, 23, 41) px=18 centroid=(21.0,39.1) shape=d0c7f782570e4c35
+  obj9: color=4 bbox=(19, 43, 23, 47) px=18 centroid=(21.0,44.9) shape=9b75feb013184053
+  obj15: color=4 bbox=(36, 22, 40, 26) px=18 centroid=(38.1,24.0) shape=f848532c687d17ee
+  obj18: color=4 bbox=(42, 22, 46, 26) px=18 centroid=(43.9,24.0) shape=831cc6a3d182474d
+  obj27: color=4 bbox=(63, 49, 63, 63) px=15 centroid=(63.0,56.0) shape=8f601a25f8119ab2
+  obj10: color=14 bbox=(20, 38, 22, 40) px=7 centroid=(21.0,38.9) shape=dc97c31231c94fc2
+  obj11: color=14 bbox=(20, 44, 22, 46) px=7 centroid=(21.0,45.1) shape=91fc627444676a69
+  obj16: color=11 bbox=(37, 23, 39, 25) px=7 centroid=(37.9,24.0) shape=87d9784ea16af9dd
+  obj19: color=11 bbox=(43, 23, 45, 25) px=7 centroid=(44.1,24.0) shape=22dcb5e0a6a050b4
+  obj3: color=13 bbox=(9, 51, 11, 53) px=5 centroid=(10.0,52.0) shape=5f4693b75debb4a6
+  obj8: color=3 bbox=(19, 42, 23, 42) px=5 centroid=(21.0,42.0) shape=6621af166a4a928a
+  obj17: color=3 bbox=(41, 22, 41, 26) px=5 centroid=(41.0,24.0) shape=ee297416a5519125
+  obj1: color=3 bbox=(9, 27, 11, 27) px=3 centroid=(10.0,27.0) shape=a65619e0ca7f0927
+  obj12: color=3 bbox=(27, 9, 27, 11) px=3 centroid=(27.0,10.0) shape=8683bbee3e68cc39
+  obj4: color=14 bbox=(9, 53, 9, 53) px=1 centroid=(9.0,53.0) shape=5ca1db6f9f904139
+  obj5: color=14 bbox=(11, 53, 11, 53) px=1 centroid=(11.0,53.0) shape=5ca1db6f9f904139
+  obj20: color=13 bbox=(49, 10, 49, 10) px=1 centroid=(49.0,10.0) shape=f180422627aaa852
+  obj21: color=13 bbox=(51, 10, 51, 10) px=1 centroid=(51.0,10.0) shape=f180422627aaa852
+  obj22: color=13 bbox=(52, 9, 52, 9) px=1 centroid=(52.0,9.0) shape=f180422627aaa852
+  obj23: color=5 bbox=(52, 10, 52, 10) px=1 centroid=(52.0,10.0) shape=e5d99bf73c2dd477
+  obj24: color=13 bbox=(52, 11, 52, 11) px=1 centroid=(52.0,11.0) shape=f180422627aaa852
+  obj25: color=13 bbox=(53, 10, 53, 10) px=1 centroid=(53.0,10.0) shape=f180422627aaa852
+  containment (parent->children): {0: [1, 2, 3, 4, 5, 6, 12, 13, 14, 21, 22, 23, 24, 25], 6: [7, 8, 9], 7: [10], 9: [11], 13: [20], 14: [15, 17, 18], 15: [16], 18: [19]}
+  adjacency (touching id pairs): [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 12], [0, 13], [0, 14], [0, 21], [0, 22], [0, 24], [0, 25], [0, 26], [0, 27], [1, 2], [2, 3], [3, 4], [3, 5], [6, 7], [6, 8], [6, 9], [7, 8], [7, 10], [8, 9], [9, 11], [12, 13], [13, 20], [13, 21], [14, 15], [14, 17], [14, 18], [15, 16], [15, 17], [17, 18], [18, 19], [21, 23], [22, 23], [23, 24], [23, 25], [26, 27]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.

@@ -1,0 +1,604 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'cn04'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 4, 8, 10, 12, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/cn04/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:10x16,4x32,10x16
+r1:10x64
+r2:10x64
+r3:10x64
+r4:10x64
+r5:10x64
+r6:10x64
+r7:10x64
+r8:10x64
+r9:10x64
+r10:10x64
+r11:10x64
+r12:10x64
+r13:10x64
+r14:10x11,0x15,10x38
+r15:10x11,0x15,10x38
+r16:10x11,0x15,10x38
+r17:10x11,0x3,10x9,0x3,10x38
+r18:10x11,0x3,10x9,0x3,10x38
+r19:10x11,0x3,10x9,0x3,10x38
+r20:10x11,0x6,10x3,0x6,10x38
+r21:10x11,0x6,10x3,0x6,10x38
+r22:10x11,0x6,10x3,0x6,10x38
+r23:10x14,0x3,10x3,0x3,10x41
+r24:10x14,0x3,10x3,0x3,10x41
+r25:10x14,0x3,10x3,0x3,10x41
+r26:10x14,0x3,10x3,0x3,10x41
+r27:10x14,0x3,10x3,0x3,10x41
+r28:10x14,0x3,10x3,0x3,10x41
+r29:10x14,8x3,10x3,8x3,10x18,14x9,10x14
+r30:10x14,8x3,10x3,8x3,10x18,14x9,10x14
+r31:10x14,8x3,10x3,8x3,10x18,14x9,10x14
+r32:10x41,14x3,10x3,14x3,10x14
+r33:10x41,14x3,10x3,14x3,10x14
+r34:10x41,14x3,10x3,14x3,10x14
+r35:10x38,8x3,14x3,10x3,14x3,10x14
+r36:10x38,8x3,14x3,10x3,14x3,10x14
+r37:10x38,8x3,14x3,10x3,14x3,10x14
+r38:10x41,14x3,10x3,14x3,10x14
+r39:10x41,14x3,10x3,14x3,10x14
+r40:10x41,14x3,10x3,14x3,10x14
+r41:10x38,8x3,14x3,10x3,14x3,10x14
+r42:10x38,8x3,14x3,10x3,14x3,10x14
+r43:10x38,8x3,14x3,10x3,14x3,10x14
+r44:10x41,14x3,10x3,14x3,10x14
+r45:10x41,14x3,10x3,14x3,10x14
+r46:10x41,14x3,10x3,14x3,10x14
+r47:10x41,14x9,10x14
+r48:10x41,14x9,10x14
+r49:10x41,14x9,10x14
+r50:10x64
+r51:10x64
+r52:10x64
+r53:10x64
+r54:10x64
+r55:10x64
+r56:10x64
+r57:10x64
+r58:10x64
+r59:10x64
+r60:10x64
+r61:10x64
+r62:10x64
+r63:10x64
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c16:0x1 r14c11:10x3 r14c26:0x3 r15c11:10x3 r15c26:0x3 r16c11:10x3 r16c26:0x3 r17c11:10x3,0x3 r17c23:10x3,0x3 r18c11:10x3,0x3 r18c23:10x3,0x3 r19c11:10x3,0x3 r19c23:10x3,0x3 r20c11:10x3 r20c17:0x3,10x3 r20c26:0x3 r21c11:10x3 r21c17:0x3,10x3 r21c26:0x3 r22c11:10x3 r22c17:0x3,10x3 r22c26:0x3 r23c14:10x3,0x3,10x3,0x3 r24c14:10x3,0x3,10x3,0x3 r25c14:10x3,0x3,10x3,0x3 r26c14:10x3,0x3,10x3,0x3 r27c14:10x3,0x3,10x3,0x3 r28c14:10x3,0x3,10x3,0x3 r29c14:10x3,8x3,10x3,8x3 r30c14:10x3,8x3,10x3,8x3 r31c14:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r14c14:10x3 r14c29:0x3 r15c14:10x3 r15c29:0x3 r16c14:10x3 r16c29:0x3 r17c14:10x3,0x3 r17c26:10x3,0x3 r18c14:10x3,0x3 r18c26:10x3,0x3 r19c14:10x3,0x3 r19c26:10x3,0x3 r20c14:10x3 r20c20:0x3,10x3 r20c29:0x3 r21c14:10x3 r21c20:0x3,10x3 r21c29:0x3 r22c14:10x3 r22c20:0x3,10x3 r22c29:0x3 r23c17:10x3,0x3,10x3,0x3 r24c17:10x3,0x3,10x3,0x3 r25c17:10x3,0x3,10x3,0x3 r26c17:10x3,0x3,10x3,0x3 r27c17:10x3,0x3,10x3,0x3 r28c17:10x3,0x3,10x3,0x3 r29c17:10x3,8x3,10x3,8x3 r30c17:10x3,8x3,10x3,8x3 r31c17:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c17:0x1 r14c17:10x3 r14c32:0x3 r15c17:10x3 r15c32:0x3 r16c17:10x3 r16c32:0x3 r17c17:10x3,0x3 r17c29:10x3,0x3 r18c17:10x3,0x3 r18c29:10x3,0x3 r19c17:10x3,0x3 r19c29:10x3,0x3 r20c17:10x3 r20c23:0x3,10x3 r20c32:0x3 r21c17:10x3 r21c23:0x3,10x3 r21c32:0x3 r22c17:10x3 r22c23:0x3,10x3 r22c32:0x3 r23c20:10x3,0x3,10x3,0x3 r24c20:10x3,0x3,10x3,0x3 r25c20:10x3,0x3,10x3,0x3 r26c20:10x3,0x3,10x3,0x3 r27c20:10x3,0x3,10x3,0x3 r28c20:10x3,0x3,10x3,0x3 r29c20:10x3,8x3,10x3,8x3 r30c20:10x3,8x3,10x3,8x3 r31c20:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r14c20:10x3 r14c35:0x3 r15c20:10x3 r15c35:0x3 r16c20:10x3 r16c35:0x3 r17c20:10x3,0x3 r17c32:10x3,0x3 r18c20:10x3,0x3 r18c32:10x3,0x3 r19c20:10x3,0x3 r19c32:10x3,0x3 r20c20:10x3 r20c26:0x3,10x3 r20c35:0x3 r21c20:10x3 r21c26:0x3,10x3 r21c35:0x3 r22c20:10x3 r22c26:0x3,10x3 r22c35:0x3 r23c23:10x3,0x3,10x3,0x3 r24c23:10x3,0x3,10x3,0x3 r25c23:10x3,0x3,10x3,0x3 r26c23:10x3,0x3,10x3,0x3 r27c23:10x3,0x3,10x3,0x3 r28c23:10x3,0x3,10x3,0x3 r29c23:10x3,8x3,10x3,8x3 r30c23:10x3,8x3,10x3,8x3 r31c23:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c18:0x1 r14c23:10x3 r14c38:0x3 r15c23:10x3 r15c38:0x3 r16c23:10x3 r16c38:0x3 r17c23:10x3,0x3 r17c35:10x3,0x3 r18c23:10x3,0x3 r18c35:10x3,0x3 r19c23:10x3,0x3 r19c35:10x3,0x3 r20c23:10x3 r20c29:0x3,10x3 r20c38:0x3 r21c23:10x3 r21c29:0x3,10x3 r21c38:0x3 r22c23:10x3 r22c29:0x3,10x3 r22c38:0x3 r23c26:10x3,0x3,10x3,0x3 r24c26:10x3,0x3,10x3,0x3 r25c26:10x3,0x3,10x3,0x3 r26c26:10x3,0x3,10x3,0x3 r27c26:10x3,0x3,10x3,0x3 r28c26:10x3,0x3,10x3,0x3 r29c26:10x3,8x3,10x3,8x3 r30c26:10x3,8x3,10x3,8x3 r31c26:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r14c26:10x3 r14c41:0x3 r15c26:10x3 r15c41:0x3 r16c26:10x3 r16c41:0x3 r17c26:10x3,0x3 r17c38:10x3,0x3 r18c26:10x3,0x3 r18c38:10x3,0x3 r19c26:10x3,0x3 r19c38:10x3,0x3 r20c26:10x3 r20c32:0x3,10x3 r20c41:0x3 r21c26:10x3 r21c32:0x3,10x3 r21c41:0x3 r22c26:10x3 r22c32:0x3,10x3 r22c41:0x3 r23c29:10x3,0x3,10x3,0x3 r24c29:10x3,0x3,10x3,0x3 r25c29:10x3,0x3,10x3,0x3 r26c29:10x3,0x3,10x3,0x3 r27c29:10x3,0x3,10x3,0x3 r28c29:10x3,0x3,10x3,0x3 r29c29:10x3,8x3,10x3,8x3 r30c29:10x3,8x3,10x3,8x3 r31c29:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r14c29:10x3 r14c44:0x3 r15c29:10x3 r15c44:0x3 r16c29:10x3 r16c44:0x3 r17c29:10x3,0x3 r17c41:10x3,0x3 r18c29:10x3,0x3 r18c41:10x3,0x3 r19c29:10x3,0x3 r19c41:10x3,0x3 r20c29:10x3 r20c35:0x3,10x3 r20c44:0x3 r21c29:10x3 r21c35:0x3,10x3 r21c44:0x3 r22c29:10x3 r22c35:0x3,10x3 r22c44:0x3 r23c32:10x3,0x3,10x3,0x3 r24c32:10x3,0x3,10x3,0x3 r25c32:10x3,0x3,10x3,0x3 r26c32:10x3,0x3,10x3,0x3 r27c32:10x3,0x3,10x3,0x3 r28c32:10x3,0x3,10x3,0x3 r29c32:10x3,8x3,10x3,8x3 r30c32:10x3,8x3,10x3,8x3 r31c32:10x3,8x3,10x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r0c19:0x1 r14c32:10x3 r14c47:0x3 r15c32:10x3 r15c47:0x3 r16c32:10x3 r16c47:0x3 r17c32:10x3,0x3 r17c44:10x3,0x3 r18c32:10x3,0x3 r18c44:10x3,0x3 r19c32:10x3,0x3 r19c44:10x3,0x3 r20c32:10x3 r20c38:0x3,10x3 r20c47:0x3 r21c32:10x3 r21c38:0x3,10x3 r21c47:0x3 r22c32:10x3 r22c38:0x3,10x3 r22c47:0x3 r23c35:10x3,0x3,10x3,0x3 r24c35:10x3,0x3,10x3,0x3 r25c35:10x3,0x3,10x3,0x3 r26c35:10x3,0x3,10x3,0x3 r27c35:10x3,0x3,10x3,0x3 r28c35:10x3,0x3,10x3,0x3 r29c35:10x3,8x3,14x3,8x3 r30c35:10x3,8x3,14x3,8x3 r31c35:10x3,8x3,14x3,8x3
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r14c35:10x3 r14c50:0x3 r15c35:10x3 r15c50:0x3 r16c35:10x3 r16c50:0x3 r17c35:10x3,0x3 r17c47:10x3,0x3 r18c35:10x3,0x3 r18c47:10x3,0x3 r19c35:10x3,0x3 r19c47:10x3,0x3 r20c35:10x3 r20c41:0x3,10x3 r20c50:0x3 r21c35:10x3 r21c41:0x3,10x3 r21c50:0x3 r22c35:10x3 r22c41:0x3,10x3 r22c50:0x3 r23c38:10x3,0x3,10x3,0x3 r24c38:10x3,0x3,10x3,0x3 r25c38:10x3,0x3,10x3,0x3 r26c38:10x3,0x3,10x3,0x3 r27c38:10x3,0x3,10x3,0x3 r28c38:10x3,0x3,10x3,0x3 r29c38:10x3,8x3,14x3,8x3 r30c38:10x3,8x3,14x3,8x3 r31c38:10x3,8x3,14x3,8x3
+--- ACTION6 data={'x': 44, 'y': 30} (level 0->0): changed cells (FULL, run-length) = r0c20:0x1 r14c38:12x15 r15c38:12x15 r16c38:12x15 r17c38:12x3 r17c50:12x3 r18c38:12x3 r18c50:12x3 r19c38:12x3 r19c50:12x3 r20c38:12x6 r20c47:12x6 r21c38:12x6 r21c47:12x6 r22c38:12x6 r22c47:12x6 r23c41:12x3 r23c47:12x3 r24c41:12x3 r24c47:12x3 r25c41:12x3 r25c47:12x3 r26c41:12x3 r26c47:12x3 r27c41:12x3 r27c47:12x3 r28c41:12x3 r28c47:12x3 r29c41:0x9 r30c41:0x9 r31c41:0x9 r32c41:0x3 r32c47:0x3 r33c41:0x3 r33c47:0x3 r34c41:0x3 r34c47:0x3 r35c41:0x3 r35c47:0x3 r36c41:0x3 r36c47:0x3 r37c41:0x3 r37c47:0x3 r38c41:0x3 r38c47:0x3 r39c41:0x3 r39c47:0x3 r40c41:0x3 r40c47:0x3 r41c41:0x3 r41c47:0x3 r42c41:0x3 r42c47:0x3 r43c41:0x3 r43c47:0x3 r44c41:0x3 r44c47:0x3 r45c41:0x3 r45c47:0x3 r46c41:0x3 r46c47:0x3 r47c41:0x9 r48c41:0x9 r49c41:0x9
+WIN TRANSITION (this is how the level was completed): applying ACTION5 to the grid below completed the level (level 0->1).
+CONSTRAINT: is_level_complete(engine(GRID_BELOW, 5)) must return True.
+Do NOT assume the rendered next frame is the win state -- the completing action also re-lays out the board for the next level, so the completed configuration of THIS level is never drawn. Reason about what the winning move accomplishes, not about how the following screen looks.
+GRID BEFORE THE COMPLETING ACTION (run-length encoded):
+r0:10x16,0x5,4x27,10x16
+r1:10x64
+r2:10x64
+r3:10x64
+r4:10x64
+r5:10x64
+r6:10x64
+r7:10x64
+r8:10x64
+r9:10x64
+r10:10x64
+r11:10x64
+r12:10x64
+r13:10x64
+r14:10x38,12x15,10x11
+r15:10x38,12x15,10x11
+r16:10x38,12x15,10x11
+r17:10x38,12x3,10x9,12x3,10x11
+r18:10x38,12x3,10x9,12x3,10x11
+r19:10x38,12x3,10x9,12x3,10x11
+r20:10x38,12x6,10x3,12x6,10x11
+r21:10x38,12x6,10x3,12x6,10x11
+r22:10x38,12x6,10x3,12x6,10x11
+r23:10x41,12x3,10x3,12x3,10x14
+r24:10x41,12x3,10x3,12x3,10x14
+r25:10x41,12x3,10x3,12x3,10x14
+r26:10x41,12x3,10x3,12x3,10x14
+r27:10x41,12x3,10x3,12x3,10x14
+r28:10x41,12x3,10x3,12x3,10x14
+r29:10x38,0x9,8x3,10x14
+r30:10x38,0x9,8x3,10x14
+r31:10x38,0x9,8x3,10x14
+r32:10x38,0x3,10x3,0x3,10x17
+r33:10x38,0x3,10x3,0x3,10x17
+r34:10x38,0x3,10x3,0x3,10x17
+r35:10x35,8x3,0x3,10x3,0x3,10x17
+r36:10x35,8x3,0x3,10x3,0x3,10x17
+r37:10x35,8x3,0x3,10x3,0x3,10x17
+r38:10x38,0x3,10x3,0x3,10x17
+r39:10x38,0x3,10x3,0x3,10x17
+r40:10x38,0x3,10x3,0x3,10x17
+r41:10x35,8x3,0x3,10x3,0x3,10x17
+r42:10x35,8x3,0x3,10x3,0x3,10x17
+r43:10x35,8x3,0x3,10x3,0x3,10x17
+r44:10x38,0x3,10x3,0x3,10x17
+r45:10x38,0x3,10x3,0x3,10x17
+r46:10x38,0x3,10x3,0x3,10x17
+r47:10x38,0x9,10x17
+r48:10x38,0x9,10x17
+r49:10x38,0x9,10x17
+r50:10x64
+r51:10x64
+r52:10x64
+r53:10x64
+r54:10x64
+r55:10x64
+r56:10x64
+r57:10x64
+r58:10x64
+r59:10x64
+r60:10x64
+r61:10x64
+r62:10x64
+r63:10x64
+OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):
+INITIAL OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj0: color=10 bbox=(0, 0, 63, 63) px=3704 centroid=(31.8,31.3) shape=a596835e0cc70010
+  obj5: color=14 bbox=(29, 41, 49, 49) px=144 centroid=(39.0,45.0) shape=7f445e676632ff6d
+  obj2: color=0 bbox=(14, 11, 28, 25) px=135 centroid=(19.8,18.0) shape=7b7042815dc5f21f
+  obj6: color=10 bbox=(32, 44, 46, 46) px=45 centroid=(39.0,45.0) shape=5dc0976e5cbb13cf
+  obj1: color=4 bbox=(0, 16, 0, 47) px=32 centroid=(0.0,31.5) shape=673b42db2cfc6d75
+  obj3: color=8 bbox=(29, 14, 31, 16) px=9 centroid=(30.0,15.0) shape=28d56b5c1ca4559a
+  obj4: color=8 bbox=(29, 20, 31, 22) px=9 centroid=(30.0,21.0) shape=28d56b5c1ca4559a
+  obj7: color=8 bbox=(35, 38, 37, 40) px=9 centroid=(36.0,39.0) shape=28d56b5c1ca4559a
+  obj8: color=8 bbox=(41, 38, 43, 40) px=9 centroid=(42.0,39.0) shape=28d56b5c1ca4559a
+  containment (parent->children): {0: [2, 3, 4, 5, 7, 8], 5: [6]}
+  adjacency (touching id pairs): [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 7], [0, 8], [2, 3], [2, 4], [5, 6], [5, 7], [5, 8]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+
+BOARD BEFORE THE COMPLETING ACTION OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj0: color=10 bbox=(0, 0, 63, 63) px=3659 centroid=(31.9,30.2) shape=08ec3f9b524e8746
+  obj5: color=0 bbox=(29, 38, 49, 46) px=144 centroid=(39.0,42.0) shape=9b1cb88771f8b81c
+  obj3: color=12 bbox=(14, 38, 28, 52) px=135 centroid=(19.8,45.0) shape=ca1fc6f2ce2b58bd
+  obj4: color=10 bbox=(17, 41, 28, 49) px=54 centroid=(21.0,45.0) shape=2d6a28eb16e045bf
+  obj7: color=10 bbox=(32, 41, 46, 43) px=45 centroid=(39.0,42.0) shape=5dc0976e5cbb13cf
+  obj2: color=4 bbox=(0, 21, 0, 47) px=27 centroid=(0.0,34.0) shape=f4765bc7d245fd0d
+  obj6: color=8 bbox=(29, 47, 31, 49) px=9 centroid=(30.0,48.0) shape=28d56b5c1ca4559a
+  obj8: color=8 bbox=(35, 35, 37, 37) px=9 centroid=(36.0,36.0) shape=28d56b5c1ca4559a
+  obj9: color=8 bbox=(41, 35, 43, 37) px=9 centroid=(42.0,36.0) shape=28d56b5c1ca4559a
+  obj1: color=0 bbox=(0, 16, 0, 20) px=5 centroid=(0.0,18.0) shape=72047de45972da40
+  containment (parent->children): {0: [3, 4, 5, 6, 8, 9], 5: [7]}
+  adjacency (touching id pairs): [[0, 1], [0, 2], [0, 3], [0, 5], [0, 6], [0, 8], [0, 9], [1, 2], [3, 4], [3, 5], [3, 6], [4, 5], [5, 6], [5, 7], [5, 8], [5, 9]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+OBJECT DELTA PERCEPTION (carnot.arc.object_delta_perception.v1; visible before/after grids and chosen actions only)
+HUD rejection: {"admitted": false, "candidate_count": 8, "dominant_color_fraction": 0.0, "edge": null, "mixed_motion_transitions": 0, "reason": "no_admitted_strip", "schema": "carnot.arc.object_delta_perception.v1.hud_receipt", "strip_only_motion_transitions": 0, "thickness": 0}
+--- TRANSITION 0 ACTION4 data=null changed_cells=199
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 31.332] shape=a0f7080c636f sig=7ddee2f960057d85
+    b1:c=4 area=32 bbox=[0, 16, 0, 47] centroid=[0.0, 31.5] shape=ce021aaefc3d sig=15bb84bd04588337
+    b2:c=0 area=135 bbox=[14, 11, 28, 25] centroid=[19.8, 18.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b3:c=8 area=9 bbox=[29, 14, 31, 16] centroid=[30.0, 15.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b4:c=8 area=9 bbox=[29, 20, 31, 22] centroid=[30.0, 21.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b6:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b7:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b8:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 31.208] shape=7cb22554c2de sig=edef346bb92c3657
+    a1:c=0 area=1 bbox=[0, 16, 0, 16] centroid=[0.0, 16.0] shape=ade013287bc0 sig=05df5c988b8798b8
+    a2:c=4 area=31 bbox=[0, 17, 0, 47] centroid=[0.0, 32.0] shape=0a389ac5d79e sig=e8f00fbd33829e8b
+    a3:c=0 area=135 bbox=[14, 14, 28, 28] centroid=[19.8, 21.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 17, 31, 19] centroid=[30.0, 18.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 23, 31, 25] centroid=[30.0, 24.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b2->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b5->a6 delta=[0.0, 0.0] kind=stable sig=917038b20f7bfcf0
+    b6->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b3", "b4", "b7", "b8"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a1", "a2", "a4", "a5", "a8", "a9"]
+  removed_before_ids: ["b0", "b1", "b3", "b4", "b7", "b8"]
+  relations: [{"after_delta": [19.2, 24.0], "after_pair": ["a3", "a6"], "before_delta": [19.2, 27.0], "before_pair": ["b2", "b5"], "before_pair_colors": [0, 14], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, 24.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 27.0], "before_pair": ["b2", "b6"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a6", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b5", "b6"], "before_pair_colors": [14, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 1 ACTION4 data=null changed_cells=198
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 31.208] shape=7cb22554c2de sig=edef346bb92c3657
+    b1:c=0 area=1 bbox=[0, 16, 0, 16] centroid=[0.0, 16.0] shape=ade013287bc0 sig=05df5c988b8798b8
+    b2:c=4 area=31 bbox=[0, 17, 0, 47] centroid=[0.0, 32.0] shape=0a389ac5d79e sig=e8f00fbd33829e8b
+    b3:c=0 area=135 bbox=[14, 14, 28, 28] centroid=[19.8, 21.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 17, 31, 19] centroid=[30.0, 18.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 23, 31, 25] centroid=[30.0, 24.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 31.085] shape=38ce6ebb0c5a sig=9db0f854a310481f
+    a1:c=0 area=1 bbox=[0, 16, 0, 16] centroid=[0.0, 16.0] shape=ade013287bc0 sig=05df5c988b8798b8
+    a2:c=4 area=31 bbox=[0, 17, 0, 47] centroid=[0.0, 32.0] shape=0a389ac5d79e sig=e8f00fbd33829e8b
+    a3:c=0 area=135 bbox=[14, 17, 28, 31] centroid=[19.8, 24.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 20, 31, 22] centroid=[30.0, 21.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 26, 31, 28] centroid=[30.0, 27.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b1->a1 delta=[0.0, 0.0] kind=stable sig=05df5c988b8798b8
+    b2->a2 delta=[0.0, 0.0] kind=stable sig=e8f00fbd33829e8b
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b6->a6 delta=[0.0, 0.0] kind=stable sig=917038b20f7bfcf0
+    b7->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a4", "a5", "a8", "a9"]
+  removed_before_ids: ["b0", "b4", "b5", "b8", "b9"]
+  relations: [{"after_delta": [0.0, 16.0], "after_pair": ["a1", "a2"], "before_delta": [0.0, 16.0], "before_pair": ["b1", "b2"], "before_pair_colors": [0, 4], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 8.0], "after_pair": ["a1", "a3"], "before_delta": [19.8, 5.0], "before_pair": ["b1", "b3"], "before_pair_colors": [0, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 29.0], "after_pair": ["a1", "a6"], "before_delta": [39.0, 29.0], "before_pair": ["b1", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 29.0], "after_pair": ["a1", "a7"], "before_delta": [39.0, 29.0], "before_pair": ["b1", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, -8.0], "after_pair": ["a2", "a3"], "before_delta": [19.8, -11.0], "before_pair": ["b2", "b3"], "before_pair_colors": [4, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 13.0], "after_pair": ["a2", "a6"], "before_delta": [39.0, 13.0], "before_pair": ["b2", "b6"], "before_pair_colors": [4, 14], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 13.0], "after_pair": ["a2", "a7"], "before_delta": [39.0, 13.0], "before_pair": ["b2", "b7"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.2, 21.0], "after_pair": ["a3", "a6"], "before_delta": [19.2, 24.0], "before_pair": ["b3", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, 21.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 24.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a6", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b6", "b7"], "before_pair_colors": [14, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 2 ACTION4 data=null changed_cells=199
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 31.085] shape=38ce6ebb0c5a sig=9db0f854a310481f
+    b1:c=0 area=1 bbox=[0, 16, 0, 16] centroid=[0.0, 16.0] shape=ade013287bc0 sig=05df5c988b8798b8
+    b2:c=4 area=31 bbox=[0, 17, 0, 47] centroid=[0.0, 32.0] shape=0a389ac5d79e sig=e8f00fbd33829e8b
+    b3:c=0 area=135 bbox=[14, 17, 28, 31] centroid=[19.8, 24.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 20, 31, 22] centroid=[30.0, 21.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 26, 31, 28] centroid=[30.0, 27.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.961] shape=779838e98c8f sig=69b7604578526131
+    a1:c=0 area=2 bbox=[0, 16, 0, 17] centroid=[0.0, 16.5] shape=e54677a3926b sig=0507c102f262ad5b
+    a2:c=4 area=30 bbox=[0, 18, 0, 47] centroid=[0.0, 32.5] shape=e2d03d31b66f sig=3338654d08ec7e6e
+    a3:c=0 area=135 bbox=[14, 20, 28, 34] centroid=[19.8, 27.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 23, 31, 25] centroid=[30.0, 24.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 29, 31, 31] centroid=[30.0, 30.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b6->a6 delta=[0.0, 0.0] kind=stable sig=917038b20f7bfcf0
+    b7->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a1", "a2", "a4", "a5", "a8", "a9"]
+  removed_before_ids: ["b0", "b1", "b2", "b4", "b5", "b8", "b9"]
+  relations: [{"after_delta": [19.2, 18.0], "after_pair": ["a3", "a6"], "before_delta": [19.2, 21.0], "before_pair": ["b3", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, 18.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 21.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a6", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b6", "b7"], "before_pair_colors": [14, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 3 ACTION4 data=null changed_cells=198
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.961] shape=779838e98c8f sig=69b7604578526131
+    b1:c=0 area=2 bbox=[0, 16, 0, 17] centroid=[0.0, 16.5] shape=e54677a3926b sig=0507c102f262ad5b
+    b2:c=4 area=30 bbox=[0, 18, 0, 47] centroid=[0.0, 32.5] shape=e2d03d31b66f sig=3338654d08ec7e6e
+    b3:c=0 area=135 bbox=[14, 20, 28, 34] centroid=[19.8, 27.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 23, 31, 25] centroid=[30.0, 24.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 29, 31, 31] centroid=[30.0, 30.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.837] shape=18a94cf04fff sig=0f1ebf13cf88ecd4
+    a1:c=0 area=2 bbox=[0, 16, 0, 17] centroid=[0.0, 16.5] shape=e54677a3926b sig=0507c102f262ad5b
+    a2:c=4 area=30 bbox=[0, 18, 0, 47] centroid=[0.0, 32.5] shape=e2d03d31b66f sig=3338654d08ec7e6e
+    a3:c=0 area=135 bbox=[14, 23, 28, 37] centroid=[19.8, 30.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 26, 31, 28] centroid=[30.0, 27.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 32, 31, 34] centroid=[30.0, 33.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b1->a1 delta=[0.0, 0.0] kind=stable sig=0507c102f262ad5b
+    b2->a2 delta=[0.0, 0.0] kind=stable sig=3338654d08ec7e6e
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b6->a6 delta=[0.0, 0.0] kind=stable sig=917038b20f7bfcf0
+    b7->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a4", "a5", "a8", "a9"]
+  removed_before_ids: ["b0", "b4", "b5", "b8", "b9"]
+  relations: [{"after_delta": [0.0, 16.0], "after_pair": ["a1", "a2"], "before_delta": [0.0, 16.0], "before_pair": ["b1", "b2"], "before_pair_colors": [0, 4], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 13.5], "after_pair": ["a1", "a3"], "before_delta": [19.8, 10.5], "before_pair": ["b1", "b3"], "before_pair_colors": [0, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 28.5], "after_pair": ["a1", "a6"], "before_delta": [39.0, 28.5], "before_pair": ["b1", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 28.5], "after_pair": ["a1", "a7"], "before_delta": [39.0, 28.5], "before_pair": ["b1", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, -2.5], "after_pair": ["a2", "a3"], "before_delta": [19.8, -5.5], "before_pair": ["b2", "b3"], "before_pair_colors": [4, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 12.5], "after_pair": ["a2", "a6"], "before_delta": [39.0, 12.5], "before_pair": ["b2", "b6"], "before_pair_colors": [4, 14], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 12.5], "after_pair": ["a2", "a7"], "before_delta": [39.0, 12.5], "before_pair": ["b2", "b7"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.2, 15.0], "after_pair": ["a3", "a6"], "before_delta": [19.2, 18.0], "before_pair": ["b3", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, 15.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 18.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a6", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b6", "b7"], "before_pair_colors": [14, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 4 ACTION4 data=null changed_cells=199
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.837] shape=18a94cf04fff sig=0f1ebf13cf88ecd4
+    b1:c=0 area=2 bbox=[0, 16, 0, 17] centroid=[0.0, 16.5] shape=e54677a3926b sig=0507c102f262ad5b
+    b2:c=4 area=30 bbox=[0, 18, 0, 47] centroid=[0.0, 32.5] shape=e2d03d31b66f sig=3338654d08ec7e6e
+    b3:c=0 area=135 bbox=[14, 23, 28, 37] centroid=[19.8, 30.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 26, 31, 28] centroid=[30.0, 27.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 32, 31, 34] centroid=[30.0, 33.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.713] shape=2089030b58f7 sig=4d1d3da85b55c37b
+    a1:c=0 area=3 bbox=[0, 16, 0, 18] centroid=[0.0, 17.0] shape=c9aa80fa5ee0 sig=7ef4d5757a299b7f
+    a2:c=4 area=29 bbox=[0, 19, 0, 47] centroid=[0.0, 33.0] shape=05d84a3da8bb sig=69b3c346c9820d18
+    a3:c=0 area=135 bbox=[14, 26, 28, 40] centroid=[19.8, 33.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 29, 31, 31] centroid=[30.0, 30.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 35, 31, 37] centroid=[30.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b6->a6 delta=[0.0, 0.0] kind=stable sig=917038b20f7bfcf0
+    b7->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a1", "a2", "a4", "a5", "a8", "a9"]
+  removed_before_ids: ["b0", "b1", "b2", "b4", "b5", "b8", "b9"]
+  relations: [{"after_delta": [19.2, 12.0], "after_pair": ["a3", "a6"], "before_delta": [19.2, 15.0], "before_pair": ["b3", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, 12.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 15.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a6", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b6", "b7"], "before_pair_colors": [14, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 5 ACTION4 data=null changed_cells=198
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.713] shape=2089030b58f7 sig=4d1d3da85b55c37b
+    b1:c=0 area=3 bbox=[0, 16, 0, 18] centroid=[0.0, 17.0] shape=c9aa80fa5ee0 sig=7ef4d5757a299b7f
+    b2:c=4 area=29 bbox=[0, 19, 0, 47] centroid=[0.0, 33.0] shape=05d84a3da8bb sig=69b3c346c9820d18
+    b3:c=0 area=135 bbox=[14, 26, 28, 40] centroid=[19.8, 33.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 29, 31, 31] centroid=[30.0, 30.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 35, 31, 37] centroid=[30.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.589] shape=f49b2fd4bd65 sig=8a88a137f9150835
+    a1:c=0 area=3 bbox=[0, 16, 0, 18] centroid=[0.0, 17.0] shape=c9aa80fa5ee0 sig=7ef4d5757a299b7f
+    a2:c=4 area=29 bbox=[0, 19, 0, 47] centroid=[0.0, 33.0] shape=05d84a3da8bb sig=69b3c346c9820d18
+    a3:c=0 area=135 bbox=[14, 29, 28, 43] centroid=[19.8, 36.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 32, 31, 34] centroid=[30.0, 33.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 38, 31, 40] centroid=[30.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b1->a1 delta=[0.0, 0.0] kind=stable sig=7ef4d5757a299b7f
+    b2->a2 delta=[0.0, 0.0] kind=stable sig=69b3c346c9820d18
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b6->a6 delta=[0.0, 0.0] kind=stable sig=917038b20f7bfcf0
+    b7->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a4", "a5", "a8", "a9"]
+  removed_before_ids: ["b0", "b4", "b5", "b8", "b9"]
+  relations: [{"after_delta": [0.0, 16.0], "after_pair": ["a1", "a2"], "before_delta": [0.0, 16.0], "before_pair": ["b1", "b2"], "before_pair_colors": [0, 4], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 19.0], "after_pair": ["a1", "a3"], "before_delta": [19.8, 16.0], "before_pair": ["b1", "b3"], "before_pair_colors": [0, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 28.0], "after_pair": ["a1", "a6"], "before_delta": [39.0, 28.0], "before_pair": ["b1", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 28.0], "after_pair": ["a1", "a7"], "before_delta": [39.0, 28.0], "before_pair": ["b1", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 3.0], "after_pair": ["a2", "a3"], "before_delta": [19.8, 0.0], "before_pair": ["b2", "b3"], "before_pair_colors": [4, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 12.0], "after_pair": ["a2", "a6"], "before_delta": [39.0, 12.0], "before_pair": ["b2", "b6"], "before_pair_colors": [4, 14], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 12.0], "after_pair": ["a2", "a7"], "before_delta": [39.0, 12.0], "before_pair": ["b2", "b7"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.2, 9.0], "after_pair": ["a3", "a6"], "before_delta": [19.2, 12.0], "before_pair": ["b3", "b6"], "before_pair_colors": [0, 14], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, 9.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 12.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a6", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b6", "b7"], "before_pair_colors": [14, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 6 ACTION4 data=null changed_cells=198
+  before components:
+    b0:c=10 area=3704 bbox=[0, 0, 63, 63] centroid=[31.787, 30.589] shape=f49b2fd4bd65 sig=8a88a137f9150835
+    b1:c=0 area=3 bbox=[0, 16, 0, 18] centroid=[0.0, 17.0] shape=c9aa80fa5ee0 sig=7ef4d5757a299b7f
+    b2:c=4 area=29 bbox=[0, 19, 0, 47] centroid=[0.0, 33.0] shape=05d84a3da8bb sig=69b3c346c9820d18
+    b3:c=0 area=135 bbox=[14, 29, 28, 43] centroid=[19.8, 36.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 32, 31, 34] centroid=[30.0, 33.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 38, 31, 40] centroid=[30.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=917038b20f7bfcf0
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3713 bbox=[0, 0, 63, 63] centroid=[31.782, 30.493] shape=2d4fb61ba0b1 sig=dd241c6a05a19b15
+    a1:c=0 area=3 bbox=[0, 16, 0, 18] centroid=[0.0, 17.0] shape=c9aa80fa5ee0 sig=7ef4d5757a299b7f
+    a2:c=4 area=29 bbox=[0, 19, 0, 47] centroid=[0.0, 33.0] shape=05d84a3da8bb sig=69b3c346c9820d18
+    a3:c=0 area=135 bbox=[14, 32, 28, 46] centroid=[19.8, 39.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=8 area=9 bbox=[29, 35, 31, 37] centroid=[30.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[29, 41, 31, 43] centroid=[30.0, 42.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=135 bbox=[29, 41, 49, 49] centroid=[39.6, 45.2] shape=e07e1f0ee669 sig=a02bccc94a6a90ed
+    a7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b1->a1 delta=[0.0, 0.0] kind=stable sig=7ef4d5757a299b7f
+    b2->a2 delta=[0.0, 0.0] kind=stable sig=69b3c346c9820d18
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b7->a7 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a4", "a5", "a8", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a4", "a5", "a6", "a8", "a9"]
+  removed_before_ids: ["b0", "b4", "b5", "b6", "b8", "b9"]
+  relations: [{"after_delta": [0.0, 16.0], "after_pair": ["a1", "a2"], "before_delta": [0.0, 16.0], "before_pair": ["b1", "b2"], "before_pair_colors": [0, 4], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 22.0], "after_pair": ["a1", "a3"], "before_delta": [19.8, 19.0], "before_pair": ["b1", "b3"], "before_pair_colors": [0, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 28.0], "after_pair": ["a1", "a7"], "before_delta": [39.0, 28.0], "before_pair": ["b1", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 6.0], "after_pair": ["a2", "a3"], "before_delta": [19.8, 3.0], "before_pair": ["b2", "b3"], "before_pair_colors": [4, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 12.0], "after_pair": ["a2", "a7"], "before_delta": [39.0, 12.0], "before_pair": ["b2", "b7"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.2, 6.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 9.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}]
+--- TRANSITION 7 ACTION4 data=null changed_cells=199
+  before components:
+    b0:c=10 area=3713 bbox=[0, 0, 63, 63] centroid=[31.782, 30.493] shape=2d4fb61ba0b1 sig=dd241c6a05a19b15
+    b1:c=0 area=3 bbox=[0, 16, 0, 18] centroid=[0.0, 17.0] shape=c9aa80fa5ee0 sig=7ef4d5757a299b7f
+    b2:c=4 area=29 bbox=[0, 19, 0, 47] centroid=[0.0, 33.0] shape=05d84a3da8bb sig=69b3c346c9820d18
+    b3:c=0 area=135 bbox=[14, 32, 28, 46] centroid=[19.8, 39.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=8 area=9 bbox=[29, 35, 31, 37] centroid=[30.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b5:c=8 area=9 bbox=[29, 41, 31, 43] centroid=[30.0, 42.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=135 bbox=[29, 41, 49, 49] centroid=[39.6, 45.2] shape=e07e1f0ee669 sig=a02bccc94a6a90ed
+    b7:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3659 bbox=[0, 0, 63, 63] centroid=[31.942, 30.205] shape=8b8c4af62063 sig=2106c0e7019afe3a
+    a1:c=0 area=4 bbox=[0, 16, 0, 19] centroid=[0.0, 17.5] shape=bedb8731d7fe sig=bf177171e2ce25d2
+    a2:c=4 area=28 bbox=[0, 20, 0, 47] centroid=[0.0, 33.5] shape=bd63011dbeb0 sig=4bce81adcaeaccd2
+    a3:c=0 area=135 bbox=[14, 35, 28, 49] centroid=[19.8, 42.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=10 area=54 bbox=[17, 38, 28, 46] centroid=[21.0, 42.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    a5:c=8 area=9 bbox=[29, 38, 31, 40] centroid=[30.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=135 bbox=[29, 41, 49, 49] centroid=[39.6, 45.0] shape=9b5282643b8c sig=a7bcf25e3d8f71e6
+    a7:c=8 area=9 bbox=[29, 44, 31, 46] centroid=[30.0, 45.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a8:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a9:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a10:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b7->a8 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a10", "a5", "a7", "a9"], "before_count": 4, "before_ids": ["b4", "b5", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a1", "a2", "a4", "a5", "a6", "a7", "a9", "a10"]
+  removed_before_ids: ["b0", "b1", "b2", "b4", "b5", "b6", "b8", "b9"]
+  relations: [{"after_delta": [19.2, 3.0], "after_pair": ["a3", "a8"], "before_delta": [19.2, 6.0], "before_pair": ["b3", "b7"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}]
+--- TRANSITION 8 ACTION4 data=null changed_cells=198
+  before components:
+    b0:c=10 area=3659 bbox=[0, 0, 63, 63] centroid=[31.942, 30.205] shape=8b8c4af62063 sig=2106c0e7019afe3a
+    b1:c=0 area=4 bbox=[0, 16, 0, 19] centroid=[0.0, 17.5] shape=bedb8731d7fe sig=bf177171e2ce25d2
+    b2:c=4 area=28 bbox=[0, 20, 0, 47] centroid=[0.0, 33.5] shape=bd63011dbeb0 sig=4bce81adcaeaccd2
+    b3:c=0 area=135 bbox=[14, 35, 28, 49] centroid=[19.8, 42.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=10 area=54 bbox=[17, 38, 28, 46] centroid=[21.0, 42.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    b5:c=8 area=9 bbox=[29, 38, 31, 40] centroid=[30.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=135 bbox=[29, 41, 49, 49] centroid=[39.6, 45.0] shape=9b5282643b8c sig=a7bcf25e3d8f71e6
+    b7:c=8 area=9 bbox=[29, 44, 31, 46] centroid=[30.0, 45.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b8:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b9:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b10:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3668 bbox=[0, 0, 63, 63] centroid=[31.937, 30.072] shape=a4e425699ef6 sig=a0e39b3994468ee1
+    a1:c=0 area=4 bbox=[0, 16, 0, 19] centroid=[0.0, 17.5] shape=bedb8731d7fe sig=bf177171e2ce25d2
+    a2:c=4 area=28 bbox=[0, 20, 0, 47] centroid=[0.0, 33.5] shape=bd63011dbeb0 sig=4bce81adcaeaccd2
+    a3:c=0 area=135 bbox=[14, 38, 28, 52] centroid=[19.8, 45.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    a4:c=10 area=54 bbox=[17, 41, 28, 49] centroid=[21.0, 45.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    a5:c=8 area=9 bbox=[29, 41, 31, 43] centroid=[30.0, 42.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=14 area=9 bbox=[29, 44, 31, 46] centroid=[30.0, 45.0] shape=cf0589ad6f7e sig=f0cf905e37995255
+    a7:c=8 area=9 bbox=[29, 47, 31, 49] centroid=[30.0, 48.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a8:c=14 area=117 bbox=[32, 41, 49, 49] centroid=[41.077, 45.0] shape=e7f53ee9cd4d sig=17c3f560e285bc08
+    a9:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a10:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a11:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b1->a1 delta=[0.0, 0.0] kind=stable sig=bf177171e2ce25d2
+    b2->a2 delta=[0.0, 0.0] kind=stable sig=4bce81adcaeaccd2
+    b3->a3 delta=[0.0, 3.0] kind=translated sig=a71163d4fbfb84c0
+    b4->a4 delta=[0.0, 3.0] kind=translated sig=4535b1a1284342ec
+    b8->a9 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 4, "after_ids": ["a10", "a11", "a5", "a7"], "before_count": 4, "before_ids": ["b10", "b5", "b7", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a5", "a6", "a7", "a8", "a10", "a11"]
+  removed_before_ids: ["b0", "b5", "b6", "b7", "b9", "b10"]
+  relations: [{"after_delta": [0.0, 16.0], "after_pair": ["a1", "a2"], "before_delta": [0.0, 16.0], "before_pair": ["b1", "b2"], "before_pair_colors": [0, 4], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 27.5], "after_pair": ["a1", "a3"], "before_delta": [19.8, 24.5], "before_pair": ["b1", "b3"], "before_pair_colors": [0, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [21.0, 27.5], "after_pair": ["a1", "a4"], "before_delta": [21.0, 24.5], "before_pair": ["b1", "b4"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 27.5], "after_pair": ["a1", "a9"], "before_delta": [39.0, 27.5], "before_pair": ["b1", "b8"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 11.5], "after_pair": ["a2", "a3"], "before_delta": [19.8, 8.5], "before_pair": ["b2", "b3"], "before_pair_colors": [4, 0], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [21.0, 11.5], "after_pair": ["a2", "a4"], "before_delta": [21.0, 8.5], "before_pair": ["b2", "b4"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 3.0], "relation_invariant": false}, {"after_delta": [39.0, 11.5], "after_pair": ["a2", "a9"], "before_delta": [39.0, 11.5], "before_pair": ["b2", "b8"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [1.2, 0.0], "after_pair": ["a3", "a4"], "before_delta": [1.2, 0.0], "before_pair": ["b3", "b4"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.2, 0.0], "after_pair": ["a3", "a9"], "before_delta": [19.2, 3.0], "before_pair": ["b3", "b8"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [18.0, 0.0], "after_pair": ["a4", "a9"], "before_delta": [18.0, 3.0], "before_pair": ["b4", "b8"], "before_pair_colors": [10, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}]
+--- TRANSITION 9 ACTION6 data={"x": 44, "y": 30} changed_cells=280
+  before components:
+    b0:c=10 area=3668 bbox=[0, 0, 63, 63] centroid=[31.937, 30.072] shape=a4e425699ef6 sig=a0e39b3994468ee1
+    b1:c=0 area=4 bbox=[0, 16, 0, 19] centroid=[0.0, 17.5] shape=bedb8731d7fe sig=bf177171e2ce25d2
+    b2:c=4 area=28 bbox=[0, 20, 0, 47] centroid=[0.0, 33.5] shape=bd63011dbeb0 sig=4bce81adcaeaccd2
+    b3:c=0 area=135 bbox=[14, 38, 28, 52] centroid=[19.8, 45.0] shape=d53d38eced59 sig=a71163d4fbfb84c0
+    b4:c=10 area=54 bbox=[17, 41, 28, 49] centroid=[21.0, 45.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    b5:c=8 area=9 bbox=[29, 41, 31, 43] centroid=[30.0, 42.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b6:c=14 area=9 bbox=[29, 44, 31, 46] centroid=[30.0, 45.0] shape=cf0589ad6f7e sig=f0cf905e37995255
+    b7:c=8 area=9 bbox=[29, 47, 31, 49] centroid=[30.0, 48.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b8:c=14 area=117 bbox=[32, 41, 49, 49] centroid=[41.077, 45.0] shape=e7f53ee9cd4d sig=17c3f560e285bc08
+    b9:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b10:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b11:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3668 bbox=[0, 0, 63, 63] centroid=[31.937, 30.072] shape=a4e425699ef6 sig=a0e39b3994468ee1
+    a1:c=0 area=5 bbox=[0, 16, 0, 20] centroid=[0.0, 18.0] shape=957c8a711141 sig=c39d55f3e199aa2b
+    a2:c=4 area=27 bbox=[0, 21, 0, 47] centroid=[0.0, 34.0] shape=39b96f041d12 sig=c1b84ac9e79f04de
+    a3:c=12 area=135 bbox=[14, 38, 28, 52] centroid=[19.8, 45.0] shape=d53d38eced59 sig=aff5c9737b41af27
+    a4:c=10 area=54 bbox=[17, 41, 28, 49] centroid=[21.0, 45.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    a5:c=0 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=c8b713aea5015162
+    a6:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    a7:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a8:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b0->a0 delta=[0.0, 0.0] kind=stable sig=a0e39b3994468ee1
+    b4->a4 delta=[0.0, 0.0] kind=stable sig=4535b1a1284342ec
+    b9->a6 delta=[0.0, 0.0] kind=stable sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 2, "after_ids": ["a7", "a8"], "before_count": 4, "before_ids": ["b10", "b11", "b5", "b7"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a1", "a2", "a3", "a5", "a7", "a8"]
+  removed_before_ids: ["b1", "b2", "b3", "b5", "b6", "b7", "b8", "b10", "b11"]
+  relations: [{"after_delta": [-10.937, 14.928], "after_pair": ["a0", "a4"], "before_delta": [-10.937, 14.928], "before_pair": ["b0", "b4"], "before_pair_colors": [10, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [7.063, 14.928], "after_pair": ["a0", "a6"], "before_delta": [7.063, 14.928], "before_pair": ["b0", "b9"], "before_pair_colors": [10, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [18.0, 0.0], "after_pair": ["a4", "a6"], "before_delta": [18.0, 0.0], "before_pair": ["b4", "b9"], "before_pair_colors": [10, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 10 ACTION3 data=null changed_cells=234
+  before components:
+    b0:c=10 area=3668 bbox=[0, 0, 63, 63] centroid=[31.937, 30.072] shape=a4e425699ef6 sig=a0e39b3994468ee1
+    b1:c=0 area=5 bbox=[0, 16, 0, 20] centroid=[0.0, 18.0] shape=957c8a711141 sig=c39d55f3e199aa2b
+    b2:c=4 area=27 bbox=[0, 21, 0, 47] centroid=[0.0, 34.0] shape=39b96f041d12 sig=c1b84ac9e79f04de
+    b3:c=12 area=135 bbox=[14, 38, 28, 52] centroid=[19.8, 45.0] shape=d53d38eced59 sig=aff5c9737b41af27
+    b4:c=10 area=54 bbox=[17, 41, 28, 49] centroid=[21.0, 45.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    b5:c=0 area=144 bbox=[29, 41, 49, 49] centroid=[39.0, 45.0] shape=413200f4c98a sig=c8b713aea5015162
+    b6:c=10 area=45 bbox=[32, 44, 46, 46] centroid=[39.0, 45.0] shape=e727e0373255 sig=42007d30f80221a2
+    b7:c=8 area=9 bbox=[35, 38, 37, 40] centroid=[36.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b8:c=8 area=9 bbox=[41, 38, 43, 40] centroid=[42.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=10 area=3659 bbox=[0, 0, 63, 63] centroid=[31.942, 30.198] shape=abb391ba7730 sig=513c95c332c8f3d6
+    a1:c=0 area=5 bbox=[0, 16, 0, 20] centroid=[0.0, 18.0] shape=957c8a711141 sig=c39d55f3e199aa2b
+    a2:c=4 area=27 bbox=[0, 21, 0, 47] centroid=[0.0, 34.0] shape=39b96f041d12 sig=c1b84ac9e79f04de
+    a3:c=12 area=135 bbox=[14, 38, 28, 52] centroid=[19.8, 45.0] shape=d53d38eced59 sig=aff5c9737b41af27
+    a4:c=10 area=54 bbox=[17, 41, 28, 49] centroid=[21.0, 45.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    a5:c=0 area=144 bbox=[29, 38, 49, 46] centroid=[39.0, 42.0] shape=413200f4c98a sig=c8b713aea5015162
+    a6:c=8 area=9 bbox=[29, 47, 31, 49] centroid=[30.0, 48.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a7:c=10 area=45 bbox=[32, 41, 46, 43] centroid=[39.0, 42.0] shape=e727e0373255 sig=42007d30f80221a2
+    a8:c=8 area=9 bbox=[35, 35, 37, 37] centroid=[36.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[41, 35, 43, 37] centroid=[42.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  matches:
+    b1->a1 delta=[0.0, 0.0] kind=stable sig=c39d55f3e199aa2b
+    b2->a2 delta=[0.0, 0.0] kind=stable sig=c1b84ac9e79f04de
+    b3->a3 delta=[0.0, 0.0] kind=stable sig=aff5c9737b41af27
+    b4->a4 delta=[0.0, 0.0] kind=stable sig=4535b1a1284342ec
+    b5->a5 delta=[0.0, -3.0] kind=translated sig=c8b713aea5015162
+    b6->a7 delta=[0.0, -3.0] kind=translated sig=42007d30f80221a2
+  ambiguous_fail_open: [{"after_count": 3, "after_ids": ["a6", "a8", "a9"], "before_count": 2, "before_ids": ["b7", "b8"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a6", "a8", "a9"]
+  removed_before_ids: ["b0", "b7", "b8"]
+  relations: [{"after_delta": [0.0, 16.0], "after_pair": ["a1", "a2"], "before_delta": [0.0, 16.0], "before_pair": ["b1", "b2"], "before_pair_colors": [0, 4], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.8, 27.0], "after_pair": ["a1", "a3"], "before_delta": [19.8, 27.0], "before_pair": ["b1", "b3"], "before_pair_colors": [0, 12], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [21.0, 27.0], "after_pair": ["a1", "a4"], "before_delta": [21.0, 27.0], "before_pair": ["b1", "b4"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 24.0], "after_pair": ["a1", "a5"], "before_delta": [39.0, 27.0], "before_pair": ["b1", "b5"], "before_pair_colors": [0, 0], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [39.0, 24.0], "after_pair": ["a1", "a7"], "before_delta": [39.0, 27.0], "before_pair": ["b1", "b6"], "before_pair_colors": [0, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.8, 11.0], "after_pair": ["a2", "a3"], "before_delta": [19.8, 11.0], "before_pair": ["b2", "b3"], "before_pair_colors": [4, 12], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [21.0, 11.0], "after_pair": ["a2", "a4"], "before_delta": [21.0, 11.0], "before_pair": ["b2", "b4"], "before_pair_colors": [4, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [39.0, 8.0], "after_pair": ["a2", "a5"], "before_delta": [39.0, 11.0], "before_pair": ["b2", "b5"], "before_pair_colors": [4, 0], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [39.0, 8.0], "after_pair": ["a2", "a7"], "before_delta": [39.0, 11.0], "before_pair": ["b2", "b6"], "before_pair_colors": [4, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [1.2, 0.0], "after_pair": ["a3", "a4"], "before_delta": [1.2, 0.0], "before_pair": ["b3", "b4"], "before_pair_colors": [12, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}, {"after_delta": [19.2, -3.0], "after_pair": ["a3", "a5"], "before_delta": [19.2, 0.0], "before_pair": ["b3", "b5"], "before_pair_colors": [12, 0], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [19.2, -3.0], "after_pair": ["a3", "a7"], "before_delta": [19.2, 0.0], "before_pair": ["b3", "b6"], "before_pair_colors": [12, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [18.0, -3.0], "after_pair": ["a4", "a5"], "before_delta": [18.0, 0.0], "before_pair": ["b4", "b5"], "before_pair_colors": [10, 0], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [18.0, -3.0], "after_pair": ["a4", "a7"], "before_delta": [18.0, 0.0], "before_pair": ["b4", "b6"], "before_pair_colors": [10, 10], "relation_delta": [0.0, -3.0], "relation_invariant": false}, {"after_delta": [0.0, 0.0], "after_pair": ["a5", "a7"], "before_delta": [0.0, 0.0], "before_pair": ["b5", "b6"], "before_pair_colors": [0, 10], "relation_delta": [0.0, 0.0], "relation_invariant": true}]
+--- TRANSITION 11 ACTION5 data=null changed_cells=3988
+  before components:
+    b0:c=10 area=3659 bbox=[0, 0, 63, 63] centroid=[31.942, 30.198] shape=abb391ba7730 sig=513c95c332c8f3d6
+    b1:c=0 area=5 bbox=[0, 16, 0, 20] centroid=[0.0, 18.0] shape=957c8a711141 sig=c39d55f3e199aa2b
+    b2:c=4 area=27 bbox=[0, 21, 0, 47] centroid=[0.0, 34.0] shape=39b96f041d12 sig=c1b84ac9e79f04de
+    b3:c=12 area=135 bbox=[14, 38, 28, 52] centroid=[19.8, 45.0] shape=d53d38eced59 sig=aff5c9737b41af27
+    b4:c=10 area=54 bbox=[17, 41, 28, 49] centroid=[21.0, 45.0] shape=d64427d665a6 sig=4535b1a1284342ec
+    b5:c=0 area=144 bbox=[29, 38, 49, 46] centroid=[39.0, 42.0] shape=413200f4c98a sig=c8b713aea5015162
+    b6:c=8 area=9 bbox=[29, 47, 31, 49] centroid=[30.0, 48.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b7:c=10 area=45 bbox=[32, 41, 46, 43] centroid=[39.0, 42.0] shape=e727e0373255 sig=42007d30f80221a2
+    b8:c=8 area=9 bbox=[35, 35, 37, 37] centroid=[36.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    b9:c=8 area=9 bbox=[41, 35, 43, 37] centroid=[42.0, 36.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+  after components:
+    a0:c=12 area=3515 bbox=[0, 0, 63, 63] centroid=[31.092, 31.565] shape=3689673ab154 sig=08acf2132dedab99
+    a1:c=4 area=32 bbox=[0, 16, 0, 47] centroid=[0.0, 31.5] shape=ce021aaefc3d sig=15bb84bd04588337
+    a2:c=0 area=90 bbox=[11, 11, 28, 19] centroid=[17.4, 14.1] shape=bef2f8a84c10 sig=245444da92324602
+    a3:c=14 area=90 bbox=[14, 38, 34, 49] centroid=[26.7, 46.2] shape=4706c53453c7 sig=92062a2deaac9680
+    a4:c=8 area=9 bbox=[14, 44, 16, 46] centroid=[15.0, 45.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a5:c=8 area=9 bbox=[20, 17, 22, 19] centroid=[21.0, 18.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a6:c=8 area=9 bbox=[20, 50, 22, 52] centroid=[21.0, 51.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a7:c=8 area=9 bbox=[26, 14, 28, 16] centroid=[27.0, 15.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a8:c=8 area=9 bbox=[26, 50, 28, 52] centroid=[27.0, 51.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a9:c=8 area=9 bbox=[29, 38, 31, 40] centroid=[30.0, 39.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a10:c=11 area=162 bbox=[35, 17, 52, 31] centroid=[43.833, 25.0] shape=e1a781346029 sig=b1b5a213a011492c
+    a11:c=8 area=9 bbox=[38, 17, 40, 19] centroid=[39.0, 18.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a12:c=12 area=54 bbox=[38, 20, 49, 28] centroid=[44.0, 25.5] shape=b0468b85e247 sig=ae368ab85948016e
+    a13:c=8 area=9 bbox=[38, 32, 40, 34] centroid=[39.0, 33.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a14:c=8 area=9 bbox=[44, 14, 46, 16] centroid=[45.0, 15.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a15:c=8 area=9 bbox=[50, 50, 52, 52] centroid=[51.0, 51.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a16:c=8 area=9 bbox=[50, 56, 52, 58] centroid=[51.0, 57.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a17:c=8 area=9 bbox=[53, 26, 55, 28] centroid=[54.0, 27.0] shape=cf0589ad6f7e sig=8fb8f4fc10b6d8ab
+    a18:c=9 area=45 bbox=[53, 50, 58, 58] centroid=[55.8, 54.0] shape=3b5f6394386a sig=adb031721bc70870
+  matches:
+  ambiguous_fail_open: [{"after_count": 12, "after_ids": ["a11", "a13", "a14", "a15", "a16", "a17", "a4", "a5", "a6", "a7", "a8", "a9"], "before_count": 3, "before_ids": ["b6", "b8", "b9"], "fail_open": true, "identity_signature": "8fb8f4fc10b6d8ab", "reason": "ambiguous_identity_signature"}]
+  created_after_ids: ["a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8", "a9", "a10", "a11", "a12", "a13", "a14", "a15", "a16", "a17", "a18"]
+  removed_before_ids: ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9"]
+  relations: []

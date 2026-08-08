@@ -1,0 +1,311 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'tu93'.
+
+The game state is a 64x64 integer grid (logical resolution; colors [0, 2, 4, 5, 6, 9, 14]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/tu93/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:5x64
+r1:5x64
+r2:5x64
+r3:5x64
+r4:5x64
+r5:5x64
+r6:5x64
+r7:5x64
+r8:5x64
+r9:5x64
+r10:5x64
+r11:5x64
+r12:5x64
+r13:5x64
+r14:5x64
+r15:5x15,0x3,2x3,0x3,5x3,0x3,2x3,0x3,2x3,0x3,5x22
+r16:5x15,0x3,2x3,0x3,5x3,0x3,2x3,0x3,2x3,0x3,5x22
+r17:5x15,0x3,2x3,0x3,5x3,0x3,2x3,0x3,2x3,0x3,5x22
+r18:5x21,2x3,5x3,2x3,5x9,2x3,5x22
+r19:5x21,2x3,5x3,2x3,5x9,2x3,5x22
+r20:5x21,2x3,5x3,2x3,5x9,2x3,5x22
+r21:5x21,0x3,5x3,0x3,2x3,9x3,2x3,0x3,2x3,0x3,5x16
+r22:5x21,0x3,5x3,0x3,2x3,9x2,4x1,2x3,0x3,2x3,0x3,5x16
+r23:5x21,0x3,5x3,0x3,2x3,9x3,2x3,0x3,2x3,0x3,5x16
+r24:5x21,2x3,5x3,2x3,5x3,2x3,5x9,2x3,5x16
+r25:5x21,2x3,5x3,2x3,5x3,2x3,5x9,2x3,5x16
+r26:5x21,2x3,5x3,2x3,5x3,2x3,5x9,2x3,5x16
+r27:5x21,0x3,2x3,0x3,5x3,0x3,5x9,0x3,5x16
+r28:5x21,0x3,2x3,0x3,5x3,0x3,5x9,0x3,5x16
+r29:5x21,0x3,2x3,0x3,5x3,0x3,5x9,0x3,5x16
+r30:5x33,2x3,5x9,2x3,5x16
+r31:5x33,2x3,5x9,2x3,5x16
+r32:5x33,2x3,5x9,2x3,5x16
+r33:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r34:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r35:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r36:5x15,2x3,5x3,2x3,5x40
+r37:5x15,2x3,5x3,2x3,5x40
+r38:5x15,2x3,5x3,2x3,5x40
+r39:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r40:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r41:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r42:5x21,2x3,5x9,2x3,5x3,2x3,5x3,2x3,5x16
+r43:5x21,2x3,5x9,2x3,5x3,2x3,5x3,2x3,5x16
+r44:5x21,2x3,5x9,2x3,5x3,2x3,5x3,2x3,5x16
+r45:5x15,0x3,2x3,0x3,5x9,0x3,2x3,0x3,5x3,14x3,5x16
+r46:5x15,0x3,2x3,0x3,5x9,0x3,2x3,0x3,5x3,14x3,5x16
+r47:5x15,0x3,2x3,0x3,5x9,0x3,2x3,0x3,5x3,14x3,5x16
+r48:5x64
+r49:5x64
+r50:5x64
+r51:5x64
+r52:5x64
+r53:5x64
+r54:5x64
+r55:5x64
+r56:5x64
+r57:5x64
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:6x56,0x8
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r21c33:0x3 r22c33:0x3 r23c33:0x3 r27c33:9x3 r28c33:9x3 r29c33:9x1,4x1,9x1 r63c55:0x1
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r27c33:0x3 r28c33:0x3 r29c33:0x3 r33c33:9x3 r34c33:9x3 r35c33:9x1,4x1,9x1 r63c54:0x1
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r33c27:9x3 r33c33:0x3 r34c27:4x1,9x2 r34c33:0x3 r35c27:9x3 r35c33:0x3 r63c52:0x2
+--- ACTION3 (level 0->0): changed cells (FULL, run-length) = r33c21:9x3 r33c27:0x3 r34c21:4x1,9x2 r34c27:0x3 r35c21:9x3 r35c27:0x3 r63c51:0x1
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r33c21:0x3 r34c21:0x3 r35c21:0x3 r39c21:9x3 r40c21:9x3 r41c21:9x1,4x1,9x1 r63c50:0x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r39c21:0x3 r39c27:9x3 r40c21:0x3 r40c27:9x2,4x1 r41c21:0x3 r41c27:9x3 r63c49:0x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r39c27:0x3 r39c33:9x3 r40c27:0x3 r40c33:9x2,4x1 r41c27:0x3 r41c33:9x3 r63c47:0x2
+--- ACTION2 (level 0->0): changed cells (FULL, run-length) = r39c33:0x3 r40c33:0x3 r41c33:0x3 r45c33:9x3 r46c33:9x3 r47c33:9x1,4x1,9x1 r63c46:0x1
+--- ACTION4 (level 0->0): changed cells (FULL, run-length) = r45c33:0x3 r45c39:9x3 r46c33:0x3 r46c39:9x2,4x1 r47c33:0x3 r47c39:9x3 r63c45:0x1
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r39c39:9x1,4x1,9x1 r40c39:9x3 r41c39:9x3 r45c39:0x3 r46c39:0x3 r47c39:0x3 r63c44:0x1
+WIN TRANSITION (this is how the level was completed): applying ACTION2 to the grid below completed the level (level 0->1).
+CONSTRAINT: is_level_complete(engine(GRID_BELOW, 2)) must return True.
+Do NOT assume the rendered next frame is the win state -- the completing action also re-lays out the board for the next level, so the completed configuration of THIS level is never drawn. Reason about what the winning move accomplishes, not about how the following screen looks.
+GRID BEFORE THE COMPLETING ACTION (run-length encoded):
+r0:5x64
+r1:5x64
+r2:5x64
+r3:5x64
+r4:5x64
+r5:5x64
+r6:5x64
+r7:5x64
+r8:5x64
+r9:5x64
+r10:5x64
+r11:5x64
+r12:5x64
+r13:5x64
+r14:5x64
+r15:5x15,0x3,2x3,0x3,5x3,0x3,2x3,0x3,2x3,0x3,5x22
+r16:5x15,0x3,2x3,0x3,5x3,0x3,2x3,0x3,2x3,0x3,5x22
+r17:5x15,0x3,2x3,0x3,5x3,0x3,2x3,0x3,2x3,0x3,5x22
+r18:5x21,2x3,5x3,2x3,5x9,2x3,5x22
+r19:5x21,2x3,5x3,2x3,5x9,2x3,5x22
+r20:5x21,2x3,5x3,2x3,5x9,2x3,5x22
+r21:5x21,0x3,5x3,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x16
+r22:5x21,0x3,5x3,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x16
+r23:5x21,0x3,5x3,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x16
+r24:5x21,2x3,5x3,2x3,5x3,2x3,5x9,2x3,5x16
+r25:5x21,2x3,5x3,2x3,5x3,2x3,5x9,2x3,5x16
+r26:5x21,2x3,5x3,2x3,5x3,2x3,5x9,2x3,5x16
+r27:5x21,0x3,2x3,0x3,5x3,0x3,5x9,0x3,5x16
+r28:5x21,0x3,2x3,0x3,5x3,0x3,5x9,0x3,5x16
+r29:5x21,0x3,2x3,0x3,5x3,0x3,5x9,0x3,5x16
+r30:5x33,2x3,5x9,2x3,5x16
+r31:5x33,2x3,5x9,2x3,5x16
+r32:5x33,2x3,5x9,2x3,5x16
+r33:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r34:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r35:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,0x3,5x16
+r36:5x15,2x3,5x3,2x3,5x40
+r37:5x15,2x3,5x3,2x3,5x40
+r38:5x15,2x3,5x3,2x3,5x40
+r39:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,9x3,5x16
+r40:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,9x2,4x1,5x16
+r41:5x15,0x3,2x3,0x3,2x3,0x3,2x3,0x3,5x3,0x3,2x3,9x3,5x16
+r42:5x21,2x3,5x9,2x3,5x3,2x3,5x3,2x3,5x16
+r43:5x21,2x3,5x9,2x3,5x3,2x3,5x3,2x3,5x16
+r44:5x21,2x3,5x9,2x3,5x3,2x3,5x3,2x3,5x16
+r45:5x15,0x3,2x3,0x3,5x9,0x3,2x3,0x3,5x3,14x3,5x16
+r46:5x15,0x3,2x3,0x3,5x9,0x3,2x3,0x3,5x3,14x3,5x16
+r47:5x15,0x3,2x3,0x3,5x9,0x3,2x3,0x3,5x3,14x3,5x16
+r48:5x64
+r49:5x64
+r50:5x64
+r51:5x64
+r52:5x64
+r53:5x64
+r54:5x64
+r55:5x64
+r56:5x64
+r57:5x64
+r58:5x64
+r59:5x64
+r60:5x64
+r61:5x64
+r62:5x64
+r63:6x42,0x22
+OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):
+INITIAL OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>)  [showing largest 60 of 69]:
+  obj0: color=5 bbox=(0, 0, 62, 63) px=3429 centroid=(31.0,31.6) shape=95067b16a9ff8174
+  obj67: color=6 bbox=(63, 0, 63, 55) px=56 centroid=(63.0,27.5) shape=d030ae99d40776b2
+  obj11: color=5 bbox=(18, 30, 20, 38) px=27 centroid=(19.0,34.0) shape=2fc7dd941f1e491a
+  obj1: color=0 bbox=(15, 15, 17, 17) px=9 centroid=(16.0,16.0) shape=a6a003b2ee0e8957
+  obj2: color=2 bbox=(15, 18, 17, 20) px=9 centroid=(16.0,19.0) shape=be3720ab6774b29e
+  obj3: color=0 bbox=(15, 21, 17, 23) px=9 centroid=(16.0,22.0) shape=a6a003b2ee0e8957
+  obj4: color=0 bbox=(15, 27, 17, 29) px=9 centroid=(16.0,28.0) shape=a6a003b2ee0e8957
+  obj5: color=2 bbox=(15, 30, 17, 32) px=9 centroid=(16.0,31.0) shape=be3720ab6774b29e
+  obj6: color=0 bbox=(15, 33, 17, 35) px=9 centroid=(16.0,34.0) shape=a6a003b2ee0e8957
+  obj7: color=2 bbox=(15, 36, 17, 38) px=9 centroid=(16.0,37.0) shape=be3720ab6774b29e
+  obj8: color=0 bbox=(15, 39, 17, 41) px=9 centroid=(16.0,40.0) shape=a6a003b2ee0e8957
+  obj9: color=2 bbox=(18, 21, 20, 23) px=9 centroid=(19.0,22.0) shape=be3720ab6774b29e
+  obj10: color=2 bbox=(18, 27, 20, 29) px=9 centroid=(19.0,28.0) shape=be3720ab6774b29e
+  obj12: color=2 bbox=(18, 39, 20, 41) px=9 centroid=(19.0,40.0) shape=be3720ab6774b29e
+  obj13: color=0 bbox=(21, 21, 23, 23) px=9 centroid=(22.0,22.0) shape=a6a003b2ee0e8957
+  obj14: color=0 bbox=(21, 27, 23, 29) px=9 centroid=(22.0,28.0) shape=a6a003b2ee0e8957
+  obj15: color=2 bbox=(21, 30, 23, 32) px=9 centroid=(22.0,31.0) shape=be3720ab6774b29e
+  obj17: color=2 bbox=(21, 36, 23, 38) px=9 centroid=(22.0,37.0) shape=be3720ab6774b29e
+  obj18: color=0 bbox=(21, 39, 23, 41) px=9 centroid=(22.0,40.0) shape=a6a003b2ee0e8957
+  obj19: color=2 bbox=(21, 42, 23, 44) px=9 centroid=(22.0,43.0) shape=be3720ab6774b29e
+  obj20: color=0 bbox=(21, 45, 23, 47) px=9 centroid=(22.0,46.0) shape=a6a003b2ee0e8957
+  obj22: color=2 bbox=(24, 21, 26, 23) px=9 centroid=(25.0,22.0) shape=be3720ab6774b29e
+  obj23: color=2 bbox=(24, 27, 26, 29) px=9 centroid=(25.0,28.0) shape=be3720ab6774b29e
+  obj24: color=2 bbox=(24, 33, 26, 35) px=9 centroid=(25.0,34.0) shape=be3720ab6774b29e
+  obj25: color=2 bbox=(24, 45, 26, 47) px=9 centroid=(25.0,46.0) shape=be3720ab6774b29e
+  obj26: color=0 bbox=(27, 21, 29, 23) px=9 centroid=(28.0,22.0) shape=a6a003b2ee0e8957
+  obj27: color=2 bbox=(27, 24, 29, 26) px=9 centroid=(28.0,25.0) shape=be3720ab6774b29e
+  obj28: color=0 bbox=(27, 27, 29, 29) px=9 centroid=(28.0,28.0) shape=a6a003b2ee0e8957
+  obj29: color=0 bbox=(27, 33, 29, 35) px=9 centroid=(28.0,34.0) shape=a6a003b2ee0e8957
+  obj30: color=0 bbox=(27, 45, 29, 47) px=9 centroid=(28.0,46.0) shape=a6a003b2ee0e8957
+  obj31: color=2 bbox=(30, 33, 32, 35) px=9 centroid=(31.0,34.0) shape=be3720ab6774b29e
+  obj32: color=2 bbox=(30, 45, 32, 47) px=9 centroid=(31.0,46.0) shape=be3720ab6774b29e
+  obj33: color=0 bbox=(33, 15, 35, 17) px=9 centroid=(34.0,16.0) shape=a6a003b2ee0e8957
+  obj34: color=2 bbox=(33, 18, 35, 20) px=9 centroid=(34.0,19.0) shape=be3720ab6774b29e
+  obj35: color=0 bbox=(33, 21, 35, 23) px=9 centroid=(34.0,22.0) shape=a6a003b2ee0e8957
+  obj36: color=2 bbox=(33, 24, 35, 26) px=9 centroid=(34.0,25.0) shape=be3720ab6774b29e
+  obj37: color=0 bbox=(33, 27, 35, 29) px=9 centroid=(34.0,28.0) shape=a6a003b2ee0e8957
+  obj38: color=2 bbox=(33, 30, 35, 32) px=9 centroid=(34.0,31.0) shape=be3720ab6774b29e
+  obj39: color=0 bbox=(33, 33, 35, 35) px=9 centroid=(34.0,34.0) shape=a6a003b2ee0e8957
+  obj40: color=0 bbox=(33, 39, 35, 41) px=9 centroid=(34.0,40.0) shape=a6a003b2ee0e8957
+  obj41: color=2 bbox=(33, 42, 35, 44) px=9 centroid=(34.0,43.0) shape=be3720ab6774b29e
+  obj42: color=0 bbox=(33, 45, 35, 47) px=9 centroid=(34.0,46.0) shape=a6a003b2ee0e8957
+  obj43: color=2 bbox=(36, 15, 38, 17) px=9 centroid=(37.0,16.0) shape=be3720ab6774b29e
+  obj44: color=5 bbox=(36, 18, 38, 20) px=9 centroid=(37.0,19.0) shape=60454ef40bad86b3
+  obj45: color=2 bbox=(36, 21, 38, 23) px=9 centroid=(37.0,22.0) shape=be3720ab6774b29e
+  obj46: color=0 bbox=(39, 15, 41, 17) px=9 centroid=(40.0,16.0) shape=a6a003b2ee0e8957
+  obj47: color=2 bbox=(39, 18, 41, 20) px=9 centroid=(40.0,19.0) shape=be3720ab6774b29e
+  obj48: color=0 bbox=(39, 21, 41, 23) px=9 centroid=(40.0,22.0) shape=a6a003b2ee0e8957
+  obj49: color=2 bbox=(39, 24, 41, 26) px=9 centroid=(40.0,25.0) shape=be3720ab6774b29e
+  obj50: color=0 bbox=(39, 27, 41, 29) px=9 centroid=(40.0,28.0) shape=a6a003b2ee0e8957
+  obj51: color=2 bbox=(39, 30, 41, 32) px=9 centroid=(40.0,31.0) shape=be3720ab6774b29e
+  obj52: color=0 bbox=(39, 33, 41, 35) px=9 centroid=(40.0,34.0) shape=a6a003b2ee0e8957
+  obj53: color=0 bbox=(39, 39, 41, 41) px=9 centroid=(40.0,40.0) shape=a6a003b2ee0e8957
+  obj54: color=2 bbox=(39, 42, 41, 44) px=9 centroid=(40.0,43.0) shape=be3720ab6774b29e
+  obj55: color=0 bbox=(39, 45, 41, 47) px=9 centroid=(40.0,46.0) shape=a6a003b2ee0e8957
+  obj56: color=2 bbox=(42, 21, 44, 23) px=9 centroid=(43.0,22.0) shape=be3720ab6774b29e
+  obj57: color=2 bbox=(42, 33, 44, 35) px=9 centroid=(43.0,34.0) shape=be3720ab6774b29e
+  obj58: color=2 bbox=(42, 39, 44, 41) px=9 centroid=(43.0,40.0) shape=be3720ab6774b29e
+  obj59: color=2 bbox=(42, 45, 44, 47) px=9 centroid=(43.0,46.0) shape=be3720ab6774b29e
+  obj60: color=0 bbox=(45, 15, 47, 17) px=9 centroid=(46.0,16.0) shape=a6a003b2ee0e8957
+  containment (parent->children): {0: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]}
+  adjacency (touching id pairs): [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9], [0, 10], [0, 12], [0, 13], [0, 14], [0, 15], [0, 17], [0, 18], [0, 19], [0, 20], [0, 22], [0, 23], [0, 24], [0, 25], [0, 26], [0, 27], [0, 28], [0, 29], [0, 30], [0, 31], [0, 32], [0, 33], [0, 34], [0, 35], [0, 36], [0, 37], [0, 38], [0, 39], [0, 40], [0, 41], [0, 42], [0, 43], [0, 45], [0, 46], [0, 47], [0, 49], [0, 50], [0, 51], [0, 52], [0, 53], [0, 54], [0, 55], [0, 56], [0, 57], [0, 58], [0, 59], [0, 60], [0, 67], [1, 2], [2, 3], [3, 9], [4, 5], [4, 10], [5, 6], [5, 11], [6, 7], [6, 11], [7, 8], [7, 11], [8, 12], [9, 13], [10, 11], [10, 14], [11, 12], [11, 15], [11, 17], [12, 18], [13, 22], [14, 15], [14, 23], [17, 18], [18, 19], [19, 20], [20, 25], [22, 26], [23, 28], [24, 29], [25, 30], [26, 27], [27, 28], [29, 31], [30, 32], [31, 39], [32, 42], [33, 34], [33, 43], [34, 35], [34, 44], [35, 36], [35, 45], [36, 37], [37, 38], [38, 39], [40, 41], [41, 42], [43, 44], [43, 46], [44, 45], [44, 47], [45, 48], [46, 47], [47, 48], [48, 49], [48, 56], [49, 50], [50, 51], [51, 52], [52, 57], [53, 54], [53, 58], [54, 55], [55, 59]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+
+BOARD BEFORE THE COMPLETING ACTION OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>)  [showing largest 60 of 69]:
+  obj0: color=5 bbox=(0, 0, 62, 63) px=3429 centroid=(31.0,31.6) shape=95067b16a9ff8174
+  obj67: color=6 bbox=(63, 0, 63, 41) px=42 centroid=(63.0,20.5) shape=9ff79cbb8e90bf95
+  obj11: color=5 bbox=(18, 30, 20, 38) px=27 centroid=(19.0,34.0) shape=2fc7dd941f1e491a
+  obj68: color=0 bbox=(63, 42, 63, 63) px=22 centroid=(63.0,52.5) shape=38bdc7460c211e53
+  obj1: color=0 bbox=(15, 15, 17, 17) px=9 centroid=(16.0,16.0) shape=a6a003b2ee0e8957
+  obj2: color=2 bbox=(15, 18, 17, 20) px=9 centroid=(16.0,19.0) shape=be3720ab6774b29e
+  obj3: color=0 bbox=(15, 21, 17, 23) px=9 centroid=(16.0,22.0) shape=a6a003b2ee0e8957
+  obj4: color=0 bbox=(15, 27, 17, 29) px=9 centroid=(16.0,28.0) shape=a6a003b2ee0e8957
+  obj5: color=2 bbox=(15, 30, 17, 32) px=9 centroid=(16.0,31.0) shape=be3720ab6774b29e
+  obj6: color=0 bbox=(15, 33, 17, 35) px=9 centroid=(16.0,34.0) shape=a6a003b2ee0e8957
+  obj7: color=2 bbox=(15, 36, 17, 38) px=9 centroid=(16.0,37.0) shape=be3720ab6774b29e
+  obj8: color=0 bbox=(15, 39, 17, 41) px=9 centroid=(16.0,40.0) shape=a6a003b2ee0e8957
+  obj9: color=2 bbox=(18, 21, 20, 23) px=9 centroid=(19.0,22.0) shape=be3720ab6774b29e
+  obj10: color=2 bbox=(18, 27, 20, 29) px=9 centroid=(19.0,28.0) shape=be3720ab6774b29e
+  obj12: color=2 bbox=(18, 39, 20, 41) px=9 centroid=(19.0,40.0) shape=be3720ab6774b29e
+  obj13: color=0 bbox=(21, 21, 23, 23) px=9 centroid=(22.0,22.0) shape=a6a003b2ee0e8957
+  obj14: color=0 bbox=(21, 27, 23, 29) px=9 centroid=(22.0,28.0) shape=a6a003b2ee0e8957
+  obj15: color=2 bbox=(21, 30, 23, 32) px=9 centroid=(22.0,31.0) shape=be3720ab6774b29e
+  obj16: color=0 bbox=(21, 33, 23, 35) px=9 centroid=(22.0,34.0) shape=a6a003b2ee0e8957
+  obj17: color=2 bbox=(21, 36, 23, 38) px=9 centroid=(22.0,37.0) shape=be3720ab6774b29e
+  obj18: color=0 bbox=(21, 39, 23, 41) px=9 centroid=(22.0,40.0) shape=a6a003b2ee0e8957
+  obj19: color=2 bbox=(21, 42, 23, 44) px=9 centroid=(22.0,43.0) shape=be3720ab6774b29e
+  obj20: color=0 bbox=(21, 45, 23, 47) px=9 centroid=(22.0,46.0) shape=a6a003b2ee0e8957
+  obj21: color=2 bbox=(24, 21, 26, 23) px=9 centroid=(25.0,22.0) shape=be3720ab6774b29e
+  obj22: color=2 bbox=(24, 27, 26, 29) px=9 centroid=(25.0,28.0) shape=be3720ab6774b29e
+  obj23: color=2 bbox=(24, 33, 26, 35) px=9 centroid=(25.0,34.0) shape=be3720ab6774b29e
+  obj24: color=2 bbox=(24, 45, 26, 47) px=9 centroid=(25.0,46.0) shape=be3720ab6774b29e
+  obj25: color=0 bbox=(27, 21, 29, 23) px=9 centroid=(28.0,22.0) shape=a6a003b2ee0e8957
+  obj26: color=2 bbox=(27, 24, 29, 26) px=9 centroid=(28.0,25.0) shape=be3720ab6774b29e
+  obj27: color=0 bbox=(27, 27, 29, 29) px=9 centroid=(28.0,28.0) shape=a6a003b2ee0e8957
+  obj28: color=0 bbox=(27, 33, 29, 35) px=9 centroid=(28.0,34.0) shape=a6a003b2ee0e8957
+  obj29: color=0 bbox=(27, 45, 29, 47) px=9 centroid=(28.0,46.0) shape=a6a003b2ee0e8957
+  obj30: color=2 bbox=(30, 33, 32, 35) px=9 centroid=(31.0,34.0) shape=be3720ab6774b29e
+  obj31: color=2 bbox=(30, 45, 32, 47) px=9 centroid=(31.0,46.0) shape=be3720ab6774b29e
+  obj32: color=0 bbox=(33, 15, 35, 17) px=9 centroid=(34.0,16.0) shape=a6a003b2ee0e8957
+  obj33: color=2 bbox=(33, 18, 35, 20) px=9 centroid=(34.0,19.0) shape=be3720ab6774b29e
+  obj34: color=0 bbox=(33, 21, 35, 23) px=9 centroid=(34.0,22.0) shape=a6a003b2ee0e8957
+  obj35: color=2 bbox=(33, 24, 35, 26) px=9 centroid=(34.0,25.0) shape=be3720ab6774b29e
+  obj36: color=0 bbox=(33, 27, 35, 29) px=9 centroid=(34.0,28.0) shape=a6a003b2ee0e8957
+  obj37: color=2 bbox=(33, 30, 35, 32) px=9 centroid=(34.0,31.0) shape=be3720ab6774b29e
+  obj38: color=0 bbox=(33, 33, 35, 35) px=9 centroid=(34.0,34.0) shape=a6a003b2ee0e8957
+  obj39: color=0 bbox=(33, 39, 35, 41) px=9 centroid=(34.0,40.0) shape=a6a003b2ee0e8957
+  obj40: color=2 bbox=(33, 42, 35, 44) px=9 centroid=(34.0,43.0) shape=be3720ab6774b29e
+  obj41: color=0 bbox=(33, 45, 35, 47) px=9 centroid=(34.0,46.0) shape=a6a003b2ee0e8957
+  obj42: color=2 bbox=(36, 15, 38, 17) px=9 centroid=(37.0,16.0) shape=be3720ab6774b29e
+  obj43: color=5 bbox=(36, 18, 38, 20) px=9 centroid=(37.0,19.0) shape=60454ef40bad86b3
+  obj44: color=2 bbox=(36, 21, 38, 23) px=9 centroid=(37.0,22.0) shape=be3720ab6774b29e
+  obj45: color=0 bbox=(39, 15, 41, 17) px=9 centroid=(40.0,16.0) shape=a6a003b2ee0e8957
+  obj46: color=2 bbox=(39, 18, 41, 20) px=9 centroid=(40.0,19.0) shape=be3720ab6774b29e
+  obj47: color=0 bbox=(39, 21, 41, 23) px=9 centroid=(40.0,22.0) shape=a6a003b2ee0e8957
+  obj48: color=2 bbox=(39, 24, 41, 26) px=9 centroid=(40.0,25.0) shape=be3720ab6774b29e
+  obj49: color=0 bbox=(39, 27, 41, 29) px=9 centroid=(40.0,28.0) shape=a6a003b2ee0e8957
+  obj50: color=2 bbox=(39, 30, 41, 32) px=9 centroid=(40.0,31.0) shape=be3720ab6774b29e
+  obj51: color=0 bbox=(39, 33, 41, 35) px=9 centroid=(40.0,34.0) shape=a6a003b2ee0e8957
+  obj52: color=0 bbox=(39, 39, 41, 41) px=9 centroid=(40.0,40.0) shape=a6a003b2ee0e8957
+  obj53: color=2 bbox=(39, 42, 41, 44) px=9 centroid=(40.0,43.0) shape=be3720ab6774b29e
+  obj56: color=2 bbox=(42, 21, 44, 23) px=9 centroid=(43.0,22.0) shape=be3720ab6774b29e
+  obj57: color=2 bbox=(42, 33, 44, 35) px=9 centroid=(43.0,34.0) shape=be3720ab6774b29e
+  obj58: color=2 bbox=(42, 39, 44, 41) px=9 centroid=(43.0,40.0) shape=be3720ab6774b29e
+  obj59: color=2 bbox=(42, 45, 44, 47) px=9 centroid=(43.0,46.0) shape=be3720ab6774b29e
+  containment (parent->children): {0: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66]}
+  adjacency (touching id pairs): [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9], [0, 10], [0, 12], [0, 13], [0, 14], [0, 15], [0, 17], [0, 18], [0, 19], [0, 20], [0, 21], [0, 22], [0, 23], [0, 24], [0, 25], [0, 26], [0, 27], [0, 28], [0, 29], [0, 30], [0, 31], [0, 32], [0, 33], [0, 34], [0, 35], [0, 36], [0, 37], [0, 38], [0, 39], [0, 40], [0, 41], [0, 42], [0, 44], [0, 45], [0, 46], [0, 48], [0, 49], [0, 50], [0, 51], [0, 52], [0, 53], [0, 56], [0, 57], [0, 58], [0, 59], [0, 67], [0, 68], [1, 2], [2, 3], [3, 9], [4, 5], [4, 10], [5, 6], [5, 11], [6, 7], [6, 11], [7, 8], [7, 11], [8, 12], [9, 13], [10, 11], [10, 14], [11, 12], [11, 15], [11, 16], [11, 17], [12, 18], [13, 21], [14, 15], [14, 22], [15, 16], [16, 17], [16, 23], [17, 18], [18, 19], [19, 20], [20, 24], [21, 25], [22, 27], [23, 28], [24, 29], [25, 26], [26, 27], [28, 30], [29, 31], [30, 38], [31, 41], [32, 33], [32, 42], [33, 34], [33, 43], [34, 35], [34, 44], [35, 36], [36, 37], [37, 38], [39, 40], [40, 41], [42, 43], [42, 45], [43, 44], [43, 46], [44, 47], [45, 46], [46, 47], [47, 48], [47, 56], [48, 49], [49, 50], [50, 51], [51, 57], [52, 53], [52, 58], [67, 68]]
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
