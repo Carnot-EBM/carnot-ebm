@@ -151,9 +151,14 @@ investigation workflow root-caused all three, all `stale_test` (no production re
   corrected to match the already-fixed language in `test_arc_submitted_agent_parity.py`. The
   repo-wide sweep this addendum called for (scope item (c)) found no further undiscovered stale
   sites beyond the finding-3 pair (2 more `== "gemma-4-31B-it"` hits exist but are self-contained
-  fixtures unaffected by the live constant, verified by direct read). **Finding 3's own pair in
-  `test_arc_submitted_agent_parity.py` is the identical root cause and is still open** — not fixed
-  in this pass, same one-line-swap-plus-comment-correction applies.
+  fixtures unaffected by the live constant, verified by direct read). ~~Finding 3's own pair in
+  `test_arc_submitted_agent_parity.py` is the identical root cause and is still open~~ — **FIXED
+  2026-08-08 (same day, follow-up commit)**: `test_req_capstone_4744_submitted_config_declares_
+  frozen_qwen_generator` now asserts `frozen["model_id"] == "unsloth/gemma-4-31B-it-qat-GGUF"` and
+  `frozen["repo_substr"] == "gemma-4-31B-it-qat"` (both were stale, matching the original finding-3
+  filing above, which named both fields); `test_req_arc_fcp_5699_11_load_sge_candidate_router_
+  reuses_frozen_generator_config` now asserts `completer.repo_substr == "gemma-4-31B-it-qat"`.
+  Full-file regression (23 tests) green.
 - **Finding 5**: real root cause identified — commit `ca8e078ccb` (2026-07-25, Exp5904/5927) wrapped
   `load_cross_game_discriminative_router`'s return value inside an `OnlineClickTargetRouter`, so a
   stub swapped in at the inner loader only ever reaches `.base` of the wrapper. `_load_submitted_

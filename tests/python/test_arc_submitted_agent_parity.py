@@ -214,8 +214,13 @@ def test_req_capstone_4744_submitted_config_declares_frozen_qwen_generator():
 
     frozen = SUBMITTED_AGENT_CONFIG["frozen_generator"]
 
-    assert frozen["model_id"] == "unsloth/gemma-4-31B-it-GGUF"
-    assert frozen["repo_substr"] == "gemma-4-31B-it"
+    # RE-PINNED AGAIN 2026-07-31 (separate, later, quant-only repin -- the 2026-07-28 repin above
+    # was a MODEL-FAMILY change, Qwen -> gemma-4-31B-it; this one is a QUANTIZATION-VARIANT change
+    # on top of that, Q4_K_M -> qat). A 20-game head-to-head found qat and Q4_K_M statistically
+    # indistinguishable on quality (sign test p=1.0); qat saves ~1GB VRAM and matches the required
+    # qat MTP drafter. See tests/python/test_arc_live_generator_pin.py for the full pin contract.
+    assert frozen["model_id"] == "unsloth/gemma-4-31B-it-qat-GGUF"
+    assert frozen["repo_substr"] == "gemma-4-31B-it-qat"
     # ASSERT THE LITERAL SCORED CONTRACT, NEVER `frozen["mtp"] is <the same expression>`.
     #
     # An intermediate 2026-07-28 version of this test read
@@ -350,7 +355,9 @@ def test_req_arc_fcp_5699_11_load_sge_candidate_router_reuses_frozen_generator_c
     assert router.k == 3
     completer = router.proposer.completer
     assert isinstance(completer, LocalGGUFProposer)
-    assert completer.repo_substr == "gemma-4-31B-it"
+    # RE-PINNED 2026-07-31 (quant-only repin, see test_req_capstone_4744_... above for the full
+    # rationale): ARC_LIVE_GENERATOR_REPO_SUBSTR moved Q4_K_M -> qat.
+    assert completer.repo_substr == "gemma-4-31B-it-qat"
     # False because that is the LOCAL default (`ARC_LIVE_GENERATOR_MTP_DEFAULT`), NOT because the
     # model lacks MTP -- the old comment here said "gemma-4-31B has no MTP heads", which was
     # falsified the same day: the head is a SEPARATE 491 MiB GGUF (`mtp-gemma-4-31B-it-Q8_0.gguf`,
