@@ -15509,3 +15509,4 @@ Still active  |
 | 2026-08-08 03:24 UTC | Post-V538-marker SOTA delta and causal-scope prere | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6211_v538_po |
 | 2026-08-08 03:55 UTC | Post-V538-marker SOTA delta and causal-scope prere | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6211_v538_po |
 | 2026-08-08 04:15 UTC | Three-family GGUF load, CUDA admission, and lifecy | OK | 87 passed, 1 warning in 7.96s |
+| 2026-08-08 21:33 UTC | Default-off transition-aware ARC object representa | OK | 126 passed, 1 warning in 8.98s |
