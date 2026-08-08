@@ -83,7 +83,11 @@ def test_scenario_arc_fcp_4523_frontier_tiebreak_keeps_depth_primary() -> None:
     exp.best_level = 0
     exp.graph = {
         "C": {"path": [{"action": 9, "data": None}], "untested": [], "value": 0.0},
-        "shallow": {"path": [{"action": 1, "data": None}], "untested": [{"action": 8, "data": None}], "value": 0.0},
+        "shallow": {
+            "path": [{"action": 1, "data": None}],
+            "untested": [{"action": 8, "data": None}],
+            "value": 0.0,
+        },
         "replay_first": {
             "path": [{"action": 2, "data": None}, {"action": 3, "data": None}],
             "untested": [{"action": 4, "data": None}],
@@ -156,12 +160,18 @@ def test_req_arc_fcp_4523_artifact_selects_only_strict_improved_core_winner(tmp_
         preconditions_checked={"offline_arcade_import": True},
         baseline=_baseline(),
         config_sweep=[control, improved],
-        positive_control={"passed": True, "reset_replay_steps_before": 9, "reset_replay_steps_after": 1},
+        positive_control={
+            "passed": True,
+            "reset_replay_steps_before": 9,
+            "reset_replay_steps_after": 1,
+        },
         random_seed=4523,
         duration_s=0.25,
     )
 
-    assert artifact["honest_verdict"] == "success: forward_walk_median_actions_on_core_7400_below_7760"
+    assert (
+        artifact["honest_verdict"] == "success: forward_walk_median_actions_on_core_7400_below_7760"
+    )
     assert artifact["median_actions_on_core_control"] == 7760.0
     assert artifact["median_actions_on_core_best"] == 7400.0
     assert artifact["core_solves_preserved"] is True
@@ -176,8 +186,15 @@ def test_req_arc_fcp_4523_artifact_selects_only_strict_improved_core_winner(tmp_
     null_artifact = exp4523.build_artifact(
         preconditions_checked={"offline_arcade_import": True},
         baseline=_baseline(),
-        config_sweep=[control, {**improved, "measurement": _measurement(median=7760.0, reset_steps=800)}],
-        positive_control={"passed": True, "reset_replay_steps_before": 9, "reset_replay_steps_after": 1},
+        config_sweep=[
+            control,
+            {**improved, "measurement": _measurement(median=7760.0, reset_steps=800)},
+        ],
+        positive_control={
+            "passed": True,
+            "reset_replay_steps_before": 9,
+            "reset_replay_steps_after": 1,
+        },
         random_seed=4523,
         duration_s=0.25,
     )
@@ -190,3 +207,105 @@ def test_req_arc_fcp_4523_artifact_selects_only_strict_improved_core_winner(tmp_
     out.parent.mkdir(parents=True)
     exp4523.write_artifact(artifact, tmp_path)
     assert json.loads(out.read_text(encoding="utf-8")) == artifact
+
+
+def test_shared_forward_bfs_cache_matches_per_node_bfs_and_is_reused() -> None:
+    """2026-08-08 adversarial review, "Speed" finding 1: one shared single-source BFS from
+    ``self.cur`` must return exactly what the old per-node ``_exact_shortest_path`` calls
+    returned, and must not be recomputed unless ``self.cur`` moves or a new edge is learned.
+
+    Graph: CUR -2-> A -4-> C, CUR -3-> B -5-> D -6-> E. ISLAND has no incoming edge at all.
+    """
+
+    exp = StepwiseExplorer(online_discriminative=False)
+    exp.cur = "CUR"
+    exp._record_forward_edge("CUR", {"action": 2, "data": None}, "A")
+    exp._record_forward_edge("CUR", {"action": 3, "data": None}, "B")
+    exp._record_forward_edge("A", {"action": 4, "data": None}, "C")
+    exp._record_forward_edge("B", {"action": 5, "data": None}, "D")
+    exp._record_forward_edge("D", {"action": 6, "data": None}, "E")
+
+    # Correctness: the new shared-cache lookup (`_exact_forward_path`) must agree, node by
+    # node, with the untouched original per-call BFS (`_exact_shortest_path`) it replaces.
+    for node in ["CUR", "A", "B", "C", "D", "E", "ISLAND"]:
+        assert exp._exact_forward_path("CUR", node) == exp._exact_shortest_path("CUR", node)
+
+    # Reuse: two calls with no intervening `self.cur` move or new edge share one BFS map.
+    first = exp._cur_forward_paths()
+    second = exp._cur_forward_paths()
+    assert first is second
+
+    # Invalidation on a newly-learned edge: the map changes and is no longer the same object.
+    exp._record_forward_edge("E", {"action": 7, "data": None}, "F")
+    third = exp._cur_forward_paths()
+    assert third is not first
+    assert third["F"] == exp._exact_shortest_path("CUR", "F")
+
+    # Invalidation on `self.cur` moving: recomputed relative to the new source.
+    exp.cur = "A"
+    fourth = exp._cur_forward_paths()
+    assert fourth is not third
+    assert fourth["C"] == exp._exact_shortest_path("A", "C")
+    assert "CUR" not in fourth  # no edge back to CUR from A
+
+
+def test_partial_forward_path_reuses_one_shared_bfs_and_matches_old_per_ancestor_scan() -> None:
+    """2026-08-08 adversarial review, "Speed" finding 1: ``_partial_forward_path`` must stop
+    running one BFS per candidate ancestor and reuse the single shared map instead, while
+    still returning exactly what the old per-ancestor-BFS loop would have returned.
+
+    ROOT/ANC1/ANC2 are candidate ancestors of DST by REPLAY path prefix; only ANC2 is
+    forward-reachable from CUR over known-working edges (a shortcut edge CUR->ANC2), so the
+    old code would run 3 separate from-scratch BFS calls (one per ancestor, including the
+    two unreachable ones) to find that out.
+    """
+
+    exp = StepwiseExplorer(online_discriminative=False)
+    exp.cur = "CUR"
+    exp.graph = {
+        "ROOT": {"path": []},
+        "ANC1": {"path": [{"action": 1, "data": None}]},
+        "ANC2": {"path": [{"action": 1, "data": None}, {"action": 2, "data": None}]},
+        "DST": {
+            "path": [
+                {"action": 1, "data": None},
+                {"action": 2, "data": None},
+                {"action": 3, "data": None},
+            ]
+        },
+    }
+    exp._record_forward_edge("CUR", {"action": 10, "data": None}, "ANC2")
+
+    calls: list[str | None] = []
+    original_bfs = exp._forward_paths_from
+    exp._forward_paths_from = lambda src: calls.append(src) or original_bfs(src)
+
+    result = exp._partial_forward_path("CUR", "DST")
+
+    assert calls == ["CUR"], "expected exactly one shared BFS run, not one per ancestor"
+
+    # Correctness: replay the OLD per-ancestor-BFS algorithm verbatim (calling the untouched
+    # `_exact_shortest_path` once per candidate ancestor) and confirm byte-identical output.
+    old_best_depth = -1
+    old_best_plan = None
+    for ancestor, node in exp.graph.items():
+        if ancestor == "DST":
+            continue
+        ancestor_path = node.get("path", [])
+        if not exp._path_is_prefix(ancestor_path, exp.graph["DST"]["path"]):
+            continue
+        forward = exp._exact_shortest_path("CUR", ancestor)
+        if forward is None:
+            continue
+        depth = len(ancestor_path)
+        if depth <= old_best_depth:
+            continue
+        suffix = [
+            {"action": int(s["action"]), "data": s.get("data")}
+            for s in exp.graph["DST"]["path"][depth:]
+        ]
+        old_best_depth = depth
+        old_best_plan = list(forward) + suffix
+
+    assert result == old_best_plan
+    assert result == [{"action": 10, "data": None}, {"action": 3, "data": None}]
