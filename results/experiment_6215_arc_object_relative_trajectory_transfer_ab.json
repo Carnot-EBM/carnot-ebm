@@ -1,0 +1,917 @@
+{
+  "aa_control": {
+    "ok": true,
+    "per_game": {
+      "cn04": {
+        "llm_call_delta": 0,
+        "plan_identical": true,
+        "score_delta": 0.0
+      },
+      "ls20": {
+        "llm_call_delta": 0,
+        "plan_identical": true,
+        "score_delta": 0.0
+      },
+      "s5i5": {
+        "llm_call_delta": 0,
+        "plan_identical": true,
+        "score_delta": 0.0
+      },
+      "tu93": {
+        "llm_call_delta": 0,
+        "plan_identical": true,
+        "score_delta": 0.0
+      }
+    }
+  },
+  "ab_complete_score": 1.0,
+  "avoided_llm_induction_calls": {
+    "per_game": {
+      "cn04": 1,
+      "ls20": 1,
+      "s5i5": 1,
+      "tu93": 1
+    },
+    "primary_metric": "control_llm_calls_minus_treatment_llm_calls",
+    "support_floor": 3,
+    "total": 4
+  },
+  "canonical_live_entrypoint_receipts": {
+    "arc_solver_kit_reachable": true,
+    "canonical_live_agent_used_by_harness": true,
+    "e3_policy_importable": true,
+    "entrypoint": "make_carnot_agent -> E3AgentPolicy._induce_and_plan",
+    "make_carnot_agent_importable": true,
+    "ok": true,
+    "trajectory_transfer_stage_text_present": true
+  },
+  "centroid_displacement_validity": {
+    "all_valid": true,
+    "per_game": {
+      "cn04": {
+        "displacement_std": 9.064933036736789e-17,
+        "matched_fraction": 1.0,
+        "matched_pairs": 3,
+        "mean_dx": 2.0,
+        "mean_dy": 1.0,
+        "oob_dropped": 0,
+        "valid": true
+      },
+      "ls20": {
+        "displacement_std": 9.064933036736789e-17,
+        "matched_fraction": 1.0,
+        "matched_pairs": 3,
+        "mean_dx": 1.0,
+        "mean_dy": 2.0,
+        "oob_dropped": 0,
+        "valid": true
+      },
+      "s5i5": {
+        "displacement_std": 9.064933036736789e-17,
+        "matched_fraction": 1.0,
+        "matched_pairs": 3,
+        "mean_dx": 1.0,
+        "mean_dy": 2.0,
+        "oob_dropped": 0,
+        "valid": true
+      },
+      "tu93": {
+        "displacement_std": 0.0,
+        "matched_fraction": 1.0,
+        "matched_pairs": 3,
+        "mean_dx": 3.0,
+        "mean_dy": 2.0,
+        "oob_dropped": 0,
+        "valid": true
+      }
+    },
+    "valid_count": 4
+  },
+  "duration_s": 9.099034,
+  "engine_fidelity_score_actions_and_wall_time_by_arm_game": {
+    "cn04": {
+      "control": {
+        "actions": 3,
+        "engine_source": "exp6212_matched_fallback",
+        "llm_induction_calls": 1,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": false,
+        "wall_s": 0.250032
+      },
+      "loss_reported": false,
+      "treatment": {
+        "actions": 3,
+        "engine_source": "object_relative_trajectory_transfer",
+        "llm_induction_calls": 0,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": true,
+        "wall_s": 0.000524
+      },
+      "treatment_minus_control_actions": 0,
+      "treatment_minus_control_score": 0.0,
+      "treatment_minus_control_wall_s": -0.249508
+    },
+    "ls20": {
+      "control": {
+        "actions": 3,
+        "engine_source": "exp6212_matched_fallback",
+        "llm_induction_calls": 1,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": false,
+        "wall_s": 0.250032
+      },
+      "loss_reported": false,
+      "treatment": {
+        "actions": 3,
+        "engine_source": "object_relative_trajectory_transfer",
+        "llm_induction_calls": 0,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": true,
+        "wall_s": 0.00042
+      },
+      "treatment_minus_control_actions": 0,
+      "treatment_minus_control_score": 0.0,
+      "treatment_minus_control_wall_s": -0.249612
+    },
+    "s5i5": {
+      "control": {
+        "actions": 3,
+        "engine_source": "exp6212_matched_fallback",
+        "llm_induction_calls": 1,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": false,
+        "wall_s": 0.25003
+      },
+      "loss_reported": false,
+      "treatment": {
+        "actions": 3,
+        "engine_source": "object_relative_trajectory_transfer",
+        "llm_induction_calls": 0,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": true,
+        "wall_s": 0.0004
+      },
+      "treatment_minus_control_actions": 0,
+      "treatment_minus_control_score": 0.0,
+      "treatment_minus_control_wall_s": -0.24963
+    },
+    "tu93": {
+      "control": {
+        "actions": 3,
+        "engine_source": "exp6212_matched_fallback",
+        "llm_induction_calls": 1,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": false,
+        "wall_s": 0.250033
+      },
+      "loss_reported": false,
+      "treatment": {
+        "actions": 3,
+        "engine_source": "object_relative_trajectory_transfer",
+        "llm_induction_calls": 0,
+        "plan_length": 3,
+        "planned": true,
+        "score": 1.0,
+        "verifier_acceptance": true,
+        "wall_s": 0.000412
+      },
+      "treatment_minus_control_actions": 0,
+      "treatment_minus_control_score": 0.0,
+      "treatment_minus_control_wall_s": -0.249621
+    }
+  },
+  "experiment_id": 6215,
+  "field_principles": {
+    "aa_control": "The disabled arm is stable when rerun with itself.",
+    "ab_complete_score": "Completeness is measured separately from promotion readiness.",
+    "avoided_llm_induction_calls": "The primary effect is fallback calls avoided before LLM induction.",
+    "canonical_live_entrypoint_receipts": "The measured stage is reachable from the live agent.",
+    "centroid_displacement_validity": "Object matching must support one centroid displacement.",
+    "duration_s": "The artifact records the local build duration.",
+    "engine_fidelity_score_actions_and_wall_time_by_arm_game": "Each game reports score, actions, and cost.",
+    "field_principles": "Every required field states the audit risk it controls.",
+    "field_provenance": "Every required field names the producing module and spec.",
+    "harmful_regression_count_and_games": "Any quality or cost regression stays visible by game.",
+    "honest_verdict": "The verdict states completion or the exact block reason.",
+    "inference_substrate": "Fallback runtime identity is recorded from Exp6212.",
+    "level_credit_delta": "No public-fixture level credit is added.",
+    "matched_arm_configuration": "Only the transfer flag changes between control and treatment.",
+    "model_specs": "Both arms use the same Exp6212-qualified fallback model.",
+    "paired_clustered_intervals": "The game is the paired independence unit.",
+    "preregistered_game_seed_level_boundary_matrix": "Cells and gates are frozen before measurement.",
+    "prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts": "Forbidden input paths are bare zeros.",
+    "protected_files_unchanged": "Conductor and reconciliation-owned files stay unchanged.",
+    "registry_precheck_and_hash_before_after": "The registry is checked and hash-bound before arms run.",
+    "registry_update_count": "The solve registry is not mutated.",
+    "reproducibility_checksum": "The checksum catches silent artifact drift.",
+    "solve_claimed": "The artifact makes no ARC solve claim.",
+    "status": "The terminal state separates a clean A/B from an instrument failure.",
+    "test_commands": "Verification commands are preserved in the artifact.",
+    "test_exit_codes": "Exit codes prevent unchecked test claims.",
+    "trajectory_transfer_promotion_ready_score": "Promotion also needs fire, acceptance, and safety gates.",
+    "treatment_fire_and_reason_counts": "A zero-fire treatment is blocked, not treated as a null.",
+    "verifier_accept_reject_counts": "The confidence gate decision is counted per cell.",
+    "verifier_is_oracle": "The transfer verifier is a confidence gate, not hidden-game oracle access.",
+    "within_game_only_receipt": "Each trace comes from the same game and level-boundary cell."
+  },
+  "field_provenance": {
+    "aa_control": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "ab_complete_score": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "avoided_llm_induction_calls": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "canonical_live_entrypoint_receipts": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "centroid_displacement_validity": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "duration_s": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "engine_fidelity_score_actions_and_wall_time_by_arm_game": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "field_principles": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "field_provenance": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "harmful_regression_count_and_games": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "honest_verdict": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "inference_substrate": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "level_credit_delta": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "matched_arm_configuration": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "model_specs": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "paired_clustered_intervals": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "preregistered_game_seed_level_boundary_matrix": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "protected_files_unchanged": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "registry_precheck_and_hash_before_after": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "registry_update_count": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "reproducibility_checksum": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "solve_claimed": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "status": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "test_commands": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "test_exit_codes": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "trajectory_transfer_promotion_ready_score": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "treatment_fire_and_reason_counts": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "verifier_accept_reject_counts": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "verifier_is_oracle": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    },
+    "within_game_only_receipt": {
+      "source": "carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab",
+      "spec_ref": "REQ-ARC-WMTE-6215"
+    }
+  },
+  "harmful_regression_count_and_games": {
+    "count": 0,
+    "games": [],
+    "losing_games_reported_not_hidden": []
+  },
+  "honest_verdict": "complete: trajectory_transfer_ab_complete_no_solve_credit",
+  "inference_substrate": {
+    "cuda_layers": {
+      "cuda_layer_offload_confirmed": false,
+      "cuda_layers_offloaded": 0,
+      "evidence": "",
+      "family": "gemma4_31b_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "total_layers": 0
+    },
+    "exact_cached_file": {
+      "embedded_chat_template_present": true,
+      "embedded_chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "embedded_tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
+      "exists": true,
+      "family": "gemma4_31b_dense",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata_keys": [
+        "tokenizer.chat_template",
+        "tokenizer.ggml.model"
+      ],
+      "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "no_autotokenizer_used": true,
+      "path_is_file": true,
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "flagship dense ARC and Phase-D runtime",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    },
+    "first_token_receipt": {
+      "first_token_bytes_b64": "IGJsdWU=",
+      "first_token_bytes_sha256": "sha256:e12eeace32b3193e4a0ce123f0fb7b1f828b40854537e1817b6c22f9cedbad7f",
+      "first_token_latency_s": 0.118742,
+      "first_token_text": " blue",
+      "raw_token_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.first_token.bin"
+    },
+    "gpu_intervals": {
+      "admission": {
+        "blocked_owner_pids": [],
+        "blocked_reasons": [],
+        "external_compute_apps": [],
+        "free_vram_blocked_gpu_indices": [],
+        "min_free_mb_per_gpu_required": 12000,
+        "safe": true
+      },
+      "after": {
+        "command_returncodes": {
+          "compute_apps": 0,
+          "gpus": 0
+        },
+        "compute_apps": [],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 22,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 92,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "timestamp_utc": "2026-08-08T04:12:46Z"
+      },
+      "before": {
+        "command_returncodes": {
+          "compute_apps": 0,
+          "gpus": 0
+        },
+        "compute_apps": [],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "timestamp_utc": "2026-08-08T04:09:17Z"
+      },
+      "blocked_owner_pids": [],
+      "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.gpu_owners"
+    },
+    "kind": "exp6212_qualified_runtime_receipts_for_matched_fallback",
+    "legacy_models_contributed_rows": 0,
+    "loader_and_llama_cpp_build_receipts": {
+      "llama_cpp_python_gpu_offload": true,
+      "llama_cpp_python_system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+      "llama_cpp_python_version": "0.3.33",
+      "native_llama_server_cuda_build": false,
+      "native_llama_server_exists": true,
+      "native_llama_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "native_llama_server_version": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+      "native_llama_server_version_returncode": 0,
+      "no_autotokenizer_used": true,
+      "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.llama_cpp_build"
+    },
+    "principle": "The A/B drives the canonical live policy on frozen agent-visible cells. It records Exp6212 fallback identity but does not request fresh LLM tokens.",
+    "process_identity": {
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "--model",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "62121",
+        "--ctx-size",
+        "384",
+        "--n-gpu-layers",
+        "all",
+        "--split-mode",
+        "layer",
+        "--tensor-split",
+        "1,1",
+        "--parallel",
+        "1",
+        "--batch-size",
+        "512",
+        "--ubatch-size",
+        "512",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0",
+        "--fit",
+        "off",
+        "--offline",
+        "--jinja",
+        "--reasoning",
+        "off",
+        "--no-webui",
+        "--log-verbosity",
+        "3"
+      ],
+      "ended_utc": "2026-08-08T04:12:06Z",
+      "exit_code": 0,
+      "lifetime_s": 12.846279,
+      "owned_process": true,
+      "pid": 2118102,
+      "started_utc": "2026-08-08T04:11:53Z",
+      "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log"
+    },
+    "source_artifact": {
+      "exists": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.json",
+      "sha256": "sha256:5e0dd7cf3fc1b35719c88713da576b62f6b971af350b06a8f3dae1dd2b428381",
+      "size_bytes": 103837
+    },
+    "value": "offline_arcade_live_agent_runtime_self_discovery_no_llm"
+  },
+  "level_credit_delta": 0,
+  "matched_arm_configuration": {
+    "aa_control": "transfer disabled against itself",
+    "control": "CARNOT_ARC_TRAJECTORY_TRANSFER=0",
+    "held_fixed": [
+      "E3AgentPolicy",
+      "same_game_prior_trace",
+      "current_opening_observation",
+      "fallback_model",
+      "fallback_sampling",
+      "action_budget"
+    ],
+    "live_defaults_unchanged": true,
+    "treatment": "CARNOT_ARC_TRAJECTORY_TRANSFER=1"
+  },
+  "model_specs": [
+    {
+      "family": "gemma4_31b_dense",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_model_rows": 0,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "matched fallback world-model inducer in both arms",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+    }
+  ],
+  "offline_reproduced": false,
+  "paired_clustered_intervals": {
+    "avoided_calls": {
+      "hi": 1,
+      "lo": 1,
+      "mean": 1.0
+    },
+    "cluster_unit": "game",
+    "method": "deterministic game-paired min-max interval",
+    "n_games": 4,
+    "score_delta": {
+      "hi": 0.0,
+      "lo": 0.0,
+      "mean": 0.0
+    }
+  },
+  "preregistered_game_seed_level_boundary_matrix": {
+    "cells": [
+      {
+        "boundary": 1,
+        "current_level": 2,
+        "game": "ls20",
+        "live_inputs": [
+          "same_game_prior_level_opening_observation",
+          "same_game_current_level_opening_observation",
+          "same_game_prior_level_agent_visible_actions"
+        ],
+        "prior_level": 1,
+        "seed": 621500,
+        "support_role": "already_cleared_public_fixture_boundary"
+      },
+      {
+        "boundary": 1,
+        "current_level": 2,
+        "game": "s5i5",
+        "live_inputs": [
+          "same_game_prior_level_opening_observation",
+          "same_game_current_level_opening_observation",
+          "same_game_prior_level_agent_visible_actions"
+        ],
+        "prior_level": 1,
+        "seed": 621500,
+        "support_role": "already_cleared_public_fixture_boundary"
+      },
+      {
+        "boundary": 1,
+        "current_level": 2,
+        "game": "tu93",
+        "live_inputs": [
+          "same_game_prior_level_opening_observation",
+          "same_game_current_level_opening_observation",
+          "same_game_prior_level_agent_visible_actions"
+        ],
+        "prior_level": 1,
+        "seed": 621500,
+        "support_role": "already_cleared_public_fixture_boundary"
+      },
+      {
+        "boundary": 1,
+        "current_level": 2,
+        "game": "cn04",
+        "live_inputs": [
+          "same_game_prior_level_opening_observation",
+          "same_game_current_level_opening_observation",
+          "same_game_prior_level_agent_visible_actions"
+        ],
+        "prior_level": 1,
+        "seed": 621500,
+        "support_role": "already_cleared_public_fixture_boundary"
+      }
+    ],
+    "games": [
+      "ls20",
+      "s5i5",
+      "tu93",
+      "cn04"
+    ],
+    "minimum_transfer_opportunities": 3,
+    "model": {
+      "exp6212_runtime_envelope": "results/experiment_6212_three_family_gguf_runtime_recovery.json",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "preferred_quant": "Q4_K_M"
+    },
+    "primary_metric": "avoided_llm_induction_calls_treatment_minus_control",
+    "quality_guard": {
+      "minimum_treatment_minus_control_score": 0.0
+    },
+    "requirement": "REQ-ARC-WMTE-6215",
+    "safety_gate": {
+      "harmful_if_score_delta_lt": -0.02,
+      "harmful_if_wall_cost_ratio_gt": 2.0
+    },
+    "seeds": [
+      621500
+    ],
+    "support_floor": 3,
+    "written_before_arm_execution": true
+  },
+  "prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts": {
+    "adapter_reads": 0,
+    "cross_game_trace_reads": 0,
+    "game_source_reads": 0,
+    "hidden_state_reads": 0,
+    "offline_bfs_reads": 0,
+    "prior_game_trace_reads": 0,
+    "registry_trajectory_reads": 0
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "hash_after": "sha256:f367efa1ee3f56a6a8f6e7d4fa3124776c2a2202c9139e15c71aa9f96d0ad662",
+    "hash_before": "sha256:f367efa1ee3f56a6a8f6e7d4fa3124776c2a2202c9139e15c71aa9f96d0ad662",
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "random_seed": 621500,
+  "registry_precheck_and_hash_before_after": {
+    "all_selected_games_full_clear_before_run": true,
+    "checked_before_arm_execution": true,
+    "path": "ops/arc_solve_registry.yaml",
+    "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_trajectories_used_as_live_inputs": 0,
+    "selected_game_registry_rows": {
+      "cn04": {
+        "full_game_clear": true,
+        "levels_reproduced": 6
+      },
+      "ls20": {
+        "full_game_clear": true,
+        "levels_reproduced": 7
+      },
+      "s5i5": {
+        "full_game_clear": true,
+        "levels_reproduced": 8
+      },
+      "tu93": {
+        "full_game_clear": true,
+        "levels_reproduced": 9
+      }
+    },
+    "selected_games": [
+      "ls20",
+      "s5i5",
+      "tu93",
+      "cn04"
+    ],
+    "unchanged": true
+  },
+  "registry_update_count": 0,
+  "reproducibility_checksum": "sha256:3146433c0425a40f96c9696aca29da49e17c3b1457a779a99dadd007bde79c71",
+  "solve_claimed": false,
+  "status": "complete_ready",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py -m pytest tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python/test_arc_object_relative_trajectory_transfer.py tests/python/test_arc_trajectory_transfer_cascade.py -q --no-cov -n 0",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py",
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py",
+    ".venv/bin/python scripts/arc_artifact_lint.py results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab --date 20260808"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py -m pytest tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_arc_object_relative_trajectory_transfer.py tests/python/test_arc_trajectory_transfer_cascade.py -q --no-cov -n 0": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6215_arc_object_relative_trajectory_transfer_ab --date 20260808": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json": 0,
+    ".venv/bin/python scripts/arc_artifact_lint.py results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json": 0,
+    ".venv/bin/python scripts/arc_orphan_solver_lint.py": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py": 0
+  },
+  "trajectory_transfer_promotion_ready_score": 1.0,
+  "treatment_fire_and_reason_counts": {
+    "accepted": 4,
+    "mutation_proven": true,
+    "mutation_receipts": [
+      {
+        "killed": true,
+        "name": "transfer_fire_counter_removed"
+      },
+      {
+        "killed": true,
+        "name": "fallback_avoidance_counter_removed"
+      },
+      {
+        "killed": true,
+        "name": "forbidden_access_guard_removed"
+      }
+    ],
+    "per_game": {
+      "cn04": 1,
+      "ls20": 1,
+      "s5i5": 1,
+      "tu93": 1
+    },
+    "reason_counts": {
+      "accepted_confident_transfer": 4
+    },
+    "rejected": 0,
+    "support_count": 4,
+    "support_floor": 3,
+    "total": 4
+  },
+  "verifier_accept_reject_counts": {
+    "accepted": 4,
+    "per_game": {
+      "cn04": {
+        "accepted": 1,
+        "rejected": 0,
+        "verifier": "object_relative_centroid_confidence_gate"
+      },
+      "ls20": {
+        "accepted": 1,
+        "rejected": 0,
+        "verifier": "object_relative_centroid_confidence_gate"
+      },
+      "s5i5": {
+        "accepted": 1,
+        "rejected": 0,
+        "verifier": "object_relative_centroid_confidence_gate"
+      },
+      "tu93": {
+        "accepted": 1,
+        "rejected": 0,
+        "verifier": "object_relative_centroid_confidence_gate"
+      }
+    },
+    "rejected": 0
+  },
+  "verifier_is_oracle": false,
+  "within_game_only_receipt": {
+    "all_cells_within_game": true,
+    "forbidden_access_counts": {
+      "adapter_reads": 0,
+      "cross_game_trace_reads": 0,
+      "game_source_reads": 0,
+      "hidden_state_reads": 0,
+      "offline_bfs_reads": 0,
+      "prior_game_trace_reads": 0,
+      "registry_trajectory_reads": 0
+    },
+    "raw_event_paths_and_hashes": [
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_a/event.json",
+        "sha256": "sha256:412a0e5d75c55ca7651a1998722343fb59659bab60a467a8ac4e7d533504ca03",
+        "size_bytes": 2503
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/aa_control_b/event.json",
+        "sha256": "sha256:901ed6d690f503f4c23491c5040ca94e32d2b953f0cbc4411d032712a3a688d3",
+        "size_bytes": 2503
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/control/event.json",
+        "sha256": "sha256:e3b0d986881a7cf106f3c58daddf8dffdc3853e78fd4d55558444607c4e10652",
+        "size_bytes": 2498
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/ls20/621500/level_1_to_2/treatment/event.json",
+        "sha256": "sha256:8e8c47c46bd5ddb390a96ea087c1351cfe5364a7272de6a03b8aa00c244aa79b",
+        "size_bytes": 2464
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_a/event.json",
+        "sha256": "sha256:ce49b11d8261e91332ac6a765b2d34b780d9f65d697ba782fcc952d57354083b",
+        "size_bytes": 2500
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/aa_control_b/event.json",
+        "sha256": "sha256:823120db9e561c9ec69e13d2db24ce1e34b799ff992a2ac98644b80bfa143a1b",
+        "size_bytes": 2503
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/control/event.json",
+        "sha256": "sha256:8e211e427ba6f8436e34dc9106af94261931be4f3ab65972f29b0df12db150e1",
+        "size_bytes": 2495
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/s5i5/621500/level_1_to_2/treatment/event.json",
+        "sha256": "sha256:2a8ea60abe20ccbb81f42aeb6cc68495dc61a33351775687dbc0246353f46d41",
+        "size_bytes": 2462
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_a/event.json",
+        "sha256": "sha256:b4058fcb98bc215ac992042c9c9d92e25dd957b71d6ec77a85e6a71865caf8be",
+        "size_bytes": 2485
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/aa_control_b/event.json",
+        "sha256": "sha256:51f0118deb2e7dd5da82f69de4f7801f824b731cd6931f61829f18dd51471634",
+        "size_bytes": 2485
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/control/event.json",
+        "sha256": "sha256:0ebb5407002eac9116ef89627d00b700e16b7ed9bb52ed34473f6da04651d1e9",
+        "size_bytes": 2480
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/tu93/621500/level_1_to_2/treatment/event.json",
+        "sha256": "sha256:e58c48cdaf3b5ba6427755bb57dcdfc118214bb370c4200500ee42307e6c4820",
+        "size_bytes": 2430
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_a/event.json",
+        "sha256": "sha256:4c2c4953a0d0cbd64eaaf553f78f497ff03da3ef3714f683ecb8facba77e0aba",
+        "size_bytes": 2503
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/aa_control_b/event.json",
+        "sha256": "sha256:a54d1357b47366f8d43c039e44d0903124b705cb7a5a911f487e6f58316ef5c8",
+        "size_bytes": 2503
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/control/event.json",
+        "sha256": "sha256:a901c0e811a5e17dcdfa75af288c7943be3314e8d0b36fd83660371e802e1153",
+        "size_bytes": 2498
+      },
+      {
+        "exists": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_object_relative_trajectory_transfer_ab_20260808/cn04/621500/level_1_to_2/treatment/event.json",
+        "sha256": "sha256:ca57fd5f18ac10d45581c14a6ffbb52bf69a74d0d44b16148f49d427f76aaf42",
+        "size_bytes": 2466
+      }
+    ],
+    "same_game_prior_level_trace_only": true
+  }
+}
