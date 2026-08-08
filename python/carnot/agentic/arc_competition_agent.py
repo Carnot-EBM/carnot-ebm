@@ -164,7 +164,17 @@ SUBMITTED_TARGET_LEVELS = 8
 # regardless of this value -- a silent no-op from 2026-08-07 to 2026-08-08. E3AgentPolicy now
 # accepts `early_stop_grace` and forwards it to StepwiseExplorer (see its __init__ and
 # SUBMITTED_AGENT_CONFIG["early_stop_grace"]), so this value is genuinely live as of 2026-08-08.
-SUBMITTED_EARLY_STOP_GRACE: Optional[int] = 400
+#
+# SECOND CORRECTION (2026-08-08, same day, after the wiring fix above). The "no score cost"
+# claim in the first paragraph is FALSE. An audit of results/early_stop_sweep_20260726/rows_*.json
+# (null-grace rows, so the gaps below were never truncated by any grace cutoff) found tu93
+# reaches level 1 at action 334 and level 2 at action 1538 on 3 of 3 tested seeds -- a
+# reproducible 1204-action gap. A grace of 400 would stop the agent around action 734, before
+# level 2, EVERY time, at the shipped MAX_ACTIONS=2000 budget. cd82 shows the same shape on 1 of
+# 3 seeds (1038-action gap). So the value is back to `None` (off) until an A/B measures total
+# levels reached, grace on vs off, across the full roster -- the wiring fix above stays; only
+# the shipped VALUE is reverted.
+SUBMITTED_EARLY_STOP_GRACE: Optional[int] = None
 SUBMITTED_SEARCH_MODE = "depth_first_ride"
 SUBMITTED_GRAPH_EXPLORE_BUDGET = 80
 SUBMITTED_ROUTED_EXPLORE_BUDGET = 24
