@@ -1270,6 +1270,7 @@ class StepwiseExplorer:
         self._disc_negative_sources: dict[str, int] = {}
         self._disc_fit_count = 0
         self._disc_frontier_pruned = 0
+        self._disc_frontier_never_empty_rescues = 0
         # SEARCH MODE: "depth_first_ride" (default, proven) rides the current branch depth-first (action-
         # efficient; load-bearing for the deep wins lp85/sp80). "best_first" ALWAYS expands the globally-
         # best A*-value frontier (depth + value_weight*value) -- this is the graph_explore_solve_v2 search
@@ -1556,6 +1557,10 @@ class StepwiseExplorer:
         self.goal_bias_lower_is_better = bool(goal_bias_lower_is_better and goal_bias is not None)
         self._goal_bias_scored = 0
         self._goal_bias_errors = 0
+        # Bumped by set_goal_bias() (the only mutator of self.goal_bias post-construction) so a
+        # per-node cached score computed under a PRIOR goal_bias can never be read back after a
+        # new one is installed -- see _goal_bias_score's cache below (REQ-ARC-WMTE-6226).
+        self._goal_bias_generation = 0
         # REQ-ARC-FCP-5703 / GAP-5703: streaming (not stored-list, to avoid unbounded memory on
         # long episodes) mean/variance/min/max so goal_bias_diagnostics() can self-audit whether
         # this source is degenerate (constant score) on the current game -- mirrors the
@@ -1837,6 +1842,7 @@ class StepwiseExplorer:
             "fit_count": int(self._disc_fit_count),
             "frontier_pruned": int(self._disc_frontier_pruned),
             "prune_threshold": float(self.discriminative_prune_threshold),
+            "never_empty_rescues": int(self._disc_frontier_never_empty_rescues),
         }
 
     def search_distribution_samples(self) -> list[dict[str, Any]]:
@@ -1900,6 +1906,7 @@ class StepwiseExplorer:
         self.goal_bias = goal_bias
         self.goal_bias_label = str(label or "")
         self.goal_bias_lower_is_better = bool(lower_is_better and goal_bias is not None)
+        self._goal_bias_generation += 1
         if self.goal_candidate_guidance is not None and hasattr(
             self.goal_candidate_guidance,
             "set_goal_energy",
@@ -2088,12 +2095,20 @@ class StepwiseExplorer:
             return 0.0
         return self.dense_curiosity.score_state(node_hash)
 
-    def _goal_bias_score(self, node: Mapping[str, Any]) -> float:
+    def _goal_bias_score(self, node: dict[str, Any]) -> float:
         if self.goal_bias is None:
             return 0.0
         frame = node.get("frame")
         if frame is None:
             return 0.0
+        # SPEED (REQ-ARC-WMTE-6226): `goal_bias` is an exec'd Python predicate re-run per node
+        # on EVERY `_frontier()` call, even though a node's frame never changes once recorded.
+        # Cache the score on the node itself, keyed by `_goal_bias_generation` -- bumped only by
+        # `set_goal_bias` -- so a stale score from a PRIOR goal/energy bias can never be served
+        # after a new one is installed (a level-up reinduction, an active-probe round, etc.).
+        cached = node.get("_goal_bias_score_cache")
+        if cached is not None and cached[0] == self._goal_bias_generation:
+            return cached[1]
         try:
             score = float(self.goal_bias(frame))
             self._goal_bias_scored += 1
@@ -2103,6 +2118,7 @@ class StepwiseExplorer:
                 self._goal_bias_score_min = score
             if self._goal_bias_score_max is None or score > self._goal_bias_score_max:
                 self._goal_bias_score_max = score
+            node["_goal_bias_score_cache"] = (self._goal_bias_generation, score)
             return score
         except Exception:
             self._goal_bias_errors += 1
@@ -2115,19 +2131,27 @@ class StepwiseExplorer:
             return float(score)
         return -float(score)
 
-    def _action_effect_frontier_key(self, node: Mapping[str, Any]) -> float:
+    def _action_effect_frontier_key(self, node: dict[str, Any]) -> float:
         if self.action_effect_expansion_prior is None:
             return 0.0
         frame = node.get("frame")
         if frame is None:
             return 0.0
+        untested = node.get("untested") or []
+        # SPEED (REQ-ARC-WMTE-6226): `frontier_priority` scores every remaining untested
+        # candidate (~34-55/node) through the frame-change scorer on EVERY `_frontier()` call,
+        # even between calls where nothing about this node changed. `untested` only ever shrinks
+        # (candidates are popped as they are tried, never re-added), so its length is a cheap,
+        # exact invalidation signal: unchanged length means the same candidate set, means the
+        # same score. `action_effect_expansion_prior` itself is set once at construction and
+        # never replaced, so no generation counter is needed here (contrast `_goal_bias_score`).
+        cached = node.get("_action_effect_key_cache")
+        if cached is not None and cached[0] == len(untested):
+            return cached[1]
         try:
-            return float(
-                self.action_effect_expansion_prior.frontier_priority(
-                    frame,
-                    node.get("untested") or [],
-                )
-            )
+            score = float(self.action_effect_expansion_prior.frontier_priority(frame, untested))
+            node["_action_effect_key_cache"] = (len(untested), score)
+            return score
         except Exception:
             return 0.0
 
@@ -3320,6 +3344,7 @@ class StepwiseExplorer:
         # same decision instead of reporting a spurious "explored out". No-op when the flag is off.
         self._maybe_advance_tier()
         eligible: list[tuple[str, dict, int, float, float, float, float]] = []
+        _best_pruned: Optional[tuple[str, dict, float]] = None
         for h, node in self.graph.items():
             if not self._node_has_open_tier(node):
                 # A node whose remaining work is merely TIER-DEFERRED is not exhausted -- do not
@@ -3343,8 +3368,38 @@ class StepwiseExplorer:
                 if node.get("discriminative_pruned") is not True:
                     self._disc_frontier_pruned += 1
                 node["discriminative_pruned"] = True
+                # Tracked for the NEVER-EMPTY GUARD below, in case every open-tier node this call
+                # scores under threshold -- highest on_path_proba first, so if a rescue is needed
+                # it is the node the discriminator was LEAST confident about excluding.
+                if _best_pruned is None or on_path > _best_pruned[2]:
+                    _best_pruned = (h, node, on_path)
                 continue
             node["discriminative_pruned"] = False
+            depth = len(node["path"])
+            eligible.append(
+                (
+                    h,
+                    node,
+                    depth,
+                    on_path,
+                    self._action_effect_frontier_key(node),
+                    self._goal_bias_score(node),
+                    self._curiosity_score(h),
+                )
+            )
+
+        if not eligible and _best_pruned is not None:
+            # NEVER-EMPTY GUARD (mirrors the hazard-pruner guard elsewhere in this file, same
+            # reasoning: load-bearing, not defensive politeness). A logistic discriminator
+            # fittable from as few as 6 samples can transiently score every open-tier node below
+            # `discriminative_prune_threshold`. Without this guard an empty `eligible` here reads
+            # as "fully explored" to the caller, which latches `explored_out = True` and ends the
+            # run with most of the action budget unspent -- a mechanical null indistinguishable
+            # from a genuine one. Retain the single highest-scoring pruned node instead of
+            # returning None, and count the rescue so an A/B can see how often this fires.
+            h, node, on_path = _best_pruned
+            node["discriminative_pruned"] = False
+            self._disc_frontier_never_empty_rescues += 1
             depth = len(node["path"])
             eligible.append(
                 (

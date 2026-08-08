@@ -22723,3 +22723,80 @@ STALL-path reentry test drives that exact scenario against the STALL path's own
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6224 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._induce_and_plan` (`_plan_start_grid` local, swapped into both the level-up and STALL/reentry branches). | `tests/python/test_arc_level_up_reinduction_plan_start_grid_20260808.py`. |
+
+### REQ-ARC-WMTE-6225: The Discriminative Frontier Prune SHALL Never Empty The Eligible Set
+
+**Origin:** 2026-08-08 adversarial review, Correctness finding 3. `StepwiseExplorer._frontier`'s
+online-discriminator prune had no never-empty floor. A logistic discriminator fittable from as
+few as 6 samples can transiently score every open-tier node below `discriminative_prune_
+threshold` (default 0.12), leaving `eligible` empty. `_frontier` then returns None, and its
+caller latches `self.explored_out = True` -- assigned only at `__init__` and there, so the latch
+never clears. The game ends with most of the action budget unspent, reading as a legitimate
+"fully explored" null rather than a mechanical artifact of the discriminator's own transient
+error. The file already has this exact guard class for a different pruner
+(`HazardMovePruner`, the "NEVER-EMPTY GUARD, load-bearing" comment near `_ingest`); the older
+discriminative-prune path lacked it.
+
+**The fix.** The prune loop now tracks the highest-`on_path_proba` node it would otherwise drop
+(`_best_pruned`). If the loop ends with `eligible` empty and a tracked candidate exists, that
+node is un-pruned and used instead of returning None -- the single least-confidently-excluded
+candidate, not an arbitrary one. The rescue increments a new
+`self._disc_frontier_never_empty_rescues` counter, surfaced in
+`online_discriminator_diagnostics()["never_empty_rescues"]`. Genuine exhaustion (no open-tier
+nodes at all, so the discriminative-prune branch is never reached for any node) is unaffected --
+`_best_pruned` stays `None` and `_frontier` still correctly returns `None`.
+
+**Tests.** `tests/python/test_arc_frontier_never_empty_guard_20260808.py`: all-nodes-pruned is
+rescued instead of returning None; the rescue is counted in diagnostics; the rescue picks the
+highest-scoring pruned candidate when more than one exists; the ordinary mixed case (a node
+survives the prune) is unaffected and the guard does not fire; genuine exhaustion (no open-tier
+nodes) still returns None and does not manufacture a rescue. Plus the pre-existing
+`test_experiment_4477_per_game_online_discriminative.py` suite, unchanged and still green.
+
+## Implementation Status (REQ-ARC-WMTE-6225)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6225 | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer._frontier` (`_best_pruned` tracking + never-empty rescue), `_disc_frontier_never_empty_rescues` counter, `online_discriminator_diagnostics()`. | `tests/python/test_arc_frontier_never_empty_guard_20260808.py`. |
+
+### REQ-ARC-WMTE-6226: Per-Node Frontier Keys SHALL Be Memoized Across `_frontier` Calls
+
+**Origin:** 2026-08-08 adversarial review, Speed finding 2 (shipped ON; confirmed by two review
+lenses). `StepwiseExplorer._frontier` recomputed two expensive per-node keys from scratch on
+EVERY call, even though the inputs they depend on are immutable between calls for most nodes:
+the action-effect prior (`_action_effect_frontier_key`) re-scores every remaining untested
+candidate (~34-55/node) through the frame-change scorer, with a per-candidate SHA-1 plus grid
+conversion even on cache hits inside that scorer; the goal-bias energy (`_goal_bias_score`)
+re-runs an exec'd Python predicate on the node's stored frame. The adjacent lazy-value cache
+(`node["value"]`) already documents and fixes this exact bug class for the value head -- applied
+there only.
+
+**The fix.** Both functions now cache their result ON THE NODE DICT itself, mirroring the
+existing `node["value"]` lazy-cache pattern -- no node-hash plumbing needed at any call site:
+
+- `_goal_bias_score`: `node["_goal_bias_score_cache"] = (generation, score)`, invalidated by a
+  new `self._goal_bias_generation` counter. The counter is bumped only by `set_goal_bias`, the
+  sole post-construction mutator of `self.goal_bias`, so a stale score computed under a PRIOR
+  bias can never be served after a new one is installed (a level-up reinduction, an
+  active-probe round, etc.).
+- `_action_effect_frontier_key`: `node["_action_effect_key_cache"] = (len(untested), score)`.
+  `self.action_effect_expansion_prior` is set once at construction and never replaced, so
+  `untested`'s length -- which only ever shrinks, as candidates are popped when tried -- is a
+  cheap, exact invalidation signal on its own; no generation counter is needed here.
+
+Both caches skip writing on an exception (the `except` fallback of 0.0 is never memoized, so a
+transient scorer error cannot poison a later, working call).
+
+**Tests.** `tests/python/test_arc_frontier_key_memoization_20260808.py`: repeated calls on an
+unchanged node hit the cache (call-count assertions against counting stand-ins, not just value
+equality); installing a new goal bias invalidates the cache; distinct nodes are scored
+independently; `untested` shrinking invalidates the action-effect cache; an end-to-end
+`_frontier()` call is unaffected in WHICH node it picks, only in how many times the underlying
+scorers actually run. Plus the pre-existing goal-bias/action-effect test suites (23 tests across
+4 files), unchanged and still green.
+
+## Implementation Status (REQ-ARC-WMTE-6226)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6226 | `python/carnot/agentic/arc_competition_agent.py:StepwiseExplorer._goal_bias_score`/`_action_effect_frontier_key` (node-dict caches), `_goal_bias_generation` counter bumped in `set_goal_bias`. | `tests/python/test_arc_frontier_key_memoization_20260808.py`. |
