@@ -142,6 +142,42 @@ identically without any of today's changes present:
 **Falsifiable gate (addendum).** Same shape as above: ends when all 3 pass again, or each is
 individually re-classified and fixed or corrected with a dated note.
 
+**RESOLVED 2026-08-08 (findings 4, 5, 6 — the addendum's own gate).** An adversarially-verified
+investigation workflow root-caused all three, all `stale_test` (no production regression):
+
+- **Finding 4** confirmed same root cause as finding 3 (the 2026-07-31 qat repin, commit
+  `6526b472a8`). Fixed: `tests/python/test_experiment_5727_arc_generalization_live_oracle_gap_v511.py`
+  now asserts `repo_substr == "gemma-4-31B-it-qat"`; the stale "no MTP heads" comment was also
+  corrected to match the already-fixed language in `test_arc_submitted_agent_parity.py`. The
+  repo-wide sweep this addendum called for (scope item (c)) found no further undiscovered stale
+  sites beyond the finding-3 pair (2 more `== "gemma-4-31B-it"` hits exist but are self-contained
+  fixtures unaffected by the live constant, verified by direct read). **Finding 3's own pair in
+  `test_arc_submitted_agent_parity.py` is the identical root cause and is still open** — not fixed
+  in this pass, same one-line-swap-plus-comment-correction applies.
+- **Finding 5**: real root cause identified — commit `ca8e078ccb` (2026-07-25, Exp5904/5927) wrapped
+  `load_cross_game_discriminative_router`'s return value inside an `OnlineClickTargetRouter`, so a
+  stub swapped in at the inner loader only ever reaches `.base` of the wrapper. `_load_submitted_
+  candidate_router` was confirmed, by direct read and by empirical monkeypatch, to no longer call
+  `load_cross_game_discriminative_router` on any live default path; the wrapper's presence is
+  deliberate and default-off-safe, not a regression. Fixed: the test now monkeypatches
+  `load_online_click_target_router` instead, with a comment explaining why.
+- **Finding 6**: root cause is two independent, deliberate interface changes to `_induce_and_plan`'s
+  plain-path calling contract that postdate the test's authoring commit — `d9de98aedd` (2026-07-27,
+  added `hud_mask=` + `change_gate_decision()`, reading fields the hand-rolled `_FakeVerifier` lacked)
+  and `c48b6a853d` (2026-07-15, REQ-ARC-FCP-5699-15, added an unconditional `diagnostics=` kwarg).
+  The resulting `TypeError`/`AttributeError` was silently swallowed by `_induce_and_plan`'s own outer
+  `except Exception`, so `plan_in_model` was never reached and `captured` stayed empty — hence the
+  reported `IndexError`. The adversarial verify pass caught that the first proposed fix was
+  incomplete (missing three more `VerifyResult` fields read directly before `change_gate_decision`
+  runs); the corrected, empirically-passing fix is now in place: the fake verifier carries
+  `hud_mask_status`/`hud_mask_cells`/`hud_mask_swallow`, `WorldModelVerifier` accepts `**kwargs`,
+  `change_gate_decision` is monkeypatched to its true default-off shape, and the final assertion
+  reads `"goal_energy" not in captured[-1]` instead of exact-`{}` equality.
+
+All three fixes are test-only; no production code changed. Verified: the 3 target node ids pass,
+the 3 files' full suites (17 tests) pass, ruff/ruff-format/mypy clean (one pre-existing, unrelated
+mypy error at `test_experiment_5727...py:413` confirmed outside this fix's edit region).
+
 ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
 
 The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed

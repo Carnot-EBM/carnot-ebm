@@ -110,7 +110,19 @@ def test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan(monkeypatch) 
 
     class _FakeVerifier:
         def score(self, _engine: Any) -> SimpleNamespace:
-            return SimpleNamespace(accuracy=1.0, cell_recall=1.0)
+            # hud_mask_status/cells/swallow: added to the real VerifyResult dataclass by commit
+            # d9de98aedd (2026-07-27), which also added the hud_mask= kwarg on the WorldModelVerifier
+            # call below and the change_gate_decision() call these fields feed -- read directly at
+            # the call site before change_gate_decision runs, so omitting them here raises an
+            # AttributeError that gets silently swallowed by _induce_and_plan's outer except, and
+            # plan_in_model is never reached.
+            return SimpleNamespace(
+                accuracy=1.0,
+                cell_recall=1.0,
+                hud_mask_status="not_requested",
+                hud_mask_cells=0,
+                hud_mask_swallow={},
+            )
 
     def engine(grid: np.ndarray, _action: int, _data: Any) -> np.ndarray:
         return np.asarray(grid)
@@ -119,11 +131,35 @@ def test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan(monkeypatch) 
         return not np.asarray(grid).any()
 
     monkeypatch.setattr(e3, "load_engine", lambda _game: (engine, is_done))
-    monkeypatch.setattr(e3, "WorldModelVerifier", lambda _transitions: _FakeVerifier())
+    # **_kwargs: the plain path now calls WorldModelVerifier(active_transitions, hud_mask=_hud_mask)
+    # (same commit as above); the old single-positional-arg fake raised a TypeError that was
+    # silently swallowed the same way.
+    monkeypatch.setattr(e3, "WorldModelVerifier", lambda _transitions, **_kwargs: _FakeVerifier())
+    # change_gate_decision() (added by the same commit) reads ~15 VerifyResult fields the bare fake
+    # above doesn't have. The change-gate feature itself is default-off in production
+    # (SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED = False), so this canned dict reflects its true
+    # default-off runtime shape rather than hand-faking the full VerifyResult surface.
+    monkeypatch.setattr(
+        e3,
+        "change_gate_decision",
+        lambda _vr, **_kwargs: {
+            "gate_enabled": False,
+            "passed": True,
+            "reason": "gate_disabled",
+            "change_fidelity": 1.0,
+            "correct_changed_cells": 1,
+            "spurious_changed_cells": 0,
+            "change_accuracy": 1.0,
+            "legacy_accuracy_would_pass_at_live_threshold": True,
+            "noop_ok_is_vacuous": False,
+        },
+    )
 
     captured: list[dict[str, Any]] = []
 
-    def plan_in_model(_engine: Any, _is_done: Any, _root_grid: np.ndarray, **kwargs: Any) -> list[dict[str, Any]]:
+    def plan_in_model(
+        _engine: Any, _is_done: Any, _root_grid: np.ndarray, **kwargs: Any
+    ) -> list[dict[str, Any]]:
         captured.append(dict(kwargs))
         return [{"action": 1, "data": None}]
 
@@ -157,7 +193,11 @@ def test_scenario_arc_wmte_4821_live_e3_passes_goal_energy_to_plan(monkeypatch) 
     bare.root_grid = np.ones((2, 2), dtype=np.int16)
     bare._induce_and_plan()
 
-    assert captured[-1] == {}
+    # Not exact-{} equality: commit c48b6a853d (2026-07-15, REQ-ARC-FCP-5699-15) made the plain
+    # path unconditionally pass a diagnostics= kwarg into plan_in_model, so captured[-1] now always
+    # carries a diagnostics dict regardless of goal_guidance_lambda. What this assertion actually
+    # cares about -- lambda=0 means no goal energy is supplied -- is still exactly captured below.
+    assert "goal_energy" not in captured[-1]
 
 
 def test_scenario_arc_wmte_4821_builds_success_artifact_when_ci_excludes_zero() -> None:
