@@ -1,0 +1,1117 @@
+{
+  "schema": "carnot.experiment_6211.v538_source_scope_prereg.v1",
+  "experiment_id": "exp6211-v538-post-marker-source-scope-prereg",
+  "run_date": "20260808",
+  "result_path": "results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+  "status": "blocked",
+  "planner_marker_and_hash": {
+    "marker_text": "V538-PLANNER-REFRESH-20260807-END",
+    "marker_count": 1,
+    "marker_line": 33142,
+    "marker_offset": 2677707,
+    "marker_text_hash": "sha256:bb9305706e6f8316ebf74d1b0cda4d958c9f9e487f44df8959b1eea44b36913e",
+    "marker_block_hash": "sha256:b324af731b75ff83087a763fd1991ba9ee361023650388913a3269f6b622c0fd",
+    "marker_commit": "d9b6e7a9380a254dc06e75169d92612d4248615e",
+    "marker_committed_at": "2026-08-08T01:44:27Z",
+    "reference_hash": "sha256:47b9535c0467354ec7a2f0e1b331e2bc0d286a06aeb42d7e008725d5a787064c"
+  },
+  "query_window": {
+    "marker": "V538-PLANNER-REFRESH-20260807-END",
+    "window_start_exclusive": "2026-08-08T01:44:27Z",
+    "window_end_inclusive": "2026-08-08T23:59:59Z",
+    "accepted_at_or_before_marker": false,
+    "same_day_policy": "A bare 2026-08-08 date is rejected because it resolves before the marker timestamp."
+  },
+  "source_channel_receipts": {
+    "receipts": [
+      {
+        "receipt_id": "arxiv_v538_topics_after_marker",
+        "channel": "arxiv_topics",
+        "authority": "arXiv",
+        "source_role": "primary",
+        "query": "submittedDate:[202608080144 TO 202608082359] AND EBM/ARC/continual/hardware/KAN terms",
+        "url": "https://export.arxiv.org/api/query?search_query=submittedDate:%5B202608080144%20TO%202608082359%5D",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "http_429_rate_limited",
+        "failure_class": "rate_limited",
+        "date_evidence": "strict submittedDate endpoint did not return records during this run",
+        "candidate_ids": [],
+        "candidate_count": 0,
+        "status": 429,
+        "total_results": null,
+        "receipt_hash": "sha256:93a88aa4bf3835fecf86f1a3826c2680faca1f2d47292f59fcfe87449119e79e"
+      },
+      {
+        "receipt_id": "openreview_v538_energy_route",
+        "channel": "openreview",
+        "authority": "OpenReview",
+        "source_role": "secondary",
+        "query": "content=energy-based&limit=5",
+        "url": "https://api.openreview.net/notes?content=energy-based&limit=5",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "http_403_challenge_required",
+        "failure_class": "challenge_required",
+        "date_evidence": "route returned challenge metadata rather than note dates",
+        "candidate_ids": [],
+        "candidate_count": 0,
+        "status": 403,
+        "receipt_hash": "sha256:f88e4551432739943c2a0bdcbf94b37b820e9b5b32f2776d2fb142f6dcd96f61"
+      },
+      {
+        "receipt_id": "semantic_scholar_v538_ebt_citations",
+        "channel": "semantic_scholar_ebt_citations",
+        "authority": "Semantic Scholar",
+        "source_role": "secondary",
+        "query": "arXiv:2507.02092 citations",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2507.02092/citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "reachable_http_200_32_records_no_post_marker",
+        "failure_class": "none",
+        "date_evidence": "newest visible publicationDate 2026-07-29",
+        "candidate_ids": [
+          "2607.27372",
+          "2607.20792",
+          "2607.17047"
+        ],
+        "candidate_count": 32,
+        "status": 200,
+        "newest_publication_date": "2026-07-29",
+        "receipt_hash": "sha256:79f0307731e3d8226b8168add0bff5e0bb8c9be923961984159e9f6fcb89f482"
+      },
+      {
+        "receipt_id": "semantic_scholar_v538_arm_ebm_citations",
+        "channel": "semantic_scholar_arm_ebm_citations",
+        "authority": "Semantic Scholar",
+        "source_role": "secondary",
+        "query": "arXiv:2512.15605 citations",
+        "url": "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605/citations?fields=title,year,externalIds,url,publicationDate,authors&limit=100",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "reachable_http_200_8_records_no_post_marker",
+        "failure_class": "none",
+        "date_evidence": "newest visible publicationDate 2026-07-02",
+        "candidate_ids": [
+          "2607.02154",
+          "2606.03089",
+          "2605.18871"
+        ],
+        "candidate_count": 8,
+        "status": 200,
+        "newest_publication_date": "2026-07-02",
+        "receipt_hash": "sha256:9e0cd7daf8ba4bd03429186e0f4d760a533b2dd1cecbb2d1976b7e7184516189"
+      },
+      {
+        "receipt_id": "huggingface_papers_v538_aug8",
+        "channel": "huggingface_papers",
+        "authority": "Hugging Face Papers",
+        "source_role": "secondary",
+        "query": "date/2026-08-08",
+        "url": "https://huggingface.co/papers/date/2026-08-08",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "reachable_http_200_secondary_feed",
+        "failure_class": "secondary_feed_only",
+        "date_evidence": "date page is secondary and exposed no strict post-marker primary timestamp",
+        "candidate_ids": [
+          "2608.05987",
+          "2607.28609"
+        ],
+        "candidate_count": 2,
+        "status": 200,
+        "receipt_hash": "sha256:c104574921631ba2e6b706c5a1c9cf8b2449e1989279ec9aaa683f32578dd392"
+      },
+      {
+        "receipt_id": "github_v538_arc_agi3_after_marker",
+        "channel": "github_targeted",
+        "authority": "GitHub",
+        "source_role": "secondary",
+        "query": "ARC-AGI-3 pushed:>2026-08-08T01:44:27Z",
+        "url": "https://api.github.com/search/repositories?q=ARC-AGI-3+pushed:%3E2026-08-08T01:44:27Z&sort=updated&order=desc&per_page=5",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "reachable_http_200_total_count_0",
+        "failure_class": "none",
+        "date_evidence": "strict pushed_at filter returned zero repositories",
+        "candidate_ids": [],
+        "candidate_count": 0,
+        "status": 200,
+        "total_count": 0,
+        "receipt_hash": "sha256:ae7a6a7c9e9fa3c88edb4b6331b56fd16b033bd89daf15900ba4262f6b5a2dc7"
+      },
+      {
+        "receipt_id": "extropic_v538_first_party_pages",
+        "channel": "extropic",
+        "authority": "Extropic",
+        "source_role": "official",
+        "query": "writing, hardware, and software pages",
+        "url": "https://extropic.ai/ ; https://extropic.ai/writing ; https://extropic.ai/hardware ; https://extropic.ai/software",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "reachable_http_200_no_dated_post_marker_local_route",
+        "failure_class": "no_changed_since_endpoint",
+        "date_evidence": "pages expose no strict post-marker public TSU/Z1 route for local execution",
+        "candidate_ids": [
+          "home",
+          "writing",
+          "hardware",
+          "software"
+        ],
+        "candidate_count": 4,
+        "status": 200,
+        "receipt_hash": "sha256:436775185bf7078e1efe5a5568e537f92c5dea6afb033de3435c57cb4d57ab99"
+      },
+      {
+        "receipt_id": "logical_intelligence_v538_kona",
+        "channel": "logical_intelligence",
+        "authority": "Logical Intelligence",
+        "source_role": "official",
+        "query": "Kona EBM first-party page",
+        "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+        "accessed_at": "2026-08-08T01:56:26Z",
+        "access_outcome": "reachable_http_200_no_public_weights_or_api",
+        "failure_class": "none",
+        "date_evidence": "first-party page exposes no public weights, local API, or architecture spec",
+        "candidate_ids": [
+          "kona_1_0"
+        ],
+        "candidate_count": 1,
+        "status": 200,
+        "receipt_hash": "sha256:19fc75b416fb0fd4873f070505bbd03ab4ee91d6c569cbddd9ef13774c47a3de"
+      }
+    ],
+    "required_channels": [
+      "arxiv_topics",
+      "openreview",
+      "extropic",
+      "semantic_scholar_ebt_citations",
+      "semantic_scholar_arm_ebm_citations",
+      "huggingface_papers",
+      "github_targeted",
+      "logical_intelligence"
+    ],
+    "required_channels_observed": [
+      "arxiv_topics",
+      "extropic",
+      "github_targeted",
+      "huggingface_papers",
+      "logical_intelligence",
+      "openreview",
+      "semantic_scholar_arm_ebm_citations",
+      "semantic_scholar_ebt_citations"
+    ],
+    "missing_required_channels": [],
+    "authority_counts": {
+      "Extropic": 1,
+      "GitHub": 1,
+      "Hugging Face Papers": 1,
+      "Logical Intelligence": 1,
+      "OpenReview": 1,
+      "Semantic Scholar": 2,
+      "arXiv": 1
+    },
+    "failure_receipts": [
+      {
+        "receipt_id": "arxiv_v538_topics_after_marker",
+        "channel": "arxiv_topics",
+        "authority": "arXiv",
+        "failure_class": "rate_limited",
+        "access_outcome": "http_429_rate_limited"
+      },
+      {
+        "receipt_id": "openreview_v538_energy_route",
+        "channel": "openreview",
+        "authority": "OpenReview",
+        "failure_class": "challenge_required",
+        "access_outcome": "http_403_challenge_required"
+      },
+      {
+        "receipt_id": "huggingface_papers_v538_aug8",
+        "channel": "huggingface_papers",
+        "authority": "Hugging Face Papers",
+        "failure_class": "secondary_feed_only",
+        "access_outcome": "reachable_http_200_secondary_feed"
+      },
+      {
+        "receipt_id": "extropic_v538_first_party_pages",
+        "channel": "extropic",
+        "authority": "Extropic",
+        "failure_class": "no_changed_since_endpoint",
+        "access_outcome": "reachable_http_200_no_dated_post_marker_local_route"
+      }
+    ],
+    "deep_research_invoked": false
+  },
+  "discovered_candidates": [
+    {
+      "stable_id": "arxiv:2607.09059",
+      "title": "ARCANA: A Reflective Multi-Agent Program Synthesis Framework",
+      "url": "https://arxiv.org/abs/2607.09059",
+      "date": "2026-07-10",
+      "authority": "arXiv",
+      "source_kind": "primary",
+      "date_evidence": "planning-time arXiv identifier already sealed under V538 marker",
+      "local_reachability": "reachable_primary_premarked_reference",
+      "roadmap_task": "exp6213-arc-object-delta-perception-wiring",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "planning-time duplicate",
+      "reason": "ARCANA is sealed planner context and predates the V538 marker.",
+      "disposition": "duplicate",
+      "primary_or_first_party": true,
+      "dated_reproducible": true,
+      "new_applicability": false,
+      "endpoint_failed": false,
+      "content_hash": "sha256:f742b84def326ca63dc9c9685f4b2793ad62811a1c99b31b9527ef4065a9c245"
+    },
+    {
+      "stable_id": "arxiv:2607.06764",
+      "title": "Cost-Effective Agent Harnesses for ARC-AGI-1",
+      "url": "https://arxiv.org/abs/2607.06764",
+      "date": "2026-07-07",
+      "authority": "arXiv",
+      "source_kind": "primary",
+      "date_evidence": "planning-time arXiv identifier already sealed under V538 marker",
+      "local_reachability": "reachable_primary_premarked_reference",
+      "roadmap_task": "exp6217-arc-gemma31-think-ab",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "planning-time duplicate",
+      "reason": "The think-tool comparator is already incorporated and is not a runtime delta.",
+      "disposition": "duplicate",
+      "primary_or_first_party": true,
+      "dated_reproducible": true,
+      "new_applicability": false,
+      "endpoint_failed": false,
+      "content_hash": "sha256:9a811317511a500bec456d7b599302e746d40a69fa103b13725c0f18b545fe3b"
+    },
+    {
+      "stable_id": "hf:papers/2608.05987",
+      "title": "AgentOPSD on Hugging Face Papers date page",
+      "url": "https://huggingface.co/papers/2608.05987",
+      "date": "2026-08-08",
+      "authority": "Hugging Face Papers",
+      "source_kind": "secondary",
+      "date_evidence": "secondary calendar page only",
+      "local_reachability": "reachable_secondary_feed",
+      "roadmap_task": "defer",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "secondary-only source",
+      "reason": "The page did not provide a strict post-marker primary timestamp or V538 gate change.",
+      "disposition": "rejected",
+      "primary_or_first_party": false,
+      "dated_reproducible": true,
+      "new_applicability": false,
+      "endpoint_failed": false,
+      "content_hash": "sha256:ddb72e33081c82464ea204d0475da8a1281f96a66112aec28b3310e5956b1cf5"
+    },
+    {
+      "stable_id": "extropic:first-party-pages",
+      "title": "Extropic first-party writing, hardware, and software pages",
+      "url": "https://extropic.ai/writing",
+      "date": "unknown",
+      "authority": "Extropic",
+      "source_kind": "official",
+      "date_evidence": "no changed-since route or strict post-marker publication timestamp",
+      "local_reachability": "reachable_first_party_pages_no_local_device",
+      "roadmap_task": "defer",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "no authenticated local TSU or Z1 route",
+      "reason": "Extropic pages still do not authorize TSU, power, latency, or local hardware claims.",
+      "disposition": "guarded",
+      "primary_or_first_party": true,
+      "dated_reproducible": false,
+      "new_applicability": false,
+      "endpoint_failed": false,
+      "content_hash": "sha256:08fe1fe8ed8f00345581216e721547bfb26f5863db2278efbc7dfc8c7b7940b2"
+    },
+    {
+      "stable_id": "logical-intelligence:kona-page",
+      "title": "Logical Intelligence Kona first-party page",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "date": "unknown",
+      "authority": "Logical Intelligence",
+      "source_kind": "official",
+      "date_evidence": "no strict post-marker public API or weight timestamp",
+      "local_reachability": "reachable_first_party_page_no_public_weights",
+      "roadmap_task": "defer",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "Kona proprietary execution remains guarded",
+      "reason": "The page exposes no public weights, local API, or architecture spec.",
+      "disposition": "guarded",
+      "primary_or_first_party": true,
+      "dated_reproducible": false,
+      "new_applicability": false,
+      "endpoint_failed": false,
+      "content_hash": "sha256:f906e80ab8c2abd0f4db4bab8b1c27cb58f50781f23562f482b7497b9d225212"
+    }
+  ],
+  "accepted_findings": [],
+  "rejected_or_duplicate_findings": [
+    {
+      "stable_id": "hf:papers/2608.05987",
+      "content_hash": "sha256:ddb72e33081c82464ea204d0475da8a1281f96a66112aec28b3310e5956b1cf5",
+      "title": "AgentOPSD on Hugging Face Papers date page",
+      "url": "https://huggingface.co/papers/2608.05987",
+      "date": "2026-08-08",
+      "authority": "Hugging Face Papers",
+      "source_kind": "secondary",
+      "date_evidence": "secondary calendar page only",
+      "local_reachability": "reachable_secondary_feed",
+      "roadmap_task": "defer",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "secondary-only source",
+      "reason": "The page did not provide a strict post-marker primary timestamp or V538 gate change.",
+      "disposition": "rejected"
+    },
+    {
+      "stable_id": "arxiv:2607.09059",
+      "content_hash": "sha256:f742b84def326ca63dc9c9685f4b2793ad62811a1c99b31b9527ef4065a9c245",
+      "title": "ARCANA: A Reflective Multi-Agent Program Synthesis Framework",
+      "url": "https://arxiv.org/abs/2607.09059",
+      "date": "2026-07-10",
+      "authority": "arXiv",
+      "source_kind": "primary",
+      "date_evidence": "planning-time arXiv identifier already sealed under V538 marker",
+      "local_reachability": "reachable_primary_premarked_reference",
+      "roadmap_task": "exp6213-arc-object-delta-perception-wiring",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "planning-time duplicate",
+      "reason": "ARCANA is sealed planner context and predates the V538 marker.",
+      "disposition": "duplicate"
+    },
+    {
+      "stable_id": "arxiv:2607.06764",
+      "content_hash": "sha256:9a811317511a500bec456d7b599302e746d40a69fa103b13725c0f18b545fe3b",
+      "title": "Cost-Effective Agent Harnesses for ARC-AGI-1",
+      "url": "https://arxiv.org/abs/2607.06764",
+      "date": "2026-07-07",
+      "authority": "arXiv",
+      "source_kind": "primary",
+      "date_evidence": "planning-time arXiv identifier already sealed under V538 marker",
+      "local_reachability": "reachable_primary_premarked_reference",
+      "roadmap_task": "exp6217-arc-gemma31-think-ab",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "planning-time duplicate",
+      "reason": "The think-tool comparator is already incorporated and is not a runtime delta.",
+      "disposition": "duplicate"
+    },
+    {
+      "stable_id": "extropic:first-party-pages",
+      "content_hash": "sha256:08fe1fe8ed8f00345581216e721547bfb26f5863db2278efbc7dfc8c7b7940b2",
+      "title": "Extropic first-party writing, hardware, and software pages",
+      "url": "https://extropic.ai/writing",
+      "date": "unknown",
+      "authority": "Extropic",
+      "source_kind": "official",
+      "date_evidence": "no changed-since route or strict post-marker publication timestamp",
+      "local_reachability": "reachable_first_party_pages_no_local_device",
+      "roadmap_task": "defer",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "no authenticated local TSU or Z1 route",
+      "reason": "Extropic pages still do not authorize TSU, power, latency, or local hardware claims.",
+      "disposition": "duplicate"
+    },
+    {
+      "stable_id": "logical-intelligence:kona-page",
+      "content_hash": "sha256:f906e80ab8c2abd0f4db4bab8b1c27cb58f50781f23562f482b7497b9d225212",
+      "title": "Logical Intelligence Kona first-party page",
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "date": "unknown",
+      "authority": "Logical Intelligence",
+      "source_kind": "official",
+      "date_evidence": "no strict post-marker public API or weight timestamp",
+      "local_reachability": "reachable_first_party_page_no_public_weights",
+      "roadmap_task": "defer",
+      "changed_method_or_gate": "none",
+      "retirement_conflict": "Kona proprietary execution remains guarded",
+      "reason": "The page exposes no public weights, local API, or architecture spec.",
+      "disposition": "duplicate"
+    }
+  ],
+  "accepted_count": 0,
+  "references_append_receipt": {
+    "reference_hash_before": "sha256:47b9535c0467354ec7a2f0e1b331e2bc0d286a06aeb42d7e008725d5a787064c",
+    "reference_hash_after": "sha256:47b9535c0467354ec7a2f0e1b331e2bc0d286a06aeb42d7e008725d5a787064c",
+    "references_byte_identical": true,
+    "append_count": 0,
+    "append_heading": null,
+    "append_status": "complete_null"
+  },
+  "roadmap_path_and_hash": {
+    "requested_path": "research-roadmap.yaml",
+    "audited_path": "research-roadmap.yaml",
+    "sha256": "sha256:285bb07988931f1288ba66f38378e5ba9dfe37810383e77d5319a15f0f848e39",
+    "milestone": "2026.08.538",
+    "proposal_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "proposal_sha256": "sha256:3a3e077d4041f7d8cfe51401475819829a1b6280dc29f2892d25a5480b8406be"
+  },
+  "roadmap_schema_result": {
+    "passed": true,
+    "milestone": "2026.08.538",
+    "task_count": 14,
+    "task_ids": [
+      "exp6211-v538-post-marker-source-scope-prereg",
+      "exp6212-three-family-gguf-runtime-recovery",
+      "exp6213-arc-object-delta-perception-wiring",
+      "exp6214-arc-object-delta-heldout-ab",
+      "exp6215-arc-trajectory-transfer-ab",
+      "exp6216-arc-budget-aware-search-ab",
+      "exp6217-arc-gemma31-think-ab",
+      "exp6218-arc-admissible-lever-portfolio-heldout",
+      "exp6219-two-timescale-constraint-csl",
+      "exp6220-mode-jump-runtime-ab",
+      "exp6221-three-family-code-transport-canary-v3",
+      "exp6222-livecodebench-k8-pool-v3",
+      "exp6223-livecodebench-headroom-v3",
+      "exp6224-v538-adversarial-capstone"
+    ]
+  },
+  "exclusion_manifest_lint_result": {
+    "passed": true,
+    "risk_count": 0,
+    "hard_count": 0,
+    "warning_count": 0,
+    "risks": []
+  },
+  "retired_scope_match_count": 0,
+  "prior_failure_contract_result": {
+    "passed": true,
+    "task_count": 14,
+    "tasks_with_prior_failures": 13,
+    "tasks_without_prior_failures_count": 1,
+    "malformed_prior_failure_count": 0,
+    "tasks_without_prior_failure_ids": [
+      "exp6216-arc-budget-aware-search-ab"
+    ],
+    "malformed_task_ids": []
+  },
+  "gate_structure_result": {
+    "n_tasks_audited": 14,
+    "n_gate_upstream_checks": 5,
+    "n_gate_upstream_failures": 0,
+    "n_prior_failures_checks": 14,
+    "n_prior_failures_missing": 0,
+    "n_model_agent_coherence_failures": 0,
+    "n_gate_field_cross_ref_failures": 0,
+    "roadmap_gate_audit_passed": true,
+    "failure_details": [],
+    "audit_script_written": true,
+    "honest_verdict": "all_checks_pass",
+    "structured_gate_count": 5
+  },
+  "model_specs_rule_result": {
+    "passed": true,
+    "sota_gguf_allowlist": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "llm_invocation_task_count": 8,
+    "tasks": [
+      {
+        "task_id": "exp6212-three-family-gguf-runtime-recovery",
+        "model_specs": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6214-arc-object-delta-heldout-ab",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6216-arc-budget-aware-search-ab",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6217-arc-gemma31-think-ab",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6218-arc-admissible-lever-portfolio-heldout",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6221-three-family-code-transport-canary-v3",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      },
+      {
+        "task_id": "exp6222-livecodebench-k8-pool-v3",
+        "model_specs": [
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "has_mandated_sota_gguf": true,
+        "legacy_mentions_guarded": true
+      }
+    ],
+    "failure_task_ids": [],
+    "legacy_small_models_can_supply_headline_rows": false
+  },
+  "task_count": 14,
+  "phase_counts": {
+    "arc": 6,
+    "capstone": 1,
+    "continuous_learning": 1,
+    "infrastructure": 2,
+    "phase_d": 3,
+    "sampling": 1
+  },
+  "arc_task_count": 6,
+  "continuous_self_learning_slot_count": 1,
+  "hardware_boundary_result": {
+    "passed": true,
+    "hardware_reference_task_ids": [],
+    "active_physical_hardware_task_count": 0,
+    "gatemate_command_count": 0,
+    "unauthorized_hardware_promotion": false,
+    "boundary": "Exp6199 remains the GateMate boundary; no TSU, Kona, KV260, or FPGA command is authorized."
+  },
+  "arc_outcome_vocabulary": {
+    "allowed_terminal_outcomes": [
+      "blocked_gate",
+      "complete_improvement",
+      "complete_mixed",
+      "complete_null",
+      "harmful_regression",
+      "instrument_failure",
+      "skipped_upstream"
+    ],
+    "arc_ab_task_ids": [
+      "exp6214-arc-object-delta-heldout-ab",
+      "exp6215-arc-trajectory-transfer-ab",
+      "exp6216-arc-budget-aware-search-ab",
+      "exp6217-arc-gemma31-think-ab"
+    ],
+    "arc_ab_task_count": 4,
+    "known_in_roadmap": [
+      "exp6214-arc-object-delta-heldout-ab",
+      "exp6215-arc-trajectory-transfer-ab",
+      "exp6216-arc-budget-aware-search-ab",
+      "exp6217-arc-gemma31-think-ab"
+    ],
+    "per_game_loss_required": true,
+    "treatment_activation_required": true,
+    "endpoint_zero_tie_disallowed": true
+  },
+  "matched_control_contract": {
+    "treatment_activation_required": true,
+    "aa_noise_floor_required": true,
+    "matched_game_seed_matrix_required": true,
+    "matched_budget_required": true,
+    "matched_model_prompt_except_treatment_required": true,
+    "per_game_loss_required": true,
+    "instrument_failure_not_null_effect": true,
+    "pre_measurement_freeze_required": true
+  },
+  "no_solve_and_registry_nonmutation_contract": {
+    "solve_claim_allowed": false,
+    "registry_mutation_allowed": false,
+    "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "registry_hash_before_after_required": true,
+    "forbidden_access_counts_required": [
+      "source_access_count",
+      "bfs_access_count",
+      "adapter_truth_access_count",
+      "hidden_state_access_count",
+      "registry_trajectory_access_count"
+    ],
+    "forbidden_access_counts_must_be_zero": true,
+    "arc_solver_kit_reproduce_is_only_credit_gate": true
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "before_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "research-references.md": "sha256:47b9535c0467354ec7a2f0e1b331e2bc0d286a06aeb42d7e008725d5a787064c",
+      "research-roadmap.yaml": "sha256:285bb07988931f1288ba66f38378e5ba9dfe37810383e77d5319a15f0f848e39",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:3a3e077d4041f7d8cfe51401475819829a1b6280dc29f2892d25a5480b8406be",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/known-issues.md": "sha256:3b7816bee8276fb3eeffca5761d73804e973118286e93d725e80e705d3cd8784",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "after_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+      "research-references.md": "sha256:47b9535c0467354ec7a2f0e1b331e2bc0d286a06aeb42d7e008725d5a787064c",
+      "research-roadmap.yaml": "sha256:285bb07988931f1288ba66f38378e5ba9dfe37810383e77d5319a15f0f848e39",
+      "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:3a3e077d4041f7d8cfe51401475819829a1b6280dc29f2892d25a5480b8406be",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "ops/known-issues.md": "sha256:3b7816bee8276fb3eeffca5761d73804e973118286e93d725e80e705d3cd8784",
+      "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+    },
+    "authorized_changed_paths": [],
+    "changed_paths": []
+  },
+  "inference_substrate": "post_marker_source_ingestion_and_arc_causal_preregistration",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The terminal state follows novelty, roadmap, and causal-contract checks.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "planner_marker_and_hash": {
+      "principle": "The exact V538 marker defines the runtime novelty boundary.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "query_window": {
+      "principle": "Only source evidence strictly after the marker can be a runtime delta.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "source_channel_receipts": {
+      "principle": "Every required source channel records success, null, or failure.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "discovered_candidates": {
+      "principle": "Rejected and duplicate rows stay visible for audit.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "accepted_findings": {
+      "principle": "Only dated primary or first-party rows that change V538 scope are accepted.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "rejected_or_duplicate_findings": {
+      "principle": "Rejected rows explain why the roadmap did not move.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "accepted_count": {
+      "principle": "A bare count drives the null versus append decision.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "references_append_receipt": {
+      "principle": "References stay byte-identical on a null and append-only on a delta.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "roadmap_path_and_hash": {
+      "principle": "The audited roadmap hash prevents silent path ambiguity.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "roadmap_schema_result": {
+      "principle": "Schema parsing catches malformed task contracts before launch.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "exclusion_manifest_lint_result": {
+      "principle": "Retired scopes stay closed unless a structured exception exists.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "retired_scope_match_count": {
+      "principle": "The bare zero is the gateable retired-scope exposure count.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "prior_failure_contract_result": {
+      "principle": "Prior failures must explain why this task is different.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "gate_structure_result": {
+      "principle": "Structured gates must reference real upstream tasks and fields.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "model_specs_rule_result": {
+      "principle": "Headline LLM tasks must use the mandated SOTA GGUF set.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "task_count": {
+      "principle": "The V538 roadmap is expected to contain fourteen tasks.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "phase_counts": {
+      "principle": "Phase counts keep ARC, runtime, CSL, sampling, Phase-D, and capstone slots explicit.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "arc_task_count": {
+      "principle": "ARC work is counted before any live A/B measurement.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "continuous_self_learning_slot_count": {
+      "principle": "FR-11 continuity needs exactly one V538 CSL slot.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "hardware_boundary_result": {
+      "principle": "Unavailable hardware stays blocked without new command claims.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "arc_outcome_vocabulary": {
+      "principle": "A/B outcomes must use a frozen vocabulary before measurement.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "matched_control_contract": {
+      "principle": "Matched controls are required before causal ARC claims.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "no_solve_and_registry_nonmutation_contract": {
+      "principle": "The prereg forbids solve credit and registry mutation.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "The audit must not rewrite instructions, roadmap, registry, or conductor code.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares deterministic source and roadmap audit rather than LLM inference.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False because this audit validates metadata, not benchmark answers.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Each required field traces to marker, receipts, roadmap checks, or commands.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field carries the reason it exists.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "test_commands": {
+      "principle": "Records focused, coverage, lint, E2E-plan, adversarial, and full-suite checks.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes prevent failed checks from being reported as clean.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "duration_s": {
+      "principle": "Reports wall time without padding.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Detects later drift in the artifact payload.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Uses complete_null, complete_delta, or blocked with accepted_count.",
+      "source": [
+        "REQ-INFRA-6211",
+        "V538 planner marker",
+        "source channel receipts",
+        "roadmap validators",
+        "ARC causal preregistration",
+        "command receipts"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The terminal state follows novelty, roadmap, and causal-contract checks.",
+    "planner_marker_and_hash": "The exact V538 marker defines the runtime novelty boundary.",
+    "query_window": "Only source evidence strictly after the marker can be a runtime delta.",
+    "source_channel_receipts": "Every required source channel records success, null, or failure.",
+    "discovered_candidates": "Rejected and duplicate rows stay visible for audit.",
+    "accepted_findings": "Only dated primary or first-party rows that change V538 scope are accepted.",
+    "rejected_or_duplicate_findings": "Rejected rows explain why the roadmap did not move.",
+    "accepted_count": "A bare count drives the null versus append decision.",
+    "references_append_receipt": "References stay byte-identical on a null and append-only on a delta.",
+    "roadmap_path_and_hash": "The audited roadmap hash prevents silent path ambiguity.",
+    "roadmap_schema_result": "Schema parsing catches malformed task contracts before launch.",
+    "exclusion_manifest_lint_result": "Retired scopes stay closed unless a structured exception exists.",
+    "retired_scope_match_count": "The bare zero is the gateable retired-scope exposure count.",
+    "prior_failure_contract_result": "Prior failures must explain why this task is different.",
+    "gate_structure_result": "Structured gates must reference real upstream tasks and fields.",
+    "model_specs_rule_result": "Headline LLM tasks must use the mandated SOTA GGUF set.",
+    "task_count": "The V538 roadmap is expected to contain fourteen tasks.",
+    "phase_counts": "Phase counts keep ARC, runtime, CSL, sampling, Phase-D, and capstone slots explicit.",
+    "arc_task_count": "ARC work is counted before any live A/B measurement.",
+    "continuous_self_learning_slot_count": "FR-11 continuity needs exactly one V538 CSL slot.",
+    "hardware_boundary_result": "Unavailable hardware stays blocked without new command claims.",
+    "arc_outcome_vocabulary": "A/B outcomes must use a frozen vocabulary before measurement.",
+    "matched_control_contract": "Matched controls are required before causal ARC claims.",
+    "no_solve_and_registry_nonmutation_contract": "The prereg forbids solve credit and registry mutation.",
+    "protected_files_unchanged": "The audit must not rewrite instructions, roadmap, registry, or conductor code.",
+    "inference_substrate": "Declares deterministic source and roadmap audit rather than LLM inference.",
+    "verifier_is_oracle": "False because this audit validates metadata, not benchmark answers.",
+    "field_provenance": "Each required field traces to marker, receipts, roadmap checks, or commands.",
+    "field_principles": "Every required field carries the reason it exists.",
+    "test_commands": "Records focused, coverage, lint, E2E-plan, adversarial, and full-suite checks.",
+    "test_exit_codes": "Exit codes prevent failed checks from being reported as clean.",
+    "duration_s": "Reports wall time without padding.",
+    "reproducibility_checksum": "Detects later drift in the artifact payload.",
+    "honest_verdict": "Uses complete_null, complete_delta, or blocked with accepted_count."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6211_v538_post_marker_source_scope_prereg.py -m pytest tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6211_v538_post_marker_source_scope_prereg.py --fail-under=100",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6211_v538_post_marker_source_scope_prereg.py -m pytest tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6211_v538_post_marker_source_scope_prereg.py --fail-under=100": 0,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6211_v538_post_marker_source_scope_prereg.json": 0,
+    ".venv/bin/pytest tests/python -q": 3
+  },
+  "duration_s": 6.874142995104194,
+  "reproducibility_checksum": "sha256:24ece2d1c0b0a3c60683a83c76557199f0e3276e90756acfa5297be1ead5722b",
+  "honest_verdict": "blocked: accepted_count=0; V538 source, roadmap, causal contract, or verification command failed"
+}
