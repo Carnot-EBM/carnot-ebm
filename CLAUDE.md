@@ -39,8 +39,9 @@ read only if debugging the enforcer):**
   corrigenda land + paper rewritten
 
 **ACTIVE — require judgment, read these when planning/executing:**
-CLAUDE.md Writing Style: Simplified Technical English (2026-08-07 — forward-only;
-governs new prose you add to this file, not the existing text) ·
+Project Writing Style: Simplified Technical English (2026-08-07, SCOPE
+EXTENDED same day — forward-only; governs new prose you write anywhere in
+this project — docs, comments, commits, agent prompts — not existing text) ·
 Codex-Default-v2 (2026-06-10) · Failed-Experiment Rerun · Pre-Launch Preconditions ·
 Adversarial Artifact Verification + Sample-Size Rigor · Inference-Substrate
 Declaration · Principle-Annotated Artifact Fields · Phase Prototype+Validation ·
@@ -91,7 +92,7 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
 
-## CLAUDE.md Writing Style: Simplified Technical English (MANDATORY, forward-only)
+## CLAUDE.md Writing Style: Simplified Technical English (MANDATORY, forward-only) — SCOPE EXTENDED 2026-08-07 to ALL project prose, see below
 
 **Origin:** 2026-08-07 operator directive: "I want to enforce a strict writing
 style of Simplified Technical English (ASD-STE100) in this project's
@@ -142,6 +143,39 @@ a direct quote.
   env var names, regex patterns, and quoted operator text are never
   simplified or paraphrased.
 
+**SCOPE EXTENSION 2026-08-07 (append-only — the CLAUDE.md-only scope above
+still applies to CLAUDE.md, unchanged).** Operator directive: "We want that
+to apply to all prose written, not just when writing to Claude.md." This
+rule now covers all prose you write for this project, not only CLAUDE.md.
+The covered surface:
+
+- CLAUDE.md (original scope, unchanged)
+- `ops/*.md` (status.md, changelog.md, known-issues.md, metrics.md, and
+  similar)
+- `docs/*.md` and `openspec/**/*.md` (spec.md, design.md, change proposals)
+- `epics/**` story text
+- Code comments and docstrings. This rule and the existing "Verbose layman
+  explanations in code" / "Calibration (operator-approved 2026-08-05)"
+  bullet, under Documentation and Communication Standards above, work
+  together. That bullet's 5-line cap and no-unglossed-jargon rule is a
+  SPECIFIC case of this rule's general principles, applied to comments.
+  Follow both.
+- Commit messages
+- Task prompts and briefs you write for other agents (planner-emitted
+  roadmap task prompts, subagent instructions)
+- Your own written responses while you work on this project
+
+Still forward-only. This extension does not rewrite any existing document.
+Still STE100-spirit, not the formal dictionary. Still honor-discipline, no
+mechanical lint.
+
+This rule does not override a more specific existing content rule. The
+Public Documentation Discipline's forbidden-content list (no raw experiment
+IDs, no milestone numbers, in public docs) and the operator-curated-doc
+protections stay in force exactly as written. STE100-spirit governs
+SENTENCE STYLE. It does not change WHO may edit a document, or WHAT content
+a document may contain.
+
 **Strictness note.** This is STE100-SPIRIT, not the formal ASD-STE100
 standard. The formal standard uses a fixed ~900-word approved dictionary,
 with one locked part of speech and one locked meaning per word, plus a
@@ -160,11 +194,15 @@ history. Not built yet.
 
 **Cross-references:**
 - 2026-08-07 operator directive — origin
+- 2026-08-07 operator directive (same day, follow-up) — the SCOPE EXTENSION
+  above, to all project prose
 - CLAUDE.md "Documentation and Communication Standards" (above) — the
   sibling rule for code comments and public docs; this rule is its
   counterpart for CLAUDE.md's own prose
 - CLAUDE.md "Never remove existing content" / never-prune doctrine — why
   this rule is forward-only
+- CLAUDE.md "Public Documentation Discipline" — the content rule this style
+  rule does not override
 
 ## Verifier Authenticity Discipline (MANDATORY)
 
