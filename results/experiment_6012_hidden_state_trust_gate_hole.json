@@ -296,6 +296,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6227 (2026-08-08): re-measured _INDUCE_WORST_CASE_PROMPT_TOKENS (15767 -> 22352) under current defaults (k=all transitions, object table on), plus a docstring-only correction note on _default_induce_n_ctx (no code changed there). Both changes affect ONLY the shared-context-pool SIZING used when launching a live llama-server -- they change nothing about what a completed induce/generate call computes or returns. This script's only e3/_e3prov symbols are change_gate_decision, collect_transitions, load_engine, logical_hud_mask, WorldModelVerifier, E3_DIR -- none touch prompt/n_ctx sizing.",
         "evidence": "Grep: `grep -oE 'e3\\.[A-Za-z_]+|_e3prov\\.[A-Za-z_]+' scripts/experiments/experiment_6012_hidden_state_trust_gate_hole.py | sort -u` -> the six symbols above, none of them _INDUCE_WORST_CASE_PROMPT_TOKENS or _default_induce_n_ctx."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "cc75cca51db1e165c840f4a4723621f1567b3c3d15185e42173137df92485b84",
+        "sha256_now": "27806115d0dfb5650f36d92828f653824dff337b9c3ccfbe2d7ef632fff47001",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Provenance-correction cascade (2026-08-08). The immediately-prior acknowledgement of this path (sha256_was above) covered REQ-ARC-WMTE-6227's constant fix, but that commit (f75998dbcd) accidentally included the conductor's separate, uncommitted REQ-ARC-WMTE-6213 work via a `git add <path>` that staged the whole working-tree diff. This edit is the correction: it removes exactly the conductor's two hunks (verified by hunk-level reconstruction) and changes nothing about REQ-ARC-WMTE-6227's own fix. The file is now CLOSER to what this artifact was built against, not further -- the same reachability argument from the immediately-prior acknowledgement applies unchanged.",
+        "evidence": "The prior acknowledgement entry for this path (sha256_now == this entry's sha256_was) already established the reachability argument for REQ-ARC-WMTE-6227. This correction only removes unrelated content (_object_delta_perception_block + its one call site), verified via `diff` against a hunk-reconstructed version: applying REQ-ARC-WMTE-6227's hunks alone to the pre-6227 base, versus the committed f75998dbcd content, differ by exactly those two hunks and nothing else."
       }
     ]
   },
