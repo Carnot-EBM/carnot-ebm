@@ -1500,6 +1500,13 @@ class StepwiseExplorer:
         self._early_stop_frame_mark = 0
         self.early_stopped = False
         self.adj: dict[str, list] = {}  # known forward edges: hash -> [(action_dict, next_hash)]
+        # Perf fix (2026-08-08 adversarial review, "Speed" finding 1): every caller that needs a
+        # forward path FROM self.cur used to run its own from-scratch BFS. All of those BFS runs
+        # share one source, so one BFS per (self.cur, adj-state) pair is enough; the map below
+        # caches it. `_adj_version` bumps whenever a new edge is learned, which is the only thing
+        # that can make a cached map stale.
+        self._adj_version = 0
+        self._forward_bfs_cache: tuple[Optional[str], int, dict[str, list]] | None = None
         self._nav_attempts = 0
         self._nav_exact_hits = 0
         self._nav_partial_hits = 0
@@ -2670,6 +2677,9 @@ class StepwiseExplorer:
             return
         edges.append((act, next_hash))
         self._nav_edges_recorded += 1
+        # A new edge can change what's forward-reachable from self.cur, so the cached
+        # single-source BFS map (see `_cur_forward_paths`) must be recomputed on next use.
+        self._adj_version += 1
         # REQ-ARC-WMTE-5836: mirror into the reverse index the distance gradient walks. Kept in
         # lock-step with self.adj HERE (the single forward-edge write path) rather than rebuilt on
         # demand, so the two indices cannot drift. Only state-CHANGING edges reach this point (the
@@ -3464,6 +3474,66 @@ class StepwiseExplorer:
                 q.append((nxt, npath))
         return None
 
+    def _forward_paths_from(self, src: Optional[str]) -> dict[str, list]:
+        """One BFS from ``src`` over the known forward edges (``self.adj``), returning every
+        forward-reachable node's shortest action path from ``src``.
+
+        Same traversal as ``_exact_shortest_path`` (FIFO queue, first-arrival wins, same
+        per-node edge order), just run to completion instead of stopping at one target. BFS
+        visits nodes in non-decreasing hop order and never revisits a node once it has a
+        path, so the path this assigns to any node ``X`` is the exact same one
+        ``_exact_shortest_path(src, X)`` would compute on its own -- this is the "one
+        distance-map BFS per call is exactly equivalent" sharing the 2026-08-08 adversarial
+        review asked for, not a new search.
+        """
+
+        from collections import deque
+
+        if src is None:
+            return {}
+        paths: dict[str, list] = {src: []}
+        q: deque[str] = deque([src])
+        while q:
+            node = q.popleft()
+            base = paths[node]
+            for act, nxt in self.adj.get(node, []):
+                if nxt in paths:
+                    continue
+                paths[nxt] = base + [act]
+                q.append(nxt)
+        return paths
+
+    def _cur_forward_paths(self) -> dict[str, list]:
+        """Cached result of ``_forward_paths_from(self.cur)``.
+
+        Every caller in this file that wants a forward path FROM ``self.cur`` (the frontier
+        navigation-cost tie-break, the winner's forward walk, the partial-forward-path
+        fallback) shares this one map instead of each re-running its own BFS. The cache key
+        is ``(self.cur, self._adj_version)``: it is recomputed the moment either the agent
+        moves to a different node or a new edge is learned, so a stale map can never be
+        served.
+        """
+
+        cache = self._forward_bfs_cache
+        if cache is not None and cache[0] == self.cur and cache[1] == self._adj_version:
+            return cache[2]
+        paths = self._forward_paths_from(self.cur)
+        self._forward_bfs_cache = (self.cur, self._adj_version, paths)
+        return paths
+
+    def _exact_forward_path(self, src: Optional[str], dst: str) -> Optional[list]:
+        """Same contract as ``_exact_shortest_path`` (action path over known forward edges,
+        or ``None`` if ``dst`` isn't forward-reachable from ``src``), but for ``src ==
+        self.cur`` -- the only source every navigation call in this file actually uses --
+        this is an O(1) lookup into the shared BFS map instead of a fresh traversal. Any
+        other ``src`` (e.g. a similarity-retrieval candidate, which starts from a different
+        node than ``self.cur``) still gets its own from-scratch BFS, unchanged.
+        """
+
+        if src == self.cur:
+            return self._cur_forward_paths().get(dst)
+        return self._exact_shortest_path(src, dst)
+
     def _shortest_path(
         self,
         src: Optional[str],
@@ -3471,7 +3541,7 @@ class StepwiseExplorer:
         *,
         allow_similarity: bool = True,
     ) -> Optional[list]:
-        exact = self._exact_shortest_path(src, dst)
+        exact = self._exact_forward_path(src, dst)
         if exact is not None:
             self._last_shortest_path_kind = "exact"
             return exact
@@ -3604,7 +3674,13 @@ class StepwiseExplorer:
         return None
 
     def _partial_forward_path(self, src: Optional[str], dst: str) -> Optional[list]:
-        """Walk to the deepest reachable ancestor of dst, then replay only the suffix."""
+        """Walk to the deepest reachable ancestor of dst, then replay only the suffix.
+
+        Every candidate ancestor shares the same navigation source (``src``, always
+        ``self.cur`` at this method's one call site), so the per-ancestor reachability
+        lookup below goes through ``_exact_forward_path`` and reuses the one shared BFS
+        (see ``_cur_forward_paths``) instead of each ancestor re-running its own traversal.
+        """
 
         if src is None or dst not in self.graph:
             return None
@@ -3617,7 +3693,7 @@ class StepwiseExplorer:
             ancestor_path = node.get("path", [])
             if not self._path_is_prefix(ancestor_path, target_path):
                 continue
-            forward = self._exact_shortest_path(src, ancestor)
+            forward = self._exact_forward_path(src, ancestor)
             if forward is None:
                 continue
             depth = len(ancestor_path)
@@ -4606,12 +4682,12 @@ class E3AgentPolicy:
         hud_mask_stage2_confirm: bool | None = None,
         value_head: Any = _DEFAULT_VALUE_HEAD,
         value_weight: float = SUBMITTED_VALUE_WEIGHT,
+        search_mode: str = SUBMITTED_SEARCH_MODE,
         # REQ finding (live-agent-adversarial-review-2026-08-08, Gaps #1): defaults to the
         # SUBMITTED_* constant directly, matching target_levels/value_weight/search_mode above --
         # unlike the boolean feature flags below this is a plain numeric knob with no
         # CARNOT_ARC_* env override convention of its own, so there is no `_fd_gate` ladder here.
         early_stop_grace: Optional[int] = SUBMITTED_EARLY_STOP_GRACE,
-        search_mode: str = SUBMITTED_SEARCH_MODE,
         mechanic_detector=None,
         frame_change_scorer: Any = _DEFAULT_FRAME_CHANGE_SCORER,
         frame_change_prune_threshold: float | None = None,
@@ -4754,8 +4830,8 @@ class E3AgentPolicy:
         elif goal_candidate_guidance is False:
             goal_candidate_guidance = None
         self.explorer = StepwiseExplorer(
-            early_stop_grace=early_stop_grace,
             target_levels=target_levels,
+            early_stop_grace=early_stop_grace,
             auto_hud_mask=auto_hud_mask,
             edge_bar_hud_mask=edge_bar_hud_mask,
             hud_mask_collapse_guard=hud_mask_collapse_guard,
@@ -7257,12 +7333,12 @@ SUBMITTED_AGENT_CONFIG = {
     "cascade": True,
     # explorer config the live agent actually runs.
     "value_weight": SUBMITTED_VALUE_WEIGHT,
+    "target_levels": SUBMITTED_TARGET_LEVELS,
     # REQ finding (live-agent-adversarial-review-2026-08-08, Gaps #1): pinned here so the parity
     # test below can catch a future re-drift between the declared config and what the explorer
     # actually receives. Fixed 2026-08-08 -- was previously read nowhere (see the comment on the
     # SUBMITTED_EARLY_STOP_GRACE declaration for the incident this closes).
     "early_stop_grace": SUBMITTED_EARLY_STOP_GRACE,
-    "target_levels": SUBMITTED_TARGET_LEVELS,
     "search_mode": SUBMITTED_SEARCH_MODE,
     "graph_explore_budget": SUBMITTED_GRAPH_EXPLORE_BUDGET,
     "routed_explore_budget": SUBMITTED_ROUTED_EXPLORE_BUDGET,
@@ -7576,8 +7652,8 @@ def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
                 E3AgentPolicy(
                     gid,
                     proposer=proposer,
-                    early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
+                    early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
                     search_mode=str(SUBMITTED_AGENT_CONFIG["search_mode"]),
                     lazy_value_top_k=int(SUBMITTED_AGENT_CONFIG["lazy_value_top_k"]),
