@@ -2758,6 +2758,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Safety revert of REQ-ARC-WMTE-6220's shipped value (SUBMITTED_EARLY_STOP_GRACE: 400 -> None), same day as the wiring fix, after an audit found the 'no score cost' premise behind 400 was false for at least two games (tu93, cd82). This returns the agent's SHIPPED, OBSERVABLE behavior to bit-for-bit what it was before any early-stop-grace work existed: early-stopping OFF, exactly what every historical artifact in this corpus was already generated under (the mechanism was dead code the entire time these artifacts were produced, so 'off' has always been the true recorded behavior). This revert makes the code match the historical record more precisely than the intervening 400-default commit did, not less.",
         "evidence": "git diff HEAD~1..HEAD -- python/carnot/agentic/arc_competition_agent.py: a single value change (400 -> None) plus a comment explaining why, no other statement touched. StepwiseExplorer.early_stop_grace=None disables the mechanism entirely (is_done()'s grace check is gated on the value being non-None), so the resulting runtime behavior is identical to every prior commit before REQ-ARC-WMTE-6220 existed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "ba235df4695b751b4a9e711901bd3912ad552ff871deb90682ae954e47b42d40",
+        "sha256_now": "0617d759eab6d62f7731c0c1ff0548e9203f1fc043e76bcf15f8c4174449a07b",
+        "acknowledged_on": "2026-08-08",
+        "reason": "exp6214's counterfactual A/B result (REQ-ARC-WMTE-6220 third correction): SUBMITTED_EARLY_STOP_GRACE None -> 1300, chosen as the margined value over the exact-fit 1204 the analysis found. This changes FUTURE agent runs only -- every historical artifact in this corpus was generated under the prior value (None/off, or 400 for the brief window it shipped), never under 1300. It cannot retroactively alter any already-recorded value.",
+        "evidence": "git diff on arc_competition_agent.py: a value change on one constant (None -> 1300) plus its comment, no other statement touched. Confirmed by the same tests already covering this constant's wiring (test_arc_early_stop_grace_wiring_20260808.py, 5/5 pass, symbolic-constant checks unaffected by the specific value)."
       }
     ]
   },

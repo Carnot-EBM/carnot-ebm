@@ -1,0 +1,856 @@
+{
+  "experiment": "experiment_6214_early_stop_grace_counterfactual_ab",
+  "schema": "carnot.exp6214.early_stop_grace_counterfactual_ab.v1",
+  "result_path": "results/experiment_6214_early_stop_grace_counterfactual_ab.json",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "honest_verdict": "complete: grace_1204_recommended_saves_6199_actions_zero_level_cost",
+  "target_budget": 2000,
+  "candidate_grace_values": [
+    null,
+    400,
+    800,
+    1204,
+    1300,
+    1600,
+    2000
+  ],
+  "games_covered": [
+    "ar25",
+    "bp35",
+    "cd82",
+    "cn04",
+    "dc22",
+    "ft09",
+    "g50t",
+    "ka59",
+    "lf52",
+    "lp85",
+    "ls20",
+    "m0r0",
+    "r11l",
+    "re86",
+    "s5i5",
+    "sb26",
+    "sc25",
+    "sk48",
+    "sp80",
+    "su15",
+    "tn36",
+    "tr87",
+    "tu93",
+    "vc33",
+    "wa30"
+  ],
+  "n_games_covered": 25,
+  "n_rows_total": 75,
+  "comparison": [
+    {
+      "grace": null,
+      "total_levels_reached": 40,
+      "levels_delta_vs_off": 0,
+      "total_actions_used": 145614,
+      "actions_saved_vs_off": 0,
+      "games_that_lost_a_level": []
+    },
+    {
+      "grace": 400,
+      "total_levels_reached": 36,
+      "levels_delta_vs_off": -4,
+      "total_actions_used": 116677,
+      "actions_saved_vs_off": 28937,
+      "games_that_lost_a_level": [
+        "cd82",
+        "tu93"
+      ]
+    },
+    {
+      "grace": 800,
+      "total_levels_reached": 36,
+      "levels_delta_vs_off": -4,
+      "total_actions_used": 128179,
+      "actions_saved_vs_off": 17435,
+      "games_that_lost_a_level": [
+        "cd82",
+        "tu93"
+      ]
+    },
+    {
+      "grace": 1204,
+      "total_levels_reached": 40,
+      "levels_delta_vs_off": 0,
+      "total_actions_used": 139415,
+      "actions_saved_vs_off": 6199,
+      "games_that_lost_a_level": []
+    },
+    {
+      "grace": 1300,
+      "total_levels_reached": 40,
+      "levels_delta_vs_off": 0,
+      "total_actions_used": 140861,
+      "actions_saved_vs_off": 4753,
+      "games_that_lost_a_level": []
+    },
+    {
+      "grace": 1600,
+      "total_levels_reached": 40,
+      "levels_delta_vs_off": 0,
+      "total_actions_used": 144297,
+      "actions_saved_vs_off": 1317,
+      "games_that_lost_a_level": []
+    },
+    {
+      "grace": 2000,
+      "total_levels_reached": 40,
+      "levels_delta_vs_off": 0,
+      "total_actions_used": 145614,
+      "actions_saved_vs_off": 0,
+      "games_that_lost_a_level": []
+    }
+  ],
+  "recommended_grace": 1204,
+  "per_grace_detail": {
+    "off": {
+      "grace": null,
+      "n_rows": 75,
+      "total_levels_reached": 40,
+      "total_actions_used": 145614,
+      "n_rows_stopped_by_grace": 0,
+      "n_rows_that_lost_a_real_level": 0,
+      "games_that_lost_a_level": [],
+      "per_row_detail": []
+    },
+    "400": {
+      "grace": 400,
+      "n_rows": 75,
+      "total_levels_reached": 36,
+      "total_actions_used": 116677,
+      "n_rows_stopped_by_grace": 29,
+      "n_rows_that_lost_a_real_level": 4,
+      "games_that_lost_a_level": [
+        "cd82",
+        "tu93"
+      ],
+      "per_row_detail": [
+        {
+          "game": "cd82",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1141,
+          "cost_a_level": true
+        },
+        {
+          "game": "lf52",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1187,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 855,
+          "cost_a_level": false
+        },
+        {
+          "game": "r11l",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1161,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 995,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 754,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 864,
+          "cost_a_level": false
+        },
+        {
+          "game": "tu93",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 734,
+          "cost_a_level": true
+        },
+        {
+          "game": "vc33",
+          "seed": 20260724,
+          "levels_reached": 2,
+          "actions_used": 457,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 589,
+          "cost_a_level": false
+        },
+        {
+          "game": "ft09",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 815,
+          "cost_a_level": false
+        },
+        {
+          "game": "lf52",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1189,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 854,
+          "cost_a_level": false
+        },
+        {
+          "game": "r11l",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1165,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1542,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 639,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 959,
+          "cost_a_level": false
+        },
+        {
+          "game": "tu93",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 734,
+          "cost_a_level": true
+        },
+        {
+          "game": "vc33",
+          "seed": 20260725,
+          "levels_reached": 2,
+          "actions_used": 532,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1293,
+          "cost_a_level": false
+        },
+        {
+          "game": "ft09",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1669,
+          "cost_a_level": false
+        },
+        {
+          "game": "lf52",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1114,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 468,
+          "cost_a_level": false
+        },
+        {
+          "game": "r11l",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1168,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1458,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 427,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 848,
+          "cost_a_level": false
+        },
+        {
+          "game": "tu93",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 734,
+          "cost_a_level": true
+        },
+        {
+          "game": "vc33",
+          "seed": 20260726,
+          "levels_reached": 2,
+          "actions_used": 745,
+          "cost_a_level": false
+        }
+      ]
+    },
+    "800": {
+      "grace": 800,
+      "n_rows": 75,
+      "total_levels_reached": 36,
+      "total_actions_used": 128179,
+      "n_rows_stopped_by_grace": 28,
+      "n_rows_that_lost_a_real_level": 4,
+      "games_that_lost_a_level": [
+        "cd82",
+        "tu93"
+      ],
+      "per_row_detail": [
+        {
+          "game": "cd82",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1541,
+          "cost_a_level": true
+        },
+        {
+          "game": "lf52",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1587,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1255,
+          "cost_a_level": false
+        },
+        {
+          "game": "r11l",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1561,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1395,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1154,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1264,
+          "cost_a_level": false
+        },
+        {
+          "game": "tu93",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1134,
+          "cost_a_level": true
+        },
+        {
+          "game": "vc33",
+          "seed": 20260724,
+          "levels_reached": 2,
+          "actions_used": 857,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 989,
+          "cost_a_level": false
+        },
+        {
+          "game": "ft09",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1215,
+          "cost_a_level": false
+        },
+        {
+          "game": "lf52",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1589,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1254,
+          "cost_a_level": false
+        },
+        {
+          "game": "r11l",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1565,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1942,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1039,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1359,
+          "cost_a_level": false
+        },
+        {
+          "game": "tu93",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1134,
+          "cost_a_level": true
+        },
+        {
+          "game": "vc33",
+          "seed": 20260725,
+          "levels_reached": 2,
+          "actions_used": 932,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1693,
+          "cost_a_level": false
+        },
+        {
+          "game": "lf52",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1514,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 868,
+          "cost_a_level": false
+        },
+        {
+          "game": "r11l",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1568,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1858,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 827,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1248,
+          "cost_a_level": false
+        },
+        {
+          "game": "tu93",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1134,
+          "cost_a_level": true
+        },
+        {
+          "game": "vc33",
+          "seed": 20260726,
+          "levels_reached": 2,
+          "actions_used": 1145,
+          "cost_a_level": false
+        }
+      ]
+    },
+    "1204": {
+      "grace": 1204,
+      "n_rows": 75,
+      "total_levels_reached": 40,
+      "total_actions_used": 139415,
+      "n_rows_stopped_by_grace": 16,
+      "n_rows_that_lost_a_real_level": 0,
+      "games_that_lost_a_level": [],
+      "per_row_detail": [
+        {
+          "game": "lp85",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1659,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1799,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1558,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1668,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260724,
+          "levels_reached": 2,
+          "actions_used": 1261,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1393,
+          "cost_a_level": false
+        },
+        {
+          "game": "ft09",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1619,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1658,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1443,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1763,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260725,
+          "levels_reached": 2,
+          "actions_used": 1336,
+          "cost_a_level": false
+        },
+        {
+          "game": "lf52",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1918,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1272,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1231,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1652,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260726,
+          "levels_reached": 2,
+          "actions_used": 1549,
+          "cost_a_level": false
+        }
+      ]
+    },
+    "1300": {
+      "grace": 1300,
+      "n_rows": 75,
+      "total_levels_reached": 40,
+      "total_actions_used": 140861,
+      "n_rows_stopped_by_grace": 15,
+      "n_rows_that_lost_a_real_level": 0,
+      "games_that_lost_a_level": [],
+      "per_row_detail": [
+        {
+          "game": "lp85",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1755,
+          "cost_a_level": false
+        },
+        {
+          "game": "s5i5",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1895,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1654,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260724,
+          "levels_reached": 1,
+          "actions_used": 1764,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260724,
+          "levels_reached": 2,
+          "actions_used": 1357,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1489,
+          "cost_a_level": false
+        },
+        {
+          "game": "ft09",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1715,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1754,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1539,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1859,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260725,
+          "levels_reached": 2,
+          "actions_used": 1432,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1368,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1327,
+          "cost_a_level": false
+        },
+        {
+          "game": "su15",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1748,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260726,
+          "levels_reached": 2,
+          "actions_used": 1645,
+          "cost_a_level": false
+        }
+      ]
+    },
+    "1600": {
+      "grace": 1600,
+      "n_rows": 75,
+      "total_levels_reached": 40,
+      "total_actions_used": 144297,
+      "n_rows_stopped_by_grace": 6,
+      "n_rows_that_lost_a_real_level": 0,
+      "games_that_lost_a_level": [],
+      "per_row_detail": [
+        {
+          "game": "vc33",
+          "seed": 20260724,
+          "levels_reached": 2,
+          "actions_used": 1657,
+          "cost_a_level": false
+        },
+        {
+          "game": "cd82",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1789,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260725,
+          "levels_reached": 1,
+          "actions_used": 1839,
+          "cost_a_level": false
+        },
+        {
+          "game": "vc33",
+          "seed": 20260725,
+          "levels_reached": 2,
+          "actions_used": 1732,
+          "cost_a_level": false
+        },
+        {
+          "game": "lp85",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1668,
+          "cost_a_level": false
+        },
+        {
+          "game": "sp80",
+          "seed": 20260726,
+          "levels_reached": 1,
+          "actions_used": 1627,
+          "cost_a_level": false
+        }
+      ]
+    },
+    "2000": {
+      "grace": 2000,
+      "n_rows": 75,
+      "total_levels_reached": 40,
+      "total_actions_used": 145614,
+      "n_rows_stopped_by_grace": 0,
+      "n_rows_that_lost_a_real_level": 0,
+      "games_that_lost_a_level": [],
+      "per_row_detail": []
+    }
+  },
+  "cited_upstream_artifacts": [
+    "rows_b2000.json"
+  ],
+  "methodology_note": "Exact replay of recorded level_up_actions sequences from null-grace sweep rows against candidate grace thresholds; not a live re-run. See module docstring for why this is exact rather than approximate."
+}
