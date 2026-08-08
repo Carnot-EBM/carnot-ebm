@@ -1,0 +1,2759 @@
+{
+  "schema": "carnot.experiment_6210.v537_adversarial_capstone.v1",
+  "experiment_id": "exp6210-v537-adversarial-capstone",
+  "milestone": "2026.08.537",
+  "run_date": "20260807",
+  "status": "complete",
+  "milestone_and_declared_task_graph_hash": {
+    "milestone": "2026.08.537",
+    "roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:a603986c16ad0a02856513f1bb53361a53303cc0387f6c75c59a8e660aff9ff5"
+    },
+    "roadmap_doc": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:54c0b2cddcc03d64cfec0c45c7640d0e290d790a9a521cc3a7706d86f7bd0587"
+    },
+    "tasks": [
+      {
+        "task_id": "exp6197-v537-terminal-artifact-contract",
+        "deliverable": "results/experiment_6197_v537_terminal_artifact_contract.json",
+        "requires": [],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6198-v537-post-marker-source-scope-audit",
+        "deliverable": "results/experiment_6198_v537_post_marker_source_scope_audit.json",
+        "requires": [
+          "exp6197-v537-terminal-artifact-contract"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6199-gatemate-terminal-action-audit-v537",
+        "deliverable": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "requires": [
+          "exp6197-v537-terminal-artifact-contract"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6200-three-family-raw-code-transport-canary",
+        "deliverable": "results/experiment_6200_three_family_raw_code_transport_canary.json",
+        "requires": [
+          "exp6197-v537-terminal-artifact-contract"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6201-livecodebench-k8-pool-v2",
+        "deliverable": "results/experiment_6201_livecodebench_k8_pool_v2.json",
+        "requires": [
+          "exp6200-three-family-raw-code-transport-canary"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6200-three-family-raw-code-transport-canary",
+            "artifact_field": "phase_d_transport_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6202-livecodebench-headroom-v2",
+        "deliverable": "results/experiment_6202_livecodebench_headroom_v2.json",
+        "requires": [
+          "exp6201-livecodebench-k8-pool-v2"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6201-livecodebench-k8-pool-v2",
+            "artifact_field": "pool_integrity_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6203-matching-base-code-hidden-state-v2",
+        "deliverable": "results/experiment_6203_matching_base_code_hidden_state_v2.json",
+        "requires": [
+          "exp6202-livecodebench-headroom-v2"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6202-livecodebench-headroom-v2",
+            "artifact_field": "headroom_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6204-calibration-code-selector-v2",
+        "deliverable": "results/experiment_6204_calibration_code_selector_v2.json",
+        "requires": [
+          "exp6203-matching-base-code-hidden-state-v2"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6203-matching-base-code-hidden-state-v2",
+            "artifact_field": "surface_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6205-held-code-selection-v2",
+        "deliverable": "results/experiment_6205_held_code_selection_v2.json",
+        "requires": [
+          "exp6204-calibration-code-selector-v2"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6204-calibration-code-selector-v2",
+            "artifact_field": "selector_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6206-live-strategy-seed-v2",
+        "deliverable": "results/experiment_6206_live_strategy_seed_v2.json",
+        "requires": [
+          "exp6200-three-family-raw-code-transport-canary"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6200-three-family-raw-code-transport-canary",
+            "artifact_field": "csl_transport_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6207-prospective-procedural-memory-csl",
+        "deliverable": "results/experiment_6207_prospective_procedural_memory_csl.json",
+        "requires": [
+          "exp6206-live-strategy-seed-v2"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6206-live-strategy-seed-v2",
+            "artifact_field": "seed_stream_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6208-mode-jump-runtime-integration",
+        "deliverable": "results/experiment_6208_mode_jump_runtime_integration.json",
+        "requires": [
+          "exp6197-v537-terminal-artifact-contract"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6209-arc-loo-task-aware-shadow",
+        "deliverable": "results/experiment_6209_arc_loo_task_aware_shadow.json",
+        "requires": [
+          "exp6197-v537-terminal-artifact-contract"
+        ],
+        "gated_on": []
+      }
+    ],
+    "declared_task_count": 13,
+    "graph_sha256": "sha256:a51222ed676168e43c525d461b0beb4e45d49ad6700f276367bc3dd6aa3a1e16"
+  },
+  "exact_deliverable_manifest": {
+    "exp6197-v537-terminal-artifact-contract": {
+      "task_id": "exp6197-v537-terminal-artifact-contract",
+      "title": "Fail-closed terminal-artifact contract after V536 bootstrap-only completions",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6197_v537_terminal_artifact_contract.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:0225790618175be300a8b87a442e7edb4a8ca690d92de7cfd9694808ab9aecbe",
+      "error": null,
+      "requires": [],
+      "gated_on": [],
+      "required_fields": [
+        "status",
+        "fixture_paths_and_hashes",
+        "accepted_terminal_prefixes",
+        "rejected_nonterminal_prefixes",
+        "status_verdict_cross_product",
+        "exp6183_classification",
+        "exp6196_classification",
+        "valid_fixture_classifications",
+        "conductor_receipt_override_count",
+        "protected_artifact_mutation_count",
+        "classifier_module_and_hash",
+        "focused_test_commands",
+        "focused_test_exit_codes",
+        "full_suite_command_and_classified_exit_code",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6198-v537-post-marker-source-scope-audit": {
+      "task_id": "exp6198-v537-post-marker-source-scope-audit",
+      "title": "Post-V537-marker SOTA delta plus staged-roadmap scope audit",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6198_v537_post_marker_source_scope_audit.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:e57a889b40a8e77487d691815da3e955d97ba785335fe48d1b56dc05b2773ebd",
+      "error": null,
+      "requires": [
+        "exp6197-v537-terminal-artifact-contract"
+      ],
+      "gated_on": [],
+      "required_fields": [
+        "status",
+        "planner_marker_and_hash",
+        "query_window",
+        "source_channel_receipts",
+        "discovered_candidates",
+        "accepted_findings",
+        "rejected_or_duplicate_findings",
+        "accepted_count",
+        "references_append_receipt",
+        "roadmap_path_and_hash",
+        "roadmap_schema_result",
+        "exclusion_manifest_lint_result",
+        "retired_scope_match_count",
+        "prior_failure_contract_result",
+        "gate_structure_result",
+        "model_specs_rule_result",
+        "task_count",
+        "infra_slot_count",
+        "phase_d_slot_count",
+        "arc_slot_count",
+        "continuous_self_learning_slot_count",
+        "hardware_continuity_result",
+        "prompt_section_and_ending_result",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6199-gatemate-terminal-action-audit-v537": {
+      "task_id": "exp6199-gatemate-terminal-action-audit-v537",
+      "title": "GateMate cached terminal-action audit with changed-state authorization only",
+      "track": "hardware",
+      "declared_deliverable": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658",
+      "error": null,
+      "requires": [
+        "exp6197-v537-terminal-artifact-contract"
+      ],
+      "gated_on": [],
+      "required_fields": [
+        "status",
+        "prior_receipt_paths_and_hashes",
+        "current_dated_operator_receipt",
+        "prior_and_current_physical_state_hashes",
+        "physical_state_changed",
+        "hardware_command_authorized",
+        "detect_attempt_count_command_stdout_stderr_exit_code",
+        "expected_and_observed_idcode",
+        "mutation_command_counts",
+        "historical_flagged_terminal_evidence_excluded",
+        "operator_action_packet",
+        "hardware_execution_authenticated",
+        "speed_power_energy_terminal_tsu_kona_claim_counts",
+        "passive_cooling_note",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "missing_verifier_gaps",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6200-three-family-raw-code-transport-canary": {
+      "task_id": "exp6200-three-family-raw-code-transport-canary",
+      "title": "Three-family raw-code envelope canary before any new pool or seed stream",
+      "track": "phase-d",
+      "declared_deliverable": "results/experiment_6200_three_family_raw_code_transport_canary.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:9ed850c4be14d12314bf216b9fb0c4ff47b1d3564aafe3dd5a31562240efb219",
+      "error": null,
+      "requires": [
+        "exp6197-v537-terminal-artifact-contract"
+      ],
+      "gated_on": [],
+      "required_fields": [
+        "status",
+        "bank_path_hash_and_calibration_task_ids",
+        "preregistered_budget_grid",
+        "model_specs",
+        "gguf_cache_hash_revision_quantization_receipts",
+        "prompt_and_embedded_chat_template_receipts",
+        "generation_matrix",
+        "raw_before_interpretation_receipt",
+        "per_family_finish_reason_token_extraction_compile_and_public_sample_metrics",
+        "private_oracle_access_count",
+        "configuration_selection_inputs",
+        "frozen_envelope_by_family",
+        "phase_d_transport_ready_score",
+        "csl_transport_ready_score",
+        "legacy_headline_row_count",
+        "gpu_offload_and_interval_receipts",
+        "process_wall_time_receipts",
+        "correctness_retry_count",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6201-livecodebench-k8-pool-v2": {
+      "task_id": "exp6201-livecodebench-k8-pool-v2",
+      "title": "Authentic Gemma-4-31B K=8 pool gated on Exp6200 dense transport readiness",
+      "track": "phase-d",
+      "declared_deliverable": "results/experiment_6201_livecodebench_k8_pool_v2.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:4d99a9748731de714fb99e5ec554797e27cc4276f4523f108875faf6bbb2c66b",
+      "error": null,
+      "requires": [
+        "exp6200-three-family-raw-code-transport-canary"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6200-three-family-raw-code-transport-canary",
+          "artifact_field": "phase_d_transport_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_bank_and_canary_hashes",
+        "frozen_generation_envelope",
+        "model_specs",
+        "gguf_and_llama_cpp_cuda_receipts",
+        "deterministic_task_sample_seed_matrix",
+        "expected_and_observed_task_sample_counts",
+        "raw_shard_paths_hashes_and_seal_receipt",
+        "raw_before_label_ordering_receipt",
+        "finish_reason_and_token_counts",
+        "extraction_outcomes",
+        "restricted_private_execution_outcomes",
+        "correctness_retry_count",
+        "replacement_count",
+        "private_test_noninterference_receipt",
+        "resume_and_conflict_receipts",
+        "gpu_utilization_memory_intervals",
+        "process_wall_time_receipts",
+        "pool_integrity_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6202-livecodebench-headroom-v2": {
+      "task_id": "exp6202-livecodebench-headroom-v2",
+      "title": "Executable-code headroom audit gated on Exp6201 pool integrity",
+      "track": "phase-d",
+      "declared_deliverable": "results/experiment_6202_livecodebench_headroom_v2.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "error": "missing",
+      "requires": [
+        "exp6201-livecodebench-k8-pool-v2"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6201-livecodebench-k8-pool-v2",
+          "artifact_field": "pool_integrity_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_pool_paths_and_hashes",
+        "split_task_counts",
+        "candidate_count_and_k_distribution",
+        "extraction_and_runnable_coverage_by_split",
+        "correctness_class_counts_by_split",
+        "per_candidate_accuracy_by_split",
+        "oracle_at_8_by_split",
+        "tuned_label_free_equivalence_selector_definition",
+        "tuned_label_free_accuracy_by_split",
+        "oracle_minus_label_free_by_split",
+        "discordant_and_harmful_task_counts",
+        "difficulty_platform_length_strata",
+        "private_oracle_use_boundary",
+        "verifier_is_oracle",
+        "verifier_is_oracle_principle",
+        "gradeability_gate",
+        "competence_gate",
+        "class_support_gate",
+        "unsaturation_gate",
+        "headroom_gate",
+        "headroom_ready_score",
+        "retirement_reason_if_failed",
+        "inference_substrate",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6203-matching-base-code-hidden-state-v2": {
+      "task_id": "exp6203-matching-base-code-hidden-state-v2",
+      "title": "Matching-base code hidden-state surface gated on Exp6202 headroom",
+      "track": "phase-d",
+      "declared_deliverable": "results/experiment_6203_matching_base_code_hidden_state_v2.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:aa0e8e03075f1810d568fa0517a6a0e9446d44729a86a7c47cacbfec61723c5f",
+      "error": null,
+      "requires": [
+        "exp6202-livecodebench-headroom-v2"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6202-livecodebench-headroom-v2",
+          "artifact_field": "headroom_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_pool_and_headroom_hashes",
+        "model_specs",
+        "base_model_cache_revision_shard_hashes",
+        "tokenizer_and_prompt_template_receipts",
+        "gguf_base_quantization_boundary",
+        "calibration_row_alignment_matrix",
+        "held_label_access_count",
+        "prompt_final_and_code_final_layer_shape_receipts",
+        "token_alignment_receipts",
+        "precision_and_device_map",
+        "gpu_cpu_offload_and_memory_intervals",
+        "feature_shard_paths_hashes",
+        "leakage_and_identifier_audit",
+        "surface_ready_score",
+        "blocked_reason",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6204-calibration-code-selector-v2": {
+      "task_id": "exp6204-calibration-code-selector-v2",
+      "title": "Calibration-only CLUE and residualized linear selector gated on Exp6203 surface",
+      "track": "phase-d",
+      "declared_deliverable": "results/experiment_6204_calibration_code_selector_v2.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "error": "missing",
+      "requires": [
+        "exp6203-matching-base-code-hidden-state-v2"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6203-matching-base-code-hidden-state-v2",
+          "artifact_field": "surface_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_feature_and_label_hashes",
+        "calibration_and_held_task_counts",
+        "calibration_only_label_access_receipt",
+        "held_label_access_count",
+        "nested_task_split_manifest",
+        "candidate_selector_definitions",
+        "length_surface_likelihood_and_difficulty_controls",
+        "shuffled_and_random_controls",
+        "calibration_metrics_with_intervals",
+        "chosen_selector_layer_features_threshold_and_rule",
+        "frozen_preprocessing_state",
+        "selector_and_held_feature_hashes",
+        "freeze_timestamp_and_post_freeze_mutation_count",
+        "oracle_feature_access_count",
+        "selector_ready_score",
+        "retirement_reason_if_failed",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "verifier_is_oracle_principle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6205-held-code-selection-v2": {
+      "task_id": "exp6205-held-code-selection-v2",
+      "title": "One-shot held executable-code internal-state selection gated on Exp6204 freeze",
+      "track": "phase-d",
+      "declared_deliverable": "results/experiment_6205_held_code_selection_v2.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:81f05e76ed68359df8510d96407eb65396e20b175c4c5844ec1baa74743115fd",
+      "error": null,
+      "requires": [
+        "exp6204-calibration-code-selector-v2"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6204-calibration-code-selector-v2",
+          "artifact_field": "selector_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_paths_and_hashes",
+        "held_join_timestamp_and_receipt",
+        "held_task_and_candidate_counts",
+        "frozen_selector_hash_and_post_join_mutation_count",
+        "baseline_definitions_and_frozen_hashes",
+        "selected_accuracy_by_method",
+        "paired_task_deltas",
+        "paired_bootstrap_ci95",
+        "mcnemar_or_exact_discordance_test",
+        "oracle_at_8_and_headroom_recovered",
+        "harmful_selection_counts",
+        "difficulty_platform_length_surface_strata",
+        "shuffled_random_and_shortcut_controls",
+        "private_test_or_label_feature_leakage_count",
+        "verifier_is_oracle",
+        "verifier_is_oracle_principle",
+        "promotion_gate",
+        "selector_family_retired",
+        "inference_substrate",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6206-live-strategy-seed-v2": {
+      "task_id": "exp6206-live-strategy-seed-v2",
+      "title": "Two-family live strategy seed gated on Exp6200 CSL transport readiness",
+      "track": "self-learning",
+      "declared_deliverable": "results/experiment_6206_live_strategy_seed_v2.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:1429068650f0d8d277606f9829dc2b2689a8afb62377681922563d01d7e91489",
+      "error": null,
+      "requires": [
+        "exp6200-three-family-raw-code-transport-canary"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6200-three-family-raw-code-transport-canary",
+          "artifact_field": "csl_transport_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_bank_and_transport_hashes",
+        "model_specs",
+        "frozen_strategy_definitions_and_order",
+        "task_model_strategy_matrix",
+        "predecision_policy_receipts",
+        "raw_before_label_paths_hashes_and_order",
+        "restricted_outcome_counts_by_family_and_strategy",
+        "positive_and_negative_executable_event_counts",
+        "seed_only_fixed_no_memory_policy_by_family",
+        "bounded_memory_schema_capacity_eviction_and_snapshot_receipt",
+        "delayed_commit_receipts",
+        "duplicate_reorder_restart_rollback_and_poison_fixtures",
+        "model_weight_mutation_count",
+        "correctness_retry_count",
+        "legacy_headline_event_count",
+        "gpu_and_process_timing_receipts",
+        "seed_stream_ready_score",
+        "retirement_reason_if_failed",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6207-prospective-procedural-memory-csl": {
+      "task_id": "exp6207-prospective-procedural-memory-csl",
+      "title": "Prospective procedural-memory continuous learning gated on Exp6206 seed readiness",
+      "track": "self-learning",
+      "declared_deliverable": "results/experiment_6207_prospective_procedural_memory_csl.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "error": "missing",
+      "requires": [
+        "exp6206-live-strategy-seed-v2"
+      ],
+      "gated_on": [
+        {
+          "upstream": "exp6206-live-strategy-seed-v2",
+          "artifact_field": "seed_stream_ready_score",
+          "op": "==",
+          "value": 1
+        }
+      ],
+      "required_fields": [
+        "status",
+        "upstream_seed_policy_memory_and_stream_hashes",
+        "preregistered_chronological_order_and_compositional_blocks",
+        "model_specs",
+        "arm_definitions_and_resource_matching",
+        "per_event_predecision_snapshot_hashes",
+        "decision_before_generation_before_label_before_commit_receipts",
+        "raw_output_paths_and_hashes",
+        "outcome_labels_by_arm_family_and_block",
+        "accuracy_and_utility_by_arm_family_and_time",
+        "forward_transfer",
+        "negative_transfer",
+        "regret_and_learning_curve",
+        "hard_case_and_prior_family_retention",
+        "harmful_memory_intervention_counts",
+        "paired_bootstrap_ci95_by_family",
+        "bounded_state_bytes_capacity_evictions",
+        "duplicate_reorder_restart_rollback_and_poison_results",
+        "model_weight_mutation_count",
+        "same_pass_memory_write_count",
+        "oracle_before_decision_count",
+        "legacy_headline_row_count",
+        "continuous_learning_ready_score",
+        "retirement_reason_if_failed",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6208-mode-jump-runtime-integration": {
+      "task_id": "exp6208-mode-jump-runtime-integration",
+      "title": "Default-off mode-jump runtime integration from qualified Exp6194 parity",
+      "track": "samplers",
+      "declared_deliverable": "results/experiment_6208_mode_jump_runtime_integration.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:40c61bbf192903dac749ae9fd9f85e3e69b9b5dd6509bb2e4eccd96d641e4260",
+      "error": null,
+      "requires": [
+        "exp6197-v537-terminal-artifact-contract"
+      ],
+      "gated_on": [],
+      "required_fields": [
+        "status",
+        "exp6194_artifact_and_kernel_hashes",
+        "runtime_adapter_paths_and_hashes",
+        "default_off_receipt",
+        "config_and_feature_flag_contract",
+        "supported_and_unsupported_shape_matrix",
+        "seeded_quality_parity",
+        "distribution_tv_kl_and_interval_receipts",
+        "autocorrelation_and_effective_sample_size",
+        "serialization_roundtrip",
+        "cancellation_timeout_and_error_receipts",
+        "exact_fallback_receipts",
+        "task_owned_test_commands_and_exit_codes",
+        "unrelated_nonzero_command_classifications",
+        "hardware_or_speed_power_energy_claimed",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": []
+    },
+    "exp6209-arc-loo-task-aware-shadow": {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "title": "Single ARC slot: leave-one-game-out shadow generalization of the frozen task-aware policy",
+      "track": "arc-generalization",
+      "declared_deliverable": "results/experiment_6209_arc_loo_task_aware_shadow.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:ff92646d73e8cdcd947fdb6efdf57926fca961653442f461e1ce80d96e142e0d",
+      "error": null,
+      "requires": [
+        "exp6197-v537-terminal-artifact-contract"
+      ],
+      "gated_on": [],
+      "required_fields": [
+        "status",
+        "registry_precheck_and_hash_before_after",
+        "duplicate_solve_target_count",
+        "preregistered_loo_game_seed_matrix",
+        "canonical_live_agent_entrypoint_receipts",
+        "adapter_disabled_receipts_by_held_out_game",
+        "frozen_policy_paths_and_hashes",
+        "fresh_transition_paths_hashes_and_counts",
+        "train_eval_overlap_counts",
+        "task_aware_and_global_shadow_decisions",
+        "loo_accuracy_quality_and_safety_by_game",
+        "paired_clustered_intervals",
+        "treatment_activation_and_aa_controls",
+        "live_action_influence_count",
+        "source_bfs_adapter_prior_game_hidden_state_access_counts",
+        "solve_claimed",
+        "level_credit_delta",
+        "registry_update_count",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6209_arc_loo_task_aware_shadow.transitions.json"
+      ]
+    }
+  },
+  "conductor_receipts": {
+    "exp6197-v537-terminal-artifact-contract": {
+      "present": true,
+      "timestamp": "2026-08-07 20:07 UTC",
+      "status": "OK",
+      "detail": "93 passed, 1 warning in 8.40s",
+      "line": "| 2026-08-07 20:07 UTC | Fail-closed terminal-artifact contract after V536  | OK | 93 passed, 1 warning in 8.40s |"
+    },
+    "exp6198-v537-post-marker-source-scope-audit": {
+      "present": true,
+      "timestamp": "2026-08-07 21:14 UTC",
+      "status": "FLAGGED",
+      "detail": "adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea",
+      "line": "| 2026-08-07 21:14 UTC | Post-V537-marker SOTA delta plus staged-roadmap sc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT \u2014 result quarantined, not a clea |"
+    },
+    "exp6199-gatemate-terminal-action-audit-v537": {
+      "present": true,
+      "timestamp": "2026-08-07 21:31 UTC",
+      "status": "OK",
+      "detail": "128 passed, 1 warning in 15.14s",
+      "line": "| 2026-08-07 21:31 UTC | GateMate cached terminal-action audit with changed | OK | 128 passed, 1 warning in 15.14s |"
+    },
+    "exp6200-three-family-raw-code-transport-canary": {
+      "present": true,
+      "timestamp": "2026-08-07 21:58 UTC",
+      "status": "OK",
+      "detail": "89 passed, 1 warning in 19.69s",
+      "line": "| 2026-08-07 21:58 UTC | Three-family raw-code envelope canary before any n | OK | 89 passed, 1 warning in 19.69s |"
+    },
+    "exp6201-livecodebench-k8-pool-v2": {
+      "present": true,
+      "timestamp": "2026-08-07 22:04 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca",
+      "line": "| 2026-08-07 22:04 UTC | Authentic Gemma-4-31B K=8 pool gated on Exp6200 de | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |"
+    },
+    "exp6202-livecodebench-headroom-v2": {
+      "present": true,
+      "timestamp": "2026-08-07 22:10 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2)",
+      "line": "| 2026-08-07 22:10 UTC | Executable-code headroom audit gated on Exp6201 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6201-livecodebench-k8-pool-v2) |"
+    },
+    "exp6203-matching-base-code-hidden-state-v2": {
+      "present": true,
+      "timestamp": "2026-08-07 22:10 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom",
+      "line": "| 2026-08-07 22:10 UTC | Matching-base code hidden-state surface gated on E | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom |"
+    },
+    "exp6204-calibration-code-selector-v2": {
+      "present": true,
+      "timestamp": "2026-08-07 22:16 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "Pre-emptive skip: upstream retired (exp6203-matching-base-code-hidden-state-v2)",
+      "line": "| 2026-08-07 22:16 UTC | Calibration-only CLUE and residualized linear sele | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6203-matching-base-code-hidden-state-v2) |"
+    },
+    "exp6205-held-code-selection-v2": {
+      "present": true,
+      "timestamp": "2026-08-07 22:16 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selec",
+      "line": "| 2026-08-07 22:16 UTC | One-shot held executable-code internal-state selec | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selec |"
+    },
+    "exp6206-live-strategy-seed-v2": {
+      "present": true,
+      "timestamp": "2026-08-07 22:22 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca",
+      "line": "| 2026-08-07 22:22 UTC | Two-family live strategy seed gated on Exp6200 CSL | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-ca |"
+    },
+    "exp6207-prospective-procedural-memory-csl": {
+      "present": true,
+      "timestamp": "2026-08-07 23:45 UTC",
+      "status": "GATE_BLOCK",
+      "detail": "Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2)",
+      "line": "| 2026-08-07 23:45 UTC | Prospective procedural-memory continuous learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6206-live-strategy-seed-v2) |"
+    },
+    "exp6208-mode-jump-runtime-integration": {
+      "present": true,
+      "timestamp": "2026-08-07 23:24 UTC",
+      "status": "OK",
+      "detail": "113 passed, 1 warning in 29.48s",
+      "line": "| 2026-08-07 23:24 UTC | Default-off mode-jump runtime integration from qua | OK | 113 passed, 1 warning in 29.48s |"
+    },
+    "exp6209-arc-loo-task-aware-shadow": {
+      "present": true,
+      "timestamp": "2026-08-07 23:43 UTC",
+      "status": "OK",
+      "detail": "88 passed, 1 warning in 19.93s",
+      "line": "| 2026-08-07 23:43 UTC | Single ARC slot: leave-one-game-out shadow general | OK | 88 passed, 1 warning in 19.93s |"
+    }
+  },
+  "terminal_classifier_path_hash_and_results": {
+    "classifier_path": "python/carnot/terminal_artifacts.py",
+    "classifier_sha256": "sha256:a51f656116f7999b5d318b176919be274f214210e087ae548b61a5b7ce2fde10",
+    "terminal_classes": [
+      "blocked",
+      "complete",
+      "flagged",
+      "null",
+      "positive",
+      "ready",
+      "retired",
+      "skipped"
+    ],
+    "nonterminal_classes": [
+      "bootstrap_only",
+      "contradictory",
+      "malformed",
+      "missing",
+      "partial",
+      "running",
+      "running_bootstrap",
+      "unknown"
+    ],
+    "results": {
+      "exp6197-v537-terminal-artifact-contract": {
+        "classification": "ready",
+        "terminal": true,
+        "reason": "status=ready verdict=complete",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6197_v537_terminal_artifact_contract.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:0225790618175be300a8b87a442e7edb4a8ca690d92de7cfd9694808ab9aecbe",
+        "status_raw": "complete_ready",
+        "status_prefix": "complete_ready",
+        "status_class": "ready",
+        "honest_verdict_raw": "complete: Exp6197 terminal artifact contract replayed immutable fixtures; Exp6183 and Exp6196 remain nonterminal running_bootstrap; conductor_receipt_override_count=0; protected_artifact_mutation_count=0",
+        "honest_verdict_prefix": "complete",
+        "verdict_class": "complete",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "OK"
+      },
+      "exp6198-v537-post-marker-source-scope-audit": {
+        "classification": "flagged",
+        "terminal": true,
+        "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6198_v537_post_marker_source_scope_audit.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:e57a889b40a8e77487d691815da3e955d97ba785335fe48d1b56dc05b2773ebd",
+        "status_raw": "complete",
+        "status_prefix": "complete",
+        "status_class": "complete",
+        "honest_verdict_raw": "complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean",
+        "honest_verdict_prefix": "complete_null",
+        "verdict_class": "null",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "FLAGGED"
+      },
+      "exp6199-gatemate-terminal-action-audit-v537": {
+        "classification": "blocked",
+        "terminal": true,
+        "reason": "status=blocked verdict=blocked",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658",
+        "status_raw": "blocked_missing_receipt",
+        "status_prefix": "blocked_missing_receipt",
+        "status_class": "blocked",
+        "honest_verdict_raw": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded",
+        "honest_verdict_prefix": "blocked_missing_receipt",
+        "verdict_class": "blocked",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "OK"
+      },
+      "exp6200-three-family-raw-code-transport-canary": {
+        "classification": "partial",
+        "terminal": false,
+        "reason": "partial marker present",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6200_three_family_raw_code_transport_canary.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:9ed850c4be14d12314bf216b9fb0c4ff47b1d3564aafe3dd5a31562240efb219",
+        "status_raw": "complete_partial",
+        "status_prefix": "complete_partial",
+        "status_class": "partial",
+        "honest_verdict_raw": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
+        "honest_verdict_prefix": "complete_partial",
+        "verdict_class": "partial",
+        "receipt_override_attempted": true,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "OK"
+      },
+      "exp6201-livecodebench-k8-pool-v2": {
+        "classification": "skipped",
+        "terminal": true,
+        "reason": "blocked artifact records a gate skip",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6201_livecodebench_k8_pool_v2.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:4d99a9748731de714fb99e5ec554797e27cc4276f4523f108875faf6bbb2c66b",
+        "status_raw": "blocked",
+        "status_prefix": "blocked",
+        "status_class": "blocked",
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "honest_verdict_prefix": "blocked_gate_check_failed",
+        "verdict_class": "blocked",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6202-livecodebench-headroom-v2": {
+        "classification": "missing",
+        "terminal": false,
+        "reason": "artifact path is missing",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6202_livecodebench_headroom_v2.json",
+        "present": false,
+        "loadable": false,
+        "sha256": null,
+        "status_raw": null,
+        "status_prefix": null,
+        "status_class": "unknown",
+        "honest_verdict_raw": null,
+        "honest_verdict_prefix": null,
+        "verdict_class": "unknown",
+        "receipt_override_attempted": true,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6203-matching-base-code-hidden-state-v2": {
+        "classification": "skipped",
+        "terminal": true,
+        "reason": "blocked artifact records a gate skip",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6203_matching_base_code_hidden_state_v2.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:aa0e8e03075f1810d568fa0517a6a0e9446d44729a86a7c47cacbfec61723c5f",
+        "status_raw": "blocked",
+        "status_prefix": "blocked",
+        "status_class": "blocked",
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "honest_verdict_prefix": "blocked_gate_check_failed",
+        "verdict_class": "blocked",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6204-calibration-code-selector-v2": {
+        "classification": "missing",
+        "terminal": false,
+        "reason": "artifact path is missing",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6204_calibration_code_selector_v2.json",
+        "present": false,
+        "loadable": false,
+        "sha256": null,
+        "status_raw": null,
+        "status_prefix": null,
+        "status_class": "unknown",
+        "honest_verdict_raw": null,
+        "honest_verdict_prefix": null,
+        "verdict_class": "unknown",
+        "receipt_override_attempted": true,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6205-held-code-selection-v2": {
+        "classification": "skipped",
+        "terminal": true,
+        "reason": "blocked artifact records a gate skip",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6205_held_code_selection_v2.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:81f05e76ed68359df8510d96407eb65396e20b175c4c5844ec1baa74743115fd",
+        "status_raw": "blocked",
+        "status_prefix": "blocked",
+        "status_class": "blocked",
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "honest_verdict_prefix": "blocked_gate_check_failed",
+        "verdict_class": "blocked",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6206-live-strategy-seed-v2": {
+        "classification": "skipped",
+        "terminal": true,
+        "reason": "blocked artifact records a gate skip",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6206_live_strategy_seed_v2.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:1429068650f0d8d277606f9829dc2b2689a8afb62377681922563d01d7e91489",
+        "status_raw": "blocked",
+        "status_prefix": "blocked",
+        "status_class": "blocked",
+        "honest_verdict_raw": "blocked_gate_check_failed",
+        "honest_verdict_prefix": "blocked_gate_check_failed",
+        "verdict_class": "blocked",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6207-prospective-procedural-memory-csl": {
+        "classification": "missing",
+        "terminal": false,
+        "reason": "artifact path is missing",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6207_prospective_procedural_memory_csl.json",
+        "present": false,
+        "loadable": false,
+        "sha256": null,
+        "status_raw": null,
+        "status_prefix": null,
+        "status_class": "unknown",
+        "honest_verdict_raw": null,
+        "honest_verdict_prefix": null,
+        "verdict_class": "unknown",
+        "receipt_override_attempted": true,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "GATE_BLOCK"
+      },
+      "exp6208-mode-jump-runtime-integration": {
+        "classification": "ready",
+        "terminal": true,
+        "reason": "status=ready verdict=ready",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6208_mode_jump_runtime_integration.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:40c61bbf192903dac749ae9fd9f85e3e69b9b5dd6509bb2e4eccd96d641e4260",
+        "status_raw": "complete_ready",
+        "status_prefix": "complete_ready",
+        "status_class": "ready",
+        "honest_verdict_raw": "complete_ready: default_off=True; fallback_exact=True; seeded_parity=True; nonzero commands [{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"task_owned\": false}]",
+        "honest_verdict_prefix": "complete_ready",
+        "verdict_class": "ready",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "OK"
+      },
+      "exp6209-arc-loo-task-aware-shadow": {
+        "classification": "positive",
+        "terminal": true,
+        "reason": "status=positive verdict=positive",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6209_arc_loo_task_aware_shadow.json",
+        "present": true,
+        "loadable": true,
+        "sha256": "sha256:ff92646d73e8cdcd947fdb6efdf57926fca961653442f461e1ce80d96e142e0d",
+        "status_raw": "complete_positive",
+        "status_prefix": "complete_positive",
+        "status_class": "positive",
+        "honest_verdict_raw": "complete_positive: loo_games_6_fresh_transitions_48_shadow_delta_0.208333_losing_games_0_no_solve_no_registry_credit",
+        "honest_verdict_prefix": "complete_positive",
+        "verdict_class": "positive",
+        "receipt_override_attempted": false,
+        "receipt_overrode": false,
+        "conductor_receipt_status": "OK"
+      }
+    }
+  },
+  "task_terminal_classes": {
+    "exp6197-v537-terminal-artifact-contract": {
+      "task_id": "exp6197-v537-terminal-artifact-contract",
+      "status": "complete_ready",
+      "honest_verdict": "complete: Exp6197 terminal artifact contract replayed immutable fixtures; Exp6183 and Exp6196 remain nonterminal running_bootstrap; conductor_receipt_override_count=0; protected_artifact_mutation_count=0",
+      "classifier_class": "ready",
+      "classifier_terminal": true,
+      "terminal_class": "ready",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6198-v537-post-marker-source-scope-audit": {
+      "task_id": "exp6198-v537-post-marker-source-scope-audit",
+      "status": "complete",
+      "honest_verdict": "complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean",
+      "classifier_class": "flagged",
+      "classifier_terminal": true,
+      "terminal_class": "flagged",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": [
+        ".venv/bin/pytest tests/python -q"
+      ]
+    },
+    "exp6199-gatemate-terminal-action-audit-v537": {
+      "task_id": "exp6199-gatemate-terminal-action-audit-v537",
+      "status": "blocked_missing_receipt",
+      "honest_verdict": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded",
+      "classifier_class": "blocked",
+      "classifier_terminal": true,
+      "terminal_class": "blocked",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6200-three-family-raw-code-transport-canary": {
+      "task_id": "exp6200-three-family-raw-code-transport-canary",
+      "status": "complete_partial",
+      "honest_verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
+      "classifier_class": "partial",
+      "classifier_terminal": false,
+      "terminal_class": "partial",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6201-livecodebench-k8-pool-v2": {
+      "task_id": "exp6201-livecodebench-k8-pool-v2",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "terminal_class": "skipped",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [
+        "upstream_bank_and_canary_hashes",
+        "frozen_generation_envelope",
+        "model_specs",
+        "gguf_and_llama_cpp_cuda_receipts",
+        "deterministic_task_sample_seed_matrix",
+        "expected_and_observed_task_sample_counts",
+        "raw_shard_paths_hashes_and_seal_receipt",
+        "raw_before_label_ordering_receipt",
+        "finish_reason_and_token_counts",
+        "extraction_outcomes",
+        "restricted_private_execution_outcomes",
+        "correctness_retry_count",
+        "replacement_count",
+        "private_test_noninterference_receipt",
+        "resume_and_conflict_receipts",
+        "gpu_utilization_memory_intervals",
+        "process_wall_time_receipts",
+        "pool_integrity_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6202-livecodebench-headroom-v2": {
+      "task_id": "exp6202-livecodebench-headroom-v2",
+      "status": null,
+      "honest_verdict": null,
+      "classifier_class": "missing",
+      "classifier_terminal": false,
+      "terminal_class": "missing",
+      "present": false,
+      "loadable": false,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6203-matching-base-code-hidden-state-v2": {
+      "task_id": "exp6203-matching-base-code-hidden-state-v2",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "terminal_class": "skipped",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [
+        "upstream_pool_and_headroom_hashes",
+        "model_specs",
+        "base_model_cache_revision_shard_hashes",
+        "tokenizer_and_prompt_template_receipts",
+        "gguf_base_quantization_boundary",
+        "calibration_row_alignment_matrix",
+        "held_label_access_count",
+        "prompt_final_and_code_final_layer_shape_receipts",
+        "token_alignment_receipts",
+        "precision_and_device_map",
+        "gpu_cpu_offload_and_memory_intervals",
+        "feature_shard_paths_hashes",
+        "leakage_and_identifier_audit",
+        "surface_ready_score",
+        "blocked_reason",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6204-calibration-code-selector-v2": {
+      "task_id": "exp6204-calibration-code-selector-v2",
+      "status": null,
+      "honest_verdict": null,
+      "classifier_class": "missing",
+      "classifier_terminal": false,
+      "terminal_class": "missing",
+      "present": false,
+      "loadable": false,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6205-held-code-selection-v2": {
+      "task_id": "exp6205-held-code-selection-v2",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "terminal_class": "skipped",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [
+        "upstream_paths_and_hashes",
+        "held_join_timestamp_and_receipt",
+        "held_task_and_candidate_counts",
+        "frozen_selector_hash_and_post_join_mutation_count",
+        "baseline_definitions_and_frozen_hashes",
+        "selected_accuracy_by_method",
+        "paired_task_deltas",
+        "paired_bootstrap_ci95",
+        "mcnemar_or_exact_discordance_test",
+        "oracle_at_8_and_headroom_recovered",
+        "harmful_selection_counts",
+        "difficulty_platform_length_surface_strata",
+        "shuffled_random_and_shortcut_controls",
+        "private_test_or_label_feature_leakage_count",
+        "verifier_is_oracle",
+        "verifier_is_oracle_principle",
+        "promotion_gate",
+        "selector_family_retired",
+        "inference_substrate",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6206-live-strategy-seed-v2": {
+      "task_id": "exp6206-live-strategy-seed-v2",
+      "status": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "terminal_class": "skipped",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [
+        "upstream_bank_and_transport_hashes",
+        "model_specs",
+        "frozen_strategy_definitions_and_order",
+        "task_model_strategy_matrix",
+        "predecision_policy_receipts",
+        "raw_before_label_paths_hashes_and_order",
+        "restricted_outcome_counts_by_family_and_strategy",
+        "positive_and_negative_executable_event_counts",
+        "seed_only_fixed_no_memory_policy_by_family",
+        "bounded_memory_schema_capacity_eviction_and_snapshot_receipt",
+        "delayed_commit_receipts",
+        "duplicate_reorder_restart_rollback_and_poison_fixtures",
+        "model_weight_mutation_count",
+        "correctness_retry_count",
+        "legacy_headline_event_count",
+        "gpu_and_process_timing_receipts",
+        "seed_stream_ready_score",
+        "retirement_reason_if_failed",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "reproducibility_checksum"
+      ],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6207-prospective-procedural-memory-csl": {
+      "task_id": "exp6207-prospective-procedural-memory-csl",
+      "status": null,
+      "honest_verdict": null,
+      "classifier_class": "missing",
+      "classifier_terminal": false,
+      "terminal_class": "missing",
+      "present": false,
+      "loadable": false,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6208-mode-jump-runtime-integration": {
+      "task_id": "exp6208-mode-jump-runtime-integration",
+      "status": "complete_ready",
+      "honest_verdict": "complete_ready: default_off=True; fallback_exact=True; seeded_parity=True; nonzero commands [{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"task_owned\": false}]",
+      "classifier_class": "ready",
+      "classifier_terminal": true,
+      "terminal_class": "ready",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    },
+    "exp6209-arc-loo-task-aware-shadow": {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "status": "complete_positive",
+      "honest_verdict": "complete_positive: loo_games_6_fresh_transitions_48_shadow_delta_0.208333_losing_games_0_no_solve_no_registry_credit",
+      "classifier_class": "positive",
+      "classifier_terminal": true,
+      "terminal_class": "positive",
+      "present": true,
+      "loadable": true,
+      "critical_adversarial_flag_count": 0,
+      "missing_required_fields": [],
+      "unclassified_nonzero_commands": []
+    }
+  },
+  "missing_nonterminal_blocked_skipped_null_retired_flagged_counts": {
+    "missing": 3,
+    "nonterminal": 4,
+    "blocked": 1,
+    "skipped": 4,
+    "null": 0,
+    "retired": 0,
+    "flagged": 1,
+    "classification_counts": {
+      "blocked": 1,
+      "flagged": 1,
+      "missing": 3,
+      "partial": 1,
+      "positive": 1,
+      "ready": 2,
+      "skipped": 4
+    }
+  },
+  "structured_gate_recomputation": {
+    "exp6197-v537-terminal-artifact-contract": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "ready"
+    },
+    "exp6198-v537-post-marker-source-scope-audit": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "flagged"
+    },
+    "exp6199-gatemate-terminal-action-audit-v537": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "blocked"
+    },
+    "exp6200-three-family-raw-code-transport-canary": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "partial"
+    },
+    "exp6201-livecodebench-k8-pool-v2": {
+      "declared_gates": [
+        {
+          "upstream": "exp6200-three-family-raw-code-transport-canary",
+          "artifact_field": "phase_d_transport_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": 0,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [
+        {
+          "upstream": "exp6200-three-family-raw-code-transport-canary",
+          "artifact_field": "phase_d_transport_ready_score",
+          "op": "==",
+          "expected": 1,
+          "actual": 0,
+          "passed": false,
+          "reason": "actual=0 == expected=1"
+        }
+      ],
+      "conductor_gate_block": true,
+      "terminal_class": "skipped"
+    },
+    "exp6202-livecodebench-headroom-v2": {
+      "declared_gates": [
+        {
+          "upstream": "exp6201-livecodebench-k8-pool-v2",
+          "artifact_field": "pool_integrity_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": true,
+      "terminal_class": "missing"
+    },
+    "exp6203-matching-base-code-hidden-state-v2": {
+      "declared_gates": [
+        {
+          "upstream": "exp6202-livecodebench-headroom-v2",
+          "artifact_field": "headroom_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [
+        {
+          "upstream": "exp6202-livecodebench-headroom-v2",
+          "artifact_field": "headroom_ready_score",
+          "op": "==",
+          "expected": 1,
+          "actual": null,
+          "passed": false,
+          "reason": "upstream artifact not found for task id 'exp6202-livecodebench-headroom-v2'"
+        }
+      ],
+      "conductor_gate_block": true,
+      "terminal_class": "skipped"
+    },
+    "exp6204-calibration-code-selector-v2": {
+      "declared_gates": [
+        {
+          "upstream": "exp6203-matching-base-code-hidden-state-v2",
+          "artifact_field": "surface_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": true,
+      "terminal_class": "missing"
+    },
+    "exp6205-held-code-selection-v2": {
+      "declared_gates": [
+        {
+          "upstream": "exp6204-calibration-code-selector-v2",
+          "artifact_field": "selector_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [
+        {
+          "upstream": "exp6204-calibration-code-selector-v2",
+          "artifact_field": "selector_ready_score",
+          "op": "==",
+          "expected": 1,
+          "actual": null,
+          "passed": false,
+          "reason": "upstream artifact not found for task id 'exp6204-calibration-code-selector-v2'"
+        }
+      ],
+      "conductor_gate_block": true,
+      "terminal_class": "skipped"
+    },
+    "exp6206-live-strategy-seed-v2": {
+      "declared_gates": [
+        {
+          "upstream": "exp6200-three-family-raw-code-transport-canary",
+          "artifact_field": "csl_transport_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": 0,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [
+        {
+          "upstream": "exp6200-three-family-raw-code-transport-canary",
+          "artifact_field": "csl_transport_ready_score",
+          "op": "==",
+          "expected": 1,
+          "actual": 0,
+          "passed": false,
+          "reason": "actual=0 == expected=1"
+        }
+      ],
+      "conductor_gate_block": true,
+      "terminal_class": "skipped"
+    },
+    "exp6207-prospective-procedural-memory-csl": {
+      "declared_gates": [
+        {
+          "upstream": "exp6206-live-strategy-seed-v2",
+          "artifact_field": "seed_stream_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false
+        }
+      ],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": true,
+      "terminal_class": "missing"
+    },
+    "exp6208-mode-jump-runtime-integration": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "ready"
+    },
+    "exp6209-arc-loo-task-aware-shadow": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "positive"
+    }
+  },
+  "adversarial_verify_receipts_by_artifact": {
+    "exp6197-v537-terminal-artifact-contract": {
+      "task_id": "exp6197-v537-terminal-artifact-contract",
+      "artifact_path": "results/experiment_6197_v537_terminal_artifact_contract.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6197_v537_terminal_artifact_contract.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6197_v537_terminal_artifact_contract.json",
+              "loaded": true,
+              "exp_id": "exp6197-v537-terminal-artifact-contract",
+              "title": "",
+              "honest_verdict": "complete: Exp6197 terminal artifact contract replayed immutable fixtures; Exp618",
+              "flag_count": 0,
+              "max_severity": -1,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6197_v537_terminal_artifact_contract.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6197_v537_terminal_artifact_contract.json\n------------------------------------------------------------------------------\n  verdict          : complete: Exp6197 terminal artifact contract replayed immutable fixtures; Exp6183 and Exp6196 remain nonterminal running_bootstrap; conductor_receipt_override_count=0; protected_artifact_mutation_count=0\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.004890440963208675   substrate: deterministic_artifact_contract_replay_no_conductor\n  duration floor   : deterministic_artifact_contract_replay_no_conductor >=0.0001s (deterministic_verifier)\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:e59965a0d82133dc8ec3f7f020b0b7a51b5a587ef774059405df50d2e937ce24"
+    },
+    "exp6198-v537-post-marker-source-scope-audit": {
+      "task_id": "exp6198-v537-post-marker-source-scope-audit",
+      "artifact_path": "results/experiment_6198_v537_post_marker_source_scope_audit.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6198_v537_post_marker_source_scope_audit.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6198_v537_post_marker_source_scope_audit.json",
+              "loaded": true,
+              "exp_id": "exp6198-v537-post-marker-source-scope-audit",
+              "title": "",
+              "honest_verdict": "complete_null: accepted_count=0; no reproducible post-V537-marker findings; refe",
+              "flag_count": 0,
+              "max_severity": -1,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6198_v537_post_marker_source_scope_audit.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6198_v537_post_marker_source_scope_audit.json\n------------------------------------------------------------------------------\n  verdict          : complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean\n  flagged_adversarial (stamped): True   |   LIVE re-check: clean\n    note: stamped-flagged but live re-check is clean (rule may have been fixed since; verify the corrigendum).\n  acceptance gates :\n      [?   ] gate_structure_result = {'n_tasks_audited': 14, 'n_gate_upstream_checks': 7, 'n_gate_upstream_failures': 0, 'n_prior_failures_checks': 14, 'n_prior_failures_missing': 0, 'n_model_agent_coherence_failures': 0, 'n_gate_field_cross_ref_failures': 0, 'roadmap_gate_audit_passed': True, 'failure_details': [], 'audit_script_written': True, 'honest_verdict': 'all_checks_pass', 'structured_gate_count': 7}\n  duration_s       : 7.155134039930999   substrate: post_marker_source_ingestion_and_roadmap_scope_audit\n  duration floor   : post_marker_source_ingestion_and_roadmap_scope_audit >=0.0001s (deterministic_verifier)\n  headline metrics :\n      accepted_count = 0\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:e759b1771d6f7a5369e5e9f3ff65ad367d705d60605537e218d9c21435a66925"
+    },
+    "exp6199-gatemate-terminal-action-audit-v537": {
+      "task_id": "exp6199-gatemate-terminal-action-audit-v537",
+      "artifact_path": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+              "loaded": true,
+              "exp_id": "experiment_6199_gatemate_terminal_action_audit",
+              "title": "",
+              "honest_verdict": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero h",
+              "flag_count": 0,
+              "max_severity": -1,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6199_gatemate_terminal_action_audit_v537.json\n------------------------------------------------------------------------------\n  verdict          : blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.011996   substrate: cached_gatemate_terminal_action_audit_with_optional_single_detect\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:e1732090c0beb086afbaf6553199a61845172f220cad4cc8397c51ce189d58c8"
+    },
+    "exp6200-three-family-raw-code-transport-canary": {
+      "task_id": "exp6200-three-family-raw-code-transport-canary",
+      "artifact_path": "results/experiment_6200_three_family_raw_code_transport_canary.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6200_three_family_raw_code_transport_canary.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6200_three_family_raw_code_transport_canary.json",
+              "loaded": true,
+              "exp_id": "experiment_6200_three_family_raw_code_transport_canary",
+              "title": "",
+              "honest_verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
+              "flag_count": 0,
+              "max_severity": -1,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6200_three_family_raw_code_transport_canary.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6200_three_family_raw_code_transport_canary.json\n------------------------------------------------------------------------------\n  verdict          : complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 308.107634   substrate: local_three_family_llama_cpp_cuda_raw_code_transport_canary\n  duration floor   : local_three_family_llama_cpp_cuda_raw_code_transport_canary >=60.0s (live_model)\n  headline metrics :\n      csl_transport_ready_score = 0\n      phase_d_transport_ready_score = 0\n      private_oracle_access_count = 0\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:83d40637e3eab56903e3d933b85705770c6331e1616ea69f17756eea4cf74735"
+    },
+    "exp6201-livecodebench-k8-pool-v2": {
+      "task_id": "exp6201-livecodebench-k8-pool-v2",
+      "artifact_path": "results/experiment_6201_livecodebench_k8_pool_v2.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6201_livecodebench_k8_pool_v2.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6201_livecodebench_k8_pool_v2.json",
+              "loaded": true,
+              "blocked_gate_artifact": true,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6201_livecodebench_k8_pool_v2.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6201_livecodebench_k8_pool_v2.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-canary.phase_d_transport_ready_score (actual=0 == expected=1)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:ce9b223584b8a855d0aac69ba9599733f62d5a694f85cb5d59d47711a12e26c9"
+    },
+    "exp6203-matching-base-code-hidden-state-v2": {
+      "task_id": "exp6203-matching-base-code-hidden-state-v2",
+      "artifact_path": "results/experiment_6203_matching_base_code_hidden_state_v2.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6203_matching_base_code_hidden_state_v2.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6203_matching_base_code_hidden_state_v2.json",
+              "loaded": true,
+              "blocked_gate_artifact": true,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6203_matching_base_code_hidden_state_v2.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6203_matching_base_code_hidden_state_v2.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = \"1 of 1 gate(s) failed; first failure: exp6202-livecodebench-headroom-v2.headroom_ready_score (upstream artifact not found for task id 'exp6202-livecodebench-headroom-v2')\"\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:f8b6a7f85bdd383c57277ce8300f560afd30ec723c12d9f2d1c00cfae828e9ec"
+    },
+    "exp6205-held-code-selection-v2": {
+      "task_id": "exp6205-held-code-selection-v2",
+      "artifact_path": "results/experiment_6205_held_code_selection_v2.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6205_held_code_selection_v2.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6205_held_code_selection_v2.json",
+              "loaded": true,
+              "blocked_gate_artifact": true,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6205_held_code_selection_v2.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6205_held_code_selection_v2.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = \"1 of 1 gate(s) failed; first failure: exp6204-calibration-code-selector-v2.selector_ready_score (upstream artifact not found for task id 'exp6204-calibration-code-selector-v2')\"\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:a97c79c1354a4dbfbf7e8a8ad74bb7bca2927e282e36d22ccc84df64d705b752"
+    },
+    "exp6206-live-strategy-seed-v2": {
+      "task_id": "exp6206-live-strategy-seed-v2",
+      "artifact_path": "results/experiment_6206_live_strategy_seed_v2.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6206_live_strategy_seed_v2.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6206_live_strategy_seed_v2.json",
+              "loaded": true,
+              "blocked_gate_artifact": true,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6206_live_strategy_seed_v2.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6206_live_strategy_seed_v2.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp6200-three-family-raw-code-transport-canary.csl_transport_ready_score (actual=0 == expected=1)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:250e1701b34e4758e49f71964922129fb865fd13855789e6d4f4c318f00b64f2"
+    },
+    "exp6208-mode-jump-runtime-integration": {
+      "task_id": "exp6208-mode-jump-runtime-integration",
+      "artifact_path": "results/experiment_6208_mode_jump_runtime_integration.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6208_mode_jump_runtime_integration.json",
+        "exit_code": 0,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6208_mode_jump_runtime_integration.json",
+              "loaded": true,
+              "exp_id": "experiment_6208_mode_jump_runtime_integration",
+              "title": "",
+              "honest_verdict": "complete_ready: default_off=True; fallback_exact=True; seeded_parity=True; nonze",
+              "flag_count": 0,
+              "max_severity": -1,
+              "flags": []
+            }
+          ],
+          "flagged_count": 0
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6208_mode_jump_runtime_integration.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6208_mode_jump_runtime_integration.json\n------------------------------------------------------------------------------\n  verdict          : complete_ready: default_off=True; fallback_exact=True; seeded_parity=True; nonzero commands [{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"task_owned\": false}]\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.00016957800835371017   substrate: production_python_samplerbackend_plus_rust_pyo3_mode_jump_cpu\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 0,
+      "receipt_hash": "sha256:0781ff16da773e08e4504253b914fcb0359d838ec1fab9513a869cc677668c72"
+    },
+    "exp6209-arc-loo-task-aware-shadow": {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "artifact_path": "results/experiment_6209_arc_loo_task_aware_shadow.json",
+      "adversarial": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6209_arc_loo_task_aware_shadow.json",
+        "exit_code": 1,
+        "stdout_json": {
+          "reports": [
+            {
+              "artifact": "results/experiment_6209_arc_loo_task_aware_shadow.json",
+              "loaded": true,
+              "exp_id": null,
+              "title": "",
+              "honest_verdict": "complete_positive: loo_games_6_fresh_transitions_48_shadow_delta_0.208333_losing",
+              "flag_count": 1,
+              "max_severity": 0,
+              "flags": [
+                {
+                  "kind": "IMPLAUSIBLE_PERFECT",
+                  "severity": "info",
+                  "detail": "level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default."
+                }
+              ]
+            }
+          ],
+          "flagged_count": 1
+        },
+        "stderr": ""
+      },
+      "summary": {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6209_arc_loo_task_aware_shadow.json",
+        "exit_code": 0,
+        "stdout_tail": "==============================================================================\nARTIFACT  experiment_6209_arc_loo_task_aware_shadow.json\n------------------------------------------------------------------------------\n  verdict          : complete_positive: loo_games_6_fresh_transitions_48_shadow_delta_0.208333_losing_games_0_no_solve_no_registry_credit\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 5.679064   substrate: submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay\n  duration floor   : submitted_live_agent_kernel_acquisition_plus_offline_frozen_policy_replay >=0.0001s (deterministic_verifier)\n  headline metrics :\n      level_credit_delta = 0  <-- flagged\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.\n==============================================================================\n",
+        "stderr_tail": ""
+      },
+      "critical_flag_count": 0,
+      "flag_count": 1,
+      "receipt_hash": "sha256:7c4c946d0576f44b55c6767ee2ade028c64d8b02cb3e0c8d74149a5904e3aebd"
+    }
+  },
+  "protected_historical_artifact_mutation_count": 0,
+  "phase_d_headline_eligibility_and_reason": {
+    "branch": "phase_d",
+    "eligible": false,
+    "task_ids": [
+      "exp6200-three-family-raw-code-transport-canary",
+      "exp6201-livecodebench-k8-pool-v2",
+      "exp6202-livecodebench-headroom-v2",
+      "exp6203-matching-base-code-hidden-state-v2",
+      "exp6204-calibration-code-selector-v2",
+      "exp6205-held-code-selection-v2"
+    ],
+    "blocking_reasons": [
+      "exp6200-three-family-raw-code-transport-canary:partial",
+      "exp6201-livecodebench-k8-pool-v2:missing_required_field",
+      "exp6201-livecodebench-k8-pool-v2:failed_gate",
+      "exp6202-livecodebench-headroom-v2:missing",
+      "exp6202-livecodebench-headroom-v2:failed_gate",
+      "exp6203-matching-base-code-hidden-state-v2:missing_required_field",
+      "exp6203-matching-base-code-hidden-state-v2:failed_gate",
+      "exp6204-calibration-code-selector-v2:missing",
+      "exp6204-calibration-code-selector-v2:failed_gate",
+      "exp6205-held-code-selection-v2:missing_required_field",
+      "exp6205-held-code-selection-v2:failed_gate"
+    ],
+    "reason": "exp6200-three-family-raw-code-transport-canary:partial; exp6201-livecodebench-k8-pool-v2:missing_required_field; exp6201-livecodebench-k8-pool-v2:failed_gate; exp6202-livecodebench-headroom-v2:missing; exp6202-livecodebench-headroom-v2:failed_gate; exp6203-matching-base-code-hidden-state-v2:missing_required_field; exp6203-matching-base-code-hidden-state-v2:failed_gate; exp6204-calibration-code-selector-v2:missing; exp6204-calibration-code-selector-v2:failed_gate; exp6205-held-code-selection-v2:missing_required_field; exp6205-held-code-selection-v2:failed_gate"
+  },
+  "continuous_self_learning_headline_eligibility_and_reason": {
+    "branch": "continuous_self_learning",
+    "eligible": false,
+    "task_ids": [
+      "exp6200-three-family-raw-code-transport-canary",
+      "exp6206-live-strategy-seed-v2",
+      "exp6207-prospective-procedural-memory-csl"
+    ],
+    "blocking_reasons": [
+      "exp6200-three-family-raw-code-transport-canary:partial",
+      "exp6206-live-strategy-seed-v2:missing_required_field",
+      "exp6206-live-strategy-seed-v2:failed_gate",
+      "exp6207-prospective-procedural-memory-csl:missing",
+      "exp6207-prospective-procedural-memory-csl:failed_gate"
+    ],
+    "reason": "exp6200-three-family-raw-code-transport-canary:partial; exp6206-live-strategy-seed-v2:missing_required_field; exp6206-live-strategy-seed-v2:failed_gate; exp6207-prospective-procedural-memory-csl:missing; exp6207-prospective-procedural-memory-csl:failed_gate"
+  },
+  "sampler_integration_headline_eligibility_and_reason": {
+    "branch": "sampler_integration",
+    "eligible": true,
+    "task_ids": [
+      "exp6208-mode-jump-runtime-integration"
+    ],
+    "blocking_reasons": [],
+    "reason": "eligible_from_terminal_clean_exact_artifacts"
+  },
+  "arc_generalization_headline_eligibility_and_reason": {
+    "branch": "arc_generalization",
+    "eligible": true,
+    "task_ids": [
+      "exp6209-arc-loo-task-aware-shadow"
+    ],
+    "blocking_reasons": [],
+    "reason": "eligible_from_terminal_clean_exact_artifacts"
+  },
+  "hardware_continuity_state": {
+    "task_id": "exp6199-gatemate-terminal-action-audit-v537",
+    "terminal_class": "blocked",
+    "forbidden_claim_counts": {
+      "energy": 0,
+      "kona": 0,
+      "power": 0,
+      "speed": 0,
+      "terminal": 0,
+      "terminal_hardware": 0,
+      "tsu": 0
+    }
+  },
+  "source_delta_state": {
+    "task_id": "exp6198-v537-post-marker-source-scope-audit",
+    "terminal_class": "flagged",
+    "accepted_count": 0
+  },
+  "prior_failure_retirement_actions": [
+    {
+      "task_id": "exp6197-v537-terminal-artifact-contract",
+      "prior_experiment_id": "exp6183-v536-transition",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6197-v537-terminal-artifact-contract",
+      "prior_experiment_id": "exp6196-v536-capstone",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6198-v537-post-marker-source-scope-audit",
+      "prior_experiment_id": "exp6185-v536-post-marker-source-delta",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6199-gatemate-terminal-action-audit-v537",
+      "prior_experiment_id": "exp6121-gatemate-changed-state-gate-v530",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6200-three-family-raw-code-transport-canary",
+      "prior_experiment_id": "exp6187-livecodebench-authentic-k8-pool",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6200-three-family-raw-code-transport-canary",
+      "prior_experiment_id": "exp6192-live-strategy-seed-stream",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6201-livecodebench-k8-pool-v2",
+      "prior_experiment_id": "exp6187-livecodebench-authentic-k8-pool",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6201-livecodebench-k8-pool-v2",
+      "prior_experiment_id": "exp4056-code-oracle-distinct-pool-preregistration",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6202-livecodebench-headroom-v2",
+      "prior_experiment_id": "exp6188-livecodebench-headroom-audit",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6202-livecodebench-headroom-v2",
+      "prior_experiment_id": "exp6175-cctu-headroom-audit",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6203-matching-base-code-hidden-state-v2",
+      "prior_experiment_id": "exp6189-matching-base-code-hidden-state-surface",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6203-matching-base-code-hidden-state-v2",
+      "prior_experiment_id": "exp6176-hidden-state-surface-qualification",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6203-matching-base-code-hidden-state-v2",
+      "prior_experiment_id": "exp5213-matching-base-hidden-state-probe-v3",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6204-calibration-code-selector-v2",
+      "prior_experiment_id": "exp6190-calibration-clue-linear-code-selector",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6204-calibration-code-selector-v2",
+      "prior_experiment_id": "exp6177-clue-latent-selector-freeze",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6204-calibration-code-selector-v2",
+      "prior_experiment_id": "exp5213-matching-base-hidden-state-probe-v3",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6205-held-code-selection-v2",
+      "prior_experiment_id": "exp6191-held-code-internal-state-selection",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6205-held-code-selection-v2",
+      "prior_experiment_id": "exp6178-held-internal-state-selection",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6206-live-strategy-seed-v2",
+      "prior_experiment_id": "exp6192-live-strategy-seed-stream",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6206-live-strategy-seed-v2",
+      "prior_experiment_id": "exp5708-live-constraint-response-stream",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6207-prospective-procedural-memory-csl",
+      "prior_experiment_id": "exp6193-prospective-continuous-strategy-learning-ab",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6207-prospective-procedural-memory-csl",
+      "prior_experiment_id": "exp6179-retention-safe-continuous-strategy-learning-ab",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6207-prospective-procedural-memory-csl",
+      "prior_experiment_id": "exp5895-shortcut-safe-csl-transaction",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6208-mode-jump-runtime-integration",
+      "prior_experiment_id": "exp6166-mode-jumping-cnce-real-run",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "prior_experiment_id": "exp5727-arc-generalization-live-oracle-gap-v511",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "prior_experiment_id": "exp5740-arc-game-blind-primitive-causal-audit",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "prior_experiment_id": "exp5741-arc-generic-primitive-live-ab",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "prior_experiment_id": "exp5766-arc-loo-component-interaction-audit",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6209-arc-loo-task-aware-shadow",
+      "prior_experiment_id": "exp5767-arc-game-blind-composition-hardening",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    },
+    {
+      "task_id": "exp6210-v537-adversarial-capstone",
+      "prior_experiment_id": "exp6196-v536-capstone",
+      "retire_if_same_verdict": true,
+      "same_verdict": false,
+      "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+    }
+  ],
+  "spec_traceability_status_changelog_reconciliation_receipts": {
+    "openspec_req_infra_6210_present": true,
+    "spec_path": "openspec/capabilities/research-harnesses/spec.md",
+    "traceability_path": "_bmad/traceability.md",
+    "status_path": "ops/status.md",
+    "changelog_path": "ops/changelog.md",
+    "ops_status_changelog_traceability_modified": false,
+    "ops_status_changelog_traceability_deferred_by_stop_rule": true,
+    "path_hashes": {
+      "openspec/capabilities/research-harnesses/spec.md": "sha256:ab5de651f6033210f56cd58ff9fb3311dc479b1e7349462bebf36c50cc30fa4f",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "ops/changelog.md": "sha256:924d04377d58f8cabc6728fd77cc4afd1e6a80f0178f84d2676604cda6679b31",
+      "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+      "research-complete.yaml": "sha256:2e0bffb90d53f838249b037c5d1b8176dfad3c93f6abe70a83dcc47cf9b49c7f",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "CLAUDE.md": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+    }
+  },
+  "architecture_freshness_warning": {
+    "path": "_bmad/architecture.md",
+    "present": true,
+    "sha256": "sha256:4144008b17b1153ccde5d87a900ca0235c5d2a160016ca97d9b683f595def8d8",
+    "last_reconciled": "2026-07-03",
+    "current_date": "2026-08-07",
+    "stale": true,
+    "warning": "_bmad/architecture.md is stale by the roadmap freshness note; do not cite it as current."
+  },
+  "forbidden_claim_counts": {
+    "energy": 0,
+    "kona": 0,
+    "power": 0,
+    "speed": 0,
+    "terminal": 0,
+    "terminal_hardware": 0,
+    "tsu": 0
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "Exp6210 is terminal only after every upstream exact path is classified and every receipt is recorded.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "milestone_and_declared_task_graph_hash": {
+      "principle": "Hashes the roadmap task graph so the denominator cannot drift after reconciliation.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "exact_deliverable_manifest": {
+      "principle": "Uses exact declared deliverables only; sidecars and aliases are evidence of nonuse, not substitutes.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "conductor_receipts": {
+      "principle": "Keeps orchestration receipts visible while preventing them from promoting artifact state.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "terminal_classifier_path_hash_and_results": {
+      "principle": "Names and hashes the Exp6197 classifier used for every upstream path.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "task_terminal_classes": {
+      "principle": "Preserves classifier class, adversarial quarantine, missing fields, and command issues per task.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "missing_nonterminal_blocked_skipped_null_retired_flagged_counts": {
+      "principle": "Counts every negative class before any branch summary is written.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "structured_gate_recomputation": {
+      "principle": "Recomputes gates from immutable upstream fields instead of trusting launch decisions.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "adversarial_verify_receipts_by_artifact": {
+      "principle": "Records live artifact-reader and adversarial-verifier receipts for each present result.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "protected_historical_artifact_mutation_count": {
+      "principle": "Bare zero proves the capstone did not rewrite upstream historical results.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "phase_d_headline_eligibility_and_reason": {
+      "principle": "Separates Phase-D headline eligibility from other branches and names blockers.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "continuous_self_learning_headline_eligibility_and_reason": {
+      "principle": "Separates FR-11 memory eligibility from transport and selector outcomes.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "sampler_integration_headline_eligibility_and_reason": {
+      "principle": "Allows the sampler branch to stand or fall independently of code-generation gates.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "arc_generalization_headline_eligibility_and_reason": {
+      "principle": "Keeps ARC generalization evidence distinct from solve or registry credit.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "hardware_continuity_state": {
+      "principle": "Preserves GateMate continuity as a bounded state audit with no speed or power claim.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "source_delta_state": {
+      "principle": "Preserves source-ingestion nulls without converting zero accepted findings into progress.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "prior_failure_retirement_actions": {
+      "principle": "Records retire-if-same-verdict decisions without deleting prior records or reusing IDs.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "spec_traceability_status_changelog_reconciliation_receipts": {
+      "principle": "Documents this run's additive spec update and deferred ops reconciliation.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "architecture_freshness_warning": {
+      "principle": "Warns that _bmad/architecture.md is stale rather than citing it as current.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "forbidden_claim_counts": {
+      "principle": "Bare zero records that no forbidden hardware, rewrite, registry, or sidecar promotion claim is made.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "Declares aggregation over checked-in artifacts, not live inference or hardware measurement.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "Bare false because this capstone verifies artifact discipline, not benchmark answers.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Ties each field to the roadmap, exact artifacts, classifier, verifier receipts, or local hashes.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "field_principles": {
+      "principle": "Keeps why each required field matters next to the emitted artifact.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "test_commands": {
+      "principle": "Lists the focused, coverage, spec-coverage, E2E-plan, and global commands.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Records observed command exits without hiding nonzero results.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "duration_s": {
+      "principle": "Records wall time for deterministic aggregation without padding.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the normalized report payload.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "Starts with a terminal prefix and names headline blockers without strengthening claims.",
+      "sources": [
+        "REQ-INFRA-6210",
+        "research-roadmap.yaml",
+        "ops/conductor-log.md",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/summarize_artifact.py",
+        "exact_declared_artifacts"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "Exp6210 is terminal only after every upstream exact path is classified and every receipt is recorded.",
+    "milestone_and_declared_task_graph_hash": "Hashes the roadmap task graph so the denominator cannot drift after reconciliation.",
+    "exact_deliverable_manifest": "Uses exact declared deliverables only; sidecars and aliases are evidence of nonuse, not substitutes.",
+    "conductor_receipts": "Keeps orchestration receipts visible while preventing them from promoting artifact state.",
+    "terminal_classifier_path_hash_and_results": "Names and hashes the Exp6197 classifier used for every upstream path.",
+    "task_terminal_classes": "Preserves classifier class, adversarial quarantine, missing fields, and command issues per task.",
+    "missing_nonterminal_blocked_skipped_null_retired_flagged_counts": "Counts every negative class before any branch summary is written.",
+    "structured_gate_recomputation": "Recomputes gates from immutable upstream fields instead of trusting launch decisions.",
+    "adversarial_verify_receipts_by_artifact": "Records live artifact-reader and adversarial-verifier receipts for each present result.",
+    "protected_historical_artifact_mutation_count": "Bare zero proves the capstone did not rewrite upstream historical results.",
+    "phase_d_headline_eligibility_and_reason": "Separates Phase-D headline eligibility from other branches and names blockers.",
+    "continuous_self_learning_headline_eligibility_and_reason": "Separates FR-11 memory eligibility from transport and selector outcomes.",
+    "sampler_integration_headline_eligibility_and_reason": "Allows the sampler branch to stand or fall independently of code-generation gates.",
+    "arc_generalization_headline_eligibility_and_reason": "Keeps ARC generalization evidence distinct from solve or registry credit.",
+    "hardware_continuity_state": "Preserves GateMate continuity as a bounded state audit with no speed or power claim.",
+    "source_delta_state": "Preserves source-ingestion nulls without converting zero accepted findings into progress.",
+    "prior_failure_retirement_actions": "Records retire-if-same-verdict decisions without deleting prior records or reusing IDs.",
+    "spec_traceability_status_changelog_reconciliation_receipts": "Documents this run's additive spec update and deferred ops reconciliation.",
+    "architecture_freshness_warning": "Warns that _bmad/architecture.md is stale rather than citing it as current.",
+    "forbidden_claim_counts": "Bare zero records that no forbidden hardware, rewrite, registry, or sidecar promotion claim is made.",
+    "inference_substrate": "Declares aggregation over checked-in artifacts, not live inference or hardware measurement.",
+    "verifier_is_oracle": "Bare false because this capstone verifies artifact discipline, not benchmark answers.",
+    "field_provenance": "Ties each field to the roadmap, exact artifacts, classifier, verifier receipts, or local hashes.",
+    "field_principles": "Keeps why each required field matters next to the emitted artifact.",
+    "test_commands": "Lists the focused, coverage, spec-coverage, E2E-plan, and global commands.",
+    "test_exit_codes": "Records observed command exits without hiding nonzero results.",
+    "duration_s": "Records wall time for deterministic aggregation without padding.",
+    "reproducibility_checksum": "Content-addresses the normalized report payload.",
+    "honest_verdict": "Starts with a terminal prefix and names headline blockers without strengthening claims."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6210_v537_adversarial_capstone.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6210_v537_adversarial_capstone.py -m pytest tests/python/test_experiment_6210_v537_adversarial_capstone.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6210_v537_adversarial_capstone.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6210_v537_adversarial_capstone.py",
+    ".venv/bin/ruff check python/carnot/experiment_6210_v537_adversarial_capstone.py tests/python/test_experiment_6210_v537_adversarial_capstone.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6210_v537_adversarial_capstone.py tests/python/test_experiment_6210_v537_adversarial_capstone.py",
+    "sed -n 1,220p ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6210_v537_adversarial_capstone.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6210_v537_adversarial_capstone.py -m pytest tests/python/test_experiment_6210_v537_adversarial_capstone.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6210_v537_adversarial_capstone.py --fail-under=100": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6210_v537_adversarial_capstone.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6210_v537_adversarial_capstone.py tests/python/test_experiment_6210_v537_adversarial_capstone.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6210_v537_adversarial_capstone.py tests/python/test_experiment_6210_v537_adversarial_capstone.py": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0,
+    ".venv/bin/pytest tests/python -q": 124
+  },
+  "test_command_receipts": [
+    {
+      "command": ".venv/bin/pytest tests/python/test_experiment_6210_v537_adversarial_capstone.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 5 items\n\ntests/python/test_experiment_6210_v537_adversarial_capstone.py .....     [100%]\n\n============================== 5 passed in 1.25s ===============================\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6210_v537_adversarial_capstone.py -m pytest tests/python/test_experiment_6210_v537_adversarial_capstone.py -q --no-cov -n 0",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 5 items\n\ntests/python/test_experiment_6210_v537_adversarial_capstone.py .....     [100%]\n\n============================== 5 passed in 2.19s ===============================\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6210_v537_adversarial_capstone.py --fail-under=100",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "Name                                                         Stmts   Miss  Cover\n--------------------------------------------------------------------------------\npython/carnot/experiment_6210_v537_adversarial_capstone.py     395      0   100%\n--------------------------------------------------------------------------------\nTOTAL                                                          395      0   100%\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6210_v537_adversarial_capstone.py",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "OK: All tests reference specification requirements.\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_6210_v537_adversarial_capstone.py tests/python/test_experiment_6210_v537_adversarial_capstone.py",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "All checks passed!\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_6210_v537_adversarial_capstone.py tests/python/test_experiment_6210_v537_adversarial_capstone.py",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "2 files already formatted\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": "sed -n 1,220p ops/e2e-test-plan.md",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": ".\n\n**Steps:**\n1. Build a generated candidate function body from a HumanEval-style prompt\n2. Run the official weak harness to confirm the buggy candidate can still pass\n3. Verify the candidate through the packaged code-verification path with\n   additive Hypothesis-backed PBT\n4. Use the packaged repair feedback to produce a repaired candidate\n5. Re-run packaged verification and the official harness on the repaired code\n\n**Pass criteria:** The initial candidate passes the weak harness but fails the\npackaged verifier, and the repaired candidate passes both packaged verification\nand the official harness.\n\n### E2E-006: EBRM Trace Scorer CPU/KV260 Verification\n\n**Objective:** Verify that extracted logical traces are scored by the CPU EBRM\nscorer and the KV260 q=3 Potts backend with matching energy results and\nauditable per-case provenance.\n\n**Spec refs:** `REQ-VERIFY-1656`, `SCENARIO-VERIFY-1656`,\n`REQ-VERIFY-1657`, `SCENARIO-VERIFY-1657`, `REQ-VERIFY-1658`,\n`SCENARIO-VERIFY-1658`.\n\n**Source artifacts:** `results/experiment_1656_ebrm_trace_scorer.json`,\n`results/experiment_1657_kv260_ebrm_binding.json`,\n`results/experiment_1658_hw_eval.json`.\n\n**Steps:**\n1. Confirm the Exp 1656 CPU scorer artifact is complete, uses continuous\n   energy, and reports `score_accuracy >= 0.8`.\n2. Confirm the Exp 1657 KV260 binding artifact is complete, uses q=3 Potts\n   states, and records whether hardware execution or software fallback was\n   used.\n3. Run or inspect Exp 1658 on bounded local SOTA output rows and compare CPU\n   and KV260 energies over the same trace batch.\n4. Verify every case score includes CPU energy, KV260 energy, absolute score\n   delta, backend provenance, and Potts state metadata.\n\n**Pass criteria:** Exp 1656, Exp 1657, and Exp 1658 artifacts are complete;\nCPU/KV260 `max_score_delta <= 1e-6`; CPU and KV260 scoring accuracy match;\n`scoring_delta_within_tolerance=true`; and no hardware execution claim is made\nunless authenticated hardware evidence is present.\n\n### E2E-007: SMGI Certified Update Verification\n\n**Objective:** Verify that SMGI policy and memory updates become reusable only\nwhen CerCE certificate evidence, replay retention, SessionMemory hash changes,\nand model-weight immutability gates all pass.\n\n**Spec refs:** `REQ-LEARN-1659`, `SCENARIO-LEARN-1659`,\n`SCENARIO-LEARN-1660`.\n\n**Source artifacts:** `results/experiment_1659_smgi_certified_updates.json`.\n\n**Steps:**\n1. Confirm the Exp 1659 artifact is complete and\n   `continuous_self_learning_task=true`.\n2. Verify the CerCE ledger gates report `accepted_violation_count=0`,\n   `false_accept_delta <= 0`, `soundness_mistakes=0`, and\n   `nonforgetting_certificate_rate=1.0`.\n3. Inspect every certified update for matching certificate ID, present and\n   changed SessionMemory hashes, full replay retention, zero replay failures,\n   provenance, and `no_model_weight_mutation=true`.\n4. Verify unsafe candidates remain in `rejected_updates` and never contribute\n   to `certified_update_success=true`.\n\n**Pass criteria:** `smgi_certified_update_ready=true`,\n`certified_update_success=true`, at least one certified update is present,\nall certified updates pass replay and hash gates, and no update mutates model\nweights.\n\n### E2E-008: CLaRa-V Continuous Latent Space Evaluation\n\n**Objective:** Verify that CLaRa-V continuous latent variables map to ContinuousEBM instances and can be correctly evaluated for constraints and energy.\n\n**Spec refs:** `REQ-KONA-040`, `SCENARIO-KONA-041`.\n\n**Source artifacts:** `results/experiment_2000_e2e_pipeline.json`.\n\n**Steps:**\n1. Instantiate a ContinuousLatentState with constraints.\n2. Instantiate a ContinuousEBM.\n3. Evaluate the continuous latent state energies with the EBM.\n4. Ensure ContinuousLatentState can project using the DouglasRachfordPiNetLayer.\n\n**Pass criteria:** ContinuousLatentState initialization succeeds, energy is evaluated correctly using ContinuousEBM, PiNet projection runs without error, and output coordinates represent the applied constraints.\n",
+      "stderr_tail": ""
+    },
+    {
+      "command": ".venv/bin/pytest tests/python -q",
+      "exit_code": 124,
+      "classification": "timed_out_after_300s",
+      "stdout_tail": "...................................................... [  7%]\n........................................................................ [  7%]\n........................................................................ [  7%]\n........................................................................ [  7%]\n.............................F.......................................... [  7%]\n........................................................................ [  8%]\n....................................F................................... [  8%]\n........................................................................ [  8%]\n........................................................................ [  8%]\n........................................................................ [  8%]\n........................................................................ [  8%]\n........................................................................ [  8%]\n........................................................................ [  8%]\n........................................................................ [  9%]\n........................................................................ [  9%]\n.......................................................F................ [  9%]\n........................................................................ [  9%]\n........................................................................ [  9%]\n........................................................................ [  9%]\n...F.................................................................... [  9%]\n........FF..................................FF.......................... [ 10%]\n.........F.............................................................. [ 10%]\n........................................................................ [ 10%]\n..F......................F...................FFFFF............F......... [ 10%]\n..............................F......................................... [ 10%]\n..................................................[gw0] node down: Not properly terminated\nF\nreplacing crashed worker gw0\n............................................F........................... [ 10%]\n........................................................................ [ 10%]\n........................FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF..........F..... [ 11%]\n........................................................................ [ 11%]\n....................FF.................................................. [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n...............................................FFFFFFFFFFFFFFFFFFFF..... [ 12%]\n.......................F................................................ [ 12%]\n........................................................................ [ 13%]\n........................s............................................... [ 13%]\n...........................................................FF.F......... [ 13%]\n........................................................................ [ 13%]\n..........................F............................................. [ 13%]\n........................................................................ [ 13%]\n........................................................",
+      "stderr_tail": "ndas._libs.properties, pandas._libs.tslibs.fields, pandas._libs.tslibs.timedeltas, pandas._libs.tslibs.tzconversion, pandas._libs.tslibs.timestamps, pandas._libs.tslibs.offsets, pandas._libs.tslibs.strptime, pandas._libs.tslibs.parsing, pandas._libs.tslibs.conversion, pandas._libs.tslibs.period, pandas._libs.tslibs.vectorized, pandas._libs.ops_dispatch, pandas._libs.missing, pandas._libs.hashtable, pandas._libs.algos, pandas._libs.interval, pandas._libs.lib, pyarrow._compute, pandas._libs.ops, pandas._libs.hashing, pandas._libs.arrays, pandas._libs.tslib, pandas._libs.sparse, pandas._libs.internals, pandas._libs.indexing, pandas._libs.index, pandas._libs.writers, pandas._libs.join, pandas._libs.window.aggregations, pandas._libs.window.indexers, pandas._libs.reshape, pandas._libs.groupby, pandas._libs.json, pandas._libs.parsers, pandas._libs.testing, sklearn._cyutility, sklearn.utils._isfinite, sklearn.utils.sparsefuncs_fast, sklearn.utils.murmurhash, sklearn.utils._openmp_helpers, sklearn.utils._vector_sentinel, sklearn.feature_extraction._hashing_fast, sklearn.preprocessing._csr_polynomial_expansion, sklearn.preprocessing._target_encoder_fast, sklearn.metrics.cluster._expected_mutual_info_fast, sklearn.metrics._dist_metrics, sklearn.metrics._pairwise_distances_reduction._datasets_pair, sklearn.utils._cython_blas, sklearn.metrics._pairwise_distances_reduction._base, sklearn.metrics._pairwise_distances_reduction._middle_term_computer, sklearn.utils._heap, sklearn.utils._sorting, sklearn.metrics._pairwise_distances_reduction._argkmin, sklearn.metrics._pairwise_distances_reduction._argkmin_classmode, sklearn.metrics._pairwise_distances_reduction._radius_neighbors, sklearn.metrics._pairwise_distances_reduction._radius_neighbors_classmode, sklearn.metrics._pairwise_fast, sklearn.neighbors._partition_nodes, sklearn.neighbors._ball_tree, sklearn.neighbors._kd_tree, sklearn.utils.arrayfuncs, sklearn.utils._random, sklearn.utils._seq_dataset, sklearn.linear_model._cd_fast, sklearn._loss._loss, sklearn.linear_model._sag_fast, sklearn.svm._liblinear, sklearn.svm._libsvm, sklearn.svm._libsvm_sparse, sklearn.utils._weight_vector, sklearn.linear_model._sgd_fast, sklearn.decomposition._online_lda_fast, sklearn.decomposition._cdnmf_fast, sklearn.utils._fast_dict, sklearn.cluster._hierarchical_fast, sklearn.cluster._k_means_common, sklearn.cluster._k_means_elkan, sklearn.cluster._k_means_lloyd, sklearn.cluster._k_means_minibatch, sklearn.cluster._dbscan_inner, sklearn.cluster._hdbscan._tree, sklearn.cluster._hdbscan._linkage, sklearn.cluster._hdbscan._reachability, sklearn._isotonic, sklearn.tree._utils, sklearn.tree._tree, sklearn.tree._partitioner, sklearn.tree._splitter, sklearn.tree._criterion, sklearn.neighbors._quad_tree, sklearn.manifold._barnes_hut_tsne, sklearn.manifold._utils, torch._C, torch._C._dynamo.autograd_compiler, torch._C._dynamo.eval_frame, torch._C._dynamo.guards, torch._C._dynamo.utils, torch._C._fft, torch._C._linalg, torch._C._nested, torch._C._nn, torch._C._sparse, torch._C._special, regex._regex, markupsafe._speedups, PIL._imaging, pyformula, pysolvers, simplejson._speedups, requests.packages.charset_normalizer.md, requests.packages.chardet.md, requests.packages.charset_normalizer.cd, requests.packages.chardet.cd, kiwisolver._cext, scipy.signal._sigtools, scipy.signal._max_len_seq_inner, scipy.signal._upfirdn_apply, scipy.signal._spline, scipy.signal._sosfilt, scipy.signal._peak_finding_utils, PIL._imagingft, pyarrow._acero, pyarrow._fs, pyarrow._csv, pyarrow._json, pyarrow._substrait, pyarrow._dataset, pyarrow._dataset_orc, pyarrow._parquet, pyarrow._azurefs, pyarrow._hdfs, pyarrow._gcsfs, pyarrow._s3fs, pyarrow._parquet_encryption, pyarrow._dataset_parquet_encryption, pyarrow._dataset_parquet, multidict._multidict, yarl._quoting_c, propcache._helpers_c, aiohttp._http_writer, aiohttp._http_parser, aiohttp._websocket.mask, aiohttp._websocket.reader_c, frozenlist._frozenlist, xxhash._xxhash, _cffi_backend (total: 254)\n"
+    }
+  ],
+  "duration_s": 309.8349794622045,
+  "reproducibility_checksum": "sha256:df50a4e1cb9198684686c0207d4160c792d87b534072ccd815eaadb9048fcfc4",
+  "honest_verdict": "complete: V537 exact-path capstone preserved missing=3, nonterminal=4, blocked=1, skipped=4, null=0, retired=0, flagged=1; headline eligibility is branch-separated and conductor receipts did not promote artifact state"
+}

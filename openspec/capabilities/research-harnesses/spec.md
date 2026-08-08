@@ -990,3 +990,94 @@ matches the normalized payload.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6198 | `python/carnot/experiment_6198_v537_post_marker_source_scope_audit.py`; terminal artifact `results/experiment_6198_v537_post_marker_source_scope_audit.json`. | `tests/python/test_experiment_6198_v537_post_marker_source_scope_audit.py`. |
+
+## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
+
+Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
+`2026.08.537`. The capstone SHALL load the active V537 roadmap, derive the
+exact task-ID to declared-deliverable manifest for Exp6197 through Exp6209,
+and SHALL NOT substitute sidecars, aliases, or glob matches when an exact path
+is missing.
+
+Exp6210 SHALL classify every exact deliverable path with the shared Exp6197
+terminal-artifact classifier; this Exp6197 terminal-artifact classifier is the
+only terminality promotion mechanism. Conductor receipts SHALL be recorded but SHALL
+NOT promote missing, malformed, running, running_bootstrap, bootstrap-only,
+contradictory, unknown, or partial artifacts. Structured roadmap gates SHALL be
+recomputed from upstream artifact fields and compared with conductor receipts
+without launching or fabricating skipped downstream artifacts.
+
+Exp6210 SHALL run adversarial verification for every present result artifact
+and record the receipts. A CRITICAL adversarial flag, nonterminal artifact
+class, missing required field, unclassified nonzero command, or failed
+promotion gate SHALL exclude the affected branch from headline eligibility.
+Headline eligibility SHALL be reported separately for Phase D, continuous
+self-learning, sampler integration, ARC generalization, and hardware
+continuity. Negative classes, quarantines, structured skips, source-delta
+nulls, stale architecture warnings, and repeated prior-failure retirement
+actions SHALL be preserved without rewriting historical result artifacts.
+
+The Exp6210 artifact SHALL be written atomically to
+`results/experiment_6210_v537_adversarial_capstone.json` and SHALL include
+these required fields: `status`, `milestone_and_declared_task_graph_hash`,
+`exact_deliverable_manifest`, `conductor_receipts`,
+`terminal_classifier_path_hash_and_results`, `task_terminal_classes`,
+`missing_nonterminal_blocked_skipped_null_retired_flagged_counts`,
+`structured_gate_recomputation`, `adversarial_verify_receipts_by_artifact`,
+`protected_historical_artifact_mutation_count`,
+`phase_d_headline_eligibility_and_reason`,
+`continuous_self_learning_headline_eligibility_and_reason`,
+`sampler_integration_headline_eligibility_and_reason`,
+`arc_generalization_headline_eligibility_and_reason`,
+`hardware_continuity_state`, `source_delta_state`,
+`prior_failure_retirement_actions`,
+`spec_traceability_status_changelog_reconciliation_receipts`,
+`architecture_freshness_warning`, `forbidden_claim_counts`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`. The mutation count and every
+forbidden claim count SHALL be bare numeric zero.
+
+### SCENARIO-INFRA-6210-1: Exact manifest refuses substitutes
+GIVEN the active V537 roadmap declares Exp6197 through Exp6209 deliverable
+paths
+WHEN Exp6210 builds its manifest
+THEN every task row records the exact declared path, hash and existence state,
+and missing exact paths remain missing even when same-number sidecars exist.
+
+### SCENARIO-INFRA-6210-2: Exp6197 classifier outranks conductor receipts
+GIVEN an upstream artifact is missing, malformed, running_bootstrap,
+bootstrap-only, contradictory, unknown, or partial
+WHEN the conductor receipt says `OK`, `COMPLETE`, or another terminal status
+THEN Exp6210 records the receipt but preserves the nonterminal class and blocks
+headline eligibility for any dependent branch.
+
+### SCENARIO-INFRA-6210-3: Structured gates are recomputed from immutable fields
+GIVEN a roadmap task declares `gated_on` upstream field/operator/value entries
+WHEN Exp6210 evaluates the gate
+THEN the gate row records upstream task, field, operator, expected value,
+actual value, pass/fail state, conductor receipt comparison, and structured
+skip preservation without writing a downstream artifact.
+
+### SCENARIO-INFRA-6210-4: Adversarial flags and missing fields exclude headlines
+GIVEN a present upstream artifact has a CRITICAL adversarial flag, nonterminal
+classification, missing required field, unclassified nonzero command, or failed
+promotion gate
+WHEN Exp6210 computes branch headline eligibility
+THEN the branch eligibility row is false and its reason cites the exact task,
+artifact path, and exclusion class.
+
+### SCENARIO-INFRA-6210-5: Exp6210 output is atomic, checksummed, and non-mutating
+GIVEN the manifest, classifier rows, gate recomputation, adversarial receipts,
+field principles, and command receipts are computed in memory
+WHEN Exp6210 validates and writes its artifact
+THEN it writes one terminal-prefixed artifact with a stable checksum,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`verifier_is_oracle=false`, `protected_historical_artifact_mutation_count=0`,
+bare zero forbidden claim counts, and no historical result byte rewritten.
+
+## Implementation Status (REQ-INFRA-6210)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6210 | Pending implementation: `python/carnot/experiment_6210_v537_adversarial_capstone.py`; terminal artifact `results/experiment_6210_v537_adversarial_capstone.json`. | Pending focused tests: `tests/python/test_experiment_6210_v537_adversarial_capstone.py`. |
