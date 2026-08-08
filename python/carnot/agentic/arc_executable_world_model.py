@@ -2939,6 +2939,22 @@ def _object_perception_on() -> bool:
     return os.environ.get("CARNOT_ARC_OBJECT_PERCEPTION", "1") != "0"
 
 
+def _object_delta_perception_block(trans: list[Transition]) -> str:
+    """REQ-ARC-WMTE-6213: append transition object deltas only for the explicit arm."""
+
+    try:
+        from carnot.agentic import arc_object_delta_perception
+    except Exception:
+        return ""
+    if not arc_object_delta_perception.object_delta_perception_on():
+        return ""
+    try:
+        block = arc_object_delta_perception.object_delta_block(trans)
+    except Exception:
+        return ""
+    return ("\n" + block) if block else ""
+
+
 # REQ-ARC-WMTE-5717: DEV-ONLY playbook methodology exemplars for the STALL re-induction
 # path. Default OFF (env CARNOT_ARC_PLAYBOOK_EXEMPLARS_ENABLED unset -> byte-identical
 # prompt, exactly like the CARNOT_ARC_CODEONLY_INDUCE / _REFACTOR_STRUCTURE_REMINDER
@@ -3044,7 +3060,7 @@ deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
 {_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled, win_transition=win_transition)}
-{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}"""
+{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{_object_delta_perception_block(trans)}"""
 
 
 _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8

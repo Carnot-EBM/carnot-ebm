@@ -100,3 +100,5 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant:** **GeniusYY** (`alexyy`) is **#4 at 1.64**. Its public notebooks are unrelated to ARC-AGI-3; no ARC agent code, dataset, repository, discussion, or technique writeup was found. **Exploit/general-purpose classification: unknown.** [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/alexyy/code)
 
+## 2026-08-08 13:38 UTC -- checked, nothing new
+

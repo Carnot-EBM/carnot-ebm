@@ -114,3 +114,7 @@ CHECK_TIMED_OUT
 
 ## 2026-08-07 13:11 UTC -- checked, nothing new
 
+## 2026-08-08 13:11 UTC -- NEW
+
+- Kaggle analyzed 500 failed submissions: about one-third had no traceable visible error, nearly 20% omitted required GPU configuration, and smaller categories included missing datasets/dependencies, CUDA OOM, obsolete endpoints, and writes to read-only `/kaggle/input`. Host Greg Kamradt added that organizers cannot inspect notebooks until teams open-source them. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
