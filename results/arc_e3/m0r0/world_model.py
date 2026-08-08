@@ -1,124 +1,127 @@
 import numpy as np
 
 def engine(grid, action, data):
-    # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
-    # Action mapping based on observed transitions:
-    # ACTION1: Move a "player" or "object" in some direction? 
-    # Looking at the delta, it seems like ACTION1 shifts something.
-    # Let's analyze the movement patterns.
-    # In ACTION1, cells change from color 5 to 10 and vice versa.
-    # Color 10 represents the player/collectible.
-    # The board has boundaries (color 11 and 12).
-    # It's a a puzzle game where you move a block of color 10.
-    #
-    # Based on the observations:
-    # ACTION1: Shift right? No, looking at the la-out, it's a sequence of moves.
-    # ACTION3: This looks like a toggle or specific interaction.
-    # ACTION4: This looks like a shift left?
-    #
-    # Actually, let's look at the same object (shape ab14cbd7b3d70239) which is color 10.
-    # The coordinates of color 10 blocks are shifted.
-    # ACTION1: Shifts the block of color 10.
-    # ACTION4: Shifts the block of color 10.
-    #
-    # Let's refine this:
-    # ACTION1: Move Right
-    # ACTION3: Move Down?
-    # ACTION2: Move Left
-    # ACTION4: Move Up?
-    #
-    # Wait, the observed transitions show ACTION1 shifting things in a way that suggests movement.
-    # ACTION4 shifts them too.
-    # ACTION6 is click.
-    #
-    # Looking at the "WIN TRANSITION":
-    # Grid before completing action has color 10 block at r9c29 to r13c38.
-    # Applying ACTION4 completes the level.
-    #
-    # In many ARC games, the same-color objects move.
-    # Color 10 is the player/object.
-    # Color 5 is the background/path.
-    # Colors 11 and 12 are walls.
-    #
-    # Let's look at the ACTION1 deltas again.
-    # r34c14:10x5 -> This means row 34, col 14, value 10, count 5.
-    # The object of color 10 is moving.
-    #
-    # Based on thees patterns:
-    # Action 1: Right
-    # Action 2: Left
-    # Action 3: Down
-    # Action 4: Up
-    # (Standard mapping)
-    #
-    # But let's check if it's a movement game.
-    # If we move the block of color 10 into a specific area or align it with something, we win.
-    #
-    # Looking at "GRID BEFORE THE COMPLETING ACTION":
-    # Object of color 10 is at bbox=(9, 29, 13, 38).
-    # Applying ACTION4 completes the level.
-    #
-    # In this specific puzzle, the goal seems to be to move the block of color 10 to a target location.
-    # Target location might be where the other block of color 10 was initially?
-    # Or simply reaching the top boundary.
-    #
-    # Let's implement a simple movement engine for the block of color 10.
+    """
+    World model for the ARC-AGI-3 game 'm0r0'.
     
+    Rules:
+    - The grid contains blocks of color 10 (5x5 or 5x10) moving in a field of color 5.
+    - Action 1: Move all color 10 blocks UP by 5 units.
+    - Action 2: Move all color 10 blocks DOWN by 5 units.
+    - Action 3: Move all color 10 blocks AWAY from the center (x=31.5).
+    - Action 4: Move all color 10 blocks TOWARDS the center (x=31.5).
+    - When blocks move, they leave color 5 behind.
+    - When blocks overlap, they merge into a larger block of color 10.
+    - "0" cells grow from the corners (0, 63) and (63, 0) based on certain actions.
+    """
     new_grid = grid.copy()
+    h, w = grid.shape
     
-    # Find all cells of color 10
-    coords = np.argwhere(grid == 10)
-    if coords.size == 0:
-        return new_grid
-    
-    # Bounding box of color 10 object
-    y0, x0 = coords.min(axis=0)
-    y1, x1 = coords.max(axis=0)
-    
-    # Movement vectors
-    move_vec = {1: (0, 1), 2: (0, -1), 3: (1, 0), 4: (-1, 0)}
-    
-    if action in move_vec:
-        dy, dx = move_vec[action]
+    # Identify all color 10 blocks
+    blocks = []
+    visited = np.zeros_like(grid, dtype=bool)
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 10 and not visited[r, c]:
+                # Find the connected component of color 10
+                comp = []
+                stack = [(r, c)]
+                visited[r, c] = True
+                while stack:
+                    curr_r, curr_c = stack.pop()
+                    comp.append((curr_r, curr_c))
+                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                        nr, nc = curr_r + dr, curr_c + dc
+                        if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == 10 and not visited[nr, nc]:
+                            visited[nr, nc] = True
+                            stack.append((nr, nc))
+                
+                # Get bbox
+                rs = [p[0] for p in comp]
+                cs = [p[1] for p in comp]
+                blocks.append({'y0': min(rs), 'x0': min(cs), 'y1': max(rs), 'x1': max(cs)})
+
+    # Movement logic
+    new_blocks = []
+    for b in blocks:
+        y0, x0, y1, x1 = b['y0'], b['x0'], b['y1'], b['x1']
+        dy, dx = 0, 0
         
-        # Check if any part of the same-color object moves into a wall (11 or 12)
-        # Move it only if possible.
-        can_move = True
-        for r, c in coords:
-            nr, nc = r + dy, c + dx
-            if nr < 0 or nr >= grid.shape[0] or nc < 0 or nc >= grid.shape[1]:
-                continue # Treat as board edge as path
-            if grid[nr, nc] in [11, 12]:
-                can_move = False
+        if action == 1:
+            dy = -5
+        elif action == 2:
+            dy = 5
+        elif action == 3:
+            # Move away from center x=31.5
+            center_x = 31.5
+            block_center_x = (x0 + x1) / 2
+            dx = 5 if block_center_x > center_x else -5
+        elif action == 4:
+            # Move towards center x=31.5
+            center_x = 31.5
+            block_center_x = (x0 + x1) / 2
+            dx = -5 if block_center_x > center_x else 5
+            
+        # Apply movement and clip to grid boundaries
+        ny0, nx0 = max(0, min(h-1, y0 + dy)), max(0, min(w-1, x0 + dx))
+        ny1, nx1 = max(0, min(h-1, y1 + dy)), max(0, min(w-1, x1 + dx))
+        new_blocks.append({'y0': ny0, 'x0': nx0, 'y1': ny1, 'x1': nx1})
+
+    # Clear old blocks and fill with color 5
+    for b in blocks:
+        new_grid[b['y0']:b['y1']+1, b['x0']:b['x1']+1] = 5
+        
+    # Place new blocks and merge
+    for b in new_blocks:
+        new_grid[b['y0']:b['y1']+1, b['x0']:b['x1']+1] = 10
+
+    # Handle "0" cell growth (simplified based on observations)
+    # Action 1 and 4 grow the 0-cells in the corners
+    if action == 1 or action == 4:
+        # Find current 0-cell boundaries
+        # Top-right: (0, 63) grows left
+        # Bottom-left: (63, 0) grows right
+        # We need to find the leftmost 0 in row 0 and rightmost 0 in row 63
+        for c in range(w - 1, -1, -1):
+            if new_grid[0, c] == 0:
+                if c > 0:
+                    new_grid[0, c-1] = 0
                 break
-        
-        if can_move:
-            # Update cells to background color (5)
-            new_grid[coords[:, 0], coords[:, 1]] = 5
-            # Update cells to player color (10)
-            for r, c in coords:
-                nr, nc = r + dy, c + dx
-                if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1]:
-                    new_grid[nr, nc] = 10
-    
+        for c in range(0, w):
+            if new_grid[h-1, c] == 0:
+                if c < w - 1:
+                    new_grid[h-1, c+1] = 0
+                break
+
     return new_grid
 
 def is_level_complete(grid):
-    # The level is complete when the block of color 10 reaches a target area.
-    # In the observed transitions, ACTION4 (Up) was applied to a block at y=9..13.
-    # If it moves up to y=8... but wait, row 0-8 are mostly walls/background.
-    # Let's look at the "GRID BEFORE THE COMPLETING ACTION":
-    # Object of color 10 is at bbox=(9, 29, 13, 38).
-    # Applying ACTION4 (Up) would move it to y=8..12.
-    # But looking at the INITIAL GRID, there is no specific target.
-    # Maybe the goal is simply to reach the top edge or a certain coordinate?
-    # Or maybe moving it into a wall triggers the win?
-    # Actually, let's check if any cell of color 10 is in the first few rows.
-    coords = np.argwhere(grid == 10)
-    if coords.size == 0:
-        return False
-    
-    y_min = coords.min(axis=0)[0]
-    # Based on the completing action, it was at y=9 and moved up.
-    # Perhaps reaching y < 9 is the win condition.
-    return y_min <= 8
+    """
+    The level is complete when the merged color 10 block (5x10) 
+    reaches the top edge of the color 5 area (y=9) and is centered (x=24-33).
+    """
+    # Find all color 10 blocks
+    visited = np.zeros_like(grid, dtype=bool)
+    for r in range(grid.shape[0]):
+        for c in range(grid.shape[1]):
+            if grid[r, c] == 10 and not visited[r, c]:
+                comp = []
+                stack = [(r, c)]
+                visited[r, c] = True
+                while stack:
+                    curr_r, curr_c = stack.pop()
+                    comp.append((curr_r, curr_c))
+                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                        nr, nc = curr_r + dr, curr_c + dc
+                        if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1] and grid[nr, nc] == 10 and not visited[nr, nc]:
+                            visited[nr, nc] = True
+                            stack.append((nr, nc))
+                
+                rs = [p[0] for p in comp]
+                cs = [p[1] for p in comp]
+                y0, x0, y1, x1 = min(rs), min(cs), max(rs), max(cs)
+                
+                # Win condition: 5x10 block at y=9, x=24-33
+                if y0 == 9 and y1 == 13 and x0 == 24 and x1 == 33:
+                    return True
+    return False
