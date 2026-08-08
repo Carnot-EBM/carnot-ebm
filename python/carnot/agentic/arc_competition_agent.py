@@ -917,6 +917,30 @@ def _run_local_adaptation_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_RUN_LOCAL_ADAPTATION") == "1"
 
 
+# BOUNDED RE-INDUCTION (2026-08-08 adversarial review, Gaps finding 2). `self.induced` latches
+# after one attempt per level and only resets at a level boundary or under the separately-gated
+# active probe, so a still-stalled agent can spend the rest of its action budget accumulating
+# transition evidence the LLM tier can never see again. This lever resets the latch on renewed
+# stall, but only after `_REINDUCTION_TRANSITION_THRESHOLD` NEW transitions have accumulated
+# since the last attempt (so a repeat attempt sees genuinely different evidence, not a re-ask on
+# the same prompt), and only up to `_REINDUCTION_MAX_ATTEMPTS` attempts per level (so a
+# pathologically-stalled game cannot spend its whole budget re-asking a generator that keeps
+# refusing).
+#
+# DEFAULT OFF. The 400->2000 action-budget raise that makes the wasted tail large enough to
+# matter was validated on an LLM-off sweep (SUBMITTED_EARLY_STOP_GRACE's own history), so this
+# lever's effect on win rate is UNMEASURED -- shipping it as a default would repeat exactly the
+# mistake that motivated Gap 1 (a behaviour change to the scored path with no A/B behind it).
+_REINDUCTION_TRANSITION_THRESHOLD = 200
+_REINDUCTION_MAX_ATTEMPTS = 3
+
+
+def _bounded_reinduction_enabled() -> bool:
+    import os
+
+    return os.environ.get("CARNOT_ARC_BOUNDED_REINDUCTION") == "1"
+
+
 # DEFAULT OFF. Changing this constant changes what the SCORED agent sends its generator, so it is
 # a deliberate operator act, not a tuning knob.
 _SUPPLY_WIN_TRANSITION_DEFAULT = "0"
@@ -4992,6 +5016,13 @@ class E3AgentPolicy:
         self._prev_level = 0  # real level AT THE TIME self._prev was captured (see next_move)
         self.cell = 1
         self.induced = False
+        # BOUNDED RE-INDUCTION bookkeeping (2026-08-08 adversarial review, Gaps finding 2). Reset
+        # alongside `self.induced` at both init and every level boundary, so the K-attempts cap
+        # is PER LEVEL -- see `_should_enter_induction` and `_REINDUCTION_TRANSITION_THRESHOLD`/
+        # `_REINDUCTION_MAX_ATTEMPTS` below for the full mechanism and why it is gated off by
+        # default.
+        self._induction_attempt_count = 0
+        self._transitions_at_last_induction_attempt = 0
         self.root_grid = None  # the reset-state logical grid; plan_in_model starts here
         self.world_model_trust_selection = None
         self._active_probe_controller: Any = None
@@ -5295,6 +5326,8 @@ class E3AgentPolicy:
         self._episode_transition_start = len(self.transitions)
         self._episode_dsl_transition_start = len(self._dsl_transitions)
         self.induced = False
+        self._induction_attempt_count = 0
+        self._transitions_at_last_induction_attempt = self._episode_transition_start
         self.plan = []
         self.pi = 0
         self._level_reinduction_pending = True
@@ -5328,6 +5361,15 @@ class E3AgentPolicy:
             return self.explorer.best_level > (self.explorer.start_level or 0)
         return self.explorer.best_level >= self._current_goal_level
 
+    def _renewed_stall_reinduction_ready(self) -> bool:
+        """Has enough NEW evidence accumulated since the last induction attempt, within this
+        level's attempt cap, to justify a bounded re-attempt? See `_bounded_reinduction_enabled`
+        for the gate and why this defaults off."""
+        if self._induction_attempt_count >= _REINDUCTION_MAX_ATTEMPTS:
+            return False
+        new_transitions = len(self.transitions) - self._transitions_at_last_induction_attempt
+        return new_transitions >= _REINDUCTION_TRANSITION_THRESHOLD
+
     def _should_enter_induction(self, *, stalled: bool, won: bool) -> tuple[bool, Optional[str]]:
         if (
             self._level_reinduction_pending
@@ -5337,6 +5379,22 @@ class E3AgentPolicy:
             return True, "level_up_reinduction"
         if stalled and not won and not self.induced:
             return True, "stall"
+        # BOUNDED RE-INDUCTION (2026-08-08 adversarial review, Gaps finding 2). `self.induced` is
+        # a ONE-SHOT latch per level: once any attempt fires (successful or refused), induction is
+        # structurally unreachable for the rest of that level, even though a still-stalled agent
+        # keeps accumulating exactly the transition evidence a second attempt would need. Gated
+        # OFF by default -- the 400->2000 action-budget raise that made this interaction matter
+        # was validated on an LLM-off sweep, so a bounded re-attempt's effect on win rate is
+        # UNMEASURED, and this project's own standing discipline is to not ship an unmeasured
+        # behaviour change as a default. See `_bounded_reinduction_enabled`.
+        if (
+            stalled
+            and not won
+            and self.induced
+            and _bounded_reinduction_enabled()
+            and self._renewed_stall_reinduction_ready()
+        ):
+            return True, "renewed_stall_reinduction"
         return False, None
 
     def _install_goal_bias(self, is_done) -> None:
@@ -6252,10 +6310,18 @@ class E3AgentPolicy:
                     self._pending_induction_reason = reason
                     if reason != "level_up_reinduction":
                         self._execute_plan_from_current = False
+                    if reason == "renewed_stall_reinduction":
+                        # The one reason that fires while `self.induced` is still True (see
+                        # `_should_enter_induction`) -- reset the latch so the
+                        # `phase == "induce" and not self.induced` gate below can actually run
+                        # this attempt, instead of silently no-op-ing straight past it.
+                        self.induced = False
                 self._prov_top = "explore.explorer"
                 return mv
         if self.phase == "induce" and not self.induced:
             self.induced = True
+            self._induction_attempt_count += 1
+            self._transitions_at_last_induction_attempt = len(self.transitions)
             self._induce_and_plan()
             self._level_reinduction_pending = False
             self.phase = "execute" if self.plan else "explore"
@@ -7336,6 +7402,18 @@ class E3AgentPolicy:
             # is the structural fact to key on instead.
             "llm_enabled": bool(enabled),
             "induction_attempts_n": len(self.induction_attempts),
+            # THE MINIMUM FIX for 2026-08-08 adversarial review, Gaps finding 2 (`self.induced`
+            # is a one-shot latch per level -- see `_should_enter_induction`). Recorded
+            # UNCONDITIONALLY so an artifact from a normal run and one from a genuinely-stuck
+            # run can be told apart without re-running: a row with `induction_tier_latched_off:
+            # true` and a large `transitions_since_last_induction_attempt` spent real actions
+            # accumulating evidence the LLM tier could not see for the rest of the episode.
+            "induction_tier_latched_off": bool(self.induced),
+            "induction_attempt_count": int(self._induction_attempt_count),
+            "transitions_since_last_induction_attempt": (
+                len(self.transitions) - int(self._transitions_at_last_induction_attempt)
+            ),
+            "bounded_reinduction_enabled": bool(_bounded_reinduction_enabled()),
             "induction_attempts_planned": sum(
                 1 for a in self.induction_attempts if a.get("planned")
             ),

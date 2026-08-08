@@ -22381,6 +22381,109 @@ transition
 |---|---|---|
 | REQ-ARC-WMTE-6213 | `python/carnot/agentic/arc_object_delta_perception.py`; prompt hook in `python/carnot/agentic/arc_executable_world_model.py:_object_delta_perception_block`; artifact builder in `python/carnot/experiment_6213_arc_object_delta_perception_wiring.py`. Default off via `CARNOT_ARC_OBJECT_DELTA_PERCEPTION`. | `tests/python/test_arc_object_delta_perception_6213.py`. |
 
+### REQ-ARC-WMTE-6214: Held-Out Object-Delta Input A/B
+
+Experiment 6214 SHALL measure whether the transition object-delta table from
+REQ-ARC-WMTE-6213 adds causal value to the canonical static object prompt.
+The measurement SHALL use public ARC games only as held-out evaluation
+fixtures. It SHALL NOT claim a level solve, update the solve registry, or
+change live defaults.
+
+Before any model load or generation, the experiment SHALL hash
+`ops/arc_solve_registry.yaml`, check duplicate solve targets, and freeze the
+game, seed, and support matrix. The frozen matrix SHALL select only already
+cleared public evaluation fixtures. It SHALL also freeze the support floor, the
+primary change-fidelity metric, action and wall-cost metrics, and the safety
+gate.
+
+The experiment SHALL compare matched arms:
+
+- `aa_control`: the canonical static object prompt against itself.
+- `control`: the canonical static object prompt.
+- `treatment`: the same prompt plus `CARNOT_ARC_OBJECT_DELTA_PERCEPTION=1`.
+
+The arms SHALL hold the model, prompt outside the object section, sampling,
+budget, observations, support windows, and replay verifier fixed. The only
+object-section change in treatment SHALL be the appended Exp6213 object-delta
+block. The measurement SHALL enter through the canonical live path
+`make_carnot_agent -> E3AgentPolicy -> arc_executable_world_model.induce_prompt`.
+
+The experiment SHALL use the Exp6212-qualified cached
+`unsloth/gemma-4-31B-it-GGUF` Q4_K_M file as the sole canonical ARC
+world-model inducer. It SHALL record the GGUF path, size, hash, revision,
+quantization, embedded template receipt, context, sampling, budget,
+llama.cpp build, CUDA layers, GPU intervals, and process lifetime. Legacy
+models SHALL contribute zero rows.
+
+The experiment SHALL persist raw prompts, object tables, model outputs, engine
+sources, model and process receipts, and replay evaluations before
+aggregation. It SHALL report every game independently. It SHALL report
+per-game effects, clustered paired intervals, the discordant-game sign test,
+action and wall costs, and harmful regressions. It SHALL classify the run as an
+instrument failure, not a scientific null, if treatment fire is zero or the
+predeclared support floor is not met.
+
+Experiment 6214 SHALL write
+`results/experiment_6214_arc_object_delta_heldout_ab.json` with bare top-level
+fields for `status`, `registry_precheck_and_hash_before_after`,
+`duplicate_solve_target_count`, `preregistered_game_seed_support_matrix`,
+`model_specs`, `gguf_cuda_and_process_receipts`,
+`canonical_live_entrypoint_receipts`, `matched_arm_configuration`,
+`treatment_fire_counts`, `raw_induction_paths_and_hashes`,
+`executable_engine_yield_by_arm_game`,
+`change_and_goal_fidelity_by_arm_game`, `action_and_wall_cost_by_arm_game`,
+`paired_clustered_intervals`, `discordant_game_sign_test`,
+`harmful_regression_count_and_games`, `aa_control`,
+`source_bfs_adapter_registry_hidden_state_access_counts`, `solve_claimed`,
+`level_credit_delta`, `registry_update_count`, `ab_complete_score`,
+`object_delta_promotion_ready_score`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+The fields `solve_claimed`, `verifier_is_oracle`, and all forbidden-access
+flags SHALL be false. The fields `duplicate_solve_target_count`,
+`level_credit_delta`, and `registry_update_count` SHALL be bare `0`.
+The artifact SHALL NOT include `solve_provenance`, because no solve is
+claimed.
+
+#### SCENARIO-ARC-WMTE-6214-REGISTRY-PRECHECK
+
+**Given** the ARC solve registry and the proposed public-fixture matrix
+**When** Experiment 6214 builds its preregistration
+**Then** the registry hash is recorded before generation
+**And** duplicate solve target count is `0`
+**And** the same registry hash is recorded after artifact aggregation.
+
+#### SCENARIO-ARC-WMTE-6214-MATCHED-ARMS
+
+**Given** a frozen game, seed, and support cell
+**When** the A/A, control, and treatment prompts are rendered
+**Then** non-object prompt content is identical across matched arms
+**And** treatment differs from control only by the object-delta block.
+
+#### SCENARIO-ARC-WMTE-6214-TREATMENT-FIRE
+
+**Given** at least one eligible held-out public fixture
+**When** the treatment arm runs
+**Then** the object-delta block fires at least once
+**And** a zero-fire or below-support run is classified as an instrument failure.
+
+#### SCENARIO-ARC-WMTE-6214-ARTIFACT-GUARDS
+
+**Given** the completed artifact
+**When** it is validated
+**Then** all required fields are present
+**And** solve, credit, registry-update, oracle, and forbidden-access fields are
+false or bare `0`
+**And** `solve_provenance` is absent.
+
+## Implementation Status (REQ-ARC-WMTE-6214)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6214 | `python/carnot/experiment_6214_arc_object_delta_heldout_ab.py`. | `tests/python/test_experiment_6214_arc_object_delta_heldout_ab.py`. |
+
 ### REQ-ARC-WMTE-TRAJ-TRANSFER-1: Verifier-Gated Object-Relative Trajectory Transfer
 
 **Origin:** 2026-08-07 operator directive (lever #2 of the ARC six-lever push, `ops/known-issues.md`
@@ -22929,3 +23032,61 @@ the pre-existing kernel test suite (22 tests across 3 files), unchanged and stil
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6228 | `scripts/kaggle/submission_kernel/main.py` — swarm timeout/try-except (Gap 4), `/proc/meminfo` preflight print in `AGENT_SRC` (Gap 5), self-locate `list()`+loud-`SystemExit` (Gap 6), `CARNOT_ARC_SERVER_LOG_DIR` setdefault (Gap 7). | `tests/python/test_arc_kaggle_kernel_gaps_20260808.py`. |
+
+### REQ-ARC-WMTE-6229: LLM Induction SHALL Report When Latched Off, And MAY Bounded-Re-Attempt On Renewed Stall
+
+**Origin:** 2026-08-08 adversarial review, Gaps finding 2. `self.induced` is a one-shot latch per
+level: `_should_enter_induction` refuses to fire again once set, and it only resets at a level
+boundary or under the separately-gated active probe. After one refused induction attempt (the
+measured modal outcome) the remaining action budget -- up to ~1900 actions at the shipped
+`MAX_ACTIONS=2000` -- accumulates exactly the transition evidence a second attempt would need,
+while the LLM tier stays structurally unreachable for the rest of the level. The 400->2000
+action-budget raise that made the wasted tail large enough to matter was validated on an LLM-off
+sweep, so this interaction was never measured.
+
+**The fix — both halves of the review's suggested fix, shipped together.**
+
+1. **Always-on diagnostic (zero behaviour change).** `generator_liveness_witness()` now reports
+   `induction_tier_latched_off` (is `self.induced` currently True), `induction_attempt_count`,
+   `transitions_since_last_induction_attempt`, and `bounded_reinduction_enabled` -- so an
+   artifact from a stuck run can be told apart from a normal one without re-running, and the
+   wasted-evidence quantity is directly readable.
+
+2. **Gated-off-by-default mechanism.** `_should_enter_induction` gains a third branch,
+   `"renewed_stall_reinduction"`: when `stalled and not won and self.induced` and
+   `CARNOT_ARC_BOUNDED_REINDUCTION=1`, it resets the latch once
+   `_REINDUCTION_TRANSITION_THRESHOLD` (200) new transitions have accumulated since the last
+   attempt (so a repeat attempt sees genuinely different evidence, not a re-ask on the same
+   prompt), capped at `_REINDUCTION_MAX_ATTEMPTS` (3) attempts per level (so a
+   pathologically-stalled game cannot spend its whole budget re-asking a generator that keeps
+   refusing). The attempt counter and the "transitions since last attempt" snapshot reset at
+   every level boundary alongside `self.induced`, so the cap is PER LEVEL. The one call site
+   that can produce this reason resets `self.induced = False` before the
+   `phase == "induce" and not self.induced` gate is checked, or the reset latch would never
+   actually let a new attempt run.
+
+**Why gated off, not shipped as the new default.** This project's own standing discipline is to
+not ship an unmeasured behaviour change to the scored path as a default -- exactly the mistake
+Gaps finding 1 (the dead `SUBMITTED_EARLY_STOP_GRACE` flag) already made once, corrected in
+REQ-ARC-WMTE-6220. A bounded re-attempt's effect on win rate is genuinely unknown until measured;
+`CARNOT_ARC_BOUNDED_REINDUCTION=1` is the lever for that future A/B.
+
+**Tests.** `tests/python/test_arc_bounded_reinduction_20260808.py` (14 tests): gated off by
+default (env unset and explicitly `"0"`); fires once enough new transitions have accumulated
+under the flag; does not fire below the threshold; the threshold is measured since the LAST
+attempt, not since the level start; does not fire once the attempt cap is reached; does not fire
+when not stalled, when won, or when not currently latched (the ordinary `"stall"` branch must
+still win in that case); the liveness witness reports the latched state, attempt count, wasted
+transitions, and gate state correctly; a level boundary resets the attempt count and transition
+snapshot; and two source-inspection tests confirming the call-site reset and the counter-update
+sit at the correct place in the real `_next_move_routed` source. Plus a 73-test regression sweep
+across the per-level-reinduction/gate-diagnostics/liveness-witness/active-probe/plan-start-grid
+test areas, unchanged and still green (2 pre-existing, unrelated qat-model-id failures in
+`test_arc_submitted_agent_parity.py`, already filed in `ops/known-issues.md`, confirmed
+untouched).
+
+## Implementation Status (REQ-ARC-WMTE-6229)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6229 | `python/carnot/agentic/arc_competition_agent.py:E3AgentPolicy._should_enter_induction` (`"renewed_stall_reinduction"` branch), `_bounded_reinduction_enabled`/`_REINDUCTION_TRANSITION_THRESHOLD`/`_REINDUCTION_MAX_ATTEMPTS`, `generator_liveness_witness` diagnostic fields. | `tests/python/test_arc_bounded_reinduction_20260808.py`. |
