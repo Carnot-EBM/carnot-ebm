@@ -228,7 +228,22 @@ local wall-clock is a dev artifact, not a live-budget violation.
 *Gate: >= 6 discordant games favoring think at p < 0.05 -> think stays on and 2b unlocks;
 fewer -> record honestly, think's default reverts to the exp6199 evidence base alone.*
 
+**DONE (2026-08-09, REQ-ARC-WMTE-6242, negative — gate NOT MET).**
+`scripts/run_exp6199_expanded_roster.py` ran all 16 games (4 attempts, 2 llama-server reaper
+recurrences + one external-timeout cutoff, all recovered cleanly via checkpoint, zero data loss)
+-> `results/experiment_6221_gemma_think_mode_ab_expanded_roster.json`.
+`scripts/analyze_exp6221_admission_rate.py` computed the pre-registered metric: of 13 comparable
+games (3 window-only/error-excluded), 1 favors think (sp80), 0 favor no_think, 12 tie — 11 of
+those 12 ties are BOTH ARMS AT THE ACCURACY FLOOR (0.0), so this is a low-power, largely
+floor-driven null, not clean evidence think never helps. Sign test p=1.0 — gate not met, 2b does
+not unlock. Bonus finding: cross-referencing the pre-confound-fix exp6199 artifact shows vc33's
+think arm scored `heldout_accuracy=1.0` (admitted) BEFORE the fix and `0.0` (floor) AFTER — direct
+confirmation the confound this session's own Phase 2a fix removed was inflating think's apparent
+advantage. sp80 is the one result that replicates across both runs. See REQ-ARC-WMTE-6242 for
+full detail.
+
 **2b. (Conditional on 2a or 1a moving the distribution) Best-of-N engine sampling.**
+NOT UNLOCKED — 2a's gate was not met (see above).
 Selection is measured NOT to be our bottleneck, and the held-out gate is an oracle-distinct
 selector already in place — so parallel diversity (distinct from the CLOSED sequential-refinement
 axis) becomes cheap to exploit the moment the single-shot distribution shifts. The repeat_penalty
