@@ -3273,3 +3273,121 @@
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6196 | Planned (`python/carnot/experiment_6196_v536_capstone_reconciliation.py`, `results/experiment_6196_v536_capstone_reconciliation.json`) | Planned (`tests/python/test_experiment_6196_v536_capstone_reconciliation.py`) |
+
+- REQ-CAPSTONE-6224: The `.538` adversarial capstone workflow
+  `exp6224-v538-adversarial-capstone` in
+  `python/carnot/experiment_6224_v538_adversarial_capstone.py` SHALL read the
+  active roadmap declarations for exactly Exp6211 through Exp6223 by exact
+  declared deliverable path only, classify each path with the Exp6197
+  fail-closed terminal artifact contract, replay adversarial verification,
+  snapshot the ARC solve registry before and after the run, import the Exp6199
+  GateMate blocked boundary unless a newer dated physical-state receipt exists,
+  and write
+  `results/experiment_6224_v538_adversarial_capstone.json` without modifying
+  `scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, or
+  `_bmad/traceability.md`. It SHALL preserve missing, nonterminal, blocked,
+  skipped, null, retired, and flagged states as separate counts. It SHALL NOT
+  promote any artifact from conductor completion receipts, downstream summaries,
+  bootstrap-only files, gate blocks, missing exact paths, retired evidence,
+  or adversarial flags. It SHALL compute branch-specific eligibility for ARC
+  levers and portfolio, GGUF runtime, continuous self-learning, sampler
+  runtime, Phase-D transport/pool/headroom, and physical hardware from raw
+  artifact fields, declared gates, and verifier receipts only. It SHALL emit
+  bare integer zeros for `conductor_receipt_override_count`,
+  `arc_solve_claim_count`, `arc_level_credit_delta`, and all unauthorized
+  hardware claim counts.
+- SCENARIO-CAPSTONE-6224: The artifact
+  `results/experiment_6224_v538_adversarial_capstone.json` must emit top-level
+  fields `status`, `declared_task_ids_and_deliverables`,
+  `exact_artifact_paths_hashes_and_terminal_classifications`,
+  `missing_nonterminal_blocked_skipped_null_retired_and_flagged_counts`,
+  `conductor_receipt_override_count`, `adversarial_verification_results`,
+  `arc_registry_hash_before_after`, `arc_solve_claim_count`,
+  `arc_level_credit_delta`, `arc_lever_and_portfolio_eligibility`,
+  `gguf_runtime_eligibility`, `continuous_self_learning_eligibility`,
+  `sampler_runtime_eligibility`,
+  `phase_d_transport_pool_and_headroom_eligibility`, `gate_cascade_receipts`,
+  `gatemate_cached_state_and_new_receipt_count`,
+  `hardware_claim_eligibility`, `publication_gate_snapshot`,
+  `exclusion_manifest_and_prior_failure_reconciliation`,
+  `spec_trace_status_changelog_reconciliation`, `protected_files_unchanged`,
+  `inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+  `field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+  `reproducibility_checksum`, and `honest_verdict`. With the current `.538`
+  evidence, Exp6222 is a missing exact deliverable, Exp6221 and Exp6223 are
+  gate-blocked Phase-D descendants, Exp6212 leaves the three-family and dense
+  GGUF runtime readiness scores at zero, Exp6217 is gate-blocked by dense
+  runtime readiness, Exp6220 is blocked with sampler readiness zero, and no ARC
+  solve, level credit, registry row mutation, hardware command, or hardware
+  promotion is eligible.
+- SCENARIO-CAPSTONE-6224-EXACT-PATH: The workflow must enumerate the 13
+  upstream IDs from the active roadmap's `requires` list for Exp6224. It must
+  hash and classify only those declared paths. A same-number sidecar or a
+  downstream summary must stay an ignored alias and must not replace a missing
+  declared deliverable.
+- SCENARIO-CAPSTONE-6224-BRANCH-INDEPENDENCE: A blocked Phase-D gate cascade
+  must not erase independent ARC, CSL, sampler, source, or runtime
+  classifications. Each branch must report its own task IDs, evidence scores,
+  blocking reasons, and promotion decision.
+- SCENARIO-CAPSTONE-6224-GATEMATE: If no newer dated physical-state receipt is
+  found after Exp6199, the workflow must copy the Exp6199 blocked boundary,
+  report `new_receipt_count=0`, run zero board commands, and set every
+  unauthorized hardware claim count to bare `0`.
+- SCENARIO-CAPSTONE-6224-ARC-REGISTRY: The ARC solve registry hash before and
+  after the workflow must match. `arc_solve_claim_count` and
+  `arc_level_credit_delta` must be bare `0`, even when ARC artifacts are
+  complete or positive.
+- SCENARIO-CAPSTONE-6224-FIELD-PRINCIPLES: The required field principles are:
+  `declared_task_ids_and_deliverables` = "fixed Exp6211-Exp6223 denominator
+  from the active roadmap exact paths"; `exact_artifact_paths_hashes_and_terminal_classifications`
+  = "Exp6197 classifier output, path hash, load state, and conductor receipt
+  state stay adjacent"; `missing_nonterminal_blocked_skipped_null_retired_and_flagged_counts`
+  = "negative classes stay disjoint before branch summaries"; `conductor_receipt_override_count`
+  = "completion receipts never promote an artifact"; `adversarial_verification_results`
+  = "each present exact artifact has a replayed verifier receipt or an injected
+  test receipt"; `arc_registry_hash_before_after` = "registry bytes are
+  content-addressed before and after the run"; `arc_solve_claim_count` =
+  "bare zero prevents hidden public-game solve banking"; `arc_level_credit_delta`
+  = "bare zero prevents level-credit inflation"; `gatemate_cached_state_and_new_receipt_count`
+  = "cached hardware state remains blocked without a newer dated physical
+  receipt"; `hardware_claim_eligibility` = "physical hardware promotion is
+  false unless authenticated workload and receipt gates pass"; `publication_gate_snapshot`
+  = "G1-G4 publication state is imported from the stable gate script";
+  `spec_trace_status_changelog_reconciliation` = "OpenSpec is updated here,
+  while ops/status, ops/changelog, and traceability edits are deferred by the
+  operator stop rule"; `protected_files_unchanged` = "conductor, ops ledgers,
+  traceability, ARC registry, and exclusion manifest hashes are compared";
+  `inference_substrate` = "deterministic_exact_path_v538_capstone_reconciliation";
+  `verifier_is_oracle` = "bare false because this capstone verifies evidence
+  discipline, not benchmark answers"; `field_provenance` = "each required field
+  names roadmap, exact artifacts, verifier receipts, registry, publication gate,
+  GateMate receipt, exclusions, or local hashes"; `test_commands` = "focused,
+  coverage, spec, capstone, adversarial, and suite commands are replayable";
+  `test_exit_codes` = "observed exits are recorded without laundering failures";
+  `reproducibility_checksum` = "the normalized report is content-addressed";
+  and `honest_verdict` = "terminal summary starts with complete: and names
+  every blocked or missing boundary without strengthening claims."
+  The module emits these exact field principle strings:
+  `status` = "terminal only after exact path classification, verifier replay,
+  zero-count checks, and checksum validation finish";
+  `arc_lever_and_portfolio_eligibility` = "ARC wiring, lever A/Bs, think A/B,
+  and portfolio close only from exact no-solve artifacts";
+  `gguf_runtime_eligibility` = "runtime promotion requires dense and
+  three-family readiness from Exp6212"; `continuous_self_learning_eligibility`
+  = "CSL eligibility is independent from Phase-D and sampler gate cascades";
+  `sampler_runtime_eligibility` = "sampler runtime eligibility uses Exp6220
+  quality, state, timing, fallback, and hardware-claim gates";
+  `phase_d_transport_pool_and_headroom_eligibility` = "code transport, pool,
+  and headroom require the exact Exp6221-Exp6223 cascade";
+  `gate_cascade_receipts` = "declared roadmap gates are replayed from raw
+  upstream artifact fields"; `exclusion_manifest_and_prior_failure_reconciliation`
+  = "exclusion lint and prior-failure receipts stay visible without deleting
+  history"; `field_principles` = "required field purpose is emitted next to
+  the measured value"; and `duration_s` = "wall time for deterministic
+  aggregation is reported without padding".
+
+## Implementation Status (REQ-CAPSTONE-6224)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-6224 | Planned (`python/carnot/experiment_6224_v538_adversarial_capstone.py`, `results/experiment_6224_v538_adversarial_capstone.json`) | Planned (`tests/python/test_experiment_6224_v538_adversarial_capstone.py`) |

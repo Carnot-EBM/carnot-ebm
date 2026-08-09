@@ -1,0 +1,2555 @@
+{
+  "schema": "carnot.experiment_6224.v538_adversarial_capstone.v1",
+  "experiment_id": "exp6224-v538-adversarial-capstone",
+  "milestone": "2026.08.538",
+  "run_date": "20260809",
+  "status": "complete",
+  "declared_task_ids_and_deliverables": {
+    "milestone": "2026.08.538",
+    "roadmap_path": "research-roadmap.yaml",
+    "roadmap_sha256": "sha256:285bb07988931f1288ba66f38378e5ba9dfe37810383e77d5319a15f0f848e39",
+    "roadmap_task_count": 14,
+    "task_count": 13,
+    "task_ids": [
+      "exp6211-v538-post-marker-source-scope-prereg",
+      "exp6212-three-family-gguf-runtime-recovery",
+      "exp6213-arc-object-delta-perception-wiring",
+      "exp6214-arc-object-delta-heldout-ab",
+      "exp6215-arc-trajectory-transfer-ab",
+      "exp6216-arc-budget-aware-search-ab",
+      "exp6217-arc-gemma31-think-ab",
+      "exp6218-arc-admissible-lever-portfolio-heldout",
+      "exp6219-two-timescale-constraint-csl",
+      "exp6220-mode-jump-runtime-ab",
+      "exp6221-three-family-code-transport-canary-v3",
+      "exp6222-livecodebench-k8-pool-v3",
+      "exp6223-livecodebench-headroom-v3"
+    ],
+    "tasks": [
+      {
+        "task_id": "exp6211-v538-post-marker-source-scope-prereg",
+        "track": "infrastructure",
+        "deliverable": "results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+        "requires": [],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6212-three-family-gguf-runtime-recovery",
+        "track": "infrastructure",
+        "deliverable": "results/experiment_6212_three_family_gguf_runtime_recovery.json",
+        "requires": [
+          "exp6211-v538-post-marker-source-scope-prereg"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6213-arc-object-delta-perception-wiring",
+        "track": "arc",
+        "deliverable": "results/experiment_6213_arc_object_delta_perception_wiring.json",
+        "requires": [
+          "exp6211-v538-post-marker-source-scope-prereg"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6214-arc-object-delta-heldout-ab",
+        "track": "arc",
+        "deliverable": "results/experiment_6214_arc_object_delta_heldout_ab.json",
+        "requires": [
+          "exp6213-arc-object-delta-perception-wiring"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6213-arc-object-delta-perception-wiring",
+            "artifact_field": "object_delta_wiring_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "track": "arc",
+        "deliverable": "results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+        "requires": [
+          "exp6211-v538-post-marker-source-scope-prereg"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6216-arc-budget-aware-search-ab",
+        "track": "arc",
+        "deliverable": "results/experiment_6216_arc_budget_aware_search_ab.json",
+        "requires": [
+          "exp6211-v538-post-marker-source-scope-prereg"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6217-arc-gemma31-think-ab",
+        "track": "arc",
+        "deliverable": "results/experiment_6217_arc_gemma31_think_mode_ab.json",
+        "requires": [
+          "exp6212-three-family-gguf-runtime-recovery"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6212-three-family-gguf-runtime-recovery",
+            "artifact_field": "gemma_4_31b_runtime_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6218-arc-admissible-lever-portfolio-heldout",
+        "track": "arc",
+        "deliverable": "results/experiment_6218_arc_admissible_lever_portfolio_heldout.json",
+        "requires": [
+          "exp6214-arc-object-delta-heldout-ab",
+          "exp6215-arc-trajectory-transfer-ab",
+          "exp6216-arc-budget-aware-search-ab",
+          "exp6217-arc-gemma31-think-ab"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6219-two-timescale-constraint-csl",
+        "track": "continuous_learning",
+        "deliverable": "results/experiment_6219_two_timescale_constraint_csl.json",
+        "requires": [
+          "exp6211-v538-post-marker-source-scope-prereg"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6220-mode-jump-runtime-ab",
+        "track": "sampling",
+        "deliverable": "results/experiment_6220_mode_jump_runtime_ab.json",
+        "requires": [
+          "exp6211-v538-post-marker-source-scope-prereg"
+        ],
+        "gated_on": []
+      },
+      {
+        "task_id": "exp6221-three-family-code-transport-canary-v3",
+        "track": "phase_d",
+        "deliverable": "results/experiment_6221_three_family_code_transport_canary_v3.json",
+        "requires": [
+          "exp6212-three-family-gguf-runtime-recovery"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6212-three-family-gguf-runtime-recovery",
+            "artifact_field": "three_family_runtime_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6222-livecodebench-k8-pool-v3",
+        "track": "phase_d",
+        "deliverable": "results/experiment_6222_livecodebench_k8_pool_v3.json",
+        "requires": [
+          "exp6221-three-family-code-transport-canary-v3"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6221-three-family-code-transport-canary-v3",
+            "artifact_field": "phase_d_transport_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "task_id": "exp6223-livecodebench-headroom-v3",
+        "track": "phase_d",
+        "deliverable": "results/experiment_6223_livecodebench_headroom_v3.json",
+        "requires": [
+          "exp6222-livecodebench-k8-pool-v3"
+        ],
+        "gated_on": [
+          {
+            "upstream": "exp6222-livecodebench-k8-pool-v3",
+            "artifact_field": "pool_integrity_ready_score",
+            "op": "==",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  "exact_artifact_paths_hashes_and_terminal_classifications": {
+    "exp6211-v538-post-marker-source-scope-prereg": {
+      "task_id": "exp6211-v538-post-marker-source-scope-prereg",
+      "title": "Post-V538-marker SOTA delta and causal-scope preregistration",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:4f538612af8e7def55f69c4d6fb4587fa669021cf947409273a156ca0500c7d3",
+      "error": null,
+      "classifier_class": "blocked",
+      "classifier_terminal": true,
+      "classification": "blocked",
+      "reason": "status=blocked verdict=blocked",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "FAIL",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "planner_marker_and_hash",
+        "query_window",
+        "source_channel_receipts",
+        "discovered_candidates",
+        "accepted_findings",
+        "rejected_or_duplicate_findings",
+        "accepted_count",
+        "references_append_receipt",
+        "roadmap_path_and_hash",
+        "roadmap_schema_result",
+        "exclusion_manifest_lint_result",
+        "retired_scope_match_count",
+        "prior_failure_contract_result",
+        "gate_structure_result",
+        "model_specs_rule_result",
+        "task_count",
+        "phase_counts",
+        "arc_task_count",
+        "continuous_self_learning_slot_count",
+        "hardware_boundary_result",
+        "arc_outcome_vocabulary",
+        "matched_control_contract",
+        "no_solve_and_registry_nonmutation_contract",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6212-three-family-gguf-runtime-recovery": {
+      "task_id": "exp6212-three-family-gguf-runtime-recovery",
+      "title": "Three-family GGUF load, CUDA admission, and lifecycle recovery",
+      "track": "infrastructure",
+      "declared_deliverable": "results/experiment_6212_three_family_gguf_runtime_recovery.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:5e0dd7cf3fc1b35719c88713da576b62f6b971af350b06a8f3dae1dd2b428381",
+      "error": null,
+      "classifier_class": "partial",
+      "classifier_terminal": false,
+      "classification": "partial",
+      "reason": "partial marker present",
+      "receipt_override_attempted": true,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "OK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "upstream_exp6200_path_and_hash",
+        "preconditions_checked",
+        "gpu_owner_pid_memory_and_utilization_before_after",
+        "model_specs",
+        "exact_gguf_paths_sizes_hashes_revisions_quantizations",
+        "embedded_chat_template_receipts",
+        "loader_and_llama_cpp_build_receipts",
+        "minimal_failure_reproductions",
+        "root_cause_classification",
+        "task_owned_fix_paths_and_hashes",
+        "per_family_server_command_pid_lifetime_stderr_and_exit",
+        "per_family_cuda_layer_offload",
+        "per_family_first_token_bytes_hash_and_latency",
+        "gemma_4_31b_runtime_ready_score",
+        "three_family_runtime_ready_score",
+        "unrelated_process_kill_count",
+        "gguf_mutation_count",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6213-arc-object-delta-perception-wiring": {
+      "task_id": "exp6213-arc-object-delta-perception-wiring",
+      "title": "Default-off transition-aware ARC object representation wiring",
+      "track": "arc",
+      "declared_deliverable": "results/experiment_6213_arc_object_delta_perception_wiring.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:0cbd912b30ae3d7cd3f321fabef1f0a35a565b50b89ef20835e36a1644a2e6a6",
+      "error": null,
+      "classifier_class": "ready",
+      "classifier_terminal": true,
+      "classification": "ready",
+      "reason": "status=ready verdict=complete",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "OK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "spec_refs",
+        "flag_name_and_default",
+        "implementation_paths_and_hashes",
+        "canonical_live_entrypoint_receipt",
+        "component_schema",
+        "transition_delta_schema",
+        "translation_invariant_match_receipts",
+        "hud_rejection_rules_and_receipts",
+        "ambiguous_match_fail_open_receipts",
+        "prompt_insertion_receipt",
+        "treatment_fire_count_in_fixture",
+        "fallback_exactness",
+        "mutation_commands_and_kills",
+        "source_bfs_adapter_registry_hidden_state_access_counts",
+        "solve_claimed",
+        "registry_hash_before_after",
+        "object_delta_wiring_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6214-arc-object-delta-heldout-ab": {
+      "task_id": "exp6214-arc-object-delta-heldout-ab",
+      "title": "Held-out canonical live-path A/B for transition-aware object input",
+      "track": "arc",
+      "declared_deliverable": "results/experiment_6214_arc_object_delta_heldout_ab.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:cbdfd9cda4beec3af9251e93bc2d55f62d714ce41a5fff2c5bd549edf8e1ad47",
+      "error": null,
+      "classifier_class": "flagged",
+      "classifier_terminal": true,
+      "classification": "flagged",
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "FLAGGED",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6214_early_stop_grace_counterfactual_ab.json"
+      ],
+      "required_fields": [
+        "status",
+        "registry_precheck_and_hash_before_after",
+        "duplicate_solve_target_count",
+        "preregistered_game_seed_support_matrix",
+        "model_specs",
+        "gguf_cuda_and_process_receipts",
+        "canonical_live_entrypoint_receipts",
+        "matched_arm_configuration",
+        "treatment_fire_counts",
+        "raw_induction_paths_and_hashes",
+        "executable_engine_yield_by_arm_game",
+        "change_and_goal_fidelity_by_arm_game",
+        "action_and_wall_cost_by_arm_game",
+        "paired_clustered_intervals",
+        "discordant_game_sign_test",
+        "harmful_regression_count_and_games",
+        "aa_control",
+        "source_bfs_adapter_registry_hidden_state_access_counts",
+        "solve_claimed",
+        "level_credit_delta",
+        "registry_update_count",
+        "ab_complete_score",
+        "object_delta_promotion_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 1
+    },
+    "exp6215-arc-trajectory-transfer-ab": {
+      "task_id": "exp6215-arc-trajectory-transfer-ab",
+      "title": "Within-game object-relative trajectory-transfer causal A/B",
+      "track": "arc",
+      "declared_deliverable": "results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:aa6338dd00818f392184e17be3467a2196c37e9563f7170594f0f7204e073106",
+      "error": null,
+      "classifier_class": "ready",
+      "classifier_terminal": true,
+      "classification": "ready",
+      "reason": "status=ready verdict=complete",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "OK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "registry_precheck_and_hash_before_after",
+        "preregistered_game_seed_level_boundary_matrix",
+        "model_specs",
+        "canonical_live_entrypoint_receipts",
+        "matched_arm_configuration",
+        "within_game_only_receipt",
+        "treatment_fire_and_reason_counts",
+        "verifier_accept_reject_counts",
+        "centroid_displacement_validity",
+        "avoided_llm_induction_calls",
+        "engine_fidelity_score_actions_and_wall_time_by_arm_game",
+        "paired_clustered_intervals",
+        "harmful_regression_count_and_games",
+        "aa_control",
+        "prior_game_cross_game_source_bfs_adapter_registry_hidden_state_access_counts",
+        "solve_claimed",
+        "level_credit_delta",
+        "registry_update_count",
+        "ab_complete_score",
+        "trajectory_transfer_promotion_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6216-arc-budget-aware-search-ab": {
+      "task_id": "exp6216-arc-budget-aware-search-ab",
+      "title": "Budget-exhaustion-aware StepwiseExplorer causal A/B",
+      "track": "arc",
+      "declared_deliverable": "results/experiment_6216_arc_budget_aware_search_ab.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:23aab373f15e89bc33e2ef43a383c6acf9f27822465ae4a47186c03efc0bb5b6",
+      "error": null,
+      "classifier_class": "flagged",
+      "classifier_terminal": true,
+      "classification": "flagged",
+      "reason": "artifact carries flagged_adversarial or corrigendum_pending",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "FLAGGED",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "registry_precheck_and_hash_before_after",
+        "preregistered_game_seed_hud_support_matrix",
+        "model_specs",
+        "canonical_live_entrypoint_receipts",
+        "matched_arm_configuration",
+        "hud_admission_and_estimator_receipts",
+        "estimator_error_by_game",
+        "consumer_fire_counts",
+        "deadline_miss_counts",
+        "path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game",
+        "paired_clustered_intervals",
+        "harmful_regression_count_and_games",
+        "aa_control",
+        "source_bfs_adapter_registry_hidden_state_access_counts",
+        "solve_claimed",
+        "level_credit_delta",
+        "registry_update_count",
+        "ab_complete_score",
+        "budget_aware_promotion_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 1
+    },
+    "exp6217-arc-gemma31-think-ab": {
+      "task_id": "exp6217-arc-gemma31-think-ab",
+      "title": "Native Gemma-4-31B think versus no-think induction A/B",
+      "track": "arc",
+      "declared_deliverable": "results/experiment_6217_arc_gemma31_think_mode_ab.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "error": "missing",
+      "classifier_class": "missing",
+      "classifier_terminal": false,
+      "classification": "missing",
+      "reason": "artifact path is missing",
+      "receipt_override_attempted": true,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "GATE_BLOCK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [
+        "results/experiment_6217_arc_gemma31_think_ab.json"
+      ],
+      "required_fields": [
+        "status",
+        "operator_directive_and_exclusion_boundary_receipt",
+        "preregistered_game_seed_induction_matrix",
+        "model_specs",
+        "gguf_template_think_token_cuda_and_process_receipts",
+        "matched_arm_configuration",
+        "fixed_budget_receipt",
+        "raw_before_extraction_paths_hashes",
+        "treatment_reasoning_activation_counts",
+        "finish_reason_and_token_counts",
+        "executable_engine_yield",
+        "transition_change_goal_fidelity_by_arm_game",
+        "completion_time_and_gpu_cost_by_arm_game",
+        "paired_clustered_intervals",
+        "harmful_regression_count_and_games",
+        "aa_control",
+        "n_predict_tuning_count",
+        "exp6091_reuse_count",
+        "source_bfs_adapter_registry_hidden_state_access_counts",
+        "solve_claimed",
+        "level_credit_delta",
+        "registry_update_count",
+        "ab_complete_score",
+        "think_mode_promotion_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6218-arc-admissible-lever-portfolio-heldout": {
+      "task_id": "exp6218-arc-admissible-lever-portfolio-heldout",
+      "title": "Held-out portfolio of independently admissible ARC levers",
+      "track": "arc",
+      "declared_deliverable": "results/experiment_6218_arc_admissible_lever_portfolio_heldout.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:e17a375f2d3547e8bfc2091272a5b64b5c755891ecf6b047df77843fab6faf0a",
+      "error": null,
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "classification": "skipped",
+      "reason": "status=skipped verdict=complete",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "OK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "upstream_paths_hashes_and_recomputed_gates",
+        "eligible_and_ineligible_levers_with_reasons",
+        "selection_rule_frozen_before_heldout",
+        "selected_levers",
+        "structured_skip_reason",
+        "registry_precheck_and_hash_before_after",
+        "preregistered_heldout_game_seed_matrix",
+        "model_specs",
+        "matched_baseline_single_and_pair_configs",
+        "treatment_fire_counts",
+        "quality_efficiency_and_cost_by_arm_game",
+        "main_and_interaction_effects",
+        "paired_clustered_intervals",
+        "harmful_regression_count_and_games",
+        "aa_control",
+        "combination_count_tested",
+        "default_flip_count",
+        "source_bfs_adapter_registry_hidden_state_access_counts",
+        "solve_claimed",
+        "level_credit_delta",
+        "registry_update_count",
+        "portfolio_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6219-two-timescale-constraint-csl": {
+      "task_id": "exp6219-two-timescale-constraint-csl",
+      "title": "Two-timescale continuous constraint learning under sealed drift",
+      "track": "continuous_learning",
+      "declared_deliverable": "results/experiment_6219_two_timescale_constraint_csl.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:cf55c1cb4d8cac3260afd81e264e97d7202b5966a910b36331eb8b024a6c095f",
+      "error": null,
+      "classifier_class": "complete",
+      "classifier_terminal": true,
+      "classification": "complete",
+      "reason": "status=complete verdict=complete",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "OK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "continuous_self_learning_task",
+        "upstream_stream_path_hash_and_clean_receipt",
+        "preregistered_chronological_family_blocks_and_future_ids",
+        "train_eval_overlap_count",
+        "arm_definitions_and_resource_parity",
+        "immutable_predecision_snapshot_hashes",
+        "decision_time_write_count",
+        "post_outcome_event_and_verifier_receipts",
+        "immediate_commit_log",
+        "block_end_consolidation_log",
+        "shuffled_memory_receipt",
+        "procedural_constraint_schema",
+        "promoted_quarantined_rejected_and_rolled_back_counts",
+        "accuracy_forward_transfer_retention_and_negative_transfer_by_family_arm",
+        "update_utility_and_memory_cost",
+        "poison_injection_results",
+        "rollback_exactness",
+        "model_weight_mutation_count",
+        "continuous_learning_promotion_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6220-mode-jump-runtime-ab": {
+      "task_id": "exp6220-mode-jump-runtime-ab",
+      "title": "Default-off mode-jump sampler runtime quality and efficiency A/B",
+      "track": "sampling",
+      "declared_deliverable": "results/experiment_6220_mode_jump_runtime_ab.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:ff0c30f99b7f086fd17b60b6cceceedb304e475478b990b861f8647e79540082",
+      "error": null,
+      "classifier_class": "blocked",
+      "classifier_terminal": true,
+      "classification": "blocked",
+      "reason": "status=blocked verdict=blocked",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "FAIL",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "upstream_exp6194_and_exp6208_paths_hashes",
+        "backend_paths_build_and_abi_receipts",
+        "preregistered_fixture_seed_schedule_matrix",
+        "matched_arm_configuration",
+        "support_validity_by_fixture_arm",
+        "observable_and_energy_error_by_fixture_arm",
+        "ess_and_autocorrelation_by_fixture_arm",
+        "transition_and_mode_occupancy_counts",
+        "serialization_and_restart_receipts",
+        "fallback_trigger_and_exactness",
+        "cpu_thread_and_wall_time_receipts",
+        "quality_gate_passed",
+        "timing_claim_allowed",
+        "default_off_preserved",
+        "fpga_tsu_power_hardware_claim_count",
+        "task_owned_and_preexisting_test_classification",
+        "sampler_runtime_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6221-three-family-code-transport-canary-v3": {
+      "task_id": "exp6221-three-family-code-transport-canary-v3",
+      "title": "Changed three-family raw-code transport canary after runtime recovery",
+      "track": "phase_d",
+      "declared_deliverable": "results/experiment_6221_three_family_code_transport_canary_v3.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:6804287b3767c7d94727c22a809c1ec16abf3eb566fc770371385e4c456a2bde",
+      "error": null,
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "classification": "skipped",
+      "reason": "blocked artifact records a gate skip",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "GATE_BLOCK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "upstream_runtime_and_bank_paths_hashes",
+        "preregistered_budget_grid_and_task_ids",
+        "model_specs",
+        "gguf_template_cuda_gpu_and_process_receipts",
+        "generation_matrix",
+        "raw_before_interpretation_paths_hashes",
+        "per_family_finish_token_extraction_compile_and_public_sample_metrics",
+        "private_oracle_access_count",
+        "configuration_selection_inputs",
+        "frozen_envelope_by_family",
+        "phase_d_transport_ready_score",
+        "all_family_transport_ready_score",
+        "correctness_retry_count",
+        "replacement_count",
+        "legacy_headline_row_count",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6222-livecodebench-k8-pool-v3": {
+      "task_id": "exp6222-livecodebench-k8-pool-v3",
+      "title": "Authentic Gemma-4-31B immutable K=8 executable-code pool",
+      "track": "phase_d",
+      "declared_deliverable": "results/experiment_6222_livecodebench_k8_pool_v3.json",
+      "present": false,
+      "loadable": false,
+      "sha256": null,
+      "error": "missing",
+      "classifier_class": "missing",
+      "classifier_terminal": false,
+      "classification": "missing",
+      "reason": "artifact path is missing",
+      "receipt_override_attempted": true,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "GATE_BLOCK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "upstream_bank_runtime_and_canary_hashes",
+        "frozen_generation_envelope",
+        "model_specs",
+        "gguf_template_cuda_gpu_and_process_receipts",
+        "deterministic_task_sample_seed_matrix",
+        "expected_and_observed_task_sample_counts",
+        "raw_shard_paths_hashes_and_seal_receipt",
+        "raw_before_label_ordering_receipt",
+        "finish_reason_and_token_counts",
+        "extraction_outcomes",
+        "restricted_private_execution_outcomes",
+        "correctness_retry_count",
+        "replacement_count",
+        "private_test_noninterference_receipt",
+        "resume_and_conflict_receipts",
+        "process_wall_time_receipts",
+        "pool_integrity_ready_score",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    },
+    "exp6223-livecodebench-headroom-v3": {
+      "task_id": "exp6223-livecodebench-headroom-v3",
+      "title": "Executable-code competence and genuine selectable-headroom audit",
+      "track": "phase_d",
+      "declared_deliverable": "results/experiment_6223_livecodebench_headroom_v3.json",
+      "present": true,
+      "loadable": true,
+      "sha256": "sha256:651cf8da2b2788828a0c0232a65c3e9543de1e1c068a0f831b8bab6a7256ca99",
+      "error": null,
+      "classifier_class": "skipped",
+      "classifier_terminal": true,
+      "classification": "skipped",
+      "reason": "blocked artifact records a gate skip",
+      "receipt_override_attempted": false,
+      "receipt_overrode": false,
+      "conductor_receipt_status": "GATE_BLOCK",
+      "same_number_alias_used": false,
+      "same_number_alias_candidates_ignored": [],
+      "required_fields": [
+        "status",
+        "upstream_pool_path_hash_and_seal_receipt",
+        "split_task_ids_and_hashes",
+        "expected_and_observed_k",
+        "extraction_and_runnable_coverage_by_split",
+        "per_candidate_accuracy_by_split",
+        "correct_and_incorrect_support_by_split",
+        "oracle_at_k_by_split",
+        "label_free_baseline_definition_and_calibration_only_tuning",
+        "baseline_accuracy_by_split",
+        "oracle_minus_baseline_by_split",
+        "discordant_task_counts_and_ids",
+        "harmful_selection_counts",
+        "bootstrap_task_cluster_intervals",
+        "independence_or_combinatorial_check",
+        "task_family_surface_and_length_strata",
+        "private_label_feature_access_count",
+        "hidden_state_access_count",
+        "row_or_label_mutation_count",
+        "headroom_ready_score",
+        "exact_pool_retirement_reason",
+        "protected_files_unchanged",
+        "inference_substrate",
+        "verifier_is_oracle",
+        "field_provenance",
+        "field_principles",
+        "test_commands",
+        "test_exit_codes",
+        "duration_s",
+        "reproducibility_checksum",
+        "honest_verdict"
+      ],
+      "critical_adversarial_flag_count": 0,
+      "flag_count": 0
+    }
+  },
+  "missing_nonterminal_blocked_skipped_null_retired_and_flagged_counts": {
+    "missing": 2,
+    "nonterminal": 3,
+    "blocked": 2,
+    "skipped": 3,
+    "null": 0,
+    "retired": 0,
+    "flagged": 2,
+    "classification_counts": {
+      "blocked": 2,
+      "complete": 1,
+      "flagged": 2,
+      "missing": 2,
+      "partial": 1,
+      "ready": 2,
+      "skipped": 3
+    }
+  },
+  "conductor_receipt_override_count": 0,
+  "adversarial_verification_results": {
+    "artifact_receipts": {
+      "exp6211-v538-post-marker-source-scope-prereg": {
+        "task_id": "exp6211-v538-post-marker-source-scope-prereg",
+        "artifact_path": "results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+                "loaded": true,
+                "exp_id": "exp6211-v538-post-marker-source-scope-prereg",
+                "title": "",
+                "honest_verdict": "blocked: accepted_count=0; V538 source, roadmap, causal contract, or verificatio",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6211_v538_post_marker_source_scope_prereg.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6211_v538_post_marker_source_scope_prereg.json\n------------------------------------------------------------------------------\n  verdict          : blocked: accepted_count=0; V538 source, roadmap, causal contract, or verification command failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_structure_result = {'n_tasks_audited': 14, 'n_gate_upstream_checks': 5, 'n_gate_upstream_failures': 0, 'n_prior_failures_checks': 14, 'n_prior_failures_missing': 0, 'n_model_agent_coherence_failures': 0, 'n_gate_field_cross_ref_failures': 0, 'roadmap_gate_audit_passed': True, 'failure_details': [], 'audit_script_written': True, 'honest_verdict': 'all_checks_pass', 'structured_gate_count': 5}\n  duration_s       : 6.780867011053488   substrate: post_marker_source_ingestion_and_arc_causal_preregistration\n  duration floor   : none\n  headline metrics :\n      accepted_count = 0\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:88b6e4a5fb128ec6f0acc68e20fb8bffcc74a48efbbd61a480e7ac74ada47e5b"
+      },
+      "exp6212-three-family-gguf-runtime-recovery": {
+        "task_id": "exp6212-three-family-gguf-runtime-recovery",
+        "artifact_path": "results/experiment_6212_three_family_gguf_runtime_recovery.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6212_three_family_gguf_runtime_recovery.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6212_three_family_gguf_runtime_recovery.json",
+                "loaded": true,
+                "exp_id": "experiment_6212_three_family_gguf_runtime_recovery",
+                "title": "",
+                "honest_verdict": "complete_partial: runtime diagnosis ran but not every family has owned CUDA and ",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6212_three_family_gguf_runtime_recovery.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6212_three_family_gguf_runtime_recovery.json\n------------------------------------------------------------------------------\n  verdict          : complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 209.626717   substrate: local_three_family_llama_cpp_server_cuda_runtime_recovery\n  duration floor   : local_three_family_llama_cpp_server_cuda_runtime_recovery >=60.0s (live_model)\n  headline metrics :\n      gemma_4_31b_runtime_ready_score = 0\n      three_family_runtime_ready_score = 0\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:97035a0c583a9592219cb04808d3967deb4c6ac2407bafa581ecd2a6172d8ed2"
+      },
+      "exp6213-arc-object-delta-perception-wiring": {
+        "task_id": "exp6213-arc-object-delta-perception-wiring",
+        "artifact_path": "results/experiment_6213_arc_object_delta_perception_wiring.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6213_arc_object_delta_perception_wiring.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6213_arc_object_delta_perception_wiring.json",
+                "loaded": true,
+                "exp_id": null,
+                "title": "",
+                "honest_verdict": "complete: object_delta_perception_wired_default_off_no_solve_claim",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6213_arc_object_delta_perception_wiring.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6213_arc_object_delta_perception_wiring.json\n------------------------------------------------------------------------------\n  verdict          : complete: object_delta_perception_wired_default_off_no_solve_claim\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 12.2285   substrate: deterministic_visible_grid_object_delta_prompt_wiring_no_llm\n  duration floor   : none\n  headline metrics :\n      object_delta_wiring_ready_score = 1.0\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:4d99c6df4caca5556ebe311e903664b70bcb772f735281761f5e6448436c4a04"
+      },
+      "exp6214-arc-object-delta-heldout-ab": {
+        "task_id": "exp6214-arc-object-delta-heldout-ab",
+        "artifact_path": "results/experiment_6214_arc_object_delta_heldout_ab.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6214_arc_object_delta_heldout_ab.json",
+          "exit_code": 1,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6214_arc_object_delta_heldout_ab.json",
+                "loaded": true,
+                "exp_id": null,
+                "title": "",
+                "honest_verdict": "complete: object_delta_heldout_ab_complete_no_solve_credit",
+                "flag_count": 1,
+                "max_severity": 0,
+                "flags": [
+                  {
+                    "kind": "IMPLAUSIBLE_PERFECT",
+                    "severity": "info",
+                    "detail": "level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default."
+                  }
+                ]
+              }
+            ],
+            "flagged_count": 1
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6214_arc_object_delta_heldout_ab.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6214_arc_object_delta_heldout_ab.json\n------------------------------------------------------------------------------\n  verdict          : complete: object_delta_heldout_ab_complete_no_solve_credit\n  flagged_adversarial (stamped): False   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 30.104621   substrate: offline_arcade_live_agent_runtime_self_discovery_no_llm\n  duration floor   : offline_arcade_live_agent_runtime_self_discovery_no_llm >=0.01s (arc_live_agent_no_llm)\n  headline metrics :\n      ab_complete_score = 1.0\n      level_credit_delta = 0  <-- flagged\n      object_delta_promotion_ready_score = 0.8\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 1,
+        "receipt_hash": "sha256:918e2e6152656e57b2949dc09b4501a7f7c83b9bc8c1ba385c9c4e7c5f62f0d2"
+      },
+      "exp6215-arc-trajectory-transfer-ab": {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "artifact_path": "results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+                "loaded": true,
+                "exp_id": 6215,
+                "title": "",
+                "honest_verdict": "complete: trajectory_transfer_ab_complete_no_solve_credit",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json",
+          "exit_code": 0,
+          "stdout_tail": ": 12000, 'safe': True}, 'after': {'command_returncodes': {'compute_apps': 0, 'gpus': 0}, 'compute_apps': [], 'devices': [{'index': 0, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 22, 'uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab'}, {'index': 1, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 92, 'uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9'}], 'gpu_count': 2, 'ok': True, 'timestamp_utc': '2026-08-08T04:12:46Z'}, 'before': {'command_returncodes': {'compute_apps': 0, 'gpus': 0}, 'compute_apps': [], 'devices': [{'index': 0, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 0, 'uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab'}, {'index': 1, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 0, 'uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9'}], 'gpu_count': 2, 'ok': True, 'timestamp_utc': '2026-08-08T04:09:17Z'}, 'blocked_owner_pids': [], 'schema': 'carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.gpu_owners'}, 'kind': 'exp6212_qualified_runtime_receipts_for_matched_fallback', 'legacy_models_contributed_rows': 0, 'loader_and_llama_cpp_build_receipts': {'llama_cpp_python_gpu_offload': True, 'llama_cpp_python_system_info': 'CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ', 'llama_cpp_python_version': '0.3.33', 'native_llama_server_cuda_build': False, 'native_llama_server_exists': True, 'native_llama_server_path': '/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', 'native_llama_server_version': 'version: 9606 (9b4dae81f)\\nbuilt with GNU 16.1.1 for Linux x86_64', 'native_llama_server_version_returncode': 0, 'no_autotokenizer_used': True, 'schema': 'carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.llama_cpp_build'}, 'principle': 'The A/B drives the canonical live policy on frozen agent-visible cells. It records Exp6212 fallback identity but does not request fresh LLM tokens.', 'process_identity': {'command': ['/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', '--model', '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf', '--host', '127.0.0.1', '--port', '62121', '--ctx-size', '384', '--n-gpu-layers', 'all', '--split-mode', 'layer', '--tensor-split', '1,1', '--parallel', '1', '--batch-size', '512', '--ubatch-size', '512', '--cache-type-k', 'q8_0', '--cache-type-v', 'q8_0', '--fit', 'off', '--offline', '--jinja', '--reasoning', 'off', '--no-webui', '--log-verbosity', '3'], 'ended_utc': '2026-08-08T04:12:06Z', 'exit_code': 0, 'lifetime_s': 12.846279, 'owned_process': True, 'pid': 2118102, 'started_utc': '2026-08-08T04:11:53Z', 'stderr_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log'}, 'source_artifact': {'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.json', 'sha256': 'sha256:5e0dd7cf3fc1b35719c88713da576b62f6b971af350b06a8f3dae1dd2b428381', 'size_bytes': 103837}, 'value': 'offline_arcade_live_agent_runtime_self_discovery_no_llm'}\n  duration floor   : offline_arcade_live_agent_runtime_self_discovery_no_llm >=0.01s (arc_live_agent_no_llm)\n  headline metrics :\n      ab_complete_score = 1.0\n      level_credit_delta = 0\n      trajectory_transfer_promotion_ready_score = 1.0\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:89f874b5f1e03645021b2493dae6eb197a47c129ce0c5c45d25dc7b538b77122"
+      },
+      "exp6216-arc-budget-aware-search-ab": {
+        "task_id": "exp6216-arc-budget-aware-search-ab",
+        "artifact_path": "results/experiment_6216_arc_budget_aware_search_ab.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6216_arc_budget_aware_search_ab.json",
+          "exit_code": 1,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6216_arc_budget_aware_search_ab.json",
+                "loaded": true,
+                "exp_id": null,
+                "title": "",
+                "honest_verdict": "complete: budget_aware_search_ab_complete_no_solve_credit",
+                "flag_count": 1,
+                "max_severity": 0,
+                "flags": [
+                  {
+                    "kind": "IMPLAUSIBLE_PERFECT",
+                    "severity": "info",
+                    "detail": "level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default."
+                  }
+                ]
+              }
+            ],
+            "flagged_count": 1
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6216_arc_budget_aware_search_ab.json",
+          "exit_code": 0,
+          "stdout_tail": "s': [{'index': 0, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 22, 'uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab'}, {'index': 1, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 92, 'uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9'}], 'gpu_count': 2, 'ok': True, 'timestamp_utc': '2026-08-08T04:12:46Z'}, 'before': {'command_returncodes': {'compute_apps': 0, 'gpus': 0}, 'compute_apps': [], 'devices': [{'index': 0, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 0, 'uuid': 'GPU-b52387a2-c625-de87-8d34-e6f64e684bab'}, {'index': 1, 'memory_free_mb': 24120, 'memory_total_mb': 24576, 'memory_used_mb': 4, 'name': 'NVIDIA GeForce RTX 3090', 'utilization_pct': 0, 'uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9'}], 'gpu_count': 2, 'ok': True, 'timestamp_utc': '2026-08-08T04:09:17Z'}, 'blocked_owner_pids': [], 'schema': 'carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.gpu_owners'}, 'kind': 'exp6212_qualified_runtime_receipts_for_matched_generator', 'legacy_models_contributed_rows': 0, 'loader_and_llama_cpp_build_receipts': {'llama_cpp_python_gpu_offload': True, 'llama_cpp_python_system_info': 'CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ', 'llama_cpp_python_version': '0.3.33', 'native_llama_server_cuda_build': False, 'native_llama_server_exists': True, 'native_llama_server_path': '/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', 'native_llama_server_version': 'version: 9606 (9b4dae81f)\\nbuilt with GNU 16.1.1 for Linux x86_64', 'native_llama_server_version_returncode': 0, 'no_autotokenizer_used': True, 'schema': 'carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.llama_cpp_build'}, 'principle': 'The A/B drives the canonical live policy on frozen agent-visible cells. It records Exp6212 generator identity but does not request fresh LLM tokens.', 'process_identity': {'command': ['/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server', '--model', '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf', '--host', '127.0.0.1', '--port', '62121', '--ctx-size', '384', '--n-gpu-layers', 'all', '--split-mode', 'layer', '--tensor-split', '1,1', '--parallel', '1', '--batch-size', '512', '--ubatch-size', '512', '--cache-type-k', 'q8_0', '--cache-type-v', 'q8_0', '--fit', 'off', '--offline', '--jinja', '--reasoning', 'off', '--no-webui', '--log-verbosity', '3'], 'ended_utc': '2026-08-08T04:12:06Z', 'exit_code': 0, 'lifetime_s': 12.846279, 'owned_process': True, 'pid': 2118102, 'started_utc': '2026-08-08T04:11:53Z', 'stderr_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.gemma4_31b_dense.llama_server.log'}, 'source_artifact': {'exists': True, 'path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.json', 'sha256': 'sha256:5e0dd7cf3fc1b35719c88713da576b62f6b971af350b06a8f3dae1dd2b428381', 'size_bytes': 103837}, 'value': 'offline_arcade_live_agent_runtime_self_discovery_no_llm'}\n  duration floor   : offline_arcade_live_agent_runtime_self_discovery_no_llm >=0.01s (arc_live_agent_no_llm)\n  headline metrics :\n      ab_complete_score = 1.0\n      budget_aware_promotion_ready_score = 1.0\n      level_credit_delta = 0  <-- flagged\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: level_credit_delta=0.0 (exactly zero). Confirm this is not a stub default.\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 1,
+        "receipt_hash": "sha256:9d30df25abc513a2f162b181caddd2da8eb17f72071ffa4bc98835f0c39eb34a"
+      },
+      "exp6218-arc-admissible-lever-portfolio-heldout": {
+        "task_id": "exp6218-arc-admissible-lever-portfolio-heldout",
+        "artifact_path": "results/experiment_6218_arc_admissible_lever_portfolio_heldout.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6218_arc_admissible_lever_portfolio_heldout.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6218_arc_admissible_lever_portfolio_heldout.json",
+                "loaded": true,
+                "exp_id": null,
+                "title": "",
+                "honest_verdict": "complete: skipped_fewer_than_two_eligible_arc_levers_no_model_load_no_solve_cred",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6218_arc_admissible_lever_portfolio_heldout.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6218_arc_admissible_lever_portfolio_heldout.json\n------------------------------------------------------------------------------\n  verdict          : complete: skipped_fewer_than_two_eligible_arc_levers_no_model_load_no_solve_credit\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.042563   substrate: {'legacy_models_contributed_rows': 0, 'model_load_attempted': False, 'output_path': '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6218_arc_admissible_lever_portfolio_heldout.json', 'value': 'aggregation_from_upstream_artifacts'}\n  duration floor   : aggregation_from_upstream_artifacts >=0.0001s (aggregation)\n  methodology      : offline_arc_methodology_descriptor via offline_reproduced, reproducibility_checksum\n  headline metrics :\n      default_flip_count = 0\n      level_credit_delta = 0\n      portfolio_ready_score = 0.5\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:d5e4245f2146b9fe407569f695a139e66cbab81106cc65f6ba8867c1eb44e38e"
+      },
+      "exp6219-two-timescale-constraint-csl": {
+        "task_id": "exp6219-two-timescale-constraint-csl",
+        "artifact_path": "results/experiment_6219_two_timescale_constraint_csl.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6219_two_timescale_constraint_csl.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6219_two_timescale_constraint_csl.json",
+                "loaded": true,
+                "exp_id": "experiment_6219_two_timescale_constraint_csl",
+                "title": "",
+                "honest_verdict": "complete: immediate post-outcome memory and slow block-end memory were separated",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6219_two_timescale_constraint_csl.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6219_two_timescale_constraint_csl.json\n------------------------------------------------------------------------------\n  verdict          : complete: immediate post-outcome memory and slow block-end memory were separated on Exp6145 with no decision-time writes, no poison propagation, exact rollback, and no model weight mutation\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.168995   substrate: deterministic_exp6145_exact_verifier_external_memory_no_llm\n  duration floor   : none\n  headline metrics :\n      continuous_learning_promotion_ready_score = 1.0\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:fe4dba49eb2cf603e7109a122526e39a56a95a77438bfee93dde404ba1d8df80"
+      },
+      "exp6220-mode-jump-runtime-ab": {
+        "task_id": "exp6220-mode-jump-runtime-ab",
+        "artifact_path": "results/experiment_6220_mode_jump_runtime_ab.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6220_mode_jump_runtime_ab.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6220_mode_jump_runtime_ab.json",
+                "loaded": true,
+                "exp_id": "experiment_6220_mode_jump_runtime_ab",
+                "title": "",
+                "honest_verdict": "blocked: default_off=True; all_fixture_arms_supported=False; quality_gate=False;",
+                "flag_count": 0,
+                "max_severity": -1,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6220_mode_jump_runtime_ab.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6220_mode_jump_runtime_ab.json\n------------------------------------------------------------------------------\n  verdict          : blocked: default_off=True; all_fixture_arms_supported=False; quality_gate=False; timing_claim_allowed=False; hardware_claim_count=0; task_owned_failures=[{\"classification\": \"task_owned_repository_wide_nonzero_interrupted\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 2, \"name\": \"required_full_python_suite_interrupted\", \"stderr_tail\": \"KeyboardInterrupt after broad repository-wide failures and worker aborts; first visible errors included missing results/experiment_3447_archive_v316_v317_activate_v318.json and worker aborts in JAX/Flax and Qwen tokenizer prewarm paths.\", \"stdout_tail\": \"369 failed, 19194 passed, 48 skipped, 161 warnings, 14 errors in 1473.48s (0:24:33)\", \"task_owned\": true}]; preexisting_nonzero=[{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}]\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.00011053704656660557   substrate: local_cpu_software_mode_jump_runtime_ab_no_hardware\n  duration floor   : none\n  headline metrics :\n      sampler_runtime_ready_score = 0.0\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:be79f278c8063d6b0da5655b6b8fa49bfc4a25d3a99c981010986d43d392026b"
+      },
+      "exp6221-three-family-code-transport-canary-v3": {
+        "task_id": "exp6221-three-family-code-transport-canary-v3",
+        "artifact_path": "results/experiment_6221_three_family_code_transport_canary_v3.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6221_three_family_code_transport_canary_v3.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6221_three_family_code_transport_canary_v3.json",
+                "loaded": true,
+                "blocked_gate_artifact": true,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6221_three_family_code_transport_canary_v3.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6221_three_family_code_transport_canary_v3.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery.three_family_runtime_ready_score (actual=0 == expected=1)'\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:2a723818d0a05453b09d816f5676d40786f8ba90eeefd6a2882e5832466e365a"
+      },
+      "exp6223-livecodebench-headroom-v3": {
+        "task_id": "exp6223-livecodebench-headroom-v3",
+        "artifact_path": "results/experiment_6223_livecodebench_headroom_v3.json",
+        "adversarial": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json results/experiment_6223_livecodebench_headroom_v3.json",
+          "exit_code": 0,
+          "stdout_json": {
+            "reports": [
+              {
+                "artifact": "results/experiment_6223_livecodebench_headroom_v3.json",
+                "loaded": true,
+                "blocked_gate_artifact": true,
+                "flags": []
+              }
+            ],
+            "flagged_count": 0
+          },
+          "stderr": ""
+        },
+        "summary": {
+          "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/summarize_artifact.py results/experiment_6223_livecodebench_headroom_v3.json",
+          "exit_code": 0,
+          "stdout_tail": "==============================================================================\nARTIFACT  experiment_6223_livecodebench_headroom_v3.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = \"1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_integrity_ready_score (upstream artifact not found for task id 'exp6222-livecodebench-k8-pool-v3')\"\n  duration_s       : 0.0   substrate: None\n  duration floor   : none\n  adversarial flags: none\n==============================================================================\n",
+          "stderr_tail": ""
+        },
+        "critical_flag_count": 0,
+        "flag_count": 0,
+        "receipt_hash": "sha256:612263bca7543c2ec4353786eb9efe58643003c874d16d288538455e7730b8bd"
+      }
+    },
+    "artifact_receipt_count": 11,
+    "flag_count": 2,
+    "critical_flag_count": 0,
+    "command_receipts": [
+      {
+        "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "Exclusion-manifest lint clean: research-roadmap.yaml\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "[OK] research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 5,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"research-roadmap.yaml\"\n}\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/python scripts/publication_gate.py --json",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}\n",
+        "stderr_tail": "",
+        "stdout_json": {
+          "paper_ready": true,
+          "gates": {
+            "G1": {
+              "pass": true,
+              "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+              "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+            },
+            "G2": {
+              "pass": true,
+              "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125"
+            },
+            "G3": {
+              "pass": true,
+              "detail": "no retracted phrasings asserted as live claims",
+              "hits": []
+            },
+            "G4": {
+              "pass": true,
+              "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+              "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+            }
+          },
+          "unmet_gates": [],
+          "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count."
+        }
+      },
+      {
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6224_v538_adversarial_capstone.py",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "OK: All tests reference specification requirements.\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/ruff check python/carnot/experiment_6224_v538_adversarial_capstone.py tests/python/test_experiment_6224_v538_adversarial_capstone.py",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "All checks passed!\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/ruff format --check python/carnot/experiment_6224_v538_adversarial_capstone.py tests/python/test_experiment_6224_v538_adversarial_capstone.py",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "2 files already formatted\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/pytest tests/python/test_experiment_6224_v538_adversarial_capstone.py -q --no-cov -n 0",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 6 items\n\ntests/python/test_experiment_6224_v538_adversarial_capstone.py ......    [100%]\n\n============================== 6 passed in 1.28s ===============================\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6224_v538_adversarial_capstone.py -m pytest tests/python/test_experiment_6224_v538_adversarial_capstone.py -q --no-cov -n 0",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 6 items\n\ntests/python/test_experiment_6224_v538_adversarial_capstone.py ......    [100%]\n\n============================== 6 passed in 2.70s ===============================\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6224_v538_adversarial_capstone.py --fail-under=100",
+        "exit_code": 0,
+        "classification": "passed",
+        "stdout_tail": "Name                                                         Stmts   Miss  Cover\n--------------------------------------------------------------------------------\npython/carnot/experiment_6224_v538_adversarial_capstone.py     339      0   100%\n--------------------------------------------------------------------------------\nTOTAL                                                          339      0   100%\n",
+        "stderr_tail": ""
+      },
+      {
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 2,
+        "classification": "nonzero_exit_2",
+        "stdout_tail": "e_fail_when_gxx_fails\nFAILED tests/python/test_experiment_750_vitis_hls.py::TestHonestVerdictLogic::test_verdict_hls_synthesized\nFAILED tests/python/test_experiment_750_vitis_hls.py::TestHonestVerdictLogic::test_verdict_kernel_ready_synthesis_pending\nFAILED tests/python/test_experiment_750_vitis_hls.py::TestHonestVerdictLogic::test_verdict_synthesis_fail_still_not_synthesized\nFAILED tests/python/test_experiment_754_preflight_v10.py::TestCheckPatchApplied::test_live_conductor_has_patch_applied\nFAILED tests/python/test_experiment_4165_capstone_v385.py::test_scenario_capstone_4165_current_flagged_inputs_are_provenance_only\nFAILED tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py::test_module_main_guard_exits_zero_for_req_report_4170\nFAILED tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py::test_deliverable_files_validate_against_req_report_4170\nFAILED tests/python/test_experiment_4173_capstone_v386.py::test_scenario_capstone_4173_current_artifacts_form_decision_grade_verdict\nFAILED tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py::test_module_main_guard_exits_zero_for_req_report_4180\nFAILED tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py::test_wrapper_script_runs_module_for_req_report_4180\nFAILED tests/python/test_experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py::test_module_main_guard_exits_zero_for_req_report_4192\nFAILED tests/python/test_experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py::test_wrapper_script_runs_module_for_req_report_4192\nFAILED tests/python/test_experiment_4203_sota_ingestion_verifier_as_reward.py::test_module_main_guard_exits_zero_for_req_report_4203\nFAILED tests/python/test_experiment_4203_sota_ingestion_verifier_as_reward.py::test_wrapper_script_runs_module_for_req_report_4203\nFAILED tests/python/test_experiment_4215_sota_ingestion_oracle_distinct.py::test_module_main_guard_exits_zero_for_req_report_4215\nFAILED tests/python/test_experiment_4215_sota_ingestion_oracle_distinct.py::test_wrapper_script_runs_module_for_req_report_4215\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_required_fields_present\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_archive_ready_flag\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_archived_milestones\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_activated_milestone\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_honest_verdict_terminal_prefix\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_inference_substrate\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_p0_1_retirement_recorded\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_p0_1_hypothesis_unanswered\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_g1_g3_g4_met\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_g2_not_met\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_unmet_gates_contains_g2\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_paper_not_ready\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_next_top_gap_present\nERROR tests/python/reporting/test_archive_v316_v317_activate_v318_3447.py::test_depth_forcing_function_active\nERROR tests/python/test_experiment_431_eorm_jepa_retrain.py::TestRunExperiment::test_run_experiment_synthetic_fallback\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/threading.py:359: KeyboardInterrupt\n(to show a full traceback on KeyboardInterrupt use --full-trace)\n= 433 failed, 23014 passed, 55 skipped, 195 warnings, 15 errors in 2422.20s (0:40:22) =\n",
+        "stderr_tail": "ies, pandas._libs.tslibs.fields, pandas._libs.tslibs.timedeltas, pandas._libs.tslibs.tzconversion, pandas._libs.tslibs.timestamps, pandas._libs.tslibs.offsets, pandas._libs.tslibs.strptime, pandas._libs.tslibs.parsing, pandas._libs.tslibs.conversion, pandas._libs.tslibs.period, pandas._libs.tslibs.vectorized, pandas._libs.ops_dispatch, pandas._libs.missing, pandas._libs.hashtable, pandas._libs.algos, pandas._libs.interval, pandas._libs.lib, pyarrow._compute, pandas._libs.ops, pandas._libs.hashing, pandas._libs.arrays, pandas._libs.tslib, pandas._libs.sparse, pandas._libs.internals, pandas._libs.indexing, pandas._libs.index, pandas._libs.writers, pandas._libs.join, pandas._libs.window.aggregations, pandas._libs.window.indexers, pandas._libs.reshape, pandas._libs.groupby, pandas._libs.json, pandas._libs.parsers, pandas._libs.testing, sklearn._cyutility, sklearn.utils._isfinite, sklearn.utils.sparsefuncs_fast, sklearn.utils.murmurhash, sklearn.utils._openmp_helpers, sklearn.utils._vector_sentinel, sklearn.feature_extraction._hashing_fast, sklearn.preprocessing._csr_polynomial_expansion, sklearn.preprocessing._target_encoder_fast, sklearn.metrics.cluster._expected_mutual_info_fast, sklearn.metrics._dist_metrics, sklearn.metrics._pairwise_distances_reduction._datasets_pair, sklearn.utils._cython_blas, sklearn.metrics._pairwise_distances_reduction._base, sklearn.metrics._pairwise_distances_reduction._middle_term_computer, sklearn.utils._heap, sklearn.utils._sorting, sklearn.metrics._pairwise_distances_reduction._argkmin, sklearn.metrics._pairwise_distances_reduction._argkmin_classmode, sklearn.metrics._pairwise_distances_reduction._radius_neighbors, sklearn.metrics._pairwise_distances_reduction._radius_neighbors_classmode, sklearn.metrics._pairwise_fast, sklearn.neighbors._partition_nodes, sklearn.neighbors._ball_tree, sklearn.neighbors._kd_tree, sklearn.utils.arrayfuncs, sklearn.utils._random, sklearn.utils._seq_dataset, sklearn.linear_model._cd_fast, sklearn._loss._loss, sklearn.linear_model._sag_fast, sklearn.svm._liblinear, sklearn.svm._libsvm, sklearn.svm._libsvm_sparse, sklearn.utils._weight_vector, sklearn.linear_model._sgd_fast, sklearn.decomposition._online_lda_fast, sklearn.decomposition._cdnmf_fast, sklearn.utils._fast_dict, sklearn.cluster._hierarchical_fast, sklearn.cluster._k_means_common, sklearn.cluster._k_means_elkan, sklearn.cluster._k_means_lloyd, sklearn.cluster._k_means_minibatch, sklearn.cluster._dbscan_inner, sklearn.cluster._hdbscan._tree, sklearn.cluster._hdbscan._linkage, sklearn.cluster._hdbscan._reachability, sklearn._isotonic, sklearn.tree._utils, sklearn.tree._tree, sklearn.tree._partitioner, sklearn.tree._splitter, sklearn.tree._criterion, sklearn.neighbors._quad_tree, sklearn.manifold._barnes_hut_tsne, sklearn.manifold._utils, torch._C, torch._C._dynamo.autograd_compiler, torch._C._dynamo.eval_frame, torch._C._dynamo.guards, torch._C._dynamo.utils, torch._C._fft, torch._C._linalg, torch._C._nested, torch._C._nn, torch._C._sparse, torch._C._special, regex._regex, markupsafe._speedups, PIL._imaging, pyformula, pysolvers, simplejson._speedups, requests.packages.charset_normalizer.md, requests.packages.chardet.md, requests.packages.charset_normalizer.cd, requests.packages.chardet.cd, kiwisolver._cext, scipy.signal._sigtools, scipy.signal._max_len_seq_inner, scipy.signal._upfirdn_apply, scipy.signal._spline, scipy.signal._sosfilt, scipy.signal._peak_finding_utils, PIL._imagingft, pyarrow._acero, pyarrow._fs, pyarrow._csv, pyarrow._json, pyarrow._substrait, pyarrow._dataset, pyarrow._dataset_orc, pyarrow._parquet, pyarrow._azurefs, pyarrow._hdfs, pyarrow._gcsfs, pyarrow._s3fs, pyarrow._parquet_encryption, pyarrow._dataset_parquet_encryption, pyarrow._dataset_parquet, multidict._multidict, yarl._quoting_c, propcache._helpers_c, aiohttp._http_writer, aiohttp._http_parser, aiohttp._websocket.mask, aiohttp._websocket.reader_c, frozenlist._frozenlist, xxhash._xxhash, _cffi_backend, PIL._imagingmath (total: 255)\n"
+      }
+    ]
+  },
+  "arc_registry_hash_before_after": {
+    "path": "ops/arc_solve_registry.yaml",
+    "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "unchanged": true
+  },
+  "arc_solve_claim_count": 0,
+  "arc_level_credit_delta": 0,
+  "arc_lever_and_portfolio_eligibility": {
+    "branch": "arc_lever_and_portfolio",
+    "eligible": false,
+    "task_ids": [
+      "exp6213-arc-object-delta-perception-wiring",
+      "exp6214-arc-object-delta-heldout-ab",
+      "exp6215-arc-trajectory-transfer-ab",
+      "exp6216-arc-budget-aware-search-ab",
+      "exp6217-arc-gemma31-think-ab",
+      "exp6218-arc-admissible-lever-portfolio-heldout"
+    ],
+    "per_task": {
+      "exp6213-arc-object-delta-perception-wiring": {
+        "terminal_class": "ready",
+        "blocking_reasons": [
+          "unclassified_nonzero_command"
+        ]
+      },
+      "exp6214-arc-object-delta-heldout-ab": {
+        "terminal_class": "flagged",
+        "blocking_reasons": [
+          "flagged",
+          "unclassified_nonzero_command"
+        ]
+      },
+      "exp6215-arc-trajectory-transfer-ab": {
+        "terminal_class": "ready",
+        "blocking_reasons": [
+          "unclassified_nonzero_command"
+        ]
+      },
+      "exp6216-arc-budget-aware-search-ab": {
+        "terminal_class": "flagged",
+        "blocking_reasons": [
+          "flagged"
+        ]
+      },
+      "exp6217-arc-gemma31-think-ab": {
+        "terminal_class": "missing",
+        "blocking_reasons": [
+          "missing",
+          "failed_gate"
+        ]
+      },
+      "exp6218-arc-admissible-lever-portfolio-heldout": {
+        "terminal_class": "skipped",
+        "blocking_reasons": [
+          "skipped",
+          "unclassified_nonzero_command"
+        ]
+      }
+    },
+    "blocking_reasons": [
+      "exp6213-arc-object-delta-perception-wiring:unclassified_nonzero_command",
+      "exp6214-arc-object-delta-heldout-ab:flagged",
+      "exp6214-arc-object-delta-heldout-ab:unclassified_nonzero_command",
+      "exp6215-arc-trajectory-transfer-ab:unclassified_nonzero_command",
+      "exp6216-arc-budget-aware-search-ab:flagged",
+      "exp6217-arc-gemma31-think-ab:missing",
+      "exp6217-arc-gemma31-think-ab:failed_gate",
+      "exp6218-arc-admissible-lever-portfolio-heldout:skipped",
+      "exp6218-arc-admissible-lever-portfolio-heldout:unclassified_nonzero_command"
+    ],
+    "reason": "exp6213-arc-object-delta-perception-wiring:unclassified_nonzero_command; exp6214-arc-object-delta-heldout-ab:flagged; exp6214-arc-object-delta-heldout-ab:unclassified_nonzero_command; exp6215-arc-trajectory-transfer-ab:unclassified_nonzero_command; exp6216-arc-budget-aware-search-ab:flagged; exp6217-arc-gemma31-think-ab:missing; exp6217-arc-gemma31-think-ab:failed_gate; exp6218-arc-admissible-lever-portfolio-heldout:skipped; exp6218-arc-admissible-lever-portfolio-heldout:unclassified_nonzero_command"
+  },
+  "gguf_runtime_eligibility": {
+    "branch": "gguf_runtime",
+    "eligible": false,
+    "task_ids": [
+      "exp6212-three-family-gguf-runtime-recovery"
+    ],
+    "per_task": {
+      "exp6212-three-family-gguf-runtime-recovery": {
+        "terminal_class": "partial",
+        "blocking_reasons": [
+          "partial",
+          "three_family_runtime_ready_score=0",
+          "gemma_4_31b_runtime_ready_score=0"
+        ]
+      }
+    },
+    "blocking_reasons": [
+      "exp6212-three-family-gguf-runtime-recovery:partial",
+      "exp6212-three-family-gguf-runtime-recovery:three_family_runtime_ready_score=0",
+      "exp6212-three-family-gguf-runtime-recovery:gemma_4_31b_runtime_ready_score=0"
+    ],
+    "reason": "exp6212-three-family-gguf-runtime-recovery:partial; exp6212-three-family-gguf-runtime-recovery:three_family_runtime_ready_score=0; exp6212-three-family-gguf-runtime-recovery:gemma_4_31b_runtime_ready_score=0"
+  },
+  "continuous_self_learning_eligibility": {
+    "branch": "continuous_self_learning",
+    "eligible": false,
+    "task_ids": [
+      "exp6219-two-timescale-constraint-csl"
+    ],
+    "per_task": {
+      "exp6219-two-timescale-constraint-csl": {
+        "terminal_class": "complete",
+        "blocking_reasons": [
+          "continuous_self_learning_ready_score=None"
+        ]
+      }
+    },
+    "blocking_reasons": [
+      "exp6219-two-timescale-constraint-csl:continuous_self_learning_ready_score=None"
+    ],
+    "reason": "exp6219-two-timescale-constraint-csl:continuous_self_learning_ready_score=None"
+  },
+  "sampler_runtime_eligibility": {
+    "branch": "sampler_runtime",
+    "eligible": false,
+    "task_ids": [
+      "exp6220-mode-jump-runtime-ab"
+    ],
+    "per_task": {
+      "exp6220-mode-jump-runtime-ab": {
+        "terminal_class": "blocked",
+        "blocking_reasons": [
+          "blocked",
+          "unclassified_nonzero_command",
+          "sampler_runtime_ready_score=0.0"
+        ]
+      }
+    },
+    "blocking_reasons": [
+      "exp6220-mode-jump-runtime-ab:blocked",
+      "exp6220-mode-jump-runtime-ab:unclassified_nonzero_command",
+      "exp6220-mode-jump-runtime-ab:sampler_runtime_ready_score=0.0"
+    ],
+    "reason": "exp6220-mode-jump-runtime-ab:blocked; exp6220-mode-jump-runtime-ab:unclassified_nonzero_command; exp6220-mode-jump-runtime-ab:sampler_runtime_ready_score=0.0"
+  },
+  "phase_d_transport_pool_and_headroom_eligibility": {
+    "branch": "phase_d_transport_pool_and_headroom",
+    "eligible": false,
+    "task_ids": [
+      "exp6221-three-family-code-transport-canary-v3",
+      "exp6222-livecodebench-k8-pool-v3",
+      "exp6223-livecodebench-headroom-v3"
+    ],
+    "per_task": {
+      "exp6221-three-family-code-transport-canary-v3": {
+        "terminal_class": "skipped",
+        "blocking_reasons": [
+          "skipped",
+          "missing_required_field",
+          "failed_gate",
+          "phase_d_transport_ready_score=None"
+        ]
+      },
+      "exp6222-livecodebench-k8-pool-v3": {
+        "terminal_class": "missing",
+        "blocking_reasons": [
+          "missing",
+          "failed_gate",
+          "pool_integrity_ready_score=None"
+        ]
+      },
+      "exp6223-livecodebench-headroom-v3": {
+        "terminal_class": "skipped",
+        "blocking_reasons": [
+          "skipped",
+          "missing_required_field",
+          "failed_gate",
+          "headroom_ready_score=None"
+        ]
+      }
+    },
+    "blocking_reasons": [
+      "exp6221-three-family-code-transport-canary-v3:skipped",
+      "exp6221-three-family-code-transport-canary-v3:missing_required_field",
+      "exp6221-three-family-code-transport-canary-v3:failed_gate",
+      "exp6221-three-family-code-transport-canary-v3:phase_d_transport_ready_score=None",
+      "exp6222-livecodebench-k8-pool-v3:missing",
+      "exp6222-livecodebench-k8-pool-v3:failed_gate",
+      "exp6222-livecodebench-k8-pool-v3:pool_integrity_ready_score=None",
+      "exp6223-livecodebench-headroom-v3:skipped",
+      "exp6223-livecodebench-headroom-v3:missing_required_field",
+      "exp6223-livecodebench-headroom-v3:failed_gate",
+      "exp6223-livecodebench-headroom-v3:headroom_ready_score=None"
+    ],
+    "reason": "exp6221-three-family-code-transport-canary-v3:skipped; exp6221-three-family-code-transport-canary-v3:missing_required_field; exp6221-three-family-code-transport-canary-v3:failed_gate; exp6221-three-family-code-transport-canary-v3:phase_d_transport_ready_score=None; exp6222-livecodebench-k8-pool-v3:missing; exp6222-livecodebench-k8-pool-v3:failed_gate; exp6222-livecodebench-k8-pool-v3:pool_integrity_ready_score=None; exp6223-livecodebench-headroom-v3:skipped; exp6223-livecodebench-headroom-v3:missing_required_field; exp6223-livecodebench-headroom-v3:failed_gate; exp6223-livecodebench-headroom-v3:headroom_ready_score=None"
+  },
+  "gate_cascade_receipts": {
+    "exp6211-v538-post-marker-source-scope-prereg": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "blocked"
+    },
+    "exp6212-three-family-gguf-runtime-recovery": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "partial"
+    },
+    "exp6213-arc-object-delta-perception-wiring": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "ready"
+    },
+    "exp6214-arc-object-delta-heldout-ab": {
+      "declared_gates": [
+        {
+          "upstream": "exp6213-arc-object-delta-perception-wiring",
+          "artifact_field": "object_delta_wiring_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": 1.0,
+          "passed": true,
+          "upstream_terminal_class": "ready",
+          "reason": null
+        }
+      ],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "flagged"
+    },
+    "exp6215-arc-trajectory-transfer-ab": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "ready"
+    },
+    "exp6216-arc-budget-aware-search-ab": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "flagged"
+    },
+    "exp6217-arc-gemma31-think-ab": {
+      "declared_gates": [
+        {
+          "upstream": "exp6212-three-family-gguf-runtime-recovery",
+          "artifact_field": "gemma_4_31b_runtime_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": 0,
+          "passed": false,
+          "upstream_terminal_class": "partial",
+          "reason": null
+        }
+      ],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": true,
+      "terminal_class": "missing"
+    },
+    "exp6218-arc-admissible-lever-portfolio-heldout": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "skipped"
+    },
+    "exp6219-two-timescale-constraint-csl": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "complete"
+    },
+    "exp6220-mode-jump-runtime-ab": {
+      "declared_gates": [],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": false,
+      "terminal_class": "blocked"
+    },
+    "exp6221-three-family-code-transport-canary-v3": {
+      "declared_gates": [
+        {
+          "upstream": "exp6212-three-family-gguf-runtime-recovery",
+          "artifact_field": "three_family_runtime_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": 0,
+          "passed": false,
+          "upstream_terminal_class": "partial",
+          "reason": null
+        }
+      ],
+      "artifact_gates_evaluated": [
+        {
+          "upstream": "exp6212-three-family-gguf-runtime-recovery",
+          "artifact_field": "three_family_runtime_ready_score",
+          "op": "==",
+          "expected": 1,
+          "actual": 0,
+          "passed": false,
+          "reason": "actual=0 == expected=1"
+        }
+      ],
+      "conductor_gate_block": true,
+      "terminal_class": "skipped"
+    },
+    "exp6222-livecodebench-k8-pool-v3": {
+      "declared_gates": [
+        {
+          "upstream": "exp6221-three-family-code-transport-canary-v3",
+          "artifact_field": "phase_d_transport_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false,
+          "upstream_terminal_class": "skipped",
+          "reason": "upstream artifact field unavailable for exp6221-three-family-code-transport-canary-v3.phase_d_transport_ready_score"
+        }
+      ],
+      "artifact_gates_evaluated": [],
+      "conductor_gate_block": true,
+      "terminal_class": "missing"
+    },
+    "exp6223-livecodebench-headroom-v3": {
+      "declared_gates": [
+        {
+          "upstream": "exp6222-livecodebench-k8-pool-v3",
+          "artifact_field": "pool_integrity_ready_score",
+          "op": "==",
+          "value": 1,
+          "actual": null,
+          "passed": false,
+          "upstream_terminal_class": "missing",
+          "reason": "upstream artifact field unavailable for exp6222-livecodebench-k8-pool-v3.pool_integrity_ready_score"
+        }
+      ],
+      "artifact_gates_evaluated": [
+        {
+          "upstream": "exp6222-livecodebench-k8-pool-v3",
+          "artifact_field": "pool_integrity_ready_score",
+          "op": "==",
+          "expected": 1,
+          "actual": null,
+          "passed": false,
+          "reason": "upstream artifact not found for task id 'exp6222-livecodebench-k8-pool-v3'"
+        }
+      ],
+      "conductor_gate_block": true,
+      "terminal_class": "skipped"
+    }
+  },
+  "gatemate_cached_state_and_new_receipt_count": {
+    "exp6199_path": "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+    "exp6199_sha256": "sha256:30f1ee494c0e2bb9bb30536941e61d674a79420bf6999967becd7954e70b5658",
+    "exp6199_present": true,
+    "exp6199_loadable": true,
+    "exp6199_status": "blocked_missing_receipt",
+    "exp6199_honest_verdict": "blocked_missing_receipt: no newer dated GateMate physical receipt exists; zero hardware commands run and Exp3866 remains excluded",
+    "cached_current_dated_operator_receipt": {
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "cable": "cached GateMate USB-C/onboard DirtyJTAG path; no reseat receipt after v477",
+      "changes": [],
+      "checked_on": "20260807",
+      "dirtyjtag": "bcdDevice=0111 product=DirtyJTAG, openFPGALoader v1.1.1",
+      "exists": false,
+      "operator_authorized_detect": false,
+      "port": "cached USB path 3-2.3, bus 003 device 006, shared hub path 2.3",
+      "power": "cached physical power unresolved; raw all-ones TDO suggests open or unpowered target",
+      "receipt_date": null,
+      "source": "repo search: no newer dated cable/port/power/board/USB/DirtyJTAG receipt supplied",
+      "usb_dirtyjtag": "1209:c0ca Jean THOMAS DirtyJTAG serial 1861832311111616"
+    },
+    "physical_state_changed": false,
+    "new_receipt_count": 0,
+    "new_receipts": [],
+    "board_command_count": 0,
+    "detect_attempt_count": 0,
+    "boundary_imported_from_exp6199": true
+  },
+  "hardware_claim_eligibility": {
+    "eligible": false,
+    "unauthorized_hardware_claim_counts": {
+      "speed": 0,
+      "power": 0,
+      "energy": 0,
+      "terminal": 0,
+      "terminal_hardware": 0,
+      "tsu": 0,
+      "kona": 0,
+      "hardware_speedup": 0,
+      "hardware_execution": 0,
+      "fpga": 0,
+      "board_command": 0
+    },
+    "blocking_reasons": [
+      "gatemate_new_dated_physical_receipt_missing"
+    ]
+  },
+  "publication_gate_snapshot": {
+    "paper_ready": true,
+    "gates": {
+      "G1": {
+        "pass": true,
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "pass": true,
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125"
+      },
+      "G3": {
+        "pass": true,
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": []
+      },
+      "G4": {
+        "pass": true,
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "unmet_gates": [],
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count."
+  },
+  "exclusion_manifest_and_prior_failure_reconciliation": {
+    "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
+    "exclusion_manifest_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+    "exclusion_lint_command": {
+      "command": ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "Exclusion-manifest lint clean: research-roadmap.yaml\n",
+      "stderr_tail": ""
+    },
+    "prior_failure_lint_command": {
+      "command": ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "[OK] research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "stderr_tail": ""
+    },
+    "roadmap_gate_audit_command": {
+      "command": ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "exit_code": 0,
+      "classification": "passed",
+      "stdout_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 5,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"research-roadmap.yaml\"\n}\n",
+      "stderr_tail": ""
+    },
+    "prior_failure_retirement_actions": [
+      {
+        "task_id": "exp6211-v538-post-marker-source-scope-prereg",
+        "prior_experiment_id": "exp6198-v537-post-marker-source-scope-audit",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6212-three-family-gguf-runtime-recovery",
+        "prior_experiment_id": "exp6200-three-family-raw-code-transport-canary",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6213-arc-object-delta-perception-wiring",
+        "prior_experiment_id": "exp4700-object-centric-perception-proposal-live",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6213-arc-object-delta-perception-wiring",
+        "prior_experiment_id": "exp4841-object-identity-perception-probe",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6213-arc-object-delta-perception-wiring",
+        "prior_experiment_id": "exp5831-object-perception-induction-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6213-arc-object-delta-perception-wiring",
+        "prior_experiment_id": "exp6018-object-perception-heldout-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6214-arc-object-delta-heldout-ab",
+        "prior_experiment_id": "exp5831-object-perception-induction-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6214-arc-object-delta-heldout-ab",
+        "prior_experiment_id": "exp6018-object-perception-heldout-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp4258-arc-oracle-distinct-cross-game-transfer",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp4272-arc-cross-family-transfer-fresh-tgi-pool",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp4318-arc-cross-game-learned-verifier-transfer",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp5410-arc-live-trajectory-frontier-levelup-v492",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp5494-arc-live-trajectory-levelup-v498",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp5740-arc-game-blind-primitive-causal-audit",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6215-arc-trajectory-transfer-ab",
+        "prior_experiment_id": "exp5766-arc-loo-component-interaction-audit",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6217-arc-gemma31-think-ab",
+        "prior_experiment_id": "exp5594-think-mode-induction-quality-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6217-arc-gemma31-think-ab",
+        "prior_experiment_id": "exp5714-think-mode-rescoped-ab",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6218-arc-admissible-lever-portfolio-heldout",
+        "prior_experiment_id": "exp5766-arc-loo-component-interaction-audit",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6218-arc-admissible-lever-portfolio-heldout",
+        "prior_experiment_id": "exp5767-arc-game-blind-composition-hardening",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6219-two-timescale-constraint-csl",
+        "prior_experiment_id": "exp5895-shortcut-safe-continuous-self-learning",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6219-two-timescale-constraint-csl",
+        "prior_experiment_id": "exp5968-delayed-commit-csl-prospective",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6220-mode-jump-runtime-ab",
+        "prior_experiment_id": "exp6166-mode-jumping-cnce-real-run",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6221-three-family-code-transport-canary-v3",
+        "prior_experiment_id": "exp6200-three-family-raw-code-transport-canary",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6221-three-family-code-transport-canary-v3",
+        "prior_experiment_id": "exp6187-livecodebench-authentic-k8-pool",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6222-livecodebench-k8-pool-v3",
+        "prior_experiment_id": "exp6201-livecodebench-k8-pool-v2",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6222-livecodebench-k8-pool-v3",
+        "prior_experiment_id": "exp6187-livecodebench-authentic-k8-pool",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6223-livecodebench-headroom-v3",
+        "prior_experiment_id": "exp6188-livecodebench-headroom-audit",
+        "retire_if_same_verdict": true,
+        "same_verdict": true,
+        "action": "retire_current_lineage_without_deleting_prior_records"
+      },
+      {
+        "task_id": "exp6223-livecodebench-headroom-v3",
+        "prior_experiment_id": "exp6175-cctu-headroom-audit",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6210-v537-adversarial-capstone",
+        "prior_experiment_id": "exp3041-matrix-capstone-adversarial-flag-hygiene-v1",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      },
+      {
+        "task_id": "exp6210-v537-adversarial-capstone",
+        "prior_experiment_id": "exp6210-v537-adversarial-capstone",
+        "retire_if_same_verdict": true,
+        "same_verdict": false,
+        "action": "no_retirement_current_verdict_differs_or_capstone_pending"
+      }
+    ]
+  },
+  "spec_trace_status_changelog_reconciliation": {
+    "openspec_req_capstone_6224_present": true,
+    "spec_path": "openspec/capabilities/capstone/spec.md",
+    "traceability_path": "_bmad/traceability.md",
+    "status_path": "ops/status.md",
+    "changelog_path": "ops/changelog.md",
+    "ops_status_changelog_traceability_modified": false,
+    "ops_status_changelog_traceability_deferred_by_stop_rule": true,
+    "path_hashes": {
+      "openspec/capabilities/capstone/spec.md": "sha256:95d9ffd029bfed20414a039ad51348f2541d06e280bebdda85e25c760de6adb7",
+      "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+      "ops/status.md": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+      "ops/changelog.md": "sha256:fb0946ac135bbcfe82ea201a5b22fa098632ceb444f18f0f7a28603b335c32c3"
+    }
+  },
+  "protected_files_unchanged": {
+    "unchanged": true,
+    "paths": {
+      "CLAUDE.md": {
+        "before_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "after_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "unchanged": true
+      },
+      "CODEX.md": {
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "unchanged": true
+      },
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "unchanged": true
+      },
+      "ops/arc_solve_registry.yaml": {
+        "before_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "after_sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:fb0946ac135bbcfe82ea201a5b22fa098632ceb444f18f0f7a28603b335c32c3",
+        "after_sha256": "sha256:fb0946ac135bbcfe82ea201a5b22fa098632ceb444f18f0f7a28603b335c32c3",
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "after_sha256": "sha256:a2187d8539e9156cc3c7abbde8dc6dce06e8188fbbc8b0722625825d4b330992",
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before_sha256": "sha256:285bb07988931f1288ba66f38378e5ba9dfe37810383e77d5319a15f0f848e39",
+        "after_sha256": "sha256:285bb07988931f1288ba66f38378e5ba9dfe37810383e77d5319a15f0f848e39",
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "unchanged": true
+      }
+    }
+  },
+  "inference_substrate": "deterministic_exact_path_v538_capstone_reconciliation",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "terminal only after exact path classification, verifier replay, zero-count checks, and checksum validation finish",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "declared_task_ids_and_deliverables": {
+      "principle": "fixed Exp6211-Exp6223 denominator from the active roadmap exact paths",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "exact_artifact_paths_hashes_and_terminal_classifications": {
+      "principle": "Exp6197 classifier output, path hash, load state, and conductor receipt state stay adjacent",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "missing_nonterminal_blocked_skipped_null_retired_and_flagged_counts": {
+      "principle": "negative classes stay disjoint before branch summaries",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "conductor_receipt_override_count": {
+      "principle": "completion receipts never promote an artifact",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "adversarial_verification_results": {
+      "principle": "each present exact artifact has a replayed verifier receipt or an injected test receipt",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "arc_registry_hash_before_after": {
+      "principle": "registry bytes are content-addressed before and after the run",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "arc_solve_claim_count": {
+      "principle": "bare zero prevents hidden public-game solve banking",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "arc_level_credit_delta": {
+      "principle": "bare zero prevents level-credit inflation",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "arc_lever_and_portfolio_eligibility": {
+      "principle": "ARC wiring, lever A/Bs, think A/B, and portfolio close only from exact no-solve artifacts",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "gguf_runtime_eligibility": {
+      "principle": "runtime promotion requires dense and three-family readiness from Exp6212",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "continuous_self_learning_eligibility": {
+      "principle": "CSL eligibility is independent from Phase-D and sampler gate cascades",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "sampler_runtime_eligibility": {
+      "principle": "sampler runtime eligibility uses Exp6220 quality, state, timing, fallback, and hardware-claim gates",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "phase_d_transport_pool_and_headroom_eligibility": {
+      "principle": "code transport, pool, and headroom require the exact Exp6221-Exp6223 cascade",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "gate_cascade_receipts": {
+      "principle": "declared roadmap gates are replayed from raw upstream artifact fields",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "gatemate_cached_state_and_new_receipt_count": {
+      "principle": "cached hardware state remains blocked without a newer dated physical receipt",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "hardware_claim_eligibility": {
+      "principle": "physical hardware promotion is false unless authenticated workload and receipt gates pass",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "publication_gate_snapshot": {
+      "principle": "G1-G4 publication state is imported from the stable gate script",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "exclusion_manifest_and_prior_failure_reconciliation": {
+      "principle": "exclusion lint and prior-failure receipts stay visible without deleting history",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "spec_trace_status_changelog_reconciliation": {
+      "principle": "OpenSpec is updated here, while ops/status, ops/changelog, and traceability edits are deferred by the operator stop rule",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "conductor, ops ledgers, traceability, ARC registry, and exclusion manifest hashes are compared",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "deterministic_exact_path_v538_capstone_reconciliation",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "bare false because this capstone verifies evidence discipline, not benchmark answers",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "field_provenance": {
+      "principle": "each required field names roadmap, exact artifacts, verifier receipts, registry, publication gate, GateMate receipt, exclusions, or local hashes",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "field_principles": {
+      "principle": "required field purpose is emitted next to the measured value",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "test_commands": {
+      "principle": "focused, coverage, spec, capstone, adversarial, and suite commands are replayable",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "observed exits are recorded without laundering failures",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "duration_s": {
+      "principle": "wall time for deterministic aggregation is reported without padding",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "the normalized report is content-addressed",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "terminal summary starts with complete: and names every blocked or missing boundary without strengthening claims",
+      "sources": [
+        "REQ-CAPSTONE-6224",
+        "research-roadmap.yaml",
+        "python/carnot/terminal_artifacts.py",
+        "scripts/adversarial_verify.py",
+        "scripts/publication_gate.py",
+        "ops/arc_solve_registry.yaml",
+        "results/experiment_6199_gatemate_terminal_action_audit_v537.json",
+        "exact_declared_artifacts"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "terminal only after exact path classification, verifier replay, zero-count checks, and checksum validation finish",
+    "declared_task_ids_and_deliverables": "fixed Exp6211-Exp6223 denominator from the active roadmap exact paths",
+    "exact_artifact_paths_hashes_and_terminal_classifications": "Exp6197 classifier output, path hash, load state, and conductor receipt state stay adjacent",
+    "missing_nonterminal_blocked_skipped_null_retired_and_flagged_counts": "negative classes stay disjoint before branch summaries",
+    "conductor_receipt_override_count": "completion receipts never promote an artifact",
+    "adversarial_verification_results": "each present exact artifact has a replayed verifier receipt or an injected test receipt",
+    "arc_registry_hash_before_after": "registry bytes are content-addressed before and after the run",
+    "arc_solve_claim_count": "bare zero prevents hidden public-game solve banking",
+    "arc_level_credit_delta": "bare zero prevents level-credit inflation",
+    "arc_lever_and_portfolio_eligibility": "ARC wiring, lever A/Bs, think A/B, and portfolio close only from exact no-solve artifacts",
+    "gguf_runtime_eligibility": "runtime promotion requires dense and three-family readiness from Exp6212",
+    "continuous_self_learning_eligibility": "CSL eligibility is independent from Phase-D and sampler gate cascades",
+    "sampler_runtime_eligibility": "sampler runtime eligibility uses Exp6220 quality, state, timing, fallback, and hardware-claim gates",
+    "phase_d_transport_pool_and_headroom_eligibility": "code transport, pool, and headroom require the exact Exp6221-Exp6223 cascade",
+    "gate_cascade_receipts": "declared roadmap gates are replayed from raw upstream artifact fields",
+    "gatemate_cached_state_and_new_receipt_count": "cached hardware state remains blocked without a newer dated physical receipt",
+    "hardware_claim_eligibility": "physical hardware promotion is false unless authenticated workload and receipt gates pass",
+    "publication_gate_snapshot": "G1-G4 publication state is imported from the stable gate script",
+    "exclusion_manifest_and_prior_failure_reconciliation": "exclusion lint and prior-failure receipts stay visible without deleting history",
+    "spec_trace_status_changelog_reconciliation": "OpenSpec is updated here, while ops/status, ops/changelog, and traceability edits are deferred by the operator stop rule",
+    "protected_files_unchanged": "conductor, ops ledgers, traceability, ARC registry, and exclusion manifest hashes are compared",
+    "inference_substrate": "deterministic_exact_path_v538_capstone_reconciliation",
+    "verifier_is_oracle": "bare false because this capstone verifies evidence discipline, not benchmark answers",
+    "field_provenance": "each required field names roadmap, exact artifacts, verifier receipts, registry, publication gate, GateMate receipt, exclusions, or local hashes",
+    "field_principles": "required field purpose is emitted next to the measured value",
+    "test_commands": "focused, coverage, spec, capstone, adversarial, and suite commands are replayable",
+    "test_exit_codes": "observed exits are recorded without laundering failures",
+    "duration_s": "wall time for deterministic aggregation is reported without padding",
+    "reproducibility_checksum": "the normalized report is content-addressed",
+    "honest_verdict": "terminal summary starts with complete: and names every blocked or missing boundary without strengthening claims"
+  },
+  "test_commands": [
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/publication_gate.py --json",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6224_v538_adversarial_capstone.py",
+    ".venv/bin/ruff check python/carnot/experiment_6224_v538_adversarial_capstone.py tests/python/test_experiment_6224_v538_adversarial_capstone.py",
+    ".venv/bin/ruff format --check python/carnot/experiment_6224_v538_adversarial_capstone.py tests/python/test_experiment_6224_v538_adversarial_capstone.py",
+    ".venv/bin/pytest tests/python/test_experiment_6224_v538_adversarial_capstone.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6224_v538_adversarial_capstone.py -m pytest tests/python/test_experiment_6224_v538_adversarial_capstone.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6224_v538_adversarial_capstone.py --fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/publication_gate.py --json": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6224_v538_adversarial_capstone.py": 0,
+    ".venv/bin/ruff check python/carnot/experiment_6224_v538_adversarial_capstone.py tests/python/test_experiment_6224_v538_adversarial_capstone.py": 0,
+    ".venv/bin/ruff format --check python/carnot/experiment_6224_v538_adversarial_capstone.py tests/python/test_experiment_6224_v538_adversarial_capstone.py": 0,
+    ".venv/bin/pytest tests/python/test_experiment_6224_v538_adversarial_capstone.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6224_v538_adversarial_capstone.py -m pytest tests/python/test_experiment_6224_v538_adversarial_capstone.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6224_v538_adversarial_capstone.py --fail-under=100": 0,
+    ".venv/bin/pytest tests/python -q": 2
+  },
+  "duration_s": 2450.198909820989,
+  "reproducibility_checksum": "sha256:1e593e5618e9e3bccc9ab30952ea3197eb4d9f105c5f597adf729c1e9fa36f0d",
+  "honest_verdict": "complete: V538 exact-path capstone preserved missing=2, nonterminal=3, blocked=2, skipped=3, null=0, retired=0, flagged=2; branch eligibility is separated; conductor receipts, ARC credit, and hardware claims remain zero"
+}
