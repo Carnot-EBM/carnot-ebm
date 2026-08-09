@@ -22758,6 +22758,93 @@ justification than originally written, and the eventual live-path A/B gating thi
 promotion to default-ON should be read with that in mind: this correction does not itself change
 whether the lever ships, but it changes how much prior evidence should be assumed going in.
 
+### REQ-ARC-WMTE-6244: Mode A Error-Class Diagnosis — Four Distinct Root Causes, None Of Them Prediction Quality
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4, redirected.
+The plan's original Phase 4a ("retrain the CNN dynamics prior with a changed-REGION target,
+unlock `trust()`") was checked against the codebase before building anything and found stale:
+`gated_engine_from_transitions`'s cell-recall trust gate ALREADY passes on the one measured
+production case (commit `a35f6a69d3`, "cell-recall trust gate fires the prior+TTT path 4/5 on
+unseen games"; REQ-ARC-FCP-5699-14 measured `heldout_cell_recall=0.98-1.0` on sp80's tier-1 engine)
+— and REQ-ARC-FCP-5699-15 through -20 already root-caused and exhaustively tested the ACTUAL
+downstream bottleneck (a trusted, gate-passing dynamics model still yields no plan from
+`plan_in_model`, traced to unconditionally-zero-gradient goal-energy for never-completed levels;
+neither 5x node budget nor a novelty-energy fallback rescues it; the search plateaus). Retraining
+an already-98%-accurate model for marginally better accuracy is unlikely to move a bottleneck that
+persists at near-perfect accuracy. Redirected to Phase 4b's territory instead: the
+2026-07-29 admission-bottleneck note's own stated "next question worth asking" — a CPU-only,
+no-GPU characterization of WHY Mode A (12/33 rows: ar25, ka59, re86, cd82; the induced engine
+predicts nothing ever changes) fails — "is the induced engine missing the action semantics, the
+object identity, or the update rule?"
+
+**METHOD.** For each Mode A game: collect fresh transitions from the real offline game
+(`e3.collect_transitions`, CPU-only), load the FROZEN origin-fixture induced engine
+(`e3.load_origin_fixture_engine`, matching what the admission-bottleneck note itself measured),
+classify every changed-frame prediction into IDENTITY / WRONG_LOCATION /
+RIGHT_LOCATION_WRONG_VALUE / PARTIAL_CORRECT, probe action-sensitivity (does the same grid under
+two different actions produce two different predictions?), and read each engine's short raw
+source directly for a qualitative account.
+
+**FINDING: four distinct root causes, not one shared "Mode A" mechanism.**
+
+| Game | Runtime result | Root cause (from reading the source) |
+|---|---|---|
+| ar25 | 16/26 crash (`TypeError`), 10/26 IDENTITY | The most sophisticated of the four — real block-sliding-physics logic for actions 2/3/4 (contiguous-run detection, per-row/column shift, boundary clamping). Crashes on `new_row[new_start:new_start+length] = color`, assigning a scalar into a Python-list slice (needs an iterable of matching length; `new_row` is a plain list, not a numpy array). A mechanical code-generation bug, not a design flaw — the underlying logic may be close to correct once fixed. |
+| ka59 | 30/30 IDENTITY | Branches on action but every branch is gated behind a HARDCODED absolute-coordinate equality check (`if grid[30, 18] == 0:`) copied verbatim from the induce-time examples. No parametric/relative logic at all — classic overfitting to the shown transitions, zero generalization capacity. |
+| re86 | 40/40 IDENTITY | Attempts genuine dynamics for actions 2/3 (a plausible toggle/move idea), but both branches require `data is not None`, assuming these actions always arrive as clicks with coordinates. Verified directly: actions 2/3 WERE exercised (7 and 4 times of 40 sampled) but always with `data=None` — the induced engine's assumption about the action's MODALITY (click vs keyboard) is wrong, so the logic never fires. |
+| cd82 | 22/33 IDENTITY, 11/33 WRONG_LOCATION | Keyboard actions 1/3/5 are bare `return grid` — no attempt at all (distinct from re86's wrong-assumption: cd82 does not even try). Click action 6 unconditionally writes a fixed color at the clicked coordinate regardless of game state, explaining the WRONG_LOCATION hits. |
+
+All four games show `distinct_predictions_across_distinct_actions_on_same_grid=1` — the induced
+engine's output is action-insensitive on the collected sample, but for FOUR DIFFERENT reasons
+(a crash, memorization, a wrong modality assumption, and an incomplete attempt), not one shared
+defect. **None of these is a prediction-quality/noise problem an accuracy-focused retrain would
+fix** — this directly supports the redirect away from 4a: the failure mode here is specific to how
+LLM-induction handles these games (overfit, incomplete, wrong assumption, buggy code), which a
+hand-structured template sidesteps by construction rather than needing a better classifier.
+
+**FOLLOW-UP CHECK: cd82 is NOT a hidden nav-template win (adversarial check on the check).**
+Given cd82's avatar-style movement pattern, checked whether the already-shipped structured-nav
+template (`InducedNavWorldModel`, REQ-ARC-WMTE-5842) already covers it. It reports
+`is_confident_nav=True` with a real-looking 4-direction displacement table — but held-out
+exact-match accuracy on that same fit is 0 (0/8 in this run's proper train/held-out split; a prior
+ad hoc check at a different sample size found 0/14 with a completely different, empty displacement
+table). The instability across samples IS the finding: `is_confident_nav` has a genuine
+false-positive gap on cd82, distinct from the sk48/wa30 cases its own docstring already documents
+excluding. Not claimed as a fix; recorded as an open gap in the confidence gate.
+
+**NOT hand-patched.** ar25's bug is real and simple, but the frozen fixture is an LLM-induced,
+mutable artifact — hand-editing this one copy would fix only this copy, not the induction
+mechanism that generates the next one. Per the ARC Live-Path Reachability Discipline, that would
+be outer-loop RE on induced code, not a fix to the live self-discovery process. Recorded as a
+finding for a future induction-robustness pass (e.g. a general static check for common LLM-codegen
+bug patterns), not applied here.
+
+#### SCENARIO-ARC-WMTE-6244-FOUR-DISTINCT-ROOT-CAUSES
+
+Given the four Mode A games' frozen origin-fixture engines and freshly collected offline
+transitions, the diagnosis classifies every changed-frame prediction and reads each engine's
+source, finding four qualitatively distinct failure mechanisms rather than one shared defect.
+
+#### SCENARIO-ARC-WMTE-6244-ACTION-INSENSITIVITY-CONFIRMED-FOR-DIFFERENT-REASONS
+
+Given a fixed grid and multiple distinct real actions, every Mode A engine returns byte-identical
+predictions regardless of which action is passed — but the diagnosis traces this to four different
+underlying causes (crash, memorization, wrong action-modality assumption, incomplete
+implementation), not a single common bug.
+
+#### SCENARIO-ARC-WMTE-6244-NAV-TEMPLATE-FALSE-POSITIVE-ON-CD82
+
+Given cd82's transitions fit the structured-nav template's confidence gate on one sample, a
+proper train/held-out split shows 0 held-out exact-match accuracy, and a second independent
+sample disagrees on whether the game even fits at all — establishing this as a genuine
+false-positive gap in `is_confident_nav`, not a usable win.
+
+## Implementation Status (REQ-ARC-WMTE-6244)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6244 | `scripts/experiments/experiment_6244_mode_a_error_class_diagnosis.py` (analysis-only; reads frozen fixtures + offline-arcade transitions, no production code changed). | `results/experiment_6244_mode_a_error_class_diagnosis.json` (the artifact IS the check — deterministic seed reproduces identically across two independent runs; adversarial_verify and determination_preservation_lint both clean). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

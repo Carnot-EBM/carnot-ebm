@@ -1,0 +1,249 @@
+{
+  "experiment": "experiment_6244_mode_a_error_class_diagnosis",
+  "title": "Mode A error-class characterization: action semantics, object identity, or update rule?",
+  "run_date": "2026-08-09T11:49:47Z",
+  "question": "For each Mode A game (predicts-nothing-changes, per the 2026-07-29 admission-bottleneck note), on transitions where the real game DID change, does the induced engine's prediction fail because it never extracted the action semantics (IDENTITY), picked the wrong object (WRONG_LOCATION), or computed the wrong update for the right object (RIGHT_LOCATION_WRONG_VALUE)?",
+  "mode_a_games": [
+    "ar25",
+    "ka59",
+    "re86",
+    "cd82"
+  ],
+  "n_transitions_requested_per_game": 40,
+  "per_game": [
+    {
+      "game": "ar25",
+      "source_sha256": "d9bc795e30dcd12de250dc7a79aac3ed20b01bff83f3011ef1b35eb76aafd15a",
+      "source_signals": {
+        "n_lines": 132,
+        "branches_on_action": true,
+        "references_action_param_at_all": true,
+        "has_bare_return_grid_only": false,
+        "mentions_object_or_component": false
+      },
+      "qualitative_finding": "Genuinely the most sophisticated of the four -- attempts real block-sliding physics (contiguous-color-run detection, per-row/column shift with boundary clamping) for actions 2/3/4. Crashes with a Python TypeError on most calls: `new_row[new_start:new_start+length] = color` assigns a SCALAR into a list SLICE (needs an iterable of matching length, e.g. `[color]*length`), and `new_row` is a plain Python list, not a numpy array. A mechanical code-generation bug, not a design or prediction-quality problem -- the underlying logic may well be closer to correct than the other three games' engines once this is fixed. NOT hand-patched here: this is an LLM-induced, mutable artifact, and hand-editing one frozen fixture would only fix this ONE copy, not the induction mechanism that generates the next one -- outer-loop RE on the induced code, not a fix to the live self-discovery process.",
+      "n_transitions_collected": 40,
+      "n_changed_transitions": 26,
+      "classification_counts": {
+        "ENGINE_RAISED:TypeError": 16,
+        "IDENTITY": 10
+      },
+      "dominant_error_class": "ENGINE_RAISED:TypeError",
+      "examples_by_class": {
+        "ENGINE_RAISED:TypeError": {
+          "action": 3,
+          "n_true_changed": 109
+        },
+        "IDENTITY": {
+          "action": 7,
+          "n_true_changed": 108
+        }
+      },
+      "distinct_predictions_across_distinct_actions_on_same_grid": 1,
+      "actions_probed": [
+        7,
+        1
+      ],
+      "structured_nav_template_check": {
+        "is_nav": true,
+        "is_confident_nav": false,
+        "displacement": {
+          "3": [
+            0,
+            -3
+          ],
+          "4": [
+            0,
+            3
+          ],
+          "2": [
+            3,
+            0
+          ],
+          "1": [
+            -3,
+            0
+          ]
+        },
+        "n_move_transitions": 15
+      }
+    },
+    {
+      "game": "ka59",
+      "source_sha256": "f6f1da91e6d4cac5d8dc6b6a8e15982d88cd3b993ae23be4b6f0b1c44cd95c41",
+      "source_signals": {
+        "n_lines": 26,
+        "branches_on_action": true,
+        "references_action_param_at_all": true,
+        "has_bare_return_grid_only": false,
+        "mentions_object_or_component": false
+      },
+      "qualitative_finding": "Branches on action (6/4/1) but every branch is gated behind a HARDCODED absolute-coordinate equality check (`if grid[30, 18] == 0:`, `if grid[27, 21] == 0:`) copied from the exact induce-time examples. Zero parametric/relative logic (no 'find the object and move it by direction' -- only 'if this exact pixel is exactly this exact value, write these exact other pixels'). Overfits to the induce-time transitions with no generalization capacity at all; that is why it is IDENTITY on 30/30 fresh transitions despite superficially 'branching on action'.",
+      "n_transitions_collected": 40,
+      "n_changed_transitions": 30,
+      "classification_counts": {
+        "IDENTITY": 30
+      },
+      "dominant_error_class": "IDENTITY",
+      "examples_by_class": {
+        "IDENTITY": {
+          "action": 6,
+          "n_true_changed": 1
+        }
+      },
+      "distinct_predictions_across_distinct_actions_on_same_grid": 1,
+      "actions_probed": [
+        6,
+        3,
+        4,
+        2
+      ],
+      "structured_nav_template_check": {
+        "is_nav": true,
+        "is_confident_nav": false,
+        "displacement": {
+          "3": [
+            0,
+            -3
+          ],
+          "4": [
+            0,
+            3
+          ]
+        },
+        "n_move_transitions": 8
+      }
+    },
+    {
+      "game": "re86",
+      "source_sha256": "862a18cbdd65573640c830cde053cf7ccaa0c10d41493c6362760bdd97e3118f",
+      "source_signals": {
+        "n_lines": 56,
+        "branches_on_action": true,
+        "references_action_param_at_all": true,
+        "has_bare_return_grid_only": false,
+        "mentions_object_or_component": true
+      },
+      "qualitative_finding": "Attempts genuine dynamics for actions 2/3 (a toggle-adjacent-cells idea for action 3, a directional-move idea for action 2) -- plausible READING of what the mechanic might be. But BOTH branches gate on `if data is not None:` before doing anything, assuming actions 2/3 always arrive as CLICK actions carrying (x, y) coordinate data. Verified directly: actions 2 and 3 WERE exercised in the collected sample (7 and 4 times respectively out of 40), every single time with `data=None` -- i.e. re86 exercises these as KEYBOARD-style actions in practice, not click actions, so the induced engine's core assumption about the action's MODALITY is wrong and the logic never fires. A genuine action-semantics error, distinct from ka59's overfitting and cd82's give-up pattern.",
+      "n_transitions_collected": 40,
+      "n_changed_transitions": 40,
+      "classification_counts": {
+        "IDENTITY": 40
+      },
+      "dominant_error_class": "IDENTITY",
+      "examples_by_class": {
+        "IDENTITY": {
+          "action": 4,
+          "n_true_changed": 61
+        }
+      },
+      "distinct_predictions_across_distinct_actions_on_same_grid": 1,
+      "actions_probed": [
+        4,
+        2,
+        5
+      ],
+      "structured_nav_template_check": {
+        "is_nav": true,
+        "is_confident_nav": false,
+        "displacement": {
+          "4": [
+            0,
+            3
+          ],
+          "2": [
+            3,
+            0
+          ],
+          "3": [
+            0,
+            -3
+          ],
+          "1": [
+            -3,
+            0
+          ]
+        },
+        "n_move_transitions": 21
+      }
+    },
+    {
+      "game": "cd82",
+      "source_sha256": "2856c6e76ddcf90f2731d5111770dbea0b025fed1fe95d2f2937c231febe0455",
+      "source_signals": {
+        "n_lines": 20,
+        "branches_on_action": true,
+        "references_action_param_at_all": true,
+        "has_bare_return_grid_only": false,
+        "mentions_object_or_component": false
+      },
+      "qualitative_finding": "Keyboard actions 1/3/5 are bare `return grid` -- no attempt at modeling them at all (distinct from re86's wrong-assumption pattern: cd82 does not even try). Click action 6 unconditionally writes color 5 at the clicked coordinate regardless of game state -- explains the 11/33 WRONG_LOCATION hits (a context-free, state-blind write). Checked whether the shipped structured-nav template (`InducedNavWorldModel`, REQ-ARC-WMTE-5842) already covers cd82 as a side effect (see this row's own `structured_nav_template_check` field for the exact numbers from THIS run's proper train/held-out split): `is_confident_nav` reports True, but held-out exact-match accuracy on the SAME fit is 0 -- reproduced across two independent transition samples at two different sizes/seeds (0/8 here; a prior ad hoc n=80 check found 0/14 with a completely different, empty displacement table on a different train slice). The instability itself (the SAME game's fit qualitatively disagreeing across samples) is the finding: `is_confident_nav` has a real false-positive gap on cd82, distinct from the sk48/wa30 cases its own docstring already documents excluding; cd82 is NOT a hidden nav-template win.",
+      "n_transitions_collected": 40,
+      "n_changed_transitions": 33,
+      "classification_counts": {
+        "WRONG_LOCATION": 11,
+        "IDENTITY": 22
+      },
+      "dominant_error_class": "IDENTITY",
+      "examples_by_class": {
+        "WRONG_LOCATION": {
+          "action": 6,
+          "n_true_changed": 1
+        },
+        "IDENTITY": {
+          "action": 3,
+          "n_true_changed": 201
+        }
+      },
+      "distinct_predictions_across_distinct_actions_on_same_grid": 1,
+      "actions_probed": [
+        6,
+        3,
+        4,
+        2
+      ],
+      "structured_nav_template_check": {
+        "is_nav": true,
+        "is_confident_nav": true,
+        "displacement": {
+          "3": [
+            -3,
+            -11
+          ],
+          "4": [
+            3,
+            11
+          ],
+          "2": [
+            11,
+            3
+          ],
+          "1": [
+            -11,
+            -3
+          ]
+        },
+        "n_move_transitions": 10,
+        "heldout_changed_transitions": 8,
+        "heldout_exact_match_correct": 0
+      }
+    }
+  ],
+  "solve_provenance": "development_proxy",
+  "solve_provenance_principle": "reads frozen origin-fixture engines and offline-arcade transitions for analysis; no solve is claimed, no live agent action is taken.",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "the offline game's own next_grid IS the ground truth this classification compares against -- an execution-grounded characterization, not an oracle-distinct verifier claim.",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "inference_substrate_principle": "pure Python offline-arcade stepping + reading already-committed engine source; no GGUF load, no CUDA, no LLM call anywhere in this script.",
+  "random_seed": 6244,
+  "aggregate_classification_counts": {
+    "ENGINE_RAISED:TypeError": 16,
+    "IDENTITY": 102,
+    "WRONG_LOCATION": 11
+  },
+  "honest_verdict": "complete_mode_a_error_class_diagnosis_ar25_ENGINE_RAISED:TypeError_ka59_IDENTITY_re86_IDENTITY_cd82_IDENTITY",
+  "honest_verdict_principle": "terminal `complete_` prefix; names every game's dominant error class in one string so no reader can cite an aggregate without seeing the per-game breakdown it came from.",
+  "duration_s": 2.189,
+  "reproducibility_checksum": "6649e481922dbad02d5720217db3f21f7827c1b338ef2ba08185543a440f59a5"
+}

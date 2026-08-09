@@ -340,6 +340,23 @@ iterative mechanics. Retrain over the existing 14.6k-transition corpus; the RAM 
 GPU pretraining is fixed. *Gate: leave-one-game-out held-out change fidelity (per 1a metrics) up
 on >= 4 of 5 games; live admission rate not regressed.*
 
+**REDIRECTED (2026-08-09) — premise checked and found stale before building; see REQ-ARC-WMTE-6244.**
+This item's stated premise ("trust() gates it out") does not hold: `gated_engine_from_transitions`'s
+cell-recall gate already passes in production (sp80, `heldout_cell_recall=0.98-1.0`), and a
+much deeper existing investigation thread (REQ-ARC-FCP-5699-14 through -20) already root-caused
+and exhaustively tested the REAL downstream bottleneck — a trusted, gate-passing dynamics model
+still yields no plan, traced to zero-gradient goal-energy for never-completed levels, unfixed by
+5x budget or a novelty-energy fallback. Retraining an already-98%-accurate model is unlikely to
+move a bottleneck that persists at near-perfect accuracy. Redirected to Phase 4b's Mode A
+question instead (see REQ-ARC-WMTE-6244 below) — a CPU-only characterization the 2026-07-29
+admission-bottleneck note itself named as the next step. Finding: FOUR distinct root causes
+across ar25/ka59/re86/cd82 (a code-generation bug, memorization of induce-time coordinates, a
+wrong click-vs-keyboard action-modality assumption, and an incomplete/give-up implementation) —
+none of them a prediction-quality problem, which further confirms retraining the CNN was the
+wrong lever. Bonus check: cd82 superficially passes the shipped nav template's confidence gate
+but scores 0 held-out exact-match, reproduced across two independent samples — a genuine
+false-positive gap in `is_confident_nav`, not a hidden win. No code shipped; diagnosis only.
+
 **4b. Extend structured mechanic-class inducers beyond navigation.**
 `InducedNavWorldModel` (behind `CARNOT_ARC_STRUCTURED_NAV=1`) cleared a five-game scored gate:
 +1 level, zero regressions — a rare positive. Only the navigation class exists. Add the next
