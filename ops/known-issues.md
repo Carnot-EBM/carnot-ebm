@@ -143,6 +143,34 @@ weakened by the caveat.
 `results/experiment_6011_world_model_change_gate_four_arm.json` (the source data) —
 `results/outer_loop_arc_induced_engine_taxonomy_20260802.json` (the original 0/296 finding).
 
+### NEW 2026-08-08 (Phase 1b of the ARC live-agent improvement plan, REQ-ARC-WMTE-6234): object-relative trajectory transfer promoted to default ON
+
+**What was asked.** Lever #2 (REQ-ARC-WMTE-TRAJ-TRANSFER-1) replays the just-completed level's
+own action trace on level-up, re-anchored by object matching, before paying for the expensive
+LLM-reinduction tier. It shipped default OFF pending a live-path A/B. Phase 1b: run the A/B, then
+promote if the gate (no solve-rate regression; actions-to-first-solve improves or holds) is met.
+
+**What happened.** The conductor ran the live-path A/B same-day, ahead of this session reaching
+the task (`[conductor] Within-game object-relative trajectory-transfer causal A/B`, commit
+`104405d43b`; `results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json`). Reused
+rather than duplicated.
+
+**Result.** 4/4 games fired, verifier accepted 4/0, 0 harmful regressions,
+`treatment_minus_control_actions: 0` and `_score: 0.0` on all 4 games (actions-to-first-solve
+held exactly), `promotion_ready_score: 1.0`, mutation-proven (3/3 tamper checks killed), run
+through the canonical live entrypoint. Gate met.
+
+**Promotion.** `SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED` flipped `False -> True` in
+`arc_competition_agent.py`. `CARNOT_ARC_TRAJECTORY_TRANSFER=0` reverts to the old behavior. One
+pinning test updated in `test_arc_trajectory_transfer_cascade.py` (its explicit-off test now sets
+the env override rather than relying on the old bare default; a new test pins the new default).
+
+**Cross-references:** full REQ write-up
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6234 —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 1b —
+`results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json` (the A/B) —
+commit `104405d43b` (the conductor's A/B run).
+
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 
 Context: this session root-caused three unexplained kills of a dev script's background process

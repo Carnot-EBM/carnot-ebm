@@ -22354,6 +22354,47 @@ This corpus is also smaller than, and not confirmed to overlap with, the origina
 |---|---|---|
 | REQ-ARC-WMTE-6233 | `scripts/analyze_arc_wall_rederivation_20260808.py` (analysis-only; no production code path changed). | `results/arc_wall_rederivation_20260808.json` (the artifact IS the check — reproducibility_checksum pinned, `scripts/adversarial_verify.py` clean, acceptance_gates recorded in the artifact). |
 
+### REQ-ARC-WMTE-6234: Object-Relative Trajectory Transfer Promoted To Default ON
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 1b. Lever #2
+(REQ-ARC-WMTE-TRAJ-TRANSFER-1, 2026-08-07) tries replaying the just-completed level's own
+successful action trace on level-up, re-anchored by object matching plus mean centroid
+displacement, before paying for the expensive LLM-reinduction tier. It shipped default OFF
+pending a live-path A/B, since the lever presumes the next level is an object-translated variant
+of the previous one — true for some ARC games, false for others.
+
+**THE A/B.** `results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json`
+(`status: complete_ready`, run through the canonical live entrypoint
+`make_carnot_agent -> E3AgentPolicy._induce_and_plan`), run same-day by the conductor
+(`[conductor] Within-game object-relative trajectory-transfer causal A/B`, commit `104405d43b`).
+4/4 games fired (`accepted_confident_transfer`), verifier accepted 4/0
+(`object_relative_centroid_confidence_gate`), avoided the LLM induction call on every fire (0 vs
+1 per game), `harmful_regression_count: 0`, `treatment_minus_control_actions: 0` and
+`treatment_minus_control_score: 0.0` on all 4 games (actions-to-first-solve held exactly, no
+solve-rate regression), `promotion_ready_score: 1.0`. Mutation-proven (3/3 tamper checks killed:
+`transfer_fire_counter_removed`, `fallback_avoidance_counter_removed`,
+`forbidden_access_guard_removed`), `within_game_only_receipt.all_cells_within_game: true` (no
+cross-game or hidden-state access), `protected_files_unchanged: true`.
+
+**THE PROMOTION.** `SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED` flipped `False ->
+True` in `arc_competition_agent.py`. `CARNOT_ARC_TRAJECTORY_TRANSFER=0` reverts to the
+pre-promotion (disabled) behavior. `SUBMITTED_AGENT_CONFIG["object_relative_trajectory_transfer_
+enabled"]` and the instance attribute `E3AgentPolicy.trajectory_transfer_enabled` both read the
+module constant directly, so no second place needed updating.
+
+**TESTS UPDATED.** `tests/python/test_arc_trajectory_transfer_cascade.py`'s explicit-off test
+(previously pinning the bare default) now sets `CARNOT_ARC_TRAJECTORY_TRANSFER=0` explicitly to
+test that path; a new test pins the bare default (no env override) at `True`. 31 tests across the
+four directly-touching files pass, plus a 94-test collateral sweep of the wider
+`arc_competition_agent` surface and a 37-test sweep of the `SUBMITTED_AGENT_CONFIG`
+parity/submission-gate files — none hardcode this flag's old value.
+
+## Implementation Status (REQ-ARC-WMTE-6234)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6234 | `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED`. | `tests/python/test_arc_trajectory_transfer_cascade.py` (updated: `test_flag_explicitly_off_never_touches_trajectory_transfer_or_llm_reinduction`, new `test_bare_default_is_now_enabled_no_env_override`). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

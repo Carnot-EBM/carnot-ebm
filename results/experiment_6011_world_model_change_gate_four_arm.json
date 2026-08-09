@@ -52876,6 +52876,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Live-agent adversarial review Phase 0c fix (2026-08-08): (1) _observe_level_boundary now captures the graded-goal-bias win-state exemplar from the last-admitted transition's PRE-action grid instead of grid_of(latest) (the frame returned by the winning action itself, which already showed the NEXT level's opening board -- an inverted gradient under CARNOT_ARC_GRADED_GOAL_BIAS=1). (2) _induce_and_plan now resets self.plan/self.pi to []/0 at entry, plus a bounds guard on the induce branch's _next_plan_move() call, fixing a stale self.pi=1 left behind by a just-consumed one-step CARNOT_ARC_ACTIVE_PROBE=1 probe plan (silently skipped the next plan's first step, or IndexError on a second one-step plan). Both changes are no-ops for this artifact: _induce_and_plan's body only ever WRITES self.plan/self.pi after the reset line, never reads the incoming value (grep-verified), and this artifact's generating script(s) and its own recorded config never set CARNOT_ARC_GRADED_GOAL_BIAS=1 or CARNOT_ARC_ACTIVE_PROBE=1 (grep-verified against both the script source and this artifact's own JSON).",
         "evidence": "git diff -U0 on arc_competition_agent.py: confined to _observe_level_boundary's completed_grid capture, _induce_and_plan's entry reset, and the induce branch's `if self.plan and self.pi < len(self.plan):` guard. `grep -c 'active_probe\\|graded_goal'` on this artifact's generating script(s) and on this artifact's own JSON both return 0."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "d3401dfd35edf2e373976aeedcb00423e4b6156319a747289ab925ccd065bc96",
+        "sha256_now": "79316a60396f3549efbfb983f358f8f2def898b8b37c8c14ab9118ab80f37dcc",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This experiment scores engines directly via select_trusted_world_model/WorldModelVerifier/change_gate_decision -- it never constructs an E3AgentPolicy or calls _induce_and_plan (grep-verified: 0 occurrences of either as a live call, only doc-comment references), so it never reaches the trajectory-transfer cascade stage this flag gates. The flip is unreachable from this artifact's own code path.",
+        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
       }
     ]
   },

@@ -1,15 +1,15 @@
 {
   "honest_verdict": "complete: Matrix generated successfully",
   "verifier_corpus_dual_matrix": {
-    "tier_low": {
+    "tier_specific": {
       "FoVer": {
         "production": 0.5,
         "architecture_only": 0.5,
         "delta": 0.0
       },
       "MBPP": {
-        "production": 0.5,
-        "architecture_only": 0.5,
+        "production": 0.8,
+        "architecture_only": 0.8,
         "delta": 0.0
       },
       "HumanEval": {
@@ -45,15 +45,15 @@
         "delta": 0.0
       }
     },
-    "tier_specific": {
+    "tier_memory": {
       "FoVer": {
-        "production": 0.5,
-        "architecture_only": 0.5,
-        "delta": 0.0
+        "production": 0.85,
+        "architecture_only": 0.6,
+        "delta": 0.25
       },
       "MBPP": {
-        "production": 0.8,
-        "architecture_only": 0.8,
+        "production": 0.5,
+        "architecture_only": 0.5,
         "delta": 0.0
       },
       "HumanEval": {
@@ -67,11 +67,11 @@
         "delta": 0.0
       }
     },
-    "tier_memory": {
+    "tier_low": {
       "FoVer": {
-        "production": 0.85,
-        "architecture_only": 0.6,
-        "delta": 0.25
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
       },
       "MBPP": {
         "production": 0.5,
@@ -95,8 +95,8 @@
     "tier_memory"
   ],
   "corpus_specific_verifiers": [
-    "tier_transfer",
-    "tier_specific"
+    "tier_specific",
+    "tier_transfer"
   ],
   "low_signal_verifiers": [
     "tier_low"
