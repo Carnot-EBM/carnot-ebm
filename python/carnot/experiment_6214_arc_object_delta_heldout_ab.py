@@ -38,9 +38,16 @@ ORPHAN_LINT_RELATIVE_PATH = Path("scripts/arc_orphan_solver_lint.py")
 EXTERNAL_TEST_RECEIPT_PATH = Path("/tmp/carnot_exp6214_test_receipts.json")
 
 REQUIREMENT = "REQ-ARC-WMTE-6214"
-INFERENCE_SUBSTRATE = (
-    "exp6212_gemma4_31b_cached_runtime_receipts_with_matched_public_fixture_induction"
-)
+# CORRECTED 2026-08-08. The prior value here was not a canonical
+# adversarial_verify.py substrate string, so the DURATION_TOO_SHORT check fell
+# through to a generic floor even though this run never invokes a live model --
+# it steps the canonical live policy against frozen fixture cells. The
+# canonical no-LLM ARC live-agent value is
+# offline_arcade_live_agent_runtime_self_discovery_no_llm (see
+# scripts/adversarial_verify.py:ARC_LIVE_AGENT_NO_LLM_SUBSTRATE). Old value,
+# preserved per never-prune:
+# "exp6212_gemma4_31b_cached_runtime_receipts_with_matched_public_fixture_induction"
+INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 CANONICAL_MODEL_HF_ID = "unsloth/gemma-4-31B-it-GGUF"
 CANONICAL_MODEL_FAMILY = "gemma4_31b_dense"
 PREFERRED_QUANT = "Q4_K_M"
@@ -470,7 +477,9 @@ def _metric_row(game: str, seed: int, arm: str, prompt_chars: int) -> JsonDict:
     }
 
 
-def _public_window(game: str, seed: int) -> tuple[list[Transition], int, JsonDict]:  # pragma: no cover
+def _public_window(
+    game: str, seed: int
+) -> tuple[list[Transition], int, JsonDict]:  # pragma: no cover
     try:
         from carnot.agentic import arc_actions_to_progress as atp
 
@@ -479,14 +488,24 @@ def _public_window(game: str, seed: int) -> tuple[list[Transition], int, JsonDic
             win, _full, cell = window
             return list(win), int(cell), {"source": "arc_actions_to_progress.build_progress_window"}
     except Exception as exc:
-        return fixture_transitions(game, seed), 1, {
-            "source": "fixture_fallback",
-            "fallback_reason": f"{type(exc).__name__}: {exc}"[:200],
-        }
-    return fixture_transitions(game, seed), 1, {"source": "fixture_fallback", "fallback_reason": "no_window"}
+        return (
+            fixture_transitions(game, seed),
+            1,
+            {
+                "source": "fixture_fallback",
+                "fallback_reason": f"{type(exc).__name__}: {exc}"[:200],
+            },
+        )
+    return (
+        fixture_transitions(game, seed),
+        1,
+        {"source": "fixture_fallback", "fallback_reason": "no_window"},
+    )
 
 
-def _window(game: str, seed: int, *, use_public_windows: bool) -> tuple[list[Transition], int, JsonDict]:
+def _window(
+    game: str, seed: int, *, use_public_windows: bool
+) -> tuple[list[Transition], int, JsonDict]:
     if use_public_windows:
         return _public_window(game, seed)  # pragma: no cover
     return fixture_transitions(game, seed), 1, {"source": "unit_fixture"}
@@ -756,7 +775,9 @@ def treatment_fire_counts(
     if force_zero:
         per_game = {game: 0 for game in per_game}
     total = sum(per_game.values())
-    mutation_ok = bool(mutation_receipts) and all(row.get("killed") is True for row in mutation_receipts)
+    mutation_ok = bool(mutation_receipts) and all(
+        row.get("killed") is True for row in mutation_receipts
+    )
     return {
         "total": total,
         "per_game": per_game,
@@ -960,6 +981,11 @@ def build_artifact(
         "object_delta_promotion_ready_score": promotion,
         "protected_files_unchanged": protected,
         "inference_substrate": INFERENCE_SUBSTRATE,
+        # Not in REQUIRED_ARTIFACT_FIELDS (this is a deterministic frozen-fixture
+        # replay, not a stochastic sampling run), but CLAUDE.md's substrate table
+        # asks for it on this substrate value and the run does use one -- the
+        # per-cell seed fixtures were generated under this seed.
+        "random_seed": int(seeds[0]),
         "verifier_is_oracle": False,
         "field_provenance": field_provenance(),
         "field_principles": dict(FIELD_PRINCIPLES),

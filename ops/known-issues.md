@@ -4,6 +4,74 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-08-08 (Phase 0a of the ARC live-agent improvement plan): a corrected artifact's fabrication-gate quarantine cannot be re-admitted by the lever-portfolio gate — a real, filed gap, not fixed
+
+**What was attempted.** Per `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`
+Phase 0a: exp6214 and exp6216 were `flagged_adversarial: true` only because each declared a
+non-canonical `inference_substrate` string, which made `scripts/adversarial_verify.py`'s
+`DURATION_TOO_SHORT` check fall through to a generic 60s floor even though neither run invokes a
+live model (both step the canonical live policy against frozen fixture cells, per
+`ARC_LIVE_AGENT_NO_LLM_SUBSTRATE`, floor 0.01s). Fixed at the source in both scripts
+(`python/carnot/experiment_6214_arc_object_delta_heldout_ab.py`,
+`python/carnot/experiment_6216_arc_budget_aware_search_ab.py`) and on the already-written
+artifacts, plus added the `random_seed` both scripts already used internally
+(`DEFAULT_SEEDS`) but never surfaced at the artifact top level. Verified: `adversarial_verify.py`
+now reports 0 CRITICAL / 0 WARN / 1 INFO (`IMPLAUSIBLE_PERFECT` on `level_credit_delta=0.0`,
+which is not a stub default — both scripts' own `validate_artifact()` requires it bare-zero by
+contract, since these are efficiency-only A/Bs). `scripts/summarize_artifact.py` confirms:
+"stamped-flagged but live re-check is clean." `flagged_adversarial` was corrected to `false` with
+a `flagged_adversarial_cleared_note` satisfying `determination_preservation_lint.py`'s documented
+`*_cleared_note` convention.
+
+**The gap.** `python/carnot/experiment_6218_arc_admissible_lever_portfolio_heldout.py` (the
+lever-combination portfolio experiment) still reports exp6214 and exp6216 ineligible with
+`artifact_flagged_by_exp6197`, EVEN THOUGH `flagged_adversarial` is now honestly `false`. Root
+cause: `python/carnot/terminal_artifacts.py`'s `_artifact_flagged()` also treats any non-empty
+`corrigendum_pending` as flagged (`payload.get("flagged_adversarial") is True or
+_nonempty(payload.get("corrigendum_pending"))`), and `corrigendum_pending` on both artifacts is
+non-empty (it records the original DURATION_TOO_SHORT/METHODOLOGY_MISSING/IMPLAUSIBLE_PERFECT
+findings). `scripts/determination_preservation_lint.py` correctly and permanently forbids ever
+emptying `corrigendum_pending` once populated — confirmed directly: an attempt to clear it (moving
+its content into a `corrigendum_resolved` field, matching the precedent in
+`results/experiment_2515_paper_writethrough.json`) was REFUSED by the lint with no escape hatch
+("EMPTIED corrigendum record(s) ... these document why the artifact was flagged; a re-run's fresh
+numbers do not supersede a review's recorded judgement"). That refusal is correct given the lint's
+own design (a permanent historical record of why an artifact was ever flagged) — but it means
+`_artifact_flagged()` has no way to distinguish "flagged and still under a cloud" from "flagged,
+corrected, and independently re-verified clean" for any artifact whose `corrigendum_pending` was
+ever populated. **These two guards, both individually correct, jointly make lever-portfolio
+re-admission of a corrected artifact structurally impossible today.**
+
+**Not fixed here, on purpose.** `_artifact_flagged()` is a shared classifier
+(`python/carnot/terminal_artifacts.py`) used well beyond exp6218; changing what it means for a
+`corrigendum_pending`-bearing artifact to be "admissible" is a decision with a blast radius wider
+than one Phase-0a fix, and belongs to whoever owns that module's contract, not to a quick
+substrate correction. `python/carnot/experiment_6218_arc_admissible_lever_portfolio_heldout.py`
+was rerun after the correction and honestly still reports
+`skipped: fewer_than_two_eligible_arc_levers_no_model_load_no_solve_credit` (1 eligible:
+exp6215 object-relative trajectory transfer; exp6216 budget-aware search — the strongest lever
+numbers on record, deadline misses 6->0, zero harm — remains blocked on this gap alone).
+
+**Candidate fixes for whoever picks this up** (not chosen or implemented here): (a) add a
+`corrigendum_resolved`-aware branch to `_artifact_flagged()` — flagged only if
+`len(corrigendum_pending) > len(corrigendum_resolved)` or similar, so a fully-resolved trail no
+longer counts as an open flag; (b) add an explicit `corrigendum_all_resolved: true` marker field
+with its own cleared-note-style justification requirement, checked by `_artifact_flagged()`
+alongside the raw non-emptiness check; (c) accept the current behavior as intentionally
+conservative (once flagged, always excluded from lever-portfolio combination testing, regardless
+of correction) and scope exp6216's promotion to its own standalone A/B rather than the portfolio
+experiment. Any of these needs its own test coverage given `_artifact_flagged()`'s corpus-wide
+reach.
+
+**Cross-references:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase
+0a — `python/carnot/terminal_artifacts.py:_artifact_flagged` —
+`scripts/determination_preservation_lint.py:_cleared_deliberately` (the `*_cleared_note`
+convention) and its corrigendum-emptying rule (no escape hatch, by design) —
+`results/experiment_6214_arc_object_delta_heldout_ab.json` /
+`results/experiment_6216_arc_budget_aware_search_ab.json` (both corrected) —
+`results/experiment_6218_arc_admissible_lever_portfolio_heldout.json` (rerun, honest result
+unchanged).
+
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 
 Context: this session root-caused three unexplained kills of a dev script's background process
