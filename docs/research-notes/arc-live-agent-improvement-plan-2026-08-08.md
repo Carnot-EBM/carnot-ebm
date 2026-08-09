@@ -365,6 +365,17 @@ mechanic class(es); the template, detector, and pre-LLM cascade slot all exist. 
 banked levels up, zero regressions on non-family controls — the same gate shape the nav work
 pre-registered.*
 
+**PARTIALLY DONE (2026-08-09, REQ-ARC-WMTE-6244) — diagnosis, not a new mechanic class.**
+Mode A turned out to be FOUR distinct root causes (ar25 crashes on a codegen bug, ka59 memorizes
+induce-time coordinates, re86 assumes the wrong action modality, cd82 gives up on keyboard
+actions), not one shared gap a single new mechanic-class template would close. Tried the cheapest
+adjacent fix — hardening the EXISTING nav template's confidence gate to reject cd82's
+false-positive fit (REQ-ARC-WMTE-6245) — and found it does not work at this project's typical
+transition-sample sizes (neither exact-match nor changed-cell recall discriminates the real nav
+game from the false positives); reverted before committing, negative result recorded. Building an
+actual new mechanic-class detector for ka59 (push-block) or re86 (toggle/move) remains open and
+unstarted — this diagnosis narrows WHAT to build for each game rather than picking one blindly.
+
 **4c. Mode B attack: change-magnitude prior + off-path drift falsifier.**
 The 2026-07-29 admission-bottleneck note splits failures into two modes wanting OPPOSITE
 corrections and names a sparsity/change-magnitude constraint on predicted writes as "cheap to

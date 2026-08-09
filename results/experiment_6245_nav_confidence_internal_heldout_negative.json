@@ -1,0 +1,140 @@
+{
+  "experiment": "experiment_6245_nav_confidence_internal_heldout_negative",
+  "title": "Negative result: internal train/held-out consistency check does not discriminate real nav fits from REQ-ARC-WMTE-6244's cd82 false positive",
+  "run_date": "2026-08-09T12:06:54Z",
+  "question": "Does refitting InducedNavWorldModel on a train-only slice and scoring held-out move-transitions (via exact-match, or via changed-cell recall) reliably separate tu93 (the one known real nav fit) from cd82/sk48/wa30 (known false positives)?",
+  "per_game": {
+    "tu93": {
+      "role": "known_true_positive",
+      "train_fit_structural_params": {
+        "avatar_colors": [
+          4,
+          9
+        ],
+        "displacement": {
+          "4": [
+            0,
+            6
+          ],
+          "2": [
+            6,
+            0
+          ],
+          "1": [
+            -6,
+            0
+          ],
+          "3": [
+            0,
+            -6
+          ]
+        },
+        "goal_color": 14,
+        "wall_colors": [
+          5
+        ]
+      },
+      "n_held_moves": 10,
+      "internal_heldout_exact_match_rate": 0.0,
+      "internal_heldout_mean_cell_recall": 0.4168
+    },
+    "cd82": {
+      "role": "known_false_positive_req_6244",
+      "train_fit_structural_params": {
+        "avatar_colors": [
+          2
+        ],
+        "displacement": {
+          "3": [
+            -3,
+            -11
+          ],
+          "4": [
+            3,
+            11
+          ],
+          "2": [
+            11,
+            3
+          ],
+          "1": [
+            -11,
+            -3
+          ]
+        },
+        "goal_color": 15,
+        "wall_colors": []
+      },
+      "n_held_moves": 4,
+      "internal_heldout_exact_match_rate": 0.0,
+      "internal_heldout_mean_cell_recall": 0.5066
+    },
+    "sk48": {
+      "role": "known_false_positive_req_5844_two_snake",
+      "train_fit_structural_params": {
+        "avatar_colors": [
+          0
+        ],
+        "displacement": {
+          "1": [
+            -6,
+            0
+          ],
+          "2": [
+            6,
+            0
+          ]
+        },
+        "goal_color": 1,
+        "wall_colors": []
+      },
+      "n_held_moves": 3,
+      "internal_heldout_exact_match_rate": 0.0,
+      "internal_heldout_mean_cell_recall": 0.4322
+    },
+    "wa30": {
+      "role": "known_false_positive_req_5844_sokoban",
+      "train_fit_structural_params": {
+        "avatar_colors": [
+          0,
+          14
+        ],
+        "displacement": {
+          "4": [
+            0,
+            4
+          ],
+          "2": [
+            4,
+            0
+          ],
+          "3": [
+            0,
+            -4
+          ],
+          "1": [
+            -4,
+            0
+          ]
+        },
+        "goal_color": 2,
+        "wall_colors": []
+      },
+      "n_held_moves": 7,
+      "internal_heldout_exact_match_rate": 0.0,
+      "internal_heldout_mean_cell_recall": 0.8225
+    }
+  },
+  "exact_match_discriminates_tp_from_fp": false,
+  "cell_recall_discriminates_tp_from_fp": false,
+  "honest_verdict": "complete_neither_metric_discriminates_no_code_shipped",
+  "honest_verdict_principle": "terminal `complete_` prefix; states the negative result plainly rather than as a process-completion claim with the actual finding buried in prose.",
+  "solve_provenance": "development_proxy",
+  "arc_solve_claim": false,
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "each game's own real next_grid is the ground truth this check compares against.",
+  "inference_substrate": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
+  "random_seed": 6244,
+  "duration_s": 1.763,
+  "reproducibility_checksum": "3aa052f76ddc32c16dbcc4789c24ea99a603e58eae4444d8362d6dc00a8a6886"
+}
