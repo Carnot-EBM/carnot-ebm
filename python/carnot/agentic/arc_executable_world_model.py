@@ -3469,8 +3469,10 @@ ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT = "1"
 
 def induce_think_on() -> bool:
     """REQ-ARC-WMTE-6198 (lever #6) arm selector. CARNOT_ARC_INDUCE_THINK=1/0 overrides;
-    unset -> ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT (both currently "0", so this resolver is
-    itself inert until an operator flips one of the two knobs post-A/B). Mirrors `_flag_env`'s
+    unset -> ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT. STALE UNTIL 2026-08-08: this docstring
+    said both constants were "0" (default OFF); the operator flipped both to "1" that day on
+    exp6199's induction-quality evidence (see the comment above ARC_LIVE_GENERATOR_THINK_
+    DEFAULT), so this resolver is now live by default, not inert. Mirrors `_flag_env`'s
     override-then-shipped-default shape but keys off the SCORED constant, matching the MTP
     resolver pattern above (`ARC_LIVE_GENERATOR_MTP_SCORED_DEFAULT`) -- there is no separate
     local-default consulted at runtime here because, unlike MTP, think mode has no local-hardware
@@ -5641,6 +5643,8 @@ class LocalGGUFProposer:
         temperature: float,
         stop: Optional[list],
         attempt: int = 0,
+        repeat_penalty: Optional[float] = None,
+        repeat_last_n: Optional[int] = None,
         _continuation_prefix: Optional[str] = None,
     ) -> tuple[dict, str]:
         """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
@@ -5656,6 +5660,14 @@ class LocalGGUFProposer:
           * extraction_text -> the FINAL answer only (reasoning stripped when the build split it),
             so _extract_python cannot accidentally grab a ```python block written INSIDE the
             model's reasoning trace.
+
+        `repeat_penalty`/`repeat_last_n` (added 2026-08-08, adversarial review): the raw
+        /completion path (this method's sibling) has scoped these to the engine-induce prompt
+        since REQ-ARC-WMTE-6198's repeat-penalty fix (13/36 -> 22/36 usable engines). This
+        method silently dropped both, so any call routed here -- which INCLUDES every think-mode
+        call, since think mode forces the chat endpoint regardless of `use_chat_template`
+        -- ran without repetition control the raw path would have applied to the identical
+        prompt. `None` (the default) omits the field exactly as before this fix.
 
         `_continuation_prefix`, internal-only (set only by the retry this method issues on
         itself -- see CARNOT_ARC_CHAT_FORCE_ANSWER_CONTINUATION below), appends a trailing
@@ -5681,6 +5693,10 @@ class LocalGGUFProposer:
             # prefix: skip re-adding the template's own generation prompt (the turn markers
             # that would otherwise be inserted AFTER our partial assistant text, corrupting it).
             payload["add_generation_prompt"] = False
+        if repeat_penalty is not None:
+            payload["repeat_penalty"] = repeat_penalty
+            if repeat_last_n is not None:
+                payload["repeat_last_n"] = repeat_last_n
         # Same opt-in determinism as the raw /completion path -- it must be on BOTH, or the
         # chat-template route (which Qwen3.6/ThinkingCap take) would stay nondeterministic while
         # the artifact claimed a seeded run. `attempt` is threaded in from the retry ladder so
@@ -5773,6 +5789,8 @@ class LocalGGUFProposer:
                 temperature=temperature,
                 stop=stop,
                 attempt=attempt,
+                repeat_penalty=repeat_penalty,
+                repeat_last_n=repeat_last_n,
                 _continuation_prefix=_prefix,
             )
             # DEFENSIVE, NOT ASSUMED: whether this llama.cpp build echoes the supplied prefix
@@ -6482,11 +6500,13 @@ class LocalGGUFProposer:
         # closing fence so the model emits ONLY the code (no win-state CoT). DEFAULT ON (2026-06-25
         # operator directive): a strict improvement (emits valid code in ~10s where the unpatched
         # path truncates to 0 code at 450s); opt out with CARNOT_ARC_CODEONLY_INDUCE=0.
-        # THINK MODE (lever #6, default OFF -- see induce_think_on()). Takes priority over
-        # codeonly: the two are mutually exclusive by construction (codeonly exists to SUPPRESS
-        # reasoning; think mode exists to ALLOW it), so an operator flipping CARNOT_ARC_INDUCE_THINK
-        # does not need to also touch CARNOT_ARC_CODEONLY_INDUCE. With think OFF (the shipped
-        # default) this is a pure no-op and the codeonly branch below is byte-identical to before.
+        # THINK MODE (lever #6 -- see induce_think_on()). Takes priority over codeonly: the two
+        # are mutually exclusive by construction (codeonly exists to SUPPRESS reasoning; think
+        # mode exists to ALLOW it), so an operator flipping CARNOT_ARC_INDUCE_THINK does not need
+        # to also touch CARNOT_ARC_CODEONLY_INDUCE. STALE UNTIL 2026-08-08: this said "default
+        # OFF" and described think-off as the shipped default; the operator flipped think ON that
+        # day (exp6199 induction-quality evidence), so THIS branch (not the codeonly branch below)
+        # is now the shipped default path.
         _think_on = induce_think_on() and codeonly_eligible
         _codeonly = (
             (not _think_on)
@@ -6494,6 +6514,17 @@ class LocalGGUFProposer:
             and codeonly_eligible
         )
         _stop_seq = ["```"] if _codeonly else None
+        # KNOWN LATENT BUG, FLAGGED 2026-08-08 (adversarial review), NOT FIXED: `_codeonly` and
+        # `use_chat_template` are independent switches, so `_codeonly=True` with
+        # `self.use_chat_template=True` is reachable in principle (currently NOT on the live
+        # gemma-4-31B path -- `use_chat_template` defaults False and nothing sets it True there;
+        # `_think_on` being on forces `_codeonly=False` anyway). If it ever IS reached: the
+        # pre-opened fence below primes a RAW-COMPLETION continuation (the model resumes
+        # mid-code-block), which is meaningless under a chat template (the fence sits inside the
+        # USER message; the model starts a FRESH assistant turn and typically emits its OWN
+        # opening fence first). `stop=["```"]` then fires on that opening fence, truncating the
+        # response before any code. Do not flip `use_chat_template=True` for a codeonly-eligible
+        # call without redesigning this interaction first -- see ops/known-issues.md.
         if _codeonly:
             prompt = _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n"
         elif _think_on:
@@ -6568,12 +6599,23 @@ class LocalGGUFProposer:
                 if self.use_chat_template or _think_on:
                     # OpenAI /v1/chat/completions -> server applies the GGUF's embedded chat template
                     # (Qwen3.6/ThinkingCap need the assistant-turn structure; REQ-ARC-WMTE-5725).
+                    # CORRECTED 2026-08-08 (adversarial review): repeat_penalty/repeat_last_n were
+                    # already computed into _payload above (when _engine_induce_call applies) but
+                    # never forwarded here, so every call routed through this branch -- which
+                    # INCLUDES every think-mode call, since `_think_on` forces this branch
+                    # regardless of `use_chat_template` -- silently ran without the repetition
+                    # control the raw /completion branch below applies to the identical prompt.
+                    # `.get(...)` reads None on the (common) case where _engine_induce_call is
+                    # False or _induce_repeat_penalty() returned 1.0, matching _chat_complete_
+                    # request's own no-op default.
                     _response, text = self._chat_complete_request(
                         _payload["prompt"],
                         max_tokens=self.max_tokens,
                         temperature=_payload["temperature"],
                         stop=_stop_seq,
                         attempt=attempt,
+                        repeat_penalty=_payload.get("repeat_penalty"),
+                        repeat_last_n=_payload.get("repeat_last_n"),
                     )
                 else:
                     req = urllib.request.Request(
@@ -6882,14 +6924,25 @@ class LocalGGUFProposer:
                 + to_ascii(np.asarray(previous_level_complete_grid))
                 + "\n"
             )
+        # CORRECTED 2026-08-08 (adversarial review, think-routing gap). `generate()`'s own
+        # think-mode branch (`elif _think_on: pass`) only skips ADDING its own pre-opened fence
+        # -- it does nothing to strip one this prompt already ends with. Before this fix, this
+        # was one of two call shapes (the split-induce engine-half fallback below is the other)
+        # that unconditionally primed a `\`\`\`python\n` fence, so it suppressed reasoning even
+        # on a think-mode call. Only the combined induce prompt in `induce()` was gated. Same
+        # conditional shape as that gate.
+        _goal_suffix = (
+            "Return ONLY one ```python code block defining is_level_complete."
+            if induce_think_on()
+            else "Return ONLY one ```python code block defining is_level_complete.\n```python\n"
+        )
         return (
             f"You are inducing ONLY the win condition for the ARC-AGI-3 game '{game}'.\n"
             + obs
             + win
             + "Write ONLY `def is_level_complete(grid):` returning True iff `grid` is a level-complete "
             "/ win state, else False. numpy + stdlib only; pure and deterministic. Prefer a SIMPLE "
-            "GENERAL rule over an exact full-grid match.\n\n"
-            "Return ONLY one ```python code block defining is_level_complete.\n```python\n"
+            "GENERAL rule over an exact full-grid match.\n\n" + _goal_suffix
         )
 
     def _combine_world_model(self, engine_code: str, goal_code: str) -> str:
@@ -6945,10 +6998,14 @@ class LocalGGUFProposer:
         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
         #
-        # THINK MODE (lever #6, default OFF): the PRE-OPENED ```python fence below is exactly what
-        # exp5714 proved suppresses reasoning even on its own, independent of the codeonly directive
-        # -- so a think-mode call must not send it either. The instruction to return one code block
-        # stays either way; only the priming fence differs.
+        # THINK MODE (lever #6, default ON since 2026-08-08 -- was OFF when this comment was
+        # first written). The PRE-OPENED ```python fence below is exactly what exp5714 proved
+        # suppresses reasoning even on its own, independent of the codeonly directive -- so a
+        # think-mode call must not send it either. The instruction to return one code block
+        # stays either way; only the priming fence differs. The two other induce prompt shapes
+        # (the split-induce engine-half fallback and `_goal_only_prompt`, both below) had the
+        # same unconditional fence and were fixed the same way on 2026-08-08 -- until then only
+        # this combined-call path actually respected think mode.
         _induce_suffix = (
             "\n\nReturn ONLY one ```python code block with engine + is_level_complete."
             if induce_think_on()
@@ -6971,9 +7028,20 @@ class LocalGGUFProposer:
         # token budget, and never writes is_level_complete. Induce each function in its OWN focused
         # call so the engine ramble cannot starve the goal -- the focused goal call is valid in ~3.5s
         # where the combined call fails (a budget bump does NOT help; the model just rambles more).
+        # CORRECTED 2026-08-08 (adversarial review, think-routing gap). Same fix as
+        # `_goal_only_prompt`'s trailing fence, same reason: `generate()`'s think-mode branch
+        # only skips ADDING its own pre-opened fence, it does not strip one already in the
+        # prompt text, so this call sent a reasoning-suppressing fence even under think mode.
+        _engine_only_suffix = (
+            "\n\nReturn ONLY one ```python code block defining engine(grid, action, data)."
+            if induce_think_on()
+            else (
+                "\n\nReturn ONLY one ```python code block defining engine(grid, action, data)."
+                "\n```python\n"
+            )
+        )
         ok_e, eng = self.generate(
-            base
-            + "\n\nReturn ONLY one ```python code block defining engine(grid, action, data).\n```python\n",
+            base + _engine_only_suffix,
             ("engine",),
             tries=self.tries,
             codeonly_eligible=True,

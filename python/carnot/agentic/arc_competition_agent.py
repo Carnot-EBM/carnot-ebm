@@ -7848,9 +7848,11 @@ SUBMITTED_AGENT_CONFIG = {
         "no_think_prefix": "",  # /no_think is a Qwen3 control token; gemma-4 has no equivalent
         # LEVER #6 (2026-08-07). Declared from the same constant induce_think_on() falls back to
         # when CARNOT_ARC_INDUCE_THINK is unset, so the readiness gates can pin whichever value is
-        # actually shipped without a second, driftable copy. Both this and the constant default to
-        # False/"0" -- see ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT for why (no gemma think-mode A/B
-        # evidence exists yet).
+        # actually shipped without a second, driftable copy. STALE UNTIL 2026-08-08: this said
+        # both defaulted to False/"0" with no A/B evidence; exp6199 (2026-08-08) measured
+        # think-mode on held-out accuracy (4W/0L/6T, moved two games 0.000->1.000 across the
+        # live admission bar), and the operator flipped ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT
+        # to "1" on that evidence, so this now reads True by default.
         "think_mode": ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT != "0",
         "max_tokens": 2560,
         "n_predict_min": 2048,

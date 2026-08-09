@@ -251,6 +251,52 @@ All three fixes are test-only; no production code changed. Verified: the 3 targe
 the 3 files' full suites (17 tests) pass, ruff/ruff-format/mypy clean (one pre-existing, unrelated
 mypy error at `test_experiment_5727...py:413` confirmed outside this fix's edit region).
 
+**ADDENDUM 2026-08-08 (FOUND DURING PHASE 0b OF THE ARC LIVE-AGENT IMPROVEMENT PLAN — the same bug
+class is at least 41 tests across 7 files, not 17 tests across 2 files).** Phase 0b
+(`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`) touched
+`python/carnot/agentic/arc_executable_world_model.py`'s `LocalGGUFProposer.generate()`/`.induce()`/
+`_chat_complete_request()` and `_goal_only_prompt()` -- exactly the machinery the original findings
+1/2 already named as the shared suspect. A regression sweep of all 35 test files referencing
+`LocalGGUFProposer`, `_chat_complete_request`, `_goal_only_prompt`, or `induce_think_on` found 41
+failures. **Confirmed via `git stash` (the same clean-HEAD comparison method findings 1-6 above all
+used) to be byte-for-byte identical -- same test names, same count -- with this session's Phase 0b
+edits stashed OUT.** None of the 41 are caused by Phase 0b; all are the pre-existing bug findings
+1/2 already opened, just swept more broadly than the original investigation reached:
+
+- `tests/python/test_arc_goal_predicate_shadowing.py` -- 5 (already counted in finding 1).
+- `tests/python/test_arc_induce_repeat_penalty_and_reask_2026_07_31.py` -- 12 (already counted in
+  finding 2).
+- `tests/python/test_codeonly_induce_scoping.py` -- 6, NEWLY discovered. Notable: this is the file
+  `tests/python/test_arc_induce_think_mode_20260807.py`'s own docstring cites BY NAME as the
+  reference the think-off arm must stay byte-identical to (`test_induce_eligible_is_codeonly_with_
+  stop` is one of the 6) -- so the shared root cause sits squarely in load-bearing, actively-relied-
+  on test infrastructure, not a peripheral corner.
+- `tests/python/test_arc_defect_gate_attempt_consumption_2026_08_01.py` -- 5, NEWLY discovered.
+- `tests/python/test_arc_goal_defect_reask_wiring.py` -- 9, NEWLY discovered (the largest single
+  file in the expanded count).
+- `tests/python/test_induce_split_fallback.py` -- 2, NEWLY discovered.
+- `tests/python/test_arc_dry_run_wallclock_bound_2026_08_01.py` -- 1, NEWLY discovered.
+
+**Why this matters beyond a bigger number.** Findings 1/2's own scope note said the investigation
+"stopped at confirmed pre-existing and unrelated ... per the discipline of not scope-creeping a
+token-count fix into an unrelated 19-test investigation" -- correct discipline at the time, but it
+means the true size of this pre-existing defect was never actually measured, only bounded below.
+This addendum does not change scope items (a)/(b)/(c) above or the root-cause hypothesis (a shared
+request/response handling path in `generate()`'s mocked-HTTP test fixtures); it corrects the
+denominator so whoever picks up this follow-up knows the real size of what they are fixing before
+declaring victory at 19/19.
+
+**Not investigated further here, on purpose** -- same reasoning as findings 1/2: Phase 0b's own
+scope is the think-routing/repeat-penalty fixes verified above (all 15 tests in
+`test_arc_induce_think_mode_20260807.py` pass, including 6 new tests pinning the two fence fixes
+and the repeat_penalty forwarding fix), not this pre-existing, unrelated defect. Scope-creeping into
+a root-cause fix for 41 mocked-HTTP tests failing the same way was correctly out of scope for a
+think-mode gating fix, exactly as it was for the original token-count fix.
+
+**Falsifiable gate (addendum).** Same shape as above: ends when all 41 pass again (re-verify the
+count first -- do not assume it is still exactly 41 by the time this is picked up), or each is
+individually re-classified and fixed or corrected with a dated note.
+
 ### NEW 2026-08-07 (OPERATOR DIRECTIVE — ARC six-lever push; amends the 2026-08-03 one-slot ruling)
 
 The operator, responding to the outer-loop's six-lever ARC strategy synthesis, directed
