@@ -1799,6 +1799,45 @@ def register_analyzed_artifact(out_path: Path, analyzer: Path | None = None) -> 
     ANALYZED_ARTIFACT_INDEX.write_text(json.dumps(index, indent=1, sort_keys=True) + "\n")
 
 
+def preserve_freshness_acknowledgements(art: dict, out_path: Path) -> None:
+    """Read-merge-preserve: before an analyser OVERWRITES `out_path`, copy forward any
+    `provenance.freshness_acknowledgements` the file already carries.
+
+    WHY THIS EXISTS (2026-08-03, filed; fixed 2026-08-08). Every analyser here builds
+    `art["provenance"] = {...}` WHOLESALE and then overwrites `out_path` with it -- including when
+    `out_path` is the SAME file the freshness lint's own printed "rebuild with: ..." remedy points
+    at. A human or agent who follows that remedy is thereby silently erasing the artifact's
+    never-prune `freshness_acknowledgements` audit trail: the rebuild never reads the file it is
+    about to replace, so an acknowledgement recorded there has no path forward into the rebuilt
+    version. It is SELF-CONCEALING -- the rebuild also refreshes `provenance.code[*].sha256` to
+    current, so the freshness lint turns GREEN at the exact moment the audit trail is destroyed.
+    Reproduced on two independent analysers before this fix; 170 acknowledgement blocks were
+    exposed across 13 of the 16 analyser-produced artifacts at the time this was filed.
+
+    WHY ONLY THIS ONE FIELD, not a general provenance merge. Every OTHER `provenance` field
+    (`sha256`, `git_head`, `rebuild_command`, ...) describes the CURRENT build and is SUPPOSED to
+    be overwritten by a rebuild -- preserving those would defeat the freshness lint entirely.
+    `freshness_acknowledgements` is different in kind: it is an APPEND-ONLY audit log of past
+    human/agent judgment calls ("this drift was checked and is inert"), not a fact about the
+    current build. Only it needs to survive a rebuild; nothing else should.
+
+    Call this AFTER `art["provenance"]` is finalized and BEFORE the file at `out_path` is written.
+    Fail-open by design (matches `_restore_dropped_determinations` in research_conductor.py, the
+    sibling self-heal for the same class of record loss): any error here is swallowed rather than
+    blocking the analyser's real output, because a rebuild that produces no artifact at all is a
+    worse outcome than one that produces an artifact without a preserved acknowledgement.
+    """
+    try:
+        if not out_path.exists():
+            return
+        existing = json.loads(out_path.read_text())
+        acks = existing.get("provenance", {}).get("freshness_acknowledgements")
+        if acks:
+            art.setdefault("provenance", {})["freshness_acknowledgements"] = acks
+    except Exception:
+        pass
+
+
 def check_fresh(artifact_path: Path) -> int:
     """Is this on-disk artifact the output of the code and inputs that are on disk RIGHT NOW?
 

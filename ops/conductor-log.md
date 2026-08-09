@@ -15514,3 +15514,4 @@ Still active  |
 | 2026-08-08 23:26 UTC | Within-game object-relative trajectory-transfer ca | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: _s": 3.0},
 +   |
 | 2026-08-08 23:53 UTC | Within-game object-relative trajectory-transfer ca | OK | 109 passed, 1 warning in 29.70s |
+| 2026-08-09 00:09 UTC | Budget-exhaustion-aware StepwiseExplorer causal A/ | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
