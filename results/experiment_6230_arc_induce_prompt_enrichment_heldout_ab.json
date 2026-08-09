@@ -1,0 +1,24 @@
+{
+  "experiment": 6230,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-08-09",
+  "started_at": "2026-08-09T12:59:45.842104+00:00",
+  "finished_at": "2026-08-09T12:59:45.842104+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated on Exp6228 dense readiness: induce-prompt enrichment held-out A/B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-endurance.gemma_4_31b_runtime_ready_score (actual=None == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6228-supervised-three-family-runtime-endurance",
+      "artifact_field": "gemma_4_31b_runtime_ready_score",
+      "op": "==",
+      "expected": 1,
+      "actual": null,
+      "passed": false,
+      "reason": "actual=None == expected=1"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

@@ -15545,3 +15545,4 @@ Still active  |
 | 2026-08-09 12:51 UTC | Supervised three-family GGUF runtime endurance and | OK | 90 passed, 1 warning in 9.34s |
 | 2026-08-09 12:53 UTC | Gated on Exp6228 dense readiness: de-confounded Ge | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 12:55 UTC | Gated on Exp6228 dense readiness: de-confounded Ge | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
+| 2026-08-09 12:57 UTC | Gated on Exp6228 dense readiness: de-confounded Ge | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
