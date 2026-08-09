@@ -1940,6 +1940,7 @@ def build(out_path: Path | None = None) -> dict[str, Any]:  # noqa: C901 - one a
             "max_actions_untouched": True,
         }
         if out_path is not None:
+            sibling.preserve_freshness_acknowledgements(art, out_path)
             sibling.register_analyzed_artifact(out_path, analyzer=Path(__file__).resolve())
     except Exception as exc:  # noqa: BLE001 - a provenance failure is recorded, never swallowed
         art["provenance"] = {"error": f"{type(exc).__name__}:{exc}"}

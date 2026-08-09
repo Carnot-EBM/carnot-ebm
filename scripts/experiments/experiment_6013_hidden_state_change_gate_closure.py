@@ -138,6 +138,7 @@ def _provenance() -> dict:
 
 sys.path.insert(0, str(REPO / "python"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(REPO / "scripts"))
 
 from carnot.agentic import arc_executable_world_model as e3  # noqa: E402
 from carnot.agentic import arc_world_model_trust_energy as te  # noqa: E402
@@ -149,6 +150,12 @@ from experiment_6012_hidden_state_trust_gate_hole import (  # noqa: E402
     _frame_hud_mask,
     _make_arms,
 )
+
+# REQ-ARC-WMTE-6016 sibling helper: before this script's wholesale `OUT.write_text(...)`
+# overwrite, copy forward any `provenance.freshness_acknowledgements` the file already
+# carries. See the helper's own docstring in analyze_scored_path_lever_ab.py for the full
+# incident this guards against (a rebuild silently erasing the append-only audit trail).
+from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements  # noqa: E402
 
 OUT = REPO / "results/experiment_6013_hidden_state_change_gate_closure.json"
 
@@ -307,17 +314,14 @@ def main() -> int:
         },
     ]
     if not all(p["available"] for p in preconditions):
+        blocked_artifact = {
+            "experiment": "experiment_6013_hidden_state_change_gate_closure",
+            "honest_verdict": "blocked_preconditions_unmet",
+            "preconditions_checked": preconditions,
+        }
+        preserve_freshness_acknowledgements(blocked_artifact, OUT)
         OUT.parent.mkdir(parents=True, exist_ok=True)
-        OUT.write_text(
-            json.dumps(
-                {
-                    "experiment": "experiment_6013_hidden_state_change_gate_closure",
-                    "honest_verdict": "blocked_preconditions_unmet",
-                    "preconditions_checked": preconditions,
-                },
-                indent=2,
-            )
-        )
+        OUT.write_text(json.dumps(blocked_artifact, indent=2))
         print("BLOCKED: preconditions unmet", preconditions)
         return 1
 
@@ -775,6 +779,7 @@ def main() -> int:
             "n": args.n,
         }
     )
+    preserve_freshness_acknowledgements(artifact, OUT)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(artifact, indent=2, default=str))
     print(

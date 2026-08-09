@@ -681,6 +681,9 @@ def main(argv=None) -> int:
     )
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
+
+    preserve_freshness_acknowledgements(art, out)
     out.write_text(json.dumps(art, indent=1, sort_keys=True))
     try:
         from analyze_scored_path_lever_ab import register_analyzed_artifact

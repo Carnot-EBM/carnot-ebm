@@ -2000,6 +2000,14 @@ def main(argv) -> int:
     except Exception as exc:  # provenance must never block the measurement itself
         art["provenance"] = {"error": f"{type(exc).__name__}:{exc}"}
 
+    # PRESERVE the append-only freshness-acknowledgement audit trail across this overwrite (see
+    # analyze_scored_path_lever_ab.py:preserve_freshness_acknowledgements for the full incident).
+    # Reuses the SAME `sibling` alias imported above; fails open if that import didn't succeed.
+    try:
+        sibling.preserve_freshness_acknowledgements(art, Path(a.out))
+    except Exception:
+        pass
+
     art["duration_s"] = round(time.time() - t0, 3)
     payload = json.dumps(
         {k: art[k] for k in art if k not in ("run_date", "duration_s")}, sort_keys=True

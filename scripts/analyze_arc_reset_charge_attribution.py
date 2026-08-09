@@ -55,6 +55,7 @@ import os
 import statistics
 import sys
 import time
+from pathlib import Path
 from typing import Any, Optional
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1115,6 +1116,16 @@ def main(argv: list[str]) -> int:
             "`navigation_diagnostics` -- are untouched by that edit in any case."
         ),
     }
+
+    # Copy forward any `provenance.freshness_acknowledgements` this output path already
+    # carries on disk, so a rebuild never silently erases that append-only audit log (see
+    # analyze_scored_path_lever_ab.py:preserve_freshness_acknowledgements for the full
+    # rationale -- every OTHER provenance field above is correctly overwritten fresh).
+    sys.path.insert(0, os.path.join(REPO, "scripts"))
+    from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
+
+    preserve_freshness_acknowledgements(artifact, Path(out_path))
+
     artifact["reproducibility_checksum"] = (
         "sha256:"
         + hashlib.sha256(json.dumps(artifact, sort_keys=True, default=str).encode()).hexdigest()

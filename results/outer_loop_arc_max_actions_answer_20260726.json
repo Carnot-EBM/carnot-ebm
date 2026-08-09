@@ -7681,6 +7681,16 @@
       "results/early_stop_sweep_20260726/rows_b4000_stress.json",
       "results/early_stop_sweep_20260726/rows_exact_attribution.json",
       "results/early_stop_sweep_20260726/rows_exact_attribution_b2000.json"
+    ],
+    "freshness_acknowledgements": [
+      {
+        "path": "scripts/analyze_arc_max_actions_answer.py",
+        "sha256_was": "a2a216baf430bf2d5c5ee429ed0ebaadfed130e83aa54072460bde1ecdb80d96",
+        "sha256_now": "1cb4e50243df5bef1ec1568a1a002a8a51c55574e2600f36f09481eaa2555506",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
+        "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record."
+      }
     ]
   },
   "reproducibility_checksum": "99470a30a8dd1b46",

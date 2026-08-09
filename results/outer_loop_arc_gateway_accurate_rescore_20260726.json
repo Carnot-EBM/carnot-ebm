@@ -3428,6 +3428,30 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6230 (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging Gap 3's arc_competition_agent.py drift INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by this commit's source-code change directly -- a provenance side effect of the acknowledgement mechanism itself, same shape as the REQ-ARC-WMTE-6229 cascade earlier this session. The cited artifacts' own NUMBERS are unchanged (only their provenance block grew an acknowledgement entry); this artifact's own rescore numbers are therefore also unaffected.",
         "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry (see the REQ-ARC-WMTE-6230 acknowledgement pass, same commit) -- no change to any row/score/metric field either file reports."
+      },
+      {
+        "path": "scripts/analyze_arc_gateway_accurate_rescore.py",
+        "sha256_was": "1eebc3e9756a202d863c9f1fe057dc415c2defe8ae31f16753e4378d974b192d",
+        "sha256_now": "8bc91edc9c2f31f0b0df3cfddcdf1a32cd8b93ef57054d074c9f7082f61b02ae",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
+        "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record."
+      },
+      {
+        "path": "results/outer_loop_arc_gateway_rescore_20260726.json",
+        "sha256_was": "c9898e502ba1492a589f3b62eaf17a8d20b59ef1d0af7a4f4c8ed1d953e5594a",
+        "sha256_now": "de511cec0cacbb4c40e395f6b7888b78113fa4d55c7b06cb4d57cc42e5ddeb29",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Freshness-lint self-fix (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging the preserve_freshness_acknowledgements wiring INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by a change to this artifact's own analyser script or numbers -- only its two cited artifacts grew a provenance.freshness_acknowledgements entry each.",
+        "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry -- no change to any row/score/metric field either file reports."
+      },
+      {
+        "path": "results/arc_per_level_reset_attribution_20260726.json",
+        "sha256_was": "a8ba07c8157e71960dc2f50aaf8a8b64d09d1d185bd4b7bab9ff6452c180d3b9",
+        "sha256_now": "e9f51f1a65ff93009c313219c0cc094326bb83f4b6363b827f525a56bbaafc67",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Freshness-lint self-fix (2026-08-08), second-order cascade: this artifact cites the two paths below by content hash (provenance.rows_sources.cited_artifacts). Acknowledging the preserve_freshness_acknowledgements wiring INSIDE those two artifacts (appending their own freshness_acknowledgements entries) changed their file hashes, which cascades here. Not caused by a change to this artifact's own analyser script or numbers -- only its two cited artifacts grew a provenance.freshness_acknowledgements entry each.",
+        "evidence": "Diff of both cited artifacts shows only an appended provenance.freshness_acknowledgements list entry -- no change to any row/score/metric field either file reports."
       }
     ]
   },

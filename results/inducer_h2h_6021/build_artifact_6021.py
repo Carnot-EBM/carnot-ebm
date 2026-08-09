@@ -51,6 +51,10 @@ from pathlib import Path
 from typing import Any
 
 REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
+
+sys.path.insert(0, str(REPO / "scripts"))
+from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements  # noqa: E402
+
 # EVIDENCE LIVES IN THE REPO, NOT THE SCRATCHPAD (2026-07-28 review). The first build of this
 # artifact read its shards, metas and VRAM witness from a session scratchpad under /tmp, and
 # recorded /tmp paths in the artifact. A scratchpad is wiped: the artifact's own
@@ -1427,6 +1431,7 @@ def main() -> int:
         "aggregation_wall_s": round(time.time() - t0, 3),
     }
 
+    preserve_freshness_acknowledgements(art, ARTIFACT)
     ARTIFACT.parent.mkdir(parents=True, exist_ok=True)
     ARTIFACT.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
     print(f"wrote {ARTIFACT}")

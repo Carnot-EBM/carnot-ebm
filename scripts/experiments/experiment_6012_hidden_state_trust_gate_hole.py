@@ -125,9 +125,11 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "python"))
+sys.path.insert(0, str(REPO / "scripts"))
 
 from carnot.agentic import arc_executable_world_model as e3  # noqa: E402
 from carnot.agentic import arc_world_model_trust_energy as te  # noqa: E402
+from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements  # noqa: E402
 
 OUT = REPO / "results" / "experiment_6012_hidden_state_trust_gate_hole.json"
 E3_DIR = REPO / "results" / "arc_e3"
@@ -875,6 +877,7 @@ def main() -> int:
         "summary": summary,
         "rows": rows,
     }
+    preserve_freshness_acknowledgements(payload, OUT)
     blob = json.dumps(payload, sort_keys=True, default=str).encode()
     payload["reproducibility_checksum"] = hashlib.sha256(blob).hexdigest()
     OUT.write_text(json.dumps(payload, indent=1, default=str))

@@ -972,6 +972,9 @@ def main(argv=None) -> int:
     art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(payload.encode()).hexdigest()
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
+
+    preserve_freshness_acknowledgements(art, out)
     out.write_text(json.dumps(art, indent=1, sort_keys=True))
     # Register under THIS script, not the helper's own file. The helper's `analyzer` default is a
     # documented trap: the first external reuser registered its artifact under the wrong analyser,
