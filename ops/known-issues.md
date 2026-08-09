@@ -16317,3 +16317,32 @@ treat this entry as "solved" -- it narrows the hypothesis space, it does not clo
 `heldout_accuracy=0.0` (real floor tie with no_think, not a crash) -- see the
 REQ-ARC-WMTE-6242/6243 corrections in `openspec/capabilities/arc-world-model-trust-energy/spec.md`
 and the matching correction in `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`.
+
+## 2026-08-09 reaper: new reproducible evidence from Phase 4d's ka59 attempts (zero-response, timeout-shaped failure)
+
+While attempting REQ-ARC-WMTE-6247's live-path A/B (`CARNOT_ARC_BOUNDED_REINDUCTION`), ka59's
+induce call failed identically 3/3 times under a real 1481-action live episode (budget=1500,
+`arc_scored_path_lever_harness.py`'s `run_cell`, gemma-4-31B-it-qat, client timeout=1500s).
+
+This is a DIFFERENT signature from the mid-generation-SIGINT incidents documented earlier this
+session (2026-08-09, above): those killed a server AFTER real tokens had already decoded (e.g.
+n_decoded=1439 at the moment of death). Here, the surviving (final) attempt's own instrumentation
+shows `llm.generate_calls=4, llm.responses=0, llm.llm_wall_s=1619.9s` (~27 minutes) -- FOUR
+internal retry attempts inside one `induce()` call, ZERO successful completions, across nearly
+half an hour, with `induction_skipped: {"proposer_failed_or_missing_root": 1}`. Consistent with
+either repeated near-timeout failures or the server being unreachable for the entire window,
+rather than a mid-generation kill.
+
+The failure was 100% reproducible on this specific game/config across 3 independent attempts
+(same action count, same reason, every time) -- a stronger, more specific data point than
+anything else on record for this investigation. A 4th, distinct storm-like failure then appeared
+on the very next cell (3 new server processes within a 2.5-minute window, no driver progress for
+15+ minutes) that was not further characterized -- the outer-loop session stopped debugging at
+that point rather than chasing a 4th infrastructure issue on a single lever measurement.
+
+Not investigated further here (out of scope for a single lever's gate measurement); recorded as
+the next diagnostic lead: is `timeout=1500`-scale requests on ka59 specifically more prone to this
+than the shorter calls (~200-900s) that showed the mid-generation-kill signature elsewhere? Or is
+this the same reaper with a longer window to strike, just observed for the first time on a call
+this long? Full context: `openspec/capabilities/arc-world-model-trust-energy/spec.md`
+REQ-ARC-WMTE-6247.
