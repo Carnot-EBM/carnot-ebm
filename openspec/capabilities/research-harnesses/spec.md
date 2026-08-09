@@ -1100,6 +1100,101 @@ checksum matches the normalized payload.
 |---|---|---|
 | REQ-INFRA-6211 | `python/carnot/experiment_6211_v538_post_marker_source_scope_prereg.py`; terminal artifact `results/experiment_6211_v538_post_marker_source_scope_prereg.json`. | `tests/python/test_experiment_6211_v538_post_marker_source_scope_prereg.py`. |
 
+## REQ-INFRA-6225: V538-To-V539 Terminal Transition SHALL Preserve Mixed Truth Before Forward Work
+
+Carnot SHALL build Exp6225 as a deterministic terminal-boundary handoff from
+milestone `2026.08.538` into milestone `2026.08.539`. The handoff SHALL read
+the V538 capstone and operational retro through `scripts/summarize_artifact.py`
+before it copies any conclusion. It SHALL classify every V538 task by its exact
+declared deliverable path and the current terminal-artifact classifier. It
+SHALL preserve blocked, skipped, partial, flagged, ready, missing, and complete
+states without upgrading them from conductor receipts or nearby sidecar files.
+
+Exp6225 SHALL validate the V539 roadmap without activating or editing it. The
+validation SHALL require exactly fourteen task ids in `exp6225` through
+`exp6238` order, no duplicate ids, no retired dependencies, valid deliverables,
+well-formed structured gates, complete `prior_failures` records, valid prompt
+endings, and protected-file rules. Every LLM task SHALL name at least one
+mandated SOTA GGUF. Every ARC task SHALL carry the live-agent provenance
+contract.
+
+Exp6225 SHALL record that `research-complete.yaml` contains duplicate
+milestone records as an input caveat. It SHALL not deduplicate or rewrite that
+file. Exp6225 SHALL record that `_bmad/architecture.md` is stale under the
+repository 30-day rule. It SHALL not reconcile or rewrite architecture in this
+transition task.
+
+The Exp6225 artifact SHALL be written atomically to
+`results/experiment_6225_v539_terminal_transition.json`. Its
+`inference_substrate` SHALL be exactly
+`deterministic_v538_v539_terminal_transition_audit`, `verifier_is_oracle`
+SHALL be false, and `retired_dependency_count` and `id_collision_count` SHALL
+be bare integer `0` for a passing handoff.
+
+The Exp6225 artifact SHALL include these required fields: `status`,
+`v538_milestone_and_roadmap_hash`, `v538_task_terminal_matrix`,
+`v538_capstone_path_hash_and_summary`,
+`operational_retro_path_hash_and_summary`,
+`blocked_skipped_partial_flagged_and_ready_counts`,
+`research_complete_duplicate_record_note`, `v539_roadmap_path_and_hash`,
+`v539_task_ids_and_deliverables`, `task_count`, `phase_counts`,
+`dependency_validation`, `gated_on_validation`, `prior_failure_validation`,
+`retired_dependency_count`, `id_collision_count`, `model_policy_validation`,
+`prompt_contract_validation`, `architecture_staleness_receipt`,
+`protected_files_unchanged`, `preconditions_checked`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+### SCENARIO-INFRA-6225-1: V538 Exact Deliverables Classify Fail Closed
+GIVEN the V538 completed milestone record, capstone, and exact deliverable
+paths
+WHEN Exp6225 builds the V538 terminal matrix
+THEN every V538 task from Exp6211 through Exp6224 is classified from its exact
+path, missing artifacts remain missing, sidecars are ignored, and current-rule
+flag counts stay visible.
+
+### SCENARIO-INFRA-6225-2: Missing Artifacts Do Not Become Terminal
+GIVEN a declared V538 deliverable path that does not exist
+WHEN the terminal matrix classifier runs
+THEN the row reports `present=false`, `terminal=false`, and
+`terminal_class=missing`.
+
+### SCENARIO-INFRA-6225-3: V539 Identity And Dependency Audit Is Exact
+GIVEN the V539 roadmap
+WHEN Exp6225 validates ids, deliverables, dependencies, gates, prior failures,
+and retired-dependency references
+THEN the task id list is exactly Exp6225 through Exp6238 in order,
+`id_collision_count=0`, `retired_dependency_count=0`, and each failure list is
+empty.
+
+### SCENARIO-INFRA-6225-4: LLM And ARC Prompt Contracts Are Mechanical
+GIVEN V539 tasks that use local LLMs or ARC live-agent work
+WHEN Exp6225 audits prompt text
+THEN each LLM task names a mandated GGUF, each ARC task declares
+`solve_provenance must be live_agent_self_discovery`, and every prompt ends
+with the required run command and conductor-protection sentence.
+
+### SCENARIO-INFRA-6225-5: Protected Files Stay Byte-Identical
+GIVEN before-state hashes for the active roadmap, conductor, ops ledgers,
+traceability, architecture, and historical inputs
+WHEN Exp6225 writes its own result artifact
+THEN those protected paths have identical before and after hashes. Only the
+Exp6225 spec, implementation, tests, and result artifact may change.
+
+### SCENARIO-INFRA-6225-6: Artifact Schema Is Principle Annotated
+GIVEN the transition report
+WHEN Exp6225 validates the payload before writing
+THEN every required field is present, every required field has field
+provenance and a field-principle entry, the checksum matches the normalized
+payload, and `honest_verdict` starts with a terminal prefix.
+
+## Implementation Status (REQ-INFRA-6225)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6225 | `python/carnot/experiment_6225_v539_terminal_transition.py`; terminal artifact `results/experiment_6225_v539_terminal_transition.json`. | `tests/python/test_experiment_6225_v539_terminal_transition.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
