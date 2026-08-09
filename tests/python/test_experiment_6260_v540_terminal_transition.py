@@ -155,9 +155,7 @@ def test_current_v540_roadmap_contracts_and_dirty_failures() -> None:
     dirty["tasks"][3]["gated_on"] = [
         {"upstream": dirty["tasks"][0]["id"], "artifact_field": "missing", "op": "==", "value": 1}
     ]
-    dirty["tasks"][4]["prior_failures"] = [
-        {"experiment_id": "", "verdict": "", "addressed_by": ""}
-    ]
+    dirty["tasks"][4]["prior_failures"] = [{"experiment_id": "", "verdict": "", "addressed_by": ""}]
     dirty["tasks"][5]["prompt"] = "Run command: broken"
     dirty_result = exp6260.validate_v540_roadmap_data(dirty, {2091})
 
@@ -204,6 +202,7 @@ def test_report_builder_records_v539_to_v540_handoff() -> None:
         command_receipts=[{"command": "focused", "exit_code": 0}],
         before_hashes=before,
         git_status_before=["M fixture"],
+        git_status_after_tests=["M after-test-fixture"],
         started_at=0.0,
     )
 
@@ -213,14 +212,21 @@ def test_report_builder_records_v539_to_v540_handoff() -> None:
     assert report["id_collision_count"] == 0
     assert report["exp6228_nonterminal_classification"]["terminal"] is False
     assert report["exp6228_nonterminal_classification"]["classification"] == "unknown"
-    assert report["v539_task_terminal_matrix"]["exp6228-supervised-three-family-runtime-endurance"][
-        "status_raw"
-    ] == "preconditions_recorded"
-    assert report[
-        "missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts"
-    ]["nonterminal"] >= 1
+    assert (
+        report["v539_task_terminal_matrix"]["exp6228-supervised-three-family-runtime-endurance"][
+            "status_raw"
+        ]
+        == "preconditions_recorded"
+    )
+    assert (
+        report["missing_nonterminal_blocked_skipped_null_flagged_retired_and_ready_counts"][
+            "nonterminal"
+        ]
+        >= 1
+    )
     assert report["v540_roadmap_path_and_hash"]["milestone"] == exp6260.MILESTONE_V540
     assert report["protected_files_unchanged"]["unchanged"] is True
+    assert report["preconditions_checked"]["git_status_after_tests"] == ["M after-test-fixture"]
 
     blocked = exp6260.build_report(
         REPO,
@@ -267,9 +273,7 @@ def test_report_validation_and_helper_edges(tmp_path: Path) -> None:
     assert exp6260.classify_v539_declared_tasks(tmp_path, {"bad": "row"}) == {}
     assert exp6260.required_artifact_fields_from_prompt("no block") == set()
     multiline_fields = exp6260.required_artifact_fields_from_prompt(
-        "REQUIRED ARTIFACT FIELDS: status,\n"
-        "  ready_score, other_field.\n"
-        "CONCRETE STEPS\n"
+        "REQUIRED ARTIFACT FIELDS: status,\n  ready_score, other_field.\nCONCRETE STEPS\n"
     )
     assert {"status", "ready_score", "other_field"} <= multiline_fields
     assert exp6260.gate_ok("bad", {"x": {}}, set()) == (False, "gate_not_mapping")
@@ -301,7 +305,9 @@ def test_report_validation_and_helper_edges(tmp_path: Path) -> None:
             "retire_if_same_verdict": False,
         }
     ) == (False, "retire_if_same_verdict_not_true")
-    assert exp6260.module_name_for_task({"deliverable": "results/custom-name.json"}) == "custom_name"
+    assert (
+        exp6260.module_name_for_task({"deliverable": "results/custom-name.json"}) == "custom_name"
+    )
 
     manifest = tmp_path / "ops/exclusion_manifest.yaml"
     manifest.parent.mkdir(parents=True, exist_ok=True)
@@ -347,7 +353,10 @@ def test_report_validation_and_helper_edges(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     _data, identity = exp6260.load_v540_roadmap(bad_root)
-    assert identity["selection_note"] == "V540 roadmap milestone was not found in next or active roadmap"
+    assert (
+        identity["selection_note"]
+        == "V540 roadmap milestone was not found in next or active roadmap"
+    )
 
     dirty_data = {
         "milestone": exp6260.MILESTONE_V540,

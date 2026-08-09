@@ -296,7 +296,9 @@ def classify_v539_declared_tasks(root: Path, capstone_matrix: JsonMap) -> JsonDi
 def _tasks(data: JsonMap) -> list[JsonDict]:
     tasks = data.get("tasks")
     return (
-        [dict(task) for task in tasks if isinstance(task, Mapping)] if isinstance(tasks, list) else []
+        [dict(task) for task in tasks if isinstance(task, Mapping)]
+        if isinstance(tasks, list)
+        else []
     )
 
 
@@ -312,7 +314,9 @@ def load_v540_roadmap(root: Path) -> tuple[JsonDict, JsonDict]:
     elif active_data.get("milestone") == MILESTONE_V540:
         chosen_rel = V540_ROADMAP_RELATIVE_PATH
         data = active_data
-        note = "active research-roadmap.yaml already contains V540; next roadmap is not activated here"
+        note = (
+            "active research-roadmap.yaml already contains V540; next roadmap is not activated here"
+        )
     else:
         chosen_rel = V540_NEXT_ROADMAP_RELATIVE_PATH if next_data else V540_ROADMAP_RELATIVE_PATH
         data = next_data or active_data
@@ -727,9 +731,11 @@ def preconditions_checked(
     git_status_before: Sequence[str],
     collision_receipt_before: JsonMap,
     input_hashes_before: JsonMap,
+    git_status_after_tests: Sequence[str] | None = None,
 ) -> JsonDict:
     return {
         "git_status_before": list(git_status_before),
+        "git_status_after_tests": list(git_status_after_tests or []),
         "input_hashes_before": input_hashes_before,
         "staged_roadmap_identity": v540_identity,
         "reserved_id_scan_before_artifact_write": collision_receipt_before,
@@ -748,6 +754,7 @@ def build_report(
     git_status_before: Sequence[str] | None = None,
     collision_receipt_before: JsonMap | None = None,
     input_hashes_before: JsonMap | None = None,
+    git_status_after_tests: Sequence[str] | None = None,
     started_at: float | None = None,
 ) -> JsonDict:
     started = time.perf_counter() if started_at is None else started_at
@@ -828,7 +835,13 @@ def build_report(
         "prompt_contract_validation": v540_validation["prompt_contract_validation"],
         "protected_files_unchanged": protected_files_unchanged(root, before),
         "preconditions_checked": preconditions_checked(
-            root, v540_identity, before, status_before, collision_before, inputs_before
+            root,
+            v540_identity,
+            before,
+            status_before,
+            collision_before,
+            inputs_before,
+            git_status_after_tests,
         ),
         "inference_substrate": INFERENCE_SUBSTRATE,
         "verifier_is_oracle": False,
@@ -841,9 +854,7 @@ def build_report(
         "reproducibility_checksum": "",
         "honest_verdict": "complete: V539 exact-path states preserved, Exp6228 remains nonterminal, and V540 roadmap contracts validated without activating a staged roadmap",
     }
-    nonzero_test_exit_count = sum(
-        1 for row in command_rows if int(row.get("exit_code") or 0) != 0
-    )
+    nonzero_test_exit_count = sum(1 for row in command_rows if int(row.get("exit_code") or 0) != 0)
     if (
         report["task_count"] != 12
         or report["retired_dependency_count"] != 0
@@ -1005,6 +1016,7 @@ def run_experiment(
         git_status_before=git_before,
         collision_receipt_before=collision_before,
         input_hashes_before=inputs_before,
+        git_status_after_tests=git_status_lines(root),
         started_at=started,
     )
     write_report(final, root)
