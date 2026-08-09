@@ -2830,6 +2830,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "83013d131f0dd533f2d77cb2a7c433c4fc054180b42df8a3ae971359a7ab243d",
+        "acknowledged_on": "2026-08-09",
+        "reason": "REQ-ARC-WMTE-6243 (2026-08-09): added SUBMITTED_THINK_ARM_FALLBACK_ENABLED (default False), the resolver `self.think_arm_fallback_enabled` in E3AgentPolicy.__init__, and a new wrapper method `_execute_bounded_llm_reinduction_with_arm_fallback` used at both _induce_and_plan call sites. This artifact's own generating script never sets CARNOT_ARC_THINK_ARM_FALLBACK (grep-verified), so the new flag resolves to its default-off value, under which the wrapper calls execute_bounded_llm_reinduction exactly once and returns its outcome unmodified -- byte-identical to the pre-change call sites for every code path this artifact exercises.",
+        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to: one new module constant + its env-override block in __init__ (near the sibling trajectory_transfer_enabled resolver), one new method inserted before _induce_and_plan, two call sites changed from `execute_bounded_llm_reinduction(...)` to `self._execute_bounded_llm_reinduction_with_arm_fallback(attempt, ...)` with identical kwargs, and two new entries in the SUBMITTED_AGENT_CONFIG status dict. No existing function body was modified."
       }
     ]
   },

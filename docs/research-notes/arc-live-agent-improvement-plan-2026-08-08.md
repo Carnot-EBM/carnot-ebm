@@ -242,6 +242,27 @@ confirmation the confound this session's own Phase 2a fix removed was inflating 
 advantage. sp80 is the one result that replicates across both runs. See REQ-ARC-WMTE-6242 for
 full detail.
 
+**2c. (New, operator-directed, beyond this plan's original scope) Conditional think-arm
+fallback.** Not "always run both" (2b, still locked) or "prefer think generally" (the sign test
+found no such edge) — a narrower lever the per-game data specifically supports: if the CURRENT
+arm produces no engine at all (`heldout_accuracy is None`, sp80's no_think shape: `"local model
+code unusable after 3 tries"`), retry once with the other arm before giving up. Excludes the 11
+of 13 floor-tie games (both arms already at 0.0 — retrying buys nothing there). Direction reads
+`e3.induce_think_on()` at call time rather than hardcoding a side, so it stays correct against
+whichever arm is currently primary (today: think, per the 2026-08-08 operator flip).
+**DONE (2026-08-09, REQ-ARC-WMTE-6243) — built and tested, default OFF pending its own live-path
+A/B, same standing convention as every other default flip in this plan.**
+`E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback` wraps both
+`_induce_and_plan` call sites; env-var toggle is restored in a `finally` block (the exact hazard
+class REQ-6242's confound-fix bonus finding was about). 8 new unit tests + 59-test collateral
+sweep pass unchanged (byte-identical no-op when the flag is off). Also resolved, by reading the
+code rather than building infra: gemma-4's think/no_think split is a PROMPT choice against the
+already-running server (`/no_think` is inert on gemma-4; the real switch is reasoning-engaged
+chat template vs reasoning-suppressed codeonly), not a model-load/server-restart difference — so
+the sequential single-retry design pays no teardown cost on this model already, and the L4x4
+dual-preload idea that prompted asking about it is better scoped as a SEPARATE, not-yet-built
+lever (concurrent arm racing to cut wall-clock, not to avoid setup cost).
+
 **2b. (Conditional on 2a or 1a moving the distribution) Best-of-N engine sampling.**
 NOT UNLOCKED — 2a's gate was not met (see above).
 Selection is measured NOT to be our bottleneck, and the held-out gate is an oracle-distinct

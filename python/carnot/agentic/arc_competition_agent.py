@@ -368,6 +368,23 @@ SUBMITTED_HAZARD_MOVE_PRUNER_MODE = (
 # (make_carnot_agent -> E3AgentPolicy._induce_and_plan). CARNOT_ARC_TRAJECTORY_TRANSFER=0
 # reverts to the pre-promotion (disabled) behavior.
 SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = True
+
+# THINK-ARM FALLBACK (REQ-ARC-WMTE-6243, 2026-08-09). exp6221 (the Phase 2a expanded-roster A/B,
+# REQ-ARC-WMTE-6242) found the admission-rate gate NOT MET on the sign test as a whole, but its
+# per-game breakdown surfaced a genuine, differently-shaped signal the gate itself is blind to:
+# sp80's no_think arm did not just score low, it FAILED TO PRODUCE A PARSEABLE ENGINE AT ALL
+# ("local model code unusable after 3 tries") while think produced a fully-admitted 1.0 engine on
+# the identical transitions. cd82/ls20/sk48 show the mirror failure (think fails outright,
+# no_think at least produces a scoreable-but-floor engine) -- so the fix is not "prefer think" or
+# "prefer no_think", it is "if the CURRENTLY-CONFIGURED arm produces no engine at all, retry once
+# with the other arm before giving up" -- a targeted safety net for total generation/parse
+# failure, not a second attempt at games where both arms already share a floor score (11 of 12
+# tied games in exp6221 tied AT 0.0, where retrying buys nothing). Direction is read from
+# `e3.induce_think_on()` at call time, not hardcoded, so this stays correct regardless of which
+# way `ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT` is set on a future flip. Default OFF pending its
+# own live-path A/B (this lever has never run against a real scored episode).
+# CARNOT_ARC_THINK_ARM_FALLBACK=1 opts in ahead of that A/B for local experimentation.
+SUBMITTED_THINK_ARM_FALLBACK_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
 # IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,
@@ -5170,6 +5187,15 @@ class E3AgentPolicy:
             )
             == "1"
         )
+        # REQ-ARC-WMTE-6243: resolved once here, same rationale as trajectory_transfer_enabled
+        # above -- this fires once per induce-and-plan call, not the per-action hot path.
+        self.think_arm_fallback_enabled = (
+            os.environ.get(
+                "CARNOT_ARC_THINK_ARM_FALLBACK",
+                "1" if SUBMITTED_THINK_ARM_FALLBACK_ENABLED else "0",
+            )
+            == "1"
+        )
         self._episode_transition_start = 0
         self._episode_dsl_transition_start = 0
         self._level_reinduction_pending = False
@@ -6525,6 +6551,61 @@ class E3AgentPolicy:
             return None, "logical_downsample_empty"
         return mask, "resolved"
 
+    def _execute_bounded_llm_reinduction_with_arm_fallback(self, attempt, **kwargs):
+        """REQ-ARC-WMTE-6243. Wraps `execute_bounded_llm_reinduction` (imported at module level)
+        with a single conditional retry: if the CURRENTLY-CONFIGURED think/no_think arm produces
+        no scoreable engine at all (`heldout_accuracy is None` -- the LLM never emitted code the
+        harness could even run, not merely code that scored low), retry once with the OTHER arm
+        before giving up. `heldout_accuracy` is `None` only when every refinement round failed to
+        produce a candidate the verifier could score (see `arc_llm_reinduction.py`'s
+        `last_heldout_accuracy`, initialised `None` and only ever overwritten by a real scoring
+        round) -- a strictly narrower trigger than `outcome.planned is False`, which also fires
+        when a GOOD engine simply has no winning plan, a failure mode neither arm can fix.
+
+        Every call records `attempt["think_arm_fallback"]` (fired or not, and why) so a zero-fire
+        cell is auditable rather than silently indistinguishable from "the lever doesn't exist" --
+        the same fire-counter discipline used elsewhere in this file (e.g. trajectory_transfer).
+        """
+
+        import os
+
+        from carnot.agentic import arc_executable_world_model as e3
+
+        outcome = execute_bounded_llm_reinduction(**kwargs)
+        if not self.think_arm_fallback_enabled:
+            attempt["think_arm_fallback"] = {"enabled": False}
+            return outcome
+        if outcome.heldout_accuracy is not None:
+            attempt["think_arm_fallback"] = {
+                "enabled": True,
+                "fired": False,
+                "reason": "primary_arm_produced_a_scored_engine",
+            }
+            return outcome
+
+        primary_arm_think = e3.induce_think_on()
+        fallback_arm_think = not primary_arm_think
+        prior_env = os.environ.get("CARNOT_ARC_INDUCE_THINK")
+        os.environ["CARNOT_ARC_INDUCE_THINK"] = "1" if fallback_arm_think else "0"
+        try:
+            fallback_outcome = execute_bounded_llm_reinduction(**kwargs)
+        finally:
+            if prior_env is None:
+                os.environ.pop("CARNOT_ARC_INDUCE_THINK", None)
+            else:
+                os.environ["CARNOT_ARC_INDUCE_THINK"] = prior_env
+
+        fallback_produced_engine = fallback_outcome.heldout_accuracy is not None
+        attempt["think_arm_fallback"] = {
+            "enabled": True,
+            "fired": True,
+            "primary_arm_think": bool(primary_arm_think),
+            "fallback_arm_think": bool(fallback_arm_think),
+            "primary_produced_engine": False,
+            "fallback_produced_engine": fallback_produced_engine,
+        }
+        return fallback_outcome if fallback_produced_engine else outcome
+
     def _induce_and_plan(self):
         import os
 
@@ -6837,7 +6918,8 @@ class E3AgentPolicy:
                         reinduction_proposer
                     )
                     attempt["structured_engine_enabled"] = True
-                outcome = execute_bounded_llm_reinduction(
+                outcome = self._execute_bounded_llm_reinduction_with_arm_fallback(
+                    attempt,
                     game=self.short,
                     transitions=active_transitions,
                     cell=self.cell,
@@ -6985,7 +7067,8 @@ class E3AgentPolicy:
                 # pre-graduation fallback capability, matching the surrounding
                 # program_synthesis_filter_error / ttt_prior_engine_error non-fatal pattern.
                 try:
-                    stall_outcome = execute_bounded_llm_reinduction(
+                    stall_outcome = self._execute_bounded_llm_reinduction_with_arm_fallback(
+                        attempt,
                         game=self.short,
                         transitions=active_transitions,
                         cell=self.cell,
@@ -7805,6 +7888,8 @@ SUBMITTED_AGENT_CONFIG = {
         SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED
     ),
     "object_relative_trajectory_transfer_wired": True,
+    "think_arm_fallback_enabled": SUBMITTED_THINK_ARM_FALLBACK_ENABLED,
+    "think_arm_fallback_wired": True,
     # Single source of truth is the kit constant (arc_solver_kit.BUDGET_AWARE_SEARCH_ENABLED,
     # imported top-level above) -- no separate SUBMITTED_* mirror, per the two-sources-of-truth
     # risk every other flag entry here is a mirror to avoid.
