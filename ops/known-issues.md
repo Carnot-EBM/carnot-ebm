@@ -248,6 +248,24 @@ time). The underlying script's own built-in verdict still uses the weaker
 correct primary metric (held-out exact-accuracy admission rate, clustered per game, sign test)
 is still needed once the run completes.
 
+**UPDATE 2026-08-09, same session — the reaper recurred exactly as the standing note above
+predicts, on THIS run.** ~7 minutes into the run (during sk48's think arm), the induce HTTP call
+failed with `RemoteDisconnected('Remote end closed connection without response')` -- the exact
+signature the standing "LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY" entry above documents for
+`llama-server`. ls20's think arm failed the same way immediately after (25.8s in), consistent
+with the replacement server also dying quickly. The driver then HUNG for approximately 4 hours on
+cd82 with the server confirmed dead (`curl` connection-refused, GPU 1 at 0% utilization, 4 MiB
+used) and zero new log output — `_ensure_server()`'s own recovery/retry logic did not bound its
+wait, so a dead server produced an unbounded hang rather than a clean failure. Killed manually and
+relaunched wrapped in an external `timeout 3600` (1 hour hard bound) so a future recurrence cannot
+silently burn hours again; the checkpoint mechanism preserved the 3.5 games already completed
+(dc22 window-only, m0r0 both arms clean -- confirming the no_think fix works end-to-end in a real
+run, not just a smoke test -- sk48 and ls20 no_think clean, their think arms recorded as honest
+failures rather than silently retried). **No root cause found; not attempted** (the standing
+note's own prescribed next step, audit-level syscall tracing, needs tooling/privileges not
+available in this session) -- this is additional MEASUREMENT of the existing open problem, not a
+fix.
+
 **Cross-references:** `scripts/run_exp6199_expanded_roster.py` —
 `python/carnot/experiment_6199_gemma_think_mode_ab.py` (the `_configure_arm` fix) —
 `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 2a.
@@ -285,6 +303,46 @@ remains open. No code shipped; this is analysis only.
 `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4c —
 `results/experiment_6240_change_magnitude_prior.json` —
 `docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md` (the source note).
+
+### NEW 2026-08-09 (Phase 3a of the ARC live-agent improvement plan, REQ-ARC-WMTE-6241): induce-prompt enrichment built and tested, measurement deferred (GPU busy with Phase 2a)
+
+**What was asked.** "Wire the already-ported Duck segmentation into the live induce path" —
+feed the induce prompt per-object identity/containment/adjacency, changed-cell counts, and
+semantic action names.
+
+**The plan's own premise was stale.** `objects_block`/`_object_perception_on` already exist and
+have been default ON since 2026-08-07 (REQ-ARC-WMTE-5830) — the live agent already imports the
+segmentation; the plan's cited grep was checking a different (module-level import) signal than
+the actual wiring point. Confirmed by reading the current code before writing anything.
+
+**What was genuinely still missing, and what was built.** No explicit changed-cell COUNT (only an
+RLE delta string), no computed cross-frame object-identity linkage (a text hint existed, no actual
+computed intersection), no semantic action names anywhere. Built all three behind one new flag
+(`SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED`, default OFF, env override
+`CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT`) as two new, purely additive functions
+(`_action_semantics_and_counts_block`, `_object_identity_crossref_note`) — `_transitions_block`
+and `objects_block` themselves were not modified. Action 7 is deliberately left as a bare integer
+(no established semantic meaning anywhere in this project's docs). 12 new tests
+(`tests/python/test_induce_prompt_enrichment_20260809.py`): flag-off byte-identity, both
+appendices' content when on, the object-perception-off edge case, defensive-on-bad-input. 81-test
+collateral sweep on sibling induce-prompt tests passes; the 6 failures in
+`test_codeonly_induce_scoping.py` reproduce identically on clean HEAD (git-stash verified) —
+pre-existing, matching the already-documented 41-failure class, not caused by this change.
+
+**Not a rerun of exp6214.** exp6214 built a per-transition matched before/after component-DELTA
+table (re-segmenting both sides of every transition); this is a static per-frame identity/topology
+table plus scalar counts — a different construction, named explicitly per the Failed-Experiment
+Rerun Discipline.
+
+**Deliberately not measured yet.** The plan's own gate (leave-one-game-out held-out change
+fidelity, >= 4 of 5 games improve) needs live LLM induction calls; GPU 1 was occupied by the
+concurrent Phase 2a think-mode A/B at implementation time. Built and tested now so the A/B can run
+the moment GPU time is free, rather than measured with a fabricated or borrowed substrate.
+
+**Cross-references:** full REQ write-up
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6241 —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 3a —
+`tests/python/test_induce_prompt_enrichment_20260809.py`.
 
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 

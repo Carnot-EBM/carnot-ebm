@@ -259,6 +259,17 @@ this is a DIFFERENT construction (identity/topology table, not deltas), and the 
 exp6214 as the differentiated prior attempt. *Gate: held-out change fidelity (HUD-masked,
 symmetric, per 1a) on a leave-one-game-out split; >= 4 of 5 held-out games improve, no live
 admission-rate regression.*
+**PARTIALLY DONE (2026-08-09, REQ-ARC-WMTE-6241) — built and tested, measurement deferred.** This
+item's own stated premise was stale: `objects_block`/`_object_perception_on` already exist and
+have been default ON since 2026-08-07 (REQ-ARC-WMTE-5830) — the live agent DOES already import the
+segmentation. The genuinely remaining gap, confirmed by reading the current code rather than the
+plan's own (outdated) grep: no explicit changed-cell COUNT, no computed object-identity linkage
+across frames (only a text hint), no semantic action names. Built all three behind one new flag
+(`SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED`, default OFF) as two purely additive functions —
+neither `_transitions_block` nor `objects_block` was modified. 12 new tests (byte-identical when
+off, correct content when on, action 7 deliberately left unnamed). GPU 1 was occupied by Phase 2a
+at implementation time, so the actual leave-one-game-out A/B this item's gate requires is deferred
+to a follow-up task, not skipped or fabricated.
 
 **3b. (Optional arm inside 3a's A/B) Withhold the raw numeric grid.**
 The Duck deliberately refuses to expose the raw grid, forcing object-level reasoning, keeping a
