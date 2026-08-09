@@ -22845,6 +22845,63 @@ false-positive gap in `is_confident_nav`, not a usable win.
 |---|---|---|
 | REQ-ARC-WMTE-6244 | `scripts/experiments/experiment_6244_mode_a_error_class_diagnosis.py` (analysis-only; reads frozen fixtures + offline-arcade transitions, no production code changed). | `results/experiment_6244_mode_a_error_class_diagnosis.json` (the artifact IS the check — deterministic seed reproduces identically across two independent runs; adversarial_verify and determination_preservation_lint both clean). |
 
+### REQ-ARC-WMTE-6245: Internal Held-Out Consistency Check Does Not Fix `is_confident_nav`'s cd82 Gap (Negative Result, No Code Shipped)
+
+**Origin:** direct follow-up to REQ-ARC-WMTE-6244's cd82 finding — a natural next question is
+whether `is_confident_nav` can be hardened to catch it. First candidate design: since the gate's
+existing structural checks (no padding avatar, >=3 directions, real goal) all pass on cd82's
+spurious fit, add a GENERALIZATION check instead — refit `InducedNavWorldModel` on a train-only
+slice of the same transitions, and require the held-out slice's move-transitions to be predicted
+correctly above some threshold.
+
+**BUILT, TESTED AGAINST THE KNOWN TRUE POSITIVE FIRST, AND RETRACTED BEFORE SHIPPING.** Implemented
+the internal split inside `fit()` (an additive `internal_heldout_n` / `internal_heldout_exact_match`
+pair in `fit_quality`, gated behind a `len(rows) >= 8` floor so it never fires on data too small to
+mean anything) and wired a new check into `is_confident_nav` guarded so a hand-constructed model
+(as this module's own existing regression tests use, bypassing `fit()`) is unaffected. Before
+committing, ran it against `tu93` (the ONE source-verified real nav game per REQ-ARC-WMTE-5844) —
+and found it ALSO scores 0.0 internal held-out EXACT match. Not a fitting bug: the train-only
+refit's own structural parameters for tu93 come out fully correct (avatar={4,9}, displacement
+magnitudes matching the known-good full-data fit, goal=14, wall={5}) — the 0.0 comes from the SAME
+HUD/step-counter contamination this project's own `structured_nav_heldout` comment already names
+elsewhere ("a CORRECT avatar-only nav model scores heldout ~0 ... it models the avatar's move, not
+the co-moving key / STEP-COUNTER HUD / rails"). Switching to changed-cell recall (the metric this
+project already prefers for exactly that reason) does NOT rescue it either: measured tu93=0.417,
+cd82=0.507, sk48=0.432, wa30=0.823 — BOTH known false positives (cd82, wa30) score as high or
+higher than the one true positive. Reverted the code change (`git checkout --` on
+`arc_nav_world_model.py`) before committing anything; the negative result is recorded here and in
+`results/experiment_6245_nav_confidence_internal_heldout_negative.json` instead of a silently
+undone diff.
+
+**WHY THIS IS RECORDED RATHER THAN QUIETLY DROPPED.** Per the Failed-Experiment Rerun Discipline,
+a future task re-proposing "harden `is_confident_nav` with an internal held-out check" needs this
+on record: at n=40 transitions per game (this project's typical live episode-budget scale), NEITHER
+exact-match NOR changed-cell recall discriminates a real rigid-avatar fit from a spurious
+coincidental co-translation via a train/held-out split. A retry needs either substantially more
+transitions per game than typical live budgets provide, or a genuinely different discriminating
+signal — not agreement (REQ-ARC-WMTE-6244 already ruled that out: tu93's own per-direction
+`displacement_agreement`, 0.18-0.57, is LOWER than cd82's false-positive fit, 0.5-0.8), not internal
+held-out accuracy under either metric tried here.
+
+#### SCENARIO-ARC-WMTE-6245-EXACT-MATCH-REJECTS-THE-TRUE-POSITIVE
+
+Given tu93's transitions split into a train-only refit and a held-out slice, the train-only fit's
+own structural parameters (avatar, displacement, goal, walls) are confirmed correct, yet full-grid
+exact-match accuracy on the held-out slice is 0.0 — an internal-consistency gate built on this
+metric would incorrectly reject the one real nav game it must never reject.
+
+#### SCENARIO-ARC-WMTE-6245-CELL-RECALL-DOES-NOT-SEPARATE-TRUE-FROM-FALSE-POSITIVES
+
+Given the same train/held-out split scored by changed-cell recall instead of exact match, both
+known false-positive games (cd82, wa30) score at or above the true positive's (tu93's) score —
+no single threshold on this metric both keeps tu93 and rejects cd82/wa30.
+
+## Implementation Status (REQ-ARC-WMTE-6245)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6245 | None — the candidate fix to `arc_nav_world_model.py` was built, measured against the known true/false positives, found not to discriminate, and reverted (`git checkout --`) before commit. `is_confident_nav`'s three existing structural checks are unchanged. | `results/experiment_6245_nav_confidence_internal_heldout_negative.json` (the artifact IS the check — reproduces the exact numbers from the pre-revert manual measurement; adversarial_verify and determination_preservation_lint both clean). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
