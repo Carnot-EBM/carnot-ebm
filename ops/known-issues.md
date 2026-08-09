@@ -16375,6 +16375,51 @@ a root cause. The standing reaper problem remains open. Full context:
 `openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6247's 2026-08-09 UPDATE
 section.
 
+## 2026-08-09 reaper: syscall-level tracing attempt, one clean run, no signal to trace (inconclusive, weakens naive correlation)
+
+Follow-up to the two isolation-test entries above. Took the plan doc's own suggested next
+diagnostic step (`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`'s "Standing
+infrastructure item"): armed a system-wide auditd rule on `kill(2)` filtered to signal=SIGINT
+(`sudo auditctl -a always,exit -F arch=b64 -S kill -F a1=0x2 -F key=llama_reaper`), which would
+record the CALLER's pid/comm/auid for any process sending SIGINT to any other process on the box
+-- direct evidence of the reaper's source, not just correlation.
+
+With the rule armed, re-ran the exact ka59/off cell+config that failed identically 3/3 times
+under conductor concurrency in REQ-ARC-WMTE-6247's run 4 (budget=1500, gemma-4-31B-it-qat,
+seed=20260809), this time deliberately leaving `carnot-conductor.service` ACTIVE (the opposite of
+the isolation tests, to try to catch the crash in the act). Result: the run completed CLEANLY
+(`llm_on_row_valid=true`, 3 real responses, 0 errors, ~19 minutes wall). `sudo ausearch -k
+llama_reaper` found zero hits for the entire window -- no SIGINT was sent to anything, because
+nothing crashed.
+
+**This is an honest single data point that WEAKENS, not confirms, the "conductor-active causes
+crashes" reading from the two isolation-test entries above.** With the conductor active the exact
+same way it was during the 3/3 failures, this attempt reproduced clean. Possible explanations,
+none yet distinguished: (a) the failure is intermittent/probabilistic rather than deterministically
+tied to "conductor active", and this run was simply luck; (b) the true trigger is something more
+specific than "conductor running" (e.g. a particular conductor task type, a specific timing window,
+GPU 0 activity level at a specific moment) that happened not to be present during this attempt;
+(c) the fixes already made to the exp6247 script this session (removing the redundant
+`_healthy()` pre-check that caused the run-3 server storm) incidentally also fixed whatever was
+producing run 4's failures, and this repro script inherited that fix. No way to distinguish these
+from n=1 clean + n=3/n=4 (from before the storm fix) prior failures.
+
+**Net effect on the investigation:** the correlational evidence from the two isolation tests
+stands (conductor-stopped runs were clean; this is the first same-config attempt WITH the
+conductor active post-storm-fix, and it was ALSO clean) -- so the more precise honest statement is
+now "no post-storm-fix run under conductor concurrency has been observed to crash yet," which is
+weaker than "conductor concurrency causes crashes." The syscall-tracing approach itself remains
+valid and cheap to re-arm (`sudo auditctl -a always,exit -F arch=b64 -S kill -F a1=0x2 -F
+key=llama_reaper`) -- it produced no false signal and adds negligible overhead. Next attempt at
+reproduction should try a longer/heavier cell (e.g. one that reaches a `renewed_stall_reinduction`
+re-entry, like the ka59/on or re86/on cells that also ran clean in the isolation test) or simply
+run several single-cell attempts back-to-back with the conductor active, since one clean run does
+not rule out an intermittent trigger. Auditd rule removed (`sudo auditctl -D`, confirmed via `auditctl -l` -> "No rules"). Attempted to
+stop the `auditd` service itself (it was inactive before this investigation started) but systemd
+refused: "Operation refused, unit auditd.service may be requested by dependency only" -- it is not
+manually stoppable on this box. Left running with no rules armed (near-zero overhead, no active
+capture) rather than forcing a service-level workaround for a non-essential cleanup step.
+
 ## 2026-08-09 the goal-energy zero-gradient wall is not tier-1-CNN-specific -- it likely blocks the nav template too
 
 Follow-up to Phase 4's redirect (REQ-ARC-WMTE-6244) and the nav-gate negative result
