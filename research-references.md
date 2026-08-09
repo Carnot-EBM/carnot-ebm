@@ -33140,3 +33140,101 @@ pages. Source claims remain hypotheses until Carnot reproduces them locally.
   spend an experiment on GateMate until a new physical-state receipt exists.
 
 <!-- V538-PLANNER-REFRESH-20260807-END -->
+
+## V539 Planner Refresh (2026-08-09, after milestone 2026.08.538)
+
+This refresh was completed before drafting milestone `2026.08.539`. It
+searched arXiv first across EBM reasoning, neural constraint solving, Ising
+sampling, hallucination verification, KANs, constrained generation,
+probabilistic hardware, and continual learning. It then refreshed OpenReview,
+Hugging Face Papers, Semantic Scholar citation trails for EBT (`2507.02092`)
+and ARM-EBM (`2512.15605`), Extropic and Logical Intelligence first-party
+pages, and targeted GitHub discovery. Source claims remain hypotheses until
+Carnot reproduces them locally.
+
+### Promoted: treatment activation and content-margin controls
+
+- **Canonical Joint Energy-Based Model on CIFAR-10: failure modes and
+  practical indistinguishability of Predictor-Corrector and SGLD samplers** -
+  arXiv:2608.05025, https://arxiv.org/abs/2608.05025; submitted 2026-08-05.
+  The replication found late-training buffer divergence in both samplers. It
+  also found no method-level advantage under the tested fixed-noise protocol.
+  The predictor step degenerates under that protocol, so its theoretical
+  advantage is not active. Carnot hook: Exp6220's successor must prove that
+  mode jumps fire before it compares outcomes. It must report equivalence or
+  inconclusive evidence when intervals overlap zero. A null with an inactive
+  treatment is an instrument failure, not a sampler finding.
+- **The Calibration Floor: Format Repair Can Masquerade as Self-Correction at
+  Small-to-Mid Scale** - arXiv:2608.04355,
+  https://arxiv.org/abs/2608.04355; submitted 2026-08-05. The paper separates
+  content change from format recovery and loss. Grammar-constrained decoding
+  closes much of the naive self-correction gain without changing the prior
+  reasoning trace. Carnot hook: any executable-code correction test must
+  report parseability and hidden-test content margins separately. Format-only
+  gains cannot qualify a verified-reasoning claim. This source does not reopen
+  the retired finite-ID or grammar-retry lanes.
+- **Decomposed Entailment for Factuality Checking and Hallucination
+  Detection** - arXiv:2608.05823, https://arxiv.org/abs/2608.05823; submitted
+  2026-08-06. HallDetect decomposes generated text into atomic claims, checks
+  each claim against source chunks with a compact entailment model, and emits
+  claim-to-span audit trails. This is useful verification structure, but its
+  source-grounded text task and encoder verifier do not supply an
+  oracle-distinct executable-constraint result. Keep it watch-only while the
+  retired external-text scorer lane remains closed.
+
+### Promoted: system-level continual learning
+
+- **Continual Learning in Transition** - arXiv:2608.06216,
+  https://arxiv.org/abs/2608.06216; submitted 2026-08-06. The survey separates
+  when, how, and where adaptation occurs. It treats external memory, skill
+  libraries, and interaction protocols as system-level continual learning,
+  not only parameter updates. Carnot hook: move Exp6219's safe two-timescale
+  memory from an archived deterministic stream to fresh flagship-GGUF events.
+  Keep the model frozen, keep decision snapshots read-only, and commit only
+  exact verifier-approved outcomes. Measure forward transfer, retention,
+  negative transfer, memory cost, quarantine, and rollback.
+
+### Hardware and secondary-source status
+
+- **From One to One Billion: Torx, Thermalizers, and Z1** - Extropic,
+  https://extropic.ai/writing/from-one-to-one-billion; published 2026-08-03.
+  This corrects the V538 index observation. Extropic now says Z1 has taped out
+  and lists 269,568 pbits, 215,904 coupling parameters, a greater-than-50 MHz
+  sampling rate, and less-than-1 W chip power. It also announces Torx,
+  Thermalizers, and an early-access GPU simulator API. Z1 sticks, cards, and
+  clusters remain planned for early access in 2027. Carnot has no authenticated
+  API or device route, so no Z1 execution, speed, power, energy, or availability
+  claim is schedulable.
+- **Extropic CHIPS R&D letter of intent** -
+  https://extropic.ai/writing/thermodynamic-computing-chips-in-america;
+  published 2026-07-29. The non-binding letter describes planned Z1 clusters
+  and a later Z1.5 domestic-fabrication path. It is product-roadmap evidence,
+  not an attached-hardware receipt.
+- **Semantic Scholar:** the refreshed citation endpoints still return 32 EBT
+  citations and 8 ARM-EBM citations. The newest relevant entries were already
+  indexed. Citation counts are discovery receipts, not quality evidence.
+- **OpenReview, Hugging Face Papers, GitHub, and Kona:** the refresh found no
+  new executable dependency that supersedes Carnot's exact validators, local
+  GGUF runtime, transactional memory, or Rust/PyO3 sampler ABI. Kona's current
+  first-party page still describes a constraint-enforcement layer but exposes
+  no public weights, reproducible architecture specification, or local API.
+
+### V539 planning impact
+
+- First make local flagship inference durable. Record the signal sender or an
+  honest unlocalized result, bound every wait, and prove owned recovery before
+  paying for another long A/B.
+- Finish the already-built ARC induce-prompt enrichment measurement and the
+  de-confounded think determination. Test bounded re-induction only after the
+  think configuration is frozen. Preserve live-agent self-discovery and no
+  hidden-game source access.
+- Add a small three-family code-correction content-margin experiment. Treat
+  parse recovery and semantic hidden-test gains as separate outcomes.
+- Run continuous self-learning on fresh flagship events. Use the safe
+  post-outcome two-timescale memory from Exp6219 and keep weights frozen.
+- Re-run the mode-jump sampler only through a bounded harness with measured
+  treatment activation, positive controls, and equivalence-aware reporting.
+- Keep TSU, Kona, GateMate, PolarFire, and KV260 execution out of V539 unless a
+  new authenticated or physical-state receipt arrives before activation.
+
+<!-- V539-PLANNER-REFRESH-20260809-END -->

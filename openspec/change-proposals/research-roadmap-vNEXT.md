@@ -1,339 +1,304 @@
-# Research Roadmap vNEXT — Causal ARC Levers and Runtime Recovery
+# Carnot Research Roadmap vNEXT: Durable SOTA Inference, ARC Depth, and Live Constraint Learning
 
-**Created:** 2026-08-07
+**Created:** 2026-08-09
+**Milestone:** 2026.08.539
+**Status:** Planned; activates only after terminal archival of 2026.08.538
+**Supersedes:** the V538 plan for milestone 2026.08.538, experiments Exp6211-Exp6224
+**Experiment range:** Exp6225-Exp6238
+**Informed by:** terminal V538 artifacts, the 2026-08-09 ARC follow-up record,
+the V539 source refresh, and the current exclusion manifest
 
-**Target milestone:** `2026.08.538`
+## What V538 Proved
 
-**Status:** Planned after terminal milestone `2026.08.537`
-
-**Experiment range:** Exp6211-Exp6224 (14 tasks, four phases)
-
-**Primary question:** Which operator-authorized ARC mechanisms improve the
-canonical live path under matched controls, and can Carnot restore the local
-flagship runtime while advancing safe continuous learning and executable-code
-verification without repeating retired work?
-
-**Informed by:** `research-program.md`, `_bmad/prd.md`,
-`_bmad/architecture.md` (last reconciled 2026-07-03; stale by the 30-day
-freshness rule), `ops/status.md`, `ops/changelog.md`,
-`research-complete.yaml`, milestone `2026.08.537`, all prior roadmap
-proposals, `ops/conductor-log.md`, `research-references.md` through the
-`V538-PLANNER-REFRESH-20260807-END` marker,
-`research-hardware-wishlist.md`, `ops/known-issues.md`,
-`ops/exclusion_manifest.yaml`, and the exact Exp6197-Exp6210 artifacts.
-
-## What milestone 2026.08.537 proved
-
-| Branch | Terminal evidence | Consequence for V538 |
+| Track | Evidence | Finding |
 |---|---|---|
-| Artifact integrity | Exp6197 shipped a fail-closed terminal-artifact classifier. It rejects bootstrap-only and contradictory artifacts. Exp6210 then used exact artifact state rather than conductor receipts. | Reuse the classifier. Do not spend another slot on terminality unless a new failure occurs. |
-| Source and scope audit | Exp6198 found no reproducible post-V537-marker source delta. Its stored adversarial stamp was a stale duration heuristic, while a live recheck was clean. | Start from the new V538 planning marker. A runtime source audit may honestly be null. |
-| GateMate | Exp6199 found no dated cable, power, port, board, or DirtyJTAG change and ran zero hardware commands. | Do not repeat the cached audit. Preserve the blocked state until a new physical receipt exists. |
-| Local flagship runtime | Exp6200 attempted all 18 planned model/task/budget cells, but every load ended in `backend_exception`; no family emitted one token and both transport readiness scores were zero. | Diagnose model-file integrity, loader selection, process ownership, VRAM admission, CUDA offload, and server lifecycle before any new generation task. Do not rerun the 18-cell canary unchanged. |
-| Phase D and live code memory | Exp6201-Exp6207 were blocked, skipped, or missing because Exp6200 qualified no model family. No new code pool, headroom, internal-state selector, seed stream, or prospective memory result exists. | After runtime recovery, rerun only a small transport canary, then one immutable pool and one headroom audit. Hidden-state work remains deferred until genuine headroom exists. |
-| Stochastic substrate | Exp6208 integrated the qualified mode-jump Rust/PyO3 kernel behind a default-off fallback boundary. Seeded parity passed, but several repository-wide checks exited nonzero and no runtime quality or speed claim was made. | Run a bounded matched runtime A/B with exact quality, ESS, autocorrelation, fallback, and test classification. Keep the feature default off. |
-| ARC generalization | Exp6209 scored 48 fresh canonical live-path transitions over six leave-one-game-out cells. The frozen task-aware policy beat the global policy by `0.208333`, with zero losing games, zero live action influence, and no solve or registry credit. | Preserve this as shadow evidence. The newer operator six-lever directive authorizes causal A/Bs of the shipped live mechanisms; it does not authorize solve farming or another single-shot refinement rerun. |
+| Flagship runtime | Exp6212 | All three mandated GGUF files produced short native-server token receipts, but no family had an accepted CUDA-layer receipt. `three_family_runtime_ready_score=0` and dense readiness stayed 0. The remaining failure class is process lifecycle and receipt ownership, not model availability. |
+| ARC object input | Exp6213-Exp6214 | Transition-aware object input reached the canonical policy and fired on four games. Its clustered change-fidelity interval was `[-0.006, 0.01]`; promotion readiness was only 0.8. It did not earn solve credit. |
+| ARC efficiency | Exp6215-Exp6216 | Object-relative trajectory transfer avoided one induction call per game with no score loss. Budget-aware search changed the synthetic paired score by +1.0 and actions by -7. Both are now default on, but neither proved deeper live progress. |
+| ARC portfolio | Exp6217-Exp6218 | The long Gemma think arm was runtime-gated. The portfolio skipped with fewer than two admissible levers. Later outer-loop work fixed think routing and built prompt enrichment, but its live A/B remains incomplete. |
+| Continuous self-learning | Exp6219 | Two-timescale external memory was poison-safe, rollback-exact, and free of decision-time writes. The result used deterministic Exp6145 replay and no live LLM, so it does not yet prove system learning from fresh model events. |
+| Sampler | Exp6220 | The mode-jump integration remained default off. The scientific A/B did not activate all arms and was blocked by a recursive repository-wide test path. It made no quality, timing, or hardware claim. |
+| Executable verification | Exp6221-Exp6223 | The raw-code canary, pool, and headroom chain gate-skipped because shared runtime readiness was 0. No new code-selection or hidden-state claim is available. |
+| Reconciliation | Exp6224 | V538 closed with 2 missing, 3 nonterminal, 2 blocked, 3 skipped, and 2 flagged tasks. ARC credit and hardware claims remained zero. |
 
-V537 therefore fixed evidence terminality, produced one positive ARC shadow
-result, and shipped one default-off sampler integration. It also localized the
-Phase-D blocker below generation: the three mandated GGUF families did not
-load. The milestone did **not** measure any of the newly shipped ARC levers,
-produce a competent code pool, or run prospective live-code self-learning.
+The result is useful but narrow: Carnot has safe components and several local
+positive controls, yet the live flagship path is not durable enough to feed
+the research loops that matter.
 
-## The three largest gaps to the PRD vision
+## The Three Largest Gaps to the PRD
 
-### Gap 1 — the live ARC architecture has mechanisms but no causal ranking
+1. **The local SOTA inference service is not an owned, durable substrate.**
+   Short token canaries work, but long ARC jobs still lose `llama-server`, and
+   the caller can wait without a bound. This blocks flagship ARC, code, and
+   fresh self-learning evidence.
+2. **ARC work improves first-level efficiency more than depth.** The corrected
+   world-model wall remains 0 accepted engines in 69 eligible units. Think
+   routing is fixed and prompt enrichment is built, but neither has a clean
+   terminal determination on the current runtime. No V538 task earned a level.
+3. **Continuous learning is safe but not live.** External procedural memory
+   has retention, poison, and rollback controls, but Exp6219 consumed an old
+   deterministic stream. The PRD requires verified adaptation from new events
+   and a reachable consumer, not only replay mechanics.
 
-The PRD's north star is an adaptive live agent on unseen interactive games.
-The 2026-08-07 operator directive caused six levers to land: larger live
-budgets, the one authorized Exp6091 fix, object-centric input, object-relative
-trajectory transfer, budget-aware search, and a Gemma-4-31B thinking toggle.
-Exp6091 is closed again on complete data. The remaining mechanisms are either
-partial or default off and have no matched live-path A/B. Carnot must measure
-each mechanism independently before testing a portfolio or changing defaults.
+Executable verification cuts across gaps 1 and 3. A small content-margin test
+will determine whether code correction changes semantics or only repairs
+format before Carnot pays for another large candidate pool.
 
-### Gap 2 — the local flagship runtime blocks the oracle-distinct verifier path
-
-FR-12 still lacks a held oracle-distinct selection win on competent local
-outputs. V537 moved the bottleneck from token-envelope speculation to a lower
-runtime failure: every exact cached SOTA GGUF load failed. Until Carnot records
-file integrity, compatible loader/build, real CUDA layer placement, owned
-process lifetime, and at least one generated token for each family, another
-large pool is waste. Runtime recovery must precede a changed canary, immutable
-Gemma-4-31B K=8 pool, and executable-headroom audit.
-
-### Gap 3 — continuous learning and stochastic inference lack safe temporal use
-
-FR-11 requires future decisions to improve from verified experience without
-forgetting. Existing experiments disagree on update timing: Exp5968 found its
-write-through control strongest, while Memoir reports that writing during
-pondering can hurt finite-budget learning. Carnot needs a clean distinction
-between immutable predecision reads, immediate **post-outcome** commits, and
-block-end consolidation under known constraint drift. In parallel, the
-mode-jump sampler is integrated but not qualified as a runtime choice. Both
-branches need matched, rollback-safe evaluation rather than new components.
-
-## Research findings incorporated
-
-| 2025-2026 source | Finding used | V538 response |
-|---|---|---|
-| ARCANA (arXiv:2607.09059) | Object-centric scene graphs, executable hypotheses, and failure-driven reflection form a useful reasoning decomposition. | Complete generic per-transition object deltas, translation-invariant identity tracking, and HUD-strip rejection. Measure only through `make_carnot_agent`/`E3AgentPolicy`; import no task solution or adapter. |
-| *Cost-Effective Agent Harnesses for Abstract Reasoning and Generalization on ARC-AGI-1* (arXiv:2607.06764) | Separating exploration from executable definition is effective, and a think-tool ablation has measurable value under fixed budgets. | Pre-register `/think` versus `/no_think` for the local Gemma-4-31B inducer with identical prompts, samples, and budgets; report quality, harmful regressions, tokens, and wall time. |
-| *Do Coding Agents Need Executable World Models, Simplification, and Verification to Solve ARC-AGI-3?* (arXiv:2607.15439) | Nested ablations are needed to attribute gains among executable modeling, simplification, and replay verification. | Give every ARC A/B matched seeds, identical budgets, exact replay, fire counts, A/A controls, and no-solve provenance. Test a portfolio only after independent measurements exist. |
-| Hyper-SET (arXiv:2502.11646; ICLR 2026) | Recurrent-depth computation can arise from explicit energy minimization and extrapolate to more test-time iterations. | Keep energy monotonicity and train-short/test-long curves as Phase-3 comparators; do not open a new training track in this milestone. |
-| Audited Skill-Graph Self-Improvement (arXiv:2512.23760), Memoir (arXiv:2607.20792), and AgentCL (arXiv:2606.02461) | Continual improvement needs verifier-backed promotion, reconstructible rewards, delayed writes, retention, and explicit negative-transfer controls. | Compare post-outcome and block-end commits on a sealed exact drift stream. Keep decision snapshots read-only, weights immutable, and rollback atomic. |
-| Code-correctness internal-state papers (arXiv:2512.07404 and 2606.14530), WybeCoder (2603.29088), and RepoZero (2605.07122) | Executable code supplies exact labels and potential internal signal, but only after authentic competence and headroom exist. | Restore runtime, qualify transport, seal a raw pool before private labels, and measure headroom. Defer hidden-state fitting and proof/test evolution. |
-| Extropic writing/THRML, Kona first-party pages, KAN search, Hugging Face Papers, GitHub, and EBT/ARM-EBM citation trails | No new authenticated TSU, reproducible Kona API, KAN replacement, or repository removes the current local prerequisites. | Keep physical hardware and new architecture training deferred. Run only the already-integrated software sampler A/B. |
-
-The dated discovery and duplicate-suppression record is in
-`research-references.md` under the V538 planner marker.
-
-## Target architecture
+## V539 Architecture: Owned Runtime to Verified Adaptation
 
 ```text
-                           V538 source/scope receipt
-                                      │
-                 ┌────────────────────┼────────────────────┐
-                 │                    │                    │
-          ARC live-path branch   Local GGUF branch   Temporal substrate
-                 │                    │                    │
-      object-delta wiring        3-family runtime      exact constraint
-                 │               recovery/preflight      drift stream
-       ┌─────────┼─────────┐          │                    │
-       │         │         │    changed raw-code      no memory / immediate
- object A/B  trajectory  budget       canary          post-outcome / block-end
-             transfer A/B  A/B         │               commit + rollback
-       └─────────┼─────────┘     Gemma-4-31B K=8            │
-                 │                    │               FR-11 decision
-       Gemma-4-31B think A/B     exact labels              │
-                 │                    │         mode-jump runtime A/B
-       eligible-lever portfolio  competence/headroom       │
-       on held-out games              │                    │
-                 └────────────────────┼────────────────────┘
-                                      │
-                         exact-path adversarial capstone
-
- GateMate: preserve Exp6199 blocked state; no command without a new dated
- physical-state receipt. No task in V538 claims a new ARC level solve.
+                         PHASE 0: OWN THE SUBSTRATE
+┌─────────────────────────────────────────────────────────────────────┐
+│ process tree + signal trace -> bounded supervisor -> endurance gate │
+│                                         │                           │
+│            Qwen3.6-35B-A3B  Gemma-4-31B  Gemma-4-26B-A4B          │
+└─────────────────────────────────────────┬───────────────────────────┘
+                                          │ owned CUDA + token receipts
+                  ┌───────────────────────┴───────────────────────┐
+                  │                                               │
+          PHASE 1: ARC DEPTH                         PHASE 2: VERIFIED LEARNING
+┌────────────────────────────────────┐   ┌──────────────────────────────────┐
+│ de-confounded think determination  │   │ code correction:                │
+│ prompt-enrichment held A/B         │   │   parse margin != content margin│
+│ bounded re-induction A/B           │   │ fresh exact constraint events   │
+│ admissible live portfolio          │   │ two-timescale procedural memory │
+│                                    │   │ default-off shadow consumer      │
+│ frames + own attempts only         │   │ exact verifier commits only      │
+└───────────────────┬────────────────┘   └─────────────────┬────────────────┘
+                    │                                      │
+                    └──────────────────┬───────────────────┘
+                                       ▼
+                         PHASE 3: EBM METHOD + CAPSTONE
+                    ┌──────────────────────────────────┐
+                    │ activated mode-jump paired test  │
+                    │ equivalence-aware null handling  │
+                    │ exact-path adversarial reconcile │
+                    └──────────────────────────────────┘
 ```
 
-The ARC branch has one rule: a mechanism must first fire, then improve a
-pre-registered quality or efficiency metric without a safety regression.
-Neither activation alone nor an aggregate that hides a losing game permits a
-default flip. The portfolio task may use only independently admissible levers
-and remains shadow/default off.
+The runtime gate is shared, but the ARC, verification, self-learning, and
+sampler branches remain independently terminal. A blocked GPU branch cannot
+turn CPU evidence into a success claim.
 
-## Phase 0 — Dated ingress, runtime recovery, and object representation (Exp6211-Exp6213)
+## Phase 0: Evidence and Durable Runtime (Exp6225-Exp6228)
 
-### Exp6211: post-marker SOTA delta and causal-scope preregistration
+### Exp6225: Exact V538-to-V539 transition
 
-Search only evidence strictly later than the V538 planning marker. Record all
-named source channels and append only reproducible deltas. Independently lint
-the staged roadmap against model, retirement, gate, prompt, ARC, CSL, and
-hardware rules. Freeze the ARC A/B outcome vocabulary and registry nonmutation
-contract before any measurement.
+Archive the terminal V538 task identities and re-check roadmap schema,
+exclusions, ID collisions, and protected files. The task records the stale
+architecture date and does not pretend to reconcile that document.
 
-### Exp6212: three-family GGUF runtime recovery
+### Exp6226: Post-marker evidence and scope freeze
 
-Reproduce one failed Exp6200 load per model family under a read-only diagnostic
-preflight. Verify the exact file, hash, size, revision, quantization, embedded
-template, llama.cpp build, compatible loader path, owned PID, GPU ownership,
-VRAM admission, CUDA layers, stderr, exit reason, and process lifetime. Make
-the smallest task-owned fix outside the conductor. A family is ready only when
-it produces and records at least one deterministic canary token with real CUDA
-offload. Do not kill unrelated processes or rewrite GGUF files.
+Search only after the V539 planning marker. Record every required source
+channel, including null results. Freeze model, ARC provenance, content-margin,
+continual-memory, sampler-activation, and no-hardware-claim contracts.
 
-### Exp6213: transition-aware object representation wiring
+### Exp6227: Llama-server reaper sender and wait-bound diagnostic
 
-Finish the partial object lever under a new default-off flag. Add per-transition
-connected-component deltas, translation-invariant identity matching, and
-HUD-strip rejection to the generic object table. Wire it into the canonical
-induction input with unit, mutation, and live-closure tests. This task proves
-wiring and invariant preservation only; it does not measure an ARC gain.
+Instrument a deliberate, short reproduction with process-tree snapshots and
+audit/eBPF signal receipts when available. No privilege escalation is allowed.
+Whether the sender is identified or remains unlocalized, specify a bounded
+wait and owned-process recovery contract. Do not build recovery before the
+diagnostic distinguishes server death, caller hang, and external termination.
 
-## Phase 1 — Independent ARC lever measurements (Exp6214-Exp6218)
+### Exp6228: Supervised three-family runtime endurance
 
-### Exp6214: held-out object-delta live-path A/B
+Implement the smallest task-owned supervisor outside the conductor. Qualify
+each mandated family with a real CUDA-offload receipt, repeated tokens, a
+controlled owned-child termination, bounded recovery, and an endurance
+window. This differs from Exp6212's 12-14 second canaries. It must never kill
+an unrelated PID and must keep GGUF files read-only.
 
-On a pre-registered game/seed matrix, compare the shipped object table with and
-without the Exp6213 transition additions. Use the same Gemma-4-31B generator,
-prompt apart from the object section, action budget, and replay verifier. Report
-per-game change fidelity, executable-engine yield, action efficiency, fire
-counts, and harmful regressions. This is the milestone's explicit held-out ARC
-generalization test and claims no solve.
+## Phase 1: ARC Induction and Depth (Exp6229-Exp6232)
 
-### Exp6215: object-relative trajectory-transfer A/B
+Every ARC task uses only the canonical live policy, agent-visible frames, the
+agent's own actions, and runtime reverse engineering. No game source, hidden
+state, exhaustive offline BFS, per-game adapter, or registry mutation is
+allowed. Any observed level completion must declare
+`solve_provenance=live_agent_self_discovery`.
 
-Compare the default-off within-game, level-to-level transfer stage with an
-identical baseline on replayable, already-cleared games. Measure transfer fire
-rate, verifier acceptance, displacement correctness, avoided LLM induction
-calls, actions, score, and per-game losses. This is not cross-game value
-transfer and cannot use source, BFS, adapters, registry trajectories, or hidden
-state as live inputs.
+### Exp6229: De-confounded Gemma think determination
 
-### Exp6216: budget-aware search A/B
+Reuse the already-launched expanded-roster run when its receipts are sound.
+Resume only missing pre-registered cells under the bounded supervisor. The
+primary outcome is held-out exact-admission rate with game clustering and an
+exact sign test. The task freezes think on/off for downstream work even when
+the result is null or underpowered.
 
-Compare `CARNOT_ARC_BUDGET_AWARE_SEARCH=0/1` with matched seeds and budgets.
-Require the estimator and frontier weight to fire on admitted HUD evidence;
-report deadline misses, path cost, states expanded, navigation actions, score,
-and levels observed without claiming new solve credit. A non-firing treatment
-is an instrument failure, not a null effect.
+### Exp6230: Induce-prompt enrichment held A/B
 
-### Exp6217: Gemma-4-31B `/think` A/B
+Measure the already-built default-off enrichment: semantic action names,
+explicit changed-cell counts, and cross-frame object identity/topology. This
+is not Exp6214's component-delta table. Use a leave-one-game-out matrix,
+treatment-fire preflight, A/A control, HUD-masked symmetric change fidelity,
+and live admission rate.
 
-After Exp6212 proves the dense runtime, compare native `/think` and `/no_think`
-inside the canonical world-model induction call. Hold prompt content, already
-expanded live budget, sampling, tasks, and replay verifier fixed. This task is
-authorized by the 2026-08-07 directive but may not revisit Exp6091, tune
-`n_predict`, or treat longer output as success. Primary evidence is executable
-transition fidelity and goal/change accuracy; tokens, time, completion, and
-harmful regressions are co-primary cost/safety receipts.
+### Exp6231: Bounded re-induction A/B
 
-### Exp6218: independently admissible lever portfolio on held-out games
+After the think configuration is frozen, compare the current one-attempt latch
+with the existing bounded re-induction flag. Use identical action budgets and
+stall criteria. The primary outcome is admission or level-depth gain, not
+lower action count on an already completed level.
 
-Read the four A/B artifacts without trusting prose. If fewer than two levers
-are complete, fire, and satisfy their pre-registered safety gate, emit a
-structured skip. Otherwise freeze at most the two strongest independently
-admissible levers before opening a new held-out game/seed matrix. Compare
-baseline, each lever, and their pair. Report interactions and every per-game
-loss. Keep the portfolio default off and leave the solve registry unchanged.
+### Exp6232: Admissible ARC depth portfolio or honest skip
 
-## Phase 2 — Continuous learning and software sampling (Exp6219-Exp6220)
+Recompute eligibility from current artifacts without changing the shared
+terminal classifier or erasing corrigenda. If at least two independently
+admissible levers exist, run a prospective matched portfolio. Otherwise emit
+a terminal skip with the exact missing evidence. This is a new prospective
+test; it does not re-label Exp6218.
 
-### Exp6219: two-timescale continuous constraint learning under drift
+## Phase 2: Verification and Continuous Self-Learning (Exp6233-Exp6236)
 
-Use the clean exact Exp6145 nonstationary constraint stream, not flagged
-decision artifacts. Freeze chronological family blocks and future evaluation
-IDs. Compare no memory, immediate post-outcome commit, block-end consolidation,
-and shuffled-memory controls. Every decision reads an immutable snapshot;
-verified constraints become procedural records only after outcome disclosure.
-Measure forward transfer, retained accuracy, negative transfer, update utility,
-quarantine, poison rejection, and rollback. GGUF weights remain immutable and
-no LLM runs. This is the mandatory continuous self-learning experiment.
+### Exp6233: Three-family code-correction content margin
 
-### Exp6220: mode-jump sampler runtime A/B
+On a small frozen executable-code bank, compare no revision, format-only
+normalization, and exact-diagnostic revision. Record raw generation bytes,
+parse, compile, run, public-test, and sealed hidden-test outcomes. The primary
+claim is the hidden-test content margin among already-parseable pairs. A gain
+caused only by parse recovery is useful engineering but not verified reasoning.
+This experiment applies the control from arXiv:2608.04355 without reopening
+finite-ID grammar retries or a large K=8 pool.
 
-Exercise the Exp6208 default-off runtime boundary on fixed multimodal and
-unimodal energy fixtures. Compare the existing fallback and mode-jump backend
-under matched seeds, samples, and schedules. Report exact support validity,
-energy/observable error, ESS, autocorrelation, transition counts, serialization,
-fallback behavior, and measured CPU wall time. A speed claim is forbidden
-unless quality gates pass and uncertainty excludes parity; no FPGA or TSU is
-involved.
+### Exp6234: Fresh flagship exact-constraint event stream
 
-## Phase 3 — Transport-qualified code evidence and closure (Exp6221-Exp6224)
+Create a chronological, family-shifted stream from at least two mandated local
+GGUF families. Each event contains the predecision snapshot, raw candidate,
+exact verifier result, post-outcome commit eligibility, and immutable hashes.
+Use the established exact constraint schema rather than the failed raw-code
+strategy seed.
 
-### Exp6221: changed three-family raw-code canary
+### Exp6235: Prospective two-timescale continuous learning
 
-Gated on all three Exp6212 runtime receipts. Reuse the immutable Exp6186
-calibration tasks and the preregistered 512/1024/1536 token grid, but now record
-owned server lifecycle and real token output. Store raw bytes before extraction
-and use only finish, extraction, compile, and public sample-run evidence to
-freeze an envelope. Private tests cannot select configuration. If the same
-zero-ready verdict returns after runtime recovery, retire this canary lineage.
+Run no-memory, shuffled-memory, immediate verified post-outcome commit, and
+slow block-end consolidation arms on the fresh stream. Decision snapshots are
+read-only. Model weights stay frozen. Require forward transfer, retention,
+negative-transfer, memory-cost, poison, duplicate/reorder/stale-event,
+quarantine, and exact rollback receipts.
 
-### Exp6222: authentic Gemma-4-31B K=8 code pool
+### Exp6236: Default-off online constraint-memory shadow consumer
 
-Gated on dense transport readiness. Generate exactly eight independent samples
-for each of the 72 immutable selector tasks. Seal every raw row before opening
-private tests, then label all rows through the restricted executor. No repair,
-replacement, correctness retry, or held-task reselection is permitted.
+Only after Exp6235 is promotion-ready, wire the governed memory into the real
+constraint decision path behind a default-off flag. Replay the fresh stream,
+prove fail-closed fallback and mutation sensitivity, and keep all writes after
+the verified outcome boundary. This is the milestone's FR11 reachability step.
 
-### Exp6223: executable-code competence and headroom audit
+## Phase 3: Activated Sampling and Reconciliation (Exp6237-Exp6238)
 
-Gated on pool integrity. Measure runnable coverage, per-candidate accuracy,
-both-class support, oracle@8, tuned label-free code equivalence/self-consistency,
-discordant tasks, harmful selections, and calibration/held strata. Hidden-state
-work proceeds in a later milestone only if both splits contain genuine
-non-combinatorial headroom. Otherwise retire this exact pool and record why.
+### Exp6237: Activated mode-jump quality and efficiency A/B
 
-### Exp6224: V538 exact-path adversarial capstone
+Replace Exp6220's recursive full-suite experiment path with bounded focused
+science and separate repository validation. Require nonzero jump proposals and
+acceptances, a synthetic multimodal positive control, matched seeded fallback,
+quality metrics, ESS/autocorrelation, and wall cost. Following
+arXiv:2608.05025, report positive, negative, equivalence-supported, or
+inconclusive. An inactive treatment is an instrument failure.
 
-Classify every declared artifact with the Exp6197 terminal contract. Preserve
-blocked, skipped, null, retired, and adversarial states independently. Re-run
-adversarial checks, verify ARC registry nonmutation, record the GateMate blocked
-boundary without a board command, and emit branch-specific eligibility for
-ARC levers, continuous learning, sampler runtime, and Phase D. Reconcile
-`openspec/`, `_bmad/traceability.md`, `ops/status.md`, and `ops/changelog.md`
-only to measured facts.
+### Exp6238: V539 exact-path adversarial capstone
 
-## Dependency graph
+Classify every task by its exact declared deliverable and current adversarial
+rules. Preserve blocked, skipped, null, partial, flagged, and retired states.
+Reconcile specs, traceability, status, changelog, known issues, exclusions, and
+the hardware boundary. Do not create an ARC solve, hardware speedup, sampler,
+code-verification, or self-learning claim that upstream evidence does not
+support.
+
+## Dependency Graph
 
 ```text
-Exp6211 source/scope prereg
-  ├── Exp6212 GGUF runtime recovery
-  │     ├── Exp6217 Gemma-4-31B think A/B ───────────────┐
-  │     └── Exp6221 code canary -> Exp6222 pool -> Exp6223 headroom
-  ├── Exp6213 object-delta wiring -> Exp6214 held-out A/B ─┐
-  ├── Exp6215 trajectory-transfer A/B ────────────────────┤
-  └── Exp6216 budget-aware-search A/B ────────────────────┤
-                                                          v
-                                                    Exp6218 portfolio
+Exp6225 transition
+   └── Exp6226 source and scope freeze
+         ├── Exp6227 runtime diagnostic
+         │      └── Exp6228 three-family endurance
+         │             ├── Exp6229 think determination
+         │             │      └── Exp6231 bounded re-induction
+         │             ├── Exp6230 prompt-enrichment A/B
+         │             │      └──────────────┐
+         │             ├── Exp6233 code content margin
+         │             └── Exp6234 fresh constraint stream
+         │                    └── Exp6235 prospective CSL
+         │                           └── Exp6236 shadow consumer
+         └── Exp6237 activated mode-jump A/B
 
-Exp6211 -> Exp6219 two-timescale CSL
-Exp6211 -> Exp6220 mode-jump runtime A/B
+Exp6229 + Exp6230 + Exp6231 ──> Exp6232 portfolio or skip
 
-Exp6211-Exp6223 -> Exp6224 exact-path capstone
+Exp6225-Exp6237 ─────────────> Exp6238 capstone
 ```
 
-No task may require a retired experiment ID. Exp6218 uses only current A/B
-artifacts and runs a new held-out matrix; it does not depend on retired ARC
-composition or cross-game value-transfer lines.
+Structured conductor gates are used for runtime, stream, CSL, and shadow
+readiness. The portfolio task intentionally performs its dynamic eligibility
+count inside the experiment because its rule is “at least two,” which cannot
+be expressed as a conjunction of the current gate operators.
 
-## Hardware and model requirements
+## Hardware Requirements
 
-| Resource | Use | Fail-closed preflight |
+| Tasks | Hardware | Admission and evidence |
 |---|---|---|
-| RTX 3090 GPU 0 | Dense Gemma-4-31B runtime, ARC induction A/Bs, code generation | Record owner/PID, free VRAM, CUDA build, exact offloaded layers, model interval, and wall time. Never kill an unrelated process. |
-| RTX 3090 GPU 1 | Qwen3.6-35B-A3B and Gemma-4-26B-A4B runtime canaries; explicit offload only when task-owned | Same receipts. If occupied, block or use a pre-registered safe split; do not fabricate readiness. |
-| CPU/Rust/PyO3 | Object representation, CSL, mode-jump sampler, audits, restricted code execution | Record threads, seeds, schedule, exact backend, fallback, and wall time. Software evidence carries no board claim. |
-| GateMate | No V538 command planned | Exp6199 remains authoritative. A new dated physical-state receipt is required before any detect/program action. |
-| KV260 / PolarFire | No active experiment | Their prior terminal receipts remain authoritative. Do not reopen parity or speed work. |
-| Extropic TSU / Kona | Not available | Software/docs context only. No authenticated device/API means no runtime, latency, power, or speed claim. |
+| Exp6227-Exp6230, Exp6231-Exp6234 | Two local RTX 3090 GPUs | Record both GPU UUIDs, PID ownership, free VRAM, CUDA layers, process lifetime, llama.cpp build, exact GGUF hash/revision/quantization, and raw output receipts. Never evict an unrelated process. |
+| Exp6235-Exp6238 | CPU; GPU only for replay already declared by the task | No GPU claim without task-linked engagement receipts. Mode-jump science is software-only. |
+| GateMate A1, KV260, PolarFire | No scheduled execution | GateMate has no new dated physical-state receipt. KV260 and PolarFire are terminal continuity assets. Repeating cached probes is excluded. |
+| Extropic XTR-0/Z1 | No authenticated route | Z1 is taped out and early access is planned for 2027. The simulator API is early access. No TSU/Z1 execution, power, energy, latency, or speedup claim is allowed. |
 
-LLM tasks must use these cached headline models:
+## Model Policy
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF` — flagship MoE.
-- `unsloth/gemma-4-31B-it-GGUF` — flagship dense and sole ARC inducer.
-- `unsloth/gemma-4-26B-A4B-it-GGUF` — middle MoE.
+Every task that calls an LLM uses at least one mandated local GGUF. Exp6228
+qualifies all three. ARC uses `unsloth/gemma-4-31B-it-GGUF`. The code
+content-margin task uses all three. The fresh constraint stream uses
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, with the dense family as a runtime control
+when budget permits. Legacy Qwen3.5-0.8B and gemma-4-E4B-it are smoke-only and
+cannot contribute headline rows.
 
-Legacy Qwen3.5-0.8B and Gemma-4-E4B may appear only in CPU smoke tests and
-contribute zero headline rows. Every live task records exact cached path,
-revision, hash, quantization, embedded chat template, context, sampling,
-llama.cpp build, device placement, and process interval.
+All GGUF loads use exact cached files and embedded templates through the local
+llama.cpp path. No task passes a GGUF repository directory to
+`AutoTokenizer`.
 
-## Promotion, stopping, and retirement rules
+## Prior-Failure and Retirement Boundaries
 
-1. **ARC:** one lever must fire and improve its pre-registered metric without a
-   safety regression. No task claims a solve, updates the registry, imports
-   source/BFS/adapter truth, or treats a development proxy as live evidence.
-2. **Portfolio:** fewer than two independently admissible levers produces a
-   structured skip. No exploratory combination fishing is allowed.
-3. **Runtime:** readiness requires a real owned process, CUDA offload, and
-   persisted output token. File presence or a conductor completion receipt is
-   insufficient.
-4. **Continuous learning:** promotion requires nonnegative protected retention,
-   positive forward utility, zero decision-time writes, exact post-outcome
-   provenance, poison/quarantine checks, and successful rollback. A repeated
-   Exp5895-style nonpromotion retires this exact two-timescale construction.
-5. **Sampler:** quality precedes timing. Default remains off unless support,
-   observable, ESS/autocorrelation, fallback, and task-owned tests pass.
-6. **Phase D:** no canary readiness means no pool; no pool integrity means no
-   headroom audit; no genuine headroom means no later hidden-state task.
-7. **Hardware:** unchanged GateMate state causes no command. No V538 result may
-   claim FPGA, TSU, Kona, power, or hardware speedup.
-8. **Evidence:** every terminal artifact carries principle annotations,
-   `inference_substrate`, `verifier_is_oracle`, real `duration_s`, checksum,
-   test commands/exit codes, and a terminal-prefixed `honest_verdict`.
+- Exp6227-Exp6228 name Exp6212 and change the mechanism from short canaries to
+  sender tracing, bounded supervision, forced owned-child recovery, and
+  endurance.
+- Exp6229 names the gate-blocked Exp6217 and runs only after dense runtime is
+  qualified.
+- Exp6230 names Exp6214 and changes the representation from component deltas to
+  semantic actions, counts, and identity/topology cross-references.
+- Exp6232 names Exp6218 and uses new prospective evidence. It does not clear or
+  rewrite historical corrigenda.
+- Exp6233 names Exp6200 and Exp6221. It uses a small content-margin design, not
+  another unchanged raw-code envelope or K=8 pool.
+- Exp6234-Exp6236 name the blocked Exp6206, Exp6207, Exp6164, and Exp6165
+  lineage. The new chain uses exact constraint events, a fresh qualified
+  runtime, and the already-positive Exp6219 two-timescale mechanism.
+- Exp6237 names Exp6166 and Exp6220. If the same blocked verdict recurs, retire
+  the mode-jump runtime A/B scope.
 
-## Deferred beyond V538
+Every listed entry sets `retire_if_same_verdict: true` in the YAML. No task
+requires a retired upstream ID.
 
-- Hidden-state surface extraction, CLUE fitting, and held code selection until
-  Exp6223 proves both competent candidates and real headroom.
-- Any ARC level solve, registry update, public-game adapter, offline BFS, or
-  single-shot refinement rerun.
-- Default flips for ARC levers or the mode-jump sampler before independent
-  safety and held-out evidence.
-- Weight-changing continual learning, live LoRA, or same-pass memory writes.
-- Hyper-SET/EBT/KAN training, proof/invariant co-generation, generated-test
-  evolution, TSU/Kona execution, and physical GateMate work.
+## Explicitly Deferred
+
+- Hidden-state code selectors and another K=8 pool, until Exp6233 proves
+  semantic headroom and complete executable transport.
+- Prompt-phrasing, sequential refinement, gate-threshold tuning, finite-ID
+  generated answers, external-text Phase D, cross-game ARC transfer, source
+  reading, offline ground-truth BFS, and per-game adapters.
+- Mutable GGUF weights, decision-time memory writes, and online distillation.
+- New KAN training, Hyper-SET/EBT training, Kona reproduction, or a claimed
+  TSU comparator.
+- GateMate, KV260, PolarFire, or Z1 execution without a new admissible receipt.
+
+## Exit Criteria
+
+V539 succeeds as an evidence milestone when:
+
+1. the runtime either passes owned three-family endurance or has a precise,
+   reproducible blocked verdict with no dependent model claims;
+2. each ARC lever has a terminal causal determination or an honest gate skip,
+   with live-agent provenance and no registry mutation;
+3. code correction reports format and semantic margins separately;
+4. fresh flagship events feed a terminal two-timescale CSL A/B, and the shadow
+   consumer runs only if its gate passes;
+5. sampler evidence proves treatment activation before any comparison; and
+6. the capstone preserves every non-positive state and aligns the spec and ops
+   record without modifying `research-roadmap.yaml` or the conductor.

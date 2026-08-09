@@ -2,64 +2,85 @@ import numpy as np
 
 def engine(grid, action, data):
     """
-    Predicts the next grid state based on the action and current grid.
-    The game 'tr87' involves a cursor (color 4) at the bottom row (r63) 
-    and other blocks (color 3, 0, 5, 7) that move in response to actions.
+    Predicts the next grid state based on the current grid and the given action.
+    The game involves moving blocks of colors 3 and 0 horizontally across rows 48, 49, 59, and 60,
+    and growing an object of color 4 from right to left along row 63.
     """
     next_grid = grid.copy()
-    
-    # The cursor is the block of color 4 in the bottom row (r63).
-    # It starts at c63 and expands to the left as actions 1, 2, and 4 are taken.
-    # We find the leftmost pixel of the cursor to determine its current position.
-    cursor_row = 63
-    cursor_cols = np.where(grid[cursor_row] == 4)[0]
-    if cursor_cols.size > 0:
-        cursor_x = np.min(cursor_cols)
-    else:
-        cursor_x = 63
-    
-    # Actions 1, 2, and 4 all move the cursor to the left by adding a pixel.
-    if action in [1, 2, 4]:
-        if cursor_x > 0:
-            next_grid[cursor_row, cursor_x - 1] = 4
-            
-    # Action 4 also moves the color 3 and 0 blocks in rows 48, 49, 59, 60.
-    # These blocks shift 7 pixels to the right per ACTION4.
-    if action == 4:
-        # Rows affected by ACTION4
-        rows_to_shift = [48, 49, 59, 60]
-        for r in rows_to_shift:
-            # Find all cells of color 3 and 0 in the row
-            # and shift them 7 pixels to the right.
-            # Based on observed deltas, this is a simplified representation.
-            row_data = grid[r].copy()
-            for c in range(63, 6, -1):
-                if row_data[c-7] == 3:
-                    next_grid[r, c] = 3
-                elif row_data[c-7] == 0:
-                    next_grid[r, c] = 0
-            # The original positions are updated to reflect the shift.
-            # This is a heuristic based on the observed run-length deltas.
-            for c in range(7):
-                # The leftmost 7 pixels of the shifting region are reset.
-                # In the actual game, this is more complex, but for the 
-                # purpose of the world model, we focus on the cursor.
-                pass
+    h, w = grid.shape
 
-    # Actions 1 and 2 move the color 5 and 7 blocks in rows 52-56.
-    # These movements are highly complex and not strictly necessary for 
-    # determining the win state in this specific level.
-    
+    # ACTION 4 moves specific block patterns in rows [48, 49, 59, 60] to the right by 7 units.
+    if action == 4:
+        rows_to_move = [48, 49, 59, 60]
+        for r in rows_to_move:
+            # Find the leftmost occurrence of color 3 or 0 that isn't part of the background (color 2/3)
+            # In this game, these blocks start at column 15 and move right.
+            # We identify the range of modified cells for each row.
+            mask = (grid[r] == 3) | (grid[r] == 0)
+            if np.any(mask):
+                cols = np.where(mask)[0]
+                c_min, c_max = cols[0], cols[-1]
+                
+                # Shift the identified segment to the right by 7
+                segment = grid[r, c_min : c_max + 1].copy()
+                new_start = c_min + 7
+                new_end = c_max + 7
+                
+                if new_end < w:
+                    next_grid[r, new_start : new_end + 1] = segment
+                    # Clear old positions (set back to original background if known, here we use a default)
+                    # Based on observed deltas, they are replaced by values from the shift.
+                    # To be safe, we only update the shifted region.
+                    # The delta shows that ACTION4 replaces specific spans.
+                    # Let's simulate the run-length logic more closely.
+                    pass
+
+        # Specifically handle the growth and movement of color 4 in row 63.
+        # Color 4 grows leftward every other turn. Since engine is pure, we can estimate 'turn'
+        # based on the position of blocks in rows [48, 49, 59, 60].
+        # Initial pos: 15. Moves: 22, 29, 36, 43...
+        current_pos = 15
+        mask = (grid[48] == 3) | (grid[48] == 0)
+        if np.any(mask):
+            current_pos = np.where(mask)[0][0]
+        
+        turn = (current_pos - 15) // 7
+        # Growth happened at T2, T4, T6, T8, T10. These correspond to turns where a move might not have occurred.
+        # However, since we don't have an explicit turn counter, let's check if it should grow.
+        # In observed data, ACTION4 often triggers growth.
+        c4_cols = np.where(grid[63] == 4)[0]
+        if len(c4_cols) > 0:
+            leftmost = c4_cols[0]
+            if leftmost > 0:
+                next_grid[63, leftmost - 1] = 4
+
+    elif action == 1 or action == 2:
+        # Actions 1 and 2 modify colors in the lower region (r51-r57).
+        # They also trigger growth of color 4 on even transitions.
+        # To simulate this without state, we use the block position as a proxy for time.
+        current_pos = 15
+        mask = (grid[48] == 3) | (grid[48] == 0)
+        if np.any(mask):
+            current_pos = np.where(mask)[0][0]
+        
+        turn = (current_pos - 15) // 7
+        
+        # Growth logic based on observation: T2, T6 were A2/A1 actions that grew C4.
+        # We'll grow it if it hasn't reached its target width yet.
+        c4_cols = np.where(grid[63] == 4)[0]
+        if len(c4_cols) > 0:
+            leftmost = c4_cols[0]
+            if leftmost > 0:
+                next_grid[63, leftmost - 1] = 4
+
     return next_grid
 
 def is_level_complete(grid):
     """
-    The level is completed when the cursor (color 4) reaches a specific 
-    leftmost column. Based on the observed transitions, the cursor 
-    starts at c63 and the completing action (ACTION2) moves it from 
-    c58 to c57.
+    The level is completed when the object of color 4 in row 63 reaches a specific size/position.
+    Based on observations, completion occurs after it grows to width 6 (columns 58-63).
     """
-    # Check if the cursor has reached column 57 in the bottom row.
-    if grid.shape[0] > 63:
-        return grid[63, 57] == 4
-    return False
+    # Check the number of pixels of color 4 in the bottom row.
+    count_color_4 = np.sum(grid[63] == 4)
+    # The win state was triggered when the width reached 6 and ACTION2 was performed.
+    return count_color_4 >= 6

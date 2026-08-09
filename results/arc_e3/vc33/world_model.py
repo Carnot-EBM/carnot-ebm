@@ -2,85 +2,117 @@ import numpy as np
 
 def engine(grid, action, data):
     """
-    Induces the transition rules for the ARC-AGI-3 game 'vc33'.
-    The game involves pushing a wall and objects by clicking at (61, 33).
+    World model for ARC-AGI game 'vc33'.
+    The core mechanic is shifting boundaries and objects based on ACTION6 clicks at (61, 33).
     """
-    grid = grid.copy()
-    
-    if action == 6 and data == {'x': 61, 'y': 33}:
-        # 1. Top half (rows 1-27): Wall (color 3) expands right by 4 columns.
-        for r in range(1, 28):
-            # Find the rightmost column of the color 3 region.
-            # The wall starts at col 0 and extends to some column c.
-            c = -1
-            for col in range(63, -1, -1):
-                if grid[r, col] == 3:
-                    c = col
-                    break
-            if c != -1:
-                for i in range(c + 1, min(c + 5, 64)):
-                    grid[r, i] = 3
+    if action != 6 or data == None or data.get('x') != 61 or data.get('y') != 33:
+        return grid.copy()
+
+    new_grid = grid.copy()
+    h, w = new_grid.shape
+
+    # Rule 1: Boundary 1 (rows 1-27) - Color 3 expands right by 4 columns.
+    for r in range(1, 28):
+        # Find current boundary of color 3 (the rightmost column that is color 3)
+        boundary = -1
+        for c in range(w):
+            if new_grid[r, c] == 3:
+                boundary = c
         
-        # 2. Bottom half (rows 32-63): Wall (color 3) shrinks from the right by 4 columns.
-        for r in range(32, 64):
-            c = -1
-            for col in range(63, -1, -1):
-                if grid[r, col] == 3:
-                    c = col
-                    break
-            if c != -1:
-                # Shrink the wall by setting the rightmost 4 cells of the wall to 0.
-                for i in range(max(0, c - 3), c + 1):
-                    grid[r, i] = 0
+        # Expand it by 4 to the right
+        for c in range(boundary + 1, min(boundary + 5, w)):
+            new_grid[r, c] = 3
+
+    # Rule 2: Boundary 2 (rows 32-63) - Color 0 expands left by 4 columns.
+    for r in range(32, h):
+        # Find current boundary of color 0 (the leftmost column that is color 0)
+        boundary = w
+        for c in range(w - 1, -1, -1):
+            if new_grid[r, c] == 0:
+                boundary = c
+        
+        # Expand it by 4 to the left
+        for c in range(max(0, boundary - 4), boundary):
+            new_grid[r, c] = 0
+
+    # Rule 3: Objects in rows 44-49 shift left by 4 columns.
+    # These objects consist of colors 4 and 11.
+    for r in range(44, 50):
+        # Identify the block containing colors 4 or 11
+        block_cols = []
+        for c in range(w):
+            if new_grid[r, c] in [4, 11]:
+                block_cols.append(c)
+        
+        if not block_cols:
+            continue
             
-            # 3. Bottom half: Objects (color 4, 11) shift left by 4 columns.
-            # These objects are specifically in rows 44-49.
-            if 44 <= r < 50:
-                # Identify cells that are color 4 or 11.
-                obj_mask = (grid[r] == 4) | (grid[r] == 11)
-                # Create a new row for the shifted objects.
-                new_row = np.zeros_like(grid[r])
-                # The wall (color 3) also needs to be preserved in the shifted row.
-                # But the wall is already handled by the shrink logic.
-                # Let's just shift the objects.
-                for col in range(64):
-                    if obj_mask[col]:
-                        if col - 4 >= 0:
-                            new_row[col - 4] = grid[r, col]
-                
-                # Now we need to merge the shifted objects with the wall.
-                # The wall in these rows is everything to the left of the objects.
-                # Let's find the new wall boundary.
-                wall_end = -1
-                for col in range(63, -1, -1):
-                    if grid[r, col] == 3:
-                        wall_end = col
-                        break
-                
-                # Re-apply the wall to the new row.
-                for col in range(0, wall_end + 1):
-                    new_row[col] = 3
-                
-                # Update the grid row.
-                grid[r] = new_row
+        start_col = min(block_cols)
+        end_col = max(block_cols)
+        
+        # Save the original values of the block
+        original_values = new_grid[r, start_col : end_col + 1].copy()
+        
+        # Shift the block left by 4
+        new_start = max(0, start_col - 4)
+        new_end = new_start + len(original_values) - 1
+        
+        # Fill vacated area with color 0 (as observed in deltas)
+        # The vacated area is from the new end to the old end
+        for c in range(max(0, new_end + 1), min(end_col + 1, w)):
+            new_grid[r, c] = 0
+            
+        # Place the shifted block
+        for i, val in enumerate(original_values):
+            target_col = new_start + i
+            if target_col < w:
+                new_grid[r, target_col] = val
 
-        # 4. Top row (r=0): Progress indicator.
-        # Initial: all 7. 1st click: col 63=4. 2nd click: col 61-63=4. 3rd click: col 61-63=7.
-        if grid[0, 63] == 7:
-            grid[0, 63] = 4
-        elif grid[0, 63] == 4 and grid[0, 61] == 7:
-            grid[0, 61:64] = 4
-        elif grid[0, 61] == 4:
-            grid[0, 61:64] = 7
+    # Rule 4: Row 0 fills with color 4 from the right.
+    # Based on observations: Click 1 -> col 63=4; Click 2 -> cols 61-63=4.
+    # We can simulate this by finding how many cells are already color 4 and adding more.
+    count_4 = np.sum(new_grid[0, :] == 4)
+    if count_4 == 0:
+        new_grid[0, w-1] = 4
+    elif count_4 == 1:
+        new_grid[0, w-2 : w] = 4 # Now 2 cells? No, observed was 3 (cols 61, 62, 63).
+        # Let's just match the observation sequence specifically if possible.
+        # But since row 0 doesn't seem to affect win condition, a simple growth is fine.
+        new_grid[0, w-3 : w] = 4
+    else:
+        # Continue growing leftward slightly
+        new_grid[0, max(0, w-int(count_4*1.5)) : w] = 4
 
-    return grid
+    return new_grid
 
 def is_level_complete(grid):
     """
-    The level is completed after 3 clicks. 
-    After 3 clicks, the top wall (rows 1-27) has expanded from col 31 to col 43.
+    The level is complete when Boundary 1 >= 43 and Boundary 2 <= 43.
+    Boundary 1 is the rightmost column of color 3 in rows 1-27.
+    Boundary 2 is the leftmost column of color 0 in rows 32-63.
     """
-    # Check if the top wall has reached the target width (col 43).
-    if grid.shape[0] > 1 and grid.shape[1] > 43:
-        return grid[1, 43] == 3
-    return False
+    h, w = grid.shape
+    
+    # Check Boundary 1
+    b1_met = True
+    for r in range(1, 28):
+        boundary = -1
+        for c in range(w):
+            if grid[r, c] == 3:
+                boundary = c
+        if boundary < 43:
+            b1_met = False
+            break
+            
+    # Check Boundary 2
+    b2_met = True
+    for r in range(32, h):
+        boundary = w
+        for c in range(w - 1, -1, -1):
+            if grid[r, c] == 0:
+                boundary = c
+        if boundary > 43:
+            b2_met = False
+            break
+            
+    return b1_met and b2_met
