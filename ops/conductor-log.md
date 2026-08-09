@@ -15531,3 +15531,4 @@ Still active  |
 | 2026-08-09 04:15 UTC | Authentic Gemma-4-31B immutable K=8 executable-cod | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6221-three-family-code-transport-canary-v |
 | 2026-08-09 04:15 UTC | Executable-code competence and genuine selectable- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_inte |
 | 2026-08-09 04:17 UTC | Authentic Gemma-4-31B immutable K=8 executable-cod | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6221-three-family-code-transport-canary-v |
+| 2026-08-09 04:18 UTC | Executable-code competence and genuine selectable- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6222-livecodebench-k8-pool-v3.pool_inte |
