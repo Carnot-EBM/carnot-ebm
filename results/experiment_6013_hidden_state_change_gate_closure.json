@@ -8870,6 +8870,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "REQ-ARC-WMTE-6230 (2026-08-08): component-load diagnostics for the candidate router and frame-change scorer (a threading.local side channel populated inside _load_submitted_candidate_router/_load_submitted_frame_change_scorer, read back by E3AgentPolicy.__init__, surfaced read-only in generator_liveness_witness()). Neither loader's return type changed (still bare Any | None). Same reachability argument as the 6223-6229 acknowledgement passes on this file: this artifact's rebuild path either never constructs E3AgentPolicy, or reads completed historical run transcripts rather than re-invoking the module, or its own recorded fields are untouched by a read-only diagnostic addition to __init__ and generator_liveness_witness.",
         "evidence": "Same grep/self-measured evidence as the prior 6223-6229 acknowledgement passes on this path; the new code in this commit (the threading.local diagnostics dict, the two loaders' greppable print statements, the __init__ read-back, the four new generator_liveness_witness fields) is confined to E3AgentPolicy construction/introspection surface none of these scripts reach any more than the prior edits were."
+      },
+      {
+        "path": "scripts/experiments/experiment_6013_hidden_state_change_gate_closure.py",
+        "sha256_was": "1706b06221237628512d3bc53092535a6850c00eec6d34add9ea0e5dc96227fc",
+        "sha256_now": "208b79a4f3ecb53004bbd269e4256e27842e86e387285f164e390bca9ee1280b",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Freshness-lint self-fix (2026-08-08, ops/known-issues.md 'A related, systemic defect', FIXED note): this analyser script gained an import of, and one call to, a new helper preserve_freshness_acknowledgements(art, out_path) in scripts/analyze_scored_path_lever_ab.py. The helper's only effect is to copy forward provenance.freshness_acknowledgements from whatever is ALREADY ON DISK at out_path into a FUTURE rebuild's provenance dict, before that future rebuild's write -- it cannot retroactively change any value already computed and written into THIS artifact. Reachability argument holds by construction (the diff is a no-op for any artifact that isn't itself being freshly rebuilt at this exact moment), not by per-script inspection.",
+        "evidence": "git diff on the analyser script: an import line + one line calling preserve_freshness_acknowledgements(<art>, <out_path>) immediately before the pre-existing write call, with no other lines touched. Verified via a real scratch dry-run per script (copy the real tracked artifact to /tmp, rebuild against that scratch path, confirm freshness_acknowledgements survives while other provenance fields correctly refresh) -- see the commit message and ops/known-issues.md's FIXED note for the full per-script verification record."
       }
     ]
   },

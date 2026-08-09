@@ -887,6 +887,12 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
     out = Path(a.out).resolve()
     art = build(out_path=out)
+    try:
+        import analyze_scored_path_lever_ab as sibling
+
+        sibling.preserve_freshness_acknowledgements(art, out)
+    except Exception:
+        pass
     out.write_text(json.dumps(art, indent=1, default=str) + "\n")
     print(json.dumps(art["headline"], indent=1))
     print(

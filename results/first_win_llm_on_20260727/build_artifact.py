@@ -1430,6 +1430,13 @@ def main() -> int:
             for f in sorted((OUT / "cells").glob("*.json"))
         ],
     }
+    # Copy forward any provenance.freshness_acknowledgements this artifact already carries on
+    # disk, BEFORE the wholesale overwrite below -- otherwise a rebuild silently erases that
+    # append-only audit log (see preserve_freshness_acknowledgements's docstring).
+    sys.path.insert(0, str(REPO / "scripts"))
+    from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
+
+    preserve_freshness_acknowledgements(payload, ART)
     payload["artifact_build_s"] = round(time.time() - t0, 3)
     payload["reproducibility_checksum"] = (
         "sha256:"

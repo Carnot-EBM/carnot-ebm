@@ -725,6 +725,10 @@ def main() -> int:
         "verifier_is_oracle": False,
         "honest_verdict": "complete_four_arm_matrix_measured",
     }
+    sys.path.insert(0, str(REPO / "scripts"))
+    from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements
+
+    preserve_freshness_acknowledgements(artifact, Path(args.out))
     Path(args.out).write_text(json.dumps(artifact, indent=2))
     print(json.dumps(summary, indent=2))
     return 0

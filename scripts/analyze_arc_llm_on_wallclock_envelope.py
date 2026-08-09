@@ -44,10 +44,13 @@ import math
 import re
 import statistics as st
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "scripts"))
+from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements  # noqa: E402
 
 # ---------------------------------------------------------------------------------------------
 # THE CANDIDATE CAPS, ranked by provenance strength. This table is the honest core of the report:
@@ -1661,6 +1664,7 @@ def main(argv=None) -> int:
     )
     out["acceptance_gate_all_passed"] = all(v.get("passed") for v in g.values())
     out["duration_s"] = round(time.time() - _t_start, 3)
+    preserve_freshness_acknowledgements(out, Path(a.out))
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(
         f"wrote {a.out}  gates_all_passed={out['acceptance_gate_all_passed']} "

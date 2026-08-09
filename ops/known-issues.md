@@ -372,14 +372,50 @@ a quarantined artifact to headline, capstone, and paper-v6 aggregation. Note als
 event the conductor changed **no measurement value at all** in the four files; the diff was pure
 determination loss, so fail-forward bought nothing here.
 
-**A related, systemic defect, filed not fixed.** The freshness lint's own printed remedy ("rebuild
-with: …") **destroys never-prune records**. The analyser scripts build `art["provenance"] = {…}`
-wholesale without ever reading the artifact they overwrite, so a rebuild silently drops
-`provenance.freshness_acknowledgements`. Reproduced on two independent analysers. Current exposure:
-**170 acknowledgement blocks across 13 of the 16 artifacts** in `ops/analyzer_artifact_index.json`.
-It is self-concealing — the rebuild also resets `provenance.code[*].sha256` to current, so the lint
-turns GREEN at the same moment the audit trail is erased. Fix belongs with the analysers' owner
-(read-merge-preserve the existing provenance block); until then, prefer acknowledgement over rebuild.
+**A related, systemic defect, filed not fixed.** ~~The freshness lint's own printed remedy
+("rebuild with: …") **destroys never-prune records**. The analyser scripts build
+`art["provenance"] = {…}` wholesale without ever reading the artifact they overwrite, so a rebuild
+silently drops `provenance.freshness_acknowledgements`. Reproduced on two independent analysers.
+Current exposure: **170 acknowledgement blocks across 13 of the 16 artifacts** in
+`ops/analyzer_artifact_index.json`. It is self-concealing — the rebuild also resets
+`provenance.code[*].sha256` to current, so the lint turns GREEN at the same moment the audit trail
+is erased. Fix belongs with the analysers' owner (read-merge-preserve the existing provenance
+block); until then, prefer acknowledgement over rebuild.~~
+
+**FIXED 2026-08-08.** Shared helper `preserve_freshness_acknowledgements(art, out_path)` added to
+`scripts/analyze_scored_path_lever_ab.py` (the module every one of the 16 analysers already
+imports `register_analyzed_artifact` from): reads whatever is currently on disk at `out_path`
+before the overwrite and copies forward ONLY `provenance.freshness_acknowledgements` into the new
+provenance dict — every other provenance field (`sha256`, `git_head`, `rebuild_command`, …)
+correctly still refreshes on rebuild, since only the acknowledgement log is an append-only audit
+trail rather than a fact about the current build. Wired into all 16 analysers' write site(s)
+(2 files had 2 write sites — a normal-completion path and a precondition-blocked early-exit path —
+both wired). Verified per-file with a real scratch dry-run against each script's own real tracked
+artifact + real cached row inputs (13 of 16; 3 needed static-only verification where a cheap
+GPU-free rebuild wasn't feasible) via an adversarially-verified fan-out (15 wire agents + 15
+independent re-verification agents, each re-running the dry-run itself rather than trusting the
+first agent's report): 13/15 CONFIRMED outright, 2/15 PARTIALLY_CONFIRMED (both were wording
+inaccuracies in the wiring agent's own self-report, not code defects — one claimed an impossible
+CLI call signature for a script whose real CLI works differently but whose actual fix and dry-run
+were independently reproduced correctly by the verifier; one claimed its target artifact had no
+acknowledgements to protect yet when it actually already carries a real one at HEAD, meaning that
+fix is load-bearing today, not merely prophylactic). Unit-tested in
+`tests/python/test_analyze_scored_path_lever_ab.py::TestPreserveFreshnessAcknowledgements` (7
+tests: no-existing-file no-op, existing-file-without-acks no-op, real preservation, missing
+`provenance` key on the new dict is created, malformed on-disk JSON fails open, no `provenance` key
+on the EXISTING file is a no-op, an empty acknowledgements list is not copied).
+
+**One honest provenance note.** The helper's own addition to `scripts/analyze_scored_path_lever_ab.py`
+and its unit tests landed inside two conductor commits sharing the identical unrelated message
+("[conductor] Pre-gate block: Native Gemma-4-31B think versus no-think induction A/B", 2026-08-08
+20:11:33 and 20:13:35 -0400 — `a9d4b13922` for the helper, `7303588b67` for the tests). This
+happened because the conductor's `git add -A` (see the determination-drop entry above; same
+mechanism, benign here) staged-and-committed each file mid-edit, two minutes apart, while this fix
+was in progress. Content is correct and verified in both cases (`diff` against the intended change
+is empty); only the commit message is misleading for anyone tracing this fix's history. Not
+amended/rewritten — both commits are already pushed, and this project's standing rule is
+forward-only correction, never history rewriting. Recorded here so a future `git blame`/
+`git log -S` search for this helper or its tests is not misled.
 
 ### 2026-08-03 (outer-loop, MEASURED — the Phase D domain search FAILS: no corpus in this repo passes all three criteria, and the two failure modes are disjoint)
 

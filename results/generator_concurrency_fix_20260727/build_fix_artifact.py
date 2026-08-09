@@ -12,11 +12,15 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 REPO = Path("/home/ianblenke/github.com/ianblenke/carnot")
 SCRATCH = Path(__file__).resolve().parent
 OUT = REPO / "results" / "outer_loop_arc_generator_concurrency_fix_20260727.json"
+
+sys.path.insert(0, str(REPO / "scripts"))
+from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements  # noqa: E402
 
 
 def sha(p: Path | str) -> str:
@@ -867,6 +871,7 @@ art["provenance"] = {
 payload = json.dumps(art, sort_keys=True).encode()
 art["reproducibility_checksum"] = "sha256:" + hashlib.sha256(payload).hexdigest()
 
+preserve_freshness_acknowledgements(art, OUT)
 OUT.write_text(json.dumps(art, indent=1))
 print(f"wrote {OUT}")
 print("gates:", {k: v for k, v in art.items() if k.startswith("acceptance_gate_g")})

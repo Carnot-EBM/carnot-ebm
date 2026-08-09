@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 
 RAW = Path("/home/ianblenke/github.com/ianblenke/carnot/results/generator_concurrency_5866")
@@ -19,6 +20,10 @@ OUT = Path(
     "experiment_5866_generator_concurrency_vram_envelope.json"
 )
 REPO_ROOT = Path("/home/ianblenke/github.com/ianblenke/carnot")
+
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from analyze_scored_path_lever_ab import preserve_freshness_acknowledgements  # noqa: E402
+
 SRC = Path(
     "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/"
     "87d32f9e-547c-4832-8fd3-2cabb283bc83/scratchpad/genconc"
@@ -995,6 +1000,8 @@ artifact["provenance"] = {
 checksum_src = "".join(sha(RAW / f) for f in ("raw.json", "boundary_c16384.json", "fixprice.json"))
 checksum_src += "".join(sha(SRC / f) for f in ("harness.py", "boundary.py", "fixprice.py"))
 artifact["reproducibility_checksum"] = hashlib.sha256(checksum_src.encode()).hexdigest()
+
+preserve_freshness_acknowledgements(artifact, OUT)
 
 OUT.write_text(json.dumps(artifact, indent=2) + "\n")
 print(f"wrote {OUT}")

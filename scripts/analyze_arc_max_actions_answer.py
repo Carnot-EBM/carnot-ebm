@@ -2948,6 +2948,16 @@ def main(argv=None) -> int:
         "This analyser's OWN runtime. It reads persisted JSON, so it is small by construction and is "
         "NOT evidence about how long the measurement took -- see measurement_wall_s."
     )
+
+    # Copy forward any `provenance.freshness_acknowledgements` the on-disk file at `a.out` already
+    # carries, BEFORE this write replaces it -- otherwise a rebuild silently erases that append-only
+    # audit log. See `preserve_freshness_acknowledgements`'s docstring in analyze_scored_path_lever_ab.py.
+    from pathlib import Path as _P
+
+    import analyze_scored_path_lever_ab as _reg
+
+    _reg.preserve_freshness_acknowledgements(art, _P(a.out))
+
     with open(a.out, "w") as fh:
         json.dump(art, fh, indent=1, default=str)
 
