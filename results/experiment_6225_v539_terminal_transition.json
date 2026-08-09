@@ -1139,5 +1139,18 @@
   "test_exit_codes": {},
   "duration_s": 7.351255744928494,
   "reproducibility_checksum": "sha256:c03baa4bab459a7967f747b28d7969276bc3e623d5c53d402de0ad763ee5c92d",
-  "honest_verdict": "complete: V538 mixed terminal states archived and V539 roadmap identity validated without activating or editing protected files"
+  "honest_verdict": "complete: V538 mixed terminal states archived and V539 roadmap identity validated without activating or editing protected files",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=7.351255744928494 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed. Methodology unverifiable."
+    }
+  ]
 }
