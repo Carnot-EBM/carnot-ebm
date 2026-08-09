@@ -96,6 +96,13 @@ honest canonical substrate is `verifier_ensemble_against_cached_candidates` (flo
 then rerun exp6218 (the lever-PORTFOLIO experiment, which skipped with "fewer than two eligible
 levers"). This is minutes of work standing between us and our first measured lever-interaction
 result. *Gate: exp6218 runs with >= 2 eligible levers and reports a portfolio verdict.*
+**DONE (2026-08-08, commit `9aa0728676`):** both substrates corrected, seeds added, exp6218
+re-run twice (a pre-existing, unrelated `honest_verdict` terminal-prefix bug in exp6218 was found
+and fixed along the way). A separate structural gap was found and filed, not fixed: a corrected
+artifact's fabrication-gate quarantine cannot currently be cleared by the lever-portfolio gate,
+because `corrigendum_pending` is permanent-once-populated per `determination_preservation_lint.py`
+while `terminal_artifacts.py`'s `_artifact_flagged()` treats any non-empty `corrigendum_pending` as
+still flagged. See `ops/known-issues.md`'s 2026-08-08 Phase 0a entry for the full reasoning.
 
 **0b. Close the think-routing gaps (the cheapest scored-path improvement available).**
 Gate the two unconditional reasoning-suppressing fences (`arc_executable_world_model.py:6892`,
@@ -105,6 +112,13 @@ chat-completions route dropping `repeat_penalty`/`repeat_last_n`. Fix the
 stale "default OFF" comments (`:6485`, `:6948`, `arc_competition_agent.py:7852`). Think's
 measured edge is specifically in INDUCTION quality — exactly what the two ungated shapes govern.
 *Gate: all three induce prompt shapes reason when think is on; unit test pins the gating.*
+**DONE (2026-08-08, commit `e587931bd0`):** both fences gated on `induce_think_on()`, repeat_penalty/
+repeat_last_n threaded through `_chat_complete_request`, the `use_chat_template`+codeonly
+truncation interaction documented as real but dormant (not reachable on the live path today, so
+left as a comment rather than a redesign), all three stale comments corrected. 6 new tests (15/15
+in the file passing). A broader regression sweep found 41 pre-existing failures across 7 files
+(confirmed via `git stash` clean-HEAD comparison — none newly introduced; the true blast radius of
+an already-filed bug class was larger than previously measured), documented in `ops/known-issues.md`.
 
 **0c. Fix the two broken default-OFF levers so future A/Bs don't retire them for wrong reasons.**
 `CARNOT_ARC_GRADED_GOAL_BIAS`: the "win-state exemplar" is provably the current level's OPENING
@@ -112,12 +126,32 @@ board, making the bias an inverted gradient pulling search back toward the start
 (`arc_competition_agent.py:5052-5058, 5200-5323`). `CARNOT_ARC_ACTIVE_PROBE`: plan/pi bookkeeping
 asymmetry — post-probe reinduction either skips a new plan's first step or raises IndexError.
 *Gate: regression tests reproducing each defect, then green.*
+**DONE (2026-08-08, commit `507f072d74`; REQ-ARC-WMTE-6231 / REQ-ARC-WMTE-6232):** the win-state
+exemplar now reads the last-admitted transition's pre-action grid instead of the post-transition
+frame; `_induce_and_plan` resets `self.plan`/`self.pi` at entry, plus a bounds guard on the induce
+branch as defense in depth. 4 new regression tests confirmed to fail on pre-fix source (via `git
+stash` comparison) and pass on the fix; the broader `arc_competition_agent` test surface (90 tests
+across 7 files) stayed green. Both fixes are no-ops today since both env vars default off.
 
 **0d. Re-derive the completion-cap arithmetic for OUR hidden runs.**
 Pull per-game level-completion counts from our Kaggle scorecards. Compute how much of our score
 is completion-capped versus efficiency-limited. This one number decides the standing budget
 split between depth work and efficiency work. *Gate: a one-page note with the per-game cap
 table; decision recorded.*
+**DONE (2026-08-08):** full note at
+`docs/research-notes/arc-completion-cap-vs-efficiency-2026-08-08.md`. Using the real
+`arc_agi.scorecard` formula (a level scores 0 if not completed, otherwise
+`min((baseline/agent)^2*100, 115)`, weighted-averaged per game by level index) against our own
+25-game level-count structure: the full efficiency range (worst plausible to the formula's own
+maximum bonus) moves a game's score by under 1.7x, while going from "reach level 1" to "reach
+level 1 and level 2" roughly triples it at the same first-win rate. **Decision: the standing
+budget favors depth (reach one more level) over efficiency (reach the same level in fewer
+actions) by roughly an order of magnitude in expected score impact.** Honest caveat recorded in
+the note: this model, even at a 100% first-win rate with zero deepening, cannot fully reproduce
+the observed 0.08 hidden score on our own game-count structure — matching it requires most games
+to reach level 2 and some level 3, deeper than our documented "live multi-level rate ~0" belief.
+That gap does not change the decision (a calibration that closed it would require MORE depth, not
+less), but it is flagged as unresolved rather than papered over.
 
 ### Phase 1 — re-measure the wall; ship the paid-for wins (one CPU pass + one short GPU pass)
 

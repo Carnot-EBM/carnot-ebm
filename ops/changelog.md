@@ -1,5 +1,49 @@
 # Carnot — Changelog
 
+## 2026-08-08 (outer-loop, ARC live-agent improvement plan Phase 0a-0d)
+
+**Instruction:** "Build me a plan that I can follow to try the best remaining possibilities" for
+improving the live agent's score, then "start on phase 0" / "continue" / "start phase 0d" across
+several turns.
+
+**Plan.** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md`, synthesized from
+three parallel research agents (a run-ledger analyst, a cloned-leaderboard-project analyst, and a
+whitepaper analyst) plus the same-day adversarial live-agent code review
+(`docs/research-notes/live-agent-adversarial-review-2026-08-08.md`).
+
+**0a (commit `9aa0728676`).** Fixed a non-canonical `inference_substrate` string on exp6214/exp6216
+that was quarantining both artifacts under `DURATION_TOO_SHORT`; reran the lever-portfolio
+experiment (exp6218), fixing a separate, pre-existing `honest_verdict` terminal-prefix bug found
+along the way. Filed, without fixing, a real structural conflict between the fabrication-gate's
+permanent-corrigendum rule and the lever-portfolio gate's flagged-artifact exclusion.
+
+**0b (commit `e587931bd0`).** Gated two remaining unconditional reasoning-suppressing code fences
+in `LocalGGUFProposer` on `induce_think_on()`, fixed the chat-completions route silently dropping
+`repeat_penalty`/`repeat_last_n`, documented a related but currently-unreachable
+`use_chat_template`+codeonly truncation interaction, corrected four stale comments. 6 new tests. A
+broader regression sweep found the true blast radius of an already-filed pre-existing bug class was
+41 failures across 7 files, not the previously-documented 17/2 (confirmed via `git stash`
+comparison that none were newly introduced).
+
+**0c (commit `507f072d74`, REQ-ARC-WMTE-6231/6232).** Fixed the `CARNOT_ARC_GRADED_GOAL_BIAS`
+win-state exemplar (was reading the post-transition frame — the next level's opening board — not
+the level just won) and a `CARNOT_ARC_ACTIVE_PROBE` plan/pi bookkeeping bug (a stale index after a
+one-step probe plan either silently skipped a new plan's first step or raised `IndexError`). 4 new
+tests confirmed to fail on pre-fix source, pass on the fix. Both flags default off, so both fixes
+are no-ops on the scored path today.
+
+**0d (no code change).** Re-derived the real Kaggle scoring rule against our own 25-game
+level-count structure: full write-up at
+`docs/research-notes/arc-completion-cap-vs-efficiency-2026-08-08.md`, decision recorded in
+`ops/known-issues.md`. Decision: budget favors depth (reach one more level) over efficiency
+(same level, fewer actions) by roughly an order of magnitude in expected score impact.
+
+**Common thread across 0a-0c:** 24 `results/*.json` freshness-acknowledgement entries across the
+three commits, including three occurrences of the same second-order cascade (acknowledging one
+artifact changes its hash, re-staling a third artifact that cites it by content hash). 0c was
+committed with `git commit --only` after the conductor's own concurrent `git add -A` had staged
+unrelated files, to avoid sweeping them into this commit.
+
 ## 2026-08-02 (outer-loop, REQ-ARC-WMTE-6071: cut the largest AVOIDABLE action class -- inert probes)
 
 **Instruction:** cut the largest avoidable class from the 2026-08-02 ARC action census, behind an
