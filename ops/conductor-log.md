@@ -15525,3 +15525,5 @@ Still active  |
 | 2026-08-09 04:05 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6220_mode_ju |
 | 2026-08-09 04:07 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
 | 2026-08-09 04:09 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
+| 2026-08-09 04:11 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
+| 2026-08-09 04:13 UTC | Authentic Gemma-4-31B immutable K=8 executable-cod | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6221-three-family-code-transport-canary-v |
