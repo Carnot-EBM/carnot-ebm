@@ -22530,6 +22530,91 @@ implementation time, so the actual measurement is deferred to a follow-up task, 
 |---|---|---|
 | REQ-ARC-WMTE-6241 | `python/carnot/agentic/arc_executable_world_model.py:SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED`, `_action_semantics_and_counts_block`, `_object_identity_crossref_note`, `_action_label`, `_n_changed_cells`. | `tests/python/test_induce_prompt_enrichment_20260809.py` (12 tests: flag defaults/byte-identity, both appendices' content, action-7/RESET left bare, defensive-on-bad-input). |
 
+### REQ-ARC-WMTE-6242: Phase 2a Expanded-Roster Gate — NOT MET, Plus a Confound-Fix Confirmation (Negative Result)
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 2a. The
+pre-registered gate: on the live agent's own admission bar (`heldout_accuracy>=1.0`), does
+gemma-4-31B's think mode beat no_think on >=6 discordant games at p<0.05 (exact two-sided sign
+test)? This is the CORRECT primary metric — `experiment_6199_gemma_think_mode_ab.py`'s own
+`_verdict()` decides on the weaker, noisier `levelup_positive_recall` instead.
+
+**THE RUN.** `scripts/run_exp6199_expanded_roster.py` (roster: the 12-game default plus r11l,
+sc25, s5i5, lp85) against the confound-fixed `_configure_arm` (this milestone's own earlier fix:
+explicit `CARNOT_ARC_INDUCE_THINK=0` for no_think, not `os.environ.pop`). Ran in 4 attempts across
+~2.5 hours real wall-clock, interrupted twice by the project's standing, unsolved llama-server
+"reaper" issue (see `ops/known-issues.md` 2026-08-09 entries) and once by its own 1-hour external
+`timeout` wrapper; each interruption resumed cleanly from `BatchedInferenceRunner`-style
+per-(game,arm) checkpointing with zero data loss. Completed all 16 games;
+`results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` is the terminal artifact.
+
+**THE GATE.** `scripts/analyze_exp6221_admission_rate.py` ->
+`results/analysis_exp6221_admission_rate_20260809.json`. 3 of 16 games are window-only precheck
+(dc22, ka59 — no level-up window; sc25 — a pre-existing `window_error` parsing bug in that game's
+own precheck, unrelated to think mode) and excluded from the admission table by construction, per
+the analysis script's own filter to rows with `arm in {no_think, think}`. Of the 13 comparable
+games: **1 favors think (sp80), 0 favor no_think, 12 tie** (11 of the 12 ties are BOTH ARMS AT THE
+ACCURACY FLOOR, 0.0 -- not both succeeding). Sign test p=1.0. Gate condition (>=6 discordant
+favoring think, p<0.05): **NOT MET.**
+
+**HONEST READING OF THE FLOOR EFFECT.** 11 of 13 games place both arms at `heldout_accuracy=0.0`
+-- this is a low-power, largely degenerate test for the admission-rate metric specifically: most
+of the roster (particularly the 4 newly-added games) is too hard for gemma-4-31B's induction to
+clear the bar under EITHER arm, so the gate has little room to discriminate think from no_think on
+this expanded roster. This is NOT the same failure mode CLAUDE.md's False-Negative Trap names (no
+oracle/upper-bound check applies to an admission-rate gate the way it does to a rerank-vs-baseline
+comparison), but the same discipline applies in spirit: a null driven mostly by floor effects is
+weaker evidence than a null driven by real discrimination, and is recorded as such rather than
+read as a clean "think doesn't help."
+
+**BONUS FINDING -- DIRECT CONFIRMATION THE CONFOUND FIX MATTERED.** Comparing this run's 10
+roster-overlapping games against the ORIGINAL pre-confound-fix artifact
+(`results/experiment_6199_gemma_think_mode_ab.json`, produced before the `_configure_arm` fix)
+on the SAME admission metric: `vc33`'s think arm scored `heldout_accuracy=1.0` (admitted) in the
+OLD run and `0.0` (floor, tied with no_think) in the NEW confound-fixed run -- the one clear
+think-favors-admission result in the old data disappears once the leftover `CARNOT_ARC_INDUCE_
+THINK` env var from a prior arm can no longer leak into the "no_think" condition. `sp80` is the
+one game where think's advantage holds up in BOTH the old and the new run (`0.0` -> not-admitted
+for no_think, `1.0` for think, both times) -- this is the one result in this whole investigation
+with any real replication behind it. Net: across both runs on the 10 overlapping games, the
+honest count is 1 favor-think (sp80, replicated), 0 favor-no_think, 9 tie -- consistent with the
+expanded-roster gate result and nowhere near the pre-registered threshold.
+
+**VERDICT AND WHAT IT UNLOCKS.** Gate not met -> think's default stays whatever
+`experiment_6199`'s own prior disposition already set (this task did not flip any live default;
+it only supplies the pre-registered analysis the plan called for). Phase 2b (conditional
+best-of-N sampling gated on think) does **NOT** unlock -- its own precondition (Phase 2a gate MET)
+is unsatisfied. `sp80`'s clean, twice-replicated think-advantage is the one concrete lead worth
+carrying forward if a future task wants to dig into WHY that specific game responds to think mode
+where 12 others do not.
+
+#### SCENARIO-ARC-WMTE-6242-ADMISSION-GATE
+
+Given the exp6221 expanded-roster artifact's `per_game_results` rows, the analysis computes
+per-game admission (`induction_ok AND heldout_accuracy>=1.0`) for the no_think and think arms,
+classifies each game as think-favored, no-think-favored, or tied, and reports an exact two-sided
+binomial sign test over the discordant games. The gate is MET only when discordant games favoring
+think are >=6 AND p<0.05.
+
+#### SCENARIO-ARC-WMTE-6242-FLOOR-EFFECT-DISCLOSURE
+
+Given a majority of comparable games show both arms at `heldout_accuracy=0.0`, the writeup
+discloses the floor-effect proportion explicitly rather than reporting the gate's binary outcome
+in isolation, so a "gate not met" reading is not mistaken for "think was tested and clearly loses"
+when most of the sample in fact had no headroom for either arm to demonstrate an advantage on.
+
+#### SCENARIO-ARC-WMTE-6242-CONFOUND-CONFIRMATION
+
+Given the pre-confound-fix exp6199 artifact and the post-fix exp6221 artifact both contain a
+`vc33` row, the analysis cross-references the two runs' `heldout_accuracy` for vc33's think arm
+and reports the before/after values, documenting that the fix changed a concrete outcome (not just
+a code-review-time inference).
+
+## Implementation Status (REQ-ARC-WMTE-6242)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6242 | `scripts/analyze_exp6221_admission_rate.py` (analysis-only; no production default flipped). | `results/analysis_exp6221_admission_rate_20260809.json` (the artifact IS the check — exact sign test, reproducibility_checksum pinned, cites `results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` by hash). Cross-run confound confirmation verified by direct read of `results/experiment_6199_gemma_think_mode_ab.json`'s vc33 row (no new test file — a one-shot historical comparison, not a regression to guard going forward). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

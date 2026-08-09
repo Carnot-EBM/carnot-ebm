@@ -16239,3 +16239,25 @@ still unknown -- consistent with the standing unsolved reaper entry above
 (host-OS causes already ruled out). Not re-investigating root cause this
 pass; operational kill-and-resume is the accepted mitigation per prior
 session guidance (checkpoint makes this cheap).
+
+## 2026-08-09 Phase 2a gate result: NOT MET (REQ-ARC-WMTE-6242, negative)
+
+Expanded-roster (16-game) de-confounded think-vs-no_think A/B completed after 4 attempts
+(2 llama-server reaper recurrences, 1 external-timeout cutoff, checkpoint recovery each time,
+zero data loss). Pre-registered admission-rate gate: 1 game favors think (sp80), 0 favor
+no_think, 12 tie (11 of 12 at the accuracy FLOOR -- both arms 0.0, not both succeeding). Sign
+test p=1.0. Gate needs >=6 discordant favoring think at p<0.05 -- not close. Phase 2b (best-of-N
+sampling, conditional on 2a) does NOT unlock.
+
+Floor-effect caveat: most of the expanded roster (particularly the 4 newly-added games) is too
+hard for gemma-4-31B's induction to clear the admission bar under EITHER arm, so this is a
+low-power test on most of the sample, not strong evidence against think generally.
+
+Bonus finding: vc33's think arm scored heldout_accuracy=1.0 in the OLD (pre-confound-fix)
+exp6199 artifact, 0.0 in the NEW (post-fix) exp6221 run -- direct confirmation the no_think
+confound this session's own fix removed (`os.environ.pop` -> explicit `CARNOT_ARC_INDUCE_
+THINK=0`) was inflating think's apparent advantage on at least one game. sp80 replicates as a
+genuine think win across both runs -- the one concrete lead left standing.
+
+See openspec/capabilities/arc-world-model-trust-energy/spec.md REQ-ARC-WMTE-6242 for full
+writeup. results/analysis_exp6221_admission_rate_20260809.json is the artifact.
