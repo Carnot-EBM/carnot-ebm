@@ -15542,3 +15542,4 @@ Still active  |
 | 2026-08-09 11:28 UTC | Llama-server signal-sender and unbounded-wait diag | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:   }
 +          |
 | 2026-08-09 12:03 UTC | Llama-server signal-sender and unbounded-wait diag | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-09 12:51 UTC | Supervised three-family GGUF runtime endurance and | OK | 90 passed, 1 warning in 9.34s |
