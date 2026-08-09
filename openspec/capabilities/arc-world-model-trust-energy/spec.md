@@ -22658,6 +22658,98 @@ false or bare `0`
 |---|---|---|
 | REQ-ARC-WMTE-6215 | `python/carnot/experiment_6215_arc_object_relative_trajectory_transfer_ab.py`. | `tests/python/test_experiment_6215_arc_object_relative_trajectory_transfer_ab.py`. |
 
+### REQ-ARC-WMTE-6216: Budget-Aware Search Matched Live-Path A/B
+
+Experiment 6216 SHALL measure the default-off budget-aware search wiring from
+REQ-ARC-WMTE-6180-WIRING. It SHALL compare A/A, disabled, and enabled arms
+through the canonical live agent path that constructs `E3AgentPolicy` and
+`StepwiseExplorer`. It SHALL flip only `CARNOT_ARC_BUDGET_AWARE_SEARCH`.
+
+Before any arm runs, the experiment SHALL hash `ops/arc_solve_registry.yaml`.
+It SHALL freeze only game/seed cells with admitted monotone HUD support. It
+SHALL freeze the generator identity, search budget, action budget, seeds,
+observations, primary deadline/action metric, estimator tolerance, quality
+guard, and safety gate.
+
+The fallback inducer for all arms SHALL be the Exp6212-qualified
+`unsloth/gemma-4-31B-it-GGUF` Q4_K_M runtime. The artifact SHALL record the
+GGUF file, hash, quantization, llama.cpp build, CUDA layer receipt, process
+identity, and first-token receipt. Legacy models SHALL contribute zero rows.
+
+The experiment SHALL persist HUD region evidence, budget estimates, frontier
+weights, selected nodes, actions, scores, model receipts, and wall time before
+aggregation. It SHALL report estimator calibration, consumer fire counts,
+deadline misses, path cost, states expanded, navigation actions, score,
+paired clustered intervals, and per-game harmful regressions. A zero-fire cell,
+support-floor miss, deadline accounting miss, or estimator miscalibration SHALL
+be an instrument failure, not a null benefit.
+
+The experiment SHALL NOT claim a solve. It SHALL NOT add registry credit. It
+SHALL NOT update the registry. It SHALL NOT use game source, BFS, adapters,
+registry trajectories, or hidden state as live input.
+
+Experiment 6216 SHALL write
+`results/experiment_6216_arc_budget_aware_search_ab.json` with bare top-level
+fields for `status`, `registry_precheck_and_hash_before_after`,
+`preregistered_game_seed_hud_support_matrix`, `model_specs`,
+`canonical_live_entrypoint_receipts`, `matched_arm_configuration`,
+`hud_admission_and_estimator_receipts`, `estimator_error_by_game`,
+`consumer_fire_counts`, `deadline_miss_counts`,
+`path_cost_states_expanded_navigation_actions_score_and_wall_time_by_arm_game`,
+`paired_clustered_intervals`, `harmful_regression_count_and_games`,
+`aa_control`, `source_bfs_adapter_registry_hidden_state_access_counts`,
+`solve_claimed`, `level_credit_delta`, `registry_update_count`,
+`ab_complete_score`, `budget_aware_promotion_ready_score`,
+`protected_files_unchanged`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+The fields `solve_claimed` and `verifier_is_oracle` SHALL be false. The fields
+`level_credit_delta`, `registry_update_count`, and each forbidden-access count
+SHALL be bare `0`. The artifact SHALL NOT include `solve_provenance`, because
+no solve is claimed.
+
+#### SCENARIO-ARC-WMTE-6216-REGISTRY-PRECHECK
+
+**Given** the ARC solve registry and the proposed HUD support matrix
+**When** Experiment 6216 builds its preregistration
+**Then** the registry hash is recorded before arm execution
+**And** selected cells are support-bearing HUD cells
+**And** the same registry hash is recorded after aggregation.
+
+#### SCENARIO-ARC-WMTE-6216-MATCHED-STEPWISE-ARMS
+
+**Given** a frozen game, seed, HUD mask, observations, and frontier graph
+**When** A/A, disabled, and enabled arms run
+**Then** all non-flag configuration is identical
+**And** the enabled arm reaches `StepwiseExplorer._frontier` through
+`E3AgentPolicy`
+**And** the consumer fires at least once on the support floor.
+
+#### SCENARIO-ARC-WMTE-6216-CALIBRATION-AND-DEADLINE-GATE
+
+**Given** admitted monotone HUD evidence with a known remaining-action count
+**When** the estimator and consumer receipts are aggregated
+**Then** estimator error is within the frozen tolerance
+**And** deadline misses are reported for both arms
+**And** non-fire or miscalibration is classified as an instrument failure.
+
+#### SCENARIO-ARC-WMTE-6216-ARTIFACT-GUARDS
+
+**Given** the completed artifact
+**When** it is validated
+**Then** all required fields are present
+**And** solve, credit, registry-update, oracle, and forbidden-access fields are
+false or bare `0`
+**And** `solve_provenance` is absent.
+
+## Implementation Status (REQ-ARC-WMTE-6216)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6216 | `python/carnot/experiment_6216_arc_budget_aware_search_ab.py`. | `tests/python/test_experiment_6216_arc_budget_aware_search_ab.py`. |
+
 ### REQ-ARC-WMTE-6180-WIRING: Budget-Exhaustion Meter Wired Into `StepwiseExplorer`
 
 **Origin:** 2026-08-07 operator directive (lever #5 of the ARC six-lever push, `ops/known-issues.md`).
