@@ -15557,3 +15557,4 @@ Still active  |
 | 2026-08-09 13:24 UTC | Gated on Exp6228 three-family readiness: code corr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 13:26 UTC | Gated on Exp6228 three-family readiness: code corr | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
 | 2026-08-09 13:28 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
+| 2026-08-09 13:30 UTC | Gated on Exp6228 two-family readiness: fresh exact | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6228-supervised-three-family-runtime-en |
