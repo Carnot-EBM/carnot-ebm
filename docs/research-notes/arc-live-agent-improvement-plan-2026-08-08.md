@@ -419,20 +419,32 @@ for free on the next scored run. Run this A/B AFTER 2a settles think, because re
 value depends on the per-attempt success rate think sets. *Gate: banked levels or admission
 rate up under the flag; no action-budget regression on games that never stall.*
 
-**ATTEMPTED, INFRASTRUCTURE-BLOCKED (2026-08-09, REQ-ARC-WMTE-6247) — zero valid cells, not a
-lever result.** Four launches against ka59+re86 (budget 1500, real live-path episodes via
-`arc_scored_path_lever_harness.py`'s `run_cell`). Fixed 3 real bugs along the way (a `REPO` path
-bug crashing the final write; missing invalid-cell detection letting a reaper-corrupted cell be
-silently accepted as done; a self-inflicted server storm from a redundant health-check stacked on
-top of `_ensure_server()`'s own identical internal check). After fixing all three, ka59/off still
-failed identically on all 3 retry attempts (same action count, same failure reason each time) —
-the surviving attempt shows 4 internal LLM retries, 0 successful completions, over ~27 minutes.
-A 4th, uncharacterized storm-like failure then appeared moving to the next cell. Stopped there
-rather than chasing a 4th distinct infrastructure issue on a single lever measurement — the
-remaining problem implicates the shared, pre-existing, unsolved llama-server reaper, out of scope
-for this task. `CARNOT_ARC_BOUNDED_REINDUCTION` stays default OFF; no evidence either way. Full
-detail (including the reproducible ka59-specific failure pattern, useful for the standing reaper
-investigation) in REQ-ARC-WMTE-6247.
+**ATTEMPTED, INFRASTRUCTURE-BLOCKED on first 4 launches (2026-08-09, REQ-ARC-WMTE-6247) — zero
+valid cells, not a lever result.** Four launches against ka59+re86 (budget 1500, real live-path
+episodes via `arc_scored_path_lever_harness.py`'s `run_cell`). Fixed 3 real bugs along the way (a
+`REPO` path bug crashing the final write; missing invalid-cell detection letting a reaper-corrupted
+cell be silently accepted as done; a self-inflicted server storm from a redundant health-check
+stacked on top of `_ensure_server()`'s own identical internal check). After fixing all three,
+ka59/off still failed identically on all 3 retry attempts (same action count, same failure reason
+each time) — the surviving attempt shows 4 internal LLM retries, 0 successful completions, over
+~27 minutes. A 4th, uncharacterized storm-like failure then appeared moving to the next cell.
+Stopped there rather than chasing a 4th distinct infrastructure issue on a single lever
+measurement — the remaining problem implicates the shared, pre-existing, unsolved llama-server
+reaper, out of scope for this task.
+
+**RETRIED CLEAN under isolation (2026-08-09, same day, REQ-ARC-WMTE-6247 UPDATE section) — real
+gate result obtained.** Same script, config, seed, budget; re-run with `carnot-conductor.service`
++ `carnot-orphan-cleanup.timer` both stopped for the duration (operator-directed isolation test —
+second such instance this session, see `ops/known-issues.md`'s reaper section). All 4 cells
+completed on their FIRST attempt, all valid, real nonzero LLM responses throughout. Gate result:
+the lever FIRED on both games (`renewed_stall_reinduction: 2` each) but `reached_any_level`
+stayed false on both arms of both games — a clean negative, not an infrastructure non-result.
+**`CARNOT_ARC_BOUNDED_REINDUCTION` stays default OFF** — the measurement is now trustworthy, but
+n=2 games is too thin to justify a production flip either way even on a clean result. Framing:
+promising-but-preliminary validation that the measurement PATH works (lever fires correctly, the
+harness now produces reliable readings), not a gate-passed or gate-failed verdict on the lever's
+value — that needs a wider roster. Full detail, including the second reaper-correlation instance,
+in REQ-ARC-WMTE-6247's 2026-08-09 UPDATE section and `ops/known-issues.md`.
 
 **4e. (Reserve bet) Real Python REPL sandbox on the 31B generator.**
 The Duck's core architecture — arbitrary-Python sandbox with mid-program `action()` round-trips —

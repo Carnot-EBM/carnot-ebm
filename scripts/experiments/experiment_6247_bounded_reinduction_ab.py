@@ -95,6 +95,16 @@ def build_artifact() -> dict:
     assert os.environ.get("CARNOT_ARC_DISABLE_INDUCTION") is None, (
         "CARNOT_ARC_DISABLE_INDUCTION must be unset -- this is an LLM-on measurement"
     )
+    # FIXED 2026-08-09 (found during the isolation-retry run): this script previously did NOT
+    # override CARNOT_ARC_E3_DIR, so `induce()` wrote its induced engines straight into the
+    # SHARED `results/arc_e3/<game>/world_model.py` store -- the conductor's own accumulated
+    # state -- unconditionally overwriting it on every cell. This is the exact destructive
+    # pattern `project_arc_engine_store_regression` warns about (unconditional overwrite
+    # destroys retained value). Caught only because the conductor happened to be stopped for
+    # this run's isolation test; the two clobbered files were restored via `git checkout --`
+    # before commit. Isolating to a private scratch dir makes this script safe to re-run at
+    # any time, conductor running or not.
+    os.environ.setdefault("CARNOT_ARC_E3_DIR", str(REPO / "results" / "arc_e3_exp6247_scratch"))
     from arc_scored_path_lever_harness import run_cell
 
     os.environ["CARNOT_ARC_GENERATOR_CUDA_GPU"] = os.environ.get(
