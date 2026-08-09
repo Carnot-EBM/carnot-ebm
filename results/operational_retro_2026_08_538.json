@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.538",
+  "generated_at": "2026-08-09T05:21:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 45.4,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "V538 exact-path adversarial capstone and evidence reconciliation",
+      "duration_minutes": 40.84,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family GGUF load, CUDA admission, and lifecycle recovery",
+      "duration_minutes": 3.49,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Held-out canonical live-path A/B for transition-aware object input",
+      "duration_minutes": 0.5,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Default-off transition-aware ARC object representation wiring",
+      "duration_minutes": 0.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Within-game object-relative trajectory-transfer causal A/B",
+      "duration_minutes": 0.15,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 45.4 minutes, including 8 compute-bound experiments. The longest compute-bound entries were the 40.84-minute exact-path adversarial capstone and evidence reconciliation and the 3.49-minute three-family GGUF load, CUDA admission, and lifecycle recovery. The timing data has no phase detail to explain their durations, and the locked compute-task GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "Runtime was concentrated in the exact-path adversarial capstone and evidence reconciliation, but the timing data has no phase breakdown and therefore does not establish why it took 40.84 minutes.",
+    "Disk-modification-time reconstruction provides experiment-level duration but no task-linked phase or process telemetry.",
+    "The GPU snapshot is not linked to an experiment interval, so it cannot establish GPU efficiency across the compute-bound tasks.",
+    "The data has no simultaneous model-count or runner-selection receipt, so it cannot establish a missed DualGPURunner engagement."
+  ],
+  "improvements_suggested": [
+    "Add task-scoped phase timers and checkpoints to capstone reconciliation so setup, verification, and evidence work can be measured and resumed independently.",
+    "Record experiment-linked GPU utilization, memory, process ownership, and cleanup receipts from task start through task end.",
+    "Record concurrent model count and selected runner; use DualGPURunner only when at least two models are loaded in parallel.",
+    "Cache unchanged evidence inputs and reconcile only changed evidence during exact-path capstones.",
+    "Schedule independent model work on an available GPU when task dependencies permit."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument and checkpoint each capstone reconciliation phase.",
+    "Add task-linked GPU and process-lifecycle telemetry.",
+    "Add explicit model-count and runner-selection receipts with concurrency-aware GPU scheduling."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded data identifies where runtime accumulated but does not explain the internal cause or support a positive savings estimate. A single unlinked GPU snapshot also cannot prove inefficient compute execution or a missed concurrent-model dispatch."
+}

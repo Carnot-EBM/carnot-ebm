@@ -6087,3 +6087,10 @@ The critical path for milestone .250:
 - theme: a short closeout concentrated runtime in one compute canary and one synthesis capstone
 - key result: the compute leader took 5 minutes; the data shows no compute-task GPU idle, but it cannot explain the runtime cause or assess concurrent model dispatch
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.538
+
+- exp_range: no data available this milestone
+- theme: exact-path capstone reconciliation concentrated runtime under coarse disk-time reconstruction
+- key result: the compute-task GPU-idle classification is false, but the data cannot explain the longest task; parallel model loading is not documented, so runner selection cannot be judged
+- acceptance: no data available this milestone
