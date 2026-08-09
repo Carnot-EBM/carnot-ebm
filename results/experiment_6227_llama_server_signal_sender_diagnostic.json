@@ -1,0 +1,973 @@
+{
+  "bounded_reproduction_deadline": {
+    "cleanup_grace_s": 30,
+    "hard_outer_deadline": true,
+    "health_timeout_s": 360,
+    "outer_deadline_s": 600,
+    "retry_budget": 1,
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.deadline",
+    "started_wall_time": 1372765.75156328,
+    "token_timeout_s": 120
+  },
+  "caller_thread_and_wait_state_receipts": {
+    "bounded_wait_observed": true,
+    "classifications": [
+      "connection_refused",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "unclassified_runtime_failure",
+      "no_failure",
+      "no_failure"
+    ],
+    "thread_snapshots": [
+      {
+        "label": "before_launch",
+        "pid": 2864667,
+        "threads": [
+          "MainThread"
+        ],
+        "timestamp_utc": "2026-08-09T12:01:08Z"
+      },
+      {
+        "label": "before_token_request",
+        "pid": 2864667,
+        "threads": [
+          "MainThread"
+        ],
+        "timestamp_utc": "2026-08-09T12:01:21Z"
+      },
+      {
+        "label": "after_cleanup",
+        "pid": 2864667,
+        "threads": [
+          "MainThread"
+        ],
+        "timestamp_utc": "2026-08-09T12:01:21Z"
+      }
+    ],
+    "wait_timeout_s": 120
+  },
+  "controlled_owned_child_death_test": {
+    "classification": "controlled_owned_child_sigterm_bounded",
+    "cleanup_receipt": {
+      "action": "terminated",
+      "bounded": true,
+      "signals_sent": [
+        {
+          "signal": "SIGTERM",
+          "target": "process_group"
+        }
+      ],
+      "unrelated_process_kill_count_delta": 0,
+      "wait_status": "exited_zombie"
+    },
+    "passed": true,
+    "timeout_s": 30
+  },
+  "duration_s": 28.591529,
+  "exact_gguf_and_llama_cpp_receipts": {
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "41281",
+      "--ctx-size",
+      "384",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "layer",
+      "--tensor-split",
+      "1,1",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "gguf": {
+      "blocked_reasons": [],
+      "chat_template_present": true,
+      "chat_template_sha256": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "embedded_tokenizer_detail": "embedded GGUF metadata parsed without AutoTokenizer",
+      "exists": true,
+      "family": "gemma4_31b_dense",
+      "filename": "gemma-4-31B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "metadata_keys": [
+        "tokenizer.chat_template",
+        "tokenizer.ggml.model"
+      ],
+      "metadata_summary_sha256": "sha256:345127a48084b8031e37f4ea2d5c66b59ed7e0cb838b8704e3127b7d7409ab3c",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "Gemma4-31B-it",
+      "no_autotokenizer_used": true,
+      "path_is_file": true,
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "real_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/blobs/9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "revision": "f130ba51393346288f5862e30e9586b9b021513f",
+      "role": "reaper reproduction and caller-hang diagnostic",
+      "sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "size_bytes": 18323731456
+    },
+    "llama_cpp": {
+      "llama_cpp_python_gpu_offload": true,
+      "llama_cpp_python_system_info": "CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | ",
+      "llama_cpp_python_version": "0.3.33",
+      "native_llama_server_cuda_build": false,
+      "native_llama_server_exists": true,
+      "native_llama_server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "native_llama_server_version": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+      "native_llama_server_version_returncode": 0,
+      "no_autotokenizer_used": true,
+      "schema": "carnot.experiment_6212.three_family_gguf_runtime_recovery.v1.llama_cpp_build"
+    },
+    "no_legacy_model_substitution": true,
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.exact_gguf_and_llama_cpp",
+    "uses_embedded_template": true,
+    "uses_native_llama_server": true
+  },
+  "experiment_id": "experiment_6227_llama_server_signal_sender_diagnostic",
+  "field_principles": {
+    "bounded_reproduction_deadline": "Every lifecycle phase is capped by explicit wall-clock limits.",
+    "caller_thread_and_wait_state_receipts": "Caller state explains waits and prevents silent multi-hour hangs.",
+    "controlled_owned_child_death_test": "A test child proves bounded wait and ownership-safe cleanup.",
+    "duration_s": "Measured wall time is reported without padding.",
+    "exact_gguf_and_llama_cpp_receipts": "Exact model bytes and native server identity prevent silent substitution.",
+    "field_principles": "Each field states the audit failure it prevents.",
+    "field_provenance": "Every required field traces to REQ-INFRA-6227.",
+    "finite_wait_retry_cleanup_contract": "The recovery contract defines finite waits, retries, and owned cleanup.",
+    "gguf_mutation_count": "Bare zero proves cached model bytes were not modified.",
+    "gpu_owner_receipts_before_during_after": "GPU owner receipts prevent accidental external-process cleanup.",
+    "health_and_token_timeline": "Health and token events prove the caller made bounded progress or failed finitely.",
+    "honest_verdict": "The verdict reports localization limits without overclaiming.",
+    "inference_substrate": "Declares native llama.cpp server diagnostics rather than benchmark inference.",
+    "launch_command_session_and_cgroup_receipts": "Launch receipts record PID, start time, session, process group, and cgroup.",
+    "model_specs": "Only the mandated Gemma-4-31B GGUF is eligible.",
+    "owned_process_tree_snapshots": "Process-tree snapshots bind observations to task-owned ancestry.",
+    "preconditions_checked": "GPU, privilege, model, server, output, and protected-file gates run before launch.",
+    "prior_incident_paths_hashes_and_timeline": "Persisted incident evidence is phase-separated before any new launch.",
+    "protected_files_unchanged": "Conductor, ops, and protected inputs remain byte-identical.",
+    "reproducibility_checksum": "Stable checksum binds the diagnostic payload.",
+    "root_cause_taxonomy": "The result distinguishes localized sender, unlocalized signal, bounded retry, and non-reproduction.",
+    "runtime_diagnostic_ready_score": "Readiness can be one with an unknown sender when evidence and contract are complete.",
+    "sender_identified_score": "The score is one only when sender identity evidence is direct.",
+    "server_exit_and_stderr_receipts": "Exit status and stderr preserve the server-side signal view.",
+    "signal_events_and_sender_receipts": "Signal evidence records sender PID only when the host exposes it.",
+    "signal_trace_tool_availability": "Unavailable or denied sender channels are recorded instead of guessed.",
+    "status": "The terminal state separates ready, bounded failure, and blocked diagnostics.",
+    "test_commands": "Verification commands are recorded with the artifact.",
+    "test_exit_codes": "Exit codes preserve what was actually verified.",
+    "unlocalized_reason": "Unknown sender cases state exactly which evidence was missing.",
+    "unrelated_process_kill_count": "Bare zero proves no unrelated process was killed.",
+    "verifier_is_oracle": "False because this diagnostic is runtime evidence, not hidden-task grading."
+  },
+  "field_provenance": {
+    "bounded_reproduction_deadline": [
+      "REQ-INFRA-6227",
+      "Every lifecycle phase is capped by explicit wall-clock limits."
+    ],
+    "caller_thread_and_wait_state_receipts": [
+      "REQ-INFRA-6227",
+      "Caller state explains waits and prevents silent multi-hour hangs."
+    ],
+    "controlled_owned_child_death_test": [
+      "REQ-INFRA-6227",
+      "A test child proves bounded wait and ownership-safe cleanup."
+    ],
+    "duration_s": [
+      "REQ-INFRA-6227",
+      "Measured wall time is reported without padding."
+    ],
+    "exact_gguf_and_llama_cpp_receipts": [
+      "REQ-INFRA-6227",
+      "Exact model bytes and native server identity prevent silent substitution."
+    ],
+    "field_principles": [
+      "REQ-INFRA-6227",
+      "Each field states the audit failure it prevents."
+    ],
+    "field_provenance": [
+      "REQ-INFRA-6227",
+      "Every required field traces to REQ-INFRA-6227."
+    ],
+    "finite_wait_retry_cleanup_contract": [
+      "REQ-INFRA-6227",
+      "The recovery contract defines finite waits, retries, and owned cleanup."
+    ],
+    "gguf_mutation_count": [
+      "REQ-INFRA-6227",
+      "Bare zero proves cached model bytes were not modified."
+    ],
+    "gpu_owner_receipts_before_during_after": [
+      "REQ-INFRA-6227",
+      "GPU owner receipts prevent accidental external-process cleanup."
+    ],
+    "health_and_token_timeline": [
+      "REQ-INFRA-6227",
+      "Health and token events prove the caller made bounded progress or failed finitely."
+    ],
+    "honest_verdict": [
+      "REQ-INFRA-6227",
+      "The verdict reports localization limits without overclaiming."
+    ],
+    "inference_substrate": [
+      "REQ-INFRA-6227",
+      "Declares native llama.cpp server diagnostics rather than benchmark inference."
+    ],
+    "launch_command_session_and_cgroup_receipts": [
+      "REQ-INFRA-6227",
+      "Launch receipts record PID, start time, session, process group, and cgroup."
+    ],
+    "model_specs": [
+      "REQ-INFRA-6227",
+      "Only the mandated Gemma-4-31B GGUF is eligible."
+    ],
+    "owned_process_tree_snapshots": [
+      "REQ-INFRA-6227",
+      "Process-tree snapshots bind observations to task-owned ancestry."
+    ],
+    "preconditions_checked": [
+      "REQ-INFRA-6227",
+      "GPU, privilege, model, server, output, and protected-file gates run before launch."
+    ],
+    "prior_incident_paths_hashes_and_timeline": [
+      "REQ-INFRA-6227",
+      "Persisted incident evidence is phase-separated before any new launch."
+    ],
+    "protected_files_unchanged": [
+      "REQ-INFRA-6227",
+      "Conductor, ops, and protected inputs remain byte-identical."
+    ],
+    "reproducibility_checksum": [
+      "REQ-INFRA-6227",
+      "Stable checksum binds the diagnostic payload."
+    ],
+    "root_cause_taxonomy": [
+      "REQ-INFRA-6227",
+      "The result distinguishes localized sender, unlocalized signal, bounded retry, and non-reproduction."
+    ],
+    "runtime_diagnostic_ready_score": [
+      "REQ-INFRA-6227",
+      "Readiness can be one with an unknown sender when evidence and contract are complete."
+    ],
+    "sender_identified_score": [
+      "REQ-INFRA-6227",
+      "The score is one only when sender identity evidence is direct."
+    ],
+    "server_exit_and_stderr_receipts": [
+      "REQ-INFRA-6227",
+      "Exit status and stderr preserve the server-side signal view."
+    ],
+    "signal_events_and_sender_receipts": [
+      "REQ-INFRA-6227",
+      "Signal evidence records sender PID only when the host exposes it."
+    ],
+    "signal_trace_tool_availability": [
+      "REQ-INFRA-6227",
+      "Unavailable or denied sender channels are recorded instead of guessed."
+    ],
+    "status": [
+      "REQ-INFRA-6227",
+      "The terminal state separates ready, bounded failure, and blocked diagnostics."
+    ],
+    "test_commands": [
+      "REQ-INFRA-6227",
+      "Verification commands are recorded with the artifact."
+    ],
+    "test_exit_codes": [
+      "REQ-INFRA-6227",
+      "Exit codes preserve what was actually verified."
+    ],
+    "unlocalized_reason": [
+      "REQ-INFRA-6227",
+      "Unknown sender cases state exactly which evidence was missing."
+    ],
+    "unrelated_process_kill_count": [
+      "REQ-INFRA-6227",
+      "Bare zero proves no unrelated process was killed."
+    ],
+    "verifier_is_oracle": [
+      "REQ-INFRA-6227",
+      "False because this diagnostic is runtime evidence, not hidden-task grading."
+    ]
+  },
+  "finite_wait_retry_cleanup_contract": {
+    "checkpointing_added": false,
+    "classified_failures": [
+      "connection_refused",
+      "server_died_mid_request",
+      "request_timeout",
+      "deadline_expired",
+      "caller_wait_timeout",
+      "external_signal_sigterm",
+      "server_received_interrupt_sender_unknown",
+      "owned_cleanup_after_success",
+      "unclassified_runtime_failure"
+    ],
+    "cleanup_grace_s": 30,
+    "cleanup_scope": "recorded_pid_identity_or_process_group_only",
+    "health_timeout_s": 360,
+    "kill_after_cleanup_timeout_s": 10,
+    "outer_deadline_s": 600,
+    "pid_reuse_guard": "pid_start_time_ticks_and_uid",
+    "request_timeout_s": 120,
+    "retry_budget": 1,
+    "retryable_failures": [
+      "connection_refused",
+      "server_died_mid_request"
+    ],
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.finite_wait_retry_cleanup_contract",
+    "token_timeout_s": 120,
+    "unrelated_process_policy": "refuse_cleanup_when_pid_start_time_or_uid_mismatch"
+  },
+  "gguf_mutation_count": 0,
+  "gpu_owner_receipts_before_during_after": {
+    "admission": {
+      "blocked_owner_pids": [],
+      "blocked_reasons": [],
+      "external_compute_apps": [],
+      "free_vram_blocked_gpu_indices": [],
+      "min_free_mb_per_gpu_required": 12000,
+      "safe": true
+    },
+    "after": {
+      "command_returncodes": {
+        "compute_apps": 0,
+        "gpus": 0
+      },
+      "compute_apps": [],
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 9,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 100,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "gpu_count": 2,
+      "label": "after",
+      "ok": true,
+      "timestamp_utc": "2026-08-09T12:01:22Z"
+    },
+    "before": {
+      "command_returncodes": {
+        "compute_apps": 0,
+        "gpus": 0
+      },
+      "compute_apps": [],
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "gpu_count": 2,
+      "label": "before",
+      "ok": true,
+      "timestamp_utc": "2026-08-09T12:00:53Z"
+    },
+    "during": {
+      "command_returncodes": {
+        "compute_apps": 0,
+        "gpus": 0
+      },
+      "compute_apps": [
+        {
+          "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf --host 127.0.0.1 --port 41281 --ctx-size 384 --n-gpu-layers all --split-mode layer --tensor-split 1,1 --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 0,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "owned_by_task": true,
+          "pid": 2864746,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 9190
+        },
+        {
+          "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf --host 127.0.0.1 --port 41281 --ctx-size 384 --n-gpu-layers all --split-mode layer --tensor-split 1,1 --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "owned_by_task": true,
+          "pid": 2864746,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 9426
+        }
+      ],
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 14925,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 9200,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 14689,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 9436,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "gpu_count": 2,
+      "label": "during_live_server",
+      "ok": true,
+      "timestamp_utc": "2026-08-09T12:01:21Z"
+    },
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.gpu_owners"
+  },
+  "health_and_token_timeline": {
+    "bounded": true,
+    "embedded_chat_template_used": true,
+    "events": [
+      {
+        "classification": "connection_refused",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "unclassified_runtime_failure",
+        "phase": "health_poll"
+      },
+      {
+        "classification": "no_failure",
+        "phase": "health",
+        "status": 200
+      },
+      {
+        "classification": "no_failure",
+        "elapsed_s": 0.124346,
+        "first_token_bytes_sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7",
+        "phase": "token"
+      }
+    ],
+    "request_endpoint": "/v1/chat/completions",
+    "retry_attempts": 0,
+    "timeouts": {
+      "health_timeout_s": 360,
+      "outer_deadline_s": 600,
+      "token_timeout_s": 120
+    },
+    "token_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6227_llama_server_signal_sender_diagnostic.first_token.bin",
+    "token_returned": true,
+    "token_sha256": "sha256:ec7d56a01607001e6401366417c5e2eb00ffa0df17ca1a9a831e0b32c8f11bf7"
+  },
+  "honest_verdict": "complete_unlocalized: bounded owned lifecycle returned a token; signal sender remains unlocalized",
+  "inference_substrate": "native_llama_cpp_owned_signal_sender_diagnostic",
+  "launch_command_session_and_cgroup_receipts": {
+    "cgroup": [
+      "0::/user.slice/user-1000.slice/user@1000.service/app.slice/carnot-conductor.service"
+    ],
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "41281",
+      "--ctx-size",
+      "384",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "layer",
+      "--tensor-split",
+      "1,1",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "deadline_s": 600,
+    "pid": 2864746,
+    "process_group_id": 2864746,
+    "session_id": 2864746,
+    "start_time_ticks": 137278034
+  },
+  "model_specs": [
+    {
+      "family": "gemma4_31b_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "reaper reproduction and caller-hang diagnostic"
+    }
+  ],
+  "owned_process_tree_snapshots": [
+    {
+      "label": "after_launch",
+      "nodes": [
+        {
+          "cgroup": [
+            "0::/user.slice/user-1000.slice/user@1000.service/app.slice/carnot-conductor.service"
+          ],
+          "cmdline": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf --host 127.0.0.1 --port 41281 --ctx-size 384 --n-gpu-layers all --split-mode layer --tensor-split 1,1 --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "comm": "llama-server",
+          "exists": true,
+          "owned_by_current_uid": true,
+          "pgid": 2864746,
+          "pid": 2864746,
+          "ppid": 2864667,
+          "session_id": 2864746,
+          "start_time_ticks": 137278034,
+          "state": "R",
+          "uid": 1000
+        }
+      ],
+      "root_pid": 2864746,
+      "timestamp_utc": "2026-08-09T12:01:08Z"
+    },
+    {
+      "label": "before_cleanup",
+      "nodes": [
+        {
+          "cgroup": [
+            "0::/user.slice/user-1000.slice/user@1000.service/app.slice/carnot-conductor.service"
+          ],
+          "cmdline": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf --host 127.0.0.1 --port 41281 --ctx-size 384 --n-gpu-layers all --split-mode layer --tensor-split 1,1 --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "comm": "llama-server",
+          "exists": true,
+          "owned_by_current_uid": true,
+          "pgid": 2864746,
+          "pid": 2864746,
+          "ppid": 2864667,
+          "session_id": 2864746,
+          "start_time_ticks": 137278034,
+          "state": "S",
+          "uid": 1000
+        }
+      ],
+      "root_pid": 2864746,
+      "timestamp_utc": "2026-08-09T12:01:21Z"
+    }
+  ],
+  "preconditions_checked": {
+    "blocked_reasons": [],
+    "embedded_template_present": true,
+    "exact_model_resolved": true,
+    "gpu_admission_safe": true,
+    "native_llama_server_present": true,
+    "no_privilege_escalation_requested": true,
+    "output_parent_writable": true,
+    "run_date": "20260809",
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.preconditions"
+  },
+  "prior_incident_paths_hashes_and_timeline": {
+    "paths": [
+      {
+        "exists": true,
+        "is_file": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/known-issues.md",
+        "sha256": "sha256:8ade606d0794f262aab364920d16d55f69b839eff3e1f3b4ae50153ff150fbe2",
+        "size_bytes": 1142374
+      },
+      {
+        "exists": true,
+        "is_file": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6212_three_family_gguf_runtime_recovery.json",
+        "sha256": "sha256:5e0dd7cf3fc1b35719c88713da576b62f6b971af350b06a8f3dae1dd2b428381",
+        "size_bytes": 103837
+      },
+      {
+        "exists": true,
+        "is_file": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6221_gemma_think_mode_ab_expanded_roster.json",
+        "sha256": "sha256:fcbac633e64f4b35fd6f98b52f83b2c88ba056b146dbe8af4c629957fddbc798",
+        "size_bytes": 18204
+      }
+    ],
+    "phase_counts": {
+      "caller_wait_or_hang": 1,
+      "connection_failure": 0,
+      "retry": 1,
+      "server_death": 10
+    },
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.prior_incident_timeline",
+    "separated_phases": [
+      "caller_wait_or_hang",
+      "retry",
+      "server_death"
+    ],
+    "server_log_dir": "/tmp/carnot_llama_server_logs",
+    "timeline": [
+      {
+        "evidence": "known issues mention caller wait or hang on defunct server",
+        "phase": "caller_wait_or_hang",
+        "source": "ops/known-issues.md"
+      },
+      {
+        "evidence": "expanded roster artifact exists after multiple rerun attempts",
+        "phase": "retry",
+        "source": "results/experiment_6221_gemma_think_mode_ab_expanded_roster.json"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:cd069038ef29afd9b66c135af50ec5b08837feaf6705ad3724b79b98e9752c6c",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786252276.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:cc361af52076e380d787c7630f49cda78b71bf4c67f2e107e08ee730598a5ab5",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786252378.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:a603af0390e5468ad40e558411bd83763a639300a037fc6c2b573b3f4902f9d1",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786257453.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:583c155c0279db846f3643bb13658f54d869229726db91c2c41ce4c9a41f0df2",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786257704.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:bb9e822250a732c2a67df50f01860eae6780fe3feb40a82d3d9bec138312f356",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786267373.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:61297b4ebec1ad6482c566a5ec4d99b19dd2f22b57db753cbcb83333347507f0",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786267591.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:03bb6f954aff1951a59fdba2c58613d605f6d3c5a11b6c2cfeb51e6303289f4c",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786267658.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:1ef697977b039dcfee0ecffb41b9db26abce8ed1848fe214cf13b1df0a5b6eae",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786268146.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:17733baee6217b5f13d2fb6ef196c8b351dbce5da9848fe1bdfae1fcb5d28a98",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786268339.log"
+      },
+      {
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sha256": "sha256:369efa8355e17719f12d9edb98cfab1b58180776c70351253dc359d7e6d4b9f9",
+        "source": "/tmp/carnot_llama_server_logs/llama_server_p8940_1786268778.log"
+      }
+    ],
+    "timeline_hash": "sha256:4de649ec18c20383c94fe932ccfa3337d23059fe3c77285f45473271a2d77797"
+  },
+  "protected_files_unchanged": {
+    "changed_paths": [],
+    "hash_after": "sha256:7c008aabbff0a74a4bb10c40ba6cb19ea13936a880f82e239b9e2353852c86a8",
+    "hash_before": "sha256:7c008aabbff0a74a4bb10c40ba6cb19ea13936a880f82e239b9e2353852c86a8",
+    "ops_ledgers_untouched": true,
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.protected_files",
+    "scripts_research_conductor_py_untouched": true,
+    "unchanged": true
+  },
+  "random_seed": 6227,
+  "reproducibility_checksum": "sha256:1e57d3275353455d4fab9b157162b755f0a61ee793b9fa370bd2d24739f0f948",
+  "root_cause_taxonomy": {
+    "caller_hang_prevented_by_contract": true,
+    "categories": [
+      "prior_server_received_interrupts",
+      "prior_caller_wait_or_hang",
+      "not_reproduced_under_short_owned_canary",
+      "signal_sender_unlocalized"
+    ],
+    "no_oom_or_gpu_fault_in_current_preconditions": true,
+    "primary": "prior_server_received_interrupts",
+    "server_exit_classification": "server_received_interrupt_sender_unknown",
+    "short_owned_lifecycle_token_returned": true
+  },
+  "run_date": "20260809",
+  "runtime_diagnostic_ready_score": 1,
+  "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1",
+  "sender_identified_score": 0,
+  "server_exit_and_stderr_receipts": {
+    "classification": "server_received_interrupt_sender_unknown",
+    "exit_code": null,
+    "pid": 2864746,
+    "received_interrupt_markers": 0,
+    "start_time_ticks": 137278034,
+    "stderr_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6227_llama_server_signal_sender_diagnostic.llama_server.log",
+    "stderr_sha256": "sha256:bcb7755d646ef304dc53f0f7ac915e816fd4f46cfe9163521c9625b571f748b9",
+    "stderr_tail": "0.00.062.670 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)\n0.00.062.674 I device_info:\n0.00.508.351 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.955.679 I   - CUDA1   : NVIDIA GeForce RTX 3090 (24123 MiB, 23858 MiB free)\n0.00.955.692 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128083 MiB, 128083 MiB free)\n0.00.955.807 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | \n0.00.955.869 I srv          init: running without SSL\n0.00.955.906 I srv          init: using 23 threads for HTTP server\n0.00.955.910 I srv          init: The UI is disabled\n0.00.955.912 I srv          init: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable\n0.00.956.022 I srv         start: binding port with default address family\n0.00.957.184 I srv  llama_server: loading model\n0.00.957.190 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf'\n0.03.265.673 W load: control-looking token:    212 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.03.266.186 W load: control-looking token:     50 '<|tool_response>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.03.273.315 W load: control-looking token:      1 '<eos>' was not control-type; this is probably a bug in the model. its type will be overridden\n0.03.298.637 W load: special_eog_ids contains '<|tool_response>', removing '</s>' token from EOG list\n0.12.153.390 W llama_context: n_ctx_seq (512) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\n0.12.178.931 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)\n0.12.442.007 I srv    load_model: initializing slots, n_slots = 1\n0.12.475.630 W common_speculative_init: no implementations specified for speculative decoding\n0.12.475.639 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 512\n0.12.475.667 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB\n0.12.475.667 I srv    load_model: use `--cache-ram 0` to disable the prompt cache\n0.12.475.667 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391\n0.12.475.668 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256\n0.12.475.727 I srv          init: idle slots will be saved to prompt cache upon starting a new task\n0.12.480.235 I init: chat template, example_format: '<|turn>system\nYou are a helpful assistant<turn|>\n<|turn>user\nHello<turn|>\n<|turn>model\nHi there<turn|>\n<|turn>user\nHow are you?<turn|>\n<|turn>model\n<|channel>thought\n<channel|>'\n0.12.480.628 I srv          init: init: chat template, thinking = 0\n0.12.480.674 I srv  llama_server: model loaded\n0.12.480.681 I srv  llama_server: server is listening on http://127.0.0.1:41281\n0.12.480.689 I srv  update_slots: all slots are idle\n0.13.280.638 I srv  params_from_: Chat format: peg-gemma4\n0.13.280.898 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1\n0.13.280.903 I srv  get_availabl: updating prompt cache\n0.13.280.914 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000\n0.13.280.924 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 512 tokens, 8589934592 est)\n0.13.280.927 I srv  get_availabl: prompt cache update took 0.02 ms\n0.13.281.034 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0\n0.13.313.214 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 0, pos_max = 0, n_tokens = 1, size = 0.416 MiB)\n0.13.401.366 I slot print_timing: id  0 | task 0 | prompt eval time =     120.29 ms /    25 tokens (    4.81 ms per token,   207.83 tokens per second)\n0.13.401.371 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token, 1000000.00 tokens per second)\n0.13.401.371 I slot print_timing: id  0 | task 0 |       total time =     120.29 ms /    26 tokens\n0.13.401.374 I slot print_timing: id  0 | task 0 |    graphs reused =          1\n0.13.401.404 I slot      release: id  0 | task 0 | stop processing: n_tokens = 25, truncated = 0\n0.13.401.416 I srv  update_slots: all slots are idle\n0.13.420.522 I srv    operator(): operator(): cleaning up before exit...\n"
+  },
+  "signal_events_and_sender_receipts": {
+    "events": [
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "server_received_interrupt_sender_unknown",
+        "evidence": "server stderr contains interrupt or cleanup marker",
+        "phase": "server_death",
+        "sender_pid": null,
+        "source": "prior_incident"
+      },
+      {
+        "classification": "owned_cleanup_after_success",
+        "sender_pid": 2864667,
+        "source": "owned_cleanup",
+        "target_pid": 2864746
+      }
+    ],
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.signal_events",
+    "sender_identified_by_allowed_tool": false,
+    "sender_receipts": []
+  },
+  "signal_trace_tool_availability": {
+    "no_privilege_escalation_requested": true,
+    "schema": "carnot.experiment_6227.llama_server_signal_sender_diagnostic.v1.trace_tools",
+    "sender_pid_observable_without_extra_privilege": false,
+    "tools": {
+      "auditctl": {
+        "available": true,
+        "path": "/usr/bin/auditctl",
+        "permitted": false,
+        "reason": "nonzero",
+        "returncode": 4,
+        "stderr_tail": "You must be root to run this program.\n",
+        "stdout_tail": ""
+      },
+      "ausearch": {
+        "available": true,
+        "path": "/usr/bin/ausearch",
+        "permitted": false,
+        "reason": "permission_denied",
+        "returncode": 1,
+        "stderr_tail": "Could not open dir /var/log/audit (Permission denied)\nNOTE - using built-in end_of_event_timeout: 2\nNOTE - using built-in logs: /var/log/audit/audit.log\nError opening /var/log/audit/audit.log (Permission denied)\n",
+        "stdout_tail": ""
+      },
+      "bpftool": {
+        "available": true,
+        "path": "/usr/bin/bpftool",
+        "permitted": false,
+        "reason": "permission_denied",
+        "returncode": 255,
+        "stderr_tail": "Error: can't get next program: Operation not permitted\n",
+        "stdout_tail": ""
+      },
+      "bpftrace": {
+        "available": false,
+        "permitted": false,
+        "reason": "not_found"
+      },
+      "perf": {
+        "available": false,
+        "permitted": false,
+        "reason": "not_found"
+      },
+      "strace": {
+        "available": true,
+        "path": "/usr/bin/strace",
+        "permitted": true,
+        "reason": "ok",
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": "strace -- version 7.0\nCopyright (c) 1991-2026 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: stack-trace=libunwind stack-demangle m32-mpers mx32-mpers\n"
+      }
+    }
+  },
+  "status": "complete_unlocalized",
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py -m pytest tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py --fail-under=100 --show-missing",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py",
+    ".venv/bin/python -m carnot.experiment_6227_llama_server_signal_sender_diagnostic --date 20260809"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py -m pytest tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/pytest tests/python -q": 2,
+    ".venv/bin/pytest tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py -q --no-cov -n 0": 0,
+    ".venv/bin/python -m carnot.experiment_6227_llama_server_signal_sender_diagnostic --date 20260809": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py": 0
+  },
+  "unlocalized_reason": "sender not identified: Linux wait status and llama-server stderr do not expose sender PID; unavailable_or_denied_tools=['auditctl', 'ausearch', 'bpftool', 'bpftrace', 'perf']",
+  "unrelated_process_kill_count": 0,
+  "verifier_is_oracle": false
+}

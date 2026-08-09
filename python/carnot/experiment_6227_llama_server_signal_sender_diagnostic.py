@@ -564,8 +564,9 @@ def cleanup_recorded_identity(
     process_ops.send_signal(pid, signal.SIGTERM, process_group=process_group)
     wait_status = process_ops.wait_for_exit(pid, grace_s)
     signals = [{"target": "process_group" if process_group else "pid", "signal": "SIGTERM"}]
+    terminated_states = {"exited", "exited_zombie"}
     return {
-        "action": "terminated" if wait_status == "exited" else "timeout_after_sigterm",
+        "action": "terminated" if wait_status in terminated_states else "timeout_after_sigterm",
         "bounded": True,
         "wait_status": wait_status,
         "signals_sent": signals,
@@ -926,7 +927,7 @@ def run(
     during_gpu: JsonDict | None = None
     if not blockers:
         lifecycle = adapter.run_owned_lifecycle(gguf, command, contract, output_path.parent)
-        during_gpu = adapter.gpu_snapshot("during")
+        during_gpu = lifecycle.get("gpu_during") or adapter.gpu_snapshot("during")
     child = adapter.controlled_child_death_test(contract)
     after_gpu = adapter.gpu_snapshot("after")
     signal_receipts = {
@@ -1106,8 +1107,14 @@ class LiveProcessOps:  # pragma: no cover
     def wait_for_exit(self, pid: int, timeout_s: float) -> str:
         deadline = time.time() + timeout_s
         while time.time() < deadline:
-            if not Path(f"/proc/{pid}").exists():
+            proc_dir = Path(f"/proc/{pid}")
+            if not proc_dir.exists():
                 return "exited"
+            try:
+                if parse_proc_stat((proc_dir / "stat").read_text(encoding="utf-8"))["state"] == "Z":
+                    return "exited_zombie"
+            except Exception:
+                pass
             time.sleep(0.1)
         return "timeout"
 
@@ -1245,6 +1252,7 @@ def run_live_owned_lifecycle(
     server_exit: JsonDict = {}
     proc: subprocess.Popen[Any] | None = None
     launch_receipt: JsonDict = {"command": command}
+    gpu_during: JsonDict | None = None
     token_returned = False
     retry_attempts = 0
     with log_path.open("wb") as log_handle:
@@ -1272,6 +1280,8 @@ def run_live_owned_lifecycle(
         snapshots.append(process_tree_snapshot("after_launch", proc.pid))
         try:
             wait_for_health(port, proc, contract, events)
+            gpu_during = nvidia_smi_gpu_snapshot()
+            gpu_during["label"] = "during_live_server"
             thread_snaps.append(caller_thread_snapshot("before_token_request"))
             request_started = time.perf_counter()
             response = post_json(
@@ -1372,6 +1382,7 @@ def run_live_owned_lifecycle(
                 "target_pid": proc.pid if proc else None,
             }
         ],
+        "gpu_during": gpu_during,
         "server_exit": server_exit,
         "caller_wait": {
             "bounded_wait_observed": True,

@@ -520,6 +520,57 @@ def test_scenario_infra_6227_pid_reuse_and_unowned_cleanup_are_refused() -> None
     )
     assert already_gone["action"] == "already_exited"
 
+    zombie_ops = FakeProcessOps(wait_result="exited_zombie")
+    zombie = mod.cleanup_recorded_identity(recorded, lambda _pid: current, zombie_ops, grace_s=0.1)
+    assert zombie["action"] == "terminated"
+    assert zombie["wait_status"] == "exited_zombie"
+
+
+def test_scenario_infra_6227_lifecycle_gpu_snapshot_prefers_live_during_receipt(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-INFRA-6227-2: during-GPU receipts come from the live lifecycle."""
+
+    class DuringGpuRuntime(FakeRuntime):
+        def run_owned_lifecycle(
+            self,
+            gguf: mod.JsonDict,
+            command: list[str],
+            contract: mod.JsonDict,
+            output_dir: Path,
+        ) -> mod.JsonDict:
+            row = super().run_owned_lifecycle(gguf, command, contract, output_dir)
+            row["gpu_during"] = {
+                **_gpu_snapshot(),
+                "label": "during_live_server",
+                "compute_apps": [
+                    {
+                        "gpu_index": 0,
+                        "pid": 622700,
+                        "process_name": "llama-server",
+                        "used_memory_mb": 9000,
+                        "owned_by_task": True,
+                    }
+                ],
+            }
+            return row
+
+    artifact = mod.run(
+        result_path=tmp_path / "during.json",
+        model_resolver=_resolver(_gguf(tmp_path)),
+        metadata_reader=_metadata,
+        runtime=DuringGpuRuntime(),
+        test_commands=TEST_COMMANDS,
+        test_exit_codes=TEST_EXIT_CODES,
+        duration_s=6.227,
+        write=False,
+    )
+
+    during = artifact["gpu_owner_receipts_before_during_after"]["during"]
+    assert during["label"] == "during_live_server"
+    assert during["compute_apps"][0]["owned_by_task"] is True
+    assert during["compute_apps"][0]["process_name"] == "llama-server"
+
 
 def test_scenario_infra_6227_dead_server_retry_and_deadline_are_bounded(
     tmp_path: Path,

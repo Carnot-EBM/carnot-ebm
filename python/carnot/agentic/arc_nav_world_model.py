@@ -301,6 +301,48 @@ class InducedNavWorldModel:
                     sizes[col] = int((g0 == col).sum()) or 10**9
                 goal_color = min(sizes, key=sizes.get)
 
+        # INTERNAL HELD-OUT CONSISTENCY CHECK (REQ-ARC-WMTE-6245, 2026-08-09). REQ-ARC-WMTE-6244
+        # found a genuine false-positive class `is_confident_nav`'s existing structural checks
+        # (no padding avatar, >=3 directions, real goal) do not catch: cd82 satisfies all three on
+        # some samples while scoring 0 held-out exact-match, and per-direction
+        # `displacement_agreement` does NOT discriminate it from a real nav game either (tu93's own
+        # agreement values, 0.18-0.57, are LOWER than cd82's false-positive fit, 0.5-0.8 -- ruled
+        # out empirically before shipping this, not assumed). A coincidental co-translation can
+        # satisfy every STRUCTURAL property of a real fit while still not generalizing, so the
+        # check that actually distinguishes them has to be a generalization check: refit on a
+        # TRAIN-only slice of these same rows and score exact-match against the remaining HELD
+        # rows' move-transitions. A genuine rigid-avatar fit reproduces unseen moves of the SAME
+        # game closely; a spurious fit does not. Only computed when there is enough data to make
+        # the split meaningful (`len(rows) >= 8`, mirroring the `>= 8` transition floor
+        # `gated_engine_from_transitions` already uses elsewhere in this project for the same
+        # reason) -- `None` on both fields when there isn't, so `is_confident_nav` can tell
+        # "checked and passed" apart from "not enough data to check" and does not manufacture a
+        # false negative on a small sample by treating the absence of a check as a failure.
+        internal_heldout_n = None
+        internal_heldout_exact_match = None
+        if len(rows) >= 8:
+            k = max(2, int(len(rows) * 0.25))
+            train_rows, held_rows = rows[:-k], rows[-k:]
+            try:
+                train_model = cls.fit(train_rows)
+            except Exception:  # noqa: BLE001 -- a train-only fit failing is itself informative
+                train_model = None  # (no displacement below), never fatal to the full fit
+            if train_model is not None and train_model.displacement:
+                held_moves = [
+                    r
+                    for r in held_rows
+                    if r[1] in train_model.displacement
+                    and not np.array_equal(np.asarray(r[0]), np.asarray(r[2]))
+                ]
+                if held_moves:
+                    correct = sum(
+                        1
+                        for g0, a, g1, *_ in held_moves
+                        if np.array_equal(train_model.engine(g0, a), np.asarray(g1))
+                    )
+                    internal_heldout_n = len(held_moves)
+                    internal_heldout_exact_match = correct / len(held_moves)
+
         fit_quality = {
             "n_transitions": len(rows),
             "n_move_transitions": int(sum(move_hits.values())),
@@ -313,6 +355,8 @@ class InducedNavWorldModel:
             "goal_color": goal_color,
             "door_color": door_color,
             "displacement": {a: list(d) for a, d in displacement.items()},
+            "internal_heldout_n": internal_heldout_n,
+            "internal_heldout_exact_match": internal_heldout_exact_match,
         }
         return cls(
             displacement=displacement,
