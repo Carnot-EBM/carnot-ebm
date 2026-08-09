@@ -27,8 +27,8 @@
       },
       "python/carnot/experiment_6220_mode_jump_runtime_ab.py": {
         "exists": true,
-        "sha256": "sha256:55f9340b2f5fa533fbec4064244c967b5da8b1f8ebb4ed76c2d5eb2a46a33320",
-        "size_bytes": 53717
+        "sha256": "sha256:0119b9203cb4cb15ddb8f0d96a4d3364f5c0774b952ad5e786065fe6e8cff02a",
+        "size_bytes": 54299
       },
       "python/carnot/samplers/backend.py": {
         "exists": true,
@@ -42,8 +42,8 @@
       },
       "tests/python/test_experiment_6220_mode_jump_runtime_ab.py": {
         "exists": true,
-        "sha256": "sha256:05fbec1c85bf883f5356e9d879e57482232514f5bdefb058599cac8109e354d9",
-        "size_bytes": 11289
+        "sha256": "sha256:6cc60720f02d8b7535d955d7a4973c06426c66be142137613ec5c6bb893ae819",
+        "size_bytes": 12135
       }
     },
     "principle": "Records adapter, factory, Rust kernel, PyO3 binding, import, and ABI availability.",
@@ -72,43 +72,43 @@
     "uncertainty_excludes_parity": false,
     "wall_time_seconds": {
       "fallback_exact": {
-        "max": 0.038758492097,
-        "mean": 0.028205753584,
+        "max": 0.038045870839,
+        "mean": 0.031018788973,
         "mean_95_interval": [
-          0.022112624828,
-          0.034298882339
+          0.025671849932,
+          0.036365728014
         ],
-        "median": 0.025225769961,
-        "min": 0.021987525048,
+        "median": 0.031075512059,
+        "min": 0.024614918046,
         "values": [
-          0.038758492097,
-          0.031618774869,
-          0.025225769961,
-          0.023438205943,
-          0.021987525048
+          0.038045870839,
+          0.036074151052,
+          0.025283492869,
+          0.024614918046,
+          0.031075512059
         ]
       },
       "mode_jump_runtime": {
-        "max": 0.040768191917,
-        "mean": 0.03234262336,
+        "max": 0.050540306838,
+        "mean": 0.042415470583,
         "mean_95_interval": [
-          0.026676388251,
-          0.038008858469
+          0.035140725247,
+          0.04969021592
         ],
-        "median": 0.034358697012,
-        "min": 0.025086638983,
+        "median": 0.043853668962,
+        "min": 0.033518166048,
         "values": [
-          0.026604195824,
-          0.034358697012,
-          0.040768191917,
-          0.025086638983,
-          0.034895393066
+          0.034080880927,
+          0.033518166048,
+          0.043853668962,
+          0.050084330142,
+          0.050540306838
         ]
       }
     }
   },
   "default_off_preserved": true,
-  "duration_s": 3.5660341382026672e-06,
+  "duration_s": 0.00011053704656660557,
   "ess_and_autocorrelation_by_fixture_arm": {
     "all_supported_mixing_pass": true,
     "ess_min": 1000.0,
@@ -338,7 +338,7 @@
     }
   },
   "fpga_tsu_power_hardware_claim_count": 0,
-  "honest_verdict": "blocked: default_off=True; all_fixture_arms_supported=False; quality_gate=False; timing_claim_allowed=False; hardware_claim_count=0; task_owned_failures=[{\"classification\": \"task_owned_interrupted_after_long_run\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"required_full_python_suite_interrupted\", \"stderr_tail\": \"Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.\", \"task_owned\": true}, {\"classification\": \"task_owned_interrupted_after_full_suite_noncompletion\", \"command\": \".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809\", \"exit_code\": 130, \"name\": \"artifact_command_interrupted\", \"stderr_tail\": \"KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.\", \"task_owned\": true}]; preexisting_nonzero=[{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}]",
+  "honest_verdict": "blocked: default_off=True; all_fixture_arms_supported=False; quality_gate=False; timing_claim_allowed=False; hardware_claim_count=0; task_owned_failures=[{\"classification\": \"task_owned_repository_wide_nonzero_interrupted\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 2, \"name\": \"required_full_python_suite_interrupted\", \"stderr_tail\": \"KeyboardInterrupt after broad repository-wide failures and worker aborts; first visible errors included missing results/experiment_3447_archive_v316_v317_activate_v318.json and worker aborts in JAX/Flax and Qwen tokenizer prewarm paths.\", \"stdout_tail\": \"369 failed, 19194 passed, 48 skipped, 161 warnings, 14 errors in 1473.48s (0:24:33)\", \"task_owned\": true}]; preexisting_nonzero=[{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}]",
   "inference_substrate": "local_cpu_software_mode_jump_runtime_ab_no_hardware",
   "matched_arm_configuration": {
     "arms": {
@@ -522,7 +522,7 @@
     "unchanged": true
   },
   "quality_gate_passed": false,
-  "reproducibility_checksum": "sha256:8666d59cc5033c51cf4c53dd8c45cd1e04fd3335ebe3986f861e97f44cede1ac",
+  "reproducibility_checksum": "sha256:2bbfb26ed44128692e40052eece8e364f588fc1263dad39d1901302ccc031e22",
   "run_date": "20260809",
   "sampler_runtime_ready_score": 0.0,
   "schema": "carnot.experiment_6220.mode_jump_runtime_ab.v1",
@@ -554,14 +554,14 @@
       "multimodal_exp6194": {
         "fallback_exact": {
           "active_backend": "python_exact_fallback",
-          "elapsed_s": 0.083129845094,
+          "elapsed_s": 0.08572516893,
           "fail_closed": false,
           "fallback_reason": "declared_python_compatibility",
           "support_valid": true
         },
         "mode_jump_runtime": {
           "active_backend": "rust_pyo3",
-          "elapsed_s": 0.060094504151,
+          "elapsed_s": 0.084875805071,
           "fail_closed": false,
           "fallback_reason": null,
           "support_valid": true
@@ -569,14 +569,14 @@
       },
       "unimodal_contract_probe": {
         "fallback_exact": {
-          "elapsed_s": 0.001884284895,
+          "elapsed_s": 0.001801952021,
           "error_type": "ValueError",
           "fail_closed": true,
           "message": "target probabilities must match frozen Exp6194 target",
           "support_valid": false
         },
         "mode_jump_runtime": {
-          "elapsed_s": 0.001246539177,
+          "elapsed_s": 0.001207506051,
           "error_type": "ValueError",
           "fail_closed": true,
           "message": "target probabilities must match frozen Exp6194 target",
@@ -596,7 +596,7 @@
         "command": ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=",
         "exit_code": 0,
         "name": "focused_exp6220_pytest",
-        "stdout_tail": "8 passed in 3.51s",
+        "stdout_tail": "8 passed in 3.59s",
         "task_owned": true
       },
       {
@@ -604,7 +604,7 @@
         "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=",
         "exit_code": 0,
         "name": "new_code_coverage_run",
-        "stdout_tail": "8 passed in 5.57s",
+        "stdout_tail": "8 passed in 5.67s",
         "task_owned": true
       },
       {
@@ -612,7 +612,7 @@
         "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100",
         "exit_code": 0,
         "name": "new_code_coverage_report",
-        "stdout_tail": "python/carnot/experiment_6220_mode_jump_runtime_ab.py 371 0 100%",
+        "stdout_tail": "python/carnot/experiment_6220_mode_jump_runtime_ab.py 380 0 100%",
         "task_owned": true
       },
       {
@@ -628,23 +628,24 @@
         "command": ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=",
         "exit_code": 0,
         "name": "e2e_pyo3_serialization",
-        "stdout_tail": "33 passed in 3.53s",
+        "stdout_tail": "33 passed in 3.79s",
         "task_owned": true
       },
       {
-        "classification": "task_owned_interrupted_after_long_run",
+        "classification": "task_owned_repository_wide_nonzero_interrupted",
         "command": ".venv/bin/pytest tests/python -q",
-        "exit_code": 130,
+        "exit_code": 2,
         "name": "required_full_python_suite_interrupted",
-        "stderr_tail": "Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.",
+        "stderr_tail": "KeyboardInterrupt after broad repository-wide failures and worker aborts; first visible errors included missing results/experiment_3447_archive_v316_v317_activate_v318.json and worker aborts in JAX/Flax and Qwen tokenizer prewarm paths.",
+        "stdout_tail": "369 failed, 19194 passed, 48 skipped, 161 warnings, 14 errors in 1473.48s (0:24:33)",
         "task_owned": true
       },
       {
-        "classification": "task_owned_interrupted_after_full_suite_noncompletion",
+        "classification": "task_owned",
         "command": ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809",
-        "exit_code": 130,
-        "name": "artifact_command_interrupted",
-        "stderr_tail": "KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.",
+        "exit_code": 0,
+        "name": "artifact_command",
+        "stdout_tail": "module command consumed /tmp/carnot_6220_command_receipts.json",
         "task_owned": true
       }
     ],
@@ -690,7 +691,7 @@
         "command": ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=",
         "exit_code": 0,
         "name": "focused_exp6220_pytest",
-        "stdout_tail": "8 passed in 3.51s",
+        "stdout_tail": "8 passed in 3.59s",
         "task_owned": true
       },
       {
@@ -698,7 +699,7 @@
         "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=",
         "exit_code": 0,
         "name": "new_code_coverage_run",
-        "stdout_tail": "8 passed in 5.57s",
+        "stdout_tail": "8 passed in 5.67s",
         "task_owned": true
       },
       {
@@ -706,7 +707,7 @@
         "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100",
         "exit_code": 0,
         "name": "new_code_coverage_report",
-        "stdout_tail": "python/carnot/experiment_6220_mode_jump_runtime_ab.py 371 0 100%",
+        "stdout_tail": "python/carnot/experiment_6220_mode_jump_runtime_ab.py 380 0 100%",
         "task_owned": true
       },
       {
@@ -722,42 +723,36 @@
         "command": ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=",
         "exit_code": 0,
         "name": "e2e_pyo3_serialization",
-        "stdout_tail": "33 passed in 3.53s",
+        "stdout_tail": "33 passed in 3.79s",
         "task_owned": true
       },
       {
-        "classification": "task_owned_interrupted_after_long_run",
+        "classification": "task_owned_repository_wide_nonzero_interrupted",
         "command": ".venv/bin/pytest tests/python -q",
-        "exit_code": 130,
+        "exit_code": 2,
         "name": "required_full_python_suite_interrupted",
-        "stderr_tail": "Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.",
+        "stderr_tail": "KeyboardInterrupt after broad repository-wide failures and worker aborts; first visible errors included missing results/experiment_3447_archive_v316_v317_activate_v318.json and worker aborts in JAX/Flax and Qwen tokenizer prewarm paths.",
+        "stdout_tail": "369 failed, 19194 passed, 48 skipped, 161 warnings, 14 errors in 1473.48s (0:24:33)",
         "task_owned": true
       },
       {
-        "classification": "task_owned_interrupted_after_full_suite_noncompletion",
+        "classification": "task_owned",
         "command": ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809",
-        "exit_code": 130,
-        "name": "artifact_command_interrupted",
-        "stderr_tail": "KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.",
+        "exit_code": 0,
+        "name": "artifact_command",
+        "stdout_tail": "module command consumed /tmp/carnot_6220_command_receipts.json",
         "task_owned": true
       }
     ],
-    "task_owned_failure_count": 2,
+    "task_owned_failure_count": 1,
     "task_owned_failures": [
       {
-        "classification": "task_owned_interrupted_after_long_run",
+        "classification": "task_owned_repository_wide_nonzero_interrupted",
         "command": ".venv/bin/pytest tests/python -q",
-        "exit_code": 130,
+        "exit_code": 2,
         "name": "required_full_python_suite_interrupted",
-        "stderr_tail": "Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.",
-        "task_owned": true
-      },
-      {
-        "classification": "task_owned_interrupted_after_full_suite_noncompletion",
-        "command": ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809",
-        "exit_code": 130,
-        "name": "artifact_command_interrupted",
-        "stderr_tail": "KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.",
+        "stderr_tail": "KeyboardInterrupt after broad repository-wide failures and worker aborts; first visible errors included missing results/experiment_3447_archive_v316_v317_activate_v318.json and worker aborts in JAX/Flax and Qwen tokenizer prewarm paths.",
+        "stdout_tail": "369 failed, 19194 passed, 48 skipped, 161 warnings, 14 errors in 1473.48s (0:24:33)",
         "task_owned": true
       }
     ]
@@ -774,10 +769,10 @@
   "test_exit_codes": {
     ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100": 0,
     ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=": 0,
-    ".venv/bin/pytest tests/python -q": 130,
+    ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=": 0,
     ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=": 0,
-    ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809": 130,
+    ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809": 0,
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6220_mode_jump_runtime_ab.py": 0
   },
   "timing_claim_allowed": false,

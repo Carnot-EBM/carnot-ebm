@@ -72,6 +72,7 @@ SCHEMA = "carnot.experiment_6220.mode_jump_runtime_ab.v1"
 EXPERIMENT_ID = "experiment_6220_mode_jump_runtime_ab"
 RUN_DATE = "20260809"
 INFERENCE_SUBSTRATE = "local_cpu_software_mode_jump_runtime_ab_no_hardware"
+DEFAULT_RECEIPT_PATH = Path("/tmp/carnot_6220_command_receipts.json")
 
 SEED = 6220
 BURN_IN = 128
@@ -1225,7 +1226,17 @@ def _run_command(command: str, root: Path) -> JsonDict:  # pragma: no cover - li
     }
 
 
-def _external_command_receipts(
+def _external_command_receipts() -> list[JsonDict] | None:
+    receipt_path = Path(os.environ.get("CARNOT_6220_COMMAND_RECEIPTS", DEFAULT_RECEIPT_PATH))
+    if not receipt_path.exists():
+        return None
+    payload = json.loads(receipt_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise ValueError("command receipt payload must be a list")
+    return [dict(row) for row in payload]
+
+
+def _run_default_task_commands(
     root: Path,
 ) -> list[JsonDict]:  # pragma: no cover - live receipt path.
     commands = (
@@ -1246,7 +1257,9 @@ def main(
     parser.add_argument("--date", default=RUN_DATE)
     args = parser.parse_args(argv)
     started = time.perf_counter()
-    command_receipts = _external_command_receipts(REPO_ROOT)
+    command_receipts = _external_command_receipts()
+    if command_receipts is None:
+        command_receipts = _run_default_task_commands(REPO_ROOT)
     artifact = write_artifact(
         output_path=REPO_ROOT / RESULT_RELATIVE_PATH,
         root=REPO_ROOT,

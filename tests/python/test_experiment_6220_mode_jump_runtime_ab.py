@@ -250,6 +250,22 @@ def test_req_sample_6220_helper_edges_for_coverage(
     assert mod._expect_error(lambda: None, ValueError)["raised"] is False  # noqa: SLF001
     assert mod.status({}) == "blocked"
 
+    receipts_path = tmp_path / "receipts.json"
+    receipts_path.write_text(json.dumps(_passing_receipts()), encoding="utf-8")
+    monkeypatch.setenv("CARNOT_6220_COMMAND_RECEIPTS", str(receipts_path))
+    assert mod._external_command_receipts() == _passing_receipts()  # noqa: SLF001
+
+    missing_default = tmp_path / "missing.json"
+    monkeypatch.delenv("CARNOT_6220_COMMAND_RECEIPTS", raising=False)
+    monkeypatch.setattr(mod, "DEFAULT_RECEIPT_PATH", missing_default)
+    assert mod._external_command_receipts() is None  # noqa: SLF001
+
+    bad_receipts = tmp_path / "bad_receipts.json"
+    bad_receipts.write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("CARNOT_6220_COMMAND_RECEIPTS", str(bad_receipts))
+    with pytest.raises(ValueError, match="command receipt payload"):
+        mod._external_command_receipts()  # noqa: SLF001
+
     readyish = mod.build_artifact(
         root=REPO,
         command_receipts=_passing_receipts(),
