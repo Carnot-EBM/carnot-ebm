@@ -1988,6 +1988,7 @@ def main(argv: list[str]) -> int:
         alt_budget_sources=[Path(x) for x in a.alt_budget_rows],
     )
     out_path = Path(a.out)
+    preserve_freshness_acknowledgements(art, out_path)
     out_path.write_text(json.dumps(art, indent=1, default=str))
     register_analyzed_artifact(out_path)
     print(json.dumps({k: v for k, v in analysis.items() if k != "rows"}, indent=1, default=str))
