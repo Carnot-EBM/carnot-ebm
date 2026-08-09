@@ -1195,6 +1195,114 @@ payload, and `honest_verdict` starts with a terminal prefix.
 |---|---|---|
 | REQ-INFRA-6225 | `python/carnot/experiment_6225_v539_terminal_transition.py`; terminal artifact `results/experiment_6225_v539_terminal_transition.json`. | `tests/python/test_experiment_6225_v539_terminal_transition.py`. |
 
+## REQ-INFRA-6226: V539 Post-Marker Source Scope Freeze SHALL Be Strict, Null-Safe, And Contract-Complete
+
+Carnot SHALL build Exp6226 as a deterministic V539 source-delta and scope
+freeze audit. The audit SHALL hash the exact
+`<!-- V539-PLANNER-REFRESH-20260809-END -->` marker and SHALL search only
+source evidence dated strictly after that marker. Evidence dated at or before
+the marker, same-day evidence without a time after the marker, duplicates,
+secondary-only rows, endpoint failures, and retired-scope conflicts SHALL NOT
+append to `research-references.md`.
+
+Exp6226 SHALL record receipts for arXiv, OpenReview, Extropic, Semantic
+Scholar EBT citations, Semantic Scholar ARM-EBM citations, Hugging Face
+Papers, targeted GitHub discovery, and Logical Intelligence. Each receipt
+SHALL record authority, source role, query, URL, access outcome, date evidence,
+candidate ids, and receipt hash even when the channel returns null evidence or
+is unavailable.
+
+Exp6226 SHALL atomically write a minimal bootstrap artifact before optional
+network work. The final artifact SHALL preserve a receipt for that bootstrap
+write and SHALL hash the marker, staged roadmap, protected files, and source
+inputs in `preconditions_checked`. The final artifact SHALL be written to
+`results/experiment_6226_v539_post_marker_source_scope_freeze.json`.
+
+Exp6226 SHALL freeze six machine-readable contracts before later V539 tasks
+run. The frozen runtime contract SHALL require task-owned process provenance
+and bounded wait ownership. The ARC provenance contract SHALL require
+`solve_provenance=live_agent_self_discovery` and zero hidden-game source,
+offline BFS, adapter truth, hidden state, or registry trajectory access. The
+code content-margin contract SHALL separate parse, compile, public-test, and
+hidden-test content margins. The continual self-learning contract SHALL accept
+only fresh events with post-outcome verifier-approved commits, frozen model
+weights, rollback, and provenance. The sampler contract SHALL require treatment
+activation before outcome interpretation. The hardware boundary SHALL forbid
+Extropic, TSU, Z1, Kona, GateMate, KV260, PolarFire, power, energy, latency, or
+speedup claims without a new authenticated route or physical-state receipt.
+
+Exp6226 SHALL audit `research-roadmap.yaml` and `research-roadmap-next.yaml`
+without changing either file. It SHALL run roadmap schema, exclusion, prior
+failure, gate, model, retired-dependency, and prompt-ending checks. A null
+`accepted_count` SHALL be valid and SHALL NOT block later tasks when no
+accepted finding exists and the freeze contracts validate.
+
+The Exp6226 artifact SHALL include these required fields: `status`,
+`planner_marker_and_hash`, `bootstrap_artifact_write_receipt`, `query_window`,
+`source_channel_receipts`, `discovered_candidates`, `accepted_findings`,
+`rejected_or_duplicate_findings`, `accepted_count`,
+`references_append_receipt`, `frozen_runtime_contract`,
+`frozen_arc_provenance_contract`, `frozen_code_content_margin_contract`,
+`frozen_csl_contract`, `frozen_sampler_activation_contract`,
+`frozen_hardware_boundary`, `roadmap_path_and_hash`,
+`roadmap_schema_result`, `exclusion_manifest_lint_result`,
+`prior_failure_contract_result`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`.
+
+### SCENARIO-INFRA-6226-1: V539 Marker Bounds Runtime Evidence
+GIVEN the sealed V539 planner refresh marker in `research-references.md`
+WHEN Exp6226 ingests source receipts and candidates
+THEN it records the marker text, marker hash, reference hash, and exclusive
+start timestamp, and rejects every candidate dated at or before the marker.
+
+### SCENARIO-INFRA-6226-2: Bootstrap Artifact Survives Optional Network Work
+GIVEN Exp6226 starts before source endpoints are queried
+WHEN it writes the final artifact
+THEN the final artifact preserves the bootstrap path, hash, status, and
+precondition hashes from the minimal atomic write.
+
+### SCENARIO-INFRA-6226-3: Null Or Duplicate Source Search Preserves References
+GIVEN every discovered source is pre-marker, duplicate, secondary-only,
+endpoint-failed, already present, or missing a strict post-marker timestamp
+WHEN Exp6226 writes its artifact
+THEN `accepted_count` may be `null` or `0`, `accepted_findings` is empty,
+`research-references.md` is byte-identical before and after, and every named
+source channel still has a receipt.
+
+### SCENARIO-INFRA-6226-4: Accepted Findings Require Strict Date, Novelty, And Scope Safety
+GIVEN a candidate has a source date equal to the marker timestamp, a bare
+same-day date, a duplicate ID or content hash, existing reference text, a
+retired-scope conflict, or no method/gate applicability
+WHEN Exp6226 classifies candidates
+THEN it rejects or guards the candidate before any references append. Only a
+primary or first-party candidate dated strictly after the V539 marker with no
+retirement conflict and new V539 applicability may be accepted.
+
+### SCENARIO-INFRA-6226-5: Frozen Contracts Fail Closed
+GIVEN later V539 tasks depend on Exp6226 contracts
+WHEN Exp6226 validates the artifact
+THEN missing provenance, inactive treatment, merged parse/content margins,
+decision-time memory writes, mutable model weights, solve claims, or hardware
+claims without authenticated receipts make the artifact invalid.
+
+### SCENARIO-INFRA-6226-6: Artifact Schema Is Principle Annotated
+GIVEN source receipts, roadmap audits, freeze contracts, command receipts, and
+protected-file hashes
+WHEN Exp6226 validates the artifact
+THEN every required field is present, every required field has field
+provenance and a principle, `verifier_is_oracle=false`, the inference substrate
+is exactly `post_marker_source_ingestion_and_v539_scope_freeze`, and the
+checksum matches the normalized payload.
+
+## Implementation Status (REQ-INFRA-6226)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6226 | `python/carnot/experiment_6226_v539_post_marker_source_scope_freeze.py`; terminal artifact `results/experiment_6226_v539_post_marker_source_scope_freeze.json`. | `tests/python/test_experiment_6226_v539_post_marker_source_scope_freeze.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
