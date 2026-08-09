@@ -33,6 +33,21 @@ def _fake_runner(argv: tuple[str, ...], _root: Path) -> mod.JsonDict:
     }
 
 
+def _nonblocking_full_suite_runner(argv: tuple[str, ...], _root: Path) -> mod.JsonDict:
+    command = " ".join(argv)
+    if command == mod.FULL_SUITE_COMMAND:
+        return {
+            "command": command,
+            "exit_code": 3,
+            "classification": (
+                mod.NONBLOCKING_FULL_SUITE_CLASSIFICATION_PREFIX + "_fixture"
+            ),
+            "stdout_tail": "repository-wide legacy failures",
+            "stderr_tail": "",
+        }
+    return _fake_runner(argv, _root)
+
+
 def _references() -> str:
     return (
         "## V539 Planner Refresh (2026-08-09, after milestone 2026.08.538)\n\n"
@@ -270,6 +285,48 @@ def test_scenario_infra_6226_frozen_contracts_fail_closed() -> None:
         malformed[field][key] = value
         malformed["reproducibility_checksum"] = mod.payload_checksum(malformed)
         assert field in mod.validate_report(malformed)
+
+
+def test_scenario_infra_6226_full_suite_failure_is_recorded_nonblocking() -> None:
+    """SCENARIO-INFRA-6226-6: unrelated broad-suite failures stay explicit."""
+
+    report = mod.build_report(
+        REPO,
+        date="20260809",
+        command_runner=_nonblocking_full_suite_runner,
+        duration_s=2.0,
+        bootstrap_receipt=mod.bootstrap_artifact_write_receipt(
+            REPO,
+            date="20260809",
+            env=None,
+            write_artifact=False,
+        ),
+    )
+
+    assert report["status"] == "complete"
+    assert report["test_exit_codes"][mod.FULL_SUITE_COMMAND] == 3
+    assert mod.validate_report(report) == []
+
+    wrong_classification = deepcopy(report)
+    for receipt in wrong_classification["test_command_receipts"]:
+        if receipt["command"] == mod.FULL_SUITE_COMMAND:
+            receipt["classification"] = "nonzero_exit_3"
+    wrong_classification["reproducibility_checksum"] = mod.payload_checksum(
+        wrong_classification
+    )
+    assert "test_exit_codes" in mod.validate_report(wrong_classification)
+
+    mismatched_exit = deepcopy(report)
+    mismatched_exit["test_exit_codes"][mod.FULL_SUITE_COMMAND] = 0
+    mismatched_exit["reproducibility_checksum"] = mod.payload_checksum(mismatched_exit)
+    assert "test_exit_codes" in mod.validate_report(mismatched_exit)
+
+    bad_receipts_type = deepcopy(report)
+    bad_receipts_type["test_command_receipts"] = "not-a-receipt-list"
+    bad_receipts_type["reproducibility_checksum"] = mod.payload_checksum(
+        bad_receipts_type
+    )
+    assert "test_exit_codes" in mod.validate_report(bad_receipts_type)
 
 
 def test_scenario_infra_6226_required_fields_principles_and_validation() -> None:

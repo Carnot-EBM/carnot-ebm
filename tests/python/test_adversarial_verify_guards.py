@@ -788,32 +788,36 @@ def test_artifact_provenance_audit_quotes_upstream_compute_markers_without_live_
 def test_post_marker_source_scope_audit_quotes_model_routing_without_live_floor(
     tmp_path: Path,
 ):
-    """REQ-INFRA-6198: roadmap source audits may quote GGUF routing rules."""
+    """REQ-INFRA-6198/REQ-INFRA-6226: source audits may quote GGUF routing rules."""
 
-    artifact = {
-        "experiment": "experiment_6198_v537_post_marker_source_scope_audit",
-        "schema": "carnot.experiment_6198.v537_source_scope_audit.v1",
-        "honest_verdict": "complete_null: accepted_count=0",
-        "inference_substrate": "post_marker_source_ingestion_and_roadmap_scope_audit",
-        "duration_s": 0.01,
-        "reproducibility_checksum": "sha256:fixture",
-        "model_specs_rule_result": {
-            "sota_gguf_allowlist": ["unsloth/Qwen3.6-35B-A3B-GGUF"],
-            "legacy_small_models_can_supply_headline_rows": False,
-        },
-    }
-    flags = []
-    av.check_duration_vs_claim(artifact, flags)
-    av.check_methodology_present(artifact, flags)
-    report = _report_for_payload(tmp_path, artifact)
+    for substrate in (
+        "post_marker_source_ingestion_and_roadmap_scope_audit",
+        "post_marker_source_ingestion_and_v539_scope_freeze",
+    ):
+        artifact = {
+            "experiment": "experiment_6198_v537_post_marker_source_scope_audit",
+            "schema": "carnot.experiment_6198.v537_source_scope_audit.v1",
+            "honest_verdict": "complete_null: accepted_count=0",
+            "inference_substrate": substrate,
+            "duration_s": 0.01,
+            "reproducibility_checksum": "sha256:fixture",
+            "model_specs_rule_result": {
+                "sota_gguf_allowlist": ["unsloth/Qwen3.6-35B-A3B-GGUF"],
+                "legacy_small_models_can_supply_headline_rows": False,
+            },
+        }
+        flags = []
+        av.check_duration_vs_claim(artifact, flags)
+        av.check_methodology_present(artifact, flags)
+        report = _report_for_payload(tmp_path, artifact)
 
-    floor = av.duration_floor_for_artifact(artifact)
-    assert floor is not None
-    assert floor["reason"] == "deterministic_verifier"
-    assert "DURATION_TOO_SHORT" not in _kinds(flags)
-    assert "METHODOLOGY_MISSING" not in _kinds(flags)
-    assert "DURATION_TOO_SHORT" not in [flag["kind"] for flag in report["flags"]]
-    assert "METHODOLOGY_MISSING" not in [flag["kind"] for flag in report["flags"]]
+        floor = av.duration_floor_for_artifact(artifact)
+        assert floor is not None
+        assert floor["reason"] == "deterministic_verifier"
+        assert "DURATION_TOO_SHORT" not in _kinds(flags)
+        assert "METHODOLOGY_MISSING" not in _kinds(flags)
+        assert "DURATION_TOO_SHORT" not in [flag["kind"] for flag in report["flags"]]
+        assert "METHODOLOGY_MISSING" not in [flag["kind"] for flag in report["flags"]]
 
 
 # --------------------------------------------------------------------------- #

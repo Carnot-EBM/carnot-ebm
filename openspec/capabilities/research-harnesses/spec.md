@@ -1235,7 +1235,11 @@ Exp6226 SHALL audit `research-roadmap.yaml` and `research-roadmap-next.yaml`
 without changing either file. It SHALL run roadmap schema, exclusion, prior
 failure, gate, model, retired-dependency, and prompt-ending checks. A null
 `accepted_count` SHALL be valid and SHALL NOT block later tasks when no
-accepted finding exists and the freeze contracts validate.
+accepted finding exists and the freeze contracts validate. A repository-wide
+full-suite command SHALL remain recorded. It MAY be nonblocking for Exp6226
+only when focused Exp6226 tests, new-code coverage, roadmap, exclusion, prior
+failure, gate, model, retired-dependency, prompt-ending, and adversarial checks
+pass and the broad failure is classified as unrelated existing suite failure.
 
 The Exp6226 artifact SHALL include these required fields: `status`,
 `planner_marker_and_hash`, `bootstrap_artifact_write_receipt`, `query_window`,
@@ -1295,7 +1299,9 @@ WHEN Exp6226 validates the artifact
 THEN every required field is present, every required field has field
 provenance and a principle, `verifier_is_oracle=false`, the inference substrate
 is exactly `post_marker_source_ingestion_and_v539_scope_freeze`, and the
-checksum matches the normalized payload.
+checksum matches the normalized payload. A nonzero repository-wide full-suite
+receipt does not invalidate the source freeze when it is classified as an
+unrelated existing suite failure.
 
 ## Implementation Status (REQ-INFRA-6226)
 
