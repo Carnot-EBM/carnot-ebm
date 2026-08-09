@@ -180,6 +180,110 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 
 ---
 
+## REQ-LEARN-6219: Two-Timescale Constraint CSL on Exp6145
+
+**Given** the clean Exp6145 exact constraint-shift stream
+**When** Exp6219 starts
+**Then** it SHALL freeze chronological family blocks, future evaluation IDs,
+seeds, memory budget, metrics, and promotion gates before any arm runs
+**And** it SHALL write
+`results/experiment_6219_two_timescale_constraint_csl.json`.
+
+### REQ-LEARN-6219 Sub-requirements
+
+- REQ-LEARN-6219-1: The artifact SHALL include `continuous_self_learning_task`
+  as bare `true`, and `train_eval_overlap_count`, `decision_time_write_count`,
+  and `model_weight_mutation_count` as bare `0`.
+- REQ-LEARN-6219-2: The four matched arms SHALL be `no_memory`,
+  `immediate_verified_post_outcome_commit`, `slow_block_end_consolidation`,
+  and `shuffled_memory_control`. They SHALL share the same Exp6145 event order,
+  held evaluation IDs, random seeds, decision count, and storage budget.
+- REQ-LEARN-6219-3: Every decision SHALL read an immutable read-only
+  pre-event snapshot. No decision may see its own post-outcome label or write to
+  memory before the outcome.
+- REQ-LEARN-6219-4: Procedural constraints SHALL be promoted only after exact
+  post-outcome verification. Each promoted record SHALL include provenance,
+  scope, support, TTL, verifier receipt, and source event hash.
+- REQ-LEARN-6219-5: Malformed, poisoned, duplicate, reordered, and stale events
+  SHALL be rejected or quarantined. Restart replay SHALL be idempotent.
+- REQ-LEARN-6219-6: Exp6219 SHALL report per-family forward transfer,
+  protected retention, negative transfer, update utility, memory cost, and
+  confidence intervals for each arm. Aggregate promotion SHALL fail if any
+  protected gate fails.
+- REQ-LEARN-6219-7: Atomic rollback SHALL restore the active store and decision
+  trace to the pre-run baseline. Model weights and protected upstream artifacts
+  SHALL remain unchanged.
+
+### Required Artifact Fields and Principles
+
+- `status`: Terminal state follows the frozen Exp6145 stream, arm parity, promotion gates, attack handling, rollback, protected-file, and test receipts.
+- `continuous_self_learning_task`: Bare true marks this as the FR-11 continuous self-learning task.
+- `upstream_stream_path_hash_and_clean_receipt`: Hashes the Exp6145 artifact, row, split, and outcome sidecars and records the clean oracle-separation replay.
+- `preregistered_chronological_family_blocks_and_future_ids`: Freezes family blocks, held future IDs, seeds, memory budget, metrics, and promotion gates before arm execution.
+- `train_eval_overlap_count`: Bare zero proves calibration IDs and held evaluation IDs are disjoint.
+- `arm_definitions_and_resource_parity`: Defines the four matched arms and proves equal event order, decision counts, seeds, storage budget, and metric surfaces.
+- `immutable_predecision_snapshot_hashes`: Records read-only pre-event snapshots for every arm decision and proves no current outcome was visible.
+- `decision_time_write_count`: Bare zero proves no memory write occurred during a decision.
+- `post_outcome_event_and_verifier_receipts`: Records exact Exp6145 Python/Z3 verifier receipts after outcome disclosure.
+- `immediate_commit_log`: Shows verified immediate commits become visible only to later events.
+- `block_end_consolidation_log`: Shows slow consolidation publishes staged constraints only after each family block ends.
+- `shuffled_memory_receipt`: Uses the same promoted-record budget with deliberately broken family alignment as a control.
+- `procedural_constraint_schema`: Defines provenance, scope, support, TTL, verifier receipt, and source event hash for promoted constraints.
+- `promoted_quarantined_rejected_and_rolled_back_counts`: Counts accepted, quarantined, rejected, duplicate, stale, and rollback outcomes.
+- `accuracy_forward_transfer_retention_and_negative_transfer_by_family_arm`: Reports per-family and per-arm forward transfer, protected retention, negative transfer, and confidence intervals.
+- `update_utility_and_memory_cost`: Reports update utility, record counts, byte cost, and utility per record under the shared memory budget.
+- `poison_injection_results`: Proves malformed, poisoned, duplicate, reordered, and stale events fail closed with zero poison propagation.
+- `rollback_exactness`: Proves atomic rollback restores active store and decision trace hashes to the pre-run baseline.
+- `model_weight_mutation_count`: Bare zero proves no mutable model weights were used or updated.
+- `continuous_learning_promotion_ready_score`: Uses a conjunctive promotion gate that fails if any protected gate fails.
+- `protected_files_unchanged`: Proves conductor, ops, traceability, and Exp6145 upstream artifacts stayed byte-identical.
+- `inference_substrate`: Declares deterministic exact-verifier replay with external memory and no LLM.
+- `verifier_is_oracle`: Records that the post-outcome verifier is exact while decisions remain pre-outcome.
+- `field_provenance`: Maps each required field to Exp6145 replay, preregistration, arm run, verifier, attack, rollback, or test evidence.
+- `field_principles`: Echoes these field principles into the artifact for audit.
+- `test_commands`: Lists focused, coverage, full-suite, spec, adversarial, and command-line checks.
+- `test_exit_codes`: Records exit codes so failed checks cannot be reported as success.
+- `duration_s`: Records measured wall-clock time for deterministic replay.
+- `reproducibility_checksum`: Hashes the artifact with the checksum field normalized.
+- `honest_verdict`: Starts with `complete:`, `complete_null:`, or `blocked:` and states the temporal-learning result.
+
+## SCENARIO-LEARN-6219-SNAPSHOTS: Decisions Are Pre-Event Immutable
+
+**Given** a chronological Exp6145 event
+**When** any arm decides
+**Then** the snapshot hash SHALL match the immutable pre-event state
+**And** the decision-time write count SHALL remain zero.
+
+## SCENARIO-LEARN-6219-TWO-TIMESCALE: Immediate and Block-End Writes Are Separated
+
+**Given** an accepted post-outcome verifier receipt
+**When** the immediate arm processes it
+**Then** the procedural constraint SHALL become visible only to later events
+**And** the block-end arm SHALL publish its staged constraints only after the
+family block closes.
+
+## SCENARIO-LEARN-6219-ATTACKS: Poison and Replay Attacks Fail Closed
+
+**Given** malformed, poisoned, duplicate, reordered, and stale update events
+**When** Exp6219 applies them
+**Then** unsafe records SHALL enter quarantine or rejection receipts
+**And** restart replay SHALL preserve the same active store hash.
+
+## SCENARIO-LEARN-6219-ROLLBACK: Rollback Restores the Pre-Run Baseline
+
+**Given** the active store and decision trace after all arms run
+**When** atomic rollback executes
+**Then** both active store hash and decision trace hash SHALL equal the pre-run
+baseline hashes.
+
+## Implementation Status (REQ-LEARN-6219)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-6219 | Planned | tests/python/test_experiment_6219_two_timescale_constraint_csl.py |
+
+---
+
 ## REQ-PSV-005: PSV Question Pool Must Contain >= 100 Questions and Sample Randomly Per Iteration
 
 **Given** a PSV self-play loop running for multiple iterations
