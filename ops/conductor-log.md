@@ -15523,3 +15523,4 @@ Still active  |
 | 2026-08-09 02:25 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: r edge cases s |
 | 2026-08-09 03:31 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6220_mode_ju |
 | 2026-08-09 04:05 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6220_mode_ju |
+| 2026-08-09 04:07 UTC | Changed three-family raw-code transport canary aft | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
