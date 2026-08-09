@@ -1,304 +1,266 @@
-# Carnot Research Roadmap vNEXT: Durable SOTA Inference, ARC Depth, and Live Constraint Learning
+# Carnot Research Roadmap vNEXT: Evidence-Ready Continuous Constraint Learning
 
 **Created:** 2026-08-09
-**Milestone:** 2026.08.539
-**Status:** Planned; activates only after terminal archival of 2026.08.538
-**Supersedes:** the V538 plan for milestone 2026.08.538, experiments Exp6211-Exp6224
-**Experiment range:** Exp6225-Exp6238
-**Informed by:** terminal V538 artifacts, the 2026-08-09 ARC follow-up record,
-the V539 source refresh, and the current exclusion manifest
+**Milestone:** 2026.08.540
+**Status:** Planned
+**Supersedes:** milestone 2026.08.539 (Exp6225-Exp6238, terminal)
+**Informed by:** the V539 exact-path capstone, clean Exp6160/Exp6162 SOTA event evidence,
+Exp6219 two-timescale memory, Exp6237 activated mode jumping, and the V540 source refresh
 
-## What V538 Proved
+## What the Previous Milestone Proved
 
-| Track | Evidence | Finding |
+| Approach | Evidence | Finding |
 |---|---|---|
-| Flagship runtime | Exp6212 | All three mandated GGUF files produced short native-server token receipts, but no family had an accepted CUDA-layer receipt. `three_family_runtime_ready_score=0` and dense readiness stayed 0. The remaining failure class is process lifecycle and receipt ownership, not model availability. |
-| ARC object input | Exp6213-Exp6214 | Transition-aware object input reached the canonical policy and fired on four games. Its clustered change-fidelity interval was `[-0.006, 0.01]`; promotion readiness was only 0.8. It did not earn solve credit. |
-| ARC efficiency | Exp6215-Exp6216 | Object-relative trajectory transfer avoided one induction call per game with no score loss. Budget-aware search changed the synthetic paired score by +1.0 and actions by -7. Both are now default on, but neither proved deeper live progress. |
-| ARC portfolio | Exp6217-Exp6218 | The long Gemma think arm was runtime-gated. The portfolio skipped with fewer than two admissible levers. Later outer-loop work fixed think routing and built prompt enrichment, but its live A/B remains incomplete. |
-| Continuous self-learning | Exp6219 | Two-timescale external memory was poison-safe, rollback-exact, and free of decision-time writes. The result used deterministic Exp6145 replay and no live LLM, so it does not yet prove system learning from fresh model events. |
-| Sampler | Exp6220 | The mode-jump integration remained default off. The scientific A/B did not activate all arms and was blocked by a recursive repository-wide test path. It made no quality, timing, or hardware claim. |
-| Executable verification | Exp6221-Exp6223 | The raw-code canary, pool, and headroom chain gate-skipped because shared runtime readiness was 0. No new code-selection or hidden-state claim is available. |
-| Reconciliation | Exp6224 | V538 closed with 2 missing, 3 nonterminal, 2 blocked, 3 skipped, and 2 flagged tasks. ARC credit and hardware claims remained zero. |
+| Llama-server sender diagnostic | Exp6227 | A bounded owned lifecycle returned a token and the diagnostic contract was ready, but the external signal sender remained unlocalized. |
+| Three-family runtime endurance | Exp6228 | Preconditions were recorded, but the scientific body did not run. The artifact has no terminal verdict or readiness fields. |
+| Structured gate cascade | Exp6229-Exp6236 | Missing runtime fields failed closed. ARC, code, fresh-stream, continual-learning, and shadow-consumer branches did not execute. |
+| Admissible ARC portfolio | Exp6232 | No eligible non-retired live lever existed. The task stopped without model load or solve credit. |
+| Activated mode jumping | Exp6237 | The Rust/PyO3 treatment fired, passed its positive control, and was distributionally equivalent to fallback on one six-state fixture. It showed no workload-level advantage. |
+| Exact-path reconciliation | Exp6238 | Missing, skipped, blocked, flagged, and non-ready evidence remained separate. No runtime, ARC, code, CSL, or hardware claim was promoted. |
 
-The result is useful but narrow: Carnot has safe components and several local
-positive controls, yet the live flagship path is not durable enough to feed
-the research loops that matter.
+**The gap:** V539 protected truth but did not move the main pipeline. One bootstrap-only
+artifact was treated as an operational success, which then made seven downstream gates skip.
+The remaining positive results are also narrow: safe two-timescale learning exists on a
+deterministic stream, and mode jumping is exact on one toy fixture. Neither result is yet a
+general live-path capability.
 
-## The Three Largest Gaps to the PRD
+## The Three Largest PRD Gaps
 
-1. **The local SOTA inference service is not an owned, durable substrate.**
-   Short token canaries work, but long ARC jobs still lose `llama-server`, and
-   the caller can wait without a bound. This blocks flagship ARC, code, and
-   fresh self-learning evidence.
-2. **ARC work improves first-level efficiency more than depth.** The corrected
-   world-model wall remains 0 accepted engines in 69 eligible units. Think
-   routing is fixed and prompt enrichment is built, but neither has a clean
-   terminal determination on the current runtime. No V538 task earned a level.
-3. **Continuous learning is safe but not live.** External procedural memory
-   has retention, poison, and rollback controls, but Exp6219 consumed an old
-   deterministic stream. The PRD requires verified adaptation from new events
-   and a reachable consumer, not only replay mechanics.
+| Gap | Current state | PRD target | V540 response |
+|---|---|---|---|
+| Evidence reaches a terminal scientific state | A preconditions-only artifact can escape the experiment call without an explicit terminal failure. | FR12 requires auditable verification and fail-closed evidence. | Wire the shared terminal classifier into the adversarial artifact boundary and prove gate fields cannot come from bootstrap-only state. |
+| Continuous constraint learning reaches the decision path | Exp6219 is safe, but V539's fresh-event and shadow branches never ran. Earlier fresh-stream shapes are blocked or retired. | FR11 requires online learning, immutable validation, rollback, and no catastrophic forgetting. | Reuse clean immutable SOTA events, add task-conditional energy familiarity, run chronological two-timescale learning, audit transfer, then wire a default-off shadow consumer. |
+| Exact sampling generalizes beyond one fixture | Exp6237 proves treatment activation and exact equivalence on one six-state target only. | The architecture needs scalable, hardware-portable EBM inference with honest quality claims. | Build an exact Ising/Potts/typed-factor suite, run a matched multi-family A/B, and train a router only if workload value is positive. |
 
-Executable verification cuts across gaps 1 and 3. A small content-margin test
-will determine whether code correction changes semantics or only repairs
-format before Carnot pays for another large candidate pool.
-
-## V539 Architecture: Owned Runtime to Verified Adaptation
+## V540 Architecture: Terminal Evidence to Safe Online Memory
 
 ```text
-                         PHASE 0: OWN THE SUBSTRATE
-┌─────────────────────────────────────────────────────────────────────┐
-│ process tree + signal trace -> bounded supervisor -> endurance gate │
-│                                         │                           │
-│            Qwen3.6-35B-A3B  Gemma-4-31B  Gemma-4-26B-A4B          │
-└─────────────────────────────────────────┬───────────────────────────┘
-                                          │ owned CUDA + token receipts
-                  ┌───────────────────────┴───────────────────────┐
-                  │                                               │
-          PHASE 1: ARC DEPTH                         PHASE 2: VERIFIED LEARNING
-┌────────────────────────────────────┐   ┌──────────────────────────────────┐
-│ de-confounded think determination  │   │ code correction:                │
-│ prompt-enrichment held A/B         │   │   parse margin != content margin│
-│ bounded re-induction A/B           │   │ fresh exact constraint events   │
-│ admissible live portfolio          │   │ two-timescale procedural memory │
-│                                    │   │ default-off shadow consumer      │
-│ frames + own attempts only         │   │ exact verifier commits only      │
-└───────────────────┬────────────────┘   └─────────────────┬────────────────┘
-                    │                                      │
-                    └──────────────────┬───────────────────┘
-                                       ▼
-                         PHASE 3: EBM METHOD + CAPSTONE
-                    ┌──────────────────────────────────┐
-                    │ activated mode-jump paired test  │
-                    │ equivalence-aware null handling  │
-                    │ exact-path adversarial reconcile │
-                    └──────────────────────────────────┘
+                 Exact artifact boundary (Exp6262)
+        missing / bootstrap / partial ────────► NONTERMINAL
+        blocked / null / complete + fields ──► terminal evidence
+                              │
+              ┌───────────────┴────────────────┐
+              │                                │
+              ▼                                ▼
+  Clean immutable SOTA events         Exact sampler fixture suite
+  Exp6160 + Exp6162                    Ising + Potts + typed factors
+              │                                │
+              ▼                                ▼
+  Chronological replay bridge          Activated mode-jump A/B
+              │                                │
+              ▼                                ├── no value ─► keep default off
+  Task-conditional energy familiarity          │
+              │                                ▼ positive value
+              ▼                         Leave-family-out router
+  Two-timescale exact-gated learning            │
+              │                                ▼
+              ▼                         default-off promotion decision
+  Family/task holdout audit
+              │
+              ▼
+  Default-off shadow consumer
+              │
+              ▼
+       Branch-independent capstone
 ```
 
-The runtime gate is shared, but the ARC, verification, self-learning, and
-sampler branches remain independently terminal. A blocked GPU branch cannot
-turn CPU evidence into a success claim.
+No V540 task generates new LLM output. The learning lane consumes immutable rows produced by
+mandated local models. The clean headline corpus includes
+`unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The
+`unsloth/gemma-4-31B-it-GGUF` Exp6146 rows remain quarantine-only because the current-rule
+audit reports missing seed provenance. Every cached-event artifact must declare
+`inference_substrate: aggregation_from_upstream_artifacts`. Legacy small models supply no
+headline rows.
 
-## Phase 0: Evidence and Durable Runtime (Exp6225-Exp6228)
+## Phase 0: Terminal Evidence Boundary (Exp6260-Exp6262)
 
-### Exp6225: Exact V538-to-V539 transition
+### Exp6260: V539-to-V540 exact terminal transition
 
-Archive the terminal V538 task identities and re-check roadmap schema,
-exclusions, ID collisions, and protected files. The task records the stale
-architecture date and does not pretend to reconcile that document.
+Archive V539 by exact declared deliverable. Preserve Exp6228 as nonterminal even though the
+conductor call returned OK. Reserve Exp6260-Exp6271 after checking the concurrent Exp6240 and
+Exp6244-Exp6246 files. Validate model policy, gates, prior failures, prompt contracts, and
+protected files without activating or editing the active roadmap.
 
-### Exp6226: Post-marker evidence and scope freeze
+**Deliverable:** `results/experiment_6260_v540_terminal_transition.json`
 
-Search only after the V539 planning marker. Record every required source
-channel, including null results. Freeze model, ARC provenance, content-margin,
-continual-memory, sampler-activation, and no-hardware-claim contracts.
+### Exp6261: Post-marker source delta and scope freeze
 
-### Exp6227: Llama-server reaper sender and wait-bound diagnostic
+Search only evidence later than the V540 planner marker. Append only non-duplicate findings.
+Freeze the terminal-artifact, cached-SOTA replay, energy-familiarity, chronological CSL,
+mode-jump generality, and no-hardware-claim contracts. A null source delta is valid.
 
-Instrument a deliberate, short reproduction with process-tree snapshots and
-audit/eBPF signal receipts when available. No privilege escalation is allowed.
-Whether the sender is identified or remains unlocalized, specify a bounded
-wait and owned-process recovery contract. Do not build recovery before the
-diagnostic distinguishes server death, caller hang, and external termination.
+**Deliverable:** `results/experiment_6261_v540_post_marker_source_scope_freeze.json`
 
-### Exp6228: Supervised three-family runtime endurance
+### Exp6262: Terminal artifact readiness contract
 
-Implement the smallest task-owned supervisor outside the conductor. Qualify
-each mandated family with a real CUDA-offload receipt, repeated tokens, a
-controlled owned-child termination, bounded recovery, and an endurance
-window. This differs from Exp6212's 12-14 second canaries. It must never kill
-an unrelated PID and must keep GGUF files read-only.
+Use `python/carnot/terminal_artifacts.py` as the single classifier. Make adversarial
+verification CRITICAL-flag a declared experiment artifact when it is missing, malformed,
+bootstrap-only, running, partial, contradictory, or unknown. A conductor receipt must not
+override exact-path state. Add gate-readiness tests that reproduce Exp6228 and prove missing
+readiness values fail closed. Do not edit the conductor.
 
-## Phase 1: ARC Induction and Depth (Exp6229-Exp6232)
+**Deliverable:** `results/experiment_6262_terminal_artifact_readiness_contract.json`
 
-Every ARC task uses only the canonical live policy, agent-visible frames, the
-agent's own actions, and runtime reverse engineering. No game source, hidden
-state, exhaustive offline BFS, per-game adapter, or registry mutation is
-allowed. Any observed level completion must declare
-`solve_provenance=live_agent_self_discovery`.
+## Phase 1: Energy-Gated Continuous Self-Learning (Exp6263-Exp6267)
 
-### Exp6229: De-confounded Gemma think determination
+### Exp6263: Clean SOTA event replay bridge
 
-Reuse the already-launched expanded-roster run when its receipts are sound.
-Resume only missing pre-registered cells under the bounded supervisor. The
-primary outcome is held-out exact-admission rate with game clustering and an
-exact sign test. The task freezes think on/off for downstream work even when
-the result is null or underpowered.
+Create an immutable manifest over current-rule-clean Exp6160 and Exp6162 rows. Preserve raw
+hashes, model provenance, chronological order, task/family partitions, and exact outcome
+labels. Keep Exp6146 rows in a separate quarantine set. Reject duplicates, time reversal,
+train/heldout overlap, parser failures promoted as valid events, and mutable source files.
 
-### Exp6230: Induce-prompt enrichment held A/B
+**Deliverable:** `results/experiment_6263_clean_sota_event_replay_bridge.json`
 
-Measure the already-built default-off enrichment: semantic action names,
-explicit changed-cell counts, and cross-frame object identity/topology. This
-is not Exp6214's component-delta table. Use a leave-one-game-out matrix,
-treatment-fire preflight, A/A control, HUD-masked symmetric change fidelity,
-and live admission rate.
+### Exp6264: Task-conditional energy familiarity gate
 
-### Exp6231: Bounded re-induction A/B
+Implement the Energy-Based Transfer control on the sealed bridge. Compare no memory,
+unconditional advice, one global energy threshold, and task-conditional familiarity. Tune only
+on the training prefix. Measure known-family coverage, shifted-family unsafe advice,
+calibration, abstention, and negative transfer. State the paper's off-policy limitation; an
+offline replay does not prove on-policy density.
 
-After the think configuration is frozen, compare the current one-attempt latch
-with the existing bounded re-induction flag. Use identical action budgets and
-stall criteria. The primary outcome is admission or level-depth gain, not
-lower action count on an already completed level.
+**Deliverable:** `results/experiment_6264_energy_familiarity_memory_gate.json`
 
-### Exp6232: Admissible ARC depth portfolio or honest skip
+### Exp6265: Chronological two-timescale CSL A/B
 
-Recompute eligibility from current artifacts without changing the shared
-terminal classifier or erasing corrigenda. If at least two independently
-admissible levers exist, run a prospective matched portfolio. Otherwise emit
-a terminal skip with the exact missing evidence. This is a new prospective
-test; it does not re-label Exp6218.
+Run the required continuous self-learning experiment. Extend Exp6219's read-only decision
+snapshot, immediate post-outcome memory, slow block-end consolidation, poison quarantine, and
+atomic rollback onto the clean SOTA stream. Compare no memory, shuffled-time memory,
+unconditional memory, and energy-familiarity-gated memory. Keep GGUF weights frozen. Report
+forward transfer, retention, forgetting, negative transfer, unsafe admissions, memory cost,
+and rollback identity.
 
-## Phase 2: Verification and Continuous Self-Learning (Exp6233-Exp6236)
+**Deliverable:** `results/experiment_6265_chronological_two_timescale_csl_ab.json`
 
-### Exp6233: Three-family code-correction content margin
+### Exp6266: Family and task holdout audit
 
-On a small frozen executable-code bank, compare no revision, format-only
-normalization, and exact-diagnostic revision. Record raw generation bytes,
-parse, compile, run, public-test, and sealed hidden-test outcomes. The primary
-claim is the hidden-test content margin among already-parseable pairs. A gain
-caused only by parse recovery is useful engineering but not verified reasoning.
-This experiment applies the control from arXiv:2608.04355 without reopening
-finite-ID grammar retries or a large K=8 pool.
+Audit the promoted learner without refitting held partitions. Run leave-one-model-family-out
+and leave-one-task-class-out tests. Require per-stratum safety, pooled positive transfer,
+retention, poison containment, and exact replay. Underpowered or missing strata block
+promotion rather than disappear from the mean.
 
-### Exp6234: Fresh flagship exact-constraint event stream
+**Deliverable:** `results/experiment_6266_family_task_holdout_csl_audit.json`
 
-Create a chronological, family-shifted stream from at least two mandated local
-GGUF families. Each event contains the predecision snapshot, raw candidate,
-exact verifier result, post-outcome commit eligibility, and immutable hashes.
-Use the established exact constraint schema rather than the failed raw-code
-strategy seed.
+### Exp6267: Default-off constraint-memory shadow consumer
 
-### Exp6235: Prospective two-timescale continuous learning
+Wire the audited policy into the canonical constraint-decision path in shadow mode. The live
+decision remains byte-identical to control. The consumer reads an immutable snapshot, emits a
+counterfactual decision and energy receipt, and writes learning state only after the exact
+outcome boundary. Prove restart and rollback identity. Do not flip the default.
 
-Run no-memory, shuffled-memory, immediate verified post-outcome commit, and
-slow block-end consolidation arms on the fresh stream. Decision snapshots are
-read-only. Model weights stay frozen. Require forward transfer, retention,
-negative-transfer, memory-cost, poison, duplicate/reorder/stale-event,
-quarantine, and exact rollback receipts.
+**Deliverable:** `results/experiment_6267_constraint_memory_shadow_consumer_v2.json`
 
-### Exp6236: Default-off online constraint-memory shadow consumer
+## Phase 2: Exact Mode-Jump Generality (Exp6268-Exp6270)
 
-Only after Exp6235 is promotion-ready, wire the governed memory into the real
-constraint decision path behind a default-off flag. Replay the fresh stream,
-prove fail-closed fallback and mutation sensitivity, and keep all writes after
-the verified outcome boundary. This is the milestone's FR11 reachability step.
+### Exp6268: Multimodal exact sampler fixture suite
 
-## Phase 3: Activated Sampling and Reconciliation (Exp6237-Exp6238)
+Build a frozen suite with the original six-state positive control, multimodal binary Ising,
+multistate Potts, and Carnot typed-factor targets. Use exact enumeration at bounded sizes.
+Store normalized target probabilities, basin labels, barriers, seeds, schedules, and expected
+mode-jump support. Include unimodal and inactive-treatment controls.
 
-### Exp6237: Activated mode-jump quality and efficiency A/B
+**Deliverable:** `results/experiment_6268_multimodal_sampler_fixture_suite.json`
 
-Replace Exp6220's recursive full-suite experiment path with bounded focused
-science and separate repository validation. Require nonzero jump proposals and
-acceptances, a synthetic multimodal positive control, matched seeded fallback,
-quality metrics, ESS/autocorrelation, and wall cost. Following
-arXiv:2608.05025, report positive, negative, equivalence-supported, or
-inconclusive. An inactive treatment is an instrument failure.
+### Exp6269: Multi-family activated mode-jump A/B
 
-### Exp6238: V539 exact-path adversarial capstone
+Compare fallback and Rust/PyO3 mode-jump arms with identical targets, seeds, burn-in, retained
+samples, and budgets. Prove treatment fire before outcome comparison. Report exact
+distribution error, energy error, mode occupancy, barrier crossings, autocorrelation, ESS,
+acceptance, and wall time. Use equivalence-aware intervals. No cDLS, CUDA, FPGA, or hardware
+claim is allowed.
 
-Classify every task by its exact declared deliverable and current adversarial
-rules. Preserve blocked, skipped, null, partial, flagged, and retired states.
-Reconcile specs, traceability, status, changelog, known issues, exclusions, and
-the hardware boundary. Do not create an ARC solve, hardware speedup, sampler,
-code-verification, or self-learning claim that upstream evidence does not
-support.
+**Deliverable:** `results/experiment_6269_mode_jump_multifamily_ab.json`
+
+### Exp6270: Descriptor-only sampler router
+
+Run only if Exp6269 shows positive workload value on at least two non-toy families without an
+exactness regression. Fit a simple default-off router from pre-run target descriptors such as
+state count, modality, barrier height, and factor arity. Do not use outcome metrics as input.
+Evaluate leave-one-family-out selection regret and exact quality.
+
+**Deliverable:** `results/experiment_6270_mode_jump_descriptor_router.json`
+
+## Phase 3: Branch-Independent Reconciliation (Exp6271)
+
+### Exp6271: V540 adversarial capstone
+
+Read every declared deliverable by exact path. Keep terminal, nonterminal, blocked, skipped,
+null, flagged, and ready states separate. Re-run current adversarial rules. Reconcile OpenSpec,
+traceability, status, and changelog only to evidence that exists. Report CSL and sampler branches
+independently. Make no runtime, live-LLM, ARC solve, hardware, speed, or power claim.
+
+**Deliverable:** `results/experiment_6271_v540_adversarial_capstone.json`
 
 ## Dependency Graph
 
 ```text
-Exp6225 transition
-   └── Exp6226 source and scope freeze
-         ├── Exp6227 runtime diagnostic
-         │      └── Exp6228 three-family endurance
-         │             ├── Exp6229 think determination
-         │             │      └── Exp6231 bounded re-induction
-         │             ├── Exp6230 prompt-enrichment A/B
-         │             │      └──────────────┐
-         │             ├── Exp6233 code content margin
-         │             └── Exp6234 fresh constraint stream
-         │                    └── Exp6235 prospective CSL
-         │                           └── Exp6236 shadow consumer
-         └── Exp6237 activated mode-jump A/B
+Exp6260 transition
+   └── Exp6261 source/scope freeze
+          └── Exp6262 terminal-artifact contract
+                 ├── Exp6263 clean SOTA replay bridge
+                 │      └── Exp6264 energy familiarity
+                 │             └── Exp6265 chronological CSL
+                 │                    └── Exp6266 family/task audit
+                 │                           └── Exp6267 shadow consumer
+                 └── Exp6268 exact sampler suite
+                        └── Exp6269 multi-family mode-jump A/B
+                               └── Exp6270 descriptor router
 
-Exp6229 + Exp6230 + Exp6231 ──> Exp6232 portfolio or skip
-
-Exp6225-Exp6237 ─────────────> Exp6238 capstone
+Exp6261-Exp6270 ───────────────────────────────► Exp6271 capstone
 ```
 
-Structured conductor gates are used for runtime, stream, CSL, and shadow
-readiness. The portfolio task intentionally performs its dynamic eligibility
-count inside the experiment because its rule is “at least two,” which cannot
-be expressed as a conjunction of the current gate operators.
+Structured gates:
+
+- Exp6264 requires `event_replay_bridge_ready_score == 1` from Exp6263.
+- Exp6265 requires `familiarity_gate_ready_score == 1` from Exp6264.
+- Exp6266 requires `continuous_learning_promotion_ready_score == 1` from Exp6265.
+- Exp6267 requires `family_task_transfer_ready_score == 1` from Exp6266.
+- Exp6269 requires `sampler_fixture_suite_ready_score == 1` from Exp6268.
+- Exp6270 requires `mode_jump_workload_value_ready_score == 1` from Exp6269.
+- Exp6271 is ungated and reconciles skipped branches as evidence.
 
 ## Hardware Requirements
 
-| Tasks | Hardware | Admission and evidence |
-|---|---|---|
-| Exp6227-Exp6230, Exp6231-Exp6234 | Two local RTX 3090 GPUs | Record both GPU UUIDs, PID ownership, free VRAM, CUDA layers, process lifetime, llama.cpp build, exact GGUF hash/revision/quantization, and raw output receipts. Never evict an unrelated process. |
-| Exp6235-Exp6238 | CPU; GPU only for replay already declared by the task | No GPU claim without task-linked engagement receipts. Mode-jump science is software-only. |
-| GateMate A1, KV260, PolarFire | No scheduled execution | GateMate has no new dated physical-state receipt. KV260 and PolarFire are terminal continuity assets. Repeating cached probes is excluded. |
-| Extropic XTR-0/Z1 | No authenticated route | Z1 is taped out and early access is planned for 2027. The simulator API is early access. No TSU/Z1 execution, power, energy, latency, or speedup claim is allowed. |
+| Experiments | Compute | Memory | Expected time | Claim boundary |
+|---|---|---:|---:|---|
+| 6260-6262 | CPU | 4 GB | 10-45 min each | Harness and artifact evidence only |
+| 6263-6267 | CPU, existing immutable result files | 8-16 GB | 15-90 min each | No new LLM inference; no model-weight mutation |
+| 6268-6270 | CPU + Rust/PyO3 build | 8 GB | 20-120 min each | Software quality only; timing is descriptive |
+| 6271 | CPU | 4 GB | 20-45 min | Reconciliation only |
 
-## Model Policy
-
-Every task that calls an LLM uses at least one mandated local GGUF. Exp6228
-qualifies all three. ARC uses `unsloth/gemma-4-31B-it-GGUF`. The code
-content-margin task uses all three. The fresh constraint stream uses
-`unsloth/Qwen3.6-35B-A3B-GGUF` and
-`unsloth/gemma-4-26B-A4B-it-GGUF`, with the dense family as a runtime control
-when budget permits. Legacy Qwen3.5-0.8B and gemma-4-E4B-it are smoke-only and
-cannot contribute headline rows.
-
-All GGUF loads use exact cached files and embedded templates through the local
-llama.cpp path. No task passes a GGUF repository directory to
-`AutoTokenizer`.
-
-## Prior-Failure and Retirement Boundaries
-
-- Exp6227-Exp6228 name Exp6212 and change the mechanism from short canaries to
-  sender tracing, bounded supervision, forced owned-child recovery, and
-  endurance.
-- Exp6229 names the gate-blocked Exp6217 and runs only after dense runtime is
-  qualified.
-- Exp6230 names Exp6214 and changes the representation from component deltas to
-  semantic actions, counts, and identity/topology cross-references.
-- Exp6232 names Exp6218 and uses new prospective evidence. It does not clear or
-  rewrite historical corrigenda.
-- Exp6233 names Exp6200 and Exp6221. It uses a small content-margin design, not
-  another unchanged raw-code envelope or K=8 pool.
-- Exp6234-Exp6236 name the blocked Exp6206, Exp6207, Exp6164, and Exp6165
-  lineage. The new chain uses exact constraint events, a fresh qualified
-  runtime, and the already-positive Exp6219 two-timescale mechanism.
-- Exp6237 names Exp6166 and Exp6220. If the same blocked verdict recurs, retire
-  the mode-jump runtime A/B scope.
-
-Every listed entry sets `retire_if_same_verdict: true` in the YAML. No task
-requires a retired upstream ID.
+The two RTX 3090 GPUs are not required. KV260 is terminal, GateMate has no new physical
+receipt, PolarFire is opportunistic, and no authenticated Extropic TSU route exists. V540
+schedules no board or GPU task. No speed, power, energy-efficiency, or hardware-availability
+claim is admissible.
 
 ## Explicitly Deferred
 
-- Hidden-state code selectors and another K=8 pool, until Exp6233 proves
-  semantic headroom and complete executable transport.
-- Prompt-phrasing, sequential refinement, gate-threshold tuning, finite-ID
-  generated answers, external-text Phase D, cross-game ARC transfer, source
-  reading, offline ground-truth BFS, and per-game adapters.
-- Mutable GGUF weights, decision-time memory writes, and online distillation.
-- New KAN training, Hyper-SET/EBT training, Kona reproduction, or a claimed
-  TSU comparator.
-- GateMate, KV260, PolarFire, or Z1 execution without a new admissible receipt.
+- Fresh flagship-GGUF generation and three-family endurance. The signal sender remains
+  unlocalized, and Exp6228 did not reach a terminal scientific state.
+- New ARC level attempts. Exp6232 found no eligible non-retired lever, and concurrent outer-loop
+  ARC measurements already occupy Exp6240 and Exp6244-Exp6246.
+- Executable-code generation. Its V539 gate depended on the same absent runtime readiness.
+- cDLS timing or crossover. Exact correction, replica exchange, Rust parity, and the terminal
+  no-crossover result already exist.
+- MetaDNS, Noisier NCE, and Scalable Power Sampling implementation. They remain future controls
+  until a learned-sampler or durable token-logit substrate is justified.
+- Any FPGA, TSU, Kona, or dual-GPU execution claim without a new authenticated receipt.
 
-## Exit Criteria
+## Milestone Exit Criteria
 
-V539 succeeds as an evidence milestone when:
+V540 is successful if it produces one of these honest outcomes:
 
-1. the runtime either passes owned three-family endurance or has a precise,
-   reproducible blocked verdict with no dependent model claims;
-2. each ARC lever has a terminal causal determination or an honest gate skip,
-   with live-agent provenance and no registry mutation;
-3. code correction reports format and semantic margins separately;
-4. fresh flagship events feed a terminal two-timescale CSL A/B, and the shadow
-   consumer runs only if its gate passes;
-5. sampler evidence proves treatment activation before any comparison; and
-6. the capstone preserves every non-positive state and aligns the spec and ops
-   record without modifying `research-roadmap.yaml` or the conductor.
+1. The terminal-artifact boundary catches the Exp6228 class, and the energy-familiarity learner
+   passes chronological transfer, retention, safety, rollback, and held-family/task audits before
+   reaching a default-off shadow path.
+2. The learner yields an honest null or block with the unsafe strata preserved, while the
+   multi-family sampler trial either demonstrates workload value or retires routing after an
+   equivalence-aware null.
+3. Both scientific branches block, but the capstone proves that no bootstrap, gate, or receipt
+   can promote a missing scientific result.
+
+V540 must not call a skipped branch successful. It must not promote quarantined Exp6146 rows,
+offline replay as on-policy proof, one-fixture equivalence as general sampler value, or software
+timing as hardware evidence.
