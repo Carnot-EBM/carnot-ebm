@@ -1,0 +1,1164 @@
+{
+  "schema": "carnot.experiment_6261.v540_post_marker_source_scope_freeze.v1",
+  "experiment_id": "exp6261-v540-post-marker-source-scope-freeze",
+  "run_date": "20260809",
+  "result_path": "results/experiment_6261_v540_post_marker_source_scope_freeze.json",
+  "status": "blocked",
+  "planner_marker_and_hash": {
+    "marker_text": "V540-PLANNER-REFRESH-20260809-END",
+    "marker_comment": "<!-- V540-PLANNER-REFRESH-20260809-END -->",
+    "marker_count": 1,
+    "marker_comment_sha256": "sha256:f042bed66d27ebfe70156310727a3caa285bbce0aa06502de92b73e2c45e5aa8",
+    "research_references_sha256": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353",
+    "marker_byte_offset": 2681952,
+    "marker_commit": "e3df5922538ce7992689b0527ddcfa6c5741b5fc",
+    "marker_committed_at_utc": "2026-08-09T15:20:51Z"
+  },
+  "query_window": {
+    "marker": "V540-PLANNER-REFRESH-20260809-END",
+    "window_start_exclusive": "2026-08-09T15:20:51Z",
+    "window_end_inclusive": "2026-08-09T23:59:59Z",
+    "same_day_policy": "Bare 2026-08-09 dates are rejected without a timestamp strictly after the marker.",
+    "accepted_at_or_before_marker": false
+  },
+  "source_channel_receipts": [
+    {
+      "channel": "arxiv",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Energy-Based Transfer for Reinforcement Learning",
+        "ARM EBM autoregressive language models energy-based",
+        "Extropic Torx Thermalizers Z1"
+      ],
+      "stable_urls": [
+        "https://arxiv.org/abs/2506.16590",
+        "https://arxiv.org/abs/2512.15605",
+        "https://arxiv.org/abs/2608.01612",
+        "https://arxiv.org/abs/2608.01615"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "The strict arXiv submittedDate window after 2026-08-09T15:20:51Z returned totalResults=0."
+    },
+    {
+      "channel": "openreview",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Energy-Based Transfer for Reinforcement Learning"
+      ],
+      "stable_urls": [
+        "https://openreview.net/forum?id=yx00QWzKEF"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "api_http_403_challenge_required",
+      "receipt": "The stable OpenReview forum URL is unchanged, but the API required a browser challenge during this run."
+    },
+    {
+      "channel": "extropic",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Extropic writing, Z1, Torx, Thermalizers, CHIPS R&D"
+      ],
+      "stable_urls": [
+        "https://extropic.ai/writing/from-one-to-one-billion/",
+        "https://extropic.ai/writing/thermodynamic-computing-chips-in-america"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "Extropic rows remain product-roadmap or watch-only evidence."
+    },
+    {
+      "channel": "semantic_scholar_ebt_arm",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Semantic Scholar EBT citations",
+        "Semantic Scholar ARM-EBM citations"
+      ],
+      "stable_urls": [
+        "https://www.semanticscholar.org/paper/Energy-Based-Transfer-for-Reinforcement-Learning",
+        "https://api.semanticscholar.org/graph/v1/paper/arXiv:2512.15605"
+      ],
+      "strict_post_marker_hits": 0,
+      "endpoint_status": "api_http_429_rate_limited",
+      "receipt": "Semantic Scholar keyword and paper routes were rate-limited, so no citation row was promoted."
+    },
+    {
+      "channel": "hugging_face_papers",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Hugging Face Papers energy based transfer OOD"
+      ],
+      "stable_urls": [
+        "https://huggingface.co/papers?q=out-of-distribution+transfer",
+        "https://huggingface.co/api/daily_papers?date=2026-08-09"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "HF Papers daily API for 2026-08-09 returned an empty list; browser search redirected to 2026-08-07 rows."
+    },
+    {
+      "channel": "targeted_github",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Energy-Based Transfer GitHub",
+        "ARM residual energy-based model GitHub",
+        "Extropic Torx GitHub"
+      ],
+      "stable_urls": [
+        "https://github.com/extropic-ai/torx"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "GitHub exact EBT and ARM-EBM searches returned zero repos; Extropic Torx had post-marker metadata churn but no post-marker code push."
+    },
+    {
+      "channel": "logical_intelligence",
+      "queried_at": "2026-08-09",
+      "queries": [
+        "Logical Intelligence Kona Aleph EBRM"
+      ],
+      "stable_urls": [
+        "https://logicalintelligence.com/blog/energy-based-models-for-reasoning",
+        "https://logicalintelligence.com/"
+      ],
+      "strict_post_marker_hits": 0,
+      "receipt": "Public Kona/Aleph pages remain strategic context, with no local reproducible route."
+    }
+  ],
+  "discovered_candidates": [
+    {
+      "stable_id": "arxiv:2506.16590",
+      "title": "Energy-Based Transfer for Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2506.16590",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2025-06-19T20:25:52Z",
+      "date_evidence": "arXiv v1 submission history",
+      "scope_effect": "Planning-accepted OOD familiarity control already sealed at V540 marker.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:128856871e00217a3b393e3a79bb3fc1fd9e8639e47e219300a79ef1405fc388"
+    },
+    {
+      "stable_id": "arxiv:2512.15605",
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models",
+      "url": "https://arxiv.org/abs/2512.15605",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-05-25T15:54:35Z",
+      "date_evidence": "arXiv v4 submission history",
+      "scope_effect": "ARM-EBM bridge remains sealed planning context.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:233f79654bbeeb26b59f1ff5a25d91a8c779887b37b712a1f0093837d69717ca"
+    },
+    {
+      "stable_id": "arxiv:2608.01612",
+      "title": "A Framework for Stochastic Differentiable Programming",
+      "url": "https://arxiv.org/abs/2608.01612",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-03T02:38:23Z",
+      "date_evidence": "arXiv v1 submission history",
+      "scope_effect": "Torx is pre-marker Extropic software context.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:4908e13ea35e6529d15076a7754f373fccf01d8a57487782729527d97401dda0"
+    },
+    {
+      "stable_id": "arxiv:2608.01615",
+      "title": "Thermalizing Stochastic Programs",
+      "url": "https://arxiv.org/abs/2608.01615",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-03T02:44:02Z",
+      "date_evidence": "arXiv v1 submission history",
+      "scope_effect": "Thermalizers is pre-marker and does not create a local TSU route.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:49f80f77b305f953173960fd413ead84cb2746c7c4ddb90d0605a19e824b6fd4"
+    },
+    {
+      "stable_id": "extropic:from-one-to-one-billion",
+      "title": "From One to One Billion: Torx, Thermalizers, and Z1",
+      "url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "source_channel": "extropic",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-08-05T00:00:00Z",
+      "date_evidence": "public announcement was already sealed before V540 marker",
+      "scope_effect": "Product-roadmap evidence only; no authenticated Carnot execution route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:c015a15f6954774f99a18c107d429ccfc3975427cb32321b0253a71776720149"
+    },
+    {
+      "stable_id": "logical:intelligence-ebrm-reasoning",
+      "title": "Energy-Based Models for AI Reasoning",
+      "url": "https://logicalintelligence.com/blog/energy-based-models-for-reasoning",
+      "source_channel": "logical_intelligence",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-06-26T23:47:00Z",
+      "date_evidence": "page HTML reports Published Jun 26, 2026, 11:47 PM UTC",
+      "scope_effect": "Strategic context only; no public Kona weights or API route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:12db6e028d91def4ac7221bd29b8f79737c162588b4c90335babcda0a4e49d02"
+    },
+    {
+      "stable_id": "github:extropic-ai/torx",
+      "title": "Torx",
+      "url": "https://github.com/extropic-ai/torx",
+      "source_channel": "targeted_github",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-08-05T06:33:38Z",
+      "date_evidence": "GitHub pushed_at; updated_at after marker was metadata only",
+      "scope_effect": "First-party Torx code predates marker and does not add a Carnot execution route.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:f5aa87bd614310028125aacd41ea39213607b766efd79e6a3504500d76982960"
+    },
+    {
+      "stable_id": "github:albertbuchard/torx-layers",
+      "title": "torx-layers",
+      "url": "https://github.com/albertbuchard/torx-layers",
+      "source_channel": "targeted_github",
+      "source_kind": "secondary",
+      "source_timestamp": "2026-08-06T01:09:55Z",
+      "date_evidence": "GitHub repository creation time",
+      "scope_effect": "Pre-marker Torx-adjacent code; no Carnot contract change.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": false,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:6ab8cea24ed19c6466ac4a984475d51a31f2140e0ec8743983f8e3c2524184fb"
+    }
+  ],
+  "accepted_findings": [],
+  "rejected_duplicate_or_watch_only_findings": [
+    {
+      "stable_id": "arxiv:2506.16590",
+      "title": "Energy-Based Transfer for Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2506.16590",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2025-06-19T20:25:52Z",
+      "date_evidence": "arXiv v1 submission history",
+      "scope_effect": "Planning-accepted OOD familiarity control already sealed at V540 marker.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": false,
+      "content_hash": "sha256:128856871e00217a3b393e3a79bb3fc1fd9e8639e47e219300a79ef1405fc388",
+      "disposition": "duplicate",
+      "rejection_reason": "title already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2512.15605",
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models",
+      "url": "https://arxiv.org/abs/2512.15605",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-05-25T15:54:35Z",
+      "date_evidence": "arXiv v4 submission history",
+      "scope_effect": "ARM-EBM bridge remains sealed planning context.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:233f79654bbeeb26b59f1ff5a25d91a8c779887b37b712a1f0093837d69717ca",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.01612",
+      "title": "A Framework for Stochastic Differentiable Programming",
+      "url": "https://arxiv.org/abs/2608.01612",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-03T02:38:23Z",
+      "date_evidence": "arXiv v1 submission history",
+      "scope_effect": "Torx is pre-marker Extropic software context.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:4908e13ea35e6529d15076a7754f373fccf01d8a57487782729527d97401dda0",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "arxiv:2608.01615",
+      "title": "Thermalizing Stochastic Programs",
+      "url": "https://arxiv.org/abs/2608.01615",
+      "source_channel": "arxiv",
+      "source_kind": "primary",
+      "source_timestamp": "2026-08-03T02:44:02Z",
+      "date_evidence": "arXiv v1 submission history",
+      "scope_effect": "Thermalizers is pre-marker and does not create a local TSU route.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:49f80f77b305f953173960fd413ead84cb2746c7c4ddb90d0605a19e824b6fd4",
+      "disposition": "duplicate",
+      "rejection_reason": "stable id already appears in research-references.md"
+    },
+    {
+      "stable_id": "extropic:from-one-to-one-billion",
+      "title": "From One to One Billion: Torx, Thermalizers, and Z1",
+      "url": "https://extropic.ai/writing/from-one-to-one-billion/",
+      "source_channel": "extropic",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-08-05T00:00:00Z",
+      "date_evidence": "public announcement was already sealed before V540 marker",
+      "scope_effect": "Product-roadmap evidence only; no authenticated Carnot execution route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:c015a15f6954774f99a18c107d429ccfc3975427cb32321b0253a71776720149",
+      "disposition": "duplicate",
+      "rejection_reason": "title already appears in research-references.md"
+    },
+    {
+      "stable_id": "logical:intelligence-ebrm-reasoning",
+      "title": "Energy-Based Models for AI Reasoning",
+      "url": "https://logicalintelligence.com/blog/energy-based-models-for-reasoning",
+      "source_channel": "logical_intelligence",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-06-26T23:47:00Z",
+      "date_evidence": "page HTML reports Published Jun 26, 2026, 11:47 PM UTC",
+      "scope_effect": "Strategic context only; no public Kona weights or API route.",
+      "reproducible_evidence": false,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:12db6e028d91def4ac7221bd29b8f79737c162588b4c90335babcda0a4e49d02",
+      "disposition": "duplicate",
+      "rejection_reason": "URL already appears in research-references.md"
+    },
+    {
+      "stable_id": "github:extropic-ai/torx",
+      "title": "Torx",
+      "url": "https://github.com/extropic-ai/torx",
+      "source_channel": "targeted_github",
+      "source_kind": "first_party",
+      "source_timestamp": "2026-08-05T06:33:38Z",
+      "date_evidence": "GitHub pushed_at; updated_at after marker was metadata only",
+      "scope_effect": "First-party Torx code predates marker and does not add a Carnot execution route.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": true,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:f5aa87bd614310028125aacd41ea39213607b766efd79e6a3504500d76982960",
+      "disposition": "duplicate",
+      "rejection_reason": "URL already appears in research-references.md"
+    },
+    {
+      "stable_id": "github:albertbuchard/torx-layers",
+      "title": "torx-layers",
+      "url": "https://github.com/albertbuchard/torx-layers",
+      "source_channel": "targeted_github",
+      "source_kind": "secondary",
+      "source_timestamp": "2026-08-06T01:09:55Z",
+      "date_evidence": "GitHub repository creation time",
+      "scope_effect": "Pre-marker Torx-adjacent code; no Carnot contract change.",
+      "reproducible_evidence": true,
+      "primary_or_first_party": false,
+      "scope_changing": false,
+      "watch_only": true,
+      "content_hash": "sha256:6ab8cea24ed19c6466ac4a984475d51a31f2140e0ec8743983f8e3c2524184fb",
+      "disposition": "watch_only",
+      "rejection_reason": "watch-only evidence does not change a V540 contract"
+    }
+  ],
+  "accepted_count": 0,
+  "references_append_receipt": {
+    "reference_hash_before": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353",
+    "reference_hash_after": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353",
+    "references_byte_identical": true,
+    "append_count": 0,
+    "append_heading": null,
+    "append_status": "complete_null"
+  },
+  "frozen_terminal_artifact_contract": {
+    "version": "v540.6261",
+    "classifier": "python/carnot/terminal_artifacts.py",
+    "source_of_truth": "exact declared artifact path",
+    "nonterminal_classes": [
+      "missing",
+      "malformed",
+      "running",
+      "bootstrap",
+      "partial",
+      "unknown"
+    ],
+    "receipt_override_allowed": false,
+    "downstream_gate_rule": "Gate fields may be read only from terminal exact artifacts."
+  },
+  "frozen_cached_sota_replay_contract": {
+    "version": "v540.6261",
+    "allowed_sources": [
+      "Exp6160 current-rule-clean rows",
+      "Exp6162 current-rule-clean rows"
+    ],
+    "quarantined_sources": [
+      "Exp6146 rows until seed provenance has an authorized correction"
+    ],
+    "cached_replay_is_on_policy_proof": false,
+    "claim_limit": "Cached replay is not on-policy proof and cannot prove live density.",
+    "required_counts": [
+      "duplicate_count=0",
+      "time_reversal_count=0",
+      "train_heldout_overlap_count=0"
+    ]
+  },
+  "frozen_energy_familiarity_contract": {
+    "version": "v540.6261",
+    "accepted_planning_delta": "Energy-Based Transfer as OOD familiarity control",
+    "arms": [
+      "no_memory",
+      "unconditional",
+      "global_threshold",
+      "task_conditional_threshold"
+    ],
+    "threshold_fit_scope": "training prefix only",
+    "success_boundary": "reduce shifted-family unsafe advice without known-family regression",
+    "watch_only_methods": [
+      "MetaDNS",
+      "Noisier NCE",
+      "Scalable Power Sampling"
+    ]
+  },
+  "frozen_chronological_csl_contract": {
+    "version": "v540.6261",
+    "continuous_learning_task": true,
+    "event_order": "strict chronological replay",
+    "decision_write_rule": "read immutable snapshot before outcome; write only after exact outcome",
+    "rollback_required": true,
+    "weight_mutation_allowed": false
+  },
+  "frozen_sampler_generality_contract": {
+    "version": "v540.6261",
+    "fixture_families": [
+      "six_state_positive_control",
+      "binary_ising",
+      "potts",
+      "typed_factor"
+    ],
+    "treatment_activation_required": true,
+    "default_promotion": "default_off",
+    "forbidden_claims": [
+      "cDLS timing reopened",
+      "CUDA speedup",
+      "FPGA speedup",
+      "hardware execution"
+    ]
+  },
+  "frozen_model_provenance_contract": {
+    "version": "v540.6261",
+    "no_model_load": true,
+    "clean_provenance_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "quarantine_only_models": [
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "legacy_small_models_headline_allowed": false,
+    "model_names_are_provenance_only": true
+  },
+  "frozen_hardware_boundary": {
+    "version": "v540.6261",
+    "current_board_execution_route_supported": false,
+    "current_tsu_execution_route_supported": false,
+    "hardware_claim_count": 0,
+    "claim_boundary": "No current board or TSU route supports execution, speed, power, or availability claims.",
+    "allowed_statement": "Hardware and Extropic remain watch-only until authenticated execution receipts exist."
+  },
+  "roadmap_path_and_hash": {
+    "requested_path": "research-roadmap-next.yaml",
+    "audited_path": "research-roadmap.yaml",
+    "requested_missing": true,
+    "selection_note": "research-roadmap-next.yaml missing; audited active V540 roadmap",
+    "sha256": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633",
+    "milestone": "2026.08.540"
+  },
+  "roadmap_schema_result": {
+    "passed": true,
+    "task_count": 12,
+    "milestone": "2026.08.540",
+    "model": "scripts.roadmap_schema.Roadmap"
+  },
+  "exclusion_manifest_lint_result": {
+    "passed": true,
+    "risk_count": 0,
+    "hard_risk_count": 0,
+    "risks": []
+  },
+  "prior_failure_contract_result": {
+    "passed": true,
+    "checked_task_count": 12,
+    "failure_count": 0,
+    "failures": []
+  },
+  "protected_files_unchanged": {
+    "all_unchanged": true,
+    "unchanged": true,
+    "paths": {
+      "AGENTS.md": {
+        "before_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "after_sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "CODEX.md": {
+        "before_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "after_sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "CLAUDE.md": {
+        "before_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "after_sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-references.md": {
+        "before_sha256": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353",
+        "after_sha256": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap.yaml": {
+        "before_sha256": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633",
+        "after_sha256": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "research-roadmap-next.yaml": {
+        "before_sha256": null,
+        "after_sha256": null,
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "before_sha256": "sha256:cb7b0675083eeb37659057aebcd196231c245375e4bbf7d431a06aad17a00690",
+        "after_sha256": "sha256:cb7b0675083eeb37659057aebcd196231c245375e4bbf7d431a06aad17a00690",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "results/experiment_6260_v540_terminal_transition.json": {
+        "before_sha256": "sha256:12551d3daf471ac4195f08ebaf9fa94c9a63e7a160d8d08ded51495f9905b6b2",
+        "after_sha256": "sha256:12551d3daf471ac4195f08ebaf9fa94c9a63e7a160d8d08ded51495f9905b6b2",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/exclusion_manifest.yaml": {
+        "before_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "after_sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/known-issues.md": {
+        "before_sha256": "sha256:815d1f3407a225ce3bca929d25522fee8b75f55131b6a9430fdce2f53c6338de",
+        "after_sha256": "sha256:815d1f3407a225ce3bca929d25522fee8b75f55131b6a9430fdce2f53c6338de",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/changelog.md": {
+        "before_sha256": "sha256:1cc7f96c902a9ae6cabf4a9f286b40ff7bee53da3a247ca1fecdf003b42bc34a",
+        "after_sha256": "sha256:1cc7f96c902a9ae6cabf4a9f286b40ff7bee53da3a247ca1fecdf003b42bc34a",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "ops/status.md": {
+        "before_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "after_sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "_bmad/traceability.md": {
+        "before_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "after_sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "scripts/research_conductor.py": {
+        "before_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "after_sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "before_sha256": "sha256:422129f2c2bb680eca7b6dc11a9e2c41d6c76e1b4f3069ecae00462ec1f926ce",
+        "after_sha256": "sha256:422129f2c2bb680eca7b6dc11a9e2c41d6c76e1b4f3069ecae00462ec1f926ce",
+        "authorized_after_sha256": null,
+        "unchanged": true
+      }
+    }
+  },
+  "preconditions_checked": {
+    "git_status_before": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      " M ops/conductor-heartbeat.json",
+      " M ops/conductor-log.md",
+      " M ops/conductor-state.json",
+      " M results/experiment_1822_rtl_synth.log",
+      " M results/experiment_2031.json",
+      " M results/experiment_2427_kv260_yosys_v4.json",
+      " M results/experiment_2510_ensemble_v7.json",
+      " M results/experiment_2824_cross_corpus_verifier_matrix.json",
+      " M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      " M results/experiment_833_constraint_delta_root_cause.json",
+      "?? python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py",
+      "?? tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py"
+    ],
+    "git_status_after_tests": [
+      " M openspec/capabilities/research-harnesses/spec.md",
+      " M ops/conductor-heartbeat.json",
+      " M ops/conductor-log.md",
+      " M ops/conductor-state.json",
+      " M results/experiment_1822_rtl_synth.log",
+      " M results/experiment_2031.json",
+      " M results/experiment_2427_kv260_yosys_v4.json",
+      " M results/experiment_2510_ensemble_v7.json",
+      " M results/experiment_2824_cross_corpus_verifier_matrix.json",
+      " M results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json",
+      " M results/experiment_833_constraint_delta_root_cause.json",
+      "?? python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py",
+      "?? tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py"
+    ],
+    "input_hashes": {
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353"
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:cb7b0675083eeb37659057aebcd196231c245375e4bbf7d431a06aad17a00690"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "results/experiment_6260_v540_terminal_transition.json": {
+        "present": true,
+        "sha256": "sha256:12551d3daf471ac4195f08ebaf9fa94c9a63e7a160d8d08ded51495f9905b6b2"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:815d1f3407a225ce3bca929d25522fee8b75f55131b6a9430fdce2f53c6338de"
+      },
+      "scripts/sweep_clusters.py": {
+        "present": true,
+        "sha256": "sha256:04cd28779f763d369af1d7aa1934602fb841cc48b119440608d127b027d131d0"
+      },
+      "scripts/sweep_semscholar.py": {
+        "present": true,
+        "sha256": "sha256:cf0ee3b6e9d0f64987fa93dfe15ae4cb3c02c2a3b09e265d720ed8c1d9941351"
+      }
+    },
+    "protected_hashes_before": {
+      "AGENTS.md": {
+        "present": true,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "CODEX.md": {
+        "present": true,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "CLAUDE.md": {
+        "present": true,
+        "sha256": "sha256:c39b1b21e7f49c864057d2b0b3343c4c686418ab9fd1ec6b4cc8b164a8f3cf59"
+      },
+      "research-references.md": {
+        "present": true,
+        "sha256": "sha256:dd37168e3cab98af0e154fdd582b119811fb908c00c43c7e595995ae57575353"
+      },
+      "research-roadmap.yaml": {
+        "present": true,
+        "sha256": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633"
+      },
+      "research-roadmap-next.yaml": {
+        "present": false,
+        "sha256": null
+      },
+      "openspec/change-proposals/research-roadmap-vNEXT.md": {
+        "present": true,
+        "sha256": "sha256:cb7b0675083eeb37659057aebcd196231c245375e4bbf7d431a06aad17a00690"
+      },
+      "results/experiment_6260_v540_terminal_transition.json": {
+        "present": true,
+        "sha256": "sha256:12551d3daf471ac4195f08ebaf9fa94c9a63e7a160d8d08ded51495f9905b6b2"
+      },
+      "ops/exclusion_manifest.yaml": {
+        "present": true,
+        "sha256": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a"
+      },
+      "ops/known-issues.md": {
+        "present": true,
+        "sha256": "sha256:815d1f3407a225ce3bca929d25522fee8b75f55131b6a9430fdce2f53c6338de"
+      },
+      "ops/changelog.md": {
+        "present": true,
+        "sha256": "sha256:1cc7f96c902a9ae6cabf4a9f286b40ff7bee53da3a247ca1fecdf003b42bc34a"
+      },
+      "ops/status.md": {
+        "present": true,
+        "sha256": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb"
+      },
+      "_bmad/traceability.md": {
+        "present": true,
+        "sha256": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c"
+      },
+      "scripts/research_conductor.py": {
+        "present": true,
+        "sha256": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757"
+      },
+      "openspec/capabilities/research-harnesses/spec.md": {
+        "present": true,
+        "sha256": "sha256:422129f2c2bb680eca7b6dc11a9e2c41d6c76e1b4f3069ecae00462ec1f926ce"
+      }
+    },
+    "exclusive_lower_time_bound": "2026-08-09T15:20:51Z",
+    "source_channel_count": 7,
+    "gate_audit_result": {
+      "n_tasks_audited": 12,
+      "n_gate_upstream_checks": 6,
+      "n_gate_upstream_failures": 0,
+      "n_prior_failures_checks": 12,
+      "n_prior_failures_missing": 0,
+      "n_model_agent_coherence_failures": 0,
+      "n_gate_field_cross_ref_failures": 0,
+      "roadmap_gate_audit_passed": true,
+      "failure_details": [],
+      "audit_script_written": true,
+      "honest_verdict": "all_checks_pass"
+    },
+    "model_policy_result": {
+      "passed": true,
+      "failure_task_ids": []
+    },
+    "prompt_ending_result": {
+      "passed": true,
+      "failure_task_ids": []
+    },
+    "collision_result": {
+      "passed": true,
+      "collision_count": 0,
+      "collisions": []
+    },
+    "prior_failure_contract_result": {
+      "passed": true,
+      "checked_task_count": 12,
+      "failure_count": 0,
+      "failures": []
+    },
+    "full_suite_failure_summary": ".venv/bin/pytest tests/python -q exited 3 after 3062.72s: 469 failed, 24036 passed, 56 skipped, 177 warnings, 15 errors. Observed unrelated worker crashes in z3_math_verifier, experiment_295_apple_verify_repair tokenizer prewarm, and tests/python/test_experiment_834_jepa_v24_dg_prm.py."
+  },
+  "inference_substrate": "post_marker_source_ingestion_and_v540_scope_freeze",
+  "verifier_is_oracle": false,
+  "field_provenance": {
+    "status": {
+      "principle": "The freeze is complete only when source, roadmap, and contract checks pass.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "planner_marker_and_hash": {
+      "principle": "The exact marker defines the novelty boundary.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "query_window": {
+      "principle": "The lower bound is exclusive, so same-time evidence cannot enter.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "source_channel_receipts": {
+      "principle": "Every required channel records how the null was reached.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "discovered_candidates": {
+      "principle": "Rejected rows stay visible for reproducibility.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "accepted_findings": {
+      "principle": "Only stable post-marker findings may change references.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "rejected_duplicate_or_watch_only_findings": {
+      "principle": "Duplicates and watch-only rows cannot move V540 scope.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "accepted_count": {
+      "principle": "A bare integer drives null versus append behavior.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "references_append_receipt": {
+      "principle": "The reference ledger must be unchanged for a null search.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_terminal_artifact_contract": {
+      "principle": "Terminality must come from exact artifact state.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_cached_sota_replay_contract": {
+      "principle": "Cached replay is useful but is not on-policy proof.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_energy_familiarity_contract": {
+      "principle": "Energy familiarity is the only accepted planning delta.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_chronological_csl_contract": {
+      "principle": "Continuous learning must preserve chronological causality.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_sampler_generality_contract": {
+      "principle": "Mode-jump claims must generalize beyond one fixture.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_model_provenance_contract": {
+      "principle": "Model names are provenance unless an artifact proves load.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "frozen_hardware_boundary": {
+      "principle": "No board or TSU claim is allowed without an execution route.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "roadmap_path_and_hash": {
+      "principle": "The audited roadmap identity is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "roadmap_schema_result": {
+      "principle": "Schema parsing catches malformed roadmap contracts.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "exclusion_manifest_lint_result": {
+      "principle": "Retired scopes remain closed by default.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "prior_failure_contract_result": {
+      "principle": "Reruns must state the prior failure and the changed mechanism.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "protected_files_unchanged": {
+      "principle": "Protected files are hash-checked around the artifact write.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "preconditions_checked": {
+      "principle": "Input hashes, git status, searches, and nonmutating checks are recorded.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "inference_substrate": {
+      "principle": "This is deterministic source ingestion and scope freezing.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "verifier_is_oracle": {
+      "principle": "False because no benchmark answer is verified.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "field_provenance": {
+      "principle": "Every required field cites concrete evidence.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "field_principles": {
+      "principle": "Every required field states why it exists.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "test_commands": {
+      "principle": "Command names show how the artifact was verified.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "test_exit_codes": {
+      "principle": "Exit codes keep failed checks from being hidden.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "duration_s": {
+      "principle": "Wall time is reported without padding.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "reproducibility_checksum": {
+      "principle": "The normalized payload is content-addressed.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    },
+    "honest_verdict": {
+      "principle": "The terminal verdict states null, delta, or block directly.",
+      "sources": [
+        "REQ-INFRA-6261",
+        "research-references V540 marker",
+        "source channel receipts",
+        "V540 roadmap validators",
+        "frozen contract serializers"
+      ]
+    }
+  },
+  "field_principles": {
+    "status": "The freeze is complete only when source, roadmap, and contract checks pass.",
+    "planner_marker_and_hash": "The exact marker defines the novelty boundary.",
+    "query_window": "The lower bound is exclusive, so same-time evidence cannot enter.",
+    "source_channel_receipts": "Every required channel records how the null was reached.",
+    "discovered_candidates": "Rejected rows stay visible for reproducibility.",
+    "accepted_findings": "Only stable post-marker findings may change references.",
+    "rejected_duplicate_or_watch_only_findings": "Duplicates and watch-only rows cannot move V540 scope.",
+    "accepted_count": "A bare integer drives null versus append behavior.",
+    "references_append_receipt": "The reference ledger must be unchanged for a null search.",
+    "frozen_terminal_artifact_contract": "Terminality must come from exact artifact state.",
+    "frozen_cached_sota_replay_contract": "Cached replay is useful but is not on-policy proof.",
+    "frozen_energy_familiarity_contract": "Energy familiarity is the only accepted planning delta.",
+    "frozen_chronological_csl_contract": "Continuous learning must preserve chronological causality.",
+    "frozen_sampler_generality_contract": "Mode-jump claims must generalize beyond one fixture.",
+    "frozen_model_provenance_contract": "Model names are provenance unless an artifact proves load.",
+    "frozen_hardware_boundary": "No board or TSU claim is allowed without an execution route.",
+    "roadmap_path_and_hash": "The audited roadmap identity is content-addressed.",
+    "roadmap_schema_result": "Schema parsing catches malformed roadmap contracts.",
+    "exclusion_manifest_lint_result": "Retired scopes remain closed by default.",
+    "prior_failure_contract_result": "Reruns must state the prior failure and the changed mechanism.",
+    "protected_files_unchanged": "Protected files are hash-checked around the artifact write.",
+    "preconditions_checked": "Input hashes, git status, searches, and nonmutating checks are recorded.",
+    "inference_substrate": "This is deterministic source ingestion and scope freezing.",
+    "verifier_is_oracle": "False because no benchmark answer is verified.",
+    "field_provenance": "Every required field cites concrete evidence.",
+    "field_principles": "Every required field states why it exists.",
+    "test_commands": "Command names show how the artifact was verified.",
+    "test_exit_codes": "Exit codes keep failed checks from being hidden.",
+    "duration_s": "Wall time is reported without padding.",
+    "reproducibility_checksum": "The normalized payload is content-addressed.",
+    "honest_verdict": "The terminal verdict states null, delta, or block directly."
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py --fail-under=100",
+    ".venv/bin/python -m carnot.experiment_6261_v540_post_marker_source_scope_freeze --check-roadmap-only",
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py",
+    ".venv/bin/python scripts/root_clutter_sweep.py",
+    "sed -n '1,220p' ops/e2e-test-plan.md",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6261_v540_post_marker_source_scope_freeze.json"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/pytest tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py -m pytest tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6261_v540_post_marker_source_scope_freeze.py --fail-under=100": 0,
+    ".venv/bin/python -m carnot.experiment_6261_v540_post_marker_source_scope_freeze --check-roadmap-only": 0,
+    ".venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml": 0,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6261_v540_post_marker_source_scope_freeze.py": 0,
+    ".venv/bin/python scripts/root_clutter_sweep.py": 0,
+    "sed -n 1,220p ops/e2e-test-plan.md": 0,
+    ".venv/bin/pytest tests/python -q": 3,
+    ".venv/bin/python scripts/adversarial_verify.py results/experiment_6261_v540_post_marker_source_scope_freeze.json": 0
+  },
+  "duration_s": 6.755182787077501,
+  "reproducibility_checksum": "sha256:2e47fc6ebd66b262b5af3c5b2a9816d27ec4bf239dc37d246abeadd005c519bd",
+  "honest_verdict": "blocked: accepted_count=0; V540 source freeze checks failed"
+}
