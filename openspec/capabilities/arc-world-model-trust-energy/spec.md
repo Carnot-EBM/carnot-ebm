@@ -23356,3 +23356,116 @@ sweep, unrelated to this change, not yet filed).
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6230 | `python/carnot/agentic/arc_competition_agent.py:_load_submitted_candidate_router`/`_load_submitted_frame_change_scorer` (`_component_load_diagnostics` thread-local), `E3AgentPolicy.__init__` diagnostic wiring, `generator_liveness_witness` diagnostic fields. | `tests/python/test_arc_component_load_diagnostics_20260808.py`. |
+
+### REQ-ARC-WMTE-6218: Admissible Lever Portfolio Held-Out Gate
+
+Experiment 6218 SHALL recompute admissibility for the four upstream ARC lever
+A/Bs before it opens any new held-out game or seed matrix. The upstream set is
+Exp6214 through Exp6217. Each upstream artifact SHALL be loaded through the
+Exp6197 terminal classifier. The experiment SHALL recompute each lever's
+completion, activation, effect, cost, and safety gate from artifact fields and
+raw-file receipts. It SHALL NOT infer admissibility from prose.
+
+A lever is eligible only when all checks pass:
+
+- The Exp6197 classifier returns a non-flagged terminal class of `complete`,
+  `ready`, or `positive`.
+- The treatment completed and fired on at least its declared support floor.
+- The lever passed its own quality and safety gates.
+- The artifact is not flagged, blocked, skipped, non-firing, unsafe, or pending
+  a corrigendum.
+- The artifact claims no solve, adds no level credit, and records no registry
+  update.
+
+If fewer than two levers are eligible, the experiment SHALL write one terminal
+structured-skip artifact and SHALL not load a model. In that skip case,
+`combination_count_tested` SHALL equal bare `0`. If two or more levers are
+eligible, the experiment SHALL freeze at most the top two by this utility rule
+before opening held-out fixtures:
+
+```text
+utility =
+  primary_quality_delta
+  + 0.05 * efficiency_gain
+  - 0.01 * max(0, wall_cost_ratio - 1)
+```
+
+Ties SHALL break by lower harmful-regression count, then by lower experiment
+number. The experiment SHALL test only the selected pair. It SHALL NOT fish over
+other combinations. In the non-skip case, `combination_count_tested` SHALL be no
+more than bare `1`.
+
+Experiment 6218 SHALL write
+`results/experiment_6218_arc_admissible_lever_portfolio_heldout.json` with
+these bare top-level fields:
+
+- `status`
+- `upstream_paths_hashes_and_recomputed_gates`
+- `eligible_and_ineligible_levers_with_reasons`
+- `selection_rule_frozen_before_heldout`
+- `selected_levers`
+- `structured_skip_reason`
+- `registry_precheck_and_hash_before_after`
+- `preregistered_heldout_game_seed_matrix`
+- `model_specs`
+- `matched_baseline_single_and_pair_configs`
+- `treatment_fire_counts`
+- `quality_efficiency_and_cost_by_arm_game`
+- `main_and_interaction_effects`
+- `paired_clustered_intervals`
+- `harmful_regression_count_and_games`
+- `aa_control`
+- `combination_count_tested`
+- `default_flip_count`
+- `source_bfs_adapter_registry_hidden_state_access_counts`
+- `solve_claimed`
+- `level_credit_delta`
+- `registry_update_count`
+- `portfolio_ready_score`
+- `protected_files_unchanged`
+- `inference_substrate`
+- `verifier_is_oracle`
+- `field_provenance`
+- `field_principles`
+- `test_commands`
+- `test_exit_codes`
+- `duration_s`
+- `reproducibility_checksum`
+- `honest_verdict`
+
+The artifact SHALL set `default_flip_count`, `level_credit_delta`, and
+`registry_update_count` to bare `0`. It SHALL set `solve_claimed` and
+`verifier_is_oracle` to bare `false`. It SHALL record zero forbidden source,
+BFS, adapter, registry, and hidden-state access counts. It SHALL record the
+registry hash before and after the run and require them to match.
+
+#### SCENARIO-ARC-WMTE-6218-UPSTREAM-RECOMPUTE
+
+Given the committed Exp6214 through Exp6217 artifacts, the experiment classifies
+each path through the Exp6197 classifier. It recomputes completion, activation,
+effect, cost, and safety fields from artifact data. Flagged, blocked,
+non-firing, unsafe, and credit-mutating artifacts are rejected with reasons.
+
+#### SCENARIO-ARC-WMTE-6218-STRUCTURED-SKIP
+
+Given fewer than two eligible upstream levers, the experiment writes a terminal
+structured-skip artifact. It leaves the held-out matrix unopened, selected
+levers empty, `combination_count_tested=0`, and `model_load_attempted=false`.
+
+#### SCENARIO-ARC-WMTE-6218-SELECTION-RULE
+
+Given two or more eligible upstream levers, the experiment freezes the
+predeclared utility rule before held-out fixtures open. It selects at most two
+levers, tests only that pair, and records `combination_count_tested<=1`.
+
+#### SCENARIO-ARC-WMTE-6218-ARTIFACT-GUARDS
+
+The artifact validates every required field, preserves the registry hash, keeps
+protected files unchanged, records all forbidden-access counters as bare zeros,
+and makes no solve claim, no level-credit claim, and no registry update.
+
+## Implementation Status (REQ-ARC-WMTE-6218)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6218 | `python/carnot/experiment_6218_arc_admissible_lever_portfolio_heldout.py`. | `tests/python/test_experiment_6218_arc_admissible_lever_portfolio_heldout.py`. |
