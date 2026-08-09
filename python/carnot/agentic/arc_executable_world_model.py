@@ -1021,6 +1021,22 @@ WORLD_MODEL_MAX_NOOP_HALLUCINATION_RATE = 0.25
 # None means follow; True/False pin it.
 SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED: Optional[bool] = None
 
+# LEVER (REQ-ARC-WMTE-6241, Phase 3a of the 2026-08-08 ARC live-agent improvement plan).
+# Two additive appendices to the induce prompt, both gated by this ONE flag since the plan
+# proposes them as a single lever to A/B together: (1) semantic action names (UP/DOWN/LEFT/
+# RIGHT/SPACE/MOUSE for actions 1-6 -- action 7 has no established semantic meaning in this
+# project and is left as a bare integer) plus an explicit changed-cell COUNT per sampled
+# transition (both notebook reference stacks the plan cites converged on "trust numeric
+# transitions over visual guesses"); (2) a computed object-identity cross-reference between
+# objects_block's two tables (which shape ids are shared, replacing that block's existing
+# text HINT with an actual computed list). Both are pure ADDITIONS appended after the existing
+# prompt content -- neither `_transitions_block` nor `objects_block` is modified, so their own
+# extensively-documented historical correctness fixes stay untouched. Default OFF pending a
+# leave-one-game-out held-out change-fidelity A/B; NOT a rerun of exp6214 (a per-transition
+# matched before/after component-DELTA construction) -- this is a static per-frame identity/
+# topology table plus scalar counts, a different construction entirely.
+SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED = False
+
 
 def _flag_env(name: str, default: bool) -> bool:
     """Read a per-arm override, falling back to the shipped SUBMITTED_* default.
@@ -1073,6 +1089,15 @@ def world_model_change_gate_hidden_state_enabled() -> bool:
     if SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED is not None:
         return bool(SUBMITTED_WORLD_MODEL_CHANGE_GATE_HIDDEN_STATE_ENABLED)
     return world_model_change_gate_enabled()
+
+
+def induce_prompt_enrichment_enabled() -> bool:
+    """REQ-ARC-WMTE-6241 arm selector. CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT=1 turns on the
+    semantic-action-names + changed-cell-count + object-identity-crossref appendices."""
+
+    return _flag_env(
+        "CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT", SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED
+    )
 
 
 def logical_hud_mask(frame_mask: Any, cell: int) -> Optional[np.ndarray]:
@@ -2833,6 +2858,112 @@ def objects_block(
         return ""  # never break the default induction path
 
 
+# Actions 1-6 per the ARC-AGI-3 competition convention. Action 7 exists in `arcengine`'s
+# `GameAction` enum but has no established semantic meaning anywhere in this project's own
+# docs or code -- left as a bare integer rather than guessed.
+_SEMANTIC_ACTION_NAMES = {1: "UP", 2: "DOWN", 3: "LEFT", 4: "RIGHT", 5: "SPACE", 6: "MOUSE"}
+
+
+def _action_label(action: int) -> str:
+    """`ACTIONn(NAME)` for actions 1-6, bare `ACTIONn` otherwise. Keeps `ACTIONn` as a literal
+    substring (nothing that already greps for that pattern breaks) while adding the semantic
+    name a general-purpose LLM's own priors can use -- an opaque integer triggers none of
+    them."""
+    name = _SEMANTIC_ACTION_NAMES.get(int(action))
+    return f"ACTION{action}({name})" if name else f"ACTION{action}"
+
+
+def _n_changed_cells(g0: np.ndarray, g1: np.ndarray) -> int:
+    a, b = np.asarray(g0), np.asarray(g1)
+    if a.shape != b.shape:
+        return int(a.size)  # a shape mismatch is a maximal, not a zero, disagreement
+    return int(np.sum(a != b))
+
+
+def _action_semantics_and_counts_block(
+    trans: list[Transition],
+    k: Optional[int] = 8,
+    *,
+    hud_mask: Optional[np.ndarray] = None,
+    hud_mask_enabled: Optional[bool] = None,
+) -> str:
+    """LEVER (REQ-ARC-WMTE-6241). Additive appendix: semantic action names plus an explicit
+    changed-cell COUNT per sampled transition, as separate evidence from `_transitions_block`'s
+    own RLE delta string. A SEPARATE function rather than a modification of `_transitions_block`
+    itself, so that function's own extensively-documented historical correctness fixes are never
+    touched by this lever -- this re-samples via the SAME `_select_transitions_for_prompt` call
+    with the same inputs, so the numbered rows line up with `_transitions_block`'s own entries in
+    the assembled prompt. Returns "" (and is never called) unless
+    `induce_prompt_enrichment_enabled()` is True, so the assembled prompt is byte-identical to
+    before this lever whenever the flag is off."""
+    if hud_mask_enabled is None:
+        hud_mask_enabled = world_model_hud_mask_enabled()
+    mask = hud_mask if hud_mask_enabled else None
+
+    def _is_changed(t: Transition) -> bool:
+        return not np.array_equal(apply_hud_mask(t.grid, mask), apply_hud_mask(t.next_grid, mask))
+
+    changed = [t for t in trans if _is_changed(t)]
+    noop = [t for t in trans if not _is_changed(t)]
+    sample = _select_transitions_for_prompt(changed, noop, k=k)
+    if not sample:
+        return ""
+    rows = [
+        "ACTION SEMANTICS AND CHANGE COUNTS (same sampled transitions as above, in the same "
+        "order; UP/DOWN/LEFT/RIGHT/SPACE/MOUSE per the ARC-AGI-3 action convention -- action 7 "
+        "has no established semantic name and is left as a bare integer):"
+    ]
+    for i, t in enumerate(sample, start=1):
+        rows.append(
+            f"  #{i}: {_action_label(t.action)} -> changed_cells={_n_changed_cells(t.grid, t.next_grid)}"
+        )
+    return "\n".join(rows)
+
+
+def _object_identity_crossref_note(
+    trans: list[Transition],
+    *,
+    previous_level_complete_grid: Optional[np.ndarray] = None,
+) -> str:
+    """LEVER (REQ-ARC-WMTE-6241). Additive appendix: which object shape ids (per `object_hash`,
+    from `objects_block`'s own tables) appear in BOTH the INITIAL grid's table and the second
+    table `objects_block` renders (the win/current-level-opening board). `objects_block` already
+    carries a text HINT ("two objects with the SAME shape id are the SAME object type") but never
+    computes the actual intersection; this does, as a short explicit list, so the model does not
+    have to eyeball-match hashes across two separate tables itself. Defensive by construction,
+    same as `objects_block`: any failure returns ""."""
+    try:
+        from carnot.agentic.arc_color_blob_salience import blob_topology
+    except Exception:
+        return ""
+    if not trans:
+        return ""
+    changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
+    layout = (changed[0] if changed else trans[0]).grid
+    win_t = next((t for t in trans if t.level_after > t.level_before), None)
+    if win_t is not None:
+        second = win_t.grid
+    elif previous_level_complete_grid is not None:
+        second = np.asarray(previous_level_complete_grid)
+    else:
+        return ""
+    try:
+        h1 = set(blob_topology(np.asarray(layout)).get("object_hashes", {}).values())
+        h2 = set(blob_topology(np.asarray(second)).get("object_hashes", {}).values())
+    except Exception:
+        return ""
+    shared = sorted(h1 & h2)
+    if not shared:
+        return (
+            "OBJECT IDENTITY CROSS-REFERENCE: no shape id is shared between the two object "
+            "tables above."
+        )
+    return (
+        f"OBJECT IDENTITY CROSS-REFERENCE: {len(shared)} shape id(s) appear in BOTH object "
+        f"tables above (the same object type persists across the two frames): {shared}"
+    )
+
+
 # A forceful CODE-ONLY directive for the L2+ induction call. The L2 induce prompt carries a WIN
 # STATE exemplar, which makes Qwen3.5-9B burn its ENTIRE token budget on win-state chain-of-thought
 # before reaching the code block (stop_type='limit', 0 code emitted -> goal_predicate_satisfiable
@@ -3060,7 +3191,7 @@ deterministic. Write ONLY that one file.
 
 OBSERVED TRANSITIONS:
 {_transitions_block(trans, k, previous_level_complete_grid=previous_level_complete_grid, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled, win_transition=win_transition)}
-{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{_object_delta_perception_block(trans)}"""
+{(_action_semantics_and_counts_block(trans, k, hud_mask=hud_mask, hud_mask_enabled=hud_mask_enabled) + chr(10)) if induce_prompt_enrichment_enabled() else ""}{("OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):" + chr(10) + objects_block(trans, previous_level_complete_grid=previous_level_complete_grid)) if _object_perception_on() else ""}{(chr(10) + _object_identity_crossref_note(trans, previous_level_complete_grid=previous_level_complete_grid)) if (induce_prompt_enrichment_enabled() and _object_perception_on()) else ""}{_object_delta_perception_block(trans)}"""
 
 
 _REFACTOR_PROMPT_MAX_CELLS_PER_MISMATCH = 8

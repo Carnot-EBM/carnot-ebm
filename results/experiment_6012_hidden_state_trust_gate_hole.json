@@ -368,6 +368,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This experiment scores engines directly via select_trusted_world_model/WorldModelVerifier/change_gate_decision -- it never constructs an E3AgentPolicy or calls _induce_and_plan (grep-verified: 0 occurrences of either as a live call, only doc-comment references), so it never reaches the trajectory-transfer cascade stage this flag gates. The flip is unreachable from this artifact's own code path.",
         "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256_was": "e3d719db5cffc202f479ba1f0e26e38dd40392efdae914c9909dab3e9ebaf379",
+        "sha256_now": "9a3f292788576f7b71723abf458a5cd9cbf991d7dd5da6ee70c88f5a504b1774",
+        "acknowledged_on": "2026-08-09",
+        "reason": "Phase 3a build (2026-08-09, REQ-ARC-WMTE-6241): added SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED (default False) plus two new, purely additive functions (_action_semantics_and_counts_block, _object_identity_crossref_note) wired into induce_prompt. Neither _transitions_block nor objects_block -- the functions this artifact actually exercises -- was modified, and this artifact's own generating script never sets CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT (grep-verified), so the new flag resolves to its default-off value, under which induce_prompt is byte-identical to before this change.",
+        "evidence": "git diff -U0 on arc_executable_world_model.py for this commit is confined to: the new module constant + resolver function (near the sibling SUBMITTED_WORLD_MODEL_* flags), four new helper functions inserted after objects_block, and two new conditional interpolations appended to induce_prompt's f-string. _transitions_block and objects_block bodies are untouched."
       }
     ]
   },

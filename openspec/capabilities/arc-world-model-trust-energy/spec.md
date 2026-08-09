@@ -22483,6 +22483,53 @@ new default exists to flip.
 |---|---|---|
 | REQ-ARC-WMTE-6240 | `scripts/experiments/experiment_6240_change_magnitude_prior.py` (analysis-only; no production code path changed). | `results/experiment_6240_change_magnitude_prior.json` (the artifact IS the check — reproducibility_checksum pinned, `scripts/adversarial_verify.py` and `scripts/determination_preservation_lint.py` both clean, acceptance_gates and the honest cap_effect_counts classification recorded in the artifact). |
 
+### REQ-ARC-WMTE-6241: Induce-Prompt Enrichment — Semantic Action Names, Change Counts, Object-Identity Cross-Reference (Default OFF, Awaiting A/B)
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 3a. The plan's
+own stated gap ("the live agent never imports `object_hash`/`blob_topology`") was found STALE
+during implementation: `objects_block`/`_object_perception_on` already exist, are wired into
+`induce_prompt`, and have been default ON since 2026-08-07 (REQ-ARC-WMTE-5830). The genuinely
+remaining scope, confirmed by direct code reading rather than the plan's own (outdated) grep: no
+explicit numeric changed-cell COUNT anywhere in the transition block (only an RLE delta string), no
+computed cross-frame object-identity linkage (`objects_block`'s two tables carry only a text HINT
+that a shared shape id means the same object, never an actual computed intersection), and no
+semantic action names anywhere (`ACTION4`, not `RIGHT`).
+
+**WHAT WAS BUILT.** One new flag, `SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED` (env override
+`CARNOT_ARC_INDUCE_PROMPT_ENRICHMENT`), gating two PURELY ADDITIVE appendices to the induce prompt:
+
+1. `_action_semantics_and_counts_block` — for the same sampled transitions `_transitions_block`
+   already renders, an additional line per transition naming the action semantically
+   (`UP`/`DOWN`/`LEFT`/`RIGHT`/`SPACE`/`MOUSE` for actions 1-6; action 7 has no established
+   semantic meaning anywhere in this project and is deliberately left as a bare integer rather
+   than guessed) plus an explicit `changed_cells=N` integer count.
+2. `_object_identity_crossref_note` — computes the actual intersection of `object_hash` values
+   between `objects_block`'s two tables and reports it as a short list, replacing that block's
+   existing text-only hint with a computed answer.
+
+Both are NEW functions, not modifications of `_transitions_block` or `objects_block` — those two
+functions' own extensively-documented historical correctness fixes (HUD-mask coherence, the
+win-state relabelling, etc.) are untouched. `induce_prompt`'s assembly point gained two new
+conditional interpolations, following the exact same `_object_perception_on()` pattern already in
+use there.
+
+**NOT A RERUN OF EXP6214.** exp6214 (`docs/research-notes/arc-live-agent-improvement-plan-2026-08-
+08.md` Finding cite, p=0.625, 3 harmful regressions) built a per-transition MATCHED before/after
+component-DELTA table, re-segmenting both sides of every transition. This lever is a STATIC
+per-frame identity/topology table plus scalar counts — a different construction, per the plan's own
+requirement that a differentiated construction be named explicitly.
+
+**STATUS: built and tested, NOT measured.** Default OFF pending a leave-one-game-out held-out
+change-fidelity A/B (the plan's own stated gate: >= 4 of 5 held-out games improve, no live
+admission-rate regression) — GPU 1 was occupied by the concurrent Phase 2a think-mode A/B at
+implementation time, so the actual measurement is deferred to a follow-up task, not skipped.
+
+## Implementation Status (REQ-ARC-WMTE-6241)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6241 | `python/carnot/agentic/arc_executable_world_model.py:SUBMITTED_INDUCE_PROMPT_ENRICHMENT_ENABLED`, `_action_semantics_and_counts_block`, `_object_identity_crossref_note`, `_action_label`, `_n_changed_cells`. | `tests/python/test_induce_prompt_enrichment_20260809.py` (12 tests: flag defaults/byte-identity, both appendices' content, action-7/RESET left bare, defensive-on-bad-input). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
