@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.08.539",
+  "generated_at": "2026-08-09T14:29:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.9,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 8,
+  "slowest_experiments": [
+    {
+      "experiment": "V539 exact-path adversarial capstone and evidence reconciliation",
+      "duration_minutes": 1.27,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Llama-server signal-sender and unbounded-wait diagnostic",
+      "duration_minutes": 0.48,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Exact terminal-boundary handoff from V538 into V539",
+      "duration_minutes": 0.12,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Post-V539-marker source delta and experimental-scope freeze",
+      "duration_minutes": 0.06,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Supervised three-family GGUF runtime endurance and recovery",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 1.9 minutes, including 8 compute-bound experiments. The longest listed compute-bound experiment took 0.48 minutes, and the available data does not attribute its duration to a specific phase.",
+  "bottlenecks_identified": [
+    "Disk-modification-time reconstruction and coarse duration reporting do not provide phase-level causes for the compute-bound runtime ordering.",
+    "The supplied data does not record concurrent model count or runner selection, so it cannot establish whether any workload qualified for multi-GPU dispatch."
+  ],
+  "improvements_suggested": [
+    "Instrument launch, model loading, inference, shutdown, and reconciliation with monotonic clocks under one experiment identifier.",
+    "Sample device utilization, memory, and process identity throughout each compute-bound experiment and join those samples to its timing trace.",
+    "Log requested and loaded model counts with the dispatcher choice, and use both GPUs only for eligible concurrent-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Produce one monotonic stage timeline for every compute-bound experiment.",
+    "Tag continuous device and process samples with the active experiment identifier.",
+    "Persist loaded-model count and dispatcher choice before inference begins."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data supports a non-idle compute classification but not a milestone-wide utilization grade or a causal explanation of the compute durations. No data available this milestone establishes a task with at least two models loaded concurrently, so no missed DualGPURunner engagement can be claimed."
+}
