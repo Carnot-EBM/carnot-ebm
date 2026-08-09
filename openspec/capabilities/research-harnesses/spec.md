@@ -1410,6 +1410,114 @@ the bare integer `0`.
 |---|---|---|
 | REQ-INFRA-6227 | `python/carnot/experiment_6227_llama_server_signal_sender_diagnostic.py`; terminal artifact `results/experiment_6227_llama_server_signal_sender_diagnostic.json`. | `tests/python/test_experiment_6227_llama_server_signal_sender_diagnostic.py`. |
 
+## REQ-INFRA-6228: Three-Family Native Llama-Server Supervisor SHALL Prove Endurance
+
+Carnot SHALL provide Exp6228 as the first reusable native `llama-server`
+supervisor outside the conductor. The supervisor SHALL own each launched server
+by PID, process start time, command hash, process group, and parent process
+identity. Cleanup SHALL refuse PID reuse, command drift, parent drift, and
+unrelated owners. All health waits, token waits, retry counts, endurance
+windows, and cleanup waits SHALL be bounded.
+
+Exp6228 SHALL qualify exactly these cached GGUF families with preferred
+quantization `Q4_K_M`: `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use exact cached files, cache
+revisions, embedded GGUF chat templates, and the native CUDA llama.cpp server
+build. It SHALL never call `AutoTokenizer` on a GGUF repository. It SHALL not
+modify the conductor or the GGUF cache.
+
+Before model load, Exp6228 SHALL enumerate GPU owners, free VRAM, exact GGUF
+files, native build identity, output writability, reserved ports, and bounded
+windows. It SHALL persist a `preconditions_checked` receipt before any server
+loads a model. Unsafe GPU ownership or missing files SHALL block the run
+without starting or killing any server.
+
+For each family, Exp6228 SHALL launch a task-owned native `llama-server`, parse
+CUDA layer or tensor placement from the actual server log, and confirm owned
+VRAM placement from GPU interval samples. It SHALL collect repeated
+deterministic raw output bytes across an endurance interval. It SHALL inject
+one controlled owned-child death, prove bounded cleanup, restart the owned
+server within the retry budget, collect a recovery token, and finish with a
+process and VRAM leak-free teardown.
+
+Each readiness score SHALL be conjunctive and principle annotated.
+`qwen_runtime_ready_score`, `gemma_4_31b_runtime_ready_score`, and
+`gemma_4_26b_runtime_ready_score` SHALL be `1` only when that family has
+owned-process receipts, log-parsed CUDA evidence, GPU interval CUDA evidence,
+repeated deterministic raw tokens, endurance samples, controlled owned-child
+failure, successful recovery, and leak-free cleanup. The dense score SHALL be
+independent. `two_family_runtime_ready_score` SHALL require at least two ready
+families. `three_family_runtime_ready_score` SHALL require all three ready
+families.
+
+The Exp6228 artifact SHALL be written to
+`results/experiment_6228_supervised_three_family_runtime_endurance.json` and
+SHALL include these required fields: `status`,
+`upstream_diagnostic_path_and_hash`, `preconditions_checked`,
+`supervisor_contract_and_paths_hashes`, `model_specs`,
+`exact_gguf_paths_sizes_hashes_revisions_quantizations`,
+`embedded_chat_template_receipts`, `llama_cpp_build_and_cuda_receipts`,
+`gpu_owner_intervals_by_family`,
+`server_command_pid_starttime_process_group_and_lifetime_by_family`,
+`parsed_cuda_layer_or_tensor_placement_by_family`,
+`repeated_raw_token_hashes_and_latencies_by_family`,
+`endurance_window_and_health_samples_by_family`,
+`controlled_owned_child_failure_and_recovery_by_family`,
+`retry_and_wait_bounds`, `final_process_and_vram_leak_check`,
+`qwen_runtime_ready_score`, `gemma_4_31b_runtime_ready_score`,
+`gemma_4_26b_runtime_ready_score`, `two_family_runtime_ready_score`,
+`three_family_runtime_ready_score`, `unrelated_process_kill_count`,
+`gguf_mutation_count`, `protected_files_unchanged`, `inference_substrate`,
+`verifier_is_oracle`, `field_provenance`, `field_principles`,
+`test_commands`, `test_exit_codes`, `duration_s`, `reproducibility_checksum`,
+and `honest_verdict`. The `unrelated_process_kill_count` and
+`gguf_mutation_count` fields SHALL be bare integer zeroes.
+The `inference_substrate` field SHALL be exactly
+`local_three_family_native_llama_server_supervised_cuda_endurance`.
+
+### SCENARIO-INFRA-6228-DEAD-PORT-SLOW-LOAD-AND-EARLY-EXIT-ARE-BOUNDED
+GIVEN a dead port, slow model load, early server exit, and retry exhaustion
+WHEN the supervisor waits for health and applies its retry budget
+THEN every wait returns a classified finite receipt and the retry count never
+exceeds the contract.
+
+### SCENARIO-INFRA-6228-OWNERSHIP-REFUSES-PID-REUSE-AND-UNRELATED-OWNERS
+GIVEN a recorded server PID identity, a PID reuse case, an unrelated owner,
+and a cleanup timeout
+WHEN cleanup runs
+THEN it signals only the matching owned PID or process group, refuses identity
+or owner drift, records leak status, and keeps `unrelated_process_kill_count`
+as bare integer `0`.
+
+### SCENARIO-INFRA-6228-CUDA-READINESS-USES-LOGS-AND-GPU-INTERVALS
+GIVEN server flags, server logs, and GPU owner interval samples
+WHEN Exp6228 parses CUDA placement
+THEN readiness requires actual log evidence and owned GPU interval evidence.
+Flags alone SHALL NOT make a family ready.
+
+### SCENARIO-INFRA-6228-ENDURANCE-AND-RECOVERY-QUALIFY-EACH-FAMILY
+GIVEN all three exact cached GGUFs and a native CUDA server
+WHEN Exp6228 qualifies each family
+THEN each family records repeated deterministic raw token hashes, endurance
+health samples, one controlled owned-child failure, successful bounded
+recovery, and final leak-free teardown.
+
+### SCENARIO-INFRA-6228-ARTIFACT-SCORES-ARE-CONJUNCTIVE
+GIVEN a terminal Exp6228 artifact
+WHEN validation recomputes readiness
+THEN dense readiness is separate, two-family readiness needs at least two
+ready families, three-family readiness needs all three, every field has
+provenance and a principle, `verifier_is_oracle=false`, protected files are
+unchanged, the checksum matches, and GGUF mutation count is the bare integer
+`0`.
+
+## Implementation Status (REQ-INFRA-6228)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6228 | `python/carnot/inference/llama_server_supervisor.py`; `python/carnot/experiment_6228_supervised_three_family_runtime_endurance.py`; terminal artifact `results/experiment_6228_supervised_three_family_runtime_endurance.json`. | `tests/python/test_experiment_6228_supervised_three_family_runtime_endurance.py`; `tests/python/test_llama_server_supervisor.py`. |
+
 ## REQ-INFRA-6210: V537 Capstone SHALL Reconcile Exact Declared Deliverables With Fail-Closed Terminality
 
 Carnot SHALL build Exp6210 as the branch-independent capstone for milestone
