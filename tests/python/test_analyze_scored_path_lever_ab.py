@@ -9,6 +9,7 @@ REQ-ARC-WMTE-5980 / SCENARIO-scored-path-lever-ab-analysis.
 from __future__ import annotations
 
 import importlib.util
+import json
 import time
 from pathlib import Path
 
@@ -1122,3 +1123,80 @@ def test_an_unmeasurable_cross_seed_floor_says_so_instead_of_being_blank() -> No
     assert "not_measurable" not in cs2
     assert cs2["max_win_flips_across_any_seed_pair"] == 1
     assert cs2["control_is_stable_across_seeds"] is False
+
+
+class TestPreserveFreshnessAcknowledgements:
+    """`AN.preserve_freshness_acknowledgements` -- the read-merge-preserve fix for the
+    2026-08-03-filed, 2026-08-08-fixed defect: every analyser here (and 15 siblings) built
+    `art["provenance"] = {...}` wholesale and overwrote its output path, silently destroying any
+    `provenance.freshness_acknowledgements` the file already carried -- exactly the file the
+    freshness lint's own printed "rebuild with: ..." remedy points a reader at. See
+    ops/known-issues.md's "A related, systemic defect" entry for the full incident."""
+
+    def test_no_existing_file_is_a_noop(self, tmp_path: Path) -> None:
+        art = {"provenance": {"sha256": "new"}}
+        out = tmp_path / "does_not_exist.json"
+        AN.preserve_freshness_acknowledgements(art, out)
+        assert "freshness_acknowledgements" not in art["provenance"]
+
+    def test_existing_file_with_no_acknowledgements_is_a_noop(self, tmp_path: Path) -> None:
+        out = tmp_path / "artifact.json"
+        out.write_text(json.dumps({"provenance": {"sha256": "old"}}))
+        art = {"provenance": {"sha256": "new"}}
+        AN.preserve_freshness_acknowledgements(art, out)
+        assert "freshness_acknowledgements" not in art["provenance"]
+
+    def test_existing_acknowledgements_are_copied_into_the_new_provenance(
+        self, tmp_path: Path
+    ) -> None:
+        acks = [
+            {
+                "path": "python/carnot/agentic/arc_competition_agent.py",
+                "sha256_was": "aaa",
+                "sha256_now": "bbb",
+                "acknowledged_on": "2026-08-08",
+                "reason": "diagnostic-only addition, unreachable from this artifact's own script",
+                "evidence": "grep confirms no import of the changed symbol",
+            }
+        ]
+        out = tmp_path / "artifact.json"
+        out.write_text(
+            json.dumps({"provenance": {"sha256": "old", "freshness_acknowledgements": acks}})
+        )
+        art = {"provenance": {"sha256": "new"}}
+        AN.preserve_freshness_acknowledgements(art, out)
+        assert art["provenance"]["freshness_acknowledgements"] == acks
+        # The field this fix is NOT supposed to preserve: sha256 must stay the REBUILD's own
+        # value, or the freshness lint would never see the rebuild as fresh again.
+        assert art["provenance"]["sha256"] == "new"
+
+    def test_missing_provenance_key_on_art_is_created(self, tmp_path: Path) -> None:
+        acks = [{"path": "x.py", "reason": "r", "evidence": "e"}]
+        out = tmp_path / "artifact.json"
+        out.write_text(json.dumps({"provenance": {"freshness_acknowledgements": acks}}))
+        art: dict = {}
+        AN.preserve_freshness_acknowledgements(art, out)
+        assert art["provenance"]["freshness_acknowledgements"] == acks
+
+    def test_malformed_existing_file_fails_open_not_closed(self, tmp_path: Path) -> None:
+        out = tmp_path / "artifact.json"
+        out.write_text("{not valid json")
+        art = {"provenance": {"sha256": "new"}}
+        AN.preserve_freshness_acknowledgements(art, out)  # must not raise
+        assert "freshness_acknowledgements" not in art["provenance"]
+
+    def test_existing_file_with_no_provenance_key_at_all_is_a_noop(self, tmp_path: Path) -> None:
+        out = tmp_path / "artifact.json"
+        out.write_text(json.dumps({"honest_verdict": "complete_x"}))
+        art = {"provenance": {"sha256": "new"}}
+        AN.preserve_freshness_acknowledgements(art, out)
+        assert "freshness_acknowledgements" not in art["provenance"]
+
+    def test_empty_acknowledgements_list_is_not_copied(self, tmp_path: Path) -> None:
+        """An empty list is falsy -- nothing to preserve, and setting it would just add clutter
+        distinguishable from 'never had any' for no benefit."""
+        out = tmp_path / "artifact.json"
+        out.write_text(json.dumps({"provenance": {"freshness_acknowledgements": []}}))
+        art = {"provenance": {"sha256": "new"}}
+        AN.preserve_freshness_acknowledgements(art, out)
+        assert "freshness_acknowledgements" not in art["provenance"]
