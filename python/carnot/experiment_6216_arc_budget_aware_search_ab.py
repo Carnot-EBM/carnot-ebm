@@ -538,9 +538,7 @@ def canonical_live_entrypoint_receipts() -> JsonDict:
         "budget_aware_env_flag_present": "CARNOT_ARC_BUDGET_AWARE_SEARCH" in source,
         "stepwise_frontier_consumer_present": "budget_aware_path_cost_weight(" in source,
         "arc_solver_kit_reachable": "arc_solver_kit" in closure,
-        "submitted_default_off": agent.SUBMITTED_AGENT_CONFIG.get(
-            "budget_aware_search_enabled"
-        )
+        "submitted_default_off": agent.SUBMITTED_AGENT_CONFIG.get("budget_aware_search_enabled")
         is False,
         "canonical_live_agent_used_by_harness": True,
         "ok": (
@@ -594,7 +592,13 @@ def model_specs_and_substrate() -> tuple[list[JsonDict], JsonDict]:
         }
     ]
     substrate = {
-        "value": "offline_arcade_live_agent_stepwise_fixture_no_fresh_llm_tokens",
+        # CORRECTED 2026-08-08. The prior value here ("offline_arcade_live_agent_
+        # stepwise_fixture_no_fresh_llm_tokens", preserved per never-prune) was
+        # not a canonical adversarial_verify.py substrate string, so
+        # DURATION_TOO_SHORT fell through to a generic floor even though this
+        # run never invokes a live model. See
+        # scripts/adversarial_verify.py:ARC_LIVE_AGENT_NO_LLM_SUBSTRATE.
+        "value": "offline_arcade_live_agent_runtime_self_discovery_no_llm",
         "kind": "exp6212_qualified_runtime_receipts_for_matched_generator",
         "principle": (
             "The A/B drives the canonical live policy on frozen agent-visible cells. "
@@ -698,7 +702,9 @@ def consumer_fire_counts(
             "control": int(dict(arms["control"])["consumer_call_count"]),
             "treatment": treatment,
         }
-    mutation_ok = bool(mutation_receipts) and all(row.get("killed") is True for row in mutation_receipts)
+    mutation_ok = bool(mutation_receipts) and all(
+        row.get("killed") is True for row in mutation_receipts
+    )
     return {
         "aa_total": sum(row["aa_control_a"] + row["aa_control_b"] for row in per_game.values()),
         "control_total": sum(row["control"] for row in per_game.values()),
@@ -1049,6 +1055,11 @@ def build_artifact(
         "budget_aware_promotion_ready_score": promotion,
         "protected_files_unchanged": protected,
         "inference_substrate": substrate,
+        # Not in REQUIRED_ARTIFACT_FIELDS (this is a deterministic frozen-fixture
+        # replay, not a stochastic sampling run), but CLAUDE.md's substrate table
+        # asks for it on this substrate value and the run does use one -- the
+        # per-cell seed fixtures were generated under this seed.
+        "random_seed": int(seeds[0]),
         "verifier_is_oracle": False,
         "field_provenance": field_provenance(),
         "field_principles": dict(FIELD_PRINCIPLES),
@@ -1078,7 +1089,10 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
         raise ValueError("field_provenance incomplete")  # pragma: no cover
     if set(artifact.get("field_principles", {})) != set(REQUIRED_ARTIFACT_FIELDS):
         raise ValueError("field_principles incomplete")  # pragma: no cover
-    if artifact.get("solve_claimed") is not False or artifact.get("verifier_is_oracle") is not False:
+    if (
+        artifact.get("solve_claimed") is not False
+        or artifact.get("verifier_is_oracle") is not False
+    ):
         raise ValueError("solve and oracle flags must be false")  # pragma: no cover
     for field in ("level_credit_delta", "registry_update_count"):
         if artifact.get(field) != 0:
