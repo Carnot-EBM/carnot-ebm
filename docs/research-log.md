@@ -6094,3 +6094,10 @@ The critical path for milestone .250:
 - theme: exact-path capstone reconciliation concentrated runtime under coarse disk-time reconstruction
 - key result: the compute-task GPU-idle classification is false, but the data cannot explain the longest task; parallel model loading is not documented, so runner selection cannot be judged
 - acceptance: no data available this milestone
+
+### Milestone 2026.08.539
+
+- exp_range: no data available this milestone
+- theme: short compute and synthesis execution exposed phase and runner-attribution telemetry gaps
+- key result: compute work had no task-scoped GPU-idle finding, but the data cannot explain the compute durations or establish concurrent multi-model runner selection
+- acceptance: no data available this milestone
