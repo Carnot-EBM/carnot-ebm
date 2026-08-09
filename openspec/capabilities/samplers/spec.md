@@ -3921,3 +3921,131 @@ and `fpga_tsu_power_hardware_claim_count` is the bare integer `0`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6220 | Planned (`python/carnot/experiment_6220_mode_jump_runtime_ab.py`, `results/experiment_6220_mode_jump_runtime_ab.json`) | Planned (`tests/python/test_experiment_6220_mode_jump_runtime_ab.py`) |
+
+### REQ-SAMPLER-6237: Activated Mode-Jump Sampler A/B
+
+Carnot MUST provide Exp6237 at
+`python/carnot/experiment_6237_activated_mode_jump_sampler_ab.py` and write
+`results/experiment_6237_activated_mode_jump_sampler_ab.json` without
+modifying `scripts/research_conductor.py`. The experiment SHALL compare the
+seeded exact Python fallback and enabled Rust/PyO3 mode-jump runtime arms on a
+bounded preregistered fixture, seed, and budget matrix. The runtime feature
+default SHALL remain off. No hardware, speedup, power, or energy-efficiency
+claim is in scope.
+
+Sub-requirements:
+- REQ-SAMPLER-6237-PRECONDITIONS: Exp6237 SHALL freeze the fixture, seeds,
+  transition budget, wall budget, metrics, equivalence margins, positive
+  control, focused commands, protected-file hashes, and upstream hashes before
+  sampler chains are measured.
+- REQ-SAMPLER-6237-ACTIVATION: The mode-jump arm SHALL prove activation before
+  any quality conclusion. Activation SHALL require Rust/PyO3 selection,
+  nonzero mode-jump proposals, nonzero mode-jump acceptances, and a multimodal
+  positive control. An inactive treatment SHALL produce `instrument_failure`.
+  It SHALL NOT produce a null sampler verdict.
+- REQ-SAMPLER-6237-MATCHED-AB: Each preregistered fixture/seed/budget cell
+  SHALL run both arms with matched target, proposal table, initial state,
+  burn-in, retained sample count, transition budget, and wall budget. Every
+  preregistered main fixture arm SHALL be supported. Unsupported controls SHALL
+  remain in `unsupported_or_failed_cells`.
+- REQ-SAMPLER-6237-CHAIN-RECEIPTS: Exp6237 SHALL persist chain-level sample
+  labels, transition counts, accepted counts, proposal counts, and mode-jump
+  proposal and acceptance counts before aggregation.
+- REQ-SAMPLER-6237-QUALITY: For each supported arm, Exp6237 SHALL report exact
+  distribution error, energy moments, mode coverage, ESS, autocorrelation, and
+  cost before paired decisions.
+- REQ-SAMPLER-6237-EQUIVALENCE: Paired intervals SHALL compare mode jumping
+  against the seeded fallback. The artifact SHALL distinguish positive,
+  negative, equivalence-supported, inconclusive, and instrument-failure
+  outcomes using preregistered equivalence bounds.
+- REQ-SAMPLER-6237-CONTROLS: Focused tests SHALL cover unsupported fixtures,
+  zero activation, degenerate chains, interruption/restart, Rust/Python parity,
+  and default-off fallback behavior.
+- REQ-SAMPLER-6237-NO-RECURSIVE-SUITE: The experiment CLI SHALL NOT invoke a
+  repository-wide test suite. Repository validation MAY be recorded only as a
+  separately run command receipt.
+
+The terminal artifact SHALL include these top-level fields:
+`status`, `upstream_paths_hashes_and_determinations`,
+`literature_control_path_and_hash`,
+`preregistered_fixture_seed_budget_matrix`,
+`exact_reference_distribution_receipts`, `arm_support_matrix`,
+`matched_arm_configuration`,
+`jump_proposal_acceptance_and_transition_counts`,
+`treatment_activation_score`, `multimodal_positive_control`,
+`fallback_parity_control`, `distribution_quality_by_fixture_arm`,
+`mode_coverage_ess_autocorrelation_by_fixture_arm`,
+`wall_and_transition_costs`, `paired_intervals`,
+`equivalence_bounds_and_decision`, `unsupported_or_failed_cells`,
+`task_owned_and_preexisting_nonzero_command_ledger`,
+`default_off_preserved`, `hardware_claim_count`,
+`sampler_runtime_ready_score`, `protected_files_unchanged`,
+`preconditions_checked`, `inference_substrate`, `verifier_is_oracle`,
+`field_provenance`, `field_principles`, `test_commands`,
+`test_exit_codes`, `duration_s`, `reproducibility_checksum`, and
+`honest_verdict`. `hardware_claim_count` SHALL be the bare integer `0`.
+`inference_substrate` SHALL equal
+`local_cpu_software_activated_mode_jump_sampler_ab`.
+
+Required field principles:
+
+- `status`: Separates supported equivalence evidence from inconclusive, blocked, and instrument-failure outcomes.
+- `upstream_paths_hashes_and_determinations`: Pins Exp6166, Exp6208, Exp6220, and sampler source evidence before this A/B is trusted.
+- `literature_control_path_and_hash`: Pins the local arXiv:2608.05025 warning that inactive treatments cannot support sampler conclusions.
+- `preregistered_fixture_seed_budget_matrix`: Freezes fixtures, seeds, transition budgets, wall budgets, metrics, margins, and positive controls before compute.
+- `exact_reference_distribution_receipts`: Records the exact finite target, modes, support, and hashes used as the oracle.
+- `arm_support_matrix`: Shows that every preregistered main fixture arm is supported and that controls fail closed.
+- `matched_arm_configuration`: Proves the fallback and mode-jump arms share target, proposal, seed, initial state, burn-in, retained samples, and wall budget.
+- `jump_proposal_acceptance_and_transition_counts`: Stores chain-level samples and transition counts before aggregation.
+- `treatment_activation_score`: Equals 1.0 only when Rust/PyO3 ran and nonzero mode-jump proposals and acceptances occurred.
+- `multimodal_positive_control`: Proves the fixture can exercise cross-mode moves before quality is interpreted.
+- `fallback_parity_control`: Proves seeded exact fallback and active Rust/PyO3 replay the same transition stream.
+- `distribution_quality_by_fixture_arm`: Reports exact-distribution error and energy moments for each supported fixture arm.
+- `mode_coverage_ess_autocorrelation_by_fixture_arm`: Reports mode coverage, ESS, and autocorrelation instead of using frequency alone.
+- `wall_and_transition_costs`: Reports matched transition budgets and diagnostic wall costs without making a speed claim.
+- `paired_intervals`: Stores paired quality and cost intervals across seeds.
+- `equivalence_bounds_and_decision`: Applies preregistered margins and emits positive, negative, equivalence-supported, inconclusive, or instrument-failure decisions.
+- `unsupported_or_failed_cells`: Keeps unsupported fixtures, degenerate chains, interruption, and activation failures visible.
+- `task_owned_and_preexisting_nonzero_command_ledger`: Separates task-owned command failures from separately classified repository-wide nonzero commands.
+- `default_off_preserved`: Bare true only when the production default remains CPU and mode-jump Rust execution requires explicit opt-in.
+- `hardware_claim_count`: Bare integer `0` prevents this software A/B from becoming a hardware claim.
+- `sampler_runtime_ready_score`: Summarizes activation, support, parity, equivalence, default-off, protected-file, and command gates.
+- `protected_files_unchanged`: Confirms conductor and reconciler-owned files stayed unchanged.
+- `preconditions_checked`: Records that preregistration and protected hashes were captured before sampler chains ran.
+- `inference_substrate`: Declares local CPU software mode-jump sampling, not hardware, GPU, TSU, or LLM inference.
+- `verifier_is_oracle`: States that exact finite enumeration and transition receipts are the verifier.
+- `field_provenance`: Maps each required field to prompt, spec, local source, upstream artifact, command receipt, or computed chain evidence.
+- `field_principles`: Explains why each required field exists before a reviewer trusts the artifact.
+- `test_commands`: Records focused tests, coverage, experiment, E2E, adversarial, and separately run suite receipts.
+- `test_exit_codes`: Stores exit codes so failed commands cannot become readiness evidence.
+- `duration_s`: Reports real wall time without padding.
+- `reproducibility_checksum`: Content-addresses the artifact after blanking volatile duration and the checksum field.
+- `honest_verdict`: Uses a terminal prefix and states activation, equivalence, unsupported controls, commands, default-off, and no hardware claim.
+
+### SCENARIO-SAMPLER-6237-ACTIVATED-EQUIVALENCE: Active Mode Jumps Gate Quality
+
+**Given** the frozen Exp6166 multimodal categorical target, Exp6208 runtime
+adapter, preregistered seeds, and matched budgets
+**When** Exp6237 runs the seeded fallback and enabled mode-jump arms
+**Then** every main fixture arm is supported
+**And** the mode-jump arm records nonzero cross-mode proposals and acceptances
+**And** the multimodal positive control passes before quality conclusions
+**And** paired quality intervals are compared against preregistered
+equivalence bounds.
+
+### SCENARIO-SAMPLER-6237-CONTROLS-FAIL-CLOSED: Controls Stay Out Of Main Claims
+
+**Given** unsupported fixture, zero-activation, degenerate-chain,
+interruption, restart, Rust/Python parity, and default-off fallback controls
+**When** Exp6237 builds the artifact
+**Then** unsupported or failed controls are recorded in
+`unsupported_or_failed_cells`
+**And** default-off and fallback parity stay true
+**And** inactive treatment evidence returns `instrument_failure`, never a null
+sampler verdict.
+
+## Implementation Status (REQ-SAMPLER-6237)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-6237 | Planned (`python/carnot/experiment_6237_activated_mode_jump_sampler_ab.py`, `results/experiment_6237_activated_mode_jump_sampler_ab.json`) | Planned (`tests/python/test_experiment_6237_activated_mode_jump_sampler_ab.py`) |
