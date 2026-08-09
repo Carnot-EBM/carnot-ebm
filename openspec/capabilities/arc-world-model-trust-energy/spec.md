@@ -22615,6 +22615,32 @@ a code-review-time inference).
 |---|---|---|
 | REQ-ARC-WMTE-6242 | `scripts/analyze_exp6221_admission_rate.py` (analysis-only; no production default flipped). | `results/analysis_exp6221_admission_rate_20260809.json` (the artifact IS the check — exact sign test, reproducibility_checksum pinned, cites `results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` by hash). Cross-run confound confirmation verified by direct read of `results/experiment_6199_gemma_think_mode_ab.json`'s vc33 row (no new test file — a one-shot historical comparison, not a regression to guard going forward). |
 
+**CORRECTION (2026-08-09, same day, later): 3 of the 13 games' "think fails outright" reads were
+a llama-server crash, not a real measurement.** Operator question ("is the think confound due to
+running out of context / a thinking loop?") prompted reading the server's own stderr log for
+sk48/ls20/cd82's think-arm failures. Finding: `max_raw_completion_len=0, n_generate_calls=0` on
+all three, and the server's own log shows two SIGINTs back-to-back mid-generation, zero
+OOM/CUDA-error/abort, steady ~29.6 tok/s decode right up to death — this project's pre-existing,
+long-standing "reaper" issue (see the ops/known-issues.md 2026-08-09 isolation-test entry), NOT a
+think-mode capability signal. Not context exhaustion either — that would show a LARGE completion
+length near the token cap with real reasoning text, not exactly zero.
+
+Reran all three cleanly (`scripts/rerun_exp6221_infra_crashed_cells.py`, retry-on-reaper logic,
+succeeded on the FIRST attempt for all three once `carnot-conductor.service` and
+`carnot-orphan-cleanup.timer` were stopped as an isolation test — see known-issues.md; 3/3 clean
+vs 4/4 crashed while those units were running is suggestive but small-n, not proof of causation).
+All three now show `heldout_accuracy=0.0` with real reasoning engaged (16-20k char completions) —
+a genuine FLOOR TIE with no_think, not a think-specific failure. Original crashed rows preserved
+in place (never deleted, per Test-Run Record Integrity Discipline); 3 new rows appended with
+`rerun_of_infra_crash: true`. `comparison_summary` recomputed via the module's own
+`_summarize_pair()` (the `induction_ok` filter naturally excludes the stale crashed rows — no
+manual de-duplication needed). **The admission-rate sign test result is UNCHANGED** (1 favor
+think / 0 favor no_think / 12 tie / p=1.0, gate still NOT MET) — `0.0` never crossed the `1.0`
+admission bar either way, so these three were already correctly classified as ties; what changed
+is that they are now a CONFIRMED tie instead of an unmeasured crash. **What DOES change: REQ-6242's
+own "mirror failure" framing was wrong** (see REQ-6243's correction below, which retracts the
+claim built on this).
+
 ### REQ-ARC-WMTE-6243: Conditional Think-Arm Fallback On Total Induction Failure (Default OFF, Awaiting Live-Path A/B)
 
 **Origin:** operator directive, 2026-08-09, reading REQ-ARC-WMTE-6242's per-game breakdown:
@@ -22711,6 +22737,26 @@ exactly once and returns its outcome unmodified, regardless of what that outcome
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6243 | `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_THINK_ARM_FALLBACK_ENABLED`, `E3AgentPolicy._execute_bounded_llm_reinduction_with_arm_fallback`, wired at both `_induce_and_plan` call sites (level_up_reinduction and stall-path). | `tests/python/test_arc_think_arm_fallback_20260809.py` (8 tests). |
+
+**CORRECTION (2026-08-09, same day, later) — the "mirror failure" motivating claim is RETRACTED.**
+This REQ's own rationale above states: "cd82/ls20/sk48 show the mirror shape (think fails
+outright, no_think at least scores something)." That is now known to be FALSE — see
+REQ-ARC-WMTE-6242's correction above. All three games' think arm was re-measured cleanly (the
+original reads were a llama-server crash, zero tokens generated) and all three now show
+`heldout_accuracy=0.0`, a genuine FLOOR TIE with no_think on every one of them. There is no
+"mirror" — sp80 (no_think fails to parse code at all, think succeeds at 1.0) is the ONLY genuine
+total-induction-failure case anywhere in this corpus.
+
+**What survives, and what narrows.** The lever's DESIGN is unaffected: retry-on-`heldout_accuracy
+is None`, direction read from `induce_think_on()` at call time, env restored in a `finally`
+block — none of that depended on the retracted claim, and it is still exactly what sp80's shape
+calls for. What narrows is the EVIDENCE BASE: this is now a single-game finding, not a
+two-directional pattern across four games. A single clean, well-verified case (real generation,
+real parse failure after 3 tries on one arm, real 1.0 admission on the other) is still enough to
+justify building a low-cost, no-downside, default-OFF safety net — but it is a narrower
+justification than originally written, and the eventual live-path A/B gating this lever's
+promotion to default-ON should be read with that in mind: this correction does not itself change
+whether the lever ships, but it changes how much prior evidence should be assumed going in.
 
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 

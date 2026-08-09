@@ -1,7 +1,7 @@
 {
   "experiment": "analysis_exp6221_admission_rate",
   "title": "Phase 2a follow-up: the pre-registered admission-rate primary metric for the expanded gemma think-mode A/B",
-  "run_date": "2026-08-09T07:37:03Z",
+  "run_date": "2026-08-09T10:03:29Z",
   "question": "On the held-out exact-accuracy admission bar (>=1.0, the live agent's own trust threshold), does think beat no_think on >=6 discordant games at p<0.05 (exact two-sided sign test)?",
   "admission_bar": 1.0,
   "per_game": [
@@ -22,9 +22,9 @@
       "no_think_admitted": false,
       "think_admitted": false,
       "no_think_heldout_accuracy": 0.0,
-      "think_heldout_accuracy": null,
+      "think_heldout_accuracy": 0.0,
       "no_think_induction_ok": true,
-      "think_induction_ok": false,
+      "think_induction_ok": true,
       "outcome": "tie_neither_admits"
     },
     {
@@ -66,9 +66,9 @@
       "no_think_admitted": false,
       "think_admitted": false,
       "no_think_heldout_accuracy": 0.0,
-      "think_heldout_accuracy": null,
+      "think_heldout_accuracy": 0.0,
       "no_think_induction_ok": true,
-      "think_induction_ok": false,
+      "think_induction_ok": true,
       "outcome": "tie_neither_admits"
     },
     {
@@ -110,9 +110,9 @@
       "no_think_admitted": false,
       "think_admitted": false,
       "no_think_heldout_accuracy": 0.0,
-      "think_heldout_accuracy": null,
+      "think_heldout_accuracy": 0.0,
       "no_think_induction_ok": true,
-      "think_induction_ok": false,
+      "think_induction_ok": true,
       "outcome": "tie_neither_admits"
     },
     {
@@ -174,9 +174,9 @@
   "random_seed": 6221,
   "honest_verdict": "complete_admission_rate_analysis_1_favor_think_0_favor_no_think_12_tie_p_1.0000_gate_not_met_0_of_13_games_incomplete_at_analysis_time",
   "honest_verdict_principle": "terminal `complete_` prefix; states the full discordant breakdown, the p-value, the gate outcome, and the completeness caveat all in one string so none can be read in isolation.",
-  "git_head": "864b03ce4f7ecdc5dcd5ee3b51a483ced428088f",
+  "git_head": "7396dd46d823f03837a94ec8b23d9a04d904520d",
   "provenance": {
-    "git_head": "864b03ce4f7ecdc5dcd5ee3b51a483ced428088f",
+    "git_head": "7396dd46d823f03837a94ec8b23d9a04d904520d",
     "code": [
       {
         "path": "scripts/analyze_exp6221_admission_rate.py",
@@ -187,13 +187,13 @@
       "cited_artifacts": [
         {
           "path": "results/experiment_6221_gemma_think_mode_ab_expanded_roster.json",
-          "sha256": "dad3bf4e058da69348f5122e5b40fdbe52858b269c35fed2cfca736c7bcf525b"
+          "sha256": "fcbac633e64f4b35fd6f98b52f83b2c88ba056b146dbe8af4c629957fddbc798"
         }
       ]
     }
   },
-  "duration_s": 0.001,
+  "duration_s": 0.002,
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "inference_substrate_principle": "reads already-persisted rows from the exp6221 artifact and recomputes a different primary metric; invokes no model and reruns no induction.",
-  "reproducibility_checksum": "51e1b041289cb92ea5c6f3a5a7b8e36eb298e3e9d87759d1dc2d62cba888d3d5"
+  "reproducibility_checksum": "5f041cee55f41523945cc698de3bf7fce6f01b8f7b66a0dfd0d36b5b8b83630d"
 }
