@@ -15541,3 +15541,4 @@ Still active  |
 | 2026-08-09 08:51 UTC | Post-V539-marker source delta and experimental-sco | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-08-09 11:28 UTC | Llama-server signal-sender and unbounded-wait diag | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output:   }
 +          |
+| 2026-08-09 12:03 UTC | Llama-server signal-sender and unbounded-wait diag | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
