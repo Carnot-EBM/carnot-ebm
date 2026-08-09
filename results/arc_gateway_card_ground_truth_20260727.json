@@ -2822,6 +2822,14 @@
         "acknowledged_on": "2026-08-08",
         "reason": "Live-agent adversarial review Phase 0c fix (2026-08-08): (1) _observe_level_boundary now captures the graded-goal-bias win-state exemplar from the last-admitted transition's PRE-action grid instead of grid_of(latest) (the frame returned by the winning action itself, which already showed the NEXT level's opening board -- an inverted gradient under CARNOT_ARC_GRADED_GOAL_BIAS=1). (2) _induce_and_plan now resets self.plan/self.pi to []/0 at entry, plus a bounds guard on the induce branch's _next_plan_move() call, fixing a stale self.pi=1 left behind by a just-consumed one-step CARNOT_ARC_ACTIVE_PROBE=1 probe plan (silently skipped the next plan's first step, or IndexError on a second one-step plan). Both changes are no-ops for this artifact: _induce_and_plan's body only ever WRITES self.plan/self.pi after the reset line, never reads the incoming value (grep-verified), and this artifact's generating script(s) and its own recorded config never set CARNOT_ARC_GRADED_GOAL_BIAS=1 or CARNOT_ARC_ACTIVE_PROBE=1 (grep-verified against both the script source and this artifact's own JSON).",
         "evidence": "git diff -U0 on arc_competition_agent.py: confined to _observe_level_boundary's completed_grid capture, _induce_and_plan's entry reset, and the induce branch's `if self.plan and self.pi < len(self.plan):` guard. `grep -c 'active_probe\\|graded_goal'` on this artifact's generating script(s) and on this artifact's own JSON both return 0."
+      },
+      {
+        "path": "python/carnot/agentic/arc_competition_agent.py",
+        "sha256_was": "cf34e53ff944b7ca743114424b6cc311c3b3c08e690ab5014e43e4154e3ed4eb",
+        "sha256_now": "79316a60396f3549efbfb983f358f8f2def898b8b37c8c14ab9118ab80f37dcc",
+        "acknowledged_on": "2026-08-08",
+        "reason": "Phase 1b promotion (2026-08-08): SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED flipped False->True (REQ-ARC-WMTE-6234). This artifact predates the lever entirely -- the trajectory-transfer cascade stage (arc_competition_agent.py lines ~6780-6810, added 2026-08-07 per its own \"LEVER #2 (2026-08-07...)\" comment) did not exist in the codebase when this artifact was measured (dated 2026-07-26/27), so its default value now cannot change what was measured then.",
+        "evidence": "git diff -U0 on arc_competition_agent.py for this commit is confined to the SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED constant, its comment block, and the SUBMITTED_AGENT_CONFIG dict entry that mirrors it -- no other line changed."
       }
     ]
   },

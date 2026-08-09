@@ -1,0 +1,929 @@
+{
+  "backend_paths_build_and_abi_receipts": {
+    "abi_receipt": {
+      "feature_env_var": "CARNOT_ENABLE_MODE_JUMP_RUNTIME",
+      "module": "carnot._rust",
+      "symbols": [
+        "RustModeJumpConfig",
+        "RustModeJumpCore",
+        "RustModeJumpState"
+      ]
+    },
+    "paths": {
+      "crates/carnot-python/src/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:83b788dafaaca79f6d90304d2cc558ce339fc10404901ca0a334d91dbbe3d275",
+        "size_bytes": 8079
+      },
+      "crates/carnot-samplers/src/mode_jump.rs": {
+        "exists": true,
+        "sha256": "sha256:d5e9fba57da0a190459c76b6bdc90e65e4e38c41cad4c13c8a54c1965079388d",
+        "size_bytes": 16667
+      },
+      "openspec/capabilities/samplers/spec.md": {
+        "exists": true,
+        "sha256": "sha256:126605b760a7cd49f354586d70b95dbe8238aafed2335e4a8061348407227927",
+        "size_bytes": 265744
+      },
+      "python/carnot/experiment_6220_mode_jump_runtime_ab.py": {
+        "exists": true,
+        "sha256": "sha256:55f9340b2f5fa533fbec4064244c967b5da8b1f8ebb4ed76c2d5eb2a46a33320",
+        "size_bytes": 53717
+      },
+      "python/carnot/samplers/backend.py": {
+        "exists": true,
+        "sha256": "sha256:fb121be3b43b80cb7b6583db0ff3c5adba2fb00cbd13e2cae2157f0bf8b78296",
+        "size_bytes": 28471
+      },
+      "python/carnot/samplers/mode_jump_rust_backend.py": {
+        "exists": true,
+        "sha256": "sha256:fa202e80662270539a911473945f236d64522a16fa4398dc41b407efe3b2b9bf",
+        "size_bytes": 30895
+      },
+      "tests/python/test_experiment_6220_mode_jump_runtime_ab.py": {
+        "exists": true,
+        "sha256": "sha256:05fbec1c85bf883f5356e9d879e57482232514f5bdefb058599cac8109e354d9",
+        "size_bytes": 11289
+      }
+    },
+    "principle": "Records adapter, factory, Rust kernel, PyO3 binding, import, and ABI availability.",
+    "required_symbols_present": true,
+    "rust_import_available": true,
+    "rust_import_error": null
+  },
+  "cpu_thread_and_wall_time_receipts": {
+    "cpu": {
+      "os_cpu_count": 24,
+      "platform": "Linux-7.1.4-1-cachyos-x86_64-with-glibc2.43",
+      "processor": "",
+      "python_version": "3.12.13",
+      "thread_env": {
+        "MKL_NUM_THREADS": null,
+        "OMP_NUM_THREADS": null,
+        "OPENBLAS_NUM_THREADS": null,
+        "RAYON_NUM_THREADS": null
+      }
+    },
+    "fixture": "multimodal_exp6194",
+    "principle": "Stores CPU/thread context and diagnostic wall-clock measurements only.",
+    "repeat_count": 5,
+    "timing_claim_condition": "requires quality_gate_passed and all fixture arms supported",
+    "timing_is_diagnostic": true,
+    "uncertainty_excludes_parity": false,
+    "wall_time_seconds": {
+      "fallback_exact": {
+        "max": 0.038758492097,
+        "mean": 0.028205753584,
+        "mean_95_interval": [
+          0.022112624828,
+          0.034298882339
+        ],
+        "median": 0.025225769961,
+        "min": 0.021987525048,
+        "values": [
+          0.038758492097,
+          0.031618774869,
+          0.025225769961,
+          0.023438205943,
+          0.021987525048
+        ]
+      },
+      "mode_jump_runtime": {
+        "max": 0.040768191917,
+        "mean": 0.03234262336,
+        "mean_95_interval": [
+          0.026676388251,
+          0.038008858469
+        ],
+        "median": 0.034358697012,
+        "min": 0.025086638983,
+        "values": [
+          0.026604195824,
+          0.034358697012,
+          0.040768191917,
+          0.025086638983,
+          0.034895393066
+        ]
+      }
+    }
+  },
+  "default_off_preserved": true,
+  "duration_s": 3.5660341382026672e-06,
+  "ess_and_autocorrelation_by_fixture_arm": {
+    "all_supported_mixing_pass": true,
+    "ess_min": 1000.0,
+    "fixtures": {
+      "multimodal_exp6194": {
+        "fallback_exact": {
+          "acceptance_rate": 0.529356060606,
+          "accepted_count": 2236,
+          "attempted_count": 4224,
+          "effective_sample_size": 1435.550082127638,
+          "integrated_autocorrelation_time": 2.853261652794,
+          "lag1_autocorrelation": 0.351283217129,
+          "mixing_evaluated": true,
+          "mixing_pass": true,
+          "support_valid": true
+        },
+        "mode_jump_runtime": {
+          "acceptance_rate": 0.529356060606,
+          "accepted_count": 2236,
+          "attempted_count": 4224,
+          "effective_sample_size": 1435.550082127638,
+          "integrated_autocorrelation_time": 2.853261652794,
+          "lag1_autocorrelation": 0.351283217129,
+          "mixing_evaluated": true,
+          "mixing_pass": true,
+          "support_valid": true
+        }
+      },
+      "unimodal_contract_probe": {
+        "fallback_exact": {
+          "mixing_evaluated": false,
+          "support_valid": false
+        },
+        "mode_jump_runtime": {
+          "mixing_evaluated": false,
+          "support_valid": false
+        }
+      }
+    },
+    "principle": "Reports mixing quality before any runtime interpretation."
+  },
+  "experiment_id": "experiment_6220_mode_jump_runtime_ab",
+  "fallback_trigger_and_exactness": {
+    "all_fallbacks_exact": true,
+    "fallback_cases": [
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "feature_flag_disabled",
+        "expected_reason_present": true,
+        "fallback_reason": "feature_flag_disabled",
+        "metrics_match": true,
+        "sample_labels_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "declared_python_compatibility",
+        "expected_reason_present": true,
+        "fallback_reason": "declared_python_compatibility",
+        "metrics_match": true,
+        "sample_labels_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "unsupported_dtype_or_layout",
+        "expected_reason_present": true,
+        "fallback_reason": "unsupported_dtype_or_layout",
+        "metrics_match": true,
+        "sample_labels_match": true,
+        "state_match": true
+      },
+      {
+        "active_backend": "python_exact_fallback",
+        "case": "rust_extension_missing",
+        "expected_reason_present": true,
+        "fallback_reason": "rust_extension_missing:missing",
+        "metrics_match": true,
+        "sample_labels_match": true,
+        "state_match": true
+      }
+    ],
+    "principle": "Proves disabled, forced, unavailable, and dtype/layout fallback paths remain exact."
+  },
+  "field_principles": {
+    "backend_paths_build_and_abi_receipts": "Records adapter, factory, Rust kernel, PyO3 binding, import, and ABI availability.",
+    "cpu_thread_and_wall_time_receipts": "Stores CPU/thread context and diagnostic wall-clock measurements only.",
+    "default_off_preserved": "Bare true only when the production default remains CPU and Rust execution needs explicit opt-in.",
+    "duration_s": "Reports real wall time without padding.",
+    "ess_and_autocorrelation_by_fixture_arm": "Reports mixing quality before any runtime interpretation.",
+    "fallback_trigger_and_exactness": "Proves disabled, forced, unavailable, and dtype/layout fallback paths remain exact.",
+    "field_principles": "Explains why each required field exists.",
+    "field_provenance": "Maps every required field to prompt, spec, source hashes, tests, commands, or computed fixtures.",
+    "fpga_tsu_power_hardware_claim_count": "Bare integer must be `0` for this software-only task.",
+    "honest_verdict": "Uses a terminal prefix and states support, quality, timing, fallback, default-off, and nonzero-command classifications.",
+    "inference_substrate": "Declares local CPU software A/B measurement, not hardware, TSU, GPU, or LLM inference.",
+    "matched_arm_configuration": "Proves the fallback and runtime arms use matched seeds, target, proposal, burn-in, and sample counts.",
+    "observable_and_energy_error_by_fixture_arm": "Reports observable, mode-mass, and energy-moment errors before timing.",
+    "preregistered_fixture_seed_schedule_matrix": "Freezes fixtures, seeds, schedules, burn-in, counts, observables, tolerances, and timing rule before outcomes.",
+    "protected_files_unchanged": "Confirms conductor and reconciliation files were not modified.",
+    "quality_gate_passed": "Bare boolean gates timing interpretation after support and quality checks.",
+    "reproducibility_checksum": "Content-addresses the artifact with volatile duration and checksum blanked.",
+    "sampler_runtime_ready_score": "Summarizes readiness from default-off, support, quality, state, fallback, tests, and no-claim gates.",
+    "serialization_and_restart_receipts": "Proves checkpoint round trip, restart equivalence, and malformed state rejection.",
+    "status": "Terminal state separates ready, partial, and blocked Exp6220 outcomes.",
+    "support_validity_by_fixture_arm": "Separates accepted support, exact fallback, Rust execution, and fail-closed unsupported fixtures.",
+    "task_owned_and_preexisting_test_classification": "Keeps task-owned failures separate from pre-existing repository-wide nonzero checks.",
+    "test_commands": "Records focused tests, coverage, artifact command, required suite, and applicable E2E receipts.",
+    "test_exit_codes": "Stores exit codes for every recorded command.",
+    "timing_claim_allowed": "Bare boolean stays false unless quality passes and uncertainty excludes parity.",
+    "transition_and_mode_occupancy_counts": "Shows accepted/proposed transitions and mode occupancy for supported runs.",
+    "upstream_exp6194_and_exp6208_paths_hashes": "Pins the qualified parity and runtime-integration evidence before this A/B run is trusted.",
+    "verifier_is_oracle": "States that the verifier is exact finite enumeration plus fixed transition receipts."
+  },
+  "field_provenance": {
+    "backend_paths_build_and_abi_receipts": {
+      "principle": "Records adapter, factory, Rust kernel, PyO3 binding, import, and ABI availability.",
+      "source": "source hashes and carnot._rust import check"
+    },
+    "cpu_thread_and_wall_time_receipts": {
+      "principle": "Stores CPU/thread context and diagnostic wall-clock measurements only.",
+      "source": "local CPU context and perf_counter timings"
+    },
+    "default_off_preserved": {
+      "principle": "Bare true only when the production default remains CPU and Rust execution needs explicit opt-in.",
+      "source": "Exp6208 default-off receipt"
+    },
+    "duration_s": {
+      "principle": "Reports real wall time without padding.",
+      "source": "wall-clock measurement"
+    },
+    "ess_and_autocorrelation_by_fixture_arm": {
+      "principle": "Reports mixing quality before any runtime interpretation.",
+      "source": "Exp6208 adapter metrics"
+    },
+    "fallback_trigger_and_exactness": {
+      "principle": "Proves disabled, forced, unavailable, and dtype/layout fallback paths remain exact.",
+      "source": "fallback control probes"
+    },
+    "field_principles": {
+      "principle": "Explains why each required field exists.",
+      "source": "OpenSpec required field principles"
+    },
+    "field_provenance": {
+      "principle": "Maps every required field to prompt, spec, source hashes, tests, commands, or computed fixtures.",
+      "source": "this provenance map"
+    },
+    "fpga_tsu_power_hardware_claim_count": {
+      "principle": "Bare integer must be `0` for this software-only task.",
+      "source": "prompt and spec invariant"
+    },
+    "honest_verdict": {
+      "principle": "Uses a terminal prefix and states support, quality, timing, fallback, default-off, and nonzero-command classifications.",
+      "source": "computed verdict"
+    },
+    "inference_substrate": {
+      "principle": "Declares local CPU software A/B measurement, not hardware, TSU, GPU, or LLM inference.",
+      "source": "prompt and spec invariant"
+    },
+    "matched_arm_configuration": {
+      "principle": "Proves the fallback and runtime arms use matched seeds, target, proposal, burn-in, and sample counts.",
+      "source": "Exp6208 descriptor and fixed target/proposal"
+    },
+    "observable_and_energy_error_by_fixture_arm": {
+      "principle": "Reports observable, mode-mass, and energy-moment errors before timing.",
+      "source": "exact finite target and sample labels"
+    },
+    "preregistered_fixture_seed_schedule_matrix": {
+      "principle": "Freezes fixtures, seeds, schedules, burn-in, counts, observables, tolerances, and timing rule before outcomes.",
+      "source": "frozen fixture matrix in this module"
+    },
+    "protected_files_unchanged": {
+      "principle": "Confirms conductor and reconciliation files were not modified.",
+      "source": "git diff over protected paths"
+    },
+    "quality_gate_passed": {
+      "principle": "Bare boolean gates timing interpretation after support and quality checks.",
+      "source": "support and quality gate computation"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addresses the artifact with volatile duration and checksum blanked.",
+      "source": "deterministic artifact hash"
+    },
+    "sampler_runtime_ready_score": {
+      "principle": "Summarizes readiness from default-off, support, quality, state, fallback, tests, and no-claim gates.",
+      "source": "computed readiness score"
+    },
+    "serialization_and_restart_receipts": {
+      "principle": "Proves checkpoint round trip, restart equivalence, and malformed state rejection.",
+      "source": "checkpoint and restart probes"
+    },
+    "status": {
+      "principle": "Terminal state separates ready, partial, and blocked Exp6220 outcomes.",
+      "source": "computed readiness gates"
+    },
+    "support_validity_by_fixture_arm": {
+      "principle": "Separates accepted support, exact fallback, Rust execution, and fail-closed unsupported fixtures.",
+      "source": "matched adapter run receipts"
+    },
+    "task_owned_and_preexisting_test_classification": {
+      "principle": "Keeps task-owned failures separate from pre-existing repository-wide nonzero checks.",
+      "source": "command receipts and Exp6208 classifications"
+    },
+    "test_commands": {
+      "principle": "Records focused tests, coverage, artifact command, required suite, and applicable E2E receipts.",
+      "source": "command receipts"
+    },
+    "test_exit_codes": {
+      "principle": "Stores exit codes for every recorded command.",
+      "source": "command receipts"
+    },
+    "timing_claim_allowed": {
+      "principle": "Bare boolean stays false unless quality passes and uncertainty excludes parity.",
+      "source": "preregistered timing gate computation"
+    },
+    "transition_and_mode_occupancy_counts": {
+      "principle": "Shows accepted/proposed transitions and mode occupancy for supported runs.",
+      "source": "decision logs and sample labels"
+    },
+    "upstream_exp6194_and_exp6208_paths_hashes": {
+      "principle": "Pins the qualified parity and runtime-integration evidence before this A/B run is trusted.",
+      "source": "upstream artifacts and file hashes"
+    },
+    "verifier_is_oracle": {
+      "principle": "States that the verifier is exact finite enumeration plus fixed transition receipts.",
+      "source": "exact finite target and fixed transition"
+    }
+  },
+  "fpga_tsu_power_hardware_claim_count": 0,
+  "honest_verdict": "blocked: default_off=True; all_fixture_arms_supported=False; quality_gate=False; timing_claim_allowed=False; hardware_claim_count=0; task_owned_failures=[{\"classification\": \"task_owned_interrupted_after_long_run\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"required_full_python_suite_interrupted\", \"stderr_tail\": \"Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.\", \"task_owned\": true}, {\"classification\": \"task_owned_interrupted_after_full_suite_noncompletion\", \"command\": \".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809\", \"exit_code\": 130, \"name\": \"artifact_command_interrupted\", \"stderr_tail\": \"KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.\", \"task_owned\": true}]; preexisting_nonzero=[{\"classification\": \"unrelated_preexisting\", \"command\": \"cargo fmt --all -- --check\", \"exit_code\": 1, \"name\": \"cargo_fmt_check_workspace\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \"cargo clippy -p carnot-samplers --tests -- -D warnings\", \"exit_code\": 101, \"name\": \"cargo_clippy_samplers\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100\", \"exit_code\": 134, \"name\": \"coverage_new_python_code\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}, {\"classification\": \"unrelated_preexisting\", \"command\": \".venv/bin/pytest tests/python -q\", \"exit_code\": 130, \"name\": \"full_python_suite\", \"source\": \"results/experiment_6208_mode_jump_runtime_integration.json\", \"task_owned\": false}]",
+  "inference_substrate": "local_cpu_software_mode_jump_runtime_ab_no_hardware",
+  "matched_arm_configuration": {
+    "arms": {
+      "fallback_exact": {
+        "backend_class": "ModeJumpRustBackend",
+        "expected_active_backend": "python_exact_fallback",
+        "prefer_rust": false
+      },
+      "mode_jump_runtime": {
+        "backend_class": "ModeJumpRustBackend",
+        "expected_active_backend": "rust_pyo3",
+        "feature_config_flag": "enable_mode_jump_runtime",
+        "prefer_rust": true
+      }
+    },
+    "couplings_or_proposal_changed_between_arms": false,
+    "matched_burn_in": 128,
+    "matched_label_order": [
+      "left_peak",
+      "left_shoulder",
+      "valley_left",
+      "valley_right",
+      "right_peak",
+      "right_shoulder"
+    ],
+    "matched_multimodal_proposal_hash": "sha256:3ed5bcdbf0d0c8d681e12c5d9824ae5d4caaafe5df5895237693dc64bcc12282",
+    "matched_multimodal_target_hash": "sha256:c04d0f7e5d422694ec0154f2a1b23d4fa70d0740c5535a73907f18df6c3c91c6",
+    "matched_sample_count": 4096,
+    "matched_seed": 6220,
+    "principle": "Proves the fallback and runtime arms use matched seeds, target, proposal, burn-in, and sample counts.",
+    "temperature_or_stopping_changed_between_arms": false
+  },
+  "observable_and_energy_error_by_fixture_arm": {
+    "all_supported_errors_within_tolerance": true,
+    "fixtures": {
+      "multimodal_exp6194": {
+        "fallback_exact": {
+          "energy_mean_abs_error": 0.01520948756,
+          "energy_variance_abs_error": 0.018916734534,
+          "error_pass": true,
+          "exact_energy_mean": 1.475986596465,
+          "exact_energy_variance": 0.384435915273,
+          "kl_target_to_empirical": 0.000340675402,
+          "max_mode_mass_abs_error": 0.00966796875,
+          "mode_mass_abs_errors": {
+            "left_mode": 0.00966796875,
+            "right_mode": 0.005712890625,
+            "valley": 0.003955078125
+          },
+          "mode_masses_empirical": {
+            "left_mode": 0.59033203125,
+            "right_mode": 0.355712890625,
+            "valley": 0.053955078125
+          },
+          "mode_masses_exact": {
+            "left_mode": 0.6,
+            "right_mode": 0.35,
+            "valley": 0.05
+          },
+          "quality_evaluated": true,
+          "sample_energy_mean": 1.491196084025,
+          "sample_energy_variance": 0.403352649807,
+          "samples_match_fallback": true,
+          "support_valid": true,
+          "total_variation_to_target": 0.00966796875
+        },
+        "mode_jump_runtime": {
+          "energy_mean_abs_error": 0.01520948756,
+          "energy_variance_abs_error": 0.018916734534,
+          "error_pass": true,
+          "exact_energy_mean": 1.475986596465,
+          "exact_energy_variance": 0.384435915273,
+          "kl_target_to_empirical": 0.000340675402,
+          "max_mode_mass_abs_error": 0.00966796875,
+          "mode_mass_abs_errors": {
+            "left_mode": 0.00966796875,
+            "right_mode": 0.005712890625,
+            "valley": 0.003955078125
+          },
+          "mode_masses_empirical": {
+            "left_mode": 0.59033203125,
+            "right_mode": 0.355712890625,
+            "valley": 0.053955078125
+          },
+          "mode_masses_exact": {
+            "left_mode": 0.6,
+            "right_mode": 0.35,
+            "valley": 0.05
+          },
+          "quality_evaluated": true,
+          "sample_energy_mean": 1.491196084025,
+          "sample_energy_variance": 0.403352649807,
+          "samples_match_fallback": true,
+          "support_valid": true,
+          "total_variation_to_target": 0.00966796875
+        }
+      },
+      "unimodal_contract_probe": {
+        "fallback_exact": {
+          "quality_evaluated": false,
+          "skipped_reason": "target probabilities must match frozen Exp6194 target",
+          "support_valid": false
+        },
+        "mode_jump_runtime": {
+          "quality_evaluated": false,
+          "skipped_reason": "target probabilities must match frozen Exp6194 target",
+          "support_valid": false
+        }
+      }
+    },
+    "principle": "Reports observable, mode-mass, and energy-moment errors before timing.",
+    "tolerances": {
+      "autocorrelation_abs_max": 0.8,
+      "energy_mean_abs_error": 0.03,
+      "energy_variance_abs_error": 0.05,
+      "ess_min": 1000.0,
+      "frequency_delta_max": 0.0,
+      "mode_mass_abs_error": 0.03,
+      "target_kl": 0.002,
+      "target_tv": 0.02
+    }
+  },
+  "preregistered_fixture_seed_schedule_matrix": {
+    "fixtures": {
+      "multimodal_exp6194": {
+        "expected_adapter_support": true,
+        "fixture_class": "multimodal_supported",
+        "fixture_sha256": "sha256:e18cec7deb30d0b8cf2539a182bf579ca5df5c6ccc31e02eae75cde0366f612b",
+        "source": "results/experiment_6194_mode_jump_rust_pyo3_parity.json"
+      },
+      "unimodal_contract_probe": {
+        "expected_adapter_support": false,
+        "fixture_class": "unimodal_unsupported_by_exp6208_contract",
+        "fixture_sha256": "sha256:e10c3b4bd9f549f46c161ac97af87e1db9b8d4396c4828f505bd5118c35992dd",
+        "source": "preregistered_exp6220_contract_probe"
+      }
+    },
+    "matrix_sha256": "sha256:93e6845d7e1e04ee06570f7e5190f7d96e70ea91c7eeee3ae008bf7dc6de6636",
+    "observables": [
+      "per_label_frequency",
+      "mode_mass",
+      "energy_mean",
+      "energy_variance",
+      "total_variation",
+      "kl_target_to_empirical",
+      "ess",
+      "lag1_autocorrelation",
+      "transition_counts"
+    ],
+    "principle": "Freezes fixtures, seeds, schedules, burn-in, counts, observables, tolerances, and timing rule before outcomes.",
+    "schedule": {
+      "algorithm": "exp6166_cross_mode_categorical_mh_v1",
+      "burn_in": 128,
+      "retained_sample_count": 4096,
+      "stopping_rule_changed_from_outcomes": false,
+      "temperature_or_beta_changed_from_exp6208": false,
+      "topology": "fixed_categorical_mode_jump"
+    },
+    "seed": 6220,
+    "timing_rule": "diagnostic unless all fixture arms are supported, quality gates pass, and 95% mean wall-time intervals exclude parity",
+    "tolerances": {
+      "autocorrelation_abs_max": 0.8,
+      "energy_mean_abs_error": 0.03,
+      "energy_variance_abs_error": 0.05,
+      "ess_min": 1000.0,
+      "frequency_delta_max": 0.0,
+      "mode_mass_abs_error": 0.03,
+      "target_kl": 0.002,
+      "target_tv": 0.02
+    }
+  },
+  "protected_files_unchanged": {
+    "git_diff_exit_code": 0,
+    "paths": [
+      "scripts/research_conductor.py",
+      "ops/changelog.md",
+      "ops/status.md",
+      "_bmad/traceability.md"
+    ],
+    "principle": "Confirms conductor and reconciliation files were not modified.",
+    "unchanged": true
+  },
+  "quality_gate_passed": false,
+  "reproducibility_checksum": "sha256:8666d59cc5033c51cf4c53dd8c45cd1e04fd3335ebe3986f861e97f44cede1ac",
+  "run_date": "20260809",
+  "sampler_runtime_ready_score": 0.0,
+  "schema": "carnot.experiment_6220.mode_jump_runtime_ab.v1",
+  "serialization_and_restart_receipts": {
+    "checkpoint_checksum_valid": true,
+    "checkpoint_payload_checksum": "sha256:f21f03a27b49be4efe865e085208e3395ce3f54cc1c83f75442cc5bd22e07df8",
+    "loaded_state_matches": true,
+    "malformed_state_rejection": {
+      "error": "ValueError",
+      "message": "checkpoint checksum mismatch",
+      "raised": true
+    },
+    "prefix_active_backend": "rust_pyo3",
+    "principle": "Proves checkpoint round trip, restart equivalence, and malformed state rejection.",
+    "python_rust_pyo3_consistency": {
+      "decision_logs_match": true,
+      "fallback_active_backend": "python_exact_fallback",
+      "runtime_active_backend": "rust_pyo3"
+    },
+    "runtime_to_fallback_restart_samples_match": true,
+    "runtime_to_fallback_restart_state_match": true,
+    "serialization_pass": true,
+    "serialized_state": "mode_jump_state_v1|left_peak|14169055744592901534|33|22"
+  },
+  "status": "blocked",
+  "support_validity_by_fixture_arm": {
+    "all_required_fixture_arms_supported": false,
+    "fixtures": {
+      "multimodal_exp6194": {
+        "fallback_exact": {
+          "active_backend": "python_exact_fallback",
+          "elapsed_s": 0.083129845094,
+          "fail_closed": false,
+          "fallback_reason": "declared_python_compatibility",
+          "support_valid": true
+        },
+        "mode_jump_runtime": {
+          "active_backend": "rust_pyo3",
+          "elapsed_s": 0.060094504151,
+          "fail_closed": false,
+          "fallback_reason": null,
+          "support_valid": true
+        }
+      },
+      "unimodal_contract_probe": {
+        "fallback_exact": {
+          "elapsed_s": 0.001884284895,
+          "error_type": "ValueError",
+          "fail_closed": true,
+          "message": "target probabilities must match frozen Exp6194 target",
+          "support_valid": false
+        },
+        "mode_jump_runtime": {
+          "elapsed_s": 0.001246539177,
+          "error_type": "ValueError",
+          "fail_closed": true,
+          "message": "target probabilities must match frozen Exp6194 target",
+          "support_valid": false
+        }
+      }
+    },
+    "principle": "Separates accepted support, exact fallback, Rust execution, and fail-closed unsupported fixtures.",
+    "supported_fixture_arm_count": 2,
+    "unsupported_fixture_arms_fail_closed": true
+  },
+  "task_owned_and_preexisting_test_classification": {
+    "all_task_owned_commands_passed": false,
+    "command_receipts": [
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=",
+        "exit_code": 0,
+        "name": "focused_exp6220_pytest",
+        "stdout_tail": "8 passed in 3.51s",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=",
+        "exit_code": 0,
+        "name": "new_code_coverage_run",
+        "stdout_tail": "8 passed in 5.57s",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100",
+        "exit_code": 0,
+        "name": "new_code_coverage_report",
+        "stdout_tail": "python/carnot/experiment_6220_mode_jump_runtime_ab.py 371 0 100%",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6220_mode_jump_runtime_ab.py",
+        "exit_code": 0,
+        "name": "spec_coverage",
+        "stdout_tail": "OK: All tests reference specification requirements.",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=",
+        "exit_code": 0,
+        "name": "e2e_pyo3_serialization",
+        "stdout_tail": "33 passed in 3.53s",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned_interrupted_after_long_run",
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 130,
+        "name": "required_full_python_suite_interrupted",
+        "stderr_tail": "Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned_interrupted_after_full_suite_noncompletion",
+        "command": ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809",
+        "exit_code": 130,
+        "name": "artifact_command_interrupted",
+        "stderr_tail": "KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.",
+        "task_owned": true
+      }
+    ],
+    "preexisting_nonzero_count": 4,
+    "preexisting_repository_wide_nonzero_commands": [
+      {
+        "classification": "unrelated_preexisting",
+        "command": "cargo fmt --all -- --check",
+        "exit_code": 1,
+        "name": "cargo_fmt_check_workspace",
+        "source": "results/experiment_6208_mode_jump_runtime_integration.json",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": "cargo clippy -p carnot-samplers --tests -- -D warnings",
+        "exit_code": 101,
+        "name": "cargo_clippy_samplers",
+        "source": "results/experiment_6208_mode_jump_runtime_integration.json",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": ".venv/bin/pytest tests/python/samplers/test_mode_jump_rust_backend.py tests/python/test_experiment_6208_mode_jump_runtime_integration.py -q -o addopts= --cov=carnot.samplers.mode_jump_rust_backend --cov=carnot.experiment_6208_mode_jump_runtime_integration --cov-report=term-missing --cov-fail-under=100",
+        "exit_code": 134,
+        "name": "coverage_new_python_code",
+        "source": "results/experiment_6208_mode_jump_runtime_integration.json",
+        "task_owned": false
+      },
+      {
+        "classification": "unrelated_preexisting",
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 130,
+        "name": "full_python_suite",
+        "source": "results/experiment_6208_mode_jump_runtime_integration.json",
+        "task_owned": false
+      }
+    ],
+    "principle": "Keeps task-owned failures separate from pre-existing repository-wide nonzero checks.",
+    "task_owned_commands": [
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=",
+        "exit_code": 0,
+        "name": "focused_exp6220_pytest",
+        "stdout_tail": "8 passed in 3.51s",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=",
+        "exit_code": 0,
+        "name": "new_code_coverage_run",
+        "stdout_tail": "8 passed in 5.57s",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100",
+        "exit_code": 0,
+        "name": "new_code_coverage_report",
+        "stdout_tail": "python/carnot/experiment_6220_mode_jump_runtime_ab.py 371 0 100%",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6220_mode_jump_runtime_ab.py",
+        "exit_code": 0,
+        "name": "spec_coverage",
+        "stdout_tail": "OK: All tests reference specification requirements.",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned",
+        "command": ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=",
+        "exit_code": 0,
+        "name": "e2e_pyo3_serialization",
+        "stdout_tail": "33 passed in 3.53s",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned_interrupted_after_long_run",
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 130,
+        "name": "required_full_python_suite_interrupted",
+        "stderr_tail": "Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned_interrupted_after_full_suite_noncompletion",
+        "command": ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809",
+        "exit_code": 130,
+        "name": "artifact_command_interrupted",
+        "stderr_tail": "KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.",
+        "task_owned": true
+      }
+    ],
+    "task_owned_failure_count": 2,
+    "task_owned_failures": [
+      {
+        "classification": "task_owned_interrupted_after_long_run",
+        "command": ".venv/bin/pytest tests/python -q",
+        "exit_code": 130,
+        "name": "required_full_python_suite_interrupted",
+        "stderr_tail": "Interrupted after about 60 minutes inside pytest worker processes while running via .venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809.",
+        "task_owned": true
+      },
+      {
+        "classification": "task_owned_interrupted_after_full_suite_noncompletion",
+        "command": ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809",
+        "exit_code": 130,
+        "name": "artifact_command_interrupted",
+        "stderr_tail": "KeyboardInterrupt in subprocess.run while waiting for .venv/bin/pytest tests/python -q.",
+        "task_owned": true
+      }
+    ]
+  },
+  "test_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100",
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6220_mode_jump_runtime_ab.py",
+    ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809"
+  ],
+  "test_exit_codes": {
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py --fail-under=100": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6220_mode_jump_runtime_ab.py -m pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q --no-cov -o addopts=": 0,
+    ".venv/bin/pytest tests/python -q": 130,
+    ".venv/bin/pytest tests/python/test_experiment_6220_mode_jump_runtime_ab.py -q -o addopts=": 0,
+    ".venv/bin/pytest tests/python/test_pyo3_integration.py tests/python/test_e2e_serialization.py -q -o addopts=": 0,
+    ".venv/bin/python -m carnot.experiment_6220_mode_jump_runtime_ab --date 20260809": 130,
+    ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6220_mode_jump_runtime_ab.py": 0
+  },
+  "timing_claim_allowed": false,
+  "transition_and_mode_occupancy_counts": {
+    "all_supported_counts_recorded": true,
+    "fixtures": {
+      "multimodal_exp6194": {
+        "fallback_exact": {
+          "accepted_count": 2236,
+          "attempted_count": 4224,
+          "counts_recorded": true,
+          "mode_occupancy_counts": {
+            "left_mode": 2418,
+            "right_mode": 1457,
+            "valley": 221
+          },
+          "per_label_counts": {
+            "left_peak": 1435,
+            "left_shoulder": 983,
+            "right_peak": 1015,
+            "right_shoulder": 442,
+            "valley_left": 109,
+            "valley_right": 112
+          },
+          "sample_count": 4096,
+          "support_valid": true,
+          "transition_counts": {
+            "left_peak->left_peak": 874,
+            "left_peak->left_shoulder": 376,
+            "left_peak->right_peak": 245,
+            "left_shoulder->left_peak": 378,
+            "left_shoulder->left_shoulder": 418,
+            "left_shoulder->right_shoulder": 102,
+            "left_shoulder->valley_left": 113,
+            "right_peak->left_peak": 243,
+            "right_peak->right_peak": 630,
+            "right_peak->right_shoulder": 168,
+            "right_shoulder->left_shoulder": 104,
+            "right_shoulder->right_peak": 166,
+            "right_shoulder->right_shoulder": 66,
+            "right_shoulder->valley_right": 114,
+            "valley_left->left_shoulder": 113,
+            "valley_right->right_shoulder": 114
+          }
+        },
+        "mode_jump_runtime": {
+          "accepted_count": 2236,
+          "attempted_count": 4224,
+          "counts_recorded": true,
+          "mode_occupancy_counts": {
+            "left_mode": 2418,
+            "right_mode": 1457,
+            "valley": 221
+          },
+          "per_label_counts": {
+            "left_peak": 1435,
+            "left_shoulder": 983,
+            "right_peak": 1015,
+            "right_shoulder": 442,
+            "valley_left": 109,
+            "valley_right": 112
+          },
+          "sample_count": 4096,
+          "support_valid": true,
+          "transition_counts": {
+            "left_peak->left_peak": 874,
+            "left_peak->left_shoulder": 376,
+            "left_peak->right_peak": 245,
+            "left_shoulder->left_peak": 378,
+            "left_shoulder->left_shoulder": 418,
+            "left_shoulder->right_shoulder": 102,
+            "left_shoulder->valley_left": 113,
+            "right_peak->left_peak": 243,
+            "right_peak->right_peak": 630,
+            "right_peak->right_shoulder": 168,
+            "right_shoulder->left_shoulder": 104,
+            "right_shoulder->right_peak": 166,
+            "right_shoulder->right_shoulder": 66,
+            "right_shoulder->valley_right": 114,
+            "valley_left->left_shoulder": 113,
+            "valley_right->right_shoulder": 114
+          }
+        }
+      },
+      "unimodal_contract_probe": {
+        "fallback_exact": {
+          "counts_recorded": false,
+          "support_valid": false
+        },
+        "mode_jump_runtime": {
+          "counts_recorded": false,
+          "support_valid": false
+        }
+      }
+    },
+    "principle": "Shows accepted/proposed transitions and mode occupancy for supported runs."
+  },
+  "upstream_exp6194_and_exp6208_paths_hashes": {
+    "exp6194_ready_score": 1.0,
+    "exp6194_status": "complete_ready",
+    "exp6208_hardware_claimed": false,
+    "exp6208_status": "complete_ready",
+    "paths": {
+      "python/carnot/experiment_6194_mode_jump_rust_pyo3_parity.py": {
+        "exists": true,
+        "sha256": "sha256:21ee7839e3ac597edc75bcbac2baeb7ff2ebe0ff4e0cbef2a0d3cb15481da24a",
+        "size_bytes": 44154
+      },
+      "python/carnot/experiment_6208_mode_jump_runtime_integration.py": {
+        "exists": true,
+        "sha256": "sha256:ce3acd8538d2886d5e8881fbaa8e1ff881b43f9a5bc1af133dc2feb500dd0636",
+        "size_bytes": 43129
+      },
+      "results/experiment_6166_mode_jumping_factor_thermalization.json": {
+        "exists": true,
+        "sha256": "sha256:34247a16cc1610caf6ec616d3bda868b89fb1e1c23201261f676e315d1533dea",
+        "size_bytes": 80727
+      },
+      "results/experiment_6180_exp6166_reproducibility_adjudication.json": {
+        "exists": true,
+        "sha256": "sha256:58096311dbb44dd4bd718a1d37e39e1725509e37313ae8e48667b67ae82ead87",
+        "size_bytes": 40227
+      },
+      "results/experiment_6194_mode_jump_rust_pyo3_parity.json": {
+        "exists": true,
+        "sha256": "sha256:878f3e7cc930bcc7fd765a40dc4e99e7cd74f0ee31cfef26c3cf8e920972e431",
+        "size_bytes": 44199
+      },
+      "results/experiment_6208_mode_jump_runtime_integration.json": {
+        "exists": true,
+        "sha256": "sha256:40c61bbf192903dac749ae9fd9f85e3e69b9b5dd6509bb2e4eccd96d641e4260",
+        "size_bytes": 33780
+      }
+    },
+    "principle": "Pins the qualified parity and runtime-integration evidence before this A/B run is trusted."
+  },
+  "verifier_is_oracle": {
+    "not_oracle_for": [
+      "hardware speed",
+      "power",
+      "TSU behavior",
+      "unseen targets"
+    ],
+    "oracle": "exact finite categorical target plus fixed Exp6194 transition receipts",
+    "principle": "States that the verifier is exact finite enumeration plus fixed transition receipts.",
+    "unsupported_fixture_handling": "fail_closed support oracle, not sampled quality evidence",
+    "value": true
+  }
+}

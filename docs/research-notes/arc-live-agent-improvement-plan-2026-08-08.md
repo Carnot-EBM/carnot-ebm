@@ -184,6 +184,17 @@ verifier accepted 4/0, 4 LLM induction calls avoided, zero harmful regressions,
 promotion-ready score 1.0). Still default OFF. Run the live-path A/B (actions-to-first-solve,
 no-solve-regression floor), then flip `SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED`.
 *Gate: no regression on solve rate; actions-to-first-solve improves or holds.*
+**DONE (2026-08-08, REQ-ARC-WMTE-6234):** the conductor ran the live-path A/B same-day, ahead of
+this session reaching it (`[conductor] Within-game object-relative trajectory-transfer causal
+A/B`, commit `104405d43b`; `results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json`,
+`status: complete_ready`). Result reused rather than re-run: 4/4 fired, verifier accepted 4/0, 0
+harmful regressions, `treatment_minus_control_actions: 0` and `_score: 0.0` on all 4 games
+(actions-to-first-solve held exactly), `promotion_ready_score: 1.0`, mutation-proven, live
+entrypoint confirmed. Gate met — flipped `SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED`
+to `True`. One pinning test updated (`test_arc_trajectory_transfer_cascade.py`'s explicit-off
+test now sets the env override explicitly rather than relying on the old bare default; a new test
+pins the new bare-default value). 31+94+37 tests across directly-touching and collateral files
+pass.
 
 **1c. Re-measure budget-aware search cleanly; promote if it holds.**
 After 0a's repair, one unflagged re-run under the same pre-registration. If deadline-miss

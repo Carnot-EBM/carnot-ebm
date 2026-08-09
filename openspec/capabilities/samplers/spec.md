@@ -3802,3 +3802,122 @@ artifact still records `hardware_or_speed_power_energy_claimed=false`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLE-6208 | Planned (`python/carnot/samplers/mode_jump_rust_backend.py`, `python/carnot/samplers/backend.py`, `python/carnot/experiment_6208_mode_jump_runtime_integration.py`, `results/experiment_6208_mode_jump_runtime_integration.json`) | Planned (`tests/python/samplers/test_mode_jump_rust_backend.py`, `tests/python/test_experiment_6208_mode_jump_runtime_integration.py`, `crates/carnot-samplers/tests/mode_jump.rs`) |
+
+### REQ-SAMPLE-6220: Mode-Jump Runtime A/B Measurement
+
+Carnot MUST provide Exp6220 at
+`python/carnot/experiment_6220_mode_jump_runtime_ab.py` and write
+`results/experiment_6220_mode_jump_runtime_ab.json`. The experiment SHALL
+compare the Exp6208 exact Python fallback arm and the default-off
+`mode_jump_rust` runtime arm on preregistered software fixtures, seeds,
+schedules, burn-in, sample counts, observables, tolerances, and timing rules.
+It SHALL keep the runtime feature default off and SHALL NOT make FPGA, TSU,
+power, hardware, latency-speedup, or energy-efficiency claims.
+
+Sub-requirements:
+- REQ-SAMPLE-6220-SPEC-FIRST: Exp6220 SHALL freeze the fixture, seed,
+  schedule, burn-in, sample count, observable, tolerance, and timing matrix
+  before measuring either arm.
+- REQ-SAMPLE-6220-SUPPORT: Each fixture/arm pair SHALL record whether the
+  Exp6208 adapter accepted the frozen inputs, selected Rust/PyO3, selected exact
+  Python fallback, or failed closed. Unsupported fixtures SHALL remain evidence
+  for the boundary and SHALL NOT be forced through by changing the Exp6208
+  target, proposal table, feature flag, or stopping rule.
+- REQ-SAMPLE-6220-QUALITY: For every accepted fixture/arm pair, Exp6220 SHALL
+  validate sample support, observable error, energy-moment error, TV/KL, ESS,
+  autocorrelation, transition counts, and mode occupancy before interpreting
+  timing.
+- REQ-SAMPLE-6220-STATE: Exp6220 SHALL test checkpoint serialization, restart
+  equivalence, backend-unavailable fallback, exact fallback, malformed state
+  rejection, and Python/Rust/PyO3 consistency.
+- REQ-SAMPLE-6220-TIMING: CPU wall time SHALL be diagnostic unless all quality
+  gates pass for all required fixture arms and the preregistered uncertainty
+  rule excludes parity. Timing SHALL NOT alter sampler settings.
+- REQ-SAMPLE-6220-ARTIFACT: The terminal artifact SHALL classify task-owned
+  command failures separately from pre-existing repository-wide nonzero checks,
+  preserve default-off behavior, and emit bare
+  `fpga_tsu_power_hardware_claim_count=0`.
+
+The terminal artifact SHALL include these top-level fields:
+`status`, `upstream_exp6194_and_exp6208_paths_hashes`,
+`backend_paths_build_and_abi_receipts`,
+`preregistered_fixture_seed_schedule_matrix`, `matched_arm_configuration`,
+`support_validity_by_fixture_arm`,
+`observable_and_energy_error_by_fixture_arm`,
+`ess_and_autocorrelation_by_fixture_arm`,
+`transition_and_mode_occupancy_counts`,
+`serialization_and_restart_receipts`, `fallback_trigger_and_exactness`,
+`cpu_thread_and_wall_time_receipts`, `quality_gate_passed`,
+`timing_claim_allowed`, `default_off_preserved`,
+`fpga_tsu_power_hardware_claim_count`,
+`task_owned_and_preexisting_test_classification`,
+`sampler_runtime_ready_score`, `protected_files_unchanged`,
+`inference_substrate`, `verifier_is_oracle`, `field_provenance`,
+`field_principles`, `test_commands`, `test_exit_codes`, `duration_s`,
+`reproducibility_checksum`, and `honest_verdict`.
+
+Required field principles:
+
+- `status`: Terminal state separates ready, partial, and blocked Exp6220 outcomes.
+- `upstream_exp6194_and_exp6208_paths_hashes`: Pins the qualified parity and runtime-integration evidence before this A/B run is trusted.
+- `backend_paths_build_and_abi_receipts`: Records adapter, factory, Rust kernel, PyO3 binding, import, and ABI availability.
+- `preregistered_fixture_seed_schedule_matrix`: Freezes fixtures, seeds, schedules, burn-in, counts, observables, tolerances, and timing rule before outcomes.
+- `matched_arm_configuration`: Proves the fallback and runtime arms use matched seeds, target, proposal, burn-in, and sample counts.
+- `support_validity_by_fixture_arm`: Separates accepted support, exact fallback, Rust execution, and fail-closed unsupported fixtures.
+- `observable_and_energy_error_by_fixture_arm`: Reports observable, mode-mass, and energy-moment errors before timing.
+- `ess_and_autocorrelation_by_fixture_arm`: Reports mixing quality before any runtime interpretation.
+- `transition_and_mode_occupancy_counts`: Shows accepted/proposed transitions and mode occupancy for supported runs.
+- `serialization_and_restart_receipts`: Proves checkpoint round trip, restart equivalence, and malformed state rejection.
+- `fallback_trigger_and_exactness`: Proves disabled, forced, unavailable, and dtype/layout fallback paths remain exact.
+- `cpu_thread_and_wall_time_receipts`: Stores CPU/thread context and diagnostic wall-clock measurements only.
+- `quality_gate_passed`: Bare boolean gates timing interpretation after support and quality checks.
+- `timing_claim_allowed`: Bare boolean stays false unless quality passes and uncertainty excludes parity.
+- `default_off_preserved`: Bare true only when the production default remains CPU and Rust execution needs explicit opt-in.
+- `fpga_tsu_power_hardware_claim_count`: Bare integer must be `0` for this software-only task.
+- `task_owned_and_preexisting_test_classification`: Keeps task-owned failures separate from pre-existing repository-wide nonzero checks.
+- `sampler_runtime_ready_score`: Summarizes readiness from default-off, support, quality, state, fallback, tests, and no-claim gates.
+- `protected_files_unchanged`: Confirms conductor and reconciliation files were not modified.
+- `inference_substrate`: Declares local CPU software A/B measurement, not hardware, TSU, GPU, or LLM inference.
+- `verifier_is_oracle`: States that the verifier is exact finite enumeration plus fixed transition receipts.
+- `field_provenance`: Maps every required field to prompt, spec, source hashes, tests, commands, or computed fixtures.
+- `field_principles`: Explains why each required field exists.
+- `test_commands`: Records focused tests, coverage, artifact command, required suite, and applicable E2E receipts.
+- `test_exit_codes`: Stores exit codes for every recorded command.
+- `duration_s`: Reports real wall time without padding.
+- `reproducibility_checksum`: Content-addresses the artifact with volatile duration and checksum blanked.
+- `honest_verdict`: Uses a terminal prefix and states support, quality, timing, fallback, default-off, and nonzero-command classifications.
+
+### SCENARIO-SAMPLE-6220-MATCHED-RUNTIME-QUALITY: Supported Fixture Compares Exactly
+
+**Given** the frozen Exp6194 multimodal fixture, matched seed, proposal table,
+burn-in, retained sample count, and timing rule
+**When** Exp6220 runs exact Python fallback and enabled `mode_jump_rust`
+**Then** support stays valid, samples and state match exactly, observable and
+energy errors remain within tolerance, ESS and autocorrelation are recorded,
+transition and mode occupancy counts are recorded, and timing remains
+diagnostic until all gates permit it.
+
+### SCENARIO-SAMPLE-6220-UNSUPPORTED-FIXTURE-BOUNDARY: Unsupported Fixture Fails Closed
+
+**Given** a preregistered unimodal software fixture that is outside the frozen
+Exp6208 target contract
+**When** fallback and runtime arms receive the fixture without changing the
+proposal, temperature, feature flag, or stopping rule
+**Then** both arms fail closed with explicit support errors, the unsupported
+fixture blocks broad timing claims, and the artifact records the boundary
+instead of changing the backend contract.
+
+### SCENARIO-SAMPLE-6220-STATE-FALLBACK-NOCLAIM: State And Fallback Gates Are Audited
+
+**Given** valid checkpoints, corrupt checkpoints, disabled feature flags,
+forced fallback, backend-unavailable controls, and malformed state payloads
+**When** Exp6220 builds the A/B artifact
+**Then** valid restarts match, corrupt states are rejected, fallback triggers
+are exact, default-off behavior is preserved, protected files are unchanged,
+and `fpga_tsu_power_hardware_claim_count` is the bare integer `0`.
+
+## Implementation Status (REQ-SAMPLE-6220)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLE-6220 | Planned (`python/carnot/experiment_6220_mode_jump_runtime_ab.py`, `results/experiment_6220_mode_jump_runtime_ab.json`) | Planned (`tests/python/test_experiment_6220_mode_jump_runtime_ab.py`) |

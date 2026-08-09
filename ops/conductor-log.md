@@ -15520,3 +15520,4 @@ Still active  |
 | 2026-08-09 00:15 UTC | Native Gemma-4-31B think versus no-think induction | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
 | 2026-08-09 00:45 UTC | Held-out portfolio of independently admissible ARC | OK | 89 passed, 1 warning in 7.73s |
 | 2026-08-09 01:02 UTC | Two-timescale continuous constraint learning under | OK | 87 passed, 1 warning in 13.02s |
+| 2026-08-09 02:25 UTC | Default-off mode-jump sampler runtime quality and  | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: r edge cases s |

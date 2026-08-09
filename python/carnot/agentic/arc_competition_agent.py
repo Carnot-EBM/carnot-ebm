@@ -354,11 +354,20 @@ SUBMITTED_HAZARD_MOVE_PRUNER_MODE = (
 # level's own successful action trace, re-anchored to the new level by object matching + mean
 # centroid displacement (arc_solver_kit.object_relative_trajectory_transfer). Cheap (no LLM call)
 # and self-discovery-compatible (uses only the agent's own runtime trajectory -- no game-source
-# reading, no registry lookup). DEFAULT OFF pending an A/B: the lever presumes the next level is an
-# object-translated variant of the previous one, which is true for some ARC games and false for
-# others (a layout change should fail the confidence gate, but a coincidental high match on a
-# re-skinned level would replay a wrong trace at real action cost).
-SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = False
+# reading, no registry lookup). The lever presumes the next level is an object-translated variant
+# of the previous one, which is true for some ARC games and false for others (a layout change
+# should fail the confidence gate, but a coincidental high match on a re-skinned level would
+# replay a wrong trace at real action cost) -- the confidence gate is what makes this safe to ship.
+#
+# PROMOTED TO DEFAULT ON 2026-08-08 (REQ-ARC-WMTE-6234, Phase 1b of the ARC live-agent
+# improvement plan). exp6215's live-path A/B (results/experiment_6215_arc_object_relative_
+# trajectory_transfer_ab.json, promotion_ready_score=1.0) fired 4/4 games, verifier accepted
+# 4/0, avoided the LLM induction call on every fire (0 vs 1), 0 harmful regressions, and held
+# actions-to-first-solve exactly (treatment_minus_control_actions=0 on all 4 games) -- mutation-
+# proven (3/3 tamper checks killed) and run through the canonical live entrypoint
+# (make_carnot_agent -> E3AgentPolicy._induce_and_plan). CARNOT_ARC_TRAJECTORY_TRANSFER=0
+# reverts to the pre-promotion (disabled) behavior.
+SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED = True
 SUBMITTED_GO_EXPLORE_ARCHIVE_ENABLED = False
 SUBMITTED_GO_EXPLORE_ARCHIVE_MODE = "return_then_explore_replayable_prefix_archive"
 # IGE-style LLM-guided cell selection on top of the Go-Explore archive (Intelligent Go-Explore,

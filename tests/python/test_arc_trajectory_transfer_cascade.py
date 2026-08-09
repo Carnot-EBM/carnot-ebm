@@ -5,8 +5,9 @@ Two things are tested here, mirroring the split in the implementation:
 1. `_begin_level_goal_episode` stashes the completed level's replayable action trace and its
    opening logical grid at the one instant both are still intact (see that method's docstring).
 2. `_induce_and_plan`'s level_up_reinduction branch tries the cheap trajectory-transfer stage
-   BEFORE paying for `execute_bounded_llm_reinduction` -- and, with the flag off (the shipped
-   default), never touches it at all.
+   BEFORE paying for `execute_bounded_llm_reinduction`. Promoted to the SHIPPED DEFAULT
+   2026-08-08 (REQ-ARC-WMTE-6234, exp6215's live-path A/B); with the flag explicitly OFF
+   (`CARNOT_ARC_TRAJECTORY_TRANSFER=0`), the stage never touches it at all.
 
 test_arc_object_relative_trajectory_transfer.py covers the underlying primitive in isolation;
 these tests cover only the wiring around it.
@@ -106,9 +107,12 @@ def _confident_setup(policy) -> None:
     policy._completed_level_trace = [{"action": 6, "data": {"x": 10, "y": 10}}]
 
 
-def test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction(monkeypatch):
-    """DEFAULT OFF: the cascade stage must not run, and the expensive LLM tier must still be
-    reachable exactly as before -- the load-bearing byte-identity property."""
+def test_flag_explicitly_off_never_touches_trajectory_transfer_or_llm_reinduction(monkeypatch):
+    """REQ-ARC-WMTE-6234 (2026-08-08): the lever's live-path A/B (exp6215, promotion_ready_score
+    1.0, 0 harmful regressions across 4/4 games, mutation-proven) promoted this to the SHIPPED
+    DEFAULT. This test now covers the EXPLICIT-OFF override (`CARNOT_ARC_TRAJECTORY_TRANSFER=0`)
+    rather than the bare default -- the cascade stage must not run, and the expensive LLM tier
+    must still be reachable exactly as before, the load-bearing byte-identity property."""
     called = {"llm": False}
 
     def _fake_llm_reinduction(**kwargs):
@@ -124,9 +128,10 @@ def test_flag_off_never_touches_trajectory_transfer_or_llm_reinduction(monkeypat
         )
 
     monkeypatch.setattr(agent, "execute_bounded_llm_reinduction", _fake_llm_reinduction)
+    monkeypatch.setenv("CARNOT_ARC_TRAJECTORY_TRANSFER", "0")
 
     policy = E3AgentPolicy("lp85", proposer=SimpleNamespace(), target_levels=3, value_head=None)
-    assert policy.trajectory_transfer_enabled is False  # the shipped default
+    assert policy.trajectory_transfer_enabled is False
     _confident_setup(policy)
     policy.transitions = _win_transitions(1)
     policy._episode_transition_start = 0
@@ -165,6 +170,18 @@ def test_flag_on_confident_transfer_short_circuits_before_llm_reinduction(monkey
     assert attempt["planned"] is True
     assert attempt["engine_source"] == "object_relative_trajectory_transfer"
     assert policy.plan == [{"action": 6, "data": {"x": 10, "y": 10}}]
+
+
+def test_bare_default_is_now_enabled_no_env_override(monkeypatch):
+    """REQ-ARC-WMTE-6234 (2026-08-08): pins the SHIPPED DEFAULT itself, with no env override at
+    all -- distinct from the two tests above, which pin the explicit-on and explicit-off
+    overrides. A fresh policy with `CARNOT_ARC_TRAJECTORY_TRANSFER` unset must resolve to
+    trajectory_transfer_enabled=True, matching SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED."""
+    monkeypatch.delenv("CARNOT_ARC_TRAJECTORY_TRANSFER", raising=False)
+    assert agent.SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED is True
+
+    policy = E3AgentPolicy("lp85", proposer=SimpleNamespace(), target_levels=3, value_head=None)
+    assert policy.trajectory_transfer_enabled is True
 
 
 def test_flag_on_unconfident_transfer_falls_through_to_llm_reinduction(monkeypatch):
