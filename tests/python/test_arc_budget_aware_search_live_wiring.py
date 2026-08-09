@@ -13,6 +13,12 @@ declared wiring out of scope, a separate follow-up. This file covers that follow
      an emergent node-selection outcome (depth_cost is monotonic in depth, so most branches never
      actually reorder nodes at different depths; the mechanism, not a specific reordering, is what
      this file pins).
+
+REQ-ARC-WMTE-6235 (2026-08-08, ARC live-agent improvement plan Phase 1c): promoted to the
+SHIPPED DEFAULT after exp6216's live-path A/B reproduced cleanly on a fresh, unflagged re-run
+(deadline misses 6 -> 0 across 6 games, 0 harmful regressions, promotion_ready_score=1.0,
+mutation-proven). Tests below that exercised the "flag off" path via the BARE default now pass
+`budget_aware_search=False` explicitly; a new test in each section pins the new bare default.
 """
 
 from __future__ import annotations
@@ -27,8 +33,13 @@ from carnot.agentic.arc_competition_agent import StepwiseExplorer
 # --------------------------------------------------------------------------- #
 # (1) flag ladder                                                             #
 # --------------------------------------------------------------------------- #
-def test_flag_defaults_off():
-    assert StepwiseExplorer().budget_aware_search_enabled is False
+def test_flag_defaults_on():
+    """REQ-ARC-WMTE-6235: the bare default (no kwarg, no env override) is now True."""
+    assert StepwiseExplorer().budget_aware_search_enabled is True
+
+
+def test_flag_explicit_kwarg_off():
+    assert StepwiseExplorer(budget_aware_search=False).budget_aware_search_enabled is False
 
 
 def test_flag_explicit_kwarg_on():
@@ -62,7 +73,7 @@ def test_buffer_and_estimate_default_empty_before_any_frame():
 def test_ingest_appends_every_frame_regardless_of_flag():
     """The buffer fill is unconditional (cheap -- a single list append) so it is ready the
     moment the flag is later flipped; only the ESTIMATE computation is gated."""
-    explorer = StepwiseExplorer()
+    explorer = StepwiseExplorer(budget_aware_search=False)
     assert explorer.budget_aware_search_enabled is False
     frame = np.zeros((4, 4), dtype=np.int16)
     explorer._ingest(frame)
@@ -100,7 +111,7 @@ def test_ingest_never_calls_estimator_when_flag_off(monkeypatch):
     monkeypatch.setattr(
         agent, "budget_exhaustion_estimate", lambda *a, **k: called.update(n=called["n"] + 1) or {}
     )
-    explorer = StepwiseExplorer()  # flag off (shipped default)
+    explorer = StepwiseExplorer(budget_aware_search=False)  # flag explicitly off
     explorer.hud_mask = np.ones((4, 4), dtype=bool)
     explorer._ingest(np.zeros((4, 4), dtype=np.int16))
     assert called["n"] == 0
@@ -139,7 +150,7 @@ def test_frontier_never_calls_budget_aware_weight_when_flag_off(monkeypatch):
         return float(kwargs["depth"])
 
     monkeypatch.setattr(agent, "budget_aware_path_cost_weight", _fake_weight)
-    explorer = StepwiseExplorer()  # flag off
+    explorer = StepwiseExplorer(budget_aware_search=False)  # flag explicitly off
     explorer.cur = "root"
     explorer.graph = _one_node_graph()
     assert explorer._frontier() == "n0"
@@ -170,7 +181,7 @@ def test_frontier_byte_identical_ordering_when_flag_off_even_with_estimate_set()
     """Byte-identity discipline: with the flag off, the sort key must be built from the exact
     same expression as before this lever, even if actions_remaining_estimate happens to hold a
     stale value (e.g. left over from a flag flip mid-run in a test)."""
-    explorer_off = StepwiseExplorer()
+    explorer_off = StepwiseExplorer(budget_aware_search=False)
     explorer_off.actions_remaining_estimate = 1.0  # would matter if consulted; must not be
     explorer_off.cur = "root"
     explorer_off.graph = {

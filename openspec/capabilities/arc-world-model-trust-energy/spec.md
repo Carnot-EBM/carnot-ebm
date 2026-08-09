@@ -22395,6 +22395,50 @@ parity/submission-gate files — none hardcode this flag's old value.
 |---|---|---|
 | REQ-ARC-WMTE-6234 | `python/carnot/agentic/arc_competition_agent.py:SUBMITTED_OBJECT_RELATIVE_TRAJECTORY_TRANSFER_ENABLED`. | `tests/python/test_arc_trajectory_transfer_cascade.py` (updated: `test_flag_explicitly_off_never_touches_trajectory_transfer_or_llm_reinduction`, new `test_bare_default_is_now_enabled_no_env_override`). |
 
+### REQ-ARC-WMTE-6235: Budget-Aware Search Promoted To Default ON
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 1c. Lever #5
+(REQ-ARC-WMTE-6180, budget-exhaustion-aware search cost) shipped default OFF pending an A/B
+reproducing cleanly under the honest Phase 0a substrate correction.
+
+**THE RE-RUN.** `python -m carnot.experiment_6216_arc_budget_aware_search_ab --date 20260809`,
+executed fresh (not just metadata-patched, unlike Phase 0a's fix) now that the source script
+itself emits the canonical `inference_substrate` value from the start. Reproduced identically:
+deadline misses 6 -> 0 across 6 games (`aa_control_a`/`aa_control_b`/`control` all 6, `treatment`
+0), 0 harmful regressions, mutation-proven (3/3 tamper checks killed), canonical live entrypoint
+confirmed (`make_carnot_agent -> E3AgentPolicy -> StepwiseExplorer._frontier`).
+
+**A RE-RUN HAZARD, CAUGHT BY THE GUARD IT EXISTS FOR.** The fresh `build_artifact()` call
+constructs a new dict with no memory of the prior review record, so the first write silently
+dropped `corrigendum_pending`, `corrigendum_resolved`, `inference_substrate_correction_note`,
+`flagged_adversarial`, and `flagged_adversarial_cleared_note` -- `scripts/determination_
+preservation_lint.py` correctly refused that state before any commit was attempted. Fixed by
+restoring all five fields from the pre-rerun artifact (git history), appending one new
+`corrigendum_resolved` entry documenting the fresh re-verification, and recomputing
+`reproducibility_checksum` via the script's own `payload_checksum()`. Lint clean after the fix.
+
+**THE PROMOTION.** `BUDGET_AWARE_SEARCH_ENABLED` flipped `False -> True` in `arc_solver_kit.py`.
+`CARNOT_ARC_BUDGET_AWARE_SEARCH=0` reverts to the pre-promotion (disabled) behavior.
+
+**TESTS UPDATED.** `tests/python/test_arc_budget_aware_search_live_wiring.py`: five tests that
+exercised the "flag off" path via the bare default now pass `budget_aware_search=False`
+explicitly; a new test pins the bare default at `True`.
+`tests/python/test_experiment_6216_arc_budget_aware_search_ab.py`: `budget_aware_promotion_ready_
+score`'s expected value updated from `1.0` to `5/6` -- one of its own six checks is "the shipped
+config still reports the pre-promotion (off) default," which is permanently unsatisfiable now
+that promotion happened, by design, not a regression (every other check, including the
+deadline-miss elimination, still holds). `tests/python/test_experiment_6218_arc_admissible_lever_
+portfolio_heldout.py` needed NO changes once the corrigendum-restoration above was in place --
+its eligibility computation briefly (and correctly) showed the budget-aware lever as ineligible
+for the SAME pre-existing `artifact_flagged_by_exp6197` reason once the corrigendum was restored,
+matching its frozen test expectations exactly.
+
+## Implementation Status (REQ-ARC-WMTE-6235)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6235 | `python/carnot/agentic/arc_solver_kit.py:BUDGET_AWARE_SEARCH_ENABLED`. | `tests/python/test_arc_budget_aware_search_live_wiring.py` (updated + new `test_flag_defaults_on`), `tests/python/test_experiment_6216_arc_budget_aware_search_ab.py` (updated promotion-score expectation). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

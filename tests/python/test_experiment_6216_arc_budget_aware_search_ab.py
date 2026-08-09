@@ -12,6 +12,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import pytest
+
 from carnot import experiment_6216_arc_budget_aware_search_ab as mod
 
 
@@ -30,9 +32,9 @@ def _mutation_receipts() -> list[dict[str, object]]:
 def test_req_arc_wmte_6216_spec_declares_fields_and_scenarios() -> None:
     """REQ-ARC-WMTE-6216: OpenSpec names the artifact and scenarios."""
 
-    section = "REQ-ARC-WMTE-6216" + SPEC.read_text(encoding="utf-8").split(
-        "### REQ-ARC-WMTE-6216", 1
-    )[1]
+    section = (
+        "REQ-ARC-WMTE-6216" + SPEC.read_text(encoding="utf-8").split("### REQ-ARC-WMTE-6216", 1)[1]
+    )
 
     for marker in (
         "REQ-ARC-WMTE-6216",
@@ -57,9 +59,10 @@ def test_scenario_arc_wmte_6216_stepwise_treatment_fires_and_reshapes_search(
 
     assert pair["hud_support"]["evidence"]["verdict"] == "admit"
     assert pair["hud_support"]["estimate"]["verdict"] == "estimate"
-    assert pair["arms"]["aa_control_a"]["selected_node"] == pair["arms"]["aa_control_b"][
-        "selected_node"
-    ]
+    assert (
+        pair["arms"]["aa_control_a"]["selected_node"]
+        == pair["arms"]["aa_control_b"]["selected_node"]
+    )
     assert pair["arms"]["control"]["consumer_call_count"] == 0
     assert pair["arms"]["treatment"]["consumer_call_count"] > 0
     assert pair["arms"]["control"]["selected_node"] == "risky_long_path"
@@ -98,7 +101,16 @@ def test_scenario_arc_wmte_6216_artifact_guards_and_required_fields(tmp_path: Pa
     assert artifact["consumer_fire_counts"]["control_total"] == 0
     assert artifact["deadline_miss_counts"]["treatment"] == 0
     assert artifact["ab_complete_score"] == 1.0
-    assert artifact["budget_aware_promotion_ready_score"] == 1.0
+    # REQ-ARC-WMTE-6235 (2026-08-08): promotion_ready_score's own checklist includes
+    # "SUBMITTED_AGENT_CONFIG still reports the pre-promotion (off) default" -- a coherence
+    # check that this measurement is a genuine before/after comparison, not a redundant
+    # re-check of an already-promoted lever. Now that BUDGET_AWARE_SEARCH_ENABLED is the
+    # shipped default (this experiment's OWN A/B evidence), that one check is permanently
+    # unsatisfiable by design -- 5 of 6 checks pass, not 6 of 6. This is the expected
+    # post-promotion reading, not a regression in the underlying mechanism (every other
+    # check, including the deadline-miss elimination, still holds -- see the sibling test
+    # `test_scenario_arc_wmte_6216_stepwise_treatment_fires_and_reshapes_search`).
+    assert artifact["budget_aware_promotion_ready_score"] == pytest.approx(5 / 6)
     assert artifact["inference_substrate"]["legacy_models_contributed_rows"] == 0
     assert artifact["model_specs"][0]["hf_id"] == mod.CANONICAL_MODEL_HF_ID
     assert all(

@@ -171,6 +171,48 @@ the env override rather than relying on the old bare default; a new test pins th
 `results/experiment_6215_arc_object_relative_trajectory_transfer_ab.json` (the A/B) —
 commit `104405d43b` (the conductor's A/B run).
 
+### NEW 2026-08-09 (Phase 1c of the ARC live-agent improvement plan, REQ-ARC-WMTE-6235): budget-aware search promoted to default ON, and a re-run corrigendum-drop caught by its own guard
+
+**What was asked.** Lever #5 (budget-exhaustion-aware search cost) shipped default OFF pending a
+clean, unflagged re-run after Phase 0a's substrate correction. Phase 1c: re-run, promote if the
+deadline-miss elimination (6 -> 0) reproduces.
+
+**What happened.** Re-ran `experiment_6216_arc_budget_aware_search_ab.py` fresh (a full
+re-execution, not the metadata-only patch Phase 0a applied) now that the source script emits the
+canonical substrate from the start. Reproduced identically: deadline misses 6 -> 0 across 6
+games, 0 harmful regressions, mutation-proven. Gate met — flipped `BUDGET_AWARE_SEARCH_ENABLED`
+to `True` in `arc_solver_kit.py`.
+
+**A re-run hazard, caught by the guard it exists for.** `build_artifact()`'s fresh dict has no
+memory of the prior review record, so the first write silently dropped `corrigendum_pending`,
+`corrigendum_resolved`, `inference_substrate_correction_note`, `flagged_adversarial`, and
+`flagged_adversarial_cleared_note`. `determination_preservation_lint.py` refused to let this
+commit before any commit was attempted — exactly the class of incident the "Test-Run Record
+Integrity Discipline" names, this time from a deliberate script re-run rather than a test.
+Fixed by restoring all five fields from git history, appending one new `corrigendum_resolved`
+entry documenting the fresh re-verification, and recomputing `reproducibility_checksum` via the
+script's own `payload_checksum()`. **Working rule for future re-runs of any previously-corrected
+artifact: run `determination_preservation_lint.py` before committing, not just
+`adversarial_verify.py` — a clean adversarial-verify pass does not mean the determination record
+survived a fresh rebuild.**
+
+**Test fallout, both expected once understood.**
+`test_experiment_6216_arc_budget_aware_search_ab.py`'s `budget_aware_promotion_ready_score`
+expectation updated `1.0 -> 5/6`: one of its own six checks is "the shipped config still reports
+the pre-promotion (off) default," permanently unsatisfiable now that promotion happened, by
+design — not a regression. `test_experiment_6218_arc_admissible_lever_portfolio_heldout.py`
+needed no changes at all once the corrigendum was restored: its eligibility computation briefly
+(and correctly) showed the budget-aware lever as newly eligible while the corrigendum was
+missing, then correctly reverted to ineligible (same pre-existing `artifact_flagged_by_exp6197`
+reason) once restored — a live demonstration of the exact structural gap Phase 0a already filed,
+not a new one.
+
+**Cross-references:** full REQ write-up
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6235 —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 1c —
+`results/experiment_6216_arc_budget_aware_search_ab.json` (the re-run) —
+CLAUDE.md "Test-Run Record Integrity Discipline" (the discipline this incident instantiates).
+
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 
 Context: this session root-caused three unexplained kills of a dev script's background process
