@@ -8314,3 +8314,42 @@ The goal-gate file's own 5-mutant proof re-ran 5/5 after this session's edits.
   fabrication the substrate witness exists to prevent.
 - **Banked ARC levels UNCHANGED at 3/3.** Nothing solved, nothing submitted, no scored or
   offline game played, no shipped default flipped.
+
+## 2026-08-09 outer-loop session: ARC live-agent improvement plan, Phases 0-2 closed
+
+Working from `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` under a
+standing "continue unattended, use judgment" instruction. Summary (full detail + REQ numbers in
+the plan doc and `openspec/capabilities/arc-world-model-trust-energy/spec.md`):
+
+- **Phase 0 (a-c): DONE.** Second-order freshness cascade fix, graded-goal-bias exemplar fix,
+  plan/pi reset fix. All shipped, tested, committed.
+- **Phase 1 (a-c): DONE.** 1a: wall re-derivation under corrected metrics — closure hardens (0
+  pass, unchanged). 1b: trajectory transfer promoted to default ON (gate met cleanly). 1c:
+  budget-aware search promoted to default ON (re-run reproduced, one determination-preservation
+  near-miss caught and fixed before commit).
+- **Phase 2a: DONE, negative (REQ-ARC-WMTE-6242).** De-confounded think-vs-no_think admission-
+  rate gate NOT MET (1 favor think, 0 favor no_think, 12 tie, p=1.0) across 4 launch attempts
+  (2 llama-server reaper recurrences, 1 external-timeout cutoff, checkpoint-recovered each time,
+  zero data loss). Bonus: direct before/after evidence that this session's own no_think-confound
+  fix removed a real artifact (vc33 flipped from a false think-win to floor). Phase 2b does not
+  unlock.
+- **Phase 3a: PARTIALLY DONE.** Prompt-enrichment lever built + unit-tested
+  (REQ-ARC-WMTE-6241), default OFF. The actual leave-one-game-out held-out change-fidelity A/B
+  is NOT YET RUN — deferred first for GPU contention with Phase 2a, and now deliberately held
+  given repeated operator health-check signals this session that Claude quota is at ~90% with
+  reset Wednesday noon. Launching another multi-hour GPU-heavy LLM experiment unattended did not
+  seem like the right call under that constraint. **Next session: run this A/B first.**
+- **Phase 4c: DONE, negative (REQ-ARC-WMTE-6240).** A naive change-magnitude cap does not fix
+  Mode B — per-cell classification found 11/21 cells degenerate-collapsed to pure no-op, only
+  2/21 a genuine improvement. Not shipped.
+- **Phase 4a/4b/4d/4e: NOT STARTED.** Plan says pick at most two, informed by what 1a/2a
+  revealed. Given 2a's result (floor effects dominate, one replicated per-game win at sp80,
+  confound-fix confirmed), the most informed next pick is probably 4d (bounded re-induction A/B,
+  explicitly gated on "after 2a settles think" — 2a is now settled) rather than 4a's CNN retrain
+  or 4b's inducer extension, but this was not started so as to not spend more unattended GPU
+  budget against a quota already flagged constrained.
+
+All work this session is committed and pushed to both remotes (gitea + github), REQ entries
+filed, tests passing, freshness/determination-preservation/adversarial-verify lints all clean at
+each commit. No corrigenda dropped. Two git-add-A races with the concurrently-running conductor
+(commits `4627821cea`, `b87becbde8`, `64c1a6420d`) verified content-complete, none rewritten.
