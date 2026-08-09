@@ -15565,3 +15565,4 @@ Still active  |
 | 2026-08-09 13:36 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |
 | 2026-08-09 13:38 UTC | Gated on Exp6234 stream readiness: prospective two | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6234-fresh-flagship-constraint-event-stre |
 | 2026-08-09 13:38 UTC | Gated on Exp6235 promotion: default-off online con | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6235-prospective-two-timescale-live-csl |
+| 2026-08-09 13:59 UTC | Activated mode-jump sampler quality, equivalence,  | OK | 89 passed, 1 warning in 15.66s |
