@@ -22310,6 +22310,50 @@ to `0` there is a no-op; the fix only changes behavior for the active-probe rein
 | REQ-ARC-WMTE-6231 | `python/carnot/agentic/arc_competition_agent.py:_observe_level_boundary`. | `tests/python/test_arc_live_agent_review_fixes_20260808.py::test_win_state_exemplar_prefers_pre_action_transition_grid_over_post_transition_frame`, `::test_win_state_exemplar_falls_back_to_latest_frame_when_no_transition_recorded`. |
 | REQ-ARC-WMTE-6232 | `python/carnot/agentic/arc_competition_agent.py:_induce_and_plan`, induce branch in `next_move`. | `tests/python/test_arc_live_agent_review_fixes_20260808.py::test_induce_and_plan_resets_stale_plan_and_pi_even_on_early_return`, `::test_next_move_induce_branch_survives_stale_pi_if_induce_and_plan_ever_regresses`. |
 
+### REQ-ARC-WMTE-6233: The World-Model Wall Re-Derived Under The Corrected Admission Criterion
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 1a. A prior
+measurement (`results/outer_loop_arc_induced_engine_taxonomy_20260802.json`, hostile-reproduced in
+`results/outer_loop_arc_taxonomy_hostile_reproduction_20260803.json`) found "0 of 296 clean
+engine-units with n_changing>=3 reach held-out change_accuracy >= 0.5" for the local single-shot
+GGUF inducer. But `arc_executable_world_model.py:923` documents that part of that null is a
+MEASUREMENT ARTIFACT: the metric is dominated by HUD/counter cells rather than real game state.
+Three repairs correct this (HUD masking, a symmetric change-fidelity gate, and the
+REQ-ARC-WMTE-6013 hidden-state branch coverage fix) and all ship default OFF. Nobody had asked
+what the wall looks like with the corrected criterion turned ON.
+
+**WHAT WAS MEASURED, AND WHY NOT THE ORIGINAL 296-UNIT CORPUS.** The taxonomy's own corpus-recovery
+script was never committed and cannot be re-derived byte-for-byte (confirmed by exhaustive grep
+across tracked files and `git log --all --diff-filter=D`). Instead, this REQ reuses an
+already-executed, comparable-scope measurement:
+`results/experiment_6011_world_model_change_gate_four_arm.json`'s four-arm matrix already
+re-scored 75 real on-disk engines (`results/arc_e3_origin_fixtures`, 25 games x 3 seeds) with
+`mask=1|gate=1` — HUD masking ON at compare time, plus `change_gate_decision` (the symmetric,
+change-fidelity-based admission gate) — the identical function REQ-ARC-WMTE-6013 wires into the
+hidden-state branch, so its verdicts are exactly what that branch would decide once wired.
+`scripts/analyze_arc_wall_rederivation_20260808.py` aggregates this already-persisted data; it
+invokes no model and reruns no engine.
+
+**RESULT.** Of 69 eligible (n_changing>=3) real engines: 0 pass under the corrected reading
+(HUD-masked + gate-enabled), identical to 0 under the naive (unmasked, gate-disabled) reading.
+HUD masking measurably narrows near-miss cases (best `change_fidelity` 0.062 -> 0.145, consistent
+with the independent 2026-08-01 finding — `results/arc_hud_masked_rescore_20260801/` — that
+masking is real but small) without flipping a single admission verdict. **The closure hardens:**
+correcting the metric does not reopen the axis on this corpus.
+
+**HONEST CAVEAT.** `results/arc_e3_origin_fixtures` is one of the original taxonomy's own
+`provenance_unknown_EXCLUDED_from_every_clean_claim` families — frozen, but whether a scoring
+transition was ever visible during induction is unconfirmed. Per the taxonomy's own stated
+reasoning, contamination can only INFLATE a score, never manufacture a null, so this zero result
+is not weakened by the open provenance question — it would only be weakened by a positive one.
+This corpus is also smaller than, and not confirmed to overlap with, the original 296-unit corpus.
+
+## Implementation Status (REQ-ARC-WMTE-6233)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6233 | `scripts/analyze_arc_wall_rederivation_20260808.py` (analysis-only; no production code path changed). | `results/arc_wall_rederivation_20260808.json` (the artifact IS the check — reproducibility_checksum pinned, `scripts/adversarial_verify.py` clean, acceptance_gates recorded in the artifact). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`

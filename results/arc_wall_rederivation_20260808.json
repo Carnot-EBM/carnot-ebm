@@ -1,0 +1,153 @@
+{
+  "experiment": "arc_wall_rederivation_20260808",
+  "title": "ARC live-agent improvement plan Phase 1a: the world-model wall re-derived under the corrected (HUD-masked, symmetric change-gate) admission criterion",
+  "run_date": "2026-08-09T03:21:06Z",
+  "question": "Of the real on-disk engines with n_changing>=3, how many clear change_accuracy>=0.5 or pass the change-gate admission decision, comparing the shipped-default (unmasked, gate disabled where relevant) reading against the corrected (HUD-masked, gate enabled) reading?",
+  "corpus": {
+    "source_artifact": "results/experiment_6011_world_model_change_gate_four_arm.json",
+    "engine_store": "results/arc_e3_origin_fixtures (frozen fixtures, real on-disk engines)",
+    "n_rows_total_in_source": 75,
+    "n_eligible_n_changing_ge_3": 69,
+    "n_games": 23,
+    "games": [
+      "ar25",
+      "bp35",
+      "cd82",
+      "cn04",
+      "dc22",
+      "g50t",
+      "ka59",
+      "lf52",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "re86",
+      "s5i5",
+      "sb26",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tr87",
+      "tu93",
+      "wa30"
+    ],
+    "n_seeds": 3,
+    "provenance_caveat": "results/arc_e3_origin_fixtures is one of the ORIGINAL taxonomy's own provenance_unknown_EXCLUDED_from_every_clean_claim families -- frozen, but induction-time purity (whether a scoring transition was ever visible during induction) is unproven. Per the taxonomy's own stated reasoning, contamination can only INFLATE a score, never manufacture a null, so a zero result here is not weakened by this caveat -- it would only be weakened by a positive result."
+  },
+  "headline": {
+    "naive_change_accuracy_ge_0_5_count": 0,
+    "masked_change_accuracy_ge_0_5_count": 0,
+    "naive_gate_pass_count": 0,
+    "corrected_gate_pass_count": 0,
+    "n_eligible": 69,
+    "reading": "0 of 69 real, n_changing>=3 engines pass the FULLY CORRECTED admission decision (HUD mask ON, symmetric change-gate ON) -- identical to the 0 that pass the naive (unmasked) gate, and identical to both the 0 and 0 that clear the strict change_accuracy>=0.5 bar unmasked and masked respectively. The closure hardens: correcting the metric does not reopen the axis on this corpus."
+  },
+  "hud_masking_measured_effect": {
+    "unmasked": {
+      "max": 0.062281,
+      "n_above_0": 26,
+      "n_above_0_1": 0
+    },
+    "masked": {
+      "max": 0.144737,
+      "n_above_0": 26,
+      "n_above_0_1": 2
+    },
+    "reading": "HUD masking raises the best near-miss change_fidelity from 0.062281 to 0.144737 and moves 2 units above 0.1 for the first time -- a real, measured, non-zero effect -- but it does not come close to the 0.5 admission bar and flips zero verdicts. This is directionally consistent with the independent 2026-08-01 HUD-masked rescore (results/arc_hud_masked_rescore_20260801/hud_masked_rescore.json), which found masking real but small (mean absolute change_fidelity shift 0.010190 over 116 A/B engines) and explicitly did not fix the tn36 degeneracy."
+  },
+  "rejection_reasons": {
+    "naive_mask_0_gate_1": {
+      "degenerate_engine_no_correct_changed_cells": 43,
+      "change_fidelity_below_threshold": 26
+    },
+    "corrected_mask_1_gate_1": {
+      "degenerate_engine_no_correct_changed_cells": 43,
+      "change_fidelity_below_threshold": 26
+    },
+    "reading": "The rejection reason breakdown is IDENTICAL under both settings: the majority of engines never predict a single real changed cell correctly (degenerate_engine_no_correct_changed_cells) -- these fail regardless of masking or gating, because they never engage with game dynamics at all. The remainder predict some real changes but fall short of the 0.5 fidelity bar (change_fidelity_below_threshold) -- masking narrows this gap slightly (see hud_masking_measured_effect) but does not close it."
+  },
+  "req_arc_wmte_6013_hidden_state_branch_note": "REQ-ARC-WMTE-6013 fixed WHERE change_gate_decision is CONSULTED (the hidden-state branch in arc_competition_agent.py:_induce_and_plan previously never called it), not what it computes for a given engine. The mask=1|gate=1 arm used here already calls the identical change_gate_decision function 6013 wires into that branch, so this corpus's corrected_gate_pass_count is exactly what that branch would decide once wired, for every engine measured here. No separate re-measurement of the hidden-state branch's wiring changes this number.",
+  "what_this_does_and_does_not_change": "This is a re-reading of already-persisted rows, not a new experiment run and not a change to any shipped default. SUBMITTED_WORLD_MODEL_HUD_MASK_ENABLED and SUBMITTED_WORLD_MODEL_CHANGE_GATE_ENABLED remain default OFF on the scored path. The taxonomy's 0/296 headline stands; this artifact adds the corrected-metric reading the plan asked for and reports it as a hardening, not a reversal.",
+  "limitations": [
+    "This corpus (75 rows, 69 eligible, 23 games) is smaller than and structurally different from the taxonomy's 296-unit corpus, and its exact overlap with those 296 units is unknown (the taxonomy's recovery script no longer exists to check membership). It is a real, independently-collected, comparable-scope measurement of the same question, not a replay of the same units.",
+    "The 'origin_fixtures' provenance caveat stated above applies; see corpus.provenance_caveat.",
+    "This aggregation does not itself execute any induced engine or rebuild any window -- it reads fields exp6011 already computed. If exp6011's own scoring had a defect, this artifact would inherit it silently; exp6011 passed its own acceptance gates (acceptance_gate_passed) at the time it ran."
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "n_eligible >= 30 (enough units for the reading to be more than anecdotal, per the project's sample-size-rigor discipline)",
+      "passed": true,
+      "principle": "a corrected-metric reading over a handful of units cannot distinguish a hardened closure from noise; 30 is the CLT floor this project uses elsewhere for percentage-point claims."
+    },
+    {
+      "condition": "corrected_gate_pass_count is computed from the SAME function (change_gate_decision) the live agent's hidden-state branch would call, not a reimplementation",
+      "passed": true,
+      "principle": "a reimplementation risks silently testing a different question than the one the live agent actually decides."
+    }
+  ],
+  "acceptance_gate_passed": true,
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "change_gate_decision and WorldModelVerifier.score ARE the executable functions the live agent's admission decision runs; this is execution-grounded re-reading, not an oracle-distinct verifier-moat claim.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_principle": "no ARC level is claimed here; this is offline metric analysis over an existing dev-twin measurement, not a live episode.",
+  "arc_solve_claim": false,
+  "random_seed": 20260808,
+  "random_seeds_used": [
+    0,
+    1,
+    2
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "source artifact present",
+      "available": true
+    }
+  ],
+  "honest_verdict": "complete_wall_rederivation_corrected_metric_hardens_closure_0_of_69_pass_mask_1_gate_1_identical_to_0_of_69_under_naive_reading_hud_masking_measured_but_does_not_flip_any_verdict",
+  "honest_verdict_principle": "terminal `complete_` prefix per the Verdict Terminal-Prefix Discipline; the verdict states the corrected count, the naive count for direct comparison, and the honest reading (hardens, not reopens) in one string.",
+  "git_head": "372ec69258106298f25c09c16101952776b158db",
+  "provenance": {
+    "git_head": "372ec69258106298f25c09c16101952776b158db",
+    "code": [
+      {
+        "path": "scripts/analyze_arc_wall_rederivation_20260808.py",
+        "sha256": "ec8b09cf923c29960e5dd36b198e2a971eb309f495a973b3fed1195b6256eac8"
+      },
+      {
+        "path": "scripts/experiments/experiment_6011_world_model_change_gate_four_arm.py",
+        "sha256": "c073f691045764c90e37e45d80888deb4bfbfde611d52dfdf301324552380ed2"
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256": "62af98a5c9b4c1db816a9007e1a6cceaa4723b8576f25d6cbb18926bd2257160"
+      },
+      {
+        "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
+        "sha256": "b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05"
+      }
+    ],
+    "rows_sources": {
+      "cited_artifacts": [
+        {
+          "path": "results/experiment_6011_world_model_change_gate_four_arm.json",
+          "sha256": "4fb28324bf7dc31600ad1c0288302a23a20928e8acb44a6618deb05bff99e202"
+        },
+        {
+          "path": "results/arc_hud_masked_rescore_20260801/hud_masked_rescore.json",
+          "sha256": "1df78e233069a7636b98a9d5e69a0a517d5836de6d5e59b362bde7f403224b27"
+        },
+        {
+          "path": "results/outer_loop_arc_induced_engine_taxonomy_20260802.json",
+          "sha256": "6cf672cc658e76828dda990ab24b4e7adcf1e6c28f11c4b85b54fca3eea577e4"
+        }
+      ]
+    }
+  },
+  "duration_s": 0.016,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_principle": "this script reads already-persisted fields from exp6011's rows and re-aggregates them under a different filter/reading; it invokes no model and rebuilds no window.",
+  "reproducibility_checksum": "6fff0137d3c941b9b13e44d898d6f5c419a5295f0b26662af78693d7cffdc8b3"
+}
