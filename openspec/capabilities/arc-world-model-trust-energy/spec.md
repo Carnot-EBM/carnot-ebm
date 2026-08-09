@@ -23070,11 +23070,92 @@ and a fourth unresolved failure, the artifact's `honest_verdict` and `dispositio
 INFRASTRUCTURE_BLOCKED explicitly, and no claim is made about whether
 `CARNOT_ARC_BOUNDED_REINDUCTION` helps, hurts, or is neutral.
 
+#### UPDATE 2026-08-09 — Isolation Retry Cleared All 4 Cells; Lever Fires, No Improvement Yet (Preliminary)
+
+**Do not read this as replacing the INFRASTRUCTURE_BLOCKED record above — it stands as the honest
+history of the first four launches.** This is an append: a fifth launch, run with the conductor
+(`carnot-conductor.service`) and the orphan-cleanup timer (`carnot-orphan-cleanup.timer`) both
+stopped for the whole run (operator-directed isolation test, following the same protocol used
+earlier in the same session for a different lever's cells — see `ops/known-issues.md`'s reaper
+entry for the first instance), completed all 4 planned cells with a VALID LLM-on measurement on
+every one:
+
+| game | arm | valid | llm.responses | llm.errors | lever fired | reached_any_level |
+|---|---|---|---|---|---|---|
+| ka59 | off | true | 5 | 0 | n/a | false |
+| ka59 | on | true | 21 | 0 | yes (`renewed_stall_reinduction: 2`) | false |
+| re86 | off | true | 4 | 0 | n/a | false |
+| re86 | on | true | 8 | 0 | yes (`renewed_stall_reinduction: 2`) | false |
+
+Zero retries needed (`cell_attempts_used: 1` on every cell) — a stark contrast with the prior
+session's identical-configuration run, where ka59/off alone failed 3/3 retry attempts under
+conductor concurrency. `honest_verdict:
+complete_bounded_reinduction_ab_fired_2_of_2_games_improved_0_where_fired`.
+
+**The lever gate outcome, now actually measurable: fires as designed, no improvement observed at
+this budget.** `_should_enter_induction`'s bounded re-entry condition triggered on both games
+(`renewed_stall_reinduction: 2` each — the lever attempted its allowed re-inductions after the
+first attempt's stall, capped correctly at the mechanism's own per-level attempt limit). But
+`reached_any_level` stayed `false` on BOTH arms of BOTH games — the `on` arm's extra induction
+attempts did not turn a stalled episode into a level-up within the 1500-action budget on either
+game. This is a genuine, clean negative on the substantive question ("does bounded re-induction
+help these two games at this budget"), not an infrastructure non-result — the distinction the
+INFRASTRUCTURE_BLOCKED record above was careful to draw actually applies now.
+
+**Second correlational instance for the standing reaper investigation.** This session already
+recorded one prior instance where stopping the conductor + orphan-cleanup timer and re-running a
+previously-crashing cell went from failing repeatedly to succeeding cleanly (a different lever's
+cells, 3/3 clean under isolation vs 4/4 crashed under conductor concurrency). This is now a
+SECOND, independent instance: the exact ka59/off cell that failed identically on all 3 retry
+attempts under conductor concurrency (zero LLM responses across 4 internal client retries, ~27
+minutes, `results/experiment_6247_bounded_reinduction_ab.json`'s superseded prior content) ran
+clean on the FIRST attempt once the conductor and timer were stopped, and all 3 remaining cells
+also ran clean on their first attempt. **This remains correlational, not proof of causation.** No
+mechanism has been identified for how the conductor (which runs on GPU 0, per
+`CARNOT_ARC_GENERATOR_CUDA_GPU`'s pinning of the ARC generator to GPU 0 for the conductor's own
+offline work) would affect a GPU-1-pinned `llama-server` process's request handling. Two
+data points on two different levers is suggestive, not conclusive; see `ops/known-issues.md` for
+the full reaper investigation log and open next steps (the standing reaper problem is NOT solved
+by this finding — a correlational avoidance strategy, "don't run heavy live-LLM ARC measurements
+while the conductor is active," is a workaround, not a fix).
+
+**`CARNOT_ARC_BOUNDED_REINDUCTION` stays default OFF.** The measurement is now clean, but n=2
+games is too thin a sample to justify a production default flip even on a fully clean result —
+one clean negative (or, more precisely, one clean "fires but no observed benefit at this budget")
+on 2 games says nothing about games where the lever might help, hurt, or fire under different
+budget/stall conditions. Framing: **promising-but-preliminary infrastructure validation of the
+measurement path itself** (the lever mechanism works as designed, fires when its condition is
+met, and the harness/script can now produce a trustworthy reading) — NOT a gate-passed result for
+the lever's value. A future wider-roster run (more games, more seeds) is the natural next step if
+this lever's gate is revisited, and it now has a working, bug-fixed measurement script to reuse.
+
+**A fifth real bug, caught only because the conductor happened to be stopped.** The script never
+set `CARNOT_ARC_E3_DIR`, so `induce()` wrote its induced engines straight into the SHARED
+`results/arc_e3/<game>/world_model.py` store on every cell — unconditionally overwriting whatever
+was there, the exact destructive pattern `project_arc_engine_store_regression` (memory) warns
+against. Because the conductor was stopped for this run, there was no concurrent-write collision,
+but the pre-existing `ka59`/`re86` engine files were still clobbered by this script's own writes.
+Caught during commit review (`git status` showed unexpected `results/arc_e3/{ka59,re86}/
+world_model.py` diffs despite the conductor being down the whole run); both files were restored
+via `git checkout --` before commit, and the script now sets
+`CARNOT_ARC_E3_DIR=results/arc_e3_exp6247_scratch` (via `os.environ.setdefault`, before the first
+import of `arc_scored_path_lever_harness`) so any future re-run — conductor running or not — writes
+to a private scratch directory instead of the shared store. This does not affect the gate result
+above: the recorded metrics (`llm_on_row_valid`, `reached_any_level`, `induction_reasons`, etc.)
+were captured live during the run and do not depend on what ends up on disk in `arc_e3` afterward.
+
+#### SCENARIO-ARC-WMTE-6247-ISOLATION-RETRY-PRODUCES-VALID-MEASUREMENT
+
+Given the same roster, budget, and lever toggle as the original INFRASTRUCTURE_BLOCKED attempt,
+re-run with the conductor and orphan-cleanup timer both stopped for the run's duration, all 4
+cells complete on their first attempt with `llm_on_row_valid=true` and nonzero `llm.responses`,
+producing a real (not infrastructure-blocked) `honest_verdict` about the lever's behavior.
+
 ## Implementation Status (REQ-ARC-WMTE-6247)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-WMTE-6247 | `scripts/experiments/experiment_6247_bounded_reinduction_ab.py` (measurement attempt; 3 real infra bugs fixed within it; no production default changed). | `results/experiment_6247_bounded_reinduction_ab.json` (the artifact IS the check — records the full attempt history, zero valid cells, `disposition: INFRASTRUCTURE_BLOCKED`; determination_preservation_lint and adversarial_verify both clean). |
+| REQ-ARC-WMTE-6247 | `scripts/experiments/experiment_6247_bounded_reinduction_ab.py` (measurement attempt; 3 real infra bugs fixed within it; no production default changed). | `results/experiment_6247_bounded_reinduction_ab.json` (superseded content: the first-attempt history — 3 infra bugs fixed, zero valid cells, `disposition: INFRASTRUCTURE_BLOCKED` — is preserved in this REQ's prose above; the file itself was overwritten by the 2026-08-09 isolation-retry run, which is the CURRENT on-disk content: `honest_verdict: complete_bounded_reinduction_ab_fired_2_of_2_games_improved_0_where_fired`, 4/4 valid cells, lever fired on both games, zero improvement observed; determination_preservation_lint, adversarial_verify, and arc_llm_on_liveness_lint all clean). |
 
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 

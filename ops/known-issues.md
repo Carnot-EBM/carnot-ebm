@@ -16347,6 +16347,34 @@ this the same reaper with a longer window to strike, just observed for the first
 this long? Full context: `openspec/capabilities/arc-world-model-trust-energy/spec.md`
 REQ-ARC-WMTE-6247.
 
+## 2026-08-09 reaper: SECOND isolation-test correlation instance (conductor+timer stopped, identical config, 0/4 crashes -> 4/4 clean)
+
+Follow-up to the entry immediately above. The exact same ka59/off cell that failed identically on
+all 3 retry attempts (0 responses, ~27 minutes, under `carnot-conductor.service` +
+`carnot-orphan-cleanup.timer` both running) was re-run with BOTH units stopped for the whole run
+(`systemctl --user stop carnot-conductor.service carnot-orphan-cleanup.timer`, verified inactive
++ GPU cleared beforehand). Same script, same config, same seed, same budget. Result: all 4 planned
+cells (ka59 off/on, re86 off/on) completed on their FIRST attempt, all `llm_on_row_valid=true`,
+real nonzero `llm.responses` on every cell (5, 21, 4, 8). Zero retries needed.
+
+This is the SECOND instance in this session of the same pattern: stop the conductor + timer,
+re-run a previously-crashing cell, get a clean result. The first instance (different lever,
+earlier this session) was 3/3 clean under isolation vs 4/4 crashed under conductor concurrency.
+
+**Stated precisely, because this matters: this is correlational, not proof of causation.** Two
+data points across two different levers is suggestive of a real association, but no causal
+mechanism has been identified. The conductor's own ARC generator work is pinned to GPU 0
+(`CARNOT_ARC_GENERATOR_CUDA_GPU`), while both isolation-test `llama-server` instances ran pinned
+to GPU 1 -- there is no known code path by which the conductor's GPU-0 activity would starve or
+kill a GPU-1 `llama-server` process. Candidate non-causal explanations not yet ruled out: shared
+CPU/host-RAM contention affecting request scheduling latency past the client's 1500s timeout,
+systemd cgroup/resource-limit interaction, or simple coincidence given a small sample (n=2
+"instances", each itself n=1 clean run). No fix is implied by this finding -- it is a workaround
+signal ("avoid heavy live-LLM ARC measurements while the conductor is active") worth knowing, not
+a root cause. The standing reaper problem remains open. Full context:
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6247's 2026-08-09 UPDATE
+section.
+
 ## 2026-08-09 the goal-energy zero-gradient wall is not tier-1-CNN-specific -- it likely blocks the nav template too
 
 Follow-up to Phase 4's redirect (REQ-ARC-WMTE-6244) and the nav-gate negative result
