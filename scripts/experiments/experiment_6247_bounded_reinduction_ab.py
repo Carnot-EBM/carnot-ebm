@@ -125,14 +125,19 @@ def build_artifact() -> dict:
             os.environ["CARNOT_ARC_BOUNDED_REINDUCTION"] = "1" if arm == "on" else "0"
             row = None
             for attempt in range(1, MAX_CELL_ATTEMPTS + 1):
-                # Re-ensure the server IS healthy before every attempt -- the reaper can (and did,
-                # in this run's first cell) kill it mid-episode, and nothing else in this loop would
-                # notice before the NEXT cell tries to use it.
-                if not proposer._inner._healthy():
-                    print(
-                        f"[exp6247] server unhealthy before {game}/{arm}, re-ensuring", flush=True
-                    )
-                    proposer._inner._ensure_server()
+                # `_ensure_server()` ALREADY does "if healthy: reuse; else: relaunch" internally
+                # (arc_executable_world_model.py:6156) -- calling it unconditionally before every
+                # attempt is a safe no-op when the server is fine and a real relaunch when it is
+                # not. A SEPARATE outer `_healthy()` pre-check here was tried first and REMOVED: it
+                # stacks a second call to the SAME bare-2-second-timeout probe `_ensure_server()`
+                # already uses internally (the exact flakiness the harness's own `forbid_spawn`
+                # docstring names -- a loaded box can fail a 2s probe on a server that is perfectly
+                # alive), and under load that produced two INDEPENDENT servers within the same
+                # minute, colliding (a self-inflicted server storm, observed directly: 4 server
+                # logs created within a 4-minute window here, several dying mid-model-load with no
+                # error at all -- consistent with a second spawn contending for the same port/VRAM
+                # while the first was still loading, not an external reaper).
+                proposer._inner._ensure_server()
                 try:
                     row = run_cell(
                         game,

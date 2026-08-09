@@ -676,13 +676,13 @@
         "unchanged": true
       },
       "ops/changelog.md": {
-        "before_sha256": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
-        "after_sha256": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
+        "before_sha256": "sha256:c886e4597703ab3008ae44647a0ec5384803aede6ce73d8351fb0d502bbebdcb",
+        "after_sha256": "sha256:c886e4597703ab3008ae44647a0ec5384803aede6ce73d8351fb0d502bbebdcb",
         "unchanged": true
       },
       "ops/conductor-log.md": {
-        "before_sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
-        "after_sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
+        "before_sha256": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984",
+        "after_sha256": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984",
         "unchanged": true
       },
       "ops/exclusion_manifest.yaml": {
@@ -733,14 +733,12 @@
     }
   },
   "preconditions_checked": {
-    "git_status_before": [
-      " M python/carnot/experiment_6260_v540_terminal_transition.py",
-      " M results/arc_e3/ka59/world_model.py",
-      " M tests/python/test_experiment_6260_v540_terminal_transition.py"
-    ],
+    "git_status_before": [],
     "git_status_after_tests": [
       " M python/carnot/experiment_6260_v540_terminal_transition.py",
       " M results/arc_e3/ka59/world_model.py",
+      " M results/experiment_6260_v540_terminal_transition.json",
+      " M scripts/experiments/experiment_6247_bounded_reinduction_ab.py",
       " M tests/python/test_experiment_6260_v540_terminal_transition.py"
     ],
     "input_hashes_before": {
@@ -790,7 +788,7 @@
       },
       "ops/conductor-log.md": {
         "present": true,
-        "sha256": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb"
+        "sha256": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984"
       },
       "ops/exclusion_manifest.yaml": {
         "present": true,
@@ -886,11 +884,11 @@
       "research-roadmap.yaml": "sha256:7f40c9f4c5148b3306efc8122aea29b6c6017229447ab352a2cc6d1c0d59b633",
       "research-roadmap-next.yaml": null,
       "scripts/research_conductor.py": "sha256:16a60f5abfd05ccb2189cb2f9cb0484bb7b57c47169aa7596fb4d73872e7e757",
-      "ops/changelog.md": "sha256:64ede3528a4a64e53fa301027fa467e2611dc36a5218ff7da1725d40fe4d43f1",
+      "ops/changelog.md": "sha256:c886e4597703ab3008ae44647a0ec5384803aede6ce73d8351fb0d502bbebdcb",
       "ops/status.md": "sha256:334dd7b7dbb1d5f39d2945d96b3bf21e32374d3a267f94f543fa32f8df684ceb",
       "_bmad/traceability.md": "sha256:f414e9161b4da7da93c5e5bd8fdc6ba246615fef6a8705d415100337a5ee737c",
       "research-complete.yaml": "sha256:ebf66e039c57b6973dac4ab25dda3a71021685c716aa6c1e06e875a1153855a1",
-      "ops/conductor-log.md": "sha256:a99f5f32c3b4ceab2bb2f7408ae20caf62e0fd339f6650a85d233eefe06334cb",
+      "ops/conductor-log.md": "sha256:3c8639da265b5f506cb875e80e7f78f20473e86a0fdf628b1d227bd5abed1984",
       "ops/exclusion_manifest.yaml": "sha256:fe2083de6ee7918b521c21caa10e14ebed886142139550cd186b01313718ef8a",
       "results/experiment_6238_v539_adversarial_capstone.json": "sha256:8b512f477204a44906be914d81f560b072071802eb78d5b93fa4d7f400ccc57a",
       "results/operational_retro_2026_08_539.json": "sha256:be96eceaf6cf6da422821a2b60fa970a0c9e4c232aa44606d6578cbb689faf19",
@@ -1387,7 +1385,8 @@
   },
   "test_commands": [
     ".venv/bin/pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0",
-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing",
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0",
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing",
     ".venv/bin/ruff check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py",
     ".venv/bin/ruff format --check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py",
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py",
@@ -1403,7 +1402,8 @@
   ],
   "test_exit_codes": {
     ".venv/bin/pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0": 0,
-    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0 && .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing": 0,
+    ".venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py -m pytest tests/python/test_experiment_6260_v540_terminal_transition.py -q --no-cov -n 0": 0,
+    ".venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_6260_v540_terminal_transition.py --fail-under=100 --show-missing": 0,
     ".venv/bin/ruff check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
     ".venv/bin/ruff format --check python/carnot/experiment_6260_v540_terminal_transition.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
     ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_6260_v540_terminal_transition.py": 0,
@@ -1417,7 +1417,7 @@
     ".venv/bin/pytest tests/python -q": 2,
     ".venv/bin/python scripts/adversarial_verify.py results/experiment_6260_v540_terminal_transition.json": 0
   },
-  "duration_s": 0.13825846905820072,
-  "reproducibility_checksum": "sha256:e947e4bdf8508488fefd4940821ea4ddad59c197b0e4bc321b3765d720f781be",
+  "duration_s": 560.0915555409156,
+  "reproducibility_checksum": "sha256:6ff2331abf61eac54914a6b3dc9f5c7d92e5d1dc1ac1ac9ce1e4c4cbd107bc32",
   "honest_verdict": "blocked: one or more recorded validation commands failed or timed out"
 }
