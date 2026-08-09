@@ -294,6 +294,17 @@ test" — never tried. The drift falsifier (arXiv:2511.06136 family) is the unbu
 the object-probe ingestion. Both are constraints, not planners. CPU-side over existing fixtures.
 *Gate: spurious-to-true changed-cell ratio and noop_hallucination_rate down vs recorded
 baselines (up to 10.3x spurious on sc25@0, hallucination 1.0 on cn04@0).*
+**DONE — negative result for the change-magnitude prior half (2026-08-09, REQ-ARC-WMTE-6240;
+the drift falsifier half was not attempted).** Re-derived the same 21 Mode B cells from the same
+frozen fixtures the 2026-07-29 note measured, capped each engine's per-transition write count at
+the max seen in its own shown portion. The raw counts look like a win (13/21 cells improve their
+spurious-to-correct ratio) but an honest per-cell classification shows why that reading is wrong:
+11/21 cells collapse to a PURE NO-OP (correct AND spurious both hit 0 -- Mode B turned into Mode
+A, not fixed), 8/21 are inert, and only 2/21 show the intended trim-excess-keep-genuine effect.
+**Retires the naive hard-cap construction specifically** (a single threshold with no partial
+credit is too brittle once later-episode transitions are genuinely larger than the shown
+prefix's); does not retire the general idea that Mode B is constrainable — a graded penalty
+rather than a hard cutoff remains untested and open. No code was shipped; analysis only.
 
 **4d. Bounded re-induction A/B (`CARNOT_ARC_BOUNDED_REINDUCTION`).**
 The one genuinely built-and-never-measured lever (shipped 2026-08-08, commit `e73efa7c85`): the

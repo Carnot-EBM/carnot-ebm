@@ -213,6 +213,79 @@ not a new one.
 `results/experiment_6216_arc_budget_aware_search_ab.json` (the re-run) —
 CLAUDE.md "Test-Run Record Integrity Discipline" (the discipline this incident instantiates).
 
+### NEW 2026-08-09 (Phase 2a of the ARC live-agent improvement plan): expanded gemma think-mode A/B launched, and a genuine third confound found and fixed before launch
+
+**What was asked.** Phase 2a: re-run the gemma think-vs-no-think induction A/B on >=16 games
+(exp6199 originally ran 12), now that Phase 0b's two confounds are fixed, pre-registered on
+held-out exact-accuracy admission rate.
+
+**A third confound found while smoke-testing, not previously known.**
+`experiment_6199_gemma_think_mode_ab.py`'s `_configure_arm` used to `os.environ.pop
+("CARNOT_ARC_INDUCE_THINK", None)` for the no_think arm — correct only while `induce_think_on()`'s
+fallback default (`ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT`) was still `"0"`. That constant was
+flipped to `"1"` on 2026-08-08 (REQ-ARC-WMTE-6198), so popping the override silently let BOTH
+arms resolve to think-ON. Confirmed directly: a smoke-test no_think row showed
+`reason_engaged=True` with a genuine `<think>` tag in its raw completion; after setting the
+override to the explicit string `"0"` instead of unsetting it, the same game's no_think row shows
+`reason_engaged=False` and the think row still shows `True`. This means the ORIGINAL 12-game
+exp6199 run (cited by Finding 3 of the improvement plan) may itself have compared two
+contaminated-identical arms if it ran after the 2026-08-08 flip — not re-litigated here, since the
+fix and the expanded rerun supersede it regardless.
+
+**A separate, structural blocker also found and worked around.** The module's default `n_ctx`
+(~106496, sized for the SCORED SWARM's 4-concurrent-games worst case) makes the CUDA guard refuse
+a single RTX 3090 outright (needs 26624 MiB against 24576 MiB total) for ANY invocation, including
+the original successful run's own config -- this offline A/B script issues induce requests
+strictly SEQUENTIALLY (one game/arm at a time, never 4 concurrent), so it never needs more than a
+single slot's context. `CARNOT_ARC_INDUCE_N_CTX=32768` fixes this with no correctness cost.
+
+**Launched, in progress at filing time.** `scripts/run_exp6199_expanded_roster.py` (16 games: the
+original 12 plus r11l, sc25, s5i5, lp85), backgrounded via `setsid nohup ... & disown` (see the
+addendum above this entry for why not the Bash tool's own backgrounding). Output:
+`results/experiment_6221_gemma_think_mode_ab_expanded_roster.json` (not yet written at filing
+time). The underlying script's own built-in verdict still uses the weaker
+`levelup_positive_recall` metric Finding 3 critiqued; a follow-up analysis pass computing the
+correct primary metric (held-out exact-accuracy admission rate, clustered per game, sign test)
+is still needed once the run completes.
+
+**Cross-references:** `scripts/run_exp6199_expanded_roster.py` —
+`python/carnot/experiment_6199_gemma_think_mode_ab.py` (the `_configure_arm` fix) —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 2a.
+
+### NEW 2026-08-09 (Phase 4c of the ARC live-agent improvement plan, REQ-ARC-WMTE-6240): a naive change-magnitude cap does not fix Mode B — negative result, reported honestly against a misleading aggregate
+
+**What was asked.** The 2026-07-29 admission-bottleneck note split 33 induced-engine rows into
+Mode A (predicts no dynamics) and Mode B (over-writes 3x-10x too many cells) and named a
+change-magnitude/sparsity constraint on predicted writes as cheap to test. Phase 4c: test it.
+
+**What was measured.** Re-derived the same 21 Mode B cells (7 games x 3 seeds) from the same
+frozen engine fixtures the 2026-07-29 note used. Capped each engine's per-transition write count
+at the largest change-count its own shown (prefix) portion exhibited; discarded any held-out
+prediction exceeding the cap (reverted to no-op).
+
+**The raw counts looked like a win and were not.** 13 of 21 cells show an improved
+spurious-to-correct ratio (mean 102.1 -> 5.8) and 10 of 21 preserve or improve correct_changed
+_cells — read alone, that is a clean pass on both of the plan's stated gate conditions. An honest
+per-cell classification shows why that reading is wrong: **11 of 21 cells collapse to a PURE
+NO-OP** (correct_changed_cells AND spurious_changed_cells both hit exactly 0 — the cap turned a
+Mode B engine into a Mode A engine, which is not a fix), **8 of 21 are inert** (the cap never
+fired), and only **2 of 21 show the intended trim-excess-keep-genuine effect**. Both raw-count
+gates are satisfied identically by a genuine fix and by a degenerate collapse, which is exactly
+why they look better than the mechanism actually is — caught before being reported as a win by
+adding an explicit per-cell classification rather than trusting the aggregate.
+
+**What this retires and what it leaves open.** Retires the specific naive hard-cap construction
+(a single threshold with zero partial credit is too brittle once later-episode transitions are
+genuinely larger than the shown prefix's, which is the common case). Does not retire the general
+idea that Mode B is constrainable — a graded penalty rather than a hard cutoff was not tested and
+remains open. No code shipped; this is analysis only.
+
+**Cross-references:** full REQ write-up
+`openspec/capabilities/arc-world-model-trust-energy/spec.md` REQ-ARC-WMTE-6240 —
+`docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4c —
+`results/experiment_6240_change_magnitude_prior.json` —
+`docs/research-notes/arc-world-model-admission-is-the-bottleneck-2026-07-29.md` (the source note).
+
 ### NEW 2026-08-08 (OUTER-LOOP FOLLOW-UP — user directive "let's add a follow-up for that"): LIVE-AGENT WHOLE-PROCESS-CRASH RECOVERY — UNKNOWN, NEEDS A CHECK
 
 Context: this session root-caused three unexplained kills of a dev script's background process
@@ -265,6 +338,23 @@ c. If the framework does NOT restart crashed processes: the finding is that whol
 restart semantics, so this is a non-issue — close it; or (2) it does, and a checkpoint design
 gets scoped against the framework's actual restart contract. Do not build checkpointing before
 step (a) confirms what the framework actually does.
+
+**ADDENDUM 2026-08-09 (Phase 2a of the ARC live-agent improvement plan) — a candidate cause for
+the ORIGINAL exp6199 kills, not the scored-agent question above.** This entry's own finding
+("the kills came from the Claude Code harness itself") did not identify WHICH harness mechanism.
+Launching exp6199's expanded-roster rerun this session used `setsid nohup ... > logfile 2>&1
+< /dev/null & disown` from a Bash tool call, deliberately NOT the Bash tool's own
+`run_in_background` parameter — the working hypothesis being that `run_in_background` ties the
+child process to the CLI's own tracked-background-task bookkeeping, and that bookkeeping (not
+the host OS) is what killed the process on session/task-cleanup events the three prior runs hit.
+The `setsid`+`disown`-launched process survived past 30 minutes of wall-clock and multiple
+Claude Code tool-call turns without being killed (still alive, still progressing through its
+16-game roster, at the time this note was written) — consistent with, but not proof of, the
+hypothesis. **Working rule going forward: launch any GPU/long-running experiment expected to
+outlive a handful of tool calls via `setsid nohup ... & disown`, never via the Bash tool's
+`run_in_background: true`, until this is either confirmed or a counterexample is found.** This
+does not resolve the scored-agent restart-semantics question above, which is a different system
+(the Kaggle competition framework, not the outer-loop's own Bash tool).
 
 ### NEW 2026-08-08 (FOUND DURING REQ-ARC-WMTE-6227's REGRESSION SWEEP — pre-existing, unrelated, NOT fixed)
 

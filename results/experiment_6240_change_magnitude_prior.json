@@ -1,0 +1,845 @@
+{
+  "experiment": "experiment_6240_change_magnitude_prior",
+  "title": "Phase 4c: a change-magnitude sparsity constraint on Mode B runaway-writer engines",
+  "run_date": "2026-08-09T04:34:05Z",
+  "question": "Does capping an induced engine's per-transition changed-cell count at the largest count observed in its own shown (prefix) portion reduce the spurious-to-correct changed-cell ratio and the noop-hallucination rate on held-out transitions, without reducing correctly-predicted changed cells?",
+  "corpus": {
+    "source_artifact": "results/experiment_6012_hidden_state_trust_gate_hole.json",
+    "engine_store": "results/arc_e3_origin_fixtures (frozen fixtures)",
+    "games": [
+      "cn04",
+      "dc22",
+      "g50t",
+      "m0r0",
+      "sc25",
+      "sk48",
+      "wa30"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "n_cells_requested": 21,
+    "n_cells_scored": 21,
+    "n_cells_cap_undefined": 0,
+    "n_cells_errored": 0
+  },
+  "cells": [
+    {
+      "game": "cn04",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 208,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 33,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 108,
+        "spurious_changed_cells": 7059,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.008045,
+        "n_noop": 7,
+        "n_noop_hallucinated": 7,
+        "noop_hallucination_rate": 1.0,
+        "spurious_to_correct_ratio": 65.3611
+      },
+      "capped": {
+        "n_changing": 33,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 7,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "cn04",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 208,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 33,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 267,
+        "spurious_changed_cells": 10479,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.022299,
+        "n_noop": 7,
+        "n_noop_hallucinated": 6,
+        "noop_hallucination_rate": 0.857143,
+        "spurious_to_correct_ratio": 39.2472
+      },
+      "capped": {
+        "n_changing": 33,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 7,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "cn04",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 208,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 29,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 207,
+        "spurious_changed_cells": 6726,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.018413,
+        "n_noop": 11,
+        "n_noop_hallucinated": 7,
+        "noop_hallucination_rate": 0.636364,
+        "spurious_to_correct_ratio": 32.4928
+      },
+      "capped": {
+        "n_changing": 29,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 11,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "dc22",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 129,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 32,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 1,
+        "spurious_changed_cells": 22,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.003472,
+        "n_noop": 8,
+        "n_noop_hallucinated": 3,
+        "noop_hallucination_rate": 0.375,
+        "spurious_to_correct_ratio": 22.0
+      },
+      "capped": {
+        "n_changing": 32,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 1,
+        "spurious_changed_cells": 22,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.003472,
+        "n_noop": 8,
+        "n_noop_hallucinated": 3,
+        "noop_hallucination_rate": 0.375,
+        "spurious_to_correct_ratio": 22.0
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "dc22",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 129,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 28,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 2,
+        "spurious_changed_cells": 13,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.008929,
+        "n_noop": 12,
+        "n_noop_hallucinated": 11,
+        "noop_hallucination_rate": 0.916667,
+        "spurious_to_correct_ratio": 6.5
+      },
+      "capped": {
+        "n_changing": 28,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 2,
+        "spurious_changed_cells": 13,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.008929,
+        "n_noop": 12,
+        "n_noop_hallucinated": 11,
+        "noop_hallucination_rate": 0.916667,
+        "spurious_to_correct_ratio": 6.5
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "dc22",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 129,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 28,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 2,
+        "spurious_changed_cells": 14,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.007937,
+        "n_noop": 12,
+        "n_noop_hallucinated": 6,
+        "noop_hallucination_rate": 0.5,
+        "spurious_to_correct_ratio": 7.0
+      },
+      "capped": {
+        "n_changing": 28,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 2,
+        "spurious_changed_cells": 14,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.007937,
+        "n_noop": 12,
+        "n_noop_hallucinated": 6,
+        "noop_hallucination_rate": 0.5,
+        "spurious_to_correct_ratio": 7.0
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "g50t",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 96,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 35,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 36,
+        "spurious_changed_cells": 6928,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.002349,
+        "n_noop": 5,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 1.0,
+        "spurious_to_correct_ratio": 192.4444
+      },
+      "capped": {
+        "n_changing": 35,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 5,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "g50t",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 153,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 33,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 48,
+        "spurious_changed_cells": 6040,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.003622,
+        "n_noop": 7,
+        "n_noop_hallucinated": 4,
+        "noop_hallucination_rate": 0.571429,
+        "spurious_to_correct_ratio": 125.8333
+      },
+      "capped": {
+        "n_changing": 33,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 7,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "g50t",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 96,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 29,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 24,
+        "spurious_changed_cells": 4804,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.002177,
+        "n_noop": 11,
+        "n_noop_hallucinated": 8,
+        "noop_hallucination_rate": 0.727273,
+        "spurious_to_correct_ratio": 200.1667
+      },
+      "capped": {
+        "n_changing": 29,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 11,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "m0r0",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 102,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 12,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 14,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 8,
+        "n_noop_hallucinated": 1,
+        "noop_hallucination_rate": 0.125,
+        "spurious_to_correct_ratio": 14.0
+      },
+      "capped": {
+        "n_changing": 12,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 14,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 8,
+        "n_noop_hallucinated": 1,
+        "noop_hallucination_rate": 0.125,
+        "spurious_to_correct_ratio": 14.0
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "m0r0",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 102,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 12,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 6,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 13,
+        "n_noop_hallucinated": 4,
+        "noop_hallucination_rate": 0.307692,
+        "spurious_to_correct_ratio": 6.0
+      },
+      "capped": {
+        "n_changing": 12,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 6,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 13,
+        "n_noop_hallucinated": 4,
+        "noop_hallucination_rate": 0.307692,
+        "spurious_to_correct_ratio": 6.0
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "m0r0",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 102,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 15,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 20,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 11,
+        "n_noop_hallucinated": 2,
+        "noop_hallucination_rate": 0.181818,
+        "spurious_to_correct_ratio": 20.0
+      },
+      "capped": {
+        "n_changing": 15,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 20,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 11,
+        "n_noop_hallucinated": 2,
+        "noop_hallucination_rate": 0.181818,
+        "spurious_to_correct_ratio": 20.0
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "sc25",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 36,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 28,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 6,
+        "spurious_changed_cells": 1751,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.001593,
+        "n_noop": 12,
+        "n_noop_hallucinated": 1,
+        "noop_hallucination_rate": 0.083333,
+        "spurious_to_correct_ratio": 291.8333
+      },
+      "capped": {
+        "n_changing": 28,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 12,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "sc25",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 36,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 26,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 15,
+        "spurious_changed_cells": 1724,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.003792,
+        "n_noop": 14,
+        "n_noop_hallucinated": 1,
+        "noop_hallucination_rate": 0.071429,
+        "spurious_to_correct_ratio": 114.9333
+      },
+      "capped": {
+        "n_changing": 26,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 14,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "sc25",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 36,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 25,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 12,
+        "spurious_changed_cells": 1702,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.003607,
+        "n_noop": 15,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.333333,
+        "spurious_to_correct_ratio": 141.8333
+      },
+      "capped": {
+        "n_changing": 25,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 15,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "sk48",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 208,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 24,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 245,
+        "spurious_changed_cells": 2680,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.039276,
+        "n_noop": 16,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.3125,
+        "spurious_to_correct_ratio": 10.9388
+      },
+      "capped": {
+        "n_changing": 24,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 245,
+        "spurious_changed_cells": 2680,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.039276,
+        "n_noop": 16,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.3125,
+        "spurious_to_correct_ratio": 10.9388
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "sk48",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 169,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 22,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 112,
+        "spurious_changed_cells": 2257,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.022903,
+        "n_noop": 18,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.277778,
+        "spurious_to_correct_ratio": 20.1518
+      },
+      "capped": {
+        "n_changing": 22,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 112,
+        "spurious_changed_cells": 2086,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.022903,
+        "n_noop": 18,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.277778,
+        "spurious_to_correct_ratio": 18.625
+      },
+      "cap_effect": "genuine_improvement_spurious_only_trimmed"
+    },
+    {
+      "game": "sk48",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 241,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 25,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 180,
+        "spurious_changed_cells": 3016,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.026956,
+        "n_noop": 15,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.333333,
+        "spurious_to_correct_ratio": 16.7556
+      },
+      "capped": {
+        "n_changing": 25,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 180,
+        "spurious_changed_cells": 3016,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.026956,
+        "n_noop": 15,
+        "n_noop_hallucinated": 5,
+        "noop_hallucination_rate": 0.333333,
+        "spurious_to_correct_ratio": 16.7556
+      },
+      "cap_effect": "inert_cap_never_fired"
+    },
+    {
+      "game": "wa30",
+      "seed": 0,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 65,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 34,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 53,
+        "spurious_changed_cells": 1091,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.012081,
+        "n_noop": 6,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 20.5849
+      },
+      "capped": {
+        "n_changing": 34,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 6,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    },
+    {
+      "game": "wa30",
+      "seed": 1,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 33,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 31,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 780,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 9,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 780.0
+      },
+      "capped": {
+        "n_changing": 31,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 9,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "genuine_improvement_spurious_only_trimmed"
+    },
+    {
+      "game": "wa30",
+      "seed": 2,
+      "n_requested": 120,
+      "n_prefix": 80,
+      "n_heldout": 40,
+      "shown_max_changed_cells": 45,
+      "cap_undefined": false,
+      "raw": {
+        "n_changing": 35,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 45,
+        "spurious_changed_cells": 709,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.011559,
+        "n_noop": 5,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 15.7556
+      },
+      "capped": {
+        "n_changing": 35,
+        "n_changes_correct": 0,
+        "correct_changed_cells": 0,
+        "spurious_changed_cells": 0,
+        "change_accuracy": 0.0,
+        "change_fidelity": 0.0,
+        "n_noop": 5,
+        "n_noop_hallucinated": 0,
+        "noop_hallucination_rate": 0.0,
+        "spurious_to_correct_ratio": 0.0
+      },
+      "cap_effect": "degenerate_collapse_to_pure_noop"
+    }
+  ],
+  "headline": {
+    "THE_HONEST_READING_FIRST": "The naive aggregate counts below (n_cells_with_improved_ratio etc.) look like a clean win but are NOT the right headline -- most of the apparent improvement is the cap collapsing an engine to a PURE NO-OP on held-out data (correct AND spurious both hit exactly 0), which is Mode A in disguise, not Mode B fixed. cap_effect_counts below is the honest classification: read that first.",
+    "cap_effect_counts": {
+      "degenerate_collapse_to_pure_noop": 11,
+      "inert_cap_never_fired": 8,
+      "genuine_improvement_spurious_only_trimmed": 2
+    },
+    "cap_effect_reading": "11 of 21 scored cells COLLAPSE TO PURE NO-OP under the cap (correct_changed_cells goes to 0 along with spurious) -- these are NOT a fix, they are the cap being so restrictive that every held-out changing transition's real magnitude exceeds anything seen in the shown prefix, so the engine is forced to a no-op every time. 8 of 21 cells are UNCHANGED (the cap never fired -- held-out changes never exceeded the shown max). 2 of 21 cells show the INTENDED effect (spurious cells trimmed, correct cells fully preserved). 0 of 21 cells show a MIXED effect (both correct and spurious cell counts changed, not cleanly interpretable as a pure win or pure loss).",
+    "n_cells_with_improved_ratio": 13,
+    "n_cells_with_improved_noop_hallucination": 9,
+    "n_cells_with_correct_changed_cells_preserved": 10,
+    "n_cells_scored": 21,
+    "mean_spurious_to_correct_ratio_raw": 102.0872,
+    "mean_spurious_to_correct_ratio_capped": 5.8009,
+    "mean_noop_hallucination_rate_raw": 0.41,
+    "mean_noop_hallucination_rate_capped": 0.1586,
+    "reading": "13 of 21 cells show a lower spurious-to-correct ratio under the cap and 10 of 21 preserve or improve correct_changed_cells BY THE RAW COUNTS ALONE -- but see cap_effect_reading above: most of that apparent win is degenerate collapse to 0/0, which trivially satisfies both counts without fixing anything. The naive max-of-shown cap, AS DESIGNED, is not a viable Mode B fix: it is a near-binary switch that is either inert or catastrophic, with only 2 of 21 cells showing the nuanced 'trim excess, keep genuine detections' outcome the mechanism was designed to produce."
+  },
+  "recorded_2026_07_29_baseline_for_comparison": {
+    "max_spurious_ratio_cited": 10.3,
+    "max_spurious_ratio_cited_cell": "sc25@0",
+    "max_noop_hallucination_cited": 1.0,
+    "max_noop_hallucination_cited_cell": "cn04@0",
+    "note": "These are the two headline numbers the 2026-07-29 note cites. This experiment's own re-derived 'raw' arm is the fair same-corpus comparator for whether they reproduce; the 'capped' arm is the treatment."
+  },
+  "limitations": [
+    "THE CAP AS DESIGNED IS NEAR-BINARY, NOT GRADED (the main finding of this experiment, not a footnote): max-of-shown is a single hard threshold, so any held-out transition whose real magnitude exceeds it is discarded entirely -- there is no partial credit for 'mostly right, a bit too big'. See cap_effect_counts in the headline; degenerate_collapse_to_pure_noop cells demonstrate this directly.",
+    "The cap is a single scalar per (game, seed) cell derived from a small shown portion (n_prefix ~ 80); it is not fit or cross-validated, and a held-out transition with a genuinely large but correct change could still be discarded if it exceeds anything seen in the shown portion.",
+    "spurious_to_correct_ratio here divides by correct_changed_cells (floored at 1), not by true_changed_cells (which WorldModelVerifier does not expose per call) -- a conservative choice that never divides by zero and never understates the ratio, but is not numerically identical to the note's own 'spurious / true' framing.",
+    "No live admission-rate check is included -- this experiment measures the metric improvement only, per the plan's stated gate; it does not itself flip any shipped default."
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "at least half of scored cells show an improved spurious-to-correct ratio under the cap",
+      "passed": true,
+      "principle": "a constraint that helps only a small minority of cells is not evidence of a general fix for Mode B.",
+      "caveat": "PASSES ON THE RAW COUNT, but see the honest-classification gate below -- this raw count does not distinguish a genuine fix from a degenerate collapse to pure no-op, both of which satisfy it identically."
+    },
+    {
+      "condition": "correctly-predicted changed cells are preserved or improved on at least half of scored cells",
+      "passed": true,
+      "principle": "a cap that also discards genuine hits is a different failure mode, not a fix.",
+      "caveat": "PASSES AT THE EXACT BOUNDARY (10 of 21), and for the same reason as above: a degenerate collapse trivially satisfies 'preserved or improved' when the baseline correct count is already 0 (m0r0's cells) -- it does not require the cap to have done anything constructive."
+    },
+    {
+      "condition": "at least one quarter of scored cells show the INTENDED effect (spurious trimmed, correct changed cells fully preserved) rather than an inert or degenerate outcome",
+      "passed": false,
+      "principle": "this is the gate that actually distinguishes a working constraint from a binary switch; the two gates above cannot make that distinction and should not be read as sufficient on their own."
+    }
+  ],
+  "verifier_is_oracle": true,
+  "verifier_is_oracle_principle": "WorldModelVerifier.score IS the executable function that defines change_accuracy/change_fidelity; this measures the constraint's effect on that scorer directly, not an oracle-distinct verifier-moat claim.",
+  "solve_provenance": "development_proxy",
+  "solve_provenance_principle": "no ARC level is claimed; this is offline metric analysis over frozen fixture engines, re-deriving a prior dated measurement's corpus.",
+  "arc_solve_claim": false,
+  "random_seed": 6240,
+  "random_seeds_used": [
+    0,
+    1,
+    2
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "results/arc_e3_origin_fixtures present",
+      "available": true
+    }
+  ],
+  "honest_verdict": "complete_change_magnitude_prior_naive_cap_is_near_binary_not_graded_only_2_of_21_cells_show_the_intended_trim_effect_11_of_21_degenerate_collapse_to_pure_noop_raw_counts_13_of_21_ratio_improved_would_overstate_this",
+  "honest_verdict_principle": "terminal `complete_` prefix per the Verdict Terminal-Prefix Discipline; leads with the honest classification (genuine trim vs degenerate collapse) rather than the raw improved-ratio count, because the raw count alone is satisfied identically by both a real fix and a degenerate no-op collapse and would mislead a reader who only saw it.",
+  "git_head": "1a40d86a51a0b483bf124f78264d4c4cf0f78789",
+  "provenance": {
+    "git_head": "1a40d86a51a0b483bf124f78264d4c4cf0f78789",
+    "code": [
+      {
+        "path": "scripts/experiments/experiment_6240_change_magnitude_prior.py",
+        "sha256": "74e9884acac8e32f95158ce37a17239b6cc0791441871ceab235396be6f2f707"
+      },
+      {
+        "path": "python/carnot/agentic/arc_executable_world_model.py",
+        "sha256": "62af98a5c9b4c1db816a9007e1a6cceaa4723b8576f25d6cbb18926bd2257160"
+      },
+      {
+        "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
+        "sha256": "b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05"
+      }
+    ],
+    "engine_store": "results/arc_e3_origin_fixtures",
+    "engine_store_is_frozen_fixtures": true,
+    "rows_sources": {
+      "cited_artifacts": [
+        {
+          "path": "results/experiment_6012_hidden_state_trust_gate_hole.json",
+          "sha256": "b36d754685d5a0c0c1c2a7b98f4677176aa3f78bec91ca1b14770a1867977e22"
+        }
+      ]
+    }
+  },
+  "duration_s": 8.552,
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "inference_substrate_principle": "no model is invoked; frozen engine source is scored against transitions collected from the offline arcade, matching this project's canonical no-LLM verifier-scoring substrate declaration.",
+  "reproducibility_checksum": "ab77e9f4e8a01f29505b375c0ded9ea274162d2b4566e1a88e49146fc9998efb"
+}

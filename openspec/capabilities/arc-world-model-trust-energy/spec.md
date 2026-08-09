@@ -22439,6 +22439,50 @@ matching its frozen test expectations exactly.
 |---|---|---|
 | REQ-ARC-WMTE-6235 | `python/carnot/agentic/arc_solver_kit.py:BUDGET_AWARE_SEARCH_ENABLED`. | `tests/python/test_arc_budget_aware_search_live_wiring.py` (updated + new `test_flag_defaults_on`), `tests/python/test_experiment_6216_arc_budget_aware_search_ab.py` (updated promotion-score expectation). |
 
+### REQ-ARC-WMTE-6240: A Naive Change-Magnitude Cap Does Not Fix Mode B (Negative Result, Not Built)
+
+**Origin:** `docs/research-notes/arc-live-agent-improvement-plan-2026-08-08.md` Phase 4c. The
+2026-07-29 admission-bottleneck note (`docs/research-notes/arc-world-model-admission-is-the-
+bottleneck-2026-07-29.md`) split 33 induced-engine rows into Mode A (12/33, predicts no dynamics
+at all) and Mode B (21/33, over-writes 3x-10x more changed cells than reality contains) and named
+a change-magnitude sparsity constraint on predicted writes as "cheap to test" for Mode B. This REQ
+is that test.
+
+**THE CONSTRAINT TESTED.** For each (game, seed) cell, cap the number of cells an engine may claim
+changed per transition at the largest change-count observed on that cell's own SHOWN (prefix)
+portion; discard (revert to no-op) any held-out prediction that exceeds the cap. Re-derived the
+SAME 21 Mode B cells (`cn04`, `dc22`, `g50t`, `m0r0`, `sc25`, `sk48`, `wa30`, x3 seeds) from the
+SAME frozen engine source (`results/arc_e3_origin_fixtures`, confirmed still on disk and
+untouched) the 2026-07-29 note's numbers came from, via `scripts/experiments/experiment_6240_
+change_magnitude_prior.py`.
+
+**RESULT — NEGATIVE for this specific construction, reported honestly rather than the flattering
+aggregate.** A first read of the raw counts looked like a clean win (13/21 cells show an improved
+spurious-to-correct ratio, mean ratio 102.1 -> 5.8). That reading is WRONG: classifying each cell
+by what actually happened shows **11 of 21 cells collapse to a PURE NO-OP** (correct_changed_cells
+AND spurious_changed_cells both hit exactly 0 -- the cap turned a Mode B engine into a Mode A
+engine, not a fixed one), **8 of 21 are inert** (the cap never fired), and only **2 of 21 show the
+intended effect** (spurious cells trimmed, correct cells fully preserved). The raw aggregate counts
+are satisfied identically by a genuine fix and a degenerate collapse, which is why they looked
+better than the mechanism actually is.
+
+**WHY.** The cap is a single hard threshold with no partial credit: a held-out transition whose
+real magnitude exceeds anything seen in the (smaller) shown prefix is discarded ENTIRELY, not
+scaled down. Games where later-episode transitions are genuinely larger than early ones (the
+common case) push every held-out change over the cap, forcing pure no-ops.
+
+**WHAT THIS DOES AND DOES NOT RETIRE.** This retires the SPECIFIC naive max-of-shown hard-cap
+construction, not the general idea that Mode B is fixable by some constraint. A graded approach
+(e.g. a magnitude PENALTY rather than a hard cutoff, or a per-region rather than global cap) was
+not tested here and remains open. No code path was built or shipped; this is analysis only, no
+new default exists to flip.
+
+## Implementation Status (REQ-ARC-WMTE-6240)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6240 | `scripts/experiments/experiment_6240_change_magnitude_prior.py` (analysis-only; no production code path changed). | `results/experiment_6240_change_magnitude_prior.json` (the artifact IS the check — reproducibility_checksum pinned, `scripts/adversarial_verify.py` and `scripts/determination_preservation_lint.py` both clean, acceptance_gates and the honest cap_effect_counts classification recorded in the artifact). |
+
 ### REQ-ARC-OBJPERC-DEFAULT-ON-1: Object-Centric Induction Perception Flipped To Default ON
 
 **Origin:** 2026-08-07 operator directive (lever #1 of the ARC six-lever push, `ops/known-issues.md`
