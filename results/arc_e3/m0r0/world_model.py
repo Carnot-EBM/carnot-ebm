@@ -2,126 +2,121 @@ import numpy as np
 
 def engine(grid, action, data):
     """
-    World model for the ARC-AGI-3 game 'm0r0'.
-    
-    Rules:
-    - The grid contains blocks of color 10 (5x5 or 5x10) moving in a field of color 5.
-    - Action 1: Move all color 10 blocks UP by 5 units.
-    - Action 2: Move all color 10 blocks DOWN by 5 units.
-    - Action 3: Move all color 10 blocks AWAY from the center (x=31.5).
-    - Action 4: Move all color 10 blocks TOWARDS the center (x=31.5).
-    - When blocks move, they leave color 5 behind.
-    - When blocks overlap, they merge into a larger block of color 10.
-    - "0" cells grow from the corners (0, 63) and (63, 0) based on certain actions.
+    World model for ARC-AGI game 'm0r0'.
+    The game involves moving two 5x5 blocks of color 10 within a central area (color 5),
+    merging them into one block, and growing boundary markers (color 0).
     """
     new_grid = grid.copy()
-    h, w = grid.shape
-    
+    h, w = new_grid.shape
+
     # Identify all color 10 blocks
     blocks = []
-    visited = np.zeros_like(grid, dtype=bool)
+    visited = np.zeros((h, w), dtype=bool)
     for r in range(h):
         for c in range(w):
-            if grid[r, c] == 10 and not visited[r, c]:
-                # Find the connected component of color 10
-                comp = []
+            if new_grid[r, c] == 10 and not visited[r, c]:
+                block_cells = []
                 stack = [(r, c)]
                 visited[r, c] = True
                 while stack:
                     curr_r, curr_c = stack.pop()
-                    comp.append((curr_r, curr_c))
-                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                    block_cells.append((curr_r, curr_c))
+                    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                         nr, nc = curr_r + dr, curr_c + dc
-                        if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == 10 and not visited[nr, nc]:
+                        if 0 <= nr < h and 0 <= nc < w and \
+                           new_grid[nr, nc] == 10 and not visited[nr, nc]:
                             visited[nr, nc] = True
                             stack.append((nr, nc))
                 
-                # Get bbox
-                rs = [p[0] for p in comp]
-                cs = [p[1] for p in comp]
+                rs = [cell[0] for cell in block_cells]
+                cs = [cell[1] for cell in block_cells]
                 blocks.append({'y0': min(rs), 'x0': min(cs), 'y1': max(rs), 'x1': max(cs)})
 
-    # Movement logic
-    new_blocks = []
-    for b in blocks:
-        y0, x0, y1, x1 = b['y0'], b['x0'], b['y1'], b['x1']
-        dy, dx = 0, 0
+    # Sort blocks by their leftmost column to identify B1 (leftmost) and B2 (rightmost)
+    blocks.sort(key=lambda b: b['x0'])
+
+    def move_block(block, dy, dx):
+        """Moves a block's cells on the grid."""
+        # Clear old position
+        for r in range(block['y0'], block['y1'] + 1):
+            for c in range(block['x0'], block['x1'] + 1):
+                if new_grid[r, c] == 10:
+                    new_grid[r, c] = 5 # Return to background color
         
-        if action == 1:
-            dy = -5
-        elif action == 2:
-            dy = 5
-        elif action == 3:
-            # Move away from center x=31.5
-            center_x = 31.5
-            block_center_x = (x0 + x1) / 2
-            dx = 5 if block_center_x > center_x else -5
-        elif action == 4:
-            # Move towards center x=31.5
-            center_x = 31.5
-            block_center_x = (x0 + x1) / 2
-            dx = -5 if block_center_x > center_x else 5
+        # Calculate new boundaries with constraints
+        ny0 = max(9, block['y0'] + dy)
+        ny1 = ny0 + (block['y1'] - block['y0'])
+        nx0 = max(9, min(w - 6, block['x0'] + dx)) # Simplified boundary for x
+        nx1 = nx0 + (block['x1'] - block['x0'])
+        
+        # Ensure it doesn't go out of bounds
+        ny1 = min(h - 6, ny1)
+        nx1 = min(w - 1, nx1)
+        
+        # Set new position
+        for r in range(ny0, ny1 + 1):
+            for c in range(nx0, nx1 + 1):
+                new_grid[r, c] = 10
+        return {'y0': ny0, 'x0': nx0, 'y1': ny1, 'x1': nx1}
+
+    if action == 1:
+        # Both blocks move UP by 5. P1 moves left, P2 moves right.
+        for b in blocks:
+            move_block(b, -5, 0)
+        # Grow color 0 markers
+        p1_len = np.sum(new_grid[0, :] == 0)
+        new_grid[0, w - p1_len - 1] = 0
+        p2_len = np.sum(new_grid[h-1, :] == 0)
+        new_grid[h-1, p2_len] = 0
+
+    elif action == 3:
+        # Rightmost block moves RIGHT by 5.
+        if blocks:
+            move_block(blocks[-1], 0, 5)
+
+    elif action == 4:
+        # Leftmost block moves RIGHT by 5, Rightmost block moves LEFT by 5.
+        # If only one block exists, it stays put (moves both ways).
+        if len(blocks) >= 2:
+            move_block(blocks[0], 0, 5)
+            move_block(blocks[-1], 0, -5)
+        elif len(blocks) == 1:
+            pass # Stays in place as per logic derived from merged state
             
-        # Apply movement and clip to grid boundaries
-        ny0, nx0 = max(0, min(h-1, y0 + dy)), max(0, min(w-1, x0 + dx))
-        ny1, nx1 = max(0, min(h-1, y1 + dy)), max(0, min(w-1, x1 + dx))
-        new_blocks.append({'y0': ny0, 'x0': nx0, 'y1': ny1, 'x1': nx1})
-
-    # Clear old blocks and fill with color 5
-    for b in blocks:
-        new_grid[b['y0']:b['y1']+1, b['x0']:b['x1']+1] = 5
-        
-    # Place new blocks and merge
-    for b in new_blocks:
-        new_grid[b['y0']:b['y1']+1, b['x0']:b['x1']+1] = 10
-
-    # Handle "0" cell growth (simplified based on observations)
-    # Action 1 and 4 grow the 0-cells in the corners
-    if action == 1 or action == 4:
-        # Find current 0-cell boundaries
-        # Top-right: (0, 63) grows left
-        # Bottom-left: (63, 0) grows right
-        # We need to find the leftmost 0 in row 0 and rightmost 0 in row 63
-        for c in range(w - 1, -1, -1):
-            if new_grid[0, c] == 0:
-                if c > 0:
-                    new_grid[0, c-1] = 0
-                break
-        for c in range(0, w):
-            if new_grid[h-1, c] == 0:
-                if c < w - 1:
-                    new_grid[h-1, c+1] = 0
-                break
+        # Grow color 0 markers
+        p1_len = np.sum(new_grid[0, :] == 0)
+        new_grid[0, w - p1_len - 1] = 0
+        p2_len = np.sum(new_grid[h-1, :] == 0)
+        new_grid[h-1, p2_len] = 0
 
     return new_grid
 
 def is_level_complete(grid):
     """
-    The level is complete when the merged color 10 block (5x10) 
-    reaches the top edge of the color 5 area (y=9) and is centered (x=24-33).
+    Level is complete when the two blocks of color 10 have merged into a single 
+    larger block and boundary markers reach a certain size.
+    Based on observed data, merging them to a width of 10 seems key.
     """
-    # Find all color 10 blocks
-    visited = np.zeros_like(grid, dtype=bool)
+    # Count connected components of color 10
+    visited = np.zeros(grid.shape, dtype=bool)
+    num_blocks = 0
     for r in range(grid.shape[0]):
         for c in range(grid.shape[1]):
             if grid[r, c] == 10 and not visited[r, c]:
-                comp = []
+                num_blocks += 1
                 stack = [(r, c)]
                 visited[r, c] = True
                 while stack:
                     curr_r, curr_c = stack.pop()
-                    comp.append((curr_r, curr_c))
-                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+                    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                         nr, nc = curr_r + dr, curr_c + dc
-                        if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1] and grid[nr, nc] == 10 and not visited[nr, nc]:
+                        if 0 <= nr < grid.shape[0] and 0 <= nc < grid.shape[1] and \
+                           grid[nr, nc] == 10 and not visited[nr, nc]:
                             visited[nr, nc] = True
                             stack.append((nr, nc))
-                
-                rs = [p[0] for p in comp]
-                cs = [p[1] for p in comp]
-                y0, x0, y1, x1 = min(rs), min(cs), max(rs), max(cs)
-                
-                # Win condition: 5x10 block at y=9, x=24-33
-                if y0 == 9 and y1 == 13 and x0 == 24 and x1 == 33:
-                    return True
-    return False
+    
+    # Win condition: blocks merged into one AND markers have grown sufficiently
+    p1_len = np.sum(grid[0, :] == 0)
+    p2_len = np.sum(grid[-1, :] == 0)
+    
+    return num_blocks == 1 and p1_len >= 7 and p2_len >= 7
