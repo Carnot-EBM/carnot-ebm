@@ -15515,3 +15515,4 @@ Still active  |
 +   |
 | 2026-08-08 23:53 UTC | Within-game object-relative trajectory-transfer ca | OK | 109 passed, 1 warning in 29.70s |
 | 2026-08-09 00:09 UTC | Budget-exhaustion-aware StepwiseExplorer causal A/ | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-08-09 00:11 UTC | Native Gemma-4-31B think versus no-think induction | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6212-three-family-gguf-runtime-recovery |
